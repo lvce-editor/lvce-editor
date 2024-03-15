@@ -1,6 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-export const getSearchToggleButtonVirtualDom = (replaceExpanded) => {
+export const getSearchToggleButtonVirtualDom = (replaceExpanded, onClick = '') => {
   return [
     {
       type: VirtualDomElements.Button,
@@ -10,6 +10,7 @@ export const getSearchToggleButtonVirtualDom = (replaceExpanded) => {
       ariaExpanded: replaceExpanded,
       childCount: 1,
       'data-command': 'toggleReplace',
+      onClick,
     },
     {
       type: VirtualDomElements.Div,

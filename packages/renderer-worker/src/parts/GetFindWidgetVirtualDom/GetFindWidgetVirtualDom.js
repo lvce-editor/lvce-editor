@@ -26,32 +26,8 @@ const getIconButtonVirtualDom = (iconButton) => {
 
 export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons, matchCase, matchWholeWord, useRegularExpression) => {
   const dom = []
-  dom.push(...GetSearchToggleButtonVirtualDom.getSearchToggleButtonVirtualDom(replaceExpanded))
-  dom.push(
-    ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom(
-      'search-value',
-      'Search',
-      'handleInput',
-      [
-        // {
-        //   icon: 'MaskIconCaseSensitive',
-        //   checked: matchCase,
-        //   title: 'Match Case',
-        // },
-        // {
-        //   icon: 'MaskIconWholeWord',
-        //   checked: matchWholeWord,
-        //   title: 'Match Whole Word',
-        // },
-        // {
-        //   icon: 'MaskIconRegex',
-        //   checked: useRegularExpression,
-        //   title: 'Use Regular Expression',
-        // },
-      ],
-      [],
-    ),
-  )
+  dom.push(...GetSearchToggleButtonVirtualDom.getSearchToggleButtonVirtualDom(replaceExpanded, 'handleClick'))
+  dom.push(...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-value', 'Search', 'handleInput', [], []))
   dom.push(
     {
       type: VirtualDomElements.Div,
