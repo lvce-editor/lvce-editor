@@ -4,10 +4,9 @@ const queryInputs = ($Viewlet) => {
   return [...$Viewlet.querySelectorAll('input, textarea')]
 }
 
-export const rememberFocus = (state, dom, eventMap) => {
+export const rememberFocus = ($Viewlet, dom, eventMap) => {
   // TODO replace this workaround with
   // virtual dom diffing
-  const { $Viewlet } = state
   let focused = document.activeElement.getAttribute('name')
   const $$Inputs = queryInputs($Viewlet)
   const inputMap = Object.create(null)
