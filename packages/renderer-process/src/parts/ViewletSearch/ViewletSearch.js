@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as RememberFocus from '../RememberFocus/RememberFocus.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 export const create = () => {
@@ -30,33 +31,7 @@ export const setDom = (state, dom) => {
 export const setFullDom = (state, dom) => {
   // TODO replace this workaround with
   // virtual dom diffing
-  const { $Viewlet } = state
-  let input = ''
-  let focused = document.activeElement.getAttribute('name')
-  let $Input = $Viewlet.querySelector('[name="search-value"]')
-  if ($Input) {
-    input = $Input.value
-  }
-  let replaceInput = ''
-  let $ReplaceInput = $Viewlet.querySelector('[name="search-replace-value"]')
-  if ($ReplaceInput) {
-    replaceInput = $ReplaceInput.value
-  }
-  VirtualDom.renderInto($Viewlet, dom, ViewletSearchEvents)
-  $Input = $Viewlet.querySelector('[name="search-value"]')
-  if ($Input) {
-    $Input.value = input
-  }
-  $ReplaceInput = $Viewlet.querySelector('[name="search-replace-value"]')
-  if ($ReplaceInput) {
-    $ReplaceInput.value = replaceInput
-  }
-  if (focused) {
-    const $Focused = $Viewlet.querySelector(`[name="${focused}"]`)
-    if ($Focused) {
-      $Focused.focus()
-    }
-  }
+  RememberFocus.rememberFocus(state.$Viewlet, dom, ViewletSearchEvents)
 }
 
 export const setValue = (state, value) => {
