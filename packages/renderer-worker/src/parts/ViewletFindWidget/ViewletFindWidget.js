@@ -15,6 +15,11 @@ export const create = (uid) => {
     matchIndex: -1,
     matchCount: 0,
     uid,
+    replaceExpanded: false,
+    useRegularExpression: false,
+    matchCase: false,
+    matchWholeWord: false,
+    replacement: '',
   }
 }
 

@@ -45,7 +45,14 @@ const renderDetails = {
         disabled: false,
       },
     ]
-    const dom = GetFindWidgetVirtualDom.getFindWidgetVirtualDom(matchCountText, buttons)
+    const dom = GetFindWidgetVirtualDom.getFindWidgetVirtualDom(
+      matchCountText,
+      newState.replaceExpanded,
+      buttons,
+      newState.matchCase,
+      newState.matchWholeWord,
+      newState.useRegularExpression,
+    )
     return [/* method */ 'setDom', /* enabled */ dom]
   },
 }
