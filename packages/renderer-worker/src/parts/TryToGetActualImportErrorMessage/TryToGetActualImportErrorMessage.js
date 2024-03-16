@@ -15,6 +15,9 @@ export const tryToGetActualImportErrorMessage = async (url, error) => {
   if (!url) {
     return `Failed to import script: ${error}`
   }
+  if (error && error instanceof Error) {
+    return `Failed to import script: ${error}`
+  }
   let response
   try {
     response = await fetch(url)
