@@ -49,7 +49,7 @@ content 2`,
   const findWidgetInput = Locator('.FindWidget .MultilineInputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toBeFocused()
-  await expect(findWidgetInput).toHaveAttribute('aria-label', 'Find')
+  await expect(findWidgetInput).toHaveAttribute('placeholder', 'Find')
   const findWidgetButtonFocusPrevious = Locator('.FindWidget [title="Previous Match"]')
   await expect(findWidgetButtonFocusPrevious).toHaveAttribute('title', 'Previous Match')
 })
