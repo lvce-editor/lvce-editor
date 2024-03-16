@@ -1,4 +1,4 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const create = (selector, options) => {
   return new Locator(selector, options)
@@ -11,7 +11,7 @@ const Locator = function (selector, { nth = -1, hasText = '' } = {}) {
 }
 
 const performAction = async (locator, fnName, options) => {
-  return RendererProcess.invoke('TestFrameWork.performAction', locator, fnName, options)
+  return Rpc.invoke('TestFrameWork.performAction', locator, fnName, options)
 }
 
 const toButtonNumber = (buttonType) => {
