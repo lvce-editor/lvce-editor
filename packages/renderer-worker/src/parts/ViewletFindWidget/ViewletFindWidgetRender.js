@@ -17,7 +17,11 @@ const renderValue = {
 
 const renderDetails = {
   isEqual(oldState, newState) {
-    return oldState.matchIndex === newState.matchIndex && oldState.matchCount === newState.matchCount
+    return (
+      oldState.matchIndex === newState.matchIndex &&
+      oldState.matchCount === newState.matchCount &&
+      oldState.replaceExpanded === newState.replaceExpanded
+    )
   },
   apply(oldState, newState) {
     const matchCountText = GetMatchCountText.getMatchCountText(newState.matchIndex, newState.matchCount)
@@ -39,7 +43,14 @@ const renderDetails = {
         disabled: false,
       },
     ]
-    const dom = GetFindWidgetVirtualDom.getFindWidgetVirtualDom(matchCountText, buttons)
+    const dom = GetFindWidgetVirtualDom.getFindWidgetVirtualDom(
+      matchCountText,
+      newState.replaceExpanded,
+      buttons,
+      newState.matchCase,
+      newState.matchWholeWord,
+      newState.useRegularExpression,
+    )
     return [/* method */ 'setDom', /* enabled */ dom]
   },
 }
@@ -64,4 +75,4 @@ const renderAriaAnnouncement = {
   },
 }
 
-export const render = [renderValue, renderAriaAnnouncement, renderDetails]
+export const render = [renderAriaAnnouncement, renderDetails, renderValue]

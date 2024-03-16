@@ -36,7 +36,7 @@ test('viewlet.editor-find-widget-accessibility', async () => {
   await FileSystem.writeFile(
     `${tmpDir}/file1.txt`,
     `content 1
-content 2`
+content 2`,
   )
   await Workspace.setPath(tmpDir)
   await Main.openUri(`${tmpDir}/file1.txt`)
@@ -46,15 +46,10 @@ content 2`
   await Editor.openFindWidget()
 
   // assert
-  const findWidgetInput = Locator('.FindWidget .InputBox')
+  const findWidgetInput = Locator('.FindWidget .MultilineInputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toBeFocused()
-  await expect(findWidgetInput).toHaveAttribute('aria-label', 'Find')
-  const findWidgetButtonFocusPrevious = Locator(
-    '.FindWidget [title="Previous Match"]'
-  )
-  await expect(findWidgetButtonFocusPrevious).toHaveAttribute(
-    'title',
-    'Previous Match'
-  )
+  await expect(findWidgetInput).toHaveAttribute('placeholder', 'Find')
+  const findWidgetButtonFocusPrevious = Locator('.FindWidget [title="Previous Match"]')
+  await expect(findWidgetButtonFocusPrevious).toHaveAttribute('title', 'Previous Match')
 })
