@@ -14,7 +14,7 @@ content 2`,
   await Editor.openFindWidget()
 
   // assert
-  const findWidgetInput = Locator('.FindWidget .MultiLineInputBox')
+  const findWidgetInput = Locator('.FindWidget .MultilineInputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toHaveValue('content')
   const findWidgetMatchCount = Locator(`.FindWidgetMatchCount`)
