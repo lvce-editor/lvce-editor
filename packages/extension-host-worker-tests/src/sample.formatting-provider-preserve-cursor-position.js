@@ -1,6 +1,6 @@
-const name = 'sample.formatting-provider-preserve-cursor-position'
+export const name = 'sample.formatting-provider-preserve-cursor-position'
 
-test('sample.formatting-provider-preserve-cursor-position', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, `<h1   class="abc">hello world</h1>`)
@@ -18,6 +18,4 @@ test('sample.formatting-provider-preserve-cursor-position', async () => {
 
   const cursor = Locator('.EditorCursor')
   await expect(cursor).toHaveCSS('translate', /^(23|24|25|26|27|28|29).*?px$/)
-})
-
-export {}
+}
