@@ -27,7 +27,7 @@ export const bundleJs = async ({
   allowCyclicDependencies = false,
   babelExternal = false,
   external = [],
-  typescript = false,
+  typescript = from.endsWith('.ts'),
 }) => {
   try {
     const allExternal = getExternal(babelExternal, external)
