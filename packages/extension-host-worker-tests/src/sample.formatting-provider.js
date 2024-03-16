@@ -1,6 +1,6 @@
 export const name = 'sample.formatting-provider'
 
-export const test = async ({ FileSystem, Workspace, Extension, Main, Editor }) => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, `a`)
