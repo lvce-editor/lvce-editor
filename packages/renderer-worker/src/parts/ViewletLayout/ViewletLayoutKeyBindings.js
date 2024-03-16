@@ -195,21 +195,7 @@ export const getKeyBindings = () => {
       key: KeyModifier.CtrlCmd | KeyCode.KeyF,
       command: 'Editor.openFind',
     },
-    {
-      key: KeyCode.Enter,
-      command: 'FindWidget.focusNext',
-      when: WhenExpression.FocusFindWidget,
-    },
-    {
-      key: KeyModifier.Shift | KeyCode.F4,
-      command: 'FindWidget.focusPrevious',
-      when: WhenExpression.FocusFindWidget,
-    },
-    {
-      key: KeyCode.F4,
-      command: 'FindWidget.focusNext',
-      when: WhenExpression.FocusFindWidget,
-    },
+
     {
       key: KeyModifier.CtrlCmd | KeyCode.Equal,
       command: 'Window.zoomIn',

@@ -5,6 +5,7 @@ export const Commands = {
   focusNext: ViewletFindWidget.focusNext,
   focusPrevious: ViewletFindWidget.focusPrevious,
   handleInput: ViewletFindWidget.handleInput,
+  refresh: ViewletFindWidget.refresh,
   handleFocus: ViewletFindWidget.handleFocus,
   handleBlur: ViewletFindWidget.handleBlur,
   close: ViewletFindWidget.close,
