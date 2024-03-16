@@ -43,7 +43,7 @@ const tryToGetActualErrorMessageInternal = async (error, url, response, seenDepe
   }
   let ast
   try {
-    ast = BabelParser.parse(text, {
+    ast = await BabelParser.parse(text, {
       sourceType: BabelSourceType.Module,
     })
   } catch (error) {
