@@ -1,4 +1,6 @@
-test('sample.icon-theme', async () => {
+export const name = 'sample.icon-theme'
+
+export const test = async ({ FileSystem, Workspace, Extension, IconTheme }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, 'test')
@@ -13,6 +15,4 @@ test('sample.icon-theme', async () => {
   const iconFile = Locator('.TreeItem[aria-label="test.xyz"] .FileIcon')
   const baseUrl = BaseUrl.getBaseUrl()
   await expect(iconFile).toHaveAttribute('src', `${baseUrl}packages/extension-host-worker-tests/fixtures/sample.icon-theme/icons/default_file.svg`)
-})
-
-export {}
+}

@@ -1,10 +1,10 @@
-test('viewlet.editor-find-widget', async () => {
+test('viewlet.editor-find-widget', async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/file1.txt`,
     `content 1
-content 2`
+content 2`,
   )
   await Workspace.setPath(tmpDir)
   await Main.openUri(`${tmpDir}/file1.txt`)
