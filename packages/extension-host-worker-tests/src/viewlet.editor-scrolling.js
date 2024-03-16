@@ -1,6 +1,6 @@
 export const name = 'viewlet.editor-scrolling'
 
-export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, expect }) => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, expect, Locator }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
