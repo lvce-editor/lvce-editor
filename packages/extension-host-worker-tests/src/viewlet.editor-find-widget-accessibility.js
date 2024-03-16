@@ -30,7 +30,9 @@
 // windows narrator says:  ""
 // orca says:  "close, push button"
 
-test('viewlet.editor-find-widget-accessibility', async () => {
+export const name = 'viewlet.editor-find-widget-accessibility'
+
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -52,4 +54,4 @@ content 2`,
   await expect(findWidgetInput).toHaveAttribute('placeholder', 'Find')
   const findWidgetButtonFocusPrevious = Locator('.FindWidget [title="Previous Match"]')
   await expect(findWidgetButtonFocusPrevious).toHaveAttribute('title', 'Previous Match')
-})
+}
