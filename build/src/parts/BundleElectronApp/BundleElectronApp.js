@@ -453,6 +453,20 @@ export const build = async ({
   })
   console.timeEnd('copyExtensionHostSubWorkerFiles')
 
+  const testWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyExtensionHostSubWorkerFiles')
+  await Copy.copy({
+    from: testWorkerCachePath,
+    to: `${resourcesPath}/app/packages/extension-host-sub-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostSubWorkerFiles')
+
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })
   console.timeEnd('copyPlaygroundFiles')

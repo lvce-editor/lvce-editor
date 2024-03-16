@@ -1,5 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
+import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
+import * as GetSearchToggleButtonVirtualDom from '../GetSearchToggleButtonVirtualDom/GetSearchToggleButtonVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -22,8 +24,10 @@ const getIconButtonVirtualDom = (iconButton) => {
   ]
 }
 
-export const getFindWidgetVirtualDom = (matchCountText, buttons) => {
+export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons, matchCase, matchWholeWord, useRegularExpression) => {
   const dom = []
+  dom.push(...GetSearchToggleButtonVirtualDom.getSearchToggleButtonVirtualDom(replaceExpanded, 'handleClick'))
+  dom.push(...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-value', 'Find', 'handleInput', [], [], 'handleFocus'))
   dom.push(
     {
       type: VirtualDomElements.Div,
@@ -33,5 +37,6 @@ export const getFindWidgetVirtualDom = (matchCountText, buttons) => {
     text(matchCountText),
     ...buttons.flatMap(getIconButtonVirtualDom),
   )
+
   return dom
 }

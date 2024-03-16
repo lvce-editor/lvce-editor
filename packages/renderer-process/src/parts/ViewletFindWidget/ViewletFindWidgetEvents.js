@@ -15,13 +15,18 @@ const handleClickClose = (uid, event) => {
 }
 
 const handleClickPreviousMatch = (uid, event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   ViewletFindWidgetFunctions.focusPrevious(uid)
 }
 
 const handleClickNextMatch = (uid, event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   ViewletFindWidgetFunctions.focusNext(uid)
+}
+
+const handleClickToggleReplace = (uid, event) => {
+  Event.preventDefault(event)
+  ViewletFindWidgetFunctions.toggleReplace(uid)
 }
 
 export const handleClick = (event) => {
@@ -37,6 +42,9 @@ export const handleClick = (event) => {
       break
     case 'Next Match':
       handleClickNextMatch(uid, event)
+      break
+    case 'Toggle Replace':
+      handleClickToggleReplace(uid, event)
       break
     default:
       break
