@@ -15,7 +15,9 @@
 // windows narrator says:  ""
 // orca says:  "No results"
 
-test('viewlet.quick-pick-no-results', async () => {
+export const name = 'viewlet.quick-pick-no-results'
+
+export const test = async ({ QuickPick, Locator, expect }) => {
   // act
   await QuickPick.open()
 
@@ -23,28 +25,16 @@ test('viewlet.quick-pick-no-results', async () => {
   const quickPickInput = Locator('#QuickPick .InputBox')
   const quickPickItems = Locator('.QuickPickItem')
   await expect(quickPickInput).toHaveAttribute('role', 'combobox')
-  await expect(quickPickInput).toHaveAttribute(
-    'aria-activedescendant',
-    'QuickPickItemActive'
-  )
-  await expect(quickPickItems.nth(0)).toHaveAttribute(
-    'id',
-    'QuickPickItemActive'
-  )
+  await expect(quickPickInput).toHaveAttribute('aria-activedescendant', 'QuickPickItemActive')
+  await expect(quickPickItems.nth(0)).toHaveAttribute('id', 'QuickPickItemActive')
 
   // act
   await QuickPick.focusNext()
 
   // assert
   // TODO add toHaveId method to test framework
-  await expect(quickPickItems.nth(1)).toHaveAttribute(
-    'id',
-    'QuickPickItemActive'
-  )
-  await expect(quickPickInput).toHaveAttribute(
-    'aria-activedescendant',
-    'QuickPickItemActive'
-  )
+  await expect(quickPickItems.nth(1)).toHaveAttribute('id', 'QuickPickItemActive')
+  await expect(quickPickInput).toHaveAttribute('aria-activedescendant', 'QuickPickItemActive')
 
   // act
   await QuickPick.setValue('not-found')
@@ -53,4 +43,4 @@ test('viewlet.quick-pick-no-results', async () => {
   const noResultMessage = Locator('.QuickPickStatus')
   await expect(noResultMessage).toBeVisible()
   await expect(noResultMessage).toHaveText('No Results')
-})
+}

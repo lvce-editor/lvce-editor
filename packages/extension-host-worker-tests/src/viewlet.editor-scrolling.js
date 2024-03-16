@@ -1,6 +1,6 @@
-const name = 'viewlet.editor-scrolling'
+export const name = 'viewlet.editor-scrolling'
 
-test('viewlet.editor-scrolling', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -35,12 +35,10 @@ test('viewlet.editor-scrolling', async () => {
   "description": "",
   "editable": true
 }
-` + '\n'.repeat(50)
+` + '\n'.repeat(50),
   )
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await Main.openUri(`${tmpDir}/file1.xyz`)
 
   // assert
@@ -52,4 +50,4 @@ test('viewlet.editor-scrolling', async () => {
 
   // assert
   await expect(descriptionToken).toHaveClass('JsonPropertyName')
-})
+}

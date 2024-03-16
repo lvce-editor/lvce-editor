@@ -1,4 +1,6 @@
-test('viewlet.activity-bar-keyboard-navigation', async () => {
+export const name = 'viewlet.activity-bar-keyboard-navigation'
+
+export const test = async ({ ActivityBar, Locator, expect }) => {
   // act
   await ActivityBar.focus()
 
@@ -58,4 +60,4 @@ test('viewlet.activity-bar-keyboard-navigation', async () => {
   await expect(sideBarHeaderTitle).toHaveText('Explorer')
 
   // TODO explorer should be focused
-})
+}
