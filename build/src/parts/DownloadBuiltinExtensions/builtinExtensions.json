@@ -17,7 +17,7 @@
   {
     "name": "builtin.language-basics-nix",
     "repository": "github.com/lvce-editor/language-basics-nix",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.debug-node",
@@ -112,12 +112,12 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.10.0"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.2.0"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.language-basics-json5",
@@ -127,7 +127,7 @@
   {
     "name": "builtin.language-basics-jsx",
     "repository": "github.com/lvce-editor/language-basics-jsx",
-    "version": "0.0.7"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.language-basics-julia",
@@ -242,7 +242,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.27"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.language-features-css",
@@ -257,7 +257,7 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "0.18.1"
+    "version": "0.19.0"
   },
   {
     "name": "builtin.prettier",
