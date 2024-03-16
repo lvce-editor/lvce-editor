@@ -4,7 +4,7 @@ test('viewlet.editor-find-widget', async () => {
   await FileSystem.writeFile(
     `${tmpDir}/file1.txt`,
     `content 1
-content 2`
+content 2`,
   )
   await Workspace.setPath(tmpDir)
   await Main.openUri(`${tmpDir}/file1.txt`)
@@ -14,7 +14,7 @@ content 2`
   await Editor.openFindWidget()
 
   // assert
-  const findWidgetInput = Locator('.FindWidget .InputBox')
+  const findWidgetInput = Locator('.FindWidget .MultiLineInputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toHaveValue('content')
   const findWidgetMatchCount = Locator(`.FindWidgetMatchCount`)
