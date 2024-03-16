@@ -6,7 +6,7 @@
   },
   {
     "name": "ky",
-    "version": "1.1.3",
+    "version": "1.2.1",
     "type": "javascript"
   },
   {
@@ -32,7 +32,7 @@
   },
   {
     "name": "@babel/parser",
-    "version": "7.23.3",
+    "version": "7.24.0",
     "type": "javascript"
   },
   {
@@ -53,7 +53,7 @@
   },
   {
     "name": "dompurify",
-    "version": "3.0.6",
+    "version": "3.0.9",
     "type": "javascript"
   },
   {
