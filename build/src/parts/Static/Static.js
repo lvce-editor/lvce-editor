@@ -426,17 +426,17 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     babelExternal: true,
   })
   await BundleJs.bundleJs({
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
+    from: 'src/extensionHostSubWorkerMain.js',
+    platform: 'webworker',
+    codeSplitting: false,
+  })
+  await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/test-worker`),
     from: 'src/testWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
     babelExternal: true,
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
-    from: 'src/extensionHostSubWorkerMain.js',
-    platform: 'webworker',
-    codeSplitting: false,
   })
 }
 
