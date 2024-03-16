@@ -1,4 +1,4 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 const getKeyOptions = (rawKey) => {
   if (rawKey.includes('+')) {
@@ -39,9 +39,5 @@ export const press = async (key) => {
     bubbles: true,
     ...keyOptions,
   }
-  await RendererProcess.invoke(
-    'TestFrameWork.performKeyBoardAction',
-    'press',
-    options
-  )
+  await Rpc.invoke('TestFrameWork.performKeyBoardAction', 'press', options)
 }

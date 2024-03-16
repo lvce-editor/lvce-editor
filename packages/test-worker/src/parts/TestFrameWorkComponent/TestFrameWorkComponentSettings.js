@@ -1,5 +1,5 @@
-import * as Preferences from '../Preferences/Preferences.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
-export const update = async (settings) => {
-  await Preferences.update(settings)
+export const update = (settings) => {
+  return Rpc.invoke('Preferences.update', settings)
 }
