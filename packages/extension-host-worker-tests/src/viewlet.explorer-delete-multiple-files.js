@@ -1,4 +1,8 @@
-test.skip('viewlet.explorer-delete-multiple-files', async () => {
+export const name = 'viewlet.explorer-delete-multiple-files'
+
+export const skip = true
+
+export const test = async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
@@ -45,4 +49,4 @@ test.skip('viewlet.explorer-delete-multiple-files', async () => {
   // assert
   await expect(file1).toBeHidden()
   await expect(explorer).toHaveClass('FocusOutline')
-})
+}

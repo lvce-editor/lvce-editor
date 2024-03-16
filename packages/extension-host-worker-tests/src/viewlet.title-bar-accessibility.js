@@ -20,7 +20,11 @@
 // windows narrator says: "Clear recently opened, menu item, four of four"
 // orca says: "Clear recently opened"
 
-test.skip('viewlet.title-bar-accessibility', async () => {
+export const name = 'viewlet.title-bar-accessibility'
+
+export const skip = true
+
+export const test = async () => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.txt`, 'div')
 
@@ -30,9 +34,7 @@ test.skip('viewlet.title-bar-accessibility', async () => {
   await expect(titleBar).toHaveAttribute('role', 'contentinfo')
   const titleBarMenuBar = Locator('#TitleBarMenu')
   await expect(titleBarMenuBar).toHaveAttribute('role', 'menubar')
-  const menuItemFile = titleBarMenuBar.locator(
-    '.TitleBarTopLevelEntry[data-id="file"]'
-  )
+  const menuItemFile = titleBarMenuBar.locator('.TitleBarTopLevelEntry[data-id="file"]')
   await expect(menuItemFile).toHaveAttribute('tabindex', '-1')
   await expect(menuItemFile).toHaveAttribute('aria-haspopup', 'true')
   await expect(menuItemFile).toHaveAttribute('aria-expanded', 'false')
@@ -57,9 +59,7 @@ test.skip('viewlet.title-bar-accessibility', async () => {
   await expect(menuItemOpenRecent).toHaveAttribute('aria-expanded', 'true')
   await expect(menuItemOpenRecent).toHaveAttribute('aria-owns', 'Menu-1')
 
-  const subMenuItemClearRecentlyOpened = subMenu.locator(
-    'text=Clear Recently Opened'
-  )
+  const subMenuItemClearRecentlyOpened = subMenu.locator('text=Clear Recently Opened')
   await subMenuItemClearRecentlyOpened.hover()
 
   const menuItemExit = menu.locator('text=Exit')
@@ -68,4 +68,4 @@ test.skip('viewlet.title-bar-accessibility', async () => {
   await expect(menu).toHaveCount(1)
   await expect(menuItemExit).toBeFocused()
   // await expect(menuItemOpenRecent).toHaveAttribute('aria-expanded', 'false') // TODO
-})
+}

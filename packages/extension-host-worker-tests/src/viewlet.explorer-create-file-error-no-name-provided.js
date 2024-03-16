@@ -1,5 +1,10 @@
 // TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7883530122?check_suite_focus=true
-test.skip('viewlet.explorer-create-file-error-no-name-provided', async () => {
+
+export const name = 'viewlet.explorer-create-file-error-no-name-provided'
+
+export const skip = true
+
+export const test = async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
@@ -22,4 +27,4 @@ test.skip('viewlet.explorer-create-file-error-no-name-provided', async () => {
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText('Error: file name must not be empty')
-})
+}

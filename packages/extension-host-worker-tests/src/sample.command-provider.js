@@ -1,10 +1,10 @@
-const name = 'sample.command-provider'
+export const name = 'sample.command-provider'
 
-test.skip('sample.command-provider', async () => {
+export const skip = true
+
+export const test = async () => {
   // arrange
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await QuickPick.open()
@@ -14,6 +14,4 @@ test.skip('sample.command-provider', async () => {
   // assert
   // TODO probably sample command should show a notification
   // and the notification text can be asserted here
-})
-
-export {}
+}

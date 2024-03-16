@@ -1,14 +1,14 @@
-const name = 'sample.brace-completion-provider'
+export const name = 'sample.brace-completion-provider'
 
-test.skip('sample.brace-completion-provider', async () => {
+export const skip = true
+
+export const test = async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, ``)
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -18,6 +18,4 @@ test.skip('sample.brace-completion-provider', async () => {
   // assert
   const editor = Locator('.Viewlet.Editor')
   await expect(editor).toHaveText(`{}`)
-})
-
-export {}
+}
