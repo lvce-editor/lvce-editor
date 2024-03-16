@@ -1,7 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as Platform from '../Platform/Platform.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 export const writeFile = async (path, content) => {

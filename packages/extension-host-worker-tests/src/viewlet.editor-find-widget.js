@@ -1,4 +1,6 @@
-test('viewlet.editor-find-widget', async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
+export const name = 'viewlet.editor-find-widget'
+
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -39,4 +41,4 @@ content 2`,
   await expect(buttonPreviousMatch).toHaveAttribute('disabled', '')
   const buttonNextMatch = Locator('[title="Next Match"]')
   await expect(buttonNextMatch).toHaveAttribute('disabled', '')
-})
+}
