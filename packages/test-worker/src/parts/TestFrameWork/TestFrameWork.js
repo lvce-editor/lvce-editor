@@ -1,5 +1,5 @@
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Rpc from '../Rpc/Rpc.js'
 import * as TestState from '../TestState/TestState.js'
 
 export { create as Locator } from './Locator.js'
@@ -17,12 +17,7 @@ test.skip = async (id, fn) => {
   const state = 'skip'
   const background = 'yellow'
   const text = `test skipped ${id}`
-  await RendererProcess.invoke(
-    'TestFrameWork.showOverlay',
-    state,
-    background,
-    text
-  )
+  await Rpc.invoke('TestFrameWork.showOverlay', state, background, text)
 }
 
 const Assert = {
@@ -42,20 +37,10 @@ export const expect = (locator) => {
   return {
     async checkSingleElementCondition(fnName, options) {
       Assert.string(fnName)
-      return RendererProcess.invoke(
-        'TestFrameWork.checkSingleElementCondition',
-        locator,
-        fnName,
-        options
-      )
+      return Rpc.invoke('TestFrameWork.checkSingleElementCondition', locator, fnName, options)
     },
     async checkMultiElementCondition(fnName, options) {
-      return RendererProcess.invoke(
-        'TestFrameWork.checkMultiElementCondition',
-        locator,
-        fnName,
-        options
-      )
+      return Rpc.invoke('TestFrameWork.checkMultiElementCondition', locator, fnName, options)
     },
     async toBeVisible() {
       if (this.negated) {
