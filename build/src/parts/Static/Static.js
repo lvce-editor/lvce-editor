@@ -433,7 +433,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/test-worker`),
-    from: 'src/testWorkerMain.js',
+    from: 'src/testWorkerMain.ts',
     platform: 'webworker',
     codeSplitting: false,
     babelExternal: true,

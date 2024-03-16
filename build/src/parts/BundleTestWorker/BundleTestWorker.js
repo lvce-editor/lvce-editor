@@ -9,7 +9,7 @@ export const bundleTestWorker = async ({ cachePath, commitHash, platform, assetD
   })
   await BundleJs.bundleJs({
     cwd: cachePath,
-    from: `./src/testWorkerMain.js`,
+    from: `./src/testWorkerMain.ts`,
     platform: 'webworker',
     allowCyclicDependencies: false,
   })
