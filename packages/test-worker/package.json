@@ -2,7 +2,7 @@
   "name": "@lvce-editor/test-worker",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/testWorkerMain.js",
+  "main": "src/testWorkerMain.ts",
   "type": "module",
   "directories": {
     "test": "test"
