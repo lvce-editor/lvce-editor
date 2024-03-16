@@ -6,6 +6,7 @@ const locations = [
   'package-lock.json',
   'build/package-lock.json',
   'packages/extension-host/package-lock.json',
+  'packages/test-worker/package-lock.json',
   'packages/extension-host-helper-process/package-lock.json',
   'packages/extension-host-worker-tests/package-lock.json',
   'packages/extension-host-worker/package-lock.json',

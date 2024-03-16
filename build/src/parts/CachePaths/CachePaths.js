@@ -12,7 +12,7 @@ const getRendererProcessCacheHash = async (extraContents) => {
       'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
       'build/src/parts/BundleRendererProcessCached/BundleRendererProcessCached.js',
     ],
-    extraContents
+    extraContents,
   )
   return hash
 }
@@ -36,7 +36,7 @@ const getRendererWorkerCacheHash = async (extraContents) => {
       'build/src/parts/EagerLoadedCss/EagerLoadedCss.js',
       'build/src/parts/GetCssDeclarationFiles/GetCssDeclarationFiles.js',
     ],
-    extraContents
+    extraContents,
   )
   return hash
 }
@@ -58,7 +58,7 @@ const getExtensionHostWorkerCacheHash = async (extraContents) => {
       'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
       'build/src/parts/BundleRendererWorkerCached/BundleRendererWorkerCached.js',
     ],
-    extraContents
+    extraContents,
   )
   return hash
 }
@@ -75,6 +75,12 @@ export const getExtensionHostSubWorkerCachePath = async (extraContents) => {
   return extensionHostWorkerCachePath
 }
 
+export const getTestWorkerCachePath = async (extraContents) => {
+  const testWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
+  const testWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/test-worker'), testWorkerCacheHash)
+  return testWorkerCachePath
+}
+
 const getMainProcessCacheHash = async (extraContents) => {
   const hash = await Hash.computeFolderHash(
     'packages/main-process/src',
@@ -88,7 +94,7 @@ const getMainProcessCacheHash = async (extraContents) => {
       'build/src/parts/BundleMainProcessCached/BundleMainProcessCached.js',
       'build/src/parts/BundleOptions/BundleOptions.js',
     ],
-    extraContents
+    extraContents,
   )
   return hash
 }
@@ -113,7 +119,7 @@ const getSharedProcessCacheHash = async (extraContents) => {
       'build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
       'build/src/parts/BundleOptions/BundleOptions.js',
     ],
-    extraContents
+    extraContents,
   )
   return hash
 }
