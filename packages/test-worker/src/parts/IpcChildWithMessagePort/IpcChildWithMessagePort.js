@@ -1,3 +1,5 @@
+import * as GetData from '../GetData/GetData.js'
+
 export const listen = () => {
   const messageChannel = new MessageChannel()
   const { port1, port2 } = messageChannel
@@ -8,6 +10,10 @@ export const listen = () => {
 export const wrap = (port) => {
   return {
     port,
+    /**
+     * @type {any}
+     */
+    listener: undefined,
     send(message) {
       this.port.postMessage(message)
     },
@@ -15,10 +21,15 @@ export const wrap = (port) => {
       this.port.postMessage(message, transferables)
     },
     get onmessage() {
-      return this.port.onmessage
+      return this.listener
     },
     set onmessage(listener) {
-      this.port.onmessage = listener
+      const wrappedListener = (event) => {
+        const message = GetData.getData(event)
+        listener(message)
+      }
+      this.listener = listener
+      this.port.onmessage = wrappedListener
     },
   }
 }

@@ -18,7 +18,7 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     replacement: `'${assetDir}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
+    path: `${cachePath}/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
     replacement: `'${assetDir}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   })

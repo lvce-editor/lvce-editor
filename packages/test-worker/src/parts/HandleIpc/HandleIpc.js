@@ -1,12 +1,10 @@
-import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
 import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
 
-export const handleIpc = (ipc, execute) => {
-  Assert.object(ipc)
-  Assert.fn(execute)
+export const handleIpc = (ipc, source = 'process') => {
   const handleMessage = (message) => {
-    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, execute, Callback.resolve)
+    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, source)
   }
   ipc.onmessage = handleMessage
 }

@@ -1,40 +1,39 @@
-import { IpcError } from '../IpcError/IpcError.js'
 import * as GetData from '../GetData/GetData.js'
 
-export const listen = async () => {
+export const listen = () => {
   if (typeof WorkerGlobalScope === 'undefined') {
-    throw new IpcError('module is not in web worker scope')
+    throw new TypeError('module is not in web worker scope')
   }
-  globalThis.postMessage('ready')
   return globalThis
 }
 
-export const wrap = (port) => {
+export const signal = (global) => {
+  global.postMessage('ready')
+}
+
+export const wrap = (global) => {
   return {
-    port,
+    global,
     /**
      * @type {any}
      */
-    wrappedListener: undefined,
+    listener: undefined,
     send(message) {
-      this.port.postMessage(message)
+      this.global.postMessage(message)
     },
     sendAndTransfer(message, transferables) {
-      this.port.postMessage(message, transferables)
+      this.global.postMessage(message, transferables)
     },
     get onmessage() {
-      return this.wrappedListener
+      return this.listener
     },
     set onmessage(listener) {
-      if (listener) {
-        this.wrappedListener = (event) => {
-          const actualData = GetData.getData(event)
-          listener(actualData)
-        }
-      } else {
-        this.wrappedListener = undefined
+      const wrappedListener = (event) => {
+        const message = GetData.getData(event)
+        listener(message)
       }
-      this.port.onmessage = this.wrappedListener
+      this.listener = listener
+      this.global.onmessage = wrappedListener
     },
   }
 }
