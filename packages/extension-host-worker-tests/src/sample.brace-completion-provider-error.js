@@ -1,14 +1,14 @@
-const name = 'sample.brace-completion-provider-error'
+export const name = 'sample.brace-completion-provider-error'
 
-test.skip('sample.brace-completion-provider-error', async () => {
+export const skip = true
+
+export const test = async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, ``)
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -18,9 +18,5 @@ test.skip('sample.brace-completion-provider-error', async () => {
   // // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute brace completion provider: oops'
-  )
-})
-
-export {}
+  await expect(overlayMessage).toHaveText('Error: Failed to execute brace completion provider: oops')
+}

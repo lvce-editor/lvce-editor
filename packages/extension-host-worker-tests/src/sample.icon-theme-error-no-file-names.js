@@ -1,15 +1,12 @@
-test('sample.icon-theme-error-no-file-names', async () => {
+export const name = 'sample.icon-theme-error-no-file-names'
+
+export const test = async ({ FileSystem, Workspace, Extension, IconTheme }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, 'test')
   await FileSystem.mkdir(`${tmpDir}/test-folder`)
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(
-      '../fixtures/sample.icon-theme-error-no-file-names',
-      import.meta.url
-    ).toString()
-  )
+  await Extension.addWebExtension(new URL('../fixtures/sample.icon-theme-error-no-file-names', import.meta.url).toString())
 
   // act
   await IconTheme.setIconTheme('test-icon-theme')
@@ -18,6 +15,4 @@ test('sample.icon-theme-error-no-file-names', async () => {
   // // assert
   // const token = Locator('.Token')
   // await expect(token).toHaveClass('Xyz')
-})
-
-export {}
+}

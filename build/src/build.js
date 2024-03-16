@@ -1,6 +1,7 @@
 import minimist from 'minimist'
 import * as ExitCode from './parts/ExitCode/ExitCode.js'
 import * as Logger from './parts/Logger/Logger.js'
+import * as SetStackTraceLimit from './parts/SetStackTraceLimit/SetStackTraceLimit.js'
 import * as Process from './parts/Process/Process.js'
 
 const getProduct = (productName) => {
@@ -69,6 +70,7 @@ const main = async () => {
     console.error(`Hint: Try using "node build.js --target=static"`)
     Process.exit(ExitCode.Error)
   }
+  SetStackTraceLimit.setStackTraceLimit(100)
   const product = await getProduct(argv.product)
   const module = await getBuildModule(target)
   try {

@@ -1,6 +1,6 @@
-const name = 'sample.formatting-provider'
+export const name = 'sample.formatting-provider'
 
-test('sample.formatting-provider', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, `a`)
@@ -16,6 +16,4 @@ test('sample.formatting-provider', async () => {
   await expect(editorRow).toHaveText('b')
   const editorInput = Locator('.EditorInput')
   await expect(editorInput).toBeFocused()
-})
-
-export {}
+}

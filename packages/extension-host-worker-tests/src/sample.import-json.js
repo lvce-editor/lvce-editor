@@ -1,6 +1,8 @@
-const name = 'sample.import-json'
+export const name = 'sample.import-json'
 
-test.skip('sample.import-json', async () => {
+export const skip = true
+
+export const test = async () => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -11,6 +13,4 @@ test.skip('sample.import-json', async () => {
 
   // assert
   // TODO
-})
-
-export {}
+}
