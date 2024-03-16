@@ -1,6 +1,6 @@
 export const name = 'sample.icon-theme'
 
-export const test = async ({ FileSystem, Workspace, Extension, IconTheme }) => {
+export const test = async ({ FileSystem, Workspace, Extension, IconTheme, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, 'test')
