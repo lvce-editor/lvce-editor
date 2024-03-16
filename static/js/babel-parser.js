@@ -353,7 +353,7 @@ var lib = createCommonjsModule(function(module, exports) {
     PrimaryTopicNotAllowed: "Topic reference was used in a lexical context without topic binding.",
     PrimaryTopicRequiresSmartPipeline: 'Topic reference is used, but the pipelineOperator plugin was not passed a "proposal": "hack" or "smart" option.'
   };
-  const _excluded$1 = ["toMessage"], _excluded2$1 = ["message"];
+  const _excluded = ["toMessage"], _excluded2 = ["message"];
   function defineHidden(obj, key, value) {
     Object.defineProperty(obj, key, {
       enumerable: false,
@@ -364,11 +364,8 @@ var lib = createCommonjsModule(function(module, exports) {
   function toParseErrorConstructor(_ref) {
     let {
       toMessage
-    } = _ref, properties = _objectWithoutPropertiesLoose(_ref, _excluded$1);
-    return function constructor({
-      loc,
-      details
-    }) {
+    } = _ref, properties = _objectWithoutPropertiesLoose(_ref, _excluded);
+    return function constructor(loc, details) {
       const error = new SyntaxError();
       Object.assign(error, properties, {
         loc,
@@ -386,10 +383,7 @@ var lib = createCommonjsModule(function(module, exports) {
           column,
           index
         } = (_overrides$loc = overrides.loc) != null ? _overrides$loc : loc;
-        return constructor({
-          loc: new Position(line, column, index),
-          details: Object.assign({}, details, overrides.details)
-        });
+        return constructor(new Position(line, column, index), Object.assign({}, details, overrides.details));
       });
       defineHidden(error, "details", details);
       Object.defineProperty(error, "message", {
@@ -422,7 +416,7 @@ var lib = createCommonjsModule(function(module, exports) {
         message: template
       } : template, {
         message
-      } = _ref2, rest = _objectWithoutPropertiesLoose(_ref2, _excluded2$1);
+      } = _ref2, rest = _objectWithoutPropertiesLoose(_ref2, _excluded2);
       const toMessage = typeof message === "string" ? () => message : message;
       ParseErrorConstructors[reasonCode] = toParseErrorConstructor(Object.assign({
         code: "BABEL_PARSER_SYNTAX_ERROR",
@@ -668,13 +662,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     toAssignableObjectExpressionProp(prop, isLast, isLHS) {
       if (prop.kind === "get" || prop.kind === "set") {
-        this.raise(Errors.PatternHasAccessor, {
-          at: prop.key
-        });
+        this.raise(Errors.PatternHasAccessor, prop.key);
       } else if (prop.method) {
-        this.raise(Errors.PatternHasMethod, {
-          at: prop.key
-        });
+        this.raise(Errors.PatternHasMethod, prop.key);
       } else {
         super.toAssignableObjectExpressionProp(prop, isLast, isLHS);
       }
@@ -1422,9 +1412,9 @@ var lib = createCommonjsModule(function(module, exports) {
   }
   class Scope {
     constructor(flags) {
-      this.var = new Set();
-      this.lexical = new Set();
-      this.functions = new Set();
+      this.flags = 0;
+      this.names = new Map();
+      this.firstLexicalName = "";
       this.flags = flags;
     }
   }
@@ -1492,11 +1482,16 @@ var lib = createCommonjsModule(function(module, exports) {
       let scope = this.currentScope();
       if (bindingType & 8 || bindingType & 16) {
         this.checkRedeclarationInScope(scope, name, bindingType, loc);
+        let type = scope.names.get(name) || 0;
         if (bindingType & 16) {
-          scope.functions.add(name);
+          type = type | 4;
         } else {
-          scope.lexical.add(name);
+          if (!scope.firstLexicalName) {
+            scope.firstLexicalName = name;
+          }
+          type = type | 2;
         }
+        scope.names.set(name, type);
         if (bindingType & 8) {
           this.maybeExportDefined(scope, name);
         }
@@ -1504,7 +1499,7 @@ var lib = createCommonjsModule(function(module, exports) {
         for (let i = this.scopeStack.length - 1; i >= 0; --i) {
           scope = this.scopeStack[i];
           this.checkRedeclarationInScope(scope, name, bindingType, loc);
-          scope.var.add(name);
+          scope.names.set(name, (scope.names.get(name) || 0) | 1);
           this.maybeExportDefined(scope, name);
           if (scope.flags & 387)
             break;
@@ -1521,8 +1516,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     checkRedeclarationInScope(scope, name, bindingType, loc) {
       if (this.isRedeclaredInScope(scope, name, bindingType)) {
-        this.parser.raise(Errors.VarRedeclaration, {
-          at: loc,
+        this.parser.raise(Errors.VarRedeclaration, loc, {
           identifierName: name
         });
       }
@@ -1531,19 +1525,20 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!(bindingType & 1))
         return false;
       if (bindingType & 8) {
-        return scope.lexical.has(name) || scope.functions.has(name) || scope.var.has(name);
+        return scope.names.has(name);
       }
+      const type = scope.names.get(name);
       if (bindingType & 16) {
-        return scope.lexical.has(name) || !this.treatFunctionsAsVarInScope(scope) && scope.var.has(name);
+        return (type & 2) > 0 || !this.treatFunctionsAsVarInScope(scope) && (type & 1) > 0;
       }
-      return scope.lexical.has(name) && !(scope.flags & 8 && scope.lexical.values().next().value === name) || !this.treatFunctionsAsVarInScope(scope) && scope.functions.has(name);
+      return (type & 2) > 0 && !(scope.flags & 8 && scope.firstLexicalName === name) || !this.treatFunctionsAsVarInScope(scope) && (type & 4) > 0;
     }
     checkLocalExport(id) {
       const {
         name
       } = id;
       const topLevelScope = this.scopeStack[0];
-      if (!topLevelScope.lexical.has(name) && !topLevelScope.var.has(name) && !topLevelScope.functions.has(name)) {
+      if (!topLevelScope.names.has(name)) {
         this.undefinedExports.set(name, id.loc.start);
       }
     }
@@ -1594,8 +1589,9 @@ var lib = createCommonjsModule(function(module, exports) {
     isRedeclaredInScope(scope, name, bindingType) {
       if (super.isRedeclaredInScope(scope, name, bindingType))
         return true;
-      if (bindingType & 2048) {
-        return !scope.declareFunctions.has(name) && (scope.lexical.has(name) || scope.functions.has(name));
+      if (bindingType & 2048 && !scope.declareFunctions.has(name)) {
+        const type = scope.names.get(name);
+        return (type & 4) > 0 || (type & 2) > 0;
       }
       return false;
     }
@@ -1669,7 +1665,13 @@ var lib = createCommonjsModule(function(module, exports) {
     addComment(comment) {
       if (this.filename)
         comment.loc.filename = this.filename;
-      this.state.comments.push(comment);
+      const {
+        commentsLen
+      } = this.state;
+      if (this.comments.length != commentsLen)
+        this.comments.length = commentsLen;
+      this.comments.push(comment);
+      this.state.commentsLen++;
     }
     processComment(node) {
       const {
@@ -1861,7 +1863,7 @@ var lib = createCommonjsModule(function(module, exports) {
   }
   class State {
     constructor() {
-      this.strict = void 0;
+      this.flags = 1024;
       this.curLine = void 0;
       this.lineStart = void 0;
       this.startLoc = void 0;
@@ -1870,21 +1872,12 @@ var lib = createCommonjsModule(function(module, exports) {
       this.potentialArrowAt = -1;
       this.noArrowAt = [];
       this.noArrowParamsConversionAt = [];
-      this.maybeInArrowParameters = false;
-      this.inType = false;
-      this.noAnonFunctionType = false;
-      this.hasFlowComment = false;
-      this.isAmbientContext = false;
-      this.inAbstractClass = false;
-      this.inDisallowConditionalTypesContext = false;
       this.topicContext = {
         maxNumOfResolvableTopics: 0,
         maxTopicIndex: null
       };
-      this.soloAwait = false;
-      this.inFSharpPipelineDirectBody = false;
       this.labels = [];
-      this.comments = [];
+      this.commentsLen = 0;
       this.commentStack = [];
       this.pos = 0;
       this.type = 139;
@@ -1893,13 +1886,20 @@ var lib = createCommonjsModule(function(module, exports) {
       this.end = 0;
       this.lastTokEndLoc = null;
       this.lastTokStartLoc = null;
-      this.lastTokStart = 0;
       this.context = [types.brace];
-      this.canStartJSXElement = true;
-      this.containsEsc = false;
       this.firstInvalidTemplateEscapePos = null;
       this.strictErrors = new Map();
       this.tokensLength = 0;
+    }
+    get strict() {
+      return (this.flags & 1) > 0;
+    }
+    set strict(value) {
+      if (value) {
+        this.flags |= 1;
+      } else {
+        this.flags &= ~1;
+      }
     }
     init({
       strictMode,
@@ -1912,20 +1912,145 @@ var lib = createCommonjsModule(function(module, exports) {
       this.lineStart = -startColumn;
       this.startLoc = this.endLoc = new Position(startLine, startColumn, 0);
     }
+    get maybeInArrowParameters() {
+      return (this.flags & 2) > 0;
+    }
+    set maybeInArrowParameters(value) {
+      if (value) {
+        this.flags |= 2;
+      } else {
+        this.flags &= ~2;
+      }
+    }
+    get inType() {
+      return (this.flags & 4) > 0;
+    }
+    set inType(value) {
+      if (value) {
+        this.flags |= 4;
+      } else {
+        this.flags &= ~4;
+      }
+    }
+    get noAnonFunctionType() {
+      return (this.flags & 8) > 0;
+    }
+    set noAnonFunctionType(value) {
+      if (value) {
+        this.flags |= 8;
+      } else {
+        this.flags &= ~8;
+      }
+    }
+    get hasFlowComment() {
+      return (this.flags & 16) > 0;
+    }
+    set hasFlowComment(value) {
+      if (value) {
+        this.flags |= 16;
+      } else {
+        this.flags &= ~16;
+      }
+    }
+    get isAmbientContext() {
+      return (this.flags & 32) > 0;
+    }
+    set isAmbientContext(value) {
+      if (value) {
+        this.flags |= 32;
+      } else {
+        this.flags &= ~32;
+      }
+    }
+    get inAbstractClass() {
+      return (this.flags & 64) > 0;
+    }
+    set inAbstractClass(value) {
+      if (value) {
+        this.flags |= 64;
+      } else {
+        this.flags &= ~64;
+      }
+    }
+    get inDisallowConditionalTypesContext() {
+      return (this.flags & 128) > 0;
+    }
+    set inDisallowConditionalTypesContext(value) {
+      if (value) {
+        this.flags |= 128;
+      } else {
+        this.flags &= ~128;
+      }
+    }
+    get soloAwait() {
+      return (this.flags & 256) > 0;
+    }
+    set soloAwait(value) {
+      if (value) {
+        this.flags |= 256;
+      } else {
+        this.flags &= ~256;
+      }
+    }
+    get inFSharpPipelineDirectBody() {
+      return (this.flags & 512) > 0;
+    }
+    set inFSharpPipelineDirectBody(value) {
+      if (value) {
+        this.flags |= 512;
+      } else {
+        this.flags &= ~512;
+      }
+    }
+    get canStartJSXElement() {
+      return (this.flags & 1024) > 0;
+    }
+    set canStartJSXElement(value) {
+      if (value) {
+        this.flags |= 1024;
+      } else {
+        this.flags &= ~1024;
+      }
+    }
+    get containsEsc() {
+      return (this.flags & 2048) > 0;
+    }
+    set containsEsc(value) {
+      if (value) {
+        this.flags |= 2048;
+      } else {
+        this.flags &= ~2048;
+      }
+    }
     curPosition() {
       return new Position(this.curLine, this.pos - this.lineStart, this.pos);
     }
-    clone(skipArrays) {
+    clone() {
       const state = new State();
-      const keys = Object.keys(this);
-      for (let i = 0, length = keys.length; i < length; i++) {
-        const key = keys[i];
-        let val = this[key];
-        if (!skipArrays && Array.isArray(val)) {
-          val = val.slice();
-        }
-        state[key] = val;
-      }
+      state.flags = this.flags;
+      state.curLine = this.curLine;
+      state.lineStart = this.lineStart;
+      state.startLoc = this.startLoc;
+      state.endLoc = this.endLoc;
+      state.errors = this.errors.slice();
+      state.potentialArrowAt = this.potentialArrowAt;
+      state.noArrowAt = this.noArrowAt.slice();
+      state.noArrowParamsConversionAt = this.noArrowParamsConversionAt.slice();
+      state.topicContext = this.topicContext;
+      state.labels = this.labels.slice();
+      state.commentsLen = this.commentsLen;
+      state.commentStack = this.commentStack.slice();
+      state.pos = this.pos;
+      state.type = this.type;
+      state.value = this.value;
+      state.start = this.start;
+      state.end = this.end;
+      state.lastTokEndLoc = this.lastTokEndLoc;
+      state.lastTokStartLoc = this.lastTokStartLoc;
+      state.context = this.context.slice();
+      state.firstInvalidTemplateEscapePos = this.firstInvalidTemplateEscapePos;
+      state.strictErrors = this.strictErrors;
+      state.tokensLength = this.tokensLength;
       return state;
     }
   }
@@ -2214,7 +2339,6 @@ var lib = createCommonjsModule(function(module, exports) {
       pos
     };
   }
-  const _excluded = ["at"], _excluded2 = ["at"];
   function buildPosition(pos, lineStart, curLine) {
     return new Position(curLine, pos - lineStart, pos);
   }
@@ -2237,8 +2361,7 @@ var lib = createCommonjsModule(function(module, exports) {
         invalidDigit: (pos, lineStart, curLine, radix) => {
           if (!this.options.errorRecovery)
             return false;
-          this.raise(Errors.InvalidDigit, {
-            at: buildPosition(pos, lineStart, curLine),
+          this.raise(Errors.InvalidDigit, buildPosition(pos, lineStart, curLine), {
             radix
           });
           return true;
@@ -2252,28 +2375,23 @@ var lib = createCommonjsModule(function(module, exports) {
       });
       this.errorHandlers_readStringContents_string = Object.assign({}, this.errorHandlers_readCodePoint, {
         strictNumericEscape: (pos, lineStart, curLine) => {
-          this.recordStrictModeErrors(Errors.StrictNumericEscape, {
-            at: buildPosition(pos, lineStart, curLine)
-          });
+          this.recordStrictModeErrors(Errors.StrictNumericEscape, buildPosition(pos, lineStart, curLine));
         },
         unterminated: (pos, lineStart, curLine) => {
-          throw this.raise(Errors.UnterminatedString, {
-            at: buildPosition(pos - 1, lineStart, curLine)
-          });
+          throw this.raise(Errors.UnterminatedString, buildPosition(pos - 1, lineStart, curLine));
         }
       });
       this.errorHandlers_readStringContents_template = Object.assign({}, this.errorHandlers_readCodePoint, {
         strictNumericEscape: this.errorBuilder(Errors.StrictNumericEscape),
         unterminated: (pos, lineStart, curLine) => {
-          throw this.raise(Errors.UnterminatedTemplate, {
-            at: buildPosition(pos, lineStart, curLine)
-          });
+          throw this.raise(Errors.UnterminatedTemplate, buildPosition(pos, lineStart, curLine));
         }
       });
       this.state = new State();
       this.state.init(options);
       this.input = input;
       this.length = input.length;
+      this.comments = [];
       this.isLookahead = false;
     }
     pushToken(token) {
@@ -2286,7 +2404,6 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.options.tokens) {
         this.pushToken(new Token(this.state));
       }
-      this.state.lastTokStart = this.state.start;
       this.state.lastTokEndLoc = this.state.endLoc;
       this.state.lastTokStartLoc = this.state.startLoc;
       this.nextToken();
@@ -2361,9 +2478,7 @@ var lib = createCommonjsModule(function(module, exports) {
     setStrict(strict) {
       this.state.strict = strict;
       if (strict) {
-        this.state.strictErrors.forEach(([toParseError, at]) => this.raise(toParseError, {
-          at
-        }));
+        this.state.strictErrors.forEach(([toParseError, at]) => this.raise(toParseError, at));
         this.state.strictErrors.clear();
       }
     }
@@ -2388,9 +2503,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const start = this.state.pos;
       const end = this.input.indexOf(commentEnd, start + 2);
       if (end === -1) {
-        throw this.raise(Errors.UnterminatedComment, {
-          at: this.state.curPosition()
-        });
+        throw this.raise(Errors.UnterminatedComment, this.state.curPosition());
       }
       this.state.pos = end + commentEnd.length;
       lineBreakG.lastIndex = start + 2;
@@ -2550,16 +2663,12 @@ var lib = createCommonjsModule(function(module, exports) {
       const nextPos = this.state.pos + 1;
       const next = this.codePointAtPos(nextPos);
       if (next >= 48 && next <= 57) {
-        throw this.raise(Errors.UnexpectedDigitAfterHash, {
-          at: this.state.curPosition()
-        });
+        throw this.raise(Errors.UnexpectedDigitAfterHash, this.state.curPosition());
       }
       if (next === 123 || next === 91 && this.hasPlugin("recordAndTuple")) {
         this.expectPlugin("recordAndTuple");
         if (this.getPluginOption("recordAndTuple", "syntaxType") === "bar") {
-          throw this.raise(next === 123 ? Errors.RecordExpressionHashIncorrectStartSyntaxType : Errors.TupleExpressionHashIncorrectStartSyntaxType, {
-            at: this.state.curPosition()
-          });
+          throw this.raise(next === 123 ? Errors.RecordExpressionHashIncorrectStartSyntaxType : Errors.TupleExpressionHashIncorrectStartSyntaxType, this.state.curPosition());
         }
         this.state.pos += 2;
         if (next === 123) {
@@ -2646,9 +2755,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         if (this.hasPlugin("recordAndTuple") && next === 125) {
           if (this.getPluginOption("recordAndTuple", "syntaxType") !== "bar") {
-            throw this.raise(Errors.RecordExpressionBarIncorrectEndSyntaxType, {
-              at: this.state.curPosition()
-            });
+            throw this.raise(Errors.RecordExpressionBarIncorrectEndSyntaxType, this.state.curPosition());
           }
           this.state.pos += 2;
           this.finishToken(9);
@@ -2656,9 +2763,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         if (this.hasPlugin("recordAndTuple") && next === 93) {
           if (this.getPluginOption("recordAndTuple", "syntaxType") !== "bar") {
-            throw this.raise(Errors.TupleExpressionBarIncorrectEndSyntaxType, {
-              at: this.state.curPosition()
-            });
+            throw this.raise(Errors.TupleExpressionBarIncorrectEndSyntaxType, this.state.curPosition());
           }
           this.state.pos += 2;
           this.finishToken(4);
@@ -2804,9 +2909,7 @@ var lib = createCommonjsModule(function(module, exports) {
         case 91:
           if (this.hasPlugin("recordAndTuple") && this.input.charCodeAt(this.state.pos + 1) === 124) {
             if (this.getPluginOption("recordAndTuple", "syntaxType") !== "bar") {
-              throw this.raise(Errors.TupleExpressionBarIncorrectStartSyntaxType, {
-                at: this.state.curPosition()
-              });
+              throw this.raise(Errors.TupleExpressionBarIncorrectStartSyntaxType, this.state.curPosition());
             }
             this.state.pos += 2;
             this.finishToken(2);
@@ -2822,9 +2925,7 @@ var lib = createCommonjsModule(function(module, exports) {
         case 123:
           if (this.hasPlugin("recordAndTuple") && this.input.charCodeAt(this.state.pos + 1) === 124) {
             if (this.getPluginOption("recordAndTuple", "syntaxType") !== "bar") {
-              throw this.raise(Errors.RecordExpressionBarIncorrectStartSyntaxType, {
-                at: this.state.curPosition()
-              });
+              throw this.raise(Errors.RecordExpressionBarIncorrectStartSyntaxType, this.state.curPosition());
             }
             this.state.pos += 2;
             this.finishToken(6);
@@ -2927,8 +3028,7 @@ var lib = createCommonjsModule(function(module, exports) {
             return;
           }
       }
-      throw this.raise(Errors.InvalidOrUnexpectedToken, {
-        at: this.state.curPosition(),
+      throw this.raise(Errors.InvalidOrUnexpectedToken, this.state.curPosition(), {
         unexpected: String.fromCodePoint(code2)
       });
     }
@@ -2946,15 +3046,11 @@ var lib = createCommonjsModule(function(module, exports) {
       } = this.state;
       for (; ; ++pos) {
         if (pos >= this.length) {
-          throw this.raise(Errors.UnterminatedRegExp, {
-            at: createPositionWithColumnOffset(startLoc, 1)
-          });
+          throw this.raise(Errors.UnterminatedRegExp, createPositionWithColumnOffset(startLoc, 1));
         }
         const ch = this.input.charCodeAt(pos);
         if (isNewLine(ch)) {
-          throw this.raise(Errors.UnterminatedRegExp, {
-            at: createPositionWithColumnOffset(startLoc, 1)
-          });
+          throw this.raise(Errors.UnterminatedRegExp, createPositionWithColumnOffset(startLoc, 1));
         }
         if (escaped) {
           escaped = false;
@@ -2979,26 +3075,18 @@ var lib = createCommonjsModule(function(module, exports) {
         if (VALID_REGEX_FLAGS.has(cp)) {
           if (cp === 118) {
             if (mods.includes("u")) {
-              this.raise(Errors.IncompatibleRegExpUVFlags, {
-                at: nextPos()
-              });
+              this.raise(Errors.IncompatibleRegExpUVFlags, nextPos());
             }
           } else if (cp === 117) {
             if (mods.includes("v")) {
-              this.raise(Errors.IncompatibleRegExpUVFlags, {
-                at: nextPos()
-              });
+              this.raise(Errors.IncompatibleRegExpUVFlags, nextPos());
             }
           }
           if (mods.includes(char)) {
-            this.raise(Errors.DuplicateRegExpFlags, {
-              at: nextPos()
-            });
+            this.raise(Errors.DuplicateRegExpFlags, nextPos());
           }
         } else if (isIdentifierChar(cp) || cp === 92) {
-          this.raise(Errors.MalformedRegExpFlags, {
-            at: nextPos()
-          });
+          this.raise(Errors.MalformedRegExpFlags, nextPos());
         } else {
           break;
         }
@@ -3025,8 +3113,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.state.pos += 2;
       const val = this.readInt(radix);
       if (val == null) {
-        this.raise(Errors.InvalidDigit, {
-          at: createPositionWithColumnOffset(startLoc, 2),
+        this.raise(Errors.InvalidDigit, createPositionWithColumnOffset(startLoc, 2), {
           radix
         });
       }
@@ -3035,14 +3122,10 @@ var lib = createCommonjsModule(function(module, exports) {
         ++this.state.pos;
         isBigInt = true;
       } else if (next === 109) {
-        throw this.raise(Errors.InvalidDecimal, {
-          at: startLoc
-        });
+        throw this.raise(Errors.InvalidDecimal, startLoc);
       }
       if (isIdentifierStart(this.codePointAtPos(this.state.pos))) {
-        throw this.raise(Errors.NumberIdentifier, {
-          at: this.state.curPosition()
-        });
+        throw this.raise(Errors.NumberIdentifier, this.state.curPosition());
       }
       if (isBigInt) {
         const str = this.input.slice(startLoc.index, this.state.pos).replace(/[_n]/g, "");
@@ -3060,22 +3143,16 @@ var lib = createCommonjsModule(function(module, exports) {
       let hasExponent = false;
       let isOctal = false;
       if (!startsWithDot && this.readInt(10) === null) {
-        this.raise(Errors.InvalidNumber, {
-          at: this.state.curPosition()
-        });
+        this.raise(Errors.InvalidNumber, this.state.curPosition());
       }
       const hasLeadingZero = this.state.pos - start >= 2 && this.input.charCodeAt(start) === 48;
       if (hasLeadingZero) {
         const integer = this.input.slice(start, this.state.pos);
-        this.recordStrictModeErrors(Errors.StrictOctalLiteral, {
-          at: startLoc
-        });
+        this.recordStrictModeErrors(Errors.StrictOctalLiteral, startLoc);
         if (!this.state.strict) {
           const underscorePos = integer.indexOf("_");
           if (underscorePos > 0) {
-            this.raise(Errors.ZeroDigitNumericSeparator, {
-              at: createPositionWithColumnOffset(startLoc, underscorePos)
-            });
+            this.raise(Errors.ZeroDigitNumericSeparator, createPositionWithColumnOffset(startLoc, underscorePos));
           }
         }
         isOctal = hasLeadingZero && !/[89]/.test(integer);
@@ -3093,9 +3170,7 @@ var lib = createCommonjsModule(function(module, exports) {
           ++this.state.pos;
         }
         if (this.readInt(10) === null) {
-          this.raise(Errors.InvalidOrMissingExponent, {
-            at: startLoc
-          });
+          this.raise(Errors.InvalidOrMissingExponent, startLoc);
         }
         isFloat = true;
         hasExponent = true;
@@ -3103,9 +3178,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       if (next === 110) {
         if (isFloat || hasLeadingZero) {
-          this.raise(Errors.InvalidBigIntLiteral, {
-            at: startLoc
-          });
+          this.raise(Errors.InvalidBigIntLiteral, startLoc);
         }
         ++this.state.pos;
         isBigInt = true;
@@ -3113,17 +3186,13 @@ var lib = createCommonjsModule(function(module, exports) {
       if (next === 109) {
         this.expectPlugin("decimal", this.state.curPosition());
         if (hasExponent || hasLeadingZero) {
-          this.raise(Errors.InvalidDecimal, {
-            at: startLoc
-          });
+          this.raise(Errors.InvalidDecimal, startLoc);
         }
         ++this.state.pos;
         isDecimal = true;
       }
       if (isIdentifierStart(this.codePointAtPos(this.state.pos))) {
-        throw this.raise(Errors.NumberIdentifier, {
-          at: this.state.curPosition()
-        });
+        throw this.raise(Errors.NumberIdentifier, this.state.curPosition());
       }
       const str = this.input.slice(start, this.state.pos).replace(/[_mn]/g, "");
       if (isBigInt) {
@@ -3186,14 +3255,10 @@ var lib = createCommonjsModule(function(module, exports) {
         this.finishToken(25, firstInvalidLoc ? null : opening + str + "${");
       }
     }
-    recordStrictModeErrors(toParseError, {
-      at
-    }) {
+    recordStrictModeErrors(toParseError, at) {
       const index = at.index;
       if (this.state.strict && !this.state.strictErrors.has(index)) {
-        this.raise(toParseError, {
-          at
-        });
+        this.raise(toParseError, at);
       } else {
         this.state.strictErrors.set(index, [toParseError, at]);
       }
@@ -3216,9 +3281,7 @@ var lib = createCommonjsModule(function(module, exports) {
           const escStart = this.state.curPosition();
           const identifierCheck = this.state.pos === start ? isIdentifierStart : isIdentifierChar;
           if (this.input.charCodeAt(++this.state.pos) !== 117) {
-            this.raise(Errors.MissingUnicodeEscape, {
-              at: this.state.curPosition()
-            });
+            this.raise(Errors.MissingUnicodeEscape, this.state.curPosition());
             chunkStart = this.state.pos - 1;
             continue;
           }
@@ -3226,9 +3289,7 @@ var lib = createCommonjsModule(function(module, exports) {
           const esc = this.readCodePoint(true);
           if (esc !== null) {
             if (!identifierCheck(esc)) {
-              this.raise(Errors.EscapedCharNotAnIdentifier, {
-                at: escStart
-              });
+              this.raise(Errors.EscapedCharNotAnIdentifier, escStart);
             }
             word += String.fromCodePoint(esc);
           }
@@ -3253,77 +3314,59 @@ var lib = createCommonjsModule(function(module, exports) {
         type
       } = this.state;
       if (tokenIsKeyword(type) && this.state.containsEsc) {
-        this.raise(Errors.InvalidEscapedReservedWord, {
-          at: this.state.startLoc,
+        this.raise(Errors.InvalidEscapedReservedWord, this.state.startLoc, {
           reservedWord: tokenLabelName(type)
         });
       }
     }
-    raise(toParseError, raiseProperties) {
-      const {
-        at
-      } = raiseProperties, details = _objectWithoutPropertiesLoose(raiseProperties, _excluded);
+    raise(toParseError, at, details = {}) {
       const loc = at instanceof Position ? at : at.loc.start;
-      const error = toParseError({
-        loc,
-        details
-      });
+      const error = toParseError(loc, details);
       if (!this.options.errorRecovery)
         throw error;
       if (!this.isLookahead)
         this.state.errors.push(error);
       return error;
     }
-    raiseOverwrite(toParseError, raiseProperties) {
-      const {
-        at
-      } = raiseProperties, details = _objectWithoutPropertiesLoose(raiseProperties, _excluded2);
+    raiseOverwrite(toParseError, at, details = {}) {
       const loc = at instanceof Position ? at : at.loc.start;
       const pos = loc.index;
       const errors = this.state.errors;
       for (let i = errors.length - 1; i >= 0; i--) {
         const error = errors[i];
         if (error.loc.index === pos) {
-          return errors[i] = toParseError({
-            loc,
-            details
-          });
+          return errors[i] = toParseError(loc, details);
         }
         if (error.loc.index < pos)
           break;
       }
-      return this.raise(toParseError, raiseProperties);
+      return this.raise(toParseError, at, details);
     }
     updateContext(prevType) {
     }
     unexpected(loc, type) {
-      throw this.raise(Errors.UnexpectedToken, {
-        expected: type ? tokenLabelName(type) : null,
-        at: loc != null ? loc : this.state.startLoc
+      throw this.raise(Errors.UnexpectedToken, loc != null ? loc : this.state.startLoc, {
+        expected: type ? tokenLabelName(type) : null
       });
     }
     expectPlugin(pluginName, loc) {
       if (this.hasPlugin(pluginName)) {
         return true;
       }
-      throw this.raise(Errors.MissingPlugin, {
-        at: loc != null ? loc : this.state.startLoc,
+      throw this.raise(Errors.MissingPlugin, loc != null ? loc : this.state.startLoc, {
         missingPlugin: [pluginName]
       });
     }
     expectOnePlugin(pluginNames) {
       if (!pluginNames.some((name) => this.hasPlugin(name))) {
-        throw this.raise(Errors.MissingOneOfPlugins, {
-          at: this.state.startLoc,
+        throw this.raise(Errors.MissingOneOfPlugins, this.state.startLoc, {
           missingPlugin: pluginNames
         });
       }
     }
     errorBuilder(error) {
       return (pos, lineStart, curLine) => {
-        this.raise(error, {
-          at: buildPosition(pos, lineStart, curLine)
-        });
+        this.raise(error, buildPosition(pos, lineStart, curLine));
       };
     }
   }
@@ -3356,8 +3399,7 @@ var lib = createCommonjsModule(function(module, exports) {
             current.undefinedPrivateNames.set(name, loc);
           }
         } else {
-          this.parser.raise(Errors.InvalidPrivateFieldResolution, {
-            at: loc,
+          this.parser.raise(Errors.InvalidPrivateFieldResolution, loc, {
             identifierName: name
           });
         }
@@ -3385,8 +3427,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       }
       if (redefined) {
-        this.parser.raise(Errors.PrivateNameRedeclaration, {
-          at: loc,
+        this.parser.raise(Errors.PrivateNameRedeclaration, loc, {
           identifierName: name
         });
       }
@@ -3402,8 +3443,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (classScope) {
         classScope.undefinedPrivateNames.set(name, loc);
       } else {
-        this.parser.raise(Errors.InvalidPrivateFieldResolution, {
-          at: loc,
+        this.parser.raise(Errors.InvalidPrivateFieldResolution, loc, {
           identifierName: name
         });
       }
@@ -3425,9 +3465,7 @@ var lib = createCommonjsModule(function(module, exports) {
       super(type);
       this.declarationErrors = new Map();
     }
-    recordDeclarationError(ParsingErrorClass, {
-      at
-    }) {
+    recordDeclarationError(ParsingErrorClass, at) {
       const index = at.index;
       this.declarationErrors.set(index, [ParsingErrorClass, at]);
     }
@@ -3450,12 +3488,8 @@ var lib = createCommonjsModule(function(module, exports) {
     exit() {
       this.stack.pop();
     }
-    recordParameterInitializerError(toParseError, {
-      at: node
-    }) {
-      const origin = {
-        at: node.loc.start
-      };
+    recordParameterInitializerError(toParseError, node) {
+      const origin = node.loc.start;
       const {
         stack
       } = this;
@@ -3471,16 +3505,12 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       this.parser.raise(toParseError, origin);
     }
-    recordArrowParameterBindingError(error, {
-      at: node
-    }) {
+    recordArrowParameterBindingError(error, node) {
       const {
         stack
       } = this;
       const scope = stack[stack.length - 1];
-      const origin = {
-        at: node.loc.start
-      };
+      const origin = node.loc.start;
       if (scope.isCertainlyParameterDeclaration()) {
         this.parser.raise(error, origin);
       } else if (scope.canBeArrowParameterDeclaration()) {
@@ -3489,9 +3519,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
     }
-    recordAsyncArrowParametersError({
-      at
-    }) {
+    recordAsyncArrowParametersError(at) {
       const {
         stack
       } = this;
@@ -3499,9 +3527,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let scope = stack[i];
       while (scope.canBeArrowParameterDeclaration()) {
         if (scope.type === 2) {
-          scope.recordDeclarationError(Errors.AwaitBindingIdentifier, {
-            at
-          });
+          scope.recordDeclarationError(Errors.AwaitBindingIdentifier, at);
         }
         scope = stack[--i];
       }
@@ -3514,9 +3540,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!currentScope.canBeArrowParameterDeclaration())
         return;
       currentScope.iterateErrors(([toParseError, loc]) => {
-        this.parser.raise(toParseError, {
-          at: loc
-        });
+        this.parser.raise(toParseError, loc);
         let i = stack.length - 2;
         let scope = stack[i];
         while (scope.canBeArrowParameterDeclaration()) {
@@ -3606,9 +3630,7 @@ var lib = createCommonjsModule(function(module, exports) {
     expectContextual(token, toParseError) {
       if (!this.eatContextual(token)) {
         if (toParseError != null) {
-          throw this.raise(toParseError, {
-            at: this.state.startLoc
-          });
+          throw this.raise(toParseError, this.state.startLoc);
         }
         this.unexpected(null, token);
       }
@@ -3629,9 +3651,7 @@ var lib = createCommonjsModule(function(module, exports) {
     semicolon(allowAsi = true) {
       if (allowAsi ? this.isLineTerminator() : this.eat(13))
         return;
-      this.raise(Errors.MissingSemicolon, {
-        at: this.state.lastTokEndLoc
-      });
+      this.raise(Errors.MissingSemicolon, this.state.lastTokEndLoc);
     }
     expect(type, loc) {
       this.eat(type) || this.unexpected(loc, type);
@@ -3702,19 +3722,13 @@ var lib = createCommonjsModule(function(module, exports) {
         return hasErrors;
       }
       if (shorthandAssignLoc != null) {
-        this.raise(Errors.InvalidCoverInitializedName, {
-          at: shorthandAssignLoc
-        });
+        this.raise(Errors.InvalidCoverInitializedName, shorthandAssignLoc);
       }
       if (doubleProtoLoc != null) {
-        this.raise(Errors.DuplicateProto, {
-          at: doubleProtoLoc
-        });
+        this.raise(Errors.DuplicateProto, doubleProtoLoc);
       }
       if (privateKeyLoc != null) {
-        this.raise(Errors.UnexpectedPrivateField, {
-          at: privateKeyLoc
-        });
+        this.raise(Errors.UnexpectedPrivateField, privateKeyLoc);
       }
       if (optionalParametersLoc != null) {
         this.unexpected(optionalParametersLoc);
@@ -3869,7 +3883,8 @@ var lib = createCommonjsModule(function(module, exports) {
   }
   class NodeUtils extends UtilParser {
     startNode() {
-      return new Node(this, this.state.start, this.state.startLoc);
+      const loc = this.state.startLoc;
+      return new Node(this, loc.index, loc);
     }
     startNodeAt(loc) {
       return new Node(this, loc.index, loc);
@@ -4071,10 +4086,8 @@ var lib = createCommonjsModule(function(module, exports) {
       const moduloLoc = this.state.startLoc;
       this.next();
       this.expectContextual(110);
-      if (this.state.lastTokStart > moduloLoc.index + 1) {
-        this.raise(FlowErrors.UnexpectedSpaceBetweenModuloChecks, {
-          at: moduloLoc
-        });
+      if (this.state.lastTokStartLoc.index > moduloLoc.index + 1) {
+        this.raise(FlowErrors.UnexpectedSpaceBetweenModuloChecks, moduloLoc);
       }
       if (this.eat(10)) {
         node.value = super.parseExpression();
@@ -4143,9 +4156,7 @@ var lib = createCommonjsModule(function(module, exports) {
           return this.flowParseDeclareModuleExports(node);
         } else {
           if (insideModule) {
-            this.raise(FlowErrors.NestedDeclareModule, {
-              at: this.state.lastTokStartLoc
-            });
+            this.raise(FlowErrors.NestedDeclareModule, this.state.lastTokStartLoc);
           }
           return this.flowParseDeclareModule(node);
         }
@@ -4183,9 +4194,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (this.match(83)) {
           this.next();
           if (!this.isContextual(130) && !this.match(87)) {
-            this.raise(FlowErrors.InvalidNonTypeImportInDeclareModule, {
-              at: this.state.lastTokStartLoc
-            });
+            this.raise(FlowErrors.InvalidNonTypeImportInDeclareModule, this.state.lastTokStartLoc);
           }
           super.parseImport(bodyNode2);
         } else {
@@ -4202,21 +4211,15 @@ var lib = createCommonjsModule(function(module, exports) {
       body.forEach((bodyElement) => {
         if (isEsModuleType(bodyElement)) {
           if (kind === "CommonJS") {
-            this.raise(FlowErrors.AmbiguousDeclareModuleKind, {
-              at: bodyElement
-            });
+            this.raise(FlowErrors.AmbiguousDeclareModuleKind, bodyElement);
           }
           kind = "ES";
         } else if (bodyElement.type === "DeclareModuleExports") {
           if (hasModuleExport) {
-            this.raise(FlowErrors.DuplicateDeclareModuleExports, {
-              at: bodyElement
-            });
+            this.raise(FlowErrors.DuplicateDeclareModuleExports, bodyElement);
           }
           if (kind === "ES") {
-            this.raise(FlowErrors.AmbiguousDeclareModuleKind, {
-              at: bodyElement
-            });
+            this.raise(FlowErrors.AmbiguousDeclareModuleKind, bodyElement);
           }
           kind = "CommonJS";
           hasModuleExport = true;
@@ -4239,8 +4242,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else {
         if (this.match(75) || this.isLet() || (this.isContextual(130) || this.isContextual(129)) && !insideModule) {
           const label = this.state.value;
-          throw this.raise(FlowErrors.UnsupportedDeclareExportKind, {
-            at: this.state.startLoc,
+          throw this.raise(FlowErrors.UnsupportedDeclareExportKind, this.state.startLoc, {
             unsupportedExportKind: label,
             suggestion: exportSuggestions[label]
           });
@@ -4338,16 +4340,13 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     checkNotUnderscore(word) {
       if (word === "_") {
-        this.raise(FlowErrors.UnexpectedReservedUnderscore, {
-          at: this.state.startLoc
-        });
+        this.raise(FlowErrors.UnexpectedReservedUnderscore, this.state.startLoc);
       }
     }
     checkReservedType(word, startLoc, declaration) {
       if (!reservedTypes.has(word))
         return;
-      this.raise(declaration ? FlowErrors.AssignReservedType : FlowErrors.UnexpectedReservedType, {
-        at: startLoc,
+      this.raise(declaration ? FlowErrors.AssignReservedType : FlowErrors.UnexpectedReservedType, startLoc, {
         reservedType: word
       });
     }
@@ -4400,9 +4399,7 @@ var lib = createCommonjsModule(function(module, exports) {
         node.default = this.flowParseType();
       } else {
         if (requireDefault) {
-          this.raise(FlowErrors.MissingTypeParamDefault, {
-            at: nodeStartLoc
-          });
+          this.raise(FlowErrors.MissingTypeParamDefault, nodeStartLoc);
         }
       }
       return this.finishNode(node, "TypeParameter");
@@ -4642,9 +4639,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         this.flowObjectTypeSemicolon();
         if (inexactStartLoc && !this.match(8) && !this.match(9)) {
-          this.raise(FlowErrors.UnexpectedExplicitInexactInObject, {
-            at: inexactStartLoc
-          });
+          this.raise(FlowErrors.UnexpectedExplicitInexactInObject, inexactStartLoc);
         }
       }
       this.expect(endDelim);
@@ -4660,33 +4655,23 @@ var lib = createCommonjsModule(function(module, exports) {
         const isInexactToken = this.match(12) || this.match(13) || this.match(8) || this.match(9);
         if (isInexactToken) {
           if (!allowSpread) {
-            this.raise(FlowErrors.InexactInsideNonObject, {
-              at: this.state.lastTokStartLoc
-            });
+            this.raise(FlowErrors.InexactInsideNonObject, this.state.lastTokStartLoc);
           } else if (!allowInexact) {
-            this.raise(FlowErrors.InexactInsideExact, {
-              at: this.state.lastTokStartLoc
-            });
+            this.raise(FlowErrors.InexactInsideExact, this.state.lastTokStartLoc);
           }
           if (variance) {
-            this.raise(FlowErrors.InexactVariance, {
-              at: variance
-            });
+            this.raise(FlowErrors.InexactVariance, variance);
           }
           return null;
         }
         if (!allowSpread) {
-          this.raise(FlowErrors.UnexpectedSpreadType, {
-            at: this.state.lastTokStartLoc
-          });
+          this.raise(FlowErrors.UnexpectedSpreadType, this.state.lastTokStartLoc);
         }
         if (protoStartLoc != null) {
           this.unexpected(protoStartLoc);
         }
         if (variance) {
-          this.raise(FlowErrors.SpreadVariance, {
-            at: variance
-          });
+          this.raise(FlowErrors.SpreadVariance, variance);
         }
         node.argument = this.flowParseType();
         return this.finishNode(node, "ObjectTypeSpreadProperty");
@@ -4709,9 +4694,7 @@ var lib = createCommonjsModule(function(module, exports) {
             this.flowCheckGetterSetterParams(node);
           }
           if (!allowSpread && node.key.name === "constructor" && node.value.this) {
-            this.raise(FlowErrors.ThisParamBannedInConstructor, {
-              at: node.value.this
-            });
+            this.raise(FlowErrors.ThisParamBannedInConstructor, node.value.this);
           }
         } else {
           if (kind !== "init")
@@ -4731,19 +4714,13 @@ var lib = createCommonjsModule(function(module, exports) {
       const paramCount = property.kind === "get" ? 0 : 1;
       const length = property.value.params.length + (property.value.rest ? 1 : 0);
       if (property.value.this) {
-        this.raise(property.kind === "get" ? FlowErrors.GetterMayNotHaveThisParam : FlowErrors.SetterMayNotHaveThisParam, {
-          at: property.value.this
-        });
+        this.raise(property.kind === "get" ? FlowErrors.GetterMayNotHaveThisParam : FlowErrors.SetterMayNotHaveThisParam, property.value.this);
       }
       if (length !== paramCount) {
-        this.raise(property.kind === "get" ? Errors.BadGetterArity : Errors.BadSetterArity, {
-          at: property
-        });
+        this.raise(property.kind === "get" ? Errors.BadGetterArity : Errors.BadSetterArity, property);
       }
       if (property.kind === "set" && property.value.rest) {
-        this.raise(Errors.BadSetterRestParameter, {
-          at: property
-        });
+        this.raise(Errors.BadSetterRestParameter, property);
       }
     }
     flowObjectTypeSemicolon() {
@@ -4800,17 +4777,13 @@ var lib = createCommonjsModule(function(module, exports) {
       const isThis = this.state.type === 78;
       if (lh.type === 14 || lh.type === 17) {
         if (isThis && !first) {
-          this.raise(FlowErrors.ThisParamMustBeFirst, {
-            at: node
-          });
+          this.raise(FlowErrors.ThisParamMustBeFirst, node);
         }
         name = this.parseIdentifier(isThis);
         if (this.eat(17)) {
           optional = true;
           if (isThis) {
-            this.raise(FlowErrors.ThisParamMayNotBeOptional, {
-              at: node
-            });
+            this.raise(FlowErrors.ThisParamMayNotBeOptional, node);
           }
         }
         typeAnnotation = this.flowParseTypeInitialiser();
@@ -4966,9 +4939,7 @@ var lib = createCommonjsModule(function(module, exports) {
             if (this.match(135)) {
               return this.parseLiteralAtNode(-this.state.value, "BigIntLiteralTypeAnnotation", node);
             }
-            throw this.raise(FlowErrors.UnexpectedSubtractionOperand, {
-              at: this.state.startLoc
-            });
+            throw this.raise(FlowErrors.UnexpectedSubtractionOperand, this.state.startLoc);
           }
           this.unexpected();
           return;
@@ -5233,9 +5204,7 @@ var lib = createCommonjsModule(function(module, exports) {
           [valid, invalid] = this.getArrowLikeExpressions(consequent);
         }
         if (failed && valid.length > 1) {
-          this.raise(FlowErrors.AmbiguousConditionalArrow, {
-            at: state.startLoc
-          });
+          this.raise(FlowErrors.AmbiguousConditionalArrow, state.startLoc);
         }
         if (failed && valid.length === 1) {
           this.state = state;
@@ -5397,13 +5366,9 @@ var lib = createCommonjsModule(function(module, exports) {
       super.parseClassMember(classBody, member, state);
       if (member.declare) {
         if (member.type !== "ClassProperty" && member.type !== "ClassPrivateProperty" && member.type !== "PropertyDefinition") {
-          this.raise(FlowErrors.DeclareClassElement, {
-            at: startLoc
-          });
+          this.raise(FlowErrors.DeclareClassElement, startLoc);
         } else if (member.value) {
-          this.raise(FlowErrors.DeclareClassFieldInitializer, {
-            at: member.value
-          });
+          this.raise(FlowErrors.DeclareClassFieldInitializer, member.value);
         }
       }
     }
@@ -5414,8 +5379,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const word = super.readWord1();
       const fullWord = "@@" + word;
       if (!this.isIterator(word) || !this.state.inType) {
-        this.raise(Errors.InvalidIdentifier, {
-          at: this.state.curPosition(),
+        this.raise(Errors.InvalidIdentifier, this.state.curPosition(), {
           identifierName: fullWord
         });
       }
@@ -5467,9 +5431,7 @@ var lib = createCommonjsModule(function(module, exports) {
         var _expr$extra;
         const expr = exprList[i];
         if (expr && expr.type === "TypeCastExpression" && !((_expr$extra = expr.extra) != null && _expr$extra.parenthesized) && (exprList.length > 1 || !isParenthesizedExpr)) {
-          this.raise(FlowErrors.TypeCastInPattern, {
-            at: expr.typeAnnotation
-          });
+          this.raise(FlowErrors.TypeCastInPattern, expr.typeAnnotation);
         }
       }
       return exprList;
@@ -5517,16 +5479,12 @@ var lib = createCommonjsModule(function(module, exports) {
       if (method.params && isConstructor) {
         const params = method.params;
         if (params.length > 0 && this.isThisParam(params[0])) {
-          this.raise(FlowErrors.ThisParamBannedInConstructor, {
-            at: method
-          });
+          this.raise(FlowErrors.ThisParamBannedInConstructor, method);
         }
       } else if (method.type === "MethodDefinition" && isConstructor && method.value.params) {
         const params = method.value.params;
         if (params.length > 0 && this.isThisParam(params[0])) {
-          this.raise(FlowErrors.ThisParamBannedInConstructor, {
-            at: method
-          });
+          this.raise(FlowErrors.ThisParamBannedInConstructor, method);
         }
       }
     }
@@ -5566,13 +5524,9 @@ var lib = createCommonjsModule(function(module, exports) {
       if (params.length > 0) {
         const param = params[0];
         if (this.isThisParam(param) && method.kind === "get") {
-          this.raise(FlowErrors.GetterMayNotHaveThisParam, {
-            at: param
-          });
+          this.raise(FlowErrors.GetterMayNotHaveThisParam, param);
         } else if (this.isThisParam(param)) {
-          this.raise(FlowErrors.SetterMayNotHaveThisParam, {
-            at: param
-          });
+          this.raise(FlowErrors.SetterMayNotHaveThisParam, param);
         }
       }
     }
@@ -5599,28 +5553,20 @@ var lib = createCommonjsModule(function(module, exports) {
     parseAssignableListItemTypes(param) {
       if (this.eat(17)) {
         if (param.type !== "Identifier") {
-          this.raise(FlowErrors.PatternIsOptional, {
-            at: param
-          });
+          this.raise(FlowErrors.PatternIsOptional, param);
         }
         if (this.isThisParam(param)) {
-          this.raise(FlowErrors.ThisParamMayNotBeOptional, {
-            at: param
-          });
+          this.raise(FlowErrors.ThisParamMayNotBeOptional, param);
         }
         param.optional = true;
       }
       if (this.match(14)) {
         param.typeAnnotation = this.flowParseTypeAnnotation();
       } else if (this.isThisParam(param)) {
-        this.raise(FlowErrors.ThisParamAnnotationRequired, {
-          at: param
-        });
+        this.raise(FlowErrors.ThisParamAnnotationRequired, param);
       }
       if (this.match(29) && this.isThisParam(param)) {
-        this.raise(FlowErrors.ThisParamNoDefault, {
-          at: param
-        });
+        this.raise(FlowErrors.ThisParamNoDefault, param);
       }
       this.resetEndLocation(param);
       return param;
@@ -5628,18 +5574,14 @@ var lib = createCommonjsModule(function(module, exports) {
     parseMaybeDefault(startLoc, left) {
       const node = super.parseMaybeDefault(startLoc, left);
       if (node.type === "AssignmentPattern" && node.typeAnnotation && node.right.start < node.typeAnnotation.start) {
-        this.raise(FlowErrors.TypeBeforeInitializer, {
-          at: node.typeAnnotation
-        });
+        this.raise(FlowErrors.TypeBeforeInitializer, node.typeAnnotation);
       }
       return node;
     }
     checkImportReflection(node) {
       super.checkImportReflection(node);
       if (node.module && node.importKind !== "value") {
-        this.raise(FlowErrors.ImportReflectionHasImportType, {
-          at: node.specifiers[0].loc.start
-        });
+        this.raise(FlowErrors.ImportReflectionHasImportType, node.specifiers[0].loc.start);
       }
     }
     parseImportSpecifierLocal(node, specifier, type) {
@@ -5698,8 +5640,7 @@ var lib = createCommonjsModule(function(module, exports) {
           specifier.importKind = specifierTypeKind;
         } else {
           if (importedIsString) {
-            throw this.raise(Errors.ImportBindingIsString, {
-              at: specifier,
+            throw this.raise(Errors.ImportBindingIsString, specifier, {
               importName: firstIdent.value
             });
           }
@@ -5715,9 +5656,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       const specifierIsTypeImport = hasTypeImportKind(specifier);
       if (isInTypeOnlyImport && specifierIsTypeImport) {
-        this.raise(FlowErrors.ImportTypeShorthandOnlyInPureImport, {
-          at: specifier
-        });
+        this.raise(FlowErrors.ImportTypeShorthandOnlyInPureImport, specifier);
       }
       if (isInTypeOnlyImport || specifierIsTypeImport) {
         this.checkReservedType(specifier.local.name, specifier.local.loc.start, true);
@@ -5803,9 +5742,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (arrow.node && this.maybeUnwrapTypeCastExpression(arrow.node).type === "ArrowFunctionExpression") {
           if (!arrow.error && !arrow.aborted) {
             if (arrow.node.async) {
-              this.raise(FlowErrors.UnexpectedTypeParameterBeforeAsyncArrowFunction, {
-                at: typeParameters
-              });
+              this.raise(FlowErrors.UnexpectedTypeParameterBeforeAsyncArrowFunction, typeParameters);
             }
             return arrow.node;
           }
@@ -5823,9 +5760,7 @@ var lib = createCommonjsModule(function(module, exports) {
           throw jsx2.error;
         if (arrow.thrown)
           throw arrow.error;
-        throw this.raise(FlowErrors.UnexpectedTokenAfterTypeParameter, {
-          at: typeParameters
-        });
+        throw this.raise(FlowErrors.UnexpectedTokenAfterTypeParameter, typeParameters);
       }
       return super.parseMaybeAssign(refExpressionErrors, afterLeftParse);
     }
@@ -5867,9 +5802,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       for (let i = 0; i < node.params.length; i++) {
         if (this.isThisParam(node.params[i]) && i > 0) {
-          this.raise(FlowErrors.ThisParamMustBeFirst, {
-            at: node.params[i]
-          });
+          this.raise(FlowErrors.ThisParamMustBeFirst, node.params[i]);
         }
       }
       super.checkParams(node, allowDuplicates, isArrowFunction, strictModeChanged);
@@ -5975,18 +5908,14 @@ var lib = createCommonjsModule(function(module, exports) {
     parseTopLevel(file, program) {
       const fileNode = super.parseTopLevel(file, program);
       if (this.state.hasFlowComment) {
-        this.raise(FlowErrors.UnterminatedFlowComment, {
-          at: this.state.curPosition()
-        });
+        this.raise(FlowErrors.UnterminatedFlowComment, this.state.curPosition());
       }
       return fileNode;
     }
     skipBlockComment() {
       if (this.hasPlugin("flowComments") && this.skipFlowComment()) {
         if (this.state.hasFlowComment) {
-          throw this.raise(FlowErrors.NestedFlowComment, {
-            at: this.state.startLoc
-          });
+          throw this.raise(FlowErrors.NestedFlowComment, this.state.startLoc);
         }
         this.hasFlowCommentCompletion();
         const commentSkip = this.skipFlowComment();
@@ -6022,43 +5951,26 @@ var lib = createCommonjsModule(function(module, exports) {
     hasFlowCommentCompletion() {
       const end = this.input.indexOf("*/", this.state.pos);
       if (end === -1) {
-        throw this.raise(Errors.UnterminatedComment, {
-          at: this.state.curPosition()
-        });
+        throw this.raise(Errors.UnterminatedComment, this.state.curPosition());
       }
     }
     flowEnumErrorBooleanMemberNotInitialized(loc, {
       enumName,
       memberName
     }) {
-      this.raise(FlowErrors.EnumBooleanMemberNotInitialized, {
-        at: loc,
+      this.raise(FlowErrors.EnumBooleanMemberNotInitialized, loc, {
         memberName,
         enumName
       });
     }
     flowEnumErrorInvalidMemberInitializer(loc, enumContext) {
-      return this.raise(!enumContext.explicitType ? FlowErrors.EnumInvalidMemberInitializerUnknownType : enumContext.explicitType === "symbol" ? FlowErrors.EnumInvalidMemberInitializerSymbolType : FlowErrors.EnumInvalidMemberInitializerPrimaryType, Object.assign({
-        at: loc
-      }, enumContext));
+      return this.raise(!enumContext.explicitType ? FlowErrors.EnumInvalidMemberInitializerUnknownType : enumContext.explicitType === "symbol" ? FlowErrors.EnumInvalidMemberInitializerSymbolType : FlowErrors.EnumInvalidMemberInitializerPrimaryType, loc, enumContext);
     }
-    flowEnumErrorNumberMemberNotInitialized(loc, {
-      enumName,
-      memberName
-    }) {
-      this.raise(FlowErrors.EnumNumberMemberNotInitialized, {
-        at: loc,
-        enumName,
-        memberName
-      });
+    flowEnumErrorNumberMemberNotInitialized(loc, details) {
+      this.raise(FlowErrors.EnumNumberMemberNotInitialized, loc, details);
     }
-    flowEnumErrorStringMemberInconsistentlyInitialized(node, {
-      enumName
-    }) {
-      this.raise(FlowErrors.EnumStringMemberInconsistentlyInitialized, {
-        at: node,
-        enumName
-      });
+    flowEnumErrorStringMemberInconsistentlyInitialized(node, details) {
+      this.raise(FlowErrors.EnumStringMemberInconsistentlyInitialized, node, details);
     }
     flowEnumMemberInit() {
       const startLoc = this.state.startLoc;
@@ -6164,16 +6076,14 @@ var lib = createCommonjsModule(function(module, exports) {
           continue;
         }
         if (/^[a-z]/.test(memberName)) {
-          this.raise(FlowErrors.EnumInvalidMemberName, {
-            at: id,
+          this.raise(FlowErrors.EnumInvalidMemberName, id, {
             memberName,
             suggestion: memberName[0].toUpperCase() + memberName.slice(1),
             enumName
           });
         }
         if (seenNames.has(memberName)) {
-          this.raise(FlowErrors.EnumDuplicateMemberName, {
-            at: id,
+          this.raise(FlowErrors.EnumDuplicateMemberName, id, {
             memberName,
             enumName
           });
@@ -6258,8 +6168,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!this.eatContextual(102))
         return null;
       if (!tokenIsIdentifier(this.state.type)) {
-        throw this.raise(FlowErrors.EnumInvalidExplicitTypeUnknownSupplied, {
-          at: this.state.startLoc,
+        throw this.raise(FlowErrors.EnumInvalidExplicitTypeUnknownSupplied, this.state.startLoc, {
           enumName
         });
       }
@@ -6268,8 +6177,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } = this.state;
       this.next();
       if (value !== "boolean" && value !== "number" && value !== "string" && value !== "symbol") {
-        this.raise(FlowErrors.EnumInvalidExplicitType, {
-          at: this.state.startLoc,
+        this.raise(FlowErrors.EnumInvalidExplicitType, this.state.startLoc, {
           enumName,
           invalidEnumType: value
         });
@@ -6353,8 +6261,7 @@ var lib = createCommonjsModule(function(module, exports) {
             this.expect(8);
             return this.finishNode(node, "EnumNumberBody");
           } else {
-            this.raise(FlowErrors.EnumInconsistentMemberValues, {
-              at: nameLoc,
+            this.raise(FlowErrors.EnumInconsistentMemberValues, nameLoc, {
               enumName
             });
             return empty();
@@ -6672,9 +6579,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let chunkStart = this.state.pos;
       for (; ; ) {
         if (this.state.pos >= this.length) {
-          throw this.raise(JsxErrors.UnterminatedJsxContent, {
-            at: this.state.startLoc
-          });
+          throw this.raise(JsxErrors.UnterminatedJsxContent, this.state.startLoc);
         }
         const ch = this.input.charCodeAt(this.state.pos);
         switch (ch) {
@@ -6729,9 +6634,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let chunkStart = ++this.state.pos;
       for (; ; ) {
         if (this.state.pos >= this.length) {
-          throw this.raise(Errors.UnterminatedString, {
-            at: this.state.startLoc
-          });
+          throw this.raise(Errors.UnterminatedString, this.state.startLoc);
         }
         const ch = this.input.charCodeAt(this.state.pos);
         if (ch === quote)
@@ -6836,18 +6739,14 @@ var lib = createCommonjsModule(function(module, exports) {
           this.next();
           node = this.jsxParseExpressionContainer(node, types.j_oTag);
           if (node.expression.type === "JSXEmptyExpression") {
-            this.raise(JsxErrors.AttributeIsEmpty, {
-              at: node
-            });
+            this.raise(JsxErrors.AttributeIsEmpty, node);
           }
           return node;
         case 142:
         case 133:
           return this.parseExprAtom();
         default:
-          throw this.raise(JsxErrors.UnsupportedJsxValue, {
-            at: this.state.startLoc
-          });
+          throw this.raise(JsxErrors.UnsupportedJsxValue, this.state.startLoc);
       }
     }
     jsxParseEmptyExpression() {
@@ -6954,18 +6853,14 @@ var lib = createCommonjsModule(function(module, exports) {
             }
           }
         if (isFragment(openingElement) && !isFragment(closingElement) && closingElement !== null) {
-          this.raise(JsxErrors.MissingClosingTagFragment, {
-            at: closingElement
-          });
+          this.raise(JsxErrors.MissingClosingTagFragment, closingElement);
         } else if (!isFragment(openingElement) && isFragment(closingElement)) {
-          this.raise(JsxErrors.MissingClosingTagElement, {
-            at: closingElement,
+          this.raise(JsxErrors.MissingClosingTagElement, closingElement, {
             openingTagName: getQualifiedJSXName(openingElement.name)
           });
         } else if (!isFragment(openingElement) && !isFragment(closingElement)) {
           if (getQualifiedJSXName(closingElement.name) !== getQualifiedJSXName(openingElement.name)) {
-            this.raise(JsxErrors.MissingClosingTagElement, {
-              at: closingElement,
+            this.raise(JsxErrors.MissingClosingTagElement, closingElement, {
               openingTagName: getQualifiedJSXName(openingElement.name)
             });
           }
@@ -6980,9 +6875,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       node.children = children;
       if (this.match(47)) {
-        throw this.raise(JsxErrors.UnwrappedAdjacentJSXElements, {
-          at: this.state.startLoc
-        });
+        throw this.raise(JsxErrors.UnwrappedAdjacentJSXElements, this.state.startLoc);
       }
       return isFragment(openingElement) ? this.finishNode(node, "JSXFragment") : this.finishNode(node, "JSXElement");
     }
@@ -7069,11 +6962,7 @@ var lib = createCommonjsModule(function(module, exports) {
   class TypeScriptScope extends Scope {
     constructor(...args) {
       super(...args);
-      this.types = new Set();
-      this.enums = new Set();
-      this.constEnums = new Set();
-      this.classes = new Set();
-      this.exportOnlyBindings = new Set();
+      this.tsNames = new Map();
     }
   }
   class TypeScriptScopeHandler extends ScopeHandler {
@@ -7114,8 +7003,7 @@ var lib = createCommonjsModule(function(module, exports) {
     declareName(name, bindingType, loc) {
       if (bindingType & 4096) {
         if (this.hasImport(name, true)) {
-          this.parser.raise(Errors.VarRedeclaration, {
-            at: loc,
+          this.parser.raise(Errors.VarRedeclaration, loc, {
             identifierName: name
           });
         }
@@ -7123,9 +7011,10 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
       const scope = this.currentScope();
+      let type = scope.tsNames.get(name) || 0;
       if (bindingType & 1024) {
         this.maybeExportDefined(scope, name);
-        scope.exportOnlyBindings.add(name);
+        scope.tsNames.set(name, type | 16);
         return;
       }
       super.declareName(name, bindingType, loc);
@@ -7134,33 +7023,38 @@ var lib = createCommonjsModule(function(module, exports) {
           this.checkRedeclarationInScope(scope, name, bindingType, loc);
           this.maybeExportDefined(scope, name);
         }
-        scope.types.add(name);
+        type = type | 1;
       }
-      if (bindingType & 256)
-        scope.enums.add(name);
+      if (bindingType & 256) {
+        type = type | 2;
+      }
       if (bindingType & 512) {
-        scope.constEnums.add(name);
+        type = type | 4;
       }
-      if (bindingType & 128)
-        scope.classes.add(name);
+      if (bindingType & 128) {
+        type = type | 8;
+      }
+      if (type)
+        scope.tsNames.set(name, type);
     }
     isRedeclaredInScope(scope, name, bindingType) {
-      if (scope.enums.has(name)) {
+      const type = scope.tsNames.get(name);
+      if ((type & 2) > 0) {
         if (bindingType & 256) {
           const isConst = !!(bindingType & 512);
-          const wasConst = scope.constEnums.has(name);
+          const wasConst = (type & 4) > 0;
           return isConst !== wasConst;
         }
         return true;
       }
-      if (bindingType & 128 && scope.classes.has(name)) {
-        if (scope.lexical.has(name)) {
+      if (bindingType & 128 && (type & 8) > 0) {
+        if (scope.names.get(name) & 2) {
           return !!(bindingType & 1);
         } else {
           return false;
         }
       }
-      if (bindingType & 2 && scope.types.has(name)) {
+      if (bindingType & 2 && (type & 1) > 0) {
         return true;
       }
       return super.isRedeclaredInScope(scope, name, bindingType);
@@ -7174,13 +7068,15 @@ var lib = createCommonjsModule(function(module, exports) {
       const len = this.scopeStack.length;
       for (let i = len - 1; i >= 0; i--) {
         const scope = this.scopeStack[i];
-        if (scope.types.has(name) || scope.exportOnlyBindings.has(name))
+        const type = scope.tsNames.get(name);
+        if ((type & 1) > 0 || (type & 16) > 0) {
           return;
+        }
       }
       super.checkLocalExport(id);
     }
   }
-  const getOwn$1 = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
+  const getOwn$1 = (object, key) => hasOwnProperty.call(object, key) && object[key];
   const unwrapParenthesizedExpression = (node) => {
     return node.type === "ParenthesizedExpression" ? unwrapParenthesizedExpression(node.expression) : node;
   };
@@ -7192,18 +7088,12 @@ var lib = createCommonjsModule(function(module, exports) {
         parenthesized = unwrapParenthesizedExpression(node);
         if (isLHS) {
           if (parenthesized.type === "Identifier") {
-            this.expressionScope.recordArrowParameterBindingError(Errors.InvalidParenthesizedAssignment, {
-              at: node
-            });
+            this.expressionScope.recordArrowParameterBindingError(Errors.InvalidParenthesizedAssignment, node);
           } else if (parenthesized.type !== "MemberExpression" && !this.isOptionalMemberExpression(parenthesized)) {
-            this.raise(Errors.InvalidParenthesizedAssignment, {
-              at: node
-            });
+            this.raise(Errors.InvalidParenthesizedAssignment, node);
           }
         } else {
-          this.raise(Errors.InvalidParenthesizedAssignment, {
-            at: node
-          });
+          this.raise(Errors.InvalidParenthesizedAssignment, node);
         }
       }
       switch (node.type) {
@@ -7221,9 +7111,7 @@ var lib = createCommonjsModule(function(module, exports) {
             const isLast = i === last;
             this.toAssignableObjectExpressionProp(prop, isLast, isLHS);
             if (isLast && prop.type === "RestElement" && (_node$extra2 = node.extra) != null && _node$extra2.trailingCommaLoc) {
-              this.raise(Errors.RestTrailingComma, {
-                at: node.extra.trailingCommaLoc
-              });
+              this.raise(Errors.RestTrailingComma, node.extra.trailingCommaLoc);
             }
           }
           break;
@@ -7247,9 +7135,7 @@ var lib = createCommonjsModule(function(module, exports) {
           break;
         case "AssignmentExpression":
           if (node.operator !== "=") {
-            this.raise(Errors.MissingEqInAssignment, {
-              at: node.left.loc.end
-            });
+            this.raise(Errors.MissingEqInAssignment, node.left.loc.end);
           }
           node.type = "AssignmentPattern";
           delete node.operator;
@@ -7262,18 +7148,14 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     toAssignableObjectExpressionProp(prop, isLast, isLHS) {
       if (prop.type === "ObjectMethod") {
-        this.raise(prop.kind === "get" || prop.kind === "set" ? Errors.PatternHasAccessor : Errors.PatternHasMethod, {
-          at: prop.key
-        });
+        this.raise(prop.kind === "get" || prop.kind === "set" ? Errors.PatternHasAccessor : Errors.PatternHasMethod, prop.key);
       } else if (prop.type === "SpreadElement") {
         prop.type = "RestElement";
         const arg = prop.argument;
         this.checkToRestConversion(arg, false);
         this.toAssignable(arg, isLHS);
         if (!isLast) {
-          this.raise(Errors.RestTrailingComma, {
-            at: prop
-          });
+          this.raise(Errors.RestTrailingComma, prop);
         }
       } else {
         this.toAssignable(prop, isLHS);
@@ -7295,13 +7177,9 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         if (elt.type === "RestElement") {
           if (i < end) {
-            this.raise(Errors.RestTrailingComma, {
-              at: elt
-            });
+            this.raise(Errors.RestTrailingComma, elt);
           } else if (trailingCommaLoc) {
-            this.raise(Errors.RestTrailingComma, {
-              at: trailingCommaLoc
-            });
+            this.raise(Errors.RestTrailingComma, trailingCommaLoc);
           }
         }
       }
@@ -7396,9 +7274,7 @@ var lib = createCommonjsModule(function(module, exports) {
         } else {
           const decorators = [];
           if (this.match(26) && this.hasPlugin("decorators")) {
-            this.raise(Errors.UnsupportedParameterDecorator, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.UnsupportedParameterDecorator, this.state.startLoc);
           }
           while (this.match(26)) {
             decorators.push(this.parseDecorator());
@@ -7484,16 +7360,13 @@ var lib = createCommonjsModule(function(module, exports) {
         if (isOptionalMemberExpression) {
           this.expectPlugin("optionalChainingAssign", expression.loc.start);
           if (ancestor.type !== "AssignmentExpression") {
-            this.raise(Errors.InvalidLhsOptionalChaining, {
-              at: expression,
+            this.raise(Errors.InvalidLhsOptionalChaining, expression, {
               ancestor
             });
           }
         }
         if (binding !== 64) {
-          this.raise(Errors.InvalidPropertyBindingPattern, {
-            at: expression
-          });
+          this.raise(Errors.InvalidPropertyBindingPattern, expression);
         }
         return;
       }
@@ -7504,9 +7377,7 @@ var lib = createCommonjsModule(function(module, exports) {
         } = expression;
         if (checkClashes) {
           if (checkClashes.has(name)) {
-            this.raise(Errors.ParamDupe, {
-              at: expression
-            });
+            this.raise(Errors.ParamDupe, expression);
           } else {
             checkClashes.add(name);
           }
@@ -7518,8 +7389,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       if (validity === false) {
         const ParseErrorClass = binding === 64 ? Errors.InvalidLhs : Errors.InvalidLhsBinding;
-        this.raise(ParseErrorClass, {
-          at: expression,
+        this.raise(ParseErrorClass, expression, {
           ancestor
         });
         return;
@@ -7543,21 +7413,17 @@ var lib = createCommonjsModule(function(module, exports) {
     checkIdentifier(at, bindingType, strictModeChanged = false) {
       if (this.state.strict && (strictModeChanged ? isStrictBindReservedWord(at.name, this.inModule) : isStrictBindOnlyReservedWord(at.name))) {
         if (bindingType === 64) {
-          this.raise(Errors.StrictEvalArguments, {
-            at,
+          this.raise(Errors.StrictEvalArguments, at, {
             referenceName: at.name
           });
         } else {
-          this.raise(Errors.StrictEvalArgumentsBinding, {
-            at,
+          this.raise(Errors.StrictEvalArgumentsBinding, at, {
             bindingName: at.name
           });
         }
       }
       if (bindingType & 8192 && at.name === "let") {
-        this.raise(Errors.LetInLexicalBinding, {
-          at
-        });
+        this.raise(Errors.LetInLexicalBinding, at);
       }
       if (!(bindingType & 64)) {
         this.declareNameFromIdentifier(at, bindingType);
@@ -7579,22 +7445,18 @@ var lib = createCommonjsModule(function(module, exports) {
           if (allowPattern)
             break;
         default:
-          this.raise(Errors.InvalidRestAssignmentPattern, {
-            at: node
-          });
+          this.raise(Errors.InvalidRestAssignmentPattern, node);
       }
     }
     checkCommaAfterRest(close) {
       if (!this.match(12)) {
         return false;
       }
-      this.raise(this.lookaheadCharCode() === close ? Errors.RestTrailingComma : Errors.ElementAfterRest, {
-        at: this.state.startLoc
-      });
+      this.raise(this.lookaheadCharCode() === close ? Errors.RestTrailingComma : Errors.ElementAfterRest, this.state.startLoc);
       return true;
     }
   }
-  const getOwn = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
+  const getOwn = (object, key) => hasOwnProperty.call(object, key) && object[key];
   function nonNull(x) {
     if (x == null) {
       throw new Error(`Unexpected ${x} value.`);
@@ -7786,16 +7648,14 @@ var lib = createCommonjsModule(function(module, exports) {
     }, modified) {
       const enforceOrder = (loc, modifier, before, after) => {
         if (modifier === before && modified[after]) {
-          this.raise(TSErrors.InvalidModifiersOrder, {
-            at: loc,
+          this.raise(TSErrors.InvalidModifiersOrder, loc, {
             orderedModifiers: [before, after]
           });
         }
       };
       const incompatible = (loc, modifier, mod1, mod2) => {
         if (modified[mod1] && modifier === mod2 || modified[mod2] && modifier === mod1) {
-          this.raise(TSErrors.IncompatibleModifiers, {
-            at: loc,
+          this.raise(TSErrors.IncompatibleModifiers, loc, {
             modifiers: [mod1, mod2]
           });
         }
@@ -7809,8 +7669,7 @@ var lib = createCommonjsModule(function(module, exports) {
           break;
         if (tsIsAccessModifier(modifier)) {
           if (modified.accessibility) {
-            this.raise(TSErrors.DuplicateAccessibilityModifier, {
-              at: startLoc,
+            this.raise(TSErrors.DuplicateAccessibilityModifier, startLoc, {
               modifier
             });
           } else {
@@ -7821,17 +7680,15 @@ var lib = createCommonjsModule(function(module, exports) {
           }
         } else if (tsIsVarianceAnnotations(modifier)) {
           if (modified[modifier]) {
-            this.raise(TSErrors.DuplicateModifier, {
-              at: startLoc,
+            this.raise(TSErrors.DuplicateModifier, startLoc, {
               modifier
             });
           }
           modified[modifier] = true;
           enforceOrder(startLoc, modifier, "in", "out");
         } else {
-          if (Object.hasOwnProperty.call(modified, modifier)) {
-            this.raise(TSErrors.DuplicateModifier, {
-              at: startLoc,
+          if (hasOwnProperty.call(modified, modifier)) {
+            this.raise(TSErrors.DuplicateModifier, startLoc, {
               modifier
             });
           } else {
@@ -7845,8 +7702,7 @@ var lib = createCommonjsModule(function(module, exports) {
           modified[modifier] = true;
         }
         if (disallowedModifiers != null && disallowedModifiers.includes(modifier)) {
-          this.raise(errorTemplate, {
-            at: startLoc,
+          this.raise(errorTemplate, startLoc, {
             modifier
           });
         }
@@ -7889,7 +7745,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         result.push(element);
         if (this.eat(12)) {
-          trailingCommaPos = this.state.lastTokStart;
+          trailingCommaPos = this.state.lastTokStartLoc.index;
           continue;
         }
         if (this.tsIsListTerminator(kind)) {
@@ -7926,11 +7782,19 @@ var lib = createCommonjsModule(function(module, exports) {
       this.expect(83);
       this.expect(10);
       if (!this.match(133)) {
-        this.raise(TSErrors.UnsupportedImportTypeArgument, {
-          at: this.state.startLoc
-        });
+        this.raise(TSErrors.UnsupportedImportTypeArgument, this.state.startLoc);
       }
       node.argument = super.parseExprAtom();
+      if (this.hasPlugin("importAttributes") || this.hasPlugin("importAssertions")) {
+        node.options = null;
+      }
+      if (this.eat(12)) {
+        this.expectImportAttributesPlugin();
+        if (!this.match(11)) {
+          node.options = super.parseMaybeAssignAllowIn();
+          this.eat(12);
+        }
+      }
       this.expect(11);
       if (this.eat(16)) {
         node.qualifier = this.tsParseEntityName();
@@ -8009,9 +7873,7 @@ var lib = createCommonjsModule(function(module, exports) {
       };
       node.params = this.tsParseBracketedList("TypeParametersOrArguments", this.tsParseTypeParameter.bind(this, parseModifiers), false, true, refTrailingCommaPos);
       if (node.params.length === 0) {
-        this.raise(TSErrors.EmptyTypeParameters, {
-          at: node
-        });
+        this.raise(TSErrors.EmptyTypeParameters, node);
       }
       if (refTrailingCommaPos.value !== -1) {
         this.addExtra(node, "trailingComma", refTrailingCommaPos.value);
@@ -8038,8 +7900,7 @@ var lib = createCommonjsModule(function(module, exports) {
           type
         } = pattern;
         if (type === "AssignmentPattern" || type === "TSParameterProperty") {
-          this.raise(TSErrors.UnsupportedSignatureParameterKind, {
-            at: pattern,
+          this.raise(TSErrors.UnsupportedSignatureParameterKind, pattern, {
             type
           });
         }
@@ -8086,15 +7947,11 @@ var lib = createCommonjsModule(function(module, exports) {
       const nodeAny = node;
       if (this.match(10) || this.match(47)) {
         if (readonly) {
-          this.raise(TSErrors.ReadonlyForMethodSignature, {
-            at: node
-          });
+          this.raise(TSErrors.ReadonlyForMethodSignature, node);
         }
         const method = nodeAny;
         if (method.kind && this.match(47)) {
-          this.raise(TSErrors.AccesorCannotHaveTypeParameters, {
-            at: this.state.curPosition()
-          });
+          this.raise(TSErrors.AccesorCannotHaveTypeParameters, this.state.curPosition());
         }
         this.tsFillSignature(14, method);
         this.tsParseTypeMemberSemicolon();
@@ -8102,42 +7959,28 @@ var lib = createCommonjsModule(function(module, exports) {
         const returnTypeKey = "typeAnnotation";
         if (method.kind === "get") {
           if (method[paramsKey].length > 0) {
-            this.raise(Errors.BadGetterArity, {
-              at: this.state.curPosition()
-            });
+            this.raise(Errors.BadGetterArity, this.state.curPosition());
             if (this.isThisParam(method[paramsKey][0])) {
-              this.raise(TSErrors.AccesorCannotDeclareThisParameter, {
-                at: this.state.curPosition()
-              });
+              this.raise(TSErrors.AccesorCannotDeclareThisParameter, this.state.curPosition());
             }
           }
         } else if (method.kind === "set") {
           if (method[paramsKey].length !== 1) {
-            this.raise(Errors.BadSetterArity, {
-              at: this.state.curPosition()
-            });
+            this.raise(Errors.BadSetterArity, this.state.curPosition());
           } else {
             const firstParameter = method[paramsKey][0];
             if (this.isThisParam(firstParameter)) {
-              this.raise(TSErrors.AccesorCannotDeclareThisParameter, {
-                at: this.state.curPosition()
-              });
+              this.raise(TSErrors.AccesorCannotDeclareThisParameter, this.state.curPosition());
             }
             if (firstParameter.type === "Identifier" && firstParameter.optional) {
-              this.raise(TSErrors.SetAccesorCannotHaveOptionalParameter, {
-                at: this.state.curPosition()
-              });
+              this.raise(TSErrors.SetAccesorCannotHaveOptionalParameter, this.state.curPosition());
             }
             if (firstParameter.type === "RestElement") {
-              this.raise(TSErrors.SetAccesorCannotHaveRestParameter, {
-                at: this.state.curPosition()
-              });
+              this.raise(TSErrors.SetAccesorCannotHaveRestParameter, this.state.curPosition());
             }
           }
           if (method[returnTypeKey]) {
-            this.raise(TSErrors.SetAccesorCannotHaveReturnType, {
-              at: method[returnTypeKey]
-            });
+            this.raise(TSErrors.SetAccesorCannotHaveReturnType, method[returnTypeKey]);
           }
         } else {
           method.kind = "method";
@@ -8254,9 +8097,7 @@ var lib = createCommonjsModule(function(module, exports) {
           type
         } = elementNode;
         if (seenOptionalElement && type !== "TSRestType" && type !== "TSOptionalType" && !(type === "TSNamedTupleMember" && elementNode.optional)) {
-          this.raise(TSErrors.OptionalTypeBeforeRequired, {
-            at: elementNode
-          });
+          this.raise(TSErrors.OptionalTypeBeforeRequired, elementNode);
         }
         seenOptionalElement || (seenOptionalElement = type === "TSNamedTupleMember" && elementNode.optional || type === "TSOptionalType");
       });
@@ -8309,16 +8150,12 @@ var lib = createCommonjsModule(function(module, exports) {
           labeledNode.elementType = type;
           if (this.eat(17)) {
             labeledNode.optional = true;
-            this.raise(TSErrors.TupleOptionalAfterType, {
-              at: this.state.lastTokStartLoc
-            });
+            this.raise(TSErrors.TupleOptionalAfterType, this.state.lastTokStartLoc);
           }
         } else {
           labeledNode = this.startNodeAtNode(type);
           labeledNode.optional = optional;
-          this.raise(TSErrors.InvalidTupleMemberLabel, {
-            at: type
-          });
+          this.raise(TSErrors.InvalidTupleMemberLabel, type);
           labeledNode.label = type;
           labeledNode.elementType = this.tsParseType();
         }
@@ -8472,9 +8309,7 @@ var lib = createCommonjsModule(function(module, exports) {
         case "TSArrayType":
           return;
         default:
-          this.raise(TSErrors.UnexpectedReadonly, {
-            at: node
-          });
+          this.raise(TSErrors.UnexpectedReadonly, node);
       }
     }
     tsParseInferType() {
@@ -8642,8 +8477,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return false;
       }
       if (containsEsc) {
-        this.raise(Errors.InvalidEscapedReservedWord, {
-          at: this.state.lastTokStartLoc,
+        this.raise(Errors.InvalidEscapedReservedWord, this.state.lastTokStartLoc, {
           reservedWord: "asserts"
         });
       }
@@ -8688,9 +8522,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseTypeAssertion() {
       if (this.getPluginOption("typescript", "disallowAmbiguousJSXLike")) {
-        this.raise(TSErrors.ReservedTypeAssertion, {
-          at: this.state.startLoc
-        });
+        this.raise(TSErrors.ReservedTypeAssertion, this.state.startLoc);
       }
       const node = this.startNode();
       node.typeAnnotation = this.tsInType(() => {
@@ -8712,8 +8544,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.finishNode(node, "TSExpressionWithTypeArguments");
       });
       if (!delimitedList.length) {
-        this.raise(TSErrors.EmptyHeritageClauseType, {
-          at: originalStartLoc,
+        this.raise(TSErrors.EmptyHeritageClauseType, originalStartLoc, {
           token
         });
       }
@@ -8730,9 +8561,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.checkIdentifier(node.id, 130);
       } else {
         node.id = null;
-        this.raise(TSErrors.MissingInterfaceName, {
-          at: this.state.startLoc
-        });
+        this.raise(TSErrors.MissingInterfaceName, this.state.startLoc);
       }
       node.typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutConstModifiers);
       if (this.eat(81)) {
@@ -8886,9 +8715,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.expect(29);
       const moduleReference = this.tsParseModuleReference();
       if (node.importKind === "type" && moduleReference.type !== "TSExternalModuleReference") {
-        this.raise(TSErrors.ImportAliasHasImportType, {
-          at: moduleReference
-        });
+        this.raise(TSErrors.ImportAliasHasImportType, moduleReference);
       }
       node.moduleReference = moduleReference;
       this.semicolon();
@@ -9079,9 +8906,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.tsParseDelimitedList("TypeParametersOrArguments", this.tsParseType.bind(this));
       }));
       if (node.params.length === 0) {
-        this.raise(TSErrors.EmptyTypeArguments, {
-          at: node
-        });
+        this.raise(TSErrors.EmptyTypeArguments, node);
       } else if (!this.state.inType && this.curContext() === types.brace) {
         this.reScan_lt_gt();
       }
@@ -9106,9 +8931,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const override = modified.override;
       const readonly = modified.readonly;
       if (!(flags & 4) && (accessibility || readonly || override)) {
-        this.raise(TSErrors.UnexpectedParameterModifier, {
-          at: startLoc
-        });
+        this.raise(TSErrors.UnexpectedParameterModifier, startLoc);
       }
       const left = this.parseMaybeDefault();
       this.parseAssignableListItemTypes(left, flags);
@@ -9125,9 +8948,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (override)
           pp.override = override;
         if (elt.type !== "Identifier" && elt.type !== "AssignmentPattern") {
-          this.raise(TSErrors.UnsupportedParameterPropertyKind, {
-            at: pp
-          });
+          this.raise(TSErrors.UnsupportedParameterPropertyKind, pp);
         }
         pp.parameter = elt;
         return this.finishNode(pp, "TSParameterProperty");
@@ -9143,9 +8964,7 @@ var lib = createCommonjsModule(function(module, exports) {
     tsDisallowOptionalPattern(node) {
       for (const param of node.params) {
         if (param.type !== "Identifier" && param.optional && !this.state.isAmbientContext) {
-          this.raise(TSErrors.PatternIsOptional, {
-            at: param
-          });
+          this.raise(TSErrors.PatternIsOptional, param);
         }
       }
     }
@@ -9162,9 +8981,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.finishNode(node, bodilessType);
       }
       if (bodilessType === "TSDeclareFunction" && this.state.isAmbientContext) {
-        this.raise(TSErrors.DeclareFunctionHasImplementation, {
-          at: node
-        });
+        this.raise(TSErrors.DeclareFunctionHasImplementation, node);
         if (node.declare) {
           return super.parseFunctionBodyAndFinish(node, bodilessType, isMethod);
         }
@@ -9182,9 +8999,7 @@ var lib = createCommonjsModule(function(module, exports) {
     tsCheckForInvalidTypeCasts(items) {
       items.forEach((node) => {
         if ((node == null ? void 0 : node.type) === "TSTypeCastExpression") {
-          this.raise(TSErrors.UnexpectedTypeAnnotation, {
-            at: node.typeAnnotation
-          });
+          this.raise(TSErrors.UnexpectedTypeAnnotation, node.typeAnnotation);
         }
       });
     }
@@ -9262,9 +9077,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         if (result) {
           if (result.type === "TSInstantiationExpression" && (this.match(16) || this.match(18) && this.lookaheadCharCode() !== 40)) {
-            this.raise(TSErrors.InvalidPropertyAccessAfterInstantiationExpression, {
-              at: this.state.startLoc
-            });
+            this.raise(TSErrors.InvalidPropertyAccessAfterInstantiationExpression, this.state.startLoc);
           }
           return result;
         }
@@ -9291,8 +9104,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.next();
           if (this.match(75)) {
             if (isSatisfies) {
-              this.raise(Errors.UnexpectedKeyword, {
-                at: this.state.startLoc,
+              this.raise(Errors.UnexpectedKeyword, this.state.startLoc, {
                 keyword: "const"
               });
             }
@@ -9314,9 +9126,7 @@ var lib = createCommonjsModule(function(module, exports) {
     checkImportReflection(node) {
       super.checkImportReflection(node);
       if (node.module && node.importKind !== "value") {
-        this.raise(TSErrors.ImportReflectionHasImportType, {
-          at: node.specifiers[0].loc.start
-        });
+        this.raise(TSErrors.ImportReflectionHasImportType, node.specifiers[0].loc.start);
       }
     }
     checkDuplicateExports() {
@@ -9358,9 +9168,7 @@ var lib = createCommonjsModule(function(module, exports) {
         importNode = super.parseImport(node);
       }
       if (importNode.importKind === "type" && importNode.specifiers.length > 1 && importNode.specifiers[0].type === "ImportDefaultSpecifier") {
-        this.raise(TSErrors.TypeImportCannotSpecifyDefaultAndNamed, {
-          at: importNode
-        });
+        this.raise(TSErrors.TypeImportCannotSpecifyDefaultAndNamed, importNode);
       }
       return importNode;
     }
@@ -9421,13 +9229,9 @@ var lib = createCommonjsModule(function(module, exports) {
         if (!init)
           continue;
         if (kind !== "const" || !!id.typeAnnotation) {
-          this.raise(TSErrors.InitializerNotAllowedInAmbientContext, {
-            at: init
-          });
+          this.raise(TSErrors.InitializerNotAllowedInAmbientContext, init);
         } else if (!isValidAmbientConstInitializer(init, this.hasPlugin("estree"))) {
-          this.raise(TSErrors.ConstInitiailizerMustBeStringOrNumericLiteralOrLiteralEnumReference, {
-            at: init
-          });
+          this.raise(TSErrors.ConstInitiailizerMustBeStringOrNumericLiteralOrLiteralEnumReference, init);
         }
       }
       return declaration;
@@ -9477,9 +9281,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.next();
           this.next();
           if (this.tsHasSomeModifiers(member, modifiers)) {
-            this.raise(TSErrors.StaticBlockCannotHaveModifier, {
-              at: this.state.curPosition()
-            });
+            this.raise(TSErrors.StaticBlockCannotHaveModifier, this.state.curPosition());
           }
           super.parseClassStaticBlock(classBody, member);
         } else {
@@ -9497,38 +9299,27 @@ var lib = createCommonjsModule(function(module, exports) {
       if (idx) {
         classBody.body.push(idx);
         if (member.abstract) {
-          this.raise(TSErrors.IndexSignatureHasAbstract, {
-            at: member
-          });
+          this.raise(TSErrors.IndexSignatureHasAbstract, member);
         }
         if (member.accessibility) {
-          this.raise(TSErrors.IndexSignatureHasAccessibility, {
-            at: member,
+          this.raise(TSErrors.IndexSignatureHasAccessibility, member, {
             modifier: member.accessibility
           });
         }
         if (member.declare) {
-          this.raise(TSErrors.IndexSignatureHasDeclare, {
-            at: member
-          });
+          this.raise(TSErrors.IndexSignatureHasDeclare, member);
         }
         if (member.override) {
-          this.raise(TSErrors.IndexSignatureHasOverride, {
-            at: member
-          });
+          this.raise(TSErrors.IndexSignatureHasOverride, member);
         }
         return;
       }
       if (!this.state.inAbstractClass && member.abstract) {
-        this.raise(TSErrors.NonAbstractClassHasAbstractMethod, {
-          at: member
-        });
+        this.raise(TSErrors.NonAbstractClassHasAbstractMethod, member);
       }
       if (member.override) {
         if (!state.hadSuperClass) {
-          this.raise(TSErrors.OverrideNotInSubClass, {
-            at: member
-          });
+          this.raise(TSErrors.OverrideNotInSubClass, member);
         }
       }
       super.parseClassMemberWithIsStatic(classBody, member, state, isStatic);
@@ -9538,14 +9329,10 @@ var lib = createCommonjsModule(function(module, exports) {
       if (optional)
         methodOrProp.optional = true;
       if (methodOrProp.readonly && this.match(10)) {
-        this.raise(TSErrors.ClassMethodHasReadonly, {
-          at: methodOrProp
-        });
+        this.raise(TSErrors.ClassMethodHasReadonly, methodOrProp);
       }
       if (methodOrProp.declare && this.match(10)) {
-        this.raise(TSErrors.ClassMethodHasDeclare, {
-          at: methodOrProp
-        });
+        this.raise(TSErrors.ClassMethodHasDeclare, methodOrProp);
       }
     }
     parseExpressionStatement(node, expr, decorators) {
@@ -9593,9 +9380,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const startLoc = this.state.startLoc;
       const isDeclare = this.eatContextual(125);
       if (isDeclare && (this.isContextual(125) || !this.shouldParseExportDeclaration())) {
-        throw this.raise(TSErrors.ExpectedAmbientAfterExportDeclare, {
-          at: this.state.startLoc
-        });
+        throw this.raise(TSErrors.ExpectedAmbientAfterExportDeclare, this.state.startLoc);
       }
       const isIdentifier = tokenIsIdentifier(this.state.type);
       const declaration = isIdentifier && this.tsTryParseExportDeclaration() || super.parseExportDeclaration(node);
@@ -9634,16 +9419,13 @@ var lib = createCommonjsModule(function(module, exports) {
     parseClassProperty(node) {
       this.parseClassPropertyAnnotation(node);
       if (this.state.isAmbientContext && !(node.readonly && !node.typeAnnotation) && this.match(29)) {
-        this.raise(TSErrors.DeclareClassFieldHasInitializer, {
-          at: this.state.startLoc
-        });
+        this.raise(TSErrors.DeclareClassFieldHasInitializer, this.state.startLoc);
       }
       if (node.abstract && this.match(29)) {
         const {
           key
         } = node;
-        this.raise(TSErrors.AbstractPropertyHasInitializer, {
-          at: this.state.startLoc,
+        this.raise(TSErrors.AbstractPropertyHasInitializer, this.state.startLoc, {
           propertyName: key.type === "Identifier" && !node.computed ? key.name : `[${this.input.slice(key.start, key.end)}]`
         });
       }
@@ -9651,13 +9433,10 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseClassPrivateProperty(node) {
       if (node.abstract) {
-        this.raise(TSErrors.PrivateElementHasAbstract, {
-          at: node
-        });
+        this.raise(TSErrors.PrivateElementHasAbstract, node);
       }
       if (node.accessibility) {
-        this.raise(TSErrors.PrivateElementHasAccessibility, {
-          at: node,
+        this.raise(TSErrors.PrivateElementHasAccessibility, node, {
           modifier: node.accessibility
         });
       }
@@ -9667,26 +9446,21 @@ var lib = createCommonjsModule(function(module, exports) {
     parseClassAccessorProperty(node) {
       this.parseClassPropertyAnnotation(node);
       if (node.optional) {
-        this.raise(TSErrors.AccessorCannotBeOptional, {
-          at: node
-        });
+        this.raise(TSErrors.AccessorCannotBeOptional, node);
       }
       return super.parseClassAccessorProperty(node);
     }
     pushClassMethod(classBody, method, isGenerator, isAsync, isConstructor, allowsDirectSuper) {
       const typeParameters = this.tsTryParseTypeParameters(this.tsParseConstModifier);
       if (typeParameters && isConstructor) {
-        this.raise(TSErrors.ConstructorHasTypeParameters, {
-          at: typeParameters
-        });
+        this.raise(TSErrors.ConstructorHasTypeParameters, typeParameters);
       }
       const {
         declare = false,
         kind
       } = method;
       if (declare && (kind === "get" || kind === "set")) {
-        this.raise(TSErrors.DeclareAccessor, {
-          at: method,
+        this.raise(TSErrors.DeclareAccessor, method, {
           kind
         });
       }
@@ -9812,9 +9586,7 @@ var lib = createCommonjsModule(function(module, exports) {
     reportReservedArrowTypeParam(node) {
       var _node$extra;
       if (node.params.length === 1 && !node.params[0].constraint && !((_node$extra = node.extra) != null && _node$extra.trailingComma) && this.getPluginOption("typescript", "disallowAmbiguousJSXLike")) {
-        this.raise(TSErrors.ReservedArrowTypeParam, {
-          at: node
-        });
+        this.raise(TSErrors.ReservedArrowTypeParam, node);
       }
     }
     parseMaybeUnary(refExpressionErrors, sawUnary) {
@@ -9873,13 +9645,9 @@ var lib = createCommonjsModule(function(module, exports) {
         case "TSNonNullExpression":
         case "TSTypeAssertion":
           if (isLHS) {
-            this.expressionScope.recordArrowParameterBindingError(TSErrors.UnexpectedTypeCastInParameter, {
-              at: node
-            });
+            this.expressionScope.recordArrowParameterBindingError(TSErrors.UnexpectedTypeCastInParameter, node);
           } else {
-            this.raise(TSErrors.UnexpectedTypeCastInParameter, {
-              at: node
-            });
+            this.raise(TSErrors.UnexpectedTypeCastInParameter, node);
           }
           this.toAssignable(node.expression, isLHS);
           break;
@@ -9960,9 +9728,7 @@ var lib = createCommonjsModule(function(module, exports) {
     parseMaybeDefault(startLoc, left) {
       const node = super.parseMaybeDefault(startLoc, left);
       if (node.type === "AssignmentPattern" && node.typeAnnotation && node.right.start < node.typeAnnotation.start) {
-        this.raise(TSErrors.TypeAnnotationAfterAssign, {
-          at: node.typeAnnotation
-        });
+        this.raise(TSErrors.TypeAnnotationAfterAssign, node.typeAnnotation);
       }
       return node;
     }
@@ -10077,9 +9843,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (this.isContextual(129)) {
         if (!this.hasFollowingLineBreak()) {
           node.abstract = true;
-          this.raise(TSErrors.NonClassMethodPropertyHasAbstractModifer, {
-            at: node
-          });
+          this.raise(TSErrors.NonClassMethodPropertyHasAbstractModifer, node);
           return this.tsParseInterfaceDeclaration(node);
         }
       } else {
@@ -10094,8 +9858,7 @@ var lib = createCommonjsModule(function(module, exports) {
           const {
             key
           } = method;
-          this.raise(TSErrors.AbstractMethodHasImplementation, {
-            at: method,
+          this.raise(TSErrors.AbstractMethodHasImplementation, method, {
             methodName: key.type === "Identifier" && !method.computed ? key.name : `[${this.input.slice(key.start, key.end)}]`
           });
         }
@@ -10177,9 +9940,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       }
       if (hasTypeSpecifier && isInTypeOnlyImportExport) {
-        this.raise(isImport ? TSErrors.TypeModifierIsUsedInTypeImports : TSErrors.TypeModifierIsUsedInTypeExports, {
-          at: loc
-        });
+        this.raise(isImport ? TSErrors.TypeModifierIsUsedInTypeImports : TSErrors.TypeModifierIsUsedInTypeExports, loc);
       }
       node[leftOfAsKey] = leftOfAs;
       node[rightOfAsKey] = rightOfAs;
@@ -10369,9 +10130,7 @@ var lib = createCommonjsModule(function(module, exports) {
           node.body = this.finishPlaceholder(placeholder, "ClassBody");
           return this.finishNode(node, type);
         } else {
-          throw this.raise(PlaceholderErrors.ClassNameIsRequired, {
-            at: this.state.startLoc
-          });
+          throw this.raise(PlaceholderErrors.ClassNameIsRequired, this.state.startLoc);
         }
       } else {
         this.parseClassId(node, isStatement, optionalId);
@@ -10452,9 +10211,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     assertNoSpace() {
       if (this.state.start > this.state.lastTokEndLoc.index) {
-        this.raise(PlaceholderErrors.UnexpectedSpace, {
-          at: this.state.lastTokEndLoc
-        });
+        this.raise(PlaceholderErrors.UnexpectedSpace, this.state.lastTokEndLoc);
       }
     }
   };
@@ -10643,9 +10400,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const name = key.type === "Identifier" ? key.name : key.value;
       if (name === "__proto__") {
         if (isRecord) {
-          this.raise(Errors.RecordNoProto, {
-            at: key
-          });
+          this.raise(Errors.RecordNoProto, key);
           return;
         }
         if (protoRef.used) {
@@ -10654,9 +10409,7 @@ var lib = createCommonjsModule(function(module, exports) {
               refExpressionErrors.doubleProtoLoc = key.loc.start;
             }
           } else {
-            this.raise(Errors.DuplicateProto, {
-              at: key
-            });
+            this.raise(Errors.DuplicateProto, key);
           }
         }
         protoRef.used = true;
@@ -10673,7 +10426,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.unexpected();
       }
       this.finalizeRemainingComments();
-      expr.comments = this.state.comments;
+      expr.comments = this.comments;
       expr.errors = this.state.errors;
       if (this.options.tokens) {
         expr.tokens = this.tokens;
@@ -10806,8 +10559,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.isPrivateName(left)) {
         const value = this.getPrivateNameSV(left);
         if (minPrec >= tokenOperatorPrecedence(58) || !this.prodParam.hasIn || !this.match(58)) {
-          this.raise(Errors.PrivateInExpectedIn, {
-            at: left,
+          this.raise(Errors.PrivateInExpectedIn, left, {
             identifierName: value
           });
         }
@@ -10837,18 +10589,14 @@ var lib = createCommonjsModule(function(module, exports) {
             proposal: "minimal"
           }])) {
             if (this.state.type === 96 && this.prodParam.hasAwait) {
-              throw this.raise(Errors.UnexpectedAwaitAfterPipelineBody, {
-                at: this.state.startLoc
-              });
+              throw this.raise(Errors.UnexpectedAwaitAfterPipelineBody, this.state.startLoc);
             }
           }
           node.right = this.parseExprOpRightExpr(op, prec);
           const finishedNode = this.finishNode(node, logical || coalesce ? "LogicalExpression" : "BinaryExpression");
           const nextOp = this.state.type;
           if (coalesce && (nextOp === 41 || nextOp === 42) || logical && nextOp === 40) {
-            throw this.raise(Errors.MixingCoalesceWithLogical, {
-              at: this.state.startLoc
-            });
+            throw this.raise(Errors.MixingCoalesceWithLogical, this.state.startLoc);
           }
           return this.parseExprOp(finishedNode, leftStartLoc, minPrec);
         }
@@ -10867,9 +10615,7 @@ var lib = createCommonjsModule(function(module, exports) {
             case "smart":
               return this.withTopicBindingContext(() => {
                 if (this.prodParam.hasYield && this.isContextual(108)) {
-                  throw this.raise(Errors.PipeBodyIsTighter, {
-                    at: this.state.startLoc
-                  });
+                  throw this.raise(Errors.PipeBodyIsTighter, this.state.startLoc);
                 }
                 return this.parseSmartPipelineBodyInStyle(this.parseExprOpBaseRightExpr(op, prec), startLoc);
               });
@@ -10894,23 +10640,18 @@ var lib = createCommonjsModule(function(module, exports) {
       const body = this.parseMaybeAssign();
       const requiredParentheses = UnparenthesizedPipeBodyDescriptions.has(body.type);
       if (requiredParentheses && !((_body$extra = body.extra) != null && _body$extra.parenthesized)) {
-        this.raise(Errors.PipeUnparenthesizedBody, {
-          at: startLoc,
+        this.raise(Errors.PipeUnparenthesizedBody, startLoc, {
           type: body.type
         });
       }
       if (!this.topicReferenceWasUsedInCurrentContext()) {
-        this.raise(Errors.PipeTopicUnused, {
-          at: startLoc
-        });
+        this.raise(Errors.PipeTopicUnused, startLoc);
       }
       return body;
     }
     checkExponentialAfterUnary(node) {
       if (this.match(57)) {
-        this.raise(Errors.UnexpectedTokenUnaryExponentiation, {
-          at: node.argument
-        });
+        this.raise(Errors.UnexpectedTokenUnaryExponentiation, node.argument);
       }
     }
     parseMaybeUnary(refExpressionErrors, sawUnary) {
@@ -10938,13 +10679,9 @@ var lib = createCommonjsModule(function(module, exports) {
         if (this.state.strict && isDelete) {
           const arg = node.argument;
           if (arg.type === "Identifier") {
-            this.raise(Errors.StrictDelete, {
-              at: node
-            });
+            this.raise(Errors.StrictDelete, node);
           } else if (this.hasPropertyAsPrivateName(arg)) {
-            this.raise(Errors.DeletePrivateField, {
-              at: node
-            });
+            this.raise(Errors.DeletePrivateField, node);
           }
         }
         if (!update) {
@@ -10961,9 +10698,7 @@ var lib = createCommonjsModule(function(module, exports) {
         } = this.state;
         const startsExpr2 = this.hasPlugin("v8intrinsic") ? tokenCanStartExpression(type) : tokenCanStartExpression(type) && !this.match(54);
         if (startsExpr2 && !this.isAmbiguousAwait()) {
-          this.raiseOverwrite(Errors.AwaitNotInAsyncContext, {
-            at: startLoc
-          });
+          this.raiseOverwrite(Errors.AwaitNotInAsyncContext, startLoc);
           return this.parseAwait(startLoc);
         }
       }
@@ -11026,9 +10761,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let optional = false;
       if (type === 18) {
         if (noCalls) {
-          this.raise(Errors.OptionalChainingNoNew, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.OptionalChainingNoNew, this.state.startLoc);
           if (this.lookaheadCharCode() === 40) {
             state.stop = true;
             return base;
@@ -11058,9 +10791,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.expect(3);
       } else if (this.match(138)) {
         if (base.type === "Super") {
-          this.raise(Errors.SuperPrivateField, {
-            at: startLoc
-          });
+          this.raise(Errors.SuperPrivateField, startLoc);
         }
         this.classScope.usePrivateName(this.state.value, this.state.startLoc);
         node.property = this.parsePrivateName();
@@ -11130,9 +10861,7 @@ var lib = createCommonjsModule(function(module, exports) {
       node.tag = base;
       node.quasi = this.parseTemplate(true);
       if (state.optionalChainMember) {
-        this.raise(Errors.OptionalChainingNoTemplate, {
-          at: startLoc
-        });
+        this.raise(Errors.OptionalChainingNoTemplate, startLoc);
       }
       return this.finishNode(node, "TaggedTemplateExpression");
     }
@@ -11154,16 +10883,13 @@ var lib = createCommonjsModule(function(module, exports) {
           }
         }
         if (node.arguments.length === 0 || node.arguments.length > 2) {
-          this.raise(Errors.ImportCallArity, {
-            at: node,
+          this.raise(Errors.ImportCallArity, node, {
             maxArgumentCount: this.hasPlugin("importAttributes") || this.hasPlugin("importAssertions") || this.hasPlugin("moduleAttributes") ? 2 : 1
           });
         } else {
           for (const arg of node.arguments) {
             if (arg.type === "SpreadElement") {
-              this.raise(Errors.ImportCallSpreadArgument, {
-                at: arg
-              });
+              this.raise(Errors.ImportCallSpreadArgument, arg);
             }
           }
         }
@@ -11182,9 +10908,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.expect(12);
           if (this.match(close)) {
             if (dynamicImport && !this.hasPlugin("importAttributes") && !this.hasPlugin("importAssertions") && !this.hasPlugin("moduleAttributes")) {
-              this.raise(Errors.ImportCallArgumentTrailingComma, {
-                at: this.state.lastTokStartLoc
-              });
+              this.raise(Errors.ImportCallArgumentTrailingComma, this.state.lastTokStartLoc);
             }
             if (nodeForExtra) {
               this.addTrailingCommaExtraToNode(nodeForExtra);
@@ -11240,9 +10964,7 @@ var lib = createCommonjsModule(function(module, exports) {
               return this.finishNode(node, "Import");
             }
           } else {
-            this.raise(Errors.UnsupportedImport, {
-              at: this.state.lastTokStartLoc
-            });
+            this.raise(Errors.UnsupportedImport, this.state.lastTokStartLoc);
             return this.finishNode(node, "Import");
           }
         case 78:
@@ -11308,14 +11030,11 @@ var lib = createCommonjsModule(function(module, exports) {
           if (callee.type === "MemberExpression") {
             return this.finishNode(node, "BindExpression");
           } else {
-            throw this.raise(Errors.UnsupportedBind, {
-              at: callee
-            });
+            throw this.raise(Errors.UnsupportedBind, callee);
           }
         }
         case 138: {
-          this.raise(Errors.PrivateInExpectedIn, {
-            at: this.state.startLoc,
+          this.raise(Errors.PrivateInExpectedIn, this.state.startLoc, {
             identifierName: this.state.value
           });
           return this.parsePrivateName();
@@ -11410,15 +11129,12 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.testTopicReferenceConfiguration(pipeProposal, startLoc, tokenType)) {
         const nodeType = pipeProposal === "smart" ? "PipelinePrimaryTopicReference" : "TopicReference";
         if (!this.topicReferenceIsAllowedInCurrentContext()) {
-          this.raise(pipeProposal === "smart" ? Errors.PrimaryTopicNotAllowed : Errors.PipeTopicUnbound, {
-            at: startLoc
-          });
+          this.raise(pipeProposal === "smart" ? Errors.PrimaryTopicNotAllowed : Errors.PipeTopicUnbound, startLoc);
         }
         this.registerTopicReference();
         return this.finishNode(node, nodeType);
       } else {
-        throw this.raise(Errors.PipeTopicUnconfiguredToken, {
-          at: startLoc,
+        throw this.raise(Errors.PipeTopicUnconfiguredToken, startLoc, {
           token: tokenLabelName(tokenType)
         });
       }
@@ -11433,9 +11149,7 @@ var lib = createCommonjsModule(function(module, exports) {
         case "smart":
           return tokenType === 27;
         default:
-          throw this.raise(Errors.PipeTopicRequiresHackPipes, {
-            at: startLoc
-          });
+          throw this.raise(Errors.PipeTopicRequiresHackPipes, startLoc);
       }
     }
     parseAsyncArrowUnaryFunction(node) {
@@ -11443,9 +11157,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const params = [this.parseIdentifier()];
       this.prodParam.exit();
       if (this.hasPrecedingLineBreak()) {
-        this.raise(Errors.LineTerminatorBeforeArrow, {
-          at: this.state.curPosition()
-        });
+        this.raise(Errors.LineTerminatorBeforeArrow, this.state.curPosition());
       }
       this.expect(19);
       return this.parseArrowExpression(node, params, true);
@@ -11473,18 +11185,12 @@ var lib = createCommonjsModule(function(module, exports) {
       const node = this.startNode();
       this.next();
       if (this.match(10) && !this.scope.allowDirectSuper && !this.options.allowSuperOutsideMethod) {
-        this.raise(Errors.SuperNotAllowed, {
-          at: node
-        });
+        this.raise(Errors.SuperNotAllowed, node);
       } else if (!this.scope.allowSuper && !this.options.allowSuperOutsideMethod) {
-        this.raise(Errors.UnexpectedSuper, {
-          at: node
-        });
+        this.raise(Errors.UnexpectedSuper, node);
       }
       if (!this.match(10) && !this.match(0) && !this.match(16)) {
-        this.raise(Errors.UnsupportedSuper, {
-          at: node
-        });
+        this.raise(Errors.UnsupportedSuper, node);
       }
       return this.finishNode(node, "Super");
     }
@@ -11516,8 +11222,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const containsEsc = this.state.containsEsc;
       node.property = this.parseIdentifier(true);
       if (node.property.name !== propertyName || containsEsc) {
-        this.raise(Errors.UnsupportedMetaProperty, {
-          at: node.property,
+        this.raise(Errors.UnsupportedMetaProperty, node.property, {
           target: meta.name,
           onlyValidPropertyName: propertyName
         });
@@ -11529,9 +11234,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.next();
       if (this.isContextual(101)) {
         if (!this.inModule) {
-          this.raise(Errors.ImportMetaOutsideModule, {
-            at: id
-          });
+          this.raise(Errors.ImportMetaOutsideModule, id);
         }
         this.sawUnambiguousESM = true;
       } else if (this.isContextual(105) || this.isContextual(97)) {
@@ -11540,8 +11243,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.unexpected();
         this.expectPlugin(isSource ? "sourcePhaseImports" : "deferredImportEvaluation");
         if (!this.options.createImportExpressions) {
-          throw this.raise(Errors.DynamicImportPhaseRequiresImportExpressions, {
-            at: this.state.startLoc,
+          throw this.raise(Errors.DynamicImportPhaseRequiresImportExpressions, this.state.startLoc, {
             phase: this.state.value
           });
         }
@@ -11689,9 +11391,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.next();
         const metaProp = this.parseMetaProperty(node, meta, "target");
         if (!this.scope.inNonArrowFunction && !this.scope.inClass && !this.options.allowNewTargetOutsideFunction) {
-          this.raise(Errors.UnexpectedNewTarget, {
-            at: metaProp
-          });
+          this.raise(Errors.UnexpectedNewTarget, metaProp);
         }
         return metaProp;
       }
@@ -11713,9 +11413,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const callee = this.parseNoCallExpr();
       node.callee = callee;
       if (isImport && (callee.type === "Import" || callee.type === "ImportExpression")) {
-        this.raise(Errors.ImportCallNotNewExpression, {
-          at: callee
-        });
+        this.raise(Errors.ImportCallNotNewExpression, callee);
       }
     }
     parseTemplateElement(isTagged) {
@@ -11729,9 +11427,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const elem = this.startNodeAt(createPositionWithColumnOffset(startLoc, 1));
       if (value === null) {
         if (!isTagged) {
-          this.raise(Errors.InvalidEscapeSequenceTemplate, {
-            at: createPositionWithColumnOffset(this.state.firstInvalidTemplateEscapePos, 1)
-          });
+          this.raise(Errors.InvalidEscapeSequenceTemplate, createPositionWithColumnOffset(this.state.firstInvalidTemplateEscapePos, 1));
         }
       }
       const isTail = this.match(24);
@@ -11791,9 +11487,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.checkProto(prop, isRecord, propHash, refExpressionErrors);
         }
         if (isRecord && !this.isObjectProperty(prop) && prop.type !== "SpreadElement") {
-          this.raise(Errors.InvalidRecordProperty, {
-            at: prop
-          });
+          this.raise(Errors.InvalidRecordProperty, prop);
         }
         if (prop.shorthand) {
           this.addExtra(prop, "shorthand", true);
@@ -11811,7 +11505,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, type);
     }
     addTrailingCommaExtraToNode(node) {
-      this.addExtra(node, "trailingComma", this.state.lastTokStart);
+      this.addExtra(node, "trailingComma", this.state.lastTokStartLoc.index);
       this.addExtra(node, "trailingCommaLoc", this.state.lastTokStartLoc, false);
     }
     maybeAsyncOrAccessorProp(prop) {
@@ -11821,9 +11515,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let decorators = [];
       if (this.match(26)) {
         if (this.hasPlugin("decorators")) {
-          this.raise(Errors.UnsupportedPropertyDecorator, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.UnsupportedPropertyDecorator, this.state.startLoc);
         }
         while (this.match(26)) {
           decorators.push(this.parseDecorator());
@@ -11864,8 +11556,7 @@ var lib = createCommonjsModule(function(module, exports) {
           prop.kind = keyName;
           if (this.match(55)) {
             isGenerator = true;
-            this.raise(Errors.AccessorIsGenerator, {
-              at: this.state.curPosition(),
+            this.raise(Errors.AccessorIsGenerator, this.state.curPosition(), {
               kind: keyName
             });
             this.next();
@@ -11886,14 +11577,10 @@ var lib = createCommonjsModule(function(module, exports) {
       const paramCount = this.getGetterSetterExpectedParamCount(method);
       const params = this.getObjectOrClassMethodParams(method);
       if (params.length !== paramCount) {
-        this.raise(method.kind === "get" ? Errors.BadGetterArity : Errors.BadSetterArity, {
-          at: method
-        });
+        this.raise(method.kind === "get" ? Errors.BadGetterArity : Errors.BadSetterArity, method);
       }
       if (method.kind === "set" && ((_params = params[params.length - 1]) == null ? void 0 : _params.type) === "RestElement") {
-        this.raise(Errors.BadSetterRestParameter, {
-          at: method
-        });
+        this.raise(Errors.BadSetterRestParameter, method);
       }
     }
     parseObjectMethod(prop, isGenerator, isAsync, isPattern, isAccessor) {
@@ -11927,9 +11614,7 @@ var lib = createCommonjsModule(function(module, exports) {
               refExpressionErrors.shorthandAssignLoc = shorthandAssignLoc;
             }
           } else {
-            this.raise(Errors.InvalidCoverInitializedName, {
-              at: shorthandAssignLoc
-            });
+            this.raise(Errors.InvalidCoverInitializedName, shorthandAssignLoc);
           }
           prop.value = this.parseMaybeDefault(startLoc, cloneIdentifier(prop.key));
         } else {
@@ -11979,9 +11664,7 @@ var lib = createCommonjsModule(function(module, exports) {
                   refExpressionErrors.privateKeyLoc = privateKeyLoc;
                 }
               } else {
-                this.raise(Errors.UnexpectedPrivateField, {
-                  at: privateKeyLoc
-                });
+                this.raise(Errors.UnexpectedPrivateField, privateKeyLoc);
               }
               key = this.parsePrivateName();
               break;
@@ -12067,9 +11750,7 @@ var lib = createCommonjsModule(function(module, exports) {
         node.body = this.parseBlock(true, false, (hasStrictModeDirective) => {
           const nonSimple = !this.isSimpleParamList(node.params);
           if (hasStrictModeDirective && nonSimple) {
-            this.raise(Errors.IllegalLanguageModeDirective, {
-              at: (node.kind === "method" || node.kind === "constructor") && !!node.key ? node.key.loc.end : node
-            });
+            this.raise(Errors.IllegalLanguageModeDirective, (node.kind === "method" || node.kind === "constructor") && !!node.key ? node.key.loc.end : node);
           }
           const strictModeChanged = !oldStrict && this.state.strict;
           this.checkParams(node, !this.state.strict && !allowExpression && !isMethod && !nonSimple, allowExpression, strictModeChanged);
@@ -12130,8 +11811,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let elt;
       if (this.match(12)) {
         if (!allowEmpty) {
-          this.raise(Errors.UnexpectedToken, {
-            at: this.state.curPosition(),
+          this.raise(Errors.UnexpectedToken, this.state.curPosition(), {
             unexpected: ","
           });
         }
@@ -12142,9 +11822,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (this.match(17)) {
         this.expectPlugin("partialApplication");
         if (!allowPlaceholder) {
-          this.raise(Errors.UnexpectedArgumentPlaceholder, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.UnexpectedArgumentPlaceholder, this.state.startLoc);
         }
         const node = this.startNode();
         this.next();
@@ -12194,47 +11872,35 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
       if (checkKeywords && isKeyword(word)) {
-        this.raise(Errors.UnexpectedKeyword, {
-          at: startLoc,
+        this.raise(Errors.UnexpectedKeyword, startLoc, {
           keyword: word
         });
         return;
       }
       const reservedTest = !this.state.strict ? isReservedWord : isBinding ? isStrictBindReservedWord : isStrictReservedWord;
       if (reservedTest(word, this.inModule)) {
-        this.raise(Errors.UnexpectedReservedWord, {
-          at: startLoc,
+        this.raise(Errors.UnexpectedReservedWord, startLoc, {
           reservedWord: word
         });
         return;
       } else if (word === "yield") {
         if (this.prodParam.hasYield) {
-          this.raise(Errors.YieldBindingIdentifier, {
-            at: startLoc
-          });
+          this.raise(Errors.YieldBindingIdentifier, startLoc);
           return;
         }
       } else if (word === "await") {
         if (this.prodParam.hasAwait) {
-          this.raise(Errors.AwaitBindingIdentifier, {
-            at: startLoc
-          });
+          this.raise(Errors.AwaitBindingIdentifier, startLoc);
           return;
         }
         if (this.scope.inStaticBlock) {
-          this.raise(Errors.AwaitBindingIdentifierInStaticBlock, {
-            at: startLoc
-          });
+          this.raise(Errors.AwaitBindingIdentifierInStaticBlock, startLoc);
           return;
         }
-        this.expressionScope.recordAsyncArrowParametersError({
-          at: startLoc
-        });
+        this.expressionScope.recordAsyncArrowParametersError(startLoc);
       } else if (word === "arguments") {
         if (this.scope.inClassAndNotInNonArrowFunction) {
-          this.raise(Errors.ArgumentsInClass, {
-            at: startLoc
-          });
+          this.raise(Errors.ArgumentsInClass, startLoc);
           return;
         }
       }
@@ -12249,13 +11915,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseAwait(startLoc) {
       const node = this.startNodeAt(startLoc);
-      this.expressionScope.recordParameterInitializerError(Errors.AwaitExpressionFormalParameter, {
-        at: node
-      });
+      this.expressionScope.recordParameterInitializerError(Errors.AwaitExpressionFormalParameter, node);
       if (this.eat(55)) {
-        this.raise(Errors.ObsoleteAwaitStar, {
-          at: node
-        });
+        this.raise(Errors.ObsoleteAwaitStar, node);
       }
       if (!this.scope.inFunction && !this.options.allowAwaitOutsideFunction) {
         if (this.isAmbiguousAwait()) {
@@ -12279,9 +11941,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseYield() {
       const node = this.startNode();
-      this.expressionScope.recordParameterInitializerError(Errors.YieldInParameter, {
-        at: node
-      });
+      this.expressionScope.recordParameterInitializerError(Errors.YieldInParameter, node);
       this.next();
       let delegating = false;
       let argument = null;
@@ -12327,9 +11987,7 @@ var lib = createCommonjsModule(function(module, exports) {
         proposal: "smart"
       }])) {
         if (left.type === "SequenceExpression") {
-          this.raise(Errors.PipelineHeadSequenceExpression, {
-            at: leftStartLoc
-          });
+          this.raise(Errors.PipelineHeadSequenceExpression, leftStartLoc);
         }
       }
     }
@@ -12357,14 +12015,10 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     checkSmartPipeTopicBodyEarlyErrors(startLoc) {
       if (this.match(19)) {
-        throw this.raise(Errors.PipelineBodyNoArrow, {
-          at: this.state.startLoc
-        });
+        throw this.raise(Errors.PipelineBodyNoArrow, this.state.startLoc);
       }
       if (!this.topicReferenceWasUsedInCurrentContext()) {
-        this.raise(Errors.PipelineTopicUnused, {
-          at: startLoc
-        });
+        this.raise(Errors.PipelineTopicUnused, startLoc);
       }
     }
     withTopicBindingContext(callback) {
@@ -12472,9 +12126,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
   }
   const loopLabel = {
-    kind: "loop"
+    kind: 1
   }, switchLabel = {
-    kind: "switch"
+    kind: 2
   };
   const loneSurrogate = /[\uD800-\uDFFF]/u;
   const keywordRelationalOperator = /in(?:stanceof)?/y;
@@ -12588,7 +12242,7 @@ var lib = createCommonjsModule(function(module, exports) {
   class StatementParser extends ExpressionParser {
     parseTopLevel(file, program) {
       file.program = this.parseProgram(program);
-      file.comments = this.state.comments;
+      file.comments = this.comments;
       if (this.options.tokens) {
         file.tokens = babel7CompatTokens(this.tokens, this.input);
       }
@@ -12600,8 +12254,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.parseBlockBody(program, true, true, end);
       if (this.inModule && !this.options.allowUndeclaredExports && this.scope.undefinedExports.size > 0) {
         for (const [localName, at] of Array.from(this.scope.undefinedExports)) {
-          this.raise(Errors.ModuleExportUndefined, {
-            at,
+          this.raise(Errors.ModuleExportUndefined, at, {
             localName
           });
         }
@@ -12744,9 +12397,7 @@ var lib = createCommonjsModule(function(module, exports) {
           if (this.lookaheadCharCode() === 46)
             break;
           if (!allowFunctionDeclaration) {
-            this.raise(this.state.strict ? Errors.StrictFunction : this.options.annexB ? Errors.SloppyFunctionAnnexB : Errors.SloppyFunction, {
-              at: this.state.startLoc
-            });
+            this.raise(this.state.strict ? Errors.StrictFunction : this.options.annexB ? Errors.SloppyFunctionAnnexB : Errors.SloppyFunction, this.state.startLoc);
           }
           return this.parseFunctionStatement(node, false, !allowDeclaration && allowFunctionDeclaration);
         case 80:
@@ -12766,13 +12417,9 @@ var lib = createCommonjsModule(function(module, exports) {
         case 96:
           if (!this.state.containsEsc && this.startsAwaitUsing()) {
             if (!this.isAwaitAllowed()) {
-              this.raise(Errors.AwaitUsingNotInAsyncContext, {
-                at: node
-              });
+              this.raise(Errors.AwaitUsingNotInAsyncContext, node);
             } else if (!allowDeclaration) {
-              this.raise(Errors.UnexpectedLexicalDeclaration, {
-                at: node
-              });
+              this.raise(Errors.UnexpectedLexicalDeclaration, node);
             }
             this.next();
             return this.parseVarStatement(node, "await using");
@@ -12784,13 +12431,9 @@ var lib = createCommonjsModule(function(module, exports) {
           }
           this.expectPlugin("explicitResourceManagement");
           if (!this.scope.inModule && this.scope.inTopLevel) {
-            this.raise(Errors.UnexpectedUsingDeclaration, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.UnexpectedUsingDeclaration, this.state.startLoc);
           } else if (!allowDeclaration) {
-            this.raise(Errors.UnexpectedLexicalDeclaration, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.UnexpectedLexicalDeclaration, this.state.startLoc);
           }
           return this.parseVarStatement(node, "using");
         case 100: {
@@ -12809,9 +12452,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         case 75: {
           if (!allowDeclaration) {
-            this.raise(Errors.UnexpectedLexicalDeclaration, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.UnexpectedLexicalDeclaration, this.state.startLoc);
           }
         }
         case 74: {
@@ -12834,9 +12475,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         case 82: {
           if (!this.options.allowImportExportEverywhere && !topLevel) {
-            this.raise(Errors.UnexpectedImportExport, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.UnexpectedImportExport, this.state.startLoc);
           }
           this.next();
           let result;
@@ -12857,9 +12496,7 @@ var lib = createCommonjsModule(function(module, exports) {
         default: {
           if (this.isAsyncFunction()) {
             if (!allowDeclaration) {
-              this.raise(Errors.AsyncFunctionInSingleStatementContext, {
-                at: this.state.startLoc
-              });
+              this.raise(Errors.AsyncFunctionInSingleStatementContext, this.state.startLoc);
             }
             this.next();
             return this.parseFunctionStatement(node, true, !allowDeclaration && allowFunctionDeclaration);
@@ -12876,9 +12513,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     assertModuleNodeAllowed(node) {
       if (!this.options.allowImportExportEverywhere && !this.inModule) {
-        this.raise(Errors.ImportOutsideModule, {
-          at: node
-        });
+        this.raise(Errors.ImportOutsideModule, node);
       }
     }
     decoratorsEnabledBeforeExport() {
@@ -12890,9 +12525,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (maybeDecorators) {
         if (classNode.decorators && classNode.decorators.length > 0) {
           if (typeof this.getPluginOption("decorators", "decoratorsBeforeExport") !== "boolean") {
-            this.raise(Errors.DecoratorsBeforeAfterExport, {
-              at: classNode.decorators[0]
-            });
+            this.raise(Errors.DecoratorsBeforeAfterExport, classNode.decorators[0]);
           }
           classNode.decorators.unshift(...maybeDecorators);
         } else {
@@ -12917,14 +12550,10 @@ var lib = createCommonjsModule(function(module, exports) {
           this.unexpected();
         }
         if (!this.decoratorsEnabledBeforeExport()) {
-          this.raise(Errors.DecoratorExportClass, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.DecoratorExportClass, this.state.startLoc);
         }
       } else if (!this.canHaveLeadingDecorator()) {
-        throw this.raise(Errors.UnexpectedLeadingDecorator, {
-          at: this.state.startLoc
-        });
+        throw this.raise(Errors.UnexpectedLeadingDecorator, this.state.startLoc);
       }
       return decorators;
     }
@@ -12944,9 +12573,7 @@ var lib = createCommonjsModule(function(module, exports) {
           const paramsStartLoc = this.state.startLoc;
           node.expression = this.parseMaybeDecoratorArguments(expr);
           if (this.getPluginOption("decorators", "allowCallParenthesized") === false && node.expression !== expr) {
-            this.raise(Errors.DecoratorArgumentsOutsideParentheses, {
-              at: paramsStartLoc
-            });
+            this.raise(Errors.DecoratorArgumentsOutsideParentheses, paramsStartLoc);
           }
         } else {
           expr = this.parseIdentifier(false);
@@ -12995,16 +12622,16 @@ var lib = createCommonjsModule(function(module, exports) {
       for (i = 0; i < this.state.labels.length; ++i) {
         const lab = this.state.labels[i];
         if (node.label == null || lab.name === node.label.name) {
-          if (lab.kind != null && (isBreak || lab.kind === "loop"))
+          if (lab.kind != null && (isBreak || lab.kind === 1)) {
             break;
+          }
           if (node.label && isBreak)
             break;
         }
       }
       if (i === this.state.labels.length) {
         const type = isBreak ? "BreakStatement" : "ContinueStatement";
-        this.raise(Errors.IllegalBreakContinue, {
-          at: node,
+        this.raise(Errors.IllegalBreakContinue, node, {
           type
         });
       }
@@ -13056,9 +12683,7 @@ var lib = createCommonjsModule(function(module, exports) {
           if (startsWithAwaitUsing) {
             kind = "await using";
             if (!this.isAwaitAllowed()) {
-              this.raise(Errors.AwaitUsingNotInAsyncContext, {
-                at: this.state.startLoc
-              });
+              this.raise(Errors.AwaitUsingNotInAsyncContext, this.state.startLoc);
             }
             this.next();
           } else {
@@ -13069,9 +12694,7 @@ var lib = createCommonjsModule(function(module, exports) {
           const init2 = this.finishNode(initNode, "VariableDeclaration");
           const isForIn = this.match(58);
           if (isForIn && starsWithUsingDeclaration) {
-            this.raise(Errors.ForInUsing, {
-              at: init2
-            });
+            this.raise(Errors.ForInUsing, init2);
           }
           if ((isForIn || this.isContextual(102)) && init2.declarations.length === 1) {
             return this.parseForIn(node, init2, awaitAt);
@@ -13088,14 +12711,10 @@ var lib = createCommonjsModule(function(module, exports) {
       const isForOf = this.isContextual(102);
       if (isForOf) {
         if (startsWithLet) {
-          this.raise(Errors.ForOfLet, {
-            at: init
-          });
+          this.raise(Errors.ForOfLet, init);
         }
         if (awaitAt === null && startsWithAsync && init.type === "Identifier") {
-          this.raise(Errors.ForOfAsync, {
-            at: init
-          });
+          this.raise(Errors.ForOfAsync, init);
         }
       }
       if (isForOf || this.match(58)) {
@@ -13129,9 +12748,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseReturnStatement(node) {
       if (!this.prodParam.hasReturn && !this.options.allowReturnOutsideFunction) {
-        this.raise(Errors.IllegalReturn, {
-          at: this.state.startLoc
-        });
+        this.raise(Errors.IllegalReturn, this.state.startLoc);
       }
       this.next();
       if (this.isLineTerminator()) {
@@ -13162,9 +12779,7 @@ var lib = createCommonjsModule(function(module, exports) {
             cur.test = this.parseExpression();
           } else {
             if (sawDefault) {
-              this.raise(Errors.MultipleDefaultsInSwitch, {
-                at: this.state.lastTokStartLoc
-              });
+              this.raise(Errors.MultipleDefaultsInSwitch, this.state.lastTokStartLoc);
             }
             sawDefault = true;
             cur.test = null;
@@ -13188,9 +12803,7 @@ var lib = createCommonjsModule(function(module, exports) {
     parseThrowStatement(node) {
       this.next();
       if (this.hasPrecedingLineBreak()) {
-        this.raise(Errors.NewlineAfterThrow, {
-          at: this.state.lastTokEndLoc
-        });
+        this.raise(Errors.NewlineAfterThrow, this.state.lastTokEndLoc);
       }
       node.argument = this.parseExpression();
       this.semicolon();
@@ -13228,9 +12841,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       node.finalizer = this.eat(67) ? this.parseBlock() : null;
       if (!node.handler && !node.finalizer) {
-        this.raise(Errors.NoCatchOrFinally, {
-          at: node
-        });
+        this.raise(Errors.NoCatchOrFinally, node);
       }
       return this.finishNode(node, "TryStatement");
     }
@@ -13250,9 +12861,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseWithStatement(node) {
       if (this.state.strict) {
-        this.raise(Errors.StrictWith, {
-          at: this.state.startLoc
-        });
+        this.raise(Errors.StrictWith, this.state.startLoc);
       }
       this.next();
       node.object = this.parseHeaderExpression();
@@ -13266,13 +12875,12 @@ var lib = createCommonjsModule(function(module, exports) {
     parseLabeledStatement(node, maybeName, expr, flags) {
       for (const label of this.state.labels) {
         if (label.name === maybeName) {
-          this.raise(Errors.LabelRedeclaration, {
-            at: expr,
+          this.raise(Errors.LabelRedeclaration, expr, {
             labelName: maybeName
           });
         }
       }
-      const kind = tokenIsLoop(this.state.type) ? "loop" : this.match(71) ? "switch" : null;
+      const kind = tokenIsLoop(this.state.type) ? 1 : this.match(71) ? 2 : null;
       for (let i = this.state.labels.length - 1; i >= 0; i--) {
         const label = this.state.labels[i];
         if (label.statementStart === node.start) {
@@ -13369,14 +12977,12 @@ var lib = createCommonjsModule(function(module, exports) {
         node.await = awaitAt !== null;
       }
       if (init.type === "VariableDeclaration" && init.declarations[0].init != null && (!isForIn || !this.options.annexB || this.state.strict || init.kind !== "var" || init.declarations[0].id.type !== "Identifier")) {
-        this.raise(Errors.ForInOfLoopInitializer, {
-          at: init,
+        this.raise(Errors.ForInOfLoopInitializer, init, {
           type: isForIn ? "ForInStatement" : "ForOfStatement"
         });
       }
       if (init.type === "AssignmentPattern") {
-        this.raise(Errors.InvalidLhs, {
-          at: init,
+        this.raise(Errors.InvalidLhs, init, {
           ancestor: {
             type: "ForStatement"
           }
@@ -13399,13 +13005,11 @@ var lib = createCommonjsModule(function(module, exports) {
         decl.init = !this.eat(29) ? null : isFor ? this.parseMaybeAssignDisallowIn() : this.parseMaybeAssignAllowIn();
         if (decl.init === null && !allowMissingInitializer) {
           if (decl.id.type !== "Identifier" && !(isFor && (this.match(58) || this.isContextual(102)))) {
-            this.raise(Errors.DeclarationMissingInitializer, {
-              at: this.state.lastTokEndLoc,
+            this.raise(Errors.DeclarationMissingInitializer, this.state.lastTokEndLoc, {
               kind: "destructuring"
             });
           } else if (kind === "const" && !(this.match(58) || this.isContextual(102))) {
-            this.raise(Errors.DeclarationMissingInitializer, {
-              at: this.state.lastTokEndLoc,
+            this.raise(Errors.DeclarationMissingInitializer, this.state.lastTokEndLoc, {
               kind: "const"
             });
           }
@@ -13437,9 +13041,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.initFunction(node, isAsync);
       if (this.match(55)) {
         if (hangingDeclaration) {
-          this.raise(Errors.GeneratorInSingleStatementContext, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.GeneratorInSingleStatementContext, this.state.startLoc);
         }
         this.next();
         node.generator = true;
@@ -13512,9 +13114,7 @@ var lib = createCommonjsModule(function(module, exports) {
         while (!this.match(8)) {
           if (this.eat(13)) {
             if (decorators.length > 0) {
-              throw this.raise(Errors.DecoratorSemicolon, {
-                at: this.state.lastTokEndLoc
-              });
+              throw this.raise(Errors.DecoratorSemicolon, this.state.lastTokEndLoc);
             }
             continue;
           }
@@ -13530,18 +13130,14 @@ var lib = createCommonjsModule(function(module, exports) {
           }
           this.parseClassMember(classBody, member, state);
           if (member.kind === "constructor" && member.decorators && member.decorators.length > 0) {
-            this.raise(Errors.DecoratorConstructor, {
-              at: member
-            });
+            this.raise(Errors.DecoratorConstructor, member);
           }
         }
       });
       this.state.strict = oldStrict;
       this.next();
       if (decorators.length) {
-        throw this.raise(Errors.TrailingDecorator, {
-          at: this.state.startLoc
-        });
+        throw this.raise(Errors.TrailingDecorator, this.state.startLoc);
       }
       this.classScope.exit();
       return this.finishNode(classBody, "ClassBody");
@@ -13599,9 +13195,7 @@ var lib = createCommonjsModule(function(module, exports) {
           return;
         }
         if (this.isNonstaticConstructor(publicMethod)) {
-          this.raise(Errors.ConstructorIsGenerator, {
-            at: publicMethod.key
-          });
+          this.raise(Errors.ConstructorIsGenerator, publicMethod.key);
         }
         this.pushClassMethod(classBody, publicMethod, true, false, false, false);
         return;
@@ -13622,14 +13216,10 @@ var lib = createCommonjsModule(function(module, exports) {
         if (isConstructor) {
           publicMethod.kind = "constructor";
           if (state.hadConstructor && !this.hasPlugin("typescript")) {
-            this.raise(Errors.DuplicateConstructor, {
-              at: key
-            });
+            this.raise(Errors.DuplicateConstructor, key);
           }
           if (isConstructor && this.hasPlugin("typescript") && member.override) {
-            this.raise(Errors.OverrideOnConstructor, {
-              at: key
-            });
+            this.raise(Errors.OverrideOnConstructor, key);
           }
           state.hadConstructor = true;
           allowsDirectSuper = state.hadSuperClass;
@@ -13655,9 +13245,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.pushClassPrivateMethod(classBody, privateMethod, isGenerator, true);
         } else {
           if (this.isNonstaticConstructor(publicMethod)) {
-            this.raise(Errors.ConstructorIsAsync, {
-              at: publicMethod.key
-            });
+            this.raise(Errors.ConstructorIsAsync, publicMethod.key);
           }
           this.pushClassMethod(classBody, publicMethod, isGenerator, true, false, false);
         }
@@ -13670,9 +13258,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.pushClassPrivateMethod(classBody, privateMethod, false, false);
         } else {
           if (this.isNonstaticConstructor(publicMethod)) {
-            this.raise(Errors.ConstructorIsAccessor, {
-              at: publicMethod.key
-            });
+            this.raise(Errors.ConstructorIsAccessor, publicMethod.key);
           }
           this.pushClassMethod(classBody, publicMethod, false, false, false, false);
         }
@@ -13699,15 +13285,11 @@ var lib = createCommonjsModule(function(module, exports) {
         value
       } = this.state;
       if ((type === 132 || type === 133) && member.static && value === "prototype") {
-        this.raise(Errors.StaticPrototype, {
-          at: this.state.startLoc
-        });
+        this.raise(Errors.StaticPrototype, this.state.startLoc);
       }
       if (type === 138) {
         if (value === "constructor") {
-          this.raise(Errors.ConstructorClassPrivateField, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.ConstructorClassPrivateField, this.state.startLoc);
         }
         const key = this.parsePrivateName();
         member.key = key;
@@ -13728,16 +13310,12 @@ var lib = createCommonjsModule(function(module, exports) {
       this.state.labels = oldLabels;
       classBody.body.push(this.finishNode(member, "StaticBlock"));
       if ((_member$decorators = member.decorators) != null && _member$decorators.length) {
-        this.raise(Errors.DecoratorStaticBlock, {
-          at: member
-        });
+        this.raise(Errors.DecoratorStaticBlock, member);
       }
     }
     pushClassProperty(classBody, prop) {
       if (!prop.computed && (prop.key.name === "constructor" || prop.key.value === "constructor")) {
-        this.raise(Errors.ConstructorClassField, {
-          at: prop.key
-        });
+        this.raise(Errors.ConstructorClassField, prop.key);
       }
       classBody.body.push(this.parseClassProperty(prop));
     }
@@ -13750,9 +13328,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!isPrivate && !prop.computed) {
         const key = prop.key;
         if (key.name === "constructor" || key.value === "constructor") {
-          this.raise(Errors.ConstructorClassField, {
-            at: key
-          });
+          this.raise(Errors.ConstructorClassField, key);
         }
       }
       const node = this.parseClassAccessorProperty(prop);
@@ -13809,9 +13385,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (optionalId || !isStatement) {
           node.id = null;
         } else {
-          throw this.raise(Errors.MissingClassName, {
-            at: this.state.startLoc
-          });
+          throw this.raise(Errors.MissingClassName, this.state.startLoc);
         }
       }
     }
@@ -13830,9 +13404,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (hasDefault)
           this.unexpected();
         if (decorators) {
-          throw this.raise(Errors.UnsupportedDecoratorExport, {
-            at: node
-          });
+          throw this.raise(Errors.UnsupportedDecoratorExport, node);
         }
         this.parseExportFrom(node, true);
         return this.finishNode(node, "ExportAllDeclaration");
@@ -13848,9 +13420,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (isFromRequired || hasSpecifiers) {
         hasDeclaration = false;
         if (decorators) {
-          throw this.raise(Errors.UnsupportedDecoratorExport, {
-            at: node
-          });
+          throw this.raise(Errors.UnsupportedDecoratorExport, node);
         }
         this.parseExportFrom(node, isFromRequired);
       } else {
@@ -13863,9 +13433,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (((_node2$declaration = node2.declaration) == null ? void 0 : _node2$declaration.type) === "ClassDeclaration") {
           this.maybeTakeDecorators(decorators, node2.declaration, node2);
         } else if (decorators) {
-          throw this.raise(Errors.UnsupportedDecoratorExport, {
-            at: node
-          });
+          throw this.raise(Errors.UnsupportedDecoratorExport, node);
         }
         return this.finishNode(node2, "ExportNamedDeclaration");
       }
@@ -13876,9 +13444,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (decl.type === "ClassDeclaration") {
           this.maybeTakeDecorators(decorators, decl, node2);
         } else if (decorators) {
-          throw this.raise(Errors.UnsupportedDecoratorExport, {
-            at: node
-          });
+          throw this.raise(Errors.UnsupportedDecoratorExport, node);
         }
         this.checkExport(node2, true, true);
         return this.finishNode(node2, "ExportDefaultDeclaration");
@@ -13959,16 +13525,12 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       if (this.match(26)) {
         if (this.hasPlugin("decorators") && this.getPluginOption("decorators", "decoratorsBeforeExport") === true) {
-          this.raise(Errors.DecoratorBeforeExport, {
-            at: this.state.startLoc
-          });
+          this.raise(Errors.DecoratorBeforeExport, this.state.startLoc);
         }
         return this.parseClass(this.maybeTakeDecorators(this.parseDecorators(false), this.startNode()), true, true);
       }
       if (this.match(75) || this.match(74) || this.isLet()) {
-        throw this.raise(Errors.UnsupportedDefaultExport, {
-          at: this.state.startLoc
-        });
+        throw this.raise(Errors.UnsupportedDefaultExport, this.state.startLoc);
       }
       const res = this.parseMaybeAssignAllowIn();
       this.semicolon();
@@ -14031,9 +13593,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.expectOnePlugin(["decorators", "decorators-legacy"]);
         if (this.hasPlugin("decorators")) {
           if (this.getPluginOption("decorators", "decoratorsBeforeExport") === true) {
-            this.raise(Errors.DecoratorBeforeExport, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.DecoratorBeforeExport, this.state.startLoc);
           }
           return true;
         }
@@ -14049,9 +13609,7 @@ var lib = createCommonjsModule(function(module, exports) {
             var _declaration$extra;
             const declaration = node.declaration;
             if (declaration.type === "Identifier" && declaration.name === "from" && declaration.end - declaration.start === 4 && !((_declaration$extra = declaration.extra) != null && _declaration$extra.parenthesized)) {
-              this.raise(Errors.ExportDefaultFromAsIdentifier, {
-                at: declaration
-              });
+              this.raise(Errors.ExportDefaultFromAsIdentifier, declaration);
             }
           }
         } else if ((_node$specifiers = node.specifiers) != null && _node$specifiers.length) {
@@ -14066,8 +13624,7 @@ var lib = createCommonjsModule(function(module, exports) {
                 local
               } = specifier;
               if (local.type !== "Identifier") {
-                this.raise(Errors.ExportBindingIsString, {
-                  at: specifier,
+                this.raise(Errors.ExportBindingIsString, specifier, {
                   localName: local.value,
                   exportName
                 });
@@ -14115,12 +13672,9 @@ var lib = createCommonjsModule(function(module, exports) {
     checkDuplicateExports(node, exportName) {
       if (this.exportedIdentifiers.has(exportName)) {
         if (exportName === "default") {
-          this.raise(Errors.DuplicateDefaultExport, {
-            at: node
-          });
+          this.raise(Errors.DuplicateDefaultExport, node);
         } else {
-          this.raise(Errors.DuplicateExport, {
-            at: node,
+          this.raise(Errors.DuplicateExport, node, {
             exportName
           });
         }
@@ -14162,8 +13716,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const result = this.parseStringLiteral(this.state.value);
         const surrogate = result.value.match(loneSurrogate);
         if (surrogate) {
-          this.raise(Errors.ModuleExportNameHasLoneSurrogate, {
-            at: result,
+          this.raise(Errors.ModuleExportNameHasLoneSurrogate, result, {
             surrogateCharCode: surrogate[0].charCodeAt(0)
           });
         }
@@ -14189,27 +13742,19 @@ var lib = createCommonjsModule(function(module, exports) {
       const singleBindingType = specifiers.length === 1 ? specifiers[0].type : null;
       if (node.phase === "source") {
         if (singleBindingType !== "ImportDefaultSpecifier") {
-          this.raise(Errors.SourcePhaseImportRequiresDefault, {
-            at: specifiers[0].loc.start
-          });
+          this.raise(Errors.SourcePhaseImportRequiresDefault, specifiers[0].loc.start);
         }
       } else if (node.phase === "defer") {
         if (singleBindingType !== "ImportNamespaceSpecifier") {
-          this.raise(Errors.DeferImportRequiresNamespace, {
-            at: specifiers[0].loc.start
-          });
+          this.raise(Errors.DeferImportRequiresNamespace, specifiers[0].loc.start);
         }
       } else if (node.module) {
         var _node$assertions;
         if (singleBindingType !== "ImportDefaultSpecifier") {
-          this.raise(Errors.ImportReflectionNotBinding, {
-            at: specifiers[0].loc.start
-          });
+          this.raise(Errors.ImportReflectionNotBinding, specifiers[0].loc.start);
         }
         if (((_node$assertions = node.assertions) == null ? void 0 : _node$assertions.length) > 0) {
-          this.raise(Errors.ImportReflectionHasAssertion, {
-            at: node.specifiers[0].loc.start
-          });
+          this.raise(Errors.ImportReflectionHasAssertion, specifiers[0].loc.start);
         }
       }
     }
@@ -14231,9 +13776,7 @@ var lib = createCommonjsModule(function(module, exports) {
             }
           });
           if (nonDefaultNamedSpecifier !== void 0) {
-            this.raise(Errors.ImportJSONBindingNotDefault, {
-              at: nonDefaultNamedSpecifier.loc.start
-            });
+            this.raise(Errors.ImportJSONBindingNotDefault, nonDefaultNamedSpecifier.loc.start);
           }
         }
       }
@@ -14343,8 +13886,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const node = this.startNode();
         const keyName = this.state.value;
         if (attrNames.has(keyName)) {
-          this.raise(Errors.ModuleAttributesWithDuplicateKeys, {
-            at: this.state.startLoc,
+          this.raise(Errors.ModuleAttributesWithDuplicateKeys, this.state.startLoc, {
             key: keyName
           });
         }
@@ -14356,9 +13898,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         this.expect(14);
         if (!this.match(133)) {
-          throw this.raise(Errors.ModuleAttributeInvalidValue, {
-            at: this.state.startLoc
-          });
+          throw this.raise(Errors.ModuleAttributeInvalidValue, this.state.startLoc);
         }
         node.value = this.parseStringLiteral(this.state.value);
         attrs.push(this.finishNode(node, "ImportAttribute"));
@@ -14373,22 +13913,17 @@ var lib = createCommonjsModule(function(module, exports) {
         const node = this.startNode();
         node.key = this.parseIdentifier(true);
         if (node.key.name !== "type") {
-          this.raise(Errors.ModuleAttributeDifferentFromType, {
-            at: node.key
-          });
+          this.raise(Errors.ModuleAttributeDifferentFromType, node.key);
         }
         if (attributes.has(node.key.name)) {
-          this.raise(Errors.ModuleAttributesWithDuplicateKeys, {
-            at: node.key,
+          this.raise(Errors.ModuleAttributesWithDuplicateKeys, node.key, {
             key: node.key.name
           });
         }
         attributes.add(node.key.name);
         this.expect(14);
         if (!this.match(133)) {
-          throw this.raise(Errors.ModuleAttributeInvalidValue, {
-            at: this.state.startLoc
-          });
+          throw this.raise(Errors.ModuleAttributeInvalidValue, this.state.startLoc);
         }
         node.value = this.parseStringLiteral(this.state.value);
         attrs.push(this.finishNode(node, "ImportAttribute"));
@@ -14415,9 +13950,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (this.isContextual(94) && !this.hasPrecedingLineBreak()) {
         if (this.hasPlugin("importAttributes")) {
           if (this.getPluginOption("importAttributes", "deprecatedAssertSyntax") !== true) {
-            this.raise(Errors.ImportAttributesUseAssert, {
-              at: this.state.startLoc
-            });
+            this.raise(Errors.ImportAttributesUseAssert, this.state.startLoc);
           }
           this.addExtra(node, "deprecatedAssertSyntax", true);
         } else {
@@ -14469,9 +14002,7 @@ var lib = createCommonjsModule(function(module, exports) {
           first = false;
         } else {
           if (this.eat(14)) {
-            throw this.raise(Errors.DestructureNamedImport, {
-              at: this.state.startLoc
-            });
+            throw this.raise(Errors.DestructureNamedImport, this.state.startLoc);
           }
           this.expect(12);
           if (this.eat(8))
@@ -14493,8 +14024,7 @@ var lib = createCommonjsModule(function(module, exports) {
           imported
         } = specifier;
         if (importedIsString) {
-          throw this.raise(Errors.ImportBindingIsString, {
-            at: specifier,
+          throw this.raise(Errors.ImportBindingIsString, specifier, {
             importName: imported.value
           });
         }
@@ -14529,6 +14059,7 @@ var lib = createCommonjsModule(function(module, exports) {
       file.errors = null;
       this.parseTopLevel(file, program);
       file.errors = this.state.errors;
+      file.comments.length = this.state.commentsLen;
       return file;
     }
   }
