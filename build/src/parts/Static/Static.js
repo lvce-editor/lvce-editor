@@ -136,6 +136,19 @@ const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
 }
 
+const copyTestWorkerFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'packages/test-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/test-worker/src`,
+  })
+  // TODO
+  // await Replace.replace({
+  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/Platform/Platform.js`,
+  //   occurrence: `/src/extensionHostWorkerMain.js`,
+  //   replacement: '/dist/extensionHostWorkerMain.js',
+  // })
+  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
+}
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copy({
     from: 'static/config',
@@ -536,6 +549,10 @@ export const build = async ({ product }) => {
   Console.time('copyExtensionHostSubWorkerFiles')
   await copyExtensionHostSubWorkerFiles({ commitHash })
   Console.timeEnd('copyExtensionHostSubWorkerFiles')
+
+  Console.time('copyTestWorkerFiles')
+  await copyTestWorkerFiles({ commitHash })
+  Console.timeEnd('copyTestWorkerFiles')
 
   Console.time('applyJsOverrides')
   await applyJsOverrides({ pathPrefix, commitHash })
