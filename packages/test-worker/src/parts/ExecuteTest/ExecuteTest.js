@@ -1,5 +1,5 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Rpc from '../Rpc/Rpc.js'
 import * as TestType from '../TestType/TestType.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 import { VError } from '../VError/VError.js'
@@ -67,5 +67,5 @@ export const executeTest = async (name, fn, globals = {}) => {
     text = `test passed in ${_formattedDuration}`
     state = TestType.Pass
   }
-  await RendererProcess.invoke('TestFrameWork.showOverlay', state, background, text)
+  await Rpc.invoke('TestFrameWork.showOverlay', state, background, text)
 }
