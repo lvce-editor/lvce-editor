@@ -8,6 +8,8 @@ export const getModule = (method) => {
       return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js')
     case IpcChildType.ReferencePort:
       return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.js')
+    case IpcChildType.ModuleWorkerAndMessagePort:
+      return import('../IpcChildWithModuleWorkerAndMessagePort/IpcChildWithModuleWorkerAndMessagePort.js')
     default:
       throw new Error('unexpected ipc type')
   }
