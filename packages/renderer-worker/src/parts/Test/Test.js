@@ -14,7 +14,6 @@ export const execute = async (href) => {
     ...TestFrameWorkComponent,
     ...TestFrameWork,
   }
-  ExposeGlobals.exposeGlobals(globalThis, globals)
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)
