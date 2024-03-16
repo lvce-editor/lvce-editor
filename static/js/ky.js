@@ -220,7 +220,7 @@ const findUnknownOptions = (request, options) => {
 class Ky {
   static create(input, options) {
     const ky2 = new Ky(input, options);
-    const fn = async () => {
+    const function_ = async () => {
       if (typeof ky2._options.timeout === "number" && ky2._options.timeout > maxSafeTimeout) {
         throw new RangeError(`The \`timeout\` option cannot be greater than ${maxSafeTimeout}`);
       }
@@ -252,7 +252,7 @@ class Ky {
       return response;
     };
     const isRetriableMethod = ky2._options.retry.methods.includes(ky2.request.method.toLowerCase());
-    const result = isRetriableMethod ? ky2._retry(fn) : fn();
+    const result = isRetriableMethod ? ky2._retry(function_) : function_();
     for (const [type, mimeType] of Object.entries(responseTypes)) {
       result[type] = async () => {
         ky2.request.headers.set("accept", ky2.request.headers.get("accept") || mimeType);
@@ -309,8 +309,9 @@ class Ky {
       value: void 0
     });
     this._input = input;
+    const isCredentialsSupported = "credentials" in Request.prototype;
     this._options = {
-      credentials: this._input.credentials || "same-origin",
+      credentials: isCredentialsSupported ? this._input.credentials : void 0,
       ...options,
       headers: mergeHeaders(this._input.headers, options.headers),
       hooks: deepMerge({
@@ -369,7 +370,7 @@ class Ky {
   }
   _calculateRetryDelay(error) {
     this._retryCount++;
-    if (this._retryCount < this._options.retry.limit && !(error instanceof TimeoutError)) {
+    if (this._retryCount <= this._options.retry.limit && !(error instanceof TimeoutError)) {
       if (error instanceof HTTPError) {
         if (!this._options.retry.statusCodes.includes(error.response.status)) {
           return 0;
@@ -402,9 +403,9 @@ class Ky {
     }
     return response;
   }
-  async _retry(fn) {
+  async _retry(function_) {
     try {
-      return await fn();
+      return await function_();
     } catch (error) {
       const ms = Math.min(this._calculateRetryDelay(error), maxSafeTimeout);
       if (ms !== 0 && this._retryCount > 0) {
@@ -420,7 +421,7 @@ class Ky {
             return;
           }
         }
-        return this._retry(fn);
+        return this._retry(function_);
       }
       throw error;
     }
