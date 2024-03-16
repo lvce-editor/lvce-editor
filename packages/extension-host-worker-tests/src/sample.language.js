@@ -1,6 +1,6 @@
 export const name = 'sample.language'
 
-export const test = async ({ FileSystem, Workspace, Extension, Main }) => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, 'test')
