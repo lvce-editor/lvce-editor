@@ -26,7 +26,7 @@
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/@@NAME@@]
 
 # electron missing dependencies
-@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 7 others
+@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 11 others
 
 # ripgrep - how to resolve this error?
 @@NAME@@: statically-linked-binary usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep/bin/rg
@@ -40,8 +40,6 @@
 # node modules
 @@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
@@ -49,8 +47,12 @@
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/clang-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/eslint-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.d.ts]
-@@NAME@@: shared-library-is-executable 0775 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
+@@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
+
+# tar-fs
+@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
+@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
 
 # extensions
 @@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
