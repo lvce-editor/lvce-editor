@@ -1,4 +1,11 @@
+export const state = {
+  configuration: Object.create(null),
+}
+
 export const getConfiguration = (key) => {
-  // TODO
-  return ''
+  return state.configuration[key] ?? ''
+}
+
+export const setConfigurations = (preferences) => {
+  state.configuration = preferences
 }
