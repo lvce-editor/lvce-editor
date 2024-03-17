@@ -1,14 +1,13 @@
-import * as Command from '../Command/Command.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Rpc from '../Rpc/Rpc.js'
 
 export const writeFile = async (path, content) => {
-  await Command.execute('FileSystem.writeFile', path, content)
+  await Rpc.invoke('FileSystem.writeFile', path, content)
 }
 
 export const mkdir = async (path) => {
-  await Command.execute('FileSystem.mkdir', path)
+  await Rpc.invoke('FileSystem.mkdir', path)
 }
 
 export const getTmpDir = async ({ scheme = FileSystemProtocol.Memfs } = {}) => {
@@ -21,7 +20,7 @@ export const getTmpDir = async ({ scheme = FileSystemProtocol.Memfs } = {}) => {
 }
 
 export const chmod = async (uri, permissions) => {
-  await Command.execute('FileSystem.chmod', uri, permissions)
+  await Rpc.invoke('FileSystem.chmod', uri, permissions)
 }
 
 export const createExecutable = async (content) => {
@@ -40,6 +39,6 @@ export const createExecutable = async (content) => {
 export const createExecutableFrom = async (path) => {
   const testPath = await Rpc.invoke('PlatformPaths.getTestPath')
   const absolutePath = testPath + PathSeparatorType.Slash + path
-  const content = await Command.execute('Ajax.getText', absolutePath)
+  const content = await Rpc.invoke('Ajax.getText', absolutePath)
   return createExecutable(content)
 }
