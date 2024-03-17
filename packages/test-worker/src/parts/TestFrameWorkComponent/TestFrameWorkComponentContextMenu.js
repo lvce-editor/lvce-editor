@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const selectItem = async (text) => {
-  await Command.execute('Menu.selectItem', text)
+  await Rpc.invoke('Menu.selectItem', text)
 }

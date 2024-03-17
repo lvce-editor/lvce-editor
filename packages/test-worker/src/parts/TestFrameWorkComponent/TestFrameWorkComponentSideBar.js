@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const open = async (id) => {
-  await Command.execute('SideBar.openViewlet', id)
+  await Rpc.invoke('SideBar.openViewlet', id)
 }

@@ -1,69 +1,69 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const openContextMenu = async (index) => {
-  await Command.execute('Explorer.handleContextMenuKeyboard', index)
+  await Rpc.invoke('Explorer.handleContextMenuKeyboard', index)
 }
 
 export const focus = async () => {
-  await Command.execute('Explorer.focusIndex', -1)
+  await Rpc.invoke('Explorer.focusIndex', -1)
 }
 
 export const focusNext = async () => {
-  await Command.execute('Explorer.focusNext')
+  await Rpc.invoke('Explorer.focusNext')
 }
 
 export const focusIndex = async (index) => {
-  await Command.execute('Explorer.focusIndex', index)
+  await Rpc.invoke('Explorer.focusIndex', index)
 }
 
 export const clickCurrent = async () => {
-  await Command.execute('Explorer.handleClickCurrent')
+  await Rpc.invoke('Explorer.handleClickCurrent')
 }
 
 export const handleArrowLeft = async () => {
-  await Command.execute('Explorer.handleArrowLeft')
+  await Rpc.invoke('Explorer.handleArrowLeft')
 }
 
 export const focusLast = async () => {
-  await Command.execute('Explorer.focusLast')
+  await Rpc.invoke('Explorer.focusLast')
 }
 
 export const focusFirst = async () => {
-  await Command.execute('Explorer.focusFirst')
+  await Rpc.invoke('Explorer.focusFirst')
 }
 
 export const removeDirent = async () => {
-  await Command.execute('Explorer.removeDirent')
+  await Rpc.invoke('Explorer.removeDirent')
 }
 
 export const expandRecursively = async () => {
-  await Command.execute('Explorer.expandRecursively')
+  await Rpc.invoke('Explorer.expandRecursively')
 }
 
 export const newFile = async () => {
-  await Command.execute('Explorer.newFile')
+  await Rpc.invoke('Explorer.newFile')
 }
 
 export const handleClick = async (index) => {
-  await Command.execute('Explorer.handleClick', index)
+  await Rpc.invoke('Explorer.handleClick', index)
 }
 
 export const rename = async () => {
-  await Command.execute('Explorer.rename')
+  await Rpc.invoke('Explorer.rename')
 }
 
 export const cancelEdit = async () => {
-  await Command.execute('Explorer.cancelEdit')
+  await Rpc.invoke('Explorer.cancelEdit')
 }
 
 export const acceptEdit = async () => {
-  await Command.execute('Explorer.acceptEdit')
+  await Rpc.invoke('Explorer.acceptEdit')
 }
 
 export const updateEditingValue = async (value) => {
-  await Command.execute('Explorer.updateEditingValue', value)
+  await Rpc.invoke('Explorer.updateEditingValue', value)
 }
 
 export const expandAll = async (value) => {
-  await Command.execute('Explorer.expandAll', value)
+  await Rpc.invoke('Explorer.expandAll', value)
 }

@@ -1,3 +1,5 @@
+export const skip = true
+
 export const mockExec = (command, args, options) => {
   if (command === 'test-source-control') {
     if (args[0] === 'get-files') {

@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const openUri = async (uri) => {
-  await Command.execute('Main.openUri', uri)
+  await Rpc.invoke('Main.openUri', uri)
 }

@@ -11,6 +11,7 @@ export const create = async ({ url, name, port }) => {
   if (!IsWorker.isWorker(worker)) {
     throw new IpcError(`worker must be of type Worker`)
   }
+  // TODO use invoke
   const message = JsonRpcEvent.create('initialize', ['message-port', port])
   worker.postMessage(message, [port])
   return undefined

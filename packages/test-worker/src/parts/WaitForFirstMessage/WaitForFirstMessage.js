@@ -11,5 +11,5 @@ export const waitForFirstMessage = async (port) => {
   }
   port.onmessage = handleMessage
   const event = await promise
-  return event.data
+  return event
 }

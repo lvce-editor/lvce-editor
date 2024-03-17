@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const update = async () => {
-  await Command.execute('StatusBar.updateStatusBarItems')
+  await Rpc.invoke('StatusBar.updateStatusBarItems')
 }
