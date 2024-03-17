@@ -130,9 +130,7 @@ const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
 }
 
 const setDom = (viewletId, dom) => {
-  console.log({ dom })
   const instance = state.instances[viewletId]
-  console.log({ viewletId })
   if (!instance) {
     return
   }
