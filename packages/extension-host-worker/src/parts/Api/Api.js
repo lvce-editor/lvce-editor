@@ -6,13 +6,12 @@ import * as ExtensionHostCodeActions from '../ExtensionHostCodeActions/Extension
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
-import * as ExtensionHostQuickPick from '../ExtensionHostQuickPick/ExtensionHostQuickPick.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
+import * as ExtensionHostDialog from '../ExtensionHostDialog/ExtensionHostDialog.js'
 import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
-import * as ExtensionHostDialog from '../ExtensionHostDialog/ExtensionHostDialog.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostGetOffset from '../ExtensionHostGetOffset/ExtensionHostGetOffset.js'
@@ -20,6 +19,8 @@ import * as ExtensionHostGetPosition from '../ExtensionHostGetPosition/Extension
 import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostNodeIpc from '../ExtensionHostNodeRpc/ExtensionHostNodeRpc.js'
+import * as ExtensionHostPrompt from '../ExtensionHostPrompt/ExtensionHostPrompt.js'
+import * as ExtensionHostQuickPick from '../ExtensionHostQuickPick/ExtensionHostQuickPick.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as ExtensionHostSelection from '../ExtensionHostSelection/ExtensionHostSelection.js'
@@ -34,7 +35,6 @@ import { FormattingError } from '../FormattingError/FormattingError.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import { VError } from '../VError/VError.js'
 
-// prettier-ignore
 export const api = {
   // Ajax
   getJson: ExtensionHostAjax.getJson,
@@ -74,7 +74,7 @@ export const api = {
   executeDiagnosticProvider: ExtensionHostDiagnostic.executeDiagnosticProvider,
 
   // Dialog
-  showInformationMessage:ExtensionHostDialog.showInformationMessage,
+  showInformationMessage: ExtensionHostDialog.showInformationMessage,
 
   // Env
   env: ExtensionHostEnv.env,
@@ -111,6 +111,9 @@ export const api = {
   registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
   executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
 
+  // Prompt
+  confirm: ExtensionHostPrompt.confirm,
+
   // QuickPick
   showQuickPick: ExtensionHostQuickPick.showQuickPick,
 
@@ -119,8 +122,8 @@ export const api = {
   executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
 
   // Selection
-  registerSelectionProvider:ExtensionHostSelection.registerSelectionProvider,
-  executeSelectionProvider:ExtensionHostSelection.executeSelectionProvider,
+  registerSelectionProvider: ExtensionHostSelection.registerSelectionProvider,
+  executeSelectionProvider: ExtensionHostSelection.executeSelectionProvider,
 
   // Source Control
   registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
@@ -145,5 +148,5 @@ export const api = {
   createWorker: ExtensionHostWorker.createWorker,
 
   // Workspace
-  getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder
+  getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder,
 }
