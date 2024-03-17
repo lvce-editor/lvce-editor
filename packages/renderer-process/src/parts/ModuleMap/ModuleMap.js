@@ -42,8 +42,6 @@ export const getModuleId = (commandId) => {
     case 'EditorRename.dispose':
     case 'EditorRename.finish':
       return ModuleId.EditorRename
-    case 'Eval.evalCode':
-      return ModuleId.Eval
     case 'FilePicker.showDirectoryPicker':
     case 'FilePicker.showFilePicker':
     case 'FilePicker.showSaveFilePicker':

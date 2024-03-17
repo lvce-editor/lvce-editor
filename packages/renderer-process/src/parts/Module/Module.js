@@ -18,8 +18,6 @@ export const load = (moduleId) => {
       return import('../EditorError/EditorError.ipc.js')
     case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
-    case ModuleId.Eval:
-      return import('../Eval/Eval.ipc.js')
     case ModuleId.FilePicker:
       return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FileSystemHandle:
