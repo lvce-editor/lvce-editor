@@ -11,12 +11,7 @@ const renderDebug = {
     const oldDom = GetRunAndDebugVirtualDom.getRunAndDebugVirtualDom(oldState)
     const newDom = GetRunAndDebugVirtualDom.getRunAndDebugVirtualDom(newState)
     const diff = DiffDom.diffDom(oldDom, newDom)
-    // console.log({ diff })
-    // if (first) {
-    //   first = false
-    return ['setDom', newDom]
-    // }
-    // return ['setPatches', diff]
+    return ['Viewlet.setDom', newDom]
   },
 }
 
