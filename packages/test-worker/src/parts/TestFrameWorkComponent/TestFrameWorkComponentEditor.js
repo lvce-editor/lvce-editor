@@ -16,6 +16,10 @@ export const invokeTabCompletion = async () => {
   await Rpc.invoke('Editor.tabCompletion')
 }
 
+export const executeTabCompletion = async () => {
+  await Rpc.invoke('Editor.tabCompletion')
+}
+
 export const invokeBraceCompletion = async (text) => {
   await Rpc.invoke('Editor.braceCompletion', text)
 }
