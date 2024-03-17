@@ -9,6 +9,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
 
@@ -85,6 +86,7 @@ const startSynching = async (extensionHost) => {
   }
   // @ts-ignore
   await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
+  extensionHost.ipc.invoke('ExtensionHostConfiguration.setConfiguration', Preferences.getAll())
 }
 
 const actuallyActivateExtension = async (extensionHost, extension) => {
