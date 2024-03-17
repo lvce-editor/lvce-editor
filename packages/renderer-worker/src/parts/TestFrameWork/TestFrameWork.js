@@ -11,3 +11,7 @@ export const checkMultiElementCondition = (locator, fnName, options) => {
 export const showOverlay = (...args) => {
   return RendererProcess.invoke('TestFrameWork.showOverlay', ...args)
 }
+
+export const performAction = (...args) => {
+  return RendererProcess.invoke('TestFrameWork.performAction', ...args)
+}
