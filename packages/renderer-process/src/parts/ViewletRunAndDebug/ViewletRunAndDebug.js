@@ -1,6 +1,5 @@
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
-import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
+export * as Events from './ViewletRunAndDebugEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -9,11 +8,6 @@ export const create = () => {
   return {
     $Viewlet,
   }
-}
-
-export const setDom = (state, dom) => {
-  const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom, ViewletDebugEvents)
 }
 
 export const setPatches = (state, diff) => {
