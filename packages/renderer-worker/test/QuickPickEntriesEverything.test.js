@@ -21,12 +21,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const QuickPickEntriesEverything = await import(
-  '../src/parts/QuickPickEntriesEverything/QuickPickEntriesEverything.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const QuickPickEntriesEverything = await import('../src/parts/QuickPickEntriesEverything/QuickPickEntriesEverything.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 const mockProvider = {
   name: 'mock',
@@ -109,7 +105,7 @@ test('selectPick', async () => {
   expect(
     await QuickPickEntriesEverything.selectPick({
       label: 'test-file-1.txt',
-    })
+    }),
   ).toEqual({
     command: QuickPickReturnValue.Hide,
   })

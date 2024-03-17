@@ -17,11 +17,7 @@ test('loadContent', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')

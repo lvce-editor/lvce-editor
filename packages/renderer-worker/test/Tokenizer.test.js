@@ -20,7 +20,7 @@ test.skip('loadTokenizer', async () => {
   await writeFile(
     tokenizePath,
     `export const tokenizeLine = () => {}
-export const TokenMap = {}`
+export const TokenMap = {}`,
   )
   await writeFile(join(temporaryDir, 'package.json'), '{ "type": "module" }')
   TokenizerState.set(id, tokenizePath)
@@ -80,7 +80,7 @@ test.skip('loadTokenizer - TokenMap should be an Object', async () => {
   await writeFile(
     tokenizePath,
     `export const tokenizeLine = () => {}
-export const TokenMap = 2`
+export const TokenMap = 2`,
   )
   await writeFile(join(temporaryDir, 'package.json'), '{ "type": "module" }')
   TokenizerState.set(id, tokenizePath)

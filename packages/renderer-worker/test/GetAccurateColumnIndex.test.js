@@ -35,7 +35,7 @@ test('getAccurateColumnIndex - at start of line', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(0)
 })
 
@@ -61,7 +61,7 @@ test('getAccurateColumnIndex - match exactly after first letter', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(0)
 })
 
@@ -87,7 +87,7 @@ test('getAccurateColumnIndex - before first letter', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(0)
 })
 
@@ -113,7 +113,7 @@ test('getAccurateColumnIndex - almost at first letter', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(1)
 })
 
@@ -143,7 +143,7 @@ test('getAccurateColumnIndex - almost at second letter', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(2)
 })
 
@@ -171,7 +171,7 @@ test('getAccurateColumnIndex - at second letter', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(2)
 })
 
@@ -207,7 +207,7 @@ test('getAccurateColumnIndex - emoji', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe('👮🏽‍♀️'.length * 4)
 })
 
@@ -233,7 +233,7 @@ test('getAccurateColumnIndex - normalize tab', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(4)
   expect(MeasureTextWidth.measureTextWidth).toHaveBeenCalledTimes(1)
   expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(1, '  tes', 400, 15, 'Test', 0.5, false, 9)
@@ -261,7 +261,7 @@ test('getAccurateColumnIndex - line starting with tab', () => {
     }
   })
   expect(
-    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX),
   ).toBe(4)
   expect(MeasureTextWidth.measureTextWidth).toHaveBeenCalledTimes(1)
   expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(1, '  try', 400, 15, 'Test', 0.5, false, 9.73080444)

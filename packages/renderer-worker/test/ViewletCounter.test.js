@@ -3,12 +3,7 @@ import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletCounter,
-    oldState,
-    newState,
-    ViewletModuleId.Counter
-  )
+  return ViewletManager.render(ViewletCounter, oldState, newState, ViewletModuleId.Counter)
 }
 
 test('create', () => {
@@ -42,7 +37,5 @@ test('render', () => {
     ...oldState,
     count: 1,
   }
-  expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'Counter', 'setCount', 1],
-  ])
+  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Counter', 'setCount', 1]])
 })

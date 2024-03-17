@@ -6,16 +6,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -24,12 +21,8 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 const Menu = await import('../src/parts/Menu/Menu.js')
 
@@ -38,15 +31,7 @@ test.skip('show', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Menu.show(0, 0, 'file')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Menu.show',
-    0,
-    0,
-    250,
-    200,
-    0,
-    expect.any(Array)
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Menu.show', 0, 0, 250, 200, 0, expect.any(Array))
 })
 
 test.skip('hide', async () => {

@@ -5,24 +5,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
-const OffscreenCanvas = await import(
-  '../src/parts/OffscreenCanvas/OffscreenCanvas.js'
-)
+const OffscreenCanvas = await import('../src/parts/OffscreenCanvas/OffscreenCanvas.js')
 
 test('create', async () => {
   // @ts-ignore
