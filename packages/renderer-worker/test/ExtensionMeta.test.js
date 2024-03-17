@@ -58,7 +58,7 @@ test('organizeExtensions', () => {
           originalStack: "Error: ENOTDIR: not a directory, open '/test/language-basics-markdown/extension.json'",
         },
       },
-    ])
+    ]),
   ).toEqual({
     rejected: [
       {
@@ -174,8 +174,8 @@ test('filterByMatchingEvent', () => {
           activation: ['onCommand:xyz'],
         },
       ],
-      'onCommand:xyz'
-    )
+      'onCommand:xyz',
+    ),
   ).toEqual([
     {
       activation: ['onCommand:xyz'],

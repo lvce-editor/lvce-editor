@@ -11,8 +11,8 @@ test('compare dirent - symlink to file and file should be ordered next to each o
       {
         name: 'file-1.txt',
         type: DirentType.SymLinkFile,
-      }
-    )
+      },
+    ),
   ).toBe(0)
 })
 
@@ -26,8 +26,8 @@ test('compare dirent - numeric order', () => {
       {
         name: 'file-10.txt',
         type: DirentType.File,
-      }
-    )
+      },
+    ),
   ).toBe(-1)
 })
 
@@ -41,8 +41,8 @@ test('compare dirent - symlink to directory and directory should be ordered next
       {
         name: 'folder-1',
         type: DirentType.SymLinkFolder,
-      }
-    )
+      },
+    ),
   ).toBe(0)
 })
 
@@ -56,7 +56,7 @@ test.only('compare dirent - folder', () => {
       {
         name: 'f',
         type: DirentType.Directory,
-      }
-    )
+      },
+    ),
   ).toBe(1)
 })

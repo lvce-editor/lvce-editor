@@ -28,15 +28,12 @@ test('editorHandleNativeSelectionChange', () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(
-    EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange(
-      editor,
-      {
-        startRowIndex: 10,
-        startColumnIndex: 10,
-        endRowIndex: 10,
-        endColumnIndex: 14,
-      }
-    )
+    EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange(editor, {
+      startRowIndex: 10,
+      startColumnIndex: 10,
+      endRowIndex: 10,
+      endColumnIndex: 14,
+    }),
   ).toMatchObject({
     selections: EditorSelection.fromRange(10, 10, 10, 14),
   })

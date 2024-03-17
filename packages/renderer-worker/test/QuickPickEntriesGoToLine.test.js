@@ -41,9 +41,7 @@ test('getPicks', async () => {
 })
 
 test.skip('selectPick', async () => {
-  expect(
-    await QuickPickEntriesGoToLine.selectPick({ label: 'test item 1' })
-  ).toEqual({
+  expect(await QuickPickEntriesGoToLine.selectPick({ label: 'test item 1' })).toEqual({
     command: QuickPickReturnValue.Hide,
   })
 })

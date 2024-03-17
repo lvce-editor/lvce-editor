@@ -18,12 +18,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletEditorImage = await import(
-  '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
-)
-const ViewletEditorImageCopyPath = await import(
-  '../src/parts/ViewletEditorImage/ViewletEditorImageCopyPath.js'
-)
+const ViewletEditorImage = await import('../src/parts/ViewletEditorImage/ViewletEditorImage.js')
+const ViewletEditorImageCopyPath = await import('../src/parts/ViewletEditorImage/ViewletEditorImageCopyPath.js')
 
 test('copyPath', async () => {
   const state = {
@@ -32,8 +28,5 @@ test('copyPath', async () => {
   }
   await ViewletEditorImageCopyPath.copyPath(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ClipBoard.writeText',
-    '/test/file.jpg'
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ClipBoard.writeText', '/test/file.jpg')
 })

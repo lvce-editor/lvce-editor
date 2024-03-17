@@ -4,20 +4,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const Notification = await import('../src/parts/Notification/Notification.js')
 
 test('create', async () => {
@@ -25,11 +20,7 @@ test('create', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Notification.create('info', 'sample text')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Notification.create',
-    'info',
-    'sample text'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.create', 'info', 'sample text')
 })
 
 test('dispose', async () => {

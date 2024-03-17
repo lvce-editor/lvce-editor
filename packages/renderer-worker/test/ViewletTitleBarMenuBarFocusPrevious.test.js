@@ -21,9 +21,7 @@ test('focusPrevious', () => {
       },
     ],
   }
-  expect(
-    ViewletTitleBarMenuBarFocusPrevious.focusPrevious(state)
-  ).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocusPrevious.focusPrevious(state)).toMatchObject({
     focusedIndex: 0,
   })
 })
@@ -47,9 +45,7 @@ test('focusPrevious - at start', () => {
       },
     ],
   }
-  expect(
-    ViewletTitleBarMenuBarFocusPrevious.focusPrevious(state)
-  ).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocusPrevious.focusPrevious(state)).toMatchObject({
     focusedIndex: 2,
   })
 })

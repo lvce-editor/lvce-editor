@@ -4,16 +4,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js',
-  () => {
-    return {
-      executeTabCompletionProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostTabCompletion.js', () => {
+  return {
+    executeTabCompletionProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   return {
     handleError: jest.fn(() => {
@@ -21,32 +18,19 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js',
-  () => {
-    return {
-      showErrorMessage: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.js', () => {
+  return {
+    showErrorMessage: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const EditorTabCompletion = await import(
-  '../src/parts/EditorCommand/EditorCommandTabCompletion.js'
-)
-const ExtensionHostTabCompletion = await import(
-  '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js'
-)
-const EditorSelection = await import(
-  '../src/parts/EditorSelection/EditorSelection.js'
-)
-const ErrorHandling = await import(
-  '../src/parts/ErrorHandling/ErrorHandling.js'
-)
-const EditorShowMessage = await import(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
-)
+const EditorTabCompletion = await import('../src/parts/EditorCommand/EditorCommandTabCompletion.js')
+const ExtensionHostTabCompletion = await import('../src/parts/ExtensionHost/ExtensionHostTabCompletion.js')
+const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
 
 test('editorTabCompletion - no tab completion available', async () => {
   const editor = {
@@ -55,11 +39,9 @@ test('editorTabCompletion - no tab completion available', async () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   // @ts-ignore
-  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
-    () => {
-      return null
-    }
-  )
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(() => {
+    return null
+  })
   expect(await EditorTabCompletion.tabCompletion(editor)).toBe(editor)
 })
 
@@ -71,15 +53,13 @@ test('editorTabCompletion - tab completion available', async () => {
     undoStack: [],
   }
   // @ts-ignore
-  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
-    () => {
-      return {
-        inserted: 'bc',
-        deleted: 1,
-        type: /* Snippet */ 2,
-      }
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(() => {
+    return {
+      inserted: 'bc',
+      deleted: 1,
+      type: /* Snippet */ 2,
     }
-  )
+  })
   expect(await EditorTabCompletion.tabCompletion(editor)).toMatchObject({
     lines: ['bc'],
   })
@@ -105,17 +85,15 @@ test('editorTabCompletion - multiline snippet', async () => {
     undoStack: [],
   }
   // @ts-ignore
-  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
-    () => {
-      return {
-        inserted: `<div>
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(() => {
+    return {
+      inserted: `<div>
   $0
 </div>`,
-        deleted: 1,
-        type: /* Snippet */ 2,
-      }
+      deleted: 1,
+      type: /* Snippet */ 2,
     }
-  )
+  })
   expect(await EditorTabCompletion.tabCompletion(editor)).toMatchObject({
     lines: ['<div>', '  $0', '</div>'],
   })
@@ -152,11 +130,9 @@ at Module.provideTabCompletion (/test/builtin.language-features-css/src/parts/Ex
 54 |         break
 55 |       case State.AfterSelector:"`
   // @ts-ignore
-  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
-    () => {
-      throw error
-    }
-  )
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(() => {
+    throw error
+  })
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
   // @ts-ignore
@@ -165,10 +141,5 @@ at Module.provideTabCompletion (/test/builtin.language-features-css/src/parts/Ex
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(error)
   expect(EditorShowMessage.showErrorMessage).toHaveBeenCalledTimes(1)
-  expect(EditorShowMessage.showErrorMessage).toHaveBeenCalledWith(
-    editor,
-    0,
-    1,
-    'Error: Failed to execute tab completion provider: no'
-  )
+  expect(EditorShowMessage.showErrorMessage).toHaveBeenCalledWith(editor, 0, 1, 'Error: Failed to execute tab completion provider: no')
 })

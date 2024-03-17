@@ -54,6 +54,10 @@ export const get = (key) => {
   return state[key]
 }
 
+export const getAll = () => {
+  return state
+}
+
 export const set = async (key, value) => {
   state[key] = value
   if (Platform.platform === PlatformType.Web) {

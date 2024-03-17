@@ -44,3 +44,4 @@ export const TextSearchExecuteTextSearchProvider = 'ExtensionHostTextSearch.exec
 export const TypeDefinitionExecuteTypeDefinitionProvider = 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider'
 export const WorkspaceSetPath = 'Workspace.setWorkspacePath'
 export const SelectionExecuteSelectionProvider = 'ExtensionHostSelection.executeSelectionProvider'
+export const ConfigurationSetConfiguration = 'ExtensionHostConfiguration.setConfiguration'

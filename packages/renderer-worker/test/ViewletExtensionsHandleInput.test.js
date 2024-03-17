@@ -109,7 +109,7 @@ test('handleInput - error', async () => {
   // @ts-ignore
   SearchExtensions.searchExtensions.mockImplementation(() => {
     throw new Error(
-      'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found'
+      'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found',
     )
   })
   expect(await ViewletExtensionsHandleInput.handleInput(state, 'test')).toMatchObject({

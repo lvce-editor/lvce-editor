@@ -19,7 +19,7 @@ test('applyEdits - one single line edit', () => {
         inserted: ['a'],
         deleted: [''],
       },
-    ])
+    ]),
   ).toEqual(['a'])
 })
 
@@ -41,7 +41,7 @@ test('applyEdits - one multi line edit', () => {
         inserted: ['a'],
         deleted: ['ine 1', 'li'],
       },
-    ])
+    ]),
   ).toEqual(['lane 2'])
 })
 
@@ -63,7 +63,7 @@ test('applyEdits - new line inserted', () => {
         inserted: ['', ''],
         deleted: [''],
       },
-    ])
+    ]),
   ).toEqual(['', 'line 1', 'line 2'])
 })
 
@@ -85,7 +85,7 @@ test('applyEdits - multiple new lines inserted', () => {
         inserted: ['', '', '', ''],
         deleted: [''],
       },
-    ])
+    ]),
   ).toEqual(['', '', '', 'line 1', 'line 2'])
 })
 
@@ -107,7 +107,7 @@ test('applyEdits - virtual space insertion', () => {
         inserted: ['a'],
         deleted: [''],
       },
-    ])
+    ]),
   ).toEqual(['     a'])
 })
 
@@ -130,7 +130,7 @@ test('applyEdits - new line inserted in middle', () => {
         deleted: [''],
         origin: EditOrigin.InsertLineBreak,
       },
-    ])
+    ]),
   ).toEqual(['  ', '  11111', '22222'])
 })
 
@@ -154,7 +154,7 @@ test('applyEdits - multiple insertions in one line', () => {
         deleted: [],
         origin: EditOrigin.ToggleBlockComment,
       },
-    ])
+    ]),
   ).toEqual(['  <body>', '    <!--sample test -->', '  </body>'])
 })
 
@@ -171,7 +171,7 @@ test('applyEdits - single deletion in one line', () => {
         deleted: ['<!--'],
         origin: EditOrigin.ToggleBlockComment,
       },
-    ])
+    ]),
   ).toEqual(['  <body>', '    sample test-->', '  </body>'])
 })
 
@@ -195,7 +195,7 @@ test('applyEdits - multiple deletions in one line', () => {
         deleted: ['-->'],
         origin: EditOrigin.ToggleBlockComment,
       },
-    ])
+    ]),
   ).toEqual(['  <body>', '    sample test', '  </body>'])
 })
 test('applyEdits - deletions in multiple lines', () => {
@@ -218,7 +218,7 @@ test('applyEdits - deletions in multiple lines', () => {
         deleted: ['-->'],
         origin: EditOrigin.ToggleBlockComment,
       },
-    ])
+    ]),
   ).toEqual(['  <body>', '    sample test', '', '  </body>'])
 })
 
@@ -228,8 +228,8 @@ test('positionAt - in first line', () => {
       {
         lines: ['11111', '22222'],
       },
-      4
-    )
+      4,
+    ),
   ).toEqual({
     rowIndex: 0,
     columnIndex: 4,
@@ -242,8 +242,8 @@ test('positionAt - at end of first line', () => {
       {
         lines: ['11111', '22222'],
       },
-      5
-    )
+      5,
+    ),
   ).toEqual({
     rowIndex: 0,
     columnIndex: 5,
@@ -256,8 +256,8 @@ test('positionAt - at start of second line', () => {
       {
         lines: ['11111', '22222'],
       },
-      6
-    )
+      6,
+    ),
   ).toEqual({
     rowIndex: 1,
     columnIndex: 0,
@@ -282,7 +282,7 @@ test('applyEdits - issue with pasting many lines', () => {
         inserted: [...Array.from({ length: 150_000 }).fill('a')],
         deleted: [''],
       },
-    ])
+    ]),
   ).toEqual([...Array.from({ length: 150_000 }).fill('a')])
 })
 
@@ -336,7 +336,7 @@ test('applyEdits - virtual space', () => {
         deleted: ['line 1', 'line 2', 'line 3'],
         origin: EditOrigin.EditorPasteText,
       },
-    ])
+    ]),
   ).toEqual(['line 1,line 2,line 3'])
 })
 
@@ -385,7 +385,7 @@ test('applyEdits - issue with inserting multiple lines', () => {
         deleted: ['line 1', 'line 2', 'line 3'],
         origin: EditOrigin.EditorPasteText,
       },
-    ])
+    ]),
   ).toEqual(['line 1', 'line 2', 'line 3'])
 })
 

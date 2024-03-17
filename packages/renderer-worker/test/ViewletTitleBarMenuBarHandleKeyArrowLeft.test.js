@@ -54,9 +54,7 @@ test('handleKeyArrowLeft - close sub menu', () => {
       },
     ],
   }
-  expect(
-    ViewletTitleBarMenuBarHandleKeyArrowLeft.handleKeyArrowLeft(state)
-  ).toMatchObject({
+  expect(ViewletTitleBarMenuBarHandleKeyArrowLeft.handleKeyArrowLeft(state)).toMatchObject({
     menus: [
       {
         level: 0,

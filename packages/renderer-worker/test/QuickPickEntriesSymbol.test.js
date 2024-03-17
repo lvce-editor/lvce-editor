@@ -24,15 +24,11 @@ test('getPicks', async () => {
 })
 
 test('selectPick', async () => {
-  expect(
-    await QuickPickEntriesSymbol.selectPick({ label: 'test item 1' })
-  ).toEqual({
+  expect(await QuickPickEntriesSymbol.selectPick({ label: 'test item 1' })).toEqual({
     command: QuickPickReturnValue.Hide,
   })
 })
 
 test('getFilterValue', async () => {
-  expect(QuickPickEntriesSymbol.getFilterValue('test item 1')).toBe(
-    'test item 1'
-  )
+  expect(QuickPickEntriesSymbol.getFilterValue('test item 1')).toBe('test item 1')
 })

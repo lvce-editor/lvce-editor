@@ -75,7 +75,7 @@ test.skip('contentLoaded', async () => {
         name: 'Extension Host',
       },
     ],
-    -1
+    -1,
   )
 })
 

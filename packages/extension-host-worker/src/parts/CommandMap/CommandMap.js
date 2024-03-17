@@ -4,6 +4,7 @@ import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHo
 import * as ExtensionHostCodeActions from '../ExtensionHostCodeActions/ExtensionHostCodeActions.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
@@ -121,6 +122,8 @@ export const getFn = (method) => {
       return ExtensionHostCodeActions.executeOrganizeImports
     case ExtensionHostCommandType.SelectionExecuteSelectionProvider:
       return ExtensionHostSelection.executeSelectionProvider
+    case ExtensionHostCommandType.ConfigurationSetConfiguration:
+      return ExtensionHostConfiguration.setConfigurations
     default:
       throw new CommandNotFoundError(method)
   }
