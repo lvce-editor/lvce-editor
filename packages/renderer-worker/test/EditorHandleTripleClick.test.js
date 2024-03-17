@@ -9,13 +9,7 @@ test.skip('editorHandleTripleClick', () => {
     },
     selections: [],
   }
-  expect(
-    EditorHandleTripleClick.handleTripleClick(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
+  expect(EditorHandleTripleClick.handleTripleClick(editor, editor.cursor.rowIndex, editor.cursor.columnIndex)).toMatchObject({
     cursor: {
       rowIndex: 0,
       columnIndex: 17,

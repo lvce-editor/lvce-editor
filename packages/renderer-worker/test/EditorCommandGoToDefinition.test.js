@@ -135,7 +135,7 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
     0,
     0,
     'Error: Failed to execute definition provider: No definition provider found',
-    false
+    false,
   )
   expect(spy).not.toHaveBeenCalled()
 })

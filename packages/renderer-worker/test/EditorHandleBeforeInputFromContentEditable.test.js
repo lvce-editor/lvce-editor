@@ -30,16 +30,12 @@ test('editorHandleBeforeInputFromContentEditable', () => {
     undoStack: [],
   }
   expect(
-    EditorHandleBeforeInputFromContentEditable.handleBeforeInputFromContentEditable(
-      editor,
-      '',
-      {
-        startRowIndex: 10,
-        startColumnIndex: 10,
-        endRowIndex: 10,
-        endColumnIndex: 14,
-      }
-    )
+    EditorHandleBeforeInputFromContentEditable.handleBeforeInputFromContentEditable(editor, '', {
+      startRowIndex: 10,
+      startColumnIndex: 10,
+      endRowIndex: 10,
+      endColumnIndex: 14,
+    }),
   ).toMatchObject({
     lines: [
       'h1 {',

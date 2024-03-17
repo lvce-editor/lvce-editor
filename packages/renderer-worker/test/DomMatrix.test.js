@@ -14,14 +14,7 @@ beforeAll(() => {
     }
 
     translate(deltaX = 0, deltaY = 0) {
-      return new DOMMatrixReadOnly([
-        this.a,
-        this.b,
-        this.c,
-        this.d,
-        this.e + this.a * deltaX,
-        this.f + this.d * deltaY,
-      ])
+      return new DOMMatrixReadOnly([this.a, this.b, this.c, this.d, this.e + this.a * deltaX, this.f + this.d * deltaY])
     }
   }
 
@@ -43,14 +36,7 @@ beforeAll(() => {
     }
 
     translate(deltaX, deltaY) {
-      return new DOMMatrix([
-        this.a,
-        this.b,
-        this.c,
-        this.d,
-        this.e + this.a * deltaX,
-        this.f + this.d * deltaY,
-      ])
+      return new DOMMatrix([this.a, this.b, this.c, this.d, this.e + this.a * deltaX, this.f + this.d * deltaY])
     }
 
     scaleSelf(scaleX = 1, scaleY = scaleX) {
@@ -102,29 +88,19 @@ test('zoomInto', () => {
 test('zoomInto - twice', () => {
   const domMatrix = DomMatrix.create([1.13, 0, 0, 1.13, 0, 0])
   const newDomMatrix = DomMatrix.zoomInto(domMatrix, 1.13, 0, 0)
-  expect(newDomMatrix).toEqual(
-    DomMatrix.create([1.2768999999999997, 0, 0, 1.2768999999999997, 0, 0])
-  )
+  expect(newDomMatrix).toEqual(DomMatrix.create([1.2768999999999997, 0, 0, 1.2768999999999997, 0, 0]))
 })
 
 test('zoomInto - top left - should move focus to bottom right', () => {
   const domMatrix = DomMatrix.create([1, 0, 0, 1, 0, 0])
   const newDomMatrix = DomMatrix.zoomInto(domMatrix, 1.13, 14, 11)
-  expect(newDomMatrix).toEqual(
-    DomMatrix.create([
-      1.13, 0, 0, 1.13, -1.8199999999999985, -1.4299999999999997,
-    ])
-  )
+  expect(newDomMatrix).toEqual(DomMatrix.create([1.13, 0, 0, 1.13, -1.8199999999999985, -1.4299999999999997]))
 })
 
 test('zoomInto - bottom right - should move focus to top left', () => {
   const domMatrix = DomMatrix.create([1, 0, 0, 1, 0, 0])
   const newDomMatrix = DomMatrix.zoomInto(domMatrix, 1.13, 100, 100)
-  expect(newDomMatrix).toEqual(
-    DomMatrix.create([
-      1.13, 0, 0, 1.13, -12.999999999999986, -12.999999999999986,
-    ])
-  )
+  expect(newDomMatrix).toEqual(DomMatrix.create([1.13, 0, 0, 1.13, -12.999999999999986, -12.999999999999986]))
 })
 
 test('toString', () => {

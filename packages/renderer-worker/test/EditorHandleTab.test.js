@@ -18,26 +18,17 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js',
-  () => {
-    return {
-      executeTabCompletionProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostTabCompletion.js', () => {
+  return {
+    executeTabCompletionProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const EditorHandleTab = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleTab.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
-const ExtensionHostTabCompletion = await import(
-  '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js'
-)
+const EditorHandleTab = await import('../src/parts/EditorCommand/EditorCommandHandleTab.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const ExtensionHostTabCompletion = await import('../src/parts/ExtensionHost/ExtensionHostTabCompletion.js')
 
 test.skip('editorHandleTab - no tab completion available', async () => {
   const cursor = {
@@ -57,11 +48,9 @@ test.skip('editorHandleTab - no tab completion available', async () => {
     undoStack: [],
   }
   // @ts-ignore
-  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
-    () => {
-      return null
-    }
-  )
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(() => {
+    return null
+  })
   expect(await EditorHandleTab.handleTab(editor)).toMatchObject({
     lines: ['a  '],
   })

@@ -8,9 +8,7 @@ test('focusPrevious', async () => {
     provider: {},
     filteredPicks: [{ label: '1' }, { label: '2' }, { label: '3' }],
   }
-  expect(
-    await ViewletQuickPickFocusPrevious.focusPrevious(state)
-  ).toMatchObject({
+  expect(await ViewletQuickPickFocusPrevious.focusPrevious(state)).toMatchObject({
     focusedIndex: 1,
   })
 })

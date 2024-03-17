@@ -1,5 +1,3 @@
-const SearchExtensions = await import(
-  '../src/parts/SearchExtensions/SearchExtensions.js'
-)
+const SearchExtensions = await import('../src/parts/SearchExtensions/SearchExtensions.js')
 
 test('', () => {})

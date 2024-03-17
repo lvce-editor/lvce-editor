@@ -134,7 +134,7 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
     0,
     0,
     'Error: Failed to execute type definition provider: No type definition provider found',
-    false
+    false,
   )
   expect(spy).not.toHaveBeenCalled()
 })

@@ -7,7 +7,7 @@ test('Help', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
       label: 'Help',
-    })
+    }),
   ).toEqual({
     label: 'Help',
     role: ElectronMenuItemRole.Help,
@@ -19,7 +19,7 @@ test('File', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
       label: 'File',
-    })
+    }),
   ).toEqual({
     label: 'File',
     role: ElectronMenuItemRole.FileMenu,
@@ -31,7 +31,7 @@ test('Edit', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
       label: 'Edit',
-    })
+    }),
   ).toEqual({
     label: 'Edit',
     role: ElectronMenuItemRole.EditMenu,
@@ -43,7 +43,7 @@ test('Exit', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
       label: 'Exit',
-    })
+    }),
   ).toEqual({
     label: 'Exit',
     role: ElectronMenuItemRole.Quit,
@@ -54,7 +54,7 @@ test('Undo', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
       label: 'Undo',
-    })
+    }),
   ).toEqual({
     label: 'Undo',
     role: ElectronMenuItemRole.Undo,
@@ -65,7 +65,7 @@ test('Separator', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
       flags: MenuItemFlags.Separator,
-    })
+    }),
   ).toEqual({
     type: ElectronMenuItemType.Separator,
   })
@@ -76,7 +76,7 @@ test('SubMenu', () => {
     ToElectronMenuItem.toElectronMenuItem({
       label: 'test',
       flags: MenuItemFlags.SubMenu,
-    })
+    }),
   ).toEqual({
     label: 'test',
     type: ElectronMenuItemType.SubMenu,

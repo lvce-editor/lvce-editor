@@ -11,23 +11,16 @@ jest.unstable_mockModule('../src/parts/Format/Format.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js',
-  () => {
-    return {
-      editorShowMessage: jest.fn(() => {}),
-    }
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.js', () => {
+  return {
+    editorShowMessage: jest.fn(() => {}),
   }
-)
+})
 
 const Format = await import('../src/parts/Format/Format.js')
 
-const EditorFormat = await import(
-  '../src/parts/EditorCommand/EditorCommandFormat.js'
-)
-const EditorShowMessage = await import(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
-)
+const EditorFormat = await import('../src/parts/EditorCommand/EditorCommandFormat.js')
+const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
 
 test('format - error', async () => {
   // @ts-ignore
@@ -48,13 +41,7 @@ test('format - error', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   expect(await EditorFormat.format(editor)).toBe(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
-  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
-    editor,
-    0,
-    0,
-    'TypeError: x is not a function',
-    true
-  )
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
 })

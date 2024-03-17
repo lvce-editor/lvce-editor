@@ -15,9 +15,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 
 const Command = await import('../src/parts/Command/Command.js')
 
-const FileSystemFetch = await import(
-  '../src/parts/FileSystem/FileSystemFetch.js'
-)
+const FileSystemFetch = await import('../src/parts/FileSystem/FileSystemFetch.js')
 
 test('readDirWithFileTypes', async () => {
   // @ts-ignore

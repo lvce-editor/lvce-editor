@@ -15,9 +15,7 @@ jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
   }
 })
 
-const EditorToggleBlockComment = await import(
-  '../src/parts/EditorCommand/EditorCommandToggleBlockComment.js'
-)
+const EditorToggleBlockComment = await import('../src/parts/EditorCommand/EditorCommandToggleBlockComment.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 
 test('comment with block comment', async () => {
@@ -37,9 +35,7 @@ test('comment with block comment', async () => {
     undoStack: [],
     uri: '',
   }
-  expect(
-    await EditorToggleBlockComment.toggleBlockComment(editor)
-  ).toMatchObject({
+  expect(await EditorToggleBlockComment.toggleBlockComment(editor)).toMatchObject({
     lines: ['  <body>', '    <!--sample test-->', '  </body>'],
     // TODO should be at 22
     selections: new Uint32Array([1, 15, 1, 15]),
@@ -61,9 +57,7 @@ test('uncomment block comment', async () => {
     undoStack: [],
     uri: '',
   }
-  expect(
-    await EditorToggleBlockComment.toggleBlockComment(editor)
-  ).toMatchObject({
+  expect(await EditorToggleBlockComment.toggleBlockComment(editor)).toMatchObject({
     lines: ['  <body>', '    sample test', '  </body>'],
     // TODO should be at 15
     selections: new Uint32Array([1, 22, 1, 22]),
@@ -86,9 +80,7 @@ test('uncomment multiline block comment', async () => {
     undoStack: [],
     uri: '',
   }
-  expect(
-    await EditorToggleBlockComment.toggleBlockComment(editor)
-  ).toMatchObject({
+  expect(await EditorToggleBlockComment.toggleBlockComment(editor)).toMatchObject({
     lines: ['  <body>', '    sample test', '', '  </body>'],
     selections: new Uint32Array([1, 20, 1, 20]),
   })
