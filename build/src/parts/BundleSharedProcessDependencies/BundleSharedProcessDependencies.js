@@ -53,6 +53,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/which/bin`)
   await Remove.remove(`${to}/node_modules/symlink-dir/dist/cli.js`)
   await Remove.remove(`${to}/node_modules/extract-zip/cli.js`)
+  await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/downloadRipGrep.js`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/postinstall.js`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
