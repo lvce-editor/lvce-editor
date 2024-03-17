@@ -19,7 +19,6 @@ jest.unstable_mockModule('../src/parts/Timeout/Timeout.js', () => {
 
 const ExtensionHostExtension = await import('../src/parts/ExtensionHostExtension/ExtensionHostExtension.js')
 const ImportScript = await import('../src/parts/ImportScript/ImportScript.js')
-const Timeout = await import('../src/parts/Timeout/Timeout.js')
 
 test('activate - error - module not found', async () => {
   // @ts-ignore
