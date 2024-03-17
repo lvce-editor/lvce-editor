@@ -22,9 +22,9 @@ jest.unstable_mockModule('../src/parts/Markdown/Markdown.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/SanitizeHtml/SanitizeHtml.js', () => {
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
   return {
-    sanitizeHtml: jest.fn(() => {
+    getExtension: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
@@ -49,7 +49,6 @@ const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Markdown = await import('../src/parts/Markdown/Markdown.js')
-const SanitizeHtml = await import('../src/parts/SanitizeHtml/SanitizeHtml.js')
 
 test('create', () => {
   const state = ViewletExtensionDetail.create()
@@ -72,10 +71,6 @@ test('loadContent', async () => {
   Markdown.toHtml.mockImplementation(() => {
     return '<h1 id="test-extension">Test Extension</h1>'
   })
-  // @ts-ignore
-  SanitizeHtml.sanitizeHtml.mockImplementation(() => {
-    return '<h1 id="test-extension">Test Extension</h1>'
-  })
   const state = {
     ...ViewletExtensionDetail.create(),
     uri: 'extension-detail://test-extension',
@@ -93,8 +88,6 @@ test('loadContent', async () => {
   expect(Markdown.toHtml).toHaveBeenCalledWith('# test extension', {
     baseUrl: '/test/test-extension',
   })
-  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledTimes(1)
-  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledWith('<h1 id="test-extension">Test Extension</h1>')
 })
 
 test('loadContent - error - readme not found', async () => {
@@ -113,16 +106,12 @@ test('loadContent - error - readme not found', async () => {
   Markdown.toHtml.mockImplementation(() => {
     return '<h1 id="test-extension">Test Extension</h1>'
   })
-  // @ts-ignore
-  SanitizeHtml.sanitizeHtml.mockImplementation(() => {
-    return ''
-  })
   const state = {
     ...ViewletExtensionDetail.create(),
     uri: 'extension-detail://test-extension',
   }
   expect(await ViewletExtensionDetail.loadContent(state)).toMatchObject({
-    sanitizedReadmeHtml: ``,
+    sanitizedReadmeHtml: '<h1 id="test-extension">Test Extension</h1>',
     iconSrc: '/icons/extensionDefaultIcon.png',
     name: 'Test Extension',
   })
@@ -134,8 +123,6 @@ test('loadContent - error - readme not found', async () => {
   expect(Markdown.toHtml).toHaveBeenCalledWith('', {
     baseUrl: '/test/test-extension',
   })
-  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledTimes(1)
-  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledWith('<h1 id="test-extension">Test Extension</h1>')
 })
 
 test('handleIconError', () => {

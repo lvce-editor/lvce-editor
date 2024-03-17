@@ -4,7 +4,6 @@ import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Origin from '../Origin/Origin.js'
-import * as TestState from '../TestState/TestState.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -63,13 +62,6 @@ const startSynching = async (extensionHost) => {
 
   const handleWorkspaceChange = async (workspacePath) => {
     await extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
-    if (TestState.state.mockExec) {
-      await extensionHost.ipc.invoke('ExtensionHostMockExec.mockExec')
-    }
-    const names = Object.values(TestState.state.mockRpcs).map((value) => value.name)
-    if (names.length > 0) {
-      await extensionHost.ipc.invoke('ExtensionHostMockRpc.mockRpc', names)
-    }
   }
 
   const handlePreferencesChange = () => {

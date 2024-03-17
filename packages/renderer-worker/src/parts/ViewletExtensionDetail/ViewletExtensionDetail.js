@@ -1,14 +1,13 @@
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as GetExtensionReadme from '../GetExtensionReadme/GetExtensionReadme.js'
+import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
-import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -50,7 +49,7 @@ export const loadContent = async (state) => {
   const readmeHtml = await MarkDown.toHtml(readmeContent, {
     baseUrl,
   })
-  const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
+  const sanitizedReadmeHtml = readmeHtml
   const normalizedReadmeHtml = sanitizedReadmeHtml
   const iconSrc = ExtensionDisplay.getIcon(extension)
   const description = ExtensionDisplay.getDescription(extension)
