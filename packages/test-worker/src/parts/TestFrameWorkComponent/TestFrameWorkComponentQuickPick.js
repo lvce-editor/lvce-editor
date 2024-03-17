@@ -1,30 +1,26 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const open = async () => {
-  await Command.execute(
-    'Viewlet.openWidget',
-    ViewletModuleId.QuickPick,
-    'everything'
-  )
+  await Rpc.invoke('Viewlet.openWidget', ViewletModuleId.QuickPick, 'everything')
 }
 
 export const setValue = async (value) => {
-  await Command.execute('QuickPick.handleInput', value, 0)
+  await Rpc.invoke('QuickPick.handleInput', value, 0)
 }
 
 export const focusNext = async () => {
-  await Command.execute('QuickPick.focusNext')
+  await Rpc.invoke('QuickPick.focusNext')
 }
 
 export const focusIndex = async (index) => {
-  await Command.execute('QuickPick.focusIndex', index)
+  await Rpc.invoke('QuickPick.focusIndex', index)
 }
 
 export const focusPrevious = async () => {
-  await Command.execute('QuickPick.focusPrevious')
+  await Rpc.invoke('QuickPick.focusPrevious')
 }
 
 export const selectItem = async (label) => {
-  await Command.execute('QuickPick.selectItem', label)
+  await Rpc.invoke('QuickPick.selectItem', label)
 }
