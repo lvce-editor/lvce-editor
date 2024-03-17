@@ -1,10 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import { VError } from '../VError/VError.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 export const state = {
   instances: Object.create(null),
@@ -57,7 +58,7 @@ export const invoke = (viewletId, method, ...args) => {
   Assert.string(method)
   const instance = state.instances[viewletId]
   if (!instance || !instance.factory) {
-    if (viewletId) {
+    if (viewletId && method !== 'setActionsDom') {
       Logger.warn(`cannot execute ${method} viewlet instance ${viewletId} not found`)
     }
     return
@@ -128,6 +129,18 @@ const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
   }
 }
 
+const setDom = (viewletId, dom) => {
+  console.log({ dom })
+  const instance = state.instances[viewletId]
+  console.log({ viewletId })
+  if (!instance) {
+    return
+  }
+  const { Events } = instance.factory
+  const { $Viewlet } = instance.state
+  VirtualDom.renderInto($Viewlet, dom, Events)
+}
+
 // TODO this code is bad
 export const sendMultiple = (commands) => {
   for (const command of commands) {
@@ -186,6 +199,10 @@ export const sendMultiple = (commands) => {
         break
       case 'Viewlet.send':
         invoke(viewletId, method, ...args)
+        break
+      case 'Viewlet.setDom':
+        // @ts-ignore
+        setDom(viewletId, method, ...args)
         break
       default: {
         invoke(viewletId, method, ...args)
@@ -352,6 +369,8 @@ const getFn = (command) => {
       return appendViewlet
     case 'Viewlet.addKeyBindings':
       return addKeyBindings
+    case 'Viewlet.setDom':
+      return setDom
     default:
       throw new Error(`unknown command ${command}`)
   }

@@ -13,7 +13,7 @@ export const renderDialog = {
     const closeMessage = AboutStrings.closeDialog()
     const infoMessage = AboutStrings.info()
     const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.lines, closeMessage, okMessage, copyMessage, infoMessage)
-    return ['setDom', dom]
+    return ['Viewlet.setDom', dom]
   },
 }
 
