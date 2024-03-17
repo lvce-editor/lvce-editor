@@ -1,89 +1,89 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const setCursor = async (rowIndex, columnIndex) => {
-  await Command.execute('Editor.cursorSet', rowIndex, columnIndex)
+  await Rpc.invoke('Editor.cursorSet', rowIndex, columnIndex)
 }
 
 export const openCompletion = async () => {
-  await Command.execute('Editor.openCompletion')
+  await Rpc.invoke('Editor.openCompletion')
 }
 
 export const openEditorContextMenu = async () => {
-  await Command.execute('Editor.handleContextMenu', 0, 0)
+  await Rpc.invoke('Editor.handleContextMenu', 0, 0)
 }
 
-export const executeTabCompletion = async () => {
-  await Command.execute('Editor.tabCompletion')
+export const invokeTabCompletion = async () => {
+  await Rpc.invoke('Editor.tabCompletion')
 }
 
-export const executeBraceCompletion = async (text) => {
-  await Command.execute('Editor.braceCompletion', text)
+export const invokeBraceCompletion = async (text) => {
+  await Rpc.invoke('Editor.braceCompletion', text)
 }
 
 export const cursorCharacterRight = async () => {
-  await Command.execute('Editor.cursorCharacterRight')
+  await Rpc.invoke('Editor.cursorCharacterRight')
 }
 
 export const cursorCharacterLeft = async () => {
-  await Command.execute('Editor.cursorCharacterLeft')
+  await Rpc.invoke('Editor.cursorCharacterLeft')
 }
 
 export const copyLineDown = async () => {
-  await Command.execute('Editor.copyLineDown')
+  await Rpc.invoke('Editor.copyLineDown')
 }
 
 export const cursorDown = async () => {
-  await Command.execute('Editor.cursorDown')
+  await Rpc.invoke('Editor.cursorDown')
 }
 
 export const cursorUp = async () => {
-  await Command.execute('Editor.cursorUp')
+  await Rpc.invoke('Editor.cursorUp')
 }
 
 export const cursorWordLeft = async () => {
-  await Command.execute('Editor.cursorWordLeft')
+  await Rpc.invoke('Editor.cursorWordLeft')
 }
 
 export const cursorWordRight = async () => {
-  await Command.execute('Editor.cursorWordRight')
+  await Rpc.invoke('Editor.cursorWordRight')
 }
 
 export const goToDefinition = async () => {
-  await Command.execute('Editor.goToDefinition')
+  await Rpc.invoke('Editor.goToDefinition')
 }
 
 export const goToTypeDefinition = async () => {
-  await Command.execute('Editor.goToTypeDefinition')
+  await Rpc.invoke('Editor.goToTypeDefinition')
 }
 
 export const type = async (text) => {
-  await Command.execute('Editor.type')
+  await Rpc.invoke('Editor.type')
 }
 
 export const findAllReferences = async () => {
-  await Command.execute('SideBar.show', 'References', /* focus */ true)
+  await Rpc.invoke('SideBar.show', 'References', /* focus */ true)
 }
 
 export const findAllImplementations = async () => {
-  await Command.execute('SideBar.show', 'Implementations', /* focus */ true)
+  await Rpc.invoke('SideBar.show', 'Implementations', /* focus */ true)
 }
 
 export const setSelections = async (selections) => {
-  await Command.execute('Editor.setSelections', selections)
+  await Rpc.invoke('Editor.setSelections', selections)
 }
 
 export const openFindWidget = async () => {
-  await Command.execute('Editor.openFind')
+  await Rpc.invoke('Editor.openFind')
 }
 
 export const setDeltaY = async (deltaY) => {
-  await Command.execute('Editor.setDeltaY', deltaY)
+  await Rpc.invoke('Editor.setDeltaY', deltaY)
 }
 
 export const format = async () => {
-  await Command.execute('Editor.format')
+  await Rpc.invoke('Editor.format')
 }
 
 export const insertLineBreak = async () => {
-  await Command.execute('Editor.insertLineBreak')
+  await Rpc.invoke('Editor.insertLineBreak')
 }

@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const evalInRendererProcess = async (code) => {
-  await Command.execute('Eval.evalInRendererProcess', code)
+  await Rpc.invoke('Eval.evalInRendererProcess', code)
 }

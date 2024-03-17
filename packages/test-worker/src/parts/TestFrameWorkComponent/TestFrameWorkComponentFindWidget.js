@@ -1,9 +1,9 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const focusNext = async () => {
-  await Command.execute('FindWidget.focusNext')
+  await Rpc.invoke('FindWidget.focusNext')
 }
 
 export const setValue = async (value) => {
-  await Command.execute('FindWidget.handleInput', value)
+  await Rpc.invoke('FindWidget.handleInput', value)
 }
