@@ -1,6 +1,5 @@
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletAboutEvents from './ViewletAboutEvents.js'
 
 export const create = () => {
@@ -18,10 +17,7 @@ export const attachEvents = (state) => {
   })
 }
 
-export const setDom = (state, dom) => {
-  const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom, ViewletAboutEvents)
-}
+export { ViewletAboutEvents as Events }
 
 export const setFocused = (state, value) => {
   if (!value) {
