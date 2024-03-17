@@ -134,8 +134,8 @@ export const load = (moduleId) => {
       return import('../SessionStorage/SessionStorage.ipc.js')
     case ModuleId.Test:
       return import('../Test/Test.ipc.js')
-    case ModuleId.TestFramework:
-      return import('../TestFrameWork/TestFrameWork.js')
+    case ModuleId.TestFrameWork:
+      return import('../TestFrameWork/TestFrameWork.ipc.js')
     case ModuleId.TestFrameworkComponent:
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
     case ModuleId.Url:

@@ -153,8 +153,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.SessionStorage
     case 'Test':
       return ModuleId.Test
-    case '001':
-      return ModuleId.TestFramework
     case '002':
       return ModuleId.TestFrameworkComponent
     case 'Url':
@@ -176,6 +174,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostQuickPick
     case 'ExtensionHostDialog':
       return ModuleId.ExtensionHostDialog
+    case 'TestFrameWork':
+      return ModuleId.TestFrameWork
     default:
       throw new Error(`module ${prefix} not found`)
   }
