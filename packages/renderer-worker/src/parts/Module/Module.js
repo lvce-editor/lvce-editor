@@ -134,8 +134,6 @@ export const load = (moduleId) => {
       return import('../Test/Test.ipc.js')
     case ModuleId.TestFrameWork:
       return import('../TestFrameWork/TestFrameWork.ipc.js')
-    case ModuleId.TestFrameworkComponent:
-      return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
     case ModuleId.Url:
       return import('../Url/Url.ipc.js')
     case ModuleId.Viewlet:
