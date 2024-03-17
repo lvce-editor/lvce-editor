@@ -48,8 +48,6 @@ export const load = (moduleId) => {
       return import('../Performance/Performance.ipc.js')
     case ModuleId.Prompt:
       return import('../Prompt/Prompt.ipc.js')
-    case ModuleId.SanitizeHtml:
-      return import('../SanitizeHtml/SanitizeHtml.ipc.js')
     case ModuleId.ScreenCapture:
       return import('../ScreenCapture/ScreenCapture.ipc.js')
     case ModuleId.TestFrameWork:
