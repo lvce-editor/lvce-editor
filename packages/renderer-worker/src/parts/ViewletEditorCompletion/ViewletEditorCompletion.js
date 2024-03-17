@@ -121,6 +121,7 @@ export const handleEditorDeleteLeft = (state, editor) => {
 }
 
 export const dispose = (state) => {
+  Focus.removeAdditionalFocus(FocusKey.EditorCompletion)
   return {
     ...state,
     disposed: true,

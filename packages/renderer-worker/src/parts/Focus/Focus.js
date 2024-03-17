@@ -5,6 +5,9 @@ import * as FocusState from '../FocusState/FocusState.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
+/**
+ * @param {number} focusKey
+ */
 export const setFocus = (focusKey) => {
   Assert.number(focusKey)
   if (FocusState.get()) {
@@ -15,14 +18,20 @@ export const setFocus = (focusKey) => {
   KeyBindingsState.update()
 }
 
+/**
+ * @param {number} key
+ */
 export const setAdditionalFocus = (key) => {
-  // TODO key should be numeric
   Context.set(key, true)
   KeyBindingsState.update()
 }
 
+/**
+ * @param {number} key
+ */
 export const removeAdditionalFocus = (key) => {
   Context.remove(key)
+  KeyBindingsState.update()
 }
 
 const getBrowserContextString = (browser) => {
