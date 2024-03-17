@@ -7,3 +7,7 @@ export const checkSingleElementCondition = (locator, fnName, options) => {
 export const checkMultiElementCondition = (locator, fnName, options) => {
   return RendererProcess.invoke('TestFrameWork.checkMultiElementCondition', locator, fnName, options)
 }
+
+export const showOverlay = (...args) => {
+  return RendererProcess.invoke('TestFrameWork.showOverlay', ...args)
+}
