@@ -19,13 +19,9 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const ViewletFindWidget = await import(
-  '../src/parts/ViewletFindWidget/ViewletFindWidget.js'
-)
+const ViewletFindWidget = await import('../src/parts/ViewletFindWidget/ViewletFindWidget.js')
 
-const ViewletStates = await import(
-  '../src/parts/ViewletStates/ViewletStates.js'
-)
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('create', () => {
@@ -107,10 +103,7 @@ test('focusPrevious', async () => {
     matchIndex: 1,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Editor.setSelections',
-    new Uint32Array([1, 0, 1, 0])
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Editor.setSelections', new Uint32Array([1, 0, 1, 0]))
 })
 
 test('focusNext', async () => {
@@ -135,10 +128,7 @@ test('focusNext', async () => {
     matchCount: 2,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Editor.setSelections',
-    new Uint32Array([1, 0, 1, 4])
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Editor.setSelections', new Uint32Array([1, 0, 1, 4]))
 })
 
 test('focusNext - only one match', async () => {
@@ -184,8 +174,5 @@ test('focusNext - at end', async () => {
     matchCount: 2,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Editor.setSelections',
-    new Uint32Array([0, 0, 0, 4])
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Editor.setSelections', new Uint32Array([0, 0, 0, 4]))
 })

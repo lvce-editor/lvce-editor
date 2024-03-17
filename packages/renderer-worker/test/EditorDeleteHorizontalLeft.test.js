@@ -8,9 +8,7 @@ test('editorDeleteCharacterHorizontalLeft - single character - no selection', ()
     selections: EditorSelection.fromRange(0, 1, 0, 1),
     undoStack: [],
   }
-  expect(
-    EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, () => 1)
-  ).toMatchObject({
+  expect(EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, () => 1)).toMatchObject({
     lines: ['ine 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -22,9 +20,7 @@ test('editorDeleteCharacterHorizontalLeft - multiple selections', () => {
     selections: EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]),
     undoStack: [],
   }
-  expect(
-    EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, () => 1)
-  ).toMatchObject({
+  expect(EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, () => 1)).toMatchObject({
     lines: [' 1', ' 2'],
     selections: EditorSelection.fromRanges([0, 0, 0, 0], [1, 0, 1, 0]),
   })

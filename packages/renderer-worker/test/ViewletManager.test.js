@@ -335,6 +335,6 @@ test('backgroundLoad', async () => {
     {
       value: 0,
     },
-    { value: 42 }
+    { value: 42 },
   )
 })

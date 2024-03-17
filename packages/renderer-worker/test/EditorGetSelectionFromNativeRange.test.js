@@ -34,6 +34,6 @@ test('editorGetSelectionFromNativeRange', () => {
       startColumnIndex: 10,
       endRowIndex: 10,
       endColumnIndex: 14,
-    })
+    }),
   ).toEqual(new Uint32Array([10, 10, 10, 14]))
 })

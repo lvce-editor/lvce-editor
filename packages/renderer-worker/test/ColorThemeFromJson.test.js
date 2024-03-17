@@ -43,7 +43,7 @@ test('createColorThemeFromJson - colors', () => {
         TitleBarColor: '#cccccc',
         TitleBarColorInactive: 'rgba(204, 204, 204, 0.6)',
       },
-    })
+    }),
   ).toBe(`:root {
   --ActivityBarBackground: rgb(40, 46, 47);
   --ActivityBarForeground: #878f8c;
@@ -85,7 +85,7 @@ test('createColorThemeFromJson - colors with contrast border', () => {
         ActivityBarBackground: 'rgb(40, 46, 47)',
         ContrastBorder: 'rgb(78,78,78)',
       },
-    })
+    }),
   ).toBe(`:root {
   --ActivityBarBackground: rgb(40, 46, 47);
   --ContrastBorder: rgb(78,78,78);

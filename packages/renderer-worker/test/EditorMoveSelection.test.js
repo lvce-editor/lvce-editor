@@ -13,7 +13,7 @@ test('editorMoveSelection', () => {
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 2,
       columnIndex: 2,
-    })
+    }),
   ).toMatchObject({
     selections: EditorSelection.fromRange(0, 1, 2, 2),
   })
@@ -33,7 +33,7 @@ test('editorMoveSelection - to the left', () => {
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 0,
       columnIndex: 0,
-    })
+    }),
   ).toMatchObject({
     selections: EditorSelection.fromRange(0, 1, 0, 0),
   })
@@ -53,7 +53,7 @@ test('editorMoveSelection - anchor same as cursor position', () => {
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 0,
       columnIndex: 1,
-    })
+    }),
   ).toMatchObject({
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
@@ -73,7 +73,7 @@ test.skip('editorMoveSelection - single line backwards selection', () => {
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 0,
       columnIndex: 3,
-    })
+    }),
   ).toMatchObject({
     selections: EditorSelection.fromRange(0, 4, 0, 3),
   })

@@ -17,9 +17,7 @@ test("closeMenu - don't keep focus", () => {
     ],
     focusedIndex: 0,
   }
-  expect(
-    ViewletTitleBarMenuBarCloseMenu.closeMenu(state, /* keepFocus */ false)
-  ).toMatchObject({
+  expect(ViewletTitleBarMenuBarCloseMenu.closeMenu(state, /* keepFocus */ false)).toMatchObject({
     isMenuOpen: false,
   })
 })
@@ -39,9 +37,7 @@ test('closeMenu - keep focus', () => {
     ],
     focusedIndex: 0,
   }
-  expect(
-    ViewletTitleBarMenuBarCloseMenu.closeMenu(state, /* keepFocus */ true)
-  ).toMatchObject({
+  expect(ViewletTitleBarMenuBarCloseMenu.closeMenu(state, /* keepFocus */ true)).toMatchObject({
     isMenuOpen: false,
     focusedIndex: 0,
   })

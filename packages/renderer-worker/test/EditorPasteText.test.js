@@ -24,8 +24,8 @@ test.skip('editorPasteText - middle of line', () => {
     EditorPasteText.pasteText(
       editor,
       ` 111
-222 `
-    )
+222 `,
+    ),
   ).toMatchObject({
     lines: ['aaa', 'b 111', '222 bb', 'ccc'],
     selections: EditorSelection.fromRange(2, 4, 2, 4),
@@ -58,8 +58,8 @@ test('editorPasteText - issue with pasting multiple lines', () => {
       editor,
       `line 1
 line 2
-line 3`
-    )
+line 3`,
+    ),
   ).toMatchObject({
     lines: ['line 1', 'line 2', 'line 3'],
   })

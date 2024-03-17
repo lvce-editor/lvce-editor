@@ -30,6 +30,14 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.j
   }
 })
 
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
+  return {
+    getExtension: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 class NodeError extends Error {
   constructor(code, message = code) {
     super(code + ':' + message)
@@ -81,6 +89,8 @@ test('loadContent', async () => {
   expect(Markdown.toHtml).toHaveBeenCalledWith('# test extension', {
     baseUrl: '/test/test-extension',
   })
+  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledTimes(1)
+  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledWith('<h1 id="test-extension">Test Extension</h1>')
 })
 
 test('loadContent - error - readme not found', async () => {
@@ -116,6 +126,8 @@ test('loadContent - error - readme not found', async () => {
   expect(Markdown.toHtml).toHaveBeenCalledWith('', {
     baseUrl: '/test/test-extension',
   })
+  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledTimes(1)
+  expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledWith('<h1 id="test-extension">Test Extension</h1>')
 })
 
 test('handleIconError', () => {
