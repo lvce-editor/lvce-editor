@@ -12,35 +12,22 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCore.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const EditorType = await import(
-  '../src/parts/EditorCommand/EditorCommandType.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const EditorType = await import('../src/parts/EditorCommand/EditorCommandType.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
-const ExtensionHostBraceCompletion = await import(
-  '../src/parts/ExtensionHost/ExtensionHostBraceCompletion.js'
-)
+const ExtensionHostBraceCompletion = await import('../src/parts/ExtensionHost/ExtensionHostBraceCompletion.js')
 
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
-)
+const ExtensionHost = await import('../src/parts/ExtensionHost/ExtensionHostCore.js')
 
-const EditorSelection = await import(
-  '../src/parts/EditorSelection/EditorSelection.js'
-)
+const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
 test('editorType', async () => {
   const editor = {

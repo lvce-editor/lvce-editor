@@ -4,26 +4,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js',
-  () => {
-    return {
-      forward: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js', () => {
+  return {
+    forward: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ViewletSimpleBrowser = await import(
-  '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js'
-)
-const ViewletSimpleBrowserForward = await import(
-  '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserForward.js'
-)
-const ElectronBrowserViewFunctions = await import(
-  '../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
-)
+const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
+const ViewletSimpleBrowserForward = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserForward.js')
+const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js')
 
 test('forward', async () => {
   // @ts-ignore

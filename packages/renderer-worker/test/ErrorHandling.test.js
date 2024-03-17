@@ -92,15 +92,15 @@ test('handleError - multiple causes', async () => {
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(
     expect.stringMatching(
-      'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
-    )
+      'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743',
+    ),
   )
   // expect(spy).toHaveBeenCalledWith(mockError2)
   // expect(spy).toHaveBeenCalledWith(mockError1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     /* Notification.create */ 'Notification.create',
     'error',
-    'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
+    'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743',
   )
 })
 

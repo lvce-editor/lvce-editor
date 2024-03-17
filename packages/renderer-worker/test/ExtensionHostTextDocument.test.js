@@ -4,23 +4,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
-  () => {
-    return {
-      execute: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostTextDocument = await import(
-  '../src/parts/ExtensionHost/ExtensionHostTextDocument.js'
-)
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
+const ExtensionHostTextDocument = await import('../src/parts/ExtensionHost/ExtensionHostTextDocument.js')
+const ExtensionHostShared = await import('../src/parts/ExtensionHost/ExtensionHostShared.js')
 
 test('handleEditorCreate', async () => {
   // @ts-ignore
@@ -60,7 +53,7 @@ test('handleEditorChange', async () => {
       languageId: 'javascript',
       id: 1,
     },
-    []
+    [],
   )
   expect(ExtensionHostShared.execute).toHaveBeenCalledTimes(1)
   expect(ExtensionHostShared.execute).toHaveBeenCalledWith({

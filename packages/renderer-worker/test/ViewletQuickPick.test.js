@@ -91,7 +91,7 @@ test('handleClickAt - first item', async () => {
       label: 'index.css',
     },
     0,
-    0
+    0,
   )
 })
 

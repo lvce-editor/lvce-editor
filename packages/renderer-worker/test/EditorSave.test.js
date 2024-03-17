@@ -26,30 +26,21 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/EditorCommand/EditorCommandFormat.js',
-  () => {
-    return {
-      format: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandFormat.js', () => {
+  return {
+    format: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
-const ErrorHandling = await import(
-  '../src/parts/ErrorHandling/ErrorHandling.js'
-)
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
-const EditorSave = await import(
-  '../src/parts/EditorCommand/EditorCommandSave.js'
-)
-const EditorFormat = await import(
-  '../src/parts/EditorCommand/EditorCommandFormat.js'
-)
+const EditorSave = await import('../src/parts/EditorCommand/EditorCommandSave.js')
+const EditorFormat = await import('../src/parts/EditorCommand/EditorCommandFormat.js')
 
 test('editorSave', async () => {
   const editor = {
@@ -61,10 +52,7 @@ test('editorSave', async () => {
     return null
   })
   expect(await EditorSave.save(editor)).toBe(editor)
-  expect(FileSystem.writeFile).toHaveBeenCalledWith(
-    '/tmp/some-file.txt',
-    'line 1\nline 2'
-  )
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('/tmp/some-file.txt', 'line 1\nline 2')
 })
 
 test('editorSave - error with fileSystem', async () => {
@@ -81,9 +69,7 @@ test('editorSave - error with fileSystem', async () => {
   expect(await EditorSave.save(editor)).toBe(editor)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new VError(
-      'Failed to save file "/tmp/some-file.txt": TypeError: x is not a function'
-    ) // TODO test error.cause once available in jest
+    new VError('Failed to save file "/tmp/some-file.txt": TypeError: x is not a function'), // TODO test error.cause once available in jest
   )
 })
 

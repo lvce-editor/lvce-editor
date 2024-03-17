@@ -4,19 +4,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+})
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 const Meta = await import('../src/parts/Meta/Meta.js')
 
@@ -25,8 +20,5 @@ test('setThemeColor', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Meta.setThemeColor('lightgreen')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Meta.setThemeColor',
-    'lightgreen'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Meta.setThemeColor', 'lightgreen')
 })

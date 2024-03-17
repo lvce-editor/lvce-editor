@@ -69,7 +69,7 @@ test('scheduleDiagnostics', async () => {
         height: 2,
         top: 200,
       },
-    ]
+    ],
   )
 })
 

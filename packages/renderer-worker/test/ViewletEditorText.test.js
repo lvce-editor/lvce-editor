@@ -39,7 +39,7 @@ test('resize - increase height', () => {
       numberOfVisibleLines: 3,
       scrollBarHeight: 0,
       finalDeltaY: 40,
-    })
+    }),
   )
 })
 
@@ -67,7 +67,7 @@ test('resize - same height', () => {
       numberOfVisibleLines: 3,
       scrollBarHeight: 0,
       finalDeltaY: 40,
-    })
+    }),
   )
 })
 
@@ -96,6 +96,6 @@ test('resize - reduce height', () => {
       numberOfVisibleLines: 1,
       scrollBarHeight: 0,
       finalDeltaY: 80,
-    })
+    }),
   )
 })

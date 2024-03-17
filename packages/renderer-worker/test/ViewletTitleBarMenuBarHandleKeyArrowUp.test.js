@@ -37,9 +37,7 @@ test('handleKeyArrowUp - with menu open', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleKeyArrowUp.handleKeyArrowUp(state)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarHandleKeyArrowUp.handleKeyArrowUp(state)).toMatchObject({
     menus: [
       {
         level: 0,

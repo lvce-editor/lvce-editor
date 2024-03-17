@@ -7,9 +7,7 @@ test('editorSelectHorizontalRight - single character', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorSelectHorizontalRight.editorSelectHorizontalRight(editor, () => 1)
-  ).toMatchObject({
+  expect(EditorSelectHorizontalRight.editorSelectHorizontalRight(editor, () => 1)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 1),
   })
 })
