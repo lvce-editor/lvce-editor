@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import { Command } from '../src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
@@ -93,18 +92,4 @@ test('getPicks - error', async () => {
     throw new TypeError('x is not a function')
   })
   await expect(QuickPickEntriesFile.getPicks('/test/file.txt')).rejects.toThrow(new TypeError('x is not a function'))
-})
-
-test.skip('selectPick', async () => {
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  expect(
-    await QuickPickEntriesFile.selectPick({
-      label: 'test-file-1.txt',
-    }),
-  ).toEqual({
-    command: QuickPickReturnValue.Hide,
-  })
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', 'test-file-1.txt')
 })
