@@ -1,68 +1,68 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const closeMenu = async () => {
-  await Command.execute('TitleBarMenuBar.closeMenu')
+  await Rpc.invoke('TitleBarMenuBar.closeMenu')
 }
 
 export const focus = async () => {
-  await Command.execute('TitleBarMenuBar.focus')
+  await Rpc.invoke('TitleBarMenuBar.focus')
 }
 
 export const focusFirst = async () => {
-  await Command.execute('TitleBarMenuBar.focusFirst')
+  await Rpc.invoke('TitleBarMenuBar.focusFirst')
 }
 
 export const focusIndex = async (index) => {
-  await Command.execute('TitleBarMenuBar.focusIndex', index)
+  await Rpc.invoke('TitleBarMenuBar.focusIndex', index)
 }
 
 export const focusLast = async () => {
-  await Command.execute('TitleBarMenuBar.focusLast')
+  await Rpc.invoke('TitleBarMenuBar.focusLast')
 }
 
 export const focusNext = async () => {
-  await Command.execute('TitleBarMenuBar.focusNext')
+  await Rpc.invoke('TitleBarMenuBar.focusNext')
 }
 
 export const focusPrevious = async () => {
-  await Command.execute('TitleBarMenuBar.focusPrevious')
+  await Rpc.invoke('TitleBarMenuBar.focusPrevious')
 }
 
 export const handleKeyArrowDown = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyArrowDown')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyArrowDown')
 }
 
 export const handleKeyArrowLeft = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyArrowLeft')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyArrowLeft')
 }
 
 export const handleKeyArrowRight = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyArrowRight')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyArrowRight')
 }
 
 export const handleKeyArrowUp = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyArrowUp')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyArrowUp')
 }
 
 export const handleKeyEnd = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyEnd')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyEnd')
 }
 
 export const handleKeyHome = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyHome')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyHome')
 }
 export const handleKeySpace = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeySpace')
+  await Rpc.invoke('TitleBarMenuBar.handleKeySpace')
 }
 
 export const handleKeyEscape = async () => {
-  await Command.execute('TitleBarMenuBar.handleKeyEscape')
+  await Rpc.invoke('TitleBarMenuBar.handleKeyEscape')
 }
 
 export const toggleIndex = async (index) => {
-  await Command.execute('TitleBarMenuBar.toggleIndex', index)
+  await Rpc.invoke('TitleBarMenuBar.toggleIndex', index)
 }
 
 export const toggleMenu = async () => {
-  await Command.execute('TitleBarMenuBar.toggleMenu')
+  await Rpc.invoke('TitleBarMenuBar.toggleMenu')
 }

@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const open = async (id) => {
-  await Command.execute('Layout.showPanel', id)
+  await Rpc.invoke('Layout.showPanel', id)
 }

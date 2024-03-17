@@ -1,33 +1,33 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const focus = async () => {
-  await Command.execute('ActivityBar.focus')
+  await Rpc.invoke('ActivityBar.focus')
 }
 
 export const focusFirst = async () => {
-  await Command.execute('ActivityBar.focusFirst')
+  await Rpc.invoke('ActivityBar.focusFirst')
 }
 
 export const focusLast = async () => {
-  await Command.execute('ActivityBar.focusLast')
+  await Rpc.invoke('ActivityBar.focusLast')
 }
 
 export const focusNext = async () => {
-  await Command.execute('ActivityBar.focusNext')
+  await Rpc.invoke('ActivityBar.focusNext')
 }
 
 export const focusPrevious = async () => {
-  await Command.execute('ActivityBar.focusPrevious')
+  await Rpc.invoke('ActivityBar.focusPrevious')
 }
 
 export const handleClick = async (index) => {
-  await Command.execute('ActivityBar.handleClick', index)
+  await Rpc.invoke('ActivityBar.handleClick', index)
 }
 
 export const handleContextMenu = async () => {
-  await Command.execute('ActivityBar.handleContextMenu')
+  await Rpc.invoke('ActivityBar.handleContextMenu')
 }
 
 export const selectCurrent = async () => {
-  await Command.execute('ActivityBar.selectCurrent')
+  await Rpc.invoke('ActivityBar.selectCurrent')
 }

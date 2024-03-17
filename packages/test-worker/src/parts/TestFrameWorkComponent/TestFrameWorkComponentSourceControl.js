@@ -1,9 +1,9 @@
-import * as Command from '../Command/Command.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const acceptInput = async () => {
-  await Command.execute('Source Control.acceptInput')
+  await Rpc.invoke('Source Control.acceptInput')
 }
 
 export const handleInput = async (text) => {
-  await Command.execute('Source Control.handleInput', text)
+  await Rpc.invoke('Source Control.handleInput', text)
 }
