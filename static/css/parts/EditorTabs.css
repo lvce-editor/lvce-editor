@@ -34,7 +34,8 @@
 }
 
 .MainTabSelected {
-  border-right: 1px solid (--TabBorder, rgb(34, 34, 34));
+  border-right: 1px solid var(--TabBorder, rgb(34, 34, 34));
+  border-bottom: 1px solid var(--TabBorderBottom, transparent);
   background: var(--TabActiveBackground);
   color: var(--TabActiveForeground);
 }
