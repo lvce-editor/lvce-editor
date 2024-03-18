@@ -10,5 +10,6 @@ export const measureTabWidth = (label, fontWeight, fontSize, fontFamily, letterS
   const closeButtonWidth = 23
   const closeButtonGap = 4
   const tabWidth = width + padding * 2 + fileIconWidth + fileIconGap + closeButtonWidth + closeButtonGap
-  return tabWidth
+  const tabWidthInt = Math.ceil(tabWidth)
+  return tabWidthInt
 }
