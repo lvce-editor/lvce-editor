@@ -1,1 +1,3 @@
-export const testWorkerUrl = new URL('../../../../test-worker/src/testWorkerMain.ts', import.meta.url).toString()
+import * as AssetDir from '../AssetDir/AssetDir.js'
+
+export const testWorkerUrl = `${AssetDir.assetDir}/packages/test-worker/src/testWorkerMain.ts`
