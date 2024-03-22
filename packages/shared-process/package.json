@@ -55,7 +55,7 @@
     "@types/tail": "^2.2.3",
     "@types/tar-fs": "^2.0.4",
     "@types/ws": "^8.5.10",
-    "get-port": "^7.0.0"
+    "get-port": "^7.1.0"
   },
   "xo": {
     "rules": {
