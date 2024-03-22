@@ -418,11 +418,6 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     to: `build/.tmp/dist/${commitHash}/packages/renderer-worker`,
     ignore: ['static'],
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/TestWorkerUrl/TestWorkerUrl.js`,
-    occurrence: `src/testWorkerMain.ts`,
-    replacement: `dist/testWorkerMain.js`,
-  })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
     from: 'src/extensionHostWorkerMain.js',
