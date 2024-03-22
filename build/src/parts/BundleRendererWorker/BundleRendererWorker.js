@@ -145,6 +145,11 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
         replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
       })
     }
+    await Replace.replace({
+      path: `${cachePath}/src/parts/TestWorkerUrl/TestWorkerUrl.js`,
+      occurrence: `src/testWorkerMain.ts`,
+      replacement: `dist/testWorkerMain.js`,
+    })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
