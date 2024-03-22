@@ -222,7 +222,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.11.0"
+    "version": "0.12.0"
   },
   {
     "name": "builtin.language-basics-vue",
@@ -262,7 +262,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.10.0"
+    "version": "0.11.0"
   },
   {
     "name": "builtin.theme-atom-one-dark",
