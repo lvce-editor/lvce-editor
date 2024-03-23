@@ -1,6 +1,7 @@
 import { extname } from 'path'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
+import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
@@ -15,7 +16,10 @@ const getExtraHeaders = (pathName, fileExtension) => {
       return GetHeadersMainFrame.getHeadersMainFrame()
     case '.js':
     case '.ts':
-      if (pathName.endsWith('rendererWorkerMain.js')) {
+      if (url.endsWith('testWorkerMain.js') || url.endsWith('testWorkerMain.ts')) {
+        return GetHeadersTestWorker.getHeadersExtensionHostWorker()
+      }
+      if (url.endsWith('rendererWorkerMain.js')) {
         return GetHeadersRendererWorker.getHeadersRendererWorker()
       }
       if (pathName.endsWith('extensionHostWorkerMain.js')) {
