@@ -141,14 +141,8 @@ const copyTestWorkerFiles = async ({ commitHash }) => {
     from: 'packages/test-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/test-worker/src`,
   })
-  // TODO
-  // await Replace.replace({
-  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/Platform/Platform.js`,
-  //   occurrence: `/src/extensionHostWorkerMain.js`,
-  //   replacement: '/dist/extensionHostWorkerMain.js',
-  // })
-  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
 }
+
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copy({
     from: 'static/config',
