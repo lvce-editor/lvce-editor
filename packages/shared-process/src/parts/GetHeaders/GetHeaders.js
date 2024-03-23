@@ -14,14 +14,15 @@ const getExtraHeaders = (url, fileExtension) => {
     case '.html':
       return GetHeadersMainFrame.getHeadersMainFrame()
     case '.js':
+    case '.ts':
       if (url.endsWith('rendererWorkerMain.js')) {
         return GetHeadersRendererWorker.getHeadersRendererWorker()
       }
       if (url.endsWith('extensionHostWorkerMain.js')) {
         return GetHeadersExtensionHostWorker.getHeadersExtensionHostWorker()
       }
-      if (url.endsWith('WorkerMain.js')) {
-        return GetHeadersOtherWorker.getHeadersOtherWorker()
+      if (url.endsWith('WorkerMain.js') || url.endsWith('WorkerMain.ts')) {
+        return GetHeadersOtherWorker.getHeadersOtherWorker(url)
       }
       return getHeadersDefault()
     default:
