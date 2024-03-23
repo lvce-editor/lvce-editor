@@ -16,10 +16,10 @@ const getExtraHeaders = (pathName, fileExtension) => {
       return GetHeadersMainFrame.getHeadersMainFrame()
     case '.js':
     case '.ts':
-      if (url.endsWith('testWorkerMain.js') || url.endsWith('testWorkerMain.ts')) {
+      if (pathName.endsWith('testWorkerMain.js') || pathName.endsWith('testWorkerMain.ts')) {
         return GetHeadersTestWorker.getHeadersExtensionHostWorker()
       }
-      if (url.endsWith('rendererWorkerMain.js')) {
+      if (pathName.endsWith('rendererWorkerMain.js')) {
         return GetHeadersRendererWorker.getHeadersRendererWorker()
       }
       if (pathName.endsWith('extensionHostWorkerMain.js')) {
