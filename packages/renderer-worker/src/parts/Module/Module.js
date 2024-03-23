@@ -154,6 +154,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostQuickPick.ipc.js')
     case ModuleId.ExtensionHostDialog:
       return import('../ExtensionHost/ExtensionHostDialog.ipc.js')
+    case ModuleId.ExtensionHostWorkerContentSecurityPolicy:
+      return import('../ExtensionHost/ExtensionHostWorkerContentSecurityPolicy.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

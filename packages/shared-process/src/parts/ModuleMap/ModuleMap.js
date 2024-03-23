@@ -323,6 +323,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWebContentsView
     case 'HandleRequestTest.handleRequestTest':
       return ModuleId.HandleRequestTest
+    case 'ContentSecurityPolicy.set':
+      return ModuleId.ContentSecurityPolicy
     default:
       throw new CommandNotFoundError(commandId)
   }
