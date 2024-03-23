@@ -73,3 +73,4 @@ export const ElectronWebContents = 66
 export const ElectronWebContentsView = 67
 export const ElectronWebContentsViewFunctions = 68
 export const HandleRequestTest = 69
+export const ContentSecurityPolicy = 70
