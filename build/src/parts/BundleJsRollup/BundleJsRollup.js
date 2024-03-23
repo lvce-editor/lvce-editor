@@ -109,7 +109,7 @@ export const bundleJs = async ({
       name: 'rendererProcess',
       extend: false,
       dir: codeSplitting ? join(cwd, 'dist') : undefined,
-      file: codeSplitting ? undefined : join(cwd, 'dist', basename(from)),
+      file: codeSplitting ? undefined : join(cwd, 'dist', basename(from).replace('.ts', '.js')),
       entryFileNames: 'renderer-process.modern.js',
       exports: 'auto',
       sourcemapExcludeSources: true,
