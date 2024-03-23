@@ -473,4 +473,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath }
     })
     console.timeEnd('addTestFiles')
   }
+  return {
+    commitHash,
+  }
 }
