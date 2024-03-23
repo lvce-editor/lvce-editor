@@ -1,10 +1,10 @@
-import * as ContentSecurityPolicy from '../ContentSecurityPolicy/ContentSecurityPolicy.js'
+import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 
 export const getHeadersMainFrame = () => {
   return {
-    [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
+    [ContentSecurityPolicyDocument.key]: ContentSecurityPolicyDocument.value,
     [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
     [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
   }
