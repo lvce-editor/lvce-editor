@@ -1,10 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostSubWorkerUrl from '../ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.js'
+import * as ExtensionHostWorkerContentSecurityPolicy from '../ExtensionHostWorkerContentSecurityPolicy/ExtensionHostWorkerContentSecurityPolicy.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as RpcParent from '../RpcParent/RpcParent.js'
 import * as RpcParentType from '../RpcParentType/RpcParentType.js'
-import * as Rpc from '../Rpc/Rpc.js'
 import { VError } from '../VError/VError.js'
 
 const defaultExecute = () => {
@@ -17,7 +17,7 @@ export const createRpc = async ({ url, name, execute = defaultExecute, contentSe
     Assert.string(name)
     Assert.fn(execute)
     if (contentSecurityPolicy) {
-      await Rpc.invoke('ExtensionHostWorkerContentSecurityPolicy.set', url, contentSecurityPolicy)
+      await ExtensionHostWorkerContentSecurityPolicy.set(url, contentSecurityPolicy)
     }
     const ipc = await IpcParent.create({
       method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,

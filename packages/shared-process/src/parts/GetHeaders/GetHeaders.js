@@ -9,20 +9,20 @@ const getHeadersDefault = () => {
   return {}
 }
 
-const getExtraHeaders = (url, fileExtension) => {
+const getExtraHeaders = (pathName, fileExtension) => {
   switch (fileExtension) {
     case '.html':
       return GetHeadersMainFrame.getHeadersMainFrame()
     case '.js':
     case '.ts':
-      if (url.endsWith('rendererWorkerMain.js')) {
+      if (pathName.endsWith('rendererWorkerMain.js')) {
         return GetHeadersRendererWorker.getHeadersRendererWorker()
       }
-      if (url.endsWith('extensionHostWorkerMain.js')) {
+      if (pathName.endsWith('extensionHostWorkerMain.js')) {
         return GetHeadersExtensionHostWorker.getHeadersExtensionHostWorker()
       }
-      if (url.endsWith('WorkerMain.js') || url.endsWith('WorkerMain.ts')) {
-        return GetHeadersOtherWorker.getHeadersOtherWorker(url)
+      if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
+        return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
       }
       return getHeadersDefault()
     default:
@@ -30,13 +30,13 @@ const getExtraHeaders = (url, fileExtension) => {
   }
 }
 
-export const getHeaders = (absolutePath) => {
+export const getHeaders = (absolutePath, pathName) => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const headers = {
     'Content-Type': mime,
   }
-  const extraHeaders = getExtraHeaders(absolutePath, extension)
+  const extraHeaders = getExtraHeaders(pathName, extension)
   return {
     ...headers,
     ...extraHeaders,
