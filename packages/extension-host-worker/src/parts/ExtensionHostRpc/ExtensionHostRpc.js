@@ -4,17 +4,21 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as RpcParent from '../RpcParent/RpcParent.js'
 import * as RpcParentType from '../RpcParentType/RpcParentType.js'
+import * as Rpc from '../Rpc/Rpc.js'
 import { VError } from '../VError/VError.js'
 
 const defaultExecute = () => {
   throw new Error('not implemented')
 }
 
-export const createRpc = async ({ url, name, execute = defaultExecute }) => {
+export const createRpc = async ({ url, name, execute = defaultExecute, contentSecurityPolicy }) => {
   try {
     Assert.string(url)
     Assert.string(name)
     Assert.fn(execute)
+    if (contentSecurityPolicy) {
+      await Rpc.invoke('ExtensionHostWorkerContentSecurityPolicy.set', url, contentSecurityPolicy)
+    }
     const ipc = await IpcParent.create({
       method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
       url: ExtensionHostSubWorkerUrl.extensionHostSubWorkerUrl,
