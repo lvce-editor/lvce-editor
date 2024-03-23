@@ -176,6 +176,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostDialog
     case 'TestFrameWork':
       return ModuleId.TestFrameWork
+    case 'ExtensionHostWorkerContentSecurityPolicy':
+      return ModuleId.ExtensionHostWorkerContentSecurityPolicy
     default:
       throw new Error(`module ${prefix} not found`)
   }
