@@ -12,7 +12,8 @@
     "isolatedModules": true,
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "composite": true
   },
   "include": ["src"]
 }

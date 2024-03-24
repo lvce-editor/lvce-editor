@@ -1,0 +1,21 @@
+{
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./build" },
+    { "path": "./packages/e2e" },
+    { "path": "./packages/extension-host" },
+    { "path": "./packages/extension-host-helper-process" },
+    { "path": "./packages/extension-host-sub-worker" },
+    { "path": "./packages/extension-host-worker" },
+    { "path": "./packages/extension-host-worker-tests" },
+    { "path": "./packages/main-process" },
+    { "path": "./packages/pty-host" },
+    { "path": "./packages/renderer-process" },
+    { "path": "./packages/renderer-worker" },
+    { "path": "./packages/server" },
+    { "path": "./packages/shared-process" },
+    { "path": "./packages/terminal-worker" },
+    { "path": "./packages/test-worker" }
+  ]
+}
