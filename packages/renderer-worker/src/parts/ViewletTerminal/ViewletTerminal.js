@@ -46,7 +46,7 @@ export const contentLoadedEffects = async (state) => {
     const response = await promise
     const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
     const { offscreenCanvasCursor, offscreenCanvasText } = result
-    const terminal = TerminalEmulator.create({
+    const terminal = await TerminalEmulator.create({
       offscreenCanvasCursor,
       offscreenCanvasText,
       async focusTextArea() {
