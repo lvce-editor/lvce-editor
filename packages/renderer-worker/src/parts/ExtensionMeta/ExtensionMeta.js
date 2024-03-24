@@ -2,20 +2,14 @@ import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
+import * as GetWebExtensions from '../GetWebExtensions/GetWebExtensions.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
-import * as WebExtensionsUrl from '../WebExtensionsUrl/WebExtensionsUrl.js'
-
-export const state = {
-  /**
-   * @type {any[]}
-   */
-  webExtensions: [],
-}
 
 const getId = (path) => {
   const slashIndex = path.lastIndexOf(Character.Slash)
@@ -47,47 +41,10 @@ export const addWebExtension = async (path) => {
     }
   }
   manifest.status = ExtensionManifestStatus.Resolved
-  state.webExtensions.push(manifest)
+  ExtensionMetaState.state.webExtensions.push(manifest)
   if (manifest.languages) {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)
-  }
-}
-
-const getSharedProcessExtensions = () => {
-  return SharedProcess.invoke(/* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions')
-}
-
-const getStaticWebExtensions = () => {
-  return Command.execute('Ajax.getJson', WebExtensionsUrl.webExtensionsUrl)
-}
-
-const getWebExtensionsWeb = async () => {
-  const staticWebExtensions = await getStaticWebExtensions()
-  return [...staticWebExtensions, ...state.webExtensions]
-}
-
-const isWebExtension = (extension) => {
-  return extension && typeof extension.browser === 'string'
-}
-
-const getWebExtensionsDefault = async () => {
-  const staticWebExtensions = await getStaticWebExtensions()
-  const sharedProcessExtensions = await getSharedProcessExtensions()
-  const sharedProcessWebExtensions = sharedProcessExtensions.filter(isWebExtension)
-  return [...staticWebExtensions, sharedProcessWebExtensions, ...state.webExtensions]
-}
-
-const getWebExtensions = async () => {
-  try {
-    switch (Platform.platform) {
-      case PlatformType.Web:
-        return getWebExtensionsWeb()
-      default:
-        return getWebExtensionsDefault()
-    }
-  } catch {
-    return state.webExtensions
   }
 }
 
@@ -156,13 +113,17 @@ export const handleRejectedExtensions = async (extensions) => {
   }
 }
 
+const getSharedProcessExtensions = () => {
+  return SharedProcess.invoke(/* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions')
+}
+
 export const getExtensions = async () => {
   if (Platform.platform === PlatformType.Web) {
-    const webExtensions = await getWebExtensions()
+    const webExtensions = await GetWebExtensions.getWebExtensions()
     return webExtensions
   }
   if (Platform.platform === PlatformType.Remote) {
-    const webExtensions = await getWebExtensions()
+    const webExtensions = await GetWebExtensions.getWebExtensions()
     const sharedProcessExtensions = await getSharedProcessExtensions()
     return [...sharedProcessExtensions, ...webExtensions]
   }

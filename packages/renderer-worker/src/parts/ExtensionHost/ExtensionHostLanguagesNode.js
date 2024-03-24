@@ -1,6 +1,6 @@
-import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Command from '../Command/Command.js'
+import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const getLanguages = async () => {
   // TODO handle error
@@ -30,7 +30,7 @@ const getLanguageConfigurationPathFromExtensions = (extensions, languageId) => {
 }
 
 const getLanguageConfigurationFromWebExtension = async (languageId) => {
-  const languageConfigurationPath = getLanguageConfigurationPathFromExtensions(ExtensionMeta.state.webExtensions, languageId)
+  const languageConfigurationPath = getLanguageConfigurationPathFromExtensions(ExtensionMetaState.state.webExtensions, languageId)
   if (!languageConfigurationPath) {
     return undefined
   }
@@ -41,7 +41,7 @@ const getLanguageConfigurationFromWebExtension = async (languageId) => {
 export const getLanguageConfiguration = async (languageId) => {
   const languageConfiguration = await SharedProcess.invoke(
     /* ExtensionHost.getLanguageConfiguration */ 'ExtensionHost.getLanguageConfiguration',
-    /* languageId */ languageId
+    /* languageId */ languageId,
   )
   if (languageConfiguration) {
     return languageConfiguration
