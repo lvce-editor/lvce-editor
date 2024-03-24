@@ -4,8 +4,10 @@ import * as GetElectronFileResponseContent from '../GetElectronFileResponseConte
 import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponseRelativePath/GetElectronFileResponseRelativePath.js'
 import * as GetEtag from '../GetEtag/GetEtag.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
+import * as GetNotModifiedResponse from '../GetNotModifiedResponse/GetNotModifiedResponse.js'
+import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Logger from '../Logger/Logger.js'
 
@@ -18,13 +20,7 @@ export const getElectronFileResponse = async (url, request) => {
       const stats = await stat(absolutePath)
       etag = GetEtag.getEtag(stats)
       if (request.headers['if-none-match'] === etag) {
-        return {
-          body: '',
-          init: {
-            status: HttpStatusCode.NotModifed,
-            headers: {},
-          },
-        }
+        return GetNotModifiedResponse.getNotModifiedResponse()
       }
     }
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
@@ -45,13 +41,6 @@ export const getElectronFileResponse = async (url, request) => {
       return GetNotFoundResponse.getNotFoundResponse()
     }
     Logger.error(error)
-    return {
-      body: 'server-error',
-      init: {
-        status: HttpStatusCode.ServerError,
-        statusText: 'server-error',
-        headers: {},
-      },
-    }
+    return GetServerErrorResponse.getServerErrorResponse()
   }
 }
