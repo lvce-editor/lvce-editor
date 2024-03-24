@@ -1,8 +1,8 @@
 // @ts-nocheck
 import * as GetData from '../GetData/GetData.ts'
 import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.ts'
-import { IpcError } from '../IpcError/IpcError.js'
-import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
+import { IpcError } from '../IpcError/IpcError.ts'
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.ts'
 
 export const listen = async () => {
   const parentIpcRaw = await IpcChildWithModuleWorker.listen()

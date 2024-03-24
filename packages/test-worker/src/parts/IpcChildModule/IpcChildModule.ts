@@ -1,15 +1,15 @@
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
 export const getModule = (method) => {
   switch (method) {
     case IpcChildType.MessagePort:
-      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.js')
+      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.ts')
     case IpcChildType.ModuleWorker:
-      return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js')
+      return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.ts')
     case IpcChildType.ReferencePort:
-      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.js')
+      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.ts')
     case IpcChildType.ModuleWorkerAndMessagePort:
-      return import('../IpcChildWithModuleWorkerAndMessagePort/IpcChildWithModuleWorkerAndMessagePort.js')
+      return import('../IpcChildWithModuleWorkerAndMessagePort/IpcChildWithModuleWorkerAndMessagePort.ts')
     default:
       throw new Error('unexpected ipc type')
   }

@@ -1,7 +1,7 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
   if ('id' in message) {

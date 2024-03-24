@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as PlatformType from '../PlatformType/PlatformType.ts'
 
 const getPlatform = () => {
   // @ts-ignore

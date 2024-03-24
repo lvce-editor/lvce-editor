@@ -1,6 +1,6 @@
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
-import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
-import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.ts'
+import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.ts'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.ts'
 
 export const send = (transport, method, ...params) => {
   const message = JsonRpcEvent.create(method, params)

@@ -1,5 +1,5 @@
-import * as CommandState from '../CommandState/CommandState.js'
-import * as ProcessName from '../ProcessName/ProcessName.js'
+import * as CommandState from '../CommandState/CommandState.ts'
+import * as ProcessName from '../ProcessName/ProcessName.ts'
 
 export const execute = (command, ...args) => {
   const fn = CommandState.getCommand(command)

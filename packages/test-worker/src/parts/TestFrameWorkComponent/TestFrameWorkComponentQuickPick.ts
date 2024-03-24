@@ -1,5 +1,5 @@
 import * as Rpc from '../Rpc/Rpc.ts'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 
 export const open = async () => {
   await Rpc.invoke('Viewlet.openWidget', ViewletModuleId.QuickPick, 'everything')

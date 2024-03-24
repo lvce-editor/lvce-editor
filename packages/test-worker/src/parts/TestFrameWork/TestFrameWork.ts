@@ -2,7 +2,7 @@
 
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
-import * as TestState from '../TestState/TestState.js'
+import * as TestState from '../TestState/TestState.ts'
 
 export { create as Locator } from './Locator.ts'
 

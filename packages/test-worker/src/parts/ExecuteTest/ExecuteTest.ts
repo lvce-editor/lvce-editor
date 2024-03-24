@@ -1,8 +1,8 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
-import * as Rpc from '../Rpc/Rpc.js'
-import * as TestType from '../TestType/TestType.js'
-import * as Timestamp from '../Timestamp/Timestamp.js'
-import { VError } from '../VError/VError.js'
+import * as Rpc from '../Rpc/Rpc.ts'
+import * as TestType from '../TestType/TestType.ts'
+import * as Timestamp from '../Timestamp/Timestamp.ts'
+import { VError } from '../VError/VError.ts'
 
 const printError = (error) => {
   if (error && error.constructor.name === 'AssertionError') {

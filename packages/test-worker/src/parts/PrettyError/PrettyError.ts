@@ -1,7 +1,7 @@
 import * as Ajax from '../Ajax/Ajax.ts'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 
 const getErrorMessage = (error) => {
   if (!error) {

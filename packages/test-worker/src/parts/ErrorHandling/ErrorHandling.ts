@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as PrettyError from '../PrettyError/PrettyError.ts'
 
 export const state = {
   /**

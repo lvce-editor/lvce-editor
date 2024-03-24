@@ -1,5 +1,5 @@
-import { VError } from '../VError/VError.js'
-import * as LoadKy from '../LoadKy/LoadKy.js'
+import { VError } from '../VError/VError.ts'
+import * as LoadKy from '../LoadKy/LoadKy.ts'
 
 export const getText = async (url, options = {}) => {
   try {

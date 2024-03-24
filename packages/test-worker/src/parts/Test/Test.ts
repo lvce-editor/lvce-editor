@@ -3,9 +3,9 @@
 import * as ExecuteTest from '../ExecuteTest/ExecuteTest.ts'
 import * as ExposeGlobals from '../ExposeGlobals/ExposeGlobals.ts'
 import * as ImportTest from '../ImportTest/ImportTest.ts'
-import * as TestFrameWork from '../TestFrameWork/TestFrameWork.js'
-import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.js'
-import * as TestState from '../TestState/TestState.js'
+import * as TestFrameWork from '../TestFrameWork/TestFrameWork.ts'
+import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.ts'
+import * as TestState from '../TestState/TestState.ts'
 
 export const state = {
   tests: [],
