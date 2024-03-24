@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
+import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
@@ -28,10 +29,10 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
       init: {
         status: HttpStatusCode.MultipleChoices,
         headers: {
-          'Cache-Control': 'public, max-age=0, must-revalidate',
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          'Content-Security-Policy': "default-src 'none'",
+          [HttpHeader.CacheControl]: 'public, max-age=0, must-revalidate',
+          [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+          [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
+          [HttpHeader.ContentSecurityPolicy]: "default-src 'none'",
         },
       },
     }

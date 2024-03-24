@@ -255,6 +255,11 @@
     "version": "0.6.0"
   },
   {
+    "name": "builtin.language-features-json",
+    "repository": "github.com/lvce-editor/language-features-json",
+    "version": "0.6.0"
+  },
+  {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
     "version": "0.21.0"
@@ -267,7 +272,7 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.5.0"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.theme-ayu",
@@ -312,6 +317,6 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "0.6.0"
+    "version": "1.0.0"
   }
 ]
