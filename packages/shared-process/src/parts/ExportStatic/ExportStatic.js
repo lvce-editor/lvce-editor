@@ -4,10 +4,6 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 
-// TODO
-// - implement this for syntax highlighting projects
-// - implement this for language features web extensions
-
 const readExtensionManifest = async (path) => {
   const json = await JsonFile.readJson(path)
   return { ...json, path }
@@ -316,15 +312,21 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
   }
 }
 
-const addExtensionWebExtension = async ({ root, extensionPath, commitHash, extensionJson, pathPrefix }) => {
+const addExtensionWebExtension = async ({ root, extensionPath, commitHash, extensionJson, pathPrefix, useSimpleWebExtensionFile }) => {
   if (!extensionJson.browser) {
+    return
+  }
+  const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${extensionJson.id}`
+  if (useSimpleWebExtensionFile) {
+    const webExtensions = [webExtensionPath]
+    await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
     return
   }
   const webExtensions = [
     {
       ...extensionJson,
       isWeb: true,
-      path: `${pathPrefix}/${commitHash}/extensions/${extensionJson.id}`,
+      path: webExtensionPath,
     },
   ]
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
@@ -333,7 +335,7 @@ const addExtensionWebExtension = async ({ root, extensionPath, commitHash, exten
   }
 }
 
-const addExtension = async ({ root, extensionPath, commitHash, pathPrefix }) => {
+const addExtension = async ({ root, extensionPath, commitHash, pathPrefix, useSimpleWebExtensionFile }) => {
   const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
   const name = extensionJson.name || extensionJson.id || ''
   const description = extensionJson.description || ''
@@ -362,6 +364,7 @@ const addExtension = async ({ root, extensionPath, commitHash, pathPrefix }) => 
     commitHash,
     extensionJson,
     pathPrefix,
+    useSimpleWebExtensionFile,
   })
 }
 
@@ -420,9 +423,9 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string   }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string, useSimpleWebExtensionFile?:boolean }} param0
  */
-export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath }) => {
+export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, useSimpleWebExtensionFile }) => {
   if (!existsSync(root)) {
     throw new Error(`root path does not exist: ${root}`)
   }
@@ -460,6 +463,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath }
     commitHash,
     pathPrefix,
     root,
+    useSimpleWebExtensionFile,
   })
   console.timeEnd('addExtension')
 
