@@ -5,10 +5,10 @@ import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionMa
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
+import * as WebExtensionsUrl from '../WebExtensionsUrl/WebExtensionsUrl.js'
 
 export const state = {
   /**
@@ -59,8 +59,7 @@ const getSharedProcessExtensions = () => {
 }
 
 const getStaticWebExtensions = () => {
-  const webExtensionsUrl = PlatformPaths.getWebExtensionsUrl()
-  return Command.execute('Ajax.getJson', webExtensionsUrl)
+  return Command.execute('Ajax.getJson', WebExtensionsUrl.webExtensionsUrl)
 }
 
 const getWebExtensionsWeb = async () => {
