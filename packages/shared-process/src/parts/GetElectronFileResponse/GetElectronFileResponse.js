@@ -17,9 +17,7 @@ export const getElectronFileResponse = async (url, request) => {
     if (request) {
       const stats = await stat(absolutePath)
       etag = GetEtag.getEtag(stats)
-
       if (request.headers['if-none-match'] === etag) {
-        console.log('same', url)
         return {
           body: '',
           init: {
