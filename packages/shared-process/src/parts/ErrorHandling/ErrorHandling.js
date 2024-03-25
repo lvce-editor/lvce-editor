@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as Character from '../Character/Character.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'

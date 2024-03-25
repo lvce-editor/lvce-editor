@@ -1,9 +1,9 @@
-import { performance } from 'node:perf_hooks'
 import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
 import * as Process from '../Process/Process.js'
 
 export const measureLatencyBetweenExtensionHostAndSharedProcess = async (socket, id) => {
   // TODO lazy load extension host
+  // @ts-ignore
   const latency = await ExtensionHost.measureLatency()
   socket.send([/* callback */ id, /* latency */ latency])
 }

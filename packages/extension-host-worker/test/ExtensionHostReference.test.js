@@ -20,6 +20,7 @@ test('executeReferenceProvider - no results', async () => {
       return []
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual([])
 })
 
@@ -45,6 +46,7 @@ test('executeReferenceProvider - single result', async () => {
       ]
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual([
     {
       endOffset: 0,
@@ -70,6 +72,7 @@ test('executeReferenceProvider - error - reference provider throws error', async
       throw new TypeError('x is not a function')
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute reference provider: TypeError: x is not a function'),
   )
@@ -88,6 +91,7 @@ test('executeReferenceProvider - error - referenceProvider has wrong shape', asy
     languageId: 'javascript',
     abc() {},
   })
+  // @ts-ignore
   await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute reference provider: VError: referenceProvider.provideReferences is not a function'),
   )
@@ -102,6 +106,7 @@ test('executeReferenceProvider - error - no reference provider found', async () 
       content: '',
     },
   ])
+  // @ts-ignore
   await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute reference provider: No reference provider found for javascript'),
   )

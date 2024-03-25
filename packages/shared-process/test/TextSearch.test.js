@@ -57,6 +57,7 @@ test('search - no results', async () => {
     })
     return childProcess
   })
+  // @ts-ignore
   expect(await TextSearch.search('/test', 'document')).toEqual({
     results: [],
     stats: expect.any(Object),
@@ -110,6 +111,7 @@ test('search - one result', async () => {
     })
     return childProcess
   })
+  // @ts-ignore
   expect(await TextSearch.search('/test', 'document')).toEqual({
     results: [
       {
@@ -208,6 +210,7 @@ test('search - one result split across multiple chunks', async () => {
     })
     return childProcess
   })
+  // @ts-ignore
   expect(await TextSearch.search('/test', 'document')).toEqual({
     results: [
       {
@@ -293,6 +296,7 @@ test('search - error with parsing line', async () => {
     })
     return childProcess
   })
+  // @ts-ignore
   await expect(TextSearch.search('/test', 'document')).rejects.toThrow(new TypeError('Cannot read properties of undefined (reading length)'))
 })
 
@@ -329,5 +333,6 @@ test('search - error ripgrep not found', async () => {
     })
     return childProcess
   })
+  // @ts-ignore
   await expect(TextSearch.search('/test', 'document')).rejects.toThrow(new TypeError('ripgrep path not found: Error: spawn /test/bin/rg ENOENT'))
 })

@@ -25,6 +25,7 @@ test.skip('Terminal', async () => {
   }
   Terminal.create(socket, 0, '/tmp')
   Terminal.write(0, 'abc')
+  // @ts-ignore
   await waitForExpect(() => {
     expect(allData).toContain('abc')
     // expect(true).toBe(false)
