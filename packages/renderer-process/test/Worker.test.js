@@ -20,6 +20,7 @@ test.skip('create - moduleWorker', () => {
       mock()
     }
   }
+  // @ts-ignore
   WebWorker.create('/test/sample-file.js')
   expect(mock).toHaveBeenCalled()
 })
@@ -38,13 +39,11 @@ test.skip('create - messagePort', async () => {
     }
   }
   const tmpDir = await getTmpDir()
-  await writeFile(
-    join(tmpDir, 'test-file.js'),
-    'const messageChannel = new MessageChannel(); globalThis.port = messageChannel.port1'
-  )
+  await writeFile(join(tmpDir, 'test-file.js'), 'const messageChannel = new MessageChannel(); globalThis.port = messageChannel.port1')
   await writeFile(join(tmpDir, 'package.json'), '{"type": "module"}')
   // @ts-ignore
   WebWorker.state.preferredMethod = 'messagePort'
+  // @ts-ignore
   const port = await WebWorker.create(join(tmpDir, 'test-file.js'))
   expect(port).toBeInstanceOf(MessagePort)
   expect('port' in globalThis).toBe(false)

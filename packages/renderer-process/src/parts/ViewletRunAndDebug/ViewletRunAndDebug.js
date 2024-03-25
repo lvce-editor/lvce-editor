@@ -23,6 +23,7 @@ export const setPatches = (state, diff) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
+        // @ts-ignore
         VirtualDomElementProp.setProp(node, diffItem.key, diffItem.value)
         break
       default:

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
@@ -77,7 +78,7 @@ const handleSelectionChange = (editor, selectionChanges) => {
     /* x */ x,
     /* y */ y,
     /* completionItems */ filteredCompletionItems,
-    /* reason */ 1
+    /* reason */ 1,
   )
 }
 

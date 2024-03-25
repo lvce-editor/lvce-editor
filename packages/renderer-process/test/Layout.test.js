@@ -34,35 +34,37 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
 const Layout = await import('../src/parts/Layout/Layout.js')
 
 test.skip('base components', () => {
+  // @ts-ignore
   expect(Layout.state.$ActivityBar).toBeInstanceOf(HTMLElement)
+  // @ts-ignore
   expect(Layout.state.$StatusBar).toBeInstanceOf(HTMLElement)
+  // @ts-ignore
   expect(Layout.state.$Panel).toBeInstanceOf(HTMLElement)
+  // @ts-ignore
   expect(Layout.state.$Main).toBeInstanceOf(HTMLElement)
+  // @ts-ignore
   expect(Layout.state.$TitleBar).toBeInstanceOf(HTMLElement)
+  // @ts-ignore
   expect(Layout.state.$SideBar).toBeInstanceOf(HTMLElement)
 })
 
 test.skip('show', async () => {
   // TODO this should be different
   // TODO check attributes on elements
+  // @ts-ignore
   Layout.show({
     'SideBar.visible': false,
     'SideBar.width': 100,
@@ -76,6 +78,7 @@ test.skip('show', async () => {
 })
 
 test.skip('update', () => {
+  // @ts-ignore
   Layout.update({
     'SideBar.visible': false,
     'SideBar.width': 100,
@@ -91,6 +94,7 @@ test.skip('update', () => {
 test.skip('handleResize', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Layout.show({
     'SideBar.visible': false,
     'SideBar.width': 100,
@@ -104,7 +108,7 @@ test.skip('handleResize', () => {
   window.dispatchEvent(
     new Event('resize', {
       bubbles: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Layout.handleResize', {
@@ -120,6 +124,7 @@ test.skip('event - move sash', () => {
   const spy1 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
   // @ts-ignore
   const spy2 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
+  // @ts-ignore
   Layout.show({
     'SideBar.visible': true,
     'SideBar.width': 100,
@@ -149,6 +154,7 @@ test.skip('event - move sash', () => {
     clientY: 0,
     pointerId: 1,
   })
+  // @ts-ignore
   const $SashSideBar = Layout.state.$SashSideBar
   $SashSideBar.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(1)
@@ -160,16 +166,7 @@ test.skip('event - move sash', () => {
   expect(spy2).toHaveBeenCalledWith(1)
 
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    1,
-    'Layout.handleSashPointerDown',
-    'SideBar'
-  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'Layout.handleSashPointerDown', 'SideBar')
   // TODO make it possible to test with custom x/y position
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    2,
-    'Layout.handleSashPointerMove',
-    0,
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Layout.handleSashPointerMove', 0, 0)
 })

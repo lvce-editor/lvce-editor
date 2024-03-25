@@ -55,6 +55,7 @@ beforeAll(() => {
 
 test('hydrate', async () => {
   // @ts-ignore
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Workspace.resolveRoot':
@@ -77,7 +78,9 @@ test('hydrate', async () => {
 })
 
 test('hydrate - path changed in the meantime', async () => {
+  // @ts-ignore
   let _resolve = (value) => {}
+  // @ts-ignore
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
@@ -111,6 +114,7 @@ test('hydrate - path changed in the meantime', async () => {
 
 test('hydrate - error', async () => {
   // @ts-ignore
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Workspace.resolveRoot':
@@ -128,8 +132,10 @@ test('hydrate - error', async () => {
 test.skip('setPath', async () => {
   const listener = jest.fn()
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 909090:
+        // @ts-ignore
         const callbackId = message[1]
         RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break

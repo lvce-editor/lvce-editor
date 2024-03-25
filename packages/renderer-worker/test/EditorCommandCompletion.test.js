@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { jest } from '@jest/globals'
 import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'
 import * as EditorCommandCursorCharacterLeft from '../src/parts/EditorCommand/EditorCommandCursorCharacterLeft.js'

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { jest } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
 import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createOffscreenTerminalDom } from '../../../../../static/js/termterm.js'
 
 export const create = ({ $Element, ...options }) => {

@@ -170,6 +170,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
   $TitleBarMenuBar.children[index].ariaExpanded = AriaBoolean.True
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
+  // @ts-ignore
   Menu.showControlled({
     x,
     y,

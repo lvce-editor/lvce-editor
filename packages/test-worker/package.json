@@ -8,13 +8,31 @@
     "test": "test"
   },
   "scripts": {
-    "lint": "npx xo ."
+    "lint": "npx xo .",
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {},
-  "jest": {},
+  "jest": {
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    }
+  },
   "xo": {
     "rules": {
       "unicorn/filename-case": "off",

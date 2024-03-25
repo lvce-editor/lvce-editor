@@ -1274,6 +1274,7 @@ Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extensio
 Node.js v18.14.0
 `
   const error = new IpcError('Utility process exited before ipc connection was established', stdout, stderr)
+  // @ts-ignore
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     codeFrame: ``,
@@ -1307,6 +1308,7 @@ Node.js v18.14.0
 test.skip('prepare - error - permission denied', async () => {
   const cause = new Error("EACCES: permission denied, open '/test/settings.json'")
   const error = new VError(cause, `Failed to read settings`)
+  // @ts-ignore
   error.stack = `VError: Failed to read settings: EACCES: permission denied, open '/test/settings.json'
     at readSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:20:11)
     at async getUserSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:47:29)
@@ -1392,6 +1394,7 @@ exports.load = load
 exports.update = update
 `
   })
+  // @ts-ignore
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     codeFrame: `  18 |     }
