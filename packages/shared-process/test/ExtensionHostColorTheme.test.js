@@ -164,7 +164,10 @@ test('getColorThemes', async () => {
 })
 
 test.skip('getColorThemeJson - not found', async () => {
+  // @ts-ignore
   ExtensionHost.state.builtinExtensions = []
+  // @ts-ignore
   ExtensionHost.state.installedExtensions = []
+  // @ts-ignore
   await expect(ExtensionHost.getColorThemeJson('test-theme')).rejects.toThrow('Color theme "test-theme" not found in extensions folder')
 })

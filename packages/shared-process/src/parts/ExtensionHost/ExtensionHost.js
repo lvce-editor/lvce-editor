@@ -31,6 +31,7 @@ export const start = async (socket) => {
       if ('result' in message) {
         Callback.resolve(message.id, message.result)
       } else if ('error' in message) {
+        // @ts-ignore
         Callback.reject(message.id, message.error)
       } else {
         console.error('unsupported message type')

@@ -1,3 +1,4 @@
+// @ts-ignore
 import clipboardEx from 'electron-clipboard-ex'
 import { VError } from '../VError/VError.js'
 

@@ -9,6 +9,7 @@ export const listen = async ({ method, ...params }) => {
     // @ts-ignore
     module.signal(rawIpc)
   }
+  // @ts-ignore
   const ipc = module.wrap(rawIpc)
   return ipc
 }
