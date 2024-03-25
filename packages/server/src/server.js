@@ -292,10 +292,6 @@ const serveTests = async (req, res, next) => {
  * @param {ServerResponse} res
  */
 const servePackages = async (req, res, next) => {
-  const pathName = getPathName(req)
-  const actualPath = join(ROOT, pathName)
-  const actualUrl = '/remote' + pathToFileURL(actualPath).toString().slice('file://'.length)
-  req.url = actualUrl
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
