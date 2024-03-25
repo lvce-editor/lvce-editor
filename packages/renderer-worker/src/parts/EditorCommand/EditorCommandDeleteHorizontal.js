@@ -14,10 +14,7 @@ export const editorDeleteHorizontalRight = (editor, getDelta) => {
     const documentEdits = {
       rowIndex,
       count: 1,
-      newLines: [
-        lines[rowIndex].slice(0, columnIndex) +
-          lines[rowIndex].slice(columnIndex),
-      ],
+      newLines: [lines[rowIndex].slice(0, columnIndex) + lines[rowIndex].slice(columnIndex)],
       type: /* splice */ 2,
     }
     const cursorEdit = {}

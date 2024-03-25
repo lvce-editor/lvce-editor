@@ -10,9 +10,7 @@ const getNewSelectionsSingleLineWord = (lines, word) => {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     let columnIndex = -word.length
-    while (
-      (columnIndex = line.indexOf(word, columnIndex + word.length)) !== -1
-    ) {
+    while ((columnIndex = line.indexOf(word, columnIndex + word.length)) !== -1) {
       newSelections.push(i, columnIndex, i, columnIndex + word.length)
     }
   }
@@ -43,20 +41,11 @@ const isMultiLineMatch = (lines, rowIndex, wordParts) => {
 // TODO if this matches the given selections, don't schedule selections/rerender
 const getAllOccurrencesMultiLine = (lines, wordParts) => {
   const newSelections = []
-  for (
-    let rowIndex = 0;
-    rowIndex < lines.length - wordParts.length + 1;
-    rowIndex
-  ) {
+  for (let rowIndex = 0; rowIndex < lines.length - wordParts.length + 1; rowIndex) {
     lines
     rowIndex
     if (isMultiLineMatch(lines, rowIndex, wordParts)) {
-      newSelections.push(
-        rowIndex,
-        lines[rowIndex].length - wordParts[0].length,
-        rowIndex + wordParts.length - 1,
-        wordParts.at(-1).length
-      )
+      newSelections.push(rowIndex, lines[rowIndex].length - wordParts[0].length, rowIndex + wordParts.length - 1, wordParts.at(-1).length)
       rowIndex += wordParts.length - 1
     } else {
       rowIndex++
@@ -113,18 +102,11 @@ const getNewSelections = (lines, selections) => {
   const endColumnIndex = selections[firstSelectionIndex + 3]
   if (startRowIndex === endRowIndex) {
     if (startColumnIndex === endColumnIndex) {
-      const wordMatch = getWordMatchAtPosition(
-        lines,
-        endRowIndex,
-        endColumnIndex
-      )
+      const wordMatch = getWordMatchAtPosition(lines, endRowIndex, endColumnIndex)
       if (wordMatch.start === wordMatch.end) {
         return selections
       }
-      const newSelections = getNewSelectionsSingleLineWord(
-        lines,
-        wordMatch.word
-      )
+      const newSelections = getNewSelectionsSingleLineWord(lines, wordMatch.word)
       return newSelections
     }
     const line = lines[startRowIndex]

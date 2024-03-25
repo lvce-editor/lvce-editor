@@ -3,7 +3,7 @@ export const isActualSourceFile = (path) => {
     path === '<anonymous>' ||
     path === 'debugger eval code' ||
     path.startsWith('"') ||
-    path.startsWith('\'') ||
+    path.startsWith("'") ||
     path.startsWith(')') ||
     path.startsWith('file://')
   ) {

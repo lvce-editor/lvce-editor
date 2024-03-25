@@ -176,9 +176,9 @@ export const startup = async () => {
     await Command.execute('Test.execute', jsPath)
     return
   }
-    Performance.mark(PerformanceMarkerType.WillLoadSaveState)
-    await SaveState.hydrate()
-    Performance.mark(PerformanceMarkerType.DidLoadSaveState)
+  Performance.mark(PerformanceMarkerType.WillLoadSaveState)
+  await SaveState.hydrate()
+  Performance.mark(PerformanceMarkerType.DidLoadSaveState)
 
   LifeCycle.mark(LifeCyclePhase.Sixteen)
 

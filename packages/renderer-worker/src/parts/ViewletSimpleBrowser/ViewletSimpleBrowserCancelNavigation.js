@@ -3,8 +3,7 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 export const cancelNavigation = async (state) => {
   const { browserViewId } = state
   await ElectronBrowserViewFunctions.cancelNavigation(browserViewId)
-  const { url, canGoBack, canGoForward } =
-    await ElectronBrowserViewFunctions.getStats(browserViewId)
+  const { url, canGoBack, canGoForward } = await ElectronBrowserViewFunctions.getStats(browserViewId)
   return {
     ...state,
     isLoading: false,

@@ -2,8 +2,5 @@ import * as EditorCursorHorizontalLeft from './EditorCommandCursorHorizontalLeft
 import * as EditorDelta from './EditorCommandDelta.js'
 
 export const cursorWordPartLeft = (editor) => {
-  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(
-    editor,
-    EditorDelta.wordPartLeft
-  )
+  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(editor, EditorDelta.wordPartLeft)
 }

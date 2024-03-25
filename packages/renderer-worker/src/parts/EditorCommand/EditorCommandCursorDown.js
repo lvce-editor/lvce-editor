@@ -1,20 +1,8 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-const moveSelectionDown = (
-  selections,
-  i,
-  selectionStartRow,
-  selectionStartColumn,
-  selectionEndRow,
-  selectionEndColumn
-) => {
-  EditorSelection.moveRangeToPosition(
-    selections,
-    i,
-    selectionEndRow + 1,
-    selectionEndColumn
-  )
+const moveSelectionDown = (selections, i, selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
+  EditorSelection.moveRangeToPosition(selections, i, selectionEndRow + 1, selectionEndColumn)
 }
 
 const getNewSelections = (selections) => {

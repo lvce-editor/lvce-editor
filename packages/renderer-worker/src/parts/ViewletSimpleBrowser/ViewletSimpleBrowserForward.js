@@ -8,9 +8,7 @@ export const forward = async (state) => {
       isLoading: false,
     }
   }
-  const newCanGoForward = await ElectronBrowserViewFunctions.forward(
-    browserViewId
-  )
+  const newCanGoForward = await ElectronBrowserViewFunctions.forward(browserViewId)
   return {
     ...state,
     isLoading: true,

@@ -8,9 +8,7 @@ export const getDiagnostics = async () => {
     return []
   }
   const editor = instance.state
-  const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(
-    editor
-  )
+  const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(editor)
   if (!diagnostics) {
     return []
   }

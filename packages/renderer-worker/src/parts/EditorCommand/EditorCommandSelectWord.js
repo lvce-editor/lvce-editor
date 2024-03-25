@@ -12,12 +12,7 @@ const getNewSelections = (line, rowIndex, columnIndex) => {
   const afterMatch = after.match(RE_WORD_START)
   const columnStart = columnIndex - (beforeMatch ? beforeMatch[0].length : 0)
   const columnEnd = columnIndex + (afterMatch ? afterMatch[0].length : 0)
-  const newSelections = new Uint32Array([
-    rowIndex,
-    columnStart,
-    rowIndex,
-    columnEnd,
-  ])
+  const newSelections = new Uint32Array([rowIndex, columnStart, rowIndex, columnEnd])
   return newSelections
 }
 

@@ -17,12 +17,7 @@ const getNewValueInsertText = (value, selectionStart, selectionEnd, data) => {
   }
 }
 
-const getNewValueDeleteContentBackward = (
-  value,
-  selectionStart,
-  selectionEnd,
-  data
-) => {
+const getNewValueDeleteContentBackward = (value, selectionStart, selectionEnd, data) => {
   const after = value.slice(selectionEnd)
   if (selectionStart === selectionEnd) {
     const before = value.slice(0, selectionStart - 1)
@@ -46,12 +41,7 @@ const isAlphaNumeric = (character) => {
   return RE_ALPHA_NUMERIC.test(character)
 }
 
-const getNewValueDeleteWordBackward = (
-  value,
-  selectionStart,
-  selectionEnd,
-  data
-) => {
+const getNewValueDeleteWordBackward = (value, selectionStart, selectionEnd, data) => {
   const after = value.slice(selectionEnd)
   if (selectionStart === selectionEnd) {
     let startIndex = Math.max(selectionStart - 1, 0)
@@ -73,12 +63,7 @@ const getNewValueDeleteWordBackward = (
   }
 }
 
-const getNewValueDeleteContentForward = (
-  value,
-  selectionStart,
-  selectionEnd,
-  data
-) => {
+const getNewValueDeleteContentForward = (value, selectionStart, selectionEnd, data) => {
   const before = value.slice(0, selectionStart)
   if (selectionStart === selectionEnd) {
     const after = value.slice(selectionEnd + 1)
@@ -96,12 +81,7 @@ const getNewValueDeleteContentForward = (
   }
 }
 
-const getNewValueDeleteWordForward = (
-  value,
-  selectionStart,
-  selectionEnd,
-  data
-) => {
+const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd, data) => {
   const before = value.slice(0, selectionStart)
   if (selectionStart === selectionEnd) {
     let startIndex = Math.min(selectionStart + 1, value.length - 1)
@@ -123,21 +103,11 @@ const getNewValueDeleteWordForward = (
   }
 }
 
-const getNewValueInsertCompositionText = (
-  value,
-  selectionStart,
-  selectionEnd,
-  data
-) => {
+const getNewValueInsertCompositionText = (value, selectionStart, selectionEnd, data) => {
   return getNewValueInsertText(value, selectionStart, selectionEnd, data)
 }
 
-const getNewValueInsertLineBreak = (
-  value,
-  selectionStart,
-  selectionEnd,
-  data
-) => {
+const getNewValueInsertLineBreak = (value, selectionStart, selectionEnd, data) => {
   return {
     newValue: value,
     cursorOffset: selectionEnd,
@@ -166,13 +136,7 @@ const getFn = (inputType) => {
   }
 }
 
-export const getNewValue = (
-  value,
-  inputType,
-  data,
-  selectionStart,
-  selectionEnd
-) => {
+export const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
   const fn = getFn(inputType)
   return fn(value, selectionStart, selectionEnd, data)
 }

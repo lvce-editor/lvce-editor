@@ -10,7 +10,7 @@ export const handleBeforeInput = (event) => {
     /* inputType */ inputType,
     /* data */ data,
     /* selectionStart */ selectionStart,
-    /* selectionEnd */ selectionEnd
+    /* selectionEnd */ selectionEnd,
   )
 }
 

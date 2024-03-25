@@ -2,8 +2,5 @@ import * as EditorSelectHorizontalRight from './EditorCommandSelectHorizontalRig
 import * as EditorDelta from './EditorCommandDelta.js'
 
 export const selectWordRight = (editor) => {
-  return EditorSelectHorizontalRight.editorSelectHorizontalRight(
-    editor,
-    EditorDelta.wordRight
-  )
+  return EditorSelectHorizontalRight.editorSelectHorizontalRight(editor, EditorDelta.wordRight)
 }

@@ -10,9 +10,7 @@ test('getItem - localStorage', () => {
 })
 
 test('getItem - localStorage - empty', () => {
-  expect(
-    WebStorage.getItem(WebStorageType.LocalStorage, 'non-existent')
-  ).toBeUndefined()
+  expect(WebStorage.getItem(WebStorageType.LocalStorage, 'non-existent')).toBeUndefined()
 })
 
 test('getItem - localStorage - number should be converted to string', () => {

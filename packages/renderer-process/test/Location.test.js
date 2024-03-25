@@ -7,20 +7,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
 const Location = await import('../src/parts/Location/Location.js')
 

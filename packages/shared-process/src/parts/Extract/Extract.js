@@ -22,7 +22,7 @@ export const extractTarGz = async ({ inFile, outDir, strip }) => {
       createGunzip(),
       tar.extract(outDir, {
         strip,
-      })
+      }),
     )
   } catch (error) {
     throw new VError(error, `Failed to extract ${inFile}`)

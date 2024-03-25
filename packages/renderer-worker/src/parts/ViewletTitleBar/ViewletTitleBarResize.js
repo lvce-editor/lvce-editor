@@ -21,7 +21,7 @@ export const resize = (state, dimensions) => {
       y: menuBarY,
       width: menuBarWidth,
       height: menuBarHeight,
-    })
+    }),
   )
   return {
     newState: state,

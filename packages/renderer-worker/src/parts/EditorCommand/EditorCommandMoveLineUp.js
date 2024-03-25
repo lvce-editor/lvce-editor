@@ -12,10 +12,7 @@ export const moveLineUp = (editor) => {
       type: /* splice */ 2,
       rowIndex: rowIndex - 1,
       count: 2,
-      newLines: [
-        TextDocument.getLine(editor.textDocument, rowIndex),
-        TextDocument.getLine(editor.textDocument, rowIndex - 1),
-      ],
+      newLines: [TextDocument.getLine(editor.textDocument, rowIndex), TextDocument.getLine(editor.textDocument, rowIndex - 1)],
     },
   ]
   const cursorEdits = Editor.moveCursors(editor, (editor, cursor) => {

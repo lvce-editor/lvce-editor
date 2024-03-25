@@ -14,10 +14,7 @@ export const moveLineDown = (editor) => {
       type: /* splice */ 2,
       rowIndex: rowIndex,
       count: 2,
-      newLines: [
-        TextDocument.getLine(editor.textDocument, rowIndex + 1),
-        TextDocument.getLine(editor.textDocument, rowIndex),
-      ],
+      newLines: [TextDocument.getLine(editor.textDocument, rowIndex + 1), TextDocument.getLine(editor.textDocument, rowIndex)],
     },
   ]
   const cursorEdits = Editor.moveCursors(editor, (editor, cursor) => {

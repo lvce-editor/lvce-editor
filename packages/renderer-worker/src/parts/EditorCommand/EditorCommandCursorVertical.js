@@ -3,12 +3,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-const editorCursorsVerticalWithIntlSegmenter = (
-  editor,
-  getPosition,
-  getEdgePosition,
-  delta
-) => {
+const editorCursorsVerticalWithIntlSegmenter = (editor, getPosition, getEdgePosition, delta) => {
   const edgePosition = getEdgePosition(editor)
   const moveSelection = (selection) => {
     const position = getPosition(selection)
@@ -23,15 +18,9 @@ const editorCursorsVerticalWithIntlSegmenter = (
     const lineOther = TextDocument.getLine(editor, position.rowIndex + delta)
 
     const segmenter = TextSegmenter.create()
-    const lineCurrentVisualIndex = segmenter.visualIndex(
-      lineCurrent,
-      position.columnIndex
-    )
+    const lineCurrentVisualIndex = segmenter.visualIndex(lineCurrent, position.columnIndex)
 
-    const lineOtherModelIndex = segmenter.modelIndex(
-      lineOther,
-      lineCurrentVisualIndex
-    )
+    const lineOtherModelIndex = segmenter.modelIndex(lineOther, lineCurrentVisualIndex)
 
     const newPosition = {
       rowIndex: position.rowIndex + delta,
@@ -46,23 +35,11 @@ const editorCursorsVerticalWithIntlSegmenter = (
   return Editor.scheduleSelections(editor, selectionEdits)
 }
 
-const moveSelectionWithoutIntlSegmenter = (
-  selections,
-  i,
-  selectionStartRow,
-  selectionStartColumn,
-  selectionEndRow,
-  selectionEndColumn
-) => {
+const moveSelectionWithoutIntlSegmenter = (selections, i, selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
   if (selectionStartRow === 0) {
     EditorSelection.moveRangeToPosition(selections, i, 0, 0)
   } else {
-    EditorSelection.moveRangeToPosition(
-      selections,
-      i,
-      selectionStartRow - 1,
-      selectionStartColumn
-    )
+    EditorSelection.moveRangeToPosition(selections, i, selectionStartRow - 1, selectionStartColumn)
   }
 }
 

@@ -8,7 +8,7 @@ export const handleWebSocket = async (message, handle) => {
       method: 'HandleWebSocket.handleWebSocket',
       params: [message],
     },
-    handle
+    handle,
   )
   // console.log({ instance })
   // const ipc = await PtyHost.getOrCreate()

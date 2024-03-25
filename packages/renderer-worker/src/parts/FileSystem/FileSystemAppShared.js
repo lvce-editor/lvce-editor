@@ -47,7 +47,6 @@ export const readFileInternal = async (getPath, defaultContent = '') => {
 const writeFileWeb = async (path, content) => {
   if (Platform.platform === PlatformType.Web) {
     await Command.execute(/* LocalStorage.setText */ 'LocalStorage.setText', /* key */ path, /* value */ content)
-
   }
 }
 

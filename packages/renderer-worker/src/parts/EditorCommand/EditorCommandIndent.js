@@ -1,3 +1,4 @@
 export const indentSelection = (editor, fn) => {
-  for (const selection of editor.selections) {}
+  for (const selection of editor.selections) {
+  }
 }

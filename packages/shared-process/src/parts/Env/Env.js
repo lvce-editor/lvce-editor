@@ -18,4 +18,4 @@ export const getRipGrepPath = () => {
   return process.env.RIP_GREP_PATH
 }
 
-export const {env} = process
+export const { env } = process

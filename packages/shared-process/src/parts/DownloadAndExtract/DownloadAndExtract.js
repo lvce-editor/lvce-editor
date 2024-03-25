@@ -11,7 +11,7 @@ export const downloadAndExtractTarGz = async ({ url, outDir, strip }) => {
       createGunzip(),
       tar.extract(outDir, {
         strip,
-      })
+      }),
     )
   } catch (error) {
     if (error && error instanceof RequestError) {
