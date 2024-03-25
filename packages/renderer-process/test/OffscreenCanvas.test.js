@@ -40,6 +40,6 @@ test('create', () => {
         },
       ],
     },
-    [{ isOffscreenCanvasPlaceholder: true }]
+    [{ isOffscreenCanvasPlaceholder: true }],
   )
 })

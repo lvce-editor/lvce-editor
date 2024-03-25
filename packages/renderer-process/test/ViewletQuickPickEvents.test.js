@@ -51,7 +51,7 @@ test.skip('event - mousedown', () => {
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(['QuickPick.selectIndex', 1])
@@ -84,7 +84,7 @@ test.skip('event - beforeinput', () => {
       bubbles: true,
       cancelable: true,
       data: 'a',
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', '>a')
 })

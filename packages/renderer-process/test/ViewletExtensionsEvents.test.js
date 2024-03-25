@@ -161,7 +161,7 @@ test('event - contextmenu - activated via keyboard', () => {
       clientY: 50,
       bubbles: true,
       button: -1,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', -1, 50, 50)
