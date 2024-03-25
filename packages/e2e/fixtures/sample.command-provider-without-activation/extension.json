@@ -1,9 +1,0 @@
-{
-  "main": "main.js",
-  "commands": [
-    {
-      "id": "command-provider.sampleCommand",
-      "label": "Command Provider: Sample Command"
-    }
-  ]
-}

@@ -1,9 +1,0 @@
-{
-  "main": "main.js",
-  "languages": [
-    {
-      "id": "javascript",
-      "extensions": [".js"]
-    }
-  ]
-}
