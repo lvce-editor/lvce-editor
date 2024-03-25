@@ -20,7 +20,7 @@ const readSymlinks = (absolutePaths) => {
 }
 
 const mergeWithSymLinks = (manifests, symlinks) => {
-  const {length} = manifests
+  const { length } = manifests
   const merged = []
   for (let i = 0; i < length; i++) {
     const manifest = manifests[i]

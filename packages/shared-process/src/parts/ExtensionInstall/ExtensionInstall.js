@@ -4,9 +4,7 @@ import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallT
 const getModule = (type) => {
   switch (type) {
     case ExtensionInstallType.GithubRepository:
-      return import(
-        '../ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js'
-      )
+      return import('../ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js')
     case ExtensionInstallType.Url:
       return import('../ExtensionInstallFromUrl/ExtensionInstallFromUrl.js')
     case ExtensionInstallType.File:
