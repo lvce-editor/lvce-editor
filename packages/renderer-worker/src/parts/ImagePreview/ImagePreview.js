@@ -27,7 +27,7 @@ export const show = async (uri, top, left) => {
       /* id */ 'ImagePreview',
       /* imageUrl */ blobUrl,
       /* top */ top - TOP,
-      /* left */ left - WIDTH - SPACE
+      /* left */ left - WIDTH - SPACE,
     )
   } catch (error) {
     console.error(error)
@@ -36,15 +36,12 @@ export const show = async (uri, top, left) => {
       /* id */ 'ImagePreview',
       /* message */ 'Image could not be loaded',
       /* top */ top - TOP,
-      /* left */ left - WIDTH - SPACE
+      /* left */ left - WIDTH - SPACE,
     )
   }
 }
 
 export const hide = async () => {
   ++state.versionId
-  await RendererProcess.invoke(
-    /* Viewlet.dispose */ 'Viewlet.dispose',
-    /* id */ 'ImagePreview'
-  )
+  await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ 'ImagePreview')
 }

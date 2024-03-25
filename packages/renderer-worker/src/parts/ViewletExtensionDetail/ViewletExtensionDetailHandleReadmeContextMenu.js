@@ -7,7 +7,7 @@ export const handleReadmeContextMenu = async (state, x, y, props) => {
     /* x */ x,
     /* y */ y,
     /* id */ MenuEntryId.ExtensionDetailReadme,
-    /* props */ props
+    /* props */ props,
   )
   return state
 }

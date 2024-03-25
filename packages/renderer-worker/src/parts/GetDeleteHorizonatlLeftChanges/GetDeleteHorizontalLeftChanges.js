@@ -21,7 +21,7 @@ export const getChanges = (lines, selections, getDelta) => {
         {
           start: positionLeft,
           end: selectionEnd,
-        }
+        },
       ),
       origin: EditOrigin.Delete,
     })

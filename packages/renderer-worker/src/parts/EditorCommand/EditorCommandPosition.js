@@ -26,7 +26,7 @@ export const at = (editor, eventX, eventY) => {
     isMonospaceFont,
     charWidth,
     tabSize,
-    eventX
+    eventX,
   )
   return {
     rowIndex: clampedRowIndex,

@@ -33,12 +33,7 @@ export const parseValue = (value) => {
     }
     return ''
   })
-  const isLocal =
-    parameters.enabled ||
-    parameters.builtin ||
-    parameters.disabled ||
-    parameters.outdated ||
-    parameters.installed
+  const isLocal = parameters.enabled || parameters.builtin || parameters.disabled || parameters.outdated || parameters.installed
   return {
     query: replaced,
     ...parameters,

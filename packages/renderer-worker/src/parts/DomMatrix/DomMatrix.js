@@ -3,14 +3,7 @@ export const create = (init = [1, 0, 0, 1, 0, 0]) => {
 }
 
 export const scaleUp = (domMatrix, deltaScale) => {
-  return new DOMMatrixReadOnly([
-    (domMatrix.a * deltaScale),
-    domMatrix.b,
-    domMatrix.c,
-    (domMatrix.d * deltaScale),
-    domMatrix.e,
-    domMatrix.f,
-  ])
+  return new DOMMatrixReadOnly([domMatrix.a * deltaScale, domMatrix.b, domMatrix.c, domMatrix.d * deltaScale, domMatrix.e, domMatrix.f])
 }
 
 export const scaleDown = (domMatrix, deltaScale) => {
@@ -18,11 +11,7 @@ export const scaleDown = (domMatrix, deltaScale) => {
 }
 
 export const zoomInto = (domMatrix, zoomFactor, relativeX, relativeY) => {
-  return new DOMMatrix()
-    .translateSelf(relativeX, relativeY)
-    .scaleSelf(zoomFactor)
-    .translateSelf(-relativeX, -relativeY)
-    .multiplySelf(domMatrix)
+  return new DOMMatrix().translateSelf(relativeX, relativeY).scaleSelf(zoomFactor).translateSelf(-relativeX, -relativeY).multiplySelf(domMatrix)
 }
 
 // workaround for browser bug
@@ -32,12 +21,5 @@ export const toString = (domMatrix) => {
 }
 
 export const move = (domMatrix, deltaX, deltaY) => {
-  return new DOMMatrixReadOnly([
-    domMatrix.a,
-    domMatrix.b,
-    domMatrix.c,
-    domMatrix.d,
-    domMatrix.e + deltaX,
-    domMatrix.f + deltaY,
-  ])
+  return new DOMMatrixReadOnly([domMatrix.a, domMatrix.b, domMatrix.c, domMatrix.d, domMatrix.e + deltaX, domMatrix.f + deltaY])
 }

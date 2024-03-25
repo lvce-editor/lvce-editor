@@ -21,7 +21,7 @@ const getTokensViewportEmbedded = (langageId, lines, lineCache, linesWithEmbed) 
           embeddedTokenizer.tokenizeLine,
           partialLine,
           topContext || GetInitialLineState.getInitialLineState(embeddedTokenizer.initialLineState),
-          embeddedTokenizer.hasArrayReturn
+          embeddedTokenizer.hasArrayReturn,
         )
         topContext = embedResult
         result.embeddedResultIndex = embeddedResults.length

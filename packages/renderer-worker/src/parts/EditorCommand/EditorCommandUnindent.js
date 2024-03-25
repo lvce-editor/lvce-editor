@@ -63,12 +63,7 @@ export const editorUnindent = (editor) => {
       })
       previousRowIndex = endRowIndex
     }
-    Editor.scheduleDocumentAndCursorsAndSelections(
-      editor,
-      documentEdits,
-      cursorEdits,
-      selectionEdits
-    )
+    Editor.scheduleDocumentAndCursorsAndSelections(editor, documentEdits, cursorEdits, selectionEdits)
     return
   }
   const documentEdits = []

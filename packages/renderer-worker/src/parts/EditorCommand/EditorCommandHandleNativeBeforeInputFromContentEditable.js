@@ -4,8 +4,7 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorGetSelectionFromNativeRange from './EditorCommandGetSelectionFromNativeRange.js'
 
 const getChanges = (editor, data, range) => {
-  const selection =
-    EditorGetSelectionFromNativeRange.getSelectionFromNativeRange(editor, range)
+  const selection = EditorGetSelectionFromNativeRange.getSelectionFromNativeRange(editor, range)
   const selectionRange = {
     start: {
       rowIndex: selection[0],

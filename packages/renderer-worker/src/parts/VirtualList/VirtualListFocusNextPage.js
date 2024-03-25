@@ -6,9 +6,6 @@ export const focusNextPage = (state) => {
   if (Arrays.isLastIndex(items, focusedIndex)) {
     return state
   }
-  const indexNextPage = Math.min(
-    maxLineY + (maxLineY - minLineY) - 2,
-    Arrays.lastIndex(items)
-  )
+  const indexNextPage = Math.min(maxLineY + (maxLineY - minLineY) - 2, Arrays.lastIndex(items))
   return focusIndex(state, indexNextPage)
 }

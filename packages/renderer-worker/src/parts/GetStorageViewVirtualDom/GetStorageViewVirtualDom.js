@@ -56,7 +56,7 @@ export const getStorageViewDom = (rows) => {
       type: VirtualDomElements.TBody,
       childCount: rows.length,
     },
-    ...rows.flatMap(getTableRowDom)
+    ...rows.flatMap(getTableRowDom),
   )
   return dom
 }
