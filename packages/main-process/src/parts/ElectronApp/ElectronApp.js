@@ -12,10 +12,6 @@ export const whenReady = () => {
   return app.whenReady()
 }
 
-export const enableSandbox = () => {
-  app.enableSandbox()
-}
-
 export const appendCommandLineSwitch = (commandLineSwitch, value) => {
   app.commandLine.appendSwitch(commandLineSwitch, value)
 }
