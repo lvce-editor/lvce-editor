@@ -387,7 +387,7 @@ app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
-app.use('*', serveStatic(STATIC), serve404())
+app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
   /**
