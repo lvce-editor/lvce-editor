@@ -37,7 +37,6 @@ cd packages/extension-host-helper-process           && updateDependencies && cd 
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
-cd packages/e2e                                     && updateDependencies && cd ../.. &&
 cd packages/extension-host-worker-tests             && updateDependencies && cd ../.. &&
 
 cd build                                            && updateDependencies && cd ..    &&
