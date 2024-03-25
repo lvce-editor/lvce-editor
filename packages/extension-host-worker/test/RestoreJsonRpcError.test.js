@@ -115,7 +115,7 @@ test('restoreJsonRpcError - with stack', () => {
     `Error: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"
     at Object.checkSingleElementCondition [as TestFrameWork.checkSingleElementCondition] (http://localhost/packages/renderer-process/src/parts/TestFrameWork/TestFrameWork.js:122:9)
     at async Worker.handleMessageFromRendererWorker (http://localhost/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js:46:24)
-    at Module.restoreJsonRpcError`
+    at Module.restoreJsonRpcError`,
   )
 })
 
@@ -141,14 +141,14 @@ test('restoreJsonRpcError - with stack in data property', () => {
   })
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(
-    `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'`
+    `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'`,
   )
   expect(error.stack).toMatch(
     `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'
     at getUserPreferences (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:23:11)
     at async Object.getAll [as Preferences.getAll] (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:63:29)
     at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
-    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
   )
 })
 
@@ -172,7 +172,7 @@ test('restoreJsonRpcError - ExecError', () => {
     at async Object.getChangedFiles (test://packages/extension-host-worker-tests/fixtures/sample.source-control-provider-exec/main.js:7:5)
     at async getChangedFiles (test://packages/extension-host-worker/src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js:20:24)
     at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)
-    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`
+    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`,
   )
   expect(error.name).toBe('ExecError')
 })
@@ -189,13 +189,13 @@ test('restoreJsonRpcError - VError', () => {
   })
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(
-    'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42'
+    'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
   )
   expect(error.stack).toMatch(
     `VError: invalid tab completion result: tabCompletion must be of type object but is 42
     at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)
     at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)
-    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`
+    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`,
   )
   expect(error.name).toBe('Error')
 })
