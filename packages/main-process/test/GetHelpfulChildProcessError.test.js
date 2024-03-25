@@ -93,7 +93,7 @@ Node.js v18.12.1`
   const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(
-    `Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/language-features-typescript/packages/node/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js' imported from /test/language-features-typescript/packages/node/src/parts/JsonRpc/JsonRpc.js`
+    `Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/language-features-typescript/packages/node/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js' imported from /test/language-features-typescript/packages/node/src/parts/JsonRpc/JsonRpc.js`,
   )
   expect(error.stack)
     .toBe(`Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/language-features-typescript/packages/node/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js' imported from /test/language-features-typescript/packages/node/src/parts/JsonRpc/JsonRpc.js
@@ -127,12 +127,12 @@ Node.js v18.14.0
   const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(
-    `SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;`
+    `SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;`,
   )
   expect(error.stack).toBe(
     `SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;
     at file:///test/packages/pty-host/src/parts/HandleElectronMessagePort/HandleElectronMessagePort.js:5
     at ModuleJob._instantiate (node:internal/modules/esm/module_job:124:21)
-    at async ModuleJob.run (node:internal/modules/esm/module_job:190:5)`
+    at async ModuleJob.run (node:internal/modules/esm/module_job:190:5)`,
   )
 })
