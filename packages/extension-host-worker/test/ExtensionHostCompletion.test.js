@@ -16,11 +16,13 @@ test('executeCompletionProvider - when completion provider has no result', async
   TextDocument.setFiles([textDocument])
   const completionProvider = {
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions: jest.fn((textDocument, offset) => {
       return []
     }),
   }
   ExtensionHostCompletion.registerCompletionProvider(completionProvider)
+  // @ts-ignore
   expect(await ExtensionHostCompletion.executeCompletionProvider(1, 1)).toEqual([])
   expect(completionProvider.provideCompletions).toHaveBeenCalledTimes(1)
   expect(completionProvider.provideCompletions).toHaveBeenCalledWith(textDocument, 1)
@@ -39,6 +41,7 @@ test('execute - when tab completion provider has wrong shape', async () => {
     languageId: 'unknown',
     abc() {},
   })
+  // @ts-ignore
   await expect(ExtensionHostCompletion.executeCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute completion provider: VError: completionProvider.provideCompletions is not a function'),
   )
@@ -55,6 +58,7 @@ test('executeCompletionProvider - when completion provider has normal result', a
   ])
   ExtensionHostCompletion.registerCompletionProvider({
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions(textDocument, offset) {
       return [
         {
@@ -68,6 +72,7 @@ test('executeCompletionProvider - when completion provider has normal result', a
       ]
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostCompletion.executeCompletionProvider(1, 1)).toEqual([
     {
       label: 'Option A',
@@ -91,10 +96,12 @@ test('executeCompletionProvider - completion provider throws error', async () =>
   ])
   ExtensionHostCompletion.registerCompletionProvider({
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions(textDocument, offset) {
       throw new TypeError('x is not a function')
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostCompletion.executeCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute completion provider: TypeError: x is not a function'),
   )
@@ -111,10 +118,12 @@ test('executeCompletionProvider - completion provider throws null error', async 
   ])
   ExtensionHostCompletion.registerCompletionProvider({
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions(textDocument, offset) {
       throw null
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostCompletion.executeCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute completion provider: NonError: null'),
   )
@@ -131,10 +140,12 @@ test('executeCompletionProvider - invalid return value - array with undefined va
   ])
   ExtensionHostCompletion.registerCompletionProvider({
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions(textDocument, offset) {
       return [undefined]
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostCompletion.executeCompletionProvider(1, 1)).rejects.toThrow(
     new Error(
       'Failed to execute completion provider: VError: invalid completion result: expected completion item to be of type object but was of type undefined',
@@ -153,10 +164,12 @@ test('executeCompletionProvider - invalid return value - number', async () => {
   ])
   ExtensionHostCompletion.registerCompletionProvider({
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions(textDocument, offset) {
       return 42
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostCompletion.executeCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42'),
   )
@@ -173,10 +186,12 @@ test('executeCompletionProvider - invalid return value - undefined', async () =>
   ])
   ExtensionHostCompletion.registerCompletionProvider({
     languageId: 'unknown',
+    // @ts-ignore
     provideCompletions(textDocument, offset) {
       return undefined
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostCompletion.executeCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is undefined'),
   )

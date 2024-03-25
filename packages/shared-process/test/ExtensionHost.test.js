@@ -34,18 +34,6 @@ test.skip('start / stop', async () => {
   ExtensionHost.dispose()
 })
 
-// TODO test with mock extensions
-test.skip('activateAll', async () => {
-  const tmpDir1 = await getTmpDir()
-  const tmpDir2 = await getTmpDir()
-  ExtensionManagement.state.builtinExtensionsPath = tmpDir1
-  ExtensionManagement.state.extensionPath = tmpDir2
-  await ExtensionHost.start()
-  // @ts-ignore
-  await ExtensionHost.activateAll()
-  await ExtensionHost.dispose()
-})
-
 test('start - error - path not found', async () => {
   // @ts-ignore
   PlatformPaths.getExtensionHostPath.mockImplementation(() => {

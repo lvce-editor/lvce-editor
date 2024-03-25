@@ -15,6 +15,5 @@ export const Commands = {
   'ExtensionManagement.enable': ExtensionManagement.enable,
   'ExtensionManagement.getAllExtensions': ExtensionManagement.getExtensions,
   'ExtensionManagement.getExtensions': ExtensionManagement.getExtensions,
-  'ExtensionManagement.install': ExtensionManagement.install,
   'ExtensionManagement.uninstall': ExtensionManagement.uninstall,
 }
