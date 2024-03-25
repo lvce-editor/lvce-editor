@@ -9,7 +9,7 @@ export const getDom = (overview) => {
       className: 'Content',
       childCount: 1,
     },
-    text(overview)
+    text(overview),
   )
   return dom
 }

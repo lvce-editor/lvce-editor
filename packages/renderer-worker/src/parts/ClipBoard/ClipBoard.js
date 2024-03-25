@@ -11,17 +11,13 @@ export const readText = async () => {
   } catch (error) {
     // @ts-ignore
     if (error.message === 'Read permission denied.') {
-      throw new VError(
-        'Failed to read text from clipboard: The Browser disallowed reading from clipboard'
-      )
+      throw new VError('Failed to read text from clipboard: The Browser disallowed reading from clipboard')
     }
     if (
       // @ts-ignore
       error.message === 'navigator.clipboard.readText is not a function'
     ) {
-      throw new VError(
-        'Failed to read text from clipboard: The Clipboard Api is not available in Firefox'
-      )
+      throw new VError('Failed to read text from clipboard: The Clipboard Api is not available in Firefox')
     }
     throw new VError(error, 'Failed to read text from clipboard')
   }
@@ -41,11 +37,7 @@ export const writeNativeFiles = async (type, files) => {
     if (Platform.platform === PlatformType.Web) {
       throw new Error('not supported')
     }
-    await SharedProcess.invoke(
-      /* command */ 'ClipBoard.writeFiles',
-      /* type */ type,
-      /* files */ files
-    )
+    await SharedProcess.invoke(/* command */ 'ClipBoard.writeFiles', /* type */ type, /* files */ files)
   } catch (error) {
     throw new VError(error, 'Failed to write files to native clipboard')
   }

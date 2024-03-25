@@ -11,8 +11,6 @@ const toContextMenuItem = (activityBarItem) => {
 }
 
 export const getMenuEntries = async () => {
-  const hiddenActivityBarItems = await Command.execute(
-    /* ActivityBar.getHiddenItems */ 8011
-  )
+  const hiddenActivityBarItems = await Command.execute(/* ActivityBar.getHiddenItems */ 8011)
   return hiddenActivityBarItems.map(toContextMenuItem)
 }

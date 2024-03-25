@@ -20,7 +20,7 @@ export const toggleComment = async (editor) => {
       /* rowIndex */ 0,
       /* columnIndex */ 0,
       /* message */ `${error}`,
-      /* isError */ true
+      /* isError */ true,
     )
     return editor
   }

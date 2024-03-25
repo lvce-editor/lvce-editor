@@ -4,9 +4,6 @@ import * as ExtensionHostTextSearch from '../ExtensionHost/ExtensionHostTextSear
 export const textSearch = async (scheme, root, query) => {
   Assert.string(scheme)
   Assert.string(query)
-  const results = await ExtensionHostTextSearch.executeTextSearchProvider(
-    scheme,
-    query
-  )
+  const results = await ExtensionHostTextSearch.executeTextSearchProvider(scheme, query)
   return results
 }

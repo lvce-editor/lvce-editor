@@ -12,10 +12,5 @@ const getPosition = (selection) => {
 }
 
 export const cursorUp = (editor) => {
-  return EditorCursorVertical.cursorVertical(
-    editor,
-    getPosition,
-    getEdgePosition,
-    -1
-  )
+  return EditorCursorVertical.cursorVertical(editor, getPosition, getEdgePosition, -1)
 }

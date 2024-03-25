@@ -2,7 +2,4 @@ import { handleKeyHomeMenuClosed } from './ViewletTitleBarMenuBarHandleKeyHomeMe
 import { handleKeyHomeMenuOpen } from './ViewletTitleBarMenuBarHandleKeyHomeMenuOpen.js'
 import { ifElse } from './ViewletTitleBarMenuBarIfElse.js'
 
-export const handleKeyHome = ifElse(
-  handleKeyHomeMenuOpen,
-  handleKeyHomeMenuClosed
-)
+export const handleKeyHome = ifElse(handleKeyHomeMenuOpen, handleKeyHomeMenuClosed)

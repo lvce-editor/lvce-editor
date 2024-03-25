@@ -5,10 +5,6 @@ import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 export const pasteText = (editor, text) => {
   const insertedLines = SplitLines.splitLines(text)
-  const changes = editorReplaceSelections(
-    editor,
-    insertedLines,
-    EditOrigin.EditorPasteText
-  )
+  const changes = editorReplaceSelections(editor, insertedLines, EditOrigin.EditorPasteText)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

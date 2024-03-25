@@ -2,8 +2,5 @@ import * as EditorDeleteHorizontalRight from './EditorCommandDeleteHorizontalRig
 import * as EditorDelta from './EditorCommandDelta.js'
 
 export const deleteWordPartRight = (editor) => {
-  EditorDeleteHorizontalRight.editorDeleteHorizontalRight(
-    editor,
-    EditorDelta.wordPartRight
-  )
+  EditorDeleteHorizontalRight.editorDeleteHorizontalRight(editor, EditorDelta.wordPartRight)
 }

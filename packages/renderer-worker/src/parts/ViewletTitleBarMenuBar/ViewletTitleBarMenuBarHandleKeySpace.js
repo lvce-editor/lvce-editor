@@ -3,7 +3,4 @@ import { handleKeySpaceMenuOpen } from './ViewletTitleBarMenuBarHandleKeySpaceMe
 import { ifElse } from './ViewletTitleBarMenuBarIfElse.js'
 
 // TODO this is same as handle key enter -> merge the functions
-export const handleKeySpace = ifElse(
-  handleKeySpaceMenuOpen,
-  handleKeySpaceMenuClosed
-)
+export const handleKeySpace = ifElse(handleKeySpaceMenuOpen, handleKeySpaceMenuClosed)

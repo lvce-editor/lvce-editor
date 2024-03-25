@@ -1,2 +1,1 @@
-
-export {focusFirst as handleKeyHomeMenuClosed} from './ViewletTitleBarMenuBarFocusFirst.js'
+export { focusFirst as handleKeyHomeMenuClosed } from './ViewletTitleBarMenuBarFocusFirst.js'

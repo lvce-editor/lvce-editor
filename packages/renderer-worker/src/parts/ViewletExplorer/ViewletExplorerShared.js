@@ -170,6 +170,6 @@ export const getTopLevelDirents = (root, pathSeparator, excluded) => {
       path: root,
       type: DirentType.Directory,
     },
-    excluded
+    excluded,
   )
 }

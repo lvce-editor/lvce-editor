@@ -57,7 +57,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y) => {
       /* id */ ViewletModuleId.EditorText,
       /* method */ 'highlightAsLink',
       /* relativeY */ definitionRelativeY,
-      /* tokenIndex */ tokenIndex
+      /* tokenIndex */ tokenIndex,
     )
     console.log({ definition })
     return editor

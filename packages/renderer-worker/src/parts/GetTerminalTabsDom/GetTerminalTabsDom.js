@@ -19,14 +19,14 @@ const createTabDom = (tab, isSelected) => {
         className,
         role: AriaRoles.ListItem,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'TerminalTabIcon',
         maskImage: icon,
       },
-      0
+      0,
     ),
     text(label),
   ]
@@ -48,7 +48,7 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
         role: AriaRoles.List,
         ariaLabel: 'Terminal tabs',
       },
-      tabs.length
+      tabs.length,
     ),
   ]
   for (let i = 0; i < tabs.length; i++) {
