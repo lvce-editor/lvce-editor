@@ -44,6 +44,7 @@ export const executeCommand = async (id, ...args) => {
     const results = await command.execute(...args)
     return results
   } catch (error) {
+    // @ts-ignore
     if (error && error.isExpected) {
       throw error
     }

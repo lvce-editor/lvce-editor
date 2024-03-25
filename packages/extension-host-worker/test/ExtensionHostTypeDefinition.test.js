@@ -17,6 +17,7 @@ test('executeTypeDefinitionProvider', async () => {
       }
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toEqual({
     endOffset: 22,
     startOffset: 15,
@@ -36,6 +37,7 @@ test('executeTypeDefinitionProvider - definition.startOffset is zero', async () 
       }
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toEqual({
     endOffset: 0,
     startOffset: 0,
@@ -51,6 +53,7 @@ test('executeTypeDefinitionProvider - error - definition must be of type object 
       return []
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is []'),
   )
@@ -64,6 +67,7 @@ test('executeTypeDefinitionProvider - error - definition must be of type object 
       return () => {}
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error(
       'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is () => {}',
@@ -79,6 +83,7 @@ test('executeTypeDefinitionProvider - error - definition.uri must be of type str
       return {}
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.uri must be of type string'),
   )
@@ -94,6 +99,7 @@ test('executeTypeDefinitionProvider - error - definition.startOffset must be of 
       }
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error(
       'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.startOffset must be of type number',
@@ -112,6 +118,7 @@ test('executeTypeDefinitionProvider - error - definition.endOffset must be of ty
       }
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.endOffset must be of type number'),
   )
@@ -125,6 +132,7 @@ test('executeTypeDefinitionProvider - error - definition provider throws error',
       throw new TypeError('x is not a function')
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute type definition provider: TypeError: x is not a function'),
   )
@@ -138,6 +146,7 @@ test('executeTypeDefinitionProvider - error - definition provider throws error n
       throw null
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute type definition provider: NonError: null'),
   )
@@ -151,5 +160,6 @@ test.skip('executeTypeDefinitionProvider - no type definition found', async () =
       return undefined
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toBe(undefined)
 })

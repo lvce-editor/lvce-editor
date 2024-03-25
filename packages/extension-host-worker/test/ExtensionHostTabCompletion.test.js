@@ -19,6 +19,7 @@ test('execute - when tab completion provider has normal result', async () => {
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
+    // @ts-ignore
     provideTabCompletion(textDocument, offset) {
       return {
         inserted: '<div></div>',
@@ -27,6 +28,7 @@ test('execute - when tab completion provider has normal result', async () => {
       }
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).toEqual({
     deleted: 0,
     inserted: '<div></div>',
@@ -39,10 +41,12 @@ test.skip('execute - when tab completion provider has no result', async () => {
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
+    // @ts-ignore
     provideTabCompletion(textDocument, offset) {
       return undefined
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).toBeUndefined()
 })
 
@@ -55,10 +59,12 @@ test('execute - when tab completion provider has invalid result of type number',
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
+    // @ts-ignore
     provideTabCompletion(textDocument, offset) {
       return 42
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
     'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
   )
@@ -71,6 +77,7 @@ test('execute - when tab completion provider has wrong shape', async () => {
     languageId: 'javascript',
     abc() {},
   })
+  // @ts-ignore
   await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute tab completion provider: VError: tabCompletionProvider.provideTabCompletion is not a function'),
   )
@@ -85,6 +92,7 @@ test('execute - when tab completion provider throws error', async () => {
       throw new Error('x is not a function')
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
     new Error('Failed to execute tab completion provider: x is not a function'),
   )
@@ -98,6 +106,7 @@ test('execute - when tab completion provider returns a string', async () => {
       return 'resultsList'
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
     new Error(
       'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is "resultsList"',
