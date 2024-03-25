@@ -28,7 +28,7 @@ test('event - input', () => {
     new InputEvent('input', {
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', 'abc')
