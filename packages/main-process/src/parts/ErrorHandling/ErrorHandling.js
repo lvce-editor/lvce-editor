@@ -5,6 +5,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as Process from '../Process/Process.js'
 
+// @ts-ignore
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
     return `<unknown error>`
@@ -15,6 +16,7 @@ const getDisplayMessage = (error) => {
 
 export const handleError = (error) => {
   const prettyError = PrettyError.prepare(error)
+  // @ts-ignore
   Logger.error(`[main-process] ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`)
 }
 
@@ -28,9 +30,11 @@ const firstErrorLine = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 export const handleUncaughtExceptionMonitor = (error, origin) => {
   Logger.info(`[main process] uncaught exception: ${firstErrorLine(error)}`)
   const prettyError = PrettyError.prepare(error)
+  // @ts-ignore
   Logger.error(prettyError.codeFrame)
   Logger.error(prettyError.stack)
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -38,9 +42,11 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
   }
 }
 
+// @ts-ignore
 export const handleUnhandledRejection = (reason, promise) => {
   const prettyError = PrettyError.prepare(reason)
   Logger.error(
+    // @ts-ignore
     `[main process] unhandled rejection: ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`,
   )
   if (BrowserWindow.getAllWindows().length === 0) {

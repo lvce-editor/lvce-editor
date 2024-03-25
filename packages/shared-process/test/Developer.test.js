@@ -19,6 +19,7 @@ test.skip('createHeapSnapshot', async () => {
       return ''
     },
   }))
+  // @ts-ignore
   await Developer.createHeapSnapshot()
   expect(await exists('/tmp/vscode-123456.heapsnapshot')).toBe(true)
 })

@@ -45,7 +45,9 @@ export const showMessageBox = async ({
     Logger.info(`[main-process] cannot show dialog message because there is no window with id ${windowId}`)
     return
   }
+  // @ts-ignore
   if (message.message) {
+    // @ts-ignore
     message = message.message
   }
   const result = await Electron.dialog.showMessageBox(window, {

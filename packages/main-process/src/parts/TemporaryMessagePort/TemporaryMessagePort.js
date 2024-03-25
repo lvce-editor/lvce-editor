@@ -23,6 +23,7 @@ export const create = async (name) => {
   const utilityProcess = UtilityProcessState.getByName(formattedName)
   const { port1, port2 } = new MessageChannelMain()
   await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
+  // @ts-ignore
   const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   const handleUtilityProcessMessage = (message) => {
     Callback.resolve(message.id, message)

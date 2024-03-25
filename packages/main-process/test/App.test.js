@@ -46,6 +46,7 @@ test.skip('handlePortForMainProcess - error - command not found', async () => {
     ports: [port],
   }
 
+  // @ts-ignore
   App.handlePortForMainProcess(event)
   await _listener({
     data: { method: 'App.exit', params: [], jsonrpc: '2.0', id: 1 },
