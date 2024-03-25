@@ -6,7 +6,7 @@ import { readFile, readdir, stat } from 'node:fs/promises'
 import { IncomingMessage, ServerResponse, createServer } from 'node:http'
 import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
@@ -286,6 +286,19 @@ const serveTests = async (req, res, next) => {
   sendHandle(req, res.socket, 'HandleRequestTest.handleRequestTest', indexHtmlPath)
 }
 
+/**
+ *
+ * @param {IncomingMessage} req
+ * @param {ServerResponse} res
+ */
+const servePackages = async (req, res, next) => {
+  const pathName = getPathName(req)
+  const actualPath = join(ROOT, pathName)
+  const actualUrl = '/remote' + pathToFileURL(actualPath).toString().slice('file://'.length)
+  req.url = actualUrl
+  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+}
+
 const getAbsolutePath = (extensionName) => {
   return join(ROOT, 'extensions', extensionName, 'extension.json')
 }
@@ -373,7 +386,8 @@ const handleRemote = (req, res) => {
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
-app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
+app.use('/packages', servePackages, serve404())
+app.use('*', serveStatic(STATIC), serve404())
 
 const state = {
   /**
