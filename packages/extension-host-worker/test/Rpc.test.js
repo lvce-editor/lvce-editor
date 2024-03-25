@@ -90,7 +90,7 @@ test('send - error - promise could not be cloned', async () => {
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.logError).toHaveBeenCalledWith(
-    new DOMException("Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.")
+    new DOMException("Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned."),
   )
 })
 

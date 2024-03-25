@@ -6,9 +6,7 @@ test('getIpcType - electron', () => {
   globalThis.navigator = {
     userAgent: 'Electron',
   }
-  expect(ExtensionHostHelperProcessIpcType.getIpcType()).toBe(
-    ParentIpcType.ElectronMessagePort
-  )
+  expect(ExtensionHostHelperProcessIpcType.getIpcType()).toBe(ParentIpcType.ElectronMessagePort)
 })
 
 test('getIpcType - chrome', () => {
@@ -16,7 +14,5 @@ test('getIpcType - chrome', () => {
   globalThis.navigator = {
     userAgent: 'Chrome',
   }
-  expect(ExtensionHostHelperProcessIpcType.getIpcType()).toBe(
-    ParentIpcType.WebSocket
-  )
+  expect(ExtensionHostHelperProcessIpcType.getIpcType()).toBe(ParentIpcType.WebSocket)
 })

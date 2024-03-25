@@ -11,7 +11,7 @@ test('VError - missing child stack', () => {
   const cause = new DOMException('The requested version (1) is less than the existing version (6).')
   const verror = new VError(cause, 'Failed to save IndexedDb value')
   expect(verror.stack).toMatch(
-    'VError: Failed to save IndexedDb value: DOMException: The requested version (1) is less than the existing version (6).'
+    'VError: Failed to save IndexedDb value: DOMException: The requested version (1) is less than the existing version (6).',
   )
 })
 
@@ -27,7 +27,7 @@ test('VError - merging stacks', () => {
     `VError: Failed to drop files: TypeError: Cannot read properties of undefined (reading \'match\')
   at getProtocol (http://localhost:3000/packages/renderer-worker/src/parts/FileSystem/FileSystem.js:18:29)
   at Module.copy (http://localhost:3000/packages/renderer-worker/src/parts/FileSystem/FileSystem.js:110:20)
-  at handleDropIntoFolder (http://localhost:3000/packages/renderer-worker/src/parts/ViewletExplorer/ViewletExplorerHandleDropIndex.js:14:22)`
+  at handleDropIntoFolder (http://localhost:3000/packages/renderer-worker/src/parts/ViewletExplorer/ViewletExplorerHandleDropIndex.js:14:22)`,
   )
 })
 
@@ -42,7 +42,7 @@ test('VError - merging stacks - parent stack does not include message', () => {
   expect(verror.stack).toBe(
     `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)
   at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
-  at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
+  at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`,
   )
 })
 
