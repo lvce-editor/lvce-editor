@@ -13,6 +13,7 @@ test('executeFormattingProvider - error - result value is of type string', async
       return `b`
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is "b"'),
   )
@@ -26,6 +27,7 @@ test('executeFormattingProvider - error - result value is of type object', async
       return {}
     },
   })
+  // @ts-ignore
   await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrow(
     new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object'),
   )
@@ -45,5 +47,6 @@ test('executeFormattingProvider', async () => {
       ]
     },
   })
+  // @ts-ignore
   expect(await ExtensionHostFormatting.executeFormattingProvider(1, 0)).toEqual([{ endOffset: 1, inserted: 'b', startOffset: 0 }])
 })

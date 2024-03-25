@@ -5,6 +5,7 @@ import { VError } from '../VError/VError.js'
 
 export const mockExec = () => {
   try {
+    // @ts-ignore
     Api.api.exec = async (command, args, options) => {
       const result = await Rpc.invoke('Test.executeMockExecFunction', command, args, options)
       const { stdout, stderr, exitCode } = result
