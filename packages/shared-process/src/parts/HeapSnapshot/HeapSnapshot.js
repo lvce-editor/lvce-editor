@@ -6,6 +6,6 @@ export const createHeapSnapshot = async () => {
   await pipeline(
     getHeapSnapshot(),
     // TODO get tmp dir from env
-    createWriteStream(`/tmp/vscode-${Date.now()}.heapsnapshot`)
+    createWriteStream(`/tmp/vscode-${Date.now()}.heapsnapshot`),
   )
 }
