@@ -58,16 +58,19 @@ test.skip('event - click on menu', () => {
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
+      // @ts-ignore
       id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
@@ -93,16 +96,19 @@ test.skip('event - click on menu item', () => {
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
+      // @ts-ignore
       id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
@@ -128,16 +134,19 @@ test.skip('event - mouseover on menu item', () => {
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
+      // @ts-ignore
       id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
@@ -163,16 +172,19 @@ test.skip('event - right click on menu item', () => {
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
+      // @ts-ignore
       id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
+      // @ts-ignore
       id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],

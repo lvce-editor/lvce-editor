@@ -24,6 +24,7 @@ test('create', () => {
 
 test.skip('focus', () => {
   const state = Editor.create()
+  // @ts-ignore
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   Editor.setFocused(state)
@@ -102,8 +103,10 @@ test('accessibility - Editor should have role code', async () => {
 })
 
 test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobile - cursor in middle - native', () => {
+  // @ts-ignore
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
+  // @ts-ignore
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
   const $Token2 = create$Token('background', 'CssPropertyName')
@@ -134,8 +137,10 @@ test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on
 })
 
 test.skip('renderTextAndCursorsAndSelections - native selection - word in middle selected', () => {
+  // @ts-ignore
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
+  // @ts-ignore
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
   const $Token2 = create$Token('background', 'CssPropertyName')
@@ -172,8 +177,10 @@ test.skip('renderTextAndCursorsAndSelections - native selection - word in middle
 })
 
 test.skip('renderTextAndCursorsAndSelections - bug with multiple tokens', () => {
+  // @ts-ignore
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
+  // @ts-ignore
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
   const $Token2 = create$Token('background', 'CssPropertyName')

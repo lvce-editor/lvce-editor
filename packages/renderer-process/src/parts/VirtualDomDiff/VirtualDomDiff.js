@@ -23,6 +23,7 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
+        // @ts-ignore
         VirtualDomElementProp.setProp($Node, diffItem.key, diffItem.value, eventMap)
         break
       case 'insert':

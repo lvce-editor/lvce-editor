@@ -51,6 +51,7 @@ test('create - error - not found', async () => {
     return {}
   })
   await expect(
+    // @ts-ignore
     IpcParentWithModuleWorkerWithMessagePort.create({
       url: 'https://example.com/not-found.js',
       name: 'Extension Host Worker',

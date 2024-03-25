@@ -68,6 +68,7 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $ExtensionHeader, $ListItems, $ScrollBar } = state
   $ExtensionHeader.addEventListener(DomEventType.Input, ViewletExtensionsEvents.handleInput, DomEventOptions.Capture)
+  // @ts-ignore
   $ExtensionHeader.addEventListener(DomEventType.Click, ViewletExtensionsEvents.handleHeaderClick)
   AttachEvents.attachEvents($ListItems, {
     [DomEventType.ContextMenu]: ViewletExtensionsEvents.handleContextMenu,
