@@ -1,24 +1,13 @@
 import { desktopCapturer } from 'electron'
-import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
-
-const serializeSource = (source) => {
-  return {
-    display_id: source.display_id,
-    id: source.id,
-    name: source.name,
-  }
-}
-
-const serializeSources = (sources) => {
-  return sources.map(serializeSource)
-}
+import * as SerializeDesktopCapturerSources from '../SerializeDesktopCapturerSources/SerializeDesktopCapturerSources.js'
+import { VError } from '../VError/VError.js'
 
 export const getSources = async (options) => {
   try {
     Assert.object(options)
     const sources = await desktopCapturer.getSources(options)
-    const serializedSources = serializeSources(sources)
+    const serializedSources = SerializeDesktopCapturerSources.serializeDeskopCapturerSources(sources)
     return serializedSources
   } catch (error) {
     throw new VError(error, `Failed to get desktop capturer sources`)
