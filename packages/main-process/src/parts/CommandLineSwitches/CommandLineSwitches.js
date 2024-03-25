@@ -1,4 +1,5 @@
 import * as ElectronApp from '../ElectronApp/ElectronApp.js'
+import * as Locale from '../Locale/Locale.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Sandbox from '../Sandbox/Sandbox.js'
 
@@ -12,5 +13,5 @@ export const enable = (parsedCliArgs) => {
       ElectronApp.appendCommandLineSwitch('--disable-gpu-sandbox')
     }
   }
-  ElectronApp.setLocale('en')
+  Locale.setLocale('en')
 }
