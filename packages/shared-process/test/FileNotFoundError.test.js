@@ -2,5 +2,6 @@ import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundEr
 
 test('FileNotFoundError - empty string', () => {
   const error = new FileNotFoundError(``)
+  // @ts-ignore
   expect(error.message).toBe(`File not found: '<empty string>'`)
 })

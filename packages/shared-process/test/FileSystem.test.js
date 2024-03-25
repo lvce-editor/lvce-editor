@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { jest } from '@jest/globals'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
@@ -141,6 +142,7 @@ test('writeFile - nonexistent file', async () => {
 test.skip('writeFile - parallel write on different files works', async () => {
   // queue would be correct but slower
 
+  // @ts-ignore
   const tmpDir = await getTmpDir()
   const testFile1 = join(tmpDir, 'writefile1.txt')
   const testFile2 = join(tmpDir, 'writefile2.txt')
@@ -155,10 +157,15 @@ test.skip('writeFile - parallel write on different files works', async () => {
     FileSystem.writeFile(testFile4, 'Hello World 4'),
     FileSystem.writeFile(testFile5, 'Hello World 5'),
   ])
+  // @ts-ignore
   expect(fs.readFileSync(testFile1, EncodingType.Utf8)).toBe('Hello World 1')
+  // @ts-ignore
   expect(fs.readFileSync(testFile2, EncodingType.Utf8)).toBe('Hello World 2')
+  // @ts-ignore
   expect(fs.readFileSync(testFile3, EncodingType.Utf8)).toBe('Hello World 3')
+  // @ts-ignore
   expect(fs.readFileSync(testFile4, EncodingType.Utf8)).toBe('Hello World 4')
+  // @ts-ignore
   expect(fs.readFileSync(testFile5, EncodingType.Utf8)).toBe('Hello World 5')
 })
 

@@ -3,12 +3,12 @@ import * as Download from '../Download/Download.js'
 import * as ExtractZip from '../ExtractZip/ExtractZip.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 const getExtensionPath = async (tmpDir) => {
   const dirents = await FileSystem.readDirWithFileTypes(tmpDir)
+  // @ts-ignore
   if (dirents.length === 1 && dirents[0].type === 'directory') {
     return Path.join(tmpDir, dirents[0].name)
   }

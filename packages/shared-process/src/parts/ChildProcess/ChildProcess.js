@@ -4,7 +4,7 @@ import exitHook from 'exit-hook'
 import * as Debug from '../Debug/Debug.js'
 
 export const state = {
-  /** @type{ChildProcess[]} */
+  /** @type{NodeChildProcess.ChildProcess[]} */
   childProcesses: [],
 }
 

@@ -23,15 +23,18 @@ if (Platform.isWindows) {
     const state = OutputChannel.open(join(tmpDir, 'log.txt'), onData)
     const writeStream = createWriteStream(join(tmpDir, 'log.txt'))
     writeStream.write('a')
+    // @ts-ignore
     await waitForExpect(() => {
       expect(onData).toHaveBeenNthCalledWith(1, 'a')
     })
     writeStream.write('b')
+    // @ts-ignore
     await waitForExpect(() => {
       expect(onData).toHaveBeenNthCalledWith(2, 'b')
     })
     writeStream.write('c')
     writeStream.close()
+    // @ts-ignore
     await waitForExpect(() => {
       expect(onData).toHaveBeenNthCalledWith(3, 'c')
     })
@@ -45,6 +48,7 @@ if (Platform.isWindows) {
     const onData = jest.fn()
     const state = OutputChannel.open(join(tmpDir, 'log.txt'), onData)
     await fs.writeFile(join(tmpDir, 'log.txt'), 'abc\n')
+    // @ts-ignore
     await waitForExpect(() => {
       expect(onData).toHaveBeenCalledWith('abc\n')
     })
