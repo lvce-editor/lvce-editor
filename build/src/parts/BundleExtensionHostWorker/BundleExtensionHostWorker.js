@@ -24,7 +24,7 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
   })
   await BundleJs.bundleJs({
     cwd: cachePath,
-    from: `./src/extensionHostWorkerMain.js`,
+    from: `./src/extensionHostWorkerMain.ts`,
     platform: 'webworker',
     allowCyclicDependencies: false,
   })
