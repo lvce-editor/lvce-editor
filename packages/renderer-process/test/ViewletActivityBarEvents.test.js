@@ -22,12 +22,14 @@ test.skip('event - handleClick - top', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
+  // @ts-ignore
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -35,6 +37,7 @@ test.skip('event - handleClick - top', () => {
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -42,9 +45,11 @@ test.skip('event - handleClick - top', () => {
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Button,
     },
   ])
+  // @ts-ignore
   ViewletActivityBar.setFocusedIndex(state, -1, 0)
   const event = new MouseEvent('mousedown', {
     bubbles: true,
@@ -63,12 +68,14 @@ test.skip('event - handleClick - bottom', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
+  // @ts-ignore
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -76,6 +83,7 @@ test.skip('event - handleClick - bottom', () => {
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -83,6 +91,7 @@ test.skip('event - handleClick - bottom', () => {
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Button,
     },
   ])
@@ -102,12 +111,14 @@ test.skip('event - handleClick - no item is clicked', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
+  // @ts-ignore
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -115,6 +126,7 @@ test.skip('event - handleClick - no item is clicked', () => {
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -122,6 +134,7 @@ test.skip('event - handleClick - no item is clicked', () => {
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Button,
     },
   ])
@@ -141,12 +154,14 @@ test.skip('event - handleContextMenu', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
+  // @ts-ignore
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -154,6 +169,7 @@ test.skip('event - handleContextMenu', () => {
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Tab,
     },
     {
@@ -161,6 +177,7 @@ test.skip('event - handleContextMenu', () => {
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
+      // @ts-ignore
       flags: ActivityBarItemFlags.Button,
     },
   ])

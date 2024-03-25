@@ -38,10 +38,12 @@ export const create = (id, uid = id) => {
 }
 
 export const addKeyBindings = (id, keyBindings) => {
+  // @ts-ignore
   KeyBindings.addKeyBindings(id, keyBindings)
 }
 
 export const removeKeyBindings = (id) => {
+  // @ts-ignore
   KeyBindings.removeKeyBindings(id)
 }
 

@@ -10,6 +10,7 @@ export const create = () => {
   const terminal = Terminal.create({
     $Element: $Viewlet,
     handleKeyDown: (...args) => ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args),
+    // @ts-ignore
     handleBlur: (...args) => ViewletTerminalEvents.handleBlur({ target: $Viewlet }, ...args),
     handleMouseDown: (...args) => ViewletTerminalEvents.handleMouseDown({ target: $Viewlet }, ...args),
     background: `#1b2020`,

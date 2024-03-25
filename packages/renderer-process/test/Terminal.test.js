@@ -6,11 +6,14 @@
 // import * as Terminal from '../src/parts/Terminal/Terminal.js'
 
 test.skip('create', () => {
+  // @ts-ignore
   const state = Terminal.create()
   expect(state).toBeDefined()
 })
 
 test.skip('write', () => {
+  // @ts-ignore
   const state = Terminal.create()
+  // @ts-ignore
   Terminal.write(state, 'abc')
 })
