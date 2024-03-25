@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { jest } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.js'

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { jest } from '@jest/globals'
 import * as ContextMenu from '../src/parts/ContextMenu/ContextMenu.js'
 // import * as Layout from '../src/parts/Layout/Layout.js'
