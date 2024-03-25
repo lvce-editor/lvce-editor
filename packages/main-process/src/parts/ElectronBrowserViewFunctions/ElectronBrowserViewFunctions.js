@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
+import * as IsWebContentsView from '../IsWebContentsView/IsWebContentsView.js'
 import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
@@ -157,9 +158,14 @@ export const show = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.addBrowserView(view)
-  // workaround for electron bug, view not being shown
-  view.setBounds(view.getBounds())
+  console.log('name', view.constructor.name)
+  if (IsWebContentsView.isWebContentsView(view)) {
+    browserWindow.contentView.addChildView(view)
+  } else {
+    browserWindow.addBrowserView(view)
+    // workaround for electron bug, view not being shown
+    view.setBounds(view.getBounds())
+  }
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {
@@ -169,9 +175,13 @@ export const addToWindow = (browserWindowId, browserViewId) => {
   if (!browserWindow) {
     return
   }
-  browserWindow.addBrowserView(view)
-  // workaround for electron bug, view not being shown
-  view.setBounds(view.getBounds())
+  if (IsWebContentsView.isWebContentsView(view)) {
+    browserWindow.contentView.addChildView(view)
+  } else {
+    browserWindow.addBrowserView(view)
+    // workaround for electron bug, view not being shown
+    view.setBounds(view.getBounds())
+  }
 }
 
 export const hide = (id) => {
@@ -181,12 +191,16 @@ export const hide = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.removeBrowserView(view)
+  if (IsWebContentsView.isWebContentsView(view)) {
+    browserWindow.contentView.removeChildView(view)
+  } else {
+    browserWindow.removeBrowserView(view)
+  }
 }
 
 /**
  *
- * @param {Electron.BrowserView} view
+ * @param {Electron.BrowserView|Electron.WebContentsView} view
  * @param {number} x
  * @param {number} y
  */
@@ -199,7 +213,7 @@ export const inspectElement = (view, x, y) => {
 
 /**
  *
- * @param {Electron.BrowserView} view
+ * @param {Electron.BrowserView|Electron.WebContentsView} view
  * @param {string} backgroundColor
  */
 export const setBackgroundColor = (view, backgroundColor) => {
@@ -208,7 +222,7 @@ export const setBackgroundColor = (view, backgroundColor) => {
 
 /**
  *
- * @param {Electron.BrowserView} view
+ * @param {Electron.BrowserView|Electron.WebContentsView} view
  * @param {number} x
  * @param {number} y
  */
@@ -226,7 +240,7 @@ export const setFallThroughKeyBindings = (fallthroughKeyBindings) => {
 // TODO maybe move some of these to webContentFunctions
 
 /**
- * @param {Electron.BrowserView} view
+ * @param {Electron.BrowserView|Electron.WebContentsView} view
  */
 export const getStats = (view) => {
   const { webContents } = view

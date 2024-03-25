@@ -6,6 +6,7 @@ import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 import { VError } from '../VError/VError.js'
+import * as IsWebContentsView from '../IsWebContentsView/IsWebContentsView.js'
 
 // TODO create output channel for browser view debug logs
 
@@ -157,7 +158,17 @@ export const show = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.addBrowserView(view)
+  console.log('name', view.constructor.name)
+  if (IsWebContentsView.isWebContentsView(view)) {
+    browserWindow.contentView.addChildView(view)
+    view.setBounds({ x: 0, y: 0, width: 400, height: 400 })
+    view.setBackgroundColor('red')
+    console.log('shwoing')
+  } else {
+    browserWindow.addBrowserView(view)
+    // workaround for electron bug, view not being shown
+    view.setBounds(view.getBounds())
+  }
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {
