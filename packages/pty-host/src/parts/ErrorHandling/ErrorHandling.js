@@ -24,9 +24,11 @@ const printPrettyError = (prettyError) => {
 }
 
 export const handleError = (error) => {
+  // @ts-ignore
   if (state.seenErrors.includes(error.message)) {
     return
   }
+  // @ts-ignore
   state.seenErrors.push(error.message)
   const prettyError = preparePrettyError(error)
   // Socket.send({
@@ -53,12 +55,14 @@ const firstErrorLine = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 export const handleUncaughtExceptionMonitor = (error, origin) => {
   Logger.info(`[pty host] uncaught exception: ${firstErrorLine(error)}`)
   if (IsIgnoredError.isIgnoredError(error)) {
     return
   }
   const prettyError = PrettyError.prepare(error)
+  // @ts-ignore
   Logger.error(prettyError.codeFrame + Character.NewLine + prettyError.stack + Character.NewLine)
   Process.setExitCode(ExitCode.Error)
 }
