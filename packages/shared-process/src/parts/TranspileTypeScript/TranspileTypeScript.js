@@ -6,8 +6,8 @@ import * as LoadTypeScript from '../LoadTypeScript/LoadTypeScript.js'
 export const transpileTypeScript = async (code) => {
   try {
     Assert.string(code)
-    const typescriptPath = GetTypeScriptPath.getTypeScriptPath()
-    const typescript = await LoadTypeScript.loadTypeScript(typescriptPath)
+    const typescriptUri = GetTypeScriptPath.getTypeScriptUri()
+    const typescript = await LoadTypeScript.loadTypeScript(typescriptUri)
     const newContent = await typescript.transpileModule(code, {
       compilerOptions: {
         target: 'esnext',
