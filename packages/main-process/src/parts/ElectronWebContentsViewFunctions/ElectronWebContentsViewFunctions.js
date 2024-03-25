@@ -51,6 +51,7 @@ const setIframeSrcFallback = async (view, error) => {
  *
  * @param {Electron.WebContents} webContents
  */
+// @ts-ignore
 const getTitle = (webContents) => {
   const title = webContents.getTitle()
   if (title) {
@@ -69,10 +70,12 @@ export const setIframeSrc = async (view, iframeSrc) => {
   try {
     await webContents.loadURL(iframeSrc)
   } catch (error) {
+    // @ts-ignore
     if (error && error.code === LoadErrorCode.ERR_ABORTED) {
       Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
       return
     }
+    // @ts-ignore
     if (error && error.code === LoadErrorCode.ERR_FAILED && ElectronWebContentsViewState.isCanceled(webContents.id)) {
       Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
       ElectronWebContentsViewState.removeCanceled(webContents.id)

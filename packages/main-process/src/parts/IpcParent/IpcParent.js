@@ -20,6 +20,7 @@ export const create = async ({ method, ...options }) => {
   if (options.noReturn) {
     return undefined
   }
+  // @ts-ignore
   const ipc = module.wrap(rawIpc)
   return ipc
 }
