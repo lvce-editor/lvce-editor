@@ -23,7 +23,3 @@ export const appendCommandLineSwitch = (commandLineSwitch, value) => {
 export const exit = (code) => {
   app.exit(code)
 }
-
-export const setLocale = (locale) => {
-  app.commandLine.appendSwitch('lang', locale)
-}
