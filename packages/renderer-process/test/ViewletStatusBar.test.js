@@ -5,6 +5,7 @@ import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBa
 
 test.skip('create', () => {
   const state = ViewletStatusBar.create(
+    // @ts-ignore
     [
       {
         name: 'Item 1',
@@ -20,7 +21,7 @@ test.skip('create', () => {
         tooltip: '',
         command: 909021,
       },
-    ]
+    ],
   )
   expect(state.$StatusBarItemsLeft.children).toHaveLength(1)
   expect(state.$StatusBarItemsLeft.firstChild.textContent).toBe('Item 1')
@@ -29,6 +30,7 @@ test.skip('create', () => {
 })
 
 test.skip('accessibility - status bar should have role status, tabIndex 0,  ariaLabel and ariaLive', () => {
+  // @ts-ignore
   const state = ViewletStatusBar.create([], [])
   expect(state.$StatusBar.getAttribute('role')).toBe('status')
   expect(state.$StatusBar.ariaLabel).toBe('Status Bar')
@@ -37,6 +39,7 @@ test.skip('accessibility - status bar should have role status, tabIndex 0,  aria
 })
 
 test('accessibility - status bar should have aria role description attribute', () => {
+  // @ts-ignore
   const state = ViewletStatusBar.create([], [])
   const { $Viewlet } = state
   expect($Viewlet.ariaRoleDescription).toBe('Status Bar')

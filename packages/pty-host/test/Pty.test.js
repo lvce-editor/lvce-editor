@@ -12,6 +12,7 @@ let pty
 // })
 
 test.skip('pty', async () => {
+  // @ts-ignore
   if (Platform.isWindows) {
     // TODO add windows test
     return
@@ -21,6 +22,7 @@ test.skip('pty', async () => {
     allData += data
   })
   Pty.write(pty, 'abc')
+  // @ts-ignore
   await waitForExpect(() => {
     expect(allData).toContain('abc')
   })

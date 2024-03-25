@@ -2,6 +2,7 @@ import { spawn } from 'node-pty'
 import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
 
+// @ts-ignore
 export const create = ({ env = {}, cwd, command, args } = {}) => {
   try {
     Assert.string(cwd)
