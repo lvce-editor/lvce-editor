@@ -4,11 +4,8 @@ import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminal
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
-import * as TerminalEmulator from '../TerminalEmulator/TerminalEmulator.js'
+import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
-import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
@@ -39,28 +36,31 @@ export const loadContent = async (state) => {
 export const contentLoadedEffects = async (state) => {
   const { uid, separateConnection, command, args } = state
   const { id, promise } = Callback.registerPromise()
-
   setTimeout(async () => {
-    await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
-    const response = await promise
-    const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
-    const { offscreenCanvasCursor, offscreenCanvasText } = result
-    const terminal = await TerminalEmulator.create({
-      offscreenCanvasCursor,
-      offscreenCanvasText,
-      async focusTextArea() {
-        await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
-      },
-      handleInput(transformedKey) {
-        Terminal.write(uid, transformedKey)
-      },
-    })
-    ViewletStates.setState(uid, {
-      ...ViewletStates.getState(uid),
-      terminal,
-    })
-    await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
+    const worker = await TerminalWorker.getOrCreate()
+    console.log({ worker })
   })
+  // setTimeout(async () => {
+  //   await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
+  //   const response = await promise
+  //   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
+  //   const { offscreenCanvasCursor, offscreenCanvasText } = result
+  //   const terminal = await TerminalEmulator.create({
+  //     offscreenCanvasCursor,
+  //     offscreenCanvasText,
+  //     async focusTextArea() {
+  //       await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
+  //     },
+  //     handleInput(transformedKey) {
+  //       Terminal.write(uid, transformedKey)
+  //     },
+  //   })
+  //   ViewletStates.setState(uid, {
+  //     ...ViewletStates.getState(uid),
+  //     terminal,
+  //   })
+  //   await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
+  // })
 }
 
 export const handleBlur = (state) => {
