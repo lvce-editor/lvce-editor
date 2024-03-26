@@ -1,4 +1,4 @@
-export const splitLines = (lines: string): readonly string[] => {
+export const splitLines = (lines: string | undefined): readonly string[] => {
   if (!lines) {
     return []
   }
