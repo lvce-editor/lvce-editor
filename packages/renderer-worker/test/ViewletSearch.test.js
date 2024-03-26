@@ -78,7 +78,7 @@ test('setValue - error - results is not of type array', async () => {
     }
   })
   expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
-    message: 'Error: results must be of type array',
+    message: 'TypeError: results must be of type array',
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.logError).toHaveBeenCalledWith(new Error('results must be of type array'))
