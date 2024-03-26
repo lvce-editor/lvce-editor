@@ -1,5 +1,5 @@
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 import { jest } from '@jest/globals'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

@@ -144,7 +144,7 @@ test('writeFile - settings - error parent folder does not exist', async () => {
     if (i++ === 0) {
       throw new NodeError(
         FileSytemErrorCodes.ENOENT,
-        `Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'`,
+        'Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'',
       )
     } else {
       // ignore

@@ -158,7 +158,7 @@ test('editorGoToDefinition - no definition found', async () => {
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
-  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, `No definition found for 'line'`, false)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No definition found for 'line'", false)
 })
 
 test('editorGoToDefinition - no definition found and no word at position', async () => {
@@ -179,5 +179,5 @@ test('editorGoToDefinition - no definition found and no word at position', async
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
-  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, `No definition found`, false)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'No definition found', false)
 })

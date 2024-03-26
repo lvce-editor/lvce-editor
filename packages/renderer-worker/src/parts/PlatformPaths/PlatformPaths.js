@@ -72,7 +72,7 @@ export const getExtensionHostWorkerUrl = () => {
 }
 
 export const getGithubApiUrl = () => {
-  return `https://api.github.com`
+  return 'https://api.github.com'
 }
 
 export const getCacheName = () => {

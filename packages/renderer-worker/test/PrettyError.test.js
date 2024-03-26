@@ -135,7 +135,7 @@ const execute = () => {
   at async handleMessageFromRendererProcess (test://packages/renderer-worker/dist/rendererWorkerMain.js:897:7)`
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: `Command did not register: "ElectronWindow.openNew"`,
+    message: 'Command did not register: "ElectronWindow.openNew"',
     codeFrame: `  2 |
   3 | const execute = () => {
 > 4 |   throw new Error(\`Command did not register \"\${command}\"\`)
@@ -175,8 +175,10 @@ test('prepare - error without stack', async () => {
     throw new TypeError('x is not a function')
   })
   const error = new Error()
-  error.message = `VError: Failed to import script http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.js: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.jss`
-  error.stack = `VError: Failed to import script http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.js: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.jss`
+  error.message =
+    'VError: Failed to import script http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.js: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.jss'
+  error.stack =
+    'VError: Failed to import script http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.js: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.jss'
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toBe(error)
@@ -355,7 +357,7 @@ export const textSearch = (scheme, root, query) => {
 })
 
 test('prepare - VError with code frame', async () => {
-  const cause = new Error(`expected value to be of type string`)
+  const cause = new Error('expected value to be of type string')
   cause.stack = `AssertionError: expected value to be of type string
     at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
     at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
@@ -376,14 +378,14 @@ test('prepare - VError with code frame', async () => {
   33 |   const extensions = await ExtensionManagement.getExtensions()
   34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   35 |   if (!colorThemePath) {`
-  const error = new VError(cause, `Failed to apply color theme \"undefined\"`)
+  const error = new VError(cause, 'Failed to apply color theme "undefined"')
   // @ts-ignore
   Ajax.getText.mockImplementation(() => {
     throw new Error('not implemented')
   })
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: `Failed to apply color theme \"undefined\": expected value to be of type string`,
+    message: 'Failed to apply color theme "undefined": expected value to be of type string',
     stack: `    at ExtensionHost.getColorThemeJson (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
     at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
     at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
@@ -407,14 +409,14 @@ test('prepare - VError with code frame', async () => {
 })
 
 test('prepare - VError with AssertionError cause', async () => {
-  const cause = new AssertionError(`expected value to be of type string`)
+  const cause = new AssertionError('expected value to be of type string')
   cause.stack = `AssertionError: expected value to be of type string
     at Module.string (http://localhost:3000/packages/renderer-worker/src/parts/Assert/Assert.js:58:11)
     at applyColorTheme (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:82:12)
     at Module.hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:123:11)
     at Module.startup (http://localhost:3000/packages/renderer-worker/src/parts/Workbench/Workbench.js:73:20)
     at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)"`
-  const error = new VError(cause, `Failed to apply color theme \"undefined\"`)
+  const error = new VError(cause, 'Failed to apply color theme "undefined"')
   // @ts-ignore
   Ajax.getText.mockImplementation(() => {
     return `import * as Command from '../Command/Command.js'
@@ -568,11 +570,11 @@ export const hydrate = async () => {
     _error: error,
   })
   expect(Ajax.getText).toHaveBeenCalledTimes(1)
-  expect(Ajax.getText).toHaveBeenCalledWith(`http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js`)
+  expect(Ajax.getText).toHaveBeenCalledWith('http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js')
 })
 
 test('prepare - regex error', async () => {
-  const error = new TypeError(`increaseIndentRegex.text is not a function`)
+  const error = new TypeError('increaseIndentRegex.text is not a function')
   error.stack = `TypeError: increaseIndentRegex.text is not a function
     at shouldIncreaseIndent (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:24:30)
     at getChanges (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:53:11)
@@ -674,7 +676,7 @@ export const insertLineBreak = async (editor) => {
   })
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: `increaseIndentRegex.text is not a function`,
+    message: 'increaseIndentRegex.text is not a function',
     stack: `    at shouldIncreaseIndent (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:24:30)
     at getChanges (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:53:11)
     at insertLineBreak (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:86:19)
@@ -694,7 +696,7 @@ export const insertLineBreak = async (editor) => {
 })
 
 test('prepare - AssertionError', async () => {
-  const error = new AssertionError(`expected value to be of type number`)
+  const error = new AssertionError('expected value to be of type number')
   error.stack = `AssertionError: expected value to be of type number
     at Module.number (http://localhost:3000/packages/renderer-worker/src/parts/Assert/Assert.js:41:11)
     at handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleMenuMouseOver.js:9:10)
@@ -784,7 +786,7 @@ export const handleMenuMouseOver = async (state, level, index) => {
   })
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: `expected value to be of type number`,
+    message: 'expected value to be of type number',
     stack: `    at handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleMenuMouseOver.js:9:10)
     at TitleBarMenuBar/lazy/handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:108:30)
     at async handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
@@ -801,7 +803,7 @@ export const handleMenuMouseOver = async (state, level, index) => {
 })
 
 test('prepare - Viewlet error', async () => {
-  const error = new TypeError(`Cannot read properties of undefined (reading 'create')`)
+  const error = new TypeError("Cannot read properties of undefined (reading 'create')")
   error.stack = `TypeError: Cannot read properties of undefined (reading 'create')
     at create (http://localhost:3000/packages/renderer-process/src/parts/Viewlet/Viewlet.js:23:32)
     at Object.sendMultiple [as Viewlet.sendMultiple] (http://localhost:3000/packages/renderer-process/src/parts/Viewlet/Viewlet.js:132:9)
@@ -1175,7 +1177,7 @@ export const setBounds = (id, left, top, width, height) => {
   })
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: `Cannot read properties of undefined (reading 'create')`,
+    message: "Cannot read properties of undefined (reading 'create')",
     stack: `    at create (http://localhost:3000/packages/renderer-process/src/parts/Viewlet/Viewlet.js:23:32)
     at Viewlet.sendMultiple (http://localhost:3000/packages/renderer-process/src/parts/Viewlet/Viewlet.js:132:9)
     at execute (http://localhost:3000/packages/renderer-process/src/parts/Command/Command.js:78:35)
@@ -1196,7 +1198,7 @@ export const setBounds = (id, left, top, width, height) => {
 })
 
 test('prepare - bad stack trace', async () => {
-  const error = new TypeError(`importFn is not a function`)
+  const error = new TypeError('importFn is not a function')
   error.stack = `TypeError: importFn is not a function
     at Explorer/lazy/() => import('./ViewletExplorerHandlePointerDown.js') (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:96:26)
     at Module.execute (http://localhost:3000/packages/renderer-worker/src/parts/Command/Command.js:62:12)
@@ -1212,7 +1214,7 @@ test('prepare - bad stack trace', async () => {
 })
 
 test('prepare - first file is anonymous', async () => {
-  const error = new Error(`VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON`)
+  const error = new Error('VError: failed to parse json: SyntaxError: Unexpected token \'o\', "[object Blob]" is not valid JSON')
   error.stack = `VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON
     at JSON.parse (<anonymous>)
     at Module.parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
@@ -1263,7 +1265,7 @@ export const parse = (content) => {
 
 test('prepare - bulk replacement error', async () => {
   const error = new Error()
-  error.message = `VError: Bulk replacement failed: File not found: './test.txt'`
+  error.message = "VError: Bulk replacement failed: File not found: './test.txt'"
   error.stack = `Error: VError: Bulk replacement failed: File not found: './test.txt'
     at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
     at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:44:27)
@@ -1311,7 +1313,7 @@ const constructError = (message, type, name) => {
   16 |     if (name && name !== 'VError') {
   17 |       error.name = name
   18 |     }`,
-    message: `VError: Bulk replacement failed: File not found: './test.txt'`,
+    message: "VError: Bulk replacement failed: File not found: './test.txt'",
     stack: `    at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
     at async invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:45:18)
     at async applyBulkReplacement (http://localhost:3000/packages/renderer-worker/src/parts/BulkReplacement/BulkReplacement.js:8:3)

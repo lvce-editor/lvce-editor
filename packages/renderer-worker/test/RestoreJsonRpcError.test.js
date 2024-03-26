@@ -27,7 +27,7 @@ test('restoreJsonRpcError - TypeError object', () => {
     type: 'TypeError',
   })
   expect(error).toBeInstanceOf(TypeError)
-  expect(error.message).toBe(`Cannot set properties of undefined (setting 'id')`)
+  expect(error.message).toBe("Cannot set properties of undefined (setting 'id')")
 })
 
 test('restoreJsonRpcError - SyntaxError', () => {
@@ -55,22 +55,22 @@ test('restoreJsonRpcError - null', () => {
 
 test('restoreJsonRpcError - empty object', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({})
-  expect(error.message).toBe(`JsonRpc Error: [object Object]`)
+  expect(error.message).toBe('JsonRpc Error: [object Object]')
 })
 
 test('restoreJsonRpcError - empty array', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError([])
-  expect(error.message).toBe(`JsonRpc Error: `)
+  expect(error.message).toBe('JsonRpc Error: ')
 })
 
 test('restoreJsonRpcError - empty weakmap', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError(new WeakMap())
-  expect(error.message).toBe(`JsonRpc Error: [object WeakMap]`)
+  expect(error.message).toBe('JsonRpc Error: [object WeakMap]')
 })
 
 test('restoreJsonRpcError - empty set', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError(new Set())
-  expect(error.message).toBe(`JsonRpc Error: [object Set]`)
+  expect(error.message).toBe('JsonRpc Error: [object Set]')
 })
 
 test('restoreJsonRpcError - DOMException', () => {
@@ -81,7 +81,7 @@ test('restoreJsonRpcError - DOMException', () => {
   })
   expect(error).toBeInstanceOf(DOMException)
   expect(error.name).toBe('AbortError')
-  expect(error.message).toBe(`The user aborted a request.`)
+  expect(error.message).toBe('The user aborted a request.')
 })
 
 test('restoreJsonRpcError - with stack', () => {
@@ -92,7 +92,7 @@ test('restoreJsonRpcError - with stack', () => {
     at async Worker.handleMessageFromRendererWorker (http://localhost/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js:46:24)`,
   })
   expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe(`Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"`)
+  expect(error.message).toBe('Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"')
   expect(error.stack).toMatch(
     `Error: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"
     at Object.checkSingleElementCondition [as TestFrameWork.checkSingleElementCondition] (http://localhost/packages/renderer-process/src/parts/TestFrameWork/TestFrameWork.js:122:9)
@@ -123,7 +123,7 @@ test('restoreJsonRpcError - with stack in data property', () => {
   })
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(
-    `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'`,
+    'Failed to get all preferences: failed to get user preferences: Failed to read file "/test/.config/app/settings.json": EACCES: permission denied, open \'/test/.config/app/settings.json\'',
   )
   expect(error.stack).toMatch(
     `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'
@@ -147,7 +147,7 @@ test('restoreJsonRpcError - ExecError', () => {
     type: 'ExecError',
   })
   expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe(`Failed to execute test-source-control: process exited with code 128`)
+  expect(error.message).toBe('Failed to execute test-source-control: process exited with code 128')
   expect(error.stack).toMatch(
     `ExecError: Failed to execute test-source-control: process exited with code 128
     at Api.api.exec (test://packages/extension-host-worker/src/parts/ExtensionHostMockExec/ExtensionHostMockExec.js:13:15)
@@ -229,7 +229,7 @@ test('restoreJsonRpcError - error without stack', () => {
   })
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe("FileNotFoundError: File not found '0.8510013488176322'")
-  expect(error.stack).toMatch(`FileNotFoundError: File not found '0.8510013488176322'`)
+  expect(error.stack).toMatch("FileNotFoundError: File not found '0.8510013488176322'")
   expect(error.name).toBe('Error')
 })
 

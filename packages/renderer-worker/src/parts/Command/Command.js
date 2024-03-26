@@ -57,7 +57,7 @@ export const execute = (command, ...args) => {
   if (command in state.commands) {
     const fn = state.commands[command]
     if (typeof fn !== 'function') {
-      throw new Error(`[renderer-worker] Command ${command} is not a function`)
+      throw new TypeError(`[renderer-worker] Command ${command} is not a function`)
     }
     return fn(...args)
   }

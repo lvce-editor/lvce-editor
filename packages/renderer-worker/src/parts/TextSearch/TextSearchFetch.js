@@ -20,7 +20,7 @@ const textSearchInFile = (file, content, query) => {
       })
     }
   }
-  if (results.length !== 0) {
+  if (results.length > 0) {
     results.unshift({
       type: TextSearchResultType.File,
       text: file,

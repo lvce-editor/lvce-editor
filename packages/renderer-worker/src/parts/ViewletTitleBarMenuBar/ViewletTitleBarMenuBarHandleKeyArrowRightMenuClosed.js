@@ -1,3 +1,1 @@
-import { focusNext } from './ViewletTitleBarMenuBarFocusNext.js'
-
-export const handleKeyArrowRightMenuClosed = focusNext
+export { focusNext as handleKeyArrowRightMenuClosed } from './ViewletTitleBarMenuBarFocusNext.js'

@@ -13,6 +13,6 @@ export const handleDrop = async (state, x, y, files) => {
         return await handleDropIndex(state, index, files)
     }
   } catch (error) {
-    throw new VError(error, `Failed to drop files`)
+    throw new VError(error, 'Failed to drop files')
   }
 }

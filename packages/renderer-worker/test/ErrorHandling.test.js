@@ -107,7 +107,7 @@ test('handleError - multiple causes', async () => {
 test('handleError - with code frame, error stack includes message', async () => {
   const mockError = new Error()
   mockError.name = 'VError'
-  mockError.message = `Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"`
+  mockError.message = 'Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"'
   mockError.stack = `VError: Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
   at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
   at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`

@@ -1,5 +1,5 @@
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

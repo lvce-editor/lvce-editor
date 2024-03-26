@@ -68,9 +68,9 @@ test('downloadSession', async () => {
 test('getEvents - error with indexeddb', async () => {
   // @ts-ignore
   IndexedDb.getValuesByIndexName.mockImplementation(() => {
-    throw new DOMException(`Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.`)
+    throw new DOMException("Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.")
   })
-  await expect(SessionReplay.getEvents(``)).rejects.toThrow(
+  await expect(SessionReplay.getEvents('')).rejects.toThrow(
     new Error("failed to get session replay events: DOMException: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found."),
   )
 })
@@ -80,7 +80,7 @@ test('getEvents', async () => {
   IndexedDb.getValuesByIndexName.mockImplementation(() => {
     return []
   })
-  expect(await SessionReplay.getEvents(`test`)).toEqual([])
+  expect(await SessionReplay.getEvents('test')).toEqual([])
   expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledTimes(1)
   expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledWith('session', 'sessionId', 'test')
 })

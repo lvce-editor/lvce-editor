@@ -24,6 +24,5 @@ export const addToRecentlyOpened = async (path) => {
     case PlatformType.Web:
       return addToRecentlyOpenedWeb(path)
     default:
-      return
   }
 }

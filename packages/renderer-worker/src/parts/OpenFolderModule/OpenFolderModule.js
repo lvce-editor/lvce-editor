@@ -10,6 +10,6 @@ export const load = () => {
     case PlatformType.Electron:
       return import('../OpenFolderElectron/OpenFolderElectron.js')
     default:
-      throw new Error(`unsupported platform`)
+      throw new Error('unsupported platform')
   }
 }

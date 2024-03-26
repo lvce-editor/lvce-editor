@@ -173,7 +173,7 @@ const contributionPoints = [
 export const addLanguage = (language) => {
   const languageId = language.id
   if (!languageId) {
-    Logger.warn(`[renderer-worker] language is missing id`, language)
+    Logger.warn('[renderer-worker] language is missing id', language)
     return
   }
   // TODO could use object destructuing here

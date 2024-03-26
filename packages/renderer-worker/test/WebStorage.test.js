@@ -51,16 +51,16 @@ test('setJson - localStorage', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await WebStorage.setJson(WebStorageType.LocalStorage, 'item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.setItem', 1, 'item-1', `43`)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.setItem', 1, 'item-1', '43')
 })
 
 test('setJson - localStorage - storage limit exceeded', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
-    throw new Error(`Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.`)
+    throw new Error("Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.")
   })
   await expect(WebStorage.setJson(WebStorageType.LocalStorage, 'item-1', 43)).rejects.toThrow(
-    new Error(`Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.`),
+    new Error("Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota."),
   )
 })
 

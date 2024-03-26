@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })

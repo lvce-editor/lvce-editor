@@ -200,7 +200,7 @@ export const loadContent = async (state, savedState) => {
   if (savedState && typeof savedState.deltaY === 'number') {
     deltaY = savedState.deltaY
   }
-  let maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
   return {
     ...state,
     root,
@@ -624,11 +624,11 @@ const getClickFn = (direntType) => {
     case DirentType.Symlink:
       return handleClickSymLink
     case DirentType.CharacterDevice:
-      throw new Error(`Cannot open character device files`)
+      throw new Error('Cannot open character device files')
     case DirentType.BlockDevice:
-      throw new Error(`Cannot open block device files`)
+      throw new Error('Cannot open block device files')
     case DirentType.Socket:
-      throw new Error(`Cannot open socket files`)
+      throw new Error('Cannot open socket files')
     default:
       throw new Error(`unsupported dirent type ${direntType}`)
   }
@@ -919,7 +919,12 @@ const getPathParts = (root, uri, pathSeparator) => {
   let depth = 0
   while ((index = uri.indexOf('/', index + 1)) !== -1) {
     const partUri = uri.slice(0, index)
-    parts.push({ path: partUri, depth: depth++, root, pathSeparator })
+    parts.push({
+      path: partUri,
+      depth: depth++,
+      root,
+      pathSeparator,
+    })
   }
   return parts
 }

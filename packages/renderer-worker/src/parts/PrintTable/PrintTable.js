@@ -16,11 +16,7 @@ export const printTable = (table, pattern, patternLen, word, wordLen) => {
   let ret = ` |   |${word.split(Character.EmptyString).map(padThree).join('|')}\n`
 
   for (let i = 0; i <= patternLen; i++) {
-    if (i === 0) {
-      ret += ' |'
-    } else {
-      ret += `${pattern[i - 1]}|`
-    }
+    ret += i === 0 ? ' |' : `${pattern[i - 1]}|`
     ret += [...table[i].subarray(0, wordLen + 1)].map((n) => pad(n.toString(), 3)).join('|') + Character.NewLine
   }
   return ret

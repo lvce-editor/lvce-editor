@@ -110,7 +110,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
     const module = await importFn()
     const fn = module[key]
     if (typeof fn !== 'function') {
-      throw new Error(`${id}.${key} is not a function`)
+      throw new TypeError(`${id}.${key} is not a function`)
     }
     const activeInstance = ViewletStates.getInstance(id)
     await runFn(activeInstance, id, key, fn, args)
@@ -124,7 +124,7 @@ const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
     const module = await importFn()
     const fn = module[key]
     if (typeof fn !== 'function') {
-      throw new Error(`${id}.${key} is not a function`)
+      throw new TypeError(`${id}.${key} is not a function`)
     }
     const activeInstance = ViewletStates.getInstance(id)
     await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
@@ -338,9 +338,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args, parentUid)
     let viewletState = initialViewletState
-    if (!viewletState.uid) {
-      viewletState.uid = viewletUid
-    }
+    viewletState.uid ||= viewletUid
     const oldVersion = viewletState.version === undefined ? undefined : ++viewletState.version
     let instanceSavedState
     if (restore) {

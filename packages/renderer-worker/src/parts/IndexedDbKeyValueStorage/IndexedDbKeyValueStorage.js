@@ -29,9 +29,7 @@ const getDb = async () => {
 }
 
 const getDbMemoized = async () => {
-  if (!state.cachedDb) {
-    state.cachedDb = await getDb()
-  }
+  state.cachedDb ||= await getDb()
   return state.cachedDb
 }
 

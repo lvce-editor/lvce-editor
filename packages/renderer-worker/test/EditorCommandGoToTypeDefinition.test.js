@@ -157,5 +157,5 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
-  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, `No type definition found for 'line'`, false)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No type definition found for 'line'", false)
 })

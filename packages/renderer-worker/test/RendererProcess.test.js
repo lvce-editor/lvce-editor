@@ -1,4 +1,5 @@
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 const Callback = await import('../src/parts/Callback/Callback.js')
@@ -45,7 +46,7 @@ test('invoke - error', async () => {
   )
   expect(error).toBeInstanceOf(Error)
   // @ts-ignore
-  expect(error.message).toBe(`Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"`)
+  expect(error.message).toBe('Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"')
   // TODO constructError stack is not really relevant, should only include stack from
   // rendererprocess.invoke onwards
   // @ts-ignore

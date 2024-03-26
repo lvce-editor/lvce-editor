@@ -14,27 +14,17 @@ export const create = async (separateConnection, id, cwd, command, args) => {
 }
 
 export const dispose = async (id) => {
-  if (_separateConnection) {
-    await TerminalProcess.invoke('Terminal.dispose', id)
-  } else {
-    await SharedProcess.invoke('Terminal.dispose', id)
-  }
+  await (_separateConnection ? TerminalProcess.invoke('Terminal.dispose', id) : SharedProcess.invoke('Terminal.dispose', id))
 }
 
 export const write = async (id, input) => {
-  if (_separateConnection) {
-    await TerminalProcess.send('Terminal.write', id, input)
-  } else {
-    await SharedProcess.invoke('Terminal.write', id, input)
-  }
+  await (_separateConnection ? TerminalProcess.send('Terminal.write', id, input) : SharedProcess.invoke('Terminal.write', id, input))
 }
 
 export const resize = async (id, columns, rows) => {
-  if (_separateConnection) {
-    await TerminalProcess.invoke('Terminal.resize', id, columns, rows)
-  } else {
-    await SharedProcess.invoke('Terminal.resize', id, columns, rows)
-  }
+  await (_separateConnection
+    ? TerminalProcess.invoke('Terminal.resize', id, columns, rows)
+    : SharedProcess.invoke('Terminal.resize', id, columns, rows))
 }
 
 export const clear = async (id) => {

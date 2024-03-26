@@ -209,7 +209,7 @@ const getActualError = async (src) => {
       }
     }
     return ViewletEditorImageStrings.imageCouldNotBeLoaded()
-  } catch (error) {
+  } catch {
     return ViewletEditorImageStrings.imageCouldNotBeLoaded()
   }
 }

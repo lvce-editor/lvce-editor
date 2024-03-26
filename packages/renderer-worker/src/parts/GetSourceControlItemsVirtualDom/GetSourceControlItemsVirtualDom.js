@@ -153,7 +153,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
       spellcheck: false,
       autocapitalize: 'off',
       autocorrect: 'off',
-      placeholder: `Message (Enter) to commit on 'master'`,
+      placeholder: "Message (Enter) to commit on 'master'",
       ariaLabel: 'Source Control Input',
       childCount: 0,
     },

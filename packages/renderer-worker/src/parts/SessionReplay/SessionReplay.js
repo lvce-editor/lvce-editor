@@ -38,7 +38,7 @@ const addSearchParam = (href, key, value) => {
 
 export const replayCurrentSession = async () => {
   if (!GetSessionId.state.sessionId) {
-    throw new VError(`session replay is disabled in settings`)
+    throw new VError('session replay is disabled in settings')
   }
   // TODO
   // 1. read commands from indexeddb
@@ -134,7 +134,7 @@ export const getEvents = async (sessionId) => {
     const events = await SessionReplayStorage.getValuesByIndexName('session', 'sessionId', sessionId)
     return events
   } catch (error) {
-    throw new VError(error, `failed to get session replay events`)
+    throw new VError(error, 'failed to get session replay events')
   }
 }
 

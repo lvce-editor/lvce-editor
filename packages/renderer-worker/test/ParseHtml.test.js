@@ -72,7 +72,7 @@ test('element with with image and sibling tag', () => {
 })
 
 test('element with two child elements', () => {
-  const html = `<div><div></div><div></div></div>`
+  const html = '<div><div></div><div></div></div>'
   const allowedAttributes = []
   expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
@@ -91,7 +91,7 @@ test('element with two child elements', () => {
 })
 
 test('deeply nested tags', () => {
-  const html = `<div><div><div></div></div><div></div></div>`
+  const html = '<div><div><div></div></div><div></div></div>'
   const allowedAttributes = []
   expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {

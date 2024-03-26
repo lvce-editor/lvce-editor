@@ -62,7 +62,7 @@ test('selectIndex - match', async () => {
     if (path.startsWith('./')) {
       return '/test' + path.slice(1)
     }
-    return `/test` + path
+    return '/test' + path
   })
   const state = {
     ...ViewletSearch.create(),

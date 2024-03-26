@@ -23,7 +23,12 @@ const diffProps = (patches, a, b, index) => {
         continue
       }
       if (aProps[propA] !== bProps[propA]) {
-        patches.push({ type: DiffDomType.UpdateProp, key: propA, value: bProps[propA], index })
+        patches.push({
+          type: DiffDomType.UpdateProp,
+          key: propA,
+          value: bProps[propA],
+          index,
+        })
       }
     } else {
       patches.push({ type: DiffDomType.RemoveProp, key: propA, index })
@@ -38,54 +43,50 @@ const diffDomInternal = (patches, oldNodeMap, oldDom, oldStartIndex, oldEndIndex
     const a = oldDom[i]
     const b = newDom[j]
     if (a === b) {
-    } else {
-      if (a.type === b.type) {
-        diffProps(patches, a, b, i)
-        if (a.childCount !== b.childCount) {
-          const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
-          const newTotal = GetTotalChildCount.getTotalChildCount(newDom, j)
-          if (a.childCount === 0) {
-            patches.push({
-              index: i,
-              type: DiffDomType.Insert,
-              nodes: newDom.slice(j + 1, j + newTotal + 1),
-            })
-            j += newTotal
-          } else if (b.childCount === 0) {
-            patches.push({
-              type: DiffDomType.Remove,
-              nodes: [i + 1],
-            })
-            i += oldTotal
-          } else {
-            diffDomInternal(patches, oldNodeMap, oldDom, i + 1, i + oldTotal + 1, newNodeMap, newDom, j + 1, j + newTotal + 1)
-            i += oldTotal
-            j += newTotal
-          }
-        }
-      } else {
-        if (a.key in newNodeMap) {
-          const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
+    } else if (a.type === b.type) {
+      diffProps(patches, a, b, i)
+      if (a.childCount !== b.childCount) {
+        const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
+        const newTotal = GetTotalChildCount.getTotalChildCount(newDom, j)
+        if (a.childCount === 0) {
           patches.push({
             index: i,
             type: DiffDomType.Insert,
-            nodes: newDom.slice(j, j + totalChildCount + 1),
+            nodes: newDom.slice(j + 1, j + newTotal + 1),
           })
-          j += totalChildCount + 1
-        } else {
-          // console.log({ a, b })
-          // replace a with b
-          const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
-          const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
+          j += newTotal
+        } else if (b.childCount === 0) {
           patches.push({
-            index: i,
-            type: DiffDomType.Replace,
-            nodes: newDom.slice(j, j + totalChildCount + 1),
+            type: DiffDomType.Remove,
+            nodes: [i + 1],
           })
           i += oldTotal
-          j += totalChildCount
+        } else {
+          diffDomInternal(patches, oldNodeMap, oldDom, i + 1, i + oldTotal + 1, newNodeMap, newDom, j + 1, j + newTotal + 1)
+          i += oldTotal
+          j += newTotal
         }
       }
+    } else if (a.key in newNodeMap) {
+      const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
+      patches.push({
+        index: i,
+        type: DiffDomType.Insert,
+        nodes: newDom.slice(j, j + totalChildCount + 1),
+      })
+      j += totalChildCount + 1
+    } else {
+      // console.log({ a, b })
+      // replace a with b
+      const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
+      const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
+      patches.push({
+        index: i,
+        type: DiffDomType.Replace,
+        nodes: newDom.slice(j, j + totalChildCount + 1),
+      })
+      i += oldTotal
+      j += totalChildCount
     }
     i++
     j++

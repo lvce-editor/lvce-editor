@@ -87,12 +87,8 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     const lines = CleanStack.cleanStack(error.stack)
     const file = getFile(lines)
     let match = file.match(RE_PATH_1)
-    if (!match) {
-      match = file.match(RE_PATH_2)
-    }
-    if (!match) {
-      match = file.match(RE_PATH_3)
-    }
+    match ||= file.match(RE_PATH_2)
+    match ||= file.match(RE_PATH_3)
     if (!match) {
       return error
     }

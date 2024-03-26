@@ -31,7 +31,7 @@ export const handleUpdate = async (state, update) => {
       useRegularExpression,
     })
     if (!Array.isArray(results)) {
-      throw new Error(`results must be of type array`)
+      throw new TypeError('results must be of type array')
     }
     const { fileCount, resultCount } = GetTextSearchResultCounts.getTextSearchResultCounts(results)
     const message = ViewletSearchStatusMessage.getStatusMessage(resultCount, fileCount)
