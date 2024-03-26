@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test, afterEach } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/Exec/Exec.js', () => ({
   exec: jest.fn(() => {

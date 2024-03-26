@@ -1,5 +1,5 @@
+import { expect, jest, test } from '@jest/globals'
 import { access } from 'node:fs/promises'
-import { jest } from '@jest/globals'
 import * as Developer from '../src/parts/Developer/Developer.js'
 
 const exists = async (path) => {

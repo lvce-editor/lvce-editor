@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('node:fs', () => ({
   existsSync: jest.fn(() => {}),

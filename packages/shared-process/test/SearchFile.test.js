@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { afterEach, expect, jest, test } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 afterEach(() => {
@@ -46,7 +46,7 @@ nested/fileC`,
   expect(await SearchFile.searchFile(options)).toBe(
     `fileA
 fileB
-nested/fileC`
+nested/fileC`,
   )
 })
 

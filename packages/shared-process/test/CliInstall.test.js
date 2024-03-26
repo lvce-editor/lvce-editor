@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ExitCode from '../src/parts/ExitCode/ExitCode.js'
 
 beforeEach(() => {

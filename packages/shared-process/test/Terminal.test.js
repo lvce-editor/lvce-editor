@@ -1,3 +1,4 @@
+import { afterEach, expect, test } from '@jest/globals'
 import { Buffer } from 'node:buffer'
 import waitForExpect from 'wait-for-expect'
 import * as Platform from '../src/parts/Platform/Platform.js'

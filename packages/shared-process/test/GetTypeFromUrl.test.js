@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as GetTypeFromUrl from '../src/parts/GetTypeFromUrl/GetTypeFromUrl.js'
 
 test('error - missing url', () => {

@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as PlatformPaths from '../src/parts/PlatformPaths/PlatformPaths.js'
 
 test('dataDir', () => {

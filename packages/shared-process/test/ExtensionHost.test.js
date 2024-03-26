@@ -1,7 +1,7 @@
+import { afterEach, expect, jest, test } from '@jest/globals'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { jest } from '@jest/globals'
 
 afterEach(() => {
   jest.restoreAllMocks()

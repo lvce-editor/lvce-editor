@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, sep } from 'node:path'
