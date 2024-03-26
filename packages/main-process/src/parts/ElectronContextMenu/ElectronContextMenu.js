@@ -17,7 +17,12 @@ export const openContextMenu = async (menuItems, x, y) => {
       data: undefined,
     }
   }
-  menu.popup({ window, x, y, callback: handleClose })
+  menu.popup({
+    window,
+    x,
+    y,
+    callback: handleClose,
+  })
   const event = await promise
   if (event.type === 'click') {
     return {

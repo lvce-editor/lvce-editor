@@ -20,7 +20,7 @@ const CreatePidMap = await import('../src/parts/CreatePidMap/CreatePidMap.js')
 const electron = await import('electron')
 
 test('createPidMap - detect chrome devtools', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return [
       {
@@ -44,7 +44,7 @@ test('createPidMap - detect chrome devtools', () => {
 })
 
 test('createPidMap - detect renderer', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return [
       {
@@ -65,7 +65,7 @@ test('createPidMap - detect renderer', () => {
 })
 
 test('createPidMap - unknown renderer', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return []
   })

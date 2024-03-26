@@ -22,10 +22,10 @@ const GetFirstNodeWorkerEvent = await import('../src/parts/GetFirstNodeWorkerEve
 const WorkerThreads = await import('node:worker_threads')
 
 test('create - error - module not found', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent.mockImplementation(() => {
     const error = new Error(
-      `[ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js`,
+      "[ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js",
     )
     error.stack = `[ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js
   at __node_internal_captureLargerStackTrace (node:internal/errors:490:5)
@@ -39,7 +39,7 @@ test('create - error - module not found', async () => {
   at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:77:40)
   at link (node:internal/modules/esm/module_job:76:36)
 `
-    // @ts-ignore
+    // @ts-expect-error
     error.code = 'ERR_MODULE_NOT_FOUND'
     return {
       type: 'error',
@@ -52,18 +52,18 @@ test('create - error - module not found', async () => {
     }),
   ).rejects.toThrow(
     new Error(
-      `Worker threw an error before ipc connection was established: Error: [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js`,
+      "Worker threw an error before ipc connection was established: Error: [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js",
     ),
   )
 })
 
 test('create - error - path is not defined', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   await expect(IpcParentWithNodeWorker.create({})).rejects.toThrow(new Error('expected value to be of type string'))
 })
 
 test('create', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent.mockImplementation(() => {
     return {
       type: 'message',

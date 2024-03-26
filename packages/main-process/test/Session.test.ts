@@ -43,7 +43,7 @@ test.skip('get - error', async () => {
     return {
       session: {
         fromPartition() {
-          throw new TypeError(`x is not a function`)
+          throw new TypeError('x is not a function')
         },
       },
     }

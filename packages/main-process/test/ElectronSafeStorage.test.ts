@@ -18,7 +18,7 @@ const electron = await import('electron')
 const ElectronSafeStorage = await import('../src/parts/ElectronSafeStorage/ElectronSafeStorage.js')
 
 test('isEncryptionAvailable - error', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.safeStorage.isEncryptionAvailable.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
@@ -26,7 +26,7 @@ test('isEncryptionAvailable - error', () => {
 })
 
 test('isEncryptionAvailable', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.safeStorage.isEncryptionAvailable.mockImplementation(() => {
     return true
   })
@@ -35,7 +35,7 @@ test('isEncryptionAvailable', () => {
 })
 
 test('encryptString - error', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.safeStorage.encryptString.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
@@ -43,7 +43,7 @@ test('encryptString - error', () => {
 })
 
 test('encryptString', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.safeStorage.encryptString.mockImplementation(() => {
     return 'encrypted'
   })

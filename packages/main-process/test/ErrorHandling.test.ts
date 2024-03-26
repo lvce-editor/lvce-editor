@@ -40,11 +40,11 @@ const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 
 test.skip('handleUncaughtExceptionMonitor', () => {
   const error = new Error('oops')
-  // @ts-ignore
+  // @ts-expect-error
   PrettyError.prepare.mockImplementation(() => {
     return {
       message: 'oops',
-      stack: `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`,
+      stack: 'at main (/test/packages/main-process/src/mainProcessMain.js:19:11)',
       codeFrame: `  17 |
   18 |   if (Math) {
 > 19 |     throw new Error('oops')
@@ -68,17 +68,17 @@ test.skip('handleUncaughtExceptionMonitor', () => {
   21 | }
   22 |`,
   )
-  expect(Logger.error).toHaveBeenNthCalledWith(2, `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`)
+  expect(Logger.error).toHaveBeenNthCalledWith(2, 'at main (/test/packages/main-process/src/mainProcessMain.js:19:11)')
   expect(Process.exit).toHaveBeenCalledTimes(1)
   expect(Process.exit).toHaveBeenCalledWith(1)
 })
 
 test.skip('handleUnhandledRejection', () => {
-  // @ts-ignore
+  // @ts-expect-error
   PrettyError.prepare.mockImplementation(() => {
     return {
       message: 'oops',
-      stack: `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`,
+      stack: 'at main (/test/packages/main-process/src/mainProcessMain.js:19:11)',
       codeFrame: `    17 |
     18 |   if (Math) {
   > 19 |     throw new Error('oops')
@@ -112,7 +112,7 @@ at main (/test/packages/main-process/src/mainProcessMain.js:19:11)
 })
 
 test.skip('handleUnhandledRejection - syntax error', () => {
-  // @ts-ignore
+  // @ts-expect-error
   PrettyError.prepare.mockImplementation(() => {
     return {
       message: 'Cannot use import statement outside a module',

@@ -49,7 +49,12 @@ export const createBrowserView = async (x, y, width, height, openDevtools = fals
     })
     state.browserView = view
     browserWindow.addBrowserView(view)
-    view.setBounds({ x, y, width, height })
+    view.setBounds({
+      x,
+      y,
+      width,
+      height,
+    })
     const url = `${Platform.scheme}://-/packages/main-process/pages/suggestions/suggestions.html`
     const handleNavigate = () => {
       view.webContents.closeDevTools()

@@ -21,7 +21,7 @@ test.skip('prepare - unknown command error', async () => {
   error.stack = `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)
   at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:7:20)
   at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const Module = require('../Module/Module.js')
 const ModuleMap = require('../ModuleMap/ModuleMap.js')
@@ -120,7 +120,7 @@ test.skip('prepare - electron error', async () => {
   at async handleReady (/test/packages/main-process/src/parts/App/App.js:40:3)
   at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:132:3)
   at async main (/test/packages/main-process/src/mainProcessMain.js:16:3)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const VError = require('verror')
 const Screen = require('../ElectronScreen/ElectronScreen.js')
@@ -271,7 +271,7 @@ Require stack:
     at getOrLoadModule (/test/packages/main-process/src/parts/Command/Command.js:26:33)
     at loadCommand (/test/packages/main-process/src/parts/Command/Command.js:32:34)
     at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:11)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const ModuleId = require('../ModuleId/ModuleId.js')
 
@@ -330,7 +330,7 @@ exports.load = async (moduleId) => {
   43 |     default:
   44 |       throw new Error(\`module \${moduleId} not found\`)
   45 |   }`,
-    message: `Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'`,
+    message: "Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'",
     stack: `    at load (/test/packages/main-process/src/parts/Module/Module.js:42:14)
     at getOrLoadModule (/test/packages/main-process/src/parts/Command/Command.js:26:33)
     at loadCommand (/test/packages/main-process/src/parts/Command/Command.js:32:34)
@@ -341,7 +341,7 @@ exports.load = async (moduleId) => {
 
 test.skip('prepare - dl open failed', async () => {
   const error = new Error(
-    `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`,
+    "Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.",
   )
   error.stack = `Error: Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.
     at process.func [as dlopen] (node:electron/js2c/asar_bundle:2:1822)
@@ -354,7 +354,7 @@ test.skip('prepare - dl open failed', async () => {
     at require (node:internal/modules/cjs/helpers:102:18)
     at Object.<anonymous> (C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\lib\\index.js:8:16)
     at Module._compile (node:internal/modules/cjs/loader:1141:14)'`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `"use strict";
 /*---------------------------------------------------------------------------------------------
@@ -497,14 +497,15 @@ exports.getProcessTree = getProcessTree;
    9 | var ProcessDataFlag;
   10 | (function (ProcessDataFlag) {
   11 |     ProcessDataFlag[ProcessDataFlag[\"None\"] = 0] = \"None\";`,
-    message: `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`,
-    stack: `    at Object.<anonymous> (C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\lib\\index.js:8:16)`,
+    message:
+      "Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.",
+    stack: '    at Object.<anonymous> (C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\lib\\index.js:8:16)',
     type: 'Error',
   })
 })
 
 test.skip('prepare - error stack with node:events', async () => {
-  const error = new TypeError(`Cannot read properties of undefined (reading 'id')`)
+  const error = new TypeError("Cannot read properties of undefined (reading 'id')")
   error.stack = `TypeError: Cannot read properties of undefined (reading 'id')
   at exports.findById (/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js:10:28)
   at exports.findById (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:94:26)
@@ -513,11 +514,12 @@ test.skip('prepare - error stack with node:events', async () => {
   at IpcMainImpl.emit (node:events:513:28)
   at EventEmitter.<anonymous> (node:electron/js2c/browser_init:2:81930)
   at EventEmitter.emit (node:events:513:28)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation((path) => {
     if (path !== '/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js') {
       throw new Error(`file not found ${path}`)
     }
+
     return `exports.state = {
   /**
    * @type {any[]}
@@ -573,7 +575,7 @@ exports.add = (config) => {
     type: 'TypeError',
   })
   expect(fs.readFileSync).toHaveBeenCalledTimes(1)
-  expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf8')
+  expect(fs.readFileSync).toHaveBeenCalledWith('/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js', 'utf8')
 })
 
 test.skip('prepare - module not found error from inside node_modules', async () => {
@@ -597,7 +599,7 @@ Require stack:
     at Module._extensions..js (node:internal/modules/cjs/loader:1229:10)
     at Module.load (node:internal/modules/cjs/loader:1044:32)
     at Module._load (node:internal/modules/cjs/loader:885:12)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `'use strict'
 
@@ -788,7 +790,7 @@ module.exports = copySync
 })
 
 test.skip('prepare - syntax error - unexpected token export', async () => {
-  const error = new SyntaxError(`Unexpected token 'export'`)
+  const error = new SyntaxError("Unexpected token 'export'")
   error.stack = `/test/packages/main-process/src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js:3
 export const getFirstNodeWorkerEvent = async (worker) => {
 ^^^^^^
@@ -805,7 +807,7 @@ SyntaxError: Unexpected token 'export'
     at require (node:internal/modules/cjs/helpers:103:18)
     at Object.<anonymous> (/test/packages/main-process/src/parts/CliForwardToSharedProcess/CliForwardToSharedProcess.js:4:33)`
 
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 
@@ -849,13 +851,13 @@ exports.getFirstNodeWorkerEvent = getFirstNodeWorkerEvent
 })
 
 test.skip('prepare - type error - object that needs transfer was found in message but not listed in transferList', async () => {
-  const error = new TypeError(`Object that needs transfer was found in message but not listed in transferList`)
+  const error = new TypeError('Object that needs transfer was found in message but not listed in transferList')
   error.stack = `TypeError: Object that needs transfer was found in message but not listed in transferList
     at Worker.postMessage (node:internal/worker:343:5)
     at Object.send (/test/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
     at handlePortForSharedProcess (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`
 
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const Assert = require('../Assert/Assert.js')
 const { Worker } = require('node:worker_threads')
@@ -909,7 +911,7 @@ exports.wrap = (worker) => {
 })
 
 test.skip('prepare - error - failed to load window', async () => {
-  const error = new Error(`Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading 'lvce-oss://-/`)
+  const error = new Error('Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading \'lvce-oss://-/')
   error.stack = `VError: Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading 'lvce-oss://-/'
     at loadUrl (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:31:13)
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
@@ -917,7 +919,7 @@ test.skip('prepare - error - failed to load window', async () => {
     at async exports.handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
     at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:102:3)
     at async main (/test/packages/main-process/src/mainProcessMain.js:15:3)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const VError = require('verror')
 const Screen = require('../ElectronScreen/ElectronScreen.js')
@@ -1035,14 +1037,14 @@ exports.findById = (id) => {
 })
 
 test.skip('prepare - error - file url must be absolute', async () => {
-  const error = new TypeError(`File URL path must be absolute`)
+  const error = new TypeError('File URL path must be absolute')
   error.stack = `TypeError [ERR_INVALID_FILE_URL_PATH]: File URL path must be absolute
     at new NodeError (node:internal/errors:393:5)
     at getPathFromURLWin32 (node:internal/url:1458:11)
     at fileURLToPath (node:internal/url:1490:22)
     at getAbsolutePath (C:\\test\\packages\\main-process\\src\\parts\\ElectronSession\\ElectronSession.js:138:14)
     at Function.handleRequest (C:\\test\\packages\\main-process\\src\\parts\\ElectronSession\\ElectronSession.js:152:16`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
@@ -1274,12 +1276,13 @@ Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extensio
 Node.js v18.14.0
 `
   const error = new IpcError('Utility process exited before ipc connection was established', stdout, stderr)
-  // @ts-ignore
+  // @ts-expect-error
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    codeFrame: ``,
-    message: `Utility process exited before ipc connection was established: Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'`,
-    stack: ``,
+    codeFrame: '',
+    message:
+      "Utility process exited before ipc connection was established: Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'",
+    stack: '',
     stderr: `node:internal/modules/cjs/loader:1057
   throw err;
   ^
@@ -1307,8 +1310,8 @@ Node.js v18.14.0
 
 test.skip('prepare - error - permission denied', async () => {
   const cause = new Error("EACCES: permission denied, open '/test/settings.json'")
-  const error = new VError(cause, `Failed to read settings`)
-  // @ts-ignore
+  const error = new VError(cause, 'Failed to read settings')
+  // @ts-expect-error
   error.stack = `VError: Failed to read settings: EACCES: permission denied, open '/test/settings.json'
     at readSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:20:11)
     at async getUserSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:47:29)
@@ -1317,7 +1320,7 @@ test.skip('prepare - error - permission denied', async () => {
     at async exports.handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
     at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:103:3)
     at async main (/test/packages/main-process/src/mainProcessMain.js:16:3)`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const { VError } = require('verror')
 const Platform = require('../Platform/Platform.js')
@@ -1394,7 +1397,7 @@ exports.load = load
 exports.update = update
 `
   })
-  // @ts-ignore
+  // @ts-expect-error
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     codeFrame: `  18 |     }
@@ -1440,7 +1443,7 @@ SyntaxError: Unexpected token 'export'
     at f._load (node:electron/js2c/asar_bundle:2:13330)
     at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:169:29)
     at ModuleJob.run (node:internal/modules/esm/module_job:194:25)',`
-  // @ts-ignore
+  // @ts-expect-error
   fs.readFileSync.mockImplementation(() => {
     return `const Assert = require('../Assert/Assert.js')
 

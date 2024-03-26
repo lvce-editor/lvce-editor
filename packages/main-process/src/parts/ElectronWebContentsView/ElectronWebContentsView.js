@@ -1,9 +1,9 @@
 import { BrowserView, BrowserWindow } from 'electron'
+import * as Electron from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
-import * as Electron from 'electron'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO use electron 30 webcontentsview api
