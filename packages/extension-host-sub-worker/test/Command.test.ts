@@ -1,5 +1,6 @@
 import * as Command from '../src/parts/Command/Command.js'
 import * as CommandState from '../src/parts/CommandState/CommandState.js'
+import { test, expect } from '@jest/globals'
 
 test('execute - error - command not found', () => {
   CommandState.state.commands = Object.create(null)
