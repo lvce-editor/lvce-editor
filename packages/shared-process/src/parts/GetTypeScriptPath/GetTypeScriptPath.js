@@ -17,5 +17,5 @@ export const getTypeScriptUri = () => {
     'typescript.js',
   )
   const typescriptUri = pathToFileURL(typescriptPath).toString()
-  return typescriptPath
+  return typescriptUri
 }
