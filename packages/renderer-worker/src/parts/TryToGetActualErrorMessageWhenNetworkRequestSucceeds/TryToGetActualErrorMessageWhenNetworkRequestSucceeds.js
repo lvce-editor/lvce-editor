@@ -38,7 +38,7 @@ const tryToGetActualErrorMessageInternal = async (error, url, response, seenDepe
   let text
   try {
     text = await response.text()
-  } catch (error) {
+  } catch {
     return `Failed to import ${url}: Unknown Network Error`
   }
   let ast

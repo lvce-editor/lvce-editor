@@ -1,5 +1,5 @@
-import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 import { jest } from '@jest/globals'
+import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -38,14 +38,26 @@ test('getVisible', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual([`48px 40px`, `24px 80px`])
+  expect(cursorInfos).toEqual(['48px 40px', '24px 80px'])
   expect(selectionInfos).toEqual(
     // prettier-ignore
     [
-      /* x */ `0px`,  /* y */ `0px`,  /* width */ `48px`, /* height */ `20px`,
-      /* x */ `0px`,  /* y */ `20px`, /* width */ `48px`, /* height */ `20px`,
-      /* x */ `0px`,  /* y */ `40px`, /* width */ `48px`, /* height */ `20px`,
-      /* x */ `16px`, /* y */ `80px`, /* width */ `8px`,  /* height */ `20px`,
+      /* x */ '0px', /* y */
+'0px', /* width */
+'48px', /* height */
+'20px',
+      /* x */ '0px', /* y */
+'20px', /* width */
+'48px', /* height */
+'20px',
+      /* x */ '0px', /* y */
+'40px', /* width */
+'48px', /* height */
+'20px',
+      /* x */ '16px', /* y */
+'80px', /* width */
+'8px', /* height */
+'20px',
     ],
   )
 })
@@ -73,12 +85,18 @@ test('getVisible - bug with two lines', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual([`32px 20px`])
+  expect(cursorInfos).toEqual(['32px 20px'])
   // prettier-ignore
   expect(selectionInfos).toEqual(
     [
-      /* x */ `32px`, /* y */ `0px`, /* width */ `16px`, /* height */ `20px`,
-      /* x */ `0px`, /* y */ `20px`, /* width */ `32px`,  /* height */ `20px`,
+      /* x */ '32px', /* y */
+'0px', /* width */
+'16px', /* height */
+'20px',
+      /* x */ '0px', /* y */
+'20px', /* width */
+'32px', /* height */
+'20px',
     ],
   )
 })
@@ -106,7 +124,7 @@ test('getVisible - cursors should be treated separately', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual([`32px 0px`])
+  expect(cursorInfos).toEqual(['32px 0px'])
   expect(selectionInfos).toEqual([])
 })
 
@@ -133,13 +151,22 @@ test('getVisible - bug with multiple lines', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual([`24px 40px`])
+  expect(cursorInfos).toEqual(['24px 40px'])
   // prettier-ignore
   expect(selectionInfos).toEqual(
     [
-      /* x */ `24px`,/* y */ `0px`,  /* width */ `24px`, /* height */ `20px`,
-      /* x */ `0px`, /* y */ `20px`, /* width */ `48px`, /* height */ `20px`,
-      /* x */ `0px`, /* y */ `40px`, /* width */ `24px`, /* height */ `20px`,
+      /* x */ '24px',/* y */
+'0px', /* width */
+'24px', /* height */
+'20px',
+      /* x */ '0px', /* y */
+'20px', /* width */
+'48px', /* height */
+'20px',
+      /* x */ '0px', /* y */
+'40px', /* width */
+'24px', /* height */
+'20px',
     ],
   )
 })
@@ -270,14 +297,38 @@ test('getVisible - only start of selection visible', () => {
   // prettier-ignore
   expect(selectionInfos).toEqual(
     [
-     /* x */ `0px`, /* y */ `0px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `20px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `40px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `60px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `80px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `100px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `120px`, /* width */ `48px`, /* height */ `20px`,
-     /* x */ `0px`, /* y */ `140px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ '0px', /* y */
+'0px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'20px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'40px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'60px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'80px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'100px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'120px', /* width */
+'48px', /* height */
+'20px',
+     /* x */ '0px', /* y */
+'140px', /* width */
+'48px', /* height */
+'20px',
     ])
 })
 
@@ -304,6 +355,6 @@ test('getVisible - selection out of range', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual([`0px 0px`, '0px 140px'])
-  expect(selectionInfos).toEqual([`0px`, `0px`, `0px`, `20px`, `0px`, `140px`, `0px`, `20px`])
+  expect(cursorInfos).toEqual(['0px 0px', '0px 140px'])
+  expect(selectionInfos).toEqual(['0px', '0px', '0px', '20px', '0px', '140px', '0px', '20px'])
 })

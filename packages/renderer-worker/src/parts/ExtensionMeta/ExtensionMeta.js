@@ -35,9 +35,7 @@ export const addWebExtension = async (path) => {
   // TODO avoid side effect here
   if (manifest.languages) {
     for (const language of manifest.languages) {
-      if (language.tokenize) {
-        language.tokenize = manifest.path + Character.Slash + language.tokenize
-      }
+      language.tokenize &&= manifest.path + Character.Slash + language.tokenize
     }
   }
   manifest.status = ExtensionManifestStatus.Resolved

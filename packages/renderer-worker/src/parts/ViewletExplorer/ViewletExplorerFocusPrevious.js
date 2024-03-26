@@ -1,5 +1,5 @@
-import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import * as Arrays from '../Arrays/Arrays.js'
+import { focusIndex } from './ViewletExplorerFocusIndex.js'
 
 export const focusPrevious = (state) => {
   const { focusedIndex, items } = state

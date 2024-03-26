@@ -9,6 +9,7 @@ beforeAll(() => {
       this._text = input.text
       this.statusText = input.statusText
     }
+
     text() {
       return this._text
     }

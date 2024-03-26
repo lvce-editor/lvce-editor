@@ -23,6 +23,6 @@ const getSourceActionVirtualDom = (sourceAction) => {
 }
 
 export const getSourceActionsVirtualDom = (sourceActions) => {
-  const dom = [...sourceActions.flatMap(getSourceActionVirtualDom)]
+  const dom = sourceActions.flatMap(getSourceActionVirtualDom)
   return dom
 }

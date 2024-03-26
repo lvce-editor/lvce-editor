@@ -52,11 +52,11 @@ beforeAll(() => {
 })
 
 test('handleUnhandledError - five parameters', async () => {
-  const message = `Uncaught VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON`
+  const message = 'Uncaught VError: failed to parse json: SyntaxError: Unexpected token \'o\', "[object Blob]" is not valid JSON'
   const filename = '/test/packages/renderer-worker/src/parts/Json/Json.js'
   const lineno = 17
   const colno = 11
-  const error = new VError(`VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON`)
+  const error = new VError('VError: failed to parse json: SyntaxError: Unexpected token \'o\', "[object Blob]" is not valid JSON')
   error.stack = `VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON
     at JSON.parse (<anonymous>)
     at Module.parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
@@ -114,7 +114,7 @@ export const parse = (content) => {
 })
 
 test('handleUnhandledRejection - prevent default', async () => {
-  const error = new TypeError(`Cannot read properties of undefined (reading 'hovered')`)
+  const error = new TypeError("Cannot read properties of undefined (reading 'hovered')")
   error.stack = `TypeError: Cannot read properties of undefined (reading 'hovered')
     at handleTabsPointerOut (/test/packages/renderer-worker/src/parts/ViewletMain/ViewletMainHandleTabsPointerOut.js:13:15)
     at executeViewletCommand (/test/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:358:26)
@@ -131,7 +131,7 @@ test('handleUnhandledRejection - prevent default', async () => {
     setTimeout(() => {
       _resolve(undefined)
     }, 0)
-    return ``
+    return ''
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -149,7 +149,7 @@ test('handleUnhandledRejection - prevent default', async () => {
 
 test('handleUnhandledRejection - bulk replacement error', async () => {
   const error = new Error()
-  error.message = `VError: Bulk replacement failed: File not found: './test.txt'`
+  error.message = "VError: Bulk replacement failed: File not found: './test.txt'"
   error.stack = `Error: VError: Bulk replacement failed: File not found: './test.txt'
     at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
     at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:44:27)
@@ -171,9 +171,9 @@ test('handleUnhandledRejection - bulk replacement error', async () => {
   // @ts-ignore
   Ajax.getText.mockImplementation(async () => {
     setTimeout(() => {
-      _resolve(``)
+      _resolve('')
     }, 0)
-    return ``
+    return ''
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})

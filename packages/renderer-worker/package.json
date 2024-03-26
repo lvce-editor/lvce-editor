@@ -67,7 +67,9 @@
       "no-unused-expressions": "off",
       "unicorn/better-regex": "off",
       "unicorn/no-array-push-push": "off",
-      "unicorn/prevent-abbreviations": "off"
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/switch-case-braces": "off",
+      "unicorn/no-for-loop": "off"
     },
     "ignores": [
       "distmin"

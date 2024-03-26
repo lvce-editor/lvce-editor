@@ -39,7 +39,7 @@ const renderRow = (rowInfo) => {
     ariaLabel: title,
     ariaDescription: '',
     childCount: 1,
-    paddingLeft: `${depth * 1 + 1}rem`,
+    paddingLeft: `${Number(depth) + 1}rem`,
     paddingRight: TreeItemPadding.PaddingRight,
   }
   switch (type) {

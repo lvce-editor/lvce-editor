@@ -150,7 +150,7 @@ test('parse - attribute without value', () => {
 })
 
 test('parse - element with text', () => {
-  const dom = VirtualDomParser.parse(`<div>hello world</div>`)
+  const dom = VirtualDomParser.parse('<div>hello world</div>')
   expect(dom).toEqual([
     {
       type: VirtualDomElements.Div,

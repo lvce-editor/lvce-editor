@@ -72,7 +72,7 @@ const getId = (idPart) => {
   if (!idPart) {
     return 0
   }
-  return parseInt(idPart)
+  return Number.parseInt(idPart)
 }
 
 export const loadContent = async (state, savedState) => {
@@ -141,10 +141,9 @@ export const handleInput = async (state, value) => {
         inputValue: value,
         hasSuggestionsOverlay: false,
       }
-    } else {
-      // TODO maybe show autocomplete for urls like browsers do
-      const suggestions = await BrowserSearchSuggestions.get(value)
     }
+    // TODO maybe show autocomplete for urls like browsers do
+    const suggestions = await BrowserSearchSuggestions.get(value)
   }
   return {
     ...state,

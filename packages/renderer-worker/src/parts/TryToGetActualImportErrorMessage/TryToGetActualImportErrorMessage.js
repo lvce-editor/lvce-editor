@@ -9,9 +9,7 @@ const getUrl = (error) => {
 }
 
 export const tryToGetActualImportErrorMessage = async (url, error) => {
-  if (!url) {
-    url = getUrl(error)
-  }
+  url ||= getUrl(error)
   if (!url) {
     return `Failed to import script: ${error}`
   }

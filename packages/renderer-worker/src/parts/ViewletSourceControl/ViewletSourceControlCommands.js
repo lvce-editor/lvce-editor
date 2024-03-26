@@ -1,5 +1,5 @@
-import * as ViewletSourceControl from './ViewletSourceControl.js'
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
+import * as ViewletSourceControl from './ViewletSourceControl.js'
 
 // prettier-ignore
 export const Commands = {

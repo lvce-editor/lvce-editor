@@ -46,6 +46,6 @@ test('getChildHandles - error - not allowed', async () => {
     },
   }
   await expect(FileSystemDirectoryHandle.getChildHandles(handle)).rejects.toThrow(
-    new Error(`The request is not allowed by the user agent or the platform in the current context.`),
+    new Error('The request is not allowed by the user agent or the platform in the current context.'),
   )
 })

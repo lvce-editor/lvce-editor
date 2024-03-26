@@ -28,7 +28,7 @@ test('first line - trim', () => {
 })
 
 test('second line', () => {
-  const content = `import * as add from './add.ts'\nadd.add`
+  const content = "import * as add from './add.ts'\nadd.add"
   const startRowIndex = 1
   const startColumnIndex = 4
   const endRowIndex = 0
@@ -37,7 +37,7 @@ test('second line', () => {
 })
 
 test('third line', () => {
-  const content = `import * as add from './add.ts'\n\nadd.add`
+  const content = "import * as add from './add.ts'\n\nadd.add"
   const startRowIndex = 2
   const startColumnIndex = 4
   const endRowIndex = 0

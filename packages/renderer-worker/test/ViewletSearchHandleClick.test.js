@@ -61,7 +61,7 @@ test('handleClick', async () => {
     if (path.startsWith('./')) {
       return '/test' + path.slice(1)
     }
-    return `/test` + path
+    return '/test' + path
   })
   expect(await ViewletSearchHandleClick.handleClick(state, 0)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)

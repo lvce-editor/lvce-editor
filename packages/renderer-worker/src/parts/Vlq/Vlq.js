@@ -1,20 +1,20 @@
 // copied from https://github.com/Rich-Harris/vlq/blob/e3009f5757abeb0b5b6233045f3bbdaf86435d08/src/index.js by Rich Harris (License MIT)
 
 /** @type {Record<string, number>} */
-let char_to_integer = {}
+const char_to_integer = {}
 
 /** @type {Record<number, string>} */
-let integer_to_char = {}
+const integer_to_char = {}
 
-'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='.split('').forEach(function (char, i) {
+for (const [i, char] of 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='.split('').entries()) {
   char_to_integer[char] = i
   integer_to_char[i] = char
-})
+}
 
 /** @param {string} string */
 export const decode = (string) => {
   /** @type {number[]} */
-  let result = []
+  const result = []
 
   let shift = 0
   let value = 0

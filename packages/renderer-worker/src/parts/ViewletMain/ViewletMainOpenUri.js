@@ -20,29 +20,25 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const contentHeight = state.height - tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
   let activeGroup = groups[activeGroupIndex]
-  if (!activeGroup) {
-    activeGroup = {
-      uid: Id.create(),
-      editors: [],
-      activeIndex: -1,
-      focusedIndex: -1,
-      tabsUid: Id.create(),
-      x,
-      y: 0,
-      width,
-      height: state.height,
-    }
+  activeGroup ||= {
+    uid: Id.create(),
+    editors: [],
+    activeIndex: -1,
+    focusedIndex: -1,
+    tabsUid: Id.create(),
+    x,
+    y: 0,
+    width,
+    height: state.height,
   }
   const { editors, activeIndex } = activeGroup
 
   const previousEditor = editors[activeIndex]
   let disposeCommands
-  if (previousEditor) {
-    if (previousEditor.uri === uri) {
-      return {
-        newState: state,
-        commands: [],
-      }
+  if (previousEditor && previousEditor.uri === uri) {
+    return {
+      newState: state,
+      commands: [],
     }
   }
   for (let i = 0; i < editors.length; i++) {

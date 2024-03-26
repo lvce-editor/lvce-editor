@@ -19,9 +19,9 @@ const LoadMarked = await import('../src/parts/LoadMarked/LoadMarked.js')
 test('toHtml', async () => {
   const marked = await LoadMarked.loadMarked()
   marked.mockImplementation(() => {
-    return `<h1 id=\"test\">test</h1>\n`
+    return '<h1 id="test">test</h1>\n'
   })
-  expect(await Markdown.toHtml('# test')).toBe(`<h1 id=\"test\">test</h1>\n`)
+  expect(await Markdown.toHtml('# test')).toBe('<h1 id="test">test</h1>\n')
   expect(marked).toHaveBeenCalledTimes(1)
   expect(marked).toHaveBeenCalledWith('# test', { baseUrl: '' })
 })

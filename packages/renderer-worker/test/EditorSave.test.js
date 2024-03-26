@@ -99,5 +99,5 @@ test('editorSave - with formatting', async () => {
   expect(EditorFormat.format).toHaveBeenCalledTimes(1)
   expect(EditorFormat.format).toHaveBeenCalledWith(editor)
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
-  expect(FileSystem.writeFile).toHaveBeenCalledWith('/test/file.txt', `b`)
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('/test/file.txt', 'b')
 })

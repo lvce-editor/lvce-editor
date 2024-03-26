@@ -21,7 +21,7 @@ export const getDebugPropertyValueLabelArray = (property) => {
   if (property.preview) {
     const innerLabel = getArrayPropertiesPreview(property.preview.properties)
     const lengthPreview = parseLength(property.description)
-    return `(${lengthPreview}) [` + innerLabel + `]`
+    return `(${lengthPreview}) [` + innerLabel + ']'
   }
   return property.description
 }

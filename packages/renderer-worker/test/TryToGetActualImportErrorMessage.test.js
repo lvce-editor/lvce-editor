@@ -9,8 +9,8 @@ const TryToGetActualImportErrorMessage = await import('../src/parts/TryToGetActu
 
 test('tryToGetActualImportErrorMessage - ReferenceError', async () => {
   const error = new ReferenceError('test is not defined')
-  error.stack = `    at http://localhost:3000/packages/extension-host-worker-tests/src/sample.brace-completion-provider-error-spelling.js:3:1`
-  const url = `src/sample.brace=completion-provider-error-spelling.js`
+  error.stack = '    at http://localhost:3000/packages/extension-host-worker-tests/src/sample.brace-completion-provider-error-spelling.js:3:1'
+  const url = 'src/sample.brace=completion-provider-error-spelling.js'
   expect(await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(url, error)).toBe(
     'Failed to import script: ReferenceError: test is not defined',
   )

@@ -30,7 +30,12 @@ export const splitRight = (state) => {
   const lastGroup = newGroups.at(-2)
   const { activeIndex, editors, tabsUid } = lastGroup
   const editor = editors[activeIndex]
-  const dimensions = { x: lastGroup.x, y: lastGroup.y, width: lastGroup.width, height: lastGroup.height }
+  const dimensions = {
+    x: lastGroup.x,
+    y: lastGroup.y,
+    width: lastGroup.width,
+    height: lastGroup.height,
+  }
   const contentHeight = height - tabHeight
   if (editor) {
     const editorUid = editor.uid

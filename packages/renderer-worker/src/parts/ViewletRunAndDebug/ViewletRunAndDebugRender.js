@@ -1,7 +1,7 @@
 import * as DiffDom from '../DiffDom/DiffDom.js'
 import * as GetRunAndDebugVirtualDom from '../GetRunAndDebugVirtualDom/GetRunAndDebugVirtualDom.js'
 
-let first = true
+const first = true
 
 const renderDebug = {
   isEqual(oldState, newState) {

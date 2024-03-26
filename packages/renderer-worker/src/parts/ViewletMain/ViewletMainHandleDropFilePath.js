@@ -116,9 +116,9 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
       ...state,
       groups: newGroups,
     }
-  } else {
-    // TODO
   }
+  // TODO
+
   // state.grid.unshift(branchItem)
   // console.log(state.grid)
 

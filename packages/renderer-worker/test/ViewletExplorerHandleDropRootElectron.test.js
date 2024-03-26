@@ -1,5 +1,5 @@
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {

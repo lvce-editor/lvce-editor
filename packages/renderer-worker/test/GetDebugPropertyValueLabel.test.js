@@ -5,7 +5,7 @@ test('getDebugPropertyValueLabel = number', () => {
     type: 'number',
     description: '1',
   }
-  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe(`1`)
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('1')
 })
 
 test('getDebugPropertyValueLabel - boolean', () => {

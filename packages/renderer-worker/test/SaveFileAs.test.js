@@ -91,7 +91,7 @@ test('saveFileAs - error', async () => {
 test('saveFileAs - error - not supported', async () => {
   // @ts-ignore
   FilePicker.showSaveFilePicker.mockImplementation(() => {
-    throw new Error(`showSaveFilePicker not supported on this browser`)
+    throw new Error('showSaveFilePicker not supported on this browser')
   })
   // @ts-ignore
   Ajax.getResponse.mockImplementation(() => {

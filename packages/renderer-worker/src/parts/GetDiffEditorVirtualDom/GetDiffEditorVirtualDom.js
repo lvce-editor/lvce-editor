@@ -78,7 +78,7 @@ const getLinesVirtualDom = (lines, className) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: `EditorContent`,
+      className: 'EditorContent',
       childCount: 1,
     },
     {

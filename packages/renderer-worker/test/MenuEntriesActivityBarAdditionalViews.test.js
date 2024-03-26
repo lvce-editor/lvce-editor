@@ -19,7 +19,12 @@ test.skip('getMenuEntries - two additional views', async () => {
       id: 8000,
       label: 'Run and Debug',
     },
-    { command: -1, flags: MenuItemFlags.None, id: 8000, label: 'Extensions' },
+    {
+      command: -1,
+      flags: MenuItemFlags.None,
+      id: 8000,
+      label: 'Extensions',
+    },
   ])
 })
 

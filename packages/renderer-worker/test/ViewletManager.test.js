@@ -308,7 +308,7 @@ test('backgroundLoad', async () => {
     backgroundLoadContent: jest.fn(async (state, savedState) => {
       return {
         title: 'Test Title',
-        uri: `test://1`,
+        uri: 'test://1',
       }
     }),
   }

@@ -30,7 +30,6 @@ test('copyImage', async () => {
           type: 'image/png',
         }
       default:
-        return
     }
   })
   const state = { ...ViewletEditorImage.create(), src: '/test/file.png' }
