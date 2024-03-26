@@ -1,21 +1,20 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Callback from '../Callback/Callback.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
-import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
-import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as Callback from '../Callback/Callback.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 import * as TerminalEmulator from '../TerminalEmulator/TerminalEmulator.js'
+import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
 export const create = (id) => {
   Assert.number(id)
-  const separateConnection = Preferences.get('terminal.separateConnection')
+  const separateConnection = true
   return {
     disposed: false,
     id: 0,
