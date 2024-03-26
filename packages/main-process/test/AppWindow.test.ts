@@ -1,3 +1,4 @@
+// @ts-nocheck
 import EventEmitter from 'node:events'
 import { jest } from '@jest/globals'
 
