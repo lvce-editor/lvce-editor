@@ -88,6 +88,7 @@ jobs:
       - name: Download Builtin Extensions
         run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - run: npm run type-check
       - run: npm test
       - run: node build/bin/build.js --target=server
       - name: Cache Electron Builder Dependencies (Windows)

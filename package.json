@@ -7,7 +7,8 @@
   "scripts": {
     "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
     "test": "lerna run test",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "type-check": "lerna run type-check"
   },
   "keywords": [],
   "author": "",
