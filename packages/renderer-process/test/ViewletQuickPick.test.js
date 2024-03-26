@@ -3,6 +3,7 @@
  */
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletQuickPick.create()

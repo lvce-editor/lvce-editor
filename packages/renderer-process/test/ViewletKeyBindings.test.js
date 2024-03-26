@@ -3,6 +3,7 @@
  */
 import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   expect(ViewletKeyBindings.create()).toBeDefined()

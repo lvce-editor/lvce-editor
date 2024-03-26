@@ -14,20 +14,18 @@
   "author": "",
   "license": "MIT",
   "jest": {
-    "moduleNameMapper": {
-      "^/static/(.*)$": "<rootDir>/../../static/$1",
-      "^/js/(.*)$": "<rootDir>/../../static/js/$1"
-    },
-    "testMatch": [
-      "**/test/**/*.js"
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
     ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
     "transform": {
-      "^.+\\.ts$": [
+      "^.+\\.tsx?$": [
         "ts-jest",
         {
-          "isolatedModules": true,
-          "useESM": true,
-          "diagnostics": false
+          "useESM": true
         }
       ]
     }

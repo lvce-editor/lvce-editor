@@ -3,6 +3,7 @@
  */
 import * as WebStorage from '../src/parts/WebStorage/WebStorage.js'
 import * as WebStorageType from '../src/parts/WebStorageType/WebStorageType.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('getItem - localStorage', () => {
   WebStorage.setItem(WebStorageType.LocalStorage, 'sample', 'abc')

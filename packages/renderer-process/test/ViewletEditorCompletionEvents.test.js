@@ -4,6 +4,7 @@
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

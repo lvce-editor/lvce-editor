@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as EditorError from '../src/parts/EditorError/EditorError.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = EditorError.create('no definition found', 10, 20)

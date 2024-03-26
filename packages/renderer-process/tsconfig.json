@@ -3,7 +3,7 @@
     "lib": ["esnext", "dom", "DOM.Iterable"],
     "checkJs": true,
     "target": "esnext",
-    "types": ["jest"],
+    "types": [],
     "module": "NodeNext",
     "moduleResolution": "nodenext",
     "skipLibCheck": true,

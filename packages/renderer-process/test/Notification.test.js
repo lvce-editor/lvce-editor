@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+import { test } from '@jest/globals'
 import * as Notification from '../src/parts/Notification/Notification.js'
 
 // TODO test dispose

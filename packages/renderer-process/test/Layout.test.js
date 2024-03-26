@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events

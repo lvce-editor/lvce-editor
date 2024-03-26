@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 const isLeaf = (node) => {
   return node.childElementCount === 0
