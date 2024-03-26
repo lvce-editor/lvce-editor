@@ -19,9 +19,6 @@ export const execute = async (href) => {
   const scriptUrl = href
   // 2. import that script
   const module = await ImportTest.importTest(scriptUrl)
-  if (module.mockExec) {
-    TestState.setMockExec(module.mockExec)
-  }
   if (module.mockRpc) {
     TestState.setMockRpc(module.mockRpc)
   }
@@ -43,16 +40,6 @@ export const execute = async (href) => {
   // 4. run the test
   // 5. if test fails, display error message
   // 6. if test succeeds, display success message
-}
-
-export const executeMockExecFunction = async (...args) => {
-  const fn = TestState.getMockExec()
-  if (!fn) {
-    throw new Error('mockExec does not exist')
-  }
-  // @ts-ignore
-  const result = await fn(...args)
-  return result
 }
 
 export const executeMockRpcFunction = async (name, command, ...args) => {
