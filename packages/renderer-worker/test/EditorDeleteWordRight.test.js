@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorDeleteWordRight from '../src/parts/EditorCommand/EditorCommandDeleteWordRight.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'

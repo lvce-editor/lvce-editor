@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as Ajax from '../src/parts/Ajax/Ajax.js'
 
 beforeAll(() => {

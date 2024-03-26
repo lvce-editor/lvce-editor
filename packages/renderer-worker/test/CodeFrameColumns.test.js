@@ -1,5 +1,6 @@
 // based on https://github.com/babel/babel/blob/6be6e04f396f03feace4431f709564a8d842163a/packages/babel-code-frame/test/index.js (License MIT)
 
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as CodeFrameColumns from '../src/parts/CodeFrameColumns/CodeFrameColumns.js'
 
 test('basic usage', () => {
