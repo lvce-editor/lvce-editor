@@ -6,6 +6,7 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
+import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
@@ -825,6 +826,18 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     ignore: ['static'],
   })
   console.timeEnd('copyTestWorkerFiles')
+  const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copyTerminalWorkerFiles')
+  await Copy.copy({
+    from: terminalWorkerCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/terminal-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyTerminalWorkerFiles')
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
