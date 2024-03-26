@@ -1,9 +1,4 @@
-/**
- *
- * @param {string|undefined} lines
- * @returns string[]
- */
-export const splitLines = (lines) => {
+export const splitLines = (lines: string): readonly string[] => {
   if (!lines) {
     return []
   }
