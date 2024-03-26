@@ -2,7 +2,7 @@
   "name": "@lvce-editor/terminal-worker",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/terminalWorkerMain.js",
+  "main": "src/terminalWorkerMain.ts",
   "type": "module",
   "directories": {
     "test": "test"
