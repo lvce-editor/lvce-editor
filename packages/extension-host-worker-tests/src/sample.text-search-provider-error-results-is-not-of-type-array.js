@@ -14,7 +14,7 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, 
   // assert
   const viewletSearch = Locator('.Search')
   const message = viewletSearch.locator('[role="status"]')
-  await expect(message).toHaveText('Error: results must be of type array')
+  await expect(message).toHaveText('TypeError: results must be of type array')
 
   // TODO trace back error to return value of extension and
   // show stack trace for extension return value
