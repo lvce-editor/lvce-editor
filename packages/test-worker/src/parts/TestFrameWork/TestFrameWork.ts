@@ -21,17 +21,4 @@ test.skip = async (id, fn) => {
   await Rpc.invoke('TestFrameWork.showOverlay', state, background, text)
 }
 
-const Assert = {
-  string(value, message) {
-    if (typeof value !== 'string') {
-      throw new TypeError(message)
-    }
-  },
-  number(value, message) {
-    if (typeof value !== 'number' || isNaN(value)) {
-      throw new TypeError(message)
-    }
-  },
-}
-
 export const expect = Expect.expect

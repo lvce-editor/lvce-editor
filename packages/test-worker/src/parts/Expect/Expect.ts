@@ -2,6 +2,19 @@
 
 import * as Rpc from '../Rpc/Rpc.ts'
 
+const Assert = {
+  string(value, message) {
+    if (typeof value !== 'string') {
+      throw new TypeError(message)
+    }
+  },
+  number(value, message) {
+    if (typeof value !== 'number' || isNaN(value)) {
+      throw new TypeError(message)
+    }
+  },
+}
+
 export const expect = (locator) => {
   return {
     async checkSingleElementCondition(fnName, options) {
