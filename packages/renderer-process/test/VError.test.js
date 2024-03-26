@@ -1,4 +1,5 @@
 import { VError } from '../src/parts/VError/VError.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('VError - missing child stack', () => {
   class DOMException extends Error {

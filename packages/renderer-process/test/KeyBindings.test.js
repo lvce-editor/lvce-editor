@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
 import * as KeyModifier from '../src/parts/KeyModifier/KeyModifier.js'
 

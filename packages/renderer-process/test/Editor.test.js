@@ -3,6 +3,7 @@
  */
 import * as Editor from '../src/parts/Editor/Editor.js'
 import * as Platform from '../src/parts/Platform/Platform.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 const create$EditorRow = () => {
   const $EditorRow = document.createElement('div')

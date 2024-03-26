@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as Main from '../src/parts/ViewletMain/ViewletMain.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(async () => {
   // await Viewlet.load(ViewletModuleId.EditorPlainText)

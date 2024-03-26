@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as Focus from '../src/parts/Focus/Focus.js'
 
 test('focus', () => {

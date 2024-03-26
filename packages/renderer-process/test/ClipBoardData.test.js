@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as ClipBoardData from '../src/parts/ClipBoardData/ClipBoardData.js'
 import * as ClipBoardDataType from '../src/parts/ClipBoardDataType/ClipBoardDataType.js'
 

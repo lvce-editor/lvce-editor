@@ -4,6 +4,7 @@
  * @jest-environment jsdom
  */
 // import * as Terminal from '../src/parts/Terminal/Terminal.js'
+import { expect, test } from '@jest/globals'
 
 test.skip('create', () => {
   // @ts-ignore

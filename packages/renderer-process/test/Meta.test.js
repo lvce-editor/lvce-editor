@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+import { beforeEach, expect, test } from '@jest/globals'
 import * as Meta from '../src/parts/Meta/Meta.js'
 
 beforeEach(() => {

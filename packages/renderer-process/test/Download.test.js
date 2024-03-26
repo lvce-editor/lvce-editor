@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as Download from '../src/parts/Download/Download.js'
 
 test('downloadFile', () => {

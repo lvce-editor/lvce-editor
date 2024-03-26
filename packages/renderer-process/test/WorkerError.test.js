@@ -1,3 +1,4 @@
+import { expect, test, beforeAll } from '@jest/globals'
 import { WorkerError } from '../src/parts/WorkerError/WorkerError.js'
 
 beforeAll(() => {
