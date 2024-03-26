@@ -67,7 +67,6 @@
     ]
   },
   "jest": {
-    "injectGlobals": false,
     "extensionsToTreatAsEsm": [
       ".ts"
     ],
