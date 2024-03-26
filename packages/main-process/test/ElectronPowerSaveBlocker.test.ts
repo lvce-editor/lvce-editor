@@ -17,7 +17,7 @@ const electron = await import('electron')
 const ElectronPowerSaveBlocker = await import('../src/parts/ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.js')
 
 test('start', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.powerSaveBlocker.start.mockImplementation(() => {
     return 1
   })
@@ -27,7 +27,7 @@ test('start', () => {
 })
 
 test('start - error', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.powerSaveBlocker.start.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
@@ -35,7 +35,7 @@ test('start - error', () => {
 })
 
 test('stop', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.powerSaveBlocker.stop.mockImplementation(() => {})
   ElectronPowerSaveBlocker.stop(1)
   expect(electron.powerSaveBlocker.stop).toHaveBeenCalledTimes(1)
@@ -43,9 +43,11 @@ test('stop', () => {
 })
 
 test('stop - error', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.powerSaveBlocker.stop.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronPowerSaveBlocker.stop(1)).toThrow(new TypeError('x is not a function'))
+  expect(() => {
+    ElectronPowerSaveBlocker.stop(1)
+  }).toThrow(new TypeError('x is not a function'))
 })

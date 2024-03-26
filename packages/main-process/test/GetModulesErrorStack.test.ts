@@ -45,7 +45,7 @@ Node.js v18.14.0
 `
   const stack = GetModulesErrorStack.getModulesErrorStack(stderr)
   expect(stack).toEqual([
-    `SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;`,
+    "SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;",
     '    at file:///test/packages/pty-host/src/parts/HandleElectronMessagePort/HandleElectronMessagePort.js:5',
     '    at ModuleJob._instantiate (node:internal/modules/esm/module_job:124:21)',
     '    at async ModuleJob.run (node:internal/modules/esm/module_job:190:5)',

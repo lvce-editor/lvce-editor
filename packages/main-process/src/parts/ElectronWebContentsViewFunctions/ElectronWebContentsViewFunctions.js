@@ -36,7 +36,12 @@ export const resizeBrowserView = (view, x, y, width, height) => {
   Assert.number(y)
   Assert.number(width)
   Assert.number(height)
-  view.setBounds({ x, y, width, height })
+  view.setBounds({
+    x,
+    y,
+    width,
+    height,
+  })
 }
 
 const setIframeSrcFallback = async (view, error) => {

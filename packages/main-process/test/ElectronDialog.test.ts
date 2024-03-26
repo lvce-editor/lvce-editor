@@ -29,7 +29,7 @@ const ElectronDialog = await import('../src/parts/ElectronDialog/ElectronDialog.
 const Electron = await import('electron')
 
 test.skip('showMessageBox', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   Electron.dialog.showMessageBox.mockImplementation(() => {
     return {
       response: 1,

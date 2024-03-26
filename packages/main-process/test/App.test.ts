@@ -25,7 +25,7 @@ jest.unstable_mockModule('electron-unhandled', () => {
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute() {
-      throw new Error(`method not found App.exit`)
+      throw new Error('method not found App.exit')
     },
   }
 })
@@ -46,10 +46,15 @@ test.skip('handlePortForMainProcess - error - command not found', async () => {
     ports: [port],
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   App.handlePortForMainProcess(event)
   await _listener({
-    data: { method: 'App.exit', params: [], jsonrpc: '2.0', id: 1 },
+    data: {
+      method: 'App.exit',
+      params: [],
+      jsonrpc: '2.0',
+      id: 1,
+    },
   })
   expect(port.postMessage).toHaveBeenCalledTimes(1)
   expect(port.postMessage).toHaveBeenCalledWith({

@@ -880,7 +880,7 @@ const getContextMenuFn = (label) => {
 
 const ElectronContextMenu = {
   handleSelect(label, customData) {
-    const pid = customData.pid
+    const { pid } = customData
     const fn = getContextMenuFn(label)
     return fn(pid)
   },
@@ -903,11 +903,9 @@ const Command = {
 }
 
 const handleMessage = (message) => {
-  if (message.id) {
-    if (isResultMessage(message) || isErrorMessage(message)) {
-      Callback.resolve(message.id, message)
-      return
-    }
+  if (message.id && (isResultMessage(message) || isErrorMessage(message))) {
+    Callback.resolve(message.id, message)
+    return
   }
   if (message.method) {
     return Command.execute(message.method, ...message.params)

@@ -1,7 +1,7 @@
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
-const RE_AT = /^    at /
-const RE_JUST_PATH = /^(?:file:\/\/|\/|\\).*\:\d+$/
+const RE_AT = /^ {4}at /
+const RE_JUST_PATH = /^(?:file:\/\/|\/|\\).*:\d+$/
 const RE_JUST_MESSAGE = /^\w+/
 
 const isStackLine = (line) => {
@@ -20,15 +20,13 @@ export const getModulesErrorStack = (stderr) => {
   const lines = SplitLines.splitLines(stderr)
   let startIndex = -1
   const extraLines = []
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+  for (const line of lines) {
     if (isJustPath(line)) {
       extraLines.push(`    at ${line}`)
       break
     }
   }
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+  for (const [i, line] of lines.entries()) {
     if (isStackLine(line)) {
       startIndex = i
       break

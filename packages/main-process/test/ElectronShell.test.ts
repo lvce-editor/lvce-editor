@@ -19,7 +19,7 @@ const electron = await import('electron')
 const ElectronShell = await import('../src/parts/ElectronShell/ElectronShell.js')
 
 test.skip('showItemInFolder', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.shell.showItemInFolder.mockImplementation(() => {})
   ElectronShell.showItemInFolder('/test/file.txt')
   expect(electron.shell.showItemInFolder).toHaveBeenCalledTimes(1)
@@ -27,7 +27,7 @@ test.skip('showItemInFolder', () => {
 })
 
 test.skip('beep', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.shell.beep.mockImplementation(() => {})
   ElectronShell.beep()
   expect(electron.shell.beep).toHaveBeenCalledTimes(1)
@@ -35,7 +35,7 @@ test.skip('beep', () => {
 })
 
 test.skip('openExternal', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.shell.openExternal.mockImplementation(() => {})
   await ElectronShell.openExternal('https://example.com')
   expect(electron.shell.openExternal).toHaveBeenCalledTimes(1)
@@ -43,7 +43,7 @@ test.skip('openExternal', async () => {
 })
 
 test.skip('openPath', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.shell.openPath.mockImplementation(() => {})
   await ElectronShell.openPath('/test/file.txt')
   expect(electron.shell.openPath).toHaveBeenCalledTimes(1)

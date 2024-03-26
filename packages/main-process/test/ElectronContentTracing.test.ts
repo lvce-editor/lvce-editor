@@ -18,11 +18,11 @@ const electron = await import('electron')
 const ElectronContentTracing = await import('../src/parts/ElectronContentTracing/ElectronContentTracing.js')
 
 test('startRecording - error', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.contentTracing.startRecording.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(() =>
+  await expect(async () =>
     ElectronContentTracing.startRecording({
       included_categories: ['*'],
     }),
@@ -30,7 +30,7 @@ test('startRecording - error', async () => {
 })
 
 test('startRecording', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.contentTracing.startRecording.mockImplementation(() => {
     return 'encrypted'
   })
@@ -44,7 +44,7 @@ test('startRecording', async () => {
 })
 
 test('stopRecording - error', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.contentTracing.stopRecording.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
@@ -52,7 +52,7 @@ test('stopRecording - error', async () => {
 })
 
 test('stopRecording', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.contentTracing.stopRecording.mockImplementation(() => {
     return '/test/records.txt'
   })

@@ -55,21 +55,21 @@ const electron = await import('electron')
 const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 
 test.skip('createAppWindow', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {})
-  // @ts-ignore
+  // @ts-expect-error
   await AppWindow.createAppWindow([], '')
-  // @ts-ignore
+  // @ts-expect-error
   expect(AppWindowStates.add).toHaveBeenCalledTimes(1)
 })
 
 test.skip('createAppWindow - error', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {
-    throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-/'`)
+    throw new Error("ERR_FAILED (-2) loading 'lvce-oss://-/'")
   })
   // TODO error message should be improved
-  // @ts-ignore
+  // @ts-expect-error
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrow(
     new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'"),
   )

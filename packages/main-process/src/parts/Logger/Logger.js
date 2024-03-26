@@ -19,9 +19,7 @@ const createConsole = () => {
 }
 
 const getOrCreateLogger = () => {
-  if (!state.console) {
-    state.console = createConsole()
-  }
+  state.console ||= createConsole()
   return state.console
 }
 

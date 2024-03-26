@@ -17,7 +17,7 @@ const electron = await import('electron')
 const ElectronNetLog = await import('../src/parts/ElectronNetLog/ElectronNetLog.js')
 
 test('startLogging - error', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.netLog.startLogging.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
@@ -25,7 +25,7 @@ test('startLogging - error', async () => {
 })
 
 test('startLogging', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.netLog.startLogging.mockImplementation(async () => {
     return true
   })
@@ -35,7 +35,7 @@ test('startLogging', async () => {
 })
 
 test('stopLogging - error', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.netLog.stopLogging.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
@@ -43,7 +43,7 @@ test('stopLogging - error', async () => {
 })
 
 test('stopLogging', async () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.netLog.stopLogging.mockImplementation(() => {})
   await ElectronNetLog.stopLogging()
   expect(electron.netLog.stopLogging).toHaveBeenCalledTimes(1)

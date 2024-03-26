@@ -26,10 +26,20 @@ export const getFirstUtilityProcessEvent = async (utilityProcess) => {
     stdout += data
   }
   const handleMessage = (event) => {
-    cleanup({ type: FirstNodeWorkerEventType.Message, event, stdout, stderr })
+    cleanup({
+      type: FirstNodeWorkerEventType.Message,
+      event,
+      stdout,
+      stderr,
+    })
   }
   const handleExit = (event) => {
-    cleanup({ type: FirstNodeWorkerEventType.Exit, event, stdout, stderr })
+    cleanup({
+      type: FirstNodeWorkerEventType.Exit,
+      event,
+      stdout,
+      stderr,
+    })
   }
   // @ts-ignore
   utilityProcess.stderr.on('data', handleStdErrData)
@@ -38,5 +48,10 @@ export const getFirstUtilityProcessEvent = async (utilityProcess) => {
   utilityProcess.on('message', handleMessage)
   utilityProcess.on('exit', handleExit)
   const { type, event } = await promise
-  return { type, event, stdout, stderr }
+  return {
+    type,
+    event,
+    stdout,
+    stderr,
+  }
 }

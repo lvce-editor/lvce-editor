@@ -35,7 +35,12 @@ export const createBrowserViewQuickPick = async (x, y, width, height) => {
       },
     })
     browserWindow.addBrowserView(view)
-    view.setBounds({ x, y, width, height })
+    view.setBounds({
+      x,
+      y,
+      width,
+      height,
+    })
     const quickPickUrl = `${Platform.scheme}://-/packages/main-process/pages/quickpick/quickpick.html`
     const handleNavigate = () => {
       view.webContents.closeDevTools()

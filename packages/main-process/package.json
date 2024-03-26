@@ -89,7 +89,10 @@
       "no-mixed-operators": "off",
       "radix": "off",
       "unicorn/prefer-query-selector": "off",
-      "unicorn/switch-case-braces": "off"
+      "unicorn/switch-case-braces": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-top-level-await": "off",
+      "import/no-extraneous-dependencies": "off"
     },
     "ignores": [
       "distmin"

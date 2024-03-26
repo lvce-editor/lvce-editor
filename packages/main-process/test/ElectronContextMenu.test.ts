@@ -12,7 +12,7 @@ const electron = await import('electron')
 const ElectronClipBoard = await import('../src/parts/ElectronClipBoard/ElectronClipBoard.js')
 
 test('writeText', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.clipboard.writeText.mockImplementation(() => {})
   ElectronClipBoard.writeText('abc')
   expect(electron.clipboard.writeText).toHaveBeenCalledTimes(1)
@@ -20,9 +20,11 @@ test('writeText', () => {
 })
 
 test('writeText - error', () => {
-  // @ts-ignore
+  // @ts-expect-error
   electron.clipboard.writeText.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronClipBoard.writeText('abc')).toThrow(new TypeError('x is not a function'))
+  expect(() => {
+    ElectronClipBoard.writeText('abc')
+  }).toThrow(new TypeError('x is not a function'))
 })
