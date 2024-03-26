@@ -1,7 +1,4 @@
-// @ts-nocheck
-
 import * as ExecuteTest from '../ExecuteTest/ExecuteTest.ts'
-import * as ExposeGlobals from '../ExposeGlobals/ExposeGlobals.ts'
 import * as ImportTest from '../ImportTest/ImportTest.ts'
 import * as TestFrameWork from '../TestFrameWork/TestFrameWork.ts'
 import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.ts'
@@ -16,7 +13,6 @@ export const execute = async (href) => {
     ...TestFrameWorkComponent,
     ...TestFrameWork,
   }
-  ExposeGlobals.exposeGlobals(globalThis, globals)
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)
@@ -33,12 +29,12 @@ export const execute = async (href) => {
     if (module.skip) {
       await TestFrameWork.test.skip(module.name, () => {})
     } else {
-      ExposeGlobals.unExposeGlobals(globalThis, globals)
       await ExecuteTest.executeTest(module.name, module.test, globals)
     }
   } else {
     const tests = TestState.getTests()
     for (const test of tests) {
+      // @ts-ignore
       await ExecuteTest.executeTest(test.name, test.fn)
     }
   }
