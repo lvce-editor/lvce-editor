@@ -103,11 +103,21 @@
     ]
   },
   "jest": {
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "moduleNameMapper": {
-      "@vscode/windows-process-tree": "<rootDir>/mocks/windows-process-tree.js"
+      "@vscode/windows-process-tree": "<rootDir>/mocks/windows-process-tree.js",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
     },
-    "testMatch": [
-      "**/test/**/*.js"
-    ]
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    }
   }
 }

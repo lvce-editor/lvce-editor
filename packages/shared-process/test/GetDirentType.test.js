@@ -1,6 +1,6 @@
-import * as GetDirentType from '../src/parts/GetDirentType/GetDirentType.js'
+import { expect, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
-import { jest } from '@jest/globals'
+import * as GetDirentType from '../src/parts/GetDirentType/GetDirentType.js'
 
 test('getDirentType - file', () => {
   const dirent = {

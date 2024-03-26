@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test, afterEach } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({

@@ -1,10 +1,9 @@
-import * as ExtensionInstallType from '../src/parts/ExtensionInstallType/ExtensionInstallType.js'
+import { expect, test } from '@jest/globals'
 import * as ExtensionInstallParseInput from '../src/parts/ExtensionInstallParseInput/ExtensionInstallParseInput.js'
+import * as ExtensionInstallType from '../src/parts/ExtensionInstallType/ExtensionInstallType.js'
 
 test('parse - github url', () => {
-  expect(
-    ExtensionInstallParseInput.parse('https://github.com/user/repo')
-  ).toEqual({
+  expect(ExtensionInstallParseInput.parse('https://github.com/user/repo')).toEqual({
     type: ExtensionInstallType.GithubRepository,
     options: {
       user: 'user',
@@ -24,9 +23,7 @@ test('parse - error - could not parse github url', () => {
 })
 
 test('parse - error - cannot install from pull request', () => {
-  expect(
-    ExtensionInstallParseInput.parse('https://github.com/user/repo/pull/1')
-  ).toEqual({
+  expect(ExtensionInstallParseInput.parse('https://github.com/user/repo/pull/1')).toEqual({
     type: ExtensionInstallType.ParsingError,
     options: {
       message: `Cannot download from Pull Request`,
@@ -35,11 +32,7 @@ test('parse - error - cannot install from pull request', () => {
 })
 
 test('parse - install from branch', () => {
-  expect(
-    ExtensionInstallParseInput.parse(
-      'https://github.com/user/repo/tree/branch-1'
-    )
-  ).toEqual({
+  expect(ExtensionInstallParseInput.parse('https://github.com/user/repo/tree/branch-1')).toEqual({
     type: ExtensionInstallType.GithubRepository,
     options: {
       user: 'user',
@@ -50,11 +43,7 @@ test('parse - install from branch', () => {
 })
 
 test('parse - install from commit', () => {
-  expect(
-    ExtensionInstallParseInput.parse(
-      'https://github.com/user/repo/tree/1981bbd'
-    )
-  ).toEqual({
+  expect(ExtensionInstallParseInput.parse('https://github.com/user/repo/tree/1981bbd')).toEqual({
     type: ExtensionInstallType.GithubRepository,
     options: {
       user: 'user',
@@ -83,9 +72,7 @@ test('parse - install from relative path', () => {
 })
 
 test('parse - install from absolute path', () => {
-  expect(
-    ExtensionInstallParseInput.parse('/test/files/extension.tar.br')
-  ).toEqual({
+  expect(ExtensionInstallParseInput.parse('/test/files/extension.tar.br')).toEqual({
     type: ExtensionInstallType.File,
     options: {
       path: '/test/files/extension.tar.br',

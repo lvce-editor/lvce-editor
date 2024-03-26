@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -47,7 +47,7 @@ a`
   expect(FileSystem.writeFile).toHaveBeenCalledWith(
     '/test/file.txt',
     `b
-b`
+b`,
   )
 })
 

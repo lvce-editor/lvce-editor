@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as LimitString from '../src/parts/LimitString/LimitString.js'
 
 test('limitString', () => {
@@ -5,8 +6,8 @@ test('limitString', () => {
     LimitString.limitString(
       `line 1
 line 2`,
-      1
-    )
+      1,
+    ),
   ).toBe(`line 1`)
 })
 
@@ -15,8 +16,8 @@ test('limitString - zero lines', () => {
     LimitString.limitString(
       `line 1
 line 2`,
-      0
-    )
+      0,
+    ),
   ).toBe(``)
 })
 
@@ -26,8 +27,8 @@ test('limitString - multiple lines', () => {
       `fileA
 fileB
 nested/fileC`,
-      10
-    )
+      10,
+    ),
   ).toBe(`fileA
 fileB
 nested/fileC`)

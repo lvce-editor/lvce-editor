@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import { EventEmitter } from 'events'
 
 jest.unstable_mockModule('../src/parts/ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc', () => {

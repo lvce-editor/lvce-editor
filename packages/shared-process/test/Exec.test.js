@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as Exec from '../src/parts/Exec/Exec.js'
 
 test('exec - stdout', async () => {

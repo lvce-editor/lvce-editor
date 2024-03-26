@@ -1,4 +1,5 @@
 import * as BulkReplacementContent from '../src/parts/BulkReplacementContent/BulkReplacementContent.js'
+import { jest, beforeEach, test, expect } from '@jest/globals'
 
 test('getNewContent - no ranges', () => {
   const content = 'a'

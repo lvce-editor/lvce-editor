@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as ListProcessGetName from '../src/parts/ListProcessGetName/ListProcessGetName.js'
 
 test('getName - detect chrome devtools', () => {
