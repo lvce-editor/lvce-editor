@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorCursorWordPartRight from '../src/parts/EditorCommand/EditorCommandCursorWordPartRight.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

@@ -8,8 +8,6 @@ const state = {
 }
 
 export const getOrCreate = () => {
-  if (!state.worker) {
-    state.worker = LaunchTerminalWorker.launchTerminalWorker()
-  }
+  state.worker ||= LaunchTerminalWorker.launchTerminalWorker()
   return state.worker
 }

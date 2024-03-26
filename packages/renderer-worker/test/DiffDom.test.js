@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as DiffDom from '../src/parts/DiffDom/DiffDom.js'
 import * as DiffDomType from '../src/parts/DiffDomType/DiffDomType.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
