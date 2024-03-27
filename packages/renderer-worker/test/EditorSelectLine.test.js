@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorSelectLine from '../src/parts/EditorCommand/EditorCommandSelectLine.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 // TODO test with multiple cursors
 test('editorSelectLine', () => {

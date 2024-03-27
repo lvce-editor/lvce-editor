@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetSplitDimensionsUp from '../src/parts/GetSplitDimensionsUp/GetSplitDimensionsUp.js'
 import * as SashOrientation from '../src/parts/SashOrientation/SashOrientation.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getSplitDimensionsUp', () => {
   const x = 0

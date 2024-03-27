@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetBulkReplacementEdits from '../src/parts/GetBulkReplacementEdits/GetBulkReplacementEdits.js'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getBulkReplacementEdits', () => {
   const workspacePath = '/test'

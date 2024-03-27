@@ -1,5 +1,5 @@
-import * as GridLayout from '../src/parts/GridLayout/GridLayout.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as GridLayout from '../src/parts/GridLayout/GridLayout.js'
 
 test.skip('empty', () => {
   const x = 0

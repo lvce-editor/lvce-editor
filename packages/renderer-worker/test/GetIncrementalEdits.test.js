@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 import * as GetIncrementalEdits from '../src/parts/GetIncrementalEdits/GetIncrementalEdits.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getIncrementalEdits - whitespace issue', () => {
   const oldState = {

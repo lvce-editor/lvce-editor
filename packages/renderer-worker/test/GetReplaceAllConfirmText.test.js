@@ -1,5 +1,5 @@
-import * as GetReplaceAllConfirmText from '../src/parts/GetReplaceAllConfirmText/GetReplaceAllConfirmText.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as GetReplaceAllConfirmText from '../src/parts/GetReplaceAllConfirmText/GetReplaceAllConfirmText.js'
 
 test('getReplaceAllConfirmText - 1 1 0', () => {
   const occurrences = 1

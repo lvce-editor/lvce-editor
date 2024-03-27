@@ -1,5 +1,5 @@
-import * as FilterQuickPickItem from '../src/parts/FilterQuickPickItem/FilterQuickPickItem.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as FilterQuickPickItem from '../src/parts/FilterQuickPickItem/FilterQuickPickItem.js'
 
 // TODO
 test('filterQuickPickItem - path', () => {

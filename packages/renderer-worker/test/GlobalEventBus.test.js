@@ -1,6 +1,5 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   GlobalEventBus.state.listenerMap = Object.create(null)

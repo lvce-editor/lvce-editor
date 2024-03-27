@@ -1,5 +1,5 @@
-import * as GetLineText from '../src/parts/GetLineText/GetLineText.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as GetLineText from '../src/parts/GetLineText/GetLineText.js'
 
 test('empty', () => {
   const content = ''

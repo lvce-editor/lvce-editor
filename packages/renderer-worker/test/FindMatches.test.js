@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as FindMatches from '../src/parts/FindMatches/FindMatches.js'
 import * as FindPreviousMatch from '../src/parts/FindPreviousMatch/FindPreviousMatch.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('findMatches - no results', () => {
   expect(FindMatches.findMatches([], '')).toEqual(new Uint32Array([]))

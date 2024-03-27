@@ -1,5 +1,5 @@
-import * as GetCommandKeyBinding from '../src/parts/GetCommandKeyBinding/GetCommandKeyBinding.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as GetCommandKeyBinding from '../src/parts/GetCommandKeyBinding/GetCommandKeyBinding.js'
 
 test('getCommandKeyBinding - empty', () => {
   const keyBindings = []

@@ -1,5 +1,5 @@
-import * as GetDebugPropertyValueLabel from '../src/parts/GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as GetDebugPropertyValueLabel from '../src/parts/GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
 
 test('getDebugPropertyValueLabel = number', () => {
   const value = {

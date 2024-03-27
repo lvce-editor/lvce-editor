@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetEditorSplitDirectionType from '../src/parts/GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as EditorSplitDirectionType from '../src/parts/EditorSplitDirectionType/EditorSplitDirectionType.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getEditorSplitDirectionType - at top left', () => {
   const x = 0
