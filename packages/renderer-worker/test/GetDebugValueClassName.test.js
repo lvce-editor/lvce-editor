@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.js'
 import * as DebugValueType from '../src/parts/DebugValueType/DebugValueType.js'
 import * as GetDebugValueClassName from '../src/parts/GetDebugValueClassName/GetDebugValueClassName.js'
