@@ -1,5 +1,6 @@
 import * as GetTotalInserted from '../src/parts/GetTotalInserted/GetTotalInserted.js'
 import { div } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getTotalInserted - single node', () => {
   const dom = [div({}, 0)]

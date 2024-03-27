@@ -1,5 +1,6 @@
 import { div } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 import * as GetTotalChildCount from '../src/parts/GetTotalChildCount/GetTotalChildCount.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getTotalChildCount - no children', () => {
   const dom = [div({}, 0)]

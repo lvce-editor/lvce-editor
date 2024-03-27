@@ -1,4 +1,5 @@
 import * as GetDebugPropertyValueLabelArray from '../src/parts/GetDebugPropertyValueLabelArray/GetDebugPropertyValueLabelArray.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('empty array', () => {
   const value = {

@@ -4,6 +4,7 @@ import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRp
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

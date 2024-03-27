@@ -1,4 +1,5 @@
 import * as Font from '../src/parts/Font/Font.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('load - error', async () => {
   // @ts-ignore

@@ -1,4 +1,5 @@
 import * as EditorSelectUp from '../src/parts/EditorCommand/EditorCommandSelectUp.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('selectUp', () => {
   const editor = {

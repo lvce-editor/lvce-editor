@@ -1,4 +1,5 @@
 import * as EditorSetDelta from '../src/parts/EditorCommand/EditorCommandSetDelta.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('setDeltaYFixedValue', () => {
   const editor = {

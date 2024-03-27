@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as ExtensionHostCommandType from '../src/parts/ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetModules()

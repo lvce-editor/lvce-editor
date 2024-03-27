@@ -1,6 +1,7 @@
 // based on tests from https://github.com/jeancroy/fuzz-aldrin-plus/blob/84eac1d73bacbbd11978e6960f4aa89f8396c540/spec/match-spec.coffee by jeancroy (License MIT)
 
 import * as FilterCompletionItem from '../src/parts/FilterCompletionItem/FilterCompletionItem.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('filterCompletionItem - match by word starts', () => {
   expect(FilterCompletionItem.filterCompletionItem('fd', 'font-display')).toEqual([expect.any(Number), 0, 1, 5, 6])

@@ -1,4 +1,5 @@
 import * as GetSearchRegex from '../src/parts/GetSearchRegex/GetSearchRegex.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('empty string', () => {
   const input = ''

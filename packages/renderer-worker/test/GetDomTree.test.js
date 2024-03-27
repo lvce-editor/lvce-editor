@@ -1,5 +1,6 @@
 import * as GetDomTree from '../src/parts/GetDomTree/GetDomTree.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('empty', () => {
   const dom = []

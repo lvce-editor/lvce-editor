@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as GetIcon from '../src/parts/GetIcon/GetIcon.js'
 import * as IconThemeState from '../src/parts/IconThemeState/IconThemeState.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
   return {
