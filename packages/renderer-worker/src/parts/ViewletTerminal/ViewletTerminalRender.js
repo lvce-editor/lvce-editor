@@ -1,3 +1,5 @@
+export const setBounds = false
+
 export const hasFunctionalRender = true
 
 const renderCanvas = {
