@@ -4,7 +4,6 @@ import * as GetResponse from '../GetResponse/GetResponse.ts'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
-  console.log({ message })
   if ('id' in message) {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message, execute)
@@ -20,5 +19,5 @@ export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
     resolve(message.id, message)
     return
   }
-  throw new JsonRpcError('unexpected message from renderer worker')
+  throw new JsonRpcError('unexpected message')
 }
