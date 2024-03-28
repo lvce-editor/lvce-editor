@@ -17,7 +17,6 @@ export const setTerminal = (state, canvasCursorId, canvasTextId) => {
   const canvasText = OffscreenCanvas.get(canvasTextId)
   const canvasCursor = OffscreenCanvas.get(canvasCursorId)
   const { $Viewlet } = state
-  console.log({ canvasText, canvasCursor })
   const terminal = Terminal.create({
     $Element: $Viewlet,
     handleKeyDown: (...args) => ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args),
