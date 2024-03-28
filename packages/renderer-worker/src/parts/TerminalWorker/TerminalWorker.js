@@ -1,13 +1,19 @@
 import * as LaunchTerminalWorker from '../LaunchTerminalWorker/LaunchTerminalWorker.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const state = {
   /**
    * @type {any}
    */
-  worker: undefined,
+  workerPromise: undefined,
 }
 
 export const getOrCreate = () => {
-  state.worker ||= LaunchTerminalWorker.launchTerminalWorker()
-  return state.worker
+  state.workerPromise ||= LaunchTerminalWorker.launchTerminalWorker()
+  return state.workerPromise
+}
+
+export const invokeAndTransfer = async (transfer, method, ...params) => {
+  const ipc = await state.workerPromise
+  await JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
 }
