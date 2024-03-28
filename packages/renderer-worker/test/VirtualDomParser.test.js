@@ -1,5 +1,6 @@
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as VirtualDomParser from '../src/parts/VirtualDomParser/VirtualDomParser.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('parse - empty', () => {
   const dom = VirtualDomParser.parse('')

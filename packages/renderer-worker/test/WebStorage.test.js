@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as WebStorageType from '../src/parts/WebStorageType/WebStorageType.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

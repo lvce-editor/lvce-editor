@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
