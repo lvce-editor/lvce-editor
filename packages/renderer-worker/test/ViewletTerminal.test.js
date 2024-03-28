@@ -1,13 +1,14 @@
 /**
  * @jest-environment jsdom
  */
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import { TextEncoder } from 'node:util'
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeAll(() => {
   // https://github.com/jsdom/jsdom/issues/2524#issuecomment-736672511
   globalThis.TextEncoder = TextEncoder
 
+  // @ts-ignore
   globalThis.OffscreenCanvas = class {}
 })
 
@@ -56,6 +57,13 @@ jest.unstable_mockModule('../src/parts/OffscreenCanvas/OffscreenCanvas.js', () =
     create() {
       return {}
     },
+  }
+})
+jest.unstable_mockModule('../src/parts/TerminalWorker/TerminalWorker.js', () => {
+  return {
+    create() {},
+    getOrCreate() {},
+    invokeAndTransfer() {},
   }
 })
 

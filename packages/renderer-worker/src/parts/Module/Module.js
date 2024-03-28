@@ -156,6 +156,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostDialog.ipc.js')
     case ModuleId.ExtensionHostWorkerContentSecurityPolicy:
       return import('../ExtensionHost/ExtensionHostWorkerContentSecurityPolicy.ipc.js')
+    case ModuleId.SendMessagePortToElectron:
+      return import('../SendMessagePortToElectron/SendMessagePortToElectron.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

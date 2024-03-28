@@ -178,6 +178,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.TestFrameWork
     case 'ExtensionHostWorkerContentSecurityPolicy':
       return ModuleId.ExtensionHostWorkerContentSecurityPolicy
+    case 'SendMessagePortToElectron':
+      return ModuleId.SendMessagePortToElectron
     default:
       throw new Error(`module ${prefix} not found`)
   }

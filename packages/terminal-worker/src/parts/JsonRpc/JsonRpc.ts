@@ -14,3 +14,11 @@ export const invoke = async (ipc, method, ...params) => {
   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
 }
+
+export const invokeAndTransfer = async (ipc, transfer, method, ...params) => {
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.sendAndTransfer(message, transfer)
+  const responseMessage = await promise
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
+}
