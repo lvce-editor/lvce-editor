@@ -438,7 +438,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           // ['Viewlet.show', viewlet.id],
         ]
         if (viewlet.setBounds !== false) {
-          console.log({ viewlet })
           allCommands.splice(1, 0, [kSetBounds, viewletUid, x, y, width, height])
         }
         if (module.contentLoadedEffects) {
@@ -507,7 +506,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push([kCreate, ViewletModuleId.Error, viewletUid])
       // @ts-ignore
       if (viewlet.setBounds !== false) {
-        console.log({ viewlet })
         commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
       }
       commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', /* message */ `${error}`])
