@@ -20,6 +20,7 @@ export const create = (id) => {
     separateConnection,
     command: '',
     args: [],
+    setBounds: false,
   }
 }
 
