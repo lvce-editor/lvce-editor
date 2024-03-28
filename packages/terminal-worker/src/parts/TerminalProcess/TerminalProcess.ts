@@ -1,8 +1,9 @@
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 import * as TerminalProcessState from '../TerminalProcessState/TerminalProcessState.ts'
+import * as LaunchTerminalProcess from '../LaunchTerminalProcess/LaunchTerminalProcess.ts'
 
 export const listen = async () => {
-  console.log('setup terminal connection')
+  await LaunchTerminalProcess.launchTerminalProcess()
 }
 
 export const invoke = (method, ...params) => {
