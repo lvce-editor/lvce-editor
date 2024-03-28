@@ -6,7 +6,7 @@ test('validate - item must be of type object but is of type function', () => {
   const shape = {
     type: 'object',
   }
-  expect(Validation.validate(item, shape)).toBe('item must be of type object but is () => {}')
+  expect(Validation.validate(item, shape)).toBe('item must be of type object but is () => { }')
 })
 
 test('validate - item must be of type object but is of type array', () => {
