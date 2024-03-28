@@ -5,6 +5,7 @@ import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
@@ -38,11 +39,20 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoadedEffects = async (state) => {
-  const { uid, separateConnection, command, args, canvasTextId, canvasCursorId } = state
+  const { uid, command, args, canvasTextId, canvasCursorId } = state
   await TerminalWorker.getOrCreate()
   const canvasText = await OffscreenCanvas.create(canvasTextId)
   const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
-  await TerminalWorker.invokeAndTransfer([canvasText, canvasCursor], 'Terminal.create', canvasText, canvasCursor)
+  await TerminalWorker.invokeAndTransfer(
+    [canvasText, canvasCursor],
+    'Terminal.create',
+    canvasText,
+    canvasCursor,
+    uid,
+    Workspace.state.workspacePath,
+    command,
+    args,
+  )
 }
 
 export const handleBlur = (state) => {
