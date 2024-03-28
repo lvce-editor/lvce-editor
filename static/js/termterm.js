@@ -1,3 +1,4 @@
+// @ts-nocheck
 const BACKGROUND = "#c00ccc";
 const CHAR_WIDTH = 12;
 const CHAR_HEIGHT = 15;
