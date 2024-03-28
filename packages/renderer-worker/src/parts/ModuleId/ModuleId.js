@@ -79,3 +79,4 @@ export const ExtensionHostQuickPick = 78
 export const ExtensionHostDialog = 79
 export const TestFrameWork = 80
 export const ExtensionHostWorkerContentSecurityPolicy = 81
+export const SendMessagePortToElectron = 82
