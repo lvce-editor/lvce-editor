@@ -18,8 +18,8 @@ export const create = async (
     focusTextArea() {
       // TODO
     },
-    handleInput() {
-      // TODO
+    handleInput(input) {
+      TerminalProcess.send('Terminal.write', id, input)
     },
   })
   TerminalEmulatorState.set(id, emulator)
