@@ -4,7 +4,7 @@
     "target": "esnext",
     "checkJs": true,
     "module": "NodeNext",
-    "types": ["node", "jest"],
+    "types": ["node"],
     "moduleResolution": "nodenext",
     "isolatedModules": true,
     "noImplicitAny": false,

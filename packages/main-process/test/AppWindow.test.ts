@@ -1,6 +1,6 @@
 // @ts-nocheck
 import EventEmitter from 'node:events'
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetModules()

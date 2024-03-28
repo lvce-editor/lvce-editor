@@ -1,5 +1,5 @@
 import * as Assert from '../src/parts/Assert/Assert.ts'
-import { test, expect } from '@jest/globals'
+import {test, expect} from '@jest/globals'
 
 test('object', () => {
   expect(() => Assert.object('')).toThrow(new Error('expected value to be of type object'))
