@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as Developer from '../src/parts/ElectronDeveloper/ElectronDeveloper.js'
 
 test('getPerformanceEntries', () => {
