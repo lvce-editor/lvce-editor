@@ -9,9 +9,6 @@ export const filterDependencies = (rawDependencies, exclude = []) => {
     if (!dependency.name) {
       return false
     }
-    if (dependency.name === '@lvce-editor/extension-host') {
-      return false
-    }
     if (dependency.name === '@lvce-editor/pty-host') {
       return false
     }

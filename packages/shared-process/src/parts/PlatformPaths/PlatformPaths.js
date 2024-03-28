@@ -71,10 +71,6 @@ export const getUserKeyBindingsPath = () => {
   return Path.join(configDir, 'keybindings.json')
 }
 
-export const getExtensionHostPath = async () => {
-  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
-}
-
 export const getExtensionHostHelperProcessPath = async () => {
   return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }

@@ -736,9 +736,6 @@ const setVersionsAndDependencies = async ({ version }) => {
     if (json.dependencies && json.dependencies['@lvce-editor/pty-host']) {
       json.dependencies['@lvce-editor/pty-host'] = version
     }
-    if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
-      json.dependencies['@lvce-editor/extension-host'] = version
-    }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
     }
