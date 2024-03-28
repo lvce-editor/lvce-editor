@@ -8,8 +8,6 @@ export const load = (protocol) => {
   switch (protocol) {
     case ProtocolType.SharedProcess:
       return import('../HandleWebSocketForSharedProcess/HandleWebSocketForSharedProcess.js')
-    case ProtocolType.ExtensionHost:
-      return import('../HandleWebSocketForExtensionHost/HandleWebSocketForExtensionHost.js')
     case ProtocolType.ExtensionHostHelperProcess:
       return import('../HandleWebSocketForExtensionHostHelperProcess/HandleWebSocketForExtensionHostHelperProcess.js')
     case ProtocolType.TerminalProcess:

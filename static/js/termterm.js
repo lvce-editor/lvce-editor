@@ -1209,8 +1209,8 @@ const createTerminal = (root, {
   bell = noop,
   setWindowTitle = noop,
   handleFocus = noop,
-  canvasText=document.createElement('canvas'), 
-  canvasCursor=document.createElement('canvas')
+  canvasText = document.createElement("canvas"),
+  canvasCursor = document.createElement("canvas")
 }) => {
   let focused = false;
   const handleKeyDown = (event) => {
