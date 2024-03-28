@@ -6,6 +6,7 @@ export const getTypeFromUrl = (url) => {
   }
   const questionMarkIndex = url.indexOf('?')
   if (questionMarkIndex === -1) {
+    console.log({ url })
     throw new VError(`missing type parameter`)
   }
   const rest = url.slice(questionMarkIndex)

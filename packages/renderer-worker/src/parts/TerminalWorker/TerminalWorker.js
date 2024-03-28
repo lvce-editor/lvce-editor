@@ -17,3 +17,8 @@ export const invokeAndTransfer = async (transfer, method, ...params) => {
   const ipc = await state.workerPromise
   await JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
 }
+
+export const invoke = async (method, ...params) => {
+  const ipc = await state.workerPromise
+  await JsonRpc.invoke(ipc, method, ...params)
+}

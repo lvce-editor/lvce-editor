@@ -26,25 +26,12 @@ export const create = (id) => {
 
 export const loadContent = async (state) => {
   // TODO this should be async and open a pty
+  const { uid } = state
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const canvasTextId = Id.create()
   const canvasCursorId = Id.create()
   const canvasText = await OffscreenCanvas.create(canvasTextId)
   const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
-  return {
-    ...state,
-    id: Id.create(),
-    command,
-    args,
-    canvasCursorId,
-    canvasTextId,
-    canvasText,
-    canvasCursor,
-  }
-}
-
-export const contentLoadedEffects = async (state) => {
-  const { uid, command, args, canvasCursor, canvasText } = state
   await TerminalWorker.getOrCreate()
   await TerminalWorker.invokeAndTransfer(
     [canvasText, canvasCursor],
@@ -56,6 +43,31 @@ export const contentLoadedEffects = async (state) => {
     command,
     args,
   )
+  const terminal = {
+    write(data) {
+      return TerminalWorker.invoke('Terminal.write', uid, data)
+    },
+    handleBlur() {
+      return TerminalWorker.invoke('Terminal.handleBlur', uid)
+    },
+    handleKeyDown(key) {
+      return TerminalWorker.invoke('Terminal.handleKeyDown', key)
+    },
+    handleMouseDown() {
+      return TerminalWorker.invoke('Terminal.handleMouseDown')
+    },
+  }
+  return {
+    ...state,
+    id: Id.create(),
+    command,
+    args,
+    canvasCursorId,
+    canvasTextId,
+    canvasText,
+    canvasCursor,
+    terminal,
+  }
 }
 
 export const handleBlur = (state) => {
