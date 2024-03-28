@@ -18,6 +18,7 @@ export const getJson = async (url, options = {}) => {
     if (error && error instanceof HTTPError) {
       let json
       try {
+        // @ts-ignore
         json = await error.response.json()
       } catch {
         throw error
