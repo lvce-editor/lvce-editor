@@ -22,5 +22,6 @@ const getError = async (fn) => {
 test('getFn', async () => {
   const error = await getError(() => CommandMap.getFn('test.not-found'))
   expect(error).toBeInstanceOf(CommandNotFoundError)
+  // @ts-ignore
   expect(error.message).toBe('Command "test.not-found" not found (extension host worker)')
 })
