@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetTotalInserted from '../src/parts/GetTotalInserted/GetTotalInserted.js'
 import { div } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 

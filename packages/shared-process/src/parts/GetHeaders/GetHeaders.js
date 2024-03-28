@@ -1,14 +1,13 @@
 import { extname } from 'path'
+import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
-import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
+import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
+import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeadersTerminalWorker.js'
+import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
-
-const getHeadersDefault = () => {
-  return {}
-}
 
 const getExtraHeaders = (pathName, fileExtension) => {
   switch (fileExtension) {
@@ -25,12 +24,15 @@ const getExtraHeaders = (pathName, fileExtension) => {
       if (pathName.endsWith('extensionHostWorkerMain.js') || pathName.endsWith('extensionHostWorkerMain.ts')) {
         return GetHeadersExtensionHostWorker.getHeadersExtensionHostWorker()
       }
+      if (pathName.endsWith('terminalWorkerMain.js') || pathName.endsWith('terminalWorkerMain.ts')) {
+        return GetHeadersTerminalWorker.getHeadersExtensionHostWorker()
+      }
       if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
         return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
       }
-      return getHeadersDefault()
+      return GetHeadersDefault.getHeadersDefault()
     default:
-      return getHeadersDefault()
+      return GetHeadersDefault.getHeadersDefault()
   }
 }
 
@@ -38,7 +40,7 @@ export const getHeaders = (absolutePath, pathName) => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const headers = {
-    'Content-Type': mime,
+    [HttpHeader.ContentType]: mime,
   }
   const extraHeaders = getExtraHeaders(pathName, extension)
   return {

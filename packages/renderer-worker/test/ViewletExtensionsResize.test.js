@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsResize from '../src/parts/ViewletExtensions/ViewletExtensionsResize.js'
 

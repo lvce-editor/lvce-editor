@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { jest } from '@jest/globals'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ExtensionHost from '../src/parts/ExtensionHost/ExtensionHostCore.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'

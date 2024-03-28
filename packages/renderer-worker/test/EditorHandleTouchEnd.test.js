@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as EditorHandleTouchEnd from '../src/parts/EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as EditorHandleTouchMove from '../src/parts/EditorCommand/EditorCommandHandleTouchMove.js'
 import * as EditorHandleTouchStart from '../src/parts/EditorCommand/EditorCommandHandleTouchStart.js'

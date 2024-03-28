@@ -3,6 +3,7 @@ import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
+import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
@@ -453,19 +454,19 @@ export const build = async ({
   })
   console.timeEnd('copyExtensionHostSubWorkerFiles')
 
-  const testWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+  const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
     commitHash,
     platform: 'electron',
     assetDir: `../../../../..`,
   })
 
-  console.time('copyExtensionHostSubWorkerFiles')
+  console.time('copyTerminalWorkerFiles')
   await Copy.copy({
-    from: testWorkerCachePath,
-    to: `${resourcesPath}/app/packages/extension-host-sub-worker`,
+    from: terminalWorkerCachePath,
+    to: `${resourcesPath}/app/packages/terminal-worker`,
     ignore: ['static'],
   })
-  console.timeEnd('copyExtensionHostSubWorkerFiles')
+  console.timeEnd('copyTerminalWorkerFiles')
 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })

@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {

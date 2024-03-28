@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorHandleScrollBarMove from '../src/parts/EditorCommand/EditorCommandHandleScrollBarMove.js'
 import * as EditorHandleScrollBarPointerDown from '../src/parts/EditorCommand/EditorCommandHandleScrollBarPointerDown.js'
 

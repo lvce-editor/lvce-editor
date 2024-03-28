@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as Diff from '../src/parts/Diff/Diff.js'
 
 test.skip('deletion', () => {

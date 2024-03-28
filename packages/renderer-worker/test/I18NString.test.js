@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as I18NString from '../src/parts/I18NString/I18NString.js'
 
 test('i18nString - only key', () => {

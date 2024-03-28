@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuEntriesActivityBarAdditionalViews from '../src/parts/MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 

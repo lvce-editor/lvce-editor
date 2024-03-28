@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetDebugPropertyValueLabelArray from '../src/parts/GetDebugPropertyValueLabelArray/GetDebugPropertyValueLabelArray.js'
 
 test('empty array', () => {

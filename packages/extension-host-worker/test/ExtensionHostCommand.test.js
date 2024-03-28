@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.js'
 
 beforeEach(() => {
@@ -50,11 +51,11 @@ test('executeCommand - error - command is registered multiple times', async () =
       id: 'xyz',
       execute(query) {},
     })
-  }).toThrow(new Error(`Failed to register command xyz: command cannot be registered multiple times`))
+  }).toThrow(new Error('Failed to register command xyz: command cannot be registered multiple times'))
 })
 
 test('executeCommand - error - command is null', async () => {
   expect(() => {
     ExtensionHostCommand.registerCommand(null)
-  }).toThrow(new Error(`Failed to register command: command is null`))
+  }).toThrow(new Error('Failed to register command: command is null'))
 })

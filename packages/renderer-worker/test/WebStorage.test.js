@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as WebStorageType from '../src/parts/WebStorageType/WebStorageType.js'
 
 beforeEach(() => {
