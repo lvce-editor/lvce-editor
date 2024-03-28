@@ -51,10 +51,10 @@ export const loadContent = async (state) => {
       return TerminalWorker.invoke('Terminal.handleBlur', uid)
     },
     handleKeyDown(key) {
-      return TerminalWorker.invoke('Terminal.handleKeyDown', key)
+      return TerminalWorker.invoke('Terminal.handleKeyDown', uid, key)
     },
     handleMouseDown() {
-      return TerminalWorker.invoke('Terminal.handleMouseDown')
+      return TerminalWorker.invoke('Terminal.handleMouseDown', uid)
     },
   }
   return {
