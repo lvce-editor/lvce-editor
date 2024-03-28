@@ -1,4 +1,5 @@
 import * as ExtensionHostTextSearch from '../src/parts/ExtensionHostTextSearch/ExtensionHostTextSearch.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostTextSearch.reset()

@@ -1,5 +1,6 @@
 import * as CommandMap from '../src/parts/CommandMap/CommandMap.js'
 import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 class NoErrorThrownError extends Error {}
 

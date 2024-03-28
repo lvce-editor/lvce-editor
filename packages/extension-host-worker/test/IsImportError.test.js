@@ -1,4 +1,5 @@
 import * as IsImportError from '../src/parts/IsImportError/IsImportError.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('isImportError - type error', () => {
   const error = new TypeError('x is not a function')

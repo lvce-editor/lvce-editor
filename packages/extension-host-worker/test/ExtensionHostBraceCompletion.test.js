@@ -1,5 +1,6 @@
 import * as ExtensionHostBraceCompletion from '../src/parts/ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostBraceCompletion.reset()

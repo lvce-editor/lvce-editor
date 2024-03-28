@@ -1,4 +1,5 @@
 import * as GetLineAndColumn from '../src/parts/GetLineAndColumn/GetLineAndColumn.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getLineAndColumn - empty string', () => {
   const text = ''

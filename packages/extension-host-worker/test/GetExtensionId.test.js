@@ -1,4 +1,5 @@
 import * as GetExtensionId from '../src/parts/GetExtensionId/GetExtensionId.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getExtensionId - null', () => {
   expect(GetExtensionId.getExtensionId(null)).toBe('<unknown>')

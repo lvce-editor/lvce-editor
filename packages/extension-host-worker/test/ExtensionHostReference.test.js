@@ -1,5 +1,6 @@
 import * as ExtensionHostReference from '../src/parts/ExtensionHostReference/ExtensionHostReference.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostReference.reset()

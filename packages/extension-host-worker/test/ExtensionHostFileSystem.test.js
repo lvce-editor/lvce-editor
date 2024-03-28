@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ExtensionHostFileSystem from '../src/parts/ExtensionHostFileSystem/ExtensionHostFileSystem.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostFileSystem.state.fileSystemProviderMap = Object.create(null)

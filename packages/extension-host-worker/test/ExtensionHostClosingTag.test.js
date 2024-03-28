@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as ExtensionHostClosingTag from '../src/parts/ExtensionHostClosingTag/ExtensionHostClosingTag.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('registerClosingTagProvider - no argument provided', () => {
   expect(() => ExtensionHostClosingTag.registerClosingTagProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))

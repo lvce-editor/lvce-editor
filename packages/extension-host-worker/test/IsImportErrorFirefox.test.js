@@ -1,4 +1,5 @@
 import * as IsImportErrorFirefox from '../src/parts/IsImportErrorFirefox/IsImportErrorFirefox.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('isImportErrorFirefox', () => {
   const error = new TypeError('error loading dynamically imported module')

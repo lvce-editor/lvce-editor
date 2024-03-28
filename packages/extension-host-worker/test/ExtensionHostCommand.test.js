@@ -1,4 +1,5 @@
 import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostCommand.reset()
