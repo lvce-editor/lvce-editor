@@ -1,13 +1,20 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ExtensionHostBraceCompletion from '../src/parts/ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostBraceCompletion.reset()
 })
 
 test('executeBraceCompletionProvider - true', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
   ExtensionHostBraceCompletion.registerBraceCompletionProvider({
     languageId: 'javascript',
     provideBraceCompletion() {
@@ -19,7 +26,14 @@ test('executeBraceCompletionProvider - true', async () => {
 })
 
 test('executeBraceCompletionProvider - false', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
   ExtensionHostBraceCompletion.registerBraceCompletionProvider({
     languageId: 'javascript',
     provideBraceCompletion() {

@@ -1,7 +1,6 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ExtensionHostCompletion from '../src/parts/ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('registerCompletionProvider - no argument provided', () => {
   expect(() => ExtensionHostCompletion.registerCompletionProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))

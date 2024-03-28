@@ -1,5 +1,5 @@
-import { DependencyNotFoundError } from '../src/parts/DependencyNotFoundError/DependencyNotFoundError.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { DependencyNotFoundError } from '../src/parts/DependencyNotFoundError/DependencyNotFoundError.js'
 
 test('DependencyNotFoundError', () => {
   const code = "import notFound from './not-found.js'\n\nexport const add = (a, b) => {\n  return a + b\n}\n"

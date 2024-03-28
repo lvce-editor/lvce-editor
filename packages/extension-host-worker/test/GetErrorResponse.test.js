@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetErrorResponse from '../src/parts/GetErrorResponse/GetErrorResponse.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getErrorResponse - null', () => {
   const message = {

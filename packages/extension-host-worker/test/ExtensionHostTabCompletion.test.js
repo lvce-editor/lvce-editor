@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ExtensionHostTabCompletion from '../src/parts/ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   ExtensionHostTabCompletion.reset()
@@ -9,14 +9,28 @@ beforeEach(() => {
 
 // TODO should have better error message here
 test('registerTabCompletionProvider - no argument provided', () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
   expect(() => ExtensionHostTabCompletion.registerTabCompletionProvider()).toThrow(
     new Error("Cannot read properties of undefined (reading 'languageId')"),
   )
 })
 
 test('execute - when tab completion provider has normal result', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
@@ -38,7 +52,14 @@ test('execute - when tab completion provider has normal result', async () => {
 })
 
 test.skip('execute - when tab completion provider has no result', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
@@ -56,7 +77,14 @@ test.skip('execute - when tab completion provider has no result', async () => {
 // good for extension development but has performance
 // overhead (and performance is really important)
 test('execute - when tab completion provider has invalid result of type number', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
@@ -72,7 +100,14 @@ test('execute - when tab completion provider has invalid result of type number',
 })
 
 test('execute - when tab completion provider has wrong shape', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
@@ -85,7 +120,14 @@ test('execute - when tab completion provider has wrong shape', async () => {
 })
 
 test('execute - when tab completion provider throws error', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
 
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
@@ -100,7 +142,14 @@ test('execute - when tab completion provider throws error', async () => {
 })
 
 test('execute - when tab completion provider returns a string', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
   ExtensionHostTabCompletion.registerTabCompletionProvider({
     languageId: 'javascript',
     provideTabCompletion() {

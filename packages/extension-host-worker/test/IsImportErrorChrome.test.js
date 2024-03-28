@@ -1,5 +1,5 @@
-import * as IsImportErrorChrome from '../src/parts/IsImportErrorChrome/IsImportErrorChrome.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as IsImportErrorChrome from '../src/parts/IsImportErrorChrome/IsImportErrorChrome.js'
 
 test('isImportErrorChrome', () => {
   const error = new Error('Failed to fetch dynamically imported module')
