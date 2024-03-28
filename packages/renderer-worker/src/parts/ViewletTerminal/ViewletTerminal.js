@@ -4,8 +4,9 @@ import * as Id from '../Id/Id.js'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
-import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as TerminalEmulator from '../TerminalEmulator/TerminalEmulator.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
@@ -26,37 +27,11 @@ export const create = (id) => {
 
 export const loadContent = async (state) => {
   // TODO this should be async and open a pty
-  const { uid } = state
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const canvasTextId = Id.create()
   const canvasCursorId = Id.create()
   const canvasText = await OffscreenCanvas.create(canvasTextId)
   const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
-  await TerminalWorker.getOrCreate()
-  await TerminalWorker.invokeAndTransfer(
-    [canvasText, canvasCursor],
-    'Terminal.create',
-    canvasText,
-    canvasCursor,
-    uid,
-    Workspace.state.workspacePath,
-    command,
-    args,
-  )
-  const terminal = {
-    write(data) {
-      return TerminalWorker.invoke('Terminal.write', uid, data)
-    },
-    handleBlur() {
-      return TerminalWorker.invoke('Terminal.handleBlur', uid)
-    },
-    handleKeyDown(key) {
-      return TerminalWorker.invoke('Terminal.handleKeyDown', uid, key)
-    },
-    handleMouseDown() {
-      return TerminalWorker.invoke('Terminal.handleMouseDown', uid)
-    },
-  }
   return {
     ...state,
     id: Id.create(),
@@ -66,8 +41,26 @@ export const loadContent = async (state) => {
     canvasTextId,
     canvasText,
     canvasCursor,
-    terminal,
   }
+}
+
+export const contentLoadedEffects = async (state) => {
+  const { uid, separateConnection, command, args, canvasCursor, canvasText } = state
+  const terminal = await TerminalEmulator.create({
+    offscreenCanvasCursor: canvasCursor,
+    offscreenCanvasText: canvasText,
+    async focusTextArea() {
+      await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
+    },
+    handleInput(transformedKey) {
+      Terminal.write(uid, transformedKey)
+    },
+  })
+  ViewletStates.setState(uid, {
+    ...ViewletStates.getState(uid),
+    terminal,
+  })
+  await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
 }
 
 export const handleBlur = (state) => {
