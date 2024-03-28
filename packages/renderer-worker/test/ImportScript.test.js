@@ -1,4 +1,5 @@
 import * as ImportScript from '../src/parts/ImportScript/ImportScript.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('importScript - error - cannot find module', async () => {
   await expect(ImportScript.importScript('test://file.js')).rejects.toThrow(
