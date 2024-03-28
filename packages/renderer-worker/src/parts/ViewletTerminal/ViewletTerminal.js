@@ -4,9 +4,11 @@ import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminal
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
-import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
-import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
+import * as TerminalEmulator from '../TerminalEmulator/TerminalEmulator.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
@@ -26,47 +28,39 @@ export const create = (id) => {
 export const loadContent = async (state) => {
   // TODO this should be async and open a pty
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
-  const canvasTextId = Id.create()
-  const canvasCursorId = Id.create()
   return {
     ...state,
     id: Id.create(),
     command,
     args,
-    canvasCursorId,
-    canvasTextId,
   }
 }
 
 export const contentLoadedEffects = async (state) => {
-  const { uid, separateConnection, command, args, canvasTextId, canvasCursorId } = state
+  const { uid, separateConnection, command, args } = state
   const { id, promise } = Callback.registerPromise()
-  await TerminalWorker.getOrCreate()
-  const canvasText = await OffscreenCanvas.create(canvasTextId)
-  const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
-  console.log({ canvasText, canvasCursor })
-  await TerminalWorker.invokeAndTransfer([canvasText, canvasCursor], 'Terminal.create', canvasText, canvasCursor)
-  // setTimeout(async () => {
-  //   await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
-  //   const response = await promise
-  //   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
-  //   const { offscreenCanvasCursor, offscreenCanvasText } = result
-  //   const terminal = await TerminalEmulator.create({
-  //     offscreenCanvasCursor,
-  //     offscreenCanvasText,
-  //     async focusTextArea() {
-  //       await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
-  //     },
-  //     handleInput(transformedKey) {
-  //       Terminal.write(uid, transformedKey)
-  //     },
-  //   })
-  //   ViewletStates.setState(uid, {
-  //     ...ViewletStates.getState(uid),
-  //     terminal,
-  //   })
-  //   await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
-  // })
+
+  setTimeout(async () => {
+    await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
+    const response = await promise
+    const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
+    const { offscreenCanvasCursor, offscreenCanvasText } = result
+    const terminal = await TerminalEmulator.create({
+      offscreenCanvasCursor,
+      offscreenCanvasText,
+      async focusTextArea() {
+        await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
+      },
+      handleInput(transformedKey) {
+        Terminal.write(uid, transformedKey)
+      },
+    })
+    ViewletStates.setState(uid, {
+      ...ViewletStates.getState(uid),
+      terminal,
+    })
+    await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
+  })
 }
 
 export const handleBlur = (state) => {
