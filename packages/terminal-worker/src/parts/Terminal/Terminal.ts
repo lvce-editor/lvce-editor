@@ -34,3 +34,23 @@ export const handleMessage = (id, method, ...args) => {
     emulator.write(parsedData)
   }
 }
+
+export const write = (id, data) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.write(data)
+}
+
+export const handleBlur = (id) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.handleBlur()
+}
+
+export const handleKeyDown = (id, key) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.handleKeyDown(key)
+}
+
+export const handleMouseDown = (id) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.handleMouseDown()
+}
