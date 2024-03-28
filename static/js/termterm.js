@@ -1208,7 +1208,9 @@ const createTerminal = (root, {
   handleInput,
   bell = noop,
   setWindowTitle = noop,
-  handleFocus = noop
+  handleFocus = noop,
+  canvasText = document.createElement("canvas"),
+  canvasCursor = document.createElement("canvas")
 }) => {
   let focused = false;
   const handleKeyDown = (event) => {
@@ -1238,9 +1240,7 @@ const createTerminal = (root, {
     textarea.focus();
     requestAnimationFrame(render);
   };
-  const canvasText = document.createElement("canvas");
   canvasText.className = "TerminalCanvasText";
-  const canvasCursor = document.createElement("canvas");
   canvasCursor.className = "TerminalCanvasCursor";
   const $Layers = document.createElement("div");
   $Layers.className = "TerminalLayers";
