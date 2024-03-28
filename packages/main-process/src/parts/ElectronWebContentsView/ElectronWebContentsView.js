@@ -8,7 +8,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO use electron 30 webcontentsview api
 export const createWebContentsView = async () => {
-  const view = new BrowserView({
+  const view = new Electron.WebContentsView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
     },
