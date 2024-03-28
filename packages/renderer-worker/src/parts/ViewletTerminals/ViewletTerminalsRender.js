@@ -1,5 +1,7 @@
 import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
 
+export const setBounds = false
+
 export const hasFunctionalRender = true
 
 const renderTabs = {
