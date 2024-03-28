@@ -1,6 +1,6 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Assert from '../Assert/Assert.js'
 
 export const create = async (canvasId) => {
   Assert.number(canvasId)
