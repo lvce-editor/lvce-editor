@@ -1,5 +1,6 @@
 import * as EditorIndentMore from '../src/parts/EditorCommand/EditorCommandIndentMore.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('editorIndentMore - indent empty selection at start of line', () => {
   const editor = {

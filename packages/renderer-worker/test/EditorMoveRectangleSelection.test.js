@@ -1,5 +1,6 @@
 import * as EditorMoveRectangleSelection from '../src/parts/EditorCommand/EditorCommandMoveRectangleSelection.js'
 import * as EditorMoveSelection from '../src/parts/EditorCommand/EditorCommandMoveSelection.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test.skip('editorMoveRectangleSelection', () => {
   const editor = {

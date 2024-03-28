@@ -1,5 +1,6 @@
 import * as MeasureTextWidth from '../src/parts/MeasureTextWidth/MeasureTextWidth.js'
 import * as MeasureTextWidthState from '../src/parts/MeasureTextWidthState/MeasureTextWidthState.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeAll(() => {
   // @ts-ignore

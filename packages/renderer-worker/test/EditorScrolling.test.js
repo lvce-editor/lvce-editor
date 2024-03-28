@@ -1,4 +1,5 @@
 import * as EditorScrolling from '../src/parts/Editor/EditorScrolling.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('setDeltaY - scroll down', () => {
   const editor = {
