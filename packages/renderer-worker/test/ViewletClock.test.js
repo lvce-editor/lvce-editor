@@ -3,9 +3,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletClock from '../src/parts/ViewletClock/ViewletClock.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletClock.create(0)

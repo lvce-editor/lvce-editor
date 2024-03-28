@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as ViewletExplorerFocusFirst from '../src/parts/ViewletExplorer/ViewletExplorerFocusFirst.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('focusFirst', () => {
   const state = {

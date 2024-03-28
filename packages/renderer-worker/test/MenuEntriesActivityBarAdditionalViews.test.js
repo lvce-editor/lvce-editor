@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuEntriesActivityBarAdditionalViews from '../src/parts/MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 

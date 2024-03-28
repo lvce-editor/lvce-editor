@@ -1,5 +1,5 @@
-import * as TextSegmenter from '../src/parts/TextSegmenter/TextSegmenter.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as TextSegmenter from '../src/parts/TextSegmenter/TextSegmenter.js'
 
 test('visualIndex', () => {
   const segmenter = TextSegmenter.create()

@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as QuickPickEntriesSymbol from '../src/parts/QuickPickEntriesSymbol/QuickPickEntriesSymbol.js'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('name', () => {
   expect(QuickPickEntriesSymbol.name).toBe('symbol')

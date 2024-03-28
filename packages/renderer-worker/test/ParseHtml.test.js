@@ -1,7 +1,7 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ParseHtml from '../src/parts/ParseHtml/ParseHtml.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import { text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('text', () => {
   const html = 'Hello World'

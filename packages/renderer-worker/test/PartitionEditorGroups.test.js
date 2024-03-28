@@ -1,5 +1,5 @@
-import * as PartitionEditorGroups from '../src/parts/PartitionEditorGroups/PartitionEditorGroups.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as PartitionEditorGroups from '../src/parts/PartitionEditorGroups/PartitionEditorGroups.js'
 
 test('partitionEditorGroups - new group added', () => {
   const oldGroups = []

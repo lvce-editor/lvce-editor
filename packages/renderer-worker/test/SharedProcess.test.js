@@ -1,8 +1,7 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as SharedProcessState from '../src/parts/SharedProcessState/SharedProcessState.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test.skip('invoke - error', async () => {
   SharedProcessState.state.ipc = {

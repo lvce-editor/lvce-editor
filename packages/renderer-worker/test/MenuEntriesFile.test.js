@@ -1,7 +1,7 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuEntriesFile from '../src/parts/MenuEntriesFile/MenuEntriesFile.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesFile.getMenuEntries()

@@ -1,6 +1,5 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as LocationType from '../src/parts/LocationType/LocationType.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(() => {

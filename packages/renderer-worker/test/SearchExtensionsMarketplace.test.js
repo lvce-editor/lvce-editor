@@ -1,5 +1,6 @@
-const SearchExtensionsMarketplace = await import('../src/parts/SearchExtensionsMarketplace/SearchExtensionsMarketplace.js')
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+
+const SearchExtensionsMarketplace = await import('../src/parts/SearchExtensionsMarketplace/SearchExtensionsMarketplace.js')
 
 test.skip('getExtensions - error', async () => {
   // @ts-ignore

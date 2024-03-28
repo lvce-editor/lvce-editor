@@ -1,5 +1,5 @@
-import * as SourceMap from '../src/parts/SourceMap/SourceMap.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as SourceMap from '../src/parts/SourceMap/SourceMap.js'
 
 test('getOriginalPosition - error - source map is null', () => {
   expect(() => SourceMap.getOriginalPosition(null, 0, 0)).toThrow(

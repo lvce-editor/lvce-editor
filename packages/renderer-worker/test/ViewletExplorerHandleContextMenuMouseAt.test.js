@@ -1,7 +1,6 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

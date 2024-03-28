@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletMap from '../src/parts/ViewletMap/ViewletMap.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('image - png', () => {
   expect(ViewletMap.getModuleId('/test/file.png')).toBe(ViewletModuleId.EditorImage)

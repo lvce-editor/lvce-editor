@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as QuickPickEntriesGoToLine from '../src/parts/QuickPickEntriesGoToLine/QuickPickEntriesGoToLine.js'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('name', () => {
   expect(QuickPickEntriesGoToLine.name).toBe('goToLine')

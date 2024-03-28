@@ -1,8 +1,8 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as MenuEntriesActivityBar from '../src/parts/MenuEntriesActivityBar/MenuEntriesActivityBar.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getMenuEntries', async () => {
   const activityBarState = {

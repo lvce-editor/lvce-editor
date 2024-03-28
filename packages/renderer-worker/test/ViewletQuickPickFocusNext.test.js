@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
 import * as ViewletQuickPickFocusNext from '../src/parts/ViewletQuickPick/ViewletQuickPickFocusNext.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('focusNext', async () => {
   const state = {

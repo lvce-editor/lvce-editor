@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletPanel from '../src/parts/ViewletPanel/ViewletPanel.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletPanel.create()
