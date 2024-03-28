@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ExtensionHostFormatting from '../src/parts/ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
@@ -6,11 +7,18 @@ beforeEach(() => {
 })
 
 test('executeFormattingProvider - error - result value is of type string', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: 'a',
+    },
+  ])
   ExtensionHostFormatting.registerFormattingProvider({
     languageId: 'javascript',
     format() {
-      return `b`
+      return 'b'
     },
   })
   // @ts-ignore
@@ -20,7 +28,14 @@ test('executeFormattingProvider - error - result value is of type string', async
 })
 
 test('executeFormattingProvider - error - result value is of type object', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: 'a',
+    },
+  ])
   ExtensionHostFormatting.registerFormattingProvider({
     languageId: 'javascript',
     format() {
@@ -34,7 +49,14 @@ test('executeFormattingProvider - error - result value is of type object', async
 })
 
 test('executeFormattingProvider', async () => {
-  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' }])
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: 'a',
+    },
+  ])
   ExtensionHostFormatting.registerFormattingProvider({
     languageId: 'javascript',
     format() {

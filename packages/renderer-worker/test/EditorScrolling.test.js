@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorScrolling from '../src/parts/Editor/EditorScrolling.js'
 
 test('setDeltaY - scroll down', () => {

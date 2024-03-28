@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ErrorType from '../src/parts/ErrorType/ErrorType.js'
 import * as GetErrorConstructor from '../src/parts/GetErrorConstructor/GetErrorConstructor.js'
 

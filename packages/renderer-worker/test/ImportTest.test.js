@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import { BabelParseError } from '../src/parts/BabelParseError/BabelParseError.js'
 
 beforeEach(() => {
