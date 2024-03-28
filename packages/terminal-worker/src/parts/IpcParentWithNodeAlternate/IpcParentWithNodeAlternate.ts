@@ -1,7 +1,15 @@
 import * as GetData from '../GetData/GetData.ts'
 
 export const create = async (options) => {
-  throw new Error('not implemented')
+  const module = await import('../IpcParentWithWebSocket/IpcParentWithWebSocket.ts')
+  const rawIpc = await module.create(options)
+  if (options.raw) {
+    return rawIpc
+  }
+  return {
+    rawIpc,
+    module,
+  }
 }
 
 export const wrap = (port) => {

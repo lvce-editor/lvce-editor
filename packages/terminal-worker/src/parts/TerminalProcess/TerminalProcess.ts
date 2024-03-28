@@ -4,7 +4,6 @@ import * as LaunchTerminalProcess from '../LaunchTerminalProcess/LaunchTerminalP
 
 export const listen = async () => {
   await LaunchTerminalProcess.launchTerminalProcess()
-  console.log('setup terminal connection')
 }
 
 export const invoke = (method, ...params) => {
