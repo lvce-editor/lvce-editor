@@ -1,6 +1,7 @@
 import * as ViewletCounter from '../src/parts/ViewletCounter/ViewletCounter.js'
 import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletCounter, oldState, newState, ViewletModuleId.Counter)

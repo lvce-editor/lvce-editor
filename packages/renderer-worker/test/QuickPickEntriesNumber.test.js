@@ -1,5 +1,6 @@
 import * as QuickPickEntriesNumber from '../src/parts/QuickPickEntriesNumber/QuickPickEntriesNumber.js'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('name', () => {
   expect(QuickPickEntriesNumber.name).toBe('number')

@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeAll(() => {
   ViewletStates.reset()

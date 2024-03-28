@@ -1,4 +1,5 @@
 import * as MergeStacks from '../src/parts/MergeStacks/MergeStacks.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('mergeStacks', () => {
   const parent = `VError: Failed to close widget 123: instance not found 123

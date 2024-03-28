@@ -1,5 +1,6 @@
 import * as ParseExtensionSearchValue from '../src/parts/ParseExtensionSearchValue/ParseExtensionSearchValue.js'
 import * as SearchExtensionsLocal from '../src/parts/SearchExtensionsLocal/SearchExtensionsLocal.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('searchExtensions - error - extension has no name, use id for filtering', async () => {
   const extensions = [

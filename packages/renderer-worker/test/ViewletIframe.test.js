@@ -1,5 +1,6 @@
 import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 

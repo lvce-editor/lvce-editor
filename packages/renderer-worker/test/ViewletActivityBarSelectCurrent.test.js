@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 

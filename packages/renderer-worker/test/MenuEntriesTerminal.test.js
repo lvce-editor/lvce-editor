@@ -1,4 +1,5 @@
 import * as MenuEntriesTerminal from '../src/parts/MenuEntriesTerminal/MenuEntriesTerminal.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesTerminal.getMenuEntries()

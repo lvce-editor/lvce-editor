@@ -1,5 +1,6 @@
 import * as MenuEntriesEdit from '../src/parts/MenuEntriesEdit/MenuEntriesEdit.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesEdit.getMenuEntries()

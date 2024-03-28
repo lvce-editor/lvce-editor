@@ -1,4 +1,5 @@
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 

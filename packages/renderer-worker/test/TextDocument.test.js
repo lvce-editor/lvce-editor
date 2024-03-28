@@ -1,5 +1,6 @@
 import * as TextDocument from '../src/parts/TextDocument/TextDocument.js'
 import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('applyEdits - one single line edit', () => {
   const textDocument = {
