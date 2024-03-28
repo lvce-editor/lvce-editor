@@ -1,6 +1,7 @@
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
+import * as Replace from '../Replace/Replace.js'
 
 export const bundleTerminalWorker = async ({ cachePath, commitHash, platform, assetDir }) => {
   await Copy.copy({
@@ -11,6 +12,13 @@ export const bundleTerminalWorker = async ({ cachePath, commitHash, platform, as
     from: 'static/js',
     to: Path.join(cachePath, 'static', 'js'),
   })
+  for (const file of ['TerminalEmulator']) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/${file}/${file}.ts`,
+      occurrence: `../../../../../static/`,
+      replacement: `../../../static/`,
+    })
+  }
   await BundleJs.bundleJs({
     cwd: cachePath,
     from: `./src/terminalWorkerMain.ts`,
