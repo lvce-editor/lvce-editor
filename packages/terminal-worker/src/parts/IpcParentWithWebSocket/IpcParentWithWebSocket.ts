@@ -32,22 +32,27 @@ export const wrap = (webSocket) => {
     },
     set onmessage(listener) {
       if (listener) {
+        // @ts-ignore
         this.handleMessage = (event) => {
           // TODO why are some events not instance of message event?
           if (event instanceof MessageEvent) {
             const message = JSON.parse(event.data)
+            // @ts-ignore
             listener(message)
           } else {
+            // @ts-ignore
             listener(event)
           }
         }
       } else {
+        // @ts-ignore
         this.handleMessage = null
       }
       this.webSocket.onmessage = this.handleMessage
     },
     send(message) {
       if (this.webSocket.readyState !== webSocket.OPEN) {
+        // @ts-ignore
         throw new VError(`Failed to send message: WebSocket is not open`)
       }
       const stringifiedMessage = Json.stringifyCompact(message)
