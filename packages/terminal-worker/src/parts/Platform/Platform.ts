@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 
 const getPlatform = () => {
