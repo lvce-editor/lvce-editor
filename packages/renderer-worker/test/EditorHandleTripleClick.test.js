@@ -1,5 +1,5 @@
+import { expect, test } from '@jest/globals'
 import * as EditorHandleTripleClick from '../src/parts/EditorCommand/EditorCommandHandleTripleClick.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test.skip('editorHandleTripleClick', () => {
   const editor = {

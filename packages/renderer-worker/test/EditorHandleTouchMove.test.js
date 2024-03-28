@@ -1,9 +1,8 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as EditorHandleTouchMove from '../src/parts/EditorCommand/EditorCommandHandleTouchMove.js'
 import * as EditorHandleTouchStart from '../src/parts/EditorCommand/EditorCommandHandleTouchStart.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test.skip('editorHandleTouchMove - single touch', () => {
   const editor = {
