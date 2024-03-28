@@ -482,6 +482,10 @@ const getHandleMessage = (request) => {
 
 const sendHandle = (request, socket, method, ...params) => {
   request.on('error', (error) => {
+    if (error && error.code === 'ECONNRESET') {
+      // ignore
+      return
+    }
     console.info('[info]: request upgrade error', error)
   })
   socket.on('error', () => {
