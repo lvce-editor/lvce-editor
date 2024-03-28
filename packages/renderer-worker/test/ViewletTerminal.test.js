@@ -2,8 +2,7 @@
  * @jest-environment jsdom
  */
 import { TextEncoder } from 'node:util'
-import { jest } from '@jest/globals'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeAll(() => {
   // https://github.com/jsdom/jsdom/issues/2524#issuecomment-736672511

@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorMoveSelection from '../src/parts/EditorCommand/EditorCommandMoveSelection.js'
 import * as EditorMoveSelectionPx from '../src/parts/EditorCommand/EditorCommandMoveSelectionPx.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test.skip('moveSelectionPx', () => {
   const editor = {

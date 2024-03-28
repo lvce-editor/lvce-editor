@@ -1,8 +1,8 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 import * as ViewletTitleBarMenuBarHandleKeyEscape from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyEscape.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('handleKeyEscape - close sub menu', () => {
   const state = {

@@ -1,7 +1,7 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as VirtualList from '../src/parts/VirtualList/VirtualList.js'
 import * as VirtualListHandleWheel from '../src/parts/VirtualList/VirtualListHandleWheel.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('handleWheel - scroll down', () => {
   const state = {

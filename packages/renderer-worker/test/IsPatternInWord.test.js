@@ -1,5 +1,5 @@
-import * as IsPatternInWord from '../src/parts/IsPatternInWord/IsPatternInWord.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as IsPatternInWord from '../src/parts/IsPatternInWord/IsPatternInWord.js'
 
 test('isPatternInWord - path', () => {
   const word = '/test/folder-1/folder-2/folder-3/folder-4/folder-5/content'

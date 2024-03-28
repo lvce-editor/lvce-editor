@@ -1,5 +1,5 @@
-import * as IsAscii from '../src/parts/IsAscii/IsAscii.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as IsAscii from '../src/parts/IsAscii/IsAscii.js'
 
 test('lowercase ascii letter', () => {
   expect(IsAscii.isAscii('a')).toBe(true)

@@ -1,6 +1,5 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as Listener from '../src/parts/Listener/Listener.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 afterEach(() => {
   for (const id in Listener.state) {

@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorSelectHorizontalRight from '../src/parts/EditorCommand/EditorCommandSelectHorizontalRight.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('editorSelectHorizontalRight - single character', () => {
   const editor = {

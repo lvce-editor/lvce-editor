@@ -1,6 +1,6 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as VirtualList from '../src/parts/VirtualList/VirtualList.js'
 import * as VirtualListHandleTouchMove from '../src/parts/VirtualList/VirtualListHandleTouchMove.js'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 test('handleTouchMove - empty touches array', () => {
   const state = VirtualList.create({

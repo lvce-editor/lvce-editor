@@ -1,5 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import { jest } from '@jest/globals'
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach, jest } from '@jest/globals'
 import * as EditorPaste from '../src/parts/EditorCommand/EditorCommandPaste.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'

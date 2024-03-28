@@ -1,5 +1,5 @@
-import * as IsAllAutoClosingPairDelete from '../src/parts/IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.js'
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import * as IsAllAutoClosingPairDelete from '../src/parts/IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.js'
 
 test('isAllAutoClosingPairDelete - single range', () => {
   const autoClosingRanges = [0, 1, 0, 1]
