@@ -44,6 +44,7 @@ export const contentLoadedEffects = async (state) => {
   await TerminalWorker.getOrCreate()
   const canvasText = await OffscreenCanvas.create(canvasTextId)
   const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
+  console.log({ canvasText, canvasCursor })
   await TerminalWorker.invokeAndTransfer([canvasText, canvasCursor], 'Terminal.create', canvasText, canvasCursor)
   // setTimeout(async () => {
   //   await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
