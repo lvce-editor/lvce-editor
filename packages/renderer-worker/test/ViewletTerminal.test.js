@@ -51,6 +51,13 @@ jest.unstable_mockModule('../src/parts/GetTerminalSpawnOptions/GetTerminalSpawnO
     },
   }
 })
+jest.unstable_mockModule('../src/parts/OffscreenCanvas/OffscreenCanvas.js', () => {
+  return {
+    create() {
+      return {}
+    },
+  }
+})
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')

@@ -304,6 +304,10 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
  */
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
   // console.time(`load/${viewlet.id}`)
+  // TODO
+  if (viewlet.id === 'Terminal') {
+    viewlet.setBounds = false
+  }
   if (viewlet.type !== 0) {
     console.log('viewlet must be empty')
     throw new Error('viewlet must be empty')

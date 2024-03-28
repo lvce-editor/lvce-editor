@@ -1507,15 +1507,19 @@ const ROWS$1 = 25;
 const BUFFER_LINES$1 = 200;
 const noop$1 = () => {
 };
-const createOffscreenTerminalDom = (root, {handleMouseDown = noop$1, handleKeyDown = noop$1, handleBlur = noop$1}) => {
+const createOffscreenTerminalDom = (root, {
+  handleMouseDown = noop$1,
+  handleKeyDown = noop$1,
+  handleBlur = noop$1,
+  canvasText = document.createElement("canvas"),
+  canvasCursor = document.createElement("canvas")
+}) => {
   root.onmousedown = (event) => {
     event.preventDefault();
     textarea.focus();
     handleMouseDown();
   };
-  const canvasText = document.createElement("canvas");
   canvasText.className = "TerminalCanvasText";
-  const canvasCursor = document.createElement("canvas");
   canvasCursor.className = "TerminalCanvasCursor";
   const $Layers = document.createElement("div");
   $Layers.className = "TerminalLayers";
@@ -1539,14 +1543,16 @@ const createOffscreenTerminalDom = (root, {handleMouseDown = noop$1, handleKeyDo
   };
   textarea.addEventListener("beforeinput", handleBeforeInput);
   textarea.onblur = handleBlur;
-  const offscreenCanvasText = canvasText.transferControlToOffscreen();
-  const offscreenCanvasCursor = canvasCursor.transferControlToOffscreen();
   const focusTextArea = () => {
     textarea.focus();
   };
   return {
-    offscreenCanvasCursor,
-    offscreenCanvasText,
+    get offscreenCanvasCursor() {
+      return canvasCursor.transferControlToOffscreen();
+    },
+    get offscreenCanvasText() {
+      return canvasText.transferControlToOffscreen();
+    },
     focusTextArea
   };
 };
