@@ -46,27 +46,6 @@ export const contentLoadedEffects = async (state) => {
   const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
   console.log({ canvasText, canvasCursor })
   await TerminalWorker.invokeAndTransfer([canvasText, canvasCursor], 'Terminal.create', canvasText, canvasCursor)
-  // setTimeout(async () => {
-  //   await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
-  //   const response = await promise
-  //   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
-  //   const { offscreenCanvasCursor, offscreenCanvasText } = result
-  //   const terminal = await TerminalEmulator.create({
-  //     offscreenCanvasCursor,
-  //     offscreenCanvasText,
-  //     async focusTextArea() {
-  //       await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
-  //     },
-  //     handleInput(transformedKey) {
-  //       Terminal.write(uid, transformedKey)
-  //     },
-  //   })
-  //   ViewletStates.setState(uid, {
-  //     ...ViewletStates.getState(uid),
-  //     terminal,
-  //   })
-  //   await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
-  // })
 }
 
 export const handleBlur = (state) => {
