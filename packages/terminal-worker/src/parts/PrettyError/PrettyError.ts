@@ -1,5 +1,3 @@
-import * as Ajax from '../Ajax/Ajax.ts'
-import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 
@@ -70,25 +68,10 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     if (!match) {
       return error
     }
-    const [_, path, line, column] = match
-    const text = await Ajax.getText(path)
-    const parsedLine = Number.parseInt(line)
-    const parsedColumn = Number.parseInt(column)
-    const codeFrame = CodeFrameColumns.create(text, {
-      start: {
-        line: parsedLine,
-        column: parsedColumn,
-      },
-      end: {
-        line: parsedLine,
-        column: parsedColumn,
-      },
-    })
     const relevantStack = JoinLines.joinLines(lines.slice(1))
     const message = getErrorMessage(error)
     return {
       message,
-      codeFrame,
       stack: relevantStack,
       type: error.constructor.name,
     }
