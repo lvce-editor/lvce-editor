@@ -72,6 +72,20 @@ export const copySharedProcessSources = async ({ to, product, commitHash, versio
 `,
     })
     await Replace.replace({
+      path: 'build/.tmp/server/shared-process/src/parts/Platform/Platform.js',
+      occurrence: `export const getExtensionHostPath = async () => {
+  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
+}
+`,
+      replacement: `export const getExtensionHostPath = async () => {
+  const { extensionHostPath } = await import(
+    '@lvce-editor/extension-host'
+  )
+  return extensionHostPath
+}
+`,
+    })
+    await Replace.replace({
       path: `build/.tmp/server/shared-process/src/parts/PtyHostPath/PtyHostPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
