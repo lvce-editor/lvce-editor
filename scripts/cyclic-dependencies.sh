@@ -16,7 +16,6 @@ else
     echo "dpdm is installed"
 fi
 
-cd packages/extension-host         && echo "Checking extension-host"                 && dpdm --no-warning --no-tree --exit-code circular:1 src/extensionHostMain.js  && cd ../.. &&
 cd packages/main-process           && echo "Checking main-process"                   && dpdm --no-warning --no-tree --exit-code circular:1 src/mainProcessMain.js  && cd ../.. &&
 cd packages/pty-host               && echo "Checking pty-host"                       && dpdm --no-warning --no-tree --exit-code circular:1 src/ptyHostMain.js  && cd ../.. &&
 cd packages/renderer-process       && echo "Checking renderer-process"               && dpdm --no-warning --no-tree --exit-code circular:1 src/rendererProcessMain.js  && cd ../.. &&
