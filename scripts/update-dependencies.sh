@@ -29,7 +29,6 @@ function updateDependencies {
 }
 
                                                        updateDependencies             &&
-cd packages/extension-host                          && updateDependencies && cd ../.. &&
 cd packages/main-process                            && updateDependencies && cd ../.. &&
 cd packages/pty-host                                && updateDependencies && cd ../.. &&
 cd packages/renderer-process                        && updateDependencies && cd ../.. &&

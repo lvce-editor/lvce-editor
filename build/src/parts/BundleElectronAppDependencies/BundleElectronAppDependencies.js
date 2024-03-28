@@ -1,5 +1,4 @@
 import { readdir } from 'node:fs/promises'
-import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
@@ -27,12 +26,6 @@ const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
   await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
     to: `${cachePath}/packages/extension-host-helper-process`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
-  })
-}
-
-const copyExtensionHostFiles = async ({ cachePath }) => {
-  await BundleExtensionHostDependencies.bundleExtensionHostDependencies({
-    to: `${cachePath}/packages/extension-host`,
   })
 }
 

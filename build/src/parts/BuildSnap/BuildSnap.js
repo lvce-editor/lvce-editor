@@ -92,20 +92,6 @@ const copyCode = async (arch) => {
     to: `build/.tmp/linux/snap/${arch}/files/extensions/builtin.language-basics-go/src`,
   })
 
-  // extension host
-  await Copy.copyFile({
-    from: 'packages/extension-host/package.json',
-    to: `build/.tmp/linux/snap/${arch}/files/packages/extension-host/package.json`,
-  })
-  await Copy.copyFile({
-    from: 'packages/extension-host/package-lock.json',
-    to: `build/.tmp/linux/snap/${arch}/files/packages/extension-host/package-lock.json`,
-  })
-  await Copy.copy({
-    from: 'packages/extension-host/src',
-    to: `build/.tmp/linux/snap/${arch}/files/packages/extension-host/src`,
-  })
-
   // main process
   await Copy.copyFile({
     from: 'packages/main-process/package.json',

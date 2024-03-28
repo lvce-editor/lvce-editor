@@ -3,7 +3,6 @@
   "include": [],
   "references": [
     { "path": "./build" },
-    { "path": "./packages/extension-host" },
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
     { "path": "./packages/extension-host-worker" },
