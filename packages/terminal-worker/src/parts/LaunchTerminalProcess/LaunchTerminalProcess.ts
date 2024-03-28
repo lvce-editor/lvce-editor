@@ -1,7 +1,7 @@
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import { VError } from '../VError/VError.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
+import * as IpcParent from '../IpcParent/IpcParent.ts'
+import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
+import { VError } from '../VError/VError.ts'
 
 export const launchTerminalProcess = async () => {
   try {
