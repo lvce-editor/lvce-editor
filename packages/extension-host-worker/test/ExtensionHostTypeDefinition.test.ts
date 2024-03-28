@@ -99,7 +99,7 @@ test('executeTypeDefinitionProvider - error - definition must be of type object 
   // @ts-ignore
   await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is () => {}',
+      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is () => { }',
     ),
   )
 })
