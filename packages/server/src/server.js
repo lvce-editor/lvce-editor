@@ -71,6 +71,11 @@ const ContentSecurityPolicyExtensionHostWorker = {
   value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
 }
 
+const ContentSecurityPolicyTerminalWorker = {
+  key: 'Content-Security-Policy',
+  value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`].map(addSemicolon).join(' '),
+}
+
 const CrossOriginOpenerPolicy = {
   key: 'Cross-Origin-Opener-Policy',
   value: 'same-origin',
@@ -155,6 +160,10 @@ const isExtensionHostWorkerUrl = (url) => {
   return url.endsWith('extensionHostWorkerMain.js') || url.endsWith('extensionHostWorkerMain.ts')
 }
 
+const isTerminalWorkerUrl = (url) => {
+  return url.endsWith('terminalWorkerMain.js') || url.endsWith('terminalWorkerMain.ts')
+}
+
 const getEtag = (fileStat) => {
   return `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
 }
@@ -204,6 +213,9 @@ const serveStatic = (root, skip = '') =>
     } else if (isExtensionHostWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyExtensionHostWorker.key] = ContentSecurityPolicyExtensionHostWorker.value
+    } else if (isTerminalWorkerUrl(filePath)) {
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[ContentSecurityPolicyTerminalWorker.key] = ContentSecurityPolicyTerminalWorker.value
     } else if (isWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
     }
