@@ -663,6 +663,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   })
 }
 
+const copyExtensionHostFiles = async () => {
+  await Copy.copy({
+    from: 'packages/extension-host',
+    to: 'build/.tmp/server/extension-host',
+    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
+  })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/extension-host/LICENSE',
+  })
+}
+
 const copyExtensionHostHelperProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process',
@@ -693,6 +705,7 @@ const sortObject = (object) => {
 
 const setVersionsAndDependencies = async ({ version }) => {
   const files = [
+    'build/.tmp/server/extension-host/package.json',
     'build/.tmp/server/pty-host/package.json',
     'build/.tmp/server/server/package.json',
     'build/.tmp/server/shared-process/package.json',
@@ -722,6 +735,9 @@ const setVersionsAndDependencies = async ({ version }) => {
     }
     if (json.dependencies && json.dependencies['@lvce-editor/pty-host']) {
       json.dependencies['@lvce-editor/pty-host'] = version
+    }
+    if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
+      json.dependencies['@lvce-editor/extension-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
@@ -911,6 +927,10 @@ export const build = async ({ product }) => {
   console.time('copyExtensions')
   await copyExtensions({ commitHash })
   console.timeEnd('copyExtensions')
+
+  console.time('copyExtensionHostFiles')
+  await copyExtensionHostFiles()
+  console.timeEnd('copyExtensionHostFiles')
 
   console.time('copyExtensionHostHelperProcessFiles')
   await copyExtensionHostHelperProcessFiles()
