@@ -12,3 +12,7 @@ export const create = async (
   await TerminalProcess.invoke('Terminal.create', id, cwd, command, args)
   console.log({ canvasText, canvasCursor })
 }
+
+export const handleMessage = (id, method, ...args) => {
+  console.log({ id, method, args })
+}
