@@ -18,8 +18,8 @@ export const create = async (
     focusTextArea() {
       // TODO
     },
-    handleInput() {
-      // TODO
+    handleInput(input) {
+      TerminalProcess.send('Terminal.write', id, input)
     },
   })
   TerminalEmulatorState.set(id, emulator)
@@ -33,4 +33,24 @@ export const handleMessage = (id, method, ...args) => {
     const parsedData = ToUint8Array.toUint8Array(data)
     emulator.write(parsedData)
   }
+}
+
+export const write = (id, data) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.write(data)
+}
+
+export const handleBlur = (id) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.handleBlur()
+}
+
+export const handleKeyDown = (id, key) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.handleKeyDown(key)
+}
+
+export const handleMouseDown = (id) => {
+  const emulator = TerminalEmulatorState.get(id)
+  emulator.handleMouseDown()
 }
