@@ -1,11 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Callback from '../Callback/Callback.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
-import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
@@ -40,7 +39,6 @@ export const loadContent = async (state) => {
 
 export const contentLoadedEffects = async (state) => {
   const { uid, separateConnection, command, args, canvasTextId, canvasCursorId } = state
-  const { id, promise } = Callback.registerPromise()
   await TerminalWorker.getOrCreate()
   const canvasText = await OffscreenCanvas.create(canvasTextId)
   const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
