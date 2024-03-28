@@ -85,7 +85,7 @@ test('executeBraceCompletionProvider - error - definition must be of type object
   // @ts-ignore
   await expect(ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute brace completion provider: VError: invalid brace completion result: braceCompletion must be of type boolean but is () => {}',
+      'Failed to execute brace completion provider: VError: invalid brace completion result: braceCompletion must be of type boolean but is () => { }',
     ),
   )
 })
