@@ -37,12 +37,12 @@
   },
   {
     "name": "termterm",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "type": "javascript"
   },
   {
     "name": "termterm",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "type": "css",
     "path": "css/termterm.css"
   },

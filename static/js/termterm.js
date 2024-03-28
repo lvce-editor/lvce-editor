@@ -1543,8 +1543,8 @@ const createOffscreenTerminalDom = (root, {
   };
   textarea.addEventListener("beforeinput", handleBeforeInput);
   textarea.onblur = handleBlur;
-  const offscreenCanvasText = canvasText.transferControlToOffscreen();
-  const offscreenCanvasCursor = canvasCursor.transferControlToOffscreen();
+  const offscreenCanvasText = canvasText instanceof OffscreenCanvas ? canvasText : canvasText.transferControlToOffscreen();
+  const offscreenCanvasCursor = canvasCursor instanceof OffscreenCanvas ? canvasCursor : canvasCursor.transferControlToOffscreen();
   const focusTextArea = () => {
     textarea.focus();
   };
