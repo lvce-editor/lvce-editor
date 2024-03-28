@@ -1,12 +1,22 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Terminal from '../Terminal/Terminal.js'
 import * as IsUint8Array from '../IsUint8Array/IsUint8Array.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Terminal from '../Terminal/Terminal.js'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Terminal'
+  return {
+    $Viewlet,
+    terminal: undefined,
+  }
+}
+
+export const setTerminal = (state, canvasCursorId, canvasTextId) => {
+  const canvasText = OffscreenCanvas.get(canvasTextId)
+  const canvasCursor = OffscreenCanvas.create(canvasCursorId)
+  const { $Viewlet } = state
   const terminal = Terminal.create({
     $Element: $Viewlet,
     handleKeyDown: (...args) => ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args),
@@ -15,27 +25,10 @@ export const create = () => {
     handleMouseDown: (...args) => ViewletTerminalEvents.handleMouseDown({ target: $Viewlet }, ...args),
     background: `#1b2020`,
     foreground: 'white',
+    canvasText,
+    canvasCursor,
   })
-
-  return {
-    $Viewlet,
-    terminal,
-  }
-}
-
-export const transferCanvases = (state, id) => {
-  const { terminal } = state
-  const { offscreenCanvasCursor, offscreenCanvasText } = terminal
-  const message = {
-    jsonrpc: '2.0',
-    id,
-    result: {
-      offscreenCanvasCursor,
-      offscreenCanvasText,
-    },
-  }
-  const transfer = [offscreenCanvasCursor, offscreenCanvasText]
-  RendererWorker.sendAndTransfer(message, transfer)
+  state.terminal = terminal
 }
 
 export const focusTextArea = (state) => {

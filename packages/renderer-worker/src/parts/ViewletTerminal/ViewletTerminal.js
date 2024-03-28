@@ -28,6 +28,8 @@ export const loadContent = async (state) => {
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const canvasTextId = Id.create()
   const canvasCursorId = Id.create()
+  const canvasText = await OffscreenCanvas.create(canvasTextId)
+  const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
   return {
     ...state,
     id: Id.create(),
@@ -35,14 +37,14 @@ export const loadContent = async (state) => {
     args,
     canvasCursorId,
     canvasTextId,
+    canvasText,
+    canvasCursor,
   }
 }
 
 export const contentLoadedEffects = async (state) => {
-  const { uid, command, args, canvasTextId, canvasCursorId } = state
+  const { uid, command, args, canvasCursor, canvasText } = state
   await TerminalWorker.getOrCreate()
-  const canvasText = await OffscreenCanvas.create(canvasTextId)
-  const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
   await TerminalWorker.invokeAndTransfer(
     [canvasText, canvasCursor],
     'Terminal.create',
