@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as VirtualListFocusNextPage from '../src/parts/VirtualList/VirtualListFocusNextPage.js'
 
 test('focusNextPage - scroll down one full page', () => {
