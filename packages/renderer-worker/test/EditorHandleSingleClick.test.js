@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 
 beforeEach(() => {

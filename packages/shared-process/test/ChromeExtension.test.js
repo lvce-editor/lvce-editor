@@ -1,4 +1,5 @@
 import * as ChromeExtension from '../src/parts/ChromeExtension/ChromeExtension.js'
+import { jest, beforeEach, test, expect } from '@jest/globals'
 
 test('install - error - url is not of type string', async () => {
   await expect(ChromeExtension.install('abc', undefined)).rejects.toThrow(

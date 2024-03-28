@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
@@ -308,7 +308,7 @@ test('backgroundLoad', async () => {
     backgroundLoadContent: jest.fn(async (state, savedState) => {
       return {
         title: 'Test Title',
-        uri: `test://1`,
+        uri: 'test://1',
       }
     }),
   }

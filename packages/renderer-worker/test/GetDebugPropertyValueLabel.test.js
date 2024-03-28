@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetDebugPropertyValueLabel from '../src/parts/GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
 
 test('getDebugPropertyValueLabel = number', () => {
@@ -5,7 +6,7 @@ test('getDebugPropertyValueLabel = number', () => {
     type: 'number',
     description: '1',
   }
-  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe(`1`)
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('1')
 })
 
 test('getDebugPropertyValueLabel - boolean', () => {

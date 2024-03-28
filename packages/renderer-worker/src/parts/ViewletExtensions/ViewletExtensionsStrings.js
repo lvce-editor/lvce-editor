@@ -12,7 +12,7 @@ const UiStrings = {
   Disable: 'Disable',
   Uninstall: 'Uninstall',
   InstallAnotherVersion: 'Install Another Version',
-  SearchExtensionsInMarketplace: `Search Extensions in Marketplace`,
+  SearchExtensionsInMarketplace: 'Search Extensions in Marketplace',
   ViewsAndMoreActions: 'Views and more Actions...',
 }
 

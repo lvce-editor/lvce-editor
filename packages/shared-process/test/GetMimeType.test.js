@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as GetMimeType from '../src/parts/GetMimeType/GetMimeType.js'
 
 test('html', () => {

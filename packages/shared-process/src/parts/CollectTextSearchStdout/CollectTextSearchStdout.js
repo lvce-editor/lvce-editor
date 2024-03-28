@@ -92,7 +92,7 @@ export const collectStdout = async (childProcess, maxSearchResults, charsBefore,
           callback(error)
         }
       },
-    })
+    }),
   )
   const results = Object.values(allSearchResults).flat(1)
   return {

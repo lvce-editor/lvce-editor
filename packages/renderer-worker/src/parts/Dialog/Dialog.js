@@ -33,7 +33,6 @@ export const openFile = () => {
     case PlatformType.Electron:
       return openFileElectron()
     default:
-      return
   }
 }
 
@@ -44,7 +43,7 @@ export const handleClick = async (index) => {
   // TODO handle case when index is out of bounds
   switch (option) {
     case 'Show Command Output':
-      const uri = `data://`
+      const uri = 'data://'
       await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
       // TODO show stderr in editor
       // TODO close dialog
@@ -62,9 +61,7 @@ export const showMessage = async (message, options) => {
   // TODO implement actual dialog component for web
   // RendererProcess.invoke(/* Dialog.alert */ 7834, /* message */ message)
   // TODO on electron use native dialog
-  if (!options) {
-    options = ['Show Command Output', 'Cancel', 'Open Git Log']
-  }
+  options ||= ['Show Command Output', 'Cancel', 'Open Git Log']
   // @ts-ignore
   state.dialog = {
     message,

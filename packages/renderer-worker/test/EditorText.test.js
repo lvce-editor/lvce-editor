@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -80,21 +80,21 @@ test('getVisible', () => {
       {
         state: 1,
         tokens: [
-          /* type */ 228, /* length */ 1,
+          /* type */ 228 /* length */, 1,
 
-          /* type */ 118, /* length */ 2,
+          /* type */ 118 /* length */, 2,
 
-          /* type */ 228, /* length */ 1,
+          /* type */ 228 /* length */, 1,
 
-          /* type */ 117, /* length */ 11,
+          /* type */ 117 /* length */, 11,
 
-          /* type */ 228, /* length */ 1,
+          /* type */ 228 /* length */, 1,
 
-          /* type */ 228, /* length */ 1,
+          /* type */ 228 /* length */, 1,
 
-          /* type */ 118, /* length */ 2,
+          /* type */ 118 /* length */, 2,
 
-          /* type */ 228, /* length */ 1,
+          /* type */ 228 /* length */, 1,
         ],
       },
     ],
@@ -277,49 +277,49 @@ test('getVisible - with semantic tokens decorations', () => {
       {
         state: 1,
         tokens: [
-          /* type */ 951, /* length */ 5,
+          /* type */ 951 /* length */, 5,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 3,
+          /* type */ 952 /* length */, 3,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
         ],
       },
       {
@@ -480,49 +480,49 @@ test('getVisible - with multi-line semantic tokens decorations', () => {
       {
         state: 1,
         tokens: [
-          /* type */ 951, /* length */ 5,
+          /* type */ 951 /* length */, 5,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 3,
+          /* type */ 952 /* length */, 3,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 777, /* length */ 1,
+          /* type */ 777 /* length */, 1,
 
-          /* type */ 952, /* length */ 1,
+          /* type */ 952 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
         ],
       },
       {
@@ -532,21 +532,21 @@ test('getVisible - with multi-line semantic tokens decorations', () => {
       {
         state: 1,
         tokens: [
-          /* type */ 952, /* length */ 3,
+          /* type */ 952 /* length */, 3,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 30, /* length */ 1,
+          /* type */ 30 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 30, /* length */ 1,
+          /* type */ 30 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
 
-          /* type */ 30, /* length */ 1,
+          /* type */ 30 /* length */, 1,
 
-          /* type */ 10, /* length */ 1,
+          /* type */ 10 /* length */, 1,
         ],
       },
       {

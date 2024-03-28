@@ -46,7 +46,7 @@ export const filterCompletionItem = (pattern, word) => {
         columnChar,
         column,
         wordLength,
-        isDiagonalMatch
+        isDiagonalMatch,
       )
       if (row === 1 && score > 5) {
         score

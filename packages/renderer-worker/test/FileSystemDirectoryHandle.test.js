@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as DomExceptionType from '../src/parts/DomExceptionType/DomExceptionType.js'
 import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
 import * as FileSystemDirectoryHandle from '../src/parts/FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
@@ -46,6 +47,6 @@ test('getChildHandles - error - not allowed', async () => {
     },
   }
   await expect(FileSystemDirectoryHandle.getChildHandles(handle)).rejects.toThrow(
-    new Error(`The request is not allowed by the user agent or the platform in the current context.`),
+    new Error('The request is not allowed by the user agent or the platform in the current context.'),
   )
 })

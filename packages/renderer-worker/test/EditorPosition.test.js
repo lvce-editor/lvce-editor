@@ -1,5 +1,4 @@
-import { jest } from '@jest/globals'
-import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetBulkReplacementEdits from '../src/parts/GetBulkReplacementEdits/GetBulkReplacementEdits.js'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 

@@ -1,6 +1,6 @@
 import * as Electron from 'electron'
-import unhandled from 'electron-unhandled' // TODO this might slow down initial startup
 import { spawn } from 'node:child_process'
+import unhandled from 'electron-unhandled' // TODO this might slow down initial startup
 import * as AppPaths from '../AppPaths/AppPaths.js'
 import * as Argv from '../Argv/Argv.js'
 import * as Cli from '../Cli/Cli.js'

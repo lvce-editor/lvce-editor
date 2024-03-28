@@ -11,9 +11,7 @@ const resolveGit = async () => {
 }
 
 const getOrResolveGit = async () => {
-  if (!state.resolvedGit) {
-    state.resolvedGit = await resolveGit()
-  }
+  state.resolvedGit ||= await resolveGit()
   return state.resolvedGit
 }
 

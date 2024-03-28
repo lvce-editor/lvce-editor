@@ -1,5 +1,5 @@
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
-import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -37,7 +37,7 @@ test('getMenuEntries - empty', async () => {
 test('getMenuEntries - error - invalid id', async () => {
   // @ts-ignore
   MenuEntriesModule.load.mockImplementation(() => {
-    throw new Error(`module not found -1`)
+    throw new Error('module not found -1')
   })
   await expect(MenuEntries.getMenuEntries(-1)).rejects.toThrow('Failed to load menu entries for id -1: module not found -1')
 })
@@ -45,11 +45,11 @@ test('getMenuEntries - error - invalid id', async () => {
 test('getMenuEntries - error - module fails to load', async () => {
   // @ts-ignore
   MenuEntriesModule.load.mockImplementation(() => {
-    throw new TypeError(`Failed to fetch dynamically imported module: https://example.com/renderer-worker/src/parts/not-found.js`)
+    throw new TypeError('Failed to fetch dynamically imported module: https://example.com/renderer-worker/src/parts/not-found.js')
   })
   await expect(MenuEntries.getMenuEntries(-1)).rejects.toThrow(
     new Error(
-      `Failed to load menu entries for id -1: TypeError: Failed to fetch dynamically imported module: https://example.com/renderer-worker/src/parts/not-found.js`,
+      'Failed to load menu entries for id -1: TypeError: Failed to fetch dynamically imported module: https://example.com/renderer-worker/src/parts/not-found.js',
     ),
   )
 })

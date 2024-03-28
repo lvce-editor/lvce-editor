@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as FindMatchesCaseInsensitive from '../src/parts/FindMatchesCaseInsensitive/FindMatchesCaseInsensitive.js'
 
 test('findMatchesCaseInsensitive - no results', () => {

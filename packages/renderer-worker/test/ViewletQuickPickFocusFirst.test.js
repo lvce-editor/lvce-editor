@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
 import * as ViewletQuickPickFocusFirst from '../src/parts/ViewletQuickPick/ViewletQuickPickFocusFirst.js'
 

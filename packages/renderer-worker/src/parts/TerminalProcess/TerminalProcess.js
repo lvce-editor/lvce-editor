@@ -27,9 +27,7 @@ const actuallyListen = async () => {
 }
 
 export const listen = async () => {
-  if (!state.ipcPromise) {
-    state.ipcPromise = actuallyListen()
-  }
+  state.ipcPromise ||= actuallyListen()
   return state.ipcPromise
 }
 

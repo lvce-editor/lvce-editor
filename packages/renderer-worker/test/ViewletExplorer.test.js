@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
@@ -767,19 +767,19 @@ test.skip('loadContent - race condition', async () => {
               type: DirentType.File,
             },
           ]
-        } else {
-          await new Promise((resolve) => setTimeout(resolve, 1))
-          return [
-            {
-              name: 'file 1',
-              type: DirentType.File,
-            },
-            {
-              name: 'file 2',
-              type: DirentType.File,
-            },
-          ]
         }
+        await new Promise((resolve) => setTimeout(resolve, 1))
+        return [
+          {
+            name: 'file 1',
+            type: DirentType.File,
+          },
+          {
+            name: 'file 2',
+            type: DirentType.File,
+          },
+        ]
+
       case 'FileSystem.getPathSeparator':
         return '/'
       default:

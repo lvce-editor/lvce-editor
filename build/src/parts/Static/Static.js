@@ -141,6 +141,10 @@ const copyTestWorkerFiles = async ({ commitHash }) => {
     from: 'packages/test-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/test-worker/src`,
   })
+  await Copy.copy({
+    from: 'packages/terminal-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/terminal-worker/src`,
+  })
 }
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
@@ -414,7 +418,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
-    from: 'src/extensionHostWorkerMain.js',
+    from: 'src/extensionHostWorkerMain.ts',
     platform: 'webworker',
     codeSplitting: false,
     babelExternal: true,
@@ -424,6 +428,13 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     from: 'src/extensionHostSubWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
+  })
+  await BundleJs.bundleJs({
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/terminal-worker`),
+    from: 'src/terminalWorkerMain.ts',
+    platform: 'webworker',
+    codeSplitting: false,
+    babelExternal: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/test-worker`),

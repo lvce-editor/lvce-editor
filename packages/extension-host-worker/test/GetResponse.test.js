@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
@@ -29,8 +29,8 @@ test('getResponse - error - method not found', async () => {
         params: [],
         id: 1,
       },
-      fn
-    )
+      fn,
+    ),
   ).toEqual({
     jsonrpc: JsonRpcVersion.Two,
     id: 1,

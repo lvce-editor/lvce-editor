@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EditorSnippet from '../src/parts/EditorCommand/EditorCommandSnippet.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
@@ -54,7 +55,7 @@ test('editorSnippet - replace cursor', () => {
     undoStack: [],
   }
   const newEditor = EditorSnippet.editorSnippet(editor, {
-    inserted: `<h1>$0</h1>`,
+    inserted: '<h1>$0</h1>',
     deleted: 2,
     type: /* Snippet */ 2,
   })
@@ -70,10 +71,10 @@ test.skip('editorSnippet - replace with multiline snippet', () => {
     undoStack: [],
   }
   const newEditor = EditorSnippet.editorSnippet(editor, {
-    inserted: `<div>\n\t$0\n</div>`,
+    inserted: '<div>\n\t$0\n</div>',
     deleted: 3,
     type: /* Snippet */ 2,
   })
-  expect(newEditor.lines).toEqual([`<div>\n\t$0\n</div>`])
+  expect(newEditor.lines).toEqual(['<div>\n\t$0\n</div>'])
   expect(newEditor.selections).toEqual(EditorSelection.fromRange(0, 4, 0, 4))
 })

@@ -14,6 +14,6 @@ export const openFolder = async () => {
     if (IsAbortError.isAbortError(error)) {
       return
     }
-    throw new VError(error, `Failed to open folder`)
+    throw new VError(error, 'Failed to open folder')
   }
 }

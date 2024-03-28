@@ -30,6 +30,5 @@ export const openNativeFolder = async (absolutePath) => {
     case PlatformType.Electron:
       return openNativeFolderElectron(absolutePath)
     default:
-      return
   }
 }

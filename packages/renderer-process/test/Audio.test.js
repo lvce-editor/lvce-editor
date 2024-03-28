@@ -3,13 +3,12 @@
  */
 import { jest } from '@jest/globals'
 import * as Audio from '../src/parts/Audio/Audio.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 // TODO when play fails, log an info message
 
 test('play', async () => {
-  const spy = jest
-    .spyOn(HTMLMediaElement.prototype, 'play')
-    .mockImplementation(async () => {})
+  const spy = jest.spyOn(HTMLMediaElement.prototype, 'play').mockImplementation(async () => {})
   await Audio.play('/test/test-sound.oga')
   expect(spy).toHaveBeenCalled()
 })

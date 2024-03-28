@@ -39,7 +39,23 @@ const getChanges = (lines, selections, snippet) => {
     } else {
       const line = insertedLines[0]
       const placeholderIndex = line.indexOf('$0')
-      if (placeholderIndex !== -1) {
+      if (placeholderIndex === -1) {
+        const cursorColumnIndex = selectionStartColumn - snippet.deleted
+        selectionChanges.push(selectionStartRow, cursorColumnIndex, selectionStartRow, cursorColumnIndex)
+        changes.push({
+          start: {
+            rowIndex: selectionStartRow,
+            columnIndex: selectionStartColumn - snippet.deleted,
+          },
+          end: {
+            rowIndex: selectionEndRow,
+            columnIndex: selectionEndColumn,
+          },
+          inserted: insertedLines,
+          deleted: [''],
+          origin: EditOrigin.EditorSnippet,
+        })
+      } else {
         const inserted = line.replace('$0', '')
         const cursorColumnIndex = selectionEndColumn + 2
         selectionChanges.push(selectionStartRow, cursorColumnIndex, selectionStartRow, cursorColumnIndex)
@@ -53,22 +69,6 @@ const getChanges = (lines, selections, snippet) => {
             columnIndex: selectionEndColumn,
           },
           inserted: [inserted],
-          deleted: [''],
-          origin: EditOrigin.EditorSnippet,
-        })
-      } else {
-        const cursorColumnIndex = selectionStartColumn - snippet.deleted
-        selectionChanges.push(selectionStartRow, cursorColumnIndex, selectionStartRow, cursorColumnIndex)
-        changes.push({
-          start: {
-            rowIndex: selectionStartRow,
-            columnIndex: selectionStartColumn - snippet.deleted,
-          },
-          end: {
-            rowIndex: selectionEndRow,
-            columnIndex: selectionEndColumn,
-          },
-          inserted: insertedLines,
           deleted: [''],
           origin: EditOrigin.EditorSnippet,
         })

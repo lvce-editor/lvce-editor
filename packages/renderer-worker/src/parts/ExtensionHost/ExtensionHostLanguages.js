@@ -14,7 +14,7 @@ export const getLanguages = async () => {
         return await ExtensionHostLanguagesNode.getLanguages()
     }
   } catch (error) {
-    throw new VError(error, `Failed to load languages`)
+    throw new VError(error, 'Failed to load languages')
   }
 }
 

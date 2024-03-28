@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as WebSocketProtocol from '../src/parts/WebSocketProtocol/WebSocketProtocol.js'
 import * as Protocol from '../src/parts/Protocol/Protocol.js'
 

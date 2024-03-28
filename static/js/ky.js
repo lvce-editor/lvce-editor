@@ -1,3 +1,4 @@
+// @ts-nocheck
 class HTTPError extends Error {
   constructor(response, request, options) {
     const code = response.status || response.status === 0 ? response.status : "";

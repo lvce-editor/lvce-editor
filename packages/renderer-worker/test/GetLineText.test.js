@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetLineText from '../src/parts/GetLineText/GetLineText.js'
 
 test('empty', () => {
@@ -28,7 +29,7 @@ test('first line - trim', () => {
 })
 
 test('second line', () => {
-  const content = `import * as add from './add.ts'\nadd.add`
+  const content = "import * as add from './add.ts'\nadd.add"
   const startRowIndex = 1
   const startColumnIndex = 4
   const endRowIndex = 0
@@ -37,7 +38,7 @@ test('second line', () => {
 })
 
 test('third line', () => {
-  const content = `import * as add from './add.ts'\n\nadd.add`
+  const content = "import * as add from './add.ts'\n\nadd.add"
   const startRowIndex = 2
   const startColumnIndex = 4
   const endRowIndex = 0

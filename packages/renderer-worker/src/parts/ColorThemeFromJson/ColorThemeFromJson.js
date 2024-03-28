@@ -39,9 +39,7 @@ const addFallbackColors = (colors) => {
     // TODO don't assign, avoid mutation
     newColors.ActivityBarInactiveForeground = transparent(newColors.ActivityBarForeground, 0.4)
   }
-  if (!newColors.CssVariableName) {
-    newColors.CssVariableName = colors.VariableName
-  }
+  newColors.CssVariableName ||= colors.VariableName
   return newColors
 }
 

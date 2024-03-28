@@ -34,7 +34,7 @@ export const getFileNameIcon = (file) => {
     const languageId = Languages.getLanguageId(fileNameLower)
     const languageIcon = iconTheme.languageIds[languageId]
     if (languageId === 'jsx' && fileNameLower.endsWith('.js')) {
-      const alternativeFileIcon = iconTheme.languageIds['javascript']
+      const alternativeFileIcon = iconTheme.languageIds.javascript
       if (alternativeFileIcon) {
         return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, alternativeFileIcon)
       }

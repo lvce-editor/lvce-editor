@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as IsImportError from '../src/parts/IsImportError/IsImportError.js'
 
 test('isImportError - type error', () => {

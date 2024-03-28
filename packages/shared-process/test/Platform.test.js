@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as Platform from '../src/parts/Platform/Platform.js'
 
 test('isWindows', () => {

@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 

@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as EditorIndentMore from '../src/parts/EditorCommand/EditorCommandIndentMore.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

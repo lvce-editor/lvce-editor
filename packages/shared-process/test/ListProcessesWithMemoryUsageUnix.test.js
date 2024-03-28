@@ -1,5 +1,5 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
-import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

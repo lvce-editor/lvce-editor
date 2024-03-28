@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as VirtualDomParser from '../src/parts/VirtualDomParser/VirtualDomParser.js'
 
@@ -150,7 +151,7 @@ test('parse - attribute without value', () => {
 })
 
 test('parse - element with text', () => {
-  const dom = VirtualDomParser.parse(`<div>hello world</div>`)
+  const dom = VirtualDomParser.parse('<div>hello world</div>')
   expect(dom).toEqual([
     {
       type: VirtualDomElements.Div,

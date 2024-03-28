@@ -2,10 +2,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const showDirectoryPicker = async (options) => {
   try {
-    return await RendererProcess.invoke(
-      'FilePicker.showDirectoryPicker',
-      options
-    )
+    return await RendererProcess.invoke('FilePicker.showDirectoryPicker', options)
   } catch (error) {
     if (
       error &&
@@ -24,10 +21,7 @@ export const showFilePicker = (options) => {
 
 export const showSaveFilePicker = async (options) => {
   try {
-    return await RendererProcess.invoke(
-      'FilePicker.showSaveFilePicker',
-      options
-    )
+    return await RendererProcess.invoke('FilePicker.showSaveFilePicker', options)
   } catch (error) {
     if (
       error &&

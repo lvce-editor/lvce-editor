@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as Path from '../src/parts/Path/Path.js'
 import * as Process from '../src/parts/Process/Process.js'
 

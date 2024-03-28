@@ -9,10 +9,7 @@ export const editorHandleWheel = (editor, y) => {
     return
   }
   editor.minLineY = newLineY
-  editor.maxLineY = Math.min(
-    editor.minLineY + editor.numberOfVisibleLines,
-    editor.lines.length
-  )
+  editor.maxLineY = Math.min(editor.minLineY + editor.numberOfVisibleLines, editor.lines.length)
 
   // TODO
   //

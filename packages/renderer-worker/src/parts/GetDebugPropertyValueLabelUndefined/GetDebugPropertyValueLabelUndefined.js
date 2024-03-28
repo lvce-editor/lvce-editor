@@ -1,3 +1,3 @@
 export const getDebugPropertyValueLabelString = (property) => {
-  return `undefined`
+  return 'undefined'
 }

@@ -5,8 +5,6 @@ export const state = {
 }
 
 export const getSessionId = () => {
-  if (!state.sessionId) {
-    state.sessionId = CreateSessionId.creareSessionId()
-  }
+  state.sessionId ||= CreateSessionId.creareSessionId()
   return state.sessionId
 }

@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as ExtensionInstallType from '../src/parts/ExtensionInstallType/ExtensionInstallType.js'
 import * as ParseUrlGithub from '../src/parts/ParseUrlGithub/ParseUrlGithub.js'
 

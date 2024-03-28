@@ -1,2 +1,1 @@
-
-export {noop as handleKeyArrowUpMenuClosed} from './ViewletTitleBarMenuBarNoop.js'
+export { noop as handleKeyArrowUpMenuClosed } from './ViewletTitleBarMenuBarNoop.js'

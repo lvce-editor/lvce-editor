@@ -9,7 +9,7 @@ export const createAppWindow = async (preferences, parsedArgs, workingDirectory,
   const { width, height } = await Screen.getBounds()
   const windowOptions = GetAppWindowOptions.getAppWindowOptions(preferences, width, height)
   const titleBarItems = GetTitleBarItems.getTitleBarItems()
-  return ParentIpc.invoke('AppWindow.createAppWindow2', windowOptions, parsedArgs, workingDirectory, titleBarItems, url)
+  return ParentIpc.invoke('AppWindow.createAppWindow', windowOptions, parsedArgs, workingDirectory, titleBarItems, url)
 }
 
 export const openNew = async (url) => {

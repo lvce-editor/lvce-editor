@@ -24,15 +24,6 @@
     "msw": "^1.3.2",
     "node-fetch": "^3.3.2"
   },
-  "jest": {
-    "moduleNameMapper": {
-      "^/static/(.*)$": "<rootDir>/../../static/$1",
-      "^/js/(.*)$": "<rootDir>/../../static/js/$1"
-    },
-    "testMatch": [
-      "**/test/**/*.js"
-    ]
-  },
   "xo": {
     "rules": {
       "unicorn/filename-case": "off",
@@ -67,10 +58,31 @@
       "no-unused-expressions": "off",
       "unicorn/better-regex": "off",
       "unicorn/no-array-push-push": "off",
-      "unicorn/prevent-abbreviations": "off"
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/switch-case-braces": "off",
+      "unicorn/no-for-loop": "off"
     },
     "ignores": [
       "distmin"
     ]
+  },
+  "jest": {
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "moduleNameMapper": {
+      "^/static/(.*)$": "<rootDir>/../../static/$1",
+      "^/js/(.*)$": "<rootDir>/../../static/js/$1",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    }
   }
 }

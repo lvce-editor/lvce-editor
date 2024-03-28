@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.ipc.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'

@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
+import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events

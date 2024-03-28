@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as FileHandlePermissionType from '../src/parts/FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
@@ -260,11 +260,8 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
   })
   // @ts-ignore
   FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
-    if (j++ === 0) {
-      throw new NotAllowedError()
-    } else {
-      throw new TypeError('x is not a function')
-    }
+    const error = j++ === 0 ? new NotAllowedError() : new TypeError('x is not a function')
+    throw error
   })
   await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
     new TypeError('failed to read directory: TypeError: x is not a function'),
@@ -302,11 +299,8 @@ test('readDirWithFileTypes - error - user activation required', async () => {
   })
   // @ts-ignore
   FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
-    if (j++ === 0) {
-      throw new NotAllowedError()
-    } else {
-      throw new UserActivationRequiredError()
-    }
+    const error = j++ === 0 ? new NotAllowedError() : new UserActivationRequiredError()
+    throw error
   })
   await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
     new TypeError('failed to read directory: User activation is required to request permissions.'),

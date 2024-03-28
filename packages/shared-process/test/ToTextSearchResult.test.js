@@ -1,5 +1,6 @@
-import * as ToTextSearchResult from '../src/parts/ToTextSearchResult/ToTextSearchResult.js'
+import { expect, test } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
+import * as ToTextSearchResult from '../src/parts/ToTextSearchResult/ToTextSearchResult.js'
 
 test('toTextSearchResult - match with bytes', () => {
   const parsedLine = {

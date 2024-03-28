@@ -1,8 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 
 const inverseChange = (edit) => {
-  const endColumnIndex =
-    edit.end.columnIndex - edit.deleted[0].length + edit.inserted[0].length
+  const endColumnIndex = edit.end.columnIndex - edit.deleted[0].length + edit.inserted[0].length
   return {
     start: edit.start,
     end: {

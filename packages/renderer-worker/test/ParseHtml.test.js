@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as ParseHtml from '../src/parts/ParseHtml/ParseHtml.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import { text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
@@ -72,7 +73,7 @@ test('element with with image and sibling tag', () => {
 })
 
 test('element with two child elements', () => {
-  const html = `<div><div></div><div></div></div>`
+  const html = '<div><div></div><div></div></div>'
   const allowedAttributes = []
   expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
@@ -91,7 +92,7 @@ test('element with two child elements', () => {
 })
 
 test('deeply nested tags', () => {
-  const html = `<div><div><div></div></div><div></div></div>`
+  const html = '<div><div><div></div></div><div></div></div>'
   const allowedAttributes = []
   expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {

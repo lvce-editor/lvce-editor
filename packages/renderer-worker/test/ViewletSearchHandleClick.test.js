@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 beforeEach(() => {
@@ -61,7 +61,7 @@ test('handleClick', async () => {
     if (path.startsWith('./')) {
       return '/test' + path.slice(1)
     }
-    return `/test` + path
+    return '/test' + path
   })
   expect(await ViewletSearchHandleClick.handleClick(state, 0)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)

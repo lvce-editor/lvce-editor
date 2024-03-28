@@ -12,16 +12,9 @@ export const handleTouchEnd = (editor, touchEvent) => {
   }
   const firstTouch = touchEvent.changedTouches[0]
   const position = EditorPosition.at(editor, firstTouch.x, firstTouch.y)
-  if (
-    EditorMoveSelection.state.position.rowIndex === position.rowIndex &&
-    EditorMoveSelection.state.position.columnIndex === position.columnIndex
-  ) {
+  if (EditorMoveSelection.state.position.rowIndex === position.rowIndex && EditorMoveSelection.state.position.columnIndex === position.columnIndex) {
     if (Date.now() - EditorHandleTouchStart.state.date > LONG_TOUCH_THRESHOLD) {
-      EditorSelectWord.selectWord(
-        editor,
-        position.rowIndex,
-        position.columnIndex
-      )
+      EditorSelectWord.selectWord(editor, position.rowIndex, position.columnIndex)
     } else {
       EditorCursorSet.cursorSet(editor, position)
     }

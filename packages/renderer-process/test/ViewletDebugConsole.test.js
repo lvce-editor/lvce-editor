@@ -3,6 +3,7 @@
  */
 import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletDebugConsole.create()

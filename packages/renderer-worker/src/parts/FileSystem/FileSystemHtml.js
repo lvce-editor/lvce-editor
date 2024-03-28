@@ -50,7 +50,7 @@ const getChildHandlesFallback = async (handle) => {
   })
   switch (permissionType) {
     case FileHandlePermissionType.Granted:
-      throw new VError(`invalid state`)
+      throw new VError('invalid state')
     case FileHandlePermissionType.Prompt:
       return await getChildHandlesFallbackPrompt(handle)
     case FileHandlePermissionType.Denied:
@@ -67,7 +67,7 @@ export const getChildHandles = async (handle) => {
     if (BrowserErrorTypes.isNotAllowedError(error)) {
       return getChildHandlesFallback(handle)
     }
-    throw new VError(error, `failed to get child handles`)
+    throw new VError(error, 'failed to get child handles')
   }
 }
 
@@ -84,7 +84,7 @@ export const readDirWithFileTypes = async (uri) => {
     const dirents = getDirents(childHandles)
     return dirents
   } catch (error) {
-    throw new VError(error, `failed to read directory`)
+    throw new VError(error, 'failed to read directory')
   }
 }
 
@@ -128,7 +128,7 @@ export const readFile = async (uri) => {
     if (BrowserErrorTypes.isNotFoundError(error)) {
       throw new FileNotFoundError(uri)
     }
-    throw new VError(error, `Failed to read file`)
+    throw new VError(error, 'Failed to read file')
   }
 }
 
@@ -140,7 +140,7 @@ export const writeFile = async (uri, content) => {
     }
     await FileSystemFileHandle.write(handle, content)
   } catch (error) {
-    throw new VError(error, `Failed to save file`)
+    throw new VError(error, 'Failed to save file')
   }
 }
 

@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as GetHeadersMainFrame from '../src/parts/GetHeadersMainFrame/GetHeadersMainFrame.js'
 
 test('getHeadersMainFrame - cross origin opener policy', () => {

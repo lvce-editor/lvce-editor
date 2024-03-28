@@ -913,9 +913,8 @@ export const toggleSideBarPosition = (state) => {
   const { sideBarLocation } = state
   if (sideBarLocation === SideBarLocationType.Left) {
     return moveSideBarRight(state)
-  } else {
-    return moveSideBarLeft(state)
   }
+  return moveSideBarLeft(state)
 }
 
 export const handleSashDoubleClick = (state, sashId) => {

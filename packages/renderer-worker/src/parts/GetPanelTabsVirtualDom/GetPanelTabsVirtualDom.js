@@ -14,7 +14,7 @@ const createPanelTab = (tab, isSelected) => {
         role: AriaRoles.Tab,
         ariaSelected: isSelected,
       },
-      1
+      1,
     ),
     text(label),
   ]

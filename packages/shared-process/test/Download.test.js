@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test, afterEach } from '@jest/globals'
 import { RequestError } from 'got'
 
 afterEach(() => {

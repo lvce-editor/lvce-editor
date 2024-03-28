@@ -2,8 +2,5 @@ import * as EditorSelectHorizontalRight from './EditorCommandSelectHorizontalRig
 import * as EditorDelta from './EditorCommandDelta.js'
 
 export const editorSelectAllRight = (editor) => {
-  return EditorSelectHorizontalRight.editorSelectHorizontalRight(
-    editor,
-    EditorDelta.lineEnd
-  )
+  return EditorSelectHorizontalRight.editorSelectHorizontalRight(editor, EditorDelta.lineEnd)
 }

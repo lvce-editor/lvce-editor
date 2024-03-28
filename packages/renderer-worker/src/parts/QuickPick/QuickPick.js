@@ -3,7 +3,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const show = async (...args) => {
   // TODO show custom quickpick
-  await Command.execute(`Viewlet.openWidget`, ViewletModuleId.QuickPick, ...args)
+  await Command.execute('Viewlet.openWidget', ViewletModuleId.QuickPick, ...args)
   return undefined
 }
 

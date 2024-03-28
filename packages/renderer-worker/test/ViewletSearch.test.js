@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 beforeEach(() => {
@@ -78,10 +78,10 @@ test('setValue - error - results is not of type array', async () => {
     }
   })
   expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
-    message: 'Error: results must be of type array',
+    message: 'TypeError: results must be of type array',
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
-  expect(ErrorHandling.logError).toHaveBeenCalledWith(new Error(`results must be of type array`))
+  expect(ErrorHandling.logError).toHaveBeenCalledWith(new Error('results must be of type array'))
 })
 
 test('setValue - one match in one file', async () => {
@@ -304,7 +304,7 @@ test('handleInput - error', async () => {
     ],
   }
   expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
-    message: `Error: could not load search results`,
+    message: 'Error: could not load search results',
     items: [],
   })
 })

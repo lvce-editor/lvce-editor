@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+import { beforeEach, expect, test } from '@jest/globals'
 import * as Meta from '../src/parts/Meta/Meta.js'
 
 beforeEach(() => {
@@ -9,7 +10,7 @@ beforeEach(() => {
   }
 })
 
-test('setThemeColor - meta element doesn\'t exist', () => {
+test("setThemeColor - meta element doesn't exist", () => {
   const meta = document.createElement('meta')
   meta.name = 'theme-color'
   document.head.append(meta)
@@ -17,7 +18,7 @@ test('setThemeColor - meta element doesn\'t exist', () => {
   expect(meta.content).toBe('#ffffff')
 })
 
-test('setThemeColor - meta element doesn\'t exist', () => {
+test("setThemeColor - meta element doesn't exist", () => {
   Meta.setThemeColor('#ffffff')
   expect(document.querySelectorAll('meta')).toHaveLength(0)
 })

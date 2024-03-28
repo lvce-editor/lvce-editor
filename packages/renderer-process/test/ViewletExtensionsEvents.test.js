@@ -4,6 +4,7 @@
 import { jest } from '@jest/globals'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
+import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -161,7 +162,7 @@ test('event - contextmenu - activated via keyboard', () => {
       clientY: 50,
       bubbles: true,
       button: -1,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', -1, 50, 50)

@@ -157,20 +157,6 @@ export const bundleSharedProcess = async ({
 `,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
-      occurrence: `export const getExtensionHostPath = async () => {
-  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
-}
-`,
-      replacement: `export const getExtensionHostPath = async () => {
-  const { extensionHostPath } = await import(
-    '@lvce-editor/extension-host'
-  )
-  return extensionHostPath
-}
-`,
-    })
-    await Replace.replace({
       path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'

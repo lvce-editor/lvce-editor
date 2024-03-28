@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 beforeEach(() => {
@@ -62,7 +62,7 @@ test('selectIndex - match', async () => {
     if (path.startsWith('./')) {
       return '/test' + path.slice(1)
     }
-    return `/test` + path
+    return '/test' + path
   })
   const state = {
     ...ViewletSearch.create(),

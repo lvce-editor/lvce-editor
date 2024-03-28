@@ -46,7 +46,7 @@ export const open = async (editor) => {
       /* editor */ editor,
       /* message */ 'You cannot rename this element',
       /* rowIndex */ rowIndex,
-      /* columnIndex */ columnIndex
+      /* columnIndex */ columnIndex,
     )
   }
 }

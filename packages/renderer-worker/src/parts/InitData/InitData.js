@@ -1,9 +1,7 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const getInitData = async () => {
-  const rendererProcessInitData = await RendererProcess.invoke(
-    'InitData.getInitData'
-  )
+  const rendererProcessInitData = await RendererProcess.invoke('InitData.getInitData')
   // TODO get the following items
   // - location.href
   // - workspace

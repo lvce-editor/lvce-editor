@@ -21,8 +21,6 @@ export const load = async (moduleId) => {
       return import('../ElectronBeep/ElectronBeep.js')
     case ModuleId.ElectronBrowserView:
       return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
-    case ModuleId.ElectronBrowserViewFunctions:
-      return import('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
     case ModuleId.ElectronBrowserViewQuickPick:
       return import('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
     case ModuleId.ElectronBrowserViewSuggestions:

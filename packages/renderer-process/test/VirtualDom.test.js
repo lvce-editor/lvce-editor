@@ -3,6 +3,7 @@
  */
 import * as VirtualDom from '../src/parts/VirtualDom/VirtualDom.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('render - single tag', () => {
   const dom = VirtualDom.render([

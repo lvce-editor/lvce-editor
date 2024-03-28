@@ -5,8 +5,5 @@ import * as EditorDelta from './EditorCommandDelta.js'
 // also can share code between moveCursorWordRight moveCursoryWordLeft deleteCursorWordLeft
 
 export const cursorWordLeft = (editor) => {
-  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(
-    editor,
-    EditorDelta.wordLeft
-  )
+  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(editor, EditorDelta.wordLeft)
 }

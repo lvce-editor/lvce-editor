@@ -1,0 +1,52 @@
+.SplitButton {
+  background: var(--SplitButtonBackground, rgb(35, 112, 112));
+  color: var(--SplitButtonForeground, white);
+  height: 28px;
+  contain: strict;
+  display: flex;
+  border-radius: 2px;
+  margin-right: 12px;
+  margin-left: 19px;
+  margin-bottom: 6px;
+}
+
+.SplitButtonContent {
+  contain: strict;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.SplitButtonContent:where(:hover),
+.SplitButtonContent:where(:focus),
+.SplitButtonDropDown:where(:hover),
+.SplitButtonDropDown:where(:focus) {
+  background: var(--SplitButtonHoverBackground, #387674);
+}
+
+.SplitButtonDisabled {
+  background: #2f6260;
+  opacity: 0.4;
+}
+
+.SplitButtonContentDisabled,
+.SplitButtonDropDownDisabled {
+  cursor: default;
+}
+
+.SplitButtonSeparator {
+  height: 90%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  contain: strict;
+}
+
+.SplitButtonDropDown {
+  width: 25px;
+  height: 100%;
+  contain: strict;
+  cursor: pointer;
+  border-right: 1px solid transparent;
+}

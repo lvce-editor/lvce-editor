@@ -4,7 +4,7 @@ import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 export const openFolder = async () => {
   const folders = await ElectronDialog.showOpenDialog(
     /* title */ 'Open Folder',
-    /* properties */ ['openDirectory', 'dontAddToRecent', 'showHiddenFiles']
+    /* properties */ ['openDirectory', 'dontAddToRecent', 'showHiddenFiles'],
   )
   if (!folders || folders.length === 0) {
     return

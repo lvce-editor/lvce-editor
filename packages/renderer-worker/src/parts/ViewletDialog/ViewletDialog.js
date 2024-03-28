@@ -45,7 +45,7 @@ export const handleClick = async (state, index) => {
   switch (option) {
     case 'Show Command Output':
       await dispose()
-      const uri = `data://`
+      const uri = 'data://'
       await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
       // TODO show stderr in editor
       // TODO close dialog

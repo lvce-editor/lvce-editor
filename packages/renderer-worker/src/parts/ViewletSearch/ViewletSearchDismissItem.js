@@ -64,7 +64,12 @@ const getRemoveIndices = (items, index, matchCount, fileCount) => {
 const removeItemFromItems = (items, index, matchCount, fileCount) => {
   const { startIndex, removeCount, newFocusedIndex, newFileCount, newMatchCount } = getRemoveIndices(items, index, matchCount, fileCount)
   const newItems = Arrays.remove(items, startIndex, removeCount)
-  return { newItems, newFocusedIndex, newFileCount, newMatchCount }
+  return {
+    newItems,
+    newFocusedIndex,
+    newFileCount,
+    newMatchCount,
+  }
 }
 
 const getNewMinMax = (newItemsLength, minLineY, maxLineY, deltaY, itemHeight) => {

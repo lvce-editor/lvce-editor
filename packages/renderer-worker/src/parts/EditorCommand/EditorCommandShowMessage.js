@@ -29,7 +29,7 @@ export const editorShowMessage = async (editor, rowIndex, columnIndex, message, 
     /* method */ 'showOverlayMessage',
     /* x */ x,
     /* y */ y,
-    /* content */ displayErrorMessage
+    /* content */ displayErrorMessage,
   )
 
   if (!isError) {

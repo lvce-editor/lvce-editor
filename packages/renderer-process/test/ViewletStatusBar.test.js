@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test.skip('create', () => {
   const state = ViewletStatusBar.create(

@@ -93,8 +93,6 @@ const createSession = () => {
 }
 
 export const getSession = () => {
-  if (!state.session) {
-    state.session = createSession()
-  }
+  state.session ||= createSession()
   return state.session
 }

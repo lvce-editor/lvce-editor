@@ -7,12 +7,7 @@ export const handleContextMenuMouseAt = async (state, x, y) => {
   Assert.number(x)
   Assert.number(y)
   const focusedIndex = getIndexFromPosition(state, x, y)
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.Explorer
-  )
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Explorer)
   return {
     ...state,
     focusedIndex,

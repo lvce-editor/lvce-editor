@@ -3,6 +3,7 @@
  */
 import * as WebStorage from '../src/parts/WebStorage/WebStorage.js'
 import * as WebStorageType from '../src/parts/WebStorageType/WebStorageType.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test('getItem - localStorage', () => {
   WebStorage.setItem(WebStorageType.LocalStorage, 'sample', 'abc')
@@ -10,9 +11,7 @@ test('getItem - localStorage', () => {
 })
 
 test('getItem - localStorage - empty', () => {
-  expect(
-    WebStorage.getItem(WebStorageType.LocalStorage, 'non-existent')
-  ).toBeUndefined()
+  expect(WebStorage.getItem(WebStorageType.LocalStorage, 'non-existent')).toBeUndefined()
 })
 
 test('getItem - localStorage - number should be converted to string', () => {

@@ -88,6 +88,7 @@ jobs:
       - name: Download Builtin Extensions
         run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - run: npm run type-check
       - run: npm test
       - run: node build/bin/build.js --target=server
       - name: Cache Electron Builder Dependencies (Windows)
@@ -287,11 +288,6 @@ jobs:
           asset_path: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_name: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_content_type: application/octet-stream
-      - run: npm publish --access public
-        if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/extension-host
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/extension-host-helper-process

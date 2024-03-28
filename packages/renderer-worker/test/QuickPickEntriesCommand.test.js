@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
@@ -91,7 +91,7 @@ test('selectPick - error - selected item has no id', async () => {
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
 
-  await expect(() => QuickPickEntriesCommand.selectPick({})).toThrowError(new TypeError(`Cannot read properties of undefined (reading 'startsWith')`))
+  await expect(() => QuickPickEntriesCommand.selectPick({})).toThrowError(new TypeError("Cannot read properties of undefined (reading 'startsWith')"))
 })
 
 test('selectPick - error', async () => {

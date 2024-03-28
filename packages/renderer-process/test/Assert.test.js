@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as Assert from '../src/parts/Assert/Assert.js'
 
 test('object', () => {

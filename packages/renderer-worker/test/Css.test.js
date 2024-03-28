@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as CssState from '../src/parts/CssState/CssState.js'
 
 beforeAll(() => {
@@ -9,6 +9,7 @@ beforeAll(() => {
       this._text = input.text
       this.statusText = input.statusText
     }
+
     text() {
       return this._text
     }

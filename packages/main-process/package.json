@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
+    "type-check": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -35,16 +36,21 @@
     "minimist": "^1.2.8"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "cjs",
-      "mjs",
-      "jsx",
-      "ts",
-      "tsx",
-      "json",
-      "node"
-    ]
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    }
   },
   "xo": {
     "rules": {
@@ -85,7 +91,10 @@
       "no-mixed-operators": "off",
       "radix": "off",
       "unicorn/prefer-query-selector": "off",
-      "unicorn/switch-case-braces": "off"
+      "unicorn/switch-case-braces": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-top-level-await": "off",
+      "import/no-extraneous-dependencies": "off"
     },
     "ignores": [
       "distmin"

@@ -1,6 +1,6 @@
+import { expect, jest, test, beforeAll } from '@jest/globals'
 import * as Process from '../src/parts/Process/Process.js'
 import * as Signal from '../src/parts/Signal/Signal.js'
-import { jest } from '@jest/globals'
 
 beforeAll(() => {
   // @ts-ignore

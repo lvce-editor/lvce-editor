@@ -2,8 +2,5 @@ import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft
 import * as EditorDelta from './EditorCommandDelta.js'
 
 export const deleteAllLeft = (editor) => {
-  return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(
-    editor,
-    EditorDelta.lineCharacterStart
-  )
+  return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.lineCharacterStart)
 }

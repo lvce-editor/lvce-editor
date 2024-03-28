@@ -68,11 +68,11 @@ export const getCachePath = () => {
 }
 
 export const getExtensionHostWorkerUrl = () => {
-  return `${AssetDir.assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
+  return `${AssetDir.assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.ts`
 }
 
 export const getGithubApiUrl = () => {
-  return `https://api.github.com`
+  return 'https://api.github.com'
 }
 
 export const getCacheName = () => {

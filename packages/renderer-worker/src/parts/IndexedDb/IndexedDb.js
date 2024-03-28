@@ -5,8 +5,6 @@ import { VError } from '../VError/VError.js'
 import { state } from '../IndexedDbState/IndexedDbState.js'
 import * as IsDataCloneError from '../IsDataCloneError/IsDataCloneError.js'
 
-export { state }
-
 const getDb = async () => {
   // @ts-ignore
   const db = await openDB('session', state.dbVersion, {
@@ -23,9 +21,7 @@ const getDb = async () => {
 }
 
 const getDbMemoized = async () => {
-  if (!state.cachedDb) {
-    state.cachedDb = await getDb()
-  }
+  state.cachedDb ||= await getDb()
   return state.cachedDb
 }
 
@@ -88,3 +84,4 @@ export const getHandle = async (uri) => {
   const handle = await handleDb.get('file-handles-store', uri)
   return handle
 }
+export { state } from '../IndexedDbState/IndexedDbState.js'

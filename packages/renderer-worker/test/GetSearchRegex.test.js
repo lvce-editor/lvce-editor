@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetSearchRegex from '../src/parts/GetSearchRegex/GetSearchRegex.js'
 
 test('empty string', () => {

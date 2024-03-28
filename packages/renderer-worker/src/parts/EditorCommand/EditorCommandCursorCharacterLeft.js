@@ -2,10 +2,7 @@ import * as EditorCursorHorizontalLeft from './EditorCommandCursorHorizontalLeft
 import * as EditorDelta from './EditorCommandDelta.js'
 
 export const cursorCharacterLeft = (editor) => {
-  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(
-    editor,
-    EditorDelta.characterLeft
-  )
+  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(editor, EditorDelta.characterLeft)
 }
 
 export const cursorLeft = cursorCharacterLeft

@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as ParsePsOutput from '../src/parts/ParsePsOutput/ParsePsOutput.js'
 
 test('parsePsOutput - linux', () => {

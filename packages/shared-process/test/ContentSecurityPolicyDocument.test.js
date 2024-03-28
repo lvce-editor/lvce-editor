@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals'
 import * as ContentSecurityPolicyDocument from '../src/parts/ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 
 test('contentSecurityPolicyDocument - should have a strict default policy', () => {

@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import EventEmitter from 'node:events'
 
 beforeEach(() => {

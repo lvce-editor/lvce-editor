@@ -4,6 +4,7 @@
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
+import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -51,7 +52,7 @@ test.skip('event - mousedown', () => {
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(['QuickPick.selectIndex', 1])
@@ -84,7 +85,7 @@ test.skip('event - beforeinput', () => {
       bubbles: true,
       cancelable: true,
       data: 'a',
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', '>a')
 })

@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as GetDebugPropertyValueLabelArray from '../src/parts/GetDebugPropertyValueLabelArray/GetDebugPropertyValueLabelArray.js'
 
 test('empty array', () => {
@@ -7,7 +8,7 @@ test('empty array', () => {
       properties: [],
     },
   }
-  expect(GetDebugPropertyValueLabelArray.getDebugPropertyValueLabelArray(value)).toBe(`(0) []`)
+  expect(GetDebugPropertyValueLabelArray.getDebugPropertyValueLabelArray(value)).toBe('(0) []')
 })
 
 test('array with string value', () => {
@@ -23,5 +24,5 @@ test('array with string value', () => {
       ],
     },
   }
-  expect(GetDebugPropertyValueLabelArray.getDebugPropertyValueLabelArray(value)).toBe(`(1) ["Host"]`)
+  expect(GetDebugPropertyValueLabelArray.getDebugPropertyValueLabelArray(value)).toBe('(1) ["Host"]')
 })

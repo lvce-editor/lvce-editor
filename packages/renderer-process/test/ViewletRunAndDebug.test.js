@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 test.skip('accessibility - scope section header should have tabIndex 0', () => {
   const state = ViewletRunAndDebug.create()

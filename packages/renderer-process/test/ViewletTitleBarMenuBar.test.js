@@ -6,6 +6,7 @@ import * as Menu from '../src/parts/OldMenu/Menu.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import { beforeEach, test, expect } from '@jest/globals'
 
 const getTextContent = (node) => {
   return node.textContent

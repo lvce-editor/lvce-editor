@@ -1,3 +1,4 @@
+import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuEntriesActivityBarAdditionalViews from '../src/parts/MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
@@ -19,7 +20,12 @@ test.skip('getMenuEntries - two additional views', async () => {
       id: 8000,
       label: 'Run and Debug',
     },
-    { command: -1, flags: MenuItemFlags.None, id: 8000, label: 'Extensions' },
+    {
+      command: -1,
+      flags: MenuItemFlags.None,
+      id: 8000,
+      label: 'Extensions',
+    },
   ])
 })
 

@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -27,11 +27,11 @@ const TryToGetActualImportErrorMessage = await import('../src/parts/TryToGetActu
 test('load - import error - dependency not found', async () => {
   // @ts-ignore
   ViewletModuleInternal.load.mockImplementation(() => {
-    throw new TypeError(`Failed to fetch dynamically imported module: test:///packages/renderer-worker/src/parts/ViewletMain/ViewletMain.ipc.js`)
+    throw new TypeError('Failed to fetch dynamically imported module: test:///packages/renderer-worker/src/parts/ViewletMain/ViewletMain.ipc.js')
   })
   // @ts-ignore
   TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
-    throw new Error(`DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"`)
+    throw new Error('DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"')
   })
   await expect(ViewletModule.load(123)).rejects.toThrow(
     new Error('DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"'),
@@ -41,7 +41,7 @@ test('load - import error - dependency not found', async () => {
 test('load - import error', async () => {
   // @ts-ignore
   ViewletModuleInternal.load.mockImplementation(() => {
-    throw new TypeError(`x is not a function`)
+    throw new TypeError('x is not a function')
   })
   await expect(ViewletModule.load(123)).rejects.toThrow(new TypeError('x is not a function'))
 })
@@ -53,7 +53,7 @@ test('load - syntax error', async () => {
   })
   // @ts-ignore
   TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
-    return `Failed to import script: SyntaxError: Unexpected token '<<'"`
+    return "Failed to import script: SyntaxError: Unexpected token '<<'\""
   })
   await expect(ViewletModule.load(123)).rejects.toThrow("Failed to load 123 module: Failed to import script: SyntaxError: Unexpected token '<<'\"")
 })
