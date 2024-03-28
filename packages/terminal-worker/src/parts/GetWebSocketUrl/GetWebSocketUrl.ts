@@ -1,4 +1,4 @@
-import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
+import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.ts'
 
 export const getWsUrl = (type) => {
   const wsProtocol = WebSocketProtocol.getWebSocketProtocol()
