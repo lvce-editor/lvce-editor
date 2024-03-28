@@ -36,6 +36,7 @@
     "minimist": "^1.2.8"
   },
   "jest": {
+    "injectGlobals": false,
     "extensionsToTreatAsEsm": [
       ".ts"
     ],
