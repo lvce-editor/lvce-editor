@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, test } from '@jest/globals'
 import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.js'
 
 beforeEach(() => {

@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as ExtensionHostClosingTag from '../src/parts/ExtensionHostClosingTag/ExtensionHostClosingTag.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
