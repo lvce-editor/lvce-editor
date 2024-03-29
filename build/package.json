@@ -28,7 +28,7 @@
     "electron-builder": "^24.13.3",
     "execa": "^8.0.1",
     "extract-zip": "^2.0.1",
-    "glob": "^10.3.10",
+    "glob": "^10.3.12",
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
@@ -42,7 +42,7 @@
     "minimist": "^1.2.8",
     "p-map": "^7.0.1",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^4.13.1",
+    "rollup": "^4.13.2",
     "tar-fs": "^3.0.5",
     "verdaccio": "^5.30.2"
   },
