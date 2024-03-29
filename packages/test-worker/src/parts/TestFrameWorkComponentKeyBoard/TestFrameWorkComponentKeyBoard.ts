@@ -5,7 +5,6 @@ const getKeyOptions = (rawKey) => {
     const parts = rawKey.split('+')
     let ctrlKey = false
     let altKey = false
-    let spaceKey = false
     let key = ''
     for (const part of parts) {
       switch (part) {
