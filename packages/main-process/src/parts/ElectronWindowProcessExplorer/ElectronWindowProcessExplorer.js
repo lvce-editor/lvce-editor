@@ -11,8 +11,6 @@ export const open2 = async (options, url) => {
     },
   }
   const processExplorerWindow = new BrowserWindow(allOptions)
-  const windowId = processExplorerWindow.id
-  const webContentsId = processExplorerWindow.webContents.id
 
   /**
    *

@@ -1,13 +1,10 @@
 import * as Electron from 'electron'
 import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 import * as ElectronResourceType from '../ElectronResourceType/ElectronResourceType.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
-import * as Root from '../Root/Root.js'
 import * as HttpMethod from '../HttpMethod/HttpMethod.js'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import * as Root from '../Root/Root.js'
 
 const getBeforeRequestResponseMainFrame = (method, url) => {
   return {}
@@ -78,7 +75,7 @@ const getBeforeRequestResponseScript = (method, url) => {
 }
 
 const getBeforeRequestResponse = (details) => {
-  const { id, method, referrer, resourceType, timestamp, uploadData, url, frame } = details
+  const { method, resourceType, url } = details
   switch (resourceType) {
     case ElectronResourceType.MainFrame:
       return getBeforeRequestResponseMainFrame(method, url)

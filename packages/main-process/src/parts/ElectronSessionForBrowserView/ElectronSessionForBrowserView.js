@@ -1,12 +1,6 @@
 import * as Electron from 'electron'
-import { VError } from '../VError/VError.js'
-import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as ElectronPermissionType from '../ElectronPermissionType/ElectronPermissionType.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as Logger from '../Logger/Logger.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
+import * as ElectronPermissionType from '../ElectronPermissionType/ElectronPermissionType.js'
 
 const state = {
   /**
@@ -34,50 +28,6 @@ const handlePermissionRequest = (webContents, permission, callback, details) => 
 
 const handlePermissionCheck = (webContents, permission, origin, details) => {
   return isAllowedPermission(permission)
-}
-
-/**
- *
- * @param {Electron.Session} session
- * @param {string } extensionPath
- */
-const loadExtension = async (session, extensionPath) => {
-  try {
-    await session.loadExtension(extensionPath)
-  } catch (error) {
-    // @ts-ignore
-    throw new VError(error, `Failed to load chrome extension`)
-  }
-}
-
-const getChromeExtensionPaths = async () => {
-  try {
-    const chromeExtensionsPath = Platform.getChromeExtensionsPath()
-    const dirents = await FileSystem.readDir(chromeExtensionsPath)
-    const extensionsPaths = []
-    for (const dirent of dirents) {
-      extensionsPaths.push(Path.join(chromeExtensionsPath, dirent))
-    }
-    return extensionsPaths
-  } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
-      return []
-    }
-    // @ts-ignore
-    throw new VError(error, `Failed to get chrome extensions paths: ${error}`)
-  }
-}
-
-const addSessionChromeExtensions = async (session) => {
-  try {
-    const chromeExtensionsPaths = await getChromeExtensionPaths()
-    for (const chromeExtensionPath of chromeExtensionsPaths) {
-      await loadExtension(session, chromeExtensionPath)
-    }
-  } catch (error) {
-    Logger.error(error)
-  }
 }
 
 const createSession = () => {
