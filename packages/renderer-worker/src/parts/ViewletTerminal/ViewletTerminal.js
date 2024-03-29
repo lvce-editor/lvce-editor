@@ -3,7 +3,6 @@ import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminal
 import * as Id from '../Id/Id.js'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Terminal from '../Terminal/Terminal.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -56,6 +55,9 @@ export const loadContent = async (state) => {
     handleMouseDown() {
       return TerminalWorker.invoke('Terminal.handleMouseDown', uid)
     },
+    resize() {
+      // TODO
+    },
   }
   return {
     ...state,
@@ -83,13 +85,13 @@ export const handleData = async (state, data) => {
 }
 
 export const write = async (state, input) => {
-  const { uid } = state
-  await Terminal.write(uid, input)
+  const { uid, terminal } = state
+  await terminal.write(uid, input)
 }
 
 export const dispose = async (state) => {
-  const { uid } = state
-  await Terminal.dispose(uid)
+  const { uid, terminal } = state
+  await terminal.dispose(uid)
   return {
     ...state,
     disposed: true,
@@ -119,14 +121,14 @@ export const resize = (state, dimensions) => {
 
 export const resizeEffect = async (state) => {
   const { width, height } = state
-  const { uid } = state
+  const { uid, terminal } = state
   // TODO columnWidth etc. should be in renderer process
   const columnWidth = 8.43332
   const rowHeight = 14
   // const columns = Math.round(width / columnWidth)
   const columns = 7
   const rows = Math.round(height / rowHeight)
-  await Terminal.resize(uid, columns, rows)
+  await terminal.resize(uid, columns, rows)
 
   // Terminal.resize(state, width, height)
 }
