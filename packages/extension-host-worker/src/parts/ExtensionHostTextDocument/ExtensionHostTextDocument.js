@@ -13,35 +13,6 @@ export const onDidSaveTextDocument = (listener) => {
   TextDocumentState.addDidSaveListener(listener)
 }
 
-const applyEdits = (state, edits) => {
-  console.assert(state !== undefined)
-  console.assert(Array.isArray(edits))
-  for (const edit of edits) {
-    switch (edit.type) {
-      case /* singleLineEdit */ 1:
-        state.lines[edit.rowIndex] =
-          state.lines[edit.rowIndex].slice(0, edit.columnIndex - edit.deleted) + edit.inserted + state.lines[edit.rowIndex].slice(edit.columnIndex)
-        break
-      case /* splice */ 2:
-        state.lines.splice(edit.rowIndex, edit.count, ...edit.newLines)
-        break
-      default:
-        console.warn('unknown edit', edit)
-        break
-    }
-    // const rowIndex = lineAt(edit.offset)
-    // if (edit.text.includes('\n')) {
-    //   // TODO splice lines
-    // }
-    // state.lines[rowIndex]
-  }
-
-  // for (const listener of state.listeners) {
-  //   listener(state, edits)
-  // }
-  // TODO
-}
-
 export const getOffset = (textDocument, position) => {
   let offset = 0
   let rowIndex = 0
@@ -266,17 +237,6 @@ export const getPosition = (textDocument, offset) => {
   return {
     rowIndex,
     columnIndex,
-  }
-}
-
-const getSyntheticChange = (textDocument, edit) => {
-  const start = getPosition(textDocument, edit.offset - edit.deleted)
-  const end = getPosition(textDocument, edit.offset)
-  return {
-    start,
-    end,
-    inserted: edit.inserted.split('\n'),
-    deleted: [],
   }
 }
 
