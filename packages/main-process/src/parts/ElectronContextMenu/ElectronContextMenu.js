@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as GetElectronContextMenuCallbacks from '../GetElectronContextMenuCallbacks/GetElectronContextMenuCallbacks.js'
 import * as GetElectronMenuItems from '../GetElectronMenuItems/GetElectronMenuItems.js'
 
+// @ts-ignore
 export const openContextMenu = async (menuItems, x, y) => {
   Assert.array(menuItems)
   Assert.number(x)

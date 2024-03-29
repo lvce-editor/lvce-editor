@@ -11,13 +11,6 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 // map windows to folders and ports
 // const windowConfigMap = new Map()
 
-const getFolder = (args) => {
-  if (!args || !args._ || args._.length === 0) {
-    return ''
-  }
-  return args._[0]
-}
-
 // TODO when shared process is a utility process
 // can just send browserWindowPort to shared process
 // else need proxy events through this process

@@ -94,7 +94,6 @@ export const setSuggestions = async (suggestions) => {
   if (!browserView) {
     return
   }
-  const { port } = state
   const { webContents } = browserView
   const suggestionsHtml = getSuggestionsHtml(suggestions)
   const execString = `document.body.innerHTML = \`${suggestionsHtml}\``

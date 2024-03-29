@@ -14,7 +14,10 @@
     "allowSyntheticDefaultImports": true,
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
-    "composite": true
+    "composite": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true
   },
   "include": ["src", "test"]
 }
