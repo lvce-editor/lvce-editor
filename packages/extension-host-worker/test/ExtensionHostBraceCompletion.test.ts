@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, test } from '@jest/globals'
 import * as ExtensionHostBraceCompletion from '../src/parts/ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
