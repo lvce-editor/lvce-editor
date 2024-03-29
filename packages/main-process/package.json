@@ -23,7 +23,7 @@
   "devDependencies": {
     "@electron/rebuild": "^3.6.0",
     "@types/debug": "^4.1.12",
-    "electron": "^28.2.8"
+    "electron": "^29.1.6"
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.2.0",
