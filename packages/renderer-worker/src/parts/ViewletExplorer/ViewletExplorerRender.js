@@ -11,7 +11,8 @@ const renderItems = {
       oldState.maxLineY === newState.maxLineY &&
       oldState.focusedIndex === newState.focusedIndex &&
       oldState.editingIndex === newState.editingIndex &&
-      oldState.editingType === newState.editingType
+      oldState.editingType === newState.editingType &&
+      oldState.editingValue === newState.editingValue
     )
   },
   apply(oldState, newState) {
@@ -22,6 +23,7 @@ const renderItems = {
       newState.focusedIndex,
       newState.editingIndex,
       newState.editingType,
+      newState.editingValue,
     )
     const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents).slice(1)
     return ['setDom', dom]
