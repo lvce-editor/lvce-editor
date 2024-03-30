@@ -222,6 +222,7 @@ export const acceptRename = async (state) => {
     ...state,
     editingIndex: -1,
     editingValue: '',
+    editingType: ExplorerEditingType.None,
     editingIcon: '',
     focusedIndex,
     focused: true,
