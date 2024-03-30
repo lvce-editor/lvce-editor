@@ -16,6 +16,7 @@
   mask-size: var(--MaskIconSize);
   mask-position: 50% 50%;
   background: currentColor;
+  cursor: pointer;
 }
 
 .ActivityBarItem:hover {
