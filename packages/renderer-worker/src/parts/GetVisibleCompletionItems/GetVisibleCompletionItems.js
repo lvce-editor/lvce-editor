@@ -1,14 +1,9 @@
-import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as CompletionItemFlags from '../CompletionItemFlags/CompletionItemFlags.js'
+import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
+import * as GetCompletionItemHighlights from '../GetCompletionItemHighlights/GetCompletionItemHighlights.js'
 
 const getLabel = (item) => {
   return item.label
-}
-
-const getHighlights = (item, leadingWord) => {
-  const label = item.label
-  const matches = item.matches
-  return matches.slice(1)
 }
 
 const getVisibleIem = (item, itemHeight, leadingWord, i, focusedIndex) => {
@@ -16,7 +11,7 @@ const getVisibleIem = (item, itemHeight, leadingWord, i, focusedIndex) => {
     label: getLabel(item),
     symbolName: EditorCompletionMap.getSymbolName(item),
     top: i * itemHeight,
-    highlights: getHighlights(item, leadingWord),
+    highlights: GetCompletionItemHighlights.getHighlights(item, leadingWord),
     focused: i === focusedIndex,
     deprecated: item.flags & CompletionItemFlags.Deprecated,
   }
