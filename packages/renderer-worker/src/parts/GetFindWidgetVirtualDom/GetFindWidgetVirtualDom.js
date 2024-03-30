@@ -27,6 +27,16 @@ const getIconButtonVirtualDom = (iconButton) => {
 export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons, matchCase, matchWholeWord, useRegularExpression) => {
   const dom = []
   dom.push(...GetSearchToggleButtonVirtualDom.getSearchToggleButtonVirtualDom(replaceExpanded, 'handleClick'))
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'FindWidgetRight',
+    childCount: replaceExpanded ? 2 : 1,
+  })
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'FindWidgetFind',
+    childCount: 5,
+  })
   dom.push(...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-value', 'Find', 'handleInput', [], [], 'handleFocus'))
   dom.push(
     {
@@ -38,5 +48,15 @@ export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons
     ...buttons.flatMap(getIconButtonVirtualDom),
   )
 
+  if (replaceExpanded) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'FindWidgetReplace',
+        childCount: 1,
+      },
+      text('replace'),
+    )
+  }
   return dom
 }
