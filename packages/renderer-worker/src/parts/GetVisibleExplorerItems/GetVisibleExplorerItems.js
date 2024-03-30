@@ -1,6 +1,7 @@
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 
-export const getVisibleExplorerItems = (items, minLineY, maxLineY, focusedIndex, editingIndex, editingType) => {
+export const getVisibleExplorerItems = (items, minLineY, maxLineY, focusedIndex, editingIndex, editingType, editingValue) => {
   const visible = []
   for (let i = minLineY; i < Math.min(maxLineY, items.length); i++) {
     const item = items[i]
@@ -9,6 +10,9 @@ export const getVisibleExplorerItems = (items, minLineY, maxLineY, focusedIndex,
         ...item,
         isFocused: i === focusedIndex,
         isEditing: true,
+        icon: IconTheme.getFileIcon({
+          name: editingValue,
+        }),
       })
     } else {
       visible.push({

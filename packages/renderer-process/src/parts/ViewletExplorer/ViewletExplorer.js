@@ -4,8 +4,8 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as RememberFocus from '../RememberFocus/RememberFocus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
@@ -133,5 +133,5 @@ export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom, ViewletExplorerEvents)
+  RememberFocus.rememberFocus($Viewlet, dom, ViewletExplorerEvents)
 }

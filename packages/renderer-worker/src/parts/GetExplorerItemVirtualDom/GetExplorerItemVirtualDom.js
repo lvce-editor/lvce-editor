@@ -38,6 +38,7 @@ const getItemVirtualDomFile = (item) => {
       id: 'ExplorerInput',
       onInput: 'handleEditingInput',
       childCount: 0,
+      name: 'ExplorerInput',
     })
   } else {
     dom.push(
