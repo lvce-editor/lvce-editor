@@ -3,5 +3,5 @@ import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js
 
 export const sendMessagePortToElectron = async (port, initialCommand) => {
   const ipc = SharedProcessState.state.ipc
-  await JsonRpc.invokeAndTransfer(ipc, [port], initialCommand || 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess')
+  await JsonRpc.invokeAndTransfer(ipc, [port], initialCommand)
 }
