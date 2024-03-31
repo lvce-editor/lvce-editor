@@ -18,8 +18,11 @@ test.skip('openFolder', async () => {
 
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
   await Dialog.openFolder()
+  // @ts-ignore
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(SharedProcess.invoke).toHaveBeenCalledWith({
     jsonrpc: JsonRpcVersion.Two,
     id: expect.any(Number),

@@ -15,6 +15,7 @@ export const moveLineUp = (editor) => {
       newLines: [TextDocument.getLine(editor.textDocument, rowIndex), TextDocument.getLine(editor.textDocument, rowIndex - 1)],
     },
   ]
+  // @ts-ignore
   const cursorEdits = Editor.moveCursors(editor, (editor, cursor) => {
     return {
       // TODO handle bottom 0
@@ -22,5 +23,6 @@ export const moveLineUp = (editor) => {
       columnIndex: cursor.columnIndex,
     }
   })
+  // @ts-ignore
   Editor.scheduleDocumentAndCursors(editor, documentEdits, cursorEdits)
 }

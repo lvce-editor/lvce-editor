@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as Editor from './Editor.js'
 
 export const editorDeleteHorizontalRight = (editor, getDelta) => {

@@ -1,4 +1,5 @@
 export const editorHandleWheel = (editor, y) => {
+  // @ts-ignore
   const newDeltaY = clamp(editor.deltaY + y, 0, editor.finalDeltaY)
   if (editor.deltaY === newDeltaY) {
     return

@@ -50,6 +50,7 @@ test.skip('renderTextAndCursorAndSelections', () => {
     invalidStartIndex: 0,
   }
   RendererProcess.state.send = jest.fn()
+  // @ts-ignore
   Editor.renderTextAndCursorAndSelections(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     'Viewlet.send',
@@ -68,6 +69,7 @@ test.skip('renderTextAndCursorAndSelections', () => {
 
 test('scheduleDocumentAndCursorsSelections', () => {
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 'Viewlet.send':
         break
@@ -129,6 +131,7 @@ test('scheduleDocumentAndCursorsSelections', () => {
 
 test('scheduleDocumentAndCursorsSelections - add one character', () => {
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 'Viewlet.send':
         break
@@ -190,6 +193,7 @@ test('scheduleDocumentAndCursorsSelections - add one character', () => {
 
 test('scheduleDocumentAndCursorsSelections - delete one character', () => {
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 'Viewlet.send':
         break

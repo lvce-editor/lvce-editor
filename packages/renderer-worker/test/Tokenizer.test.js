@@ -40,6 +40,7 @@ test('loadTokenizer - fallback', async () => {
 // TODO failing for some reason
 test.skip('loadTokenizer - module not found', async () => {
   const id = getId()
+  // @ts-ignore
   Tokenizer.state.tokenizePaths[id] = '/abc'
   const spy = jest.spyOn(console, 'error')
   await Tokenizer.loadTokenizer(id)
@@ -66,6 +67,7 @@ test.skip('loadTokenizer - tokenizeLine is not a function', async () => {
   const tokenizePath = join(temporaryDir, 'tokenize.js')
   await writeFile(tokenizePath, 'export const tokenizeLine = 2')
   await writeFile(join(temporaryDir, 'package.json'), '{ "type": "module" }')
+  // @ts-ignore
   Tokenizer.state.tokenizePaths[id] = tokenizePath
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await Tokenizer.loadTokenizer(id)

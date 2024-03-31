@@ -815,6 +815,7 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
   SharedProcess.invoke.mockImplementation((message) => {
     switch (message.method) {
       case 'Platform.getRecentlyOpenedPath':
+        // @ts-ignore
         SharedProcess.state.receive({
           id: message.id,
           jsonrpc: JsonRpcVersion.Two,
@@ -822,6 +823,7 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         })
         break
       case 'FileSystem.readFile':
+        // @ts-ignore
         SharedProcess.state.receive({
           id: message.id,
           jsonrpc: JsonRpcVersion.Two,

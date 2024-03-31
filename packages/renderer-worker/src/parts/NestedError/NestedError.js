@@ -1,3 +1,4 @@
+// @ts-ignore
 import RError from '../../../../../static/js/rerror.js'
 
 // utility for nested errors

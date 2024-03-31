@@ -39,6 +39,7 @@ test('show', async () => {
 test.skip('show - multiple times and out of order promises', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
   FileSystem.state.fileSystems.test = {
     async getBlobUrl(protocol, uri) {
       if (uri === 'test:///image-1.png') {
@@ -62,6 +63,7 @@ test.skip('show - multiple times and out of order promises', async () => {
 test.skip('show - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
   FileSystem.state.fileSystems.test = {
     async getBlobUrl(protocol, uri) {
       throw new Error(

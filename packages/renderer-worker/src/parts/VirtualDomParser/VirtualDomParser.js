@@ -98,6 +98,7 @@ export const parse = (string) => {
           const trimmed = next[0].trim()
           if (trimmed) {
             const parentNode = stack.at(-1)
+            // @ts-ignore
             parentNode.childCount++
             dom.push({
               type: VirtualDomElements.Text,
@@ -117,6 +118,7 @@ export const parse = (string) => {
           state = State.InsideTag
           const type = getType(next[0])
           const parentNode = stack.at(-1)
+          // @ts-ignore
           parentNode.childCount++
           node = {
             type,

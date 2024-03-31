@@ -19,6 +19,7 @@ const cursorIteratorTraps = {
 };
 async function* iterate(...args) {
     // tslint:disable-next-line:no-this-assignment
+    // @ts-ignore
     let cursor = this;
     if (!(cursor instanceof IDBCursor)) {
         cursor = await cursor.openCursor(...args);

@@ -72,6 +72,7 @@ export const handleEditorType = (state, editor, text) => {
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  // @ts-ignore
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const wordAtOffset = getWordAtOffset(editor)
   const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
@@ -97,6 +98,7 @@ export const handleEditorDeleteLeft = (state, editor) => {
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  // @ts-ignore
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const wordAtOffset = getWordAtOffset(editor)
   if (!wordAtOffset) {
@@ -148,6 +150,7 @@ export const loadContent = async (state) => {
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  // @ts-ignore
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
   editor.widgets = editor.widgets || []
@@ -190,6 +193,7 @@ export const loadingContent = () => {
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  // @ts-ignore
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const changes = [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.EditorCompletion, /* method */ 'showLoading', /* x */ x, /* y */ y]
   return changes

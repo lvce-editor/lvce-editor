@@ -36,6 +36,7 @@ test.skip('loadContent', async () => {
 
 test.skip('contentLoaded', async () => {
   const state = { ...ViewletSourceControl.create() }
+  // @ts-ignore
   await ViewletSourceControl.contentLoaded(state)
 })
 

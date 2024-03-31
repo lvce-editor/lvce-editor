@@ -3,6 +3,7 @@ import * as EditorHandleClick from './EditorCommandHandleSingleClick.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 
 export const moveRectangleSelection = (editor, position) => {
+  // @ts-ignore
   const anchor = EditorMoveSelection.state.position
   const startRowIndex = anchor.rowIndex
   const startColumnIndex = anchor.columnIndex
@@ -21,6 +22,8 @@ export const moveRectangleSelection = (editor, position) => {
       },
     })
   }
+  // @ts-ignore
   const cursorEdits = [selectionEdits.at(-1).end]
+  // @ts-ignore
   Editor.scheduleCursorsAndSelections(editor, cursorEdits, selectionEdits)
 }

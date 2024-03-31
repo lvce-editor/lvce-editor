@@ -15,7 +15,8 @@
     "build-min3": "microbundle --entry src/rendererWorkerMain.js --output distmin --format modern",
     "build-min4": "microbundle --entry src/parts/Editor/Editor.js --output distmin --format modern",
     "build-min5": "microbundle --entry src/parts/ViewletEditorText/ViewletEditorText.ipc.js --output distmin --format modern",
-    "lint": "npx xo ."
+    "lint": "npx xo .",
+    "type-check": "tsc"
   },
   "keywords": [],
   "author": "",

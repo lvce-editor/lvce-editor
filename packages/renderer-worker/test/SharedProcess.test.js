@@ -6,10 +6,13 @@ import * as SharedProcessState from '../src/parts/SharedProcessState/SharedProce
 test.skip('invoke - error', async () => {
   SharedProcessState.state.ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       switch (message.method) {
         case 123456:
+          // @ts-ignore
           SharedProcess.handleMessageFromSharedProcess({
             jsonrpc: JsonRpcVersion.Two,
+            // @ts-ignore
             id: message.id,
             error: {
               code: -32000,
@@ -34,10 +37,13 @@ test.skip('invoke - error', async () => {
 test.skip('invoke - error stack', async () => {
   SharedProcessState.state.ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       switch (message.method) {
         case 123456:
+          // @ts-ignore
           SharedProcess.handleMessageFromSharedProcess({
             jsonrpc: JsonRpcVersion.Two,
+            // @ts-ignore
             id: message.id,
             error: {
               code: -32000,

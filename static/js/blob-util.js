@@ -1,5 +1,6 @@
 function loadImage(src, crossOrigin) {
   return new Promise(function(resolve, reject) {
+    // @ts-ignore
     var img = new Image();
     if (crossOrigin) {
       img.crossOrigin = crossOrigin;
@@ -12,6 +13,7 @@ function loadImage(src, crossOrigin) {
   });
 }
 function imgToCanvas(img) {
+  // @ts-ignore
   var canvas = document.createElement("canvas");
   canvas.width = img.width;
   canvas.height = img.height;
@@ -28,9 +30,11 @@ function createBlob(parts, properties) {
   try {
     return new Blob(parts, properties);
   } catch (e) {
+    // @ts-ignore
     if (e.name !== "TypeError") {
       throw e;
     }
+    // @ts-ignore
     var Builder = typeof BlobBuilder !== "undefined" ? BlobBuilder : typeof MSBlobBuilder !== "undefined" ? MSBlobBuilder : typeof MozBlobBuilder !== "undefined" ? MozBlobBuilder : WebKitBlobBuilder;
     var builder = new Builder();
     for (var i = 0; i < parts.length; i += 1) {
@@ -40,9 +44,11 @@ function createBlob(parts, properties) {
   }
 }
 function createObjectURL(blob) {
+  // @ts-ignore
   return (typeof URL !== "undefined" ? URL : webkitURL).createObjectURL(blob);
 }
 function revokeObjectURL(url) {
+  // @ts-ignore
   return (typeof URL !== "undefined" ? URL : webkitURL).revokeObjectURL(url);
 }
 function blobToBinaryString(blob) {

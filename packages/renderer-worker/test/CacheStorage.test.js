@@ -9,8 +9,11 @@ import * as CacheStorage from '../src/parts/CacheStorage/CacheStorage.js'
 // so just mock globalThis.caches in the meantime
 
 afterEach(() => {
+  // @ts-ignore
   delete globalThis.caches
+  // @ts-ignore
   delete globalThis.Response
+  // @ts-ignore
   delete globalThis.Headers
 })
 
@@ -61,6 +64,7 @@ test('getJson - error - firefox', async () => {
 })
 
 test('getJson - caches are not available', async () => {
+  // @ts-ignore
   delete globalThis.caches
   expect(await CacheStorage.getJson('sample-key-1')).toBeUndefined()
 })
@@ -106,6 +110,7 @@ test('setJson - error', async () => {
 })
 
 test('setJson - caches are not available', async () => {
+  // @ts-ignore
   delete globalThis.caches
   await CacheStorage.setJson('sample-key-6', {})
 })
@@ -167,6 +172,7 @@ test('getText - error - firefox', async () => {
 })
 
 test('getText - caches are not available', async () => {
+  // @ts-ignore
   delete globalThis.caches
   expect(await CacheStorage.getTextFromCache('sample-key-4')).toBeUndefined()
 })
@@ -174,6 +180,7 @@ test('getText - caches are not available', async () => {
 test('clearCache', async () => {
   // @ts-ignore
   globalThis.caches = {
+    // @ts-ignore
     delete: jest.fn(),
   }
   await CacheStorage.clearCache()
@@ -201,6 +208,7 @@ test('clearCache - error - firefox', async () => {
 })
 
 test('clearCache - caches are not available', async () => {
+  // @ts-ignore
   delete globalThis.caches
   await CacheStorage.clearCache()
 })
