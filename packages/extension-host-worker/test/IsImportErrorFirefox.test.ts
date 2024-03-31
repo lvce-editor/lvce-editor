@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as IsImportErrorFirefox from '../src/parts/IsImportErrorFirefox/IsImportErrorFirefox.js'
+import * as IsImportErrorFirefox from '../src/parts/IsImportErrorFirefox/IsImportErrorFirefox.ts'
 
 test('isImportErrorFirefox', () => {
   const error = new TypeError('error loading dynamically imported module')

@@ -1,4 +1,4 @@
-import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.ts'
 
 export const listen = async () => {
   const postMessageFn = globalThis.postMessage

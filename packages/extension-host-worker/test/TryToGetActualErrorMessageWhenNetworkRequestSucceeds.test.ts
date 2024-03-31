@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/BabelParser/BabelParser.js', () => {
+jest.unstable_mockModule('../src/parts/BabelParser/BabelParser.ts', () => {
   return {
     parse: jest.fn(() => {
       throw new Error('not implemented')
@@ -15,10 +15,10 @@ jest.unstable_mockModule('../src/parts/BabelParser/BabelParser.js', () => {
 })
 
 const TryToGetActualErrorMessageWhenNetworkRequestSucceeds = await import(
-  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
+  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.ts'
 )
 
-const BabelParser = await import('../src/parts/BabelParser/BabelParser.js')
+const BabelParser = await import('../src/parts/BabelParser/BabelParser.ts')
 
 class NoErrorThrownError extends Error {}
 
@@ -56,7 +56,7 @@ test('tryToGetActualErrorMessage - syntax error - identifier has already been de
   const error = await getError(
     TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(
       null,
-      'test://extension.js',
+      'test://extension.ts',
       new Response(`let x = 1
 
 let x = 2
@@ -68,7 +68,7 @@ export const activate = () => {}
   expect(error).toBeInstanceOf(SyntaxError)
   expect(error.message).toBe("Identifier 'x' has already been declared.")
   expect(error.stack).toMatch(`Identifier 'x' has already been declared.
-  at test://extension.js:3:5`)
+  at test://extension.ts:3:5`)
 })
 
 test('tryToGetActualErrorMessage - syntax error - missing semicolon', async () => {
@@ -82,7 +82,7 @@ test('tryToGetActualErrorMessage - syntax error - missing semicolon', async () =
   const error = await getError(
     TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(
       null,
-      'test://extension.js',
+      'test://extension.ts',
       new Response(`[]0
 `),
     ),
@@ -90,7 +90,7 @@ test('tryToGetActualErrorMessage - syntax error - missing semicolon', async () =
   expect(error).toBeInstanceOf(SyntaxError)
   expect(error.message).toBe('SyntaxError: Missing semicolon.')
   expect(error.stack).toMatch(`SyntaxError: Missing semicolon.
-  at test://extension.js:1:3`)
+  at test://extension.ts:1:3`)
 })
 
 test('tryToGetActualErrorMessage - missing content type header', async () => {
@@ -104,7 +104,7 @@ test('tryToGetActualErrorMessage - missing content type header', async () => {
   })
   const response = new Response('', {})
   response.headers.delete('Content-Type')
-  expect(await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(null, 'test://extension.js', response)).toBe(
-    'Failed to import test://extension.js: Missing Content-Type header for javascript',
+  expect(await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(null, 'test://extension.ts', response)).toBe(
+    'Failed to import test://extension.ts: Missing Content-Type header for javascript',
   )
 })

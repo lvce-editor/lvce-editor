@@ -1,5 +1,5 @@
-import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
-import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.js'
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.ts'
+import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.ts'
 
 export const getResponse = async (message, execute) => {
   try {

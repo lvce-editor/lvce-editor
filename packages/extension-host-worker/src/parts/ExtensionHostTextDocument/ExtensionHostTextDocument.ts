@@ -1,5 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
-import * as TextDocumentState from '../TextDocumentState/TextDocumentState.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as TextDocumentState from '../TextDocumentState/TextDocumentState.ts'
 
 export const onWillChangeTextDocument = (listener) => {
   TextDocumentState.addWillChangeListener(listener)

@@ -1,4 +1,4 @@
-import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
+import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.ts'
 
 export const handleContentSecurityPolicyViolation = (event) => {
   const { violatedDirective, sourceFile, lineNumber, columnNumber } = event

@@ -1,12 +1,12 @@
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.ts'
+import * as Platform from '../Platform/Platform.ts'
 
 const getModule = async () => {
   switch (Platform.platform) {
     case PlatformType.Remote:
-      return import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
+      return import('../IpcParentWithWebSocket/IpcParentWithWebSocket.ts')
     default:
-      return import('../IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.js')
+      return import('../IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.ts')
   }
 }
 

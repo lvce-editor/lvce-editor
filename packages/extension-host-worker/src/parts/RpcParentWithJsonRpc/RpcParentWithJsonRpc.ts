@@ -1,7 +1,7 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Callback from '../Callback/Callback.js'
-import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Callback from '../Callback/Callback.ts'
+import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.ts'
+import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
 export const create = ({ ipc, execute }) => {
   Assert.object(ipc)

@@ -1,7 +1,7 @@
-import { IpcError } from '../IpcError/IpcError.js'
-import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
-import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.js'
-import * as Rpc from '../Rpc/Rpc.js'
+import { IpcError } from '../IpcError/IpcError.ts'
+import * as IsMessagePort from '../IsMessagePort/IsMessagePort.ts'
+import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 const getPort = async (type) => {
   const port = await Rpc.invoke('IpcParent.create', {

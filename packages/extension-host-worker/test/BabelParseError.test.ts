@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { BabelParseError } from '../src/parts/BabelParseError/BabelParseError.js'
+import { BabelParseError } from '../src/parts/BabelParseError/BabelParseError.ts'
 
 test('name', () => {
   const error = new SyntaxError('')

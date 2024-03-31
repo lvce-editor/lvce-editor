@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as IpcParent from '../IpcParent/IpcParent.ts'
+import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
 
 export const createWorker = async ({ method, url, name }) => {
   Assert.string(method)

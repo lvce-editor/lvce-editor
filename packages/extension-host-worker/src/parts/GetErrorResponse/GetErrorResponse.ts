@@ -1,7 +1,7 @@
-import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
-import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as SerializeError from '../SerializeError/SerializeError.js'
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.ts'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.ts'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.ts'
+import * as SerializeError from '../SerializeError/SerializeError.ts'
 
 export const getErrorResponse = (message, error) => {
   if (error && error instanceof CommandNotFoundError) {

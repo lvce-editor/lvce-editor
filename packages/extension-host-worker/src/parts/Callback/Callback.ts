@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Id from '../Id/Id.js'
-import * as Promises from '../Promises/Promises.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Id from '../Id/Id.ts'
+import * as Promises from '../Promises/Promises.ts'
 
 export const state = {
   callbacks: Object.create(null),

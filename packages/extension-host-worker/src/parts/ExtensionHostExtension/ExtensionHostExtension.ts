@@ -1,11 +1,11 @@
-import * as Assert from '../Assert/Assert.js'
-import * as CancelToken from '../CancelToken/CancelToken.js'
-import * as GetExtensionId from '../GetExtensionId/GetExtensionId.js'
-import * as ImportScript from '../ImportScript/ImportScript.js'
-import * as IsImportError from '../IsImportError/IsImportError.js'
-import * as Timeout from '../Timeout/Timeout.js'
-import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'
-import { VError } from '../VError/VError.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as CancelToken from '../CancelToken/CancelToken.ts'
+import * as GetExtensionId from '../GetExtensionId/GetExtensionId.ts'
+import * as ImportScript from '../ImportScript/ImportScript.ts'
+import * as IsImportError from '../IsImportError/IsImportError.ts'
+import * as Timeout from '../Timeout/Timeout.ts'
+import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.ts'
+import { VError } from '../VError/VError.ts'
 
 const activationTimeout = 10_000
 

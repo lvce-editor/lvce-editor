@@ -1,5 +1,5 @@
 import { expect, jest, test } from '@jest/globals'
-import * as IpcChildWithModuleWorker from '../src/parts/IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
+import * as IpcChildWithModuleWorker from '../src/parts/IpcChildWithModuleWorker/IpcChildWithModuleWorker.ts'
 
 test('listen', () => {
   globalThis.postMessage = jest.fn()

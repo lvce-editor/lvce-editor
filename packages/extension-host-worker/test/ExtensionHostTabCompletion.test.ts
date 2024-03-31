@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostTabCompletion from '../src/parts/ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as ExtensionHostTabCompletion from '../src/parts/ExtensionHostTabCompletion/ExtensionHostTabCompletion.ts'
+import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 
 beforeEach(() => {
   ExtensionHostTabCompletion.reset()
@@ -11,7 +11,7 @@ beforeEach(() => {
 test('registerTabCompletionProvider - no argument provided', () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -26,7 +26,7 @@ test('registerTabCompletionProvider - no argument provided', () => {
 test('execute - when tab completion provider has normal result', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -55,7 +55,7 @@ test('execute - when tab completion provider has normal result', async () => {
 test.skip('execute - when tab completion provider has no result', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -80,7 +80,7 @@ test.skip('execute - when tab completion provider has no result', async () => {
 test('execute - when tab completion provider has invalid result of type number', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -103,7 +103,7 @@ test('execute - when tab completion provider has invalid result of type number',
 test('execute - when tab completion provider has wrong shape', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -123,7 +123,7 @@ test('execute - when tab completion provider has wrong shape', async () => {
 test('execute - when tab completion provider throws error', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -145,7 +145,7 @@ test('execute - when tab completion provider throws error', async () => {
 test('execute - when tab completion provider returns a string', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',

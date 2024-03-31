@@ -1,5 +1,5 @@
-import * as IpcParentModule from '../IpcParentModule/IpcParentModule.js'
-import { VError } from '../VError/VError.js'
+import * as IpcParentModule from '../IpcParentModule/IpcParentModule.ts'
+import { VError } from '../VError/VError.ts'
 
 export const create = async ({ method, ...options }) => {
   try {

@@ -1,5 +1,5 @@
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.ts'
 
 export const tryToGetActualImportErrorMessage = async (url, error) => {
   let response

@@ -1,6 +1,6 @@
-import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
-import * as ExtensionHostHelperProcessIpcType from '../ExtensionHostHelperProcessIpcType/ExtensionHostHelperProcessIpcType.js'
-import * as ExtensionHostHelperProcessRpc from '../ExtensionHostHelperProcessRpc/ExtensionHostHelperProcessRpc.js'
+import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.ts'
+import * as ExtensionHostHelperProcessIpcType from '../ExtensionHostHelperProcessIpcType/ExtensionHostHelperProcessIpcType.ts'
+import * as ExtensionHostHelperProcessRpc from '../ExtensionHostHelperProcessRpc/ExtensionHostHelperProcessRpc.ts'
 
 export const state = {
   /**

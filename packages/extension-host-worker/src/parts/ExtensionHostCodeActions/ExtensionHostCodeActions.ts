@@ -1,6 +1,6 @@
-import * as Registry from '../Registry/Registry.js'
-import * as Types from '../Types/Types.js'
-import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as Registry from '../Registry/Registry.ts'
+import * as Types from '../Types/Types.ts'
+import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 
 const { registerCodeActionProvider, executeCodeActionProvider } = Registry.create({
   name: 'CodeAction',

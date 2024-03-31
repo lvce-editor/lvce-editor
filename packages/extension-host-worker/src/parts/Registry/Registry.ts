@@ -1,7 +1,7 @@
-import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import { NoProviderFoundError } from '../NoProviderFoundError/NoProviderFoundError.js'
-import { VError } from '../VError/VError.js'
-import * as Validation from '../Validation/Validation.js'
+import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
+import { NoProviderFoundError } from '../NoProviderFoundError/NoProviderFoundError.ts'
+import { VError } from '../VError/VError.ts'
+import * as Validation from '../Validation/Validation.ts'
 
 const RE_UPPERCASE_LETTER = /[A-Z]/g
 const RE_PROPERTY = /item\..*must be of type/
@@ -48,7 +48,7 @@ class NonError extends Error {
   }
 }
 
-// ensureError based on https://github.com/sindresorhus/ensure-error/blob/main/index.js (License MIT)
+// ensureError based on https://github.com/sindresorhus/ensure-error/blob/main/index.ts (License MIT)
 const ensureError = (input) => {
   if (!(input instanceof Error)) {
     return new NonError(input)

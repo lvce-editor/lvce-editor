@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostTextSearch from '../src/parts/ExtensionHostTextSearch/ExtensionHostTextSearch.js'
+import * as ExtensionHostTextSearch from '../src/parts/ExtensionHostTextSearch/ExtensionHostTextSearch.ts'
 
 beforeEach(() => {
   ExtensionHostTextSearch.reset()

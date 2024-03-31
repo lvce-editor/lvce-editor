@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => {
+jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.ts', () => {
   return {
     invoke: jest.fn(() => {
       throw new Error('not implemented')
@@ -12,7 +12,7 @@ jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Api/Api.js', () => {
+jest.unstable_mockModule('../src/parts/Api/Api.ts', () => {
   return {
     api: {
       exec: jest.fn(),
@@ -20,9 +20,9 @@ jest.unstable_mockModule('../src/parts/Api/Api.js', () => {
   }
 })
 
-const ExtensionHostMockExec = await import('../src/parts/ExtensionHostMockExec/ExtensionHostMockExec.js')
-const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
-const Api = await import('../src/parts/Api/Api.js')
+const ExtensionHostMockExec = await import('../src/parts/ExtensionHostMockExec/ExtensionHostMockExec.ts')
+const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.ts')
+const Api = await import('../src/parts/Api/Api.ts')
 
 test('mockExec', async () => {
   // @ts-ignore

@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as GetSuccessResponse from '../src/parts/GetSuccessResponse/GetSuccessResponse.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as GetSuccessResponse from '../src/parts/GetSuccessResponse/GetSuccessResponse.ts'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.ts'
 
 test('getSuccessResponse - result is of type number', () => {
   const message = {

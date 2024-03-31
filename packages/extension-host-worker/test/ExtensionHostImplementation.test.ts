@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostImplementation from '../src/parts/ExtensionHostImplementation/ExtensionHostImplementation.js'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as ExtensionHostImplementation from '../src/parts/ExtensionHostImplementation/ExtensionHostImplementation.ts'
+import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 
 beforeEach(() => {
   ExtensionHostImplementation.reset()
@@ -9,7 +9,7 @@ beforeEach(() => {
 test('executeImplementationProvider - no results', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -28,7 +28,7 @@ test('executeImplementationProvider - no results', async () => {
 test('executeImplementationProvider - single result', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -39,7 +39,7 @@ test('executeImplementationProvider - single result', async () => {
     async provideImplementations() {
       return [
         {
-          uri: '/test/index.js',
+          uri: '/test/index.ts',
           lineText: '',
           startOffset: 0,
           endOffset: 0,
@@ -53,7 +53,7 @@ test('executeImplementationProvider - single result', async () => {
       endOffset: 0,
       lineText: '',
       startOffset: 0,
-      uri: '/test/index.js',
+      uri: '/test/index.ts',
     },
   ])
 })
@@ -61,7 +61,7 @@ test('executeImplementationProvider - single result', async () => {
 test('executeImplementationProvider - error - Implementation provider throws error', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -82,7 +82,7 @@ test('executeImplementationProvider - error - Implementation provider throws err
 test('executeImplementationProvider - error - ImplementationProvider has wrong shape', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -101,7 +101,7 @@ test('executeImplementationProvider - error - ImplementationProvider has wrong s
 test('executeImplementationProvider - error - no Implementation provider found', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',

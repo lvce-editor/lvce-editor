@@ -1,8 +1,8 @@
-import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
-import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
-import * as IsImportError from '../IsImportError/IsImportError.js'
-import * as Timeout from '../Timeout/Timeout.js'
-import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'
+import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.ts'
+import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.ts'
+import * as IsImportError from '../IsImportError/IsImportError.ts'
+import * as Timeout from '../Timeout/Timeout.ts'
+import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.ts'
 
 export const importScript = async (url) => {
   try {

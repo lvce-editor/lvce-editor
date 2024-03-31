@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Rpc/Rpc.js', () => {
+jest.unstable_mockModule('../src/parts/Rpc/Rpc.ts', () => {
   return {
     invoke: jest.fn(() => {
       throw new Error('not implemented')
@@ -12,9 +12,9 @@ jest.unstable_mockModule('../src/parts/Rpc/Rpc.js', () => {
   }
 })
 
-const IpcParentWithElectronMessagePort = await import('../src/parts/IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.js')
+const IpcParentWithElectronMessagePort = await import('../src/parts/IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.ts')
 
-const Rpc = await import('../src/parts/Rpc/Rpc.js')
+const Rpc = await import('../src/parts/Rpc/Rpc.ts')
 
 test('create - error - port is not defined', async () => {
   // @ts-ignore

@@ -1,11 +1,11 @@
-import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
-import * as GetResponse from '../GetResponse/GetResponse.js'
-import * as IpcState from '../IpcState/IpcState.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
+import * as Callback from '../Callback/Callback.ts'
+import * as Command from '../Command/Command.ts'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.ts'
+import * as GetResponse from '../GetResponse/GetResponse.ts'
+import * as IpcState from '../IpcState/IpcState.ts'
+import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 
 export const send = (method, ...params) => {
   const ipc = IpcState.get()

@@ -1,7 +1,7 @@
-import * as Api from '../Api/Api.js'
-import { ExecError } from '../ExecError/ExecError.js'
-import * as Rpc from '../Rpc/Rpc.js'
-import { VError } from '../VError/VError.js'
+import * as Api from '../Api/Api.ts'
+import { ExecError } from '../ExecError/ExecError.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
+import { VError } from '../VError/VError.ts'
 
 export const mockExec = () => {
   try {

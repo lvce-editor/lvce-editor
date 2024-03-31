@@ -1,13 +1,13 @@
-import { BabelParseError } from '../BabelParseError/BabelParseError.js'
-import * as BabelParser from '../BabelParser/BabelParser.js'
-import * as BabelSourceType from '../BabelSourceType/BabelSourceType.js'
-import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
-import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
-import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNotFoundError.js'
-import * as GetBabelAstDependencies from '../GetBabelAstDependencies/GetBabelAstDependencies.js'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.js'
-import * as Url from '../Url/Url.js'
+import { BabelParseError } from '../BabelParseError/BabelParseError.ts'
+import * as BabelParser from '../BabelParser/BabelParser.ts'
+import * as BabelSourceType from '../BabelSourceType/BabelSourceType.ts'
+import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.ts'
+import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.ts'
+import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNotFoundError.ts'
+import * as GetBabelAstDependencies from '../GetBabelAstDependencies/GetBabelAstDependencies.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.ts'
+import * as Url from '../Url/Url.ts'
 
 const isExternal = (url) => {
   if (url.startsWith('/')) {
@@ -76,7 +76,7 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
   }
   const contentType = response.headers.get('Content-Type')
-  if (url.endsWith('.js') && contentType === null) {
+  if (url.endsWith('.ts') && contentType === null) {
     return `Failed to import ${url}: Missing Content-Type header for javascript`
   }
   return `Failed to import ${url}: Unknown Network Error`

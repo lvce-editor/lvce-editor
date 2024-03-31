@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.js'
-import * as Rpc from '../Rpc/Rpc.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 export const create = async ({ url, name }) => {
   Assert.string(url)

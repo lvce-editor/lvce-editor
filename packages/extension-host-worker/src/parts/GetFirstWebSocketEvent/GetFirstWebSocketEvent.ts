@@ -1,5 +1,5 @@
-import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
-import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.js'
+import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.ts'
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.ts'
 
 /**
  *

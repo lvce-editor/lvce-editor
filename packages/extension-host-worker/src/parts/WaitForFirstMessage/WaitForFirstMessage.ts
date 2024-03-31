@@ -1,4 +1,4 @@
-import * as Promises from '../Promises/Promises.js'
+import * as Promises from '../Promises/Promises.ts'
 
 export const waitForFirstMessage = async (port) => {
   const { resolve, promise } = Promises.withResolvers()

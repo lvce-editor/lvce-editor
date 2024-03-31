@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.js'
+import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.ts'
 
 beforeEach(() => {
   ExtensionHostCommand.reset()

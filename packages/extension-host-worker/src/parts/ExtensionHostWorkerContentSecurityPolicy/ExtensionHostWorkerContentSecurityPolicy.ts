@@ -1,4 +1,4 @@
-import * as Rpc from '../Rpc/Rpc.js'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 export const set = async (url, contentSecurityPolicy) => {
   const pathName = new URL(url).pathname

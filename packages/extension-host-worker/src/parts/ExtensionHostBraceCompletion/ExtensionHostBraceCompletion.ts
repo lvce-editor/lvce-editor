@@ -1,5 +1,5 @@
-import * as Registry from '../Registry/Registry.js'
-import * as Types from '../Types/Types.js'
+import * as Registry from '../Registry/Registry.ts'
+import * as Types from '../Types/Types.ts'
 
 const { registerBraceCompletionProvider, executeBraceCompletionProvider, reset } = Registry.create({
   name: 'BraceCompletion',

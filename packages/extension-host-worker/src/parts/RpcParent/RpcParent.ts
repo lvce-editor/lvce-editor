@@ -1,4 +1,4 @@
-import * as RpcParentModule from '../RpcParentModule/RpcParentModule.js'
+import * as RpcParentModule from '../RpcParentModule/RpcParentModule.ts'
 
 export const create = async ({ method, ...options }) => {
   const module = await RpcParentModule.getModule(method)

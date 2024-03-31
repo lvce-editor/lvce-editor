@@ -1,4 +1,4 @@
-import { VError } from '../VError/VError.js'
+import { VError } from '../VError/VError.ts'
 
 export const state = {
   fileSystemProviderMap: Object.create(null),

@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Rpc from '../Rpc/Rpc.js'
-import { VError } from '../VError/VError.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
+import { VError } from '../VError/VError.ts'
 
 export const state = {
   debugProviderMap: Object.create(null),

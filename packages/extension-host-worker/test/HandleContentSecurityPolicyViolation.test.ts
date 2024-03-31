@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js', () => {
+jest.unstable_mockModule('../src/parts/ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.ts', () => {
   return {
     addError: jest.fn(() => {
       throw new Error('not implemented')
@@ -12,13 +12,13 @@ jest.unstable_mockModule('../src/parts/ContentSecurityPolicyErrorState/ContentSe
   }
 })
 
-const HandleContentSecurityPolicyViolation = await import('../src/parts/HandleContentSecurityPolicyViolation/HandleContentSecurityPolicyViolation.js')
-const ContentSecurityPolicyErrorState = await import('../src/parts/ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js')
+const HandleContentSecurityPolicyViolation = await import('../src/parts/HandleContentSecurityPolicyViolation/HandleContentSecurityPolicyViolation.ts')
+const ContentSecurityPolicyErrorState = await import('../src/parts/ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.ts')
 
 test('handleContentSecurityPolicyViolation', () => {
   const event = {
     violatedDirective: 'script-src-elem',
-    sourceFile: 'http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-import-data-url-csp-violation/main.js',
+    sourceFile: 'http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-import-data-url-csp-violation/main.ts',
     lineNumber: 1,
     columnNumber: 11,
   }
@@ -26,7 +26,7 @@ test('handleContentSecurityPolicyViolation', () => {
   expect(ContentSecurityPolicyErrorState.addError).toHaveBeenCalledTimes(1)
   expect(ContentSecurityPolicyErrorState.addError).toHaveBeenCalledWith({
     violatedDirective: 'script-src-elem',
-    sourceFile: 'http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-import-data-url-csp-violation/main.js',
+    sourceFile: 'http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-import-data-url-csp-violation/main.ts',
     lineNumber: 1,
     columnNumber: 11,
   })

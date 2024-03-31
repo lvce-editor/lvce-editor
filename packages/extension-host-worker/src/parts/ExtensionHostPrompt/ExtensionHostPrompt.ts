@@ -1,5 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Rpc from '../Rpc/Rpc.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 export const confirm = (message) => {
   Assert.string(message)

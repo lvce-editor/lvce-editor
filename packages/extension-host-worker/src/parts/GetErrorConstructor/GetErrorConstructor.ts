@@ -1,4 +1,4 @@
-import * as ErrorType from '../ErrorType/ErrorType.js'
+import * as ErrorType from '../ErrorType/ErrorType.ts'
 
 export const getErrorConstructor = (message, type) => {
   if (type) {

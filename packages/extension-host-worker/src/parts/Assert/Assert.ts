@@ -1,6 +1,6 @@
 // TODO consider using an assertion library like https://github.com/alexreardon/tiny-invariant, https://github.com/tj/better-assert
 
-import { AssertionError } from '../AssertionError/AssertionError.js'
+import { AssertionError } from '../AssertionError/AssertionError.ts'
 
 export const getType = (value) => {
   switch (typeof value) {

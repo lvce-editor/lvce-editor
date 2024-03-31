@@ -1,28 +1,28 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import { setTimeout } from 'node:timers/promises'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/GetErrorResponse/GetErrorResponse.js', () => ({
+jest.unstable_mockModule('../src/parts/GetErrorResponse/GetErrorResponse.ts', () => ({
   getErrorResponse: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.js', () => ({
+jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.ts', () => ({
   getResponse: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.ts', () => ({
   logError: jest.fn(),
 }))
 
-const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
-const GetErrorResponse = await import('../src/parts/GetErrorResponse/GetErrorResponse.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const GetResponse = await import('../src/parts/GetResponse/GetResponse.ts')
+const GetErrorResponse = await import('../src/parts/GetErrorResponse/GetErrorResponse.ts')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.ts')
 
-const Rpc = await import('../src/parts/Rpc/Rpc.js')
+const Rpc = await import('../src/parts/Rpc/Rpc.ts')
 
 test('send - error - promise could not be cloned', async () => {
   const mockResult = Promise.resolve()

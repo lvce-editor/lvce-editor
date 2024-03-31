@@ -1,6 +1,6 @@
-import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.js'
-import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
+import * as Callback from '../Callback/Callback.ts'
+import * as Command from '../Command/Command.ts'
+import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.ts'
 
 export const handleIpc = (ipc) => {
   const handleMessageFromRendererWorker = (message) => {

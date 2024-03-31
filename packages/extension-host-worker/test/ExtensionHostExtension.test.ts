@@ -4,21 +4,21 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ImportScript/ImportScript.js', () => {
+jest.unstable_mockModule('../src/parts/ImportScript/ImportScript.ts', () => {
   return {
     importScript: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
 })
-jest.unstable_mockModule('../src/parts/Timeout/Timeout.js', () => {
+jest.unstable_mockModule('../src/parts/Timeout/Timeout.ts', () => {
   return {
     sleep: jest.fn(() => {}),
   }
 })
 
-const ExtensionHostExtension = await import('../src/parts/ExtensionHostExtension/ExtensionHostExtension.js')
-const ImportScript = await import('../src/parts/ImportScript/ImportScript.js')
+const ExtensionHostExtension = await import('../src/parts/ExtensionHostExtension/ExtensionHostExtension.ts')
+const ImportScript = await import('../src/parts/ImportScript/ImportScript.ts')
 
 test('activate - error - module not found', async () => {
   // @ts-ignore
@@ -34,12 +34,12 @@ test('activate - error - module not found', async () => {
       {
         isWeb: true,
         path: '/test',
-        browser: 'extension.js',
+        browser: 'extension.ts',
         id: 'test',
       },
-      '/test/extension.js',
+      '/test/extension.ts',
     ),
-  ).rejects.toThrow(new Error('Failed to activate extension test: Failed to import /test/extension.js: Not found (404)'))
+  ).rejects.toThrow(new Error('Failed to activate extension test: Failed to import /test/extension.ts: Not found (404)'))
 })
 
 test('activate - error', async () => {
@@ -60,10 +60,10 @@ test('activate - error', async () => {
       {
         isWeb: true,
         path: '/test',
-        browser: 'extension.js',
+        browser: 'extension.ts',
         id: 'test',
       },
-      '/test/extension.js',
+      '/test/extension.ts',
     ),
   ).rejects.toThrow(new Error('Failed to activate extension test: TypeError: x is not a function'))
 })
@@ -87,10 +87,10 @@ test('activate - timeout exceeded', async () => {
       {
         isWeb: true,
         path: '/test',
-        browser: 'extension.js',
+        browser: 'extension.ts',
         id: 'test',
       },
-      '/test/extension.js',
+      '/test/extension.ts',
     ),
   ).rejects.toThrow(new Error('Failed to activate extension test: Activation timeout of 10000ms exceeded'))
 })

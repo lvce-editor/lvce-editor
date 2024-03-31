@@ -1,4 +1,4 @@
-import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
+import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.ts'
 
 export const getStatusBarItems = async () => {
   const providers = Object.values(ExtensionHostSourceControl.state.providers)

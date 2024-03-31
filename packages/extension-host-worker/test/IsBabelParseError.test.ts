@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as IsBabelParseError from '../src/parts/IsBabelParseError/IsBabelParseError.js'
+import * as IsBabelParseError from '../src/parts/IsBabelParseError/IsBabelParseError.ts'
 
 test('isBabelParseError - type error', () => {
   const error = new TypeError('x is not a function')

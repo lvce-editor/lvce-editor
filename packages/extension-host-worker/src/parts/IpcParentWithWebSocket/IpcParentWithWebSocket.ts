@@ -1,10 +1,10 @@
-import * as Assert from '../Assert/Assert.js'
-import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
-import * as GetFirstWebSocketEvent from '../GetFirstWebSocketEvent/GetFirstWebSocketEvent.js'
-import * as GetWebSocketUrl from '../GetWebSocketUrl/GetWebSocketUrl.js'
-import { IpcError } from '../IpcError/IpcError.js'
-import * as Json from '../Json/Json.js'
-import { VError } from '../VError/VError.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.ts'
+import * as GetFirstWebSocketEvent from '../GetFirstWebSocketEvent/GetFirstWebSocketEvent.ts'
+import * as GetWebSocketUrl from '../GetWebSocketUrl/GetWebSocketUrl.ts'
+import { IpcError } from '../IpcError/IpcError.ts'
+import * as Json from '../Json/Json.ts'
+import { VError } from '../VError/VError.ts'
 
 export const create = async ({ type }) => {
   Assert.string(type)

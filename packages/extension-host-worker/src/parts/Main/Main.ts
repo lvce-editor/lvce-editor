@@ -1,12 +1,12 @@
-import * as Api from '../Api/Api.js'
-import * as Command from '../Command/Command.js'
-import * as CommandMap from '../CommandMap/CommandMap.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as HandleContentSecurityPolicyViolation from '../HandleContentSecurityPolicyViolation/HandleContentSecurityPolicyViolation.js'
-import * as IpcChild from '../IpcChild/IpcChild.js'
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as Rpc from '../Rpc/Rpc.js'
-import * as SetStackTraceLimit from '../SetStackTraceLimit/SetStackTraceLimit.js'
+import * as Api from '../Api/Api.ts'
+import * as Command from '../Command/Command.ts'
+import * as CommandMap from '../CommandMap/CommandMap.ts'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
+import * as HandleContentSecurityPolicyViolation from '../HandleContentSecurityPolicyViolation/HandleContentSecurityPolicyViolation.ts'
+import * as IpcChild from '../IpcChild/IpcChild.ts'
+import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
+import * as SetStackTraceLimit from '../SetStackTraceLimit/SetStackTraceLimit.ts'
 
 export const main = async () => {
   SetStackTraceLimit.setStackTraceLimit(20)

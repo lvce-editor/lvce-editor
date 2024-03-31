@@ -1,4 +1,4 @@
-import { VError } from '../VError/VError.js'
+import { VError } from '../VError/VError.ts'
 
 export const stringify = (value) => {
   return JSON.stringify(value, null, 2) + '\n'

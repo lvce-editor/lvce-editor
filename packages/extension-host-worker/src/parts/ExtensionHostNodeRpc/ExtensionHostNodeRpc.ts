@@ -1,9 +1,9 @@
-import * as Assert from '../Assert/Assert.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as RpcParent from '../RpcParent/RpcParent.js'
-import * as RpcParentType from '../RpcParentType/RpcParentType.js'
-import { VError } from '../VError/VError.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as IpcParent from '../IpcParent/IpcParent.ts'
+import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
+import * as RpcParent from '../RpcParent/RpcParent.ts'
+import * as RpcParentType from '../RpcParentType/RpcParentType.ts'
+import { VError } from '../VError/VError.ts'
 
 const defaultExecute = () => {
   throw new Error('not implemented')
@@ -20,7 +20,7 @@ export const createNodeRpc = async ({ path, execute = defaultExecute, name = '' 
     })
     const rpc = await RpcParent.create({
       ipc,
-      method: RpcParentType.JsonRpc,
+      method: RpcParentType.tsonRpc,
       execute,
     })
     await rpc.invoke('LoadFile.loadFile', path)

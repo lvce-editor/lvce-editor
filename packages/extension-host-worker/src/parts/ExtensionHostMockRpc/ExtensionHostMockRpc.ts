@@ -1,6 +1,6 @@
-import * as Api from '../Api/Api.js'
-import * as Rpc from '../Rpc/Rpc.js'
-import { VError } from '../VError/VError.js'
+import * as Api from '../Api/Api.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
+import { VError } from '../VError/VError.ts'
 
 export const mockRpc = () => {
   // @ts-ignore
