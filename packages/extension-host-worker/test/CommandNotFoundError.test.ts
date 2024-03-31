@@ -6,5 +6,6 @@ test('CommandNotFoundError', () => {
   const error = new CommandNotFoundError('test-command')
   expect(error.name).toBe('CommandNotFoundError')
   expect(error.message).toBe('Command "test-command" not found (extension host worker)')
+  // @ts-ignore
   expect(error.code).toBe(ErrorCodes.E_COMMAND_NOT_FOUND)
 })

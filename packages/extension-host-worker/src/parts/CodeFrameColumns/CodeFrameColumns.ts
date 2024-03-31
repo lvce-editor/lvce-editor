@@ -94,7 +94,9 @@ export const create = (rawLines, loc, opts = {}) => {
 
           markerLine = ['\n ', gutter.replace(/\d/g, ' '), ' ', markerSpacing, '^'.repeat(numberOfMarkers)].join('')
 
+          // @ts-ignore
           if (lastMarkerLine && opts.message) {
+            // @ts-ignore
             markerLine += ' ' + opts.message
           }
         }
@@ -104,7 +106,9 @@ export const create = (rawLines, loc, opts = {}) => {
     })
     .join('\n')
 
+  // @ts-ignore
   if (opts.message && !hasColumns) {
+    // @ts-ignore
     frame = `${' '.repeat(numberMaxWidth + 1)}${opts.message}\n${frame}`
   }
 
