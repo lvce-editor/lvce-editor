@@ -26,16 +26,21 @@ export const wrap = (port) => {
     },
     set onmessage(listener) {
       if (listener) {
+        // @ts-ignore
         this.handleMessage = (event) => {
           // TODO why are some events not instance of message event?
           if (event instanceof MessageEvent) {
             const message = event.data
+            // @ts-ignore
             listener(message, event)
           } else {
+            // @ts-ignore
+
             listener(event)
           }
         }
       } else {
+        // @ts-ignore
         this.handleMessage = null
       }
       this.port.onmessage = this.handleMessage

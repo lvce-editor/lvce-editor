@@ -3,6 +3,7 @@ import * as ExtensionHostClosingTag from '../src/parts/ExtensionHostClosingTag/E
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 test('registerClosingTagProvider - no argument provided', () => {
+  // @ts-expect-error
   expect(() => ExtensionHostClosingTag.registerClosingTagProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))
 })
 

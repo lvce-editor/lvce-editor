@@ -16,6 +16,7 @@ export const importScript = async (url) => {
     await Timeout.sleep(0)
     if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
       const recentError = ContentSecurityPolicyErrorState.getRecentError()
+      // @ts-ignore
       throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
     }
     throw error
