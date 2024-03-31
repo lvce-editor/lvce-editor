@@ -2,7 +2,7 @@
   "name": "@lvce-editor/renderer-process",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/rendererProcessMain.js",
+  "main": "src/rendererProcessMain.ts",
   "type": "module",
   "scripts": {
     "dev": "esbuild src/rendererProcessMain.js --target=esnext --format=esm --sourcemap --bundle --outfile=dist/rendererProcessMain.js --watch",

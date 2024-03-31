@@ -64,7 +64,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     }
     await BundleJs.bundleJs({
       cwd: cachePath,
-      from: `./src/rendererProcessMain.js`,
+      from: `./src/rendererProcessMain.ts`,
       platform: 'web',
     })
   } catch (error) {
