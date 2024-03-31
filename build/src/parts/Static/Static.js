@@ -112,16 +112,15 @@ export const getModule = (method) => {
 }
 
 const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
-  await Copy.copy({
-    from: 'packages/extension-host-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
-  })
-
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts`,
-    occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
-    replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
-  })
+  // await Copy.copy({
+  //   from: 'packages/extension-host-worker/src',
+  //   to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
+  // })
+  // await Replace.replace({
+  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts`,
+  //   occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
+  //   replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
+  // })
 }
 
 const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
