@@ -16,6 +16,7 @@ export const main = async () => {
     self.addEventListener('securitypolicyviolation', HandleContentSecurityPolicyViolation.handleContentSecurityPolicyViolation)
   }
   globalThis.vscode = Api.api
+  // @ts-ignore
   Command.state.getFn = CommandMap.getFn
   const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
   Rpc.listen(ipc)

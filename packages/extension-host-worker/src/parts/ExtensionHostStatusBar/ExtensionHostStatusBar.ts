@@ -4,7 +4,9 @@ export const getStatusBarItems = async () => {
   const providers = Object.values(ExtensionHostSourceControl.state.providers)
   const statusBarItems = []
   for (const provider of providers) {
+    // @ts-ignore
     if (provider && provider.statusBarCommands) {
+      // @ts-ignore
       statusBarItems.push(...provider.statusBarCommands)
     }
   }

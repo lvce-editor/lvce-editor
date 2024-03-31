@@ -28,6 +28,7 @@ const validateResultObject = (result, resultShape) => {
     return undefined
   }
   for (const [key, value] of Object.entries(resultShape.properties)) {
+    // @ts-ignore
     const expectedType = value.type
     const actualType = getType(result[key])
     if (expectedType !== actualType) {
