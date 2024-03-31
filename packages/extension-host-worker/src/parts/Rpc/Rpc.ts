@@ -19,10 +19,12 @@ const handleMessageFromRendererWorker = async (event) => {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message, Command.execute)
       try {
+        // @ts-ignore
         ipc.send(response)
       } catch (error) {
         await ErrorHandling.logError(error)
         const errorResponse = GetErrorResponse.getErrorResponse(message, error)
+        // @ts-ignore
         ipc.send(errorResponse)
       }
       return

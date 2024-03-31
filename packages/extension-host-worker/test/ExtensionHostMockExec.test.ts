@@ -35,6 +35,7 @@ test('mockExec', async () => {
   })
 
   ExtensionHostMockExec.mockExec()
+  // @ts-ignore
   expect(await Api.api.exec('test')).toEqual({
     stdout: '',
     stderr: '',

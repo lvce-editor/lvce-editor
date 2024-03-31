@@ -75,6 +75,7 @@ const registerMethod = ({ context, providers, returnUndefinedWhenNoProviderFound
       const error = Validation.validate(result, resultShape)
       if (error) {
         const improvedError = improveValidationError(name, error)
+        // @ts-ignore
         throw new VError(improvedError)
       }
       return result
@@ -84,7 +85,7 @@ const registerMethod = ({ context, providers, returnUndefinedWhenNoProviderFound
       if (actualError && actualError.message) {
         if (actualError.message === 'provider[methodName] is not a function') {
           const camelCaseName = toCamelCase(name)
-
+          // @ts-ignore
           throw new VError(`Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`)
         }
         const message = actualError.name === 'Error' ? `${actualError.message}` : `${actualError.name}: ${actualError.message}`
@@ -111,6 +112,7 @@ export const create = ({ name, resultShape, executeKey = '', returnUndefinedWhen
   }
   registerMethod({ context, providers, name, methodName, returnUndefinedWhenNoProviderFound, resultShape })
   for (const method of additionalMethodNames) {
+    // @ts-ignore
     registerMethod({ context, providers, ...method })
   }
   const finalContext = { ...context }

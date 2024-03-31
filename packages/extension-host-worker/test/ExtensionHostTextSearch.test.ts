@@ -6,6 +6,7 @@ beforeEach(() => {
 })
 
 test('registerTextSearchProvider - no argument provided', () => {
+  // @ts-expect-error
   expect(() => ExtensionHostTextSearch.registerTextSearchProvider()).toThrow(
     new Error('Failed to register text search provider: textSearchProvider is not defined'),
   )

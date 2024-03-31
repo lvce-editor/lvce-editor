@@ -11,17 +11,21 @@ export const state = {
 }
 
 export const addWillChangeListener = (listener) => {
+  // @ts-ignore
   state.onWillChangeEditorListeners.push(listener)
 }
 
 export const addDidChangeListener = (listener) => {
+  // @ts-ignore
   state.onDidChangeTextDocumentListeners.push(listener)
 }
 export const addDidOpenListener = (listener) => {
+  // @ts-ignore
   state.onDidOpenEditorListeners.push(listener)
 }
 
 export const addDidSaveListener = (listener) => {
+  // @ts-ignore
   state.onDidSaveTextDocumentListeners.push(listener)
 }
 

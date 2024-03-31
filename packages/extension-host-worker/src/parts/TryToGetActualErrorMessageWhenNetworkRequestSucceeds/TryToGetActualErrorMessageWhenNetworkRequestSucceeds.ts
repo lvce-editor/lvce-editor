@@ -72,6 +72,7 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
   await getErrorInDependencies(url, dependencies, seenUrls)
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
+    // @ts-ignore
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
   }
   const contentType = response.headers.get('Content-Type')
