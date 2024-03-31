@@ -39,6 +39,9 @@ export const getSessionId = () => {
 }
 
 export const getSharedProcessPath = () => {
+  if (isProduction) {
+    return join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
+  }
   return join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 }
 
