@@ -5,6 +5,7 @@ import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCa
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -432,21 +433,23 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     platform: 'webworker',
     codeSplitting: false,
   })
-  await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
+  const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
     assetDir,
     platform,
     commitHash,
   })
   await Copy.copy({
-    from: extensionHostWorkerCachePath,
+    from: terminalWorkerCachePath,
     to: `build/.tmp/dist/${commitHash}/packages/terminal-worker`,
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/test-worker`),
-    from: 'src/testWorkerMain.ts',
-    platform: 'webworker',
-    codeSplitting: false,
-    babelExternal: true,
+  const testWorkerCachePath = await BundleTestWorkerCached.bundleTestWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: testWorkerCachePath,
+    to: `build/.tmp/dist/${commitHash}/packages/test-worker`,
   })
 }
 
