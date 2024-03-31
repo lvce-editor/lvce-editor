@@ -2,6 +2,7 @@ import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as GetSharedProcessArgv from '../GetSharedProcessArgv/GetSharedProcessArgv.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Performance from '../Performance/Performance.js'
@@ -52,6 +53,7 @@ const handleChildDisconnect = () => {
 export const launchSharedProcess = async ({ method, env = {} }) => {
   Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
   const sharedProcessPath = Platform.getSharedProcessPath()
+  const execArgv = GetSharedProcessArgv.getSharedProcessArgv()
   const sharedProcess = await IpcParent.create({
     method,
     env: {
@@ -59,7 +61,7 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
       ...env,
     },
     argv: [],
-    execArgv: ['--enable-source-maps'],
+    execArgv,
     path: sharedProcessPath,
     name: 'shared-process',
   })
