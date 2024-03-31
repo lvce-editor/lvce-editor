@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as GetErrorResponse from '../src/parts/GetErrorResponse/GetErrorResponse.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as GetErrorResponse from '../src/parts/GetErrorResponse/GetErrorResponse.ts'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.ts'
 
 test('getErrorResponse - null', () => {
   const message = {

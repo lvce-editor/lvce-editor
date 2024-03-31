@@ -1,12 +1,12 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.ts'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+jest.unstable_mockModule('../src/parts/Command/Command.ts', () => {
   return {
     execute: jest.fn(() => {
       throw new Error('not implemented')
@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
+const GetResponse = await import('../src/parts/GetResponse/GetResponse.ts')
 
 test('getResponse - error - method not found', async () => {
   // @ts-ignore

@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostBraceCompletion from '../src/parts/ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as ExtensionHostBraceCompletion from '../src/parts/ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.ts'
+import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 
 beforeEach(() => {
   ExtensionHostBraceCompletion.reset()
@@ -9,7 +9,7 @@ beforeEach(() => {
 test('executeBraceCompletionProvider - true', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -28,7 +28,7 @@ test('executeBraceCompletionProvider - true', async () => {
 test('executeBraceCompletionProvider - false', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -47,7 +47,7 @@ test('executeBraceCompletionProvider - false', async () => {
 test('executeBraceCompletionProvider - error - result is undefined', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -70,7 +70,7 @@ test('executeBraceCompletionProvider - error - result is undefined', async () =>
 test('executeBraceCompletionProvider - error - definition must be of type object but is function', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -93,7 +93,7 @@ test('executeBraceCompletionProvider - error - definition must be of type object
 test('executeBraceCompletionProvider - error - brace completion provider throws error', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -114,7 +114,7 @@ test('executeBraceCompletionProvider - error - brace completion provider throws 
 test('executeBraceCompletionProvider - error - definition provider throws error null', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',

@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as ExtensionHostHelperProcessIpcType from '../src/parts/ExtensionHostHelperProcessIpcType/ExtensionHostHelperProcessIpcType.js'
-import * as ParentIpcType from '../src/parts/IpcParentType/IpcParentType.js'
+import * as ExtensionHostHelperProcessIpcType from '../src/parts/ExtensionHostHelperProcessIpcType/ExtensionHostHelperProcessIpcType.ts'
+import * as ParentIpcType from '../src/parts/IpcParentType/IpcParentType.ts'
 
 test('getIpcType - electron', () => {
   // @ts-ignore

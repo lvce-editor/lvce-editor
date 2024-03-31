@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as ErrorType from '../src/parts/ErrorType/ErrorType.js'
-import * as GetErrorConstructor from '../src/parts/GetErrorConstructor/GetErrorConstructor.js'
+import * as ErrorType from '../src/parts/ErrorType/ErrorType.ts'
+import * as GetErrorConstructor from '../src/parts/GetErrorConstructor/GetErrorConstructor.ts'
 
 test('getErrorConstructor - DOMException', () => {
   expect(GetErrorConstructor.getErrorConstructor('', ErrorType.DomException)).toBe(DOMException)

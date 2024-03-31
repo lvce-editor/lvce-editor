@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as GetExtensionId from '../src/parts/GetExtensionId/GetExtensionId.js'
+import * as GetExtensionId from '../src/parts/GetExtensionId/GetExtensionId.ts'
 
 test('getExtensionId - null', () => {
   expect(GetExtensionId.getExtensionId(null)).toBe('<unknown>')

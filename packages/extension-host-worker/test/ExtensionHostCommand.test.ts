@@ -1,11 +1,12 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.js'
+import * as ExtensionHostCommand from '../src/parts/ExtensionHostCommand/ExtensionHostCommand.ts'
 
 beforeEach(() => {
   ExtensionHostCommand.reset()
 })
 
 test('registerCommand - no argument provided', () => {
+  // @ts-ignore
   expect(() => ExtensionHostCommand.registerCommand()).toThrow(new Error('Failed to register command: command is not defined'))
 })
 

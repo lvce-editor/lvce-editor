@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import * as ExtensionHostTypeDefinition from '../src/parts/ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
+import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
+import * as ExtensionHostTypeDefinition from '../src/parts/ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.ts'
 
 beforeEach(() => {
   ExtensionHostTypeDefinition.reset()
@@ -9,7 +9,7 @@ beforeEach(() => {
 test('executeTypeDefinitionProvider', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -19,7 +19,7 @@ test('executeTypeDefinitionProvider', async () => {
     languageId: 'javascript',
     provideTypeDefinition() {
       return {
-        uri: '/test/index.js',
+        uri: '/test/index.ts',
         startOffset: 15,
         endOffset: 22,
       }
@@ -29,14 +29,14 @@ test('executeTypeDefinitionProvider', async () => {
   expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toEqual({
     endOffset: 22,
     startOffset: 15,
-    uri: '/test/index.js',
+    uri: '/test/index.ts',
   })
 })
 
 test('executeTypeDefinitionProvider - definition.startOffset is zero', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -46,7 +46,7 @@ test('executeTypeDefinitionProvider - definition.startOffset is zero', async () 
     languageId: 'javascript',
     provideTypeDefinition() {
       return {
-        uri: '/test/index.js',
+        uri: '/test/index.ts',
         startOffset: 0,
         endOffset: 0,
       }
@@ -56,14 +56,14 @@ test('executeTypeDefinitionProvider - definition.startOffset is zero', async () 
   expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toEqual({
     endOffset: 0,
     startOffset: 0,
-    uri: '/test/index.js',
+    uri: '/test/index.ts',
   })
 })
 
 test('executeTypeDefinitionProvider - error - definition must be of type object but is array', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -84,7 +84,7 @@ test('executeTypeDefinitionProvider - error - definition must be of type object 
 test('executeTypeDefinitionProvider - error - definition must be of type object but is function', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -107,7 +107,7 @@ test('executeTypeDefinitionProvider - error - definition must be of type object 
 test('executeTypeDefinitionProvider - error - definition.uri must be of type string', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -128,7 +128,7 @@ test('executeTypeDefinitionProvider - error - definition.uri must be of type str
 test('executeTypeDefinitionProvider - error - definition.startOffset must be of type number', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -138,7 +138,7 @@ test('executeTypeDefinitionProvider - error - definition.startOffset must be of 
     languageId: 'javascript',
     provideTypeDefinition() {
       return {
-        uri: '/test/index.js',
+        uri: '/test/index.ts',
       }
     },
   })
@@ -153,7 +153,7 @@ test('executeTypeDefinitionProvider - error - definition.startOffset must be of 
 test('executeTypeDefinitionProvider - error - definition.endOffset must be of type number', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -163,7 +163,7 @@ test('executeTypeDefinitionProvider - error - definition.endOffset must be of ty
     languageId: 'javascript',
     provideTypeDefinition() {
       return {
-        uri: '/test/index.js',
+        uri: '/test/index.ts',
         startOffset: 1,
       }
     },
@@ -177,7 +177,7 @@ test('executeTypeDefinitionProvider - error - definition.endOffset must be of ty
 test('executeTypeDefinitionProvider - error - definition provider throws error', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -198,7 +198,7 @@ test('executeTypeDefinitionProvider - error - definition provider throws error',
 test('executeTypeDefinitionProvider - error - definition provider throws error null', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -219,7 +219,7 @@ test('executeTypeDefinitionProvider - error - definition provider throws error n
 test.skip('executeTypeDefinitionProvider - no type definition found', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',

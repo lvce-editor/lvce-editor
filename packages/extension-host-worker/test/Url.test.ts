@@ -4,14 +4,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Location/Location.js', () => {
+jest.unstable_mockModule('../src/parts/Location/Location.ts', () => {
   return {
     getOrigin: jest.fn(),
   }
 })
 
-const Url = await import('../src/parts/Url/Url.js')
-const Location = await import('../src/parts/Location/Location.js')
+const Url = await import('../src/parts/Url/Url.ts')
+const Location = await import('../src/parts/Location/Location.ts')
 
 test('getAbsoluteUrl - source url starts with slash', () => {
   // @ts-ignore

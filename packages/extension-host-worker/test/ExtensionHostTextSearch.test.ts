@@ -1,11 +1,12 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostTextSearch from '../src/parts/ExtensionHostTextSearch/ExtensionHostTextSearch.js'
+import * as ExtensionHostTextSearch from '../src/parts/ExtensionHostTextSearch/ExtensionHostTextSearch.ts'
 
 beforeEach(() => {
   ExtensionHostTextSearch.reset()
 })
 
 test('registerTextSearchProvider - no argument provided', () => {
+  // @ts-expect-error
   expect(() => ExtensionHostTextSearch.registerTextSearchProvider()).toThrow(
     new Error('Failed to register text search provider: textSearchProvider is not defined'),
   )

@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostReference from '../src/parts/ExtensionHostReference/ExtensionHostReference.js'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as ExtensionHostReference from '../src/parts/ExtensionHostReference/ExtensionHostReference.ts'
+import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 
 beforeEach(() => {
   ExtensionHostReference.reset()
@@ -9,7 +9,7 @@ beforeEach(() => {
 test('executeReferenceProvider - no results', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -28,7 +28,7 @@ test('executeReferenceProvider - no results', async () => {
 test('executeReferenceProvider - single result', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -39,7 +39,7 @@ test('executeReferenceProvider - single result', async () => {
     async provideReferences() {
       return [
         {
-          uri: '/test/index.js',
+          uri: '/test/index.ts',
           lineText: '',
           startOffset: 0,
           endOffset: 0,
@@ -53,7 +53,7 @@ test('executeReferenceProvider - single result', async () => {
       endOffset: 0,
       lineText: '',
       startOffset: 0,
-      uri: '/test/index.js',
+      uri: '/test/index.ts',
     },
   ])
 })
@@ -61,7 +61,7 @@ test('executeReferenceProvider - single result', async () => {
 test('executeReferenceProvider - error - reference provider throws error', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -82,7 +82,7 @@ test('executeReferenceProvider - error - reference provider throws error', async
 test('executeReferenceProvider - error - referenceProvider has wrong shape', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',
@@ -101,7 +101,7 @@ test('executeReferenceProvider - error - referenceProvider has wrong shape', asy
 test('executeReferenceProvider - error - no reference provider found', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: '',

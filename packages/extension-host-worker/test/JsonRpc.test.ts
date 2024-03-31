@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
-import * as Callback from '../src/parts/Callback/Callback.js'
-import * as JsonRpc from '../src/parts/JsonRpc/JsonRpc.js'
-import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
+import * as Callback from '../src/parts/Callback/Callback.ts'
+import * as JsonRpc from '../src/parts/JsonRpc/JsonRpc.ts'
+import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.ts'
 
 class NoErrorThrownError extends Error {}
 

@@ -4,12 +4,12 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.ts', () => ({
   logError: jest.fn(() => {}),
 }))
 
-const HandleJsonRpcMessage = await import('../src/parts/HandleJsonRpcMessage/HandleJsonRpcMessage.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const HandleJsonRpcMessage = await import('../src/parts/HandleJsonRpcMessage/HandleJsonRpcMessage.ts')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.ts')
 
 test('resolve', () => {
   const ipc = {}

@@ -1,5 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as ExtensionHostSourceControl from '../src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js'
+import * as ExtensionHostSourceControl from '../src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.ts'
 
 beforeEach(() => {
   ExtensionHostSourceControl.reset()
@@ -27,6 +27,7 @@ test('getChangedFiles - error - no provider id specified', async () => {
       return [{ file: '/test/file-1.txt', status: 1 }]
     },
   })
+  // @ts-expect-error
   await expect(ExtensionHostSourceControl.getChangedFiles()).rejects.toThrow(new Error('no source control provider found'))
 })
 

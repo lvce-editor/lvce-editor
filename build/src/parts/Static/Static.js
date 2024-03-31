@@ -1,8 +1,11 @@
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -110,16 +113,15 @@ export const getModule = (method) => {
 }
 
 const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
-  await Copy.copy({
-    from: 'packages/extension-host-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
-  })
-
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.js`,
-    occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
-    replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
-  })
+  // await Copy.copy({
+  //   from: 'packages/extension-host-worker/src',
+  //   to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
+  // })
+  // await Replace.replace({
+  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts`,
+  //   occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
+  //   replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
+  // })
 }
 
 const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
@@ -416,12 +418,14 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     to: `build/.tmp/dist/${commitHash}/packages/renderer-worker`,
     ignore: ['static'],
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
-    from: 'src/extensionHostWorkerMain.ts',
-    platform: 'webworker',
-    codeSplitting: false,
-    babelExternal: true,
+  const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
+    commitHash,
+    platform,
+    assetDir,
+  })
+  await Copy.copy({
+    from: extensionHostWorkerCachePath,
+    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker`,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
@@ -429,19 +433,23 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     platform: 'webworker',
     codeSplitting: false,
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/terminal-worker`),
-    from: 'src/terminalWorkerMain.ts',
-    platform: 'webworker',
-    codeSplitting: false,
-    babelExternal: true,
+  const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
+    assetDir,
+    platform,
+    commitHash,
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/test-worker`),
-    from: 'src/testWorkerMain.ts',
-    platform: 'webworker',
-    codeSplitting: false,
-    babelExternal: true,
+  await Copy.copy({
+    from: terminalWorkerCachePath,
+    to: `build/.tmp/dist/${commitHash}/packages/terminal-worker`,
+  })
+  const testWorkerCachePath = await BundleTestWorkerCached.bundleTestWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: testWorkerCachePath,
+    to: `build/.tmp/dist/${commitHash}/packages/test-worker`,
   })
 }
 

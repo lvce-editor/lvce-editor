@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ExtensionHostFormatting from '../src/parts/ExtensionHostFormatting/ExtensionHostFormatting.js'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as ExtensionHostFormatting from '../src/parts/ExtensionHostFormatting/ExtensionHostFormatting.ts'
+import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 
 beforeEach(() => {
   ExtensionHostFormatting.reset()
@@ -9,7 +9,7 @@ beforeEach(() => {
 test('executeFormattingProvider - error - result value is of type string', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: 'a',
@@ -30,7 +30,7 @@ test('executeFormattingProvider - error - result value is of type string', async
 test('executeFormattingProvider - error - result value is of type object', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: 'a',
@@ -51,7 +51,7 @@ test('executeFormattingProvider - error - result value is of type object', async
 test('executeFormattingProvider', async () => {
   TextDocument.setFiles([
     {
-      path: '/test.index.js',
+      path: '/test.index.ts',
       id: 1,
       languageId: 'javascript',
       content: 'a',
