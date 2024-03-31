@@ -2,6 +2,7 @@ import * as AssetDir from '../AssetDir/AssetDir.js'
 
 /**
  *
+ // @ts-ignore
  * @returns {Promise<import('../../../../../static/js/ky.js',  { assert: { "resolution-mode": "import" } } )>}
  */
 export const loadKy = async () => {

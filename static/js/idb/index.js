@@ -1,3 +1,4 @@
+// @ts-ignore
 import { w as wrap, r as replaceTraps } from './wrap-idb-value.js';
 export { u as unwrap, w as wrap } from './wrap-idb-value.js';
 
@@ -8,6 +9,7 @@ export { u as unwrap, w as wrap } from './wrap-idb-value.js';
  * @param version Schema version.
  * @param callbacks Additional callbacks.
  */
+// @ts-ignore
 function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
     const request = indexedDB.open(name, version);
     const openPromise = wrap(request);
@@ -37,6 +39,7 @@ function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) 
  *
  * @param name Name of the database.
  */
+// @ts-ignore
 function deleteDB(name, { blocked } = {}) {
     const request = indexedDB.deleteDatabase(name);
     if (blocked) {
@@ -69,6 +72,7 @@ function getMethod(target, prop) {
     }
     const method = async function (storeName, ...args) {
         // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        // @ts-ignore
         const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
         let target = tx.store;
         if (useIndex)

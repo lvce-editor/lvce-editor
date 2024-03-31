@@ -54,7 +54,9 @@ test.skip('openSettingsJson', async () => {
   // @ts-ignore
   Main.openUri.mockImplementation(() => {})
   await Preferences.openSettingsJson()
+  // @ts-ignore
   expect(Main.openUri).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(Main.openUri).toHaveBeenCalledWith('app://settings.json')
 })
 
@@ -64,7 +66,9 @@ test.skip('openKeyBindingsJson', async () => {
   // @ts-ignore
   Main.openUri.mockImplementation(() => {})
   await Preferences.openKeyBindingsJson()
+  // @ts-ignore
   expect(Main.openUri).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(Main.openUri).toHaveBeenCalledWith('app://keyBindings.json')
 })
 

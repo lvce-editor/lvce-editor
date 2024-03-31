@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+// @ts-ignore
 import * as Layout from '../Layout/Layout.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'

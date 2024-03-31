@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as Worker from '../Worker/Worker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Languages from '../Languages/Languages.js'
@@ -5,6 +6,7 @@ import * as Languages from '../Languages/Languages.js'
 export const state = {
   pendingMessages: [],
   send(message) {
+    // @ts-ignore
     state.pendingMessages.push(message)
   },
 }

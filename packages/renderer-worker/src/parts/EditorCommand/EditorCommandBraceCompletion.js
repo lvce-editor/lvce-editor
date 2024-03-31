@@ -39,6 +39,7 @@ export const braceCompletion = async (editor, text) => {
     console.error(error)
     // TODO cursor should always be of type object
     const position = Array.isArray(editor.cursor) ? editor.cursor[0] : editor.cursor
+    // @ts-ignore
     return EditorShowMessage.showErrorMessage(editor, position, getErrorMessage(error))
   }
 }

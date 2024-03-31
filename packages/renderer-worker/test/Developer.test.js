@@ -124,6 +124,7 @@ beforeAll(() => {
 // and possibly log an error to the console
 
 test.skip('startupPerformance', async () => {
+  // @ts-ignore
   LifeCycle.state.phase = LifeCycle.PHASE_TWELVE
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -288,7 +289,9 @@ test.skip('monitorPerformance', async () => {
       usedJSHeapSize: 2400652,
     },
   }
+  // @ts-ignore
   SharedProcess.state.totalSent = 379
+  // @ts-ignore
   SharedProcess.state.totalReceived = 1693
   await Developer.getMemoryUsageContent()
   expect(SharedProcess.invoke).toHaveBeenCalledWith({

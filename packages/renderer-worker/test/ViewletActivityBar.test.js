@@ -274,6 +274,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       },
     ],
   }
+  // @ts-ignore
   await ViewletActivityBar.contentLoaded(state)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
@@ -441,6 +442,7 @@ test.skip('render - two items do not fit', () => {
 test.skip('handleContextMenu', async () => {
   RendererProcess.state.send = jest.fn()
   const state = ViewletActivityBar.create()
+  // @ts-ignore
   await ViewletActivityBar.handleContextMenu(state, 0, 0)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     3028,

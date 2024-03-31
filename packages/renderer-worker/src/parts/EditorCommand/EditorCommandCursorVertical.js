@@ -57,6 +57,7 @@ export const cursorVertical = (editor, getPosition, getEdgePosition, delta) => {
   //   )
   // }
   const selections = editor.selections
+  // @ts-ignore
   const newSelections = getNewSelections(selections, delta)
   return Editor.scheduleSelections(editor, newSelections)
 }

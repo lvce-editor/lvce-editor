@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as BlobUtil from '../../../../../static/js/blob-util.js'
 import * as NormalizeBlobError from '../NormalizeBlobError/NormalizeBlobError.js'
 import { VError } from '../VError/VError.js'

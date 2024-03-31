@@ -66,6 +66,7 @@ export const addTerminal = async (state) => {
   const newSelectedIndex = newTabs.length - 1
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
+    // @ts-ignore
     x,
     y,
     width,
@@ -99,6 +100,7 @@ export const focusIndex = async (state, index) => {
   newTab.uid = childUid
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
+    // @ts-ignore
     x,
     y,
     width,

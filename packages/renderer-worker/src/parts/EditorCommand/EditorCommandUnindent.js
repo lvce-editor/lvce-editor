@@ -63,6 +63,7 @@ export const editorUnindent = (editor) => {
       })
       previousRowIndex = endRowIndex
     }
+    // @ts-ignore
     Editor.scheduleDocumentAndCursorsAndSelections(editor, documentEdits, cursorEdits, selectionEdits)
     return
   }
@@ -82,6 +83,7 @@ export const editorUnindent = (editor) => {
     rowIndex: editor.cursor.rowIndex,
     columnIndex: editor.cursor.columnIndex - 2,
   })
+  // @ts-ignore
   Editor.scheduleDocumentAndCursors(editor, documentEdits, cursorEdits)
 }
 // const editor = {

@@ -37,6 +37,7 @@ export const openElectronQuickPick = async (...args) => {
   const windowWidth = viewletLayout.points[0]
   const x = Math.round((windowWidth - width) / 2)
   const y = 50
+  // @ts-ignore
   const keyBindings = await KeyBindings.getKeyBindings()
   const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
   await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(x, y, width, height)

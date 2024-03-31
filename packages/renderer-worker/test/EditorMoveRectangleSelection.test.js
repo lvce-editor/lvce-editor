@@ -15,6 +15,7 @@ test.skip('editorMoveRectangleSelection', () => {
     rowHeight: 20,
     columnWidth: 8,
   }
+  // @ts-ignore
   EditorMoveSelection.state.position = {
     rowIndex: 0,
     columnIndex: 2,

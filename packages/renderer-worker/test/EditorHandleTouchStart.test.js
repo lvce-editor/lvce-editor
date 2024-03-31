@@ -19,6 +19,7 @@ test.skip('editorHandleTouchStart - no touches', () => {
     deltaY: 0,
   }
   EditorHandleTouchStart.handleTouchStart(editor, [])
+  // @ts-ignore
   expect(EditorMoveSelection.state.position).toEqual({
     rowIndex: 0,
     columnIndex: 0,

@@ -66,11 +66,13 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Escape,
       command: 'Run And Debug.cancelEdit',
+      // @ts-ignore
       when: WhenExpression.FocusDebugScopeEditBox,
     },
     {
       key: KeyCode.Enter,
       command: 'Run And Debug.acceptEdit',
+      // @ts-ignore
       when: WhenExpression.FocusDebugScopeEditBox,
     },
     {

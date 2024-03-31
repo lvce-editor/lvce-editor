@@ -11,6 +11,7 @@ const mapExtToEditorType = {
   '.webp': ViewletModuleId.EditorImage,
   '.jpg': ViewletModuleId.EditorImage,
   '.jpeg': ViewletModuleId.EditorImage,
+  // @ts-ignore
   '.pdf': ViewletModuleId.Pdf,
   '.mp3': ViewletModuleId.Audio,
   '.mp4': ViewletModuleId.Video,

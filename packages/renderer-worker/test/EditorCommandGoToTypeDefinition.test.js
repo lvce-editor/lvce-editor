@@ -47,8 +47,10 @@ test('editorGoToTypeDefinition', async () => {
     }
   })
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 909090:
+        // @ts-ignore
         const callbackId = message[1]
         RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
@@ -75,8 +77,10 @@ test('editorGoToTypeDefinition - startOffset is 0', async () => {
     }
   })
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 909090:
+        // @ts-ignore
         const callbackId = message[1]
         RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break

@@ -71,6 +71,7 @@ test('rename - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
+  // @ts-ignore
   await expect(ExtensionHostFileSystem.rename('memfs', 'memfs:///test.txt', 'memfs:///test2.txt')).rejects.toThrow(
     new TypeError('x is not a function'),
   )

@@ -123,6 +123,7 @@ test('handleTitleUpdated', async () => {
 
 test('handleWillNavigate', () => {
   const state = ViewletSimpleBrowser.create()
+  // @ts-ignore
   expect(ViewletSimpleBrowser.handleWillNavigate(state, 'https://example.com', false, false)).toMatchObject({
     isLoading: true,
   })
@@ -130,6 +131,7 @@ test('handleWillNavigate', () => {
 
 test('handleDidNavigate', () => {
   const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
+  // @ts-ignore
   expect(ViewletSimpleBrowser.handleDidNavigate(state, 'https://example.com', false, false)).toMatchObject({
     isLoading: false,
   })
