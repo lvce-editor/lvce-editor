@@ -20,7 +20,7 @@ export const createNodeRpc = async ({ path, execute = defaultExecute, name = '' 
     })
     const rpc = await RpcParent.create({
       ipc,
-      method: RpcParentType.tsonRpc,
+      method: RpcParentType.JsonRpc,
       execute,
     })
     await rpc.invoke('LoadFile.loadFile', path)

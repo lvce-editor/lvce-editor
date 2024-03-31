@@ -26,7 +26,7 @@ export const createRpc = async ({ url, name, execute = defaultExecute, contentSe
     })
     const rpc = await RpcParent.create({
       ipc,
-      method: RpcParentType.tsonRpc,
+      method: RpcParentType.JsonRpc,
       execute,
     })
     await rpc.invoke('LoadFile.loadFile', url)
