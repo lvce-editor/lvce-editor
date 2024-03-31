@@ -10,6 +10,7 @@ const { registerCompletionProvider, executeCompletionProvider, executeresolveCom
     },
   },
   additionalMethodNames: [
+    // @ts-ignore
     {
       name: 'resolveCompletionItem',
       methodName: 'resolveCompletionItem',

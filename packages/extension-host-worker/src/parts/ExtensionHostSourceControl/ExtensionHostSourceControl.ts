@@ -72,6 +72,7 @@ export const add = async (path) => {
   if (!provider) {
     return
   }
+  // @ts-ignore
   await provider.add(path)
 }
 
@@ -80,6 +81,7 @@ export const discard = async (path) => {
   if (!provider) {
     return
   }
+  // @ts-ignore
   await provider.discard(path)
 }
 
@@ -89,11 +91,14 @@ export const getEnabledProviderIds = async (scheme, root) => {
   const providers = Object.values(state.providers)
   const enabledIds = []
   for (const provider of providers) {
+    // @ts-ignore
     if (typeof provider.isActive !== 'function') {
       continue
     }
+    // @ts-ignore
     const isActive = await provider.isActive(scheme, root)
     if (isActive) {
+      // @ts-ignore
       enabledIds.push(provider.id)
     }
   }

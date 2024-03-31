@@ -7,6 +7,7 @@ export const state = {
 const getFileSystemProvider = (protocol) => {
   const provider = state.fileSystemProviderMap[protocol]
   if (!provider) {
+    // @ts-ignore
     throw new VError(`no file system provider for protocol "${protocol}" found`)
   }
   return provider

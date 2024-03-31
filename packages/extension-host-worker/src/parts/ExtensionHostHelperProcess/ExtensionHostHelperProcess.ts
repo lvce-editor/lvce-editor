@@ -18,6 +18,7 @@ const createRpc = async () => {
 
 export const getOrCreateRpc = () => {
   if (!state.rpcPromise) {
+    // @ts-ignore
     state.rpcPromise = createRpc()
   }
   return state.rpcPromise
@@ -25,5 +26,6 @@ export const getOrCreateRpc = () => {
 
 export const invoke = async (method, ...params) => {
   const rpc = await getOrCreateRpc()
+  // @ts-ignore
   return rpc.invoke(method, params)
 }

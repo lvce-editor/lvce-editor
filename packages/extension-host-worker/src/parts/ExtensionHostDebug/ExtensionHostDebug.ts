@@ -9,6 +9,7 @@ export const state = {
 const getDebugProvider = (id) => {
   const provider = state.debugProviderMap[id]
   if (!provider) {
+    // @ts-ignore
     throw new VError(`no debug provider "${id}" found`)
   }
   return provider

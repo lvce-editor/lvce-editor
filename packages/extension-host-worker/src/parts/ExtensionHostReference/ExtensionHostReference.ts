@@ -10,6 +10,7 @@ const { registerReferenceProvider, executeReferenceProvider, executefileReferenc
     },
   },
   additionalMethodNames: [
+    // @ts-ignore
     {
       name: 'fileReference',
       methodName: 'provideFileReferences',
