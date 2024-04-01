@@ -63,6 +63,6 @@ export const handleEditingInput = (event) => {
   ViewletExplorerFunctions.updateEditingValue(uid, value)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../DragEvents/DragEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

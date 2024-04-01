@@ -92,5 +92,5 @@ export const handleTouchEnd = (event) => {
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

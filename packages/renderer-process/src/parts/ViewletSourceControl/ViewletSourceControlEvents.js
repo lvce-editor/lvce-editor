@@ -71,5 +71,5 @@ export const handleInput = (event) => {
   ViewletSourceControlFunctions.handleInput(uid, value)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'
