@@ -1,10 +1,10 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as InputSource from '../InputSource/InputSource.ts'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
+import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
 export const handleInput = (event) => {

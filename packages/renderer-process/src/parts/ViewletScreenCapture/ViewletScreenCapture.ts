@@ -1,4 +1,4 @@
-import * as ScreenCapture from '../ScreenCapture/ScreenCapture.js'
+import * as ScreenCapture from '../ScreenCapture/ScreenCapture.ts'
 import * as ViewletScreenCaptureEvents from './ViewletScreenCaptureEvents.js'
 
 export const create = () => {

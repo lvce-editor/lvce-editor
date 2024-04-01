@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as RememberFocus from '../RememberFocus/RememberFocus.js'
+import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 export const create = () => {
@@ -52,4 +52,4 @@ export const setFocus = (state, selector) => {
 
 export const dispose = () => {}
 
-export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletScrollable/ViewletScrollable.ts'

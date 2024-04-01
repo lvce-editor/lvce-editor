@@ -1,4 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletRunAndDebugFunctions from './ViewletRunAndDebugFunctions.js'
 

@@ -5,59 +5,59 @@ export const load = (moduleId) => {
     case ViewletModuleId.ImagePreview:
       return import('../ImagePreview/ImagePreview.ts')
     case ViewletModuleId.ActivityBar:
-      return import('../ViewletActivityBar/ViewletActivityBar.js')
+      return import('../ViewletActivityBar/ViewletActivityBar.ts')
     case ViewletModuleId.Audio:
-      return import('../ViewletAudio/ViewletAudio.js')
+      return import('../ViewletAudio/ViewletAudio.ts')
     case ViewletModuleId.BrowserViewOverview:
-      return import('../ViewletBrowseViewOverview/ViewletBrowserViewOverview.js')
+      return import('../ViewletBrowseViewOverview/ViewletBrowserViewOverview.ts')
     case ViewletModuleId.Clock:
-      return import('../ViewletClock/ViewletClock.js')
+      return import('../ViewletClock/ViewletClock.ts')
     case ViewletModuleId.ColorPicker:
-      return import('../ViewletColorPicker/ViewletColorPicker.js')
+      return import('../ViewletColorPicker/ViewletColorPicker.ts')
     case ViewletModuleId.DebugConsole:
-      return import('../ViewletDebugConsole/ViewletDebugConsole.js')
+      return import('../ViewletDebugConsole/ViewletDebugConsole.ts')
     case ViewletModuleId.DefineKeyBinding:
-      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.js')
+      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ts')
     case ViewletModuleId.Dialog:
-      return import('../ViewletDialog/ViewletDialog.js')
+      return import('../ViewletDialog/ViewletDialog.ts')
     case ViewletModuleId.DiffEditor:
-      return import('../ViewletDiffEditor/ViewletDiffEditor.js')
+      return import('../ViewletDiffEditor/ViewletDiffEditor.ts')
     case ViewletModuleId.EditorCompletion:
-      return import('../ViewletEditorCompletion/ViewletEditorCompletion.js')
+      return import('../ViewletEditorCompletion/ViewletEditorCompletion.ts')
     case ViewletModuleId.EditorError:
-      return import('../ViewletEditorError/ViewletEditorError.js')
+      return import('../ViewletEditorError/ViewletEditorError.ts')
     case ViewletModuleId.EditorHover:
-      return import('../ViewletEditorHover/ViewletEditorHover.js')
+      return import('../ViewletEditorHover/ViewletEditorHover.ts')
     case ViewletModuleId.EditorImage:
-      return import('../ViewletEditorImage/ViewletEditorImage.js')
+      return import('../ViewletEditorImage/ViewletEditorImage.ts')
     case ViewletModuleId.EditorPlainText:
-      return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
+      return import('../ViewletEditorPlainText/ViewletEditorPlainText.ts')
     case ViewletModuleId.EditorText:
-      return import('../ViewletEditorText/ViewletEditorText.js')
+      return import('../ViewletEditorText/ViewletEditorText.ts')
     case ViewletModuleId.EditorWidgetError:
-      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.js')
+      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ts')
     case ViewletModuleId.Empty:
-      return import('../ViewletEmpty/ViewletEmpty.js')
+      return import('../ViewletEmpty/ViewletEmpty.ts')
     case ViewletModuleId.Error:
-      return import('../ViewletError/ViewletError.js')
+      return import('../ViewletError/ViewletError.ts')
     case ViewletModuleId.Explorer:
-      return import('../ViewletExplorer/ViewletExplorer.js')
+      return import('../ViewletExplorer/ViewletExplorer.ts')
     case ViewletModuleId.ExtensionDetail:
-      return import('../ViewletExtensionDetail/ViewletExtensionDetail.js')
+      return import('../ViewletExtensionDetail/ViewletExtensionDetail.ts')
     case ViewletModuleId.Extensions:
-      return import('../ViewletExtensions/ViewletExtensions.js')
+      return import('../ViewletExtensions/ViewletExtensions.ts')
     case ViewletModuleId.FindWidget:
-      return import('../ViewletFindWidget/ViewletFindWidget.js')
+      return import('../ViewletFindWidget/ViewletFindWidget.ts')
     case ViewletModuleId.Implementations:
-      return import('../ViewletImplementations/ViewletImplementations.js')
+      return import('../ViewletImplementations/ViewletImplementations.ts')
     case ViewletModuleId.KeyBindings:
-      return import('../ViewletKeyBindings/ViewletKeyBindings.js')
+      return import('../ViewletKeyBindings/ViewletKeyBindings.ts')
     case ViewletModuleId.Layout:
-      return import('../ViewletLayout/ViewletLayout.js')
+      return import('../ViewletLayout/ViewletLayout.ts')
     case ViewletModuleId.Main:
-      return import('../ViewletMain/ViewletMain.js')
+      return import('../ViewletMain/ViewletMain.ts')
     case ViewletModuleId.MainTabs:
-      return import('../ViewletMainTabs/ViewletMainTabs.js')
+      return import('../ViewletMainTabs/ViewletMainTabs.ts')
     case ViewletModuleId.Output:
       return import('../ViewletOutput/ViewletOutput.js')
     case ViewletModuleId.Panel:
@@ -101,11 +101,11 @@ export const load = (moduleId) => {
     case ViewletModuleId.TitleBarTitle:
       return import('../ViewletTitleBarTitle/ViewletTitleBarTitle.js')
     case ViewletModuleId.About:
-      return import('../ViewletAbout/ViewletAbout.js')
+      return import('../ViewletAbout/ViewletAbout.ts')
     case ViewletModuleId.EditorSourceActions:
-      return import('../ViewletEditorSourceActions/ViewletEditorSourceActions.js')
+      return import('../ViewletEditorSourceActions/ViewletEditorSourceActions.ts')
     case ViewletModuleId.EmptyEditor:
-      return import('../ViewletEmptyEditor/ViewletEmptyEditor.js')
+      return import('../ViewletEmptyEditor/ViewletEmptyEditor.ts')
     default:
       throw new Error(`${moduleId} module not found in renderer process`)
   }
