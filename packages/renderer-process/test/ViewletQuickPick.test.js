@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
-import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
