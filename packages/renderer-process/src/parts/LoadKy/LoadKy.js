@@ -1,4 +1,4 @@
-import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as AssetDir from '../AssetDir/AssetDir.ts'
 
 /**
  *
