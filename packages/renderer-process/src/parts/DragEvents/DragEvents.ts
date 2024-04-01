@@ -1,6 +1,6 @@
-import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DataTransfer from '../DataTransfer/DataTransfer.js'
+import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as DataTransfer from '../DataTransfer/DataTransfer.ts'
 import * as DragFunctions from '../DragFunctions/DragFunctions.js'
 import * as Event from '../Event/Event.js'
 

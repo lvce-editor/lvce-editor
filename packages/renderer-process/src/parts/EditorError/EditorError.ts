@@ -1,4 +1,4 @@
-import * as AriaAlert from '../AriaAlert/AriaAlert.js'
+import * as AriaAlert from '../AriaAlert/AriaAlert.ts'
 import * as Widget from '../Widget/Widget.js'
 
 // TODO not sure whether created dom node

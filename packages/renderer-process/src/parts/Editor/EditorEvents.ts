@@ -1,9 +1,9 @@
 // TODO so many things in this file
 
-import * as ClipBoardData from '../ClipBoardData/ClipBoardData.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ClipBoardData from '../ClipBoardData/ClipBoardData.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Event from '../Event/Event.js'
 import * as GetModifierKey from '../GetModifierKey/GetModifierKey.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
@@ -318,4 +318,4 @@ export const handleNativeSelectionChange = (event) => {
   // )
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'

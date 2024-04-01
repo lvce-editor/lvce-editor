@@ -1,5 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const executeViewletCommand = (uid, command, ...args) => {
   Assert.number(uid)
