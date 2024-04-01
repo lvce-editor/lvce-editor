@@ -1,4 +1,4 @@
-import * as FocusState from '../FocusState/FocusState.js'
+import * as FocusState from '../FocusState/FocusState.ts'
 
 export const focus = ($Element) => {
   if ($Element === document.activeElement) {
