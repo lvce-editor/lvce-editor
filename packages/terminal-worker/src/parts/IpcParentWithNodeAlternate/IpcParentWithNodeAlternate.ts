@@ -17,7 +17,7 @@ export const create = async (options) => {
         module,
       }
     case PlatformType.Electron:
-      return IpcParentWithElectron.create()
+      return IpcParentWithElectron.create(options)
     default:
       throw new Error('unsupported platform')
   }
