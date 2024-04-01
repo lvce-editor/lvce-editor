@@ -1,6 +1,6 @@
 import * as Event from '../Event/Event.js'
 import * as ViewletDefineKeyBindingFunctions from './ViewletDefineKeyBindingFunctions.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 
 export const handleKeyDown = (event) => {
   Event.preventDefault(event)

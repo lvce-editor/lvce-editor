@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as VirtualListFunctions from '../VirtualListFunctions/VirtualListFunctions.js'
 
 export const handleWheel = (event) => {

@@ -1,5 +1,5 @@
 import { findIndex } from '../../shared/findIndex.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
 
 export const handleFocus = (event) => {

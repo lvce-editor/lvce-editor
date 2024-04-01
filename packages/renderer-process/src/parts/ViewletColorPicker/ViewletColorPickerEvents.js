@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletColorPickerFunctions from './ViewletColorPickerFunctions.js'
 

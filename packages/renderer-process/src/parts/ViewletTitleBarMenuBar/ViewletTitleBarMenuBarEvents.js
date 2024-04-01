@@ -1,5 +1,5 @@
 import * as FindIndex from '../../shared/findIndex.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.js'

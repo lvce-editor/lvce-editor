@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'

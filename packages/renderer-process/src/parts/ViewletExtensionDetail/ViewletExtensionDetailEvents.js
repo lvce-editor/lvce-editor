@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as Event from '../Event/Event.js'
 import * as ViewletExtensionDetailFunctions from './ViewletExtensionDetailFunctions.js'
 

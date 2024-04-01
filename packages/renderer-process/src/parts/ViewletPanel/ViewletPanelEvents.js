@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletPanelFunctions from './ViewletPanelFunctions.js'
 

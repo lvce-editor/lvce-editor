@@ -1,5 +1,5 @@
 export * from '../DragEvents/DragEvents.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/componentuid.ts'
 import * as Event from '../Event/Event.js'
 import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
 
