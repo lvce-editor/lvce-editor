@@ -1,4 +1,4 @@
-import * as ConfirmPrompt from './ConfirmPrompt.js'
+import * as ConfirmPrompt from './ConfirmPrompt.ts'
 
 export const name = 'ConfirmPrompt'
 
