@@ -1,4 +1,4 @@
-import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
 
 export const setContentHeight = (state, height) => {
   const { $ListItems } = state

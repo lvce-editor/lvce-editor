@@ -1,6 +1,6 @@
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 export const handleLocationsMouseDown = (event) => {
   if (event.button !== MouseEventType.LeftClick) {
