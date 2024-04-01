@@ -1,1 +1,1 @@
-export * from '../ForwardCommand/ForwardCommand.js'
+export * from '../ForwardCommand/ForwardCommand.ts'

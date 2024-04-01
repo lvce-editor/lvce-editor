@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
+import * as ForwardCommand from '../ForwardCommand/ForwardCommand.ts'
 import * as Event from '../Event/Event.js'
 
 export const handleClickOk = (event) => {
