@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
@@ -396,14 +397,15 @@ const copyIconThemes = async ({ commitHash }) => {
 }
 
 const bundleJs = async ({ commitHash, platform, assetDir, version, date, product }) => {
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-process`),
-    from: 'src/rendererProcessMain.js',
-    platform: 'web',
-    codeSplitting: true,
-    minify: true,
-    babelExternal: true,
-    typescript: true,
+  const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
+    commitHash,
+    platform,
+    assetDir,
+  })
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `build/.tmp/dist/${commitHash}/packages/renderer-process`,
+    ignore: ['static'],
   })
   const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
     commitHash,
