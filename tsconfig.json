@@ -3,10 +3,11 @@
   "include": [],
   "references": [
     { "path": "./build" },
+    { "path": "./packages/editor-worker" },
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
-    { "path": "./packages/extension-host-worker" },
     { "path": "./packages/extension-host-worker-tests" },
+    { "path": "./packages/extension-host-worker" },
     { "path": "./packages/main-process" },
     { "path": "./packages/pty-host" },
     { "path": "./packages/renderer-process" },

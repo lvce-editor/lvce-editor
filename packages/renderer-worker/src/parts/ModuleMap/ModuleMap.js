@@ -180,6 +180,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostWorkerContentSecurityPolicy
     case 'SendMessagePortToElectron':
       return ModuleId.SendMessagePortToElectron
+    case 'OffscreenCanvas':
+      return ModuleId.OffscreenCanvas
     default:
       throw new Error(`module ${prefix} not found`)
   }

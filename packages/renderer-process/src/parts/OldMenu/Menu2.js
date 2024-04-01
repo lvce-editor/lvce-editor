@@ -1,4 +1,4 @@
-import * as FindIndex from '../../shared/findIndex.js'
+import * as FindIndex from '../FindIndex/FindIndex.ts'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
