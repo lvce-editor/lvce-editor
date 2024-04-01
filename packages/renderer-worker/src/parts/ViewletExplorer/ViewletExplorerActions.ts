@@ -1,8 +1,9 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as ViewletExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
+import * as ViewletExplorerStrings from './ViewletExplorerStrings.js'
+import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
-export const getActions = () => {
+export const getActions = (): readonly ViewletAction[] => {
   return [
     {
       type: ActionType.Button,
