@@ -1,4 +1,4 @@
-import * as CssState from '../CssState/CssState.js'
+import * as CssState from '../CssState/CssState.ts'
 
 export const addCssStyleSheet = async (id, text) => {
   const existing = CssState.get(id)
