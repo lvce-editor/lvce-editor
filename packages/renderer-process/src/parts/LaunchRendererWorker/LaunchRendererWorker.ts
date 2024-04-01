@@ -1,5 +1,5 @@
 import * as IsElectron from '../IsElectron/IsElectron.ts'
-import * as LaunchWorker from '../LaunchWorker/LaunchWorker.js'
+import * as LaunchWorker from '../LaunchWorker/LaunchWorker.ts'
 import * as RendererWorkerUrl from '../RendererWorkerUrl/RendererWorkerUrl.js'
 
 export const launchRendererWorker = async () => {
