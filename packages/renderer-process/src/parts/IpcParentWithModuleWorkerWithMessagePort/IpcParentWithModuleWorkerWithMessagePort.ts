@@ -1,5 +1,5 @@
-import { IpcError } from '../IpcError/IpcError.js'
-import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'
+import { IpcError } from '../IpcError/IpcError.ts'
+import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts'
 import * as IsWorker from '../IsWorker/IsWorker.js'
 import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 

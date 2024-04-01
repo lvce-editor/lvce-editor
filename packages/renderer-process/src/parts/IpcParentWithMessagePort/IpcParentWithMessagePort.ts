@@ -1,5 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
-import { IpcError } from '../IpcError/IpcError.js'
+import * as Assert from '../Assert/Assert.ts'
+import { IpcError } from '../IpcError/IpcError.ts'
 import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
 
 export const create = async ({ url }) => {

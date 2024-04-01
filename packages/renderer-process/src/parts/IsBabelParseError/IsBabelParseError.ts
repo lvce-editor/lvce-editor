@@ -1,4 +1,4 @@
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as IsSyntaxError from '../IsSyntaxError/IsSyntaxError.js'
 
 export const isBabelError = (error) => {

@@ -1,5 +1,5 @@
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcChildWithWindow from '../IpcChildWithWindow/IpcChildWithWindow.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
+import * as IpcChildWithWindow from '../IpcChildWithWindow/IpcChildWithWindow.ts'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
