@@ -1,5 +1,5 @@
-import * as Key from '../Key/Key.js'
-import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as Key from '../Key/Key.ts'
+import * as KeyCode from '../KeyCode/KeyCode.ts'
 
 export const getKeyCode = (key) => {
   switch (key) {
