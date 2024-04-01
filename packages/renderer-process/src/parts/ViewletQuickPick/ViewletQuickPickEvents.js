@@ -2,7 +2,7 @@
 
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as IsMobile from '../IsMobile/IsMobile.js'
+import * as IsMobile from '../IsMobile/IsMobile.ts'
 import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.js'
 
 // TODO use another virtual list that just appends elements and
