@@ -1,15 +1,7 @@
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as TestWorkerUrl from '../TestWorkerUrl/TestWorkerUrl.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as LaunchTestWorker from '../LaunchTestWorker/LaunchTestWorker.js'
 
 export const execute = async (href) => {
-  const ipc = await IpcParent.create({
-    method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
-    url: TestWorkerUrl.testWorkerUrl,
-    name: 'Test Worker',
-  })
-  HandleIpc.handleIpc(ipc, 'test-worker')
+  const ipc = await LaunchTestWorker.launchTestWorker()
   await JsonRpc.invoke(ipc, 'Test.execute', href)
 }
