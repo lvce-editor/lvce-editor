@@ -1,4 +1,4 @@
-import * as Developer from './Developer.js'
+import * as Developer from './Developer.ts'
 
 export const name = 'Developer'
 

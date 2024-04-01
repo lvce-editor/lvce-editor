@@ -1,4 +1,4 @@
-import * as Download from './Download.js'
+import * as Download from './Download.ts'
 
 export const name = 'Download'
 
