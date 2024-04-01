@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.2.0",
-    "@lvce-editor/verror": "^1.1.2",
+    "@lvce-editor/verror": "^1.2.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.20.2",
     "fs-extra": "^11.2.0",
