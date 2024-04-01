@@ -1,4 +1,4 @@
-import * as GetLineAndColumn from '../GetLineAndColumn/GetLineAndColumn.js'
+import * as GetLineAndColumn from '../GetLineAndColumn/GetLineAndColumn.ts'
 
 export class DependencyNotFoundError extends Error {
   constructor(code, start, end, dependencyRelativePath, dependencyUrl, sourceUrl) {
