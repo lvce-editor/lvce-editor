@@ -37,4 +37,4 @@ export const handleFocus = (event) => {
   ViewletActivityBarFunctions.handleFocus(uid)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
