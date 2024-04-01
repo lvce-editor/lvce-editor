@@ -23,7 +23,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     width,
     height,
     filterValue: '',
-    viewMode: ProblemsViewMode.List,
+    viewMode: ProblemsViewMode.None,
   }
 }
 
