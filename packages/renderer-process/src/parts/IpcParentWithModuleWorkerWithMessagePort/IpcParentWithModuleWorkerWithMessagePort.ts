@@ -1,7 +1,7 @@
 import { IpcError } from '../IpcError/IpcError.ts'
 import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts'
-import * as IsWorker from '../IsWorker/IsWorker.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import * as IsWorker from '../IsWorker/IsWorker.ts'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.ts'
 
 export const create = async ({ url, name, port }) => {
   const worker = await IpcParentWithModuleWorker.create({
