@@ -1,3 +1,4 @@
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.ts'
 import * as Terminal from '../Terminal/Terminal.ts'
 
 export const commandMap = {
@@ -6,4 +7,5 @@ export const commandMap = {
   'Terminal.handleBlur': Terminal.handleBlur,
   'Terminal.handleKeyDown': Terminal.handleKeyDown,
   'Terminal.handleMouseDown': Terminal.handleMouseDown,
+  'OffscreenCanvas.handleResult': OffscreenCanvas.handleResult,
 }

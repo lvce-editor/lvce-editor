@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
-import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
@@ -29,19 +28,8 @@ export const loadContent = async (state) => {
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const canvasTextId = Id.create()
   const canvasCursorId = Id.create()
-  const canvasText = await OffscreenCanvas.create(canvasTextId)
-  const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
   await TerminalWorker.getOrCreate()
-  await TerminalWorker.invokeAndTransfer(
-    [canvasText, canvasCursor],
-    'Terminal.create',
-    canvasText,
-    canvasCursor,
-    uid,
-    Workspace.state.workspacePath,
-    command,
-    args,
-  )
+  await TerminalWorker.invoke('Terminal.create', canvasTextId, canvasCursorId, uid, Workspace.state.workspacePath, command, args)
   const terminal = {
     write(data) {
       return TerminalWorker.invoke('Terminal.write', uid, data)
@@ -66,8 +54,6 @@ export const loadContent = async (state) => {
     args,
     canvasCursorId,
     canvasTextId,
-    canvasText,
-    canvasCursor,
     terminal,
   }
 }

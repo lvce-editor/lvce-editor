@@ -66,6 +66,7 @@ jest.unstable_mockModule('../src/parts/TerminalWorker/TerminalWorker.js', () => 
     create() {},
     getOrCreate() {},
     invokeAndTransfer() {},
+    invoke() {},
   }
 })
 
