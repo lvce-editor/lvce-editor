@@ -1,4 +1,4 @@
-import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.ts'
 
 // TODO store keybindings as json somewhere
 

@@ -1,4 +1,4 @@
-import * as GetStorage from '../GetStorage/GetStorage.js'
+import * as GetStorage from '../GetStorage/GetStorage.ts'
 
 export const getAll = (storageType) => {
   const storage = GetStorage.getStorage(storageType)
