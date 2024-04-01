@@ -1,4 +1,4 @@
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
 
 export const unwrapJsonRpcResult = (responseMessage) => {
