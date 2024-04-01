@@ -127,11 +127,6 @@ export const bundleJs = async ({
     }
     await result.write(outputOptions)
   } catch (error) {
-    console.log('some error')
-    console.log({ error })
-    console.log({ isError: error instanceof Error })
-    const v = new VError(error, `Failed to bundle js`)
-    console.log({ v })
     throw new VError(error, `Failed to bundle js`)
   }
 }
