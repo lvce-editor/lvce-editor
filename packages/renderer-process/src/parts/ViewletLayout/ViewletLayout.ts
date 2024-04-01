@@ -1,7 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
 import * as ViewletLayoutEvents from './ViewletLayoutEvents.js'
 
 export const create = () => {

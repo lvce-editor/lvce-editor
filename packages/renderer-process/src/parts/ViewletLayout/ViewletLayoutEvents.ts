@@ -1,5 +1,5 @@
 import * as KeyBindingsEvents from '../KeyBindingsEvents/KeyBindingsEvents.ts'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
 
 const getSashId = ($Target) => {

@@ -1,5 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
-import * as RememberFocus from '../RememberFocus/RememberFocus.js'
+import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 
 export const create = () => {

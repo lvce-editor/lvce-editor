@@ -1,4 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 export const handleSashPointerMove = (x, y) => {
   RendererWorker.send('Layout.handleSashPointerMove', x, y)

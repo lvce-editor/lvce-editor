@@ -1,9 +1,9 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as Icon from '../Icon/Icon.ts'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
-import * as TouchEvent from '../TouchEvent/TouchEvent.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
+import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
+import * as TouchEvent from '../TouchEvent/TouchEvent.ts'
 import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {

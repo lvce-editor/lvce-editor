@@ -3,7 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 
 export const handleInput = (event) => {
   const { target } = event
