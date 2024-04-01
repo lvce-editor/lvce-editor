@@ -31,6 +31,5 @@ export const getActions = (state) => {
       icon: MaskIcon.ListFlat,
     })
   }
-  console.log({ actions })
   return actions
 }
