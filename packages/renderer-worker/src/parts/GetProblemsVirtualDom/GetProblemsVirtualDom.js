@@ -1,5 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetProblemsListVirtualDom from '../GetProblemsListVirtualDom/GetProblemsListVirtualDom.js'
+import * as GetProblemsTableVirtualDom from '../GetProblemsTableVirtualDom/GetProblemsTableVirtualDom.js'
+import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -15,7 +17,9 @@ export const getProblemsVirtualDom = (viewMode, problems) => {
       text(ViewletProblemsStrings.noProblemsDetected()),
     ]
   }
-  // TODO if viewMode is table, render a table
+  if (viewMode === ProblemsViewMode.Table) {
+    return GetProblemsTableVirtualDom.getProblemsTableVirtualDom(problems)
+  }
   const dom = GetProblemsListVirtualDom.getProblemsListVirtualDom(problems)
   return dom
 }
