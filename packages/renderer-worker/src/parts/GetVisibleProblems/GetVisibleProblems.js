@@ -28,6 +28,7 @@ export const getVisibleProblems = (problems, focusedIndex, filterValue) => {
     }
     visibleItems.push({
       ...problem,
+      isEven: i % 2 === 0,
       isActive: i === focusedIndex,
       icon: getIcon(problem.uri),
       uriMatchIndex,

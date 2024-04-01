@@ -1,5 +1,6 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
+import * as GetProblemSourceDetail from '../GetProblemSourceDetail/GetProblemSourceDetail.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
@@ -7,19 +8,6 @@ import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-// TODO compute detail message in getVisibleProblems
-const getDetailMessage = (source, code) => {
-  let message = ''
-  if (source) {
-    message += `${source}`
-  }
-  if (code) {
-    message += `(${code})`
-  }
-  message += ' '
-  return message
-}
 
 export const getProblemVirtualDom = (problem) => {
   const { message, rowIndex, columnIndex, isActive, uri, icon, source, relativePath, messageMatchIndex, filterValueLength, code } = problem
@@ -90,7 +78,7 @@ export const getProblemVirtualDom = (problem) => {
       className: ClassNames.ProblemAt,
       childCount: 2,
     },
-    text(getDetailMessage(source, code)),
+    text(GetProblemSourceDetail.getProblemSourceDetail(source, code)),
     text(lineColumn),
   )
   return dom
