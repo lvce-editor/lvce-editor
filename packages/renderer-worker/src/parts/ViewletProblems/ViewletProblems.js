@@ -9,9 +9,10 @@ import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, args, parentUid) => {
   return {
     uid: id,
+    parentUid,
     problems: [],
     disposed: false,
     focusedIndex: -2,

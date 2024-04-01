@@ -3,11 +3,9 @@ import * as Command from '../Command/Command.js'
 import * as GetPanelViews from '../GetPanelViews/GetPanelViews.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
