@@ -1,4 +1,4 @@
-import * as KeyBindings from './KeyBindings.js'
+import * as KeyBindings from './KeyBindings.ts'
 
 export const name = 'KeyBindings'
 
