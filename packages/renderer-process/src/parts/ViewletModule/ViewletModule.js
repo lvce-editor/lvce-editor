@@ -3,7 +3,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 export const load = (moduleId) => {
   switch (moduleId) {
     case ViewletModuleId.ImagePreview:
-      return import('../ImagePreview/ImagePreview.js')
+      return import('../ImagePreview/ImagePreview.ts')
     case ViewletModuleId.ActivityBar:
       return import('../ViewletActivityBar/ViewletActivityBar.js')
     case ViewletModuleId.Audio:
