@@ -40,3 +40,5 @@ export const focus = (state) => {
   const { $Viewlet } = state
   $Viewlet.focus()
 }
+
+export * as EventMap from './ViewletProblemsEvents.ts'
