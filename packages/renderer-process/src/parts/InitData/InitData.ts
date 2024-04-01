@@ -1,5 +1,5 @@
-import * as Location from '../Location/Location.js'
-import * as Layout from '../Layout/Layout.js'
+import * as Location from '../Location/Location.ts'
+import * as Layout from '../Layout/Layout.ts'
 
 export const getInitData = () => {
   const initData = {

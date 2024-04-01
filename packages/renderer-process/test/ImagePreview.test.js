@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ImagePreview from '../src/parts/ImagePreview/ImagePreview.js'
+import * as ImagePreview from '../src/parts/ImagePreview/ImagePreview.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

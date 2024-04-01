@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletTitleBar from '../src/parts/ViewletTitleBar/ViewletTitleBar.js'
+import * as ViewletTitleBar from '../src/parts/ViewletTitleBar/ViewletTitleBar.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('accessibility - title bar should have role of contentinfo', () => {

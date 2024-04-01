@@ -1,5 +1,5 @@
 import * as AriaAlert from '../AriaAlert/AriaAlert.ts'
-import * as Widget from '../Widget/Widget.js'
+import * as Widget from '../Widget/Widget.ts'
 
 // TODO not sure whether created dom node
 // should stay in state or be removed

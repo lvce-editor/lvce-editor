@@ -1,4 +1,4 @@
-import * as Promises from '../Promises/Promises.js'
+import * as Promises from '../Promises/Promises.ts'
 
 export const getFirstEvent = (eventTarget, eventMap) => {
   const { resolve, promise } = Promises.withResolvers()

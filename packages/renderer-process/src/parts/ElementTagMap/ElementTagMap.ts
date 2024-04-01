@@ -1,5 +1,5 @@
 import * as ElementTag from '../ElementTags/ElementTags.ts'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
 
 export const getElementTag = (type) => {
   switch (type) {

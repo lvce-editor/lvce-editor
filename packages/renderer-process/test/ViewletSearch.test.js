@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.js'
-import * as EnterKeyHintType from '../src/parts/EnterKeyHintType/EnterKeyHintType.js'
+import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.ts'
+import * as EnterKeyHintType from '../src/parts/EnterKeyHintType/EnterKeyHintType.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
@@ -17,6 +17,7 @@ test('refresh', () => {
 
 test.skip('accessibility - input box should have enterkeyhint search', () => {
   const state = ViewletSearch.create()
+  // @ts-ignore
   const { $ViewletSearchInput } = state
   expect($ViewletSearchInput.enterKeyHint).toBe(EnterKeyHintType.Search)
 })

@@ -1,4 +1,4 @@
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.ts'
 
 export const create$Button = (label, icon) => {
   // TODO icon div might not be needed (unnecessary html element)

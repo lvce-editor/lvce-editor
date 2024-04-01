@@ -8,7 +8,7 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js',
+  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.ts',
   () => ({
     tryToGetActualErrorMessage: jest.fn(() => {
       throw new Error('not implemented')
@@ -16,9 +16,9 @@ jest.unstable_mockModule(
   }),
 )
 
-const TryToGetActualWorkerErrorMessage = await import('../src/parts/TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js')
+const TryToGetActualWorkerErrorMessage = await import('../src/parts/TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.ts')
 const TryToGetActualErrorMessageWhenNetworkRequestSucceeds = await import(
-  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
+  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.ts'
 )
 
 test('getActualErrorMessage - missing content type header', async () => {

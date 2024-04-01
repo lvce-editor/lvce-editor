@@ -8,14 +8,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/ViewletKeyBindings.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/ViewletKeyBindings.ts')
 
 test('event - input', () => {
   const state = ViewletKeyBindings.create()

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.ts'
 import { beforeEach, beforeAll, test, expect } from '@jest/globals'
 
 beforeAll(() => {
@@ -18,16 +18,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(),
     sendAndTransfer: jest.fn(),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
 
-const OffscreenCanvas = await import('../src/parts/OffscreenCanvas/OffscreenCanvas.js')
+const OffscreenCanvas = await import('../src/parts/OffscreenCanvas/OffscreenCanvas.ts')
 
 test('create', () => {
   OffscreenCanvas.create()

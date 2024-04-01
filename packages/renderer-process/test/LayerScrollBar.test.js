@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as LayerScrollBar from '../src/parts/Editor/LayerScrollBar.js'
+import * as LayerScrollBar from '../src/parts/Editor/LayerScrollBar.ts'
 import { beforeEach, test, expect, afterEach } from '@jest/globals'
 
 const create$ScrollBarDiagnostic = () => {

@@ -22,7 +22,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/CssState/CssState.js', () => ({
+jest.unstable_mockModule('../src/parts/CssState/CssState.ts', () => ({
   get: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -31,8 +31,8 @@ jest.unstable_mockModule('../src/parts/CssState/CssState.js', () => ({
   }),
 }))
 
-const Css = await import('../src/parts/Css/Css.js')
-const CssState = await import('../src/parts/CssState/CssState.js')
+const Css = await import('../src/parts/Css/Css.ts')
+const CssState = await import('../src/parts/CssState/CssState.ts')
 
 test('addCssStyleSheet - add', async () => {
   const id = '1'

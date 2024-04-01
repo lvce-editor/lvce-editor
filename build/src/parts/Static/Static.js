@@ -35,7 +35,7 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.ts`,
     occurrence: `PLATFORM`,
     replacement: 'PlatformType.Web',
   })
@@ -83,7 +83,7 @@ export const getModule = (method) => {
 }`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
     occurrence: `/src/rendererWorkerMain.js`,
     replacement: '/dist/rendererWorkerMain.js',
   })
@@ -93,12 +93,12 @@ export const getModule = (method) => {
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.ts`,
     eagerlyLoadedModules: ['Css', 'InitData', 'Layout', 'Location', 'Meta', 'Viewlet', 'WebStorage', 'Window'],
     ipcPostFix: true,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/ViewletModule/ViewletModule.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/ViewletModule/ViewletModule.ts`,
     eagerlyLoadedModules: [
       'ViewletMain',
       'ViewletLayout',

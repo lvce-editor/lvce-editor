@@ -3,7 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
-import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
+import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
@@ -43,14 +43,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletTitleBarMenuBar = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletTitleBarMenuBar = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ts')
 
 test.skip('event - click on menu', () => {
   const state = ViewletTitleBarMenuBar.create()

@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import * as Menu from '../src/parts/OldMenu/Menu.js'
-import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
-import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as Menu from '../src/parts/OldMenu/Menu.ts'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ts'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 const getTextContent = (node) => {
@@ -119,8 +119,10 @@ test.skip('openMenu - focus on menuBar', () => {
     ViewletTitleBarMenuBar.create(titleBarMenuEntries)
   // @ts-ignore
   document.body.append($ViewletTitleBarMenuBar)
+  // @ts-ignore
   $ViewletTitleBarMenuBar.firstChild.focus()
   ViewletTitleBarMenuBar.openMenu(-1, 1, 0, menuItems, false)
+  // @ts-ignore
   expect(document.activeElement).toBe($ViewletTitleBarMenuBar.children[1])
 })
 
@@ -160,6 +162,7 @@ test.skip('openMenu - focus on menu', () => {
     ViewletTitleBarMenuBar.create(titleBarMenuEntries)
   // @ts-ignore
   document.body.append($ViewletTitleBarMenuBar)
+  // @ts-ignore
   $ViewletTitleBarMenuBar.firstChild.focus()
   ViewletTitleBarMenuBar.openMenu(1, 0, menuItems, true)
   expect(document.activeElement).toBe(Menu.state.$$Menus[0].firstChild)

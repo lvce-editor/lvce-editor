@@ -1,4 +1,4 @@
-import * as ModifierKey from '../ModifierKey/ModifierKey.js'
+import * as ModifierKey from '../ModifierKey/ModifierKey.ts'
 
 export const getModifierKey = (event) => {
   if (event.ctrlKey) {

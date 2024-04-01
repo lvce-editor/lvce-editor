@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
+import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 const isLeaf = (node) => {

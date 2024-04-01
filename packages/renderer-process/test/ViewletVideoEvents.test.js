@@ -7,19 +7,20 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
 
-const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.js')
+const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.ts')
 
 test.skip('event - error', () => {
   const state = ViewletVideo.create()
   ViewletVideo.attachEvents(state)
+  // @ts-ignore
   const { $Video } = state
   // @ts-ignore
   $Video.error = {

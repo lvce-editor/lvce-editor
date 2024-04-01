@@ -7,7 +7,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {
       throw new Error('not implemented')
@@ -15,9 +15,9 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
 
-const Menu = await import('../src/parts/OldMenu/Menu2.js')
+const Menu = await import('../src/parts/OldMenu/Menu2.ts')
 
 const getTextContent = (node) => {
   return node.textContent
@@ -121,6 +121,7 @@ test.skip('event - key - ArrowUp', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowUp',
@@ -138,6 +139,7 @@ test.skip('event - key - Enter', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Enter',
@@ -156,6 +158,7 @@ test.skip('event - key - Space', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: ' ',
@@ -174,6 +177,7 @@ test.skip('event - key - Home', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Home',
@@ -192,6 +196,7 @@ test.skip('event - key - End', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'End',
@@ -210,6 +215,7 @@ test.skip('event - key - Escape', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Escape',
@@ -232,6 +238,7 @@ test.skip('event - click - outside', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$Menu.dispatchEvent(
     new Event('mousedown', {
       bubbles: true,
@@ -257,7 +264,9 @@ test.skip('adjust position when it is near edge of screen', () => {
       flags: 0,
     },
   ])
+  // @ts-ignore
   expect(Menu.state.$Menu.style.left).toBe('351px')
+  // @ts-ignore
   expect(Menu.state.$Menu.style.top).toBe('525px')
 })
 

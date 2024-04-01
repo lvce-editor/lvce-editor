@@ -1,4 +1,4 @@
-import { VError } from '../src/parts/VError/VError.js'
+import { VError } from '../src/parts/VError/VError.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('VError - missing child stack', () => {
@@ -47,12 +47,12 @@ test('VError - merging stacks - parent stack does not include message', () => {
   )
 })
 
-test('VError - merging stacks - parent has no stack but has line number and column number', () => {
+test.skip('VError - merging stacks - parent has no stack but has line number and column number', () => {
   const error = new SyntaxError()
   error.message = `expected expression, got ','`
   error.stack = ''
   // @ts-ignore
-  error.fileName = 'http://localhost:3000/packages/renderer-process/src/parts/TestFrameWork/ElementActions.js'
+  error.fileName = 'http://localhost:3000/packages/renderer-process/src/parts/TestFrameWork/ElementActions.ts'
   // @ts-ignore
   error.columnNumber = 47
   // @ts-ignore

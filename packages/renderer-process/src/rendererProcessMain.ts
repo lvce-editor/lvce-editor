@@ -1,5 +1,5 @@
-import * as Main from './parts/Main/Main.js'
+import * as Main from './parts/Main/Main.ts'
 
 Main.main()
 
-export { send } from './parts/RendererWorker/RendererWorker.js'
+export { send } from './parts/RendererWorker/RendererWorker.ts'
