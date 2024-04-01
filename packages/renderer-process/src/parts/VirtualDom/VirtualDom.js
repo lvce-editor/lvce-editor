@@ -1,5 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
-import * as ClearNode from '../ClearNode/ClearNode.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as ClearNode from '../ClearNode/ClearNode.ts'
 import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 /**
