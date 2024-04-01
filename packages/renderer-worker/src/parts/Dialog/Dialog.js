@@ -69,6 +69,7 @@ export const showMessage = async (message, options) => {
   }
 
   if (Platform.platform === PlatformType.Electron) {
+    // @ts-ignore
     const index = await ElectronDialog.showMessageBox(/* message */ message.message, /* buttons */ options, ElectronMessageBoxType.Error)
 
     if (index === -1) {

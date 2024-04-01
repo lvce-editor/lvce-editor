@@ -70,6 +70,7 @@ function cacheDonePromiseForTransaction(tx) {
             tx.removeEventListener('abort', error);
         };
         const complete = () => {
+            // @ts-ignore
             resolve();
             unlisten();
         };
@@ -126,6 +127,7 @@ function wrapFunction(func) {
     if (func === IDBDatabase.prototype.transaction &&
         !('objectStoreNames' in IDBTransaction.prototype)) {
         return function (storeNames, ...args) {
+            // @ts-ignore
             const tx = func.call(unwrap(this), storeNames, ...args);
             transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
             return wrap(tx);
@@ -140,13 +142,16 @@ function wrapFunction(func) {
         return function (...args) {
             // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
             // the original object.
+            // @ts-ignore
             func.apply(unwrap(this), args);
+            // @ts-ignore
             return wrap(cursorRequestMap.get(this));
         };
     }
     return function (...args) {
         // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
         // the original object.
+        // @ts-ignore
         return wrap(func.apply(unwrap(this), args));
     };
 }

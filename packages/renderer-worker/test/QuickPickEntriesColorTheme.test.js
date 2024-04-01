@@ -42,11 +42,15 @@ test('getPicks', async () => {
 })
 
 test.skip('getPicks - error', async () => {
+  // @ts-ignore
   SharedProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message.method) {
       case 'ExtensionHost.getColorThemeNames':
+        // @ts-ignore
         SharedProcess.state.receive({
           jsonrpc: JsonRpcVersion.Two,
+          // @ts-ignore
           id: message.id,
           error: {
             code: -32000,

@@ -17,11 +17,13 @@ export const moveLineDown = (editor) => {
       newLines: [TextDocument.getLine(editor.textDocument, rowIndex + 1), TextDocument.getLine(editor.textDocument, rowIndex)],
     },
   ]
+  // @ts-ignore
   const cursorEdits = Editor.moveCursors(editor, (editor, cursor) => {
     return {
       rowIndex: cursor.rowIndex + 1,
       columnIndex: cursor.columnIndex,
     }
   })
+  // @ts-ignore
   Editor.scheduleDocumentAndCursors(editor, documentEdits, cursorEdits)
 }

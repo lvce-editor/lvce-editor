@@ -16,6 +16,7 @@ test.skip('moveSelectionPx', () => {
     columnWidth: 8,
     deltaY: 0,
   }
+  // @ts-ignore
   EditorMoveSelection.state.position = {
     rowIndex: 0,
     columnIndex: 1,

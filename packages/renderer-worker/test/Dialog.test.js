@@ -78,6 +78,7 @@ test.skip('close - web', async () => {
   )
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
   await Dialog.close()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(7836)

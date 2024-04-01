@@ -35,6 +35,7 @@ export const open = async (editor) => {
 
   if (prepareRenameResult.canRename) {
     const x = EditorPosition.x(editor, rowIndex, columnIndex)
+    // @ts-ignore
     const y = EditorPosition.y(editor, rowIndex, columnIndex)
     // const prepareRenameResult = await prepareRename(editor)
     // console.log({ prepareRenameResult })

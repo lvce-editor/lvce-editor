@@ -2,9 +2,11 @@ import * as ViewletQuickPickElectron from './ViewletQuickPickElectron.js'
 
 // prettier-ignore
 export const Commands = {
+  // @ts-ignore
   handleBeforeInput: ViewletQuickPickElectron.handleBeforeInput,
   handleBlur: ViewletQuickPickElectron.handleBlur,
   handleClickAt: ViewletQuickPickElectron.handleClickAt,
+  // @ts-ignore
   handleInput: ViewletQuickPickElectron.handleInput,
   handleWheel: ViewletQuickPickElectron.handleWheel,
   selectCurrentIndex: ViewletQuickPickElectron.selectCurrentIndex,

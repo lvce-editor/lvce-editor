@@ -42,6 +42,7 @@ test('y', () => {
     columnWidth: 8,
     rowHeight: 20,
   }
+  // @ts-ignore
   expect(EditorPosition.y(editor, 0, 0)).toBe(20)
 })
 

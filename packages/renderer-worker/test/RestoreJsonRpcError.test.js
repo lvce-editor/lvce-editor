@@ -185,6 +185,7 @@ test('restoreJsonRpcError - VError', () => {
 
 test.skip('restoreJsonRpcError - with only one line in stack', async () => {
   const ipc = {
+    // @ts-ignore
     send: jest.fn((message) => {
       // @ts-ignore
       if (message.method === 'Test.execute') {
@@ -202,6 +203,7 @@ test.skip('restoreJsonRpcError - with only one line in stack', async () => {
       }
     }),
   }
+  // @ts-ignore
   const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(DOMException)
   expect(error.message).toBe('The user aborted a request.')
@@ -216,9 +218,11 @@ test.skip('restoreJsonRpcError - with only one line in stack', async () => {
 test.skip('restoreJsonRpcError - method not found', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'method not found',
+    // @ts-ignore
     code: JsonRpcErrorCode.MethodNotFound,
     data: '',
   })
+  // @ts-ignore
   expect(error).toBeInstanceOf(JsonRpcError)
   expect(error.message).toBe('method not found')
 })

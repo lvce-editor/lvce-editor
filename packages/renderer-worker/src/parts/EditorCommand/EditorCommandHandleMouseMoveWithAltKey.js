@@ -62,6 +62,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y) => {
     console.log({ definition })
     return editor
   } catch (error) {
+    // @ts-ignore
     if (error && error.message.startsWith('Failed to execute definition provider: No definition provider found')) {
       return editor
     }

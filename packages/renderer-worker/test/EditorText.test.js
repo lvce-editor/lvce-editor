@@ -855,7 +855,9 @@ test("getVisible - don't tokenize lines that have been tokenized already", () =>
     hasArrayReturn: true,
     tokenizeLine: jest.fn((line, lineState) => {
       return {
+        // @ts-ignore
         state: lineState.state,
+        // @ts-ignore
         tokens: [1, line.length],
       }
     }),

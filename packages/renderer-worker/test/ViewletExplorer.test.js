@@ -793,13 +793,16 @@ test.skip('loadContent - race condition', async () => {
     if (state.version !== version) {
       return
     }
+    // @ts-ignore
     await ViewletExplorer.contentLoaded(newState)
   }
   const state = ViewletExplorer.create(1, '', 0, 0, 100, 100)
   const promise1 = load(state)
   const promise2 = load(state)
   await Promise.all([promise1, promise2])
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Explorer', 'updateDirents', [
     {
       depth: 1,
@@ -898,8 +901,11 @@ test.skip('contentLoaded', async () => {
     root: '/test',
     y: 0,
   }
+  // @ts-ignore
   await ViewletExplorer.contentLoaded(state)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Explorer', 'updateDirents', [
     {
       depth: 1,
@@ -949,7 +955,9 @@ test.skip('refresh - error', async () => {
   })
   // @ts-ignore
   await ViewletExplorer.refresh(state)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledWith(['Viewlet.send', 'Explorer', 'handleError', new Error('TypeError: x is not a function')])
 })
 
@@ -1684,7 +1692,9 @@ test.skip('handleClick - race condition - child folder is being expanded and par
   const promise2 = ViewletExplorer.handleClick(state, 0)
   await Promise.all([promise1, promise2])
   expect(state.focusedIndex).toBe(0)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Explorer', 'updateDirents', [
     {
       depth: 1,
@@ -1753,7 +1763,9 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
   const promise3 = ViewletExplorer.handleClick(state, 2)
   await Promise.all([promise1, promise2, promise3])
   expect(state.focusedIndex).toBe(2)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Explorer', 'updateDirents', [
     {
       depth: 1,
@@ -1792,6 +1804,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
       type: DirentType.DirectoryExpanded,
     },
   ])
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.send', 'Explorer', 'updateDirents', [
     {
       depth: 1,
@@ -1839,6 +1852,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
       type: DirentType.DirectoryExpanded,
     },
   ])
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.send', 'Explorer', 'updateDirents', [
     {
       depth: 1,
@@ -3237,7 +3251,9 @@ test.skip('event - workspace change', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await GlobalEventBus.emitEvent('workspace.change', '/test')
+  // @ts-ignore
   expect(RendererProcess.invoke).toBeCalledTimes(1)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledWith(['Viewlet.send', 'Explorer', 'updateDirents', []])
 })
 
@@ -3269,8 +3285,11 @@ test.skip('newFile - root', async () => {
     }
   })
   await ViewletExplorer.newFile(state)
+  // @ts-ignore
   await ViewletExplorer.acceptCreateNewFile(state)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),
@@ -3370,6 +3389,7 @@ test.skip('newFile - inside folder', async () => {
   })
 
   await ViewletExplorer.newFile(state)
+  // @ts-ignore
   expect(await ViewletExplorer.acceptCreateNewFile(state)).toMatchObject({
     items: [
       {
@@ -3468,10 +3488,15 @@ test.skip('newFile - error with writeFile', async () => {
     }
   })
   await ViewletExplorer.newFile(state)
+  // @ts-ignore
   await ViewletExplorer.acceptCreateNewFile(state)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [909090, expect.any(Number), 'Viewlet.send', 'Explorer', 'showCreateFileInputBox', 0])
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [909090, expect.any(Number), 'Viewlet.send', 'Explorer', 'hideCreateFileInputBox', 0])
+  // @ts-ignore
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),

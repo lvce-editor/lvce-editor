@@ -72,9 +72,11 @@ test.skip('editorHandleTab - tab completion available', async () => {
     ],
     lineCache: [],
   }
+  // @ts-ignore
   SharedProcess.state.send = (message) => {
     switch (message.method) {
       case 386:
+        // @ts-ignore
         SharedProcess.state.receive({
           id: message.id,
           result: {

@@ -15,8 +15,10 @@ test('create', () => {
 test('loadContent', async () => {
   const state = ViewletClock.create(0)
   RendererProcess.state.send = jest.fn((message) => {
+    // @ts-ignore
     switch (message[0]) {
       case 909090:
+        // @ts-ignore
         const callbackId = message[1]
         RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break

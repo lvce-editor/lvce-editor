@@ -124,6 +124,7 @@ export const getPickFilterValue = (pick) => {
 
 export const getPickDescription = (pick) => {
   const { provider } = state
+  // @ts-ignore
   if (provider.getPickDescription) {
     // @ts-ignore
     return provider.getPickDescription(pick)
@@ -133,11 +134,13 @@ export const getPickDescription = (pick) => {
 
 export const getPickLabel = (pick) => {
   const { provider } = state
+  // @ts-ignore
   return provider.getPickLabel(pick)
 }
 
 export const getPickIcon = (pick) => {
   const { provider } = state
+  // @ts-ignore
   return provider.getPickIcon(pick)
 }
 

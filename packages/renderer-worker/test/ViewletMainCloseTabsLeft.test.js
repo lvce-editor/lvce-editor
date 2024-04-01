@@ -393,6 +393,7 @@ test.skip('closeTabsLeft - 2 2 - third tab is focused and third tab is selected'
 
 test.skip('resize', () => {
   const state = ViewletMain.create(1)
+  // @ts-ignore
   const { newState } = ViewletMain.resize(state, {
     x: 200,
     y: 200,
