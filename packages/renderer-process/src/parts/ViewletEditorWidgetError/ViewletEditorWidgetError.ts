@@ -1,5 +1,5 @@
 import * as Widget from '../Widget/Widget.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

@@ -2,7 +2,7 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Event from '../Event/Event.ts'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
 import * as ViewletEditorImageFunctions from './ViewletEditorImageFunctions.js'
 
 /**

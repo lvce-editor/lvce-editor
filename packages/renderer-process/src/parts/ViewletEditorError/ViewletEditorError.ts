@@ -1,4 +1,4 @@
-import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 // TODO not sure whether created dom node
