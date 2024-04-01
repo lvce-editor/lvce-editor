@@ -1,4 +1,4 @@
-import * as Event from '../Event/Event.js'
+import * as Event from '../Event/Event.ts'
 import * as ViewletDefineKeyBindingFunctions from './ViewletDefineKeyBindingFunctions.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 

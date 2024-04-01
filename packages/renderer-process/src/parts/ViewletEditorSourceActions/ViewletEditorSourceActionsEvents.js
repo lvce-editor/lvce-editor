@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as Event from '../Event/Event.js'
+import * as Event from '../Event/Event.ts'
 import * as ForwardCommand from '../ForwardCommand/ForwardCommand.ts'
 
 export const handleFocusIn = (event) => {

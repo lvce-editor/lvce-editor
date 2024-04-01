@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as ContextMenuFunctions from '../ContextMenuFunctions/ContextMenuFunctions.js'
-import * as Event from '../Event/Event.js'
+import * as Event from '../Event/Event.ts'
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)

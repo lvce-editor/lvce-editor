@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as Event from '../Event/Event.js'
+import * as Event from '../Event/Event.ts'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
 // TODO put drop into separate module and use executeCommand to call it
 
