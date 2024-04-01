@@ -13,7 +13,7 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: ViewletExplorerStrings.newFolder(),
-      icon: MaskIcon.ListTree,
+      icon: MaskIcon.NewFolder,
       command: 'newFolder',
     },
     {

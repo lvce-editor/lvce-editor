@@ -21,7 +21,7 @@ export const getActions = (state) => {
       type: ActionType.Button,
       id: 'View as list',
       command: 'viewAsList',
-      icon: MaskIcon.NewFile,
+      icon: MaskIcon.ListTree,
     })
   } else {
     actions.push({
