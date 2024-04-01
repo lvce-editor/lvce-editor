@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.js'
+import * as Command from '../Command/Command.ts'
 import * as HandleBeforeInstallPrompt from '../HandleBeforeInstallPrompt/HandleBeforeInstallPrompt.js'
 import * as HandleContentSecurityPolicyViolation from '../HandleContentSecurityPolicyViolation/HandleContentSecurityPolicyViolation.js'
 import * as Module from '../Module/Module.js'

@@ -30,7 +30,7 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.ts`,
     occurrence: `ASSET_DIR`,
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
@@ -40,7 +40,7 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
     replacement: 'PlatformType.Web',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.ts`,
     occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const getModule = (method) => {
@@ -88,7 +88,7 @@ export const getModule = (method) => {
     replacement: '/dist/rendererWorkerMain.js',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Icon/Icon.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Icon/Icon.ts`,
     occurrence: `/icons`,
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
