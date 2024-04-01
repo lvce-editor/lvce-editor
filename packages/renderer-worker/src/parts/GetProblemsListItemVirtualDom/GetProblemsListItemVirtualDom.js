@@ -64,7 +64,7 @@ export const getProblemVirtualDom = (problem) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: `${ClassNames.MaskIconError} ${ClassNames.ProblemsErrorIcon}`,
+      className: ClassNames.ProblemsErrorIcon,
       childCount: 0,
     },
     label,
