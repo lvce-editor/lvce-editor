@@ -1,5 +1,5 @@
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as IsChromeExtensionError from '../IsChromeExtensionError/IsChromeExtensionError.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
+import * as IsChromeExtensionError from '../IsChromeExtensionError/IsChromeExtensionError.ts'
 
 export const handleUnhandledRejection = (event) => {
   event.preventDefault()

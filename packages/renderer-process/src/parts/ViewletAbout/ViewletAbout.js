@@ -1,5 +1,5 @@
-import * as AttachEvents from '../AttachEvents/AttachEvents.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as ViewletAboutEvents from './ViewletAboutEvents.js'
 
 export const create = () => {

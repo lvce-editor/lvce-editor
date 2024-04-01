@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
+import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.ts'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 

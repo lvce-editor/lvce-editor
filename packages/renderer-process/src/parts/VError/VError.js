@@ -1,4 +1,4 @@
-import * as GetCombinedErrorMessage from '../GetCombinedErrorMessage/GetCombinedErrorMessage.js'
+import * as GetCombinedErrorMessage from '../GetCombinedErrorMessage/GetCombinedErrorMessage.ts'
 
 const mergeStacks = (parent, child) => {
   if (!child) {

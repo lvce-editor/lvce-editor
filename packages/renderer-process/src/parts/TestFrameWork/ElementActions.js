@@ -1,4 +1,4 @@
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 
 export const mouseEvent = (element, eventType, options) => {
   const event = new MouseEvent(eventType, options)

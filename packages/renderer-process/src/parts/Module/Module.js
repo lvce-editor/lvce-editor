@@ -3,31 +3,31 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 export const load = (moduleId) => {
   switch (moduleId) {
     case ModuleId.Audio:
-      return import('../Audio/Audio.ipc.js')
+      return import('../Audio/Audio.ipc.ts')
     case ModuleId.ClipBoard:
-      return import('../ClipBoard/ClipBoard.ipc.js')
+      return import('../ClipBoard/ClipBoard.ipc.ts')
     case ModuleId.ConfirmPrompt:
-      return import('../ConfirmPrompt/ConfirmPrompt.ipc.js')
+      return import('../ConfirmPrompt/ConfirmPrompt.ipc.ts')
     case ModuleId.Css:
-      return import('../Css/Css.ipc.js')
+      return import('../Css/Css.ipc.ts')
     case ModuleId.Developer:
-      return import('../Developer/Developer.ipc.js')
+      return import('../Developer/Developer.ipc.ts')
     case ModuleId.Download:
-      return import('../Download/Download.ipc.js')
+      return import('../Download/Download.ipc.ts')
     case ModuleId.EditorError:
-      return import('../EditorError/EditorError.ipc.js')
+      return import('../EditorError/EditorError.ipc.ts')
     case ModuleId.EditorRename:
-      return import('../EditorRename/EditorRename.ipc.js')
+      return import('../EditorRename/EditorRename.ipc.ts')
     case ModuleId.FilePicker:
-      return import('../FilePicker/FilePicker.ipc.js')
+      return import('../FilePicker/FilePicker.ipc.ts')
     case ModuleId.FileSystemHandle:
-      return import('../FileSystemHandle/FileSystemHandle.ipc.js')
+      return import('../FileSystemHandle/FileSystemHandle.ipc.ts')
     case ModuleId.ImagePreview:
-      return import('../ImagePreview/ImagePreview.ipc.js')
+      return import('../ImagePreview/ImagePreview.ipc.ts')
     case ModuleId.InitData:
-      return import('../InitData/InitData.ipc.js')
+      return import('../InitData/InitData.ipc.ts')
     case ModuleId.IpcParent:
-      return import('../IpcParent/IpcParent.ipc.js')
+      return import('../IpcParent/IpcParent.ipc.ts')
     case ModuleId.Layout:
       return import('../Layout/Layout.ipc.js')
     case ModuleId.Location:
@@ -63,7 +63,7 @@ export const load = (moduleId) => {
     case ModuleId.WindowTitle:
       return import('../WindowTitle/WindowTitle.ipc.js')
     case ModuleId.KeyBindings:
-      return import('../KeyBindings/KeyBindings.ipc.js')
+      return import('../KeyBindings/KeyBindings.ipc.ts')
     case ModuleId.PointerCapture:
       return import('../PointerCapture/PointerCapture.ipc.js')
     default:

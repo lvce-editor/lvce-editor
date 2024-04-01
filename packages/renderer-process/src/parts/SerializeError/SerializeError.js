@@ -1,4 +1,4 @@
-import * as EnsureError from '../EnsureError/EnsureError.js'
+import * as EnsureError from '../EnsureError/EnsureError.ts'
 
 export const serializeError = (error) => {
   error = EnsureError.ensureError(error)

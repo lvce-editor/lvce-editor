@@ -3,7 +3,7 @@
  */
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
-import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.ts'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.js'
 

@@ -1,6 +1,6 @@
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as LaunchRendererWorker from '../LaunchRendererWorker/LaunchRendererWorker.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
+import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
+import * as LaunchRendererWorker from '../LaunchRendererWorker/LaunchRendererWorker.ts'
 
 export const state = {
   /**

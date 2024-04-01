@@ -1,7 +1,7 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'

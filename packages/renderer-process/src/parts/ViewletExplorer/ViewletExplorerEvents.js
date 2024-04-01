@@ -1,5 +1,5 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as Event from '../Event/Event.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as Event from '../Event/Event.ts'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -63,6 +63,6 @@ export const handleEditingInput = (event) => {
   ViewletExplorerFunctions.updateEditingValue(uid, value)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
-export * from '../DragEvents/DragEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
+export * from '../DragEvents/DragEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

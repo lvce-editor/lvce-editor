@@ -1,4 +1,4 @@
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 

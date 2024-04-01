@@ -1,5 +1,5 @@
 import * as ViewletAudioFunctions from './ViewletAudioFunctions.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 
 export const handleAudioError = (event) => {
   const { target } = event

@@ -1,5 +1,5 @@
 import { findIndex } from '../../shared/findIndex.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
 
 export const handleFocus = (event) => {
@@ -71,5 +71,5 @@ export const handleInput = (event) => {
   ViewletSourceControlFunctions.handleInput(uid, value)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

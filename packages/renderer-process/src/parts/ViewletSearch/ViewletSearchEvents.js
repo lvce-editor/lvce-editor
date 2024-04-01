@@ -1,6 +1,6 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
-import * as InputSource from '../InputSource/InputSource.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
+import * as InputSource from '../InputSource/InputSource.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
@@ -120,5 +120,5 @@ export const handleHeaderFocusIn = (event) => {
   ViewletSearchFunctions.handleFocusIn(uid, key)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

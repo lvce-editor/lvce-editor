@@ -1,6 +1,6 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as Event from '../Event/Event.js'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as Event from '../Event/Event.ts'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
 
 const get$ItemFromEvent = (event) => {
@@ -37,4 +37,4 @@ export const handleFocus = (event) => {
   ViewletActivityBarFunctions.handleFocus(uid)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'

@@ -1,5 +1,5 @@
 import { VError } from '../VError/VError.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const state = {
   screenCaptures: Object.create(null),

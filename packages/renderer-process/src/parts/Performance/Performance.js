@@ -1,4 +1,4 @@
-import * as IsElectronUserAgentSpecificMemoryError from '../IsElectronUserAgentSpecificMemoryError/IsElectronUserAgentSpecificMemoryError.js'
+import * as IsElectronUserAgentSpecificMemoryError from '../IsElectronUserAgentSpecificMemoryError/IsElectronUserAgentSpecificMemoryError.ts'
 
 export const measureUserAgentSpecificMemory = async () => {
   try {

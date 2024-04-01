@@ -1,6 +1,6 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Assert from '../Assert/Assert.js'
-import * as Focus from '../Focus/Focus.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
+import * as Assert from '../Assert/Assert.ts'
+import * as Focus from '../Focus/Focus.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 

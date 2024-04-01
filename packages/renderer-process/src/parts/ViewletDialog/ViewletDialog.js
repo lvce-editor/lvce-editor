@@ -1,5 +1,5 @@
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as IconButton from '../IconButton/IconButton.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
+import * as IconButton from '../IconButton/IconButton.ts'
 import * as ViewletDialogEvents from './ViewletDialogEvents.js'
 
 export const create = () => {

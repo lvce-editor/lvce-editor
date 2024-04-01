@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ConditionErrorMap from './ConditionErrorMap.js'
 import * as ElementActions from './ElementActions.js'

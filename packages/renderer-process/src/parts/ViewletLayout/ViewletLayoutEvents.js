@@ -1,4 +1,4 @@
-import * as KeyBindingsEvents from '../KeyBindingsEvents/KeyBindingsEvents.js'
+import * as KeyBindingsEvents from '../KeyBindingsEvents/KeyBindingsEvents.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
 

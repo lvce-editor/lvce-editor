@@ -1,6 +1,6 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
-import * as Icon from '../Icon/Icon.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
+import * as Icon from '../Icon/Icon.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
@@ -92,5 +92,5 @@ export const handleTouchEnd = (event) => {
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

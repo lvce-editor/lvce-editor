@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as AttachEvents from '../AttachEvents/AttachEvents.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 

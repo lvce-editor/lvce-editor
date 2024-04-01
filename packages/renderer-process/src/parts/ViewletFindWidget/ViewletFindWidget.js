@@ -1,4 +1,4 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as RememberFocus from '../RememberFocus/RememberFocus.js'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 

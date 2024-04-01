@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as KeyBindings from '../KeyBindings/KeyBindings.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import { VError } from '../VError/VError.js'
@@ -283,7 +283,7 @@ export const appendViewlet = (parentId, childId, focus) => {
 }
 
 const ariaAnnounce = async (message) => {
-  const AriaAlert = await import('../AriaAlert/AriaAlert.js')
+  const AriaAlert = await import('../AriaAlert/AriaAlert.ts')
   AriaAlert.alert(message)
 }
 

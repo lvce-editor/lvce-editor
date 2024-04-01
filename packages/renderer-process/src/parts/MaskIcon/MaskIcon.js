@@ -1,4 +1,4 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as MaskImage from '../MaskImage/MaskImage.js'
 
 export const create = (icon) => {

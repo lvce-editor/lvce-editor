@@ -1,6 +1,6 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
-import * as Event from '../Event/Event.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as ForwardCommand from '../ForwardCommand/ForwardCommand.ts'
+import * as Event from '../Event/Event.ts'
 
 export const handleClickOk = (event) => {
   const uid = ComponentUid.fromEvent(event)

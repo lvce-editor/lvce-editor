@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as ViewletStorageFunctions from './ViewletStorageFunctions.js'
 
 export const handleClick = (event) => {
