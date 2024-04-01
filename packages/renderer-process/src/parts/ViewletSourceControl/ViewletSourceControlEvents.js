@@ -1,4 +1,4 @@
-import { findIndex } from '../../shared/findIndex.js'
+import { findIndex } from '../FindIndex/FindIndex.ts'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
 
