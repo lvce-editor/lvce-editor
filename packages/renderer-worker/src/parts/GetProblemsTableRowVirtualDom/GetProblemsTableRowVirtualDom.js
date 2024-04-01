@@ -1,5 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
+import * as GetProblemSourceDetail from '../GetProblemSourceDetail/GetProblemSourceDetail.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getClassName = (isEven) => {
@@ -33,7 +34,7 @@ export const getProblemsTableRowVirtualDom = (problem) => {
       className: 'ProblemsTableRowItem',
       childCount: 1,
     },
-    text(code),
+    text(GetProblemSourceDetail.getProblemSourceDetail(source, code)),
     {
       type: VirtualDomElements.Td,
       className: 'ProblemsTableRowItem',
