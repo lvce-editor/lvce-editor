@@ -6,8 +6,8 @@ export const getActions = (state) => {
   const actions = [
     {
       type: ActionType.Filter,
-      id: '',
-      command: 'filter',
+      id: 'Filter',
+      command: 'handleFilterInput',
     },
     {
       type: ActionType.Button,

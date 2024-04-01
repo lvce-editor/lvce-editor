@@ -68,6 +68,11 @@ export const setProp = ($Element, key, value, eventMap) => {
         return
       }
       const listener = eventMap[value]
+      if (!listener) {
+        console.warn('listener not found', value)
+        return
+      }
+
       $Element.addEventListener(eventName, listener)
       break
     default:

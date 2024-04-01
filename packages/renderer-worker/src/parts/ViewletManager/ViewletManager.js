@@ -159,16 +159,9 @@ export const create = (getModule, id, parentUid, uri, x, y, width, height) => {
   }
 }
 
-const getInstanceSavedState = (savedState, id) => {
-  if (savedState && savedState.instances && savedState.instances[id]) {
-    return savedState.instances[id]
-  }
-  return undefined
-}
-
 const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name, parentId) => {
   const commands = []
-  if (module.renderActions) {
+  if (module.renderActions && !module.renderActions.isEqual(oldState, newState)) {
     const actionsCommands = module.renderActions.apply(oldState, newState)
     if (parentId) {
       commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
