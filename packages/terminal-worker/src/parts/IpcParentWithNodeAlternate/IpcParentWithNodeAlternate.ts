@@ -41,7 +41,10 @@ export const wrap = (port) => {
       const wrappedListener = (event) => {
         const data = GetData.getData(event)
         // @ts-ignore
-        listener(data)
+        listener({
+          data,
+          target: this,
+        })
       }
       this.port.onmessage = wrappedListener
     },

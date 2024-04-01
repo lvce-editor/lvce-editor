@@ -11,5 +11,6 @@ export const waitForFirstMessage = async (port) => {
   }
   port.onmessage = handleMessage
   const event = await promise
-  return event
+  // @ts-ignore
+  return event.data
 }

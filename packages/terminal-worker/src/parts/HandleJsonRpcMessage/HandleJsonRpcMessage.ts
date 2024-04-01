@@ -3,26 +3,26 @@ import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 
-export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
-  if ('id' in message) {
-    if ('method' in message) {
-      const response = await GetResponse.getResponse(message, execute)
+export const handleJsonRpcMessage = async (event, execute, resolve) => {
+  const { target, data } = event
+  if ('id' in data) {
+    if ('method' in data) {
+      const response = await GetResponse.getResponse(data, execute)
       try {
-        ipc.send(response)
+        target.send(response)
       } catch (error) {
         await ErrorHandling.logError(error)
-        const errorResponse = GetErrorResponse.getErrorResponse(message, error)
-        ipc.send(errorResponse)
+        const errorResponse = GetErrorResponse.getErrorResponse(data, error)
+        target.send(errorResponse)
       }
       return
     }
-    resolve(message.id, message)
+    resolve(data.id, data)
     return
   }
-  if ('method' in message) {
-    await GetResponse.getResponse(message, execute)
+  if ('method' in data) {
+    await GetResponse.getResponse(data, execute)
     return
   }
-  console.log({ message })
   throw new JsonRpcError('unexpected message')
 }
