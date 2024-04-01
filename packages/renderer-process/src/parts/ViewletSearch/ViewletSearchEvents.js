@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'

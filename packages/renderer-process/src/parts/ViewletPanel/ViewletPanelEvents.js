@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletPanelFunctions from './ViewletPanelFunctions.js'
 
 export const handleClickClose = (event) => {

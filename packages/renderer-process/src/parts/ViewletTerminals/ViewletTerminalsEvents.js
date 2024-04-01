@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import { getNodeIndex } from '../GetNodeIndex/GetNodeIndex.js'
+import { getNodeIndex } from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletTerminalsFunctions from './ViewletTerminalsFunctions.js'
 
 export const handleClickTab = (event) => {
