@@ -21,12 +21,18 @@ const KeyBindingsEvents = await import('../src/parts/KeyBindingsEvents/KeyBindin
 const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
 
 beforeEach(() => {
+  // @ts-ignore
   if (KeyBindingsState.state.modifierTimeout !== -1) {
+    // @ts-ignore
     clearTimeout(KeyBindingsState.state.modifierTimeout)
+    // @ts-ignore
     KeyBindingsState.state.modifierTimeout = -1
   }
+  // @ts-ignore
   KeyBindingsState.state.modifier = ''
+  // @ts-ignore
   KeyBindingsState.state.keyBindingSets = Object.create(null)
+  // @ts-ignore
   KeyBindingsState.state.keyBindings = []
 })
 
