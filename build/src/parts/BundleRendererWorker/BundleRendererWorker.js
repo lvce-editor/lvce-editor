@@ -157,7 +157,7 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     })
     await BundleJs.bundleJs({
       cwd: cachePath,
-      from: `./src/rendererWorkerMain.js`,
+      from: `./src/rendererWorkerMain.ts`,
       platform: 'webworker',
       allowCyclicDependencies: true, // TODO
     })

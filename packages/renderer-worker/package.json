@@ -2,7 +2,7 @@
   "name": "@lvce-editor/renderer-worker",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/rendererWorkerMain.js",
+  "main": "src/rendererWorkerMain.ts",
   "type": "module",
   "directories": {
     "test": "test"

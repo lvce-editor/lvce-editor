@@ -13,7 +13,8 @@
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
     "noImplicitAny": false,
-    "composite": true
+    "composite": true,
+    "allowImportingTsExtensions": true
   },
   "include": ["src", "test"]
 }

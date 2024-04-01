@@ -55,14 +55,6 @@ const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supports
   })
 }
 
-const bundleJs = async () => {
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/renderer-worker`),
-    from: `./src/rendererWorkerMain.js`,
-    platform: 'webworker',
-  })
-}
-
 const copyResults = async () => {
   await Copy.copy({
     from: `build/.tmp/bundle/electron/packages/renderer-process/src`,

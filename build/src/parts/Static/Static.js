@@ -84,7 +84,7 @@ export const getModule = (method) => {
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
-    occurrence: `/src/rendererWorkerMain.js`,
+    occurrence: `/src/rendererWorkerMain.ts`,
     replacement: '/dist/rendererWorkerMain.js',
   })
   await Replace.replace({
