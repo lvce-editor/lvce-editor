@@ -6,6 +6,9 @@ export const handleClickAction = async (state, index, command) => {
   Assert.number(index)
   const { currentViewletId } = state
   Assert.string(command)
+  if (command === 'undefined') {
+    throw new Error(`command is undefined`)
+  }
   const fullCommand = `${currentViewletId}.${command}`
   await Command.execute(fullCommand)
   return state
