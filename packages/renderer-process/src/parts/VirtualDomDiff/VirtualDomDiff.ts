@@ -1,4 +1,4 @@
-import { renderInternal } from '../VirtualDom/VirtualDom.js'
+import { renderInternal } from '../VirtualDom/VirtualDom.ts'
 import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
 
 const insert = ($Node, diffItem, eventMap) => {

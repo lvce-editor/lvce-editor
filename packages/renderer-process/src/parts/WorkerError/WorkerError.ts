@@ -1,5 +1,5 @@
 import * as JoinLines from '../JoinLines/JoinLines.ts'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 
 export class WorkerError extends Error {
   constructor(event) {

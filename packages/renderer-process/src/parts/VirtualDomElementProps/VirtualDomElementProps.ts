@@ -1,4 +1,4 @@
-import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
+import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.ts'
 
 export const setProps = ($Element, props, eventMap) => {
   for (const key in props) {
