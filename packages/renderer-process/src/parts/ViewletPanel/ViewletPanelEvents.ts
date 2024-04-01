@@ -19,7 +19,11 @@ const handleClickTab = (target, uid) => {
 
 const handleClickAction = (target, uid) => {
   const index = GetNodeIndex.getNodeIndex(target)
-  ViewletPanelFunctions.handleClickAction(uid, index, target.dataset.command)
+  const { command } = target.dataset
+  if (!command) {
+    throw new Error('action command not found')
+  }
+  ViewletPanelFunctions.handleClickAction(uid, index, command)
 }
 
 export const handleHeaderClick = (event) => {
