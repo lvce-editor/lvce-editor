@@ -1,4 +1,4 @@
-import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as GetResponse from '../GetResponse/GetResponse.ts'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {

@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Callback from '../Callback/Callback.ts'
+import * as Command from '../Command/Command.ts'
 import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
 
 export const handleIpc = (ipc) => {
