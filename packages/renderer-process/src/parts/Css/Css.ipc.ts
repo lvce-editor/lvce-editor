@@ -1,4 +1,4 @@
-import * as Css from './Css.js'
+import * as Css from './Css.ts'
 
 export const name = 'Css'
 

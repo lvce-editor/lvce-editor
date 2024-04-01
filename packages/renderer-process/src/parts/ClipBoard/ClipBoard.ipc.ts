@@ -1,4 +1,4 @@
-import * as ClipBoard from './ClipBoard.js'
+import * as ClipBoard from './ClipBoard.ts'
 
 export const name = 'ClipBoard'
 
