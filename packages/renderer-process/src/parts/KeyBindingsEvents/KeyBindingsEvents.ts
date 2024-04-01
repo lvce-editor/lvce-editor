@@ -1,6 +1,6 @@
-import * as Event from '../Event/Event.js'
-import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
-import * as IsMatchingKeyBinding from '../IsMatchingKeyBinding/IsMatchingKeyBinding.js'
+import * as Event from '../Event/Event.ts'
+import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.ts'
+import * as IsMatchingKeyBinding from '../IsMatchingKeyBinding/IsMatchingKeyBinding.ts'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 

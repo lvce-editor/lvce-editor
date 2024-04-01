@@ -1,4 +1,4 @@
-import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as LaunchWorker from '../LaunchWorker/LaunchWorker.js'
 import * as RendererWorkerUrl from '../RendererWorkerUrl/RendererWorkerUrl.js'
 

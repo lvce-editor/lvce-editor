@@ -1,5 +1,5 @@
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as IpcParent from '../IpcParent/IpcParent.ts'
+import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
 
 export const launchWorker = async ({ name, url }) => {
   const worker = await IpcParent.create({
