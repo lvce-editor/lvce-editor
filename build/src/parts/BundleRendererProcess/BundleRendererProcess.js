@@ -52,12 +52,12 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     })
     if (platform === 'electron') {
       await Replace.replace({
-        path: `${cachePath}/src/parts/IsFirefox/IsFirefox.js`,
+        path: `${cachePath}/src/parts/IsFirefox/IsFirefox.ts`,
         occurrence: `export const isFirefox = getIsFirefox()`,
         replacement: `export const isFirefox = false`,
       })
       await Replace.replace({
-        path: `${cachePath}/src/parts/IsMobile/IsMobile.js`,
+        path: `${cachePath}/src/parts/IsMobile/IsMobile.ts`,
         occurrence: `export const isMobile = getIsMobile()`,
         replacement: `export const isMobile = false`,
       })
