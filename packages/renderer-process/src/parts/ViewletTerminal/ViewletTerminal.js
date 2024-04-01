@@ -1,7 +1,7 @@
-import * as Assert from '../Assert/Assert.js'
-import * as IsUint8Array from '../IsUint8Array/IsUint8Array.js'
-import * as Terminal from '../Terminal/Terminal.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as IsUint8Array from '../IsUint8Array/IsUint8Array.ts'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
+import * as Terminal from '../Terminal/Terminal.js'
 import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
 
 export const create = () => {
