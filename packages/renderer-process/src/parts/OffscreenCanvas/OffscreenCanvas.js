@@ -1,4 +1,4 @@
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.ts'
 import * as OffscreenCanvasState from '../OffscreenCanvasState/OffscreenCanvasState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
