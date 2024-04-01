@@ -71,7 +71,7 @@ export const renderIncremental = ($Parent, dom) => {
  * @param {any[]} elements
  * @returns
  */
-export const render = (elements, eventMap) => {
+export const render = (elements, eventMap = {}) => {
   const $Root = document.createElement('div')
   // @ts-ignore
   renderInternal($Root, elements, eventMap)
