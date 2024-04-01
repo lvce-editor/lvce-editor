@@ -35,7 +35,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       })
     }
     await Replace.replace({
-      path: `${cachePath}/src/parts/RendererWorkerUrl/RendererWorkerUrl.js`,
+      path: `${cachePath}/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
       occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
       replacement: `/packages/renderer-worker/dist/rendererWorkerMain.js`,
     })
@@ -46,7 +46,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     })
     const platformCode = getPlatformCode(platform)
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/Platform/Platform.ts`,
       occurrence: 'PLATFORM',
       replacement: `${platformCode}`,
     })
