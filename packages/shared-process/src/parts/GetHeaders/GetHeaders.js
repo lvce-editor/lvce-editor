@@ -18,7 +18,7 @@ const getExtraHeaders = (pathName, fileExtension) => {
       if (pathName.endsWith('testWorkerMain.js') || pathName.endsWith('testWorkerMain.ts')) {
         return GetHeadersTestWorker.getHeadersExtensionHostWorker()
       }
-      if (pathName.endsWith('rendererWorkerMain.js')) {
+      if (pathName.endsWith('rendererWorkerMain.js') || pathName.endsWith('rendererWorkerMain.ts')) {
         return GetHeadersRendererWorker.getHeadersRendererWorker()
       }
       if (pathName.endsWith('extensionHostWorkerMain.js') || pathName.endsWith('extensionHostWorkerMain.ts')) {
