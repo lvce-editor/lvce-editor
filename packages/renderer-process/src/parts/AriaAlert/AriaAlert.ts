@@ -1,8 +1,8 @@
 // based on https://github.com/microsoft/vscode/blob/5f87632829dc3ac80203e2377727935184399431/src/vs/base/browser/ui/aria/aria.ts (License MIT)
-import * as AriaAlertState from '../AriaAlertState/AriaAlertState.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaAlertState from '../AriaAlertState/AriaAlertState.ts'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.ts'
+import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 
 const create$AriaAlert = () => {
   const $AriaAlert = document.createElement('div')
