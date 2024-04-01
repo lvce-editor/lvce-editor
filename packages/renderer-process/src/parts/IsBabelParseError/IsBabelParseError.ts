@@ -1,5 +1,5 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
-import * as IsSyntaxError from '../IsSyntaxError/IsSyntaxError.js'
+import * as IsSyntaxError from '../IsSyntaxError/IsSyntaxError.ts'
 
 export const isBabelError = (error) => {
   // @ts-ignore
