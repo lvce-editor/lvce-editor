@@ -1,4 +1,4 @@
-import * as ElementTagMap from '../ElementTagMap/ElementTagMap.js'
+import * as ElementTagMap from '../ElementTagMap/ElementTagMap.ts'
 import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 

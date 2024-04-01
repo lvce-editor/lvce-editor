@@ -1,7 +1,7 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
 import * as IpcChildWithWindow from '../IpcChildWithWindow/IpcChildWithWindow.ts'
-import * as IsElectron from '../IsElectron/IsElectron.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as IsElectron from '../IsElectron/IsElectron.ts'
+import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
 export const create = async ({ type, name, port }) => {
   if (!IsElectron.isElectron) {
