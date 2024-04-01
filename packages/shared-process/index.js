@@ -14,5 +14,5 @@ export const exportStatic = async ({ extensionPath = process.cwd(), testPath = '
     extensionPath = join(root, extensionPath)
   }
   const pathPrefix = process.env.PATH_PREFIX || ''
-  await fn.exportStatic({ root, pathPrefix, extensionPath, testPath })
+  return fn.exportStatic({ root, pathPrefix, extensionPath, testPath })
 }
