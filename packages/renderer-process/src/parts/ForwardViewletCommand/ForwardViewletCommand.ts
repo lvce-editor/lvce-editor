@@ -1,4 +1,4 @@
-import * as ExecuteViewletCommand from '../ExecuteViewletCommand/ExecuteViewletCommand.js'
+import * as ExecuteViewletCommand from '../ExecuteViewletCommand/ExecuteViewletCommand.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 
 export const forwardViewletCommand = (name) => {

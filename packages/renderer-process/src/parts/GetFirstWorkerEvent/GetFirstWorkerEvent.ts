@@ -1,5 +1,5 @@
-import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
-import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.js'
+import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.ts'
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.ts'
 
 /**
  *

@@ -1,4 +1,4 @@
-import * as BabelNodeType from '../BabelNodeType/BabelNodeType.js'
+import * as BabelNodeType from '../BabelNodeType/BabelNodeType.ts'
 
 const walk = (node, visitor) => {
   if (!node) {
