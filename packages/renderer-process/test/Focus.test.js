@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { expect, test } from '@jest/globals'
-import * as Focus from '../src/parts/Focus/Focus.js'
+import * as Focus from '../src/parts/Focus/Focus.ts'
 
 test('focus', () => {
   const $Element = document.createElement('button')

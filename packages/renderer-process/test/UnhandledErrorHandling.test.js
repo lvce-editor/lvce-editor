@@ -6,7 +6,7 @@ beforeEach(() => {
   globalThis.alert = jest.fn()
 })
 
-jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+jest.unstable_mockModule('../src/parts/Logger/Logger.ts', () => {
   return {
     info: jest.fn(),
     error: jest.fn(),
@@ -14,19 +14,19 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
+jest.unstable_mockModule('../src/parts/Ajax/Ajax.ts', () => {
   return {
     getText: jest.fn(),
   }
 })
 
-const UnhandledErrorHandling = await import('../src/parts/UnhandledErrorHandling/UnhandledErrorHandling.js')
-const Logger = await import('../src/parts/Logger/Logger.js')
-const Ajax = await import('../src/parts/Ajax/Ajax.js')
+const UnhandledErrorHandling = await import('../src/parts/UnhandledErrorHandling/UnhandledErrorHandling.ts')
+const Logger = await import('../src/parts/Logger/Logger.ts')
+const Ajax = await import('../src/parts/Ajax/Ajax.ts')
 
 test('handleError - normal error', async () => {
   const message = 'oops'
-  const filename = '/test/file.js'
+  const filename = '/test/file.ts'
   const lineno = 1
   const colno = 1
   const mockError = new Error('oops')

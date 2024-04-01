@@ -1,4 +1,4 @@
-import { NonError } from '../NonError/NonError.js'
+import { NonError } from '../NonError/NonError.ts'
 
 // ensureError based on https://github.com/sindresorhus/ensure-error/blob/main/index.js (License MIT)
 export const ensureError = (input) => {

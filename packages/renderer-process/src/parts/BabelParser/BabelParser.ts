@@ -1,4 +1,4 @@
-import * as LoadBabelParser from '../LoadBabelParser/LoadBabelParser.js'
+import * as LoadBabelParser from '../LoadBabelParser/LoadBabelParser.ts'
 
 export const parse = async (code, options) => {
   const BabelParse = await LoadBabelParser.loadBabelParser()

@@ -1,5 +1,5 @@
-import * as GetKeyBindingIdenfitier from '../src/parts/GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
-import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
+import * as GetKeyBindingIdenfitier from '../src/parts/GetKeyBindingIdentifier/GetKeyBindingIdentifier.ts'
+import * as KeyCode from '../src/parts/KeyCode/KeyCode.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('KeyA', () => {

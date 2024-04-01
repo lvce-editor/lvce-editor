@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { beforeEach, expect, jest, test, beforeAll } from '@jest/globals'
-import * as FilePicker from '../src/parts/FilePicker/FilePicker.js'
+import * as FilePicker from '../src/parts/FilePicker/FilePicker.ts'
 
 beforeAll(() => {
   // workaround for jsdom not supporting file picker apis

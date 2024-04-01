@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
-import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.ts'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as EditorError from '../src/parts/EditorError/EditorError.js'
+import * as EditorError from '../src/parts/EditorError/EditorError.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

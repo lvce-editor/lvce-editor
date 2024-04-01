@@ -2,17 +2,17 @@
  * @jest-environment jsdom
  */
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.ts'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.ts'
-import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
+import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
   Menu.state.$$Menus = []
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {
       throw new Error('not implemented')
@@ -20,8 +20,8 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-const Menu = await import('../src/parts/OldMenu/Menu.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
+const Menu = await import('../src/parts/OldMenu/Menu.ts')
 
 const getTextContent = ($Node) => {
   return $Node.textContent
@@ -177,6 +177,7 @@ test.skip('accessibility - MenuItem show have role menuitem or separator', () =>
 
 test.skip('showMenu - error - item has missing flags', () => {
   console.warn = jest.fn()
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -190,6 +191,7 @@ test.skip('showMenu - error - item has missing flags', () => {
 
 test.skip('showMenu - error - item has missing label', () => {
   console.warn = jest.fn()
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       flags: MenuItemFlags.Checked,
@@ -298,6 +300,7 @@ test.skip('showMenu - with sub menu', () => {
 })
 
 test.skip('event - click', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -317,6 +320,7 @@ test.skip('event - click', () => {
 })
 
 test.skip('event - click - outside', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -374,6 +378,7 @@ test.skip('event - right click outside', () => {
 })
 
 test.skip('event - mouseleave - outside', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -400,6 +405,7 @@ test.skip('event - mouseleave - outside', () => {
 })
 
 test.skip('event - mouseleave - outside', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -425,6 +431,7 @@ test.skip('event - mouseleave - outside', () => {
 })
 
 test.skip('event - context menu', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',

@@ -1,4 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as Assert from '../Assert/Assert.ts'
 
 export const executeViewletCommand = (uid, command, ...args) => {

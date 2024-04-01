@@ -1,6 +1,6 @@
 import * as GetKeyCode from '../GetKeyCode/GetKeyCode.ts'
 import * as KeyModifier from '../KeyModifier/KeyModifier.ts'
-import * as NormalizeKey from '../NormalizeKey/NormalizeKey.js'
+import * as NormalizeKey from '../NormalizeKey/NormalizeKey.ts'
 
 export const getKeyBindingIdentifier = (event) => {
   const { ctrlKey, shiftKey, altKey, key } = event

@@ -1,4 +1,4 @@
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 export const setDecorationsDom = (state, decorations) => {
   const { $LayerDiagnostics } = state

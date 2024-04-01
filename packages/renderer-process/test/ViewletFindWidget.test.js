@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletFindWidget from '../src/parts/ViewletFindWidget/ViewletFindWidget.js'
+import * as ViewletFindWidget from '../src/parts/ViewletFindWidget/ViewletFindWidget.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

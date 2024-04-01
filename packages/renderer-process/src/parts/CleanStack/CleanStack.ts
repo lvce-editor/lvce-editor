@@ -1,4 +1,4 @@
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 import * as Assert from '../Assert/Assert.ts'
 
 const RE_AT = /^\s+at/

@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as Main from '../src/parts/ViewletMain/ViewletMain.js'
+import * as Main from '../src/parts/ViewletMain/ViewletMain.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(async () => {

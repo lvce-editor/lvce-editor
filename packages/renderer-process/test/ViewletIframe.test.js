@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
+import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 // TODO find a good way to test html elements

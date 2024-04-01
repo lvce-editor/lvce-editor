@@ -2,7 +2,7 @@ import * as Event from '../Event/Event.ts'
 import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.ts'
 import * as IsMatchingKeyBinding from '../IsMatchingKeyBinding/IsMatchingKeyBinding.ts'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 const handleMatchingKeyBinding = (identifier) => {
   RendererWorker.send(/* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding', /* keyBinding */ identifier)

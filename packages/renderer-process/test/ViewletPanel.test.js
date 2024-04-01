@@ -7,7 +7,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {
       throw new Error('not implemented')
@@ -15,7 +15,7 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
   }
 })
 
-const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.js')
+const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.ts')
 
 test('create', () => {
   const state = ViewletPanel.create()

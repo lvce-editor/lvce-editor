@@ -9,19 +9,20 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.ts')
 
 test.skip('event - input', () => {
   const state = ViewletSearch.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletSearch.attachEvents(state)
+  // @ts-ignore
   const { $ViewletSearchInput } = state
   $ViewletSearchInput.value = 'test search'
   const event = new Event('input', {

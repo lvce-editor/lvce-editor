@@ -1,9 +1,9 @@
 import * as Focus from '../Focus/Focus.ts'
 import * as InputBox from '../InputBox/InputBox.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as Widget from '../Widget/Widget.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
+import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
+import * as Widget from '../Widget/Widget.ts'
 
 const handleBlur = () => {
   RendererWorker.send(/* EditorRename.abort */ 'EditorRename.abort')

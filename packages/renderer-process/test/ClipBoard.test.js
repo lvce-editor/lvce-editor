@@ -13,7 +13,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
+const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.ts')
 
 test('readText', async () => {
   globalThis.navigator = {

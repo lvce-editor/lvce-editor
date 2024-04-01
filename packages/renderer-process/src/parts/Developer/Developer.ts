@@ -1,4 +1,4 @@
-import * as Logger from '../Logger/Logger.js'
+import * as Logger from '../Logger/Logger.ts'
 
 const modules = [
   'ActivityBar',

@@ -7,7 +7,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js', () => {
+jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.ts', () => {
   return {
     create: jest.fn(() => {
       return {}
@@ -15,17 +15,17 @@ jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMes
   }
 })
 
-jest.unstable_mockModule('https://example.com/worker.js', () => {}, {
+jest.unstable_mockModule('https://example.com/worker.ts', () => {}, {
   virtual: true,
 })
 
-jest.unstable_mockModule('https://example.com/not-found.js', () => {}, {
+jest.unstable_mockModule('https://example.com/not-found.ts', () => {}, {
   virtual: true,
 })
 
-const IpcParentWithMessagePort = await import('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js')
+const IpcParentWithMessagePort = await import('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.ts')
 const IpcParentWithModuleWorkerWithMessagePort = await import(
-  '../src/parts/IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js'
+  '../src/parts/IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.ts'
 )
 
 test('create - error - not found', async () => {
@@ -53,7 +53,7 @@ test('create - error - not found', async () => {
   await expect(
     // @ts-ignore
     IpcParentWithModuleWorkerWithMessagePort.create({
-      url: 'https://example.com/not-found.js',
+      url: 'https://example.com/not-found.ts',
       name: 'Extension Host Worker',
     }),
   ).rejects.toThrow(new Error('Failed to start extension host worker: Not found (404)'))

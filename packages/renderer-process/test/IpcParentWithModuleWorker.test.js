@@ -2,14 +2,14 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js', () => {
+jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.ts', () => {
   return {
     create: jest.fn(() => {
       return {}
@@ -17,16 +17,16 @@ jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMes
   }
 })
 
-jest.unstable_mockModule('https://example.com/worker.js', () => {}, {
+jest.unstable_mockModule('https://example.com/worker.ts', () => {}, {
   virtual: true,
 })
 
-jest.unstable_mockModule('https://example.com/not-found.js', () => {}, {
+jest.unstable_mockModule('https://example.com/not-found.ts', () => {}, {
   virtual: true,
 })
 
-const IpcParentWithMessagePort = await import('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js')
-const IpcParentWithModuleWorker = await import('../src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
+const IpcParentWithMessagePort = await import('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.ts')
+const IpcParentWithModuleWorker = await import('../src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts')
 
 test('create - error - not found', async () => {
   // @ts-ignore
@@ -51,7 +51,7 @@ test('create - error - not found', async () => {
   })
   await expect(
     IpcParentWithModuleWorker.create({
-      url: 'https://example.com/not-found.js',
+      url: 'https://example.com/not-found.ts',
       name: 'Renderer Worker',
     }),
   ).rejects.toThrow(new Error('Failed to start renderer worker: Not found (404)'))
@@ -73,7 +73,7 @@ test('create', async () => {
 
   expect(
     await IpcParentWithModuleWorker.create({
-      url: 'https://example.com/not-found.js',
+      url: 'https://example.com/not-found.ts',
       name: 'Renderer Worker',
     }),
   ).toEqual(new globalThis.Worker(''))

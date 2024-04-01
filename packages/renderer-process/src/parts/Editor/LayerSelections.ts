@@ -1,4 +1,4 @@
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 export const setSelections = (state, dom) => {
   const { $LayerSelections } = state

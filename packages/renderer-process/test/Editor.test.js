@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as Editor from '../src/parts/Editor/Editor.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
+import * as Editor from '../src/parts/Editor/Editor.ts'
+import * as Platform from '../src/parts/Platform/Platform.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 const create$EditorRow = () => {

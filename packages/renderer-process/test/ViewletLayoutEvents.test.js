@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.ts'
 import * as DomEventType from '../src/parts/DomEventType/DomEventType.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
@@ -38,16 +38,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
 
-const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.js')
-const ViewletLayoutEvents = await import('../src/parts/ViewletLayout/ViewletLayoutEvents.js')
+const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
+const ViewletLayoutEvents = await import('../src/parts/ViewletLayout/ViewletLayoutEvents.ts')
 
 test.skip('event - pointermove after pointerdown', () => {
   const state = ViewletLayout.create()

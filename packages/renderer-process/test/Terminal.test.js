@@ -3,7 +3,7 @@
 /**
  * @jest-environment jsdom
  */
-// import * as Terminal from '../src/parts/Terminal/Terminal.js'
+// import * as Terminal from '../src/parts/Terminal/Terminal.ts'
 import { expect, test } from '@jest/globals'
 
 test.skip('create', () => {

@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
+import * as Layout from '../src/parts/Layout/Layout.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {

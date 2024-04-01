@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.ts'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
+import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 const getSimpleList = (state) => {

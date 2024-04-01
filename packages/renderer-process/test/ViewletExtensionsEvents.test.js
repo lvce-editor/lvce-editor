@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.ts'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
@@ -50,14 +50,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.ts')
 
 test('event - touchstart', () => {
   const state = ViewletExtensions.create()

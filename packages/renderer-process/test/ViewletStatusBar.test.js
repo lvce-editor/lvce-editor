@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
+import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test.skip('create', () => {
@@ -24,18 +24,26 @@ test.skip('create', () => {
       },
     ],
   )
+  // @ts-ignore
   expect(state.$StatusBarItemsLeft.children).toHaveLength(1)
+  // @ts-ignore
   expect(state.$StatusBarItemsLeft.firstChild.textContent).toBe('Item 1')
+  // @ts-ignore
   expect(state.$StatusBarItemsRight.children).toHaveLength(1)
+  // @ts-ignore
   expect(state.$StatusBarItemsRight.firstChild.textContent).toBe('Item 2')
 })
 
 test.skip('accessibility - status bar should have role status, tabIndex 0,  ariaLabel and ariaLive', () => {
   // @ts-ignore
   const state = ViewletStatusBar.create([], [])
+  // @ts-ignore
   expect(state.$StatusBar.getAttribute('role')).toBe('status')
+  // @ts-ignore
   expect(state.$StatusBar.ariaLabel).toBe('Status Bar')
+  // @ts-ignore
   expect(state.$StatusBar.ariaLive).toBe('off')
+  // @ts-ignore
   expect(state.$StatusBar.tabIndex).toBe(0)
 })
 
