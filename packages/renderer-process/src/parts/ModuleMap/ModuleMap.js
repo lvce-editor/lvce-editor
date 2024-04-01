@@ -1,4 +1,4 @@
-import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.ts'
 import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
