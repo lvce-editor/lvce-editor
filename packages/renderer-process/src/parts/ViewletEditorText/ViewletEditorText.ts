@@ -43,6 +43,7 @@ export const showOverlayMessage = (state, x, y, content) => {
 export const hideOverlayMessage = (state) => {
   // TODO pass id of the overlay message and remove widget by id
   for (const $Widget of Widget.state.widgetSet) {
+    // @ts-ignore
     if ($Widget.className === 'EditorOverlayMessage') {
       Widget.remove($Widget)
     }

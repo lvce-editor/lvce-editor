@@ -18,6 +18,7 @@ export const setItem = (storageType, key, value) => {
 export const setJsonObjects = (storageType, objects) => {
   const storage = GetStorage.getStorage(storageType)
   for (const [key, value] of Object.entries(objects)) {
+    // @ts-ignore
     storage.setItem(key, value)
   }
 }

@@ -23,5 +23,6 @@ test.skip('focus', () => {
   Viewlet.mount(document.body, state)
   // @ts-ignore
   ViewletDebugConsole.focus(state)
+  // @ts-ignore
   expect(document.activeElement).toBe(state.$Input)
 })

@@ -10,6 +10,7 @@ export const create = async ({ url, name }) => {
     type: WorkerType.Module,
     name,
   })
+  // @ts-ignore
   const { type, event } = await GetFirstWorkerEvent.getFirstWorkerEvent(worker)
   switch (type) {
     case FirstWorkerEventType.Message:

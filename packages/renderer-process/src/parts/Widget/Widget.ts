@@ -30,6 +30,7 @@ export const append = ($Element) => {
 
 export const find = (id) => {
   for (const $Widget of state.widgetSet) {
+    // @ts-ignore
     if ($Widget.dataset.id === id) {
       return $Widget
     }

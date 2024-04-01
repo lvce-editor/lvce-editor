@@ -13,6 +13,7 @@ export const getJson = async (url, options = {}) => {
     return response.json()
   } catch (error) {
     if (error && error instanceof TypeError && error.message === 'Failed to fetch') {
+      // @ts-ignore
       throw new VError(`Failed to request json from "${url}". Make sure that the server is running and has CORS enabled`)
     }
     if (error && error instanceof HTTPError) {
@@ -24,6 +25,7 @@ export const getJson = async (url, options = {}) => {
         throw error
       }
       if (json && json.message) {
+        // @ts-ignore
         throw new VError(`Failed to request json from "${url}": ${json.message}`)
       }
     }

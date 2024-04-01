@@ -170,6 +170,7 @@ test.skip('event - wheel', () => {
   const state = ViewletEditorImage.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  // @ts-ignore
   const { $Image } = state
   const event = new WheelEvent('wheel', {
     bubbles: true,

@@ -22,6 +22,7 @@ test.skip('event - input', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletSearch.attachEvents(state)
+  // @ts-ignore
   const { $ViewletSearchInput } = state
   $ViewletSearchInput.value = 'test search'
   const event = new Event('input', {

@@ -23,6 +23,7 @@ test.skip('event - error', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletAudio.attachEvents(state)
+  // @ts-ignore
   const { $Audio } = state
   // @ts-ignore
   $Audio.error = {

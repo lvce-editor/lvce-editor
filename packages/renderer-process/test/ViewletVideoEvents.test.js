@@ -20,6 +20,7 @@ const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.ts')
 test.skip('event - error', () => {
   const state = ViewletVideo.create()
   ViewletVideo.attachEvents(state)
+  // @ts-ignore
   const { $Video } = state
   // @ts-ignore
   $Video.error = {

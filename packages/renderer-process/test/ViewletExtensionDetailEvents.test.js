@@ -22,6 +22,7 @@ test.skip('event - image does not load', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletExtensionDetail.attachEvents(state)
+  // @ts-ignore
   const { $ExtensionDetailIcon } = state
   const event = new ErrorEvent('error')
   $ExtensionDetailIcon.dispatchEvent(event)

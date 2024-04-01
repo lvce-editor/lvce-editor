@@ -14,5 +14,6 @@ test.skip('focus', () => {
   const state = ViewletSourceControl.create()
   Viewlet.mount(document.body, state)
   ViewletSourceControl.focus(state)
+  // @ts-ignore
   expect(document.activeElement).toBe(state.$ViewSourceControlInput)
 })

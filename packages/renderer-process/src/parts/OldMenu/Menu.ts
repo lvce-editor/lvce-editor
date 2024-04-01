@@ -255,9 +255,11 @@ export const hideSubMenu = (level) => {
 
 // TODO support nested menus / submenus
 export const showControlled = ({ x, y, items, handleKeyDown, handleFocusOut, $Parent, level, width, height }) => {
+  // @ts-ignore
   showMenu(x, y, width, height, items, level)
   // TODO menu should not necessarily know about parent (titleBarMenuBar)
   // it should be the other way around
+  // @ts-ignore
   state.$Parent = $Parent
   state.handleFocusOut = handleFocusOut
   state.handleKeyDown = handleKeyDown

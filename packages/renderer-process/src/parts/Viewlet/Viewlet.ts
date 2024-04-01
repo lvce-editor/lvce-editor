@@ -91,6 +91,7 @@ export const refresh = (viewletId, viewletContext) => {
   if (instance) {
     instance.factory.refresh(instance.state, viewletContext)
   } else {
+    // @ts-ignore
     state.refreshContext[viewletId] = viewletContext
   }
 }
@@ -152,6 +153,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.setBounds': {
+        // @ts-ignore
         setBounds(viewletId, method, ...args)
 
         break
@@ -162,6 +164,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.append': {
+        // @ts-ignore
         append(viewletId, method, ...args)
 
         break
@@ -172,11 +175,13 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.createPlaceholder': {
+        // @ts-ignore
         createPlaceholder(viewletId, method, ...args)
 
         break
       }
       case 'Viewlet.handleError': {
+        // @ts-ignore
         handleError(viewletId, method, ...args)
 
         break
@@ -187,6 +192,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.appendViewlet': {
+        // @ts-ignore
         appendViewlet(viewletId, method, ...args)
 
         break
@@ -379,6 +385,7 @@ const getFn = (command) => {
 export const executeCommands = (commands) => {
   for (const [command, ...args] of commands) {
     const fn = getFn(command)
+    // @ts-ignore
     fn(...args)
   }
 }

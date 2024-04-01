@@ -17,7 +17,9 @@ export const hydrate = async () => {
 
 // TODO needed?
 export const dispose = () => {
+  // @ts-ignore
   if (state.rendererWorker) {
+    // @ts-ignore
     state.rendererWorker.terminate()
   }
 }

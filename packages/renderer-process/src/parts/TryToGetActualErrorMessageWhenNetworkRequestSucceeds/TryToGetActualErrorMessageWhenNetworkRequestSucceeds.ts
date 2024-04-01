@@ -38,6 +38,7 @@ const getErrorInDependencies = async ({ url, dependencies, workerName, seenUrls 
     const dependencyResponse = await fetch(dependencyUrl)
     // } catch (error) {}
     if (dependencyResponse.ok) {
+      // @ts-ignore
       await tryToGetActualErrorMessage({ url: dependencyUrl, response: dependencyResponse, seenUrls, workerName })
     } else {
       switch (dependencyResponse.status) {

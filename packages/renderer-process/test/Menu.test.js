@@ -177,6 +177,7 @@ test.skip('accessibility - MenuItem show have role menuitem or separator', () =>
 
 test.skip('showMenu - error - item has missing flags', () => {
   console.warn = jest.fn()
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -190,6 +191,7 @@ test.skip('showMenu - error - item has missing flags', () => {
 
 test.skip('showMenu - error - item has missing label', () => {
   console.warn = jest.fn()
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       flags: MenuItemFlags.Checked,
@@ -298,6 +300,7 @@ test.skip('showMenu - with sub menu', () => {
 })
 
 test.skip('event - click', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -317,6 +320,7 @@ test.skip('event - click', () => {
 })
 
 test.skip('event - click - outside', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -374,6 +378,7 @@ test.skip('event - right click outside', () => {
 })
 
 test.skip('event - mouseleave - outside', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -400,6 +405,7 @@ test.skip('event - mouseleave - outside', () => {
 })
 
 test.skip('event - mouseleave - outside', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -425,6 +431,7 @@ test.skip('event - mouseleave - outside', () => {
 })
 
 test.skip('event - context menu', () => {
+  // @ts-ignore
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',

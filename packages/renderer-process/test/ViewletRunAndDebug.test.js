@@ -6,12 +6,14 @@ import { beforeEach, test, expect } from '@jest/globals'
 
 test.skip('accessibility - scope section header should have tabIndex 0', () => {
   const state = ViewletRunAndDebug.create()
+  // @ts-ignore
   const { $DebugSectionHeaderScope } = state
   expect($DebugSectionHeaderScope.tabIndex).toBe(0)
 })
 
 test.skip('accessibility - scope section header should have role treeitem', () => {
   const state = ViewletRunAndDebug.create()
+  // @ts-ignore
   const { $DebugSectionHeaderScope } = state
   expect($DebugSectionHeaderScope.role).toBe('treeitem')
 })

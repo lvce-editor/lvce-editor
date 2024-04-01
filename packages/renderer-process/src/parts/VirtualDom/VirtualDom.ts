@@ -39,6 +39,7 @@ export const renderInto = ($Parent, dom, eventMap = {}) => {
 
 export const renderIncremental = ($Parent, dom) => {
   if ($Parent.textContent === '') {
+    // @ts-ignore
     renderInternal($Parent, dom)
     return
   }
@@ -72,10 +73,12 @@ export const renderIncremental = ($Parent, dom) => {
  */
 export const render = (elements) => {
   const $Root = document.createElement('div')
+  // @ts-ignore
   renderInternal($Root, elements)
   return $Root
 }
 
 const insert = ($Node, diffItem) => {
+  // @ts-ignore
   renderInternal($Node, diffItem.nodes)
 }
