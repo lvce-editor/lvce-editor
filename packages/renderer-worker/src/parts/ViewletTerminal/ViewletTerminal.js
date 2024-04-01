@@ -54,8 +54,6 @@ export const loadContent = async (state) => {
     args,
     canvasCursorId,
     canvasTextId,
-    canvasText,
-    canvasCursor,
     terminal,
   }
 }
