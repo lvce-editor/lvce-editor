@@ -7,7 +7,7 @@ export const getProblemsTableVirtualDom = (problems) => {
     {
       type: VirtualDomElements.Table,
       className: ClassNames.ProblemsTable,
-      childCount: 1,
+      childCount: 2,
     },
     {
       type: VirtualDomElements.THead,
