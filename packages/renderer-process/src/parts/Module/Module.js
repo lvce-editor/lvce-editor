@@ -29,7 +29,7 @@ export const load = (moduleId) => {
     case ModuleId.IpcParent:
       return import('../IpcParent/IpcParent.ipc.ts')
     case ModuleId.Layout:
-      return import('../Layout/Layout.ipc.ts')
+      return import('../Layout/Layout.ipc.js')
     case ModuleId.Location:
       return import('../Location/Location.ipc.js')
     case ModuleId.MeasureTextHeight:
@@ -63,7 +63,7 @@ export const load = (moduleId) => {
     case ModuleId.WindowTitle:
       return import('../WindowTitle/WindowTitle.ipc.js')
     case ModuleId.KeyBindings:
-      return import('../KeyBindings/KeyBindings.ipc.js')
+      return import('../KeyBindings/KeyBindings.ipc.ts')
     case ModuleId.PointerCapture:
       return import('../PointerCapture/PointerCapture.ipc.js')
     default:
