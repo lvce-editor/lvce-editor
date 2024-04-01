@@ -1,4 +1,4 @@
-import * as ElementTag from '../ElementTags/ElementTags.js'
+import * as ElementTag from '../ElementTags/ElementTags.ts'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getElementTag = (type) => {
