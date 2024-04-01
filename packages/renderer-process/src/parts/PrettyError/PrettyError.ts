@@ -7,7 +7,7 @@ import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.ts'
 import * as IsActualSourceFile from '../IsActualSourceFile/IsActualSourceFile.ts'
 import * as IsFirefox from '../IsFirefox/IsFirefox.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
-import * as Logger from '../Logger/Logger.js'
+import * as Logger from '../Logger/Logger.ts'
 import * as SourceMap from '../SourceMap/SourceMap.js'
 
 const getErrorMessage = (error) => {
