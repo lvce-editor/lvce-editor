@@ -1,4 +1,4 @@
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletSashFunctions from './ViewletSashFunctions.js'
 

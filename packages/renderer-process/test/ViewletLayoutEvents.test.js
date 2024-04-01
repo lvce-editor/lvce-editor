@@ -3,7 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
-import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
+import * as DomEventType from '../src/parts/DomEventType/DomEventType.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {

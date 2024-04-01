@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'

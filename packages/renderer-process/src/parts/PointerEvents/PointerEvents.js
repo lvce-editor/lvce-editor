@@ -1,4 +1,4 @@
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 
 export const startTracking = ($Target, pointerId, handlePointerMove, handlePointerUp) => {
   $Target.setPointerCapture(pointerId)

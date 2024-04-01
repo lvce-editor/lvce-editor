@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
