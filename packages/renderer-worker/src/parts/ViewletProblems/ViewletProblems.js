@@ -27,13 +27,29 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
   }
 }
 
-export const loadContent = async (state) => {
+export const saveState = (state) => {
+  const { viewMode } = state
+  return {
+    viewMode,
+  }
+}
+
+const getSavedViewMode = (savedState) => {
+  if (savedState && typeof savedState.viewMode === 'number') {
+    return savedState.viewMode
+  }
+  return ProblemsViewMode.List
+}
+
+export const loadContent = async (state, savedState) => {
   const problems = await GetProblems.getProblems()
   const message = ViewletProblemsStrings.getMessage(problems.length)
+  const viewMode = getSavedViewMode(savedState)
   return {
     ...state,
     problems,
     message,
+    viewMode,
   }
 }
 
