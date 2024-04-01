@@ -1,6 +1,6 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as AttachEvents from '../AttachEvents/AttachEvents.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
+import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
