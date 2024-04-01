@@ -170,10 +170,11 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   const commands = []
   if (module.renderActions) {
     const actionsCommands = module.renderActions.apply(oldState, newState)
-    if (!parentId) {
-      throw new Error('parent id not found')
+    if (parentId) {
+      commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
+    } else {
+      console.warn('parent id not found')
     }
-    commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
   }
   if (Array.isArray(module.render)) {
     for (const item of module.render) {
