@@ -1,4 +1,4 @@
-import * as Audio from './Audio.js'
+import * as Audio from './Audio.ts'
 
 export const name = 'Audio'
 
