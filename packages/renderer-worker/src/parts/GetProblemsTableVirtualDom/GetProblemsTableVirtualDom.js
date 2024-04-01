@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetProblemsTableRowVirtualDom from '../GetProblemsTableRowVirtualDom/GetProblemsTableRowVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -11,30 +12,49 @@ export const getProblemsTableVirtualDom = (problems) => {
     },
     {
       type: VirtualDomElements.THead,
+      className: 'ProblemsTableHeader',
       childCount: 1,
     },
     {
       type: VirtualDomElements.Tr,
-      childCount: 1,
+      className: 'ProblemsTableRow',
+      childCount: 5,
     },
     {
       type: VirtualDomElements.Th,
+      className: 'ProblemsTableRowItem',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Th,
+      className: 'ProblemsTableRowItem',
       childCount: 1,
     },
     text('Code'),
     {
+      type: VirtualDomElements.Th,
+      className: 'ProblemsTableRowItem',
+      childCount: 1,
+    },
+    text('Message'),
+    {
+      type: VirtualDomElements.Th,
+      className: 'ProblemsTableRowItem',
+      childCount: 1,
+    },
+    text('File'),
+    {
+      type: VirtualDomElements.Th,
+      className: 'ProblemsTableRowItem',
+      childCount: 1,
+    },
+    text('Source'),
+    {
       type: VirtualDomElements.TBody,
-      childCount: 1,
+      className: 'ProblemsTableBody',
+      childCount: problems.length,
     },
-    {
-      type: VirtualDomElements.Tr,
-      childCount: 1,
-    },
-    {
-      type: VirtualDomElements.Td,
-      childCount: 1,
-    },
-    text('123'),
+    ...problems.flatMap(GetProblemsTableRowVirtualDom.getProblemsTableRowVirtualDom),
   ]
   return dom
 }

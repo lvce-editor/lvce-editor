@@ -60,3 +60,9 @@
 .Problems .Label {
   flex: initial;
 }
+
+.ProblemsTable {
+  width: 100%;
+  height: 100%;
+  contain: strict;
+}
