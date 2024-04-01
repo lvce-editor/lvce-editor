@@ -6,11 +6,11 @@ import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Event from '../Event/Event.ts'
 import * as Focus from '../Focus/Focus.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as Widget from '../Widget/Widget.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
+import * as Widget from '../Widget/Widget.ts'
 // TODO when pressing tab -> focus next element in tab order and close menu
 
 // TODO menu and contextmenu should have own keybinding logic

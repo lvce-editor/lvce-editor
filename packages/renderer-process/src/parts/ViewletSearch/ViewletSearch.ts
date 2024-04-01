@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
-import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as ViewletSearchEvents from './ViewletSearchEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

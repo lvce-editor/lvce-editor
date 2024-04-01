@@ -1,8 +1,8 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.ts'
 
 export const create = () => {
   const $ReadmeHtml = document.createElement('div')
@@ -41,4 +41,4 @@ export const setHeaderDom = (state, dom) => {
   VirtualDom.renderInto($ExtensionDetailHeader, dom)
 }
 
-export * from '../ViewletSizable/ViewletSizable.js'
+export * from '../ViewletSizable/ViewletSizable.ts'

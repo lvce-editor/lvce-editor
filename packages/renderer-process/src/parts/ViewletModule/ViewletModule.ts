@@ -1,4 +1,4 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 
 export const load = (moduleId) => {
   switch (moduleId) {
@@ -59,47 +59,47 @@ export const load = (moduleId) => {
     case ViewletModuleId.MainTabs:
       return import('../ViewletMainTabs/ViewletMainTabs.ts')
     case ViewletModuleId.Output:
-      return import('../ViewletOutput/ViewletOutput.js')
+      return import('../ViewletOutput/ViewletOutput.ts')
     case ViewletModuleId.Panel:
-      return import('../ViewletPanel/ViewletPanel.js')
+      return import('../ViewletPanel/ViewletPanel.ts')
     case ViewletModuleId.Problems:
-      return import('../ViewletProblems/ViewletProblems.js')
+      return import('../ViewletProblems/ViewletProblems.ts')
     case ViewletModuleId.QuickPick:
-      return import('../ViewletQuickPick/ViewletQuickPick.js')
+      return import('../ViewletQuickPick/ViewletQuickPick.ts')
     case ViewletModuleId.References:
-      return import('../ViewletReferences/ViewletReferences.js')
+      return import('../ViewletReferences/ViewletReferences.ts')
     case ViewletModuleId.RunAndDebug:
-      return import('../ViewletRunAndDebug/ViewletRunAndDebug.js')
+      return import('../ViewletRunAndDebug/ViewletRunAndDebug.ts')
     case ViewletModuleId.ScreenCapture:
-      return import('../ViewletScreenCapture/ViewletScreenCapture.js')
+      return import('../ViewletScreenCapture/ViewletScreenCapture.ts')
     case ViewletModuleId.Search:
-      return import('../ViewletSearch/ViewletSearch.js')
+      return import('../ViewletSearch/ViewletSearch.ts')
     case ViewletModuleId.SideBar:
-      return import('../ViewletSideBar/ViewletSideBar.js')
+      return import('../ViewletSideBar/ViewletSideBar.ts')
     case ViewletModuleId.SimpleBrowser:
-      return import('../ViewletSimpleBrowser/ViewletSimpleBrowser.js')
+      return import('../ViewletSimpleBrowser/ViewletSimpleBrowser.ts')
     case ViewletModuleId.SourceControl:
-      return import('../ViewletSourceControl/ViewletSourceControl.js')
+      return import('../ViewletSourceControl/ViewletSourceControl.ts')
     case ViewletModuleId.StatusBar:
-      return import('../ViewletStatusBar/ViewletStatusBar.js')
+      return import('../ViewletStatusBar/ViewletStatusBar.ts')
     case ViewletModuleId.Storage:
-      return import('../ViewletStorage/ViewletStorage.js')
+      return import('../ViewletStorage/ViewletStorage.ts')
     case ViewletModuleId.Terminal:
-      return import('../ViewletTerminal/ViewletTerminal.js')
+      return import('../ViewletTerminal/ViewletTerminal.ts')
     case ViewletModuleId.Terminals:
-      return import('../ViewletTerminals/ViewletTerminals.js')
+      return import('../ViewletTerminals/ViewletTerminals.ts')
     case ViewletModuleId.TitleBar:
-      return import('../ViewletTitleBar/ViewletTitleBar.js')
+      return import('../ViewletTitleBar/ViewletTitleBar.ts')
     case ViewletModuleId.TitleBarButtons:
-      return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.js')
+      return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.ts')
     case ViewletModuleId.TitleBarIcon:
-      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.js')
+      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.ts')
     case ViewletModuleId.TitleBarMenuBar:
-      return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
+      return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ts')
     case ViewletModuleId.Video:
-      return import('../ViewletVideo/ViewletVideo.js')
+      return import('../ViewletVideo/ViewletVideo.ts')
     case ViewletModuleId.TitleBarTitle:
-      return import('../ViewletTitleBarTitle/ViewletTitleBarTitle.js')
+      return import('../ViewletTitleBarTitle/ViewletTitleBarTitle.ts')
     case ViewletModuleId.About:
       return import('../ViewletAbout/ViewletAbout.ts')
     case ViewletModuleId.EditorSourceActions:

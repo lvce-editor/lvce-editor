@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.js'
+import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

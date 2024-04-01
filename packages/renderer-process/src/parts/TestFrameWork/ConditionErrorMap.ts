@@ -1,4 +1,4 @@
-import * as ConditionErrors from './ConditionErrors.js'
+import * as ConditionErrors from './ConditionErrors.ts'
 
 export const getFunction = (fnName) => {
   switch (fnName) {

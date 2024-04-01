@@ -1,6 +1,6 @@
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.ts'
-import * as OffscreenCanvasState from '../OffscreenCanvasState/OffscreenCanvasState.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as OffscreenCanvasState from '../OffscreenCanvasState/OffscreenCanvasState.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 export const get = (id) => {
   return OffscreenCanvasState.get(id)

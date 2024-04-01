@@ -1,6 +1,6 @@
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 import * as IconButton from '../IconButton/IconButton.ts'
-import * as ViewletDialogEvents from './ViewletDialogEvents.js'
+import * as ViewletDialogEvents from './ViewletDialogEvents.ts'
 
 export const create = () => {
   const $DialogTitle = document.createElement('h2')

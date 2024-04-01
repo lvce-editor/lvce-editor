@@ -1,1 +1,1 @@
-export * from '../ViewletLocations/ViewletLocations.js'
+export * from '../ViewletLocations/ViewletLocations.ts'

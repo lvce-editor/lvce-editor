@@ -1,4 +1,4 @@
-import * as PointerCapture from './PointerCapture.js'
+import * as PointerCapture from './PointerCapture.ts'
 
 export const name = 'PointerCapture'
 

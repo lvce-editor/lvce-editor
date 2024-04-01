@@ -3,9 +3,9 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
+import * as ViewletLocationsEvents from './ViewletLocationsEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

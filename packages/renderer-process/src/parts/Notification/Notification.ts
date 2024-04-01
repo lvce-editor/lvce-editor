@@ -1,5 +1,5 @@
-import * as Widget from '../Widget/Widget.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Widget from '../Widget/Widget.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 export const state = {
   $Notifications: undefined,

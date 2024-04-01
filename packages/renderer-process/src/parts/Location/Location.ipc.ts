@@ -1,4 +1,4 @@
-import * as Location from './Location.js'
+import * as Location from './Location.ts'
 
 export const name = 'Location'
 

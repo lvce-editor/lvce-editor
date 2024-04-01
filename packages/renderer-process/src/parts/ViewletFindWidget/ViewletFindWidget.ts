@@ -1,6 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
-import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
+import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

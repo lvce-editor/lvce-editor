@@ -2,7 +2,7 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
+import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 
 export const handleInput = (event) => {
@@ -82,4 +82,4 @@ export const handlePointerDown = (event) => {
   pointerDownFunction(event)
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.ts'

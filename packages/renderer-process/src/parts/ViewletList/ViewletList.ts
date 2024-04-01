@@ -10,5 +10,5 @@ export const setNegativeMargin = (state, negativeMargin) => {
   SetBounds.setTop($ListItems, negativeMargin)
 }
 
-export * from '../ViewletScrollable/ViewletScrollable.js'
-export * from '../ViewletSizable/ViewletSizable.js'
+export * from '../ViewletScrollable/ViewletScrollable.ts'
+export * from '../ViewletSizable/ViewletSizable.ts'

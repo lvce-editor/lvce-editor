@@ -1,4 +1,4 @@
-import * as IsFileSystemAccessNotSupportedOnFireFoxError from '../IsFileSystemAccessNotSupportedOnFireFoxError/IsFileSystemAccessNotSupportedOnFirefoxError.js'
+import * as IsFileSystemAccessNotSupportedOnFireFoxError from '../IsFileSystemAccessNotSupportedOnFireFoxError/IsFileSystemAccessNotSupportedOnFirefoxError.ts'
 
 const getHandle = async (item) => {
   const entry = await item.getAsFileSystemHandle()

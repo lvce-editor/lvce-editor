@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
+import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.ts'
 // TODO put drop into separate module and use executeCommand to call it
 
 // TODO drag and drop should be loaded on demand
@@ -65,4 +65,4 @@ export const handleEditingInput = (event) => {
 
 export * from '../ContextMenuEvents/ContextMenuEvents.ts'
 export * from '../DragEvents/DragEvents.ts'
-export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.ts'

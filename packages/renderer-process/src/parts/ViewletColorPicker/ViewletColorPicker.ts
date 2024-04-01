@@ -1,8 +1,8 @@
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletColorPickerEvents from './ViewletColorPickerEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletColorPickerEvents from './ViewletColorPickerEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

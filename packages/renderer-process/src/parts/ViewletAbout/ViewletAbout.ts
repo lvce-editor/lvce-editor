@@ -1,6 +1,6 @@
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as ViewletAboutEvents from './ViewletAboutEvents.js'
+import * as ViewletAboutEvents from './ViewletAboutEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

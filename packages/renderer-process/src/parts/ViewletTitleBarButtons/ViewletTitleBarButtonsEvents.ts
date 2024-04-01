@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as ViewletTitleBarButtonsFunctions from './ViewletTitleBarButtonsFunctions.js'
+import * as ViewletTitleBarButtonsFunctions from './ViewletTitleBarButtonsFunctions.ts'
 
 /**
  *

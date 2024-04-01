@@ -1,4 +1,4 @@
-import * as Performance from './Performance.js'
+import * as Performance from './Performance.ts'
 
 export const name = 'Performance'
 

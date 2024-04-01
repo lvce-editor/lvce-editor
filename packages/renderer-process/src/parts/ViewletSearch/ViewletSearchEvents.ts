@@ -3,9 +3,9 @@ import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as InputSource from '../InputSource/InputSource.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
-import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
+import * as ViewletSearchFunctions from './ViewletSearchFunctions.ts'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -121,4 +121,4 @@ export const handleHeaderFocusIn = (event) => {
 }
 
 export * from '../ContextMenuEvents/ContextMenuEvents.ts'
-export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.ts'

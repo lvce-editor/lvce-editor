@@ -1,5 +1,5 @@
-import * as ModuleMap from '../ModuleMap/ModuleMap.js'
-import { VError } from '../VError/VError.js'
+import * as ModuleMap from '../ModuleMap/ModuleMap.ts'
+import { VError } from '../VError/VError.ts'
 
 export const state = {
   commands: Object.create(null),

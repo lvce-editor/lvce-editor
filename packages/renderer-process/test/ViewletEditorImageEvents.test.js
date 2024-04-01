@@ -4,7 +4,7 @@
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.ts'
-import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
@@ -43,15 +43,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletEditorImage = await import('../src/parts/ViewletEditorImage/ViewletEditorImage.js')
-const ViewletEditorImageEvents = await import('../src/parts/ViewletEditorImage/ViewletEditorImageEvents.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletEditorImage = await import('../src/parts/ViewletEditorImage/ViewletEditorImage.ts')
+const ViewletEditorImageEvents = await import('../src/parts/ViewletEditorImage/ViewletEditorImageEvents.ts')
 
 test('event - pointerdown', () => {
   const state = ViewletEditorImage.create()

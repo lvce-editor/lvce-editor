@@ -7,7 +7,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {
       throw new Error('not implemented')
@@ -15,9 +15,9 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
 
-const Menu = await import('../src/parts/OldMenu/Menu2.js')
+const Menu = await import('../src/parts/OldMenu/Menu2.ts')
 
 const getTextContent = (node) => {
   return node.textContent

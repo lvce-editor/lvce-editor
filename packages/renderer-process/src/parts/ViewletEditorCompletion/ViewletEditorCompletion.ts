@@ -3,9 +3,9 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as Widget from '../Widget/Widget.js'
-import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as Widget from '../Widget/Widget.ts'
+import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.ts'
 
 export const create = () => {
   const $ListItems = document.createElement('div')
@@ -79,4 +79,4 @@ export const setBounds = (state, x, y, width, height) => {
   const { $Viewlet } = state
   SetBounds.setBounds($Viewlet, x, y, width, height)
 }
-export * from '../ViewletList/ViewletList.js'
+export * from '../ViewletList/ViewletList.ts'

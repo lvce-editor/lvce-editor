@@ -1,4 +1,4 @@
-import * as WebStorageType from '../WebStorageType/WebStorageType.js'
+import * as WebStorageType from '../WebStorageType/WebStorageType.ts'
 
 export const getStorage = (storageType) => {
   switch (storageType) {

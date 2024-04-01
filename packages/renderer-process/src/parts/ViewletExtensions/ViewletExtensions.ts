@@ -8,8 +8,8 @@ import * as Assert from '../Assert/Assert.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.ts'
 
 // TODO vscode uninstall behaviour is better -> more subtle uninstall -> no cta for uninstalling
 
@@ -167,4 +167,4 @@ export const setSearchValue = (state, oldValue, newValue) => {
   $InputBox.value = newValue
 }
 
-export * from '../ViewletList/ViewletList.js'
+export * from '../ViewletList/ViewletList.ts'

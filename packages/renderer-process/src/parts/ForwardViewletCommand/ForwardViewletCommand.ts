@@ -1,5 +1,5 @@
 import * as ExecuteViewletCommand from '../ExecuteViewletCommand/ExecuteViewletCommand.ts'
-import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.ts'
 
 export const forwardViewletCommand = (name) => {
   const fn = (uid, ...args) => {

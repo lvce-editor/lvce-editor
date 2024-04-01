@@ -1,5 +1,5 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
-import * as ProcessName from '../ProcessName/ProcessName.js'
+import * as ProcessName from '../ProcessName/ProcessName.ts'
 
 export class CommandNotFoundError extends Error {
   constructor(id) {

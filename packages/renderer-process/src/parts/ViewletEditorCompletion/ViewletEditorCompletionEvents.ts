@@ -1,7 +1,7 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
-import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.js'
+import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.ts'
 
 export const handleMousedown = (event) => {
   Event.preventDefault(event)
@@ -29,4 +29,4 @@ export const handleScrollBarPointerDown = (event) => {
   ViewletEditorCompletionFunctions.handleScrollBarClick(uid, clientY)
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.ts'

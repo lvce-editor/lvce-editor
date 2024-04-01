@@ -4,7 +4,7 @@ import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.ts'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 
 const constructError = (message, type, name) => {
   const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)

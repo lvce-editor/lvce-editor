@@ -3,7 +3,7 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
 import * as IsMobile from '../IsMobile/IsMobile.ts'
-import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.js'
+import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.ts'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -65,4 +65,4 @@ export const handleBeforeInput = (event) => {
   ViewletQuickPickFunctions.handleBeforeInput(uid, inputType, data, selectionStart, selectionEnd)
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.ts'

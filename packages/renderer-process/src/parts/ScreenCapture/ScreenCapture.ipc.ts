@@ -1,4 +1,4 @@
-import * as ScreenCapture from './ScreenCapture.js'
+import * as ScreenCapture from './ScreenCapture.ts'
 
 export const name = 'ScreenCapture'
 

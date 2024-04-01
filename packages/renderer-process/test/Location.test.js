@@ -7,7 +7,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {
       throw new Error('not implemented')
@@ -15,9 +15,9 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
 
-const Location = await import('../src/parts/Location/Location.js')
+const Location = await import('../src/parts/Location/Location.ts')
 
 test('getPathName', () => {
   expect(Location.getPathName()).toBe('/')

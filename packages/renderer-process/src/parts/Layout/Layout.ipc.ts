@@ -1,4 +1,4 @@
-import * as Layout from './Layout.js'
+import * as Layout from './Layout.ts'
 
 export const name = 'Layout'
 

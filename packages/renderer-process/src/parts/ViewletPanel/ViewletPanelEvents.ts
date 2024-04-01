@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as ViewletPanelFunctions from './ViewletPanelFunctions.js'
+import * as ViewletPanelFunctions from './ViewletPanelFunctions.ts'
 
 export const handleClickClose = (event) => {
   const uid = ComponentUid.fromEvent(event)

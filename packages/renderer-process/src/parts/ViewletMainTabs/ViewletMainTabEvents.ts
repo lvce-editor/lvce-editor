@@ -2,7 +2,7 @@ import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffe
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as DataTransfer from '../DataTransfer/DataTransfer.ts'
 import * as Event from '../Event/Event.ts'
-import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
+import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.ts'
 
 // TODO
 const getUid = () => {

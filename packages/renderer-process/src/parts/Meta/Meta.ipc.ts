@@ -1,4 +1,4 @@
-import * as Meta from './Meta.js'
+import * as Meta from './Meta.ts'
 
 export const name = 'Meta'
 

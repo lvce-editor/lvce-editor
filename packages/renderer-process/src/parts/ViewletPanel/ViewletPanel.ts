@@ -4,8 +4,8 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as IconButton from '../IconButton/IconButton.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletPanelEvents from './ViewletPanelEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletPanelEvents from './ViewletPanelEvents.ts'
 
 /**
  * @enum {string}

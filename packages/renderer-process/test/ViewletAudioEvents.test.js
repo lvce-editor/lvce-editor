@@ -9,14 +9,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletAudio = await import('../src/parts/ViewletAudio/ViewletAudio.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletAudio = await import('../src/parts/ViewletAudio/ViewletAudio.ts')
 
 test.skip('event - error', () => {
   const state = ViewletAudio.create()

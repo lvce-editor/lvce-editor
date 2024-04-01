@@ -1,4 +1,4 @@
-import * as GetWorkerDisplayName from '../src/parts/GetWorkerDisplayName/GetWorkerDisplayName.js'
+import * as GetWorkerDisplayName from '../src/parts/GetWorkerDisplayName/GetWorkerDisplayName.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('getWorkerDisplayName', () => {

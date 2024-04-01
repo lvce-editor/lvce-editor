@@ -1,11 +1,11 @@
 import * as Command from '../Command/Command.ts'
 import * as HandleBeforeInstallPrompt from '../HandleBeforeInstallPrompt/HandleBeforeInstallPrompt.ts'
 import * as HandleContentSecurityPolicyViolation from '../HandleContentSecurityPolicyViolation/HandleContentSecurityPolicyViolation.ts'
-import * as Module from '../Module/Module.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
+import * as Module from '../Module/Module.ts'
+import * as Platform from '../Platform/Platform.ts'
+import * as PlatformType from '../PlatformType/PlatformType.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.ts'
 
 export const main = async () => {
   onerror = UnhandledErrorHandling.handleUnhandledError

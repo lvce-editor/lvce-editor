@@ -1,6 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as ViewletSimpleBrowserFunctions from './ViewletSimpleBrowserFunctions.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
+import * as ViewletSimpleBrowserFunctions from './ViewletSimpleBrowserFunctions.ts'
 
 export const handleInput = (event) => {
   const { target } = event

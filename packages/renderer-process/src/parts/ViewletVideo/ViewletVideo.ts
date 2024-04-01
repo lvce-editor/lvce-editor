@@ -2,8 +2,8 @@
 
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletVideoEvents from './ViewletVideoEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletVideoEvents from './ViewletVideoEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

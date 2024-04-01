@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as AriaAlert from '../src/parts/AriaAlert/AriaAlert.js'
-import * as AriaAlertState from '../src/parts/AriaAlertState/AriaAlertState.js'
+import * as AriaAlert from '../src/parts/AriaAlert/AriaAlert.ts'
+import * as AriaAlertState from '../src/parts/AriaAlertState/AriaAlertState.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {

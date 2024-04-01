@@ -2,7 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
-import * as ViewletLayoutEvents from './ViewletLayoutEvents.js'
+import * as ViewletLayoutEvents from './ViewletLayoutEvents.ts'
 
 export const create = () => {
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348

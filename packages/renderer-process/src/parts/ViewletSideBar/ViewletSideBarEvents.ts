@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as ViewletSideBarFunctions from './ViewletSideBarFunctions.js'
+import * as ViewletSideBarFunctions from './ViewletSideBarFunctions.ts'
 
 const handleClickAction = (target, uid) => {
   const index = GetNodeIndex.getNodeIndex(target)

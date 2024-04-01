@@ -1,4 +1,4 @@
-import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
+import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.ts'
 
 export const setSize = (state, oldSize, newSize) => {
   const { $Viewlet } = state

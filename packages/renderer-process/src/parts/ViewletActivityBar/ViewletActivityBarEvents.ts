@@ -1,7 +1,7 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
+import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.ts'
 
 const get$ItemFromEvent = (event) => {
   const $Target = event.target

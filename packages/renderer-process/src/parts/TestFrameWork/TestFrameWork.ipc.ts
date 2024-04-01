@@ -1,4 +1,4 @@
-import * as TestFrameWork from './TestFrameWork.js'
+import * as TestFrameWork from './TestFrameWork.ts'
 
 export const name = 'TestFrameWork'
 

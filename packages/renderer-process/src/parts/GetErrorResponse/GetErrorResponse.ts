@@ -1,5 +1,5 @@
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.ts'
-import * as SerializeError from '../SerializeError/SerializeError.js'
+import * as SerializeError from '../SerializeError/SerializeError.ts'
 
 export const getErrorResponse = (message, error) => {
   const serializedError = SerializeError.serializeError(error)

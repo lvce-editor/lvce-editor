@@ -4,7 +4,7 @@ import * as Icon from '../Icon/Icon.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as TouchEvent from '../TouchEvent/TouchEvent.ts'
-import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
+import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.ts'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -93,4 +93,4 @@ export const handleTouchEnd = (event) => {
 }
 
 export * from '../ContextMenuEvents/ContextMenuEvents.ts'
-export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.ts'

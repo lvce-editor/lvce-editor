@@ -1,5 +1,5 @@
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.ts'
+import * as Platform from '../Platform/Platform.ts'
 
 const getAssetDir = () => {
   // @ts-ignore

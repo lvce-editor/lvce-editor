@@ -7,7 +7,7 @@ import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNo
 import * as GetBabelAstDependencies from '../GetBabelAstDependencies/GetBabelAstDependencies.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.ts'
-import * as Url from '../Url/Url.js'
+import * as Url from '../Url/Url.ts'
 
 const isExternal = (url) => {
   if (url.startsWith('/')) {

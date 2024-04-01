@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ModuleMap/ModuleMap.js', () => {
+jest.unstable_mockModule('../src/parts/ModuleMap/ModuleMap.ts', () => {
   return {
     getModuleId: jest.fn(() => {
       throw new Error('not implemented')
@@ -12,8 +12,8 @@ jest.unstable_mockModule('../src/parts/ModuleMap/ModuleMap.js', () => {
   }
 })
 
-const Command = await import('../src/parts/Command/Command.js')
-const ModuleMap = await import('../src/parts/ModuleMap/ModuleMap.js')
+const Command = await import('../src/parts/Command/Command.ts')
+const ModuleMap = await import('../src/parts/ModuleMap/ModuleMap.ts')
 
 class NoErrorThrownError extends Error {}
 

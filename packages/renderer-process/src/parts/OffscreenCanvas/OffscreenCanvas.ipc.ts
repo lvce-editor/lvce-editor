@@ -1,4 +1,4 @@
-import * as OffscreenCanvas from './OffscreenCanvas.js'
+import * as OffscreenCanvas from './OffscreenCanvas.ts'
 
 export const name = 'OffscreenCanvas'
 

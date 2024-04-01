@@ -7,9 +7,9 @@ import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Event from '../Event/Event.ts'
 import * as GetModifierKey from '../GetModifierKey/GetModifierKey.ts'
 import * as InputEventType from '../InputEventType/InputEventType.ts'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
-import * as TouchEvent from '../TouchEvent/TouchEvent.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
+import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
+import * as TouchEvent from '../TouchEvent/TouchEvent.ts'
 import * as EditorFunctions from './EditorFunctions.ts'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button

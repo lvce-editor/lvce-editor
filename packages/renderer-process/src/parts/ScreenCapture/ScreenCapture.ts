@@ -1,4 +1,4 @@
-import { VError } from '../VError/VError.js'
+import { VError } from '../VError/VError.ts'
 import * as Assert from '../Assert/Assert.ts'
 
 export const state = {

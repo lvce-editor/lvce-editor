@@ -2,8 +2,8 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as InputBox from '../InputBox/InputBox.ts'
 import * as InputType from '../InputType/InputType.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.ts'
 
 /**
  * @enum {string}
@@ -89,5 +89,5 @@ export const setColumnWidths = (state, columnWidth1, columnWidth2, columnWidth3)
   $Resizer2.style.left = `${paddingLeft + columnWidth1 + columnWidth2}px`
 }
 
-export * from '../ViewletScrollable/ViewletScrollable.js'
-export * from '../ViewletSizable/ViewletSizable.js'
+export * from '../ViewletScrollable/ViewletScrollable.ts'
+export * from '../ViewletSizable/ViewletSizable.ts'

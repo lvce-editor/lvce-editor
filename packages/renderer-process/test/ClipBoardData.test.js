@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
-import * as ClipBoardData from '../src/parts/ClipBoardData/ClipBoardData.js'
-import * as ClipBoardDataType from '../src/parts/ClipBoardDataType/ClipBoardDataType.js'
+import * as ClipBoardData from '../src/parts/ClipBoardData/ClipBoardData.ts'
+import * as ClipBoardDataType from '../src/parts/ClipBoardDataType/ClipBoardDataType.ts'
 
 test('getData', () => {
   const clipBoardData = {

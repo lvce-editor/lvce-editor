@@ -2,17 +2,17 @@
  * @jest-environment jsdom
  */
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.ts'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.ts'
-import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
+import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
   Menu.state.$$Menus = []
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {
       throw new Error('not implemented')
@@ -20,8 +20,8 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-const Menu = await import('../src/parts/OldMenu/Menu.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
+const Menu = await import('../src/parts/OldMenu/Menu.ts')
 
 const getTextContent = ($Node) => {
   return $Node.textContent

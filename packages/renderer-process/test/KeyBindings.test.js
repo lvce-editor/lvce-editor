@@ -2,23 +2,23 @@
  * @jest-environment jsdom
  */
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
-import * as KeyModifier from '../src/parts/KeyModifier/KeyModifier.js'
+import * as KeyCode from '../src/parts/KeyCode/KeyCode.ts'
+import * as KeyModifier from '../src/parts/KeyModifier/KeyModifier.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
-const KeyBindingsEvents = await import('../src/parts/KeyBindingsEvents/KeyBindingsEvents.js')
-const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.ts')
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.ts')
+const KeyBindingsEvents = await import('../src/parts/KeyBindingsEvents/KeyBindingsEvents.ts')
+const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.ts')
 
 beforeEach(() => {
   // @ts-ignore

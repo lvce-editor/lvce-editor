@@ -1,4 +1,4 @@
-import * as ViewletVideoFunctions from './ViewletVideoFunctions.js'
+import * as ViewletVideoFunctions from './ViewletVideoFunctions.ts'
 
 export const handleVideoError = (event) => {
   const { target } = event

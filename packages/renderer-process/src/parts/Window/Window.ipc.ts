@@ -1,4 +1,4 @@
-import * as Window from './Window.js'
+import * as Window from './Window.ts'
 
 export const name = 'Window'
 

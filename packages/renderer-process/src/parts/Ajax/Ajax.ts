@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as LoadKy from '../LoadKy/LoadKy.js'
-import { VError } from '../VError/VError.js'
+import * as LoadKy from '../LoadKy/LoadKy.ts'
+import { VError } from '../VError/VError.ts'
 
 export const getJson = async (url, options = {}) => {
   const { default: ky, HTTPError } = await LoadKy.loadKy()

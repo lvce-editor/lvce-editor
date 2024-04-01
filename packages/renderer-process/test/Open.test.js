@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Open from '../src/parts/Open/Open.js'
+import * as Open from '../src/parts/Open/Open.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('openUrl', () => {

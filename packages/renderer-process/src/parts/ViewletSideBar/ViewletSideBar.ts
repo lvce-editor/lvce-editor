@@ -3,8 +3,8 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletSideBarEvents from './ViewletSideBarEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletSideBarEvents from './ViewletSideBarEvents.ts'
 
 export const create = () => {
   const $SideBarTitleAreaTitle = document.createElement('h2')

@@ -1,5 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
-import * as MaskImage from '../MaskImage/MaskImage.js'
+import * as MaskImage from '../MaskImage/MaskImage.ts'
 
 export const create = (icon) => {
   const $Icon = document.createElement('div')

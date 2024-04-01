@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.js'
+import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.ts'
 
 export const handleInput = (event) => {
   const { target } = event

@@ -1,4 +1,4 @@
-import * as WindowTitle from './WindowTitle.js'
+import * as WindowTitle from './WindowTitle.ts'
 
 export const name = 'WindowTitle'
 

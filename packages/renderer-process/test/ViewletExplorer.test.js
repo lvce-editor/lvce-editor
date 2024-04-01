@@ -7,13 +7,13 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
  * @jest-environment jsdom
  */
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.ts', () => {
   return {
     send: jest.fn(),
   }
 })
 
-const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.ts')
 
 beforeEach(() => {
   document.body.textContent = ''

@@ -1,6 +1,6 @@
 import * as KeyBindingsEvents from '../KeyBindingsEvents/KeyBindingsEvents.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
-import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
+import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.ts'
 
 const getSashId = ($Target) => {
   if ($Target.id === 'SashPanel') {

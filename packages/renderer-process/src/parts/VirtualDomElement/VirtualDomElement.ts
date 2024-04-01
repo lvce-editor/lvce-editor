@@ -1,6 +1,6 @@
 import * as ElementTagMap from '../ElementTagMap/ElementTagMap.ts'
-import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.ts'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
 
 const renderDomTextNode = (element) => {
   return document.createTextNode(element.text)

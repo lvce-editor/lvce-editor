@@ -1,4 +1,4 @@
-import * as ViewletOutputFunctions from './ViewletOutputFunctions.js'
+import * as ViewletOutputFunctions from './ViewletOutputFunctions.ts'
 
 export const handleChange = (event) => {
   const $Target = event.target

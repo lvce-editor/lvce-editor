@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.js'
+import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

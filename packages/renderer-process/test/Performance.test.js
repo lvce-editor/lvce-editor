@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as Performance from '../src/parts/Performance/Performance.js'
+import * as Performance from '../src/parts/Performance/Performance.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('getMemory - performance.memory is not available', () => {
@@ -62,7 +62,7 @@ test('measureUserAgentSpecificMemory - performance.measureUserAgentSpecificMemor
           attribution: [
             {
               scope: 'DedicatedWorkerGlobalScope',
-              url: 'http://localhost:3000/worker.js',
+              url: 'http://localhost:3000/worker.ts',
             },
           ],
           bytes: 3004319,
@@ -103,7 +103,7 @@ test('measureUserAgentSpecificMemory - performance.measureUserAgentSpecificMemor
         attribution: [
           {
             scope: 'DedicatedWorkerGlobalScope',
-            url: 'http://localhost:3000/worker.js',
+            url: 'http://localhost:3000/worker.ts',
           },
         ],
         bytes: 3004319,

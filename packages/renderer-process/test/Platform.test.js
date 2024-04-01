@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as Platform from '../src/parts/Platform/Platform.js'
+import * as Platform from '../src/parts/Platform/Platform.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('platform', () => {

@@ -1,4 +1,4 @@
-import * as WebStorage from './WebStorage.js'
+import * as WebStorage from './WebStorage.ts'
 
 export const name = 'WebStorage'
 

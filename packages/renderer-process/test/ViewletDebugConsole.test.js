@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.ts'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {

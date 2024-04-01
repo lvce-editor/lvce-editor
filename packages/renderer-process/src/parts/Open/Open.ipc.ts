@@ -1,4 +1,4 @@
-import * as Open from './Open.js'
+import * as Open from './Open.ts'
 
 export const name = 'Open'
 

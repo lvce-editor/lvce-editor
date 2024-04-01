@@ -1,4 +1,4 @@
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 const queryInputs = ($Viewlet) => {
   return [...$Viewlet.querySelectorAll('input, textarea')]

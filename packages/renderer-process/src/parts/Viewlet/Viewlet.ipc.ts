@@ -1,4 +1,4 @@
-import * as Viewlet from './Viewlet.js'
+import * as Viewlet from './Viewlet.ts'
 
 export const name = 'Viewlet'
 

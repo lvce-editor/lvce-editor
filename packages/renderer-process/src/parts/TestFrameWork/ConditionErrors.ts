@@ -1,4 +1,4 @@
-import * as QuerySelector from './QuerySelector.js'
+import * as QuerySelector from './QuerySelector.ts'
 
 export const toBeVisible = (locator) => {
   return `expected selector to be visible ${locator._selector}`

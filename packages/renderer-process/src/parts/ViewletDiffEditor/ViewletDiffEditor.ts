@@ -1,7 +1,7 @@
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -21,4 +21,4 @@ export const setDom = (state, dom) => {
   VirtualDom.renderInto($Viewlet, dom)
 }
 
-export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletScrollable/ViewletScrollable.ts'

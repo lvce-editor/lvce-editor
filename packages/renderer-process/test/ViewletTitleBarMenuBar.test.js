@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import * as Menu from '../src/parts/OldMenu/Menu.js'
-import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
-import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as Menu from '../src/parts/OldMenu/Menu.ts'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ts'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 const getTextContent = (node) => {

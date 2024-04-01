@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as ViewletProblemsFunctions from './ViewletProblemsFunctions.js'
+import * as ViewletProblemsFunctions from './ViewletProblemsFunctions.ts'
 
 export const handlePointerDown = (event) => {
   Event.preventDefault(event)

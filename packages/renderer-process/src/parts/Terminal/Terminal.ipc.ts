@@ -1,4 +1,4 @@
-import * as Terminal from './Terminal.js'
+import * as Terminal from './Terminal.ts'
 
 export const name = 'Terminal'
 

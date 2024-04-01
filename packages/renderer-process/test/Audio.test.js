@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Audio from '../src/parts/Audio/Audio.js'
+import * as Audio from '../src/parts/Audio/Audio.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 // TODO when play fails, log an info message

@@ -1,7 +1,7 @@
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as Assert from '../Assert/Assert.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

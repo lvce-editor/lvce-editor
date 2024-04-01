@@ -13,9 +13,9 @@ import * as InputBox from '../InputBox/InputBox.ts'
 import * as IsMobile from '../IsMobile/IsMobile.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
+import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.ts'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should

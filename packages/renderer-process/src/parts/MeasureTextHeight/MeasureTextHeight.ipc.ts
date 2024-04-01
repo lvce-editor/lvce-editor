@@ -1,4 +1,4 @@
-import * as MeasureTextHeight from './MeasureTextHeight.js'
+import * as MeasureTextHeight from './MeasureTextHeight.ts'
 
 export const name = 'MeasureTextHeight'
 

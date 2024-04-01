@@ -1,5 +1,5 @@
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletDebugConsoleEvents from './ViewletDebugConsoleEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletDebugConsoleEvents from './ViewletDebugConsoleEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

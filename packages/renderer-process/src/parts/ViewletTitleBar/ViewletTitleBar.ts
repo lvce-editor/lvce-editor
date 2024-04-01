@@ -1,7 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as ViewletTitleBarEvents from './ViewletTitleBarEvents.js'
+import * as ViewletTitleBarEvents from './ViewletTitleBarEvents.ts'
 
 export const create = () => {
   // TODO set aria label for title bar menu

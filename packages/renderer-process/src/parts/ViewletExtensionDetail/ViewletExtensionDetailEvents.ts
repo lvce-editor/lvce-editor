@@ -1,6 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as ViewletExtensionDetailFunctions from './ViewletExtensionDetailFunctions.js'
+import * as ViewletExtensionDetailFunctions from './ViewletExtensionDetailFunctions.ts'
 
 export const handleIconError = (event) => {
   const uid = ComponentUid.fromEvent(event)

@@ -1,4 +1,4 @@
-import * as Prompt from './Prompt.js'
+import * as Prompt from './Prompt.ts'
 
 export const name = 'Prompt'
 

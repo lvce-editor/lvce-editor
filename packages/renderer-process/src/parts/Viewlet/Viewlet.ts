@@ -4,8 +4,8 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import { VError } from '../VError/VError.ts'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.ts'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 export const state = {
   instances: Object.create(null),

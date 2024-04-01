@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.ts'
-import { VError } from '../VError/VError.js'
-import * as Vlq from '../Vlq/Vlq.js'
+import { VError } from '../VError/VError.ts'
+import * as Vlq from '../Vlq/Vlq.ts'
 
 const getColumnMapping = (mappings, line, column) => {
   Assert.string(mappings)

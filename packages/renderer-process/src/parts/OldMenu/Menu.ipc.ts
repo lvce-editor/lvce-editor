@@ -1,4 +1,4 @@
-import * as Menu from './Menu.js'
+import * as Menu from './Menu.ts'
 
 export const name = 'Menu'
 

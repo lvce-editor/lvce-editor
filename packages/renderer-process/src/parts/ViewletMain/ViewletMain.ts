@@ -2,7 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
-import * as ViewletMainEvents from './ViewletMainEvents.js'
+import * as ViewletMainEvents from './ViewletMainEvents.ts'
 
 // TODO Main should not be bound to Editor -> Lazy load Editor
 export const create = () => {

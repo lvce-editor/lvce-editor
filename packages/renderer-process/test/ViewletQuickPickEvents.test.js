@@ -3,7 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
-import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
@@ -34,14 +34,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.ts')
 
 test.skip('event - mousedown', () => {
   const state = ViewletQuickPick.create()

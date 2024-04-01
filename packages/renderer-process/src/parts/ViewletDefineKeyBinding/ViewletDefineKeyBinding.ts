@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletDefineKeyBindingEvents from './ViewletDefineKeyBindingEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as ViewletDefineKeyBindingEvents from './ViewletDefineKeyBindingEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

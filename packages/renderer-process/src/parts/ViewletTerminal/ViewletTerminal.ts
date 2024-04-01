@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as IsUint8Array from '../IsUint8Array/IsUint8Array.ts'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.ts'
 import * as Terminal from '../Terminal/Terminal.ts'
-import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
+import * as ViewletTerminalEvents from './ViewletTerminalEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

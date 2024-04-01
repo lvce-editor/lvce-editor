@@ -1,5 +1,5 @@
-import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
-export * as Events from './ViewletRunAndDebugEvents.js'
+import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.ts'
+export * as Events from './ViewletRunAndDebugEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

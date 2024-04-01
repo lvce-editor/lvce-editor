@@ -1,7 +1,7 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as FindIndex from '../FindIndex/FindIndex.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.js'
+import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.ts'
 
 const isInsideTitleBarMenu = ($Element) => {
   return $Element.classList.contains('MenuItem') || $Element.classList.contains('Menu') || $Element.classList.contains('TitleBarTopLevelEntry')

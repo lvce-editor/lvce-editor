@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as VirtualListFunctions from '../VirtualListFunctions/VirtualListFunctions.js'
+import * as VirtualListFunctions from '../VirtualListFunctions/VirtualListFunctions.ts'
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event

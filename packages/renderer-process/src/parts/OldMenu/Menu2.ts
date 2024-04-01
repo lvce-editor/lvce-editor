@@ -4,8 +4,8 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Widget from '../Widget/Widget.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as Widget from '../Widget/Widget.ts'
 
 export const state = {
   $$Menus: [],

@@ -1,5 +1,5 @@
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
-import * as ViewletDialogFunctions from './ViewletDialogFunctions.js'
+import * as ViewletDialogFunctions from './ViewletDialogFunctions.ts'
 
 export const handleClick = (event) => {
   const { target } = event

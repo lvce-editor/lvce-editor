@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
+import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
 test.skip('create', () => {

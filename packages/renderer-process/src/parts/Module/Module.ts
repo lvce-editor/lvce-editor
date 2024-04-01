@@ -1,4 +1,4 @@
-import * as ModuleId from '../ModuleId/ModuleId.js'
+import * as ModuleId from '../ModuleId/ModuleId.ts'
 
 export const load = (moduleId) => {
   switch (moduleId) {
@@ -37,35 +37,35 @@ export const load = (moduleId) => {
     case ModuleId.Meta:
       return import('../Meta/Meta.ipc.ts')
     case ModuleId.Notification:
-      return import('../Notification/Notification.ipc.js')
+      return import('../Notification/Notification.ipc.ts')
     case ModuleId.OffscreenCanvas:
-      return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
+      return import('../OffscreenCanvas/OffscreenCanvas.ipc.ts')
     case ModuleId.Menu:
-      return import('../OldMenu/Menu.ipc.js')
+      return import('../OldMenu/Menu.ipc.ts')
     case ModuleId.Open:
-      return import('../Open/Open.ipc.js')
+      return import('../Open/Open.ipc.ts')
     case ModuleId.Performance:
-      return import('../Performance/Performance.ipc.js')
+      return import('../Performance/Performance.ipc.ts')
     case ModuleId.Prompt:
-      return import('../Prompt/Prompt.ipc.js')
+      return import('../Prompt/Prompt.ipc.ts')
     case ModuleId.ScreenCapture:
-      return import('../ScreenCapture/ScreenCapture.ipc.js')
+      return import('../ScreenCapture/ScreenCapture.ipc.ts')
     case ModuleId.TestFrameWork:
-      return import('../TestFrameWork/TestFrameWork.ipc.js')
+      return import('../TestFrameWork/TestFrameWork.ipc.ts')
     case ModuleId.Transferrable:
-      return import('../Transferrable/Transferrable.ipc.js')
+      return import('../Transferrable/Transferrable.ipc.ts')
     case ModuleId.Viewlet:
-      return import('../Viewlet/Viewlet.ipc.js')
+      return import('../Viewlet/Viewlet.ipc.ts')
     case ModuleId.WebStorage:
-      return import('../WebStorage/WebStorage.ipc.js')
+      return import('../WebStorage/WebStorage.ipc.ts')
     case ModuleId.Window:
-      return import('../Window/Window.ipc.js')
+      return import('../Window/Window.ipc.ts')
     case ModuleId.WindowTitle:
-      return import('../WindowTitle/WindowTitle.ipc.js')
+      return import('../WindowTitle/WindowTitle.ipc.ts')
     case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.ts')
     case ModuleId.PointerCapture:
-      return import('../PointerCapture/PointerCapture.ipc.js')
+      return import('../PointerCapture/PointerCapture.ipc.ts')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

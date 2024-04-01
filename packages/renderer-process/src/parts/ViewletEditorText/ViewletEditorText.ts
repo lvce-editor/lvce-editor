@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
-import * as Widget from '../Widget/Widget.js'
+import * as Widget from '../Widget/Widget.ts'
 
 export const create = Editor.create
 

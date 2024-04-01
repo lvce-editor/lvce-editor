@@ -8,14 +8,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts', () => {
   return {
     executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
-const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.ts')
+const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.ts')
 
 test.skip('event - image does not load', () => {
   const state = ViewletExtensionDetail.create()

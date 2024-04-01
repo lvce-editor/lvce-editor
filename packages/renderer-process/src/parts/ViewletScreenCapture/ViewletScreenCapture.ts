@@ -1,5 +1,5 @@
 import * as ScreenCapture from '../ScreenCapture/ScreenCapture.ts'
-import * as ViewletScreenCaptureEvents from './ViewletScreenCaptureEvents.js'
+import * as ViewletScreenCaptureEvents from './ViewletScreenCaptureEvents.ts'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

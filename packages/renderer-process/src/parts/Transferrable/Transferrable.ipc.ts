@@ -1,4 +1,4 @@
-import * as Transferrable from './Transferrable.js'
+import * as Transferrable from './Transferrable.ts'
 
 export const name = 'Transferrable'
 

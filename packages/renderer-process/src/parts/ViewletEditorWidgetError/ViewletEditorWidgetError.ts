@@ -1,4 +1,4 @@
-import * as Widget from '../Widget/Widget.js'
+import * as Widget from '../Widget/Widget.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 
 export const create = () => {
