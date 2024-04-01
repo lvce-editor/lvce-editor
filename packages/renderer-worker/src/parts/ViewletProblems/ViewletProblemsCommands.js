@@ -1,7 +1,6 @@
 import * as ViewletProblems from './ViewletProblems.js'
 import * as ViewletProblemsSetProblems from './ViewletProblemsSetProblems.js'
 
-// prettier-ignore
 export const Commands = {
   focusIndex: ViewletProblems.focusIndex,
   handleClickAt: ViewletProblems.handleClickAt,
@@ -10,5 +9,7 @@ export const Commands = {
   focusNext: ViewletProblems.focusNext,
   focusPrevious: ViewletProblems.focusPrevious,
   handleFilterInput: ViewletProblems.handleFilterInput,
-  copyMessage: ViewletProblems.copyMessage
+  copyMessage: ViewletProblems.copyMessage,
+  collapseAll: ViewletProblems.collapseAll,
+  viewAsTable: ViewletProblems.viewAsTable,
 }
