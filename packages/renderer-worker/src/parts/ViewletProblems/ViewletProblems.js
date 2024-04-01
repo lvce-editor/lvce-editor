@@ -5,6 +5,7 @@ import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
@@ -21,6 +22,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     filterValue: '',
+    viewMode: ProblemsViewMode.List,
   }
 }
 
@@ -115,5 +117,23 @@ export const dispose = (state) => {
   return {
     ...state,
     disposed: true,
+  }
+}
+
+export const collapseAll = (state) => {
+  return state
+}
+
+export const viewAsTable = (state) => {
+  return {
+    ...state,
+    viewMode: ProblemsViewMode.Table,
+  }
+}
+
+export const viewAsList = (state) => {
+  return {
+    ...state,
+    viewMode: ProblemsViewMode.List,
   }
 }
