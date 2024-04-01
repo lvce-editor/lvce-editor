@@ -1,4 +1,4 @@
-import * as FindIndex from '../../shared/findIndex.js'
+import * as FindIndex from '../FindIndex/FindIndex.ts'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as BackDrop from '../BackDrop/BackDrop.ts'
