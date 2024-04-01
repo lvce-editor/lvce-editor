@@ -541,7 +541,7 @@ export const mutate = async (id, fn) => {
   await fn(state)
 }
 
-export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid) => {
+export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid = newState.parentUid) => {
   return getRenderCommands(module, oldState, newState, uid, parentUid)
 }
 

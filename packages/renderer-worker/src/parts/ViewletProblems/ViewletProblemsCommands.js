@@ -12,4 +12,5 @@ export const Commands = {
   copyMessage: ViewletProblems.copyMessage,
   collapseAll: ViewletProblems.collapseAll,
   viewAsTable: ViewletProblems.viewAsTable,
+  viewAsList: ViewletProblems.viewAsList,
 }
