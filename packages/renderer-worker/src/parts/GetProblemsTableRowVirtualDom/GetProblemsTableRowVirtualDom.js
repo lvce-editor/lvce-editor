@@ -1,12 +1,20 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getClassName = (isEven) => {
+  if (isEven) {
+    return 'ProblemsTableRow'
+  }
+  return 'ProblemsTableRow ProblemsTableRowOdd'
+}
+
 export const getProblemsTableRowVirtualDom = (problem) => {
-  const { code, source, message, file } = problem
+  const { code, source, message, file, isEven } = problem
+
   const dom = [
     {
       type: VirtualDomElements.Tr,
-      className: 'ProblemsTableRow',
+      className: getClassName(isEven),
       childCount: 5,
     },
     {

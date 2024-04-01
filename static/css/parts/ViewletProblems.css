@@ -66,3 +66,7 @@
   height: 100%;
   contain: strict;
 }
+
+.ProblemsTableRowOdd {
+  background: var(--TableRowOddBackground, rgba(156, 162, 160, 0.04));
+}
