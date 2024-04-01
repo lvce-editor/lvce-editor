@@ -64,5 +64,5 @@ export const handleEditingInput = (event) => {
 }
 
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
-export * from '../DragEvents/DragEvents.js'
+export * from '../DragEvents/DragEvents.ts'
 export * from '../VirtualListEvents/VirtualListEvents.js'

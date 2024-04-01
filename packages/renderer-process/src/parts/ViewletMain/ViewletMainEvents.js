@@ -1,4 +1,4 @@
-export * from '../DragEvents/DragEvents.js'
+export * from '../DragEvents/DragEvents.ts'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
 import * as ForwardCommand from '../ForwardCommand/ForwardCommand.ts'
