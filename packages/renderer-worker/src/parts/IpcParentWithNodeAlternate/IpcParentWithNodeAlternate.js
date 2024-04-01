@@ -18,10 +18,7 @@ export const create = async (options) => {
       }
     case PlatformType.Electron:
       const { port1, port2 } = new MessageChannel()
-      await SendMessagePortToElectron.sendMessagePortToElectron(
-        port2,
-        options.initialCommand || 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess',
-      )
+      await SendMessagePortToElectron.sendMessagePortToElectron(port2, options.initialCommand)
       return port1
     default:
       throw new Error('unsupported platform')

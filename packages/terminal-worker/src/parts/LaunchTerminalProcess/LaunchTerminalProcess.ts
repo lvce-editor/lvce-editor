@@ -10,6 +10,7 @@ export const launchTerminalProcess = async () => {
       method: IpcParentType.NodeAlternate,
       type: 'terminal-process',
       name: 'Terminal Process',
+      initialCommand: 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess',
     })
     TerminalProcessState.state.ipc = ipc
     HandleIpc.handleIpc(ipc, 'terminal process')
