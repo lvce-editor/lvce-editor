@@ -32,6 +32,15 @@
           "useESM": true
         }
       ]
+    },
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 60,
+        "lines": 60,
+        "statements": -1000
+      }
     }
   },
   "xo": {
