@@ -1,5 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as ViewletColorPickerFunctions from './ViewletColorPickerFunctions.js'
 
 const handleSliderPointerCaptureLost = (event) => {

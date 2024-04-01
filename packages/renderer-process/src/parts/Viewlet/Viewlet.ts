@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as KeyBindings from '../KeyBindings/KeyBindings.ts'
-import * as Logger from '../Logger/Logger.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
-import { VError } from '../VError/VError.js'
+import * as Logger from '../Logger/Logger.ts'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
+import { VError } from '../VError/VError.ts'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 

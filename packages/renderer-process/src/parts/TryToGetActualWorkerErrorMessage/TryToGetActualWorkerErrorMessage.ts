@@ -1,6 +1,6 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
-import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
+import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.ts'
 
 export const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)

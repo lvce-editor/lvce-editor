@@ -1,4 +1,4 @@
-import * as Location from '../Location/Location.js'
+import * as Location from '../Location/Location.ts'
 
 export const getAbsoluteUrl = (relativePath, sourceUrl) => {
   if (sourceUrl.startsWith('/')) {
