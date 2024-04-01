@@ -42,6 +42,7 @@
   mask-size: 100%;
   mask-position: 50% 50%;
   background: currentColor;
+  mask-image: url(/icons/error.svg);
 }
 
 .Message {

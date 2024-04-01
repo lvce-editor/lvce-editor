@@ -63,16 +63,13 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += content
     }
 
-    await Replace.replace({
-      path: Path.join(outDir, 'parts', 'MaskIcon.css'),
-      occurrence: `url(/icons/`,
-      replacement: `url(${assetDir}/icons/`,
-    })
-    await Replace.replace({
-      path: Path.join(outDir, 'parts', 'Symbol.css'),
-      occurrence: `url(/icons/`,
-      replacement: `url(${assetDir}/icons/`,
-    })
+    for (const file of ['MaskIcon', 'Symbol', 'ViewletProblems']) {
+      await Replace.replace({
+        path: Path.join(outDir, 'parts', `${file}.css`),
+        occurrence: `url(/icons/`,
+        replacement: `url(${assetDir}/icons/`,
+      })
+    }
 
     for (const part of EagerLoadedCss.eagerLoadedCss) {
       const absoluteOutDir = Path.absolute(outDir)
