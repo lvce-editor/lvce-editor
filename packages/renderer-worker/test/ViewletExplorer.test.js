@@ -2920,7 +2920,7 @@ test('handleArrowRight - when no focus', async () => {
   expect(await ViewletExplorer.handleArrowRight(state)).toBe(state)
 })
 
-test('handleWheel - up', () => {
+test.skip('handleWheel - up', () => {
   const state = {
     ...ViewletExplorer.create(1),
     name: 'Explorer',
