@@ -10,12 +10,12 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as EditorEvents from './EditorEvents.js'
-import * as LayerCursor from './LayerCursor.js'
-import * as LayerDiagnostics from './LayerDiagnostics.js'
-import * as LayerScrollBar from './LayerScrollBar.js'
-import * as LayerSelections from './LayerSelections.js'
-import * as LayerText3 from './LayerText.js'
+import * as EditorEvents from './EditorEvents.ts'
+import * as LayerCursor from './LayerCursor.ts'
+import * as LayerDiagnostics from './LayerDiagnostics.ts'
+import * as LayerScrollBar from './LayerScrollBar.ts'
+import * as LayerSelections from './LayerSelections.ts'
+import * as LayerText3 from './LayerText.ts'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
