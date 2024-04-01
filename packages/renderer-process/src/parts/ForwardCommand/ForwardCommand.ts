@@ -1,4 +1,4 @@
-import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.ts'
 
 export const close = ForwardViewletCommand.forwardViewletCommand('close')
 export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEditor')
