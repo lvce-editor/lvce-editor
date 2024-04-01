@@ -28,6 +28,7 @@ const loadModule = async (moduleId) => {
     initializeModule(module)
   } catch (error) {
     if (error && error instanceof SyntaxError && error.stack === `SyntaxError: ${error.message}`) {
+      // @ts-ignore
       Error.captureStackTrace(error, loadModule)
     }
     throw new VError(error, `failed to load module ${moduleId}`)
