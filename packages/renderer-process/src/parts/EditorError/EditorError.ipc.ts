@@ -1,4 +1,4 @@
-import * as EditorError from './EditorError.js'
+import * as EditorError from './EditorError.ts'
 
 export const name = 'EditorError'
 

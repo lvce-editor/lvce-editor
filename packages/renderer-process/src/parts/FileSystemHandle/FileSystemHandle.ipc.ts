@@ -1,4 +1,4 @@
-import * as FileSystemHandle from './FileSystemHandle.js'
+import * as FileSystemHandle from './FileSystemHandle.ts'
 
 export const name = 'FileSystemHandle'
 

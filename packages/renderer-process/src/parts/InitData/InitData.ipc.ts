@@ -1,4 +1,4 @@
-import * as InitData from './InitData.js'
+import * as InitData from './InitData.ts'
 
 export const name = 'InitData'
 

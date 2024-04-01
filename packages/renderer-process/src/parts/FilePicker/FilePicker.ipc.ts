@@ -1,4 +1,4 @@
-import * as FilePicker from './FilePicker.js'
+import * as FilePicker from './FilePicker.ts'
 
 export const name = 'FilePicker'
 

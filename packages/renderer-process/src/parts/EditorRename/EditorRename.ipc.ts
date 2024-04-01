@@ -1,4 +1,4 @@
-import * as EditorRename from './EditorRename.js'
+import * as EditorRename from './EditorRename.ts'
 
 export const name = 'EditorRename'
 

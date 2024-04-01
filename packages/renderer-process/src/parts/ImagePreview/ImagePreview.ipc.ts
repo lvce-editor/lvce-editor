@@ -1,4 +1,4 @@
-import * as ImagePreview from './ImagePreview.js'
+import * as ImagePreview from './ImagePreview.ts'
 
 export const name = 'ImagePreview'
 
