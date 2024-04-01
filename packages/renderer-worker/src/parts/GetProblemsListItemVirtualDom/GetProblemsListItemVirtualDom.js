@@ -2,6 +2,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -62,11 +63,7 @@ export const getProblemVirtualDom = (problem) => {
       childCount: 3,
       paddingLeft: GetTreeItemIndent.getTreeItemIndent(2),
     },
-    {
-      type: VirtualDomElements.Div,
-      className: `${ClassNames.MaskIconError} ${ClassNames.ProblemsErrorIcon}`,
-      childCount: 0,
-    },
+    GetProblemsIconVirtualDom.getProblemsIconVirtualDom(),
     label,
   ]
   if (filterValueLength) {
