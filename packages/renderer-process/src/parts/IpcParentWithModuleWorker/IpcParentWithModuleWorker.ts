@@ -1,7 +1,7 @@
 import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.ts'
 import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent.ts'
 import { IpcError } from '../IpcError/IpcError.ts'
-import * as IsErrorEvent from '../IsErrorEvent/IsErrorEvent.js'
+import * as IsErrorEvent from '../IsErrorEvent/IsErrorEvent.ts'
 import { WorkerError } from '../WorkerError/WorkerError.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
 

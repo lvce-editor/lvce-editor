@@ -1,5 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Character from '../Character/Character.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Character from '../Character/Character.ts'
 
 export const splitLines = (lines) => {
   Assert.string(lines)
