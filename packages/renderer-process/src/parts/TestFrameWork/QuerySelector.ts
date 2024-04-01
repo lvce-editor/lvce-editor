@@ -1,4 +1,4 @@
-import { htmlElements } from './HtmlElements.js'
+import { htmlElements } from './HtmlElements.ts'
 
 const querySelectorByText = (root, text) => {
   let node

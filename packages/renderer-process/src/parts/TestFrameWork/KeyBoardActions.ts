@@ -1,4 +1,4 @@
-import * as ElementActions from './ElementActions.js'
+import * as ElementActions from './ElementActions.ts'
 
 export const press = (options) => {
   const element = document.activeElement

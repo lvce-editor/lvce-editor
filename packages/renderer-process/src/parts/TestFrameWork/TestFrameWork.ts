@@ -1,11 +1,11 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as ConditionErrorMap from './ConditionErrorMap.js'
-import * as ElementActions from './ElementActions.js'
-import * as KeyBoardActions from './KeyBoardActions.js'
-import * as MultiElementConditions from './MultiElementConditions.js'
-import * as QuerySelector from './QuerySelector.js'
-import * as SingleElementConditions from './SingleElementConditions.js'
+import * as SetBounds from '../SetBounds/SetBounds.ts'
+import * as ConditionErrorMap from './ConditionErrorMap.ts'
+import * as ElementActions from './ElementActions.ts'
+import * as KeyBoardActions from './KeyBoardActions.ts'
+import * as MultiElementConditions from './MultiElementConditions.ts'
+import * as QuerySelector from './QuerySelector.ts'
+import * as SingleElementConditions from './SingleElementConditions.ts'
 
 const create$Overlay = () => {
   const $TestOverlay = document.createElement('div')
