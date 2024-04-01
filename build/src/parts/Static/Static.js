@@ -41,29 +41,29 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.ts`,
-    occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+    occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
 
 export const getModule = (method) => {
   switch (method) {
     case IpcParentType.ModuleWorker:
-      return import('../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
+      return import('../IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts')
     case IpcParentType.MessagePort:
-      return import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
+      return import('../IpcParentWithMessagePort/IpcParentWithMessagePort.ts')
     case IpcParentType.ReferencePort:
-      return import('../IpcParentWithReferencePort/IpcParentWithReferencePort.js')
+      return import('../IpcParentWithReferencePort/IpcParentWithReferencePort.ts')
     case IpcParentType.ModuleWorkerWithMessagePort:
-      return import('../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js')
+      return import('../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.ts')
     case IpcParentType.Electron:
-      return import('../IpcParentWithElectron/IpcParentWithElectron.js')
+      return import('../IpcParentWithElectron/IpcParentWithElectron.ts')
     default:
       throw new Error('unexpected ipc type')
   }
 }`,
-    replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'
-import * as IpcParentWithModuleWorkerWithMessagePort from '../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js'
-import * as IpcParentWithMessagePort from '../IpcParentWithMessagePort/IpcParentWithMessagePort.js'
-import * as IpcParentWithReferencePort from '../IpcParentWithReferencePort/IpcParentWithReferencePort.js'
+    replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
+import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts'
+import * as IpcParentWithModuleWorkerWithMessagePort from '../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.ts'
+import * as IpcParentWithMessagePort from '../IpcParentWithMessagePort/IpcParentWithMessagePort.ts'
+import * as IpcParentWithReferencePort from '../IpcParentWithReferencePort/IpcParentWithReferencePort.ts'
 
 export const getModule = (method) => {
   switch (method) {
