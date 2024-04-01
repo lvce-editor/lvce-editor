@@ -325,3 +325,7 @@
 .MaskIconPreserveCase {
   mask-image: url(/icons/preserve-case.svg);
 }
+
+.MaskIconListTree {
+  mask-image: url(/icons/list-tree.svg);
+}

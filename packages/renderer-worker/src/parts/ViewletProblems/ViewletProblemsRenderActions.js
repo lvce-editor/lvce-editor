@@ -6,7 +6,7 @@ export const renderActions = {
     return oldState === newState
   },
   apply(oldState, newState) {
-    const actions = ViewletProblemsActions.getActions()
+    const actions = ViewletProblemsActions.getActions(newState)
     const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
     return dom
   },
