@@ -1,5 +1,5 @@
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/

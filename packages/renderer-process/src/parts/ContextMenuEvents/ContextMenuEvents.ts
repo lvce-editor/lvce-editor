@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as ContextMenuFunctions from '../ContextMenuFunctions/ContextMenuFunctions.js'
 import * as Event from '../Event/Event.js'
 

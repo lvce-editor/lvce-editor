@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as DataTransferType from '../DataTransferType/DataTransferType.js'
 
 export const setEffectAllowed = (dataTransfer, effectAllowed) => {

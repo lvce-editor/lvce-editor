@@ -1,5 +1,5 @@
 // based on https://github.com/babel/babel/blob/6be6e04f396f03feace4431f709564a8d842163a/packages/babel-code-frame/src/index.ts (License MIT)
-import * as Character from '../Character/Character.js'
+import * as Character from '../Character/Character.ts'
 
 /**
  * RegExp to test for newlines in terminal.
