@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/componentuid.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.js'

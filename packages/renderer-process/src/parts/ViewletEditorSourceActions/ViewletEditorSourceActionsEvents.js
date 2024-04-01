@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/componentuid.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.js'
 import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
 

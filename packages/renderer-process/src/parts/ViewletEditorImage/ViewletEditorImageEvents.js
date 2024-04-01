@@ -1,4 +1,4 @@
-import * as ComponentUid from '../ComponentUid/componentuid.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'

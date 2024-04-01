@@ -1,6 +1,6 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
-import * as ComponentUid from '../ComponentUid/componentuid.ts'
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.js'
 import * as IsMobile from '../IsMobile/IsMobile.js'
 import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.js'

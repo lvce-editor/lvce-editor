@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ComponentUid from '../src/parts/ComponentUid/componentuid.ts'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ComponentUid from '../src/parts/ComponentUid/componentuid.ts'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 import { beforeEach, test, expect } from '@jest/globals'
 
