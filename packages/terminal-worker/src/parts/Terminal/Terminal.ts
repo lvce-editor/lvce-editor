@@ -2,16 +2,12 @@ import * as TerminalProcess from '../TerminalProcess/TerminalProcess.ts'
 import * as TerminalEmulator from '../TerminalEmulator/TerminalEmulator.ts'
 import * as TerminalEmulatorState from '../TerminalEmulatorState/TerminalEmulatorState.ts'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.ts'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.ts'
 
-export const create = async (
-  canvasText: OffscreenCanvas,
-  canvasCursor: OffscreenCanvas,
-  id: number,
-  cwd: string,
-  command: string,
-  args: readonly string[],
-) => {
+export const create = async (canvasTextId: number, canvasCursorId: number, id: number, cwd: string, command: string, args: readonly string[]) => {
   await TerminalProcess.listen()
+  const canvasCursor = await OffscreenCanvas.create(canvasCursorId)
+  const canvasText = await OffscreenCanvas.create(canvasTextId)
   const emulator = await TerminalEmulator.create({
     offscreenCanvasCursor: canvasCursor,
     offscreenCanvasText: canvasText,
