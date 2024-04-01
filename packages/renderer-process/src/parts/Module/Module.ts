@@ -29,13 +29,13 @@ export const load = (moduleId) => {
     case ModuleId.IpcParent:
       return import('../IpcParent/IpcParent.ipc.ts')
     case ModuleId.Layout:
-      return import('../Layout/Layout.ipc.js')
+      return import('../Layout/Layout.ipc.ts')
     case ModuleId.Location:
-      return import('../Location/Location.ipc.js')
+      return import('../Location/Location.ipc.ts')
     case ModuleId.MeasureTextHeight:
-      return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
+      return import('../MeasureTextHeight/MeasureTextHeight.ipc.ts')
     case ModuleId.Meta:
-      return import('../Meta/Meta.ipc.js')
+      return import('../Meta/Meta.ipc.ts')
     case ModuleId.Notification:
       return import('../Notification/Notification.ipc.js')
     case ModuleId.OffscreenCanvas:

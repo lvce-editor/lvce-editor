@@ -1,5 +1,5 @@
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.ts'
-import * as ModuleId from '../ModuleId/ModuleId.js'
+import * as ModuleId from '../ModuleId/ModuleId.ts'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
