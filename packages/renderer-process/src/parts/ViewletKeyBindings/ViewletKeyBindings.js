@@ -1,7 +1,7 @@
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as InputBox from '../InputBox/InputBox.js'
-import * as InputType from '../InputType/InputType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
+import * as DomEventType from '../DomEventType/DomEventType.ts'
+import * as InputBox from '../InputBox/InputBox.ts'
+import * as InputType from '../InputType/InputType.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
 

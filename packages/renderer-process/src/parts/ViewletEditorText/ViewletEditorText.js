@@ -1,4 +1,4 @@
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
