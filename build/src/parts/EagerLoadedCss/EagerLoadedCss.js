@@ -10,6 +10,7 @@ export const eagerLoadedCss = [
   'Drag.css',
   'EditorTabs.css',
   'FileIcon.css',
+  'Filter.css',
   'Focus.css',
   'Highlight.css',
   'IconButton.css',
