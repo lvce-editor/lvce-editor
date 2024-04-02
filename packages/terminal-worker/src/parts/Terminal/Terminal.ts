@@ -31,11 +31,6 @@ export const handleMessage = (id, method, ...args) => {
   }
 }
 
-export const write = (id, data) => {
-  const emulator = TerminalEmulatorState.get(id)
-  emulator.write(data)
-}
-
 export const handleBlur = (id) => {
   const emulator = TerminalEmulatorState.get(id)
   emulator.handleBlur()

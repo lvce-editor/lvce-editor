@@ -31,9 +31,6 @@ export const loadContent = async (state) => {
   await TerminalWorker.getOrCreate()
   await TerminalWorker.invoke('Terminal.create', canvasTextId, canvasCursorId, uid, Workspace.state.workspacePath, command, args)
   const terminal = {
-    write(data) {
-      return TerminalWorker.invoke('Terminal.write', uid, data)
-    },
     handleBlur() {
       return TerminalWorker.invoke('Terminal.handleBlur', uid)
     },
@@ -66,13 +63,7 @@ export const handleBlur = (state) => {
 
 export const handleData = async (state, data) => {
   const { uid, terminal } = state
-  const parsedData = ToUint8Array.toUint8Array(data)
-  terminal.write(parsedData)
-}
-
-export const write = async (state, input) => {
-  const { uid, terminal } = state
-  await terminal.write(uid, input)
+  terminal.write(data)
 }
 
 export const dispose = async (state) => {
