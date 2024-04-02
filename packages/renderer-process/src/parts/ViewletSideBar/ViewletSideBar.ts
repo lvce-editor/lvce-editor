@@ -54,7 +54,8 @@ export const setActionsDom = (state, actions) => {
     return
   }
   const { $SideBarTitleArea, $Actions } = state
-  const $NewActions = VirtualDom.render(actions).firstChild
+  const eventMap = {}
+  const $NewActions = VirtualDom.render(actions, eventMap).firstChild
   if ($Actions) {
     $Actions.replaceWith($NewActions)
   } else {

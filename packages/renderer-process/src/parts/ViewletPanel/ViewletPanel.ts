@@ -4,6 +4,7 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as IconButton from '../IconButton/IconButton.ts'
+import * as Viewlet from '../Viewlet/Viewlet.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 import * as ViewletPanelEvents from './ViewletPanelEvents.ts'
 
@@ -107,9 +108,16 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
   }
 }
 
-export const setActionsDom = (state, actions) => {
+export const setActionsDom = (state, actions, childUid) => {
   const { $PanelTabs, $Actions } = state
-  const $NewActions = VirtualDom.render(actions).firstChild
+  // console.log({ childUid })
+  const instances = Viewlet.state.instances
+  const instance = instances[childUid]
+  if (!instance) {
+    throw new Error(`child instance not found`)
+  }
+  const eventMap = instance.factory.EventMap
+  const $NewActions = VirtualDom.render(actions, eventMap).firstChild
   if ($Actions) {
     $Actions.replaceWith($NewActions)
   } else {
