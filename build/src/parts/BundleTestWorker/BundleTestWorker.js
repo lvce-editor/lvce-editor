@@ -5,6 +5,10 @@ import * as Replace from '../Replace/Replace.js'
 
 export const bundleTestWorker = async ({ cachePath, commitHash, platform, assetDir }) => {
   await Copy.copy({
+    from: 'static/js',
+    to: Path.join(cachePath, 'static', 'js'),
+  })
+  await Copy.copy({
     from: 'packages/test-worker/src',
     to: Path.join(cachePath, 'src'),
   })
