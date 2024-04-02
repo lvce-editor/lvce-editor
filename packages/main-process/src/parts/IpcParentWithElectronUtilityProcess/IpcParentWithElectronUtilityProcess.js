@@ -17,4 +17,4 @@ export const effects = ({ rawIpc, name }) => {
   rawIpc.on('exit', handleExit)
 }
 
-export * from '@lvce-editor/ipc/dist/parts/IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js'
+export * from '@lvce-editor/ipc'
