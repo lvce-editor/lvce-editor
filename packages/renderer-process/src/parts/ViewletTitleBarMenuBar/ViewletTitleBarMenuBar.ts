@@ -93,32 +93,32 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
   const { $TitleBarMenuBar } = state
-  if (unFocusIndex !== -1) {
-    const $Child = $TitleBarMenuBar.children[unFocusIndex]
-    $Child.ariaExpanded = AriaBoolean.False
-    $Child.removeAttribute(DomAttributeType.AriaOwns)
-    $Child.removeAttribute('id')
-    $Child.classList.remove(activeClassName)
-    const $Wrapper = $Child.firstChild
-    $Wrapper.remove()
-    $Child.append($Wrapper.firstChild)
-  }
+  // if (unFocusIndex !== -1) {
+  //   const $Child = $TitleBarMenuBar.children[unFocusIndex]
+  //   $Child.ariaExpanded = AriaBoolean.False
+  //   $Child.removeAttribute(DomAttributeType.AriaOwns)
+  //   $Child.removeAttribute('id')
+  //   $Child.classList.remove(activeClassName)
+  //   const $Wrapper = $Child.firstChild
+  //   $Wrapper.remove()
+  //   $Child.append($Wrapper.firstChild)
+  // }
   if (focusIndex !== -1) {
-    const $Child = $TitleBarMenuBar.children[focusIndex]
-    const $Node = $Child.firstChild
-    $Child.id = activeId
-    $Child.classList.add(activeClassName)
-    const $Label = document.createElement('div')
-    $Label.className = 'TitleBarTopLevelEntryLabel'
-    $Label.append($Node)
-    $Child.replaceChildren($Label)
+    // const $Child = $TitleBarMenuBar.children[focusIndex]
+    // const $Node = $Child.firstChild
+    // $Child.id = activeId
+    // $Child.classList.add(activeClassName)
+    // const $Label = document.createElement('div')
+    // $Label.className = 'TitleBarTopLevelEntryLabel'
+    // $Label.append($Node)
+    // $Child.replaceChildren($Label)
 
     $TitleBarMenuBar.focus()
     $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
-    if (newIsMenuOpen) {
-      $Child.setAttribute(DomAttributeType.AriaOwns, 'Menu-0')
-      $Child.ariaExpanded = AriaBoolean.True
-    }
+    // if (newIsMenuOpen) {
+    //   $Child.setAttribute(DomAttributeType.AriaOwns, 'Menu-0')
+    //   $Child.ariaExpanded = AriaBoolean.True
+    // }
   }
 }
 
