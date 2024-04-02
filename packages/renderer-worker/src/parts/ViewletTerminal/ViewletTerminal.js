@@ -3,7 +3,6 @@ import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminal
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
-import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
