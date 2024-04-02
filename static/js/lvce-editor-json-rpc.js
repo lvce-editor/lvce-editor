@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Two = "2.0";
 const create$4 = (method, params) => {
   return {
