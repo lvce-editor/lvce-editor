@@ -15,7 +15,7 @@ const renderProblems = {
   },
   apply(oldState, newState) {
     const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.focusedIndex, newState.filterValue)
-    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.viewMode, visible)
+    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.viewMode, visible, newState.filterValue)
     return ['setProblemsDom', dom]
   },
 }
