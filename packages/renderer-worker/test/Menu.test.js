@@ -1,6 +1,5 @@
 import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -818,7 +817,7 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         // @ts-ignore
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: JsonRpcVersion.Two,
+          jsonrpc: '2.0',
           result: '/test/recently-opened.json',
         })
         break
@@ -826,7 +825,7 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         // @ts-ignore
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: JsonRpcVersion.Two,
+          jsonrpc: '2.0',
           result: '["/test/folder-1"]',
         })
         break
