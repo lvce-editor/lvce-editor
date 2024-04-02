@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -10,40 +11,40 @@ export const getProblemsTableHeaderVirtualDom = () => {
   const dom = [
     {
       type: VirtualDomElements.THead,
-      className: 'ProblemsTableHeader',
+      className: ClassNames.ProblemsTableHeader,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Tr,
-      className: 'ProblemsTableRow',
+      className: ClassNames.ProblemsTableRow,
       childCount: 5,
     },
     {
       type: VirtualDomElements.Th,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Th,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(textCode),
     {
       type: VirtualDomElements.Th,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(textMessage),
     {
       type: VirtualDomElements.Th,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(textFile),
     {
       type: VirtualDomElements.Th,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(textSource),
