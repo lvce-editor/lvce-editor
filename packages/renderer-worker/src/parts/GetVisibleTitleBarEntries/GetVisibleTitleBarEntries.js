@@ -18,7 +18,8 @@ export const getVisibleTitleBarEntries = (entries, width) => {
   if (hasOverflow) {
     const padding = 8
     const moreIconWidth = 22
-    const hasStillOverflow = total + moreIconWidth + padding * 2 > width
+    const totalPadding = padding * 2
+    const hasStillOverflow = total + moreIconWidth + totalPadding > width
     if (hasStillOverflow) {
       visible.pop()
     }
@@ -26,7 +27,7 @@ export const getVisibleTitleBarEntries = (entries, width) => {
       ariaLabel: TitleBarMenuBarStrings.more(),
       icon: Icon.Ellipsis,
       label: '',
-      width: moreIconWidth + padding * 2,
+      width: moreIconWidth + totalPadding,
     })
   }
   return visible

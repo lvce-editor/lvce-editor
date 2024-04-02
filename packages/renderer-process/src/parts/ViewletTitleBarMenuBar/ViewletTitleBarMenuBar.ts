@@ -5,7 +5,6 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
-import * as MaskIcon from '../MaskIcon/MaskIcon.ts'
 import * as Menu from '../OldMenu/Menu.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
@@ -88,28 +87,6 @@ export const focus = (state) => {
 // 17us update layer tree
 // 0.17ms paint
 // 0.19ms composite layers
-
-const create$TopLevelEntry = (item) => {
-  // const $Label = document.createElement('div')
-  // $Label.className = 'TitleBarTopLevelEntryLabel'
-  // $Label.textContent = item.label
-
-  const $TitleBarTopLevelEntry = document.createElement('div')
-  $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
-  $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
-  $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
-  $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
-  if (item.keyboardShortCut) {
-    $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
-  }
-  if (item.label) {
-    $TitleBarTopLevelEntry.textContent = item.label
-  } else {
-    const $Icon = MaskIcon.create(item.icon)
-    $TitleBarTopLevelEntry.append($Icon)
-  }
-  return $TitleBarTopLevelEntry
-}
 
 export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, newIsMenuOpen) => {
   Assert.object(state)
@@ -205,9 +182,9 @@ export const closeMenu = (state, unFocusIndex, index) => {
   })
 }
 
-export const setEntries = (state, titleBarEntries) => {
+export const setEntries = (state, dom) => {
   const { $TitleBarMenuBar } = state
-  $TitleBarMenuBar.replaceChildren(...titleBarEntries.map(create$TopLevelEntry))
+  VirtualDom.renderInto($TitleBarMenuBar, dom)
 }
 
 const create$Menu = () => {
