@@ -7,10 +7,6 @@ import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
 import * as Menu from '../src/parts/OldMenu/Menu.ts'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ts'
 
-const getTextContent = (node) => {
-  return node.textContent
-}
-
 test('create', async () => {
   const state = ViewletTitleBarMenuBar.create()
   expect(state).toBeDefined()
