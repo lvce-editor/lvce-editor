@@ -1,6 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const getBulkReplacementEdits = (workspacePath, matches) => {
   Assert.string(workspacePath)

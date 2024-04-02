@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostTextSearch from '../ExtensionHost/ExtensionHostTextSearch.js'
 
 export const textSearch = async (scheme, root, query) => {

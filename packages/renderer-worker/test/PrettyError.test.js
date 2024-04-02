@@ -429,7 +429,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
@@ -704,7 +704,7 @@ test('prepare - AssertionError', async () => {
     at async handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
   // @ts-ignore
   Ajax.getText.mockImplementation(() => {
-    return `import * as Assert from '../Assert/Assert.js'
+    return `import * as Assert from '../Assert/Assert.ts'
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
@@ -818,7 +818,7 @@ test('prepare - Viewlet error', async () => {
     at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)`
   // @ts-ignore
   Ajax.getText.mockImplementation(() => {
-    return `import * as Assert from '../Assert/Assert.js'
+    return `import * as Assert from '../Assert/Assert.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'

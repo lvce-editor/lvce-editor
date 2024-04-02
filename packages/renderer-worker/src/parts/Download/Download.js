@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Json from '../Json/Json.js'
 import * as MimeType from '../MimeType/MimeType.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'

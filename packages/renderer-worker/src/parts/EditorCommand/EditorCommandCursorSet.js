@@ -1,5 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 export const cursorSet = (editor, rowIndex, columnIndex) => {

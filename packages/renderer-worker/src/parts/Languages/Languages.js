@@ -1,6 +1,6 @@
 // TODO merge all of this with extension host languages module
 
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'

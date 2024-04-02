@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 
 // TODO where to store keybindings? need them here and in renderer process

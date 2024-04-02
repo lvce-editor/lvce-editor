@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 import * as Json from '../Json/Json.js'

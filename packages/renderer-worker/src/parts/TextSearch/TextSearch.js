@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as TextSearchProvider from '../TextSearchProvider/TextSearchProvider.js'
 

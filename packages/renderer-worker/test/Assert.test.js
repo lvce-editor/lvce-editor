@@ -1,5 +1,5 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as Assert from '../src/parts/Assert/Assert.js'
+import * as Assert from '../src/parts/Assert/Assert.ts'
 
 test('object', () => {
   expect(() => Assert.object('')).toThrow(new Error('expected value to be of type object'))

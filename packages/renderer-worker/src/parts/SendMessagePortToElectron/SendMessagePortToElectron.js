@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 

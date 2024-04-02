@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.js'
 import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.js'
 import * as IsSelfClosingTag from '../IsSelfClosingTag/IsSelfClosingTag.js'

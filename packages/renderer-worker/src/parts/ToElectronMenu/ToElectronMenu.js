@@ -1,6 +1,6 @@
 import * as ToElectronMenuItem from '../ToElectronMenuItem/ToElectronMenuItem.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 const toElectronMenuInternal = (commandMap, map, id, electronMenu) => {
   Assert.object(commandMap)

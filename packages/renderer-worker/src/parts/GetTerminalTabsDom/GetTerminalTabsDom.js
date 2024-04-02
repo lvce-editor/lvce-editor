@@ -1,5 +1,5 @@
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const getTabClassName = (isSelected) => {

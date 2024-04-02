@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
 import * as GetWebSocketUrl from '../GetWebSocketUrl/GetWebSocketUrl.js'
 import { IpcError } from '../IpcError/IpcError.js'

@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
 import * as FocusState from '../FocusState/FocusState.js'

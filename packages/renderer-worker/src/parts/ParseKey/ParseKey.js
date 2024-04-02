@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetKeyCodeString from '../GetKeyCodeString/GetKeyCodeString.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 

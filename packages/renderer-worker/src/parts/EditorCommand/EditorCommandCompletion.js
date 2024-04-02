@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'

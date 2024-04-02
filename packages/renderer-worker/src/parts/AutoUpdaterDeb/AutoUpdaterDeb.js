@@ -1,6 +1,6 @@
 // TODO remove this code when auto update through apt is supported
 
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Download from '../Download/Download.js'
 import * as Exec from '../Exec/Exec.js'
 import * as GetDebArch from '../GetDebArch/GetDebArch.js'

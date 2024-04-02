@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetTextMeasureContext from '../GetTextMeasureContext/GetTextMeasureContext.js'
 import * as GetFontString from '../GetFontString/GetFontString.js'
 

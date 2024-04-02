@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ViewletSearchStrings from './ViewletSearchStrings.js'
 
 export const getStatusMessage = (resultCount, fileResultCount) => {

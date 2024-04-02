@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 

@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as GetX from '../GetX/GetX.js'

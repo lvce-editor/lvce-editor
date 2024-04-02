@@ -1,5 +1,5 @@
 import * as AllowedMarkdownAttributes from '../AllowedMarkdownAttributes/AllowedMarkdownAttributes.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ParseHtml from '../ParseHtml/ParseHtml.js'
 
 export const getMarkdownVirtualDom = (html) => {

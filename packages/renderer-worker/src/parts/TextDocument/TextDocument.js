@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Arrays from '../Arrays/Arrays.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'

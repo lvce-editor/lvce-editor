@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import { closeAllEditors } from './ViewletMainCloseAllEditors.js'
 

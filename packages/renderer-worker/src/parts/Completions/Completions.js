@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 

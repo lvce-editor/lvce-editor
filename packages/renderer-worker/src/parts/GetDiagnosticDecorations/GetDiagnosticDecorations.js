@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetX from '../GetX/GetX.js'
 
 const getDiagnosticDecoration = (

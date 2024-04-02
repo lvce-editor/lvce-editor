@@ -1,5 +1,5 @@
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const fileExtension = (uri) => {
   Assert.string(uri)

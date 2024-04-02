@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as SplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'

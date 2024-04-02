@@ -1,6 +1,6 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 

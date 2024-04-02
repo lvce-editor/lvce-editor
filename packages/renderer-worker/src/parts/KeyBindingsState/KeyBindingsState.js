@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as Context from '../Context/Context.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'

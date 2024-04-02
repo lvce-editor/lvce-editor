@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const create = ({ itemHeight, headerHeight = 0, minimumSliderSize = 20 }) => {
   return {

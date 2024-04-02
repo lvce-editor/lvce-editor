@@ -1,5 +1,5 @@
 import * as Id from '../Id/Id.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Logger from '../Logger/Logger.js'
 
 export const state = Object.create(null)

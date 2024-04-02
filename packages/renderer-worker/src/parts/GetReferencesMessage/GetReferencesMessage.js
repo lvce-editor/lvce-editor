@@ -1,5 +1,5 @@
 import * as LocationStrings from '../LocationStrings/LocationsStrings.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const getMessage = (resultCount, fileCount) => {
   Assert.number(resultCount)

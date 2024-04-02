@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ElectronContextMenu from '../ElectronContextMenu/ElectronContextMenu.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
