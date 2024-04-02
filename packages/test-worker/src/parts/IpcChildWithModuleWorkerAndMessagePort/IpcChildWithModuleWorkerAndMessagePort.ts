@@ -1,11 +1,10 @@
-// @ts-nocheck
 import * as GetData from '../GetData/GetData.ts'
 import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.ts'
 import { IpcError } from '../IpcError/IpcError.ts'
 import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.ts'
 
 export const listen = async () => {
-  const parentIpcRaw = await IpcChildWithModuleWorker.listen()
+  const parentIpcRaw = IpcChildWithModuleWorker.listen()
   const parentIpc = IpcChildWithModuleWorker.wrap(parentIpcRaw)
   const firstMessage = await WaitForFirstMessage.waitForFirstMessage(parentIpc)
   if (firstMessage.method !== 'initialize') {
@@ -37,8 +36,10 @@ export const wrap = (port) => {
     },
     set onmessage(listener) {
       if (listener) {
+        // @ts-ignore
         this.wrappedListener = (event) => {
           const data = GetData.getData(event)
+          // @ts-ignore
           listener({ data, target: this })
         }
       } else {
