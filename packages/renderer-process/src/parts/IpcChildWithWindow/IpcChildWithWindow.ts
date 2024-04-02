@@ -15,7 +15,7 @@ export const wrap = (window) => {
         if ('method' in data) {
           return
         }
-        listener(data)
+        listener({ data, target: this })
       }
       this.window.onmessage = wrappedListener
     },

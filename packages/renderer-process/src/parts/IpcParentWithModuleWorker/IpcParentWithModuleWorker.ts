@@ -34,6 +34,14 @@ export const create = async ({ url, name }) => {
   return worker
 }
 
+const getData = (event) => {
+  // TODO why are some events not instance of message event?
+  if (event instanceof MessageEvent) {
+    return event.data
+  }
+  return event
+}
+
 export const wrap = (worker) => {
   let handleMessage
   return {
@@ -43,13 +51,8 @@ export const wrap = (worker) => {
     set onmessage(listener) {
       if (listener) {
         handleMessage = (event) => {
-          // TODO why are some events not instance of message event?
-          if (event instanceof MessageEvent) {
-            const message = event.data
-            listener(message, event)
-          } else {
-            listener(event)
-          }
+          const data = getData(event)
+          listener({ data, target: this })
         }
       } else {
         handleMessage = null

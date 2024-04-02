@@ -3,10 +3,11 @@ import * as Callback from '../Callback/Callback.ts'
 import * as Command from '../Command/Command.ts'
 import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.ts'
 
+const handleMessage = (event) => {
+  return HandleJsonRpcMessage.handleJsonRpcMessage(event.target, event.data, Command.execute, Callback.resolve)
+}
+
 export const handleIpc = (ipc) => {
   Assert.object(ipc)
-  const handleMessage = (message) => {
-    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve)
-  }
   ipc.onmessage = handleMessage
 }
