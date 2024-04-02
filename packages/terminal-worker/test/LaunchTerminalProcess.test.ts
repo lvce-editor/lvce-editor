@@ -34,5 +34,5 @@ test('launchTerminalProcess', async () => {
   jest.spyOn(IpcParent, 'create').mockResolvedValue(mockIpc)
   await LaunchTerminalProcess.launchTerminalProcess()
   expect(HandleIpc.handleIpc).toHaveBeenCalledTimes(1)
-  expect(HandleIpc.handleIpc).toHaveBeenCalledWith(mockIpc, 'terminal process')
+  expect(HandleIpc.handleIpc).toHaveBeenCalledWith(mockIpc)
 })
