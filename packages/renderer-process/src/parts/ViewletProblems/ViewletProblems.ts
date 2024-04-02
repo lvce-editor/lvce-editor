@@ -33,7 +33,7 @@ export const setProblemsDom = (state, dom) => {
   Assert.object(state)
   Assert.array(dom)
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom)
+  VirtualDom.renderInto($Viewlet, dom, ViewletProblemsEvents)
 }
 
 export const focus = (state) => {

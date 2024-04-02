@@ -11,7 +11,21 @@ export const getProblemsNoProblemsFoundVirtualDom = (filterValue) => {
     childCount: 1,
   })
   if (filterValue) {
-    dom.push(text(ProblemStrings.noResultsFoundWithProvidedFilterCriteria()))
+    dom[0].childCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Span,
+        childCount: 1,
+      },
+      text(ProblemStrings.noResultsFoundWithProvidedFilterCriteria()),
+      {
+        type: VirtualDomElements.A,
+        className: 'MessageAction',
+        childCount: 1,
+        onClick: 'handleClearFilterClick',
+      },
+      text(ProblemStrings.clearFilter()),
+    )
   } else {
     dom.push(text(ProblemStrings.noProblemsDetected()))
   }

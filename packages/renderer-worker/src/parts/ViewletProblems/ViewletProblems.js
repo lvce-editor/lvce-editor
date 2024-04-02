@@ -154,3 +154,10 @@ export const viewAsList = (state) => {
     viewMode: ProblemsViewMode.List,
   }
 }
+
+export const clearFilter = (state) => {
+  return {
+    ...state,
+    filterValue: '',
+  }
+}

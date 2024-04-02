@@ -13,4 +13,5 @@ export const Commands = {
   collapseAll: ViewletProblems.collapseAll,
   viewAsTable: ViewletProblems.viewAsTable,
   viewAsList: ViewletProblems.viewAsList,
+  clearFilter: ViewletProblems.clearFilter,
 }

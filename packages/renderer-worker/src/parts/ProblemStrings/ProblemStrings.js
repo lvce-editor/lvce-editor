@@ -13,10 +13,10 @@ const UiStrings = {
   LineColumn: '[Ln {PH1}, Col {PH2}]',
   Message: 'Message',
   NoProblemsDetected: 'No problems have been detected in the workspace.',
+  NoResultsFoundWithProvidedFilterCriteria: 'No results found with provided filter criteria.',
   ProblemsDetected: 'Some problems have been detected in the workspace.',
   ShowingOfItems: 'Showing {PH1} of {PH2} ',
   Source: 'Source',
-  NoResultsFoundWithProvidedFilterCriteria: 'No results found with provided filter criteria.',
 }
 
 export const noProblemsDetected = () => {
