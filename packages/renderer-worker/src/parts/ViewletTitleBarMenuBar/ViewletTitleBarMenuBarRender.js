@@ -1,17 +1,29 @@
 import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
 import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
 import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
+import * as GetTitleBarMenuBarVirtualDom from '../GetTitleBarMenuBarVirtualDom/GetTitleBarMenuBarVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
 const renderTitleBarEntries = {
   isEqual(oldState, newState) {
-    return oldState.titleBarEntries === newState.titleBarEntries && oldState.width === newState.width
+    return (
+      oldState.titleBarEntries === newState.titleBarEntries &&
+      oldState.width === newState.width &&
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.isMenuOpen === newState.isMenuOpen
+    )
   },
   apply(oldState, newState) {
-    const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(newState.titleBarEntries, newState.width)
-    return [/* method */ RenderMethod.SetEntries, /* titleBarEntries */ visibleEntries]
+    const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(
+      newState.titleBarEntries,
+      newState.width,
+      newState.focusedIndex,
+      newState.isMenuOpen,
+    )
+    const dom = GetTitleBarMenuBarVirtualDom.getTitleBarMenuBarVirtualDom(visibleEntries)
+    return [/* method */ RenderMethod.SetEntries, dom]
   },
 }
 
