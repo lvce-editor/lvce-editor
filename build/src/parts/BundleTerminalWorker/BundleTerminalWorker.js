@@ -12,7 +12,7 @@ export const bundleTerminalWorker = async ({ cachePath, commitHash, platform, as
     from: 'static/js',
     to: Path.join(cachePath, 'static', 'js'),
   })
-  for (const file of ['TerminalEmulator']) {
+  for (const file of ['TerminalEmulator', 'JsonRpc']) {
     await Replace.replace({
       path: `${cachePath}/src/parts/${file}/${file}.ts`,
       occurrence: `../../../../../static/`,
