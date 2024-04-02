@@ -1,6 +1,5 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -49,7 +48,7 @@ test.skip('getPicks - error', async () => {
       case 'ExtensionHost.getColorThemeNames':
         // @ts-ignore
         SharedProcess.state.receive({
-          jsonrpc: JsonRpcVersion.Two,
+          jsonrpc: '2.0',
           // @ts-ignore
           id: message.id,
           error: {

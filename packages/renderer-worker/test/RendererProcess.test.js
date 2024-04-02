@@ -1,5 +1,4 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
@@ -20,7 +19,7 @@ test('invoke - error', async () => {
   RendererProcess.state.ipc = {
     send(message) {
       Callback.resolve(message.id, {
-        jsonrpc: JsonRpcVersion.Two,
+        jsonrpc: '2.0',
         error: {
           message: 'Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"',
           stack: `Error: expected selector .Viewlet.Editor to have text "test3" but was "test"

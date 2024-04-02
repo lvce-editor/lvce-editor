@@ -1,5 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
@@ -24,7 +23,7 @@ test.skip('openFolder', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   // @ts-ignore
   expect(SharedProcess.invoke).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 8307,
     params: [],

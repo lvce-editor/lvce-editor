@@ -1,6 +1,5 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as SharedProcessState from '../src/parts/SharedProcessState/SharedProcessState.js'
 
 test.skip('invoke - error', async () => {
@@ -11,7 +10,7 @@ test.skip('invoke - error', async () => {
         case 123456:
           // @ts-ignore
           SharedProcess.handleMessageFromSharedProcess({
-            jsonrpc: JsonRpcVersion.Two,
+            jsonrpc: '2.0',
             // @ts-ignore
             id: message.id,
             error: {
@@ -42,7 +41,7 @@ test.skip('invoke - error stack', async () => {
         case 123456:
           // @ts-ignore
           SharedProcess.handleMessageFromSharedProcess({
-            jsonrpc: JsonRpcVersion.Two,
+            jsonrpc: '2.0',
             // @ts-ignore
             id: message.id,
             error: {
