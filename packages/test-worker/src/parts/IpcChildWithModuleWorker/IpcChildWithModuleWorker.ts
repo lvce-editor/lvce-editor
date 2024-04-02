@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as GetData from '../GetData/GetData.ts'
 
 export const listen = () => {
@@ -32,6 +31,7 @@ export const wrap = (global) => {
     set onmessage(listener) {
       const wrappedListener = (event) => {
         const data = GetData.getData(event)
+        // @ts-ignore
         listener({
           data,
           target: this,
