@@ -1,5 +1,5 @@
 import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
-import * as ViewletProblemsActions from './ViewletProblemsActions.js'
+import * as ViewletProblemsActions from './ViewletProblemsActions.ts'
 
 export const renderActions = {
   isEqual(oldState, newState) {

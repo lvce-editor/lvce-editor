@@ -2,8 +2,9 @@ import * as ActionType from '../ActionType/ActionType.js'
 import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
+import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
-export const getActions = (state) => {
+export const getActions = (state): readonly ViewletAction[] => {
   const visibleCount = GetVisibleProblems.getVisibleProblems(state.problems, state.focusedIndex, state.filterValue).length
   const problemsCount = state.problems.length
   const actions = [
