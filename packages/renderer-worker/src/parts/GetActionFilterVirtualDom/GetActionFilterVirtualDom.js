@@ -17,6 +17,7 @@ export const getActionFilterVirtualDom = (action) => {
       autocorrect: 'off',
       placeholder: 'Filter',
       onInput: action.command,
+      name: 'filter',
     },
   )
   if (action.badgeText) {
