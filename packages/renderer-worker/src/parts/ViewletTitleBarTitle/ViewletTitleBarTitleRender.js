@@ -1,3 +1,5 @@
+import * as GetTitleBarTitleVirtualDom from '../GetTitleBarTitleVirtualDom/GetTitleBarTitleVirtualDom.js'
+
 export const hasFunctionalRender = true
 
 const renderTitle = {
@@ -5,7 +7,8 @@ const renderTitle = {
     return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    return ['setTitle', newState.title]
+    const dom = GetTitleBarTitleVirtualDom.getVirtualDom(newState.title)
+    return ['setDom', dom]
   },
 }
 
