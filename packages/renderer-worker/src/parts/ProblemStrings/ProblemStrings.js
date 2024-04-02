@@ -4,18 +4,18 @@ import * as I18NString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  NoProblemsDetected: 'No problems have been detected in the workspace.',
-  ProblemsDetected: 'Some problems have been detected in the workspace.',
-  LineColumn: '[Ln {PH1}, Col {PH2}]',
+  ClearFilter: 'Clear Filter',
+  Code: 'Code',
   Copy: 'Copy',
   CopyMessage: 'Copy Message',
-  Code: 'Code',
-  Message: 'Message',
   File: 'File',
-  Source: 'Source',
   Filter: 'Filter',
-  ClearFilter: 'Clear Filter',
+  LineColumn: '[Ln {PH1}, Col {PH2}]',
+  Message: 'Message',
+  NoProblemsDetected: 'No problems have been detected in the workspace.',
+  ProblemsDetected: 'Some problems have been detected in the workspace.',
   ShowingOfItems: 'Showing {PH1} of {PH2} ',
+  Source: 'Source',
 }
 
 export const noProblemsDetected = () => {
