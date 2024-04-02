@@ -1,3 +1,5 @@
+import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet TitleBarTitle'
@@ -6,7 +8,7 @@ export const create = () => {
   }
 }
 
-export const setTitle = (state, title) => {
+export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  $Viewlet.textContent = title
+  VirtualDom.renderInto($Viewlet, dom)
 }
