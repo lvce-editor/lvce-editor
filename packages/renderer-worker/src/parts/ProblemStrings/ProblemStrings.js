@@ -16,6 +16,7 @@ const UiStrings = {
   ProblemsDetected: 'Some problems have been detected in the workspace.',
   ShowingOfItems: 'Showing {PH1} of {PH2} ',
   Source: 'Source',
+  NoResultsFoundWithProvidedFilterCriteria: 'No results found with provided filter criteria.',
 }
 
 export const noProblemsDetected = () => {
@@ -73,4 +74,8 @@ export const source = () => {
 
 export const copyMessage = () => {
   return I18NString.i18nString(UiStrings.CopyMessage)
+}
+
+export const noResultsFoundWithProvidedFilterCriteria = () => {
+  return I18NString.i18nString(UiStrings.NoResultsFoundWithProvidedFilterCriteria)
 }
