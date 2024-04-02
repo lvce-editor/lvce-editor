@@ -1,5 +1,6 @@
 import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.ts'
 
+export const clearFilter = ForwardViewletCommand.forwardViewletCommand('clearFilter')
 export const close = ForwardViewletCommand.forwardViewletCommand('close')
 export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEditor')
 export const closeMenu = ForwardViewletCommand.forwardViewletCommand('closeMenu')

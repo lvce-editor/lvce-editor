@@ -1,9 +1,12 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
+import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
-export const getActions = (state) => {
+export const getActions = (state): readonly ViewletAction[] => {
   const visibleCount = GetVisibleProblems.getVisibleProblems(state.problems, state.focusedIndex, state.filterValue).length
   const problemsCount = state.problems.length
   const actions = [
@@ -11,7 +14,9 @@ export const getActions = (state) => {
       type: ActionType.Filter,
       id: 'Filter',
       command: 'handleFilterInput',
-      badgeText: visibleCount === 0 ? '' : `Showing ${visibleCount} of ${problemsCount}`,
+      badgeText: visibleCount === problemsCount ? '' : ProblemStrings.showingOf(visibleCount, problemsCount),
+      placeholder: ProblemStrings.filter(),
+      value: state.inputSource === InputSource.Script ? state.filterValue : '',
     },
     {
       type: ActionType.Button,

@@ -13,7 +13,8 @@
 }
 
 .FilterBadge {
-  background: purple;
-  color: white;
-  padding: 0 2px;
+  background: var(--BadgeBackground, rgb(160, 63, 155));
+  color: var(--BadgeForeground, #eeeeee);
+  padding: 0 4px;
+  border-radius: 2px;
 }

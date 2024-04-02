@@ -6,6 +6,7 @@ import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as IconButton from '../IconButton/IconButton.ts'
 import * as Viewlet from '../Viewlet/Viewlet.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
+import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as ViewletPanelEvents from './ViewletPanelEvents.ts'
 
 /**
@@ -31,9 +32,13 @@ export const create = () => {
   $PanelToolBar.role = AriaRoles.ToolBar
   $PanelToolBar.append($ButtonMaximize, $ButtonClose)
 
+  const $PanelActions = document.createElement('div')
+  $PanelActions.className = 'Actions'
+  $PanelActions.role = 'toolbar'
+
   const $PanelHeader = document.createElement('div')
   $PanelHeader.className = 'PanelHeader'
-  $PanelHeader.append($PanelTabs, $PanelToolBar)
+  $PanelHeader.append($PanelTabs, $PanelActions, $PanelToolBar)
   // const $PanelContent = document.createElement('div')
   // $PanelContent.id = 'PanelContent'
   const $Viewlet = document.createElement('div')
@@ -49,6 +54,7 @@ export const create = () => {
     $PanelContent: undefined,
     $ButtonClose,
     $ButtonMaximize,
+    $PanelActions,
   }
   // await openViewlet('Terminal')
 }
@@ -109,22 +115,12 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
 }
 
 export const setActionsDom = (state, actions, childUid) => {
-  const { $PanelTabs, $Actions } = state
-  // console.log({ childUid })
+  const { $PanelTabs, $PanelActions } = state
   const instances = Viewlet.state.instances
   const instance = instances[childUid]
   if (!instance) {
     throw new Error(`child instance not found`)
   }
   const eventMap = instance.factory.EventMap
-  const $NewActions = VirtualDom.render(actions, eventMap).firstChild
-  if ($Actions) {
-    $Actions.replaceWith($NewActions)
-  } else {
-    $NewActions.addEventListener(DomEventType.Input, ViewletPanelEvents.handleFilterInput, {
-      capture: true,
-    })
-    $PanelTabs.after($NewActions)
-  }
-  state.$Actions = $NewActions
+  RememberFocus.rememberFocus($PanelActions, actions, eventMap)
 }

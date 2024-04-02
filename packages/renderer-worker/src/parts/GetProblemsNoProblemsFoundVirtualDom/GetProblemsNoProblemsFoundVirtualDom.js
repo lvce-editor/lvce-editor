@@ -1,5 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
+import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -11,10 +11,23 @@ export const getProblemsNoProblemsFoundVirtualDom = (filterValue) => {
     childCount: 1,
   })
   if (filterValue) {
-    // TODO use i18nstring
-    dom.push(text('No results found with provided filter criteria.'))
+    dom[0].childCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Span,
+        childCount: 1,
+      },
+      text(ProblemStrings.noResultsFoundWithProvidedFilterCriteria()),
+      {
+        type: VirtualDomElements.A,
+        className: 'MessageAction',
+        childCount: 1,
+        onClick: 'handleClearFilterClick',
+      },
+      text(ProblemStrings.clearFilter()),
+    )
   } else {
-    dom.push(text(ViewletProblemsStrings.noProblemsDetected()))
+    dom.push(text(ProblemStrings.noProblemsDetected()))
   }
   return dom
 }

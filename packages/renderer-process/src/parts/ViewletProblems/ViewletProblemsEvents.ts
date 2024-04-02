@@ -22,3 +22,8 @@ export const handleFilterInput = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ForwardCommand.handleFilterInput(uid, value)
 }
+
+export const handleClearFilterClick = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.clearFilter(uid)
+}
