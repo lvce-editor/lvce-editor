@@ -13,7 +13,7 @@ export const launchTerminalProcess = async () => {
       initialCommand: 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess',
     })
     TerminalProcessState.state.ipc = ipc
-    HandleIpc.handleIpc(ipc, 'terminal process')
+    HandleIpc.handleIpc(ipc)
   } catch (error) {
     throw new VError(error, 'Failed to create terminal connection')
   }

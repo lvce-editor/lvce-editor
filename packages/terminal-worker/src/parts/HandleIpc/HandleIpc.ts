@@ -1,12 +1,11 @@
-// @ts-nocheck
-
 import * as Callback from '../Callback/Callback.ts'
 import * as Command from '../Command/Command.ts'
 import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.ts'
 
-export const handleIpc = (ipc, source = 'process') => {
-  const handleMessage = (message) => {
-    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, source)
-  }
+const handleMessage = (event) => {
+  return HandleJsonRpcMessage.handleJsonRpcMessage(event, Command.execute, Callback.resolve)
+}
+
+export const handleIpc = (ipc) => {
   ipc.onmessage = handleMessage
 }

@@ -38,8 +38,11 @@ export const wrap = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          const actualData = GetData.getData(event)
-          listener(actualData)
+          const data = GetData.getData(event)
+          listener({
+            data,
+            target: this,
+          })
         }
       } else {
         this.wrappedListener = undefined

@@ -36,9 +36,12 @@ export const wrap = (webSocket) => {
         this.handleMessage = (event) => {
           // TODO why are some events not instance of message event?
           if (event instanceof MessageEvent) {
-            const message = JSON.parse(event.data)
+            const data = JSON.parse(event.data)
             // @ts-ignore
-            listener(message)
+            listener({
+              data,
+              target: this,
+            })
           } else {
             // @ts-ignore
             listener(event)
