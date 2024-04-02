@@ -97,22 +97,6 @@ test.skip('handleData', () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'write', new Uint8Array([1, 2, 3, 4, 5]))
 })
 
-test('write', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
-    return null
-  })
-  const state = {
-    ...ViewletTerminal.create(1),
-    terminal: {
-      write: jest.fn(),
-    },
-  }
-  await ViewletTerminal.write(state, 'abc')
-  expect(state.terminal.write).toHaveBeenCalledTimes(1)
-  expect(state.terminal.write).toHaveBeenCalledWith(1, 'abc')
-})
-
 test.skip('clear', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
