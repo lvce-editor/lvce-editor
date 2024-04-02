@@ -15,7 +15,7 @@ export const getActionFilterVirtualDom = (action) => {
       spellcheck: false,
       autocapitalize: 'off',
       autocorrect: 'off',
-      placeholder: 'Filter',
+      placeholder: action.placeholder,
       onInput: action.command,
       name: 'filter',
     },
