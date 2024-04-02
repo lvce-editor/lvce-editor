@@ -18,6 +18,7 @@ const getItemVirtualDom = (item) => {
     dom[0].ariaOwns = 'Menu-0'
   }
   if (isFocused) {
+    dom[0].className += ' TitleBarEntryActive'
     // @ts-ignore
     dom[0].id = 'TitleBarEntryActive'
     dom.push({
