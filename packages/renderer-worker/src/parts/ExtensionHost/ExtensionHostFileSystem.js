@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'

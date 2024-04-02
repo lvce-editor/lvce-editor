@@ -1,5 +1,5 @@
 import * as Arrays from '../Arrays/Arrays.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as Distance from '../Distance/Distance.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'

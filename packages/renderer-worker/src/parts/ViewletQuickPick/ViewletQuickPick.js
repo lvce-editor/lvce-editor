@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Height from '../Height/Height.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'

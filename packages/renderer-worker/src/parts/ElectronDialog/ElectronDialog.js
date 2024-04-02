@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as Product from '../Product/Product.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'

@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const listProcesses = async (debugId) => {

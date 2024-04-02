@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 import * as FilterQuickPickItem from '../FilterQuickPickItem/FilterQuickPickItem.js'
 import * as Character from '../Character/Character.js'

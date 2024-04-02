@@ -1,5 +1,5 @@
 import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const state = {
   enabledProviders: [],

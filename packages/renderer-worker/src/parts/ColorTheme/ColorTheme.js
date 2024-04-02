@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Css from '../Css/Css.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetColorThemeCss from '../GetColorThemeCss/GetColorThemeCss.js'

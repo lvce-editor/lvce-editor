@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as TokenType from '../HtmlTokenType/HtmlTokenType.js'
 import { UnexpectedTokenError } from '../UnexpectedTokenError/UnexpectedTokenError.js'
 

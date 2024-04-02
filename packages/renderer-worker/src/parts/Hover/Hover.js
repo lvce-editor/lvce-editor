@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostHover from '../ExtensionHost/ExtensionHostHover.js'
 
 export const getHover = async (editor, offset) => {

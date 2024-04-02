@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Clamp from '../Clamp/Clamp.js'
 
 const getTotalTabWidth = (tabs) => {

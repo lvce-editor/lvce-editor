@@ -1,5 +1,5 @@
 import * as Arrays from '../Arrays/Arrays.js'
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
 import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'

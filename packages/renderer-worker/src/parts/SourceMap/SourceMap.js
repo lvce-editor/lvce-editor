@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import { VError } from '../VError/VError.js'
 import * as Vlq from '../Vlq/Vlq.js'

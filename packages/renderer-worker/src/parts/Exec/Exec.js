@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const exec = (command, args, options) => {

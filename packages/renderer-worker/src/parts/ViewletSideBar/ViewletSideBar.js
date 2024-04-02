@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as GetActionRenderers from '../GetActionRenderers/GetActionRenderers.js'

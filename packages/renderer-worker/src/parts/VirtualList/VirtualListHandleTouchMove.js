@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 export const handleTouchMove = (state, timeStamp, touches) => {

@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as FilterQuickPickItems from '../FilterQuickPickItems/FilterQuickPickItems.js'
 
 export const getFilteredItems = (state, picks, filterValue, provider) => {

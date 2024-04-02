@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 
 export const splitLines = (lines) => {

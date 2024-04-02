@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 

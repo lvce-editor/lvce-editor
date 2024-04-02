@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 
 export const getDownloadUrl = (repository, version, applicationName, debArch) => {
   Assert.string(repository)

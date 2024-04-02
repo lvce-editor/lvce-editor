@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetData from '../GetData/GetData.js'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'

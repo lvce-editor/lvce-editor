@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 import * as Id from '../Id/Id.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'

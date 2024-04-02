@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'

@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
