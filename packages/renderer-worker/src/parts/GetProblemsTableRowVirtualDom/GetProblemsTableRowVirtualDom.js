@@ -1,13 +1,14 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetProblemSourceDetail from '../GetProblemSourceDetail/GetProblemSourceDetail.js'
+import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getClassName = (isEven) => {
   if (isEven) {
-    return 'ProblemsTableRow'
+    return ClassNames.ProblemsTableRow
   }
-  return 'ProblemsTableRow ProblemsTableRowOdd'
+  return `${ClassNames.ProblemsTableRow} ${ClassNames.ProblemsTableRowOdd}`
 }
 
 export const getProblemsTableRowVirtualDom = (problem) => {
@@ -25,31 +26,31 @@ export const getProblemsTableRowVirtualDom = (problem) => {
     },
     {
       type: VirtualDomElements.Td,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     GetProblemsIconVirtualDom.getProblemsIconVirtualDom(),
     {
       type: VirtualDomElements.Td,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(GetProblemSourceDetail.getProblemSourceDetail(source, code)),
     {
       type: VirtualDomElements.Td,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(message),
     {
       type: VirtualDomElements.Td,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(uri),
     {
       type: VirtualDomElements.Td,
-      className: 'ProblemsTableRowItem',
+      className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(source),
