@@ -323,7 +323,6 @@ export const contentLoaded = async (state) => {
     return []
   }
   const commands = []
-  console.log({ groups })
   for (const group of groups) {
     const { editors } = group
     if (editors.length === 0) {

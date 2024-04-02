@@ -11,7 +11,7 @@ export const getActions = (state) => {
       type: ActionType.Filter,
       id: 'Filter',
       command: 'handleFilterInput',
-      badgeText: visibleCount === 0 ? '' : `Showing ${visibleCount} of ${problemsCount}`,
+      badgeText: visibleCount === problemsCount ? '' : `Showing ${visibleCount} of ${problemsCount}`,
     },
     {
       type: ActionType.Button,
