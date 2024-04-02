@@ -1,5 +1,10 @@
 import * as FormatUtilityProcessName from '../FormatUtilityProcessName/FormatUtilityProcessName.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
+import { IpcParentWithElectronUtilityProcess } from '@lvce-editor/ipc'
+
+export const create = IpcParentWithElectronUtilityProcess.create
+
+export const wrap = IpcParentWithElectronUtilityProcess.wrap
 
 export const effects = ({ rawIpc, name }) => {
   if (!rawIpc.pid) {
@@ -16,5 +21,3 @@ export const effects = ({ rawIpc, name }) => {
   }
   rawIpc.on('exit', handleExit)
 }
-
-export * from '@lvce-editor/ipc/dist/parts/IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js'
