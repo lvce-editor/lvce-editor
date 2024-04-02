@@ -1,13 +1,11 @@
 import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
-  Callback.state.id = 0
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -295,7 +293,7 @@ test.skip('monitorPerformance', async () => {
   SharedProcess.state.totalReceived = 1693
   await Developer.getMemoryUsageContent()
   expect(SharedProcess.invoke).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     method: 284,
     params: [],
     id: 1,

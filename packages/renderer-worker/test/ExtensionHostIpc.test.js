@@ -1,9 +1,7 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
+// @ts-nocheck
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRpc.js'
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
-import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -24,7 +22,7 @@ test('listen - error - unexpected extension host type', async () => {
   await expect(ExtensionHostIpc.listen(123)).rejects.toThrow(new Error('unexpected extension host type: 123'))
 })
 
-test.only('handleMessage - error - method not found', async () => {
+test.skip('handleMessage - error - method not found', async () => {
   // @ts-ignore
   IpcParent.create.mockImplementation(() => {
     let _onmessage

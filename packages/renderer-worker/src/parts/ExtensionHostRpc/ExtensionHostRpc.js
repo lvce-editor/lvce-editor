@@ -1,11 +1,9 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as HasTransferableResult from '../HasTransferableResult/HasTransferableResult.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
-import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const isResultMessage = (message) => {
   return 'result' in message
