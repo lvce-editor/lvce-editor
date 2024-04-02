@@ -28,22 +28,22 @@ jobs:
         id: nodeModulesCacheKey
         run: echo "value=$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: npm-cache
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: electron-rebuild-cache
         with:
           path: '~/.electron-gyp'
           key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: electron-builder-cache
         with:
           path: '~/.cache/electron-builder'
           key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: build-cache
         with:
           path: 'build/.tmp/cachedDependencies'
@@ -57,7 +57,7 @@ jobs:
         id: builtinExtensionsCacheKey
         run: echo "value=$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: builtin-extensions-cache
         with:
           path: extensions
@@ -99,7 +99,7 @@ jobs:
         if: matrix.os == 'macos-12'
         run: node build/bin/build.js --target=electron-builder-mac --arch=x64
       - name: Cache Electron Builder Dependencies (Windows)
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: electron-builder-cache-windows
         if: matrix.os == 'windows-2022'
         with:
