@@ -8,10 +8,20 @@ export const hasFunctionalRender = true
 
 const renderTitleBarEntries = {
   isEqual(oldState, newState) {
-    return oldState.titleBarEntries === newState.titleBarEntries && oldState.width === newState.width
+    return (
+      oldState.titleBarEntries === newState.titleBarEntries &&
+      oldState.width === newState.width &&
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.isMenuOpen === newState.isMenuOpen
+    )
   },
   apply(oldState, newState) {
-    const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(newState.titleBarEntries, newState.width)
+    const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(
+      newState.titleBarEntries,
+      newState.width,
+      newState.focusedIndex,
+      newState.isMenuOpen,
+    )
     const dom = GetTitleBarMenuBarVirtualDom.getTitleBarMenuBarVirtualDom(visibleEntries)
     return [/* method */ RenderMethod.SetEntries, dom]
   },

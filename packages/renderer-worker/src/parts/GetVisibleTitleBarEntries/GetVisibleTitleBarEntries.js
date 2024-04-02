@@ -2,17 +2,19 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Icon from '../Icon/Icon.js'
 import * as TitleBarMenuBarStrings from '../TitleBarMenuBarStrings/TitleBarMenuBarStrings.js'
 
-export const getVisibleTitleBarEntries = (entries, width) => {
+export const getVisibleTitleBarEntries = (entries, width, focusedIndex, isMenuOpen) => {
   Assert.array(entries)
   Assert.number(width)
   let total = 0
   const visible = []
-  for (const entry of entries) {
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i]
     total += entry.width
     if (total >= width) {
       break
     }
-    visible.push(entry)
+    const isOpen = i === focusedIndex && isMenuOpen
+    visible.push({ ...entry, isOpen })
   }
   const hasOverflow = visible.length < entries.length
   if (hasOverflow) {
