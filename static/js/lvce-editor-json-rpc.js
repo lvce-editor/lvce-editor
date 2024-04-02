@@ -7,10 +7,10 @@ const create$4 = (method, params) => {
     params
   };
 };
-var JsonRpcEvent = /* @__PURE__ */ Object.freeze({
+const JsonRpcEvent = {
   __proto__: null,
   create: create$4
-});
+};
 class AssertionError extends Error {
   constructor(message) {
     super(message);
@@ -46,48 +46,64 @@ const number = (value) => {
   }
 };
 const state$1 = {
+  callbacks: Object.create(null)
+};
+const set = (id, fn) => {
+  state$1.callbacks[id] = fn;
+};
+const get = (id) => {
+  return state$1.callbacks[id];
+};
+const remove = (id) => {
+  delete state$1.callbacks[id];
+};
+const state = {
   id: 0
 };
 const create$3 = () => {
-  return ++state$1.id;
+  return ++state.id;
 };
 const warn = (...args) => {
   console.warn(...args);
 };
 const withResolvers = () => {
   let _resolve;
-  let _reject;
-  const promise = new Promise((resolve2, reject) => {
+  const promise = new Promise((resolve2) => {
     _resolve = resolve2;
-    _reject = reject;
   });
   return {
     resolve: _resolve,
-    reject: _reject,
     promise
   };
 };
-const state = {
-  callbacks: Object.create(null)
-};
 const registerPromise = () => {
   const id = create$3();
-  const {resolve: resolve2, promise} = withResolvers();
-  state.callbacks[id] = resolve2;
-  return {id, promise};
+  const {
+    resolve: resolve2,
+    promise
+  } = withResolvers();
+  set(id, resolve2);
+  return {
+    id,
+    promise
+  };
 };
 const resolve = (id, args) => {
   number(id);
-  if (!(id in state.callbacks)) {
+  const fn = get(id);
+  if (!fn) {
     console.log(args);
     warn(`callback ${id} may already be disposed`);
     return;
   }
-  state.callbacks[id](args);
-  delete state.callbacks[id];
+  fn(args);
+  remove(id);
 };
 const create$2 = (method, params) => {
-  const {id, promise} = registerPromise();
+  const {
+    id,
+    promise
+  } = registerPromise();
   const message = {
     jsonrpc: Two,
     method,
@@ -99,16 +115,17 @@ const create$2 = (method, params) => {
     promise
   };
 };
-var JsonRpcRequest = /* @__PURE__ */ Object.freeze({
+const JsonRpcRequest = {
   __proto__: null,
   create: create$2
-});
+};
 class JsonRpcError extends Error {
   constructor(message) {
     super(message);
     this.name = "JsonRpcError";
   }
 }
+const NewLine = "\n";
 const DomException = "DOMException";
 const ReferenceError$1 = "ReferenceError";
 const SyntaxError$1 = "SyntaxError";
@@ -139,18 +156,6 @@ const getErrorConstructor = (message, type) => {
   }
   return Error;
 };
-const NewLine = "\n";
-const getNewLineIndex = (string, startIndex = void 0) => {
-  return string.indexOf(NewLine, startIndex);
-};
-const joinLines = (lines) => {
-  return lines.join(NewLine);
-};
-const MethodNotFound = -32601;
-const Custom = -32001;
-const splitLines = (lines) => {
-  return lines.split(NewLine);
-};
 const constructError = (message, type, name) => {
   const ErrorConstructor = getErrorConstructor(message, type);
   if (ErrorConstructor === DOMException && name) {
@@ -164,6 +169,17 @@ const constructError = (message, type, name) => {
     return error;
   }
   return new ErrorConstructor(message);
+};
+const getNewLineIndex = (string, startIndex = void 0) => {
+  return string.indexOf(NewLine, startIndex);
+};
+const joinLines = (lines) => {
+  return lines.join(NewLine);
+};
+const MethodNotFound = -32601;
+const Custom = -32001;
+const splitLines = (lines) => {
+  return lines.split(NewLine);
 };
 const getParentStack = (error) => {
   let parentStack = error.stack || error.data || error.message || "";
@@ -306,18 +322,24 @@ const send = (transport, method, ...params) => {
   transport.send(message);
 };
 const invoke = async (ipc, method, ...params) => {
-  const {message, promise} = create$2(method, params);
+  const {
+    message,
+    promise
+  } = create$2(method, params);
   ipc.send(message);
   const responseMessage = await promise;
   const result = unwrapJsonRpcResult(responseMessage);
   return result;
 };
 const invokeAndTransfer = async (ipc, handle, method, ...params) => {
-  const {message, promise} = create$2(method, params);
+  const {
+    message,
+    promise
+  } = create$2(method, params);
   ipc.sendAndTransfer(message, handle);
   const responseMessage = await promise;
   const result = unwrapJsonRpcResult(responseMessage);
   return result;
 };
-export {JsonRpcEvent, JsonRpcRequest, getErrorResponse, getSuccessResponse, handleJsonRpcMessage, invoke, invokeAndTransfer, resolve, send};
+export {JsonRpcEvent, JsonRpcRequest, getErrorResponse, getSuccessResponse, handleJsonRpcMessage, invoke, invokeAndTransfer, registerPromise, resolve, send};
 export default null;
