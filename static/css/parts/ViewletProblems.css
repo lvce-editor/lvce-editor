@@ -58,8 +58,10 @@
   opacity: 0.7;
 }
 
+/* TODO avoid css nesting */
 .Problems .Label {
   flex: initial;
+  display: flex;
 }
 
 .ProblemsTable {
