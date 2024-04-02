@@ -1,0 +1,19 @@
+.Filter {
+  display: flex;
+  min-width: 214px;
+  contain: strict;
+  height: 24px;
+  align-items: center;
+  border: 1px solid var(--InputBoxBorder, rgb(55, 65, 63));
+}
+
+/* TODO avoid css nesting */
+.Filter .InputBox {
+  border: none;
+}
+
+.FilterBadge {
+  background: purple;
+  color: white;
+  padding: 0 2px;
+}
