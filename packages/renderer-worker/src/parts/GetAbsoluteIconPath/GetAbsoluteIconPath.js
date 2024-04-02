@@ -14,9 +14,9 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     }
     if (extensionPath.includes(PathSeparator.BackSlash)) {
       const extensionUri = extensionPath.replaceAll(PathSeparator.BackSlash, PathSeparator.Slash)
-      return `/remote/${extensionUri}/${result}`
+      return `/remote/${extensionUri}${result}`
     }
-    return GetRemoteSrc.getRemoteSrc(`${extensionPath}/${result}`)
+    return GetRemoteSrc.getRemoteSrc(`${extensionPath}${result}`)
   }
   return ''
 }
