@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as MergeStacks from '../MergeStacks/MergeStacks.ts'
 
 const stringifyError = (error) => {
@@ -32,6 +31,7 @@ export class VError extends Error {
       this.stack = MergeStacks.mergeStacks(this.stack, error.stack)
     }
     if (error.codeFrame) {
+      // @ts-ignore
       this.codeFrame = error.codeFrame
     }
   }
