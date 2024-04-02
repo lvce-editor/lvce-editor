@@ -1,9 +1,14 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetProblemsTableRowVirtualDom from '../GetProblemsTableRowVirtualDom/GetProblemsTableRowVirtualDom.js'
+import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getProblemsTableVirtualDom = (problems) => {
+  const textCode = ProblemStrings.code()
+  const textSource = ProblemStrings.source()
+  const textMessage = ProblemStrings.message()
+  const textFile = ProblemStrings.file()
   const dom = [
     {
       type: VirtualDomElements.Table,
@@ -30,25 +35,25 @@ export const getProblemsTableVirtualDom = (problems) => {
       className: 'ProblemsTableRowItem',
       childCount: 1,
     },
-    text('Code'),
+    text(textCode),
     {
       type: VirtualDomElements.Th,
       className: 'ProblemsTableRowItem',
       childCount: 1,
     },
-    text('Message'),
+    text(textMessage),
     {
       type: VirtualDomElements.Th,
       className: 'ProblemsTableRowItem',
       childCount: 1,
     },
-    text('File'),
+    text(textFile),
     {
       type: VirtualDomElements.Th,
       className: 'ProblemsTableRowItem',
       childCount: 1,
     },
-    text('Source'),
+    text(textSource),
     {
       type: VirtualDomElements.TBody,
       className: 'ProblemsTableBody',
