@@ -1,13 +1,17 @@
 import * as ActionType from '../ActionType/ActionType.js'
+import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 
 export const getActions = (state) => {
+  const visibleCount = GetVisibleProblems.getVisibleProblems(state.problems, state.focusedIndex, state.filterValue).length
+  const problemsCount = state.problems.length
   const actions = [
     {
       type: ActionType.Filter,
       id: 'Filter',
       command: 'handleFilterInput',
+      badgeText: visibleCount === 0 ? '' : `Showing ${visibleCount} of ${problemsCount}`,
     },
     {
       type: ActionType.Button,
