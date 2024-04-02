@@ -1,10 +1,22 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
-export const handleIpc = (ipc, source = 'process') => {
+const prepareError = (error) => {
+  return error
+}
+
+const logError = (error) => {
+  console.error(error)
+}
+
+const requiresSocket = () => {
+  return false
+}
+
+export const handleIpc = (ipc) => {
   const handleMessage = (message) => {
-    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, source)
+    JsonRpc.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, prepareError, logError, requiresSocket)
   }
   ipc.onmessage = handleMessage
 }
