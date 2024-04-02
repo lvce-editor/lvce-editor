@@ -13,6 +13,8 @@ const UiStrings = {
   Message: 'Message',
   File: 'File',
   Source: 'Source',
+  Filter: 'Filter',
+  ShowingOfItems: 'Showing {PH1} of {PH2} ',
 }
 
 export const noProblemsDetected = () => {
@@ -47,6 +49,17 @@ export const message = () => {
 
 export const file = () => {
   return I18NString.i18nString(UiStrings.File)
+}
+
+export const filter = () => {
+  return I18NString.i18nString(UiStrings.Filter)
+}
+
+export const showingOf = (visibleCount, totalCount) => {
+  return I18NString.i18nString(UiStrings.ShowingOfItems, {
+    PH1: visibleCount,
+    PH2: totalCount,
+  })
 }
 
 export const source = () => {

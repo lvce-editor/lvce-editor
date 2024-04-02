@@ -2,6 +2,7 @@ import * as ActionType from '../ActionType/ActionType.js'
 import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
+import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
 export const getActions = (state): readonly ViewletAction[] => {
@@ -12,8 +13,8 @@ export const getActions = (state): readonly ViewletAction[] => {
       type: ActionType.Filter,
       id: 'Filter',
       command: 'handleFilterInput',
-      badgeText: visibleCount === problemsCount ? '' : `Showing ${visibleCount} of ${problemsCount}`,
-      placeholder: 'Filter',
+      badgeText: visibleCount === problemsCount ? '' : ProblemStrings.showingOf(visibleCount, problemsCount),
+      placeholder: ProblemStrings.filter(),
     },
     {
       type: ActionType.Button,
