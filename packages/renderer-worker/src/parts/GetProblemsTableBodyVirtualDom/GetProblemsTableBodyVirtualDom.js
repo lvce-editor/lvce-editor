@@ -1,0 +1,14 @@
+import * as GetProblemsTableRowVirtualDom from '../GetProblemsTableRowVirtualDom/GetProblemsTableRowVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+
+export const getProblemsTableBodyVirtualDom = (problems) => {
+  const dom = [
+    {
+      type: VirtualDomElements.TBody,
+      className: 'ProblemsTableBody',
+      childCount: problems.length,
+    },
+    ...problems.flatMap(GetProblemsTableRowVirtualDom.getProblemsTableRowVirtualDom),
+  ]
+  return dom
+}

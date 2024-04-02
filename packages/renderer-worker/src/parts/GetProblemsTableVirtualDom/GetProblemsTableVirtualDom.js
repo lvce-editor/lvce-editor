@@ -1,6 +1,6 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetProblemsTableBodyVirtualDom from '../GetProblemsTableBodyVirtualDom/GetProblemsTableBodyVirtualDom.js'
 import * as GetProblemsTableHeaderVirtualDom from '../GetProblemsTableHeaderVirtualDom/GetProblemsTableHeaderVirtualDom.js'
-import * as GetProblemsTableRowVirtualDom from '../GetProblemsTableRowVirtualDom/GetProblemsTableRowVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getProblemsTableVirtualDom = (problems) => {
@@ -11,12 +11,7 @@ export const getProblemsTableVirtualDom = (problems) => {
       childCount: 2,
     },
     ...GetProblemsTableHeaderVirtualDom.getProblemsTableHeaderVirtualDom(),
-    {
-      type: VirtualDomElements.TBody,
-      className: 'ProblemsTableBody',
-      childCount: problems.length,
-    },
-    ...problems.flatMap(GetProblemsTableRowVirtualDom.getProblemsTableRowVirtualDom),
+    ...GetProblemsTableBodyVirtualDom.getProblemsTableBodyVirtualDom(problems),
   ]
   return dom
 }
