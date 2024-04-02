@@ -1,5 +1,5 @@
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
-import * as Arrays from '../Arrays/Arrays.js'
+import * as SortExtensions from '../SortExtensions/SortExtensions.js'
 
 const matchesParsedValue = (extension, parsedValue) => {
   if (extension && typeof extension.name === 'string') {
@@ -11,14 +11,6 @@ const matchesParsedValue = (extension, parsedValue) => {
     return extensionIdLower.includes(parsedValue.query)
   }
   return false
-}
-
-const compareExtension = (extensionA, extensionB) => {
-  return extensionA.name.localeCompare(extensionB.name) || extensionA.id.localeCompare(extensionB.id)
-}
-
-const sortExtensions = (extensions) => {
-  return Arrays.toSorted(extensions, compareExtension)
 }
 
 export const getExtensions = async (extensions, parsedValue) => {
@@ -34,6 +26,6 @@ export const getExtensions = async (extensions, parsedValue) => {
       })
     }
   }
-  const sortedExtensions = sortExtensions(filteredExtensions)
+  const sortedExtensions = SortExtensions.sortExtensions(filteredExtensions)
   return sortedExtensions
 }
