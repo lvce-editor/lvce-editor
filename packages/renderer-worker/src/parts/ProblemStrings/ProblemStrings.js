@@ -14,6 +14,7 @@ const UiStrings = {
   File: 'File',
   Source: 'Source',
   Filter: 'Filter',
+  ClearFilter: 'Clear Filter',
   ShowingOfItems: 'Showing {PH1} of {PH2} ',
 }
 
@@ -37,6 +38,10 @@ export const atLineColumn = (line, column) => {
 
 export const copy = () => {
   return I18NString.i18nString(UiStrings.Copy)
+}
+
+export const clearFilter = () => {
+  return I18NString.i18nString(UiStrings.ClearFilter)
 }
 
 export const code = () => {
