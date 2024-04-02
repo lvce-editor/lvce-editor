@@ -27,7 +27,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       from: 'static/js',
       to: Path.join(cachePath, 'static', 'js'),
     })
-    for (const file of ['Terminal']) {
+    for (const file of ['Terminal', 'JsonRpc']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.ts`,
         occurrence: `../../../../../static/`,
