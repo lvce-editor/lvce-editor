@@ -70,6 +70,17 @@
   contain: strict;
 }
 
+.ProblemsTableRow {
+  height: 21px;
+  contain: strict;
+  cursor: pointer;
+}
+
+.ProblemsTableRow:where(:hover) {
+  color: var(--ListHoverForeground);
+  background: var(--ListHoverBackground);
+}
+
 .ProblemsTableRowOdd {
   background: var(--TableRowOddBackground, rgba(156, 162, 160, 0.04));
 }
@@ -78,4 +89,9 @@
 .MessageAction {
   text-decoration: underline;
   margin-left: 4px;
+}
+
+.ProblemsTableRowItem {
+  contain: content;
+  text-align: left;
 }
