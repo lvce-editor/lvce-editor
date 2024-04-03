@@ -158,18 +158,6 @@ const restoreExpandedState = async (savedState, root, pathSeparator, excluded) =
   return dirents
 }
 
-export const saveState = (state) => {
-  const { items, root, deltaY, minLineY, maxLineY } = state
-  const expandedPaths = items.filter(isExpandedDirectory).map(getPath)
-  return {
-    expandedPaths,
-    root,
-    minLineY,
-    maxLineY,
-    deltaY,
-  }
-}
-
 const getExcluded = () => {
   const excludedObject = Preferences.get('files.exclude') || {}
   const excluded = []
@@ -181,32 +169,19 @@ const getExcluded = () => {
   return excluded
 }
 
-const getSavedRoot = (savedState, workspacePath) => {
-  return workspacePath
-}
-
 export const loadContent = async (state, savedState) => {
-  const root = getSavedRoot(savedState, Workspace.state.workspacePath)
+  const { root, minLineY } = savedState
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const excluded = getExcluded()
   const restoredDirents = await restoreExpandedState(savedState, root, pathSeparator, excluded)
   const { itemHeight, height } = state
-  let minLineY = 0
-  if (savedState && typeof savedState.minLineY === 'number') {
-    minLineY = savedState.minLineY
-  }
-  let deltaY = 0
-  if (savedState && typeof savedState.deltaY === 'number') {
-    deltaY = savedState.deltaY
-  }
   const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
   return {
     ...state,
     root,
     items: restoredDirents,
     minLineY,
-    deltaY,
     maxLineY,
     pathSeparator,
     excluded,

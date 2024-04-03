@@ -349,7 +349,11 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       instanceSavedState = restoreState
     }
     const args = viewlet.args || []
-    let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
+    let newState
+    if (module.restoreState) {
+      newState = module.restoreState(instanceSavedState || {})
+    }
+    newState = await module.loadContent(viewletState, instanceSavedState, ...args)
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
     }
