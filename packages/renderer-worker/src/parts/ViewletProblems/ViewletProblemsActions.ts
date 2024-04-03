@@ -9,7 +9,7 @@ import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 export const getActions = (state): readonly ViewletAction[] => {
   const visibleCount = GetVisibleProblems.getVisibleProblems(state.problems, state.focusedIndex, state.filterValue).length
   const problemsCount = state.problems.length
-  const actions = [
+  const actions: ViewletAction[] = [
     {
       type: ActionType.Filter,
       id: 'Filter',
@@ -17,12 +17,6 @@ export const getActions = (state): readonly ViewletAction[] => {
       badgeText: visibleCount === problemsCount ? '' : ProblemStrings.showingOf(visibleCount, problemsCount),
       placeholder: ProblemStrings.filter(),
       value: state.inputSource === InputSource.Script ? state.filterValue : '',
-    },
-    {
-      type: ActionType.Button,
-      id: 'Collapse All',
-      command: 'collapseAll',
-      icon: MaskIcon.CollapseAll,
     },
   ]
   if (state.viewMode === ProblemsViewMode.Table) {
@@ -33,12 +27,20 @@ export const getActions = (state): readonly ViewletAction[] => {
       icon: MaskIcon.ListTree,
     })
   } else {
-    actions.push({
-      type: ActionType.Button,
-      id: 'View as table',
-      command: 'viewAsTable',
-      icon: MaskIcon.ListFlat,
-    })
+    actions.push(
+      {
+        type: ActionType.Button,
+        id: 'Collapse All',
+        command: 'collapseAll',
+        icon: MaskIcon.CollapseAll,
+      },
+      {
+        type: ActionType.Button,
+        id: 'View as table',
+        command: 'viewAsTable',
+        icon: MaskIcon.ListFlat,
+      },
+    )
   }
   return actions
 }
