@@ -17,6 +17,7 @@ export const eagerLoadedCss = [
   'InputBox.css',
   'Label.css',
   'MaskIcon.css',
+  'MessageAction.css',
   'Menu.css',
   'Mobile.css',
   'Notification.css',
