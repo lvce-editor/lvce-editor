@@ -20,36 +20,36 @@ export const getProblemsTableRowVirtualDom = (problem) => {
   }
   const dom = [
     {
-      type: VirtualDomElements.Tr,
+      type: VirtualDomElements.Div,
       className: getClassName(isEven),
       childCount: 5,
     },
     {
-      type: VirtualDomElements.Td,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     GetProblemsIconVirtualDom.getProblemsIconVirtualDom(type),
     {
-      type: VirtualDomElements.Td,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(GetProblemSourceDetail.getProblemSourceDetail(source, code)),
     {
-      type: VirtualDomElements.Td,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(message),
     {
-      type: VirtualDomElements.Td,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
     text(uri),
     {
-      type: VirtualDomElements.Td,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },

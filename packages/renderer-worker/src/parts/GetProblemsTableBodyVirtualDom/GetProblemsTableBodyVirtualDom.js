@@ -5,7 +5,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 export const getProblemsTableBodyVirtualDom = (problems) => {
   const dom = [
     {
-      type: VirtualDomElements.TBody,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTableBody,
       childCount: problems.length,
     },
