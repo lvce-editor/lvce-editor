@@ -73,9 +73,3 @@
 .ProblemsTableRowOdd {
   background: var(--TableRowOddBackground, rgba(156, 162, 160, 0.04));
 }
-
-/* TODO move into separate file */
-.MessageAction {
-  text-decoration: underline;
-  margin-left: 4px;
-}
