@@ -171,5 +171,6 @@ export const clearFilter = (state) => {
   return {
     ...state,
     filterValue: '',
+    inputSource: InputSource.Script,
   }
 }

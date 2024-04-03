@@ -11,7 +11,7 @@ export const getProblemsNoProblemsFoundVirtualDom = (filterValue) => {
     childCount: 1,
   })
   if (filterValue) {
-    dom[0].childCount++
+    dom[0].childCount += 2
     dom.push(
       {
         type: VirtualDomElements.Span,
@@ -25,6 +25,7 @@ export const getProblemsNoProblemsFoundVirtualDom = (filterValue) => {
         onClick: 'handleClearFilterClick',
       },
       text(ProblemStrings.clearFilter()),
+      text('.'),
     )
   } else {
     dom.push(text(ProblemStrings.noProblemsDetected()))

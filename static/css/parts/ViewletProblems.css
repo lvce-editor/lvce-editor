@@ -77,4 +77,5 @@
 /* TODO move into separate file */
 .MessageAction {
   text-decoration: underline;
+  margin-left: 4px;
 }
