@@ -1,7 +1,7 @@
 import * as Workspace from '../Workspace/Workspace.js'
 
 const toProblem = (diagnostic) => {
-  const { message, rowIndex, columnIndex, source, code } = diagnostic
+  const { message, rowIndex, columnIndex, source, code, type } = diagnostic
   return {
     message: message || '',
     rowIndex: rowIndex || 0,
@@ -11,6 +11,7 @@ const toProblem = (diagnostic) => {
     count: 0,
     source: source || '',
     code: code || '',
+    type: type || 'error',
   }
 }
 
@@ -37,6 +38,7 @@ export const toProblems = (diagnostics) => {
         relativePath: '',
         count: 1,
         source: '',
+        type: '',
       }
       problems.push(problem)
     }
