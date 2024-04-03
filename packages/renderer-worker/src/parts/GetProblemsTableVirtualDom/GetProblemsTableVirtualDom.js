@@ -6,7 +6,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 export const getProblemsTableVirtualDom = (problems) => {
   const dom = [
     {
-      type: VirtualDomElements.Table,
+      type: VirtualDomElements.Div,
       className: ClassNames.ProblemsTable,
       childCount: 2,
     },
