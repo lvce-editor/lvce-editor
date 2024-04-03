@@ -12,7 +12,7 @@ const getClassName = (isEven) => {
 }
 
 export const getProblemsTableRowVirtualDom = (problem) => {
-  const { code, source, uri, message, file, isEven } = problem
+  const { code, source, uri, message, file, isEven, type } = problem
   // TODO problems are grouped by uri, depending
   // on which renderer is used the data needs to look different
   if (!message) {
@@ -29,7 +29,7 @@ export const getProblemsTableRowVirtualDom = (problem) => {
       className: ClassNames.ProblemsTableRowItem,
       childCount: 1,
     },
-    GetProblemsIconVirtualDom.getProblemsIconVirtualDom(),
+    GetProblemsIconVirtualDom.getProblemsIconVirtualDom(type),
     {
       type: VirtualDomElements.Td,
       className: ClassNames.ProblemsTableRowItem,
