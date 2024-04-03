@@ -4,7 +4,7 @@ import * as I18NString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  ClearFilter: 'Clear Filter',
+  ClearFilters: 'Clear Filters',
   Code: 'Code',
   Copy: 'Copy',
   CopyMessage: 'Copy Message',
@@ -42,7 +42,7 @@ export const copy = () => {
 }
 
 export const clearFilter = () => {
-  return I18NString.i18nString(UiStrings.ClearFilter)
+  return I18NString.i18nString(UiStrings.ClearFilters)
 }
 
 export const code = () => {
