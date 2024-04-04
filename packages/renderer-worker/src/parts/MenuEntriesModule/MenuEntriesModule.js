@@ -9,8 +9,6 @@ export const load = (id) => {
       return import('../MenuEntriesEdit/MenuEntriesEdit.js')
     case MenuEntryId.Editor:
       return import('../MenuEntriesEditor/MenuEntriesEditor.js')
-    case MenuEntryId.Explorer:
-      return import('../MenuEntriesExplorer/MenuEntriesExplorer.js')
     case MenuEntryId.File:
       return import('../MenuEntriesFile/MenuEntriesFile.js')
     case MenuEntryId.Go:

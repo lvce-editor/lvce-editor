@@ -9,6 +9,7 @@ import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFu
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -279,12 +280,21 @@ const maybeRegisterEvents = (module) => {
   }
 }
 
+const maybeRegisterMenuEntries = (module) => {
+  if (module.menus) {
+    for (const menu of module.menus) {
+      MenuEntriesRegistryState.register(menu.id, menu)
+    }
+  }
+}
+
 const actuallyLoadModule = async (getModule, id) => {
   const module = await getModule(id)
   await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id)
   await ViewletManagerVisitor.loadModule(id, module)
   maybeRegisterWrappedCommands(id, module)
   maybeRegisterEvents(module)
+  maybeRegisterMenuEntries(module)
   return module
 }
 
