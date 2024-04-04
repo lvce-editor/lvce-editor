@@ -112,11 +112,6 @@ const handleMouseEnter = (event) => {
   )
 }
 
-const handleMouseMove = (event) => {
-  // const x = event.clientX
-  // const y = event.clientY
-}
-
 const handleMouseLeave = (event) => {
   const $RelatedTarget = event.relatedTarget
   if ($RelatedTarget.classList.contains('MenuItem')) {
@@ -218,7 +213,6 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
 
 export const closeSubMenu = () => {
   const $SubMenu = state.$$Menus.pop()
-  const $ParentMenu = state.$$Menus.at(-1)
   Widget.remove($SubMenu)
 }
 

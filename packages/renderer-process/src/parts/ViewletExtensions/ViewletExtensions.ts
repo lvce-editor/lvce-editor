@@ -92,7 +92,7 @@ export const focus = (state) => {
   state.$InputBox.focus()
 }
 
-export const setExtensionState = (state, id, extensionState) => {
+export const setExtensionState = () => {
   // const index = state.extensions.findIndex((extension) => extension.id === id)
   // if (index === -1) {
   //   return
@@ -131,14 +131,13 @@ export const setExtensionsDom = (state, dom) => {
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
 }
 
-export const dispose = (state) => {}
+export const dispose = () => {}
 
 export const openSuggest = (state) => {
   // TODO maybe cache getBoundingClientRect (though it is not a bottleneck right now)
   // TODO getBoundingClientRect should not be needed, all positions should be known already in renderer worker
+  // @ts-ignore
   const rect = state.$InputBox.getBoundingClientRect()
-  const x = rect.left
-  const y = rect.top
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
 }

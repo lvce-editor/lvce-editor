@@ -67,8 +67,3 @@ export const render = (elements, eventMap = {}) => {
   renderInternal($Root, elements, eventMap)
   return $Root
 }
-
-const insert = ($Node, diffItem) => {
-  // @ts-ignore
-  renderInternal($Node, diffItem.nodes)
-}
