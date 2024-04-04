@@ -34,8 +34,6 @@ export const load = (id) => {
       return import('../MenuEntriesEditorImage/MenuEntriesEditorImage.js')
     case MenuEntryId.ExtensionDetailReadme:
       return import('../MenuEntriesExtensionDetailReadme/MenuEntriesExtensionDetailReadme.js')
-    case MenuEntryId.SimpleBrowser:
-      return import('../MenuEntriesSimpleBrowser/MenuEntriesSimpleBrowser.js')
     case MenuEntryId.Problems:
       return import('../MenuEntriesProblems/MenuEntriesProblems.js')
     case MenuEntryId.Main:
