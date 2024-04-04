@@ -158,18 +158,6 @@ const restoreExpandedState = async (savedState, root, pathSeparator, excluded) =
   return dirents
 }
 
-export const saveState = (state) => {
-  const { items, root, deltaY, minLineY, maxLineY } = state
-  const expandedPaths = items.filter(isExpandedDirectory).map(getPath)
-  return {
-    expandedPaths,
-    root,
-    minLineY,
-    maxLineY,
-    deltaY,
-  }
-}
-
 const getExcluded = () => {
   const excludedObject = Preferences.get('files.exclude') || {}
   const excluded = []
