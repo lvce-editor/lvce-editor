@@ -179,8 +179,6 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
       const newParentState = parentInstance.factory.setBadgeCount(oldState, childInstance.factory.name, badgeCount)
       ViewletStates.setState(parentId, newParentState)
       commands.push(...getRenderCommands(parentInstance.factory, oldState, newParentState))
-      console.log({ newParentState })
-      console.log({ commands })
     }
   }
   if (Array.isArray(module.render)) {
