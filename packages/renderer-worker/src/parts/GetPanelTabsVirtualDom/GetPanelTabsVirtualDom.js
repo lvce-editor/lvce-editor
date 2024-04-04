@@ -38,7 +38,6 @@ export const getPanelTabsVirtualDom = (tabs, selectedIndex, badgeCounts) => {
     const isSelected = i === selectedIndex
     const tab = tabs[i]
     const badgeCount = badgeCounts[tab] || 0
-    console.log({ tab, badgeCount })
     dom.push(...createPanelTab(tab, badgeCount, isSelected))
   }
   return dom
