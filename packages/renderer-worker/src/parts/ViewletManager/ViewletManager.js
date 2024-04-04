@@ -170,6 +170,19 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
       // console.warn('parent id not found')
     }
   }
+  if (module.getBadgeCount && parentId) {
+    const badgeCount = module.getBadgeCount(newState)
+    const parentInstance = ViewletStates.getInstance(parentId)
+    const childInstance = ViewletStates.getInstance(uid)
+    if (parentInstance && parentInstance.factory.setBadgeCount) {
+      const oldState = parentInstance.state
+      const newParentState = parentInstance.factory.setBadgeCount(oldState, childInstance.factory.name, badgeCount)
+      ViewletStates.setState(parentId, newParentState)
+      commands.push(...getRenderCommands(parentInstance.factory, oldState, newParentState))
+      console.log({ newParentState })
+      console.log({ commands })
+    }
+  }
   if (Array.isArray(module.render)) {
     for (const item of module.render) {
       if (!item.isEqual(oldState, newState)) {
