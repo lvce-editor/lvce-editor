@@ -18,7 +18,7 @@ export const handlePointerMove = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerUp = (event) => {
-  const { pointerId, clientX, clientY, target, button } = event
+  const { pointerId, clientX, clientY, button } = event
   if (button !== MouseEventType.LeftClick) {
     return
   }
