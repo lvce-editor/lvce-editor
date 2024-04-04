@@ -1,9 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as PathDisplay from '../PathDisplay/PathDisplay.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 
 /**
  * @enum {string}
@@ -28,6 +28,8 @@ const toMenuItem = (folder) => {
 const getRecentlyOpened = () => {
   return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened')
 }
+
+export const id = MenuEntryId.OpenRecent
 
 export const getMenuEntries = async () => {
   const allItems = await getRecentlyOpened()
