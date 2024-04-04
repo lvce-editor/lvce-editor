@@ -179,3 +179,27 @@ export const clearFilter = (state) => {
     inputSource: InputSource.Script,
   }
 }
+
+const getArrowLeftNewFocusedIndex = (problems, focusedIndex) => {
+  for (let i = focusedIndex - 1; i >= 0; i--) {
+    const problem = problems[i]
+    if (problem.uri) {
+      return i
+    }
+  }
+  return 0
+}
+
+export const handleArrowLeft = (state) => {
+  const { problems, focusedIndex } = state
+  const newFocusedIndex = getArrowLeftNewFocusedIndex(problems, focusedIndex)
+  return {
+    ...state,
+    focusedIndex: newFocusedIndex,
+  }
+}
+
+export const handleArrowRight = (state) => {
+  // TODO expand
+  return state
+}
