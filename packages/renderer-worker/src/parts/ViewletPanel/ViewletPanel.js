@@ -21,6 +21,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     actions: [],
+    badgeCounts: Object.create(null),
   }
 }
 
@@ -55,6 +56,18 @@ export const loadContent = (state, savedState) => {
     views,
     currentViewletId: savedViewletId,
     selectedIndex,
+  }
+}
+
+export const setBadgeCount = (state, id, count) => {
+  // console.log({ id, count })
+  const { badgeCounts } = state
+  return {
+    ...state,
+    badgeCounts: {
+      ...badgeCounts,
+      [id]: count,
+    },
   }
 }
 

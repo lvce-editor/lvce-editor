@@ -7,12 +7,17 @@
 .PanelTab {
   cursor: pointer;
   font-size: 11px;
-  font-family: system-ui, Ubuntu, Droid Sans, sans-serif;
+  font-family:
+    system-ui,
+    Ubuntu,
+    Droid Sans,
+    sans-serif;
   text-transform: uppercase;
   height: 85%;
   line-height: 35px;
   /* color: rgba(231, 231, 231, 0.6); */
   color: var(--PanelTabForeground);
+  display: flex;
 }
 
 .PanelTabSelected {
