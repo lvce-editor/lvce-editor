@@ -529,6 +529,7 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   // TODO handle error
   const dirents = await getChildDirents(state.pathSeparator, dirent)
   const state2 = Viewlet.getState('Explorer')
+  console.log('no satte')
   if (!state2) {
     return state
   }
@@ -536,8 +537,10 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   const newIndex = state2.items.indexOf(dirent)
   // TODO if viewlet is disposed or root has changed, return
   if (newIndex === -1) {
+    console.log('is disposed')
     return state
   }
+
   const newDirents = [...state2.items]
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = DirentType.DirectoryExpanded
@@ -624,6 +627,7 @@ const getClickFn = (direntType) => {
 
 export const handleClick = (state, index, keepFocus = false) => {
   const { items, minLineY } = state
+  console.log({ state })
   if (index === -1) {
     return focusIndex(state, -1)
   }

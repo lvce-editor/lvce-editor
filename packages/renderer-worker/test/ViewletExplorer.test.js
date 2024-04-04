@@ -21,6 +21,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -28,6 +29,13 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/ViewletExplorer/ViewletExplorerMenuEntries.js', () => {
+  return {
+    menus: [],
+  }
+})
+
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
     rename: jest.fn(() => {
