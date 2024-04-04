@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as GetIcon from '../src/parts/GetIcon/GetIcon.js'
 import * as IconThemeState from '../src/parts/IconThemeState/IconThemeState.js'
@@ -16,7 +16,7 @@ const Languages = await import('../src/parts/Languages/Languages.js')
 test('getIcon - match by lowerCase file name', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_license: 'test/file_license.svg',
+      f_license: '/test/file_license.svg',
     },
     fileNames: {
       license: 'f_license',
@@ -33,7 +33,7 @@ test('getIcon - match by lowerCase file name', () => {
 test('getIcon - match by upperCase file name', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_license: 'test/file_license.svg',
+      f_license: '/test/file_license.svg',
     },
     fileNames: {
       license: 'f_license',
@@ -50,7 +50,7 @@ test('getIcon - match by upperCase file name', () => {
 test('getIcon - match by lowerCase folder name', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      fd_test: 'test/folder_test.svg',
+      fd_test: '/test/folder_test.svg',
     },
     folderNames: {
       test: 'fd_test',
@@ -67,7 +67,7 @@ test('getIcon - match by lowerCase folder name', () => {
 test('getIcon - match by upperCase folder name', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      fd_test: 'test/folder_test.svg',
+      fd_test: '/test/folder_test.svg',
     },
     folderNames: {
       test: 'fd_test',
@@ -84,7 +84,7 @@ test('getIcon - match by upperCase folder name', () => {
 test('getIcon - match by file extension', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_test: 'test/file_test.svg',
+      f_test: '/test/file_test.svg',
     },
     fileNames: {},
     languageIds: {},
@@ -103,7 +103,7 @@ test('getIcon - match by file extension', () => {
 test('getIcon - match by lowercase file extension', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_test: 'test/file_test.svg',
+      f_test: '/test/file_test.svg',
     },
     fileNames: {},
     languageIds: {},
@@ -150,7 +150,7 @@ test.skip('getIcon - match by file extension but icon theme has no languages pro
 test('getIcon - match by folder name expanded', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      fd_api_open: 'test/folder_api_open.svg',
+      fd_api_open: '/test/folder_api_open.svg',
     },
     folderNamesExpanded: {
       api: 'fd_api_open',
@@ -167,7 +167,7 @@ test('getIcon - match by folder name expanded', () => {
 test('getIcon - error - directory not in definitions', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _file: 'test/file.svg',
+      _file: '/test/file.svg',
     },
   }
   expect(
@@ -181,7 +181,7 @@ test('getIcon - error - directory not in definitions', () => {
 test('getIcon - error - directory expanded not in definitions', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _folder_open: 'test/folder_open.svg',
+      _folder_open: '/test/folder_open.svg',
     },
   }
   expect(
@@ -195,7 +195,7 @@ test('getIcon - error - directory expanded not in definitions', () => {
 test('getIcon - symlink', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _file: 'test/file.svg',
+      _file: '/test/file.svg',
     },
   }
   expect(
@@ -209,7 +209,7 @@ test('getIcon - symlink', () => {
 test('getIcon - socket', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _file: 'test/file.svg',
+      _file: '/test/file.svg',
     },
   }
   expect(
@@ -227,7 +227,7 @@ test('getIcon - file extension should have priority over language id', () => {
   })
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_svg: 'test/file_svg.svg',
+      f_svg: '/test/file_svg.svg',
     },
     folderNames: {
       test: 'fd_test',
@@ -255,7 +255,7 @@ test('getIcon - symbolic link to file', () => {
   })
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _f_nvmrc: 'test/file_nvmrc.svg',
+      _f_nvmrc: '/test/file_nvmrc.svg',
     },
     folderNames: {},
     languageIds: {},
@@ -275,7 +275,7 @@ test('getIcon - symbolic link to file', () => {
 test('getIcon - no fileNames property', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _file: 'test/file.svg',
+      _file: '/test/file.svg',
     },
   }
   expect(
@@ -289,7 +289,7 @@ test('getIcon - no fileNames property', () => {
 test('getIcon - character device', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _file: 'test/file.svg',
+      _file: '/test/file.svg',
     },
   }
   expect(
@@ -303,7 +303,7 @@ test('getIcon - character device', () => {
 test('getIcon - block device', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _file: 'test/file.svg',
+      _file: '/test/file.svg',
     },
   }
   expect(
@@ -317,8 +317,8 @@ test('getIcon - block device', () => {
 test('getFileIcon - match by long extension', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _f_dts: 'test/file_dts.svg',
-      _f_ts: 'test/file_ts.svg',
+      _f_dts: '/test/file_dts.svg',
+      _f_ts: '/test/file_ts.svg',
     },
     fileExtensions: { 'd.ts': '_f_dts', ts: '_f_ts' },
   }
@@ -328,7 +328,7 @@ test('getFileIcon - match by long extension', () => {
 test('getFileIcon - fall back to shortest extension', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      _f_png: 'test/file_png.svg',
+      _f_png: '/test/file_png.svg',
     },
     fileExtensions: { png: '_f_png' },
   }

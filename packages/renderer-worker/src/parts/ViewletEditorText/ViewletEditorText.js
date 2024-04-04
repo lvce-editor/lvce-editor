@@ -62,15 +62,6 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-export const saveState = (state) => {
-  const { selections, focused, deltaY, minLineY, differences } = state
-  return {
-    selections: Array.from(selections),
-    focused,
-    deltaY,
-  }
-}
-
 const getSavedSelections = (savedState) => {
   if (savedState && savedState.selections) {
     return new Uint32Array(savedState.selections)
