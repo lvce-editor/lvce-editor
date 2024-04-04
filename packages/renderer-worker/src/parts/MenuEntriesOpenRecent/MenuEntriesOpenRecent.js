@@ -3,6 +3,8 @@ import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as TitleBarMenuBarStrings from '../TitleBarMenuBarStrings/TitleBarMenuBarStrings.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+
 
 const MAX_MENU_RECENT_ENTRIES = 10
 
@@ -19,6 +21,8 @@ const toMenuItem = (folder) => {
 const getRecentlyOpened = () => {
   return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened')
 }
+
+export const id = MenuEntryId.OpenRecent
 
 export const getMenuEntries = async () => {
   const allItems = await getRecentlyOpened()
