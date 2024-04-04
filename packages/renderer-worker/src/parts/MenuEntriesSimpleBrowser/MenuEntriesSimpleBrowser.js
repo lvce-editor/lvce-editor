@@ -1,36 +1,21 @@
-import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Path from '../Path/Path.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  InspectElement: 'Inspect Element',
-  Cut: 'Cut',
-  Copy: 'Copy',
-  Paste: 'Paste',
-  OpenLinkInNewTab: 'Open Link in New Tab',
-  CopyLinkAddress: 'Copy Link Address',
-  SaveImageAs: 'Save Image',
-  CopyImage: 'Copy Image',
-}
+import * as SimpleBrowserStrings from '../SimpleBrowserStrings/SimpleBrowserStrings.js'
 
 const getMenuEntriesLink = (x, y, params) => {
   const { linkURL } = params
   return [
     {
       id: 'open-link-in-new-tab',
-      label: I18nString.i18nString(UiStrings.OpenLinkInNewTab),
+      label: SimpleBrowserStrings.openLinkInNewTab(),
       flags: MenuItemFlags.None,
       command: 'SimpleBrowser.openBackgroundTab',
       args: [linkURL],
     },
     {
       id: 'copy-link-address',
-      label: I18nString.i18nString(UiStrings.CopyLinkAddress),
+      label: SimpleBrowserStrings.copyLinkAddress(),
       flags: MenuItemFlags.None,
       command: 'ElectronClipBoard.writeText',
       args: [linkURL],
@@ -42,7 +27,7 @@ const getMenuEntriesDefault = (x, y, params) => {
   return [
     {
       id: 'inspect-element',
-      label: I18nString.i18nString(UiStrings.InspectElement),
+      label: SimpleBrowserStrings.inspectElement(),
       flags: MenuItemFlags.None,
       command: 'SimpleBrowser.inspectElement',
       args: [x, y],
@@ -55,7 +40,7 @@ const getMenuEntriesSelectionText = (x, y, params) => {
   return [
     {
       id: 'copy',
-      label: I18nString.i18nString(UiStrings.Copy),
+      label: SimpleBrowserStrings.copy(),
       flags: MenuItemFlags.None,
       command: 'ElectronClipBoard.writeText',
       args: [selectionText],
@@ -69,14 +54,14 @@ const getMenuEntriesImage = (x, y, params) => {
   return [
     {
       id: 'save-image',
-      label: I18nString.i18nString(UiStrings.SaveImageAs),
+      label: SimpleBrowserStrings.saveImageAs(),
       flags: MenuItemFlags.None,
       command: 'Download.downloadToDownloadsFolder',
       args: [fileName, srcURL],
     },
     {
       id: 'copy-image',
-      label: I18nString.i18nString(UiStrings.CopyImage),
+      label: SimpleBrowserStrings.copyImage(),
       flags: MenuItemFlags.None,
       command: 'SimpleBrowser.copyImage',
       args: [x, y],
