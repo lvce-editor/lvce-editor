@@ -48,5 +48,15 @@ export const getKeyBindings = () => {
       command: 'Problems.focusLast',
       when: WhenExpression.FocusProblems,
     },
+    {
+      key: KeyCode.LeftArrow,
+      command: 'Problems.handleArrowLeft',
+      when: WhenExpression.FocusProblems,
+    },
+    {
+      key: KeyCode.RightArrow,
+      command: 'Problems.handleArrowRight',
+      when: WhenExpression.FocusProblems,
+    },
   ]
 }
