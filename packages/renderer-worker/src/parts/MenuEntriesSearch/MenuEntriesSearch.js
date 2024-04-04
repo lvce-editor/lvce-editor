@@ -1,5 +1,8 @@
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.js'
+
+export const id = MenuEntryId.Search
 
 export const getMenuEntries = () => {
   return [
