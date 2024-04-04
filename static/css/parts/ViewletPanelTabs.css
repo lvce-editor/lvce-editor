@@ -15,13 +15,13 @@
   text-transform: uppercase;
   height: 85%;
   line-height: 35px;
-  /* color: rgba(231, 231, 231, 0.6); */
   color: var(--PanelTabForeground);
   display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .PanelTabSelected {
-  /* color: rgb(231, 231, 231); */
   color: var(--PanelTabActiveForeground);
   border-bottom-color: rgb(231, 231, 231);
   border-bottom: 1px solid;
