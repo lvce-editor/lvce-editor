@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletAudio from '../src/parts/ViewletAudio/ViewletAudio.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletAudio.create()

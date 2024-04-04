@@ -1,6 +1,5 @@
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as Performance from '../src/parts/Performance/Performance.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('getMemory - performance.memory is not available', () => {
   // @ts-ignore

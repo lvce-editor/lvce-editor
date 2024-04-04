@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletEditorImage.create()

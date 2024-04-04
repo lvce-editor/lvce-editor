@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletClock from '../src/parts/ViewletClock/ViewletClock.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletClock.create()

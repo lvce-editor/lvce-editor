@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.ts'
 import * as Platform from '../src/parts/Platform/Platform.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 const create$EditorRow = () => {
   const $EditorRow = document.createElement('div')

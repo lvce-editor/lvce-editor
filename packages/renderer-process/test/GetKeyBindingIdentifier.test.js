@@ -1,6 +1,6 @@
+import { expect, test } from '@jest/globals'
 import * as GetKeyBindingIdenfitier from '../src/parts/GetKeyBindingIdentifier/GetKeyBindingIdentifier.ts'
 import * as KeyCode from '../src/parts/KeyCode/KeyCode.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('KeyA', () => {
   const event = {
