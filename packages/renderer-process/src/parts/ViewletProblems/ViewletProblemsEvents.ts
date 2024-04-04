@@ -11,6 +11,7 @@ export const handlePointerDown = (event) => {
 }
 
 export const handleContextMenu = (event) => {
+  Event.preventDefault(event)
   const uid = ComponentUid.fromEvent(event)
   const { clientX, clientY } = event
   ViewletProblemsFunctions.handleContextMenu(uid, clientX, clientY)
