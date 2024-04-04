@@ -1,8 +1,11 @@
 import * as HelpStrings from '../HelpStrings/HelpStrings.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 const keyBindingsUri = 'app://keybindings'
+
+export const id = MenuEntryId.Settings
 
 export const getMenuEntries = () => {
   return [

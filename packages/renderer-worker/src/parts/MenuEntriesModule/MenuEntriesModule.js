@@ -2,8 +2,6 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const load = (id) => {
   switch (id) {
-    case MenuEntryId.ActivityBar:
-      return import('../MenuEntriesActivityBar/MenuEntriesActivityBar.js')
     case MenuEntryId.Edit:
       return import('../MenuEntriesEdit/MenuEntriesEdit.js')
     case MenuEntryId.Editor:
@@ -24,8 +22,6 @@ export const load = (id) => {
       return import('../MenuEntriesRun/MenuEntriesRun.js')
     case MenuEntryId.Selection:
       return import('../MenuEntriesSelection/MenuEntriesSelection.js')
-    case MenuEntryId.Settings:
-      return import('../MenuEntriesSettings/MenuEntriesSettings.js')
     case MenuEntryId.Tab:
       return import('../MenuEntriesTab/MenuEntriesTab.js')
     case MenuEntryId.Terminal:
@@ -34,8 +30,6 @@ export const load = (id) => {
       return import('../MenuEntriesTitleBar/MenuEntriesTitleBar.js')
     case MenuEntryId.View:
       return import('../MenuEntriesView/MenuEntriesView.js')
-    case MenuEntryId.ActivityBarAdditionalViews:
-      return import('../MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js')
     case MenuEntryId.Search:
       return import('../MenuEntriesSearch/MenuEntriesSearch.js')
     case MenuEntryId.EditorImage:

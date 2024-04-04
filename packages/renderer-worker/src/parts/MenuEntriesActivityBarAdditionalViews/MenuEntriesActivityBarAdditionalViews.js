@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 const toContextMenuItem = (activityBarItem) => {
@@ -9,6 +10,8 @@ const toContextMenuItem = (activityBarItem) => {
     command: -1,
   }
 }
+
+export const id = MenuEntryId.ActivityBarAdditionalViews
 
 export const getMenuEntries = async () => {
   const hiddenActivityBarItems = await Command.execute(/* ActivityBar.getHiddenItems */ 8011)
