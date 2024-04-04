@@ -1,6 +1,6 @@
+import { expect, test } from '@jest/globals'
 import * as GetModifierKey from '../src/parts/GetModifierKey/GetModifierKey.ts'
 import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('getModifierKey - alt', () => {
   expect(GetModifierKey.getModifierKey({ altKey: true })).toBe(ModifierKey.Alt)

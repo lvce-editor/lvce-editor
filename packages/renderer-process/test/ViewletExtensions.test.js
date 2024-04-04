@@ -5,22 +5,6 @@ import { jest } from '@jest/globals'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.ts'
 import { beforeEach, test, expect } from '@jest/globals'
 
-const isLeaf = (node) => {
-  return node.childElementCount === 0
-}
-
-const getTextContent = (node) => {
-  return node.textContent
-}
-
-const getSimpleList = (state) => {
-  const { $ListItems } = state
-  return Array.from($ListItems.children).map((node) => {
-    const children = node.querySelectorAll('*')
-    return Array.from(children).filter(isLeaf).map(getTextContent).filter(Boolean)
-  })
-}
-
 beforeEach(() => {
   jest.restoreAllMocks()
 })
