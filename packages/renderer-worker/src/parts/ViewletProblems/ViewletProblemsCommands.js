@@ -14,4 +14,5 @@ export const Commands = {
   viewAsTable: ViewletProblems.viewAsTable,
   viewAsList: ViewletProblems.viewAsList,
   clearFilter: ViewletProblems.clearFilter,
+  getBadgeCount: ViewletProblems.getBadgeCount,
 }

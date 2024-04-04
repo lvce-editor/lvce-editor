@@ -66,6 +66,11 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
+export const getBadgeCount = (state) => {
+  const { problems } = state
+  return problems.length
+}
+
 const handleEditorChange = async (editor) => {
   const problems = await GetProblems.getProblems()
   await Command.execute('Problems.setProblems', problems)
