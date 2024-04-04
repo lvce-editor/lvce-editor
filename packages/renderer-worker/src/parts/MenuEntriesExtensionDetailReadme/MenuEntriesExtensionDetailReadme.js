@@ -1,5 +1,8 @@
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ViewletExtensionDetailStrings from '../ViewletExtensionDetail/ViewletExtensionDetailStrings.js'
+
+export const id = MenuEntryId.ExtensionDetailReadme
 
 export const getMenuEntries = (props) => {
   const menuEntries = []
