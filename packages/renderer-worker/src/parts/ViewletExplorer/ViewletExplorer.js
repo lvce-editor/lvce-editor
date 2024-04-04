@@ -170,7 +170,7 @@ const getExcluded = () => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const { root, minLineY } = savedState
+  const { root = '', minLineY = '' } = savedState
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const excluded = getExcluded()
