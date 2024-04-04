@@ -11,7 +11,6 @@ import * as ViewletExplorerEvents from './ViewletExplorerEvents.ts'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
-const defaultIndent = 1
 
 export const create = () => {
   const $Viewlet = document.createElement('div')

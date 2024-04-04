@@ -19,10 +19,6 @@ export const setPathName = (pathName) => {
   history.pushState(null, null, pathName)
 }
 
-const handlePopState = (event) => {
-  // RendererWorker.send(/* Workspace.hydrate */ 'Workspace.hydrate')
-}
-
 export const hydrate = () => {
   // addEventListener('popstate', handlePopState)
 }

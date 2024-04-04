@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.ts'
+import { expect, test } from '@jest/globals'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.ts'
-import { beforeEach, test, expect } from '@jest/globals'
+import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.ts'
 
 test('create', () => {
   const state = ViewletQuickPick.create()

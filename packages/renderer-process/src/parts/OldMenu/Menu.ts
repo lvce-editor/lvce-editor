@@ -89,8 +89,6 @@ const handleMouseDown = (event) => {
 //   }
 // }
 
-const MOUSE_LOCS_TRACKED = 3
-
 /**
  *
  * @param {MouseEvent} event
