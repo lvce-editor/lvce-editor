@@ -1,6 +1,5 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
-// prettier-ignore
 export const load = (id) => {
   switch (id) {
     case MenuEntryId.ActivityBar:
@@ -49,10 +48,10 @@ export const load = (id) => {
       return import('../MenuEntriesSourceControl/MenuEntriesSourceControl.js')
     case MenuEntryId.Problems:
       return import('../MenuEntriesProblems/MenuEntriesProblems.js')
-      case MenuEntryId.Main:
-        return import('../MenuEntriesMain/MenuEntriesMain.js')
-        case MenuEntryId.ProblemsFilter:
-          return import('../MenuEntriesProblemsFilter/MenuEntriesProblemsFilter.js')
+    case MenuEntryId.Main:
+      return import('../MenuEntriesMain/MenuEntriesMain.js')
+    case MenuEntryId.ProblemsFilter:
+      return import('../MenuEntriesProblemsFilter/MenuEntriesProblemsFilter.js')
     default:
       throw new Error(`Module not found "${id}"`)
   }
