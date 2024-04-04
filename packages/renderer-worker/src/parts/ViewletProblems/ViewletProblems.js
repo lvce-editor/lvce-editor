@@ -29,14 +29,6 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
   }
 }
 
-export const saveState = (state) => {
-  const { viewMode, filterValue } = state
-  return {
-    viewMode,
-    filterValue,
-  }
-}
-
 const getSavedViewMode = (savedState) => {
   if (savedState && typeof savedState.viewMode === 'number') {
     return savedState.viewMode
