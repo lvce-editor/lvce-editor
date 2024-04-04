@@ -33,31 +33,6 @@
   color: var(--ListActiveSelectionForeground);
 }
 
-/* TODO extract common css */
-.ProblemsErrorIcon {
-  width: 16px;
-  height: 16px;
-  contain: strict;
-  color: var(--ProblemsErrorIconForeground, #b64e4e);
-  mask-repeat: no-repeat;
-  mask-size: 100%;
-  mask-position: 50% 50%;
-  background: currentColor;
-  mask-image: url(/icons/error.svg);
-}
-
-.ProblemsWarningIcon {
-  width: 16px;
-  height: 16px;
-  contain: strict;
-  color: var(--ProblemsWarningIconForeground, yellow);
-  mask-repeat: no-repeat;
-  mask-size: 100%;
-  mask-position: 50% 50%;
-  background: currentColor;
-  mask-image: url(/icons/warning.svg);
-}
-
 .Message {
   padding-left: 20px;
   line-height: 22px;

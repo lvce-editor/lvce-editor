@@ -6,13 +6,13 @@ export const getProblemsIconVirtualDom = (type) => {
   if (type === DiagnosticType.Warning) {
     return {
       type: VirtualDomElements.Div,
-      className: ClassNames.ProblemsWarningIcon,
+      className: `${ClassNames.ProblemsIcon} ${ClassNames.ProblemsWarningIcon}`,
       childCount: 0,
     }
   }
   return {
     type: VirtualDomElements.Div,
-    className: ClassNames.ProblemsErrorIcon,
+    className: `${ClassNames.ProblemsIcon} ${ClassNames.ProblemsErrorIcon}`,
     childCount: 0,
   }
 }
