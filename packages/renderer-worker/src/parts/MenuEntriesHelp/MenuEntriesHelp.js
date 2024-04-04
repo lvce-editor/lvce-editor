@@ -1,9 +1,12 @@
 import * as HelpStrings from '../HelpStrings/HelpStrings.js'
 import * as IsAutoUpdateSupported from '../IsAutoUpdateSupported/IsAutoUpdateSupported.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+
+export const id = MenuEntryId.Help
 
 export const getMenuEntries = async () => {
   const autoUpdateSupported = await IsAutoUpdateSupported.isAutoUpdateSupported()

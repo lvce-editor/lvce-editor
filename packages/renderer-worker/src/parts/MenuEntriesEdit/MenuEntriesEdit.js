@@ -1,6 +1,9 @@
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+
+export const id = MenuEntryId.Edit
 
 export const getMenuEntries = () => {
   return [
