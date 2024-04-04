@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.ts'
+import { expect, test } from '@jest/globals'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
-import { beforeEach, test, expect } from '@jest/globals'
+import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.ts'
 
 test('create', () => {
   const state = ViewletDebugConsole.create()

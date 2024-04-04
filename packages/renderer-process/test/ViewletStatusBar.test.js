@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test.skip('create', () => {
   const state = ViewletStatusBar.create(

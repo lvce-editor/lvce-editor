@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletEditorCompletion from '../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletEditorCompletion.create()
