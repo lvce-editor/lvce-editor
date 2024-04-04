@@ -63,7 +63,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += content
     }
 
-    for (const file of ['MaskIcon', 'Symbol', 'ViewletProblems']) {
+    for (const file of ['MaskIcon', 'Symbol', 'ProblemsIcon']) {
       await Replace.replace({
         path: Path.join(outDir, 'parts', `${file}.css`),
         occurrence: `url(/icons/`,
