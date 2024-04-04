@@ -11,7 +11,7 @@ export const getActions = (state): readonly ViewletAction[] => {
   const problemsCount = state.problems.length
   const actions: ViewletAction[] = [
     {
-      type: ActionType.Filter,
+      type: ActionType.ProblemsFilter,
       id: 'Filter',
       command: 'handleFilterInput',
       badgeText: visibleCount === problemsCount ? '' : ProblemStrings.showingOf(visibleCount, problemsCount),
