@@ -1,9 +1,9 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
@@ -1548,7 +1548,7 @@ test('handleClick - directory - issue with invisible items', async () => {
   })
 })
 
-test('handleClick - collapsed folder', async () => {
+test.only('handleClick - collapsed folder', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     path: '/home/test-user/test-path',
