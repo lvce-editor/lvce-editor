@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ClearNode from '../ClearNode/ClearNode.ts'
 import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.ts'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
 /**
  *
  * @param {any[]} elements
@@ -21,14 +20,6 @@ export const renderInternal = ($Parent, elements, eventMap) => {
     stack.unshift($Element)
   }
   $Parent.append(...stack)
-}
-
-const isEqualNodeName = ($Node, node) => {
-  if ($Node.nodeName === 'BUTTON' && node.type === VirtualDomElements.Button) {
-    return true
-  }
-
-  return false
 }
 
 export const renderInto = ($Parent, dom, eventMap = {}) => {

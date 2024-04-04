@@ -1,14 +1,8 @@
-import * as Widget from '../Widget/Widget.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as Widget from '../Widget/Widget.ts'
 
 export const state = {
   $Notifications: undefined,
-}
-
-const create$Notifications = () => {
-  const $Notifications = document.createElement('div')
-  $Notifications.id = 'Notifications'
-  return $Notifications
 }
 
 const create$Notification = (message) => {

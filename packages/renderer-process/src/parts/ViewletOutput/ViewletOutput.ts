@@ -4,13 +4,6 @@ import * as Focus from '../Focus/Focus.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
 
-const create$Option = (option) => {
-  const $Option = document.createElement('option')
-  $Option.value = option.file
-  $Option.textContent = option.name
-  return $Option
-}
-
 export const create = () => {
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
