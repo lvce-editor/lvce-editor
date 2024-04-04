@@ -4,6 +4,7 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const toContextMenuItem = (activityBarItem) => {
   const isEnabled = activityBarItem.flags & ActivityBarItemFlags.Enabled
@@ -34,6 +35,8 @@ const menuEntryMoveSideBar = (sideBarLocation) => {
       throw new Error('unexpected side bar location')
   }
 }
+
+export const id = MenuEntryId.ActivityBar
 
 export const getMenuEntries = async (layoutState, activityBarState) => {
   const { activityBarItems } = activityBarState
