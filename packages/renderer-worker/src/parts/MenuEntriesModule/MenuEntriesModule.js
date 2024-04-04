@@ -51,6 +51,8 @@ export const load = (id) => {
       return import('../MenuEntriesProblems/MenuEntriesProblems.js')
       case MenuEntryId.Main:
         return import('../MenuEntriesMain/MenuEntriesMain.js')
+        case MenuEntryId.ProblemsFilter:
+          return import('../MenuEntriesProblemsFilter/MenuEntriesProblemsFilter.js')
     default:
       throw new Error(`Module not found "${id}"`)
   }
