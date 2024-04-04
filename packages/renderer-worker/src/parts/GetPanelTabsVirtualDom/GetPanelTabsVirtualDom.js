@@ -24,6 +24,7 @@ const createPanelTab = (tab, badgeCount, isSelected) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
+        className: 'Badge',
         childCount: 1,
       },
       text(' ' + badgeCount),
