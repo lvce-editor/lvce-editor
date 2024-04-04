@@ -16,8 +16,6 @@ export const load = (id) => {
       return import('../MenuEntriesGo/MenuEntriesGo.js')
     case MenuEntryId.Help:
       return import('../MenuEntriesHelp/MenuEntriesHelp.js')
-    case MenuEntryId.ManageExtension:
-      return import('../MenuEntriesManageExtension/MenuEntriesManageExtension.js')
     case MenuEntryId.OpenRecent:
       return import('../MenuEntriesOpenRecent/MenuEntriesOpenRecent.js')
     case MenuEntryId.Run:
