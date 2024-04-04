@@ -39,17 +39,6 @@ const activeId = 'QuickPickItemActive'
 /**
  * @enum {string}
  */
-const ClassNames = {
-  Label: 'QuickPickLabel',
-  QuickPickItem: 'QuickPickItem',
-  Icon: 'Icon',
-  QuickPickItemDescription: 'QuickPickItemDescription',
-  QuickPickStatus: 'QuickPickStatus',
-}
-
-/**
- * @enum {string}
- */
 const Ids = {
   QuickPickHeader: 'QuickPickHeader',
   QuickPickItems: 'QuickPickItems',

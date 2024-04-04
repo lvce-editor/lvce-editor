@@ -1,4 +1,3 @@
-import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as ViewletSashFunctions from './ViewletSashFunctions.ts'
 
