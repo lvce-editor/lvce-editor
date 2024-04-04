@@ -62,14 +62,6 @@ const getSavedReplaceExpanded = (savedState) => {
   return false
 }
 
-export const saveState = (state) => {
-  const { value, replaceExpanded } = state
-  return {
-    value,
-    replaceExpanded,
-  }
-}
-
 const getThreads = () => {
   const value = Preferences.get('search.threads')
   if (typeof value !== 'number' || value < 0 || value > 8) {

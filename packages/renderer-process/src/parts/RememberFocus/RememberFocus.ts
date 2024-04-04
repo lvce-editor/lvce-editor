@@ -16,7 +16,7 @@ export const rememberFocus = ($Viewlet, dom, eventMap) => {
   VirtualDom.renderInto($Viewlet, dom, eventMap)
   const $$NewInputs = queryInputs($Viewlet)
   for (const $Input of $$NewInputs) {
-    $Input.value = inputMap[$Input.name] || ''
+    $Input.value = inputMap[$Input.name] || $Input.value || ''
   }
   if (focused) {
     const $Focused = $Viewlet.querySelector(`[name="${focused}"]`)

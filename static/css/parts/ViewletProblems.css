@@ -33,6 +33,7 @@
   color: var(--ListActiveSelectionForeground);
 }
 
+/* TODO extract common css */
 .ProblemsErrorIcon {
   width: 16px;
   height: 16px;
@@ -43,6 +44,18 @@
   mask-position: 50% 50%;
   background: currentColor;
   mask-image: url(/icons/error.svg);
+}
+
+.ProblemsWarningIcon {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  color: var(--ProblemsWarningIconForeground, yellow);
+  mask-repeat: no-repeat;
+  mask-size: 100%;
+  mask-position: 50% 50%;
+  background: currentColor;
+  mask-image: url(/icons/warning.svg);
 }
 
 .Message {
@@ -58,16 +71,50 @@
   opacity: 0.7;
 }
 
+/* TODO avoid css nesting */
 .Problems .Label {
   flex: initial;
+  display: flex;
 }
 
 .ProblemsTable {
   width: 100%;
   height: 100%;
   contain: strict;
+  display: flex;
+  flex-direction: column;
+}
+
+.ProblemsTableBody {
+  flex: 1;
+  contain: strict;
+  overflow-y: auto;
+}
+
+.ProblemsTableRow {
+  height: 21px;
+  contain: strict;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+}
+
+.ProblemsTableRow:where(:hover) {
+  color: var(--ListHoverForeground);
+  background: var(--ListHoverBackground);
 }
 
 .ProblemsTableRowOdd {
   background: var(--TableRowOddBackground, rgba(156, 162, 160, 0.04));
+}
+
+/* TODO move into separate file */
+.MessageAction {
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.ProblemsTableRowItem {
+  contain: content;
+  text-align: left;
 }

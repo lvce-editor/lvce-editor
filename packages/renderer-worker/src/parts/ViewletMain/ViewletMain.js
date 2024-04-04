@@ -318,26 +318,28 @@ export const getChildren = (state) => {
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
-  if (state.groups.length === 0) {
+  const { groups, x, y, width, height, tabHeight } = state
+  if (groups.length === 0) {
     return []
   }
   const commands = []
-  for (const group of state.groups) {
-    if (group.editors.length === 0) {
+  for (const group of groups) {
+    const { editors } = group
+    if (editors.length === 0) {
       continue
     }
-    const editor = Arrays.last(group.editors)
-    const x = state.x
-    const y = state.y + state.tabHeight
-    const width = state.width
-    const contentHeight = state.height - state.tabHeight
+    const editor = Arrays.last(editors)
+    const editorX = x
+    const editorY = y + tabHeight
+    const editorWidth = width
+    const editorHeight = height - tabHeight
     const id = ViewletMap.getModuleId(editor.uri)
     const tabLabel = PathDisplay.getLabel(editor.uri)
     const tabTitle = PathDisplay.getTitle(editor.uri)
     editor.label = tabLabel
     editor.title = tabTitle
     const childUid = editor.uid
-    commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
+    commands.push(['Viewlet.setBounds', childUid, editorX, state.tabHeight, editorWidth, editorHeight])
     const tabsUid = Id.create()
     state.tabsUid = tabsUid
     // commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
@@ -354,10 +356,10 @@ export const contentLoaded = async (state) => {
         // @ts-ignore
         parentUid: state.uid,
         uri: editor.uri,
-        x,
-        y,
-        width,
-        height: contentHeight,
+        x: editorX,
+        y: editorY,
+        width: editorWidth,
+        height: editorHeight,
         show: false,
         focus: false,
         type: 0,
@@ -369,7 +371,7 @@ export const contentLoaded = async (state) => {
     )
     // @ts-ignore
     commands.push(...extraCommands)
-    commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
+    commands.push(['Viewlet.setBounds', childUid, editorX, state.tabHeight, editorWidth, editorHeight])
     // commands.push(['Viewlet.append', state.uid, tabsUid])
     commands.push(['Viewlet.append', state.uid, childUid])
   }

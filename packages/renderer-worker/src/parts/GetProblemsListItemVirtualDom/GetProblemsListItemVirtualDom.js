@@ -1,8 +1,8 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
-import * as GetProblemSourceDetail from '../GetProblemSourceDetail/GetProblemSourceDetail.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as GetProblemSourceDetail from '../GetProblemSourceDetail/GetProblemSourceDetail.js'
 import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
@@ -10,7 +10,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getProblemVirtualDom = (problem) => {
-  const { message, rowIndex, columnIndex, isActive, uri, icon, source, relativePath, messageMatchIndex, filterValueLength, code } = problem
+  const { message, rowIndex, columnIndex, isActive, uri, icon, source, relativePath, messageMatchIndex, filterValueLength, code, type } = problem
   let className = ClassNames.Problem
   if (isActive) {
     className += ' ' + ClassNames.ProblemSelected
@@ -51,7 +51,7 @@ export const getProblemVirtualDom = (problem) => {
       childCount: 3,
       paddingLeft: GetTreeItemIndent.getTreeItemIndent(2),
     },
-    GetProblemsIconVirtualDom.getProblemsIconVirtualDom(),
+    GetProblemsIconVirtualDom.getProblemsIconVirtualDom(type),
     label,
   ]
   if (filterValueLength) {

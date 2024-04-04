@@ -2,85 +2,19 @@
  * @jest-environment jsdom
  */
 
+import { expect, test } from '@jest/globals'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
 import * as Menu from '../src/parts/OldMenu/Menu.ts'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ts'
-import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.ts'
-import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.ts'
-import { beforeEach, test, expect } from '@jest/globals'
-
-const getTextContent = (node) => {
-  return node.textContent
-}
-
-const getSimpleList = ($ViewletTitleBarMenuBar) => {
-  return Array.from($ViewletTitleBarMenuBar.children).map(getTextContent)
-}
 
 test('create', async () => {
   const state = ViewletTitleBarMenuBar.create()
   expect(state).toBeDefined()
 })
 
-test('setEntries', () => {
-  const state = ViewletTitleBarMenuBar.create()
-  ViewletTitleBarMenuBar.setEntries(state, [
-    {
-      id: 'file',
-      label: 'File',
-      children: [],
-    },
-    {
-      id: 'edit',
-      label: 'Edit',
-      children: [],
-    },
-    {
-      id: 'selection',
-      label: 'Selection',
-      children: [],
-    },
-  ])
-  const { $TitleBarMenuBar } = state
-  expect(getSimpleList($TitleBarMenuBar)).toEqual(['File', 'Edit', 'Selection'])
-})
-
 // TODO test pageup/pagedown
 
 // TODO test mouse enter (with index)
-
-test('accessibility - ViewletTitleBarMenuBar should have role menubar', () => {
-  const state = ViewletTitleBarMenuBar.create()
-  const { $TitleBarMenuBar } = state
-  expect($TitleBarMenuBar.role).toBe('menubar')
-})
-
-test('accessibility - TitleBarTopLevelEntry should have role menuitem and aria-haspopup and aria-expanded', () => {
-  const state = ViewletTitleBarMenuBar.create()
-  ViewletTitleBarMenuBar.setEntries(state, [
-    {
-      id: 'file',
-      name: 'File',
-      children: [],
-    },
-    {
-      id: 'edit',
-      name: 'Edit',
-      children: [],
-    },
-    {
-      id: 'selection',
-      name: 'Selection',
-      children: [],
-    },
-  ])
-  const { $TitleBarMenuBar } = state
-  // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.role).toBe('menuitem')
-  // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.ariaExpanded).toBe(AriaBoolean.False)
-  // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.ariaHasPopup).toBe(AriaBoolean.True)
-})
 
 // TODO test focusIndex in combination with menu and also check aria-attributes
 

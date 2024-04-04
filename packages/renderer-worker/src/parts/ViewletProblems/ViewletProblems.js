@@ -1,12 +1,13 @@
+import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Assert from '../Assert/Assert.ts'
-import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
 export const create = (id, uri, x, y, width, height, args, parentUid) => {
@@ -24,13 +25,15 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     height,
     filterValue: '',
     viewMode: ProblemsViewMode.None,
+    inputSource: InputSource.User,
   }
 }
 
 export const saveState = (state) => {
-  const { viewMode } = state
+  const { viewMode, filterValue } = state
   return {
     viewMode,
+    filterValue,
   }
 }
 
@@ -41,15 +44,25 @@ const getSavedViewMode = (savedState) => {
   return ProblemsViewMode.List
 }
 
+const getSavedFilterValue = (savedState) => {
+  if (savedState && typeof savedState.filterValue === 'string') {
+    return savedState.filterValue
+  }
+  return ''
+}
+
 export const loadContent = async (state, savedState) => {
   const problems = await GetProblems.getProblems()
   const message = ViewletProblemsStrings.getMessage(problems.length)
   const viewMode = getSavedViewMode(savedState)
+  const filterValue = getSavedFilterValue(savedState)
   return {
     ...state,
     problems,
     message,
     viewMode,
+    filterValue,
+    inputSource: InputSource.Script,
   }
 }
 
@@ -102,7 +115,6 @@ export const handleClickAt = (state, eventX, eventY) => {
   }
   const problem = problems[index]
   const { rowIndex, columnIndex } = problem
-  console.log('open', rowIndex, columnIndex)
   return {
     ...state,
     focusedIndex: index,
@@ -152,5 +164,13 @@ export const viewAsList = (state) => {
   return {
     ...state,
     viewMode: ProblemsViewMode.List,
+  }
+}
+
+export const clearFilter = (state) => {
+  return {
+    ...state,
+    filterValue: '',
+    inputSource: InputSource.Script,
   }
 }

@@ -166,7 +166,8 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
     if (parentId) {
       commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
     } else {
-      console.warn('parent id not found')
+      // TODO
+      // console.warn('parent id not found')
     }
   }
   if (Array.isArray(module.render)) {
