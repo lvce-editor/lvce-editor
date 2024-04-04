@@ -1,9 +1,9 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
@@ -21,6 +21,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -28,6 +29,13 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/ViewletExplorer/ViewletExplorerMenuEntries.js', () => {
+  return {
+    menus: [],
+  }
+})
+
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
     rename: jest.fn(() => {
