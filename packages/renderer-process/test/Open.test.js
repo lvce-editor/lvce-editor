@@ -1,9 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as Open from '../src/parts/Open/Open.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('openUrl', () => {
   const spy = jest.spyOn(globalThis, 'open').mockImplementation(() => {

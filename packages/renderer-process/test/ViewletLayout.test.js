@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletLayout from '../src/parts/ViewletLayout/ViewletLayout.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletLayout.create()
