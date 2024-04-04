@@ -4,10 +4,10 @@ import { VError } from '../VError/VError.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getModule = (id) => {
-  // const module = MenuEntriesRegistryState.get(id)
-  // if (module) {
-  //   return module
-  // }
+  const module = MenuEntriesRegistryState.get(id)
+  if (module) {
+    return module
+  }
   return MenuEntriesModule.load(id)
 }
 
