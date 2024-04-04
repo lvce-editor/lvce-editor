@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as WebStorage from '../src/parts/WebStorage/WebStorage.ts'
 import * as WebStorageType from '../src/parts/WebStorageType/WebStorageType.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('getItem - localStorage', () => {
   WebStorage.setItem(WebStorageType.LocalStorage, 'sample', 'abc')
