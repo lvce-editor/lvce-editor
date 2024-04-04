@@ -1548,7 +1548,7 @@ test('handleClick - directory - issue with invisible items', async () => {
   })
 })
 
-test.only('handleClick - collapsed folder', async () => {
+test('handleClick - collapsed folder', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     path: '/home/test-user/test-path',
