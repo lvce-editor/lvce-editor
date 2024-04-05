@@ -26,6 +26,9 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     filterValue: '',
     viewMode: ProblemsViewMode.None,
     inputSource: InputSource.User,
+    minLineY: 0,
+    maxLineY: 0,
+    listItems: [],
   }
 }
 
@@ -55,6 +58,8 @@ export const loadContent = async (state, savedState) => {
     viewMode,
     filterValue,
     inputSource: InputSource.Script,
+    filteredProblems: problems,
+    listItems: [],
   }
 }
 
