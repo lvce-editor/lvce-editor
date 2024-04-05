@@ -9,7 +9,7 @@ export const getTypeFromUrl = (url) => {
     const slashIndex = url.lastIndexOf('/')
     const rest = url.slice(slashIndex + 1)
     if (!rest) {
-      throw new Error('could not parse websocket type from url')
+      throw new Error('missing type parameter')
     }
     return rest
   }
