@@ -15,13 +15,7 @@ test('create', () => {
 })
 
 test('dispose', () => {
-  const state = ViewletExtensions.create()
-  ViewletExtensions.dispose(state)
-})
-
-test('dispose', () => {
-  const state = ViewletExtensions.create()
-  ViewletExtensions.dispose(state)
+  ViewletExtensions.dispose()
 })
 
 test('handleError', () => {
