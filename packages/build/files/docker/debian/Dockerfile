@@ -1,4 +1,4 @@
-FROM node:18.20.0
+FROM node:18.20.1
 
 RUN npm install --global @lvce-editor/server@0.24.1
 
