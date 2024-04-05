@@ -6,6 +6,7 @@ import * as GetProblemSourceDetail from '../GetProblemSourceDetail/GetProblemSou
 import * as GetProblemsIconVirtualDom from '../GetProblemsIconVirtualDom/GetProblemsIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -27,12 +28,13 @@ export const getProblemVirtualDom = (problem) => {
     posInSet,
     setSize,
     level,
+    listItemType,
   } = problem
   let className = ClassNames.Problem
   if (isActive) {
     className += ' ' + ClassNames.ProblemSelected
   }
-  if (uri) {
+  if (listItemType === ProblemListItemType.Expanded || listItemType === ProblemListItemType.Collapsed) {
     return [
       {
         type: VirtualDomElements.Div,

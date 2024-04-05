@@ -6,6 +6,8 @@ import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as InputSource from '../InputSource/InputSource.js'
+import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
+import * as Arrays from '../Arrays/Arrays.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
@@ -29,6 +31,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     minLineY: 0,
     maxLineY: 0,
     listItems: [],
+    collapsedUris: [],
   }
 }
 
@@ -46,11 +49,23 @@ const getSavedFilterValue = (savedState) => {
   return ''
 }
 
+const isString = (value) => {
+  return typeof value === 'string'
+}
+
+const getSavedCollapsedUris = (savedState) => {
+  if (savedState && savedState.collapsedUris && Array.isArray(savedState.collapsedUris) && savedState.collapsedUris.every(isString)) {
+    return savedState.collapsedUris
+  }
+  return []
+}
+
 export const loadContent = async (state, savedState) => {
   const problems = await GetProblems.getProblems()
   const message = ViewletProblemsStrings.getMessage(problems.length)
   const viewMode = getSavedViewMode(savedState)
   const filterValue = getSavedFilterValue(savedState)
+  const collapsedUris = getSavedCollapsedUris(savedState)
   return {
     ...state,
     problems,
@@ -60,6 +75,7 @@ export const loadContent = async (state, savedState) => {
     inputSource: InputSource.Script,
     filteredProblems: problems,
     listItems: [],
+    collapsedUris,
   }
 }
 
@@ -177,26 +193,47 @@ export const clearFilter = (state) => {
   }
 }
 
-const getArrowLeftNewFocusedIndex = (problems, focusedIndex) => {
-  for (let i = focusedIndex - 1; i >= 0; i--) {
+const getArrowLeftNewFocusedIndex = (problems, collapsedUris, focusedIndex) => {
+  for (let i = focusedIndex; i >= 0; i--) {
     const problem = problems[i]
-    if (problem.uri) {
-      return i
+    if (problem.listItemType !== ProblemListItemType.Item) {
+      return {
+        index: i,
+        newCollapsedUris: [...collapsedUris, problem.uri],
+      }
     }
   }
-  return 0
+  return {
+    index: 0,
+    newCollapsedUris: collapsedUris,
+  }
 }
 
 export const handleArrowLeft = (state) => {
-  const { problems, focusedIndex } = state
-  const newFocusedIndex = getArrowLeftNewFocusedIndex(problems, focusedIndex)
+  const { problems, focusedIndex, collapsedUris } = state
+  const { index, newCollapsedUris } = getArrowLeftNewFocusedIndex(problems, collapsedUris, focusedIndex)
   return {
     ...state,
-    focusedIndex: newFocusedIndex,
+    focusedIndex: index,
+    collapsedUris: newCollapsedUris,
+  }
+}
+
+const getArrowRightNewFocusedIndex = (problems, collapsedUris, focusedIndex) => {
+  const problem = problems[focusedIndex]
+  const newCollapsedUris = Arrays.removeElement(collapsedUris, problem.uri)
+  return {
+    index: focusedIndex,
+    newCollapsedUris,
   }
 }
 
 export const handleArrowRight = (state) => {
-  // TODO expand
-  return state
+  const { problems, focusedIndex, collapsedUris } = state
+  const { index, newCollapsedUris } = getArrowRightNewFocusedIndex(problems, collapsedUris, focusedIndex)
+  return {
+    ...state,
+    focusedIndex: index,
+    collapsedUris: newCollapsedUris,
+  }
 }

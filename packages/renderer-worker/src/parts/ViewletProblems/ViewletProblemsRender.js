@@ -10,11 +10,12 @@ const renderProblems = {
       oldState.problems === newState.problems &&
       oldState.focusedIndex === newState.focusedIndex &&
       oldState.filterValue === newState.filterValue &&
-      oldState.viewMode === newState.viewMode
+      oldState.viewMode === newState.viewMode &&
+      oldState.collapsedUris === newState.collapsedUris
     )
   },
   apply(oldState, newState) {
-    const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.focusedIndex, newState.filterValue)
+    const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.collapsedUris, newState.focusedIndex, newState.filterValue)
     const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.viewMode, visible, newState.filterValue)
     return ['setProblemsDom', dom]
   },
