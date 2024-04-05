@@ -51,7 +51,7 @@ jobs:
           python-version: '3.11'
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
-        run: echo "value=$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v4
         id: npm-cache
@@ -69,7 +69,7 @@ jobs:
       - uses: actions/cache@v4
         id: build-cache
         with:
-          path: 'build/.tmp/cachedDependencies'
+          path: 'packages/build/.tmp/cachedDependencies'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
@@ -78,7 +78,7 @@ jobs:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
-        run: echo "value=$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v4
         id: builtin-extensions-cache
@@ -86,21 +86,21 @@ jobs:
           path: extensions
           key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
       - name: Download Builtin Extensions
-        run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run type-check
       - run: npm test
-      - run: node build/bin/build.js --target=server
+      - run: node packages/build/bin/build.js --target=server
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v4
         id: electron-builder-cache-windows
         if: matrix.os == 'windows-2022'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Build Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --product=lvce --target=electron-deb
+        run: node packages/build/bin/build.js --product=lvce --target=electron-deb
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, x64)
@@ -108,7 +108,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.deb"
-          mv "build/.tmp/releases/lvce-amd64.deb" "$staging"
+          mv "packages/build/.tmp/releases/lvce-amd64.deb" "$staging"
           echo "ASSET_DEB_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -122,7 +122,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (deb, arm64)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
+        run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, arm64)
@@ -130,7 +130,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.deb"
-          mv "build/.tmp/releases/lvce-arm64.deb" "$staging"
+          mv "packages/build/.tmp/releases/lvce-arm64.deb" "$staging"
           echo "ASSET_DEB_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, arm64)
         uses: actions/upload-release-asset@v1.0.1
@@ -144,7 +144,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (deb, armhf)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
+        run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, armhf)
@@ -152,7 +152,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
-          mv "build/.tmp/releases/lvce-armhf.deb" "$staging"
+          mv "packages/build/.tmp/releases/lvce-armhf.deb" "$staging"
           echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, armhf)
         uses: actions/upload-release-asset@v1.0.1
@@ -166,13 +166,13 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (snap, x64)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-snap
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-snap
       - name: Rename Electron App (snap, x64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.snap"
-          mv "build/.tmp/releases/lvce-editor.snap" "$staging"
+          mv "packages/build/.tmp/releases/lvce-editor.snap" "$staging"
           echo "ASSET_SNAP_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (snap, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -186,13 +186,13 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-12'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-mac --arch=x64
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=x64
       - name: Rename Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-12'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
-          mv "build/.tmp/releases/lvce-amd64.dmg" "$staging"
+          mv "packages/build/.tmp/releases/lvce-amd64.dmg" "$staging"
           echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -206,13 +206,13 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, arm64)
         if: matrix.os == 'macos-12'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
       - name: Rename Electron App (Macos dmg, arm64)
         if: matrix.os == 'macos-12'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
-          mv "build/.tmp/releases/lvce-arm64.dmg" "$staging"
+          mv "packages/build/.tmp/releases/lvce-arm64.dmg" "$staging"
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -226,7 +226,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, x64)
         if: matrix.os == 'windows-2022'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=x64
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=x64
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, x64)
@@ -234,7 +234,7 @@ jobs:
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-x64.exe"
-          mv "build/.tmp/releases/Lvce Editor-x64.exe" "$staging"
+          mv "packages/build/.tmp/releases/Lvce Editor-x64.exe" "$staging"
           echo "ASSET_WINDOWS_EXE_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -248,7 +248,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, arm64)
         if: matrix.os == 'windows-2022'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=arm64
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=arm64
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, arm64)
@@ -256,7 +256,7 @@ jobs:
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-arm64.exe"
-          mv "build/.tmp/releases/Lvce Editor-arm64.exe" "$staging"
+          mv "packages/build/.tmp/releases/Lvce Editor-arm64.exe" "$staging"
           echo "ASSET_WINDOWS_EXE_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe, arm64)
         uses: actions/upload-release-asset@v1.0.1
@@ -270,13 +270,13 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-app-image
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-app-image
       - name: Rename Electron App (AppImage)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
         run: |
           staging="Lvce-${{ needs.create-release.outputs.rg_version }}.AppImage"
-          mv "build/.tmp/releases/lvce.AppImage" "$staging"
+          mv "packages/build/.tmp/releases/lvce.AppImage" "$staging"
           echo "ASSET_APP_IMAGE_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (AppImage)
         uses: actions/upload-release-asset@v1.0.1
@@ -290,31 +290,31 @@ jobs:
           asset_content_type: application/octet-stream
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/extension-host-helper-process
+        working-directory: ./packages/build/.tmp/server/extension-host-helper-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/jest-environment
+        working-directory: ./packages/build/.tmp/server/jest-environment
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/pty-host
+        working-directory: ./packages/build/.tmp/server/pty-host
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/server
+        working-directory: ./packages/build/.tmp/server/server
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/shared-process
+        working-directory: ./packages/build/.tmp/server/shared-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Clean up
-        run: rm -rf node build/.tmp
+        run: rm -rf packages/build/.tmp
         shell: bash
 
       # - name: Build archive

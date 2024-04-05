@@ -1,4 +1,3 @@
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 import * as TestType from '../TestType/TestType.ts'
 import * as Timestamp from '../Timestamp/Timestamp.ts'
@@ -44,7 +43,7 @@ export const executeTest = async (name, fn, globals = {}) => {
       // @ts-ignore
       error.message.startsWith('Failed to load command TestFrameWork.')
     ) {
-      await ErrorHandling.handleError(error)
+      console.error(error)
       return
     }
     // @ts-ignore
