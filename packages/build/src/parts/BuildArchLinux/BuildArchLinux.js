@@ -24,20 +24,24 @@ const bundleElectronMaybe = async ({ product, version }) => {
 const copyElectronResult = async ({ product, version }) => {
   await bundleElectronMaybe({ product, version })
   await Copy.copy({
-    from: `build/.tmp/electron-bundle/x64/resources/app`,
-    to: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}`,
+    from: `packages/build/.tmp/electron-bundle/x64/resources/app`,
+    to: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}`,
   })
-  await Remove.remove(`build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/keytar`)
-  await Remove.remove(`build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`)
-  await Remove.remove(`build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`)
+  await Remove.remove(`packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/keytar`)
+  await Remove.remove(
+    `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
+  )
+  await Remove.remove(
+    `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
+  )
   await Replace.replace({
-    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
+    path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
     occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
     replacement: `export const rgPath = 'rg'`,
   })
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
   await Replace.replace({
-    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
+    path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
     occurrence: `const relevantArgv = argv.slice(1)`,
     replacement: `const relevantArgv = argv.slice(2)`,
   })
@@ -45,7 +49,7 @@ const copyElectronResult = async ({ product, version }) => {
 
 const copyMetaFiles = async ({ product }) => {
   const arch = ArchType.X64
-  await Template.write('linux_desktop', `build/.tmp/arch-linux/${arch}/usr/share/applications/${product.applicationName}.desktop`, {
+  await Template.write('linux_desktop', `packages/build/.tmp/arch-linux/${arch}/usr/share/applications/${product.applicationName}.desktop`, {
     '@@NAME_LONG@@': product.nameLong,
     '@@NAME_SHORT@@': product.nameShort,
     '@@NAME@@': product.applicationName,
@@ -56,13 +60,13 @@ const copyMetaFiles = async ({ product }) => {
     '@@KEYWORDS@@': `${product.applicationName};`,
     '@@APPLICATION_NAME@@': product.applicationName,
   })
-  await Template.write('bash_completion', `build/.tmp/arch-linux/${arch}/usr/share/bash-completion/completions/${product.applicationName}`, {
+  await Template.write('bash_completion', `packages/build/.tmp/arch-linux/${arch}/usr/share/bash-completion/completions/${product.applicationName}`, {
     '@@APPNAME@@': product.applicationName,
   })
   const tag = await Tag.getSemverVersion()
   const version = tag + '-1'
   const buildDate = new Date().getTime() // TODO use commit info
-  await Template.write('arch_linux_pkginfo', `build/.tmp/arch-linux/${arch}/.PKGINFO`, {
+  await Template.write('arch_linux_pkginfo', `packages/build/.tmp/arch-linux/${arch}/.PKGINFO`, {
     '@@APPNAME@@': product.applicationName,
     '@@VERSION@@': version,
     '@@PACKAGER@@': product.linuxMaintainer,
@@ -73,14 +77,14 @@ const copyMetaFiles = async ({ product }) => {
   })
   await Template.write(
     'arch_linux_bin',
-    `build/.tmp/arch-linux/${arch}/usr/bin/${product.applicationName}`,
+    `packages/build/.tmp/arch-linux/${arch}/usr/bin/${product.applicationName}`,
     {
       '@@APPNAME@@': product.applicationName,
       '@@ELECTRON_VERSION@@': ArchLinuxElectronVersion.name,
     },
     755,
   )
-  await Template.write('arch_linux_install', `build/.tmp/arch-linux/${arch}/.INSTALL`, {})
+  await Template.write('arch_linux_install', `packages/build/.tmp/arch-linux/${arch}/.INSTALL`, {})
   await Copy.copyFile({
     from: 'packages/build/files/icon.png',
     to: `packages/build/.tmp/arch-linux/${arch}/usr/share/pixmaps/${product.applicationName}.png`,
@@ -88,7 +92,7 @@ const copyMetaFiles = async ({ product }) => {
 
   // TODO
   // const installedSize = await getInstalledSize(
-  //   Path.absolute(`build/.tmp/linux/arch/${arch}/app`)
+  //   Path.absolute(`packages/build/.tmp/linux/arch/${arch}/app`)
   // )
   // const tag = await Tag.getGitTag()
 }
@@ -117,17 +121,17 @@ const getOtherDirents = async () => {
 
 const createMTree = async () => {
   const otherDirents = await getOtherDirents()
-  await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`), [
+  await Compress.createMTree(Path.absolute(`packages/build/.tmp/arch-linux/x64`), [
     '.PKGINFO', // .PKGINFO must be the first file in the archive
     ...otherDirents,
   ])
 }
 
 const compress = async ({ product }) => {
-  const cwd = Path.absolute(`build/.tmp/arch-linux/x64`)
-  const outFile = Path.absolute(`build/.tmp/releases/${product.applicationName}.tar.xz`)
+  const cwd = Path.absolute(`packages/build/.tmp/arch-linux/x64`)
+  const outFile = Path.absolute(`packages/build/.tmp/releases/${product.applicationName}.tar.xz`)
   const otherDirents = await getOtherDirents()
-  await Mkdir.mkdir(`build/.tmp/releases`)
+  await Mkdir.mkdir(`packages/build/.tmp/releases`)
   await Compress.tarXzFolders(
     [
       '.MTREE', // .MTREE must be the first file in the archive
@@ -143,7 +147,7 @@ const compress = async ({ product }) => {
 
 const printFinalSize = async ({ product }) => {
   try {
-    const size = await Stat.getFileSize(Path.absolute(`build/.tmp/releases/${product.applicationName}.tar.xz`))
+    const size = await Stat.getFileSize(Path.absolute(`packages/build/.tmp/releases/${product.applicationName}.tar.xz`))
     Logger.info(`tar xz size: ${size}`)
   } catch (error) {
     throw new VError(error, `Failed to print tar xz size`)

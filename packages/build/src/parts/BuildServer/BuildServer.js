@@ -23,76 +23,76 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'static/config',
-    to: `build/.tmp/server/server/static/${commitHash}/config`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/config`,
   })
   await Copy.copy({
     from: 'static/js',
-    to: `build/.tmp/server/server/static/${commitHash}/js`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/js`,
   })
   await Copy.copy({
     from: 'static/lib-css',
-    to: `build/.tmp/server/server/static/${commitHash}/lib-css`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/lib-css`,
   })
   await Copy.copyFile({
     from: 'static/favicon.ico',
-    to: `build/.tmp/server/server/static/favicon.ico`,
+    to: `packages/build/.tmp/server/server/static/favicon.ico`,
   })
   await Copy.copy({
     from: 'static/fonts',
-    to: `build/.tmp/server/server/static/${commitHash}/fonts`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/fonts`,
   })
   await Copy.copy({
     from: 'static/images',
-    to: `build/.tmp/server/server/static/images`,
+    to: `packages/build/.tmp/server/server/static/images`,
   })
   await Copy.copy({
     from: 'static/sounds',
-    to: `build/.tmp/server/server/static/${commitHash}/sounds`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/sounds`,
   })
   await Copy.copyFile({
     from: 'static/manifest.json',
-    to: `build/.tmp/server/server/static/${commitHash}/manifest.json`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/manifest.json`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/manifest.json`,
+    path: `packages/build/.tmp/server/server/static/${commitHash}/manifest.json`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
   })
   await Copy.copyFile({
     from: 'static/index.html',
-    to: `build/.tmp/server/server/static/index.html`,
+    to: `packages/build/.tmp/server/server/static/index.html`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
+    path: `packages/build/.tmp/server/server/static/index.html`,
     occurrence: '/packages/renderer-process/src/rendererProcessMain.ts',
     replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
+    path: `packages/build/.tmp/server/server/static/index.html`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
+    path: `packages/build/.tmp/server/server/static/index.html`,
     occurrence: '/manifest.json',
     replacement: `/${commitHash}/manifest.json`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
+    path: `packages/build/.tmp/server/server/static/index.html`,
     occurrence: '/css',
     replacement: `/${commitHash}/css`,
   })
   await BundleCss.bundleCss({
-    outDir: `build/.tmp/server/server/static/${commitHash}/css`,
+    outDir: `packages/build/.tmp/server/server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
   })
   await Copy.copy({
     from: 'static/icons',
-    to: `build/.tmp/server/server/static/${commitHash}/icons`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/icons`,
   })
-  await Remove.remove(`build/.tmp/server/server/static/images`)
-  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/sounds`)
-  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css/modern-normalize.css`)
+  await Remove.remove(`packages/build/.tmp/server/server/static/images`)
+  await Remove.remove(`packages/build/.tmp/server/server/static/${commitHash}/sounds`)
+  await Remove.remove(`packages/build/.tmp/server/server/static/${commitHash}/lib-css/modern-normalize.css`)
 }
 
 const getObjectDependencies = (obj) => {
@@ -766,7 +766,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   console.time('copyRendererProcessFiles')
   await Copy.copy({
     from: rendererProcessCachePath,
-    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/renderer-process`,
     ignore: ['static'],
   })
   console.timeEnd('copyRendererProcessFiles')
@@ -783,7 +783,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   console.time('copyRendererWorkerFiles')
   await Copy.copy({
     from: rendererWorkerCachePath,
-    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyRendererWorkerFiles')
@@ -796,7 +796,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   console.time('copyExtensionHostWorkerFiles')
   await Copy.copy({
     from: extensionHostWorkerCachePath,
-    to: `build/.tmp/server/server/static/${commitHash}/packages/extension-host-worker`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/extension-host-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostWorkerFiles')
@@ -809,7 +809,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   console.time('copyExtensionHostSubWorkerFiles')
   await Copy.copy({
     from: extensionHostSubWorkerCachePath,
-    to: `build/.tmp/server/server/static/${commitHash}/packages/extension-host-sub-worker`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/extension-host-sub-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostSubWorkerFiles')
@@ -822,7 +822,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   console.time('copyTestWorkerFiles')
   await Copy.copy({
     from: testWorkerCachePath,
-    to: `build/.tmp/server/server/static/${commitHash}/packages/test-worker`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/test-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyTestWorkerFiles')
@@ -834,7 +834,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   console.time('copyTerminalWorkerFiles')
   await Copy.copy({
     from: terminalWorkerCachePath,
-    to: `build/.tmp/server/server/static/${commitHash}/packages/terminal-worker`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/terminal-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
@@ -842,18 +842,18 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
-    from: `build/files/playground-source`,
-    to: `build/.tmp/server/server/static/${commitHash}/playground`,
+    from: `packages/build/files/playground-source`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/playground`,
   })
 }
 
 const copyJestEnvironment = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/build/files/jest-environment',
-    to: `build/.tmp/server/jest-environment`,
+    to: `packages/build/.tmp/server/jest-environment`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/jest-environment/src/index.js`,
+    path: `packages/build/.tmp/server/jest-environment/src/index.js`,
     occurrence: 'COMMIT_HASH',
     replacement: commitHash,
   })
@@ -868,17 +868,17 @@ const copyExtensions = async ({ commitHash }) => {
     if (shouldBeCopied(extensionName)) {
       await Copy.copy({
         from: `extensions/${extensionName}`,
-        to: `build/.tmp/server/server/static/${commitHash}/extensions/${extensionName}`,
+        to: `packages/build/.tmp/server/server/static/${commitHash}/extensions/${extensionName}`,
       })
     }
   }
   await Copy.copy({
-    from: `build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
-    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
+    from: `packages/build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/file-icons`,
   })
-  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`)
+  await Remove.remove(`packages/build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`)
   await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
+    path: `packages/build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
     occurrence: '/icons',
     replacement: '/file-icons',
   })

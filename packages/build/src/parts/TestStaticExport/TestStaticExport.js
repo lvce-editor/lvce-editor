@@ -25,12 +25,12 @@ const main = async () => {
     content: `{}`,
   })
   await Copy.copy({
-    from: `build/.tmp/server`,
+    from: `packages/build/.tmp/server`,
     to: join(tmpDir, 'node_modules', `@lvce-editor`),
   })
   await Copy.copy({
     from: `packages/shared-process/node_modules/@lvce-editor/verror`,
-    to: `build/.tmp/server/shared-process/node_modules/@lvce-editor/verror`,
+    to: `packages/build/.tmp/server/shared-process/node_modules/@lvce-editor/verror`,
   })
   try {
     await module.exportStatic({
@@ -42,7 +42,7 @@ const main = async () => {
   } catch (error) {
     throw new VError(error, `static export failed`)
   }
-  await Remove.remove(`build/.tmp/server/shared_process/node_modules`)
+  await Remove.remove(`packages/build/.tmp/server/shared_process/node_modules`)
 }
 
 main()

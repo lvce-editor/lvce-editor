@@ -21,7 +21,7 @@ import * as Template from '../Template/Template.js'
 import * as Version from '../Version/Version.js'
 
 const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales, arch = ArchType.Amd64, platform }) => {
-  // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
+  // if (existsSync(Path.absolute(`packages/build/.tmp/electron-bundle`))) {
   //   console.info('[electron build skipped]')
   //   return
   // }
@@ -33,21 +33,21 @@ const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales
 const copyElectronResult = async ({ product, version, arch, debArch, platform }) => {
   await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true, arch, platform })
   await Copy.copy({
-    from: `build/.tmp/electron-bundle/${arch}`,
-    to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
+    from: `packages/build/.tmp/electron-bundle/${arch}`,
+    to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
   })
   await Remove.remove(
-    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
+    `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )
   await Replace.replace({
-    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
+    path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
     occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
     replacement: `export const rgPath = 'rg'`,
   })
 }
 
 const copyMetaFiles = async ({ product, version, debArch }) => {
-  await Template.write('linux_desktop', `build/.tmp/linux/deb/${debArch}/app/usr/share/applications/${product.applicationName}.desktop`, {
+  await Template.write('linux_desktop', `packages/build/.tmp/linux/deb/${debArch}/app/usr/share/applications/${product.applicationName}.desktop`, {
     '@@NAME_LONG@@': product.nameLong,
     '@@NAME_SHORT@@': product.nameShort,
     '@@NAME@@': product.applicationName,
@@ -58,10 +58,14 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     '@@KEYWORDS@@': `${product.applicationName};`,
     '@@APPLICATION_NAME@@': product.applicationName,
   })
-  await Template.write('bash_completion', `build/.tmp/linux/deb/${debArch}/app/usr/share/bash-completion/completions/${product.applicationName}`, {
-    '@@APPNAME@@': product.applicationName,
-  })
-  await Template.write('lintian_overrides', `build/.tmp/linux/deb/${debArch}/app/usr/share/lintian/overrides/${product.applicationName}`, {
+  await Template.write(
+    'bash_completion',
+    `packages/build/.tmp/linux/deb/${debArch}/app/usr/share/bash-completion/completions/${product.applicationName}`,
+    {
+      '@@APPNAME@@': product.applicationName,
+    },
+  )
+  await Template.write('lintian_overrides', `packages/build/.tmp/linux/deb/${debArch}/app/usr/share/lintian/overrides/${product.applicationName}`, {
     '@@NAME@@': product.applicationName,
   })
   await Copy.copyFile({
@@ -69,12 +73,12 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${product.applicationName}.png`,
   })
 
-  const installedSize = await GetInstalledSize.getInstalledSize(Path.absolute(`build/.tmp/linux/deb/${debArch}/app`))
+  const installedSize = await GetInstalledSize.getInstalledSize(Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app`))
   const defaultDepends = LinuxDependencies.defaultDepends
   // TODO add options to process.argv whether or not ripgrep should be bundled or a dependency
   const recommends = LinuxDependencies.recommends
   const depends = [...defaultDepends].join(', ')
-  await Template.write('debian_control', `build/.tmp/linux/deb/${debArch}/DEBIAN/control`, {
+  await Template.write('debian_control', `packages/build/.tmp/linux/deb/${debArch}/DEBIAN/control`, {
     '@@NAME@@': product.applicationName,
     '@@VERSION@@': version,
     '@@ARCHITECTURE@@': debArch,
@@ -87,20 +91,20 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
 
   // TODO include electron/chromium licenses here? They are already at <appName>/Licenses.chromium.html
   // TODO include licenses of all used npm modules here?
-  await Template.write('linux_copyright', `build/.tmp/linux/deb/${debArch}/app/usr/share/doc/${product.applicationName}/copyright`, {
+  await Template.write('linux_copyright', `packages/build/.tmp/linux/deb/${debArch}/app/usr/share/doc/${product.applicationName}/copyright`, {
     '@@COPYRIGHT@@': product.copyrightShort,
     '@@LICENSE@@': product.licenseName,
   })
-  await Remove.remove(`build/.tmp/linux/deb/${debArch}/app/usr/bin`)
-  await Mkdir.mkdir(`build/.tmp/linux/deb/${debArch}/app/usr/bin`)
+  await Remove.remove(`packages/build/.tmp/linux/deb/${debArch}/app/usr/bin`)
+  await Mkdir.mkdir(`packages/build/.tmp/linux/deb/${debArch}/app/usr/bin`)
   await Symlink.symlink(
     `../lib/${product.applicationName}/${product.applicationName}`,
-    Path.absolute(`build/.tmp/linux/deb/${debArch}/app/usr/bin/${product.applicationName}`),
+    Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app/usr/bin/${product.applicationName}`),
   )
 }
 
 const compressData = async ({ debArch }) => {
-  const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
+  const cwd = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app`)
   try {
     console.time('compressing data')
     await Compress.tarXz('.', '../data.tar.xz', {
@@ -113,7 +117,7 @@ const compressData = async ({ debArch }) => {
 }
 
 const compressControl = async ({ debArch }) => {
-  const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}/DEBIAN`)
+  const cwd = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/DEBIAN`)
   try {
     await Compress.tarXz('.', '../control.tar.xz', {
       cwd,
@@ -124,14 +128,14 @@ const compressControl = async ({ debArch }) => {
 }
 
 const createDebianBinaryFile = async ({ debArch }) => {
-  const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
+  const cwd = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}`)
   await writeFile(Path.join(cwd, 'debian-binary'), '2.0\n')
 }
 
 const createDeb = async ({ product, debArch }) => {
   try {
-    const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
-    const releases = Path.absolute(`build/.tmp/releases`)
+    const cwd = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}`)
+    const releases = Path.absolute(`packages/build/.tmp/releases`)
     await Mkdir.mkdir(releases)
     const appName = product.applicationName
     await Compress.deb('control.tar.xz', 'data.tar.xz', {
@@ -148,7 +152,7 @@ const createDeb = async ({ product, debArch }) => {
 
 const printDebSize = async ({ product, debArch }) => {
   try {
-    const size = await Stat.getFileSize(Path.absolute(`build/.tmp/releases/${product.applicationName}-${debArch}.deb`))
+    const size = await Stat.getFileSize(Path.absolute(`packages/build/.tmp/releases/${product.applicationName}-${debArch}.deb`))
     Logger.info(`deb size: ${size}`)
   } catch (error) {
     throw new VError(error, `Failed to print deb size`)
@@ -157,7 +161,7 @@ const printDebSize = async ({ product, debArch }) => {
 
 const fixPermissions = async ({ debArch }) => {
   try {
-    const folder = Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
+    const folder = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app`)
     // change permissions from 775 to 755
     await Exec.exec('find', [folder, '-type', 'd', '-perm', '775', '-print', '-exec', 'chmod', '755', '{}', '+'], {
       stdout: 'ignore',
@@ -169,10 +173,10 @@ const fixPermissions = async ({ debArch }) => {
       stderr: 'inherit',
     })
     const extraFiles = [
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/web/bin/web.js`,
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
+      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/web/bin/web.js`,
+      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
+      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
+      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
     ]
     for (const extraFile of extraFiles) {
       await chmod(Path.absolute(extraFile), 0o755)
@@ -183,7 +187,7 @@ const fixPermissions = async ({ debArch }) => {
 }
 
 const cleanup = async ({ debArch }) => {
-  const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
+  const cwd = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}`)
   await Remove.remove(cwd)
 }
 

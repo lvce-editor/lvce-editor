@@ -22,7 +22,7 @@ const publishPackage = async (name) => {
         npm_config_registry: registryUrl,
       },
       stdio: 'inherit',
-      cwd: Path.absolute(`build/.tmp/server/${name}`),
+      cwd: Path.absolute(`packages/build/.tmp/server/${name}`),
     })
   } catch (error) {
     throw new VError(error, `Failed to publish ${name}`)

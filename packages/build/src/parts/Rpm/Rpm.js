@@ -19,20 +19,24 @@ const getRpmArch = (arch) => {
 
 const copyMetaFiles = async ({ arch, product }) => {
   const rpmArch = getRpmArch(arch)
-  await Template.write('linux_desktop', `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/applications/${product.applicationName}.desktop`, {
-    '@@NAME_LONG@@': product.nameLong,
-    '@@NAME_SHORT@@': product.nameShort,
-    '@@NAME@@': product.applicationName,
-    '@@EXEC@@': product.applicationName,
-    '@@ICON@@': product.applicationName,
-    '@@URLPROTOCOL@@': product.applicationName,
-    '@@SUMMARY@@': product.linuxSummary,
-    '@@KEYWORDS@@': `${product.applicationName};`,
-    '@@APPLICATION_NAME@@': product.applicationName,
-  })
+  await Template.write(
+    'linux_desktop',
+    `packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/applications/${product.applicationName}.desktop`,
+    {
+      '@@NAME_LONG@@': product.nameLong,
+      '@@NAME_SHORT@@': product.nameShort,
+      '@@NAME@@': product.applicationName,
+      '@@EXEC@@': product.applicationName,
+      '@@ICON@@': product.applicationName,
+      '@@URLPROTOCOL@@': product.applicationName,
+      '@@SUMMARY@@': product.linuxSummary,
+      '@@KEYWORDS@@': `${product.applicationName};`,
+      '@@APPLICATION_NAME@@': product.applicationName,
+    },
+  )
   await Template.write(
     'linux_app_data_xml',
-    `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/appdata/${product.applicationName}.appdata.xml`,
+    `packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/appdata/${product.applicationName}.appdata.xml`,
     {
       '@@NAME_LONG@@': product.nameLong,
       '@@NAME@@': product.applicationName,
@@ -43,17 +47,17 @@ const copyMetaFiles = async ({ arch, product }) => {
   )
   await Copy.copyFile({
     from: 'packages/build/files/icon.png',
-    to: `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/${product.applicationName}/usr/share/pixmaps/${product.applicationName}.png`,
+    to: `packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/${product.applicationName}/usr/share/pixmaps/${product.applicationName}.png`,
   })
 }
 
 const createRpm = async ({ arch, product }) => {
   const rpmArch = getRpmArch(arch)
-  const cwd = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
-  const rpmBuildPath = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
-  const rpmOut = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild/RPMS/${rpmArch}`)
-  const destination = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}`)
-  const specPath = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild/SPECS/${product.applicationName}.spec`)
+  const cwd = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
+  const rpmBuildPath = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
+  const rpmOut = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/RPMS/${rpmArch}`)
+  const destination = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}`)
+  const specPath = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/SPECS/${product.applicationName}.spec`)
   await Exec.exec('fakeroot', [`rpmbuild --bb ${specPath} --target=${rpmArch}`], {
     env: {
       HOME: destination,

@@ -33,7 +33,7 @@ const bundleElectronMaybe = async ({
   isArchLinux,
   isAppImage,
 }) => {
-  // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
+  // if (existsSync(Path.absolute(`packages/build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
@@ -70,7 +70,7 @@ const runElectronBuilder = async ({ config }) => {
      */
     const options = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
-      prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
+      prepackaged: Path.absolute(`packages/build/.tmp/linux/snap/${debArch}/app`),
       publish: 'never',
 
       // win: ['portable'],
@@ -88,7 +88,7 @@ const runElectronBuilder = async ({ config }) => {
 
 const copyBuildResources = async ({ config }) => {
   await Copy.copyFile({
-    from: `build/files/icon.png`,
+    from: `packages/build/files/icon.png`,
     to: 'packages/build/.tmp/electron-builder/build/icon.png',
   })
   await Copy.copy({
@@ -97,15 +97,15 @@ const copyBuildResources = async ({ config }) => {
   })
   if (config === ElectronBuilderConfigType.WindowsExe) {
     await Copy.copyFile({
-      from: `build/files/windows/installer.nsh`,
-      to: `build/.tmp/electron-builder/build/installer.nsh`,
+      from: `packages/build/files/windows/installer.nsh`,
+      to: `packages/build/.tmp/electron-builder/build/installer.nsh`,
     })
     await Copy.copyFile({
-      from: `build/files/windows/EnvVarUpdate.nsh`,
-      to: `build/.tmp/electron-builder/build/EnvVarUpdate.nsh`,
+      from: `packages/build/files/windows/EnvVarUpdate.nsh`,
+      to: `packages/build/.tmp/electron-builder/build/EnvVarUpdate.nsh`,
     })
     await Copy.copyFile({
-      from: `build/files/icon.ico`,
+      from: `packages/build/files/icon.ico`,
       to: 'packages/build/.tmp/electron-builder/build/icon.ico',
     })
   }
@@ -114,17 +114,17 @@ const copyBuildResources = async ({ config }) => {
 const getFinalFileName = ({ config, version, product }) => {
   switch (config) {
     case ElectronBuilderConfigType.ArchLinux:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Pacman}`
+      return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Pacman}`
     case ElectronBuilderConfigType.Deb:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.${FileExtension.Deb}`
+      return `packages/build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.${FileExtension.Deb}`
     case ElectronBuilderConfigType.WindowsExe:
-      return `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.${FileExtension.Exe}`
+      return `packages/build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.${FileExtension.Exe}`
     case ElectronBuilderConfigType.Snap:
-      return `build/.tmp/electron-builder/dist/${product.snapName}_${version}_amd64.${FileExtension.Snap}`
+      return `packages/build/.tmp/electron-builder/dist/${product.snapName}_${version}_amd64.${FileExtension.Snap}`
     case ElectronBuilderConfigType.Mac:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Dmg}`
+      return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Dmg}`
     case ElectronBuilderConfigType.AppImage:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.AppImage}`
+      return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.AppImage}`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
   }
@@ -210,12 +210,12 @@ const copyElectronResult = async ({
   })
   const debArch = 'amd64'
   const resourcesPath = isMacos
-    ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
-    : `build/.tmp/linux/snap/${debArch}/app/resources`
-  await Remove.remove(`build/.tmp/linux/snap/${debArch}/app`)
+    ? `packages/build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
+    : `packages/build/.tmp/linux/snap/${debArch}/app/resources`
+  await Remove.remove(`packages/build/.tmp/linux/snap/${debArch}/app`)
   await Copy.copy({
-    from: `build/.tmp/electron-bundle/${arch}`,
-    to: `build/.tmp/linux/snap/${debArch}/app`,
+    from: `packages/build/.tmp/electron-bundle/${arch}`,
+    to: `packages/build/.tmp/linux/snap/${debArch}/app`,
   })
   await AddRootPackageJson.addRootPackageJson({
     cachePath: `${resourcesPath}/app`,
@@ -232,7 +232,7 @@ const copyElectronResult = async ({
     })
     // workaround for https://github.com/electron-userland/electron-builder/issues/2761
     const { owner, repoName } = getRepositoryInfo(product.repoUrl)
-    await Template.write('electron_builder_app_update_yaml', `build/.tmp/linux/snap/${debArch}/app/resources/app-update.yml`, {
+    await Template.write('electron_builder_app_update_yaml', `packages/build/.tmp/linux/snap/${debArch}/app/resources/app-update.yml`, {
       '@@OWNER@@': owner,
       '@@REPO_NAME@@': repoName,
     })
@@ -244,16 +244,16 @@ const copyElectronResult = async ({
     })
   }
   if (config === ElectronBuilderConfigType.WindowsExe) {
-    await Template.write('windows_cmd', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`, {
+    await Template.write('windows_cmd', `packages/build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`, {
       '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
-    await Template.write('windows_cli_bash', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
+    await Template.write('windows_cli_bash', `packages/build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
       '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
     await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion })
     await Copy.copyFile({
-      from: `build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
-      to: `build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
+      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
+      to: `packages/build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
     })
   }
 }
@@ -261,7 +261,7 @@ const copyElectronResult = async ({
 const renameReleaseFile = async ({ config, version, product, arch }) => {
   const finalFileName = getFinalFileName({ config, version, product })
   const releaseFileName = getReleaseFileName({ config, product, arch })
-  const releaseFilePath = `build/.tmp/releases/${releaseFileName}`
+  const releaseFilePath = `packages/build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
     from: finalFileName,
     to: releaseFilePath,

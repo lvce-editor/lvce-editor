@@ -27,20 +27,20 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/renderer-process/src',
-    to: `build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.ts`,
     occurrence: `ASSET_DIR`,
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.ts`,
     occurrence: `PLATFORM`,
     replacement: 'PlatformType.Web',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.ts`,
     occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
 
 export const getModule = (method) => {
@@ -83,22 +83,22 @@ export const getModule = (method) => {
 }`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
     occurrence: `/src/rendererWorkerMain.ts`,
     replacement: '/dist/rendererWorkerMain.js',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Icon/Icon.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Icon/Icon.ts`,
     occurrence: `/icons`,
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.ts`,
     eagerlyLoadedModules: ['Css', 'InitData', 'Layout', 'Location', 'Meta', 'Viewlet', 'WebStorage', 'Window'],
     ipcPostFix: true,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/ViewletModule/ViewletModule.ts`,
+    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/ViewletModule/ViewletModule.ts`,
     eagerlyLoadedModules: [
       'ViewletMain',
       'ViewletLayout',
@@ -116,10 +116,10 @@ export const getModule = (method) => {
 const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
   // await Copy.copy({
   //   from: 'packages/extension-host-worker/src',
-  //   to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
+  //   to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
   // })
   // await Replace.replace({
-  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts`,
+  //   path: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts`,
   //   occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
   //   replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   // })
@@ -128,11 +128,11 @@ const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
 const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-sub-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker/src`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker/src`,
   })
   // TODO
   // await Replace.replace({
-  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/Platform/Platform.js`,
+  //   path: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/Platform/Platform.js`,
   //   occurrence: `/src/extensionHostWorkerMain.js`,
   //   replacement: '/dist/extensionHostWorkerMain.js',
   // })
@@ -142,107 +142,107 @@ const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
 const copyTestWorkerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/test-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/test-worker/src`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/test-worker/src`,
   })
   await Copy.copy({
     from: 'packages/terminal-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/terminal-worker/src`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/terminal-worker/src`,
   })
 }
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copy({
     from: 'static/config',
-    to: `build/.tmp/dist/${commitHash}/config`,
+    to: `packages/build/.tmp/dist/${commitHash}/config`,
   })
   await Copy.copy({
     from: 'static/js',
-    to: `build/.tmp/dist/${commitHash}/static/js`,
+    to: `packages/build/.tmp/dist/${commitHash}/static/js`,
   })
   await Copy.copy({
     from: 'static/js',
-    to: `build/.tmp/dist/${commitHash}/js`,
+    to: `packages/build/.tmp/dist/${commitHash}/js`,
   })
   await Copy.copyFile({
     from: 'static/favicon.ico',
-    to: `build/.tmp/dist/favicon.ico`,
+    to: `packages/build/.tmp/dist/favicon.ico`,
   })
   await Copy.copy({
     from: 'static/fonts',
-    to: `build/.tmp/dist/${commitHash}/fonts`,
+    to: `packages/build/.tmp/dist/${commitHash}/fonts`,
   })
   await Copy.copy({
     from: 'static/sounds',
-    to: `build/.tmp/dist/sounds`,
+    to: `packages/build/.tmp/dist/sounds`,
   })
   await Copy.copyFile({
     from: 'static/manifest.json',
-    to: `build/.tmp/dist/manifest.json`,
+    to: `packages/build/.tmp/dist/manifest.json`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/manifest.json`,
+    path: `packages/build/.tmp/dist/manifest.json`,
     occurrence: '/icons',
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   if (pathPrefix) {
     await Replace.replace({
-      path: `build/.tmp/dist/manifest.json`,
+      path: `packages/build/.tmp/dist/manifest.json`,
       occurrence: '"start_url": "/"',
       replacement: `"start_url": "${pathPrefix}/"`,
     })
   }
   await Copy.copyFile({
     from: 'static/index.html',
-    to: `build/.tmp/dist/index.html`,
+    to: `packages/build/.tmp/dist/index.html`,
   })
   if (pathPrefix) {
     await Replace.replace({
-      path: `build/.tmp/dist/index.html`,
+      path: `packages/build/.tmp/dist/index.html`,
       occurrence: '/manifest.json',
       replacement: `${pathPrefix}/manifest.json`,
     })
     await Replace.replace({
-      path: `build/.tmp/dist/index.html`,
+      path: `packages/build/.tmp/dist/index.html`,
       occurrence: '</title>',
       replacement: `</title>
     <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
     })
   }
   await Replace.replace({
-    path: `build/.tmp/dist/index.html`,
+    path: `packages/build/.tmp/dist/index.html`,
     occurrence: '/packages/renderer-process/src/rendererProcessMain.ts',
     replacement: `${pathPrefix}/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/index.html`,
+    path: `packages/build/.tmp/dist/index.html`,
     occurrence: '/icons',
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/index.html`,
+    path: `packages/build/.tmp/dist/index.html`,
     occurrence: '/css',
     replacement: `${pathPrefix}/${commitHash}/css`,
   })
   if (!ignoreIconTheme) {
     await Copy.copy({
       from: 'extensions/builtin.vscode-icons/icons',
-      to: `build/.tmp/dist/${commitHash}/file-icons`,
+      to: `packages/build/.tmp/dist/${commitHash}/file-icons`,
     })
   }
   await BundleCss.bundleCss({
-    outDir: `build/.tmp/dist/${commitHash}/css`,
+    outDir: `packages/build/.tmp/dist/${commitHash}/css`,
     assetDir: `${pathPrefix}/${commitHash}`,
     pathPrefix,
   })
   await Copy.copy({
     from: 'static/icons',
-    to: `build/.tmp/dist/${commitHash}/icons`,
+    to: `packages/build/.tmp/dist/${commitHash}/icons`,
   })
   const languageBasics = await getLanguageBasicsNames()
   for (const languageBasic of languageBasics) {
     await Copy.copy({
       from: `extensions/${languageBasic}`,
-      to: `build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
     })
   }
 }
@@ -283,7 +283,7 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   }
   const languages = extensions.flatMap(getLanguages)
   await JsonFile.writeJson({
-    to: `build/.tmp/dist/${commitHash}/config/languages.json`,
+    to: `packages/build/.tmp/dist/${commitHash}/config/languages.json`,
     value: languages,
   })
 }
@@ -292,7 +292,7 @@ const applyJsOverrides = async ({ pathPrefix, commitHash }) => {}
 
 const addRobotsTxt = async () => {
   await WriteFile.writeFile({
-    to: `build/.tmp/dist/robots.txt`,
+    to: `packages/build/.tmp/dist/robots.txt`,
     content: `User-agent: *
 Disallow: /
 `,
@@ -302,7 +302,7 @@ Disallow: /
 const addVersionFile = async ({ commitHash }) => {
   const commitMessage = await CommitHash.getCommitMessage()
   await JsonFile.writeJson({
-    to: `build/.tmp/dist/version`,
+    to: `packages/build/.tmp/dist/version`,
     value: {
       version: commitHash,
       commitMessage,
@@ -329,11 +329,11 @@ const copyColorThemes = async ({ commitHash }) => {
   for (const theme of themes) {
     await Copy.copyFile({
       from: `extensions/builtin.theme-${theme}/color-theme.json`,
-      to: `build/.tmp/dist/${commitHash}/themes/${theme}.json`,
+      to: `packages/build/.tmp/dist/${commitHash}/themes/${theme}.json`,
     })
   }
   await JsonFile.writeJson({
-    to: `build/.tmp/dist/${commitHash}/config/themes.json`,
+    to: `packages/build/.tmp/dist/${commitHash}/config/themes.json`,
     value: themes,
   })
 }
@@ -357,7 +357,7 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     }
     await Copy.copy({
       from: `extensions/${languageFeature}`,
-      to: `build/.tmp/dist/${commitHash}/extensions/${languageFeature}`,
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageFeature}`,
     })
     webExtensions.push({
       ...manifest,
@@ -366,18 +366,18 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     })
   }
   await JsonFile.writeJson({
-    to: `build/.tmp/dist/${commitHash}/config/webExtensions.json`,
+    to: `packages/build/.tmp/dist/${commitHash}/config/webExtensions.json`,
     value: webExtensions,
   })
 
-  if (existsSync(Path.absolute(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript`))) {
+  if (existsSync(Path.absolute(`packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript`))) {
     await Copy.copy({
-      from: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node/node_modules/typescript`,
-      to: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/typescript`,
+      from: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node/node_modules/typescript`,
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/typescript`,
     })
-    await Remove.remove(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node`)
+    await Remove.remove(`packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node`)
     await Replace.replace({
-      path: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/src/parts/IsWeb/IsWeb.js`,
+      path: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/src/parts/IsWeb/IsWeb.js`,
       occurrence: 'false',
       replacement: 'true',
     })
@@ -387,10 +387,10 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
 const copyIconThemes = async ({ commitHash }) => {
   await Copy.copyFile({
     from: 'extensions/builtin.vscode-icons/icon-theme.json',
-    to: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
+    to: `packages/build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
+    path: `packages/build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
     occurrence: '/icons',
     replacement: '/file-icons',
   })
@@ -404,7 +404,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await Copy.copy({
     from: rendererProcessCachePath,
-    to: `build/.tmp/dist/${commitHash}/packages/renderer-process`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process`,
     ignore: ['static'],
   })
   const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
@@ -417,7 +417,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await Copy.copy({
     from: rendererWorkerCachePath,
-    to: `build/.tmp/dist/${commitHash}/packages/renderer-worker`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-worker`,
     ignore: ['static'],
   })
   const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
@@ -427,10 +427,10 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await Copy.copy({
     from: extensionHostWorkerCachePath,
-    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker`,
   })
   await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
+    cwd: Path.absolute(`packages/build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
     from: 'src/extensionHostSubWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
@@ -442,7 +442,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await Copy.copy({
     from: terminalWorkerCachePath,
-    to: `build/.tmp/dist/${commitHash}/packages/terminal-worker`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/terminal-worker`,
   })
   const testWorkerCachePath = await BundleTestWorkerCached.bundleTestWorkerCached({
     assetDir,
@@ -451,7 +451,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await Copy.copy({
     from: testWorkerCachePath,
-    to: `build/.tmp/dist/${commitHash}/packages/test-worker`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/test-worker`,
   })
 }
 
@@ -497,31 +497,31 @@ const getTestFiles = (testFilesRaw) => {
 const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/src',
-    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`,
     ignore: ['videos'],
   })
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/fixtures',
-    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
   })
 
   const testFilesRaw = await ReadDir.readDirWithFileTypes('packages/extension-host-worker-tests/src')
   const testFiles = getTestFiles(testFilesRaw)
-  await Mkdir.mkdir(`build/.tmp/dist/${commitHash}/tests`)
+  await Mkdir.mkdir(`packages/build/.tmp/dist/${commitHash}/tests`)
   for (const testFile of testFiles) {
     await Copy.copyFile({
-      from: `build/.tmp/dist/index.html`,
-      to: `build/.tmp/dist/tests/${testFile}.html`,
+      from: `packages/build/.tmp/dist/index.html`,
+      to: `packages/build/.tmp/dist/tests/${testFile}.html`,
     })
   }
   const testOverviewHtml = generateTestOverviewHtml(testFiles)
   await WriteFile.writeFile({
-    to: `build/.tmp/dist/tests/index.html`,
+    to: `packages/build/.tmp/dist/tests/index.html`,
     content: testOverviewHtml,
   })
   if (pathPrefix) {
     await Replace.replace({
-      path: `build/.tmp/dist/tests/index.html`,
+      path: `packages/build/.tmp/dist/tests/index.html`,
       occurrence: '</title>',
       replacement: `</title>
     <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
@@ -531,8 +531,8 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
-    from: `build/files/playground-source`,
-    to: `build/.tmp/dist/${commitHash}/playground`,
+    from: `packages/build/files/playground-source`,
+    to: `packages/build/.tmp/dist/${commitHash}/playground`,
   })
 }
 

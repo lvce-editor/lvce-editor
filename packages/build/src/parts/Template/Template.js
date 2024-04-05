@@ -4,7 +4,7 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Path from '../Path/Path.js'
 
 const getTemplate = (name) => {
-  return ReadFile.readFile(`build/src/parts/Template/template_${name}.txt`)
+  return ReadFile.readFile(`packages/build/src/parts/Template/template_${name}.txt`)
 }
 
 export const write = async (name, to, replacements, executable = 0) => {

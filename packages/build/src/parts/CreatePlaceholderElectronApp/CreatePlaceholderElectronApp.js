@@ -46,7 +46,7 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
   })
 
   await Copy.copy({
-    from: `build/files/icon.ico`,
+    from: `packages/build/files/icon.ico`,
     to: 'packages/build/.tmp/electron-builder-placeholder-app/build/icon.ico',
   })
 

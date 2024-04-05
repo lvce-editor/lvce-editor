@@ -9,7 +9,7 @@ import * as Version from '../Version/Version.js'
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
 
 const bundleElectronMaybe = async ({ product, version }) => {
-  if (existsSync(Path.absolute(`build/.tmp/bundle/electron-result`))) {
+  if (existsSync(Path.absolute(`packages/build/.tmp/bundle/electron-result`))) {
     Logger.info('[electron build skipped]')
     return
   }
@@ -22,7 +22,7 @@ const copyElectronResult = async ({ arch, product, version }) => {
   // TODO could skip copy by changing which files to dump in snapcraft.yml
   await Copy.copy({
     from: 'packages/build/.tmp/bundle/electron-result',
-    to: `build/.tmp/linux/snap/${arch}/files/usr/lib/${product.applicationName}`,
+    to: `packages/build/.tmp/linux/snap/${arch}/files/usr/lib/${product.applicationName}`,
   })
 }
 

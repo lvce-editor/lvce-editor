@@ -285,8 +285,8 @@ export const build = async ({
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
   const optimizeLanguageBasics = true
   const resourcesPath = isMacos
-    ? `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
-    : `build/.tmp/electron-bundle/${arch}/resources`
+    ? `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
+    : `packages/build/.tmp/electron-bundle/${arch}/resources`
 
   const useInstalledElectronVersion = isInstalled && installedArch === arch && installedPlatform === platform
   if (!useInstalledElectronVersion) {

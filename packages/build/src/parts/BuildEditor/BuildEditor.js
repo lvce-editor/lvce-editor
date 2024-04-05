@@ -82,7 +82,7 @@ const copySources = async () => {
     to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/TextDocument',
   })
   await Replace.replace({
-    path: `build/.tmp/editor/packages/renderer-worker/src/parts/TextDocument/TextDocument.js`,
+    path: `packages/build/.tmp/editor/packages/renderer-worker/src/parts/TextDocument/TextDocument.js`,
     occurrence: `import * as FileSystem from '../FileSystem/FileSystem.js'`,
     replacement: '',
   })

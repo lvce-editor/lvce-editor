@@ -12,8 +12,8 @@ const shouldLocaleBeRemovedMacos = (dirent) => {
 }
 
 const removeUnusedLocalesMacos = async ({ arch, product }) => {
-  const localesPath1 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
-  const localesPath2 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources`
+  const localesPath1 = `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
+  const localesPath2 = `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources`
   const localesPaths = [localesPath1, localesPath2]
   for (const localePath of localesPaths) {
     const dirents = await ReadDir.readDir(localePath)
@@ -29,11 +29,11 @@ const shouldLocaleBeRemovedOther = (locale) => {
 }
 
 const removeUnusedLocalesOther = async ({ arch }) => {
-  const localesPath = `build/.tmp/electron-bundle/${arch}/locales`
+  const localesPath = `packages/build/.tmp/electron-bundle/${arch}/locales`
   const dirents = await ReadDir.readDir(localesPath)
   const toRemove = dirents.filter(shouldLocaleBeRemovedOther)
   for (const dirent of toRemove) {
-    await Remove.remove(`build/.tmp/electron-bundle/${arch}/locales/${dirent}`)
+    await Remove.remove(`packages/build/.tmp/electron-bundle/${arch}/locales/${dirent}`)
   }
 }
 

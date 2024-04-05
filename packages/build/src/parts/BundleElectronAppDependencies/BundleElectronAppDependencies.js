@@ -57,24 +57,24 @@ const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supports
 
 const copyResults = async () => {
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-process/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/src`,
+    from: `packages/build/.tmp/bundle/electron/packages/renderer-process/src`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/src`,
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/dist`,
+    from: `packages/build/.tmp/bundle/electron/packages/renderer-process/dist`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/dist`,
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-worker/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/src`,
+    from: `packages/build/.tmp/bundle/electron/packages/renderer-worker/src`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/src`,
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-worker/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/dist`,
+    from: `packages/build/.tmp/bundle/electron/packages/renderer-worker/dist`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/dist`,
   })
   const webPackageJson = await JsonFile.readJson('packages/server/package.json')
   await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/server/package.json`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/packages/server/package.json`,
     value: {
       name: webPackageJson.name,
       type: webPackageJson.type,
@@ -82,35 +82,35 @@ const copyResults = async () => {
     },
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/server/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/server/src`,
+    from: `packages/build/.tmp/bundle/electron/packages/server/src`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/packages/server/src`,
   })
 
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/static`,
-    to: `build/.tmp/bundle/electron-result/resources/app/static`,
+    from: `packages/build/.tmp/bundle/electron/static`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/static`,
   })
 
-  for (const dirent of await readdir(Path.absolute(`build/.tmp/bundle/electron/extensions`))) {
+  for (const dirent of await readdir(Path.absolute(`packages/build/.tmp/bundle/electron/extensions`))) {
     if (isLanguageBasics(dirent)) {
       await Copy.copy({
-        from: `build/.tmp/bundle/electron/extensions/${dirent}`,
-        to: `build/.tmp/bundle/electron-result/resources/app/extensions/${dirent}`,
+        from: `packages/build/.tmp/bundle/electron/extensions/${dirent}`,
+        to: `packages/build/.tmp/bundle/electron-result/resources/app/extensions/${dirent}`,
       })
     }
   }
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.theme-slime`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.theme-slime`,
+    from: `packages/build/.tmp/bundle/electron/extensions/builtin.theme-slime`,
+    to: `packages/build/.tmp/bundle/electron-result/resources/app/extensions/builtin.theme-slime`,
   })
 
-  for (const dirent of await readdir(Path.absolute(`build/.tmp/bundle/electron/extensions`))) {
+  for (const dirent of await readdir(Path.absolute(`packages/build/.tmp/bundle/electron/extensions`))) {
     if (!dirent.startsWith('builtin.theme-')) {
       continue
     }
     await Copy.copy({
-      from: `build/.tmp/bundle/electron/extensions/${dirent}`,
-      to: `build/.tmp/bundle/electron-result/resources/app/extensions/${dirent}`,
+      from: `packages/build/.tmp/bundle/electron/extensions/${dirent}`,
+      to: `packages/build/.tmp/bundle/electron-result/resources/app/extensions/${dirent}`,
       ignore: ['node_modules', 'test', 'package-lock.json'],
     })
   }

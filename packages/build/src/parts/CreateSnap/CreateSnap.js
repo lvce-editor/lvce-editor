@@ -8,7 +8,7 @@ export const createSnap = async (arch) => {
       return
     }
     await Exec.exec('snapcraft', [], {
-      cwd: Path.absolute(`build/.tmp/linux/snap/${arch}`),
+      cwd: Path.absolute(`packages/build/.tmp/linux/snap/${arch}`),
       stdio: 'inherit',
       shell: true,
       env: {

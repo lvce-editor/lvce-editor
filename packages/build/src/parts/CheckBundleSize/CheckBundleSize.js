@@ -16,7 +16,7 @@ const computeResults = async (budget) => {
     actual[group] = Object.create(null)
     for (const key of Object.keys(budget[group])) {
       try {
-        actual[group][key] = await Stat.getGzipFileSize(`build/.tmp/dist/${commitHash}/packages/${packageName}/dist/${key}.js`)
+        actual[group][key] = await Stat.getGzipFileSize(`packages/build/.tmp/dist/${commitHash}/packages/${packageName}/dist/${key}.js`)
       } catch (error) {
         // @ts-ignore
         if (error && error.code === ErrorCodes.ENOENT) {
