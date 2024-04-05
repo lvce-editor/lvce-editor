@@ -73,6 +73,5 @@ export const restoreJsonRpcError = (error) => {
   if (typeof error === 'string') {
     return new Error(`JsonRpc Error: ${error}`)
   }
-  console.log({ error })
   return new Error(`JsonRpc Error: Unknown Error`)
 }
