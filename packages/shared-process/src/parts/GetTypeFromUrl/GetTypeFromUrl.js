@@ -6,7 +6,12 @@ export const getTypeFromUrl = (url) => {
   }
   const questionMarkIndex = url.indexOf('?')
   if (questionMarkIndex === -1) {
-    throw new VError(`missing type parameter`)
+    const slashIndex = url.lastIndexOf('/')
+    const rest = url.slice(slashIndex + 1)
+    if (!rest) {
+      throw new Error('could not parse websocket type from url')
+    }
+    return rest
   }
   const rest = url.slice(questionMarkIndex)
   const searchParams = new URLSearchParams(rest)

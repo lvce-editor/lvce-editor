@@ -8,7 +8,7 @@ import { VError } from '../VError/VError.ts'
 
 export const create = async ({ type }) => {
   Assert.string(type)
-  const wsUrl = GetWebSocketUrl.getWsUrl(type)
+  const wsUrl = GetWebSocketUrl.getWebSocketUrl(type)
   const webSocket = new WebSocket(wsUrl)
   const firstWebSocketEvent = await GetFirstWebSocketEvent.waitForWebSocketToBeOpen(webSocket)
   if (firstWebSocketEvent.type === FirstWebSocketEventType.Error) {
