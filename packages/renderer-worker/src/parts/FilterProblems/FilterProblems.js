@@ -1,3 +1,5 @@
+import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
+
 const matchesFilterValue = (string, filterValueLower) => {
   if (filterValueLower) {
     return string.toLowerCase().indexOf(filterValueLower)
@@ -5,7 +7,7 @@ const matchesFilterValue = (string, filterValueLower) => {
   return 0
 }
 
-export const filterProblems = (problems, filterValue) => {
+export const filterProblems = (problems, collapsedUris, filterValue) => {
   const filterValueLower = filterValue.toLowerCase()
   const filtered = []
   for (const problem of problems) {
@@ -15,6 +17,10 @@ export const filterProblems = (problems, filterValue) => {
     if (uriMatchIndex === -1 && sourceMatchIndex === -1 && messageMatchIndex === -1) {
       continue
     }
+    if (collapsedUris.includes(problem.uri) && problem.listItemType === ProblemListItemType.Item) {
+      continue
+    }
+
     filtered.push({
       ...problem,
       uriMatchIndex,

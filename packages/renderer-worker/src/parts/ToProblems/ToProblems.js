@@ -2,12 +2,12 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
 
 const toProblem = (diagnostic, index) => {
-  const { message, rowIndex, columnIndex, source, code, type } = diagnostic
+  const { message, rowIndex, columnIndex, source, code, type, uri } = diagnostic
   return {
     message: message || '',
     rowIndex: rowIndex || 0,
     columnIndex: columnIndex || 0,
-    uri: '',
+    uri,
     relativePath: '',
     count: 0,
     source: source || '',
