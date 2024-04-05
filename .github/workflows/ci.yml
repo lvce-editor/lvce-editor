@@ -34,7 +34,7 @@ jobs:
           python-version: '3.11'
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
-        run: echo "value=$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v4
         id: npm-cache
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/cache@v4
         id: build-cache
         with:
-          path: 'build/.tmp/cachedDependencies'
+          path: 'packages/build/.tmp/cachedDependencies'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
@@ -63,7 +63,7 @@ jobs:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
-        run: echo "value=$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v4
         id: builtin-extensions-cache
@@ -71,7 +71,7 @@ jobs:
           path: extensions
           key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
       - name: Download Builtin Extensions
-        run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run type-check
       - run: npm test
@@ -88,38 +88,38 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-deb
+        run: node packages/build/bin/build.js --target=electron-deb
       - name: Build Electron App (snap)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-builder-snap
+        run: node packages/build/bin/build.js --target=electron-builder-snap
       - name: Build Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-12'
-        run: node build/bin/build.js --target=electron-builder-mac --arch=x64
+        run: node packages/build/bin/build.js --target=electron-builder-mac --arch=x64
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v4
         id: electron-builder-cache-windows
         if: matrix.os == 'windows-2022'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
-        run: node build/bin/build.js --target=electron-builder-windows-exe
+        run: node packages/build/bin/build.js --target=electron-builder-windows-exe
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-builder-app-image
+        run: node packages/build/bin/build.js --target=electron-builder-app-image
       - name: Build static site
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=static
+        run: node packages/build/bin/build.js --target=static
         env:
           PATH_PREFIX: /lvce-editor
       - name: Upload artifact
         if: matrix.os == 'ubuntu-22.04'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build/.tmp/dist
+          path: ./packages/build/.tmp/dist
       - name: Clean up
-        run: rm -rf node build/.tmp
+        run: rm -rf packages/build/.tmp
         shell: bash
 
   deploy:
