@@ -10,6 +10,7 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
   const list = []
   let $Node1
   while (($Node1 = iter1.nextNode())) {
+    // @ts-ignore
     list.push($Node1)
   }
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
@@ -46,6 +47,7 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
     }
   }
   for (const $Node of toRemove) {
+    // @ts-ignore
     $Node.remove()
   }
 }

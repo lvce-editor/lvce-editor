@@ -28,6 +28,7 @@ test.skip('focus', () => {
   // @ts-ignore
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
+  // @ts-ignore
   Editor.setFocused(state)
   expect(state.$EditorInput).toBe(document.activeElement)
 })
@@ -118,8 +119,11 @@ test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on
   state.$LayerText.append($Row1)
   document.body.append(state.$Editor)
   const range = document.createRange()
+  // @ts-ignore
   range.setStart($Token2.firstChild, 4)
+  // @ts-ignore
   document.getSelection().removeAllRanges()
+  // @ts-ignore
   document.getSelection().addRange(range)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -131,9 +135,13 @@ test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on
     [{ rowIndex: 0, columnIndex: 7 }],
     [],
   )
+  // @ts-ignore
   expect(document.getSelection().anchorNode).toBe($Row1.children[1].firstChild)
+  // @ts-ignore
   expect(document.getSelection().anchorOffset).toBe(5)
+  // @ts-ignore
   expect(document.getSelection().focusNode).toBe($Row1.children[1].firstChild)
+  // @ts-ignore
   expect(document.getSelection().focusOffset).toBe(5)
 })
 
@@ -152,9 +160,13 @@ test.skip('renderTextAndCursorsAndSelections - native selection - word in middle
   state.$LayerText.append($Row1)
   document.body.append(state.$Editor)
   const range = document.createRange()
+  // @ts-ignore
   range.setStart($Token2.firstChild, 0)
+  // @ts-ignore
   range.setEnd($Token2.firstChild, 10)
+  // @ts-ignore
   document.getSelection().removeAllRanges()
+  // @ts-ignore
   document.getSelection().addRange(range)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -171,9 +183,13 @@ test.skip('renderTextAndCursorsAndSelections - native selection - word in middle
     ],
     [],
   )
+  // @ts-ignore
   expect(document.getSelection().anchorNode).toBe($Row1.children[1].firstChild)
+  // @ts-ignore
   expect(document.getSelection().anchorOffset).toBe(1)
+  // @ts-ignore
   expect(document.getSelection().focusNode).toBe($Row1.children[1].firstChild)
+  // @ts-ignore
   expect(document.getSelection().focusOffset).toBe(1)
 })
 
@@ -193,9 +209,13 @@ test.skip('renderTextAndCursorsAndSelections - bug with multiple tokens', () => 
   state.$LayerText.append($Row1)
   document.body.append(state.$Editor)
   const range = document.createRange()
+  // @ts-ignore
   range.setStart($Token3.firstChild, 1)
+  // @ts-ignore
   range.setEnd($Token3.firstChild, 1)
+  // @ts-ignore
   document.getSelection().removeAllRanges()
+  // @ts-ignore
   document.getSelection().addRange(range)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -212,8 +232,12 @@ test.skip('renderTextAndCursorsAndSelections - bug with multiple tokens', () => 
     ],
     [],
   )
+  // @ts-ignore
   expect(document.getSelection().anchorNode).toBe($Row1.children[3].firstChild)
+  // @ts-ignore
   expect(document.getSelection().anchorOffset).toBe(1)
+  // @ts-ignore
   expect(document.getSelection().focusNode).toBe($Row1.children[3].firstChild)
+  // @ts-ignore
   expect(document.getSelection().focusOffset).toBe(1)
 })

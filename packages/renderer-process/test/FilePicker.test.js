@@ -23,6 +23,7 @@ test('showDirectoryPicker - error', async () => {
   window.showDirectoryPicker.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
+  // @ts-ignore
   await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
@@ -31,6 +32,7 @@ test('showDirectoryPicker - error - canceled', async () => {
   window.showDirectoryPicker.mockImplementation(async () => {
     throw new Error('The user aborted a request.')
   })
+  // @ts-ignore
   await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new Error('The user aborted a request.'))
 })
 
@@ -39,6 +41,7 @@ test('showDirectoryPicker - error - not implemented', async () => {
   window.showDirectoryPicker.mockImplementation(async () => {
     throw new Error('window.showDirectoryPicker is not a function')
   })
+  // @ts-ignore
   await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new Error('window.showDirectoryPicker is not a function'))
 })
 
@@ -50,6 +53,7 @@ test('showDirectoryPicker', async () => {
       name: 'test-folder',
     }
   })
+  // @ts-ignore
   expect(await FilePicker.showDirectoryPicker()).toEqual({
     kind: 'directory',
     name: 'test-folder',
@@ -65,6 +69,7 @@ test('showFilePicker - error', async () => {
   window.showFilePicker.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
+  // @ts-ignore
   await expect(FilePicker.showFilePicker()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
@@ -73,5 +78,6 @@ test('showSaveFilePicker - error', async () => {
   window.showSaveFilePicker.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
+  // @ts-ignore
   await expect(FilePicker.showSaveFilePicker()).rejects.toThrow(new TypeError('x is not a function'))
 })

@@ -55,6 +55,7 @@ test.skip('openMenu - focus on menuBar', () => {
   document.body.append($ViewletTitleBarMenuBar)
   // @ts-ignore
   $ViewletTitleBarMenuBar.firstChild.focus()
+  // @ts-ignore
   ViewletTitleBarMenuBar.openMenu(-1, 1, 0, menuItems, false)
   // @ts-ignore
   expect(document.activeElement).toBe($ViewletTitleBarMenuBar.children[1])
@@ -98,7 +99,9 @@ test.skip('openMenu - focus on menu', () => {
   document.body.append($ViewletTitleBarMenuBar)
   // @ts-ignore
   $ViewletTitleBarMenuBar.firstChild.focus()
+  // @ts-ignore
   ViewletTitleBarMenuBar.openMenu(1, 0, menuItems, true)
+  // @ts-ignore
   expect(document.activeElement).toBe(Menu.state.$$Menus[0].firstChild)
 })
 
@@ -137,6 +140,7 @@ test.skip('setMenus - add one menu', () => {
   )
   const { $$Menus } = state
   expect($$Menus.length).toBe(1)
+  // @ts-ignore
   expect($$Menus[0].outerHTML).toBe(
     '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem" tabindex="-1">Open Recent</div></div>',
   )
@@ -229,9 +233,11 @@ test.skip('setMenus - open sub menu', () => {
   )
   const { $$Menus } = state
   expect($$Menus.length).toBe(2)
+  // @ts-ignore
   expect($$Menus[0].outerHTML).toBe(
     '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem MenuItemFocused" tabindex="-1">Open Recent</div></div>',
   )
+  // @ts-ignore
   expect($$Menus[1].outerHTML).toBe(
     '<div class="Menu" tabindex="-1" style="top: 0px; left: 150px; width: 150px; height: 150px;" id="Menu-1"><div class="MenuItem" tabindex="-1">file-1.txt</div><div class="MenuItem" tabindex="-1">file-2.txt</div></div>',
   )

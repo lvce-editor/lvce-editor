@@ -15,6 +15,7 @@ export const wrap = (window) => {
         if ('method' in data) {
           return
         }
+        // @ts-ignore
         listener({ data, target: this })
       }
       this.window.onmessage = wrappedListener

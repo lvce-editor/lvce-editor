@@ -18,6 +18,7 @@ test('setPosition', () => {
   const state = {
     $ScrollBarThumbVertical: document.createElement('div'),
   }
+  // @ts-ignore
   LayerScrollBar.setPosition(state, `0 50px`)
   expect(state.$ScrollBarThumbVertical.style.translate).toBe('0 50px')
 })

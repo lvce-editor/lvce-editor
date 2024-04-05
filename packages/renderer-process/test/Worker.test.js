@@ -47,6 +47,8 @@ test.skip('create - messagePort', async () => {
   const port = await WebWorker.create(join(tmpDir, 'test-file.ts'))
   expect(port).toBeInstanceOf(MessagePort)
   expect('port' in globalThis).toBe(false)
+  // @ts-ignore
   delete global.MessageChannel
+  // @ts-ignore
   delete global.MessagePort
 })

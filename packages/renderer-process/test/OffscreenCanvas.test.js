@@ -30,6 +30,7 @@ const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.
 const OffscreenCanvas = await import('../src/parts/OffscreenCanvas/OffscreenCanvas.ts')
 
 test('create', () => {
+  // @ts-ignore
   OffscreenCanvas.create()
   expect(RendererWorker.sendAndTransfer).toHaveBeenCalledTimes(1)
   expect(RendererWorker.sendAndTransfer).toHaveBeenCalledWith(

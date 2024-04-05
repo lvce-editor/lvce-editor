@@ -17,6 +17,7 @@ export const renderInternal = ($Parent, elements, eventMap) => {
       $Element.append(...stack.slice(0, element.childCount))
       stack = stack.slice(element.childCount)
     }
+    // @ts-ignore
     stack.unshift($Element)
   }
   $Parent.append(...stack)

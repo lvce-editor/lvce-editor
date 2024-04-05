@@ -394,6 +394,7 @@ export const show = (id) => {
   const instance = state.instances[id]
   const $Viewlet = instance.state.$Viewlet
   const $Workbench = document.getElementById('Workbench')
+  // @ts-ignore
   $Workbench.append($Viewlet)
   if (instance.factory.focus) {
     instance.factory.focus(instance.state)

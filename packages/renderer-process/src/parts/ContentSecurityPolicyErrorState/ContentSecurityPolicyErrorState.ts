@@ -6,6 +6,7 @@ export const state = {
 }
 
 export const addError = (error) => {
+  // @ts-ignore
   state.errors.push(error)
 }
 

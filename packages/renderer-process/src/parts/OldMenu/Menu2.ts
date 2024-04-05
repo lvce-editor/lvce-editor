@@ -71,6 +71,7 @@ const handleMouseDown = (event) => {
   if (index === -1) {
     return
   }
+  // @ts-ignore
   const menuIndex = state.$$Menus.indexOf($Menu)
   RendererWorker.send(/* Menu.handleClick */ 'Menu.selectIndex', /* menuIndex */ menuIndex, /* index */ index)
 }
@@ -82,6 +83,7 @@ const handleMouseEnter = (event) => {
   if (index === -1) {
     return
   }
+  // @ts-ignore
   const level = state.$$Menus.indexOf($Menu)
   RendererWorker.send(/* Menu.handleMouseEnter */ 'Menu.handleMouseEnter', /* level */ level, /* index */ index)
 }
@@ -108,6 +110,7 @@ export const show = (x, y, level, items) => {
   $Menu.style.top = `${y}px`
   $Menu.dataset.id = `menu-${level}`
   $Menu.append(...items.map(create$MenuItem))
+  // @ts-ignore
   state.$$Menus.push($Menu)
 }
 

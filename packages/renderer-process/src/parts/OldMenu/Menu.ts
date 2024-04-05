@@ -49,6 +49,7 @@ export const state = {
 }
 
 const getLevel = ($Menu) => {
+  // @ts-ignore
   return state.$$Menus.indexOf($Menu)
 }
 
@@ -157,9 +158,11 @@ const create$Menu = () => {
 export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
   const $Menu = state.$$Menus[level]
   if (oldFocusedIndex !== -1) {
+    // @ts-ignore
     $Menu.children[oldFocusedIndex].classList.remove('MenuItemFocused')
   }
   if (newFocusedIndex !== -1) {
+    // @ts-ignore
     const $New = $Menu.children[newFocusedIndex]
     if ($New.classList.contains('MenuItemSeparator')) {
       return
@@ -186,6 +189,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
     const $BackDrop = BackDrop.create$BackDrop()
     $BackDrop.onmousedown = handleBackDropMouseDown
     $BackDrop.oncontextmenu = handleContextMenu
+    // @ts-ignore
     state.$BackDrop = $BackDrop
     Widget.append($BackDrop)
   }
@@ -197,11 +201,13 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
 
   if (parentIndex !== -1) {
     const $ParentMenu = state.$$Menus[level - 1]
+    // @ts-ignore
     const $ParentMenuItem = $ParentMenu.children[parentIndex]
     $ParentMenuItem.ariaExpanded = AriaBoolean.True
     $ParentMenuItem.setAttribute(DomAttributeType.AriaOwns, $Menu.id)
   }
 
+  // @ts-ignore
   state.$$Menus.push($Menu)
   Widget.append($Menu)
 
@@ -284,6 +290,7 @@ export const hide = (restoreFocus = true) => {
 
 export const contains = ($Element) => {
   for (const $Menu of state.$$Menus) {
+    // @ts-ignore
     if ($Menu.contains($Element)) {
       return true
     }

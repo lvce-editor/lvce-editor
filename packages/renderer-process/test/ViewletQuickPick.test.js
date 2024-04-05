@@ -25,6 +25,7 @@ test('accessibility - aria-activedescendant should point to quick pick item', ()
 
 test('hideStatus', () => {
   const state = ViewletQuickPick.create()
+  // @ts-ignore
   ViewletQuickPick.showNoResults(state)
   ViewletQuickPick.hideStatus(state)
   expect(state.$QuickPickStatus).toBeUndefined()

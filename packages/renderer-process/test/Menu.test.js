@@ -100,6 +100,7 @@ test.skip('focus', () => {
   })
   // @ts-ignore
   Menu.focus()
+  // @ts-ignore
   expect(document.activeElement).toBe(Menu.state.$$Menus[0].firstChild)
 })
 
@@ -135,6 +136,7 @@ test.skip('accessibility - Menu show have role menu', () => {
     width: 100,
     height: 100,
   })
+  // @ts-ignore
   expect(Menu.state.$$Menus[0].role).toBe('menu')
 })
 
@@ -208,6 +210,7 @@ test.skip('showMenu - error - item has missing label', () => {
 })
 
 test.skip('showMenu - with sub menu', () => {
+  // @ts-ignore
   Menu.showMenu(
     0,
     0,
@@ -258,6 +261,7 @@ test.skip('showMenu - with sub menu', () => {
     0,
     -1,
   )
+  // @ts-ignore
   Menu.showMenu(
     100,
     100,
@@ -366,6 +370,7 @@ test.skip('event - right click outside', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const $BackDrop = document.querySelector('.BackDrop')
+  // @ts-ignore
   $BackDrop.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
@@ -481,6 +486,7 @@ test.skip('event - context menu - outside', () => {
     cancelable: true,
   })
   const $BackDrop = document.querySelector('.BackDrop')
+  // @ts-ignore
   $BackDrop.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
