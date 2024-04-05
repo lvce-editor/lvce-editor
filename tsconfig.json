@@ -2,7 +2,7 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./build" },
+    { "path": "./packages/build" },
     { "path": "./packages/editor-worker" },
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
