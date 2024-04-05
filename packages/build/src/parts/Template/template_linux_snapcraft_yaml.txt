@@ -46,7 +46,7 @@ parts:
       echo $(which npm)
       echo test
       npm ci --unsafe-perm
-      node build/bin/build.js --target=snap-internal
+      node packages/build/bin/build.js --target=snap-internal
 
   #dump-package:
   #  plugin: dump
