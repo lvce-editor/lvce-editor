@@ -1,11 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.ts'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.ts'
-import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -71,7 +70,7 @@ test('event - pointerdown', () => {
 })
 
 test.skip('event - pointerdown - error - no active pointer with the given id is found', () => {
-  const spy = jest
+  jest
     // @ts-ignore
     .spyOn(HTMLElement.prototype, 'setPointerCapture')
     .mockImplementation(() => {

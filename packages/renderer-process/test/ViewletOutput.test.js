@@ -1,10 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.ts'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
+import { beforeAll, expect, test } from '@jest/globals'
 import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.ts'
-import { beforeEach, test, expect, beforeAll } from '@jest/globals'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
+import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.ts'
 
 const getSimpleList = (state) => {
   return state.content.textContent

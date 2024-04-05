@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   // TODO ideally sidebar and sidebar content html elements should be created and mounted

@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
+import { expect, test } from '@jest/globals'
 import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletProblems.create()

@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as Widget from '../src/parts/Widget/Widget.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('append', () => {
   const $Element = document.createElement('div')

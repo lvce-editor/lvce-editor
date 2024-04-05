@@ -19,13 +19,6 @@ beforeEach(() => {
   document.body.textContent = ''
 })
 
-const getTextContent = ($Node) => {
-  return $Node.textContent
-}
-const getSimpleList = (state) => {
-  return Array.from(state.$Viewlet.children).map(getTextContent)
-}
-
 test('create', () => {
   const state = ViewletExplorer.create()
   expect(state).toBeDefined()

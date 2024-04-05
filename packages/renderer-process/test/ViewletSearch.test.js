@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.ts'
+import { expect, test } from '@jest/globals'
 import * as EnterKeyHintType from '../src/parts/EnterKeyHintType/EnterKeyHintType.ts'
-import { beforeEach, test, expect } from '@jest/globals'
+import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.ts'
 
 test('create', () => {
   const state = ViewletSearch.create()

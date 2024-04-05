@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ClearNode from '../ClearNode/ClearNode.ts'
 import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.ts'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
 /**
  *
  * @param {any[]} elements
@@ -23,14 +22,6 @@ export const renderInternal = ($Parent, elements, eventMap) => {
   $Parent.append(...stack)
 }
 
-const isEqualNodeName = ($Node, node) => {
-  if ($Node.nodeName === 'BUTTON' && node.type === VirtualDomElements.Button) {
-    return true
-  }
-
-  return false
-}
-
 export const renderInto = ($Parent, dom, eventMap = {}) => {
   Assert.array(dom)
   ClearNode.clearNode($Parent)
@@ -44,7 +35,6 @@ export const renderIncremental = ($Parent, dom) => {
     return
   }
   // TODO
-  const oldCount = $Parent.children.length
   let $Node = $Parent
   for (let i = 0; i < dom.length; i++) {
     const node = dom[i]
@@ -76,9 +66,4 @@ export const render = (elements, eventMap = {}) => {
   // @ts-ignore
   renderInternal($Root, elements, eventMap)
   return $Root
-}
-
-const insert = ($Node, diffItem) => {
-  // @ts-ignore
-  renderInternal($Node, diffItem.nodes)
 }

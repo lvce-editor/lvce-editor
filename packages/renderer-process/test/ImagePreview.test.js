@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as ImagePreview from '../src/parts/ImagePreview/ImagePreview.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ImagePreview.create('/remote/tmp/image.png', 10, 20)

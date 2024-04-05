@@ -220,7 +220,7 @@ export const setMenus = (state, changes, uid) => {
         const menu = change[1]
         const newLength = change[2]
         const dom = change[3]
-        const { level, x, y, width, height, focusedIndex, items, expanded } = menu
+        const { level, x, y, width, height, focusedIndex } = menu
         const $Menu = $$Menus[level]
         SetBounds.setBounds($Menu, x, y, width, height)
         VirtualDom.renderInto($Menu, dom)

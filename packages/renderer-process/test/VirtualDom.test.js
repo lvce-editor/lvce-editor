@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as VirtualDom from '../src/parts/VirtualDom/VirtualDom.ts'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('render - single tag', () => {
   const dom = VirtualDom.render([

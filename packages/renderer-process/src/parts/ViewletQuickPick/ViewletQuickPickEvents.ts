@@ -18,14 +18,6 @@ import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.ts'
 // TODO accessibility issues with nvda: when pressing escape, it goes into different mode
 // but should just close quick-pick like vscode does
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 export const handlePointerDown = (event) => {
   if (IsMobile.isMobile) {
     // workaround to disable virtual keyboard automatically opening on android

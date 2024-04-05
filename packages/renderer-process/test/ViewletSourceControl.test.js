@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
 import * as ViewletSourceControl from '../src/parts/ViewletSourceControl/ViewletSourceControl.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('create', () => {
   const state = ViewletSourceControl.create()

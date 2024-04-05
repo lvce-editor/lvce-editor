@@ -1,6 +1,3 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as ViewletDiffEditorFunctions from './ViewletDiffEditorFunctions.ts'
-
 export const handleScrollBarPointerDown = (event) => {
   // TODO
 }

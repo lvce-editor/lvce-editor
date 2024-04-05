@@ -1,6 +1,5 @@
 // based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
 
-import * as FindIndex from '../FindIndex/FindIndex.ts'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.ts'
 import * as AriaLiveType from '../AriaLiveType/AriaLiveType.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
@@ -8,6 +7,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.ts'
 import * as DomEventType from '../DomEventType/DomEventType.ts'
+import * as FindIndex from '../FindIndex/FindIndex.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.ts'
 
@@ -92,7 +92,7 @@ export const focus = (state) => {
   state.$InputBox.focus()
 }
 
-export const setExtensionState = (state, id, extensionState) => {
+export const setExtensionState = () => {
   // const index = state.extensions.findIndex((extension) => extension.id === id)
   // if (index === -1) {
   //   return
@@ -131,14 +131,13 @@ export const setExtensionsDom = (state, dom) => {
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
 }
 
-export const dispose = (state) => {}
+export const dispose = () => {}
 
 export const openSuggest = (state) => {
   // TODO maybe cache getBoundingClientRect (though it is not a bottleneck right now)
   // TODO getBoundingClientRect should not be needed, all positions should be known already in renderer worker
+  // @ts-ignore
   const rect = state.$InputBox.getBoundingClientRect()
-  const x = rect.left
-  const y = rect.top
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
 }

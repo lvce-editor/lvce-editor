@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as VirtualDomDiff from '../src/parts/VirtualDomDiff/VirtualDomDiff.ts'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('renderDiff - update class name', () => {
   const oldHtml = `<div class="a"></div>`

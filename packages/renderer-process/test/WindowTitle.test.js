@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
+import { expect, test } from '@jest/globals'
 import * as WindowTitle from '../src/parts/WindowTitle/WindowTitle.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 test('setTitle', () => {
   WindowTitle.set('test')

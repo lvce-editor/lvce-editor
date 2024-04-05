@@ -115,7 +115,7 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
 }
 
 export const setActionsDom = (state, actions, childUid) => {
-  const { $PanelTabs, $PanelActions } = state
+  const { $PanelActions } = state
   const instances = Viewlet.state.instances
   const instance = instances[childUid]
   if (!instance) {

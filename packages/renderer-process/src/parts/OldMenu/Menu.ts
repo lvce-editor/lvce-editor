@@ -89,8 +89,6 @@ const handleMouseDown = (event) => {
 //   }
 // }
 
-const MOUSE_LOCS_TRACKED = 3
-
 /**
  *
  * @param {MouseEvent} event
@@ -112,11 +110,6 @@ const handleMouseEnter = (event) => {
     /* y */ clientY,
     /* timeStamp */ timeStamp,
   )
-}
-
-const handleMouseMove = (event) => {
-  // const x = event.clientX
-  // const y = event.clientY
 }
 
 const handleMouseLeave = (event) => {
@@ -220,7 +213,6 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
 
 export const closeSubMenu = () => {
   const $SubMenu = state.$$Menus.pop()
-  const $ParentMenu = state.$$Menus.at(-1)
   Widget.remove($SubMenu)
 }
 
