@@ -108,7 +108,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.deb"
-          mv "build/.tmp/releases/lvce-amd64.deb" "$staging"
+          mv "packages/build/.tmp/releases/lvce-amd64.deb" "$staging"
           echo "ASSET_DEB_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -130,7 +130,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.deb"
-          mv "build/.tmp/releases/lvce-arm64.deb" "$staging"
+          mv "packages/build/.tmp/releases/lvce-arm64.deb" "$staging"
           echo "ASSET_DEB_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, arm64)
         uses: actions/upload-release-asset@v1.0.1
@@ -152,7 +152,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
-          mv "build/.tmp/releases/lvce-armhf.deb" "$staging"
+          mv "packages/build/.tmp/releases/lvce-armhf.deb" "$staging"
           echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, armhf)
         uses: actions/upload-release-asset@v1.0.1
@@ -172,7 +172,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.snap"
-          mv "build/.tmp/releases/lvce-editor.snap" "$staging"
+          mv "packages/build/.tmp/releases/lvce-editor.snap" "$staging"
           echo "ASSET_SNAP_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (snap, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -192,7 +192,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
-          mv "build/.tmp/releases/lvce-amd64.dmg" "$staging"
+          mv "packages/build/.tmp/releases/lvce-amd64.dmg" "$staging"
           echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -212,7 +212,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
-          mv "build/.tmp/releases/lvce-arm64.dmg" "$staging"
+          mv "packages/build/.tmp/releases/lvce-arm64.dmg" "$staging"
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -234,7 +234,7 @@ jobs:
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-x64.exe"
-          mv "build/.tmp/releases/Lvce Editor-x64.exe" "$staging"
+          mv "packages/build/.tmp/releases/Lvce Editor-x64.exe" "$staging"
           echo "ASSET_WINDOWS_EXE_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe, x64)
         uses: actions/upload-release-asset@v1.0.1
@@ -256,7 +256,7 @@ jobs:
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-arm64.exe"
-          mv "build/.tmp/releases/Lvce Editor-arm64.exe" "$staging"
+          mv "packages/build/.tmp/releases/Lvce Editor-arm64.exe" "$staging"
           echo "ASSET_WINDOWS_EXE_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe, arm64)
         uses: actions/upload-release-asset@v1.0.1
@@ -276,7 +276,7 @@ jobs:
         shell: bash
         run: |
           staging="Lvce-${{ needs.create-release.outputs.rg_version }}.AppImage"
-          mv "build/.tmp/releases/lvce.AppImage" "$staging"
+          mv "packages/build/.tmp/releases/lvce.AppImage" "$staging"
           echo "ASSET_APP_IMAGE_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (AppImage)
         uses: actions/upload-release-asset@v1.0.1
