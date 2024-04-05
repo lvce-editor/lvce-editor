@@ -10,7 +10,7 @@ export const bundleRendererWorkerCached = async ({ commitHash, platform, assetDi
     Logger.info('[build step skipped] bundleRendererWorker')
   } else {
     console.time('bundleRendererWorker')
-    await Remove.remove(Path.absolute('build/.tmp/cachedSources/renderer-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/renderer-worker'))
     const BundleRendererWorker = await import('../BundleRendererWorker/BundleRendererWorker.js')
     await BundleRendererWorker.bundleRendererWorker({
       cachePath: rendererWorkerCachePath,

@@ -42,7 +42,7 @@ const copyMetaFiles = async ({ arch, product }) => {
     },
   )
   await Copy.copyFile({
-    from: 'build/files/icon.png',
+    from: 'packages/build/files/icon.png',
     to: `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/${product.applicationName}/usr/share/pixmaps/${product.applicationName}.png`,
   })
 }

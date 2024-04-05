@@ -10,15 +10,13 @@ const sortBuiltinExtensions = (builtinExtensions) => {
 }
 
 export const formatBuiltinExtensions = async () => {
-  const builtinExtensions = await JsonFile.readJson(
-    'build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json'
-  )
+  const builtinExtensions = await JsonFile.readJson('packages/build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json')
   const sortedBuiltinExtensions = sortBuiltinExtensions(builtinExtensions)
   if (Arrays.isEqual(builtinExtensions, sortedBuiltinExtensions)) {
     return
   }
   await JsonFile.writeJson({
-    to: 'build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json',
+    to: 'packages/build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json',
     value: sortedBuiltinExtensions,
   })
 }

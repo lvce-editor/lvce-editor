@@ -10,7 +10,7 @@ export const bundleSharedProcessCached = async ({ commitHash, product, version, 
     Logger.info('[build step skipped] bundleSharedprocess')
   } else {
     console.time('bundleSharedProcess')
-    await Remove.remove(Path.absolute('build/.tmp/cachedSources/shared-process'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/shared-process'))
     const BundleSharedProcess = await import('../BundleSharedProcess/BundleSharedProcess.js')
     await BundleSharedProcess.bundleSharedProcess({
       cachePath,

@@ -1,10 +1,10 @@
 import * as ComputeCacheKey from '../ComputeCacheKey/ComputeCacheKey.js'
 
 const locations = [
-  'build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js',
-  'build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js',
-  'build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json',
-  'build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
+  'packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js',
+  'packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js',
+  'packages/build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json',
+  'packages/build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
 ]
 
 const main = async () => {

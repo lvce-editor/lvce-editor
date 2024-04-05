@@ -6,7 +6,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
 
 export const start = async () => {
-  const cachePath = Path.absolute('build/.tmp/verdaccio-cache')
+  const cachePath = Path.absolute('packages/build/.tmp/verdaccio-cache')
   const lvceEditorPath = Path.join(cachePath, '@lvce-editor')
   await Remove.remove(lvceEditorPath)
   await Remove.remove(Path.join(cachePath, 'jest-environment-lvce-editor'))

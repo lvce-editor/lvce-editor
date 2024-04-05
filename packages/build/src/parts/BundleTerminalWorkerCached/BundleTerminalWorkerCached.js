@@ -10,7 +10,7 @@ export const bundleTerminalWorkerCached = async ({ commitHash, platform, assetDi
     Logger.info('[build step skipped] bundleTerminalWorker')
   } else {
     console.time('bundleTerminalWorker')
-    await Remove.remove(Path.absolute('build/.tmp/cachedSources/extension-host-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/extension-host-worker'))
     const BundleTerminalWorker = await import('../BundleTerminalWorker/BundleTerminalWorker.js')
     await BundleTerminalWorker.bundleTerminalWorker({
       cachePath,

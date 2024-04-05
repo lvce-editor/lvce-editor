@@ -16,67 +16,67 @@ const TO_COPY = [
   // extension host
   {
     from: 'packages/extension-host/bin',
-    to: 'build/.tmp/packages/extension-host/bin',
+    to: 'packages/build/.tmp/packages/extension-host/bin',
   },
   {
     from: 'packages/extension-host/src',
-    to: 'build/.tmp/packages/extension-host/src',
+    to: 'packages/build/.tmp/packages/extension-host/src',
   },
   {
     from: 'packages/extension-host/package.json',
-    to: 'build/.tmp/packages/extension-host',
+    to: 'packages/build/.tmp/packages/extension-host',
   },
   {
     from: 'packages/extension-host/package-lock.json',
-    to: 'build/.tmp/packages/extension-host',
+    to: 'packages/build/.tmp/packages/extension-host',
   },
   // renderer process
   {
     from: 'packages/renderer-process/src',
-    to: 'build/.tmp/packages/renderer-process/src',
+    to: 'packages/build/.tmp/packages/renderer-process/src',
   },
   // renderer worker
   {
     from: 'packages/renderer-worker/src',
-    to: 'build/.tmp/packages/renderer-worker/src',
+    to: 'packages/build/.tmp/packages/renderer-worker/src',
   },
   // shared process
   {
     from: 'packages/shared-process/bin',
-    to: 'build/.tmp/packages/shared-process/bin',
+    to: 'packages/build/.tmp/packages/shared-process/bin',
   },
   {
     from: 'packages/shared-process/src',
-    to: 'build/.tmp/packages/shared-process/src',
+    to: 'packages/build/.tmp/packages/shared-process/src',
   },
   {
     from: 'packages/shared-process/package-lock.json',
-    to: 'build/.tmp/packages/shared-process',
+    to: 'packages/build/.tmp/packages/shared-process',
   },
   {
     from: 'packages/shared-process/package.json',
-    to: 'build/.tmp/packages/shared-process',
+    to: 'packages/build/.tmp/packages/shared-process',
   },
   // web
   {
     from: 'packages/web/bin',
-    to: 'build/.tmp/packages/web/bin',
+    to: 'packages/build/.tmp/packages/web/bin',
   },
   {
     from: 'packages/web/src',
-    to: 'build/.tmp/packages/web/src',
+    to: 'packages/build/.tmp/packages/web/src',
   },
   {
     from: 'packages/web/package-lock.json',
-    to: 'build/.tmp/packages/web',
+    to: 'packages/build/.tmp/packages/web',
   },
   {
     from: 'packages/web/package.json',
-    to: 'build/.tmp/packages/web',
+    to: 'packages/build/.tmp/packages/web',
   },
   {
     from: 'static',
-    to: 'build/.tmp/static',
+    to: 'packages/build/.tmp/static',
   },
 ]
 
@@ -87,10 +87,10 @@ const copySources = async () => {
     await mkdir(dirname(absoluteTo), { recursive: true })
     await cpy(absoluteFrom, absoluteTo, {})
   }
-  await mkdir(join(root, 'build/.tmp/playground'))
+  await mkdir(join(root, 'packages/build/.tmp/playground'))
 }
 
-const TO_INSTALL_DEPENDENCIES = ['build/.tmp/packages/extension-host', 'build/.tmp/packages/shared-process']
+const TO_INSTALL_DEPENDENCIES = ['packages/build/.tmp/packages/extension-host', 'packages/build/.tmp/packages/shared-process']
 
 const installDependencies = async () => {
   for (const to of TO_INSTALL_DEPENDENCIES) {

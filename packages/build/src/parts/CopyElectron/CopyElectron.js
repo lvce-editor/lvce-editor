@@ -41,7 +41,7 @@ export const copyElectron = async ({ arch, electronVersion, useInstalledElectron
       })
       await Remove.remove(`build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/electron.icns`)
       await Copy.copy({
-        from: 'build/files/icon.icns',
+        from: 'packages/build/files/icon.icns',
         to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/${product.nameShort}.icns`,
       })
       await Rename.rename({

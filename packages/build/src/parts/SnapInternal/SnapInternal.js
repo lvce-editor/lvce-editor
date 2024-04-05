@@ -21,7 +21,7 @@ const copyElectronResult = async ({ arch, product, version }) => {
   await bundleElectronMaybe({ product, version })
   // TODO could skip copy by changing which files to dump in snapcraft.yml
   await Copy.copy({
-    from: 'build/.tmp/bundle/electron-result',
+    from: 'packages/build/.tmp/bundle/electron-result',
     to: `build/.tmp/linux/snap/${arch}/files/usr/lib/${product.applicationName}`,
   })
 }

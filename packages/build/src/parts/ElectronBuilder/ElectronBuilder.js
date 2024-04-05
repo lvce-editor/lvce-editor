@@ -46,7 +46,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
   const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.js` : `packages/main-process/src/mainProcessMain.js`
-  await Template.write(config, 'build/.tmp/electron-builder/package.json', {
+  await Template.write(config, 'packages/build/.tmp/electron-builder/package.json', {
     '@@SNAP_NAME@@': product.snapName,
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
@@ -69,7 +69,7 @@ const runElectronBuilder = async ({ config }) => {
      * @type {ElectronBuilder.CliOptions}
      */
     const options = {
-      projectDir: Path.absolute('build/.tmp/electron-builder'),
+      projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
       publish: 'never',
 
@@ -89,11 +89,11 @@ const runElectronBuilder = async ({ config }) => {
 const copyBuildResources = async ({ config }) => {
   await Copy.copyFile({
     from: `build/files/icon.png`,
-    to: 'build/.tmp/electron-builder/build/icon.png',
+    to: 'packages/build/.tmp/electron-builder/build/icon.png',
   })
   await Copy.copy({
-    from: 'build/files/icons',
-    to: 'build/.tmp/electron-builder/build/icons',
+    from: 'packages/build/files/icons',
+    to: 'packages/build/.tmp/electron-builder/build/icons',
   })
   if (config === ElectronBuilderConfigType.WindowsExe) {
     await Copy.copyFile({
@@ -106,7 +106,7 @@ const copyBuildResources = async ({ config }) => {
     })
     await Copy.copyFile({
       from: `build/files/icon.ico`,
-      to: 'build/.tmp/electron-builder/build/icon.ico',
+      to: 'packages/build/.tmp/electron-builder/build/icon.ico',
     })
   }
 }
@@ -167,7 +167,7 @@ const printFinalSize = async (releaseFilePath) => {
     Logger.info(`final size: ${size}`)
   } catch (error) {
     console.warn(error)
-    console.log(await readdir(Path.absolute('build/.tmp/electron-builder/dist/')))
+    console.log(await readdir(Path.absolute('packages/build/.tmp/electron-builder/dist/')))
   }
 }
 

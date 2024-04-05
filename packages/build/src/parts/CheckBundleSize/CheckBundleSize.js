@@ -47,7 +47,7 @@ const computeResults = async (budget) => {
 }
 
 const checkBundleSize = async () => {
-  const budget = await ReadJson.readJson('build/files/bundlesize.config.json')
+  const budget = await ReadJson.readJson('packages/build/files/bundlesize.config.json')
   const results = await computeResults(budget)
   if (results.errors.length > 0) {
     console.error(`Bundle Size Error: ${results.errors.length} size assertions failed:`)

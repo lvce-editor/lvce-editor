@@ -6,7 +6,7 @@ import * as Template from '../Template/Template.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyElectronBuilderConfig = async ({ config, version, product, electronVersion }) => {
-  await Template.write(config, 'build/.tmp/electron-builder-placeholder-app/package.json', {
+  await Template.write(config, 'packages/build/.tmp/electron-builder-placeholder-app/package.json', {
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
     '@@VERSION@@': version,
@@ -26,7 +26,7 @@ const runElectronBuilder = async ({}) => {
      * @type {ElectronBuilder.CliOptions}
      */
     const options = {
-      projectDir: Path.absolute('build/.tmp/electron-builder-placeholder-app'),
+      projectDir: Path.absolute('packages/build/.tmp/electron-builder-placeholder-app'),
     }
     await ElectronBuilder.build(options)
   } catch (error) {
@@ -41,13 +41,13 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
   await copyElectronBuilderConfig({ config, product, version, electronVersion })
 
   await WriteFile.writeFile({
-    to: 'build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
+    to: 'packages/build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
     content: '',
   })
 
   await Copy.copy({
     from: `build/files/icon.ico`,
-    to: 'build/.tmp/electron-builder-placeholder-app/build/icon.ico',
+    to: 'packages/build/.tmp/electron-builder-placeholder-app/build/icon.ico',
   })
 
   await runElectronBuilder({})

@@ -7,79 +7,79 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 const copySources = async () => {
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/Editor',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Editor',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Editor',
   })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/Assert',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Assert',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Assert',
   })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/WebWorker',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/WebWorker',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/WebWorker',
   })
   // await Copy.copy({
   //   from: 'packages/renderer-process/src/parts/EditorCompletion',
-  //   to: 'build/.tmp/editor/packages/renderer-process/src/parts/EditorCompletion',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/EditorCompletion',
   // })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/EditorHover',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/EditorHover',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/EditorHover',
   })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/Widget',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Widget',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Widget',
   })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/Focus',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Focus',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Focus',
   })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/Context',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Context',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Context',
   })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/RendererWorker',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/RendererWorker',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/RendererWorker',
   })
   // await Copy.copy({
   //   from: 'packages/renderer-process/src/parts/AssetDir',
-  //   to: 'build/.tmp/editor/packages/renderer-process/src/parts/AssetDir',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/AssetDir',
   // })
   // await Copy.copy({
   //   from: 'packages/renderer-process/src/parts/Worker',
-  //   to: 'build/.tmp/editor/packages/renderer-process/src/parts/Worker',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Worker',
   // })
   await Copy.copy({
     from: 'packages/renderer-process/src/parts/Viewlet',
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Viewlet',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Viewlet',
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Viewlet/Viewlet.js',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Viewlet/Viewlet.js',
     content: '',
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Command/Command.js',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Command/Command.js',
     content: `export const execute = () => {}`,
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/packages/renderer-process/src/parts/Platform/Platform.js',
+    to: 'packages/build/.tmp/editor/packages/renderer-process/src/parts/Platform/Platform.js',
     content: `export const platform = 'web'`,
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/Editor',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Editor',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Editor',
   })
   // await Copy.copy({
   //   from: 'packages/renderer-worker/src/parts/EditorCursor',
-  //   to: 'build/.tmp/editor/packages/renderer-worker/src/parts/EditorCursor',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/EditorCursor',
   // })
   // await Copy.copy({
   //   from: 'packages/renderer-worker/src/parts/EditorSelection',
-  //   to: 'build/.tmp/editor/packages/renderer-worker/src/parts/EditorSelection',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/EditorSelection',
   // })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/TextDocument',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/TextDocument',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/TextDocument',
   })
   await Replace.replace({
     path: `build/.tmp/editor/packages/renderer-worker/src/parts/TextDocument/TextDocument.js`,
@@ -88,62 +88,62 @@ const copySources = async () => {
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/Tokenizer',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Tokenizer',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Tokenizer',
   })
   // await Copy.copy({
   //   from: 'packages/renderer-worker/src/parts/EditorScrolling',
-  //   to: 'build/.tmp/editor/packages/renderer-worker/src/parts/EditorScrolling',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/EditorScrolling',
   // })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/RendererProcess',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/RendererProcess',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/RendererProcess',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/Callback',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Callback',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Callback',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/EditorCommand',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/EditorCommand',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/EditorCommand',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/Languages',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Languages',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Languages',
   })
   // await Copy.copy({
   //   from: 'packages/renderer-worker/src/parts/AssetDir',
-  //   to: 'build/.tmp/editor/packages/renderer-worker/src/parts/AssetDir',
+  //   to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/AssetDir',
   // })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/SharedProcess',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/SharedProcess',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/SharedProcess',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/CacheStorage',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/CacheStorage',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/CacheStorage',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/WebSocket',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/WebSocket',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/WebSocket',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/JsonRpc',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/JsonRpc',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/JsonRpc',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/FileSystem',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/FileSystem',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/FileSystem',
   })
   await Copy.copy({
     from: 'packages/renderer-worker/src/parts/Platform',
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Platform',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Platform',
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Viewlet/Viewlet.js',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Viewlet/Viewlet.js',
     content: '',
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/packages/renderer-worker/src/parts/Command/Command.js',
+    to: 'packages/build/.tmp/editor/packages/renderer-worker/src/parts/Command/Command.js',
     content: `export const execute = () => {
   // TODO
 }
@@ -153,19 +153,19 @@ const copySources = async () => {
 
 const bundle = async () => {
   await BundleJs.bundleJs({
-    cwd: Path.absolute('build/.tmp/editor/packages/renderer-process'),
+    cwd: Path.absolute('packages/build/.tmp/editor/packages/renderer-process'),
     from: './src/parts/Editor/Editor.js',
     platform: 'web',
     // minify: true,
   })
   await BundleJs.bundleJs({
-    cwd: Path.absolute('build/.tmp/editor/packages/renderer-worker'),
+    cwd: Path.absolute('packages/build/.tmp/editor/packages/renderer-worker'),
     from: './src/parts/Editor/Editor.js',
     platform: 'web',
     minify: true,
   })
   await BundleJs.bundleJs({
-    cwd: Path.absolute('build/.tmp/editor/packages/renderer-worker'),
+    cwd: Path.absolute('packages/build/.tmp/editor/packages/renderer-worker'),
     from: './src/parts/EditorCommand/EditorCommand.ipc.js',
     platform: 'web',
     minify: true,
@@ -174,7 +174,7 @@ const bundle = async () => {
 
 const generateTypings = async () => {
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/dist/editor.d.ts',
+    to: 'packages/build/.tmp/editor/dist/editor.d.ts',
     content: `export interface Editor {
   /**
    * Type text into the editor.
@@ -346,7 +346,7 @@ export const create: () => Editor
 `,
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/dist/test.ts',
+    to: 'packages/build/.tmp/editor/dist/test.ts',
     content: `import { Editor } from './editor.js'
 
 const e = {} as Editor
@@ -385,7 +385,7 @@ e.executeCommand('indentLess')
 
 const generateSampleCode = async () => {
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/index.html',
+    to: 'packages/build/.tmp/editor/index.html',
     content: `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -425,7 +425,7 @@ const generateSampleCode = async () => {
 `,
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/editor/lib/Editor.js',
+    to: 'packages/build/.tmp/editor/lib/Editor.js',
     content: `export const state = {
       editors: [],
       messageChannel: undefined,

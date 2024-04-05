@@ -546,7 +546,7 @@ export const build = async ({ product }) => {
   const version = await Version.getVersion()
 
   Console.time('clean')
-  await Remove.remove('build/.tmp/dist')
+  await Remove.remove('packages/build/.tmp/dist')
   Console.timeEnd('clean')
 
   Console.time('copyStaticFiles')

@@ -36,7 +36,7 @@ const getName = (object) => {
 // https://stackoverflow.com/questions/48728714/how-to-set-env-var-for-npmrc-use#answer-53783077
 const addNpmrcFile = async () => {
   await WriteFile.writeFile({
-    to: 'build/.tmp/server/.npmrc',
+    to: 'packages/build/.tmp/server/.npmrc',
     content: `//localhost:4873/:_authToken="test"`,
   })
 }
@@ -46,12 +46,12 @@ const isFolder = (dirent) => {
 }
 
 const publishPackages = async () => {
-  await Exec.exec('node', ['build/bin/build.js', '--target=server'], {
+  await Exec.exec('node', ['packages/build/bin/build.js', '--target=server'], {
     cwd: Root.root,
     stdio: 'inherit',
   })
   await addNpmrcFile()
-  const packages = await ReadDir.readDirWithFileTypes('build/.tmp/server')
+  const packages = await ReadDir.readDirWithFileTypes('packages/build/.tmp/server')
   await Promise.all(packages.filter(isFolder).map(getName).map(publishPackage))
 }
 

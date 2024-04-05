@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { exec } from '../Exec/Exec.js'
 import { root } from '../Root/Root.js'
 
-const bundlePath = join(root, 'build/.tmp/linux/deb/amd64/app/usr/lib/lvce-oss')
+const bundlePath = join(root, 'packages/build/.tmp/linux/deb/amd64/app/usr/lib/lvce-oss')
 
 const getAbsolutePath = (relativePath) => {
   return join(bundlePath, relativePath)
@@ -83,15 +83,9 @@ const getDescription = (path) => {
 }
 
 const printResults = (results) => {
-  const longestName = getLongestStringLength(
-    results.map(getProperty('relativePath'))
-  )
-  const longestSize = getLongestStringLength(
-    results.map(getProperty('size')).map(prettifySize)
-  )
-  const longestDescription = getLongestStringLength(
-    results.map(getProperty('relativePath')).map(getDescription)
-  )
+  const longestName = getLongestStringLength(results.map(getProperty('relativePath')))
+  const longestSize = getLongestStringLength(results.map(getProperty('size')).map(prettifySize))
+  const longestDescription = getLongestStringLength(results.map(getProperty('relativePath')).map(getDescription))
   const lines = []
   let line = ''
   line += '| '

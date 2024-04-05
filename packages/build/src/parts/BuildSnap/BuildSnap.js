@@ -58,19 +58,19 @@ const copyCode = async (arch) => {
 
   // build
   await Copy.copyFile({
-    from: 'build/package.json',
+    from: 'packages/build/package.json',
     to: `build/.tmp/linux/snap/${arch}/files/build/package.json`,
   })
   await Copy.copyFile({
-    from: 'build/package-lock.json',
+    from: 'packages/build/package-lock.json',
     to: `build/.tmp/linux/snap/${arch}/files/build/package-lock.json`,
   })
   await Copy.copy({
-    from: 'build/src',
+    from: 'packages/build/src',
     to: `build/.tmp/linux/snap/${arch}/files/build/src`,
   })
   await Copy.copy({
-    from: 'build/bin',
+    from: 'packages/build/bin',
     to: `build/.tmp/linux/snap/${arch}/files/build/bin`,
   })
 
