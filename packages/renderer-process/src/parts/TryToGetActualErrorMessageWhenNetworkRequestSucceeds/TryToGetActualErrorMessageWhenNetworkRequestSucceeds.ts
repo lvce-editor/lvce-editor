@@ -82,6 +82,7 @@ export const tryToGetActualErrorMessage = async ({ error, url, response, workerN
   await getErrorInDependencies({ url, dependencies, seenUrls, workerName })
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
+    // @ts-ignore
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
   }
   if (workerName) {

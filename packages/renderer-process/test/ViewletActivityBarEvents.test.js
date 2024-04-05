@@ -96,6 +96,7 @@ test.skip('event - handleClick - bottom', () => {
       flags: ActivityBarItemFlags.Button,
     },
   ])
+  // @ts-ignore
   state.$ActivityBar.lastChild.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,

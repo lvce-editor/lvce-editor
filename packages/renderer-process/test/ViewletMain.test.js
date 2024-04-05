@@ -21,6 +21,7 @@ test('closeTabsLeft - highlightDragOver', () => {
   const $Tab1 = document.createElement('div')
   const $Tabs = document.createElement('div')
   $Tabs.append($Tab1)
+  // @ts-ignore
   state.$MainTabs = $Tabs
   Main.highlightDragOver(state)
   expect($Tabs.classList.contains('DragOver')).toBe(true)
@@ -32,6 +33,7 @@ test('closeTabsLeft - stopHighlightDragOver', () => {
   const $Tabs = document.createElement('div')
   $Tabs.className = 'MainTabs DragOver'
   $Tabs.append($Tab1)
+  // @ts-ignore
   state.$MainTabs = $Tabs
   Main.stopHighlightDragOver(state)
   expect($Tabs.classList.contains('DragOver')).toBe(false)

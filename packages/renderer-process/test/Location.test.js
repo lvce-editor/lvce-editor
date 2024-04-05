@@ -31,6 +31,7 @@ test('setPathName', () => {
 })
 
 test('setPathName - should do nothing if we are already at the url', () => {
+  // @ts-ignore
   delete window.location
   // @ts-ignore
   window.location = { pathname: '/test' }

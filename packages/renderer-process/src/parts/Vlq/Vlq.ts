@@ -38,8 +38,10 @@ export const decode = (string) => {
       value >>>= 1
 
       if (should_negate) {
+        // @ts-ignore
         result.push(value === 0 ? -0x80000000 : -value)
       } else {
+        // @ts-ignore
         result.push(value)
       }
 

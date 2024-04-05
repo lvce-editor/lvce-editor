@@ -50,6 +50,7 @@ export const attachEvents = (state) => {
 export const setDom = (state, dom) => {
   const { $ListItems, $Viewlet } = state
   const $Root = VirtualDom.render(dom)
+  // @ts-ignore
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
   Widget.append($Viewlet)
   // TODO recycle nodes

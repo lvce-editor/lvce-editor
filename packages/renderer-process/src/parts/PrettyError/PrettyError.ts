@@ -93,6 +93,7 @@ const getSourceMapMatch = (text) => {
   if (lastLineMatch) {
     return lastLineMatch
   }
+  // @ts-ignore
   const secondLastLineIndex = GetNewLineIndex.getNewLineIndex(text, index - 1)
   const secondLastLine = text.slice(secondLastLineIndex, index)
   const secondLastLineMatch = secondLastLine.match(RE_SOURCE_MAP)

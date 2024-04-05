@@ -119,6 +119,7 @@ export const setMessage = (state, message) => {
 
 export const setHeaderDom = (state, dom) => {
   const { $ExtensionHeader } = state
+  // @ts-ignore
   const $Element = VirtualDom.render(dom).firstChild.firstChild
   $ExtensionHeader.replaceChildren($Element)
 }
@@ -128,6 +129,7 @@ export const setExtensionsDom = (state, dom) => {
   Assert.array(dom)
   const { $ListItems } = state
   const $Root = VirtualDom.render(dom)
+  // @ts-ignore
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
 }
 

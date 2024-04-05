@@ -13,7 +13,7 @@
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
     "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "allowImportingTsExtensions": true,
     "composite": true,
     "rootDir": ".",

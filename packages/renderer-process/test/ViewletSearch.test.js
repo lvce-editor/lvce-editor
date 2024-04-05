@@ -12,6 +12,7 @@ test('create', () => {
 
 test('refresh', () => {
   const state = ViewletSearch.create()
+  // @ts-ignore
   ViewletSearch.refresh(state)
 })
 

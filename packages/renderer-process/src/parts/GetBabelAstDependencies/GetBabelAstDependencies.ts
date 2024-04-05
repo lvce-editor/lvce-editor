@@ -56,6 +56,7 @@ export const getBabelAstDependencies = (code, ast) => {
       const relativePath = node.source.extra.rawValue
       const start = node.source.start
       const end = node.source.end
+      // @ts-ignore
       dependencies.push({ relativePath, code, start, end })
     } else if (
       node.type === BabelNodeType.VariableDeclaration &&
@@ -75,6 +76,7 @@ export const getBabelAstDependencies = (code, ast) => {
       const relativePath = node.declarations[0].init.argument.arguments[0].extra.rawValue
       const start = node.declarations[0].init.argument.arguments[0].start
       const end = node.declarations[0].init.argument.arguments[0].end
+      // @ts-ignore
       dependencies.push({ relativePath, code, start, end })
     }
   }
@@ -92,6 +94,7 @@ export const getBabelAstDependencies = (code, ast) => {
       const relativePath = node.arguments[0].extra.rawValue
       const start = node.arguments[0].start
       const end = node.arguments[0].end
+      // @ts-ignore
       dependencies.push({ relativePath, code, start, end })
     }
   }

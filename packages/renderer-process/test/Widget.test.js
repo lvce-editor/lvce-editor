@@ -7,6 +7,7 @@ import * as Widget from '../src/parts/Widget/Widget.ts'
 test('append', () => {
   const $Element = document.createElement('div')
   Widget.append($Element)
+  // @ts-ignore
   expect(Widget.state.$Widgets.children).toHaveLength(1)
   expect($Element.isConnected).toBe(true)
   Widget.remove($Element)

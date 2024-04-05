@@ -71,6 +71,7 @@ test.skip('closeUntil', () => {
     },
   ])
   Menu.closeUntil(0)
+  // @ts-ignore
   expect(document.querySelector('#Widgets').children).toHaveLength(0)
   // expect(document.activeElement).toBe($FocusedElement)
 })
@@ -84,6 +85,7 @@ test('event - mousedown', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   const $MenuItemOne = Menu.state.$$Menus[0].firstChild
   $MenuItemOne.dispatchEvent(
     new Event('mousedown', {
@@ -103,6 +105,7 @@ test.skip('event - key - ArrowDown', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
   Menu.state.$$Menus[0].dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowDown',

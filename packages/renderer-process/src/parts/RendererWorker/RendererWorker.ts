@@ -12,6 +12,7 @@ export const state = {
 export const hydrate = async () => {
   const ipc = await LaunchRendererWorker.launchRendererWorker()
   HandleIpc.handleIpc(ipc)
+  // @ts-ignore
   state.ipc = ipc
 }
 
@@ -33,5 +34,6 @@ export const invoke = (method, ...params) => {
 }
 
 export const sendAndTransfer = (message, transfer) => {
+  // @ts-ignore
   state.ipc.sendAndTransfer(message, transfer)
 }

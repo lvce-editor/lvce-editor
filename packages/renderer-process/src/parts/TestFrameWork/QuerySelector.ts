@@ -7,6 +7,7 @@ const querySelectorByText = (root, text) => {
   while ((node = walk.nextNode())) {
     // @ts-ignore
     if (node.nodeValue === text) {
+      // @ts-ignore
       elements.push(node.parentNode)
     }
   }

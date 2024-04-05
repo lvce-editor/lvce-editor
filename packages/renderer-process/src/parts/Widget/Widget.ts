@@ -20,10 +20,14 @@ export const append = ($Element) => {
   }
   state.widgetSet.add($Element)
   if (state.$Widgets) {
+    // @ts-ignore
     state.$Widgets.append($Element)
   } else {
+    // @ts-ignore
     state.$Widgets = create$Widgets()
+    // @ts-ignore
     state.$Widgets.append($Element)
+    // @ts-ignore
     document.body.append(state.$Widgets)
   }
 }
@@ -47,6 +51,7 @@ export const remove = ($Element) => {
   $Element.remove()
   // TODO state.$Widgets should always be defined at this point
   if (state.widgetSet.size === 0 && state.$Widgets) {
+    // @ts-ignore
     state.$Widgets.remove()
     state.$Widgets = undefined
   }
