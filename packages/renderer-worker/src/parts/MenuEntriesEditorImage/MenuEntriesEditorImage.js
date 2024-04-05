@@ -1,5 +1,4 @@
 import * as EditorImageStrings from '../EditorImageStrings/EditorImageStrings.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
