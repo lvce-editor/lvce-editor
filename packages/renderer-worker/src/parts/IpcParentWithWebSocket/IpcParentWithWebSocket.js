@@ -8,7 +8,7 @@ import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWe
 
 export const create = async ({ type }) => {
   Assert.string(type)
-  const wsUrl = GetWebSocketUrl.getWsUrl(type)
+  const wsUrl = GetWebSocketUrl.getWebSocketUrl(type)
   const webSocket = ReconnectingWebSocket.create(wsUrl)
   const firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
   if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {
