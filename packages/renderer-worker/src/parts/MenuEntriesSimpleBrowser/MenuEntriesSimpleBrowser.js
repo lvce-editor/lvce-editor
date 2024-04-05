@@ -1,3 +1,4 @@
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Path from '../Path/Path.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
@@ -68,6 +69,8 @@ const getMenuEntriesImage = (x, y, params) => {
     },
   ]
 }
+
+export const id = MenuEntryId.SimpleBrowser
 
 export const getMenuEntries = (x, y, params) => {
   const menuItems = []
