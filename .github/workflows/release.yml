@@ -69,7 +69,7 @@ jobs:
       - uses: actions/cache@v4
         id: build-cache
         with:
-          path: 'build/.tmp/cachedDependencies'
+          path: 'packages/build/.tmp/cachedDependencies'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
@@ -97,7 +97,7 @@ jobs:
         if: matrix.os == 'windows-2022'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Build Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --product=lvce --target=electron-deb

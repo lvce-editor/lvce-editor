@@ -54,7 +54,7 @@ jobs:
       - uses: actions/cache@v4
         id: build-cache
         with:
-          path: 'build/.tmp/cachedDependencies'
+          path: 'packages/build/.tmp/cachedDependencies'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
@@ -63,7 +63,7 @@ jobs:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
-        run: echo "value=$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v4
         id: builtin-extensions-cache
@@ -101,7 +101,7 @@ jobs:
         if: matrix.os == 'windows-2022'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
         run: node build/bin/build.js --target=electron-builder-windows-exe

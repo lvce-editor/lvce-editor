@@ -65,8 +65,8 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     '@@NAME@@': product.applicationName,
   })
   await Copy.copyFile({
-    from: 'build/files/icon.png',
-    to: `build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${product.applicationName}.png`,
+    from: 'packages/build/files/icon.png',
+    to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${product.applicationName}.png`,
   })
 
   const installedSize = await GetInstalledSize.getInstalledSize(Path.absolute(`build/.tmp/linux/deb/${debArch}/app`))

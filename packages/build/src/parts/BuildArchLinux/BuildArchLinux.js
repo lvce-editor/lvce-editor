@@ -82,8 +82,8 @@ const copyMetaFiles = async ({ product }) => {
   )
   await Template.write('arch_linux_install', `build/.tmp/arch-linux/${arch}/.INSTALL`, {})
   await Copy.copyFile({
-    from: 'build/files/icon.png',
-    to: `build/.tmp/arch-linux/${arch}/usr/share/pixmaps/${product.applicationName}.png`,
+    from: 'packages/build/files/icon.png',
+    to: `packages/build/.tmp/arch-linux/${arch}/usr/share/pixmaps/${product.applicationName}.png`,
   })
 
   // TODO
@@ -110,7 +110,7 @@ const isIncludededMtreeDirent = (dirent) => {
 }
 
 const getOtherDirents = async () => {
-  const dirents = await ReadDir.readDir(Path.absolute('build/.tmp/arch-linux/x64'))
+  const dirents = await ReadDir.readDir(Path.absolute('packages/build/.tmp/arch-linux/x64'))
   const filteredDirents = [...dirents.filter(isIncludededMtreeDirent)]
   return filteredDirents
 }
