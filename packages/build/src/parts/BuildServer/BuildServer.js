@@ -104,7 +104,7 @@ const getObjectDependencies = (obj) => {
 
 const copySharedProcessFiles = async ({ product, version, commitHash, date }) => {
   await CopySharedProcessSources.copySharedProcessSources({
-    to: 'build/.tmp/server/shared-process',
+    to: 'packages/build/.tmp/server/shared-process',
     target: 'server',
     product,
     version,
@@ -116,43 +116,43 @@ const copySharedProcessFiles = async ({ product, version, commitHash, date }) =>
 const copyServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/server',
-    to: 'build/.tmp/server/server',
+    to: 'packages/build/.tmp/server/server',
     ignore: ['tsconfig.json', 'node_modules', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
-    to: 'build/.tmp/server/server/LICENSE',
+    to: 'packages/build/.tmp/server/server/LICENSE',
   })
   await Replace.replace({
-    path: 'build/.tmp/server/server/src/server.js',
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const STATIC = resolve(__dirname, '../../../static')`,
     replacement: `const STATIC = resolve(__dirname, '../static')`,
   })
   await Replace.replace({
-    path: 'build/.tmp/server/server/src/server.js',
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const ROOT = resolve(__dirname, '../../../')`,
     replacement: `const ROOT = resolve(__dirname, '../')`,
   })
   await Replace.replace({
-    path: 'build/.tmp/server/server/src/server.js',
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const builtinExtensionsPath = join(ROOT, 'extensions')`,
     replacement: `const builtinExtensionsPath = join(ROOT, 'static', '${commitHash}', 'extensions')`,
   })
   await Replace.replace({
-    path: 'build/.tmp/server/server/src/server.js',
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `import { ChildProcess, fork } from 'node:child_process'`,
     replacement: `import { sharedProcessPath } from '@lvce-editor/shared-process'
 import { ChildProcess, fork } from 'node:child_process'`,
   })
   await Replace.replace({
-    path: 'build/.tmp/server/server/src/server.js',
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 `,
     replacement: ``,
   })
   await Replace.replace({
-    path: 'build/.tmp/server/server/src/server.js',
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const isImmutable = argv.includes('--immutable')`,
     replacement: `const isImmutable = true`,
   })
@@ -658,7 +658,7 @@ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 `
   await WriteFile.writeFile({
-    to: 'build/.tmp/server/server/ThirdPartyNotices.txt',
+    to: 'packages/build/.tmp/server/server/ThirdPartyNotices.txt',
     content,
   })
 }
@@ -666,36 +666,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 const copyExtensionHostFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host',
-    to: 'build/.tmp/server/extension-host',
+    to: 'packages/build/.tmp/server/extension-host',
     ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
-    to: 'build/.tmp/server/extension-host/LICENSE',
+    to: 'packages/build/.tmp/server/extension-host/LICENSE',
   })
 }
 
 const copyExtensionHostHelperProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process',
-    to: 'build/.tmp/server/extension-host-helper-process',
+    to: 'packages/build/.tmp/server/extension-host-helper-process',
     ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
-    to: 'build/.tmp/server/extension-host-helper-process/LICENSE',
+    to: 'packages/build/.tmp/server/extension-host-helper-process/LICENSE',
   })
 }
 
 const copyPtyHostFiles = async () => {
   await Copy.copy({
     from: 'packages/pty-host',
-    to: 'build/.tmp/server/pty-host',
+    to: 'packages/build/.tmp/server/pty-host',
     ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', '.nvmrc', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
-    to: 'build/.tmp/server/pty-host/LICENSE',
+    to: 'packages/build/.tmp/server/pty-host/LICENSE',
   })
 }
 
@@ -705,12 +705,12 @@ const sortObject = (object) => {
 
 const setVersionsAndDependencies = async ({ version }) => {
   const files = [
-    'build/.tmp/server/extension-host/package.json',
-    'build/.tmp/server/pty-host/package.json',
-    'build/.tmp/server/server/package.json',
-    'build/.tmp/server/shared-process/package.json',
-    'build/.tmp/server/extension-host-helper-process/package.json',
-    'build/.tmp/server/jest-environment/package.json',
+    'packages/build/.tmp/server/extension-host/package.json',
+    'packages/build/.tmp/server/pty-host/package.json',
+    'packages/build/.tmp/server/server/package.json',
+    'packages/build/.tmp/server/shared-process/package.json',
+    'packages/build/.tmp/server/extension-host-helper-process/package.json',
+    'packages/build/.tmp/server/jest-environment/package.json',
   ]
   for (const file of files) {
     const json = await JsonFile.readJson(file)
@@ -723,10 +723,10 @@ const setVersionsAndDependencies = async ({ version }) => {
       delete json['optionalDependencies']['@vscode/windows-process-tree']
       delete json['optionalDependencies']['symlink-dir']
     }
-    if (file === 'build/.tmp/server/server/package.json') {
+    if (file === 'packages/build/.tmp/server/server/package.json') {
       json.dependencies['@lvce-editor/shared-process'] = version
     }
-    if (file === 'build/.tmp/server/shared-process/package.json') {
+    if (file === 'packages/build/.tmp/server/shared-process/package.json') {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
       json.dependencies['@lvce-editor/pty-host'] = version
     }
@@ -849,7 +849,7 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
 
 const copyJestEnvironment = async ({ commitHash }) => {
   await Copy.copy({
-    from: 'build/files/jest-environment',
+    from: 'packages/build/files/jest-environment',
     to: `build/.tmp/server/jest-environment`,
   })
   await Replace.replace({
@@ -891,7 +891,7 @@ export const build = async ({ product }) => {
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
   Console.time('clean')
-  await Remove.remove('build/.tmp/server')
+  await Remove.remove('packages/build/.tmp/server')
   Console.timeEnd('clean')
 
   console.time('copyServerFiles')
@@ -916,7 +916,7 @@ export const build = async ({ product }) => {
   console.time('copySharedProcessFiles')
   await Copy.copy({
     from: sharedProcessCachePath,
-    to: 'build/.tmp/server/shared-process',
+    to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
 

@@ -10,7 +10,7 @@ export const bundleExtensionHostSubWorkerCached = async ({ commitHash, platform,
     Logger.info('[build step skipped] bundleExtensionHostSubWorker')
   } else {
     console.time('bundleExtensionHostSubWorker')
-    await Remove.remove(Path.absolute('build/.tmp/cachedSources/extension-host-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/extension-host-sub-worker'))
     const BundleExtensionSubHostWorker = await import('../BundleExtensionSubHostWorker/BundleExtensionHostSubWorker.js')
     await BundleExtensionSubHostWorker.bundleExtensionHostSubWorker({
       cachePath: extensionHostSubWorkerCachePath,

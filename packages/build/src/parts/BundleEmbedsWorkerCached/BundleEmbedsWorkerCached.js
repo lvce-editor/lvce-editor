@@ -10,7 +10,7 @@ export const bundleEmbedsWorkerCached = async ({ commitHash, platform, assetDir 
     Logger.info('[build step skipped] bundleEmbeds')
   } else {
     console.time('bundleEmbedsWorker')
-    await Remove.remove(Path.absolute('build/.tmp/cachedSources/extension-host-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/embeds-worker'))
     const BundleEmbedsWorker = await import('../BundleEmbedsWorker/BundleEmbedsWorker.js')
     await BundleEmbedsWorker.bundleEmbedsWorker({
       cachePath,

@@ -35,20 +35,20 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/extension-host-worker/package-lock.json',
     'packages/extension-host-sub-worker/package-lock.json',
     'packages/extension-host-helper-process/package-lock.json',
-    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
-    'build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
-    'build/src/parts/BundleExtensionHostDependencies/BundleExtensionHostDependencies.js',
-    'build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
-    'build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
-    'build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.js',
-    'build/src/parts/FilterPtyHostDependencies/FilterPtyHostDependencies.js',
-    'build/src/parts/CopyDependencies/CopyDependencies.js',
-    'build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
-    'build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
-    'build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
-    'build/src/parts/NpmDependencies/NpmDependencies.js',
-    'build/src/parts/WalkDependencies/WalkDependencies.js',
-    'build/src/parts/Rebuild/Rebuild.js',
+    'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
+    'packages/build/src/parts/BundleExtensionHostDependencies/BundleExtensionHostDependencies.js',
+    'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
+    'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
+    'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.js',
+    'packages/build/src/parts/FilterPtyHostDependencies/FilterPtyHostDependencies.js',
+    'packages/build/src/parts/CopyDependencies/CopyDependencies.js',
+    'packages/build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
+    'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
+    'packages/build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
+    'packages/build/src/parts/NpmDependencies/NpmDependencies.js',
+    'packages/build/src/parts/WalkDependencies/WalkDependencies.js',
+    'packages/build/src/parts/Rebuild/Rebuild.js',
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
@@ -277,7 +277,7 @@ export const build = async ({
     isArchLinux,
     isAppImage,
   })
-  const dependencyCachePath = Path.join(Path.absolute('build/.tmp/cachedDependencies'), dependencyCacheHash)
+  const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
   const date = await GetCommitDate.getCommitDate(commitHash)
@@ -303,7 +303,7 @@ export const build = async ({
     Logger.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
-    await Remove.remove(Path.absolute('build/.tmp/cachedDependencies'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedDependencies'))
     const BundleElectronAppDependencies = await import('../BundleElectronAppDependencies/BundleElectronAppDependencies.js')
     await BundleElectronAppDependencies.bundleElectronAppDependencies({
       cachePath: dependencyCachePath,
