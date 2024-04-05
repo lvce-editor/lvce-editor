@@ -28,16 +28,6 @@ export const load = (id) => {
       return import('../MenuEntriesTitleBar/MenuEntriesTitleBar.js')
     case MenuEntryId.View:
       return import('../MenuEntriesView/MenuEntriesView.js')
-    case MenuEntryId.Search:
-      return import('../MenuEntriesSearch/MenuEntriesSearch.js')
-    case MenuEntryId.EditorImage:
-      return import('../MenuEntriesEditorImage/MenuEntriesEditorImage.js')
-    case MenuEntryId.ExtensionDetailReadme:
-      return import('../MenuEntriesExtensionDetailReadme/MenuEntriesExtensionDetailReadme.js')
-    case MenuEntryId.Problems:
-      return import('../MenuEntriesProblems/MenuEntriesProblems.js')
-    case MenuEntryId.SimpleBrowser:
-      return import('../MenuEntriesSimpleBrowser/MenuEntriesSimpleBrowser.js')
     case MenuEntryId.Main:
       return import('../MenuEntriesMain/MenuEntriesMain.js')
     default:
