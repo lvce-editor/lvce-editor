@@ -72,7 +72,7 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
 const copyDependencies = async ({ cachePath, resourcesPath }) => {
   await Copy.copy({
     from: cachePath,
-    to: `${resourcesPath}/app`,
+    to: `${resourcesPath}/app/packages`,
   })
 }
 

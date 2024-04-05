@@ -17,7 +17,7 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) 
   await BundlePtyHostDependencies.bundlePtyHostDependencies({
     electronVersion,
     arch,
-    to: `${cachePath}/packages/pty-host`,
+    to: `${cachePath}/pty-host`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
     platform,
   })
@@ -25,20 +25,20 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) 
 
 const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
   await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
-    to: `${cachePath}/packages/extension-host-helper-process`,
+    to: `${cachePath}/extension-host-helper-process`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
   })
 }
 
 const copyExtensionHostFiles = async ({ cachePath }) => {
   await BundleExtensionHostDependencies.bundleExtensionHostDependencies({
-    to: `${cachePath}/packages/extension-host`,
+    to: `${cachePath}/extension-host`,
   })
 }
 
 const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
   await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
-    to: `${cachePath}/packages/shared-process`,
+    to: `${cachePath}/shared-process`,
     arch,
     electronVersion,
     exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
@@ -50,7 +50,7 @@ const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supports
   await BundleMainProcessDependencies.bundleMainProcessDependencies({
     electronVersion,
     arch,
-    to: `${cachePath}/packages/main-process`,
+    to: `${cachePath}/main-process`,
     supportsAutoUpdate,
   })
 }
