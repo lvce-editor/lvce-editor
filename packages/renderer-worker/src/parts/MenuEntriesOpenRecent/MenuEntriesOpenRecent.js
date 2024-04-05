@@ -1,17 +1,10 @@
 import * as Command from '../Command/Command.js'
-import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
+import * as TitleBarMenuBarStrings from '../TitleBarMenuBarStrings/TitleBarMenuBarStrings.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  More: 'More ...',
-  ClearRecentlyOpened: 'Clear Recently Opened',
-}
 
 const MAX_MENU_RECENT_ENTRIES = 10
 
@@ -41,14 +34,14 @@ export const getMenuEntries = async () => {
   items.push(
     {
       id: 'more',
-      label: I18nString.i18nString(UiStrings.More),
+      label: TitleBarMenuBarStrings.moreDot(),
       flags: MenuItemFlags.None,
       command: 'QuickPick.showRecent',
     },
     MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'clearRecentlyOpened',
-      label: I18nString.i18nString(UiStrings.ClearRecentlyOpened),
+      label: TitleBarMenuBarStrings.clearRecentlyOpened(),
       flags: MenuItemFlags.None,
       command: 'RecentlyOpened.clearRecentlyOpened',
     },
