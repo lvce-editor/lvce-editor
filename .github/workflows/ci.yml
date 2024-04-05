@@ -117,7 +117,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build/.tmp/dist
+          path: ./packages/build/.tmp/dist
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash

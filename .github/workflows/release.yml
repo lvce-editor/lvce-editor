@@ -290,27 +290,27 @@ jobs:
           asset_content_type: application/octet-stream
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/extension-host-helper-process
+        working-directory: ./packages/build/.tmp/server/extension-host-helper-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/jest-environment
+        working-directory: ./packages/build/.tmp/server/jest-environment
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/pty-host
+        working-directory: ./packages/build/.tmp/server/pty-host
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/server
+        working-directory: ./packages/build/.tmp/server/server
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./build/.tmp/server/shared-process
+        working-directory: ./packages/build/.tmp/server/shared-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Clean up
