@@ -29,6 +29,7 @@ export const getProblemVirtualDom = (problem) => {
     setSize,
     level,
     listItemType,
+    isCollapsed,
   } = problem
   let className = ClassNames.Problem
   if (isActive) {
@@ -44,10 +45,12 @@ export const getProblemVirtualDom = (problem) => {
         ariaPosInSet: posInSet,
         ariaSetSize: setSize,
         ariaLevel: level,
-        ariaExpanded: true,
+        ariaExpanded: !isCollapsed,
         role: AriaRoles.TreeItem,
       },
-      GetChevronVirtualDom.getChevronDownVirtualDom(),
+      listItemType === ProblemListItemType.Collapsed
+        ? GetChevronVirtualDom.getChevronRightVirtualDom()
+        : GetChevronVirtualDom.getChevronDownVirtualDom(),
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
       {

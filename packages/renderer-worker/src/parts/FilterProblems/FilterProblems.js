@@ -7,6 +7,16 @@ const matchesFilterValue = (string, filterValueLower) => {
   return 0
 }
 
+const getListItemType = (listItemType, isCollapsed) => {
+  if (listItemType === ProblemListItemType.Item) {
+    return ProblemListItemType.Item
+  }
+  if (isCollapsed) {
+    return ProblemListItemType.Collapsed
+  }
+  return ProblemListItemType.Expanded
+}
+
 export const filterProblems = (problems, collapsedUris, filterValue) => {
   const filterValueLower = filterValue.toLowerCase()
   const filtered = []
@@ -17,7 +27,8 @@ export const filterProblems = (problems, collapsedUris, filterValue) => {
     if (uriMatchIndex === -1 && sourceMatchIndex === -1 && messageMatchIndex === -1) {
       continue
     }
-    if (collapsedUris.includes(problem.uri) && problem.listItemType === ProblemListItemType.Item) {
+    const isCollapsed = collapsedUris.includes(problem.uri)
+    if (isCollapsed && problem.listItemType === ProblemListItemType.Item) {
       continue
     }
 
@@ -26,6 +37,8 @@ export const filterProblems = (problems, collapsedUris, filterValue) => {
       uriMatchIndex,
       sourceMatchIndex,
       messageMatchIndex,
+      listItemType: getListItemType(problem.listItemType, isCollapsed),
+      isCollapsed,
     })
   }
   return filtered
