@@ -283,6 +283,9 @@ const maybeRegisterEvents = (module) => {
 const maybeRegisterMenuEntries = (module) => {
   if (module.menus) {
     for (const menu of module.menus) {
+      if (!menu.id) {
+        throw new Error('missing menu id')
+      }
       MenuEntriesRegistryState.register(menu.id, menu)
     }
   }
