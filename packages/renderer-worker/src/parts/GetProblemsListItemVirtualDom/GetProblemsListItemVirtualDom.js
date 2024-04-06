@@ -46,6 +46,7 @@ export const getProblemVirtualDom = (problem) => {
         ariaSetSize: setSize,
         ariaLevel: level,
         ariaExpanded: !isCollapsed,
+        ariaSelected: isActive,
         role: AriaRoles.TreeItem,
       },
       listItemType === ProblemListItemType.Collapsed
@@ -80,6 +81,7 @@ export const getProblemVirtualDom = (problem) => {
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       ariaLevel: level,
+      ariaSelected: isActive,
       role: AriaRoles.TreeItem,
     },
     GetProblemsIconVirtualDom.getProblemsIconVirtualDom(type),
