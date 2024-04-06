@@ -111,7 +111,7 @@ const updateBuiltinExtensions = async () => {
   if (diffCount === 0) {
     Logger.info(`All releases are up to date in ${duration}ms`)
   } else {
-    const builtinExtensionsPath = join(Root.root, 'build', 'src', 'parts', 'DownloadBuiltinExtensions', 'builtinExtensions.json')
+    const builtinExtensionsPath = join(Root.root, 'packages', 'build', 'src', 'parts', 'DownloadBuiltinExtensions', 'builtinExtensions.json')
     await writeFile(builtinExtensionsPath, JSON.stringify(newBuiltinExtensions, null, 2) + '\n')
     // TODO print which releases were updated
     if (diffCount === 1) {
