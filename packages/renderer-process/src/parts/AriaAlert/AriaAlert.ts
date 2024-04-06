@@ -35,7 +35,7 @@ export const alert = (message) => {
   }
   const $AriaAlert1 = AriaAlertState.getAriaAlert1()
   const $AriaAlert2 = AriaAlertState.getAriaAlert2()
-  // @ts-ignore
+  // @ts-expect-error
   if ($AriaAlert1.textContent === message) {
     setMessage($AriaAlert1, $AriaAlert2, message)
   } else {

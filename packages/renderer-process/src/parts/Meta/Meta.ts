@@ -3,6 +3,6 @@ export const setThemeColor = (color) => {
   if (!meta) {
     return
   }
-  // @ts-ignore
+  // @ts-expect-error
   meta.content = color
 }

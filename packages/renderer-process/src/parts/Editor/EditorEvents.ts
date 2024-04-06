@@ -116,11 +116,8 @@ export const handleEditorGotPointerCapture = () => {}
  */
 export const handleEditorPointerDown = (event) => {
   const { target, pointerId } = event
-  // @ts-ignore
   target.setPointerCapture(pointerId)
-  // @ts-ignore
   target.addEventListener(DomEventType.PointerMove, handleEditorPointerMove, DomEventOptions.Active)
-  // @ts-ignore
   target.addEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
 }
 

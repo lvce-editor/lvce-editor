@@ -14,7 +14,7 @@ export const writeImage = async (blob) => {
 }
 
 export const execCopy = async () => {
-  // @ts-ignore
+  // @ts-expect-error
   const text = getSelection().toString()
   await writeText(text)
 }

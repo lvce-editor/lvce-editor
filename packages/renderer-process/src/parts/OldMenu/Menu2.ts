@@ -15,31 +15,26 @@ const create$MenuItem = (item) => {
   const $MenuItem = document.createElement('li')
   switch (item.flags) {
     case MenuItemFlags.None:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Separator:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.Separator
       break
     case MenuItemFlags.Checked:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = AriaBoolean.True
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Unchecked:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = AriaBoolean.False
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.SubMenu:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
@@ -47,14 +42,12 @@ const create$MenuItem = (item) => {
       $MenuItem.ariaExpanded = AriaBoolean.False
       break
     case MenuItemFlags.Disabled:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       $MenuItem.setAttribute('disabled', AriaBoolean.True)
       break
     default:
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
@@ -71,7 +64,7 @@ const handleMouseDown = (event) => {
   if (index === -1) {
     return
   }
-  // @ts-ignore
+  // @ts-expect-error
   const menuIndex = state.$$Menus.indexOf($Menu)
   RendererWorker.send(/* Menu.handleClick */ 'Menu.selectIndex', /* menuIndex */ menuIndex, /* index */ index)
 }
@@ -83,7 +76,7 @@ const handleMouseEnter = (event) => {
   if (index === -1) {
     return
   }
-  // @ts-ignore
+  // @ts-expect-error
   const level = state.$$Menus.indexOf($Menu)
   RendererWorker.send(/* Menu.handleMouseEnter */ 'Menu.handleMouseEnter', /* level */ level, /* index */ index)
 }
@@ -99,7 +92,6 @@ export const show = (x, y, level, items) => {
   // TODO set aria label on menu (e.g. File, Edit, Selection)
   const $Menu = document.createElement('ul')
   $Menu.className = 'Menu'
-  // @ts-ignore
   $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
   $Menu.addEventListener(DomEventType.MouseDown, handleMouseDown)
@@ -110,7 +102,7 @@ export const show = (x, y, level, items) => {
   $Menu.style.top = `${y}px`
   $Menu.dataset.id = `menu-${level}`
   $Menu.append(...items.map(create$MenuItem))
-  // @ts-ignore
+  // @ts-expect-error
   state.$$Menus.push($Menu)
 }
 

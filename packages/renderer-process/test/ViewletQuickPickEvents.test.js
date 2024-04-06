@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.ts'
-import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events

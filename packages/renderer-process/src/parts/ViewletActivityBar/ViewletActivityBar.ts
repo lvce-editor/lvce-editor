@@ -38,7 +38,6 @@ export const setBadgeCount = (state, index, count) => {
   const $Badge = document.createElement('div')
   $Badge.className = 'ActivityBarItemBadge'
   $Badge.textContent = `${count}`
-  // @ts-ignore
   $Item.append($Badge)
 }
 

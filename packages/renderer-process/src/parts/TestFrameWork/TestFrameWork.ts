@@ -47,7 +47,7 @@ const Timeout = {
     await Promise.race([
       new Promise((resolve) => {
         const timeout = setTimeout(resolve, maxDelay)
-        // @ts-ignore
+        // @ts-expect-error
         disposables.push(() => {
           clearTimeout(timeout)
         })
@@ -65,14 +65,14 @@ const Timeout = {
           attributeOldValue: true,
           characterDataOldValue: true,
         })
-        // @ts-ignore
+        // @ts-expect-error
         disposables.push(() => {
           observer.disconnect()
         })
       }),
     ])
     for (const disposable of disposables) {
-      // @ts-ignore
+      // @ts-expect-error
       disposable()
     }
   },

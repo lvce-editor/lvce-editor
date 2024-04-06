@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.ts'
 import { test, expect } from '@jest/globals'
+import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.ts'
 
 test('create', () => {
   const state = ViewletEditorPlainText.create()

@@ -12,15 +12,15 @@ export const state = {
 export const hydrate = async () => {
   const ipc = await LaunchRendererWorker.launchRendererWorker()
   HandleIpc.handleIpc(ipc)
-  // @ts-ignore
+  // @ts-expect-error
   state.ipc = ipc
 }
 
 // TODO needed?
 export const dispose = () => {
-  // @ts-ignore
+  // @ts-expect-error
   if (state.rendererWorker) {
-    // @ts-ignore
+    // @ts-expect-error
     state.rendererWorker.terminate()
   }
 }
@@ -34,6 +34,6 @@ export const invoke = (method, ...params) => {
 }
 
 export const sendAndTransfer = (message, transfer) => {
-  // @ts-ignore
+  // @ts-expect-error
   state.ipc.sendAndTransfer(message, transfer)
 }

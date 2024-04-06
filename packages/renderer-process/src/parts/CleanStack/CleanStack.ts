@@ -3,7 +3,7 @@ import * as Assert from '../Assert/Assert.ts'
 
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
-const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
+const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w.]+)]/
 const RE_OBJECT = /^\s*at Object\.(\w+)/
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/

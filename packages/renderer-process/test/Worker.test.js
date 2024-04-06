@@ -1,10 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import { expect, jest, test } from '@jest/globals'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { expect, jest, test } from '@jest/globals'
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))

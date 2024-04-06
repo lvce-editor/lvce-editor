@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { beforeEach, expect, test } from '@jest/globals'
 import * as AriaAlert from '../src/parts/AriaAlert/AriaAlert.ts'
 import * as AriaAlertState from '../src/parts/AriaAlertState/AriaAlertState.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {
   AriaAlertState.state.$AriaAlert1 = undefined

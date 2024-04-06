@@ -8,6 +8,5 @@ import * as ViewletTitleBarButtonsFunctions from './ViewletTitleBarButtonsFuncti
 export const handleTitleBarButtonsClick = (event) => {
   const { target } = event
   const uid = ComponentUid.fromEvent(event)
-  // @ts-ignore
   ViewletTitleBarButtonsFunctions.handleClick(uid, target.className)
 }

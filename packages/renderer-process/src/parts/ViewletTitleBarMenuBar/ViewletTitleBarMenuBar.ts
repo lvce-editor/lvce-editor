@@ -123,7 +123,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
   $TitleBarMenuBar.children[index].ariaExpanded = AriaBoolean.True
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
-  // @ts-ignore
+  // @ts-expect-error
   Menu.showControlled({
     x,
     y,
@@ -210,7 +210,7 @@ export const setMenus = (state, changes, uid) => {
         Widget.append($Menu)
         if (focusedIndex !== -1) {
           const $Child = $Menu.children[focusedIndex]
-          // @ts-ignore
+          // @ts-expect-error
           $Child.focus()
         }
         $$Menus.push($Menu)

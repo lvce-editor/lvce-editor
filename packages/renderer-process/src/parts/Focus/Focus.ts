@@ -11,7 +11,7 @@ export const focus = ($Element) => {
 export const focusPrevious = () => {
   const $Element = FocusState.getElement()
   if ($Element) {
-    // @ts-ignore
+    // @ts-expect-error
     $Element.focus()
   }
 }

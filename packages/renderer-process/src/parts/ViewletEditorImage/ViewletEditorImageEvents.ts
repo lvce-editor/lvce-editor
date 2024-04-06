@@ -40,11 +40,8 @@ export const handlePointerDown = (event) => {
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  // @ts-ignore
   target.setPointerCapture(pointerId)
-  // @ts-ignore
   target.addEventListener(DomEventType.PointerMove, handlePointerMove, DomEventOptions.Active)
-  // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handlePointerUp)
   target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
   const uid = ComponentUid.fromEvent(event)

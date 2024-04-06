@@ -1,4 +1,5 @@
 import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.ts'
+
 export * as Events from './ViewletRunAndDebugEvents.ts'
 
 export const create = () => {
@@ -23,7 +24,7 @@ export const setPatches = (state, diff) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
-        // @ts-ignore
+        // @ts-expect-error
         VirtualDomElementProp.setProp(node, diffItem.key, diffItem.value)
         break
       default:

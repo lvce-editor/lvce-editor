@@ -24,7 +24,7 @@ export const handlePointerDown = (event) => {
     // see https://stackoverflow.com/questions/48635501/how-to-hide-soft-keyboard-and-keep-input-on-focus#answer-53104238
     const $Input = document.querySelector('#QuickPickHeader .InputBox')
     if ($Input) {
-      // @ts-ignore
+      // @ts-expect-error
       $Input.readOnly = true
     }
   }

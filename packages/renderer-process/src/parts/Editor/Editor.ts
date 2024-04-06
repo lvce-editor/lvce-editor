@@ -231,7 +231,7 @@ export const setFocused = (state, isFocused) => {
 }
 
 export const renderDiagnostics = (state, diagnostics, scrollBarDiagnostics) => {
-  // @ts-ignore
+  // @ts-expect-error
   LayerDiagnostics.setDiagnostics(state, diagnostics)
   LayerScrollBar.setDiagnostics(state, scrollBarDiagnostics)
 }

@@ -17,7 +17,6 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = InputType.Search
   $InputBox.placeholder = UiStrings.SearchKeyBindings
-  // @ts-ignore
   $InputBox.ariaDescription = UiStrings.ResultsWillUpdateAsYouType
 
   const $KeyBindingsHeader = document.createElement('div')

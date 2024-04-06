@@ -38,7 +38,7 @@ const getErrorInDependencies = async ({ url, dependencies, workerName, seenUrls 
     const dependencyResponse = await fetch(dependencyUrl)
     // } catch (error) {}
     if (dependencyResponse.ok) {
-      // @ts-ignore
+      // @ts-expect-error
       await tryToGetActualErrorMessage({ url: dependencyUrl, response: dependencyResponse, seenUrls, workerName })
     } else {
       switch (dependencyResponse.status) {
@@ -61,7 +61,7 @@ export const tryToGetActualErrorMessage = async ({ error, url, response, workerN
   let text
   try {
     text = await response.text()
-  } catch (error) {
+  } catch {
     if (workerName) {
       return `Failed to start ${workerName}: Unknown Network Error (${response.status})`
     }
@@ -82,7 +82,7 @@ export const tryToGetActualErrorMessage = async ({ error, url, response, workerN
   await getErrorInDependencies({ url, dependencies, seenUrls, workerName })
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
-    // @ts-ignore
+    // @ts-expect-error
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
   }
   if (workerName) {

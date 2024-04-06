@@ -48,7 +48,7 @@ export const array = (value) => {
 
 export const float32Array = (value) => {
   if (!(value instanceof Float32Array)) {
-    throw new Error('expected value to be of float32Array')
+    throw new AssertionError('expected value to be of float32Array')
   }
 }
 

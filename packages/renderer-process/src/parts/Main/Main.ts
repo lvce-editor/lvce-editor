@@ -16,7 +16,7 @@ export const main = async () => {
   Command.setLoad(Module.load)
   if (Platform.platform === PlatformType.Web) {
     // disable prompt to download app as pwa
-    // @ts-ignore
+    // @ts-expect-error
     window.onbeforeinstallprompt = HandleBeforeInstallPrompt.handleBeforeInstallPrompt
   }
   // TODO this is discovered very late

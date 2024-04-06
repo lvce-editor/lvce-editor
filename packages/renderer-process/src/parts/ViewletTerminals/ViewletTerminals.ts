@@ -15,7 +15,7 @@ export const setTabsDom = (state, dom) => {
   const $Root = document.createElement('div')
   VirtualDom.renderInto($Root, dom)
   const $TerminalTabs = $Root.firstChild
-  // @ts-ignore
+  // @ts-expect-error
   $TerminalTabs.onclick = ViewletTerminalsEvents.handleClickTab
   if (state.$TerminalTabs) {
     state.$TerminalTabs.replaceWith($TerminalTabs)

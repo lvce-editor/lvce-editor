@@ -65,7 +65,18 @@
       "node/prefer-global/process": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/switch-case-braces": "off"
+      "unicorn/switch-case-braces": "off",
+      "quotes": "off",
+      "@typescript-eslint/semi": "off",
+      "object-curly-newline": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "@typescript-eslint/indent": "off",
+      "n/file-extension-in-import": "off",
+      "@typescript-eslint/promise-function-async": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/quotes": "off",
+      "@typescript-eslint/object-curly-spacing": "off",
+      "@typescript-eslint/padding-line-between-statements": "off"
     },
     "ignores": [
       "distmin"

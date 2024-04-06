@@ -68,7 +68,7 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $ExtensionHeader, $ListItems, $ScrollBar } = state
   $ExtensionHeader.addEventListener(DomEventType.Input, ViewletExtensionsEvents.handleInput, DomEventOptions.Capture)
-  // @ts-ignore
+  // @ts-expect-error
   $ExtensionHeader.addEventListener(DomEventType.Click, ViewletExtensionsEvents.handleHeaderClick)
   AttachEvents.attachEvents($ListItems, {
     [DomEventType.ContextMenu]: ViewletExtensionsEvents.handleContextMenu,
@@ -119,7 +119,7 @@ export const setMessage = (state, message) => {
 
 export const setHeaderDom = (state, dom) => {
   const { $ExtensionHeader } = state
-  // @ts-ignore
+  // @ts-expect-error
   const $Element = VirtualDom.render(dom).firstChild.firstChild
   $ExtensionHeader.replaceChildren($Element)
 }
@@ -129,7 +129,7 @@ export const setExtensionsDom = (state, dom) => {
   Assert.array(dom)
   const { $ListItems } = state
   const $Root = VirtualDom.render(dom)
-  // @ts-ignore
+  // @ts-expect-error
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
 }
 

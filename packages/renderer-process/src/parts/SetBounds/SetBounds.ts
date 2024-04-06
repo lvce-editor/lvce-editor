@@ -20,16 +20,8 @@ export const setYAndHeight = ($Element, y, height) => {
   if (!$Element) {
     return
   }
-  if (typeof y === 'string') {
-    $Element.style.translate = y
-  } else {
-    $Element.style.translate = `0 ${y}px`
-  }
-  if (typeof height === 'string') {
-    $Element.style.height = height
-  } else {
-    $Element.style.height = `${height}px`
-  }
+  $Element.style.translate = typeof y === 'string' ? y : `0 ${y}px`;
+  $Element.style.height = typeof height === 'string' ? height : `${height}px`;
 }
 
 export const setXAndWidth = ($Element, x, width) => {

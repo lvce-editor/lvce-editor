@@ -13,11 +13,11 @@ export const renderInternal = ($Parent, elements, eventMap) => {
     const element = elements[i]
     const $Element = VirtualDomElement.render(element, eventMap)
     if (element.childCount > 0) {
-      // @ts-ignore
+      // @ts-expect-error
       $Element.append(...stack.slice(0, element.childCount))
       stack = stack.slice(element.childCount)
     }
-    // @ts-ignore
+    // @ts-expect-error
     stack.unshift($Element)
   }
   $Parent.append(...stack)
@@ -31,12 +31,12 @@ export const renderInto = ($Parent, dom, eventMap = {}) => {
 
 export const renderIncremental = ($Parent, dom) => {
   if ($Parent.textContent === '') {
-    // @ts-ignore
+    // @ts-expect-error
     renderInternal($Parent, dom)
     return
   }
   // TODO
-  let $Node = $Parent
+  const $Node = $Parent
   for (let i = 0; i < dom.length; i++) {
     const node = dom[i]
     if (!$Node) {
@@ -64,7 +64,6 @@ export const renderIncremental = ($Parent, dom) => {
  */
 export const render = (elements, eventMap = {}) => {
   const $Root = document.createElement('div')
-  // @ts-ignore
   renderInternal($Root, elements, eventMap)
   return $Root
 }

@@ -16,11 +16,7 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'top':
     case 'left':
     case 'marginTop':
-      if (typeof value === 'number') {
-        $Element.style[key] = `${value}px`
-      } else {
-        $Element.style[key] = value
-      }
+      $Element.style[key] = typeof value === 'number' ? `${value}px` : value
       break
     case 'translate':
       $Element.style[key] = value
@@ -48,7 +44,6 @@ export const setProp = ($Element, key, value, eventMap) => {
       }
       break
     case 'inputType':
-      // @ts-ignore
       $Element.type = value
       break
     case 'ariaLabelledBy':

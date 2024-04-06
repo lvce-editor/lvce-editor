@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import { beforeEach, test, expect } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()

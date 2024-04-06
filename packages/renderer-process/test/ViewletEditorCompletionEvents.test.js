@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import { beforeEach, test, expect } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.ts'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

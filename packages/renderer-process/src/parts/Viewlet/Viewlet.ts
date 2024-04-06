@@ -23,7 +23,7 @@ export const create = (id, uid = id) => {
   if (!module) {
     throw new Error(`module not found: ${id}`)
   }
-  if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
+  if (state.instances[id]?.state.$Viewlet.isConnected) {
     state.instances[id].state.$Viewlet.remove()
   }
   const instanceState = module.create()
@@ -38,12 +38,12 @@ export const create = (id, uid = id) => {
 }
 
 export const addKeyBindings = (id, keyBindings) => {
-  // @ts-ignore
+  // @ts-expect-error
   KeyBindings.addKeyBindings(id, keyBindings)
 }
 
 export const removeKeyBindings = (id) => {
-  // @ts-ignore
+  // @ts-expect-error
   KeyBindings.removeKeyBindings(id)
 }
 
@@ -59,7 +59,7 @@ export const loadModule = async (id) => {
 export const invoke = (viewletId, method, ...args) => {
   Assert.string(method)
   const instance = state.instances[viewletId]
-  if (!instance || !instance.factory) {
+  if (!instance?.factory) {
     if (viewletId && method !== 'setActionsDom') {
       Logger.warn(`cannot execute ${method} viewlet instance ${viewletId} not found`)
     }
@@ -74,9 +74,9 @@ export const invoke = (viewletId, method, ...args) => {
 
 export const focus = (viewletId) => {
   const instance = state.instances[viewletId]
-  if (instance.factory && instance.factory.setFocused) {
+  if (instance.factory?.setFocused) {
     instance.factory.setFocused(instance.state, true)
-  } else if (instance && instance.factory && instance.factory.focus) {
+  } else if (instance?.factory?.focus) {
     instance.factory.focus(instance.state)
   } else {
     // TODO push focusContext
@@ -91,7 +91,7 @@ export const refresh = (viewletId, viewletContext) => {
   if (instance) {
     instance.factory.refresh(instance.state, viewletContext)
   } else {
-    // @ts-ignore
+    // @ts-expect-error
     state.refreshContext[viewletId] = viewletContext
   }
 }
@@ -153,7 +153,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.setBounds': {
-        // @ts-ignore
+        // @ts-expect-error
         setBounds(viewletId, method, ...args)
 
         break
@@ -164,7 +164,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.append': {
-        // @ts-ignore
+        // @ts-expect-error
         append(viewletId, method, ...args)
 
         break
@@ -175,13 +175,13 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.createPlaceholder': {
-        // @ts-ignore
+        // @ts-expect-error
         createPlaceholder(viewletId, method, ...args)
 
         break
       }
       case 'Viewlet.handleError': {
-        // @ts-ignore
+        // @ts-expect-error
         handleError(viewletId, method, ...args)
 
         break
@@ -192,7 +192,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.appendViewlet': {
-        // @ts-ignore
+        // @ts-expect-error
         appendViewlet(viewletId, method, ...args)
 
         break
@@ -207,7 +207,7 @@ export const sendMultiple = (commands) => {
         invoke(viewletId, method, ...args)
         break
       case 'Viewlet.setDom':
-        // @ts-ignore
+        // @ts-expect-error
         setDom(viewletId, method, ...args)
         break
       default: {
@@ -229,7 +229,7 @@ export const dispose = (id) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
-    if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {
+    if (instance.state.$Viewlet?.isConnected) {
       instance.state.$Viewlet.remove()
     }
     delete instances[id]
@@ -248,19 +248,19 @@ export const replace = () => {
 export const handleError = (id, parentId, message) => {
   Logger.info(`[viewlet-error] ${id}: ${message}`)
   const instance = state.instances[id]
-  if (instance && instance.state.$Viewlet.isConnected) {
+  if (instance?.state.$Viewlet.isConnected) {
     instance.state.$Viewlet.remove()
   }
-  if (instance && instance.factory && instance.factory.handleError) {
+  if (instance?.factory?.handleError) {
     instance.factory.handleError(instance.state, message)
     return
   }
-  if (instance && instance.state.$Viewlet) {
+  if (instance?.state.$Viewlet) {
     instance.state.$Viewlet.textContent = `${message}`
   }
   // TODO error should bubble up to until highest possible component
   const parentInstance = state.instances[parentId]
-  if (parentInstance && parentInstance.factory && parentInstance.factory.handleError) {
+  if (parentInstance?.factory?.handleError) {
     parentInstance.factory.handleError(instance.state, message)
   }
 }
@@ -337,7 +337,7 @@ const append = (parentId, childId, referenceNodes) => {
   } else {
     $Parent.append($Child)
   }
-  if (childInstance.factory && childInstance.factory.postAppend) {
+  if (childInstance.factory?.postAppend) {
     childInstance.factory.postAppend(childInstance.state)
   }
 }
@@ -385,7 +385,7 @@ const getFn = (command) => {
 export const executeCommands = (commands) => {
   for (const [command, ...args] of commands) {
     const fn = getFn(command)
-    // @ts-ignore
+    // @ts-expect-error
     fn(...args)
   }
 }
@@ -394,7 +394,7 @@ export const show = (id) => {
   const instance = state.instances[id]
   const $Viewlet = instance.state.$Viewlet
   const $Workbench = document.getElementById('Workbench')
-  // @ts-ignore
+  // @ts-expect-error
   $Workbench.append($Viewlet)
   if (instance.factory.focus) {
     instance.factory.focus(instance.state)

@@ -22,8 +22,8 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
     if (crossOriginEmbedderPolicy !== 'require-corp') {
       return `Failed to start ${displayName}: Cross Origin Embedder Policy has wrong value`
     }
-    // @ts-ignore
-    return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
+    // @ts-expect-error
+    return TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
       url,
       response,
       workerName: displayName,
