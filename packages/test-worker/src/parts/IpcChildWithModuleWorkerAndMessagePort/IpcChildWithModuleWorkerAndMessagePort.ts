@@ -36,10 +36,10 @@ export const wrap = (port) => {
     },
     set onmessage(listener) {
       if (listener) {
-        // @ts-ignore
+        // @ts-expect-error
         this.wrappedListener = (event) => {
           const data = GetData.getData(event)
-          // @ts-ignore
+          // @ts-expect-error
           listener({ data, target: this })
         }
       } else {

@@ -3,9 +3,9 @@
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 
 const getPlatform = () => {
-  // @ts-ignore
+  // @ts-expect-error
   if (typeof PLATFORM !== 'undefined') {
-    // @ts-ignore
+    // @ts-expect-error
     return PLATFORM
   }
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {

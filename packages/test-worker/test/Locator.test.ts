@@ -1,6 +1,4 @@
-import { expect, test } from '@jest/globals'
-
-import { beforeEach, jest } from '@jest/globals'
+import { expect, test, beforeEach, jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

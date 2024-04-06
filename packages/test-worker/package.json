@@ -45,6 +45,7 @@
   "xo": {
     "rules": {
       "unicorn/filename-case": "off",
+      "unicorn/prefer-query-selector": "off",
       "indent": "off",
       "semi": "off",
       "no-unused-vars": "off",
@@ -74,9 +75,21 @@
       "no-await-in-loop": "off",
       "unicorn/prefer-add-event-listener": "off",
       "no-unused-expressions": "off",
-      "unicorn/better-regex": "off",
-      "unicorn/no-array-push-push": "off",
-      "unicorn/prevent-abbreviations": "off"
+      "node/prefer-global/process": "off",
+      "unicorn/no-for-loop": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/switch-case-braces": "off",
+      "quotes": "off",
+      "@typescript-eslint/semi": "off",
+      "object-curly-newline": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "@typescript-eslint/indent": "off",
+      "n/file-extension-in-import": "off",
+      "@typescript-eslint/promise-function-async": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/quotes": "off",
+      "@typescript-eslint/object-curly-spacing": "off",
+      "@typescript-eslint/padding-line-between-statements": "off"
     },
     "ignores": [
       "distmin"

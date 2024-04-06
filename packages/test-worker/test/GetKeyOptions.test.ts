@@ -1,5 +1,5 @@
-import * as GetKeyOptions from '../src/parts/GetKeyOptions/GetKeyOptions.ts'
 import { test, expect } from '@jest/globals'
+import * as GetKeyOptions from '../src/parts/GetKeyOptions/GetKeyOptions.ts'
 
 test('key with control', () => {
   expect(GetKeyOptions.getKeyOptions('Control+a')).toEqual({

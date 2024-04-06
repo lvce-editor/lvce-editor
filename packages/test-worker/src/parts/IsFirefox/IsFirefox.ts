@@ -3,12 +3,10 @@ const getIsFirefox = () => {
     return false
   }
   if (
-    // @ts-ignore
-    navigator.userAgentData &&
-    // @ts-ignore
-    navigator.userAgentData.brands
+    // @ts-expect-error
+    navigator.userAgentData?.brands
   ) {
-    // @ts-ignore
+    // @ts-expect-error
     return navigator.userAgentData.brands.includes('Firefox')
   }
   return navigator.userAgent.toLowerCase().includes('firefox')

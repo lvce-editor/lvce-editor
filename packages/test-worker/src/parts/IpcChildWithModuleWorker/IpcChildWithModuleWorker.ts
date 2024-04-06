@@ -31,7 +31,7 @@ export const wrap = (global) => {
     set onmessage(listener) {
       const wrappedListener = (event) => {
         const data = GetData.getData(event)
-        // @ts-ignore
+        // @ts-expect-error
         listener({
           data,
           target: this,
