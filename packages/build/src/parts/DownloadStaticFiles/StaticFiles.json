@@ -10,6 +10,11 @@
     "type": "javascript"
   },
   {
+    "name": "@lvce-editor/ipc",
+    "version": "3.3.0",
+    "type": "javascript"
+  },
+  {
     "name": "ky",
     "version": "1.2.1",
     "type": "javascript"
