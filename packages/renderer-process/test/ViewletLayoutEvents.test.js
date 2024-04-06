@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.ts'
 import * as DomEventType from '../src/parts/DomEventType/DomEventType.ts'
-import { beforeEach, test, expect, beforeAll } from '@jest/globals'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events

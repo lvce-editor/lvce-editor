@@ -1,9 +1,8 @@
 const getIsMobile = () => {
-  // @ts-ignore
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
     return false
   }
-  // @ts-ignore
+  // @ts-expect-error
   const userAgentData = navigator.userAgentData
   if (userAgentData && 'mobile' in userAgentData) {
     return userAgentData.mobile

@@ -10,7 +10,7 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
   const list = []
   let $Node1
   while (($Node1 = iter1.nextNode())) {
-    // @ts-ignore
+    // @ts-expect-error
     list.push($Node1)
   }
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
@@ -24,7 +24,6 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
-        // @ts-ignore
         VirtualDomElementProp.setProp($Node, diffItem.key, diffItem.value, eventMap)
         break
       case 'insert':
@@ -47,7 +46,7 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
     }
   }
   for (const $Node of toRemove) {
-    // @ts-ignore
+    // @ts-expect-error
     $Node.remove()
   }
 }

@@ -19,10 +19,16 @@ export const setTerminal = (state, canvasCursorId, canvasTextId) => {
   const { $Viewlet } = state
   const terminal = Terminal.create({
     $Element: $Viewlet,
-    handleKeyDown: (...args) => ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args),
-    // @ts-ignore
-    handleBlur: (...args) => ViewletTerminalEvents.handleBlur({ target: $Viewlet }, ...args),
-    handleMouseDown: (...args) => ViewletTerminalEvents.handleMouseDown({ target: $Viewlet }, ...args),
+    handleKeyDown: (...args) => {
+      ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args)
+    },
+    handleBlur: (...args) => {
+      // @ts-ignore
+      ViewletTerminalEvents.handleBlur({ target: $Viewlet }, ...args)
+    },
+    handleMouseDown: (...args) => {
+      ViewletTerminalEvents.handleMouseDown({ target: $Viewlet }, ...args)
+    },
     background: `#1b2020`,
     foreground: 'white',
     canvasText,
@@ -63,10 +69,13 @@ export const reduceWrite = (state, action) => {
 
 export const reduce = (state, action) => {
   switch (action.type) {
-    case 'write':
-      return reduceWrite(state, action)
-    case 'focus':
-      return reduceFocus(state, action)
+    case 'write': {
+      reduceWrite(state, action)
+      return
+    }
+    case 'focus': {
+      reduceFocus(state, action)
+    }
     default:
       break
   }

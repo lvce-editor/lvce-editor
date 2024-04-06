@@ -1,9 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.ts'
-import { beforeEach, beforeAll, test, expect } from '@jest/globals'
 
 beforeAll(() => {
   // @ts-ignore

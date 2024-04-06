@@ -7,8 +7,8 @@ const queryInputs = ($Viewlet) => {
 export const rememberFocus = ($Viewlet, dom, eventMap) => {
   // TODO replace this workaround with
   // virtual dom diffing
-  // @ts-ignore
-  let focused = document.activeElement.getAttribute('name')
+  // @ts-expect-error
+  const focused = document.activeElement.getAttribute('name')
   const $$Inputs = queryInputs($Viewlet)
   const inputMap = Object.create(null)
   for (const $Input of $$Inputs) {

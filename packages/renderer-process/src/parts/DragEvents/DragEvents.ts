@@ -47,6 +47,6 @@ export const handleDrop = (event) => {
   }
   const filePath = DataTransfer.getFilePath(dataTransfer)
   if (filePath) {
-    return DragFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
+    DragFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
   }
 }

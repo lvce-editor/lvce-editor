@@ -47,7 +47,7 @@ export const showState = async () => {
     try {
       imported = await import(`../${module}/${module}.js`)
     } catch {}
-    if (imported && imported.state) {
+    if (imported?.state) {
       state[module] = imported.state
     }
   }

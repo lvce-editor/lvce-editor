@@ -5,9 +5,8 @@ const querySelectorByText = (root, text) => {
   const elements = []
   const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null)
   while ((node = walk.nextNode())) {
-    // @ts-ignore
     if (node.nodeValue === text) {
-      // @ts-ignore
+      // @ts-expect-error
       elements.push(node.parentNode)
     }
   }

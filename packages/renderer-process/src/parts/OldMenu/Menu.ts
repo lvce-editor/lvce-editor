@@ -49,7 +49,7 @@ export const state = {
 }
 
 const getLevel = ($Menu) => {
-  // @ts-ignore
+  // @ts-expect-error
   return state.$$Menus.indexOf($Menu)
 }
 
@@ -96,7 +96,6 @@ const handleMouseDown = (event) => {
  */
 const handleMouseEnter = (event) => {
   const { target, clientX, clientY, timeStamp } = event
-  // @ts-ignore
   const $Menu = target.closest('.Menu')
   const index = FindIndex.findIndex($Menu, target)
   if (index === -1) {
@@ -158,11 +157,11 @@ const create$Menu = () => {
 export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
   const $Menu = state.$$Menus[level]
   if (oldFocusedIndex !== -1) {
-    // @ts-ignore
+    // @ts-expect-error
     $Menu.children[oldFocusedIndex].classList.remove('MenuItemFocused')
   }
   if (newFocusedIndex !== -1) {
-    // @ts-ignore
+    // @ts-expect-error
     const $New = $Menu.children[newFocusedIndex]
     if ($New.classList.contains('MenuItemSeparator')) {
       return
@@ -189,7 +188,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
     const $BackDrop = BackDrop.create$BackDrop()
     $BackDrop.onmousedown = handleBackDropMouseDown
     $BackDrop.oncontextmenu = handleContextMenu
-    // @ts-ignore
+    // @ts-expect-error
     state.$BackDrop = $BackDrop
     Widget.append($BackDrop)
   }
@@ -201,13 +200,13 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
 
   if (parentIndex !== -1) {
     const $ParentMenu = state.$$Menus[level - 1]
-    // @ts-ignore
+    // @ts-expect-error
     const $ParentMenuItem = $ParentMenu.children[parentIndex]
     $ParentMenuItem.ariaExpanded = AriaBoolean.True
     $ParentMenuItem.setAttribute(DomAttributeType.AriaOwns, $Menu.id)
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   state.$$Menus.push($Menu)
   Widget.append($Menu)
 
@@ -253,11 +252,11 @@ export const hideSubMenu = (level) => {
 
 // TODO support nested menus / submenus
 export const showControlled = ({ x, y, items, handleKeyDown, handleFocusOut, $Parent, level, width, height }) => {
-  // @ts-ignore
+  // @ts-expect-error
   showMenu(x, y, width, height, items, level)
   // TODO menu should not necessarily know about parent (titleBarMenuBar)
   // it should be the other way around
-  // @ts-ignore
+  // @ts-expect-error
   state.$Parent = $Parent
   state.handleFocusOut = handleFocusOut
   state.handleKeyDown = handleKeyDown
@@ -290,7 +289,7 @@ export const hide = (restoreFocus = true) => {
 
 export const contains = ($Element) => {
   for (const $Menu of state.$$Menus) {
-    // @ts-ignore
+    // @ts-expect-error
     if ($Menu.contains($Element)) {
       return true
     }

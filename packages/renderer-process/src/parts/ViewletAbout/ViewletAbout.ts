@@ -17,8 +17,6 @@ export const attachEvents = (state) => {
   })
 }
 
-export { ViewletAboutEvents as Events }
-
 export const setFocused = (state, value) => {
   if (!value) {
     return
@@ -27,3 +25,5 @@ export const setFocused = (state, value) => {
   const $Focusable = $Viewlet.querySelector('button')
   $Focusable.focus()
 }
+
+export * as Events from './ViewletAboutEvents.ts'

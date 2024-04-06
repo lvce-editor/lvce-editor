@@ -1,9 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
-import { beforeEach, test, expect } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

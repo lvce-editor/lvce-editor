@@ -16,7 +16,7 @@ export const setPathName = (pathName) => {
   if (currentPathName === pathName) {
     return
   }
-  // @ts-ignore
+  // @ts-expect-error
   history.pushState(null, null, pathName)
 }
 

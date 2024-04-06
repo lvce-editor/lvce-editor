@@ -20,21 +20,21 @@ export const append = ($Element) => {
   }
   state.widgetSet.add($Element)
   if (state.$Widgets) {
-    // @ts-ignore
+    // @ts-expect-error
     state.$Widgets.append($Element)
   } else {
-    // @ts-ignore
+    // @ts-expect-error
     state.$Widgets = create$Widgets()
-    // @ts-ignore
+    // @ts-expect-error
     state.$Widgets.append($Element)
-    // @ts-ignore
+    // @ts-expect-error
     document.body.append(state.$Widgets)
   }
 }
 
 export const find = (id) => {
   for (const $Widget of state.widgetSet) {
-    // @ts-ignore
+    // @ts-expect-error
     if ($Widget.dataset.id === id) {
       return $Widget
     }
@@ -51,7 +51,7 @@ export const remove = ($Element) => {
   $Element.remove()
   // TODO state.$Widgets should always be defined at this point
   if (state.widgetSet.size === 0 && state.$Widgets) {
-    // @ts-ignore
+    // @ts-expect-error
     state.$Widgets.remove()
     state.$Widgets = undefined
   }
