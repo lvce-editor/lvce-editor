@@ -1,4 +1,5 @@
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import { IpcChildWithElectronUtilityProcess, IpcChildWithWebSocket, IpcChildWithElectronMessagePort } from '@lvce-editor/ipc'
 
 export const getModule = (method) => {
   switch (method) {
@@ -7,11 +8,11 @@ export const getModule = (method) => {
     case IpcChildType.NodeWorker:
       return import('../IpcChildWithNodeWorker/IpcChildWithNodeWorker.js')
     case IpcChildType.WebSocket:
-      return import('../IpcChildWithWebSocket/IpcChildWithWebSocket.js')
+      return IpcChildWithWebSocket
     case IpcChildType.ElectronUtilityProcess:
-      return import('../IpcChildWithElectronUtilityProcess/IpcChildWithElectronUtilityProcess.js')
+      return IpcChildWithElectronUtilityProcess
     case IpcChildType.ElectronMessagePort:
-      return import('../IpcChildWithElectronMessagePort/IpcChildWithElectronMessagePort.js')
+      return IpcChildWithElectronMessagePort
     case IpcChildType.NodeMessagePort:
       return import('../IpcChildWithNodeMessagePort/IpcChildWithNodeMessagePort.js')
     default:
