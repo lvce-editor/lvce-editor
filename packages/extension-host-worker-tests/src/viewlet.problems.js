@@ -15,5 +15,12 @@ export const test = async ({ Main, FileSystem, Workspace, Extension, Locator, Pa
   const problemsView = Locator('.Problems')
   await expect(problemsView).toBeVisible()
 
-  // TODO verify that diagnostics are visible
+  const problems = Locator('.Problem')
+  await expect(problems).toHaveCount(2)
+
+  const firstProblem = problems.nth(0)
+  await expect(firstProblem).toHaveText('file1.xyz1')
+
+  const secondProblem = problems.nth(1)
+  await expect(secondProblem).toHaveText('error 1xyz [Ln 0, Col 0]')
 }
