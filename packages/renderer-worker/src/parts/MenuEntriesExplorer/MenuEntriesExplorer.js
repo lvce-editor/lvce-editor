@@ -1,8 +1,11 @@
 import * as DirentType from '../DirentType/DirentType.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
+
+export const id = MenuEntryId.Explorer
 
 const menuEntryNewFile = {
   id: 'newFile',

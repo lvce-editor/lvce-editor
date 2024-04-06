@@ -1,4 +1,5 @@
 import * as Platform from '../Platform/Platform.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getModule = () => {
@@ -9,6 +10,8 @@ const getModule = () => {
       return import('./MenuEntriesTitleBarRemote.js')
   }
 }
+
+export const id = MenuEntryId.TitleBar
 
 export const getMenuEntries = async () => {
   const module = await getModule()
