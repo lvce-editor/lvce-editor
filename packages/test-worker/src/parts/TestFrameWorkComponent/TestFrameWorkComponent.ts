@@ -11,7 +11,7 @@ export * as IconTheme from '../TestFrameWorkComponentIconTheme/TestFrameWorkComp
 export * as KeyBoard from '../TestFrameWorkComponentKeyBoard/TestFrameWorkComponentKeyBoard.ts'
 export * as Main from './TestFrameWorkComponentMain.ts'
 export * as Panel from './TestFrameWorkComponentPanel.ts'
-export * as Platform from './TestFrameWorkComponentPlatform.ts'
+export * as Platform from '../TestFrameWorkComponentPlatform/TestFrameWorkComponentPlatform.ts'
 export * as Problems from './TestFrameWorkComponentProblems.ts'
 export * as QuickPick from './TestFrameWorkComponentQuickPick.ts'
 export * as Search from './TestFrameWorkComponentSearch.ts'
