@@ -31,7 +31,7 @@ export class VError extends Error {
       this.stack = MergeStacks.mergeStacks(this.stack, error.stack)
     }
     if (error.codeFrame) {
-      // @ts-ignore
+      // @ts-expect-error
       this.codeFrame = error.codeFrame
     }
   }

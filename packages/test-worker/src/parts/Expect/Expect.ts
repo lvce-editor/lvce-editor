@@ -57,13 +57,13 @@ export const expect = (locator) => {
     },
     async toHaveClass(className) {
       Assert.string(className, 'className must be of type string')
-      return await this.checkSingleElementCondition('toHaveClass', {
+      return this.checkSingleElementCondition('toHaveClass', {
         className,
       })
     },
     async toHaveId(id) {
       Assert.string(id, 'id must be of type string')
-      return await this.checkSingleElementCondition('toHaveId', {
+      return this.checkSingleElementCondition('toHaveId', {
         id,
       })
     },

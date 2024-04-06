@@ -2,9 +2,9 @@ import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 
 const getAssetDir = () => {
-  // @ts-ignore
+  // @ts-expect-error
   if (typeof ASSET_DIR !== 'undefined') {
-    // @ts-ignore
+    // @ts-expect-error
     return ASSET_DIR
   }
   if (Platform.platform === PlatformType.Electron) {

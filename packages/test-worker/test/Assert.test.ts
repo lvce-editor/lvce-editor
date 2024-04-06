@@ -1,12 +1,14 @@
-import * as Assert from '../src/parts/Assert/Assert.ts'
 import { test, expect } from '@jest/globals'
+import * as Assert from '../src/parts/Assert/Assert.ts'
 
 test('object - error', () => {
   expect(Assert.object({})).toBeUndefined()
 })
 
 test('object - error', () => {
-  expect(() => Assert.object('')).toThrow(new Error('expected value to be of type object'))
+  expect(() => {
+    Assert.object('')
+  }).toThrow(new Error('expected value to be of type object'))
 })
 
 test('number', () => {
@@ -14,7 +16,9 @@ test('number', () => {
 })
 
 test('number - error', () => {
-  expect(() => Assert.number('')).toThrow(new Error('expected value to be of type number'))
+  expect(() => {
+    Assert.number('')
+  }).toThrow(new Error('expected value to be of type number'))
 })
 
 test('array', () => {
@@ -22,7 +26,9 @@ test('array', () => {
 })
 
 test('array - error', () => {
-  expect(() => Assert.array('')).toThrow(new Error('expected value to be of type array'))
+  expect(() => {
+    Assert.array('')
+  }).toThrow(new Error('expected value to be of type array'))
 })
 
 test('fn', () => {
@@ -30,7 +36,9 @@ test('fn', () => {
 })
 
 test('fn - error', () => {
-  expect(() => Assert.fn('')).toThrow(new Error('expected value to be of type function'))
+  expect(() => {
+    Assert.fn('')
+  }).toThrow(new Error('expected value to be of type function'))
 })
 
 test('uint32array', () => {
@@ -38,7 +46,9 @@ test('uint32array', () => {
 })
 
 test('uint32array - error', () => {
-  expect(() => Assert.uint32array('')).toThrow(new Error('expected value to be of type uint32array'))
+  expect(() => {
+    Assert.uint32array('')
+  }).toThrow(new Error('expected value to be of type uint32array'))
 })
 
 test('string', () => {
@@ -46,7 +56,9 @@ test('string', () => {
 })
 
 test('string - error', () => {
-  expect(() => Assert.string(1)).toThrow(new Error('expected value to be of type string'))
+  expect(() => {
+    Assert.string(1)
+  }).toThrow(new Error('expected value to be of type string'))
 })
 
 test('null_', () => {
@@ -54,7 +66,9 @@ test('null_', () => {
 })
 
 test('null_ - error', () => {
-  expect(() => Assert.null_(1)).toThrow(new Error('expected value to be of type null'))
+  expect(() => {
+    Assert.null_(1)
+  }).toThrow(new Error('expected value to be of type null'))
 })
 
 test('boolean', () => {
@@ -62,5 +76,7 @@ test('boolean', () => {
 })
 
 test('boolean - error', () => {
-  expect(() => Assert.boolean(1)).toThrow(new Error('expected value to be of type boolean'))
+  expect(() => {
+    Assert.boolean(1)
+  }).toThrow(new Error('expected value to be of type boolean'))
 })
