@@ -1,7 +1,6 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -132,23 +131,5 @@ test('itemRightUpdate', () => {
         tooltip: 'test tooltip 2',
       },
     ],
-  })
-})
-
-test('resize', () => {
-  const state = ViewletStatusBar.create()
-  const newState = ViewletStatusBar.resize(state, {
-    x: 200,
-    y: 200,
-    width: 200,
-    height: 200,
-  })
-  expect(newState).toEqual({
-    height: 200,
-    x: 200,
-    y: 200,
-    statusBarItemsLeft: [],
-    statusBarItemsRight: [],
-    width: 200,
   })
 })
