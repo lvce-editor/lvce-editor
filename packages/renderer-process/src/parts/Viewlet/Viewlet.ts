@@ -164,6 +164,7 @@ const setDom2 = (viewletId, dom) => {
   }
   const { Events } = instance.factory
   const { $Viewlet } = instance.state
+  // TODO optimize rendering with virtual dom diffing
   const $NewViewlet = VirtualDom.render(dom, Events).firstChild
   $Viewlet.replaceWith($NewViewlet)
   ComponentUid.set($NewViewlet, viewletId)
