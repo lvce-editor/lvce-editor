@@ -1,45 +1,13 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-const getStatusBarItemVirtualDom = (statusBarItem) => {
-  const { tooltip, icon } = statusBarItem
-  const dom = []
-  dom.push(
-    {
-      type: VirtualDomElements.Div,
-      className: 'StatusBarItem',
-      role: AriaRoles.Button,
-      tabIndex: -1,
-      title: tooltip,
-      childCount: 1,
-    },
-    text(statusBarItem.text),
-  )
-  return dom
-}
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetStatusBarItemsVirtualDom from '../GetStatusBarItemsVirtualDom/GetStatusBarItemsVirtualDom.js'
 
 export const getStatusBarVirtualDom = (statusBarItemsLeft, statusBarItemsRight) => {
   const dom = []
   if (statusBarItemsLeft.length > 0) {
-    dom.push(
-      {
-        type: VirtualDomElements.Div,
-        className: 'StatusBarItemsLeft',
-        childCount: statusBarItemsLeft.length,
-      },
-      ...statusBarItemsLeft.flatMap(getStatusBarItemVirtualDom),
-    )
+    dom.push(...GetStatusBarItemsVirtualDom.getStatusBarItemsVirtualDom(statusBarItemsLeft, ClassNames.StatusBarItemsLeft))
   }
   if (statusBarItemsRight.length > 0) {
-    dom.push(
-      {
-        type: VirtualDomElements.Div,
-        className: 'StatusBarItemsRight',
-        childCount: statusBarItemsRight.length,
-      },
-      ...statusBarItemsRight.flatMap(getStatusBarItemVirtualDom),
-    )
+    dom.push(GetStatusBarItemsVirtualDom.getStatusBarItemsVirtualDom(statusBarItemsRight, ClassNames.StatusBarItemsRight))
   }
   return dom
 }
