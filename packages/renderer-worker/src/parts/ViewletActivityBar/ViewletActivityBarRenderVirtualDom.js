@@ -17,7 +17,7 @@ const renderItems = {
   apply(oldState, newState) {
     const visibleItems = GetVisibleActivityBarItems.getVisibleActivityBarItems(newState)
     const dom = GetActivityBarVirtualDom.getActivityBarVirtualDom(visibleItems)
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
