@@ -28,6 +28,7 @@ const ViewletState = {
 }
 
 const kCreate = 'Viewlet.create'
+const kCreateFunctionalRoot = 'Viewlet.createFunctionalRoot'
 const kAppend = 'Viewlet.append'
 const kSendMultiple = 'Viewlet.sendMultiple'
 const kLoadModule = 'Viewlet.loadModule'
@@ -193,7 +194,9 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
           commands.push(...command)
           continue
         }
-        if (command[0] === 'Viewlet.setDom') {
+        if (command[0] === 'Viewlet.setDom2') {
+          command.splice(1, 0, uid)
+        } else if (command[0] === 'Viewlet.setDom') {
           command.splice(1, 0, uid)
         } else if (command[0] !== 'Viewlet.send' && command[0] !== 'Viewlet.ariaAnnounce') {
           command.unshift('Viewlet.send', uid)
@@ -440,7 +443,12 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       factory: module,
       moduleId: viewlet.moduleId || viewlet.id || '',
     })
-    const commands = [[kCreate, viewlet.id, viewletUid]]
+    const commands = []
+    if (module.hasFunctionalRootRender) {
+      commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid])
+    } else {
+      commands.push([kCreate, viewlet.id, viewletUid])
+    }
     if (viewletState !== newState && module.contentLoaded) {
       const additionalExtraCommands = await module.contentLoaded(newState)
       Assert.array(additionalExtraCommands)
