@@ -37,6 +37,22 @@ export const create = (id, uid = id) => {
   }
 }
 
+export const createFunctionalRoot = (id, uid = id) => {
+  const module = state.modules[id]
+  if (!module) {
+    throw new Error(`module not found: ${id}`)
+  }
+  if (state.instances[id]?.state.$Viewlet.isConnected) {
+    state.instances[id].state.$Viewlet.remove()
+  }
+  const instanceState = { $Viewlet: document.createElement('div') }
+  ComponentUid.set(instanceState.$Viewlet, uid)
+  state.instances[uid] = {
+    state: instanceState,
+    factory: module,
+  }
+}
+
 export const addKeyBindings = (id, keyBindings) => {
   // @ts-expect-error
   KeyBindings.addKeyBindings(id, keyBindings)
@@ -142,6 +158,18 @@ const setDom = (viewletId, dom) => {
   VirtualDom.renderInto($Viewlet, dom, Events)
 }
 
+const setDom2 = (viewletId, dom) => {
+  const instance = state.instances[viewletId]
+  if (!instance) {
+    return
+  }
+  const { Events } = instance.factory
+  const { $Viewlet } = instance.state
+  const $NewViewlet = VirtualDom.render(dom, Events).firstChild
+  $Viewlet.replaceWith($NewViewlet)
+  instance.state.$Viewlet = $NewViewlet
+}
+
 // TODO this code is bad
 export const sendMultiple = (commands) => {
   for (const command of commands) {
@@ -161,6 +189,11 @@ export const sendMultiple = (commands) => {
       case 'Viewlet.create': {
         create(viewletId, method)
 
+        break
+      }
+      case 'Viewlet.createFunctionalRoot': {
+        // @ts-ignore
+        createFunctionalRoot(viewletId, method, ...args)
         break
       }
       case 'Viewlet.append': {
@@ -209,6 +242,10 @@ export const sendMultiple = (commands) => {
       case 'Viewlet.setDom':
         // @ts-expect-error
         setDom(viewletId, method, ...args)
+        break
+      case 'Viewlet.setDom2':
+        // @ts-ignore
+        setDom2(viewletId, method, ...args)
         break
       default: {
         invoke(viewletId, method, ...args)

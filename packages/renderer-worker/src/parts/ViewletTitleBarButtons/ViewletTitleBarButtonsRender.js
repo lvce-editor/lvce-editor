@@ -2,13 +2,15 @@ import * as GetTitleBarButtonsVirtualDom from '../GetTitleBarButtonsVirtualDom/G
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderTitleBarButtons = {
   isEqual(oldState, newState) {
     return oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
     const dom = GetTitleBarButtonsVirtualDom.getTitleBarButtonsVirtualDom(newState.buttons)
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
