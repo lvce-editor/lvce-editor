@@ -1,6 +1,6 @@
 import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStatusBarItems.js'
 import * as GetStatusBarItems from '../GetStatusBarItems/GetStatusBarItems.js'
-import * as Preferences from '../Preferences/Preferences.js'
+import * as StatusBarPreferences from '../StatusBarPreferences/StatusBarPreferences.js'
 
 export const create = () => {
   return {
@@ -10,7 +10,7 @@ export const create = () => {
 }
 
 export const loadContent = async (state) => {
-  const statusBarItemsPreference = Preferences.get('statusBar.itemsVisible') ?? false
+  const statusBarItemsPreference = StatusBarPreferences.itemsVisible()
   const statusBarItems = await GetStatusBarItems.getStatusBarItems(statusBarItemsPreference)
   return {
     ...state,
@@ -44,15 +44,16 @@ const updateArray = (items, newItem) => {
 }
 
 export const itemLeftCreate = (state, name, text, tooltip) => {
+  const { statusBarItemsLeft } = state
   const newItem = {
     name,
     text,
     tooltip,
   }
-  const statusBarItemsLeft = [...state.statusBarItemsLeft, newItem]
+  const newStatusBarItemsLeft = [...statusBarItemsLeft, newItem]
   return {
     ...state,
-    statusBarItemsLeft,
+    statusBarItemsLeft: newStatusBarItemsLeft,
   }
 }
 
@@ -73,29 +74,23 @@ export const itemLeftUpdate = (state, newItem) => {
 }
 
 export const itemRightCreate = (state, newItem) => {
-  const statusBarItemsRight = [...state.statusBarItemsRight, newItem]
+  const { statusBarItemsRight } = state
+  const newStatusBarItemsRight = [...statusBarItemsRight, newItem]
   return {
     ...state,
-    statusBarItemsRight,
+    statusBarItemsRight: newStatusBarItemsRight,
   }
 }
 
 export const itemRightUpdate = (state, newItem) => {
+  const { statusBarItemsRight } = state
+  const newStatusBarItemsRight = updateArray(statusBarItemsRight, newItem)
   return {
     ...state,
-    statusBarItemsRight: updateArray(state.statusBarItemsRight, newItem),
+    statusBarItemsRight: newStatusBarItemsRight,
   }
 }
 
 export const handleClick = (name) => {
   // sendExtensionWorker([/* statusBarItemHandleClick */ 7657, /* name */ name])
-}
-
-export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  return {
-    ...state,
-    ...dimensions,
-  }
 }
