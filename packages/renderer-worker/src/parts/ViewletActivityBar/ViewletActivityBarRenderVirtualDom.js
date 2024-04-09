@@ -1,5 +1,9 @@
-import * as GetActivityBarItemsVirtualDom from '../GetActivityBarItemsVirtualDom/GetActivityBarItemsVirtualDom.js'
+import * as GetActivityBarVirtualDom from '../GetActivityBarVirtualDom/GetActivityBarVirtualDom.js'
 import * as GetVisibleActivityBarItems from '../GetVisibleActivityBarItems/GetVisibleActivityBarItems.js'
+
+export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderItems = {
   isEqual(oldState, newState) {
@@ -12,11 +16,9 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleItems = GetVisibleActivityBarItems.getVisibleActivityBarItems(newState)
-    const dom = GetActivityBarItemsVirtualDom.getVirtualDom(visibleItems)
+    const dom = GetActivityBarVirtualDom.getActivityBarVirtualDom(visibleItems)
     return ['setDom', dom]
   },
 }
 
 export const render = [renderItems]
-
-export const hasFunctionalRender = true
