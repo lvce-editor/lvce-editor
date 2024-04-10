@@ -4,13 +4,19 @@ export const set = ($Element, uid) => {
   $Element[uidSymbol] = uid
 }
 
-export const get = ($Element) => {
+const getUidTarget = ($Element) => {
   while ($Element) {
     if ($Element[uidSymbol]) {
-      return $Element[uidSymbol]
+      return $Element
     }
     $Element = $Element.parentNode
   }
+  return undefined
+}
+
+export const get = ($Element) => {
+  const $Target = getUidTarget($Element)
+  return $Target[uidSymbol]
 }
 
 export const fromEvent = (event) => {
