@@ -4,6 +4,8 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderKeyBindings = {
   isEqual(oldState, newState) {
     return (
@@ -24,8 +26,8 @@ const renderKeyBindings = {
     // console.time('tableDom')
     const tableDom = GetKeyBindingsVirtualDom.getTableDom(filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3)
     // console.timeEnd('tableDom')
-    // console.log({ tableDom })
-    return [/* method */ 'setTableDom', /* tableDom */ tableDom]
+    console.log({ tableDom })
+    return ['Viewlet.setDom2', /* tableDom */ tableDom]
   },
 }
 

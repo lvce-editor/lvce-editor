@@ -5,58 +5,6 @@ import * as InputType from '../InputType/InputType.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.ts'
 
-/**
- * @enum {string}
- */
-const UiStrings = {
-  SearchKeyBindings: 'Search Key Bindings', // TODO placeholder string should come from renderer worker
-  ResultsWillUpdateAsYouType: 'Results will update as you type',
-}
-
-export const create = () => {
-  const $InputBox = InputBox.create()
-  $InputBox.type = InputType.Search
-  $InputBox.placeholder = UiStrings.SearchKeyBindings
-  $InputBox.ariaDescription = UiStrings.ResultsWillUpdateAsYouType
-
-  const $KeyBindingsHeader = document.createElement('div')
-  $KeyBindingsHeader.className = 'KeyBindingsHeader'
-  $KeyBindingsHeader.append($InputBox)
-
-  const $KeyBindingsTableWrapper = document.createElement('div')
-  $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
-
-  const $ScrollBarThumb = document.createElement('div')
-  $ScrollBarThumb.className = 'ScrollBarThumb'
-
-  const $ScrollBar = document.createElement('div')
-  $ScrollBar.className = 'ScrollBar'
-  $ScrollBar.append($ScrollBarThumb)
-
-  const $Resizer1 = document.createElement('div')
-  $Resizer1.className = 'Resizer'
-
-  const $Resizer2 = document.createElement('div')
-  $Resizer2.className = 'Resizer'
-
-  $KeyBindingsTableWrapper.append($Resizer1, $Resizer2)
-
-  const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet KeyBindings'
-  $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper, $ScrollBar)
-
-  return {
-    $Viewlet,
-    $InputBox,
-    $KeyBindingsHeader,
-    $KeyBindingsTableWrapper,
-    $ScrollBarThumb,
-    $ScrollBar,
-    $Resizer1,
-    $Resizer2,
-  }
-}
-
 export const attachEvents = (state) => {
   const { $Viewlet } = state
   $Viewlet.onpointerdown = ViewletkeyBindingsEvents.handlePointerDown
@@ -83,7 +31,10 @@ export const setValue = (state, value) => {
 
 export const setColumnWidths = (state, columnWidth1, columnWidth2, columnWidth3) => {
   const paddingLeft = 15
-  const { $Resizer1, $Resizer2 } = state
+  const { $Viewlet } = state
+  const $$Resizers = $Viewlet.querySelectorAll('.Resizer')
+  const $Resizer1 = $$Resizers[0]
+  const $Resizer2 = $$Resizers[1]
   $Resizer1.style.left = `${paddingLeft + columnWidth1}px`
   $Resizer2.style.left = `${paddingLeft + columnWidth1 + columnWidth2}px`
 }
