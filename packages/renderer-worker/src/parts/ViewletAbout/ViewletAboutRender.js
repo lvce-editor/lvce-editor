@@ -3,6 +3,8 @@ import * as AboutStrings from '../AboutStrings/AboutStrings.js'
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 export const renderDialog = {
   isEqual(oldState, newState) {
     return oldState.productName === newState.productName && oldState.lines === newState.lines
@@ -13,7 +15,7 @@ export const renderDialog = {
     const closeMessage = AboutStrings.closeDialog()
     const infoMessage = AboutStrings.info()
     const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.lines, closeMessage, okMessage, copyMessage, infoMessage)
-    return ['Viewlet.setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
