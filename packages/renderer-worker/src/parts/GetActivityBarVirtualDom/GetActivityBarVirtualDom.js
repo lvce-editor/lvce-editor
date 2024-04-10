@@ -15,6 +15,7 @@ export const getActivityBarVirtualDom = (visibleItems) => {
       onContextMenu: 'handleContextMenu',
       onFocus: 'handleFocus',
       onBlur: 'handleBlur',
+      childCount: visibleItems.length,
     },
     ...GetActivityBarItemsVirtualDom.getVirtualDom(visibleItems),
   ]
