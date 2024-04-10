@@ -8,6 +8,10 @@ const queryInputs = ($Viewlet) => {
 export const rememberFocus = ($Viewlet, dom, eventMap, uid = 0) => {
   // TODO replace this workaround with
   // virtual dom diffing
+  const oldLeft = $Viewlet.style.left
+  const oldTop = $Viewlet.style.top
+  const oldWidth = $Viewlet.style.width
+  const oldHeight = $Viewlet.style.height
   // @ts-expect-error
   const focused = document.activeElement.getAttribute('name')
   const $$Inputs = queryInputs($Viewlet)
@@ -33,5 +37,11 @@ export const rememberFocus = ($Viewlet, dom, eventMap, uid = 0) => {
       $Focused.focus()
     }
   }
+
+  $Viewlet.style.top = oldTop
+  $Viewlet.style.left = oldLeft
+  $Viewlet.style.height = oldHeight
+  $Viewlet.style.width = oldWidth
+
   return $Viewlet
 }
