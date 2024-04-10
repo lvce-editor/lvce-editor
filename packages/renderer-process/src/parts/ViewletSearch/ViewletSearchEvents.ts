@@ -114,7 +114,7 @@ export const handleListBlur = (event) => {
 }
 
 export const handleHeaderFocusIn = (event) => {
-  const { target, relatedTarget, currentTarget } = event
+  const { target } = event
   const key = target.name || target.title
   const uid = ComponentUid.fromEvent(event)
   ViewletSearchFunctions.handleFocusIn(uid, key)
