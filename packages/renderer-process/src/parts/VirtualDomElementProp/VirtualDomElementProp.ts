@@ -59,7 +59,7 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'onPointerDown':
     case 'onWheel':
       const eventName = key.slice(2).toLowerCase()
-      if (!eventMap) {
+      if (!eventMap || !value) {
         return
       }
       const listener = eventMap[value]

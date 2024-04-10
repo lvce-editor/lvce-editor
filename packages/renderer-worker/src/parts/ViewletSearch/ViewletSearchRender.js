@@ -3,6 +3,7 @@ import * as GetSearchVirtualDom from '../GetSearchVirtualDom/GetSearchVirtualDom
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const hasFunctionalRender = true
+export const hasFunctionalRootRender = true
 
 const renderItems = {
   isEqual(oldState, newState) {
@@ -39,7 +40,7 @@ const renderItems = {
       newState.message,
       newState.detailsExpanded,
     )
-    return ['setFullDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
