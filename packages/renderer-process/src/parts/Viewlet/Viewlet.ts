@@ -396,6 +396,8 @@ const getFn = (command) => {
       return show
     case 'Viewlet.dispose':
       return dispose
+    case 'Viewlet.setDom2':
+      return setDom2
     case 'Viewlet.setBounds':
       return setBounds
     case 'Viewlet.ariaAnnounce':
