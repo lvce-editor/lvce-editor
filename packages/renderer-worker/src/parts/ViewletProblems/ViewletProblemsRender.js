@@ -1,4 +1,4 @@
-import * as GetProblemsVirtualDom from '../GetProblemsVirtualDom/GetProblemsVirtualDom.js'
+import * as GetProblemsVirtualDom from '../GetProblemsItemsVirtualDom/GetProblemsItemsVirtualDom.js'
 import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
