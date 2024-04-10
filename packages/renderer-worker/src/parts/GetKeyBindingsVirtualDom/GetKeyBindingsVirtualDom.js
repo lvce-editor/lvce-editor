@@ -1,5 +1,6 @@
 import * as GetKeyBindingsTableVirtualDom from '../GetKeyBindingsTableVirtualDom/GetKeyBindingsTableVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetKeyBindingsHeaderVirtualDom from '../GetKeyBindingsHeaderVirtualDom/GetKeyBindingsHeaderVirtualDom.js'
 
 const UiStrings = {
   SearchKeyBindings: 'Search Key Bindings', // TODO placeholder string should come from renderer worker
@@ -16,19 +17,7 @@ export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings
       onWheel: 'handleWheel',
       childCount: 3,
     },
-    {
-      type: VirtualDomElements.Div,
-      className: 'KeyBindingsHeader',
-      childCount: 1,
-    },
-    {
-      type: VirtualDomElements.Input,
-      className: 'InputBox',
-      inputType: 'search',
-      placeholder: UiStrings.SearchKeyBindings,
-      onInput: 'handleInput',
-      childCount: 0,
-    },
+    ...GetKeyBindingsHeaderVirtualDom.getKeyBindingsHeaderVirtualDom(),
     {
       type: VirtualDomElements.Div,
       className: 'KeyBindingsTableWrapper',
