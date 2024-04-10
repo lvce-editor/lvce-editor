@@ -58,6 +58,7 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'onInput':
     case 'onKeyDown':
     case 'onPointerDown':
+    case 'onMouseDown':
     case 'onWheel':
       const eventName = key.slice(2).toLowerCase()
       if (!eventMap || !value) {
