@@ -2,10 +2,10 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as KeyBindings from '../KeyBindings/KeyBindings.ts'
 import * as Logger from '../Logger/Logger.ts'
+import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import { VError } from '../VError/VError.ts'
 import * as ViewletModule from '../ViewletModule/ViewletModule.ts'
-import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 export const state = {
@@ -414,6 +414,8 @@ const getFn = (command) => {
       return addKeyBindings
     case 'Viewlet.setDom':
       return setDom
+    case 'Viewlet.createFunctionalRoot':
+      return createFunctionalRoot
     default:
       throw new Error(`unknown command ${command}`)
   }
