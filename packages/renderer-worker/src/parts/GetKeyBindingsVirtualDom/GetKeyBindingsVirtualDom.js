@@ -13,7 +13,6 @@ export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings
       className: 'Viewlet KeyBindings',
       onPointerDown: 'handlePointerDown',
       onDblClick: 'handleTableDoubleClick',
-      onInput: 'handleInput',
       onWheel: 'handleWheel',
       childCount: 3,
     },
@@ -27,6 +26,7 @@ export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings
       className: 'InputBox',
       inputType: 'search',
       placeholder: UiStrings.SearchKeyBindings,
+      onInput: 'handleInput',
       childCount: 0,
     },
     {
