@@ -16,6 +16,14 @@ const createTitleBarButton = (button) => {
 }
 
 export const getTitleBarButtonsVirtualDom = (buttons) => {
-  const dom = buttons.flatMap(createTitleBarButton)
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet TitleBarButtons',
+      childCount: buttons.length,
+      onClick: 'handleTitleBarButtonsClick',
+    },
+    ...buttons.flatMap(createTitleBarButton),
+  ]
   return dom
 }
