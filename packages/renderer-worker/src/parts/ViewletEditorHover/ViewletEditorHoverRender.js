@@ -3,6 +3,8 @@ import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderHover = {
   isEqual(oldState, newState) {
     return (
@@ -14,7 +16,7 @@ const renderHover = {
   },
   apply(oldState, newState) {
     const dom = GetHoverVirtualDom.getHoverVirtualDom(newState.lineInfos, newState.documentation, newState.diagnostics)
-    return [/* method */ 'setDom', dom]
+    return [/* method */ 'Viewlet.setDom2', dom]
   },
 }
 

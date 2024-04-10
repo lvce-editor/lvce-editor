@@ -15,8 +15,17 @@ const hoverProblemDetail = {
   childCount: 1,
 }
 
+const getChildCount = (lineInfos, documentation, diagnostics) => {
+  return lineInfos.length + documentation ? 1 : 0 + (diagnostics && diagnostics.length > 0) ? 1 : 0
+}
+
 export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
   const dom = []
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'Viewlet EditorHover',
+    childCount: getChildCount(lineInfos, documentation, diagnostics),
+  })
   if (diagnostics && diagnostics.length > 0) {
     dom.push({
       type: VirtualDomElements.Div,
