@@ -1,10 +1,11 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 const queryInputs = ($Viewlet) => {
   return [...$Viewlet.querySelectorAll('input, textarea')]
 }
 
-export const rememberFocus = ($Viewlet, dom, eventMap, useNew = false) => {
+export const rememberFocus = ($Viewlet, dom, eventMap, uid = 0) => {
   // TODO replace this workaround with
   // virtual dom diffing
   // @ts-expect-error
@@ -14,8 +15,9 @@ export const rememberFocus = ($Viewlet, dom, eventMap, useNew = false) => {
   for (const $Input of $$Inputs) {
     inputMap[$Input.name] = $Input.value
   }
-  if (useNew) {
+  if (uid) {
     const $New = VirtualDom.render(dom, eventMap).firstChild
+    ComponentUid.set($New, uid)
     $Viewlet.replaceWith($New)
     $Viewlet = $New
   } else {
