@@ -3,6 +3,8 @@ import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderColor = {
   isEqual(oldState, newState) {
     return oldState.color === newState.color
@@ -27,7 +29,7 @@ const renderColorPicker = {
   },
   apply(oldState, newState) {
     const dom = GetColorPickerVirtualDom.getColorPickerVirtualDom()
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 

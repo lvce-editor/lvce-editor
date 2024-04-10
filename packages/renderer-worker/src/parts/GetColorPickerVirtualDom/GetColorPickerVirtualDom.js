@@ -5,6 +5,12 @@ export const getColorPickerVirtualDom = () => {
   return [
     {
       type: VirtualDomElements.Div,
+      className: 'Viewlet ColorPicker',
+      onPointerDown: 'handlePointerDown',
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
       className: ClassNames.ColorPickerRectangle,
       childCount: 3,
     },
