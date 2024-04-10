@@ -4,7 +4,7 @@ const queryInputs = ($Viewlet) => {
   return [...$Viewlet.querySelectorAll('input, textarea')]
 }
 
-export const rememberFocus = ($Viewlet, dom, eventMap) => {
+export const rememberFocus = ($Viewlet, dom, eventMap, useNew = false) => {
   // TODO replace this workaround with
   // virtual dom diffing
   // @ts-expect-error
@@ -14,7 +14,13 @@ export const rememberFocus = ($Viewlet, dom, eventMap) => {
   for (const $Input of $$Inputs) {
     inputMap[$Input.name] = $Input.value
   }
-  VirtualDom.renderInto($Viewlet, dom, eventMap)
+  if (useNew) {
+    const $New = VirtualDom.render(dom, eventMap).firstChild
+    $Viewlet.replaceWith($New)
+    $Viewlet = $New
+  } else {
+    VirtualDom.renderInto($Viewlet, dom, eventMap)
+  }
   const $$NewInputs = queryInputs($Viewlet)
   for (const $Input of $$NewInputs) {
     $Input.value = inputMap[$Input.name] || $Input.value || ''
@@ -25,4 +31,5 @@ export const rememberFocus = ($Viewlet, dom, eventMap) => {
       $Focused.focus()
     }
   }
+  return $Viewlet
 }

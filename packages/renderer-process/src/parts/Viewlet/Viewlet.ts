@@ -5,6 +5,7 @@ import * as Logger from '../Logger/Logger.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import { VError } from '../VError/VError.ts'
 import * as ViewletModule from '../ViewletModule/ViewletModule.ts'
+import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
 export const state = {
@@ -165,8 +166,7 @@ const setDom2 = (viewletId, dom) => {
   const { Events } = instance.factory
   const { $Viewlet } = instance.state
   // TODO optimize rendering with virtual dom diffing
-  const $NewViewlet = VirtualDom.render(dom, Events).firstChild
-  $Viewlet.replaceWith($NewViewlet)
+  const $NewViewlet = RememberFocus.rememberFocus($Viewlet, dom, Events, true)
   ComponentUid.set($NewViewlet, viewletId)
   instance.state.$Viewlet = $NewViewlet
 }
