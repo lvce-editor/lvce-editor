@@ -6,7 +6,7 @@ const UiStrings = {
   ResultsWillUpdateAsYouType: 'Results will update as you type',
 }
 
-export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3) => {
+export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3) => {
   return [
     {
       type: VirtualDomElements.Div,
