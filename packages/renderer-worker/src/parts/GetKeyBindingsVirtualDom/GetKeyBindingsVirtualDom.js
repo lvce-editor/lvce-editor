@@ -21,7 +21,7 @@ export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings
     {
       type: VirtualDomElements.Div,
       className: 'KeyBindingsTableWrapper',
-      childCount: filteredKeyBindings.length + 2,
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Div,
