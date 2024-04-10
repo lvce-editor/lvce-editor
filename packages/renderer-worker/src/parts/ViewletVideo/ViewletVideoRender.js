@@ -1,7 +1,8 @@
 import * as GetVideoVirtualDom from '../GetVideoVirtualDom/GetVideoVirtualDom.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderVideo = {
   isEqual(oldState, newState) {
@@ -9,7 +10,7 @@ const renderVideo = {
   },
   apply(oldState, newState) {
     const dom = GetVideoVirtualDom.getVideoVirtualDom(newState.src, newState.videoErrorMessage)
-    return [/* method */ RenderMethod.SetDom, dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
