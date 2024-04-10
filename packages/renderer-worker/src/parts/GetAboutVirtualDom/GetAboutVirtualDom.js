@@ -1,27 +1,16 @@
+import * as GetAboutContentVirtualDom from '../GetAboutContentVirtualDom/GetAboutContentVirtualDom.js'
 import * as GetDialogVirtualDom from '../GetDialogVirtualDom/GetDialogVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-const br = {
-  type: VirtualDomElements.Br,
-  childCount: 0,
-}
-
-const renderLine = (line, index) => {
-  if (index === 0) {
-    return [text(line)]
-  }
-  return [br, text(line)]
-}
 
 export const getAboutVirtualDom = (productName, lines, closeMessage, okMessage, copyMessage, infoMessage) => {
-  const content = [
+  const content = GetAboutContentVirtualDom.getAboutContentVirtualDom(lines)
+  return [
     {
       type: VirtualDomElements.Div,
-      className: 'DialogMessage',
-      childCount: lines.length * 2 - 1,
+      className: 'Viewlet About',
+      onContextMenu: 'handleContextMenu',
+      childCount: 1,
     },
-    ...lines.flatMap(renderLine),
+    ...GetDialogVirtualDom.getDialogVirtualDom(content, closeMessage, infoMessage, okMessage, copyMessage, productName),
   ]
-  return GetDialogVirtualDom.getDialogVirtualDom(content, closeMessage, infoMessage, okMessage, copyMessage, productName)
 }
