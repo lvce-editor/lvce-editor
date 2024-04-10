@@ -2,6 +2,8 @@ import * as GetTitleBarIconVirtualDom from '../GetTitleBarIconVirtualDom/GetTitl
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderIcon = {
   isEqual(oldState, newState) {
     return oldState.iconSrc === newState.iconSrc
