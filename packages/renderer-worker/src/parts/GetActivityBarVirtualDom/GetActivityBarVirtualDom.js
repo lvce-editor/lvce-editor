@@ -1,5 +1,7 @@
 import * as GetActivityBarItemsVirtualDom from '../GetActivityBarItemsVirtualDom/GetActivityBarItemsVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaOrientationType from '../AriaOrientationType/AriaOrientationType.ts'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const getActivityBarVirtualDom = (visibleItems) => {
   return [
@@ -7,9 +9,9 @@ export const getActivityBarVirtualDom = (visibleItems) => {
       type: VirtualDomElements.Div,
       id: 'ActivityBar',
       className: 'Viewlet ActivityBar',
-      role: 'toolbar',
+      role: AriaRoles.ToolBar,
       ariaRoleDescription: 'Activity Bar',
-      ariaOrientation: 'vertical',
+      ariaOrientation: AriaOrientationType.Vertical,
       tabIndex: 0,
       onMouseDown: 'handleMouseDown',
       onContextMenu: 'handleContextMenu',
