@@ -4,6 +4,11 @@ import { WorkerError } from '../src/parts/WorkerError/WorkerError.ts'
 beforeAll(() => {
   // @ts-ignore
   globalThis.ErrorEvent = class {
+    type: any
+    lineno: any
+    colno: any
+    filename: any
+    message: any
     constructor(type, options) {
       this.type = type
       this.lineno = options.lineno
