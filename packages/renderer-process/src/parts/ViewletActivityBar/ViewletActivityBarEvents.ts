@@ -14,7 +14,7 @@ const get$ItemFromEvent = (event) => {
   return undefined
 }
 
-export const handleMousedown = (event) => {
+export const handleMouseDown = (event) => {
   const { button, clientX, clientY } = event
   const $Item = get$ItemFromEvent(event)
   if (!$Item) {
