@@ -1,35 +1,21 @@
-import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetExtensionDetailHeaderVirtualDom from '../GetExtensionDetailHeaderVirtualDom/GetExtensionDetailHeaderVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getExtensionDetailVirtualDom = (extensionDetail) => {
-  const { name, iconSrc, description } = extensionDetail
   const dom = [
     {
-      type: VirtualDomElements.Img,
-      className: ClassNames.ExtensionDetailIcon,
-      alt: '',
-      draggable: false,
-      childCount: 0,
-      src: iconSrc,
-    },
-    {
       type: VirtualDomElements.Div,
-      className: ClassNames.ExtensionDetailHeaderDetails,
+      className: 'Viewlet ExtensionDetail',
       childCount: 2,
     },
+
+    ...GetExtensionDetailHeaderVirtualDom.getExtensionDetailHeaderVirtualDom(extensionDetail),
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.ExtensionDetailName,
-      childCount: 1,
+      className: 'Markdown',
+      role: 'document',
+      onContextMenu: 'handleReadmeContextMenu',
     },
-    text(name),
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.ExtensionDetailDescription,
-      childCount: 1,
-    },
-    text(description),
   ]
   return dom
 }
