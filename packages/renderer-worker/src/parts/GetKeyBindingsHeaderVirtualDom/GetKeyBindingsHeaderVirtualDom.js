@@ -15,6 +15,7 @@ export const getKeyBindingsHeaderVirtualDom = () => {
       placeholder: KeyBindingStrings.searchKeyBindings(),
       name: 'keybindings-filter',
       onInput: 'handleInput',
+      ariaDescription: KeyBindingStrings.resultsWillUpdateAsYouType(),
       childCount: 0,
     },
   ]
