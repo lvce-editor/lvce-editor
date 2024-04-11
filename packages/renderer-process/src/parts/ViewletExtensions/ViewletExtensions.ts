@@ -157,7 +157,6 @@ export const handleError = (state, message) => {
 
 export const setSearchValue = (state, oldValue, newValue) => {
   const { $ExtensionHeader } = state
-  console.log({ newValue })
   if (!$ExtensionHeader) {
     return
   }
