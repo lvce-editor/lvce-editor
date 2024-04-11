@@ -1,8 +1,10 @@
-import * as GetKeyBindingsVirtualDom from '../GetKeyBindingsTableVirtualDom/GetKeyBindingsTableVirtualDom.js'
+import * as GetKeyBindingsVirtualDom from '../GetKeyBindingsVirtualDom/GetKeyBindingsVirtualDom.js'
 import * as GetVisibleKeyBindings from '../GetVisibleKeyBindings/GetVisibleKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderKeyBindings = {
   isEqual(oldState, newState) {
@@ -22,10 +24,16 @@ const renderKeyBindings = {
     const displayKeyBindings = GetVisibleKeyBindings.getVisibleKeyBindings(filteredKeyBindings, minLineY, maxLineY, selectedIndex)
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
     // console.time('tableDom')
-    const tableDom = GetKeyBindingsVirtualDom.getTableDom(filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3)
+    const tableDom = GetKeyBindingsVirtualDom.getKeyBindingsVirtualDom(
+      filteredKeyBindings,
+      displayKeyBindings,
+      columnWidth1,
+      columnWidth2,
+      columnWidth3,
+    )
     // console.timeEnd('tableDom')
     // console.log({ tableDom })
-    return [/* method */ 'setTableDom', /* tableDom */ tableDom]
+    return ['Viewlet.setDom2', /* tableDom */ tableDom]
   },
 }
 
@@ -76,4 +84,8 @@ const renderScrollBar = {
   },
 }
 
-export const render = [renderKeyBindings, renderValue, renderNoResults, renderScrollBar, renderColumnWidths]
+export const render = [
+  renderKeyBindings,
+  renderValue,
+  // renderNoResults, renderScrollBar, renderColumnWidths
+]

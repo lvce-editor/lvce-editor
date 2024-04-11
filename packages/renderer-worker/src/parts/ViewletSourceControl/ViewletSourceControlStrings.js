@@ -25,6 +25,8 @@ export const UiStrings = {
   CreatePullRequest: 'Create Pull Request',
   CommitAndPush: 'Commit and Push',
   Refresh: 'Refresh',
+  MessageEnterToCommitOnMaster: `Message (Enter) to commit on 'master'`,
+  SourceControlInput: 'Source Control Input',
 }
 
 export const openChanges = () => {
@@ -96,4 +98,12 @@ export const commitAndPush = () => {
 
 export const refresh = () => {
   return I18nString.i18nString(UiStrings.Refresh)
+}
+
+export const messageEnterToCommitOnMaster = () => {
+  return I18nString.i18nString(UiStrings.MessageEnterToCommitOnMaster)
+}
+
+export const sourceControlInput = () => {
+  return I18nString.i18nString(UiStrings.SourceControlInput)
 }
