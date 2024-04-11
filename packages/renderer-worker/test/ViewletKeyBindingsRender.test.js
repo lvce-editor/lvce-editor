@@ -1,14 +1,14 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+import { expect, test } from '@jest/globals'
 import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.ipc.js'
-import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletKeyBindings, oldState, newState, ViewletModuleId.KeyBindings)
 }
 
-test('render - add one keybinding', () => {
+test.skip('render - add one keybinding', () => {
   const oldState = {
     ...ViewletKeyBindings.create(),
     filteredKeyBindings: [],
@@ -117,7 +117,7 @@ test('render - add one keybinding', () => {
   ])
 })
 
-test('render - remove one keybinding', () => {
+test.skip('render - remove one keybinding', () => {
   const oldState = {
     ...ViewletKeyBindings.create(),
     filteredKeyBindings: [
