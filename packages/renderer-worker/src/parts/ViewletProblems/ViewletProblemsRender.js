@@ -1,8 +1,10 @@
-import * as GetProblemsVirtualDom from '../GetProblemsItemsVirtualDom/GetProblemsItemsVirtualDom.js'
+import * as GetProblemsVirtualDom from '../GetProblemsVirtualDom/GetProblemsVirtualDom.js'
 import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderProblems = {
   isEqual(oldState, newState) {
@@ -17,7 +19,7 @@ const renderProblems = {
   apply(oldState, newState) {
     const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.collapsedUris, newState.focusedIndex, newState.filterValue)
     const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.viewMode, visible, newState.filterValue)
-    return ['setProblemsDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
