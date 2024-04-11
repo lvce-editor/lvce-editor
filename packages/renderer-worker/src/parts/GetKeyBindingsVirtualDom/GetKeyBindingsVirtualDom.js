@@ -2,11 +2,6 @@ import * as GetKeyBindingsTableVirtualDom from '../GetKeyBindingsTableVirtualDom
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetKeyBindingsHeaderVirtualDom from '../GetKeyBindingsHeaderVirtualDom/GetKeyBindingsHeaderVirtualDom.js'
 
-const UiStrings = {
-  SearchKeyBindings: 'Search Key Bindings', // TODO placeholder string should come from renderer worker
-  ResultsWillUpdateAsYouType: 'Results will update as you type',
-}
-
 export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3) => {
   return [
     {

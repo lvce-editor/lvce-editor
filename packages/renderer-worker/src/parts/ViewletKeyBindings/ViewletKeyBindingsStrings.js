@@ -11,6 +11,8 @@ const UiStrings = {
   EmptyString: '',
   TypeToSearchKeyBindings: 'Type to search in keybindings',
   PressDesiredKeyCombinationThenPressEnter: 'Press Desired Key Combination, Then Press Enter',
+  SearchKeyBindings: 'Search Key Bindings', // TODO placeholder string should come from renderer worker
+  ResultsWillUpdateAsYouType: 'Results will update as you type',
 }
 
 export const keyBindings = () => {
@@ -35,4 +37,12 @@ export const typeToSearchKeyBindings = () => {
 
 export const pressDesiredKeyCombinationThenPressEnter = () => {
   return I18nString.i18nString(UiStrings.PressDesiredKeyCombinationThenPressEnter)
+}
+
+export const searchKeyBindings = () => {
+  return I18nString.i18nString(UiStrings.SearchKeyBindings)
+}
+
+export const resultsWillUpdateAsYouType = () => {
+  return I18nString.i18nString(UiStrings.ResultsWillUpdateAsYouType)
 }
