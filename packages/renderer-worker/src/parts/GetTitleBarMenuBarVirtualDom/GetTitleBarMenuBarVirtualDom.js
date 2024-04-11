@@ -9,6 +9,11 @@ export const getTitleBarMenuBarVirtualDom = (visibleItems) => {
       role: 'menubar',
       tabIndex: 0,
       childCount: visibleItems.length,
+      onMouseDown: 'handleClick',
+      onFocusOut: 'handleFocusOut',
+      onFocusIn: 'handleFocusIn',
+      onPointerOver: 'handlePointerOver',
+      onPointerOut: 'handlePointerOut',
     },
     ...GetTitleBarMenubarItemsVirtualDom.getTitleBarMenuBarItemsVirtualDom(visibleItems),
   ]
