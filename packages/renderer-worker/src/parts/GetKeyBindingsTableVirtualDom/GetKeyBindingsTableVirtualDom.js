@@ -1,7 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const kbdDom = {
