@@ -249,3 +249,5 @@ export const setMenus = (state, changes, uid) => {
     }
   }
 }
+
+export const Events = ViewletTitleBarMenuBarEvents
