@@ -1,10 +1,8 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as Assert from '../Assert/Assert.ts'
-import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
-import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as Menu from '../OldMenu/Menu.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
@@ -12,29 +10,6 @@ import * as Widget from '../Widget/Widget.ts'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.ts'
 
 const activeId = 'TitleBarEntryActive'
-
-export const create = () => {
-  const $TitleBarMenuBar = document.createElement('div')
-  $TitleBarMenuBar.className = 'Viewlet TitleBarMenuBar'
-  $TitleBarMenuBar.role = AriaRoles.MenuBar
-  $TitleBarMenuBar.tabIndex = 0
-  return {
-    $Viewlet: $TitleBarMenuBar,
-    $TitleBarMenuBar,
-    $$Menus: [],
-  }
-}
-
-export const attachEvents = (state) => {
-  const { $TitleBarMenuBar } = state
-  AttachEvents.attachEvents($TitleBarMenuBar, {
-    [DomEventType.MouseDown]: ViewletTitleBarMenuBarEvents.handleClick,
-    [DomEventType.FocusOut]: ViewletTitleBarMenuBarEvents.handleFocusOut,
-    [DomEventType.FocusIn]: ViewletTitleBarMenuBarEvents.handleFocus,
-    [DomEventType.PointerOver]: ViewletTitleBarMenuBarEvents.handlePointerOver,
-    [DomEventType.PointerOut]: ViewletTitleBarMenuBarEvents.handlePointerOut,
-  })
-}
 
 export const dispose = (state) => {}
 
@@ -192,6 +167,7 @@ const create$Menu = () => {
 export const setMenus = (state, changes, uid) => {
   Assert.array(changes)
   Assert.number(uid)
+  state.$$Menus ||= []
   const { $$Menus } = state
   for (const change of changes) {
     const type = change[0]
