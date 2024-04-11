@@ -1,8 +1,11 @@
 import * as GetExtensionDetailHeaderVirtualDom from '../GetExtensionDetailHeaderVirtualDom/GetExtensionDetailHeaderVirtualDom.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
+import * as GetTotalChildCount from '../GetTotalChildCount/GetTotalChildCount.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getExtensionDetailVirtualDom = (extensionDetail, sanitizedReadmeHtml) => {
+  const markdownDom = GetMarkdownVirtualDom.getMarkdownVirtualDom(sanitizedReadmeHtml)
+  const childCount = GetTotalChildCount.getTotalChildCount(markdownDom, 0)
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -16,8 +19,9 @@ export const getExtensionDetailVirtualDom = (extensionDetail, sanitizedReadmeHtm
       className: 'Markdown',
       role: 'document',
       onContextMenu: 'handleReadmeContextMenu',
+      childCount,
     },
-    ...GetMarkdownVirtualDom.getMarkdownVirtualDom(sanitizedReadmeHtml),
+    ...markdownDom,
   ]
   return dom
 }
