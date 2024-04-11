@@ -17,6 +17,7 @@ export const getKeyBindingsHeaderVirtualDom = () => {
       className: 'InputBox',
       inputType: 'search',
       placeholder: UiStrings.SearchKeyBindings,
+      name: 'keybindings-filter',
       onInput: 'handleInput',
       childCount: 0,
     },
