@@ -1,3 +1,13 @@
+const getOptions = (eventName) => {
+  switch (eventName) {
+    case 'wheel':
+      return {
+        passive: true,
+      }
+    default:
+      return undefined
+  }
+}
 /**
  *
  * @param {HTMLElement} $Element
@@ -69,8 +79,8 @@ export const setProp = ($Element, key, value, eventMap) => {
         console.warn('listener not found', value)
         return
       }
-
-      $Element.addEventListener(eventName, listener)
+      const options = getOptions(eventMap)
+      $Element.addEventListener(eventName, listener, options)
       break
     default:
       if (key.startsWith('data-')) {
