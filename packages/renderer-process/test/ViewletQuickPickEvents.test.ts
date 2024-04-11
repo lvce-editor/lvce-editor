@@ -10,6 +10,10 @@ beforeAll(() => {
   // workaround for jsdom not supporting pointer events
   // @ts-ignore
   globalThis.PointerEvent = class extends Event {
+    clientX: any
+    clientY: any
+    pointerId: any
+    button: any
     constructor(type, init) {
       super(type, init)
       this.clientX = init.clientX
