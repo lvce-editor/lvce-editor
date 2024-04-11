@@ -1,7 +1,8 @@
 import * as GetExtensionDetailHeaderVirtualDom from '../GetExtensionDetailHeaderVirtualDom/GetExtensionDetailHeaderVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
 
-export const getExtensionDetailVirtualDom = (extensionDetail) => {
+export const getExtensionDetailVirtualDom = (extensionDetail, sanitizedReadmeHtml) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -16,6 +17,7 @@ export const getExtensionDetailVirtualDom = (extensionDetail) => {
       role: 'document',
       onContextMenu: 'handleReadmeContextMenu',
     },
+    ...GetMarkdownVirtualDom.getMarkdownVirtualDom(sanitizedReadmeHtml),
   ]
   return dom
 }

@@ -15,8 +15,8 @@ const renderDom = {
     )
   },
   apply(oldState, newState) {
-    const headerDom = GetExtensionDetailVirtualDom.getExtensionDetailVirtualDom(newState)
-    return ['Viewlet.setDom2', headerDom]
+    const dom = GetExtensionDetailVirtualDom.getExtensionDetailVirtualDom(newState, newState.sanitizedReadmeHtml)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
