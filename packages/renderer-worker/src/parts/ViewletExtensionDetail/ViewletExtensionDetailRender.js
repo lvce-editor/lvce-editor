@@ -1,26 +1,22 @@
 import * as GetExtensionDetailVirtualDom from '../GetExtensionDetailVirtualDom/GetExtensionDetailVirtualDom.js'
-import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
-const renderReadme = {
-  isEqual(oldState, newState) {
-    return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
-  },
-  apply(oldState, newState) {
-    const dom = GetMarkdownVirtualDom.getMarkdownVirtualDom(newState.sanitizedReadmeHtml)
-    return ['setReadmeDom', dom]
-  },
-}
+export const hasFunctionalRootRender = true
 
-const renderHeader = {
+const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.name === newState.name && oldState.description === newState.description && oldState.iconSrc === newState.iconSrc
+    return (
+      oldState.name === newState.name &&
+      oldState.description === newState.description &&
+      oldState.iconSrc === newState.iconSrc &&
+      oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
+    )
   },
   apply(oldState, newState) {
-    const headerDom = GetExtensionDetailVirtualDom.getExtensionDetailVirtualDom(newState)
-    return ['setHeaderDom', headerDom]
+    const dom = GetExtensionDetailVirtualDom.getExtensionDetailVirtualDom(newState, newState.sanitizedReadmeHtml)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
@@ -33,4 +29,4 @@ const renderSize = {
   },
 }
 
-export const render = [renderHeader, renderReadme, renderSize]
+export const render = [renderDom, renderSize]
