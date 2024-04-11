@@ -66,10 +66,10 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
-  const { $TitleBarMenuBar } = state
+  const { $Viewlet } = state
   if (focusIndex !== -1) {
-    $TitleBarMenuBar.focus()
-    $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
+    $Viewlet.focus()
+    $Viewlet.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
   }
 }
 
@@ -86,16 +86,16 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
   Assert.number(y)
   Assert.number(width)
   Assert.number(height)
-  const { $TitleBarMenuBar } = state
+  const { $Viewlet } = state
   // TODO this code is very unclean
-  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
+  $Viewlet.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
     capture: true,
   })
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = AriaBoolean.False
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
+    $Viewlet.children[unFocusIndex].ariaExpanded = AriaBoolean.False
+    $Viewlet.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
-  $TitleBarMenuBar.children[index].ariaExpanded = AriaBoolean.True
+  $Viewlet.children[index].ariaExpanded = AriaBoolean.True
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
   // @ts-expect-error
@@ -106,7 +106,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
     height,
     items: menuItems,
     handleFocusOut: ViewletTitleBarMenuBarEvents.handleFocusOut,
-    $Parent: $TitleBarMenuBar.children[index],
+    $Parent: $Viewlet.children[index],
     level,
   })
   if (menuFocusedIndex !== -1) {
@@ -119,23 +119,18 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
 
 // TODO there need to be two variants of closeMenu: one just closes menu, another close menu and focuses top level entry
 export const closeMenu = (state, unFocusIndex, index) => {
-  const { $TitleBarMenuBar } = state
+  const { $Viewlet } = state
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = AriaBoolean.False
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
+    $Viewlet.children[unFocusIndex].ariaExpanded = AriaBoolean.False
+    $Viewlet.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
   if (index !== -1) {
-    $TitleBarMenuBar.children[index].focus()
+    $Viewlet.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
+  $Viewlet.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
     capture: true,
   })
-}
-
-export const setEntries = (state, dom) => {
-  const { $TitleBarMenuBar } = state
-  VirtualDom.renderInto($TitleBarMenuBar, dom)
 }
 
 const create$Menu = () => {
