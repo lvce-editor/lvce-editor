@@ -33,6 +33,8 @@ test.skip('create - messagePort', async () => {
   }
   // @ts-ignore
   global.MessageChannel = class {
+    port1: MessagePort
+    port2: MessagePort
     constructor() {
       this.port1 = new MessagePort()
       this.port2 = new MessagePort()

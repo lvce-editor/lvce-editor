@@ -39,7 +39,6 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
   const toRemove = []
   for (const diffItem of diff) {
     if (diffItem.type === 'remove') {
-      console.log({ list, nodes: diffItem.nodes })
       for (const index of diffItem.nodes) {
         toRemove.push(list[index + 1])
       }
