@@ -65,10 +65,14 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'onDblClick':
     case 'onFocus':
     case 'onFocusIn':
+    case 'onFocusIn':
+    case 'onFocusOut':
     case 'onInput':
     case 'onKeyDown':
-    case 'onPointerDown':
     case 'onMouseDown':
+    case 'onPointerDown':
+    case 'onPointerOut':
+    case 'onPointerOver':
     case 'onWheel':
       const eventName = key.slice(2).toLowerCase()
       if (!eventMap || !value) {

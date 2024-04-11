@@ -4,12 +4,20 @@ import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.ts'
 
 const isInsideTitleBarMenu = ($Element) => {
-  return $Element.classList.contains('MenuItem') || $Element.classList.contains('Menu') || $Element.classList.contains('TitleBarTopLevelEntry')
+  return (
+    $Element.classList.contains('MenuItem') ||
+    $Element.classList.contains('Menu') ||
+    $Element.classList.contains('TitleBarTopLevelEntry') ||
+    $Element.classList.contains('TitleBarMenuBar')
+  )
 }
 
 export const handleFocusOut = (event) => {
-  const $ActiveElement = event.relatedTarget
-  if ($ActiveElement && isInsideTitleBarMenu($ActiveElement)) {
+  const { target, relatedTarget } = event
+  if (relatedTarget && isInsideTitleBarMenu(relatedTarget)) {
+    return
+  }
+  if (target && isInsideTitleBarMenu(target)) {
     return
   }
   const uid = ComponentUid.fromEvent(event)
@@ -69,7 +77,7 @@ export const handleMenuClick = (event) => {
   ViewletTitleBarMenuBarFunctions.handleMenuClick(uid, level, index)
 }
 
-export const handleFocus = (event) => {
+export const handleFocusIn = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletTitleBarMenuBarFunctions.handleFocus(uid)
 }

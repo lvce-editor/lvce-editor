@@ -1,10 +1,12 @@
 import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
+import * as GetTitleBarMenuBarVirtualDom from '../GetTitleBarMenuBarVirtualDom/GetTitleBarMenuBarVirtualDom.js'
 import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
 import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
-import * as GetTitleBarMenuBarVirtualDom from '../GetTitleBarMenuBarVirtualDom/GetTitleBarMenuBarVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderTitleBarEntries = {
   isEqual(oldState, newState) {
@@ -23,7 +25,7 @@ const renderTitleBarEntries = {
       newState.isMenuOpen,
     )
     const dom = GetTitleBarMenuBarVirtualDom.getTitleBarMenuBarVirtualDom(visibleEntries)
-    return [/* method */ RenderMethod.SetEntries, dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
