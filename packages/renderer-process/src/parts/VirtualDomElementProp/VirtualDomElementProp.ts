@@ -62,6 +62,7 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'onBlur':
     case 'onClick':
     case 'onContextMenu':
+    case 'onDblClick':
     case 'onFocus':
     case 'onFocusIn':
     case 'onInput':
