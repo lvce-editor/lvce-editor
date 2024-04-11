@@ -3,6 +3,7 @@ import { beforeEach, expect, jest, test, beforeAll } from '@jest/globals'
 beforeAll(() => {
   // @ts-ignore
   globalThis.ClipboardItem = class {
+    options: any
     constructor(options) {
       this.options = options
     }
