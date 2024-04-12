@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
@@ -2983,7 +2984,7 @@ test.skip('handleWheel - up', () => {
         {
           childCount: 0,
           className: 'MaskIcon MaskIconNewFile',
-          role: 'none',
+          role: AriaRoles.None,
           type: 4,
         },
         {
@@ -2996,7 +2997,7 @@ test.skip('handleWheel - up', () => {
         {
           childCount: 0,
           className: 'MaskIcon MaskIconNewFolder',
-          role: 'none',
+          role: AriaRoles.None,
           type: 4,
         },
         {
@@ -3009,7 +3010,7 @@ test.skip('handleWheel - up', () => {
         {
           childCount: 0,
           className: 'MaskIcon MaskIconRefresh',
-          role: 'none',
+          role: AriaRoles.None,
           type: 4,
         },
         {
@@ -3022,7 +3023,7 @@ test.skip('handleWheel - up', () => {
         {
           childCount: 0,
           className: 'MaskIcon MaskIconCollapseAll',
-          role: 'none',
+          role: AriaRoles.None,
           type: 4,
         },
       ],
@@ -3050,7 +3051,7 @@ test.skip('handleWheel - up', () => {
         {
           childCount: 0,
           className: 'FileIcon',
-          role: 'none',
+          role: AriaRoles.None,
           src: undefined,
           type: 17,
         },
@@ -3248,7 +3249,7 @@ test.skip('event - workspace change', async () => {
       case 'ClipBoard.readFiles':
         return {
           source: 'notSupported',
-          type: 'none',
+          type: AriaRoles.None,
           files: [],
         }
       default:
