@@ -22,6 +22,7 @@ import * as ExtensionHostNodeIpc from '../ExtensionHostNodeRpc/ExtensionHostNode
 import * as ExtensionHostPrompt from '../ExtensionHostPrompt/ExtensionHostPrompt.ts'
 import * as ExtensionHostQuickPick from '../ExtensionHostQuickPick/ExtensionHostQuickPick.ts'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.ts'
+import * as ExtensionHostRename from '../ExtensionHostRename/ExtensionHostRename.ts'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.ts'
 import * as ExtensionHostSelection from '../ExtensionHostSelection/ExtensionHostSelection.ts'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.ts'
@@ -116,6 +117,10 @@ export const api = {
 
   // QuickPick
   showQuickPick: ExtensionHostQuickPick.showQuickPick,
+
+  // Rename
+  registerRenameProvider: ExtensionHostRename.registerRenameProvider,
+  executeRenameProvider: ExtensionHostRename.executeRenameProvider,
 
   // Reference
   registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
