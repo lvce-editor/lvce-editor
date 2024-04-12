@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as Rename from '../Rename/Rename.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
@@ -22,8 +23,11 @@ const rename = (editor, rowIndex, columnIndex, newName) => {
   return Rename.rename(editor, offset, newName)
 }
 
-export const open = async (editor) => {
-  console.log({ editor })
+export const open = async () => {
+  const editor = GetActiveEditor.getActiveEditor()
+  if (!editor) {
+    return
+  }
   Assert.object(editor)
   const { selections } = editor
   const rowIndex = selections[0]
@@ -36,7 +40,8 @@ export const open = async (editor) => {
 
   // TODO race condition, what is when editor is closed before promise resolves
 
-  if (prepareRenameResult.canRename) {
+  console.log({ prepareRenameResult })
+  if (prepareRenameResult && prepareRenameResult.canRename) {
     const x = EditorPosition.x(editor, rowIndex, columnIndex)
     // @ts-ignore
     const y = EditorPosition.y(editor, rowIndex, columnIndex)
