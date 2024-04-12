@@ -1,8 +1,10 @@
-import * as GetSourceControlItemsVirtualDom from '../GetSourceControlItemsVirtualDom/GetSourceControlItemsVirtualDom.js'
+import * as GetSourceControlVirtualDom from '../GetSourceControlVirtualDom/GetSourceControlVirtualDom.js'
 import * as GetVisibleSourceControlItems from '../GetVisibleSourceControlItems/GetVisibleSourceControlItems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderValue = {
   isEqual(oldState, newState) {
@@ -32,8 +34,8 @@ const renderChangedFiles = {
       newState.buttons,
       newState.buttonIndex,
     )
-    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(visible, newState.splitButtonEnabled)
-    return [RenderMethod.SetDom, dom]
+    const dom = GetSourceControlVirtualDom.getSourceControlVirtualDom(visible, newState.splitButtonEnabled)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
