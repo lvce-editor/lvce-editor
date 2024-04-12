@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const getSearchFieldButtonVirtualDom = (button) => {
   const { icon, checked, title } = button
@@ -7,7 +8,7 @@ export const getSearchFieldButtonVirtualDom = (button) => {
       type: VirtualDomElements.Div,
       className: `SearchFieldButton ${checked ? 'SearchFieldButtonChecked' : ''}`,
       title,
-      role: 'checkbox', // TODO use aria roles enum
+      role: AriaRoles.CheckBox,
       ariaChecked: checked,
       tabIndex: 0,
       childCount: 1,
