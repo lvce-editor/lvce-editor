@@ -121,6 +121,7 @@ export const api = {
   // Rename
   registerRenameProvider: ExtensionHostRename.registerRenameProvider,
   executeRenameProvider: ExtensionHostRename.executeRenameProvider,
+  executePrepareRenameProvider: ExtensionHostRename.executeprepareRenameProvider,
 
   // Reference
   registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
