@@ -2,6 +2,7 @@ import * as GetExtensionDetailHeaderVirtualDom from '../GetExtensionDetailHeader
 import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
 import * as GetTotalChildCount from '../GetTotalChildCount/GetTotalChildCount.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const getExtensionDetailVirtualDom = (extensionDetail, sanitizedReadmeHtml) => {
   const markdownDom = GetMarkdownVirtualDom.getMarkdownVirtualDom(sanitizedReadmeHtml)
@@ -17,7 +18,7 @@ export const getExtensionDetailVirtualDom = (extensionDetail, sanitizedReadmeHtm
     {
       type: VirtualDomElements.Div,
       className: 'Markdown',
-      role: 'document',
+      role: AriaRoles.Document,
       onContextMenu: 'handleReadmeContextMenu',
       childCount,
     },

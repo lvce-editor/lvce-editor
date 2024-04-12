@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
@@ -9,7 +10,7 @@ const getItemVirtualDom = (item) => {
     className: 'TitleBarTopLevelEntry',
     ariaHasPopup: true,
     ariaExpanded: isOpen,
-    role: 'menuitem',
+    role: AriaRoles.MenuItem,
     childCount: 1,
     ariaKeyShortcuts: keyboardShortCut,
   })

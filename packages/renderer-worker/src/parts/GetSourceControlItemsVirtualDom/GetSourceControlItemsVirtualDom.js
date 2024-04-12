@@ -3,6 +3,7 @@ import * as GetSourceControlItemVirtualDom from '../GetSourceControlItemVirtualD
 import * as GetSplitButtonVirtualDom from '../GetSplitButtonVirtualDom/GetSplitButtonVirtualDom.js'
 import * as ViewletSourceControlStrings from '../ViewletSourceControl/ViewletSourceControlStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
   const dom = []
@@ -33,7 +34,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SourceControlItems,
-      role: 'tree',
+      role: AriaRoles.Tree,
       childCount: items.length,
     },
     ...items.flatMap(GetSourceControlItemVirtualDom.getSourceControlItemVirtualDom),
