@@ -21,6 +21,8 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
       placeholder: ViewletSourceControlStrings.messageEnterToCommitOnMaster(),
       ariaLabel: ViewletSourceControlStrings.sourceControlInput(),
       childCount: 0,
+      onInput: 'handleInput',
+      onFocus: 'handleFocus',
     },
   )
   if (splitButtonEnabled) {
