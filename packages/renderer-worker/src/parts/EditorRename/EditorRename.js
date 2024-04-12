@@ -23,8 +23,11 @@ const rename = (editor, rowIndex, columnIndex, newName) => {
 }
 
 export const open = async (editor) => {
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
+  console.log({ editor })
+  Assert.object(editor)
+  const { selections } = editor
+  const rowIndex = selections[0]
+  const columnIndex = selections[1]
   Assert.number(rowIndex)
   Assert.number(columnIndex)
 

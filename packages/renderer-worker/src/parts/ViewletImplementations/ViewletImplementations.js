@@ -1,12 +1,12 @@
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Implementation from '../Implementation/Implementation.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 const getImplementations = () => {
-  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
+  const editor = GetActiveEditor.getActiveEditor()
   return Implementation.getImplementations(editor)
 }
 
