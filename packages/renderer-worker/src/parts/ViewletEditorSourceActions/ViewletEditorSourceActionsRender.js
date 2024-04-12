@@ -2,13 +2,15 @@ import * as GetSourceActionsVirtualDom from '../GetSourceActionsVirtualDom/GetSo
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderSourceActions = {
   isEqual(oldState, newState) {
     return oldState.sourceActions === newState.sourceActions
   },
   apply(oldStatem, newState) {
     const dom = GetSourceActionsVirtualDom.getSourceActionsVirtualDom(newState.sourceActions)
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
