@@ -18,11 +18,11 @@ test('executeRenameProvider - no results', async () => {
   ExtensionHostRename.registerRenameProvider({
     languageId: 'javascript',
     async prepareRename() {
-      return []
+      return undefined
     },
   })
   // @ts-ignore
-  expect(await ExtensionHostRename.executeprepareRenameProvider(1, 0)).toEqual([])
+  expect(await ExtensionHostRename.executeprepareRenameProvider(1, 0)).toBe(undefined)
 })
 
 test('executeRename - error - rename provider throws error', async () => {
@@ -36,7 +36,7 @@ test('executeRename - error - rename provider throws error', async () => {
   ])
   ExtensionHostRename.registerRenameProvider({
     languageId: 'javascript',
-    rename() {
+    provideRename() {
       throw new TypeError('x is not a function')
     },
   })

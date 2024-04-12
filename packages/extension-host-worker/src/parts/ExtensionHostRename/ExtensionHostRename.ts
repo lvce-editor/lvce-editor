@@ -5,6 +5,7 @@ const { registerRenameProvider, executeRenameProvider, executeprepareRenameProvi
   name: 'Rename',
   resultShape: {
     type: Types.Object,
+    allowUndefined: true,
   },
   additionalMethodNames: [
     // @ts-ignore
@@ -13,6 +14,7 @@ const { registerRenameProvider, executeRenameProvider, executeprepareRenameProvi
       methodName: 'prepareRename',
       resultShape: {
         type: Types.Object,
+        allowUndefined: true,
       },
     },
   ],
