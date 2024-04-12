@@ -1,4 +1,4 @@
-import * as GetSourceActionsVirtualDom from '../GetSourceActiomsVirtualDom/GetSourceActionsVirtualDom.js'
+import * as GetSourceActionsVirtualDom from '../GetSourceActionsVirtualDom/GetSourceActionsVirtualDom.js'
 
 export const hasFunctionalRender = true
 
