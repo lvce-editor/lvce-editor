@@ -1,5 +1,4 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.ts'
 
