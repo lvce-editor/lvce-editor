@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getDefineKeyBindingsVirtualDom = (message) => {
@@ -10,18 +11,18 @@ export const getDefineKeyBindingsVirtualDom = (message) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DefineKeyBindingContent',
+      className: ClassNames.DefineKeyBindingContent,
       childCount: 2,
     },
     {
       type: VirtualDomElements.H2,
-      className: 'DefineKeyBindingHeading',
+      className: ClassNames.DefineKeyBindingHeading,
       childCount: 1,
     },
     text(message),
     {
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       childCount: 0,
       onKeyDown: 'handleKeyDown',
       onBlur: 'handleBlur',
