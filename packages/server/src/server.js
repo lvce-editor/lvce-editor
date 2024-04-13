@@ -15,6 +15,8 @@ const STATIC = resolve(__dirname, '../../../static')
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
+const isProduction = false
+
 const { argv, env } = process
 
 const PORT = env.PORT ? parseInt(env.PORT) : 3000
@@ -458,7 +460,7 @@ const launchSharedProcess = () => {
     env: {
       ...process.env,
     },
-    execArgv: ['--import', '@swc-node/register/esm-register'],
+    execArgv: isProduction ? [] : ['--import', '@swc-node/register/esm-register'],
   })
   const handleFirstMessage = (message) => {
     state.sharedProcessState = /* on */ 2
