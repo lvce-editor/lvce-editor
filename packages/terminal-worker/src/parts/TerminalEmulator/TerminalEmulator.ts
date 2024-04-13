@@ -4,7 +4,7 @@ export const create = async ({ offscreenCanvasCursor, offscreenCanvasText, focus
   Assert.object(offscreenCanvasCursor)
   Assert.object(offscreenCanvasText)
   // @ts-ignore
-  const { createOffscreenTerminal } = await import('../../../../../static/js/termterm.js')
+  const { createOffscreenTerminal } = await import('/static/js/termterm.js')
   const terminal = createOffscreenTerminal({
     canvasCursor: offscreenCanvasCursor,
     canvasText: offscreenCanvasText,
