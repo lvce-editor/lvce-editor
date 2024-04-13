@@ -8,7 +8,7 @@ export const hasFunctionalRootRender = true
 const renderHover = {
   isEqual(oldState, newState) {
     return (
-      oldState.sanitzedHtml === newState.lineInfos &&
+      oldState.lineInfos === newState.lineInfos &&
       oldState.documentation === newState.minLineY &&
       oldState.maxLineY === newState.documentation &&
       oldState.diagnostics === newState.diagnostics
