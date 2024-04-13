@@ -1,15 +1,10 @@
-import * as Languages from '../Languages/Languages.js'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerState from '../TokenizerState/TokenizerState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
-const getTokenizePath = (languageId) => {
-  const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
-  return tokenizePath
-}
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const handleTokenizeChange = async () => {
   const instances = ViewletStates.getValues()
@@ -35,7 +30,7 @@ export const loadTokenizer = async (languageId) => {
   if (TokenizerState.has(languageId)) {
     return
   }
-  const tokenizePath = getTokenizePath(languageId)
+  const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
   if (!tokenizePath) {
     return
   }

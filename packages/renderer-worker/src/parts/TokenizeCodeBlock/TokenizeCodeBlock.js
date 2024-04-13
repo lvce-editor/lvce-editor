@@ -1,6 +1,7 @@
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as SyntaxHighlightingWorker from '../SyntaxHighlightingWorker/SyntaxHighlightingWorker.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -37,15 +38,16 @@ const getLineInfos = (lines, tokenizer, languageId) => {
   return lineInfos
 }
 
-const tokenizeCodeBlockWorker = async (codeBlock, languageId) => {
+const tokenizeCodeBlockWorker = async (codeBlock, languageId, tokenizePath) => {
   await SyntaxHighlightingWorker.getOrCreate()
-  return SyntaxHighlightingWorker.invoke('Tokenizer.tokenizeCodeBlock', codeBlock, languageId)
+  return SyntaxHighlightingWorker.invoke('Tokenizer.tokenizeCodeBlock', codeBlock, languageId, tokenizePath)
 }
 
 export const tokenizeCodeBlock = async (codeBlock, languageId) => {
   const useSyntaxHighlightingWorker = Preferences.get('editor.useSyntaxHighlightingWorker')
   if (useSyntaxHighlightingWorker) {
-    return tokenizeCodeBlockWorker(codeBlock, languageId)
+    const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
+    return tokenizeCodeBlockWorker(codeBlock, languageId, tokenizePath)
   }
   await Tokenizer.loadTokenizer(languageId)
   const tokenizer = Tokenizer.getTokenizer(languageId)
