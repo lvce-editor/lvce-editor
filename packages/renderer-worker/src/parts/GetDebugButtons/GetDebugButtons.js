@@ -1,4 +1,5 @@
 import * as DebugState from '../DebugState/DebugState.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 
 export const getDebugButtons = (debugState) => {
@@ -7,40 +8,40 @@ export const getDebugButtons = (debugState) => {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.resume(),
       icon: 'DebugContinue',
-      fn: 'handleClickContinue',
+      fn: DomEventListenerFunctions.HandleClickContinue,
     })
   } else {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.pause(),
       icon: 'DebugPause',
-      fn: 'handleClickPause',
+      fn: DomEventListenerFunctions.HandleClickPause,
     })
   }
   debugButtons.push(
     {
       title: ViewletRunAndDebugStrings.stepOver(),
       icon: 'DebugStepOver',
-      fn: 'handleClickStepOver',
+      fn: DomEventListenerFunctions.HandleClickStepOver,
     },
     {
       title: ViewletRunAndDebugStrings.stepInto(),
       icon: 'DebugStepInto',
-      fn: 'handleClickStepInto',
+      fn: DomEventListenerFunctions.HandleClickStepInto,
     },
     {
       title: ViewletRunAndDebugStrings.stepOut(),
       icon: 'DebugStepOut',
-      fn: 'handleClickStepOut',
+      fn: DomEventListenerFunctions.HandleClickStepOut,
     },
     {
       title: ViewletRunAndDebugStrings.restart(),
       icon: 'DebugRestart',
-      fn: 'handleClickRestart',
+      fn: DomEventListenerFunctions.HandleClickRestart,
     },
     {
       title: ViewletRunAndDebugStrings.stop(),
       icon: 'DebugStop',
-      fn: 'handleClickStop',
+      fn: DomEventListenerFunctions.HandleClickStop,
     },
   )
   return debugButtons

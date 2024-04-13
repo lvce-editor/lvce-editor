@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -19,8 +20,8 @@ export const getVirtualDom = (textContent) => {
     {
       type: VirtualDomElements.Input,
       className: ClassNames.InputBox,
-      onInput: 'handleInput',
-      onFocus: 'handleFocus',
+      onInput: DomEventListenerFunctions.HandleInput,
+      onFocus: DomEventListenerFunctions.HandleFocus,
       childCount: 0,
     },
   )
