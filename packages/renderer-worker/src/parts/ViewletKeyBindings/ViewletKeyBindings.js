@@ -207,11 +207,26 @@ export const handleResizerMove = (state, eventX) => {
   }
 }
 
-export const focusNext = (state) => {
-  const { selectedIndex } = state
+export const focusFirst = (state) => {
   return {
     ...state,
-    selectedIndex: selectedIndex + 1,
+    selectedIndex: 0,
+  }
+}
+
+export const focusLast = (state) => {
+  const { filteredKeyBindings } = state
+  return {
+    ...state,
+    selectedIndex: filteredKeyBindings.length - 1,
+  }
+}
+
+export const focusNext = (state) => {
+  const { selectedIndex, filteredKeyBindings } = state
+  return {
+    ...state,
+    selectedIndex: Math.min(selectedIndex + 1, filteredKeyBindings.length - 1),
   }
 }
 
@@ -219,6 +234,6 @@ export const focusPrevious = (state) => {
   const { selectedIndex } = state
   return {
     ...state,
-    selectedIndex: selectedIndex - 1,
+    selectedIndex: Math.max(selectedIndex - 1, 0),
   }
 }
