@@ -1,4 +1,5 @@
 import * as GetProblemsItemsVirtualDom from '../GetProblemsItemsVirtualDom/GetProblemsItemsVirtualDom.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getProblemsVirtualDom = (viewMode, problems, filterValue) => {
@@ -7,8 +8,8 @@ export const getProblemsVirtualDom = (viewMode, problems, filterValue) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet Problems',
       tabIndex: 0,
-      onPointerDown: 'handlePointerDown',
-      onContextMenu: 'handleContextMenu',
+      onPointerDown: DomEventListenerFunctions.HandlePointerDown,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       childCount: 1,
     },
     ...GetProblemsItemsVirtualDom.getProblemsVirtualDom(viewMode, problems, filterValue),
