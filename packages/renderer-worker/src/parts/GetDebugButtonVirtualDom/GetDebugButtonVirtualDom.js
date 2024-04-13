@@ -11,7 +11,8 @@ export const getDebugButtonVirtualDom = (button) => {
       className: DebugButton + ' ' + icon,
       title,
       childCount: 1,
-      onPointerDown: fn,
+      // onPointerDown: fn,
+      'data-command': fn,
     },
     {
       type: VirtualDomElements.Div,
