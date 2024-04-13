@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
 import * as GetSearchToggleButtonVirtualDom from '../GetSearchToggleButtonVirtualDom/GetSearchToggleButtonVirtualDom.js'
@@ -29,12 +30,12 @@ export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons
   dom.push(...GetSearchToggleButtonVirtualDom.getSearchToggleButtonVirtualDom(replaceExpanded, 'handleClick'))
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'FindWidgetRight',
+    className: ClassNames.FindWidgetRight,
     childCount: replaceExpanded ? 2 : 1,
   })
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'FindWidgetFind',
+    className: ClassNames.FindWidgetFind,
     childCount: 5,
   })
   dom.push(...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-value', 'Find', 'handleInput', [], [], 'handleFocus'))
@@ -52,10 +53,10 @@ export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'FindWidgetReplace',
+        className: ClassNames.FindWidgetReplace,
         childCount: 1,
       },
-      text('replace'),
+      text(EditorStrings.replace()),
     )
   }
   return dom
