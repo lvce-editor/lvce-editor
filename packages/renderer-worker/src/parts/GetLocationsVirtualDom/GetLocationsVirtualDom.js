@@ -96,6 +96,12 @@ const getLocationVirtualDom = (location) => {
 
 export const getLocationsVirtualDom = (locations, message) => {
   const dom = []
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'Viewlet Locations',
+    onMouseDown: 'handleLocationsMouseDown',
+    childCount: 2,
+  })
   dom.push(
     {
       type: VirtualDomElements.Div,
