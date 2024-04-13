@@ -1,11 +1,11 @@
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import {
-  IpcChildWithElectronUtilityProcess,
-  IpcChildWithWebSocket,
-  IpcChildWithNodeWorker,
-  IpcChildWithNodeForkedProcess,
   IpcChildWithElectronMessagePort,
+  IpcChildWithElectronUtilityProcess,
+  IpcChildWithNodeForkedProcess,
+  IpcChildWithNodeWorker,
+  IpcChildWithWebSocket,
 } from '@lvce-editor/ipc'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 export const getModule = (method) => {
   switch (method) {
