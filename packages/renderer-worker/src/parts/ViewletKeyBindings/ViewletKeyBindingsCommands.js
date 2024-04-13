@@ -1,6 +1,5 @@
 import * as ViewletKeyBindings from './ViewletKeyBindings.js'
 
-// prettier-ignore
 export const Commands = {
   handleClick: ViewletKeyBindings.handleClick,
   handleInput: ViewletKeyBindings.handleInput,
@@ -11,4 +10,6 @@ export const Commands = {
   handleDefineKeyBindingDisposed: ViewletKeyBindings.handleDefineKeyBindingDisposed,
   focusNext: ViewletKeyBindings.focusNext,
   focusPrevious: ViewletKeyBindings.focusPrevious,
+  focusFirst: ViewletKeyBindings.focusFirst,
+  focusLast: ViewletKeyBindings.focusLast,
 }
