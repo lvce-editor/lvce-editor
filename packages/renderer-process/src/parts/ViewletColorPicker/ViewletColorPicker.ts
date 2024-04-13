@@ -1,4 +1,5 @@
 import * as SetBounds from '../SetBounds/SetBounds.ts'
+export * as Events from './ViewletColorPickerEvents.ts'
 
 export const setColor = (state, color) => {
   const { $Viewlet } = state
