@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getActionFilterVirtualDom = (action) => {
@@ -17,7 +18,7 @@ export const getActionFilterVirtualDom = (action) => {
       autocorrect: 'off',
       placeholder: action.placeholder,
       onInput: action.command,
-      name: 'filter',
+      name: InputName.Filter,
       value: action.value,
     },
   )
