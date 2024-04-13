@@ -5,6 +5,7 @@ import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtual
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const useChevrons = false
@@ -38,7 +39,7 @@ const getItemVirtualDomFile = (item) => {
       id: 'ExplorerInput',
       onInput: 'handleEditingInput',
       childCount: 0,
-      name: 'ExplorerInput',
+      name: InputName.ExplorerInput,
     })
   } else {
     dom.push(
