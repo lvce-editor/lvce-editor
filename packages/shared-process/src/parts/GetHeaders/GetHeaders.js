@@ -3,11 +3,12 @@ import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
-import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
+import * as GetHeadersSyntaxHighlightingWorker from '../GetHeadersSyntaxHighlightingWorker/GetHeadersSyntaxHighlightingWorker.js'
 import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeadersTerminalWorker.js'
 import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
+import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 
 const getExtraHeaders = (pathName, fileExtension) => {
   switch (fileExtension) {
@@ -26,6 +27,9 @@ const getExtraHeaders = (pathName, fileExtension) => {
       }
       if (pathName.endsWith('terminalWorkerMain.js') || pathName.endsWith('terminalWorkerMain.ts')) {
         return GetHeadersTerminalWorker.getHeadersTerminalWorker()
+      }
+      if (pathName.endsWith('syntaxHighlightingWorkerMain.js') || pathName.endsWith('syntaxHighlightingWorkerMain.ts')) {
+        return GetHeadersSyntaxHighlightingWorker.getHeadersSyntaxHighlightingWorker()
       }
       if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
         return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
