@@ -4,7 +4,7 @@ export const getSharedProcessArgv = () => {
   if (Platform.isProduction) {
     return ['--enable-source-maps']
   }
-  if (process.versions.node === '18.19.1') {
+  if (process.versions.node === '18.19.1' || process.versions.node === '18.18.2') {
     // node<=20.5, deprecated
     return ['--loader', '@swc-node/register/esm']
   }

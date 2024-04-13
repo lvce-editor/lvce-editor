@@ -453,17 +453,13 @@ const handleSharedProcessDisconnect = () => {
 
 const launchSharedProcess = () => {
   state.sharedProcessState = /* launching */ 1
-  const sharedProcess = fork(
-    sharedProcessPath,
-    // execArgv: ['--trace-deopt'],
-    ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced],
-    {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-      },
+  const sharedProcess = fork(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced], {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
     },
-  )
+    execArgv: ['--import', '@swc-node/register/esm-register'],
+  })
   const handleFirstMessage = (message) => {
     state.sharedProcessState = /* on */ 2
     for (const listener of state.onSharedProcessReady) {
