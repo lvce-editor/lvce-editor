@@ -3,8 +3,6 @@ import * as GetDebugButtonVirtualDom from '../GetDebugButtonVirtualDom/GetDebugB
 import * as GetDebugButtons from '../GetDebugButtons/GetDebugButtons.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const DebugButton = ClassNames.IconButton + ' ' + ClassNames.DebugButton
-
 export const getRunAndDebugButtonsVirtualDom = (debugState) => {
   const debugButtons = GetDebugButtons.getDebugButtons(debugState)
   const dom = [
