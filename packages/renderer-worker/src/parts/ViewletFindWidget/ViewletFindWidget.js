@@ -1,11 +1,10 @@
 import * as Command from '../Command/Command.js'
 import * as FindMatchesCaseInsensitive from '../FindMatchesCaseInsensitive/FindMatchesCaseInsensitive.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetMatchCount from '../GetMatchCount/GetMatchCount.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
-import * as Focus from '../Focus/Focus.js'
 
 export const create = (uid) => {
   return {
@@ -24,7 +23,7 @@ export const create = (uid) => {
 }
 
 export const getPosition = () => {
-  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
+  const editor = GetActiveEditor.getActiveEditor()
   if (!editor) {
     return {
       x: 0,
@@ -48,7 +47,7 @@ export const getPosition = () => {
 }
 
 export const loadContent = (state) => {
-  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
+  const editor = GetActiveEditor.getActiveEditor()
   if (!editor) {
     return state
   }
@@ -73,7 +72,7 @@ export const loadContent = (state) => {
 export const refresh = (state, value = state.value) => {
   // TODO get focused editor
   // highlight locations that match value
-  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
+  const editor = GetActiveEditor.getActiveEditor()
   const { lines } = editor
   const matches = FindMatchesCaseInsensitive.findMatchesCaseInsensitive(lines, value)
   const matchCount = GetMatchCount.getMatchCount(matches)

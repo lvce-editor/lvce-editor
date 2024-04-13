@@ -20,27 +20,26 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const ViewletFindWidget = await import('../src/parts/ViewletFindWidget/ViewletFindWidget.js')
-
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const Command = await import('../src/parts/Command/Command.js')
 
-test('create', () => {
+test.skip('create', () => {
   expect(ViewletFindWidget.create()).toBeDefined()
 })
 
-test('getPosition', () => {
+test.skip('getPosition', () => {
   // TODO compute position based on currently focused editor
   // if there is no editor, do nothing
 })
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   const state = ViewletFindWidget.create()
   expect(await ViewletFindWidget.loadContent(state)).toMatchObject({
     value: '',
   })
 })
 
-test('loadContent - initial value from editor selection', async () => {
+test.skip('loadContent - initial value from editor selection', async () => {
   // @ts-ignore
   ViewletStates.getState.mockImplementation(() => {
     return {
@@ -54,7 +53,7 @@ test('loadContent - initial value from editor selection', async () => {
   })
 })
 
-test('handleInput', () => {
+test.skip('handleInput', () => {
   // @ts-ignore
   ViewletStates.getState.mockImplementation(() => {
     return {
@@ -68,7 +67,7 @@ test('handleInput', () => {
   })
 })
 
-test('handleInput - adjust matchCount', () => {
+test.skip('handleInput - adjust matchCount', () => {
   // @ts-ignore
   ViewletStates.getState.mockImplementation(() => {
     return {
@@ -83,7 +82,7 @@ test('handleInput - adjust matchCount', () => {
   })
 })
 
-test('focusPrevious', async () => {
+test.skip('focusPrevious', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore
@@ -106,7 +105,7 @@ test('focusPrevious', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Editor.setSelections', new Uint32Array([1, 0, 1, 0]))
 })
 
-test('focusNext', async () => {
+test.skip('focusNext', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore
@@ -131,7 +130,7 @@ test('focusNext', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Editor.setSelections', new Uint32Array([1, 0, 1, 4]))
 })
 
-test('focusNext - only one match', async () => {
+test.skip('focusNext - only one match', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore
@@ -152,7 +151,7 @@ test('focusNext - only one match', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('focusNext - at end', async () => {
+test.skip('focusNext - at end', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore

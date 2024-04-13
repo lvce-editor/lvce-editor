@@ -1,11 +1,11 @@
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as GetReferencesWithPreview from '../GetReferencesWithPreview/GetReferencesWithPreview.js'
 import * as References from '../References/References.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as GetReferencesWithPreview from '../GetReferencesWithPreview/GetReferencesWithPreview.js'
 
 const getReferences = async () => {
-  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
+  const editor = GetActiveEditor.getActiveEditor()
   return GetReferencesWithPreview.getReferencesWithPreview(editor)
 }
 
@@ -18,7 +18,7 @@ export const create = ViewletLocations.create
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 export const loadContent = async (state) => {
-  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
+  const editor = GetActiveEditor.getActiveEditor()
   const fn = state.args
     ? () => {
         console.log('get file ref')

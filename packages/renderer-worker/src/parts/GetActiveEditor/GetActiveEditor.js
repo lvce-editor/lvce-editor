@@ -1,6 +1,6 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const getActiveEditor = () => {
-  return Viewlet.getState(ViewletModuleId.EditorText)
+  return ViewletStates.getState(ViewletModuleId.EditorText)
 }
