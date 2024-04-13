@@ -5,21 +5,18 @@
   align-items: center;
 }
 
-.DebugButton {
-}
-
 .DebugContinue,
 .DebugStepOver,
 .DebugPause,
 .DebugStepInto,
 .DebugStepOut {
-  color: #75beff;
+  color: var(--DebugButtonDefault, #75beff);
 }
 
 .DebugRestart {
-  color: #89d185;
+  color: var(--DebugButtonRestart, #89d185);
 }
 
 .DebugStop {
-  color: #f48771;
+  color: var(--DebugButtonStop, #f48771);
 }

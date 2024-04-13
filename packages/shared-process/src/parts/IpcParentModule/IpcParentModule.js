@@ -1,11 +1,12 @@
+import { IpcParentWithNodeForkedProcess, IpcParentWithNodeWorker } from '@lvce-editor/ipc'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const getModule = (method) => {
   switch (method) {
     case IpcParentType.NodeWorker:
-      return import('../IpcParentWithNodeWorker/IpcParentWithNodeWorker.js')
+      return IpcParentWithNodeWorker
     case IpcParentType.NodeForkedProcess:
-      return import('../IpcParentWithNodeForkedProcess/IpcParentWithNodeForkedProcess.js')
+      return IpcParentWithNodeForkedProcess
     case IpcParentType.ElectronUtilityProcess:
       return import('../IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js')
     default:
