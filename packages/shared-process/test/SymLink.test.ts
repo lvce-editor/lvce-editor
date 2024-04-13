@@ -17,6 +17,7 @@ const SymLink = await import('../src/parts/SymLink/SymLink.js')
 const symlinkDir = (await import('symlink-dir')).default
 
 class NodeError extends Error {
+  code: any
   constructor(code) {
     super(code)
     this.code = code

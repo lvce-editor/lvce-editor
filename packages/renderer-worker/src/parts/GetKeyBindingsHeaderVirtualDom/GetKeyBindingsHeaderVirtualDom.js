@@ -1,6 +1,7 @@
 import * as KeyBindingStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as InputName from '../InputName/InputName.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 export const getKeyBindingsHeaderVirtualDom = () => {
   return [
@@ -15,7 +16,7 @@ export const getKeyBindingsHeaderVirtualDom = () => {
       inputType: 'search',
       placeholder: KeyBindingStrings.searchKeyBindings(),
       name: InputName.KeyBindingsFilter,
-      onInput: 'handleInput',
+      onInput: DomEventListenerFunctions.HandleInput,
       ariaDescription: KeyBindingStrings.resultsWillUpdateAsYouType(),
       childCount: 0,
     },

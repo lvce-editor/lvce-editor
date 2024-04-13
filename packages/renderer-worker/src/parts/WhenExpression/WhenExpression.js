@@ -37,3 +37,4 @@ export const FocusReplaceAll = 35
 export const FocusPreserveCase = 36
 export const FocusSimpleBrowser = 37
 export const FocusSourceActions = 38
+export const FocusKeyBindingsTable = 39

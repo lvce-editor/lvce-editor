@@ -48,6 +48,7 @@ const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.
 const fs = await import('node:fs/promises')
 
 class NodeError extends Error {
+  code: any
   constructor(code) {
     super(code)
     this.code = code
