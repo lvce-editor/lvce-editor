@@ -15,7 +15,7 @@ export const getDefineKeyBindingsVirtualDom = (message) => {
       childCount: 2,
     },
     {
-      type: VirtualDomElements.H2,
+      type: VirtualDomElements.Div,
       className: ClassNames.DefineKeyBindingHeading,
       childCount: 1,
     },
