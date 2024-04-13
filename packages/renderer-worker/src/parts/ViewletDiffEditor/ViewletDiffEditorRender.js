@@ -5,6 +5,8 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderChanges = {
   isEqual(oldState, newState) {
     return oldState.changes === newState.changes && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
@@ -25,7 +27,7 @@ const renderChanges = {
       newState.languageRight,
     )
     const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(mergedLeft, mergedRight)
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
