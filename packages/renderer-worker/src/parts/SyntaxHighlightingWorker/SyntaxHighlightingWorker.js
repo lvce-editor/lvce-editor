@@ -1,35 +1,24 @@
-// @ts-ignore
-import * as Worker from '../Worker/Worker.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Languages from '../Languages/Languages.js'
+import * as LaunchSyntaxHighlightingWorker from '../LaunchSyntaxHighlightingWorker/LaunchSyntaxHighlightingWorker.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
-export const state = {
-  pendingMessages: [],
-  send(message) {
-    // @ts-ignore
-    state.pendingMessages.push(message)
-  },
+const state = {
+  /**
+   * @type {any}
+   */
+  workerPromise: undefined,
 }
 
-export const hydrate = async () => {
-  // const syntaxHighlightingWorker = await Worker.create(
-  //   '/packages/syntax-highlighting-worker/src/syntaxHighlightingWorkerMain.js'
-  // )
-  // const messageChannel = new MessageChannel()
-  // RendererProcess.sendAndTransfer(
-  //   [/* SyntaxHighlighting.setPort */ 9997],
-  //   [/* port */ messageChannel.port1]
-  // )
-  // syntaxHighlightingWorker.postMessage(
-  //   [/* SyntaxHighlighting.setPort */ 9997],
-  //   [/* port */ messageChannel.port2]
-  // )
-  // state.send = (message) => syntaxHighlightingWorker.postMessage(message)
-  // while (state.pendingMessages.length > 0) {
-  //   send(state.pendingMessages.shift())
-  // }
+export const getOrCreate = () => {
+  state.workerPromise ||= LaunchSyntaxHighlightingWorker.launchSyntaxHighlightingWorker()
+  return state.workerPromise
 }
 
-export const send = (message) => {
-  state.send(message)
+export const invokeAndTransfer = async (transfer, method, ...params) => {
+  const ipc = await state.workerPromise
+  await JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
+}
+
+export const invoke = async (method, ...params) => {
+  const ipc = await state.workerPromise
+  await JsonRpc.invoke(ipc, method, ...params)
 }
