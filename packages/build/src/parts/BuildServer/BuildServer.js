@@ -130,7 +130,7 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const isProdcution = false`,
+    occurrence: `const isProduction = false`,
     replacement: `const isProduction = true`,
   })
   await Replace.replace({
