@@ -5,8 +5,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
+import * as Focus from '../Focus/Focus.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -136,6 +138,7 @@ const getIndex = (state, eventX, eventY) => {
 }
 
 export const handleClick = (state, eventX, eventY) => {
+  Focus.setFocus(WhenExpression.FocusKeyBindingsTable)
   const selectedIndex = getIndex(state, eventX, eventY)
   return {
     ...state,
@@ -201,5 +204,21 @@ export const handleResizerMove = (state, eventX) => {
     ...state,
     columnWidth2: newColumnWidth2,
     columnWidth3: newColumnWidth3,
+  }
+}
+
+export const focusNext = (state) => {
+  const { selectedIndex } = state
+  return {
+    ...state,
+    selectedIndex: selectedIndex + 1,
+  }
+}
+
+export const focusPrevious = (state) => {
+  const { selectedIndex } = state
+  return {
+    ...state,
+    selectedIndex: selectedIndex - 1,
   }
 }
