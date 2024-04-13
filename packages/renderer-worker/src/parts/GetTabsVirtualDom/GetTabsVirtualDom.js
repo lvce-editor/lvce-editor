@@ -5,6 +5,17 @@ import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getIconDom = (icon) => {
+  if (icon.startsWith('MaskIcon')) {
+    return {
+      type: VirtualDomElements.Div,
+      className: `TabIcon ${icon}`,
+      childCount: 0,
+    }
+  }
+  return GetFileIconVirtualDom.getFileIconVirtualDom(icon)
+}
+
 const getTabDom = (tab, isActive, fixedWidth) => {
   const { icon, tabWidth, uri, flags } = tab
   let tabClassName = ClassNames.MainTab
@@ -24,16 +35,18 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     title: uri,
     childCount: 2,
   }
-  const dom = [
+  const dom = []
+
+  dom.push(
     tabElement,
-    GetFileIconVirtualDom.getFileIconVirtualDom(icon),
+    getIconDom(icon),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.TabLabel,
       childCount: 1,
     },
     text(tab.label),
-  ]
+  )
 
   if (isDirty) {
     tabElement.childCount++
