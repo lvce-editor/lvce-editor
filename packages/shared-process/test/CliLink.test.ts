@@ -26,6 +26,7 @@ const Process = await import('../src/parts/Process/Process.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 
 class ErrorWithCode extends Error {
+  code: any
   constructor(message, code) {
     super(message, code)
     this.code = code
