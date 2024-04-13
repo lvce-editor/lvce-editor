@@ -1,12 +1,8 @@
-import * as Character from '../Character/Character.js'
-import * as AddSemiColon from '../AddSemiColon/AddSemiColon.js'
+import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 
-// prettier-ignore
-export const value = [
+export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `connect-src 'self'`,
   `script-src 'self'`,
   `font-src 'self'`,
-]
-  .map(AddSemiColon.addSemicolon)
-  .join(Character.Space)
+])

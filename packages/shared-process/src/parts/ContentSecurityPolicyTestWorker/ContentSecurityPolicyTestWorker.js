@@ -1,4 +1,3 @@
-import * as Character from '../Character/Character.js'
-import * as AddSemiColon from '../AddSemiColon/AddSemiColon.js'
+import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 
-export const value = [`default-src 'none'`, `script-src 'self'`].map(AddSemiColon.addSemicolon).join(Character.Space)
+export const value = GetContentSecurityPolicy.getContentSecurityPolicy([`default-src 'none'`, `script-src 'self'`])
