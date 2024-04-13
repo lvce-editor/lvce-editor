@@ -5,6 +5,24 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Platform from '../Platform/Platform.js'
+import { readFile, readdir, rename, writeFile } from 'fs/promises'
+import { join } from 'path'
+
+const replaceTs = (content) => {
+  if (!content) {
+    return content
+  }
+  const newLines = []
+  const lines = content.split('\n')
+  for (const line of lines) {
+    let newLine = line
+    if (newLine.startsWith('import') || (newLine.startsWith('{') && newLine.endsWith(".ts'"))) {
+      newLine = newLine.replace(".ts'", ".js'")
+    }
+    newLines.push(newLine)
+  }
+  return newLines.join('\n')
+}
 
 const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   const newPackageJson = {
@@ -217,6 +235,21 @@ export const getPtyHostPath = async () => {
   }
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
   const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess, target)
+  const dirents = await readdir(`${cachePath}/src`, { recursive: true, withFileTypes: true })
+  for (const dirent of dirents) {
+    const direntName = join(dirent.path, dirent.name)
+    if (dirent.isDirectory()) {
+      continue
+    }
+    const content = await readFile(direntName, 'utf8')
+    const newContent = replaceTs(content)
+    if (content !== newContent) {
+      await writeFile(direntName, newContent)
+    }
+    if (direntName.endsWith('.ts')) {
+      await rename(direntName, `${direntName.slice(0, -3)}.js`)
+    }
+  }
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: newPackageJson,
