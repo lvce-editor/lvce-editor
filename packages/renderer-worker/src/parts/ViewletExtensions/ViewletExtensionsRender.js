@@ -1,14 +1,12 @@
 import * as ActionType from '../ActionType/ActionType.js'
-import * as GetExtensionHeaderVirtualDom from '../GetExtensionHeaderVirtualDom/GetExtensionHeaderVirtualDom.js'
 import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensionsVirtualDom.js'
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as ViewletExtensionStrings from '../ViewletExtensions/ViewletExtensionsStrings.js'
-import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 const renderExtensions = {
   isEqual(oldState, newState) {
@@ -23,66 +21,6 @@ const renderExtensions = {
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = GetVisibleExtensions.getVisible(newState)
-    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions)
-    return ['setExtensionsDom', dom]
-  },
-}
-
-const renderScrollBar = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.negativeMargin === newState.negativeMargin &&
-      oldState.deltaY === newState.deltaY &&
-      oldState.height === newState.height &&
-      oldState.finalDeltaY === newState.finalDeltaY &&
-      oldState.items.length === newState.items.length &&
-      oldState.scrollBarActive === newState.scrollBarActive
-    )
-  },
-  apply(oldState, newState) {
-    const listHeight = getListHeight(newState)
-    const total = newState.items.length
-    const contentHeight = total * newState.itemHeight
-    const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(listHeight, contentHeight, newState.minimumSliderSize)
-    const scrollBarY = ScrollBarFunctions.getScrollBarY(
-      newState.deltaY,
-      newState.finalDeltaY,
-      newState.height - newState.headerHeight,
-      scrollBarHeight,
-    )
-    const heightString = `${scrollBarHeight}px`
-    const translateString = `0 ${scrollBarY}px`
-    let className = 'ScrollBarThumb'
-    if (newState.scrollBarActive) {
-      className += ' ScrollBarThumbActive'
-    }
-    return [/* method */ RenderMethod.SetScrollBar, translateString, heightString, className]
-  },
-}
-
-const renderMessage = {
-  isEqual(oldState, newState) {
-    return oldState.message === newState.message
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetMessage, /* message */ newState.message]
-  },
-}
-
-const renderSearchValue = {
-  isEqual(oldState, newState) {
-    return oldState.searchValue === newState.searchValue
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetSearchValue, oldState.searchValue, newState.searchValue]
-  },
-}
-
-const renderHeader = {
-  isEqual(oldState, newState) {
-    return oldState.placeholder === newState.placeholder
-  },
-  apply(oldState, newState) {
     const actions = [
       {
         type: ActionType.Button,
@@ -96,9 +34,41 @@ const renderHeader = {
         icon: `MaskIcon${MaskIcon.Filter}`,
       },
     ]
-    const dom = GetExtensionHeaderVirtualDom.getExtensionHeaderVirtualDom(newState.placeholder, actions)
-    return ['setHeaderDom', dom]
+    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions, newState.placeholder, actions)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
-export const render = [renderScrollBar, renderMessage, renderExtensions, renderSearchValue, renderHeader]
+// const renderScrollBar = {
+//   isEqual(oldState, newState) {
+//     return (
+//       oldState.negativeMargin === newState.negativeMargin &&
+//       oldState.deltaY === newState.deltaY &&
+//       oldState.height === newState.height &&
+//       oldState.finalDeltaY === newState.finalDeltaY &&
+//       oldState.items.length === newState.items.length &&
+//       oldState.scrollBarActive === newState.scrollBarActive
+//     )
+//   },
+//   apply(oldState, newState) {
+//     const listHeight = getListHeight(newState)
+//     const total = newState.items.length
+//     const contentHeight = total * newState.itemHeight
+//     const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(listHeight, contentHeight, newState.minimumSliderSize)
+//     const scrollBarY = ScrollBarFunctions.getScrollBarY(
+//       newState.deltaY,
+//       newState.finalDeltaY,
+//       newState.height - newState.headerHeight,
+//       scrollBarHeight,
+//     )
+//     const heightString = `${scrollBarHeight}px`
+//     const translateString = `0 ${scrollBarY}px`
+//     let className = 'ScrollBarThumb'
+//     if (newState.scrollBarActive) {
+//       className += ' ScrollBarThumbActive'
+//     }
+//     return [/* method */ RenderMethod.SetScrollBar, translateString, heightString, className]
+//   },
+// }
+
+export const render = [renderExtensions]
