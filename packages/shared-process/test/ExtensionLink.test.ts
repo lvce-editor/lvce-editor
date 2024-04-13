@@ -52,6 +52,7 @@ const ExtensionLink = await import('../src/parts/ExtensionLink/ExtensionLink.js'
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
+  code: any
   constructor(code) {
     super(code)
     this.code = code
@@ -59,6 +60,7 @@ class NodeError extends Error {
 }
 
 class PermissionDeniedError extends Error {
+  code: string
   constructor(from, to) {
     super(`EPERM: operation not permittet, symlink ${from} -> ${to}`)
     this.code = 'EPERM'
