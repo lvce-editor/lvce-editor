@@ -47,6 +47,7 @@ const ExtensionUnlink = await import('../src/parts/ExtensionUnlink/ExtensionUnli
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
+  code: any
   constructor(code) {
     super(code)
     this.code = code
