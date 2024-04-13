@@ -4,6 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
@@ -467,6 +468,20 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
+
+  const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copySyntaxHighlightingWorkerFiles')
+  await Copy.copy({
+    from: syntaxHighlightingWorkerCachePath,
+    to: `${resourcesPath}/app/packages/syntax-highlighting-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copySyntaxHighlightingWorkerFiles')
 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })
