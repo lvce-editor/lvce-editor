@@ -1,6 +1,6 @@
-import * as Workspace from '../Workspace/Workspace.js'
+import * as Icon from '../Icon/Icon.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const getTitle = (uri) => {
   if (!uri) {
@@ -20,7 +20,10 @@ export const getLabel = (uri) => {
 
 export const getFileIcon = (uri) => {
   if (uri === 'app://keybindings') {
-    return `MaskIconRecordKey`
+    return `MaskIcon${Icon.RecordKey}`
+  }
+  if (uri.startsWith('extension-detail://')) {
+    return `MaskIcon${Icon.Extensions}`
   }
   const baseName = Workspace.pathBaseName(uri)
   const icon = IconTheme.getFileIcon({ name: baseName })
