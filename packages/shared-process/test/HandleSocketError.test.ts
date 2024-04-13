@@ -13,6 +13,7 @@ afterEach(() => {
 })
 
 class NodeError extends Error {
+  code: any
   constructor(message, code) {
     super(message)
     this.code = code
