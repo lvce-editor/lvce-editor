@@ -47,6 +47,7 @@ const UiStrings = {
   EditorCloseColorPicker: 'Editor: Close Color Picker',
   EditorCopyLineDown: 'Editor: Copy Line Down',
   EditorCopyLineUp: 'Editor: Copy Line Up',
+  Replace: 'replace',
 }
 
 export const goToDefinition = () => {
@@ -223,4 +224,8 @@ export const editorCopyLineDown = () => {
 
 export const editorCopyLineUp = () => {
   return I18nString.i18nString(UiStrings.EditorCopyLineUp)
+}
+
+export const replace = () => {
+  return I18nString.i18nString(UiStrings.Replace)
 }
