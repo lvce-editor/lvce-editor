@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getColorPickerVirtualDom = () => {
@@ -6,7 +7,7 @@ export const getColorPickerVirtualDom = () => {
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet ColorPicker',
-      onPointerDown: 'handlePointerDown',
+      onPointerDown: DomEventListenerFunctions.HandlePointerDown,
       childCount: 3,
     },
     {
