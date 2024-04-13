@@ -227,7 +227,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
       `Failed to load language configuration for javascript: Failed to parse json at ${join(
         tmpDir,
         'languageConfiguration.json',
-      )}: SyntaxError: Unexpected end of JSON input`,
+      )}: SyntaxError: Expected property name or '}' in JSON at position 1`,
     ),
   )
 })
