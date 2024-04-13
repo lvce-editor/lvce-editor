@@ -38,6 +38,7 @@ const fsPromises = await import('node:fs/promises')
 const ListProcessesWithMemoryUsage = await import('../src/parts/ListProcessesWithMemoryUsageUnix/ListProcessesWithMemoryUsageUnix.js')
 
 class NodeError extends Error {
+  code: any
   constructor(code, message = code) {
     super(code + ':' + message)
     this.code = code

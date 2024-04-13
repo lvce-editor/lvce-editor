@@ -9,4 +9,6 @@ export const Commands = {
   handleWheel: ViewletKeyBindings.handleWheel,
   handleDoubleClick: ViewletKeyBindings.handleDoubleClick,
   handleDefineKeyBindingDisposed: ViewletKeyBindings.handleDefineKeyBindingDisposed,
+  focusNext: ViewletKeyBindings.focusNext,
+  focusPrevious: ViewletKeyBindings.focusPrevious,
 }

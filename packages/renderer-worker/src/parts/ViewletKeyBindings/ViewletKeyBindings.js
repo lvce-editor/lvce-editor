@@ -5,8 +5,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
+import * as Focus from '../Focus/Focus.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -87,6 +89,8 @@ export const loadContent = async (state, savedState) => {
     columnWidth1,
     columnWidth2,
     columnWidth3,
+    searchHeaderHeight,
+    tableHeaderHeight,
   }
 }
 
@@ -126,9 +130,16 @@ export const handleWheel = (state, deltaMode, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export const handleClick = (state, index) => {
-  const { minLineY } = state
-  const selectedIndex = minLineY + index
+const getIndex = (state, eventX, eventY) => {
+  const { minLineY, y, rowHeight, tableHeaderHeight, searchHeaderHeight } = state
+  const relativeY = eventY - y - tableHeaderHeight - searchHeaderHeight
+  const row = Math.floor(relativeY / rowHeight)
+  return minLineY + row
+}
+
+export const handleClick = (state, eventX, eventY) => {
+  Focus.setFocus(WhenExpression.FocusKeyBindingsTable)
+  const selectedIndex = getIndex(state, eventX, eventY)
   return {
     ...state,
     focusedIndex: selectedIndex,
@@ -156,9 +167,8 @@ export const handleDefineKeyBindingDisposed = async (state, key) => {
   return state
 }
 
-export const handleDoubleClick = async (state, index) => {
-  const { minLineY } = state
-  const selectedIndex = minLineY + index
+export const handleDoubleClick = async (state, eventX, eventY) => {
+  const selectedIndex = getIndex(state, eventX, eventY)
   // TODO wait promise?
   showDefineWidget(state, selectedIndex)
   return {
@@ -194,5 +204,21 @@ export const handleResizerMove = (state, eventX) => {
     ...state,
     columnWidth2: newColumnWidth2,
     columnWidth3: newColumnWidth3,
+  }
+}
+
+export const focusNext = (state) => {
+  const { selectedIndex } = state
+  return {
+    ...state,
+    selectedIndex: selectedIndex + 1,
+  }
+}
+
+export const focusPrevious = (state) => {
+  const { selectedIndex } = state
+  return {
+    ...state,
+    selectedIndex: selectedIndex - 1,
   }
 }

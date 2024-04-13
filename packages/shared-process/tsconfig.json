@@ -15,7 +15,8 @@
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
     "useUnknownInCatchVariables": false,
-    "composite": true
+    "composite": true,
+    "allowImportingTsExtensions": true
   },
   "include": ["src", "test"]
 }

@@ -4,6 +4,7 @@ import * as InputSource from '../InputSource/InputSource.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
 export const getActions = (state): readonly ViewletAction[] => {
@@ -13,7 +14,7 @@ export const getActions = (state): readonly ViewletAction[] => {
     {
       type: ActionType.ProblemsFilter,
       id: 'Filter',
-      command: 'handleFilterInput',
+      command: DomEventListenerFunctions.HandleFilterInput,
       badgeText: visibleCount === problemsCount ? '' : ProblemStrings.showingOf(visibleCount, problemsCount),
       placeholder: ProblemStrings.filter(),
       value: state.inputSource === InputSource.Script ? state.filterValue : '',
