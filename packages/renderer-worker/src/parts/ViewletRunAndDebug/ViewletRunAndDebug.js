@@ -247,8 +247,6 @@ export const dispose = (state) => {
   }
 }
 
-export const hasFunctionalRender = true
-
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
