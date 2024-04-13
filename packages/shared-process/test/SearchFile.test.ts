@@ -25,6 +25,7 @@ const RipGrep = await import('../src/parts/RipGrep/RipGrep.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 
 class NodeError extends Error {
+  code: any
   constructor(code, message = code) {
     super(code + ':' + message)
     this.code = code

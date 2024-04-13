@@ -71,6 +71,7 @@ const createExtensionTarBr = async (files) => {
   await rm(folder, { force: true, recursive: true })
   await mkdir(folder, { recursive: true })
   for (const [filePath, content] of Object.entries(files)) {
+    // @ts-ignore
     await writeFile(`${folder}/${filePath}`, content)
   }
   await compress(folder, `${folder}.tar.br`)

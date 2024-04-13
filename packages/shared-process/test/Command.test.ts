@@ -20,6 +20,7 @@ const ModuleMap = await import('../src/parts/ModuleMap/ModuleMap.js')
 class NoErrorThrownError extends Error {}
 
 class NodeError extends Error {
+  code: any
   constructor(message, code) {
     super(message)
     this.code = code
