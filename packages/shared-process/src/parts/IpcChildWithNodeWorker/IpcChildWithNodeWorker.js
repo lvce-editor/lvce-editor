@@ -1,7 +1,7 @@
 import { parentPort } from 'node:worker_threads'
-import * as IsElectron from '../IsElectron/IsElectron.js'
 
 export const listen = async () => {
+  console.log('listening')
   if (!parentPort) {
     throw new Error('parentPort is required')
   }
@@ -9,6 +9,7 @@ export const listen = async () => {
 }
 
 export const signal = (parentPort) => {
+  console.log('sending ready')
   parentPort.postMessage('ready')
 }
 

@@ -97,7 +97,7 @@ test('getColorThemeJson - invalid json', async () => {
       tmpDir,
       'builtin.theme-test',
       'color-theme.json',
-    )}: SyntaxError: Unexpected number in JSON at position 2`,
+    )}: SyntaxError: Expected property name or '}' in JSON at position 2`,
   )
 })
 
