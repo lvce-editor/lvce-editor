@@ -8,40 +8,40 @@ export const getDebugButtons = (debugState) => {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.resume(),
       icon: 'DebugContinue',
-      fn: DomEventListenerFunctions.HandleClickContinue,
+      fn: 'resume',
     })
   } else {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.pause(),
       icon: 'DebugPause',
-      fn: DomEventListenerFunctions.HandleClickPause,
+      fn: 'pause',
     })
   }
   debugButtons.push(
     {
       title: ViewletRunAndDebugStrings.stepOver(),
       icon: 'DebugStepOver',
-      fn: DomEventListenerFunctions.HandleClickStepOver,
+      fn: 'stepOver',
     },
     {
       title: ViewletRunAndDebugStrings.stepInto(),
       icon: 'DebugStepInto',
-      fn: DomEventListenerFunctions.HandleClickStepInto,
+      fn: 'stepInto',
     },
     {
       title: ViewletRunAndDebugStrings.stepOut(),
       icon: 'DebugStepOut',
-      fn: DomEventListenerFunctions.HandleClickStepOut,
+      fn: 'stepOut',
     },
     {
       title: ViewletRunAndDebugStrings.restart(),
       icon: 'DebugRestart',
-      fn: DomEventListenerFunctions.HandleClickRestart,
+      fn: 'restart',
     },
     {
       title: ViewletRunAndDebugStrings.stop(),
       icon: 'DebugStop',
-      fn: DomEventListenerFunctions.HandleClickStop,
+      fn: 'stop',
     },
   )
   return debugButtons
