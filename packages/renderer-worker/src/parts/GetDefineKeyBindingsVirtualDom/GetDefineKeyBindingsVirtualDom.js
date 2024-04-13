@@ -5,6 +5,11 @@ export const getDefineKeyBindingsVirtualDom = (message) => {
   return [
     {
       type: VirtualDomElements.Div,
+      className: 'Viewlet DefineKeyBinding',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
       className: 'DefineKeyBindingContent',
       childCount: 2,
     },
