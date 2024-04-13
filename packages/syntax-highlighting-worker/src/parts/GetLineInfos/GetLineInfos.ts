@@ -2,8 +2,8 @@ import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState
 import * as GetLineInfo from '../GetLineInfo/GetLineInfo.ts'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.ts'
 
-export const getLineInfos = (lines, tokenizer, languageId) => {
-  const lineInfos: any[] = []
+export const getLineInfos = (lines: readonly string[], tokenizer: any, languageId: string) => {
+  const lineInfos: (readonly string[])[] = []
   const { tokenizeLine, initialLineState, hasArrayReturn, TokenMap } = tokenizer
   let currentLineState = GetInitialLineState.getInitialLineState(initialLineState)
   for (const line of lines) {

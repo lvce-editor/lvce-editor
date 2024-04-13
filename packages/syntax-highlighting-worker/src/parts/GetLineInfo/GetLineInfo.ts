@@ -1,4 +1,4 @@
-export const getLineInfo = (line, tokens, TokenMap) => {
+export const getLineInfo = (line: string, tokens: number[], TokenMap: Record<number, string>) => {
   const tokensLength = tokens.length
   let end = 0
   let start = 0
