@@ -1,34 +1,9 @@
-import * as Assert from '../Assert/Assert.ts'
-import * as AttachEvents from '../AttachEvents/AttachEvents.ts'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.ts'
-import * as DomEventType from '../DomEventType/DomEventType.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
-import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
 import * as ViewletLocationsEvents from './ViewletLocationsEvents.ts'
 
-export const create = () => {
-  const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet Locations'
-  return {
-    $Viewlet,
-  }
-}
-
-export const attachEvents = (state) => {
-  const { $Viewlet } = state
-  AttachEvents.attachEvents($Viewlet, {
-    [DomEventType.MouseDown]: ViewletLocationsEvents.handleLocationsMouseDown,
-  })
-}
-
-export const setLocationsDom = (state, dom) => {
-  Assert.object(state)
-  Assert.array(dom)
-  const { $Viewlet } = state
-  const $Root = VirtualDom.render(dom)
-  $Viewlet.replaceChildren(...$Root.childNodes)
-}
+export const Events = ViewletLocationsEvents
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   const { $Viewlet } = state

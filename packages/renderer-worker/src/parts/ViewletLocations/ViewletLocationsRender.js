@@ -2,13 +2,15 @@ import * as GetLocationsVirtualDom from '../GetLocationsVirtualDom/GetLocationsV
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderLocations = {
   isEqual(oldState, newState) {
     return oldState.displayReferences === newState.displayReferences && oldState.message === newState.message
   },
   apply(oldState, newState) {
     const dom = GetLocationsVirtualDom.getLocationsVirtualDom(newState.displayReferences, newState.message)
-    return ['setLocationsDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
