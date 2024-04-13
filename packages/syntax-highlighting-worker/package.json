@@ -33,7 +33,14 @@
         }
       ]
     },
-    "collectCoverage": true
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 28,
+        "functions": 44,
+        "lines": 52
+      }
+    }
   },
   "xo": {
     "rules": {
