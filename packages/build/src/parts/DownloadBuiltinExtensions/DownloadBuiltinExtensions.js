@@ -34,7 +34,7 @@ const downloadExtension = async (extension) => {
     }
     const baseName = Path.baseName(extension.repository)
     const cacheName = baseName + '-' + extension.version + '.tar.br'
-    const cachedPath = Path.absolute(Path.join('build', '.tmp', `cachedExtensions`, cacheName))
+    const cachedPath = Path.absolute(Path.join('packages', 'build', '.tmp', `cachedExtensions`, cacheName))
     const outPath = Path.absolute(Path.join(`extensions`, extension.name))
     if (existsSync(cachedPath)) {
       if (!existsSync(outPath)) {
