@@ -87,6 +87,8 @@ export const loadContent = async (state, savedState) => {
     columnWidth1,
     columnWidth2,
     columnWidth3,
+    searchHeaderHeight,
+    tableHeaderHeight,
   }
 }
 
@@ -126,9 +128,15 @@ export const handleWheel = (state, deltaMode, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export const handleClick = (state, index) => {
-  const { minLineY } = state
-  const selectedIndex = minLineY + index
+const getIndex = (state, eventX, eventY) => {
+  const { minLineY, y, rowHeight, tableHeaderHeight, searchHeaderHeight } = state
+  const relativeY = eventY - y - tableHeaderHeight - searchHeaderHeight
+  const row = Math.floor(relativeY / rowHeight)
+  return minLineY + row
+}
+
+export const handleClick = (state, eventX, eventY) => {
+  const selectedIndex = getIndex(state, eventX, eventY)
   return {
     ...state,
     focusedIndex: selectedIndex,
@@ -156,9 +164,8 @@ export const handleDefineKeyBindingDisposed = async (state, key) => {
   return state
 }
 
-export const handleDoubleClick = async (state, index) => {
-  const { minLineY } = state
-  const selectedIndex = minLineY + index
+export const handleDoubleClick = async (state, eventX, eventY) => {
+  const selectedIndex = getIndex(state, eventX, eventY)
   // TODO wait promise?
   showDefineWidget(state, selectedIndex)
   return {

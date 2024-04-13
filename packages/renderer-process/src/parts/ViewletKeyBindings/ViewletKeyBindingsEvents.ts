@@ -10,34 +10,16 @@ export const handleInput = (event) => {
   ViewletKeyBindingsFunctions.handleInput(uid, value)
 }
 
-const getTableRowIndex = ($Target) => {
-  const { className } = $Target
-  switch (className) {
-    case 'KeyBindingsTableCell':
-      return GetNodeIndex.getNodeIndex($Target.parentNode)
-    default:
-      return -1
-  }
-}
-
 export const handleTableClick = (event) => {
-  const { target } = event
-  const index = getTableRowIndex(target)
+  const { clientX, clientY } = event
   const uid = ComponentUid.fromEvent(event)
-  if (index === -1) {
-    return
-  }
-  ViewletKeyBindingsFunctions.handleClick(uid, index)
+  ViewletKeyBindingsFunctions.handleClick(uid, clientX, clientY)
 }
 
 export const handleTableDoubleClick = (event) => {
-  const { target } = event
-  const index = getTableRowIndex(target)
+  const { clientX, clientY } = event
   const uid = ComponentUid.fromEvent(event)
-  if (index === -1) {
-    return
-  }
-  ViewletKeyBindingsFunctions.handleDoubleClick(uid, index)
+  ViewletKeyBindingsFunctions.handleDoubleClick(uid, clientX, clientY)
 }
 
 export const handleResizerPointerMove = (event) => {

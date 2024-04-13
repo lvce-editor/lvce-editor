@@ -158,6 +158,7 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
       className: ClassNames.KeyBindingsTable,
       ariaLabel: ViewletKeyBindingsStrings.keyBindings(),
       ariaRowCount: filteredKeyBindings.length,
+      onClick: 'handleTableClick',
       childCount: 3,
     },
     {
