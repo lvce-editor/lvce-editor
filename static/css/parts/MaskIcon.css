@@ -329,3 +329,7 @@
 .MaskIconListTree {
   mask-image: url(/icons/list-tree.svg);
 }
+
+.MaskIconRecordKey {
+  mask-image: url(/icons/record-keys.svg);
+}

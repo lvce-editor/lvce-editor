@@ -11,9 +11,11 @@
 
 .DefineKeyBindingContent {
   width: 400px;
-  height: 200px;
+  height: 110px;
   contain: strict;
   background: #282e2f;
   display: grid;
   place-items: center;
+  padding: 10px;
+  box-shadow: 0 2px 8px var(--WidgetShadow, rgba(0, 0, 0, 0.36));
 }

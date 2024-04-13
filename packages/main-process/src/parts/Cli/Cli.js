@@ -1,4 +1,5 @@
 import * as CliCommandType from '../CliCommandType/CliCommandType.js'
+import * as CliForwardToSharedProcess from '../CliForwardToSharedProcess/CliForwardToSharedProcess.js'
 
 /**
  * @enum {number}
@@ -11,7 +12,7 @@ const ModuleId = {
 const getModule = (moduleId) => {
   switch (moduleId) {
     case ModuleId.SharedProcess:
-      return import('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
+      return CliForwardToSharedProcess
     default:
       throw new Error('module not found')
   }

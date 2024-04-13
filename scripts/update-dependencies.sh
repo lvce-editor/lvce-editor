@@ -18,7 +18,7 @@ fi
 
 function updateDependencies {
   echo "updating dependencies..."
-  OUTPUT=`ncu -u -x msw -x got -x electron -x @types/node`
+  OUTPUT=`ncu -u -x msw -x electron -x @types/node`
   SUB='All dependencies match the latest package versions'
   if [[ "$OUTPUT" == *"$SUB"* ]]; then
     echo "$OUTPUT"
@@ -37,6 +37,7 @@ cd packages/pty-host                                && updateDependencies && cd 
 cd packages/renderer-process                        && updateDependencies && cd ../.. &&
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
+cd packages/syntax-highlighting-worker              && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
 
 

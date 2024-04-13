@@ -1,5 +1,9 @@
 import * as GetDefineKeyBindingsVirtualDom from '../GetDefineKeyBindingsVirtualDom/GetDefineKeyBindingsVirtualDom.js'
 
+export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
+
 const renderValue = {
   isEqual(oldState, newState) {
     return oldState.value === newState.value
@@ -24,10 +28,8 @@ const renderDom = {
   },
   apply(oldState, newState) {
     const dom = GetDefineKeyBindingsVirtualDom.getDefineKeyBindingsVirtualDom(newState.message)
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
-
-export const hasFunctionalRender = true
 
 export const render = [renderDom, renderValue, renderFocus]

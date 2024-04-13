@@ -1,7 +1,6 @@
-import * as AddSemiColon from '../AddSemiColon/AddSemiColon.js'
-import * as Character from '../Character/Character.js'
+import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 
-export const value = [
+export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
   `frame-src *`,
@@ -9,6 +8,4 @@ export const value = [
   `script-src 'self'`,
   `media-src 'self'`,
   `style-src 'self'`,
-]
-  .map(AddSemiColon.addSemicolon)
-  .join(Character.Space)
+])

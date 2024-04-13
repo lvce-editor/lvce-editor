@@ -3,6 +3,7 @@ import * as GetWhenExpressionText from '../GetWhenExpressionText/GetWhenExpressi
 export const getVisibleKeyBindings = (filteredKeyBindings, minLineY, maxLineY, selectedIndex) => {
   const visibleKeyBindings = []
   const slicedKeyBindings = filteredKeyBindings.slice(minLineY, maxLineY)
+  const relativeSelectedIndex = selectedIndex - minLineY
   for (let i = 0; i < slicedKeyBindings.length; i++) {
     const slicedKeyBinding = slicedKeyBindings[i]
     const { isCtrl, isShift, key, when, command, commandMatches, keyMatches } = slicedKeyBinding
@@ -13,7 +14,7 @@ export const getVisibleKeyBindings = (filteredKeyBindings, minLineY, maxLineY, s
       key,
       when: GetWhenExpressionText.getWhenExpressionText(when),
       command,
-      selected: i === selectedIndex,
+      selected: i === relativeSelectedIndex,
       commandMatches,
       keyMatches,
     })

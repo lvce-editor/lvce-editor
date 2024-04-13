@@ -1,25 +1,32 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getDefineKeyBindingsVirtualDom = (message) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'DefineKeyBindingContent',
+      className: 'Viewlet DefineKeyBinding',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DefineKeyBindingContent,
       childCount: 2,
     },
     {
-      type: VirtualDomElements.H2,
-      className: 'DefineKeyBindingHeading',
+      type: VirtualDomElements.Div,
+      className: ClassNames.DefineKeyBindingHeading,
       childCount: 1,
     },
     text(message),
     {
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       childCount: 0,
-      onKeyDown: 'handleKeyDown',
-      onBlur: 'handleBlur',
+      onKeyDown: DomEventListenerFunctions.HandleKeyDown,
+      onBlur: DomEventListenerFunctions.HandleBlur,
     },
   ]
 }

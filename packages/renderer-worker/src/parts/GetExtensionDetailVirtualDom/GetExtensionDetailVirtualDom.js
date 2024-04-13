@@ -1,18 +1,18 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetExtensionDetailHeaderVirtualDom from '../GetExtensionDetailHeaderVirtualDom/GetExtensionDetailHeaderVirtualDom.js'
 import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
-import * as GetTotalChildCount from '../GetTotalChildCount/GetTotalChildCount.js'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetVirtualDomChildCount from '../GetVirtualDomChildCount/GetVirtualDomChildCount.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const getExtensionDetailVirtualDom = (extensionDetail, sanitizedReadmeHtml) => {
   const markdownDom = GetMarkdownVirtualDom.getMarkdownVirtualDom(sanitizedReadmeHtml)
-  const childCount = GetTotalChildCount.getTotalChildCount(markdownDom, 0)
+  const childCount = GetVirtualDomChildCount.getVirtualDomChildCount(markdownDom)
   const dom = [
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet ExtensionDetail',
-      childCount: 2,
+      childCount: childCount + 1,
     },
 
     ...GetExtensionDetailHeaderVirtualDom.getExtensionDetailHeaderVirtualDom(extensionDetail),

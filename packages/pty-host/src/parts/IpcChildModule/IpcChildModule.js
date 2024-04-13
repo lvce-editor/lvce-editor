@@ -1,12 +1,18 @@
+import {
+  IpcChildWithElectronMessagePort,
+  IpcChildWithElectronUtilityProcess,
+  IpcChildWithNodeForkedProcess,
+  IpcChildWithNodeWorker,
+  IpcChildWithWebSocket,
+} from '@lvce-editor/ipc'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import { IpcChildWithElectronUtilityProcess, IpcChildWithWebSocket, IpcChildWithElectronMessagePort } from '@lvce-editor/ipc'
 
 export const getModule = (method) => {
   switch (method) {
     case IpcChildType.NodeForkedProcess:
-      return import('../IpcChildWithNodeForkedProcess/IpcChildWithNodeForkedProcess.js')
+      return IpcChildWithNodeForkedProcess
     case IpcChildType.NodeWorker:
-      return import('../IpcChildWithNodeWorker/IpcChildWithNodeWorker.js')
+      return IpcChildWithNodeWorker
     case IpcChildType.WebSocket:
       return IpcChildWithWebSocket
     case IpcChildType.ElectronUtilityProcess:

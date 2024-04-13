@@ -1,4 +1,5 @@
 import * as DebugState from '../DebugState/DebugState.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 
 export const getDebugButtons = (debugState) => {
@@ -7,40 +8,40 @@ export const getDebugButtons = (debugState) => {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.resume(),
       icon: 'DebugContinue',
-      fn: 'handleClickContinue',
+      fn: 'resume',
     })
   } else {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.pause(),
       icon: 'DebugPause',
-      fn: 'handleClickPause',
+      fn: 'pause',
     })
   }
   debugButtons.push(
     {
       title: ViewletRunAndDebugStrings.stepOver(),
       icon: 'DebugStepOver',
-      fn: 'handleClickStepOver',
+      fn: 'stepOver',
     },
     {
       title: ViewletRunAndDebugStrings.stepInto(),
       icon: 'DebugStepInto',
-      fn: 'handleClickStepInto',
+      fn: 'stepInto',
     },
     {
       title: ViewletRunAndDebugStrings.stepOut(),
       icon: 'DebugStepOut',
-      fn: 'handleClickStepOut',
+      fn: 'stepOut',
     },
     {
       title: ViewletRunAndDebugStrings.restart(),
       icon: 'DebugRestart',
-      fn: 'handleClickRestart',
+      fn: 'restart',
     },
     {
       title: ViewletRunAndDebugStrings.stop(),
       icon: 'DebugStop',
-      fn: 'handleClickStop',
+      fn: 'stop',
     },
   )
   return debugButtons

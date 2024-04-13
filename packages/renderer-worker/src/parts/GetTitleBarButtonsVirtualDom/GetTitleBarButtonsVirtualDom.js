@@ -1,5 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 const createTitleBarButton = (button) => {
   const { id, icon, label } = button
@@ -21,7 +22,7 @@ export const getTitleBarButtonsVirtualDom = (buttons) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet TitleBarButtons',
       childCount: buttons.length,
-      onClick: 'handleTitleBarButtonsClick',
+      onClick: DomEventListenerFunctions.HandleTitleBarButtonsClick,
     },
     ...buttons.flatMap(createTitleBarButton),
   ]
