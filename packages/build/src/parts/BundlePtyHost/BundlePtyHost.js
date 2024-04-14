@@ -4,7 +4,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as ReplaceTs from '../ReplaceTs/ReplaceTs.js'
 
-const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
+const createNewPackageJson = (oldPackageJson, target) => {
   const newPackageJson = {
     ...oldPackageJson,
   }
@@ -23,27 +23,17 @@ const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   return newPackageJson
 }
 
-export const bundleSharedProcess = async ({
-  cachePath,
-  commitHash,
-  product,
-  version,
-  bundleSharedProcess,
-  date,
-  target,
-  isArchLinux,
-  isAppImage,
-}) => {
+export const bundlePtyHost = async ({ cachePath, target }) => {
   await Copy.copy({
-    from: 'packages/pty-process/src',
+    from: 'packages/pty-host/src',
     to: `${cachePath}/src`,
   })
   await Copy.copy({
-    from: 'packages/pty-process/package.json',
+    from: 'packages/pty-host/package.json',
     to: `${cachePath}/package.json`,
   })
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
-  const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess, target)
+  const newPackageJson = createNewPackageJson(oldPackageJson, target)
   const dirents = await readdir(`${cachePath}/src`, { recursive: true, withFileTypes: true })
   for (const dirent of dirents) {
     const direntName = join(dirent.path, dirent.name)
