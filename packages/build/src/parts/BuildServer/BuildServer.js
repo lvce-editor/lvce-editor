@@ -6,6 +6,7 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
+import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -828,6 +829,18 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   await Copy.copy({
     from: testWorkerCachePath,
     to: `packages/build/.tmp/server/server/static/${commitHash}/packages/test-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyTestWorkerFiles')
+  const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copySyntaxHighlightingWorkerFiles')
+  await Copy.copy({
+    from: syntaxHighlightingWorkerCachePath,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/syntax-highlighting-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyTestWorkerFiles')
