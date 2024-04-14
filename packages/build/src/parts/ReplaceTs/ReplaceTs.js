@@ -19,7 +19,7 @@ export const replaceTs = async (content) => {
     return content
   }
   const typescriptUri = 'typescript'
-  const typescript = await import(typescriptUri)
+  const { default: typescript } = await import(typescriptUri)
   const newContent = await typescript.transpileModule(content, {
     compilerOptions: {
       target: 'esnext',
