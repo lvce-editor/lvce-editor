@@ -3,6 +3,7 @@ export const fixImports = (content) => {
     return content
   }
   const newLines = []
+  console.log({ content })
   const lines = content.split('\n')
   for (const line of lines) {
     let newLine = line
@@ -20,7 +21,7 @@ export const replaceTs = async (content) => {
   }
   const typescriptUri = 'typescript'
   const { default: typescript } = await import(typescriptUri)
-  const newContent = await typescript.transpileModule(content, {
+  const { outputText: newContent } = await typescript.transpileModule(content, {
     compilerOptions: {
       target: 'esnext',
     },
