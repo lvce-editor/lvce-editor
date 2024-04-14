@@ -6,6 +6,7 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
@@ -452,6 +453,15 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   await Copy.copy({
     from: testWorkerCachePath,
     to: `packages/build/.tmp/dist/${commitHash}/packages/test-worker`,
+  })
+  const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: syntaxHighlightingWorkerCachePath,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/syntax-highlighting-worker`,
   })
 }
 
