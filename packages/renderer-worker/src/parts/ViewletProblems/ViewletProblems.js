@@ -32,6 +32,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     maxLineY: 0,
     listItems: [],
     collapsedUris: [],
+    smallWidthBreakPoint: 650,
   }
 }
 
