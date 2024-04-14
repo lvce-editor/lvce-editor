@@ -1,4 +1,5 @@
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as Platform from '../Platform/Platform.js'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.js'
 
 const ElectronUtilityProcess = 3
@@ -6,10 +7,17 @@ const ElectronUtilityProcess = 3
 export const create = async (options) => {
   // TODO how to launch process without race condition?
   // when promise resolves, process might have already exited
+  const fullEnv = {
+    ...process.env,
+  }
+  if (!Platform.isProduction) {
+    fullEnv['NODE_OPTIONS'] = '--import=@swc-node/register/esm-register'
+  }
   await ParentIpc.invoke('IpcParent.create', {
     ...options,
     method: ElectronUtilityProcess,
     noReturn: true,
+    env: fullEnv,
   })
   // TODO use uuid instead of name
   const port = await TemporaryMessagePort.create(options.name)
