@@ -12,10 +12,10 @@ export const bundleTestWorker = async ({ cachePath, commitHash, platform, assetD
     from: 'packages/test-worker/src',
     to: Path.join(cachePath, 'src'),
   })
-  for (const file of ['JsonRpc']) {
+  for (const file of ['JsonRpc', 'IpcChildModule']) {
     await Replace.replace({
       path: `${cachePath}/src/parts/${file}/${file}.ts`,
-      occurrence: `../../../../../static/`,
+      occurrence: `/static/`,
       replacement: `../../../static/`,
     })
   }
