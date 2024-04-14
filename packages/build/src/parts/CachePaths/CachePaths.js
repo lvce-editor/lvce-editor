@@ -153,3 +153,28 @@ export const getSharedProcessCachePath = async (extraContents) => {
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/shared-process'), cacheHash)
   return cachePath
 }
+
+const getPtyHostCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/pty-host/src',
+    [
+      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'packages/build/src/parts/BuildServer/BuildServer.js',
+      'packages/build/src/parts/BundleJs/BundleJs.js',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'packages/build/src/parts/CachePaths/CachePaths.js',
+      'packages/build/src/parts/BundlePtyHost/BundlePtyHost.js',
+      'packages/build/src/parts/BundlePtyHostCached/BundlePtyHostCached.js',
+      'packages/build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
+      'packages/build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents,
+  )
+  return hash
+}
+
+export const getPtyHostCachePath = async (extraContents) => {
+  const cacheHash = await getPtyHostCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/pty-host'), cacheHash)
+  return cachePath
+}
