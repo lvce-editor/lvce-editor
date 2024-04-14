@@ -1,4 +1,4 @@
-export const importScript = async (url) => {
+export const importScript = async <T = any>(url: string): Promise<T> => {
   try {
     return await import(url)
   } catch (error) {
