@@ -4,12 +4,8 @@ import { IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort } from
 
 export const getModule = (method) => {
   switch (method) {
-    case IpcChildType.MessagePort:
-      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.ts')
     case IpcChildType.ModuleWorker:
       return IpcChildWithModuleWorker
-    case IpcChildType.ReferencePort:
-      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.ts')
     case IpcChildType.ModuleWorkerAndMessagePort:
       return IpcChildWithModuleWorkerAndMessagePort
     default:
