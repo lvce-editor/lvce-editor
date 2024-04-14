@@ -9,6 +9,7 @@ import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCa
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -96,13 +97,6 @@ const copyPlaygroundFiles = async ({ arch, resourcesPath }) => {
   await WriteFile.writeFile({
     to: `${resourcesPath}/app/playground/index.css`,
     content: `h1 { color: dodgerblue; }`,
-  })
-}
-
-const copyPtyHostSources = async ({ resourcesPath }) => {
-  await Copy.copy({
-    from: 'packages/pty-host/src',
-    to: `${resourcesPath}/app/packages/pty-host/src`,
   })
 }
 
@@ -342,10 +336,6 @@ export const build = async ({
   })
   console.timeEnd('copyDependencies')
 
-  console.time('copyPtyHostSources')
-  await copyPtyHostSources({ resourcesPath })
-  console.timeEnd('copyPtyHostSources')
-
   const mainProcessCachePath = await BundleMainProcessCached.bundleMainProcessCached({
     commitHash,
     product,
@@ -380,6 +370,20 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  const ptyHostCachePath = await BundlePtyHostCached.bundlePtyHostCached({
+    commitHash,
+    product,
+    version,
+    target: '',
+  })
+
+  console.time('copyPtyHostFiles')
+  await Copy.copy({
+    from: ptyHostCachePath,
+    to: `${resourcesPath}/app/packages/pty-host`,
+  })
+  console.timeEnd('copyPtyHostFiles')
 
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ resourcesPath })
