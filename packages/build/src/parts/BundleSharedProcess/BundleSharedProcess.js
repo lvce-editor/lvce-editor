@@ -227,7 +227,7 @@ export const getPtyHostPath = async () => {
       continue
     }
     const content = await readFile(direntName, 'utf8')
-    const newContent = ReplaceTs.replaceTs(content)
+    const newContent = await ReplaceTs.replaceTs(content)
     if (content !== newContent) {
       await writeFile(direntName, newContent)
     }
