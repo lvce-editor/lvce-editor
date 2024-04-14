@@ -1,17 +1,17 @@
-const getData = (event) => {
+const getData$1 = (event) => {
   return event.data;
 };
-const listen$1 = () => {
+const readyMessage = "ready";
+const listen$2 = () => {
   if (typeof WorkerGlobalScope === "undefined") {
     throw new TypeError("module is not in web worker scope");
   }
-  globalThis.postMessage("ready");
   return globalThis;
 };
-const signal = (global) => {
-  global.postMessage("ready");
+const signal$1 = (global) => {
+  global.postMessage(readyMessage);
 };
-const wrap$1 = (global) => {
+const wrap$3 = (global) => {
   return {
     global,
     listener: void 0,
@@ -26,7 +26,7 @@ const wrap$1 = (global) => {
     },
     set onmessage(listener) {
       const wrappedListener = (event) => {
-        const data = getData(event);
+        const data = getData$1(event);
         listener({
           data,
           target: this
@@ -34,14 +34,18 @@ const wrap$1 = (global) => {
       };
       this.listener = listener;
       this.global.onmessage = wrappedListener;
+    },
+    dispose() {
+      this.listener = null;
+      this.global.onmessage = null;
     }
   };
 };
 const IpcChildWithModuleWorker = {
   __proto__: null,
-  listen: listen$1,
-  signal,
-  wrap: wrap$1
+  listen: listen$2,
+  signal: signal$1,
+  wrap: wrap$3
 };
 const E_INCOMPATIBLE_NATIVE_MODULE = "E_INCOMPATIBLE_NATIVE_MODULE";
 const E_MODULES_NOT_SUPPORTED_IN_ELECTRON = "E_MODULES_NOT_SUPPORTED_IN_ELECTRON";
@@ -255,21 +259,23 @@ const waitForFirstMessage = async (port) => {
   const event = await promise;
   return event.data;
 };
-const listen = async () => {
-  const parentIpcRaw = listen$1();
-  const parentIpc = wrap$1(parentIpcRaw);
+const listen$1 = async () => {
+  const parentIpcRaw = listen$2();
+  signal$1(parentIpcRaw);
+  const parentIpc = wrap$3(parentIpcRaw);
   const firstMessage = await waitForFirstMessage(parentIpc);
   if (firstMessage.method !== "initialize") {
     throw new IpcError("unexpected first message");
   }
   const type = firstMessage.params[0];
   if (type === "message-port") {
+    parentIpc.dispose();
     const port = firstMessage.params[1];
     return port;
   }
   return globalThis;
 };
-const wrap = (port) => {
+const wrap$2 = (port) => {
   return {
     port,
     wrappedListener: void 0,
@@ -285,7 +291,7 @@ const wrap = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          const data = getData(event);
+          const data = getData$1(event);
           listener({
             data,
             target: this
@@ -300,8 +306,184 @@ const wrap = (port) => {
 };
 const IpcChildWithModuleWorkerAndMessagePort = {
   __proto__: null,
+  listen: listen$1,
+  wrap: wrap$2
+};
+const listen = () => {
+  return window;
+};
+const signal = (global) => {
+  global.postMessage(readyMessage);
+};
+const wrap$1 = (window2) => {
+  return {
+    window: window2,
+    listener: void 0,
+    get onmessage() {
+      return this.listener;
+    },
+    set onmessage(listener) {
+      this.listener = listener;
+      const wrappedListener = (event) => {
+        const data = event.data;
+        if ("method" in data) {
+          return;
+        }
+        listener({
+          data,
+          target: this
+        });
+      };
+      this.window.onmessage = wrappedListener;
+    },
+    send(message) {
+      this.window.postMessage(message);
+    },
+    sendAndTransfer(message, transfer) {
+      this.window.postMessage(message, "*", transfer);
+    },
+    dispose() {
+      this.window.onmessage = null;
+      this.window = void 0;
+      this.listener = void 0;
+    }
+  };
+};
+const IpcChildWithWindow = {
+  __proto__: null,
   listen,
+  signal,
+  wrap: wrap$1
+};
+const Message = "message";
+const Error$1 = "error";
+const getFirstEvent = (eventEmitter, eventMap) => {
+  const {
+    resolve,
+    promise
+  } = withResolvers();
+  const listenerMap = Object.create(null);
+  const cleanup = (value) => {
+    for (const event of Object.keys(eventMap)) {
+      eventEmitter.off(event, listenerMap[event]);
+    }
+    resolve(value);
+  };
+  for (const [event, type] of Object.entries(eventMap)) {
+    const listener = (event2) => {
+      cleanup({
+        type,
+        event: event2
+      });
+    };
+    eventEmitter.on(event, listener);
+    listenerMap[event] = listener;
+  }
+  return promise;
+};
+const getFirstWorkerEvent = (worker) => {
+  return getFirstEvent(worker, {
+    message: Message,
+    error: Error$1
+  });
+};
+const isErrorEvent = (event) => {
+  return event instanceof ErrorEvent;
+};
+const getWorkerDisplayName = (name) => {
+  if (!name) {
+    return "<unknown> worker";
+  }
+  if (name.endsWith("Worker") || name.endsWith("worker")) {
+    return name.toLowerCase();
+  }
+  return `${name} Worker`;
+};
+const tryToGetActualErrorMessage = async ({
+  name
+}) => {
+  const displayName = getWorkerDisplayName(name);
+  return `Failed to start ${displayName}: Worker Launch Error`;
+};
+class WorkerError extends Error {
+  constructor(event) {
+    super(event.message);
+    const stackLines = splitLines(this.stack || "");
+    const relevantLines = stackLines.slice(1);
+    const relevant = joinLines(relevantLines);
+    this.stack = `${event.message}
+    at Module (${event.filename}:${event.lineno}:${event.colno})
+${relevant}`;
+  }
+}
+const Module = "module";
+const create = async ({
+  url,
+  name
+}) => {
+  const worker = new Worker(url, {
+    type: Module,
+    name
+  });
+  const {
+    type,
+    event
+  } = await getFirstWorkerEvent(worker);
+  switch (type) {
+    case Message:
+      if (event.data !== readyMessage) {
+        throw new IpcError("unexpected first message from worker");
+      }
+      break;
+    case Error$1:
+      if (isErrorEvent(event)) {
+        throw new WorkerError(event);
+      }
+      const actualErrorMessage = await tryToGetActualErrorMessage({
+        name
+      });
+      throw new Error(actualErrorMessage);
+  }
+  return worker;
+};
+const getData = (event) => {
+  if (event instanceof MessageEvent) {
+    return event.data;
+  }
+  return event;
+};
+const wrap = (worker) => {
+  let handleMessage;
+  return {
+    get onmessage() {
+      return handleMessage;
+    },
+    set onmessage(listener) {
+      if (listener) {
+        handleMessage = (event) => {
+          const data = getData(event);
+          listener({
+            data,
+            target: this
+          });
+        };
+      } else {
+        handleMessage = null;
+      }
+      worker.onmessage = handleMessage;
+    },
+    send(message) {
+      worker.postMessage(message);
+    },
+    sendAndTransfer(message, transfer) {
+      worker.postMessage(message, transfer);
+    }
+  };
+};
+const IpcParentWithModuleWorker = {
+  __proto__: null,
+  create,
   wrap
 };
-export {IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort};
+export {IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow, IpcParentWithModuleWorker};
 export default null;
