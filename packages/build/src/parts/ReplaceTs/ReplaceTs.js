@@ -1,4 +1,4 @@
-export const replaceTs = (content) => {
+export const fixImports = (content) => {
   if (!content) {
     return content
   }
@@ -12,4 +12,18 @@ export const replaceTs = (content) => {
     newLines.push(newLine)
   }
   return newLines.join('\n')
+}
+
+export const replaceTs = async (content) => {
+  if (!content) {
+    return content
+  }
+  const typescriptUri = 'typescript'
+  const { default: typescript } = await import(typescriptUri)
+  const { outputText: newContent } = await typescript.transpileModule(content, {
+    compilerOptions: {
+      target: 'esnext',
+    },
+  })
+  return fixImports(newContent)
 }
