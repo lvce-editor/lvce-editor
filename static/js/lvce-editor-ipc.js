@@ -34,6 +34,10 @@ const wrap$3 = (global) => {
       };
       this.listener = listener;
       this.global.onmessage = wrappedListener;
+    },
+    dispose() {
+      this.listener = null;
+      this.global.onmessage = null;
     }
   };
 };
@@ -257,6 +261,7 @@ const waitForFirstMessage = async (port) => {
 };
 const listen$1 = async () => {
   const parentIpcRaw = listen$2();
+  signal$1(parentIpcRaw);
   const parentIpc = wrap$3(parentIpcRaw);
   const firstMessage = await waitForFirstMessage(parentIpc);
   if (firstMessage.method !== "initialize") {
@@ -264,6 +269,7 @@ const listen$1 = async () => {
   }
   const type = firstMessage.params[0];
   if (type === "message-port") {
+    parentIpc.dispose();
     const port = firstMessage.params[1];
     return port;
   }
