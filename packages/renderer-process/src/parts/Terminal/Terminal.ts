@@ -1,5 +1,5 @@
 // @ts-ignore
-import { createOffscreenTerminalDom } from '../../../../../static/js/termterm.js'
+import { createOffscreenTerminalDom } from '/static/js/termterm.js'
 
 export const create = ({ $Element, ...options }) => {
   const terminal = createOffscreenTerminalDom($Element, options)
