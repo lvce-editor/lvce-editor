@@ -1,3 +1,3 @@
-export const getData = (event) => {
+export const getData = (event: any) => {
   return event.data
 }

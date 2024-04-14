@@ -36,7 +36,7 @@
     "collectCoverage": true,
     "coverageThreshold": {
       "global": {
-        "branches": 65,
+        "branches": 67,
         "functions": 84,
         "lines": 86
       }
@@ -89,7 +89,11 @@
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/quotes": "off",
       "@typescript-eslint/object-curly-spacing": "off",
-      "@typescript-eslint/padding-line-between-statements": "off"
+      "@typescript-eslint/padding-line-between-statements": "off",
+      "@typescript-eslint/prefer-ts-expect-error": "off",
+      "@typescript-eslint/consistent-type-definitions": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-confusing-void-expression": "off"
     },
     "ignores": [
       "distmin"
