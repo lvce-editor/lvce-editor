@@ -62,8 +62,7 @@ export const loadTokenizer = async (languageId) => {
     if (useWorker) {
       await loadTokenizerWorker()
     } else {
-      const tokenizer = await loadTokenizerLocal()
-      TokenizerState.set(languageId, tokenizer)
+      await loadTokenizerLocal()
     }
   } catch (error) {
     // TODO better error handling
