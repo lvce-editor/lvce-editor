@@ -30,7 +30,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     for (const file of ['Terminal', 'JsonRpc', 'IpcParentWithElectron']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.ts`,
-        occurrence: `/static/`,
+        occurrence: `../../../../../static/`,
         replacement: `../../../static/`,
       })
     }
