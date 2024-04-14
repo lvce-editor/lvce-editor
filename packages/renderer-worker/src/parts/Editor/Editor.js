@@ -334,4 +334,9 @@ export const setText = (editor, text) => {
   }
 }
 
+export const update = async (editor) => {
+  const newEditor = await EditorText.getVisible2(editor)
+  return newEditor
+}
+
 export * from './EditorRender.js'

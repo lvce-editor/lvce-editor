@@ -4,6 +4,7 @@ import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as SyntaxHighlightingWorker from '../SyntaxHighlightingWorker/SyntaxHighlightingWorker.js'
 
 // const getTokens = (editor) => {
 //   const tokens = []
@@ -325,4 +326,9 @@ export const getVisible = (editor) => {
     textInfos: result,
     differences,
   }
+}
+
+export const getVisible2 = async (editor) => {
+  await SyntaxHighlightingWorker.getOrCreate()
+  return SyntaxHighlightingWorker.invoke('Tokenizer.getVisible', editor)
 }
