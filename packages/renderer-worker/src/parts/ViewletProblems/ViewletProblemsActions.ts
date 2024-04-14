@@ -10,16 +10,18 @@ import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 export const getActions = (state): readonly ViewletAction[] => {
   const visibleCount = GetVisibleProblems.getVisibleProblems(state.problems, state.collapsedUris, state.focusedIndex, state.filterValue).length
   const problemsCount = state.problems.length
-  const actions: ViewletAction[] = [
-    {
+  const isSmall = state.width <= state.smallWidthBreakPoint
+  const actions: ViewletAction[] = []
+  if (!isSmall) {
+    actions.push({
       type: ActionType.ProblemsFilter,
       id: 'Filter',
       command: DomEventListenerFunctions.HandleFilterInput,
       badgeText: visibleCount === problemsCount ? '' : ProblemStrings.showingOf(visibleCount, problemsCount),
       placeholder: ProblemStrings.filter(),
       value: state.inputSource === InputSource.Script ? state.filterValue : '',
-    },
-  ]
+    })
+  }
   if (state.viewMode === ProblemsViewMode.Table) {
     actions.push({
       type: ActionType.Button,

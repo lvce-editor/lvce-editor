@@ -13,12 +13,14 @@ const renderProblems = {
       oldState.focusedIndex === newState.focusedIndex &&
       oldState.filterValue === newState.filterValue &&
       oldState.viewMode === newState.viewMode &&
-      oldState.collapsedUris === newState.collapsedUris
+      oldState.collapsedUris === newState.collapsedUris &&
+      oldState.width === newState.width
     )
   },
   apply(oldState, newState) {
     const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.collapsedUris, newState.focusedIndex, newState.filterValue)
-    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.viewMode, visible, newState.filterValue)
+    const isSmall = newState.width <= newState.smallWidthBreakPoint
+    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.viewMode, visible, newState.filterValue, isSmall)
     return ['Viewlet.setDom2', dom]
   },
 }
