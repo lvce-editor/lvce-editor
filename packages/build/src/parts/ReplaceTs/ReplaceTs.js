@@ -3,7 +3,6 @@ export const fixImports = (content) => {
     return content
   }
   const newLines = []
-  console.log({ content })
   const lines = content.split('\n')
   for (const line of lines) {
     let newLine = line
