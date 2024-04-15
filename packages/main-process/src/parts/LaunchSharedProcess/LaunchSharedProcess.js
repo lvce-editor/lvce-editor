@@ -22,7 +22,8 @@ const logError = (error, prettyError) => {
   PrintPrettyError.printPrettyError(prettyError, '[main-process] ')
 }
 
-const handleChildMessage = async (message) => {
+const handleChildMessage = async (event) => {
+  const message = event.data
   if (message === 'ready') {
     return
   }
@@ -31,7 +32,7 @@ const handleChildMessage = async (message) => {
     return
   }
   await JsonRpc.handleJsonRpcMessage(
-    SharedProcessState.state.sharedProcess,
+    event.target,
     message,
     Command.execute,
     Callback.resolve,
