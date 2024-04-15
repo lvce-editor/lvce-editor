@@ -9,31 +9,18 @@ const logError = (error, prettyError) => {
   PrintPrettyError.printPrettyError(prettyError, '[main-process] ')
 }
 
-const getActualIpcAndMessage = (ipc, message) => {
-  if (ipc.supportsTargetProperty) {
-    return {
-      actualIpc: message.target,
-      actualMessage: message.data,
-    }
-  }
-  return {
-    actualIpc: ipc,
-    actualMessage: message,
-  }
+const handleMessage = (event) => {
+  return JsonRpc.handleJsonRpcMessage(
+    event.target,
+    event.data,
+    Command.execute,
+    Callback.resolve,
+    PrettyError.prepare,
+    logError,
+    RequiresSocket.requiresSocket,
+  )
 }
 
 export const handleIpc = (ipc) => {
-  const handleMessage = (message) => {
-    const { actualIpc, actualMessage } = getActualIpcAndMessage(ipc, message)
-    return JsonRpc.handleJsonRpcMessage(
-      actualIpc,
-      actualMessage,
-      Command.execute,
-      Callback.resolve,
-      PrettyError.prepare,
-      logError,
-      RequiresSocket.requiresSocket,
-    )
-  }
   ipc.on('message', handleMessage)
 }
