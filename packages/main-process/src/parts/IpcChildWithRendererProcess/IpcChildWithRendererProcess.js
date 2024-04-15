@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 
 export const listen = () => {
   return ipcMain
@@ -20,9 +20,15 @@ const createSyntheticEvent = (event, message) => {
       return this.sender.isDestroyed()
     },
   }
+  // TODO compute browser window id in renderer process or preload script?
+  const browserWindow = BrowserWindow.fromWebContents(event.sender)
+  if (!browserWindow) {
+    throw new Error('no browser window found')
+  }
+  const browserWindowId = browserWindow.id
   const data = {
     ...message,
-    params: [...message.params, ...ports],
+    params: [...message.params, ...ports, browserWindowId],
   }
   const syntheticEvent = {
     target,
@@ -38,7 +44,7 @@ export const wrap = (ipcMain) => {
     send(message) {
       throw new Error('not implemented')
     },
-    set onmessage(listener) {
+    on(event, listener) {
       const wrappedListener = (event, message) => {
         const syntheticEvent = createSyntheticEvent(event, message)
         listener(syntheticEvent)

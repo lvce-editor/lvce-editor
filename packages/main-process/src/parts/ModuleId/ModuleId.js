@@ -33,3 +33,4 @@ export const TemporaryMessagePort = 34
 export const ElectronWebContents = 35
 export const ElectronWebContentsView = 36
 export const ElectronWebContentsViewFunctions = 37
+export const CreateMessagePort = 38
