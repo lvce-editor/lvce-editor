@@ -777,7 +777,7 @@ const unwrapJsonRpcResult = (responseMessage) => {
   return undefined
 }
 
-const getPort = async (type) => {
+const getPort = async (type, name) => {
   // @ts-ignore
   window.addEventListener('message', handleMessageFromWindow)
   const { id, promise } = Callback.registerPromise()
@@ -786,7 +786,7 @@ const getPort = async (type) => {
     jsonrpc: JsonRpcVersion.Two,
     id,
     method: 'CreateMessagePort.createMessagePort',
-    params: [type],
+    params: [type, name],
   }
   // @ts-ignore
   if (!globalThis.isElectron) {
@@ -800,7 +800,7 @@ const getPort = async (type) => {
 
 const IpcChildWithSharedProcess = {
   async create() {
-    const port = await getPort('shared-process')
+    const port = await getPort('shared-process', 'Shared Process')
     return port
   },
   wrap(port) {
