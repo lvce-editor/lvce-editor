@@ -42,7 +42,8 @@ const handleChildMessage = async (event) => {
   )
 }
 
-const handleChildExit = (code) => {
+const handleChildExit = (event) => {
+  const code = event.data
   Logger.info(`[main process] shared process exited with code ${code}`)
   Process.exit(code)
 }
