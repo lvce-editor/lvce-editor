@@ -1,6 +1,6 @@
 import * as Electron from 'electron'
-import { spawn } from 'node:child_process'
 import unhandled from 'electron-unhandled' // TODO this might slow down initial startup
+import { spawn } from 'node:child_process'
 import * as AppPaths from '../AppPaths/AppPaths.js'
 import * as Argv from '../Argv/Argv.js'
 import * as Cli from '../Cli/Cli.js'
@@ -10,14 +10,14 @@ import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventType.js'
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
 import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
-import * as ElectronIpcMain from '../ElectronIpcMain/ElectronIpcMain.js'
-import * as ElectronPreloadChannelType from '../ElectronPreloadChannelType/ElectronPreloadChannelType.js'
 import * as Exit from '../Exit/Exit.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
-import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as HandleSecondInstance from '../HandleSecondInstance/HandleSecondInstance.js'
 import * as HandleWindowAllClosed from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Performance from '../Performance/Performance.js'
@@ -85,7 +85,10 @@ export const hydrate = async () => {
   Protocol.enable(Electron.protocol)
 
   // ipcMain
-  ElectronIpcMain.on(ElectronPreloadChannelType.Port, HandleMessagePort.handlePort)
+  const ipc = await IpcChild.listen({
+    method: IpcChildType.RendererProcess,
+  })
+  HandleIpc.handleIpc(ipc)
 
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, HandleWindowAllClosed.handleWindowAllClosed)
