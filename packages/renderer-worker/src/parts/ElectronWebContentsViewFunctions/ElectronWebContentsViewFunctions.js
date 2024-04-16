@@ -1,5 +1,6 @@
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 
 // TODO improve and test function
 const getZoomLevelToPercentValue = (zoomLevel) => {
@@ -22,7 +23,7 @@ export const resizeWebContentsView = async (id, x, y, width, height) => {
   const zoomValue = getZoomLevelToPercentValue(zoomLevel)
   const modifiedWidth = Math.round(width * zoomValue)
   const modifiedHeight = Math.round(height * zoomValue)
-  return SharedProcess.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, x, y, modifiedWidth, modifiedHeight)
+  return EmbedsWorker.invoke('ElectronWebContentsView.resizeWebContentsView', id, x, y, modifiedWidth, modifiedHeight)
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {

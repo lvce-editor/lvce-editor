@@ -3,4 +3,5 @@ import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWeb
 export const commandMap = {
   'ElectronWebContentsView.createWebContentsView': ElectronWebContentsView.createWebContentsView,
   'ElectronWebContentsView.disposeWebContentsView': ElectronWebContentsView.disposeWebContentsView,
+  'ElectronWebContentsView.resizeWebContentsView': ElectronWebContentsView.resizeWebContentsView,
 }

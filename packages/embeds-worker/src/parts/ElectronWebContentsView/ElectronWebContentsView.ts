@@ -8,3 +8,7 @@ export const createWebContentsView = async (restoreId, fallThroughKeyBindings) =
 export const disposeWebContentsView = (id) => {
   return SharedProcess.invoke('ElectronWebContentsView.disposeWebContentsView', id)
 }
+
+export const resizeWebContentsView = (id, x, y, width, height) => {
+  return SharedProcess.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, x, y, width, height)
+}
