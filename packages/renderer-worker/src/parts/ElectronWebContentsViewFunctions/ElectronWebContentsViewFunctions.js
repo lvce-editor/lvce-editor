@@ -1,25 +1,12 @@
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
+import * as GetZoomLevelPercent from '../GetZoomLevelPercent/GetZoomLevelPercent.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
-// TODO improve and test function
-const getZoomLevelToPercentValue = (zoomLevel) => {
-  if (zoomLevel === 0) {
-    return 1
-  }
-  if (zoomLevel === -0.2) {
-    return 0.96
-  }
-  if (zoomLevel === 0.2) {
-    return 1.04
-  }
-  return 1
-}
 
 export const resizeWebContentsView = async (id, x, y, width, height) => {
   // TODO speed up resizing by avoid too many round trips
   const windowId = await GetWindowId.getWindowId()
   const zoomLevel = await SharedProcess.invoke('ElectronWindow.getZoom', windowId)
-  const zoomValue = getZoomLevelToPercentValue(zoomLevel)
+  const zoomValue = GetZoomLevelPercent.getZoomLevelToPercentValue(zoomLevel)
   const modifiedWidth = Math.round(width * zoomValue)
   const modifiedHeight = Math.round(height * zoomValue)
   return SharedProcess.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, x, y, modifiedWidth, modifiedHeight)
