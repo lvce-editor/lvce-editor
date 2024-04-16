@@ -33,7 +33,11 @@ export const wrap = (port) => {
           break
         case 'message':
           const wrapped = (event) => {
-            listener(event.data)
+            const syntheticEvent = {
+              data: event.data,
+              target: this,
+            }
+            listener(syntheticEvent)
           }
           this.port.on(event, wrapped)
           break

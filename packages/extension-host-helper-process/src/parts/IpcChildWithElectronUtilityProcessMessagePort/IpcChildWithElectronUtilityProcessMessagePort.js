@@ -27,7 +27,11 @@ export const wrap = (port) => {
       switch (event) {
         case 'message':
           const wrappedListener = (event) => {
-            listener(event.data)
+            const syntheticEvent = {
+              data: event.data,
+              target: this,
+            }
+            listener(syntheticEvent)
           }
           this.port.on(event, wrappedListener)
           break

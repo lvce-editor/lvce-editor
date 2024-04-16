@@ -12,11 +12,20 @@ const logError = (error, prettyError) => {
   PrintPrettyError.printPrettyError(prettyError, `[terminal-process] `)
 }
 
+const handleMessage = (event) => {
+  return JsonRpc.handleJsonRpcMessage(
+    event.target,
+    event.data,
+    Command.execute,
+    Callback.resolve,
+    preparePrettyError,
+    logError,
+    RequiresSocket.requiresSocket,
+  )
+}
+
 export const handleIpc = (ipc) => {
   Assert.object(ipc)
-  const handleMessage = (message) => {
-    return JsonRpc.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, preparePrettyError, logError, RequiresSocket.requiresSocket)
-  }
   ipc.on('message', handleMessage)
   if (ipc.start) {
     ipc.start()

@@ -31,6 +31,7 @@ const createPtyHost = async (method) => {
   })
   HandleIpc.handleIpc(ptyHost)
   const handleClose = () => {
+    // @ts-ignore
     ptyHost.off('close', handleClose)
     PtyHostState.state.ipc = undefined
     PtyHostState.state.ptyHostPromise = undefined

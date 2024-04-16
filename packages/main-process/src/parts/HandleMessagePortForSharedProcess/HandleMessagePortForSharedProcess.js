@@ -1,4 +1,3 @@
-import { BrowserWindow } from 'electron'
 import * as ConnectIpc from '../ConnectIpc/ConnectIpc.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -15,12 +14,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 // can just send browserWindowPort to shared process
 // else need proxy events through this process
 
-/**
- *
- * @param {import('electron').IpcMainEvent} event
- * @returns
- */
-export const handlePort = async (event, browserWindowPort, type, name) => {
+export const handlePort = async (browserWindowPort, browserWindowId) => {
   const method = IpcParentType.ElectronUtilityProcess
   const sharedProcess = await SharedProcess.hydrate({
     method,
@@ -28,10 +22,5 @@ export const handlePort = async (event, browserWindowPort, type, name) => {
       FOLDER: '',
     },
   })
-  const browserWindow = BrowserWindow.fromWebContents(event.sender)
-  if (!browserWindow) {
-    return
-  }
-  const browserWindowId = browserWindow.id
   await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, '', browserWindowId)
 }
