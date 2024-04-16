@@ -7,7 +7,9 @@ export const createWebContentsView = async (restoreId, fallThroughKeyBindings) =
   await Rpc.invokeAndTransfer('IpcParent.create', [port1], {
     method: 8,
     type: 1,
-    initialCommand: 'HandleNodeMessagePort.handleNodeMessagePort',
+    initialCommand: 'HandleElectronMessagePort.handleElectronMessagePort',
+    port: port1,
+    raw: true,
   })
   console.log({ port2 })
   throw new Error('not implemented')
