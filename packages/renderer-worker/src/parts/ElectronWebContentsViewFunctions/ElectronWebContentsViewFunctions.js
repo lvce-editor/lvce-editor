@@ -1,7 +1,7 @@
+import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as GetZoomLevelPercent from '../GetZoomLevelPercent/GetZoomLevelPercent.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 
 export const resizeWebContentsView = async (id, x, y, width, height) => {
   // TODO speed up resizing by avoid too many round trips
