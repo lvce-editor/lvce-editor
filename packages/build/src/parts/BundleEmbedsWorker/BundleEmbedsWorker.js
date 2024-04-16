@@ -12,10 +12,10 @@ export const bundleEmbedsWorker = async ({ cachePath, commitHash, platform, asse
     from: 'static/js',
     to: Path.join(cachePath, 'static', 'js'),
   })
-  for (const file of ['JsonRpc']) {
+  for (const file of ['JsonRpc', 'IpcChildModule']) {
     await Replace.replace({
       path: `${cachePath}/src/parts/${file}/${file}.ts`,
-      occurrence: `../../../../../static/`,
+      occurrence: `/static/`,
       replacement: `../../../static/`,
     })
   }

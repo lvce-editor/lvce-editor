@@ -1,3 +1,4 @@
+import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as GetZoomLevelPercent from '../GetZoomLevelPercent/GetZoomLevelPercent.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -9,11 +10,11 @@ export const resizeWebContentsView = async (id, x, y, width, height) => {
   const zoomValue = GetZoomLevelPercent.getZoomLevelToPercentValue(zoomLevel)
   const modifiedWidth = Math.round(width * zoomValue)
   const modifiedHeight = Math.round(height * zoomValue)
-  return SharedProcess.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, x, y, modifiedWidth, modifiedHeight)
+  return EmbedsWorker.invoke('ElectronWebContentsView.resizeWebContentsView', id, x, y, modifiedWidth, modifiedHeight)
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
-  return SharedProcess.invoke('ElectronWebContentsViewFunctions.setIframeSrc', id, iframeSrc)
+  return EmbedsWorker.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
 }
 
 export const focus = (id) => {

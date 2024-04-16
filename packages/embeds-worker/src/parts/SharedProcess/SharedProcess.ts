@@ -1,15 +1,16 @@
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as LaunchEmbedsWorker from '../LaunchEmbedsWorker/LaunchEmbedsWorker.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
+import * as LaunchSharedProcessIpc from '../LaunchSharedProcessIpc/LaunchSharedProcessIpc.ts'
 
-const state = {
-  /**
-   * @type {any}
-   */
+interface State {
+  workerPromise?: Promise<any>
+}
+
+const state: State = {
   workerPromise: undefined,
 }
 
 export const getOrCreate = () => {
-  state.workerPromise ||= LaunchEmbedsWorker.launchEmbedsWorker()
+  state.workerPromise ||= LaunchSharedProcessIpc.launchSharedProcessIpc()
   return state.workerPromise
 }
 
