@@ -14,11 +14,11 @@ export const getOrCreate = () => {
 }
 
 export const invokeAndTransfer = async (transfer, method, ...params) => {
-  const ipc = await state.workerPromise
-  await JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
+  const ipc = await getOrCreate()
+  return JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
 }
 
 export const invoke = async (method, ...params) => {
-  const ipc = await state.workerPromise
-  await JsonRpc.invoke(ipc, method, ...params)
+  const ipc = await getOrCreate()
+  return JsonRpc.invoke(ipc, method, ...params)
 }
