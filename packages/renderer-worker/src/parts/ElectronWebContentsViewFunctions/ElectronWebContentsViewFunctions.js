@@ -27,7 +27,7 @@ export const resizeWebContentsView = async (id, x, y, width, height) => {
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
-  return SharedProcess.invoke('ElectronWebContentsViewFunctions.setIframeSrc', id, iframeSrc)
+  return EmbedsWorker.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
 }
 
 export const focus = (id) => {

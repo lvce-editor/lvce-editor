@@ -12,3 +12,7 @@ export const disposeWebContentsView = (id) => {
 export const resizeWebContentsView = (id, x, y, width, height) => {
   return SharedProcess.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, x, y, width, height)
 }
+
+export const setIframeSrc = (id, iframeSrc) => {
+  return SharedProcess.invoke('ElectronWebContentsViewFunctions.setIframeSrc', id, iframeSrc)
+}
