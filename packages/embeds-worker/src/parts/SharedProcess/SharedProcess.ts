@@ -1,5 +1,5 @@
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as LaunchSharedProcessIpc from '../LaunchSharedProcessIpc/LaunchSharedProcessIpc.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
+import * as LaunchSharedProcessIpc from '../LaunchSharedProcessIpc/LaunchSharedProcessIpc.ts'
 
 const state = {
   /**
