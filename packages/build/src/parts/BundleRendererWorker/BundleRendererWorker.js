@@ -93,6 +93,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       occurrence: '/packages/terminal-worker/src/terminalWorkerMain.ts',
       replacement: `/packages/terminal-worker/dist/terminalWorkerMain.js`,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/EmbedsWorkerUrl/EmbedsWorkerUrl.js`,
+      occurrence: '/packages/embeds-worker/src/embedsWorkerMain.ts',
+      replacement: `/packages/embeds-worker/dist/embedsWorkerMain.js`,
+    })
 
     await Replace.replace({
       path: `${cachePath}/src/parts/Product/Product.js`,
