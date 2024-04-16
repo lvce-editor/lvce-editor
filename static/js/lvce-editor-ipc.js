@@ -1,4 +1,3 @@
-// @ts-nocheck
 const getData$1 = (event) => {
   return event.data;
 };
