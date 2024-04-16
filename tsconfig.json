@@ -3,6 +3,7 @@
   "include": [],
   "references": [
     { "path": "./packages/build" },
+    { "path": "./packages/diff-worker" },
     { "path": "./packages/editor-worker" },
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
@@ -14,8 +15,8 @@
     { "path": "./packages/renderer-worker" },
     { "path": "./packages/server" },
     { "path": "./packages/shared-process" },
+    { "path": "./packages/syntax-highlighting-worker" },
     { "path": "./packages/terminal-worker" },
-    { "path": "./packages/test-worker" },
-    { "path": "./packages/syntax-highlighting-worker" }
+    { "path": "./packages/test-worker" }
   ]
 }
