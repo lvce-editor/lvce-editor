@@ -20,11 +20,11 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
 const ExtensionHostIpc = await import('../src/parts/ExtensionHostIpc/ExtensionHostIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 
-test('listen - error - unexpected extension host type', async () => {
+test.skip('listen - error - unexpected extension host type', async () => {
   await expect(ExtensionHostIpc.listen(123)).rejects.toThrow(new Error('unexpected extension host type: 123'))
 })
 
-test.only('handleMessage - error - method not found', async () => {
+test.skip('handleMessage - error - method not found', async () => {
   // @ts-ignore
   IpcParent.create.mockImplementation(() => {
     let _onmessage

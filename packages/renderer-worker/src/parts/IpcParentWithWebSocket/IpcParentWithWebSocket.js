@@ -35,7 +35,11 @@ export const wrap = (webSocket) => {
       this.listener = listener
       const wrappedListener = (event) => {
         const message = getMessage(event)
-        listener(message)
+        const syntheticEvent = {
+          data: message,
+          target: this,
+        }
+        listener(syntheticEvent)
       }
       this.webSocket.onmessage = wrappedListener
     },

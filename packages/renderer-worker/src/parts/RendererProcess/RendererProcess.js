@@ -19,7 +19,7 @@ const getIpc = () => {
 export const listen = async () => {
   console.assert(state.pendingMessages.length === 0)
   const ipc = await getIpc()
-  HandleIpc.handleIpc(ipc, 'renderer process')
+  HandleIpc.handleIpc(ipc)
   state.ipc = ipc
 }
 

@@ -9,6 +9,6 @@ export const launchEmbedsWorker = async () => {
     url: EmbedsWorkerUrl.embedsWorkerUrl,
     name: 'Embeds Worker',
   })
-  HandleIpc.handleIpc(ipc, 'embeds-worker')
+  HandleIpc.handleIpc(ipc)
   return ipc
 }

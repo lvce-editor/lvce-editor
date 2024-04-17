@@ -13,17 +13,16 @@ export const create = async ({ url, name }) => {
   return port2
 }
 
-export const wrap = (port) => {
-  const fakeEvent = {
-    target: {
-      send(message, transfer) {
-        port.postMessage(message, transfer)
-      },
-      postMessage(message, transfer) {
-        port.postMessage(message, transfer)
-      },
-    },
+// TODO why are some events not instance of message event?
+
+const getData = (event) => {
+  if (event instanceof MessageEvent) {
+    return event.data
   }
+  return event
+}
+
+export const wrap = (port) => {
   return {
     port,
     /**
@@ -35,13 +34,12 @@ export const wrap = (port) => {
     },
     set onmessage(listener) {
       const wrappedListener = (event) => {
-        // TODO why are some events not instance of message event?
-        if (event instanceof MessageEvent) {
-          const message = event.data
-          listener(message, fakeEvent)
-        } else {
-          listener(event)
+        const data = getData(event)
+        const syntheticEvent = {
+          data,
+          target: this,
         }
+        listener(syntheticEvent)
       }
       this.port.onmessage = wrappedListener
     },
