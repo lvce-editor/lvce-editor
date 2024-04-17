@@ -1,7 +1,6 @@
 import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
 import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent.js'
 import { IpcError } from '../IpcError/IpcError.js'
-import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
 
@@ -45,7 +44,11 @@ export const wrap = (worker) => {
       this.listener = listener
       const wrappedListener = (event) => {
         const message = getMessage(event)
-        listener(message)
+        const syntheticEvent = {
+          data: message,
+          target: this,
+        }
+        listener(syntheticEvent)
       }
       this.worker.onmessage = wrappedListener
     },

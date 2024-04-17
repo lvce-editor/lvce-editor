@@ -9,6 +9,6 @@ export const launchTestWorker = async () => {
     url: TestWorkerUrl.testWorkerUrl,
     name: 'Test Worker',
   })
-  HandleIpc.handleIpc(ipc, 'test-worker')
+  HandleIpc.handleIpc(ipc)
   return ipc
 }

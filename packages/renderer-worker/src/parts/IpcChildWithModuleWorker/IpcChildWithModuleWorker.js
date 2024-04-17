@@ -30,7 +30,11 @@ export const wrap = (global) => {
     set onmessage(listener) {
       const wrappedListener = (event) => {
         const message = GetData.getData(event)
-        listener(message)
+        const syntheticEvent = {
+          data: message,
+          target: this,
+        }
+        listener(syntheticEvent)
       }
       this.listener = listener
       this.global.onmessage = wrappedListener
