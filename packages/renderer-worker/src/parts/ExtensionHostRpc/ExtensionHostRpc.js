@@ -7,6 +7,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 
+// TODO use normal ipc methods
 const isResultMessage = (message) => {
   return 'result' in message
 }

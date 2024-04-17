@@ -25,7 +25,11 @@ export const wrap = (referencePort) => {
       this.listener = listener
       const wrappedListener = (event) => {
         const message = getMessage(event)
-        listener(message)
+        const syntheticEvent = {
+          data: message,
+          target: this,
+        }
+        listener(syntheticEvent)
       }
       this.referencePort.onmessage = wrappedListener
     },
