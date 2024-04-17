@@ -72,6 +72,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
         replacement: `../../../static/`,
       })
     }
+    for (const file of ['IpcChildModule']) {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/${file}/${file}.js`,
+        occurrence: `/static/`,
+        replacement: `../../../static/`,
+      })
+    }
     await Replace.replace({
       path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
       occurrence: `ASSET_DIR`,
