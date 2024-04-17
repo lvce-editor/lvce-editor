@@ -1,1 +1,1 @@
-export const processName = 'test-worker'
+export const processName = 'embeds-worker'
