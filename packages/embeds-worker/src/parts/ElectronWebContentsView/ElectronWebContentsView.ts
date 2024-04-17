@@ -30,11 +30,11 @@ export const reload = (id) => {
 }
 
 export const show = (id) => {
-  return SharedProcess.invoke('ElectronWebContentsViewFunctions.reload', id)
+  return SharedProcess.invoke('ElectronWebContentsViewFunctions.show', id)
 }
 
 export const hide = (id) => {
-  return SharedProcess.invoke('ElectronWebContentsViewFunctions.reload', id)
+  return SharedProcess.invoke('ElectronWebContentsViewFunctions.hide', id)
 }
 
 export const forward = (id) => {
