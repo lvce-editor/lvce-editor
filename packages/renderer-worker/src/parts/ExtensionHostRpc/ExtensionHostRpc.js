@@ -24,7 +24,7 @@ const handleMessageMethod = async (event) => {
       const response = await GetResponse.getResponse(message, Command.execute)
       if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
         try {
-          target.send(response, [response.result])
+          target.sendAndTransfer(response, [response.result])
         } catch (error) {
           const response = GetErrorResponse.getErrorResponse(message, error)
           target.send(response)
