@@ -7,7 +7,8 @@
   "scripts": {
     "build:remote": "node src/build.js --remote",
     "build:electron": "node src/build.js --electron",
-    "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress"
+    "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress",
+    "type-check": "tsc"
   },
   "keywords": [],
   "author": "",
