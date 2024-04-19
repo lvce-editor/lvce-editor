@@ -1,21 +1,6 @@
-const getOptions = (eventName) => {
-  switch (eventName) {
-    case 'wheel':
-      return {
-        passive: true,
-      }
-    default:
-      return undefined
-  }
-}
-/**
- *
- * @param {HTMLElement} $Element
- * @param string} key
- * @param {any} value
- * @param {any} eventMap
- */
-export const setProp = ($Element, key, value, eventMap) => {
+import * as GetEventListeneroptions from '../GetEventListenerOptions/GetEventListenerOptions.ts'
+
+export const setProp = ($Element: HTMLElement, key: string, value: any, eventMap: any) => {
   switch (key) {
     case 'maskImage':
       $Element.style.maskImage = `url('${value}')`
@@ -54,6 +39,7 @@ export const setProp = ($Element, key, value, eventMap) => {
       }
       break
     case 'inputType':
+      // @ts-ignore
       $Element.type = value
       break
     case 'ariaLabelledBy':
@@ -83,7 +69,7 @@ export const setProp = ($Element, key, value, eventMap) => {
         console.warn('listener not found', value)
         return
       }
-      const options = getOptions(eventMap)
+      const options = GetEventListeneroptions.getEventListenerOptions(eventMap)
       $Element.addEventListener(eventName, listener, options)
       break
     default:
