@@ -4,13 +4,6 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as LaunchPtyHost from '../LaunchPtyHost/LaunchPtyHost.js'
 import * as PtyHostState from '../PtyHostState/PtyHostState.js'
 
-const cleanUpAll = () => {
-  if (PtyHostState.state.ipc) {
-    PtyHostState.state.ipc.dispose()
-    PtyHostState.state.ipc = undefined
-  }
-}
-
 export const getOrCreate = (method = IpcParentType.NodeForkedProcess) => {
   Debug.debug('creating pty host')
   if (!PtyHostState.state.ptyHostPromise) {
