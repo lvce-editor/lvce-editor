@@ -1,13 +1,5 @@
-const getOptions = (eventName) => {
-  switch (eventName) {
-    case 'wheel':
-      return {
-        passive: true,
-      }
-    default:
-      return undefined
-  }
-}
+import * as GetEventListeneroptions from '../GetEventListenerOptions/GetEventListenerOptions.ts'
+
 /**
  *
  * @param {HTMLElement} $Element
@@ -83,7 +75,7 @@ export const setProp = ($Element, key, value, eventMap) => {
         console.warn('listener not found', value)
         return
       }
-      const options = getOptions(eventMap)
+      const options = GetEventListeneroptions.getEventListenerOptions(eventMap)
       $Element.addEventListener(eventName, listener, options)
       break
     default:
