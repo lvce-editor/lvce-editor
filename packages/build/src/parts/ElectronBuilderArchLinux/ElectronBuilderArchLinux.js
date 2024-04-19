@@ -9,6 +9,7 @@ export const build = async ({ product, arch }) => {
     Logger.info('building for arch linux is not supported on windows')
     Process.exit(ExitCode.Error)
   }
+  // @ts-ignore
   await ElectronBuilder.build({
     config: ElectronBuilderConfigType.ArchLinux,
     product,

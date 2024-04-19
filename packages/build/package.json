@@ -2,12 +2,13 @@
   "name": "build",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "linux_amd64.js",
+  "main": "src/build.js",
   "type": "module",
   "scripts": {
     "build:remote": "node src/build.js --remote",
     "build:electron": "node src/build.js --electron",
-    "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress"
+    "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress",
+    "type-check": "tsc"
   },
   "keywords": [],
   "author": "",

@@ -13,6 +13,7 @@ export const build = async ({ product, arch }) => {
     Logger.info('building macos dmg is not supported on windows')
     Process.exit(ExitCode.Error)
   }
+  // @ts-ignore
   await ElectronBuilder.build({
     config: ElectronBuilderConfigType.Mac,
     product,
