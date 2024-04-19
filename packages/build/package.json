@@ -2,7 +2,7 @@
   "name": "build",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "linux_amd64.js",
+  "main": "src/build.js",
   "type": "module",
   "scripts": {
     "build:remote": "node src/build.js --remote",
