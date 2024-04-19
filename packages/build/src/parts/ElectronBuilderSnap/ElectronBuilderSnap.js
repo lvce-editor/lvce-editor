@@ -13,6 +13,7 @@ export const build = async ({ product, arch }) => {
     Logger.info('building snap is not supported on macos')
     Process.exit(ExitCode.Error)
   }
+  // @ts-ignore
   await ElectronBuilder.build({
     config: ElectronBuilderConfigType.Snap,
     product,

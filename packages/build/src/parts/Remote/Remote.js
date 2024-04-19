@@ -1,7 +1,9 @@
 import { mkdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
+// @ts-ignore
 import cpy from 'cpy'
 import { VError } from '@lvce-editor/verror'
+// @ts-ignore
 import execa from 'execa'
 import { getTmpDir, root } from '../Shared/Shared.js'
 

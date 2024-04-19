@@ -1,3 +1,4 @@
+// @ts-ignore
 import microbundle from 'microbundle'
 
 export const bundleJs = async ({

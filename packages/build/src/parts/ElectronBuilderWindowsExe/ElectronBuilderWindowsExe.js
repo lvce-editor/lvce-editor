@@ -14,6 +14,7 @@ export const build = async ({ product, arch }) => {
     Logger.info('building windows exe is not supported on macos')
     Process.exit(ExitCode.Error)
   }
+  // @ts-ignore
   await ElectronBuilder.build({
     config: ElectronBuilderConfigType.WindowsExe,
     product,
