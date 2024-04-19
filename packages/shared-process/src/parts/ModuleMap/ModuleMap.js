@@ -325,6 +325,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleRequestTest
     case 'ContentSecurityPolicy.set':
       return ModuleId.ContentSecurityPolicy
+    case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
+      return ModuleId.HandleMessagePortForEmbedsProcess
     default:
       throw new CommandNotFoundError(commandId)
   }

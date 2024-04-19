@@ -3,7 +3,7 @@ import * as IpcParent from '../IpcParent/IpcParent.ts'
 
 export const launchEmbedsProcessIpc = async () => {
   const ipc = await IpcParent.create({
-    initialCommand: 'HandleElectronMessagePortForEmbedsProcess.handleElectronMessagePortForEmbedsProcess',
+    initialCommand: 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess',
   })
   HandleIpc.handleIpc(ipc)
   return ipc
