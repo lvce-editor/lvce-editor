@@ -1,13 +1,6 @@
 import * as GetEventListeneroptions from '../GetEventListenerOptions/GetEventListenerOptions.ts'
 
-/**
- *
- * @param {HTMLElement} $Element
- * @param string} key
- * @param {any} value
- * @param {any} eventMap
- */
-export const setProp = ($Element, key, value, eventMap) => {
+export const setProp = ($Element: HTMLElement, key: string, value: any, eventMap: any) => {
   switch (key) {
     case 'maskImage':
       $Element.style.maskImage = `url('${value}')`
@@ -46,6 +39,7 @@ export const setProp = ($Element, key, value, eventMap) => {
       }
       break
     case 'inputType':
+      // @ts-ignore
       $Element.type = value
       break
     case 'ariaLabelledBy':
