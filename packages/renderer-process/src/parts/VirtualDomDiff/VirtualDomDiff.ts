@@ -24,7 +24,7 @@ export const renderDiff = ($Root, diff, eventMap = {}) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
-        VirtualDomElementProp.setProp($Node, diffItem.key, diffItem.value, eventMap)
+        VirtualDomElementProp.setProp($Node as HTMLElement, diffItem.key, diffItem.value, eventMap)
         break
       case 'insert':
         insert($Node, diffItem, eventMap)
