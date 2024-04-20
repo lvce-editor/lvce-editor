@@ -738,6 +738,28 @@ const JsonRpc = {
 
     throw new Error('unexpected response message')
   },
+  async invokeAndTransfer(ipc, transfer, method, ...params) {
+    const { id, promise } = Callback.registerPromise()
+    ipc.sendAndTransfer(
+      {
+        jsonrpc: JsonRpcVersion.Two,
+        method,
+        params,
+        id,
+      },
+      transfer,
+    )
+    const responseMessage = await promise
+    if ('error' in responseMessage) {
+      const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
+      throw restoredError
+    }
+    if ('result' in responseMessage) {
+      return responseMessage.result
+    }
+
+    throw new Error('unexpected response message')
+  },
 }
 
 const SharedProcess = {
@@ -748,8 +770,24 @@ const SharedProcess = {
   async invoke(method, ...params) {
     return JsonRpc.invoke(this.ipc, method, ...params)
   },
+  async invokeAndTransfer(method, transfer, ...params) {
+    return JsonRpc.invokeAndTransfer(this.ipc, transfer, method, ...params)
+  },
   async listen() {
     this.ipc = await IpcChild.listen({ module: IpcChildWithSharedProcess })
+  },
+}
+
+const ProcessExplorer = {
+  /**
+   * @type {any}
+   */
+  ipc: undefined,
+  async invoke(method, ...params) {
+    return JsonRpc.invoke(this.ipc, method, ...params)
+  },
+  async listen() {
+    this.ipc = await IpcChild.listen({ module: IpcChildWithProcessExplorer })
   },
 }
 
@@ -802,6 +840,38 @@ const IpcChildWithSharedProcess = {
   async create() {
     const port = await getPort('shared-process', 'Shared Process')
     return port
+  },
+  wrap(port) {
+    return {
+      port,
+      /**
+       * @type {any}
+       */
+      wrappedListener: null,
+      send(message) {
+        this.port.postMessage(message)
+      },
+      sendAndTransfer(message, transfer) {
+        this.port.postMessage(message, transfer)
+      },
+      set onmessage(listener) {
+        this.wrappedListener = (event) => {
+          listener(event.data)
+        }
+        this.port.onmessage = this.wrappedListener
+      },
+      get onmessage() {
+        return this.wrappedListener
+      },
+    }
+  },
+}
+
+const IpcChildWithProcessExplorer = {
+  async create() {
+    const { port1, port2 } = new MessageChannel()
+    await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', [port1])
+    return port2
   },
   wrap(port) {
     return {
@@ -910,7 +980,6 @@ const handleMessage = (message) => {
   if (message.method) {
     return Command.execute(message.method, ...message.params)
   }
-  console.log({ message })
 }
 
 const getPid = () => {
@@ -933,6 +1002,7 @@ const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
   await SharedProcess.listen()
+  await ProcessExplorer.listen()
   const pid = await getPid()
   const refreshInterval = 1000
   while (true) {
