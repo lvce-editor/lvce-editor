@@ -3,6 +3,7 @@ import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
@@ -453,6 +454,15 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   await Copy.copy({
     from: testWorkerCachePath,
     to: `packages/build/.tmp/dist/${commitHash}/packages/test-worker`,
+  })
+  const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: diffWorkerCachePath,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/diff-worker`,
   })
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     assetDir,
