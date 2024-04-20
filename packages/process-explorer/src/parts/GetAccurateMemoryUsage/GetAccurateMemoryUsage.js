@@ -4,8 +4,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as IsEsrchError from '../IsEsrchError/IsEsrchError.js'
+import * as IsMacos from '../IsMacos/IsMacos.js'
 import * as ParseMemory from '../ParseMemory/ParseMemory.js'
-import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
 
 const getContent = async (pid) => {
@@ -24,7 +24,7 @@ const getContent = async (pid) => {
 export const getAccurateMemoryUsage = async (pid) => {
   try {
     Assert.number(pid)
-    if (Platform.isMacOs) {
+    if (IsMacos.isMacOs) {
       return 0
     }
     const content = await getContent(pid)

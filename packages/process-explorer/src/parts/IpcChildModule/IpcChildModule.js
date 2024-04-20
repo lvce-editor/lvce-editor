@@ -17,8 +17,6 @@ export const getModule = (method) => {
       return IpcChildWithElectronUtilityProcess
     case IpcChildType.ElectronMessagePort:
       return IpcChildWithElectronMessagePort
-    case IpcChildType.NodeMessagePort:
-      return import('../IpcChildWithNodeMessagePort/IpcChildWithNodeMessagePort.js')
     case IpcChildType.WebSocket:
       return IpcChildWithWebSocket
     default:
