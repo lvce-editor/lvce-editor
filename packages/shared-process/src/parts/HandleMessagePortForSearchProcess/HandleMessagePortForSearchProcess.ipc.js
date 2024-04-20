@@ -1,7 +1,7 @@
-import * as HandleMessagePortForEmbedsProcess from './HandleMessagePortForSearchProcess.js'
+import * as HandleMessagePortForSearchProcess from './HandleMessagePortForSearchProcess.js'
 
-export const name = 'HandleMessagePortForEmbedsProcess'
+export const name = 'HandleMessagePortForSearchProcess'
 
 export const Commands = {
-  handleMessagePortForEmbedsProcess: HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess,
+  handleMessagePortForSearchProcess: HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess,
 }
