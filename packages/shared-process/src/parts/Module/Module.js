@@ -80,8 +80,6 @@ export const load = (moduleId) => {
       return import('../InstallExtension/InstallExtension.ipc.js')
     case ModuleId.IsAutoUpdateSupported:
       return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
-    case ModuleId.ListProcessesWithMemoryUsage:
-      return import('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.ipc.js')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.OpenNativeFolder:
