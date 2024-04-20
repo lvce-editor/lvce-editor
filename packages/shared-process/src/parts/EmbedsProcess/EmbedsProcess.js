@@ -16,8 +16,6 @@ export const getOrCreate = async () => {
 }
 
 export const invoke = async (method, ...params) => {
-  console.log('before ipc')
   const ipc = await getOrCreate()
-  console.log('after ipc')
   return JsonRpc.invoke(ipc, method, ...params)
 }
