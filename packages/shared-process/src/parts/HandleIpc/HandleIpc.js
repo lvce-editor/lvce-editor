@@ -28,7 +28,4 @@ const handleMessage = (event) => {
 
 export const handleIpc = (ipc) => {
   ipc.on('message', handleMessage)
-  if (ipc.start) {
-    ipc.start()
-  }
 }
