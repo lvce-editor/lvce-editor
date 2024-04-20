@@ -1,3 +1,5 @@
+import * as Listen from '../Listen/Listen.js'
+
 export const main = async () => {
-  // TODO setup ipc
+  await Listen.listen()
 }
