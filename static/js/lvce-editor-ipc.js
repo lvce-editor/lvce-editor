@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getData$1 = (event) => {
+const getData$2 = (event) => {
   return event.data;
 };
 const readyMessage = "ready";
@@ -12,7 +12,7 @@ const listen$2 = () => {
 const signal$1 = (global) => {
   global.postMessage(readyMessage);
 };
-const wrap$3 = (global) => {
+const wrap$4 = (global) => {
   return {
     global,
     listener: void 0,
@@ -27,7 +27,7 @@ const wrap$3 = (global) => {
     },
     set onmessage(listener) {
       const wrappedListener = (event) => {
-        const data = getData$1(event);
+        const data = getData$2(event);
         listener({
           data,
           target: this
@@ -46,7 +46,7 @@ const IpcChildWithModuleWorker = {
   __proto__: null,
   listen: listen$2,
   signal: signal$1,
-  wrap: wrap$3
+  wrap: wrap$4
 };
 const E_INCOMPATIBLE_NATIVE_MODULE = "E_INCOMPATIBLE_NATIVE_MODULE";
 const E_MODULES_NOT_SUPPORTED_IN_ELECTRON = "E_MODULES_NOT_SUPPORTED_IN_ELECTRON";
@@ -263,7 +263,7 @@ const waitForFirstMessage = async (port) => {
 const listen$1 = async () => {
   const parentIpcRaw = listen$2();
   signal$1(parentIpcRaw);
-  const parentIpc = wrap$3(parentIpcRaw);
+  const parentIpc = wrap$4(parentIpcRaw);
   const firstMessage = await waitForFirstMessage(parentIpc);
   if (firstMessage.method !== "initialize") {
     throw new IpcError("unexpected first message");
@@ -276,7 +276,7 @@ const listen$1 = async () => {
   }
   return globalThis;
 };
-const wrap$2 = (port) => {
+const wrap$3 = (port) => {
   return {
     port,
     wrappedListener: void 0,
@@ -292,7 +292,7 @@ const wrap$2 = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          const data = getData$1(event);
+          const data = getData$2(event);
           listener({
             data,
             target: this
@@ -308,7 +308,7 @@ const wrap$2 = (port) => {
 const IpcChildWithModuleWorkerAndMessagePort = {
   __proto__: null,
   listen: listen$1,
-  wrap: wrap$2
+  wrap: wrap$3
 };
 const listen = () => {
   return window;
@@ -316,7 +316,7 @@ const listen = () => {
 const signal = (global) => {
   global.postMessage(readyMessage);
 };
-const wrap$1 = (window2) => {
+const wrap$2 = (window2) => {
   return {
     window: window2,
     listener: void 0,
@@ -354,10 +354,24 @@ const IpcChildWithWindow = {
   __proto__: null,
   listen,
   signal,
-  wrap: wrap$1
+  wrap: wrap$2
 };
 const Message = "message";
 const Error$1 = "error";
+const addListener = (emitter, type, callback) => {
+  if ("addEventListener" in emitter) {
+    emitter.addEventListener(type, callback);
+  } else {
+    emitter.on(type, callback);
+  }
+};
+const removeListener = (emitter, type, callback) => {
+  if ("removeEventListener" in emitter) {
+    emitter.removeEventListener(type, callback);
+  } else {
+    emitter.off(type, callback);
+  }
+};
 const getFirstEvent = (eventEmitter, eventMap) => {
   const {
     resolve,
@@ -366,7 +380,7 @@ const getFirstEvent = (eventEmitter, eventMap) => {
   const listenerMap = Object.create(null);
   const cleanup = (value) => {
     for (const event of Object.keys(eventMap)) {
-      eventEmitter.off(event, listenerMap[event]);
+      removeListener(eventEmitter, event, listenerMap[event]);
     }
     resolve(value);
   };
@@ -377,7 +391,7 @@ const getFirstEvent = (eventEmitter, eventMap) => {
         event: event2
       });
     };
-    eventEmitter.on(event, listener);
+    addListener(eventEmitter, event, listener);
     listenerMap[event] = listener;
   }
   return promise;
@@ -418,7 +432,7 @@ ${relevant}`;
   }
 }
 const Module = "module";
-const create = async ({
+const create$1 = async ({
   url,
   name
 }) => {
@@ -447,13 +461,13 @@ const create = async ({
   }
   return worker;
 };
-const getData = (event) => {
+const getData$1 = (event) => {
   if (event instanceof MessageEvent) {
     return event.data;
   }
   return event;
 };
-const wrap = (worker) => {
+const wrap$1 = (worker) => {
   let handleMessage;
   return {
     get onmessage() {
@@ -462,7 +476,7 @@ const wrap = (worker) => {
     set onmessage(listener) {
       if (listener) {
         handleMessage = (event) => {
-          const data = getData(event);
+          const data = getData$1(event);
           listener({
             data,
             target: this
@@ -483,8 +497,71 @@ const wrap = (worker) => {
 };
 const IpcParentWithModuleWorker = {
   __proto__: null,
+  create: create$1,
+  wrap: wrap$1
+};
+const Open = 1;
+const Close = 2;
+const stringifyCompact = (value) => {
+  return JSON.stringify(value);
+};
+const parse = (content) => {
+  if (content === "undefined") {
+    return null;
+  }
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    throw new VError(error, "failed to parse json");
+  }
+};
+const waitForWebSocketToBeOpen = (webSocket) => {
+  return getFirstEvent(webSocket, {
+    open: Open,
+    close: Close
+  });
+};
+const create = async ({
+  webSocket
+}) => {
+  const firstWebSocketEvent = await waitForWebSocketToBeOpen(webSocket);
+  if (firstWebSocketEvent.type === Close) {
+    throw new IpcError("Websocket connection was immediately closed");
+  }
+  return webSocket;
+};
+const getData = (event) => {
+  return parse(event.data);
+};
+const wrap = (webSocket) => {
+  return {
+    webSocket,
+    listener: void 0,
+    get onmessage() {
+      return this.listener;
+    },
+    set onmessage(listener) {
+      this.listener = listener;
+      const wrappedListener = (event) => {
+        const data = getData(event);
+        const syntheticEvent = {
+          data,
+          target: this
+        };
+        listener(syntheticEvent);
+      };
+      this.webSocket.onmessage = wrappedListener;
+    },
+    send(message) {
+      const stringifiedMessage = stringifyCompact(message);
+      this.webSocket.send(stringifiedMessage);
+    }
+  };
+};
+const IpcParentWithWebSocket = {
+  __proto__: null,
   create,
   wrap
 };
-export {IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow, IpcParentWithModuleWorker};
+export {IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow, IpcParentWithModuleWorker, IpcParentWithWebSocket};
 export default null;
