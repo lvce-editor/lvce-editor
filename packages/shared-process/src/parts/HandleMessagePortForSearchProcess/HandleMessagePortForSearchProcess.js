@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
-import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
+import * as SearchProcess from '../SearchProcess/SearchProcess.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const handleMessagePortForSearchProcess = async (port) => {
   Assert.object(port)
-  const embedsProcess = await EmbedsProcess.getOrCreate()
-  await JsonRpc.invokeAndTransfer(embedsProcess, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
+  const ipc = await SearchProcess.getOrCreate()
+  await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
 }

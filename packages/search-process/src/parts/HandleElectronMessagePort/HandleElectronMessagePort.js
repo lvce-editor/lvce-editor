@@ -10,7 +10,4 @@ export const handleElectronMessagePort = async (messagePort, ...params) => {
     messagePort,
   })
   HandleIpc.handleIpc(ipc)
-  // TODO find better way to associate configuration with ipc
-  // @ts-ignore
-  ipc.windowId = params[1]
 }
