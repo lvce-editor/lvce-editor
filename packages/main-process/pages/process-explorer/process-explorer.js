@@ -852,8 +852,7 @@ const IpcChildWithSharedProcess = {
         this.port.postMessage(message)
       },
       sendAndTransfer(message, transfer) {
-        console.log({ message, transfer })
-        // this.port.postMessage(message, transfer)
+        this.port.postMessage(message, transfer)
       },
       set onmessage(listener) {
         this.wrappedListener = (event) => {
@@ -871,7 +870,7 @@ const IpcChildWithSharedProcess = {
 const IpcChildWithProcessExplorer = {
   async create() {
     const { port1, port2 } = new MessageChannel()
-    await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', [port1], port1)
+    await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', [port1])
     return port2
   },
   wrap(port) {
