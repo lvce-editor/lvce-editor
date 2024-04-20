@@ -36,7 +36,7 @@ export const createPortTuple = async (id1, id2) => {
   await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port2], 'TemporaryMessagePort.handlePort', id2)
 }
 
-export const sendTo = async (name, port) => {
+export const sendTo = async (port, name) => {
   Assert.string(name)
   Assert.object(port)
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
