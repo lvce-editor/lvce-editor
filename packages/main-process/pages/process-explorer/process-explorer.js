@@ -391,9 +391,9 @@ const getMenuItems = (displayProcess) => {
 const handleContextMenuSelect = (label, displayProcess) => {
   switch (label) {
     case UiStrings.DebugProcess:
-      return SharedProcess.invoke('AttachDebugger.attachDebugger', displayProcess.pid)
+      return ProcessExplorer.invoke('AttachDebugger.attachDebugger', displayProcess.pid)
     case UiStrings.KillProcess:
-      return SharedProcess.invoke('Process.kill', displayProcess.pid)
+      return ProcessExplorer.invoke('Process.kill', displayProcess.pid)
     default:
       break
   }
@@ -402,7 +402,7 @@ const handleContextMenuSelect = (label, displayProcess) => {
 const processExplorerShowContextMenu = async (displayProcess, x, y) => {
   const menuItems = getMenuItems(displayProcess)
   const customData = displayProcess
-  const event = await SharedProcess.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
+  const event = await ProcessExplorer.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
   if (event.type === 'close') {
     return
   }
@@ -792,7 +792,7 @@ const ProcessExplorer = {
 }
 
 const listProcessesWithMemoryUsage = (rootPid) => {
-  return SharedProcess.invoke('ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
+  return ProcessExplorer.invoke('ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
 }
 
 const handleMessageFromWindow = (event) => {
@@ -929,7 +929,7 @@ const Signal = {
 
 const Process = {
   kill(pid) {
-    return SharedProcess.invoke('Process.kill', pid, Signal.SIGTERM)
+    return ProcessExplorer.invoke('Process.kill', pid, Signal.SIGTERM)
   },
   debug(pid) {
     // TODO
@@ -983,7 +983,7 @@ const handleMessage = (message) => {
 }
 
 const getPid = () => {
-  return SharedProcess.invoke('ProcessId.getMainProcessId')
+  return ProcessExplorer.invoke('ProcessId.getMainProcessId')
 }
 
 const sleep = (timeout) => {
