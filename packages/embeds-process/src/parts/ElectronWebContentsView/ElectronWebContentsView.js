@@ -20,3 +20,11 @@ export const disposeWebContentsView = async (id) => {
 export const resizeWebContentsView = async (id, ...args) => {
   await ParentIpc.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, ...args)
 }
+
+export const setIframeSrc = async (id, ...args) => {
+  await ParentIpc.invoke('ElectronWebContentsViewFunctions.setIframeSrc', id, ...args)
+}
+
+export const getStats = async (id, ...args) => {
+  await ParentIpc.invoke('ElectronWebContentsViewFunctions.getStats', id, ...args)
+}
