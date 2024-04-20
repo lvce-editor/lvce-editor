@@ -1,6 +1,6 @@
 // TODO treeshake out this whole module in production
 
-import { AssertionError } from '../AssertionError/AssertionError.ts'
+import { AssertionError } from '../AssertionError/AssertionError.js'
 
 const getType = (value) => {
   switch (typeof value) {
