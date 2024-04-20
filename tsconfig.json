@@ -20,6 +20,7 @@
     { "path": "./packages/shared-process" },
     { "path": "./packages/syntax-highlighting-worker" },
     { "path": "./packages/terminal-worker" },
+    { "path": "./packages/search-process" },
     { "path": "./packages/test-worker" }
   ]
 }
