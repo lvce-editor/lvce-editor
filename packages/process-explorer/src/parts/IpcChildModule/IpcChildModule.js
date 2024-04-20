@@ -13,12 +13,12 @@ export const getModule = (method) => {
       return IpcChildWithNodeForkedProcess
     case IpcChildType.NodeWorker:
       return IpcChildWithNodeWorker
-    case IpcChildType.WebSocket:
-      return IpcChildWithWebSocket
     case IpcChildType.ElectronUtilityProcess:
       return IpcChildWithElectronUtilityProcess
     case IpcChildType.ElectronMessagePort:
       return IpcChildWithElectronMessagePort
+    case IpcChildType.WebSocket:
+      return IpcChildWithWebSocket
     default:
       throw new Error('unexpected ipc type')
   }
