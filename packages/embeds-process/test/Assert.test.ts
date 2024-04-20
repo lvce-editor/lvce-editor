@@ -1,4 +1,4 @@
-import * as Assert from '../src/parts/Assert/Assert.ts'
+import * as Assert from '../src/parts/Assert/Assert.js'
 import { test, expect } from '@jest/globals'
 
 test('object', () => {
