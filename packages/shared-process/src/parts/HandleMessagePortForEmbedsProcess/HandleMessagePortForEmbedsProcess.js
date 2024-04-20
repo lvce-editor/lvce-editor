@@ -4,6 +4,6 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const handleMessagePortForEmbedsProcess = async (port) => {
   Assert.object(port)
-  const ipc = await EmbedsProcess.getOrCreate()
-  await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
+  const embedsProcess = await EmbedsProcess.getOrCreate()
+  await JsonRpc.invokeAndTransfer(embedsProcess, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
 }
