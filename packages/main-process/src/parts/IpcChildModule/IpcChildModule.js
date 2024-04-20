@@ -19,6 +19,8 @@ export const getModule = (method) => {
       return IpcChildWithElectronUtilityProcess
     case IpcChildType.ElectronMessagePort:
       return IpcChildWithElectronMessagePort
+    case IpcChildType.RendererProcess:
+      return import('../IpcChildWithRendererProcess/IpcChildWithRendererProcess.js')
     default:
       throw new Error('unexpected ipc type')
   }
