@@ -16,7 +16,6 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
   "jest": {
     "injectGlobals": false,
     "extensionsToTreatAsEsm": [
@@ -74,5 +73,9 @@
     "ignores": [
       "distmin"
     ]
+  },
+  "dependencies": {
+    "@lvce-editor/ipc": "^4.1.0",
+    "@lvce-editor/json-rpc": "^1.3.0"
   }
 }

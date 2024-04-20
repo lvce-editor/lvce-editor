@@ -1,4 +1,5 @@
 import * as LaunchEmbedsProcess from '../LaunchEmbedsProcess/LaunchEmbedsProcess.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const state = {
   /**
@@ -12,4 +13,11 @@ export const getOrCreate = async () => {
     state.ipc = LaunchEmbedsProcess.launchEmbedsProcess()
   }
   return state.ipc
+}
+
+export const invoke = async (method, ...params) => {
+  console.log('before ipc')
+  const ipc = await getOrCreate()
+  console.log('after ipc')
+  return JsonRpc.invoke(ipc, method, ...params)
 }
