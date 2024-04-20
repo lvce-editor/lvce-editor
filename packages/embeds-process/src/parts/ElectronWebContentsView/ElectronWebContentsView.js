@@ -16,3 +16,7 @@ export const disposeWebContentsView = async (id) => {
   await ParentIpc.invoke('ElectronWebContentsView.disposeWebContentsView', id)
   await ElectronWebContents.dispose(id)
 }
+
+export const resizeWebContentsView = async (id, ...args) => {
+  await ParentIpc.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, ...args)
+}
