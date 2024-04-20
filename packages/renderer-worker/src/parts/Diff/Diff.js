@@ -9,7 +9,7 @@ import * as MakeDiffMap from '../MakeDiffMap/MakeDiffMap.js'
  * @param {string[]} linesB
  * @returns
  */
-export const diff = (linesA, linesB) => {
+export const diff = async (linesA, linesB) => {
   // create hashmaps of which line corresponds to which indices
   const { map, oa, na } = MakeDiffMap.makeDiffMap(linesA, linesB)
 
