@@ -6,4 +6,5 @@ export const Commands = {
   create: TemporaryMessagePort.create,
   createPortTuple: TemporaryMessagePort.createPortTuple,
   dispose: TemporaryMessagePort.dispose,
+  sendTo: TemporaryMessagePort.sendTo,
 }

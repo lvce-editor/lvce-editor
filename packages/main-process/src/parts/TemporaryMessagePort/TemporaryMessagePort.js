@@ -37,6 +37,8 @@ export const createPortTuple = async (id1, id2) => {
 }
 
 export const sendTo = async (name, port) => {
+  Assert.string(name)
+  Assert.object(port)
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   const utilityProcess = UtilityProcessState.getByName(formattedName)
   // @ts-ignore
