@@ -1,5 +1,5 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcChild from '../HandleIpc/IpcChild/IpcChild.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 export const listen = async () => {

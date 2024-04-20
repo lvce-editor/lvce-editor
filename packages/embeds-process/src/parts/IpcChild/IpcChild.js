@@ -1,4 +1,4 @@
-import * as IpcChildModule from '../../IpcChildModule/IpcChildModule.js'
+import * as IpcChildModule from '../IpcChildModule/IpcChildModule.js'
 
 export const listen = async ({ method, ...params }) => {
   const module = await IpcChildModule.getModule(method)
