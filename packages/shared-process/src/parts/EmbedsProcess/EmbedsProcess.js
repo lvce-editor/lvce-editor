@@ -8,7 +8,6 @@ export const state = {
 }
 
 export const getOrCreate = async () => {
-  // TODO create ipc
   if (!state.ipc) {
     state.ipc = LaunchEmbedsProcess.launchEmbedsProcess()
   }
