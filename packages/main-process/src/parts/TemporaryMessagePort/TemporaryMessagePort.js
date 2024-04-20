@@ -6,6 +6,8 @@ import * as IpcParentWithElectronUtilityProcess from '../IpcParentWithElectronUt
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
 
 // TODO
 // In order to create utility process from shared process
@@ -19,10 +21,16 @@ import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState
 // because they are sent to the shared process/utility process
 export const create = async (name) => {
   Assert.string(name)
+  const { port1, port2 } = new MessageChannelMain()
+  // TODO send both ports to shared process
+  // then shared process send port back to send to it to utility process
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
+  await sendTo(name, port2)
+}
+
+export const sendTo = async (name, port) => {
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   const utilityProcess = UtilityProcessState.getByName(formattedName)
-  const { port1, port2 } = new MessageChannelMain()
-  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
   // @ts-ignore
   const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   const handleUtilityProcessMessage = (message) => {
@@ -30,7 +38,7 @@ export const create = async (name) => {
     utilityProcess.off('message', handleUtilityProcessMessage)
   }
   utilityProcess.on('message', handleUtilityProcessMessage)
-  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port2], 'HandleElectronMessagePort.handleElectronMessagePort')
+  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
 }
 
 export const dispose = (name) => {
