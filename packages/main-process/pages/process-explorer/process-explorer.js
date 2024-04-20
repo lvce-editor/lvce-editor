@@ -898,11 +898,8 @@ const IpcChildWithProcessExplorer = {
 
 const IpcChild = {
   async listen({ module }) {
-    console.log('before')
     const rawIpc = await module.create()
-    console.log('middle')
     const ipc = module.wrap(rawIpc)
-    console.log('after')
     HandleIpc.handleIpc(ipc)
     return ipc
   },
@@ -983,7 +980,6 @@ const handleMessage = (message) => {
   if (message.method) {
     return Command.execute(message.method, ...message.params)
   }
-  console.log({ message })
 }
 
 const getPid = () => {
