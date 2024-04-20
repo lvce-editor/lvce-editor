@@ -7,4 +7,6 @@ export const commandMap = {
   'ElectronWebContentsView.resizeBrowserView': ElectronWebContentsView.resizeWebContentsView,
   'ElectronWebContentsView.setIframeSrc': ElectronWebContentsView.setIframeSrc,
   'ElectronWebContentsView.getStats': ElectronWebContentsView.getStats,
+  'ElectronWebContentsView.show': ElectronWebContentsView.show,
 }
+2
