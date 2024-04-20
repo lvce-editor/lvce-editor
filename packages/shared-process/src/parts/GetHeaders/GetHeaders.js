@@ -1,5 +1,6 @@
 import { extname } from 'path'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
+import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
@@ -30,6 +31,9 @@ const getExtraHeaders = (pathName, fileExtension) => {
       }
       if (pathName.endsWith('syntaxHighlightingWorkerMain.js') || pathName.endsWith('syntaxHighlightingWorkerMain.ts')) {
         return GetHeadersSyntaxHighlightingWorker.getHeadersSyntaxHighlightingWorker()
+      }
+      if (pathName.endsWith('embedsWorkerMain.js') || pathName.endsWith('embedsWorkerMain.ts')) {
+        return GetHeadersEmbedsWorker.getHeadersEmbedsWorker()
       }
       if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
         return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
