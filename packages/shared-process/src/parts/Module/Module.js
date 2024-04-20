@@ -148,6 +148,8 @@ export const load = (moduleId) => {
       return import('../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.ipc.js')
     case ModuleId.ContentSecurityPolicy:
       return import('../ContentSecurityPolicy/ContentSecurityPolicy.ipc.js')
+    case ModuleId.HandleMessagePortForProcessExplorer:
+      return import('../HandleMessagePortForProcessExplorer/HandleMessagePortForProcessExplorer.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
