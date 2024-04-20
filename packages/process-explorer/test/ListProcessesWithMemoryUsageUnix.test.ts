@@ -11,7 +11,7 @@ jest.unstable_mockModule('node:child_process', () => ({
   }),
 }))
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/IsMacos/IsMacos.js', () => ({
   isMacos: true,
 }))
 
