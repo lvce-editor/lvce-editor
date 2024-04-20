@@ -1,5 +1,5 @@
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
-import * as LaunchSharedProcessIpc from '../LaunchSharedProcessIpc/LaunchSharedProcessIpc.ts'
+import * as LaunchEmbedsProcessIpc from '../LaunchEmbedsProcessIpc/LaunchEmbedsProcessIpc.ts'
 
 interface State {
   workerPromise?: Promise<any>
@@ -10,7 +10,7 @@ const state: State = {
 }
 
 export const getOrCreate = () => {
-  state.workerPromise ||= LaunchSharedProcessIpc.launchSharedProcessIpc()
+  state.workerPromise ||= LaunchEmbedsProcessIpc.launchEmbedsProcessIpc()
   return state.workerPromise
 }
 

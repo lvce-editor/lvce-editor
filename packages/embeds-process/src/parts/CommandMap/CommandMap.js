@@ -4,4 +4,9 @@ import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWeb
 export const commandMap = {
   'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
   'ElectronWebContentsView.createWebContentsView': ElectronWebContentsView.createWebContentsView,
+  'ElectronWebContentsView.resizeBrowserView': ElectronWebContentsView.resizeWebContentsView,
+  'ElectronWebContentsView.setIframeSrc': ElectronWebContentsView.setIframeSrc,
+  'ElectronWebContentsView.getStats': ElectronWebContentsView.getStats,
+  'ElectronWebContentsView.show': ElectronWebContentsView.show,
 }
+2

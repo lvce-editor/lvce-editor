@@ -16,7 +16,7 @@ export const launchEmbedsProcess = async () => {
   })
   HandleIpc.handleIpc(embedsProcess)
   const { port1, port2 } = await GetPortTuple.getPortTuple()
-  await JsonRpc.invokeAndTransfer(embedsProcess, [port1], 'HandleElectronMessagePort.handleElectronMessagePort')
+  await JsonRpc.invokeAndTransfer(embedsProcess, [port1], 'HandleElectronMessagePort.handleElectronMessagePort', /* isElectron */ true)
   await ParentIpc.invokeAndTransfer('HandleElectronMessagePort.handleElectronMessagePort', [port2])
   return embedsProcess
 }
