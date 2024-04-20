@@ -1,1 +1,1 @@
-export const processName = 'syntax-highlighting-worker'
+export const processName = 'diff-worker'
