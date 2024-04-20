@@ -28,6 +28,16 @@ export const create = async (name) => {
   await sendTo(name, port2)
 }
 
+export const createPortTuple = async (id1, id2) => {
+  Assert.string(id1)
+  Assert.string(id2)
+  const { port1, port2 } = new MessageChannelMain()
+  // TODO use one call to send both
+  // TODO use SharedProcess.invokeAndTransfer api
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', id1)
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port2], 'TemporaryMessagePort.handlePort', id2)
+}
+
 export const sendTo = async (name, port) => {
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   const utilityProcess = UtilityProcessState.getByName(formattedName)
