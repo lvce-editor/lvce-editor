@@ -2,28 +2,21 @@ const { ipcRenderer, contextBridge } = require('electron')
 
 const channelName = 'port'
 
-const handlePort = (event, message) => {
+const handleElectronMessage = (event, message) => {
   // @ts-ignore
   const { origin } = location
-  const { ports } = event
-  if (ports.length === 1) {
-    const port = ports[0]
-    // @ts-ignore
-    window.postMessage({ ...message, result: port }, origin, [port])
-  } else {
-    // @ts-ignore
-    window.postMessage(message, origin)
-  }
-  ipcRenderer.off(channelName, handlePort)
+  // @ts-ignore
+  window.postMessage(message, origin)
+  ipcRenderer.off(channelName, handleElectronMessage)
 }
 
 const handleWindowMessage = (event) => {
   const { data, ports } = event
+  ipcRenderer.on(channelName, handleElectronMessage)
   ipcRenderer.postMessage(channelName, data, ports)
 }
 
 const main = () => {
-  ipcRenderer.on(channelName, handlePort)
   // @ts-ignore
   window.addEventListener('message', handleWindowMessage, { once: true })
   contextBridge.exposeInMainWorld('isElectron', true)
