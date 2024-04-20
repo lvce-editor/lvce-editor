@@ -1001,11 +1001,8 @@ const HandleIpc = {
 const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
-  console.log('one')
   await SharedProcess.listen()
-  console.log('two')
   await ProcessExplorer.listen()
-  console.log('three')
   const pid = await getPid()
   const refreshInterval = 1000
   while (true) {
