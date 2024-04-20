@@ -327,6 +327,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ContentSecurityPolicy
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
       return ModuleId.HandleMessagePortForEmbedsProcess
+    case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
+      return ModuleId.HandleMessagePortForProcessExplorer
     default:
       throw new CommandNotFoundError(commandId)
   }
