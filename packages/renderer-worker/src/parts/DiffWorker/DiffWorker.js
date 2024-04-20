@@ -1,5 +1,5 @@
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as LaunchEmbedsWorker from '../LaunchEmbedsWorker/LaunchEmbedsWorker.js'
+import * as LaunchDiffWorker from '../LaunchDiffWorker/LaunchDiffWorker.js'
 
 const state = {
   /**
@@ -9,7 +9,7 @@ const state = {
 }
 
 export const getOrCreate = () => {
-  state.workerPromise ||= LaunchEmbedsWorker.launchEmbedsWorker()
+  state.workerPromise ||= LaunchDiffWorker.launchDiffWorker()
   return state.workerPromise
 }
 
