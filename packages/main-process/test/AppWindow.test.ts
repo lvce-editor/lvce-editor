@@ -1,6 +1,5 @@
-// @ts-nocheck
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import EventEmitter from 'node:events'
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetModules()
@@ -11,13 +10,17 @@ jest.unstable_mockModule('electron', () => {
   const BrowserWindow = class extends EventEmitter {
     constructor() {
       super()
+      // @ts-ignore
       this.webContents = {
         id: 1,
       }
     }
   }
+  // @ts-ignore
   BrowserWindow.prototype.loadURL = jest.fn()
+  // @ts-ignore
   BrowserWindow.prototype.setMenuBarVisibility = jest.fn()
+  // @ts-ignore
   BrowserWindow.prototype.setAutoHideMenuBar = jest.fn()
   return {
     session: {
@@ -48,6 +51,7 @@ jest.unstable_mockModule('electron', () => {
     BrowserWindow,
     net: {},
     Menu: class {},
+    MessageChannelMain: class {},
   }
 })
 
@@ -57,7 +61,7 @@ const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 test.skip('createAppWindow', async () => {
   // @ts-expect-error
   electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {})
-  // @ts-expect-error
+  // @ts-ignore
   await AppWindow.createAppWindow([], '')
   // @ts-expect-error
   expect(AppWindowStates.add).toHaveBeenCalledTimes(1)
@@ -69,7 +73,7 @@ test.skip('createAppWindow - error', async () => {
     throw new Error("ERR_FAILED (-2) loading 'lvce-oss://-/'")
   })
   // TODO error message should be improved
-  // @ts-expect-error
+  // @ts-ignore
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrow(
     new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'"),
   )
