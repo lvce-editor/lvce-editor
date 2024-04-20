@@ -62,7 +62,6 @@ test.skip('createAppWindow', async () => {
   // @ts-expect-error
   electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {})
   // @ts-ignore
-  // @ts-expect-error
   await AppWindow.createAppWindow([], '')
   // @ts-expect-error
   expect(AppWindowStates.add).toHaveBeenCalledTimes(1)
@@ -75,7 +74,6 @@ test.skip('createAppWindow - error', async () => {
   })
   // TODO error message should be improved
   // @ts-ignore
-  // @ts-expect-error
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrow(
     new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'"),
   )
