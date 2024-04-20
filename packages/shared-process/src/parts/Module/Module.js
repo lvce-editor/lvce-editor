@@ -16,8 +16,6 @@ export const load = (moduleId) => {
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.js')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.js')
-    case ModuleId.ChromeExtension:
-      return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.Crash:
@@ -82,8 +80,6 @@ export const load = (moduleId) => {
       return import('../InstallExtension/InstallExtension.ipc.js')
     case ModuleId.IsAutoUpdateSupported:
       return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
-    case ModuleId.ListProcessesWithMemoryUsage:
-      return import('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.ipc.js')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.OpenNativeFolder:
@@ -132,6 +128,8 @@ export const load = (moduleId) => {
       return import('../HandleWindowAllClosed/HandleWindowAllClosed.ipc.js')
     case ModuleId.HandleMessagePortForTerminalProcess:
       return import('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.ipc.js')
+    case ModuleId.HandleMessagePortForEmbedsProcess:
+      return import('../HandleMessagePortForEmbedsProcess/HandleMessagePortForEmbedsProcess.ipc.js')
     case ModuleId.TemporaryMessagePort:
       return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.js')
     case ModuleId.GetElectronFileResponse:
@@ -148,6 +146,10 @@ export const load = (moduleId) => {
       return import('../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.ipc.js')
     case ModuleId.ContentSecurityPolicy:
       return import('../ContentSecurityPolicy/ContentSecurityPolicy.ipc.js')
+    case ModuleId.HandleMessagePortForProcessExplorer:
+      return import('../HandleMessagePortForProcessExplorer/HandleMessagePortForProcessExplorer.ipc.js')
+    case ModuleId.HandleMessagePortForSearchProcess:
+      return import('../HandleMessagePortForSearchProcess/HandleMessagePortForSearchProcess.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

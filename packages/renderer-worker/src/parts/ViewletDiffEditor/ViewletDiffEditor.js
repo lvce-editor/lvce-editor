@@ -45,7 +45,7 @@ export const loadContent = async (state, savedState) => {
 
   const linesLeft = SplitLines.splitLines(contentLeft)
   const linesRight = SplitLines.splitLines(contentRight)
-  const changes = Diff.diff(linesLeft, linesRight)
+  const changes = await Diff.diff(linesLeft, linesRight)
 
   const total = Math.max(linesLeft.length, linesRight.length)
   const contentHeight = total * itemHeight

@@ -2,6 +2,7 @@ import * as GetData from '../GetData/GetData.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SendMessagePortToElectron from '../SendMessagePortToElectron/SendMessagePortToElectron.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
 export const create = async (options) => {
   switch (Platform.platform) {
@@ -17,7 +18,7 @@ export const create = async (options) => {
         module,
       }
     case PlatformType.Electron:
-      const { port1, port2 } = new MessageChannel()
+      const { port1, port2 } = GetPortTuple.getPortTuple(options.port)
       await SendMessagePortToElectron.sendMessagePortToElectron(port2, options.initialCommand)
       return port1
     default:
@@ -42,7 +43,11 @@ export const wrap = (port) => {
       this.listener = listener
       const wrappedListener = (event) => {
         const data = GetData.getData(event)
-        listener(data)
+        const syntheticEvent = {
+          data,
+          target: this,
+        }
+        listener(syntheticEvent)
       }
       this.port.onmessage = wrappedListener
     },

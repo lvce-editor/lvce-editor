@@ -1,8 +1,9 @@
 import { readdir } from 'node:fs/promises'
+import * as BundleEmbedsProcessDependencies from '../BundleEmbedsProcessDependencies/BundleEmbedsProcessDependencies.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
-import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
+import * as BundleProcessExplorerDependencies from '../BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
 import * as Copy from '../Copy/Copy.js'
@@ -42,6 +43,25 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platfo
     arch,
     electronVersion,
     exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
+    platform,
+  })
+}
+
+const copyEmbedsProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
+  await BundleEmbedsProcessDependencies.bundleEmbedsProcessDependencies({
+    to: `${cachePath}/embeds-process`,
+    arch,
+    electronVersion,
+    exclude: ['ws', '@lvce-editor/web-socket-server'],
+    platform,
+  })
+}
+const copyProcessExplorerFiles = async ({ cachePath, arch, electronVersion, platform }) => {
+  await BundleProcessExplorerDependencies.bundleProcessExplorerDependencies({
+    to: `${cachePath}/process-explorer`,
+    arch,
+    electronVersion,
+    exclude: ['ws', '@lvce-editor/web-socket-server'],
     platform,
   })
 }
@@ -148,6 +168,24 @@ export const bundleElectronAppDependencies = async ({
     platform,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  console.time('copyEmbedsProcessFiles')
+  await copyEmbedsProcessFiles({
+    cachePath,
+    arch,
+    electronVersion,
+    platform,
+  })
+  console.timeEnd('copyEmbedsProcessFiles')
+
+  console.time('copyProcessExplorerFiles')
+  await copyProcessExplorerFiles({
+    cachePath,
+    arch,
+    electronVersion,
+    platform,
+  })
+  console.timeEnd('copyProcessExplorerFiles')
 
   if (!bundleMainProcess) {
     console.time('copyMainProcessFiles')

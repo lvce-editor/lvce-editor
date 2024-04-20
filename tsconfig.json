@@ -3,19 +3,24 @@
   "include": [],
   "references": [
     { "path": "./packages/build" },
+    { "path": "./packages/diff-worker" },
     { "path": "./packages/editor-worker" },
+    { "path": "./packages/embeds-process" },
+    { "path": "./packages/embeds-worker" },
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
     { "path": "./packages/extension-host-worker-tests" },
     { "path": "./packages/extension-host-worker" },
     { "path": "./packages/main-process" },
+    { "path": "./packages/process-explorer" },
     { "path": "./packages/pty-host" },
     { "path": "./packages/renderer-process" },
     { "path": "./packages/renderer-worker" },
     { "path": "./packages/server" },
     { "path": "./packages/shared-process" },
+    { "path": "./packages/syntax-highlighting-worker" },
     { "path": "./packages/terminal-worker" },
-    { "path": "./packages/test-worker" },
-    { "path": "./packages/syntax-highlighting-worker" }
+    { "path": "./packages/search-process" },
+    { "path": "./packages/test-worker" }
   ]
 }

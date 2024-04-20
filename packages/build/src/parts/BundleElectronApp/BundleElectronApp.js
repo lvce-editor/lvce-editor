@@ -2,15 +2,19 @@ import { existsSync } from 'node:fs'
 import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleEmbedsProcessCached from '../BundleEmbedsProcessCached/BundleEmbedsProcessCached.js'
+import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
-import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
+import * as BundleProcessExplorerCached from '../BundleProcessExplorerCached/BundleProcessExplorerCached.js'
+import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
+import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopyElectron from '../CopyElectron/CopyElectron.js'
@@ -96,13 +100,6 @@ const copyPlaygroundFiles = async ({ arch, resourcesPath }) => {
   await WriteFile.writeFile({
     to: `${resourcesPath}/app/playground/index.css`,
     content: `h1 { color: dodgerblue; }`,
-  })
-}
-
-const copyPtyHostSources = async ({ resourcesPath }) => {
-  await Copy.copy({
-    from: 'packages/pty-host/src',
-    to: `${resourcesPath}/app/packages/pty-host/src`,
   })
 }
 
@@ -342,10 +339,6 @@ export const build = async ({
   })
   console.timeEnd('copyDependencies')
 
-  console.time('copyPtyHostSources')
-  await copyPtyHostSources({ resourcesPath })
-  console.timeEnd('copyPtyHostSources')
-
   const mainProcessCachePath = await BundleMainProcessCached.bundleMainProcessCached({
     commitHash,
     product,
@@ -380,6 +373,48 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  const ptyHostCachePath = await BundlePtyHostCached.bundlePtyHostCached({
+    commitHash,
+    product,
+    version,
+    target: '',
+  })
+
+  console.time('copyPtyHostFiles')
+  await Copy.copy({
+    from: ptyHostCachePath,
+    to: `${resourcesPath}/app/packages/pty-host`,
+  })
+  console.timeEnd('copyPtyHostFiles')
+
+  const embedsProcessCachePath = await BundleEmbedsProcessCached.bundleEmbedsProcessCached({
+    commitHash,
+    product,
+    version,
+    target: '',
+  })
+
+  console.time('copyEmbedsProcessFiles')
+  await Copy.copy({
+    from: embedsProcessCachePath,
+    to: `${resourcesPath}/app/packages/embeds-process`,
+  })
+  console.timeEnd('copyEmbedsProcessFiles')
+
+  const processExplorerCachePath = await BundleProcessExplorerCached.bundleProcessExplorerCached({
+    commitHash,
+    product,
+    version,
+    target: '',
+  })
+
+  console.time('copyProcessExplorerFiles')
+  await Copy.copy({
+    from: processExplorerCachePath,
+    to: `${resourcesPath}/app/packages/process-explorer`,
+  })
+  console.timeEnd('copyProcessExplorerFiles')
 
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ resourcesPath })
@@ -482,6 +517,20 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copySyntaxHighlightingWorkerFiles')
+
+  const embedsWorkerCachePath = await BundleEmbedsWorkerCached.bundleEmbedsWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyEmbedsWorkerFiles')
+  await Copy.copy({
+    from: embedsWorkerCachePath,
+    to: `${resourcesPath}/app/packages/embeds-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyEmbedsWorkerFiles')
 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })

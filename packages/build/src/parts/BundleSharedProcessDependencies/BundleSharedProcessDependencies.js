@@ -3,7 +3,6 @@ import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependen
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
@@ -22,15 +21,13 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     },
   })
   await CopyDependencies.copyDependencies(projectPath, to, npmDependencies)
-  if (Platform.isWindows()) {
+  if (platform === 'win32') {
     const Rebuild = await import('../Rebuild/Rebuild.js')
     await Rebuild.rebuild({
       arch,
       buildPath: Path.absolute(to),
       electronVersion,
     })
-  } else {
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree`)
   }
   await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/node-addon-api`)
@@ -63,25 +60,4 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
-  if (platform === 'win32') {
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/src`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/typings`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/binding.gyp`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/SECURITY.md`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/tsconfig.json`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/tslint.json`)
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build`, '*.gypi')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build`, '*.vcxproj')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build`, '*.filters')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build`, '*.sln')
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/build/Release/obj`)
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build/Release`, '*.pdb')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build/Release`, '*.iobj')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build/Release`, '*.ipdb')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build/Release`, '*.lib')
-    await Remove.removeMatching(`${to}/node_modules/@vscode/windows-process-tree/build/Release`, '*.exp')
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/build/Release.forge-meta`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/lib/index.ts`)
-    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/lib/promises.ts`)
-  }
 }

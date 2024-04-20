@@ -1,28 +1,13 @@
+import { readFile, readdir, rename, writeFile } from 'fs/promises'
+import { join } from 'path'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
-import * as Platform from '../Platform/Platform.js'
-import { readFile, readdir, rename, writeFile } from 'fs/promises'
-import { join } from 'path'
-
-const replaceTs = (content) => {
-  if (!content) {
-    return content
-  }
-  const newLines = []
-  const lines = content.split('\n')
-  for (const line of lines) {
-    let newLine = line
-    if (newLine.startsWith('import') || (newLine.startsWith('{') && newLine.endsWith(".ts'"))) {
-      newLine = newLine.replace(".ts'", ".js'")
-    }
-    newLines.push(newLine)
-  }
-  return newLines.join('\n')
-}
+import * as ReplaceTs from '../ReplaceTs/ReplaceTs.js'
 
 const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   const newPackageJson = {
@@ -242,7 +227,7 @@ export const getPtyHostPath = async () => {
       continue
     }
     const content = await readFile(direntName, 'utf8')
-    const newContent = replaceTs(content)
+    const newContent = await ReplaceTs.replaceTs(content)
     if (content !== newContent) {
       await writeFile(direntName, newContent)
     }

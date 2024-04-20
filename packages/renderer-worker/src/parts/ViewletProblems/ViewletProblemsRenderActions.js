@@ -7,7 +7,8 @@ export const renderActions = {
       oldState.viewMode === newState.viewMode &&
       oldState.problems === newState.problems &&
       oldState.filterValue === newState.filterValue &&
-      oldState.inputSource === newState.inputSource
+      oldState.inputSource === newState.inputSource &&
+      oldState.width === newState.width
     )
   },
   apply(oldState, newState) {

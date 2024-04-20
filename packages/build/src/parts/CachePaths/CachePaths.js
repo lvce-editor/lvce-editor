@@ -153,3 +153,78 @@ export const getSharedProcessCachePath = async (extraContents) => {
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/shared-process'), cacheHash)
   return cachePath
 }
+
+const getPtyHostCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/pty-host/src',
+    [
+      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'packages/build/src/parts/BuildServer/BuildServer.js',
+      'packages/build/src/parts/BundleJs/BundleJs.js',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'packages/build/src/parts/CachePaths/CachePaths.js',
+      'packages/build/src/parts/BundlePtyHost/BundlePtyHost.js',
+      'packages/build/src/parts/BundlePtyHostCached/BundlePtyHostCached.js',
+      'packages/build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
+      'packages/build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents,
+  )
+  return hash
+}
+
+export const getPtyHostCachePath = async (extraContents) => {
+  const cacheHash = await getPtyHostCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/pty-host'), cacheHash)
+  return cachePath
+}
+
+const getEmbedsProcessCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/embeds-process/src',
+    [
+      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'packages/build/src/parts/BuildServer/BuildServer.js',
+      'packages/build/src/parts/BundleJs/BundleJs.js',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'packages/build/src/parts/CachePaths/CachePaths.js',
+      'packages/build/src/parts/BundleEmbedsProcess/BundleEmbedsProcess.js',
+      'packages/build/src/parts/BundleEmbedsProcessCached/BundleEmbedsProcessCached.js',
+      'packages/build/src/parts/BundleEmbedsProcessDependencies/BundleEmbedsProcessDependencies.js',
+      'packages/build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents,
+  )
+  return hash
+}
+
+export const getEmbedsProcessCachePath = async (extraContents) => {
+  const cacheHash = await getEmbedsProcessCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/embeds-process'), cacheHash)
+  return cachePath
+}
+
+const getProcessExplorerCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/process-explorer/src',
+    [
+      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'packages/build/src/parts/BuildServer/BuildServer.js',
+      'packages/build/src/parts/BundleJs/BundleJs.js',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'packages/build/src/parts/CachePaths/CachePaths.js',
+      'packages/build/src/parts/BundleProcessExplorer/BundleProcessExplorer.js',
+      'packages/build/src/parts/BundleProcessExplorerCached/BundleProcessExplorerCached.js',
+      'packages/build/src/parts/BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js',
+      'packages/build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents,
+  )
+  return hash
+}
+
+export const getProcessExplorerCachePath = async (extraContents) => {
+  const cacheHash = await getProcessExplorerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/process-explorer'), cacheHash)
+  return cachePath
+}

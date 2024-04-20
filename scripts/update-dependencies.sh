@@ -30,15 +30,18 @@ function updateDependencies {
 
                                                        updateDependencies             &&
 cd packages/build                                   && updateDependencies && cd ../.. &&
+cd packages/embeds-process                          && updateDependencies && cd ../.. &&
 cd packages/extension-host-helper-process           && updateDependencies && cd ../.. &&
 cd packages/extension-host-worker-tests             && updateDependencies && cd ../.. &&
 cd packages/main-process                            && updateDependencies && cd ../.. &&
+cd packages/process-explorer                        && updateDependencies && cd ../.. &&
 cd packages/pty-host                                && updateDependencies && cd ../.. &&
 cd packages/renderer-process                        && updateDependencies && cd ../.. &&
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&
+cd packages/search-process                          && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
-cd packages/syntax-highlighting-worker              && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
+cd packages/syntax-highlighting-worker              && updateDependencies && cd ../.. &&
 
 
 echo "Great Success!"

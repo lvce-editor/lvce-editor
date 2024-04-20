@@ -72,6 +72,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
         replacement: `../../../static/`,
       })
     }
+    for (const file of ['IpcChildModule']) {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/${file}/${file}.js`,
+        occurrence: `/static/`,
+        replacement: `../../../static/`,
+      })
+    }
     await Replace.replace({
       path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
       occurrence: `ASSET_DIR`,
@@ -92,6 +99,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       path: `${cachePath}/src/parts/TerminalWorkerUrl/TerminalWorkerUrl.js`,
       occurrence: '/packages/terminal-worker/src/terminalWorkerMain.ts',
       replacement: `/packages/terminal-worker/dist/terminalWorkerMain.js`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/EmbedsWorkerUrl/EmbedsWorkerUrl.js`,
+      occurrence: '/packages/embeds-worker/src/embedsWorkerMain.ts',
+      replacement: `/packages/embeds-worker/dist/embedsWorkerMain.js`,
     })
 
     await Replace.replace({
