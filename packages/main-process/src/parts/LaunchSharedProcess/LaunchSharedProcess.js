@@ -1,7 +1,11 @@
+import { MessageChannelMain } from 'electron'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as GetSharedProcessArgv from '../GetSharedProcessArgv/GetSharedProcessArgv.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
@@ -46,6 +50,16 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
   sharedProcess.on('exit', handleChildExit)
   sharedProcess.on('disconnect', handleChildDisconnect)
   HandleIpc.handleIpc(sharedProcess)
+
+  // create secondary ipc to support transferring objects
+  // from shared process to main process
+  const { port1, port2 } = new MessageChannelMain()
+  const childIpc = await IpcChild.listen({
+    method: IpcChildType.ElectronMessagePort,
+    messagePort: port1,
+  })
+  HandleIpc.handleIpc(childIpc)
+  await JsonRpc.invokeAndTransfer(sharedProcess, [port2], 'HandleElectronMessagePort.handleElectronMessagePort', -5)
   SharedProcessState.state.sharedProcess = sharedProcess
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   return sharedProcess
