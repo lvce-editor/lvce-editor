@@ -7,7 +7,7 @@ import * as Remove from '../Remove/Remove.js'
 export const bundleDiffWorkerCached = async ({ commitHash, platform, assetDir }) => {
   const cachePath = await CachePaths.getEmbedsWorkerCachePath([platform])
   if (existsSync(cachePath)) {
-    Logger.info('[build step skipped] bundleDiff')
+    Logger.info('[build step skipped] bundleDiffWorker')
   } else {
     console.time('bundleDiffWorker')
     await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/embeds-worker'))
