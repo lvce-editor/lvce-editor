@@ -15,6 +15,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopyElectron from '../CopyElectron/CopyElectron.js'
@@ -503,6 +504,19 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
+  const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyDiffWorkerFiles')
+  await Copy.copy({
+    from: diffWorkerCachePath,
+    to: `${resourcesPath}/app/packages/diff-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyDiffWorkerFiles')
 
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     commitHash,

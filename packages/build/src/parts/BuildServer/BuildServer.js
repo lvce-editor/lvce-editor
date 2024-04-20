@@ -6,6 +6,7 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
+import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
@@ -856,6 +857,18 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
+  const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copyDiffWorkerFiles')
+  await Copy.copy({
+    from: diffWorkerCachePath,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/diff-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyDiffWorkerFiles')
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
