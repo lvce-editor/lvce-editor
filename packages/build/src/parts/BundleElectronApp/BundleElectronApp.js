@@ -10,6 +10,7 @@ import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainP
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
+import * as BundleEmbedsProcessCached from '../BundleEmbedsProcessCached/BundleEmbedsProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
@@ -385,6 +386,20 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/pty-host`,
   })
   console.timeEnd('copyPtyHostFiles')
+
+  const embedsProcessCachePath = await BundleEmbedsProcessCached.bundleEmbedsProcessCached({
+    commitHash,
+    product,
+    version,
+    target: '',
+  })
+
+  console.time('copyEmbedsProcessFiles')
+  await Copy.copy({
+    from: embedsProcessCachePath,
+    to: `${resourcesPath}/app/packages/embeds-process`,
+  })
+  console.timeEnd('copyEmbedsProcessFiles')
 
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ resourcesPath })
