@@ -3,7 +3,6 @@ import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependen
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
