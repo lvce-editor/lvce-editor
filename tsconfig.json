@@ -12,6 +12,7 @@
     { "path": "./packages/extension-host-worker-tests" },
     { "path": "./packages/extension-host-worker" },
     { "path": "./packages/main-process" },
+    { "path": "./packages/process-explorer" },
     { "path": "./packages/pty-host" },
     { "path": "./packages/renderer-process" },
     { "path": "./packages/renderer-worker" },
@@ -19,6 +20,7 @@
     { "path": "./packages/shared-process" },
     { "path": "./packages/syntax-highlighting-worker" },
     { "path": "./packages/terminal-worker" },
+    { "path": "./packages/search-process" },
     { "path": "./packages/test-worker" }
   ]
 }
