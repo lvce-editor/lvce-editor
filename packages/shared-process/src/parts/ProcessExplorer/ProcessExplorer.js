@@ -1,4 +1,4 @@
-import * as LaunchEmbedsProcess from '../LaunchEmbedsProcess/LaunchEmbedsProcess.js'
+import * as LaunchProcessExplorer from '../LaunchProcessExplorer/LaunchProcessExplorer.js'
 
 export const state = {
   /**
@@ -9,7 +9,7 @@ export const state = {
 
 export const getOrCreate = async () => {
   if (!state.ipc) {
-    state.ipc = LaunchEmbedsProcess.launchEmbedsProcess()
+    state.ipc = LaunchProcessExplorer.launchProcessExplorer()
   }
   return state.ipc
 }
