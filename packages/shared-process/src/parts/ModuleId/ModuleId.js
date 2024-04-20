@@ -76,3 +76,4 @@ export const HandleRequestTest = 69
 export const ContentSecurityPolicy = 70
 export const HandleMessagePortForEmbedsProcess = 72
 export const HandleMessagePortForProcessExplorer = 73
+export const HandleMessagePortForSearchProcess = 74
