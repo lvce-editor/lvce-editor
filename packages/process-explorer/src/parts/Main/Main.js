@@ -1,5 +1,5 @@
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as Listen from '../Listen/Listen.js'
 
 export const main = async () => {
-  await ParentIpc.listen()
+  await Listen.listen()
 }
