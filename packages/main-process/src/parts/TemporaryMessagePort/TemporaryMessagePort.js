@@ -6,8 +6,6 @@ import * as IpcParentWithElectronUtilityProcess from '../IpcParentWithElectronUt
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcChild from '../IpcChild/IpcChild.js'
 
 // TODO
 // In order to create utility process from shared process
