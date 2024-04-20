@@ -1,45 +1,20 @@
-import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.js'
+import { MessageChannelMain } from 'electron'
 import * as ExitCode from '../ExitCode/ExitCode.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as GetSharedProcessArgv from '../GetSharedProcessArgv/GetSharedProcessArgv.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PrettyError from '../PrettyError/PrettyError.js'
-import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 import * as Process from '../Process/Process.js'
-import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 
 const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
-}
-
-const logError = (error, prettyError) => {
-  PrintPrettyError.printPrettyError(prettyError, '[main-process] ')
-}
-
-const handleChildMessage = async (event) => {
-  const message = event.data
-  if (message === 'ready') {
-    return
-  }
-  if (Array.isArray(message)) {
-    Logger.warn('invalid message', message)
-    return
-  }
-  await JsonRpc.handleJsonRpcMessage(
-    event.target,
-    message,
-    Command.execute,
-    Callback.resolve,
-    PrettyError.prepare,
-    logError,
-    RequiresSocket.requiresSocket,
-  )
 }
 
 const handleChildExit = (event) => {
@@ -72,9 +47,19 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
     name: 'shared-process',
   })
   sharedProcess.on('error', handleChildError)
-  sharedProcess.on('message', handleChildMessage)
   sharedProcess.on('exit', handleChildExit)
   sharedProcess.on('disconnect', handleChildDisconnect)
+  HandleIpc.handleIpc(sharedProcess)
+
+  // create secondary ipc to support transferring objects
+  // from shared process to main process
+  const { port1, port2 } = new MessageChannelMain()
+  const childIpc = await IpcChild.listen({
+    method: IpcChildType.ElectronMessagePort,
+    messagePort: port1,
+  })
+  HandleIpc.handleIpc(childIpc)
+  await JsonRpc.invokeAndTransfer(sharedProcess, [port2], 'HandleElectronMessagePort.handleElectronMessagePort', -5)
   SharedProcessState.state.sharedProcess = sharedProcess
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   return sharedProcess

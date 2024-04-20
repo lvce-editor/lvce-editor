@@ -148,6 +148,8 @@ export const load = (moduleId) => {
       return import('../ContentSecurityPolicy/ContentSecurityPolicy.ipc.js')
     case ModuleId.HandleMessagePortForProcessExplorer:
       return import('../HandleMessagePortForProcessExplorer/HandleMessagePortForProcessExplorer.ipc.js')
+    case ModuleId.HandleMessagePortForSearchProcess:
+      return import('../HandleMessagePortForSearchProcess/HandleMessagePortForSearchProcess.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

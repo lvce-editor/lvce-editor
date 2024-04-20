@@ -19,10 +19,28 @@ import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState
 // because they are sent to the shared process/utility process
 export const create = async (name) => {
   Assert.string(name)
+  const { port1, port2 } = new MessageChannelMain()
+  // TODO send both ports to shared process
+  // then shared process send port back to send to it to utility process
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
+  await sendTo(name, port2)
+}
+
+export const createPortTuple = async (id1, id2) => {
+  Assert.string(id1)
+  Assert.string(id2)
+  const { port1, port2 } = new MessageChannelMain()
+  // TODO use one call to send both
+  // TODO use SharedProcess.invokeAndTransfer api
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', id1)
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port2], 'TemporaryMessagePort.handlePort', id2)
+}
+
+export const sendTo = async (port, name) => {
+  Assert.string(name)
+  Assert.object(port)
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   const utilityProcess = UtilityProcessState.getByName(formattedName)
-  const { port1, port2 } = new MessageChannelMain()
-  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
   // @ts-ignore
   const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   const handleUtilityProcessMessage = (message) => {
@@ -30,7 +48,7 @@ export const create = async (name) => {
     utilityProcess.off('message', handleUtilityProcessMessage)
   }
   utilityProcess.on('message', handleUtilityProcessMessage)
-  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port2], 'HandleElectronMessagePort.handleElectronMessagePort')
+  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
 }
 
 export const dispose = (name) => {

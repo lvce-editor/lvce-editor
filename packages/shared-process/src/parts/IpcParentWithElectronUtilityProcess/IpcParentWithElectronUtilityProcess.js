@@ -1,3 +1,4 @@
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.js'
 
@@ -11,10 +12,15 @@ export const create = async (options) => {
     method: ElectronUtilityProcess,
     noReturn: true,
   })
+  const { port1, port2 } = await GetPortTuple.getPortTuple()
   // TODO use uuid instead of name
-  const port = await TemporaryMessagePort.create(options.name)
-  port.name = options.name
-  return port
+  await TemporaryMessagePort.sendTo(options.name, port2)
+  port1.start()
+  return port1
+}
+
+export const signal = (port) => {
+  port.start()
 }
 
 export const wrap = (port) => {
