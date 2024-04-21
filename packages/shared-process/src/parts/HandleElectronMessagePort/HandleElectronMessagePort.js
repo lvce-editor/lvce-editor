@@ -3,8 +3,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
-
-const mainProcessSpecialId = -5
+import * as IpcId from '../IpcId/IpcId.js'
 
 export const handleElectronMessagePort = async (messagePort, ...params) => {
   Assert.object(messagePort)
@@ -13,7 +12,7 @@ export const handleElectronMessagePort = async (messagePort, ...params) => {
     messagePort,
   })
   HandleIpc.handleIpc(ipc)
-  if (params[0] === mainProcessSpecialId) {
+  if (params[0] === IpcId.MainProcess) {
     // update ipc with message port ipc that supports transferring objects
     // @ts-ignore
     ParentIpc.state.ipc = ipc

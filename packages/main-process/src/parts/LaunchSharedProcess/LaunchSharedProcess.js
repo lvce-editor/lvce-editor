@@ -4,6 +4,7 @@ import * as GetSharedProcessArgv from '../GetSharedProcessArgv/GetSharedProcessA
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
@@ -17,8 +18,7 @@ const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
 }
 
-const handleChildExit = (event) => {
-  const code = event.data
+const handleChildExit = (code) => {
   Logger.info(`[main process] shared process exited with code ${code}`)
   Process.exit(code)
 }
@@ -46,9 +46,9 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
     path: sharedProcessPath,
     name: 'shared-process',
   })
-  sharedProcess.on('error', handleChildError)
-  sharedProcess.on('exit', handleChildExit)
-  sharedProcess.on('disconnect', handleChildDisconnect)
+  sharedProcess._rawIpc.on('error', handleChildError)
+  sharedProcess._rawIpc.on('exit', handleChildExit)
+  sharedProcess._rawIpc.on('disconnect', handleChildDisconnect)
   HandleIpc.handleIpc(sharedProcess)
 
   // create secondary ipc to support transferring objects
@@ -61,7 +61,7 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
     messagePort: port1,
   })
   HandleIpc.handleIpc(childIpc)
-  await JsonRpc.invokeAndTransfer(sharedProcess, [port2], 'HandleElectronMessagePort.handleElectronMessagePort', -5)
+  await JsonRpc.invokeAndTransfer(sharedProcess, [port2], 'HandleElectronMessagePort.handleElectronMessagePort', IpcId.MainProcess)
   SharedProcessState.state.sharedProcess = sharedProcess
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   return sharedProcess

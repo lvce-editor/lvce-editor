@@ -32,6 +32,7 @@ export const handleClickBackward = () => {
 export const handleClickReload = (event) => {
   const { target } = event
   // TODO maybe set data attribute to check if it is a cancel button
+  // TODO do checks in renderer worker
   if (target.title === 'Cancel') {
     ViewletSimpleBrowserFunctions.cancelNavigation()
   } else {
