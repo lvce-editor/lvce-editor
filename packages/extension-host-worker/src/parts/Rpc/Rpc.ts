@@ -40,6 +40,11 @@ export const invoke = (method, ...params) => {
   return JsonRpc.invoke(ipc, method, ...params)
 }
 
+export const invokeAndTransfer = (method, transfer, ...params) => {
+  const ipc = IpcState.get()
+  return JsonRpc.invokeAndTransfer(ipc, method, transfer, ...params)
+}
+
 export const listen = (ipc) => {
   ipc.onmessage = handleMessageFromRendererWorker
   IpcState.set(ipc)
