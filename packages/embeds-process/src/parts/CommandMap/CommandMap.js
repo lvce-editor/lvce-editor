@@ -3,16 +3,17 @@ import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWeb
 import * as ElectronWebContents from '../ElectronWebContents/ElectronWebContents.js'
 
 export const commandMap = {
-  'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
+  'ElectronWebContentsView.backward': ElectronWebContents.backward,
   'ElectronWebContentsView.createWebContentsView': ElectronWebContentsView.createWebContentsView,
-  'ElectronWebContentsView.resizeBrowserView': ElectronWebContentsView.resizeWebContentsView,
-  'ElectronWebContentsView.setIframeSrc': ElectronWebContentsView.setIframeSrc,
-  'ElectronWebContentsView.getStats': ElectronWebContentsView.getStats,
-  'ElectronWebContentsView.show': ElectronWebContentsView.show,
+  'ElectronWebContentsView.disposeWebContentsView': ElectronWebContentsView.disposeWebContentsView,
   'ElectronWebContentsView.focus': ElectronWebContents.focus,
+  'ElectronWebContentsView.forward': ElectronWebContents.forward,
+  'ElectronWebContentsView.getStats': ElectronWebContentsView.getStats,
+  'ElectronWebContentsView.inspectElement': ElectronWebContents.inspectElement,
   'ElectronWebContentsView.openDevtools': ElectronWebContents.openDevtools,
   'ElectronWebContentsView.reload': ElectronWebContents.reload,
-  'ElectronWebContentsView.forward': ElectronWebContents.forward,
-  'ElectronWebContentsView.backward': ElectronWebContents.backward,
-  'ElectronWebContentsView.inspectElement': ElectronWebContents.inspectElement,
+  'ElectronWebContentsView.resizeBrowserView': ElectronWebContentsView.resizeWebContentsView,
+  'ElectronWebContentsView.setIframeSrc': ElectronWebContentsView.setIframeSrc,
+  'ElectronWebContentsView.show': ElectronWebContentsView.show,
+  'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
 }
