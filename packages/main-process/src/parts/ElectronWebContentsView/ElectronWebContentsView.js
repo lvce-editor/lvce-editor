@@ -1,10 +1,10 @@
-import { BrowserView, BrowserWindow } from 'electron'
 import * as Electron from 'electron'
+import { BrowserView, BrowserWindow } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
 
 // TODO use electron 30 webcontentsview api
 export const createWebContentsView = async () => {
@@ -33,7 +33,7 @@ export const attachEventListeners = (webContentsId) => {
       const { result, messages } = value.handler(...args)
       for (const message of messages) {
         const [key, ...rest] = message
-        SharedProcess.send(`ElectronWebContents.${key}`, webContentsId, ...rest)
+        EmbedsProcess.send(`ElectronWebContents.${key}`, webContentsId, ...rest)
       }
       return result
     }
