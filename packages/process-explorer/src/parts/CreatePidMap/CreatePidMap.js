@@ -1,5 +1,5 @@
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+
 export const createPidMap = async () => {
-  // TODO ask electron for pid map
-  const pidMap = {}
-  return pidMap
+  return ParentIpc.invoke('CreatePidMap.createPidMap')
 }
