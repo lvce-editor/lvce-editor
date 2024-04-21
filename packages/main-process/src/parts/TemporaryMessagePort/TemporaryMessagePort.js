@@ -1,7 +1,7 @@
-import { MessageChannelMain } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import * as FormatUtilityProcessName from '../FormatUtilityProcessName/FormatUtilityProcessName.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as IpcParentWithElectronUtilityProcess from '../IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
@@ -19,7 +19,7 @@ import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState
 // because they are sent to the shared process/utility process
 export const create = async (name) => {
   Assert.string(name)
-  const { port1, port2 } = new MessageChannelMain()
+  const { port1, port2 } = GetPortTuple.getPortTuple()
   // TODO send both ports to shared process
   // then shared process send port back to send to it to utility process
   await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
@@ -29,7 +29,7 @@ export const create = async (name) => {
 export const createPortTuple = async (id1, id2) => {
   Assert.string(id1)
   Assert.string(id2)
-  const { port1, port2 } = new MessageChannelMain()
+  const { port1, port2 } = GetPortTuple.getPortTuple()
   // TODO use one call to send both
   // TODO use SharedProcess.invokeAndTransfer api
   await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', id1)
