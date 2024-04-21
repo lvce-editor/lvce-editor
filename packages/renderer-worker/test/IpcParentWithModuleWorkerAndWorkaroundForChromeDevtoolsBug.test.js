@@ -35,6 +35,7 @@ test('create', async () => {
   const ipc = await IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.create({
     url: 'https://example.com/worker.js',
     name: 'test worker',
+    port: undefined,
   })
   expect(ipc).toBeInstanceOf(MessagePort)
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
