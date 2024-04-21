@@ -1,7 +1,27 @@
 // @ts-nocheck
-const getData$2 = (event) => {
+const getData$1 = (event) => {
   return event.data;
 };
+const attachEvent = (rawIpc, getData2, that) => {
+  const wrapped = (event) => {
+    const data = getData2(event);
+    that.dispatchEvent(new MessageEvent("message", {
+      data
+    }));
+  };
+  if ("onmessage" in rawIpc) {
+    rawIpc.onmessage = wrapped;
+  } else if ("on" in rawIpc) {
+    rawIpc.on("message", wrapped);
+  }
+};
+class Ipc extends EventTarget {
+  constructor(rawIpc) {
+    super();
+    attachEvent(rawIpc, this.getData, this);
+    this._rawIpc = rawIpc;
+  }
+}
 const readyMessage = "ready";
 const listen$2 = () => {
   if (typeof WorkerGlobalScope === "undefined") {
@@ -12,37 +32,23 @@ const listen$2 = () => {
 const signal$1 = (global) => {
   global.postMessage(readyMessage);
 };
+class IpcChildWithModuleWorker extends Ipc {
+  getData(event) {
+    return getData$1(event);
+  }
+  send(message) {
+    this._rawIpc.postMessage(message);
+  }
+  sendAndTransfer(message, transfer) {
+    this._rawIpc.postMessage(message, transfer);
+  }
+  dispose() {
+  }
+}
 const wrap$4 = (global) => {
-  return {
-    global,
-    listener: void 0,
-    send(message) {
-      this.global.postMessage(message);
-    },
-    sendAndTransfer(message, transferables) {
-      this.global.postMessage(message, transferables);
-    },
-    get onmessage() {
-      return this.listener;
-    },
-    set onmessage(listener) {
-      const wrappedListener = (event) => {
-        const data = getData$2(event);
-        listener({
-          data,
-          target: this
-        });
-      };
-      this.listener = listener;
-      this.global.onmessage = wrappedListener;
-    },
-    dispose() {
-      this.listener = null;
-      this.global.onmessage = null;
-    }
-  };
+  return new IpcChildWithModuleWorker(global);
 };
-const IpcChildWithModuleWorker = {
+const IpcChildWithModuleWorker$1 = {
   __proto__: null,
   listen: listen$2,
   signal: signal$1,
@@ -276,36 +282,26 @@ const listen$1 = async () => {
   }
   return globalThis;
 };
-const wrap$3 = (port) => {
-  return {
-    port,
-    wrappedListener: void 0,
-    send(message) {
-      this.port.postMessage(message);
-    },
-    sendAndTransfer(message, transferables) {
-      this.port.postMessage(message, transferables);
-    },
-    get onmessage() {
-      return this.wrappedListener;
-    },
-    set onmessage(listener) {
-      if (listener) {
-        this.wrappedListener = (event) => {
-          const data = getData$2(event);
-          listener({
-            data,
-            target: this
-          });
-        };
-      } else {
-        this.wrappedListener = void 0;
-      }
-      this.port.onmessage = this.wrappedListener;
+class IpcChildWithModuleWorkerAndMessagePort extends Ipc {
+  getData(event) {
+    return getData$1(event);
+  }
+  send(message) {
+    this._rawIpc.postMessage(message);
+  }
+  sendAndTransfer(message, transfer) {
+    this._rawIpc.postMessage(message, transfer);
+  }
+  dispose() {
+    if (this._rawIpc.close) {
+      this._rawIpc.close();
     }
-  };
+  }
+}
+const wrap$3 = (port) => {
+  return new IpcChildWithModuleWorkerAndMessagePort(port);
 };
-const IpcChildWithModuleWorkerAndMessagePort = {
+const IpcChildWithModuleWorkerAndMessagePort$1 = {
   __proto__: null,
   listen: listen$1,
   wrap: wrap$3
@@ -316,41 +312,23 @@ const listen = () => {
 const signal = (global) => {
   global.postMessage(readyMessage);
 };
+class IpcChildWithWindow extends Ipc {
+  getData(event) {
+    return getData$1(event);
+  }
+  send(message) {
+    this._rawIpc.postMessage(message);
+  }
+  sendAndTransfer(message, transfer) {
+    this._rawIpc.postMessage(message, "*", transfer);
+  }
+  dispose() {
+  }
+}
 const wrap$2 = (window2) => {
-  return {
-    window: window2,
-    listener: void 0,
-    get onmessage() {
-      return this.listener;
-    },
-    set onmessage(listener) {
-      this.listener = listener;
-      const wrappedListener = (event) => {
-        const data = event.data;
-        if ("method" in data) {
-          return;
-        }
-        listener({
-          data,
-          target: this
-        });
-      };
-      this.window.onmessage = wrappedListener;
-    },
-    send(message) {
-      this.window.postMessage(message);
-    },
-    sendAndTransfer(message, transfer) {
-      this.window.postMessage(message, "*", transfer);
-    },
-    dispose() {
-      this.window.onmessage = null;
-      this.window = void 0;
-      this.listener = void 0;
-    }
-  };
+  return new IpcChildWithWindow(window2);
 };
-const IpcChildWithWindow = {
+const IpcChildWithWindow$1 = {
   __proto__: null,
   listen,
   signal,
@@ -461,41 +439,29 @@ const create$1 = async ({
   }
   return worker;
 };
-const getData$1 = (event) => {
+const getData = (event) => {
   if (event instanceof MessageEvent) {
     return event.data;
   }
   return event;
 };
+class IpcParentWithModuleWorker extends Ipc {
+  getData(event) {
+    return getData(event);
+  }
+  send(message) {
+    this._rawIpc.postMessage(message);
+  }
+  sendAndTransfer(message, transfer) {
+    this._rawIpc.postMessage(message, transfer);
+  }
+  dispose() {
+  }
+}
 const wrap$1 = (worker) => {
-  let handleMessage;
-  return {
-    get onmessage() {
-      return handleMessage;
-    },
-    set onmessage(listener) {
-      if (listener) {
-        handleMessage = (event) => {
-          const data = getData$1(event);
-          listener({
-            data,
-            target: this
-          });
-        };
-      } else {
-        handleMessage = null;
-      }
-      worker.onmessage = handleMessage;
-    },
-    send(message) {
-      worker.postMessage(message);
-    },
-    sendAndTransfer(message, transfer) {
-      worker.postMessage(message, transfer);
-    }
-  };
+  return new IpcParentWithModuleWorker(worker);
 };
-const IpcParentWithModuleWorker = {
+const IpcParentWithModuleWorker$1 = {
   __proto__: null,
   create: create$1,
   wrap: wrap$1
@@ -530,38 +496,27 @@ const create = async ({
   }
   return webSocket;
 };
-const getData = (event) => {
-  return parse(event.data);
-};
+class IpcParentWithWebSocket extends Ipc {
+  getData(event) {
+    return parse(event.data);
+  }
+  send(message) {
+    this._rawIpc.send(stringifyCompact(message));
+  }
+  sendAndTransfer(message, transfer) {
+    throw new Error("sendAndTransfer not supported");
+  }
+  dispose() {
+    this._rawIpc.close();
+  }
+}
 const wrap = (webSocket) => {
-  return {
-    webSocket,
-    listener: void 0,
-    get onmessage() {
-      return this.listener;
-    },
-    set onmessage(listener) {
-      this.listener = listener;
-      const wrappedListener = (event) => {
-        const data = getData(event);
-        const syntheticEvent = {
-          data,
-          target: this
-        };
-        listener(syntheticEvent);
-      };
-      this.webSocket.onmessage = wrappedListener;
-    },
-    send(message) {
-      const stringifiedMessage = stringifyCompact(message);
-      this.webSocket.send(stringifiedMessage);
-    }
-  };
+  return new IpcParentWithWebSocket(webSocket);
 };
-const IpcParentWithWebSocket = {
+const IpcParentWithWebSocket$1 = {
   __proto__: null,
   create,
   wrap
 };
-export {IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow, IpcParentWithModuleWorker, IpcParentWithWebSocket};
+export {IpcChildWithModuleWorker$1 as IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort$1 as IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow$1 as IpcChildWithWindow, IpcParentWithModuleWorker$1 as IpcParentWithModuleWorker, IpcParentWithWebSocket$1 as IpcParentWithWebSocket};
 export default null;
