@@ -19,6 +19,16 @@ export const invoke = async (ipc, method, ...params) => {
   return result
 }
 
+export const invokeAndTransfer = async (ipc, method, transfer, ...params) => {
+  Assert.object(ipc)
+  Assert.string(method)
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.sendAndTransfer(message, transfer)
+  const responseMessage = await promise
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
+}
+
 export const handleMessage = (message) => {
   if ('id' in message) {
     if ('method' in message) {
