@@ -1,5 +1,5 @@
-import { MessageChannelMain } from 'electron'
 import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetSharedProcessArgv from '../GetSharedProcessArgv/GetSharedProcessArgv.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
@@ -53,7 +53,9 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
 
   // create secondary ipc to support transferring objects
   // from shared process to main process
-  const { port1, port2 } = new MessageChannelMain()
+  // TODO let shared process ask for secondary
+  // ipc instead of sending it directly?
+  const { port1, port2 } = GetPortTuple.getPortTuple()
   const childIpc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,
     messagePort: port1,
