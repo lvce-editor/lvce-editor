@@ -4,9 +4,9 @@ import * as HandleIpcModule from '../HandleIpcModule/HandleIpcModule.js'
 import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
-const handleIncomingIpcMessagePort = async (module, handle, ...params) => {
-  const target = await module.targetMessagePort(handle)
-  const response = module.upgradeMessagePort(handle)
+const handleIncomingIpcMessagePort = async (module, handle, message) => {
+  const target = await module.targetMessagePort(handle, message)
+  const response = module.upgradeMessagePort(handle, message)
   return {
     target,
     response,
@@ -35,7 +35,6 @@ const applyResponse = async (target, response) => {
       HandleIpc.handleIpc(target)
       break
     case 'send':
-      console.log({ response })
       await JsonRpc.invokeAndTransfer(target, response.transfer, response.method, ...response.params)
       break
     default:
