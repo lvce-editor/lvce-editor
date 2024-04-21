@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
 import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as HandleSocketError from '../HandleSocketError/HandleSocketError.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
