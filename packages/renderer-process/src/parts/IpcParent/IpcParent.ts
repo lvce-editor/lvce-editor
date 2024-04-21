@@ -3,7 +3,7 @@ import * as IpcParentModule from '../IpcParentModule/IpcParentModule.ts'
 export const create = async ({ method, ...options }) => {
   const module = await IpcParentModule.getModule(method)
   const rawIpc = module.create(options)
-  if (options.raw) {
+  if (!options.wrap) {
     return rawIpc
   }
   // @ts-ignore

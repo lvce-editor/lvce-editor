@@ -6,6 +6,8 @@ export const launchWorker = async ({ name, url }) => {
     method: IpcParentType.Auto,
     url,
     name,
+    wrap: true,
   })
+  console.log({ worker })
   return worker
 }
