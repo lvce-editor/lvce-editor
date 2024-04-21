@@ -19,7 +19,7 @@ export const invoke = async (ipc, method, ...params) => {
   return result
 }
 
-export const invokeAndTransfer = async (ipc, method, transfer, ...params) => {
+export const invokeAndTransfer = async (ipc, transfer, method, ...params) => {
   Assert.object(ipc)
   Assert.string(method)
   const { message, promise } = JsonRpcRequest.create(method, params)
