@@ -6,8 +6,6 @@ export const load = (moduleId) => {
       return import('../AttachDebugger/AttachDebugger.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
-    case ModuleId.ElectronBrowserViewFunctions:
-      return import('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
     case ModuleId.AutoUpdaterAppImage:
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.js')
     case ModuleId.GetWindowId:
@@ -28,8 +26,6 @@ export const load = (moduleId) => {
       return import('../Download/Download.ipc.js')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
-    case ModuleId.ElectronBrowserView:
-      return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     case ModuleId.ElectronContentTracing:
       return import('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.ElectronDeveloper:
@@ -48,8 +44,6 @@ export const load = (moduleId) => {
       return import('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
     case ModuleId.Window:
       return import('../ElectronWindow/ElectronWindow.ipc.js')
-    case ModuleId.ElectronBrowserViewQuickPick:
-      return import('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
     case ModuleId.ElectronWindowAbout:
       return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
@@ -112,8 +106,6 @@ export const load = (moduleId) => {
       return import('../TextDocument/TextDocument.ipc.js')
     case ModuleId.Search:
       return import('../TextSearch/TextSearch.ipc.js')
-    case ModuleId.ElectronBrowserViewSuggestions:
-      return import('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
     case ModuleId.WebSocketServer:
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
@@ -138,12 +130,6 @@ export const load = (moduleId) => {
       return import('../HandleRemoteRequest/HandleRemoteRequest.ipc.js')
     case ModuleId.HandleMessagePortForExtensionHostHelperProcess:
       return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.ipc.js')
-    case ModuleId.ElectronWebContents:
-      return import('../ElectronWebContents/ElectronWebContents.ipc.js')
-    case ModuleId.ElectronWebContentsView:
-      return import('../ElectronWebContentsView/ElectronWebContentsView.ipc.js')
-    case ModuleId.ElectronWebContentsViewFunctions:
-      return import('../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.ipc.js')
     case ModuleId.ContentSecurityPolicy:
       return import('../ContentSecurityPolicy/ContentSecurityPolicy.ipc.js')
     case ModuleId.HandleMessagePortForProcessExplorer:
