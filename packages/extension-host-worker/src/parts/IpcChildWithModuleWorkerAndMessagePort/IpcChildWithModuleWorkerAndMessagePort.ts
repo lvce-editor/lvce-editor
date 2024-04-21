@@ -11,6 +11,7 @@ export const wrap = (global) => {
       this.global.postMessage(message)
     },
     sendAndTransfer(message, transferables) {
+      console.log({ message, transferables })
       this.global.postMessage(message, transferables)
     },
     get onmessage() {

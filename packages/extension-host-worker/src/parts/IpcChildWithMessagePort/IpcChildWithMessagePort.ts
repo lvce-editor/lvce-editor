@@ -12,6 +12,7 @@ export const wrap = (port) => {
       this.port.postMessage(message)
     },
     sendAndTransfer(message, transferables) {
+      console.log({ message, transferables })
       this.port.postMessage(message, transferables)
     },
     get onmessage() {

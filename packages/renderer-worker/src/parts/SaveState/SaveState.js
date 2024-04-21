@@ -25,7 +25,7 @@ export const saveViewletState = async (id) => {
   const instance = ViewletStates.getInstance(id)
   const savedState = SerializeViewlet.serializeInstance(instance)
   await InstanceStorage.setJson(id, savedState)
-  if (instance.factory.saveChildState) {
+  if (instance && instance.factory.saveChildState) {
     const childIds = instance.factory.saveChildState(instance.state)
     await Promise.all(childIds.map(saveViewletState))
   }
