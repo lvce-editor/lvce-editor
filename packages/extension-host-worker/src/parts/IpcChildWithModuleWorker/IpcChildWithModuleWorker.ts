@@ -15,6 +15,8 @@ export const listen = async () => {
   return globalThis
 }
 
+export const signal = (global) => {}
+
 export const wrap = (global) => {
   return {
     global,
