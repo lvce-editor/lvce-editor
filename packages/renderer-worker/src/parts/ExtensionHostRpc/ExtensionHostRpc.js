@@ -22,7 +22,7 @@ const handleMessageMethod = async (event) => {
   if ('id' in message) {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message, Command.execute)
-      if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
+      if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response && response.result) {
         try {
           target.sendAndTransfer(response, [response.result])
         } catch (error) {

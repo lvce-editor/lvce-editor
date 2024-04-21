@@ -1,17 +1,20 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
 import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
 export const create = async ({ url, name }) => {
   Assert.string(url)
   Assert.string(name)
-  const port = await Rpc.invoke('IpcParent.create', {
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  await Rpc.invokeAndTransfer([port1], 'IpcParent.create', {
     method: RendererWorkerIpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     url,
     name,
     raw: true,
+    port: port1,
   })
-  return port
+  return port2
 }
 
 export const wrap = (port) => {
