@@ -2,7 +2,7 @@ import * as PtyHost from '../PtyHost/PtyHost.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const targetWebSocket = () => {
-  return PtyHost.getOrCreate()
+  return PtyHost.getOrCreate(IpcParentType.NodeForkedProcess)
 }
 
 export const upgradeWebSocket = (handle, message) => {
