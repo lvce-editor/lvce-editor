@@ -34,7 +34,7 @@ export const bundleEmbedsProcess = async ({ cachePath, target }) => {
   })
   await BundleJs.bundleJs({
     cwd: cachePath,
-    from: `./src/embedsWorkerMain.js`,
+    from: `./src/embedsProcessMain.js`,
     platform: 'node',
     allowCyclicDependencies: false,
   })
