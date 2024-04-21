@@ -30,7 +30,6 @@ export const sendTo = async (port, name) => {
   Assert.object(port)
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   const utilityProcess = UtilityProcessState.getByName(formattedName)
-  // @ts-ignore
   const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   HandleIpc.handleIpc(utilityProcessIpc)
   await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
