@@ -52,6 +52,7 @@ export const wrap = (worker) => {
       if (listener) {
         handleMessage = (event) => {
           const data = getData(event)
+          console.log({ data })
           listener({ data, target: this })
         }
       } else {

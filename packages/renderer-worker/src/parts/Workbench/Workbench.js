@@ -37,14 +37,19 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
+  console.log('zero')
   await RendererProcess.listen()
+  console.log('first')
   if (Platform.platform !== PlatformType.Web) {
     await SharedProcess.listen()
   }
 
+  console.log('second')
+
   LifeCycle.mark(LifeCyclePhase.One)
 
   const initData = await InitData.getInitData()
+  console.log('third')
 
   if (initData.Location.href.includes('?replayId')) {
     const url = new URL(initData.Location.href)
