@@ -1,16 +1,17 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
-export const create = async ({ url, name }) => {
-  const { port1, port2 } = new MessageChannel()
-  await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
+export const create = async ({ url, name, port }) => {
+  const { port1, port2 } = GetPortTuple.getPortTuple(port)
+  await RendererProcess.invokeAndTransfer('IpcParent.create', [port2], {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     url,
     name,
     raw: true,
-    port: port1,
+    port: port2,
   })
-  return port2
+  return port1
 }
 
 // TODO why are some events not instance of message event?
