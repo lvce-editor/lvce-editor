@@ -42,10 +42,6 @@ export const getModuleId = (commandId) => {
     case 'ElectronApplicationMenu.handleClick':
     case 'ElectronApplicationMenu.setItems':
       return ModuleId.ElectronApplicationMenu
-    case 'ElectronBrowserView.createBrowserView':
-    case 'ElectronBrowserView.disposeBrowserView':
-    case 'ElectronBrowserView.getAll':
-      return ModuleId.ElectronBrowserView
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
     case 'ElectronContentTracing.startRecording':
@@ -74,9 +70,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWindowProcessExplorer
     case 'Exit.exit':
       return ModuleId.Exit
-    case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
-    case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
-      return ModuleId.ElectronBrowserViewQuickPick
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -137,34 +130,6 @@ export const getModuleId = (commandId) => {
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
       return ModuleId.ExtensionManagement
-    case 'ElectronBrowserViewFunctions.resizeBrowserView':
-    case 'ElectronBrowserViewFunctions.setIframeSrc':
-    case 'ElectronBrowserViewFunctions.focus':
-    case 'ElectronBrowserViewFunctions.openDevtools':
-    case 'ElectronBrowserViewFunctions.reload':
-    case 'ElectronBrowserViewFunctions.forward':
-    case 'ElectronBrowserViewFunctions.backward':
-    case 'ElectronBrowserViewFunctions.cancelNavigation':
-    case 'ElectronBrowserViewFunctions.hide':
-    case 'ElectronBrowserViewFunctions.inspectElement':
-    case 'ElectronBrowserViewFunctions.copyImageAt':
-    case 'ElectronBrowserViewFunctions.setFallthroughKeyBindings':
-    case 'ElectronBrowserViewFunctions.getStats':
-      return ModuleId.ElectronBrowserViewFunctions
-    case 'ElectronWebContentsViewFunctions.resizeBrowserView':
-    case 'ElectronWebContentsViewFunctions.setIframeSrc':
-    case 'ElectronWebContentsViewFunctions.focus':
-    case 'ElectronWebContentsViewFunctions.openDevtools':
-    case 'ElectronWebContentsViewFunctions.reload':
-    case 'ElectronWebContentsViewFunctions.forward':
-    case 'ElectronWebContentsViewFunctions.backward':
-    case 'ElectronWebContentsViewFunctions.cancelNavigation':
-    case 'ElectronWebContentsViewFunctions.hide':
-    case 'ElectronWebContentsViewFunctions.inspectElement':
-    case 'ElectronWebContentsViewFunctions.copyImageAt':
-    case 'ElectronWebContentsViewFunctions.setFallthroughKeyBindings':
-    case 'ElectronWebContentsViewFunctions.getStats':
-      return ModuleId.ElectronWebContentsViewFunctions
     case 'FileSystem.chmod':
     case 'FileSystem.copy':
     case 'FileSystem.createFile':
@@ -178,10 +143,6 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
-    case 'ElectronBrowserViewSuggestions.createBrowserView':
-    case 'ElectronBrowserViewSuggestions.disposeBrowserView':
-    case 'ElectronBrowserViewSuggestions.setSuggestions':
-      return ModuleId.ElectronBrowserViewSuggestions
     case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
       return ModuleId.GetTerminalSpawnOptions
     case 'GitLsFiles.gitLsFiles':
@@ -310,17 +271,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleRemoteRequest
     case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
       return ModuleId.HandleMessagePortForExtensionHostHelperProcess
-    case 'ElectronWebContents.dispose':
-    case 'ElectronWebContents.handleKeyBinding':
-    case 'ElectronWebContents.handleWindowOpen':
-    case 'ElectronWebContents.handleWillNavigate':
-    case 'ElectronWebContents.handleDidNavigate':
-    case 'ElectronWebContents.handleContextMenu':
-    case 'ElectronWebContents.handlePageTitleUpdated':
-      return ModuleId.ElectronWebContents
-    case 'ElectronWebContentsView.createWebContentsView':
-    case 'ElectronWebContentsView.disposeWebContentsView':
-      return ModuleId.ElectronWebContentsView
     case 'HandleRequestTest.handleRequestTest':
       return ModuleId.HandleRequestTest
     case 'ContentSecurityPolicy.set':
