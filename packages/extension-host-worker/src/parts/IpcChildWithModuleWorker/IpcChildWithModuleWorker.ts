@@ -9,6 +9,11 @@ export const listen = async () => {
   }
   const type = firstMessage.params[0]
   if (type === 'message-port') {
+    postMessageFn({
+      jsonrpc: '2.0',
+      id: firstMessage.id,
+      result: null,
+    })
     const port = firstMessage.params[1]
     return port
   }
