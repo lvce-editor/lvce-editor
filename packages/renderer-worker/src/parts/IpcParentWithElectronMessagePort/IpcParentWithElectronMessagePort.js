@@ -1,10 +1,11 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as GetData from '../GetData/GetData.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 const getPort = async (type, name) => {
-  const { port1, port2 } = new MessageChannel()
+  const { port1, port2 } = GetPortTuple.getPortTuple()
   await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
     method: RendererProcessIpcParentType.Electron,
     type,

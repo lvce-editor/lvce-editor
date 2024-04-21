@@ -1,8 +1,9 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
 export const create = async ({ url, name }) => {
-  const { port1, port2 } = new MessageChannel()
+  const { port1, port2 } = GetPortTuple.getPortTuple(undefined)
   await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     url,
