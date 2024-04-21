@@ -10,7 +10,7 @@ export const launchProcessExplorer = async () => {
     path: ProcessExplorerPath.processExplorerPath,
     argv: [],
     stdio: 'inherit',
-    name: 'Process Process',
+    name: 'Process Explorer',
   })
   HandleIpc.handleIpc(ipc)
   await ConnectIpcToElectron.connectIpcToElectron(ipc)
