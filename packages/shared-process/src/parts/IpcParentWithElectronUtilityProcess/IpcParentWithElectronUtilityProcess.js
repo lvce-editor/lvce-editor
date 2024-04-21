@@ -26,6 +26,7 @@ export const signal = (port) => {
 export const wrap = (port) => {
   return {
     port,
+    wrappedListener: undefined,
     send(message) {
       this.port.postMessage(message)
     },
@@ -38,20 +39,33 @@ export const wrap = (port) => {
           this.port.on(event, listener)
           break
         case 'message':
-          const wrapped = (event) => {
+          // @ts-ignore
+          this.wrappedListener = (event) => {
             const syntheticEvent = {
               data: event.data,
               target: this,
             }
             listener(syntheticEvent)
           }
-          this.port.on(event, wrapped)
+          this.port.on(event, this.wrappedListener)
           break
         default:
           break
       }
     },
-    off(event, listener) {},
+    off(event, listener) {
+      switch (event) {
+        case 'close':
+          this.port.off(event, listener)
+          break
+        case 'message':
+          this.port.off(event, this.wrappedListener)
+          this.wrappedListener = undefined
+          break
+        default:
+          break
+      }
+    },
     dispose() {
       this.port.close()
       ParentIpc.invoke('TemporaryMessagePort.dispose', this.port.name)
