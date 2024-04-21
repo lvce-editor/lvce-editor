@@ -37,7 +37,6 @@ const handlers = {
           method: IpcChildType.ElectronMessagePort,
           messagePort,
         })
-        HandleIpc.handleIpc(ipc)
         if (params[0] === mainProcessSpecialId) {
           // update ipc with message port ipc that supports transferring objects
           // @ts-ignore
