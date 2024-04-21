@@ -19,8 +19,8 @@ import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState
 // because they are sent to the shared process/utility process
 
 export const createPortTuple = async (id1, id2) => {
-  Assert.string(id1)
-  Assert.string(id2)
+  Assert.number(id1)
+  Assert.number(id2)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   // TODO use one call to send both
   await SharedProcess.invokeAndTransfer([port1], 'TemporaryMessagePort.handlePort', id1)
