@@ -146,6 +146,11 @@ export const bundleSharedProcess = async ({
       replacement: `isBuiltServer = true`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/EmbedsProcessPath/EmbedsProcessPath.js`,
+      occurrence: `'src'`,
+      replacement: `'dist'`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `export const getExtensionHostHelperProcessPath = async () => {
   return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')

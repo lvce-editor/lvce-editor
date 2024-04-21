@@ -1,5 +1,6 @@
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 
 const createNewPackageJson = (oldPackageJson, target) => {
   const newPackageJson = {
@@ -10,13 +11,9 @@ const createNewPackageJson = (oldPackageJson, target) => {
   delete newPackageJson.devDependencies
   delete newPackageJson.xo
   delete newPackageJson.jest
-  if (target !== 'server') {
-    delete newPackageJson.keywords
-    delete newPackageJson.author
-    delete newPackageJson.license
-    delete newPackageJson.repository
-    delete newPackageJson.engines
-  }
+  delete newPackageJson.directories
+  delete newPackageJson.dependencies
+  newPackageJson.main = 'dist/embedsProcessMain.js'
   return newPackageJson
 }
 
@@ -34,5 +31,11 @@ export const bundleEmbedsProcess = async ({ cachePath, target }) => {
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: newPackageJson,
+  })
+  await BundleJs.bundleJs({
+    cwd: cachePath,
+    from: `./src/embedsProcessMain.js`,
+    platform: 'node',
+    allowCyclicDependencies: false,
   })
 }
