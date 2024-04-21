@@ -1,10 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as PtyHost from '../PtyHost/PtyHost.js'
+import * as HandleIncomingIpc from '../HandleIncomingIpc/HandleIncomingIpc.js'
+import * as IpcId from '../IpcId/IpcId.js'
 
-export const handleMessagePortForTerminalProcess = async (port) => {
-  Assert.object(port)
-  const ptyHost = await PtyHost.getOrCreate(IpcParentType.ElectronUtilityProcess)
-  await JsonRpc.invokeAndTransfer(ptyHost, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
+export const handleMessagePortForTerminalProcess = (port) => {
+  return HandleIncomingIpc.handleIncomingIpc(IpcId.TerminalProcess, port, {})
 }

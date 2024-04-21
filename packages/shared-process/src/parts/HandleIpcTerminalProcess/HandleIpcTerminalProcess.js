@@ -1,4 +1,5 @@
 import * as PtyHost from '../PtyHost/PtyHost.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const targetWebSocket = () => {
   return PtyHost.getOrCreate()
@@ -14,7 +15,7 @@ export const upgradeWebSocket = (message, handle) => {
 }
 
 export const targetMessagePort = () => {
-  return PtyHost.getOrCreate()
+  return PtyHost.getOrCreate(IpcParentType.ElectronUtilityProcess)
 }
 
 export const upgradeMessagePort = (port) => {
