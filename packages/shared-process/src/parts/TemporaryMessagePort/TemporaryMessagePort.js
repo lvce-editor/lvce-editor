@@ -6,18 +6,6 @@ export const state = {
   ports: Object.create(null),
 }
 
-export const create = async (name) => {
-  Assert.string(name)
-  await ParentIpc.invoke('TemporaryMessagePort.create', name)
-  const port = state.ports[name]
-  if (!port) {
-    throw new Error(`port was not created`)
-  }
-  delete state.ports[name]
-  port.start()
-  return port
-}
-
 export const getPortTuple = async () => {
   const id1 = `${Id.create()}`
   const id2 = `${Id.create()}`

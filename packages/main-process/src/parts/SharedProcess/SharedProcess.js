@@ -20,3 +20,8 @@ export const invoke = async (method, ...params) => {
   const ipc = await SharedProcessState.state.promise
   return JsonRpc.invoke(ipc, method, ...params)
 }
+
+export const invokeAndTransfer = async (transfer, method, ...params) => {
+  const ipc = await SharedProcessState.state.promise
+  return JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
+}
