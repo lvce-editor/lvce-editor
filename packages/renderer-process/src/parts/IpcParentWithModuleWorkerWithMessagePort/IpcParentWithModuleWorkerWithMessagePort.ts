@@ -15,7 +15,10 @@ export const create = async ({ url, name, port }) => {
   }
   const ipc = IpcParentWithModuleWorker.wrap(worker)
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invokeAndTransfer(ipc, [port], 'initialize', 'message-port', port)
+  // TODO await promise
+  // TODO call separate method HandleMessagePort.handleMessagePort or
+  // HandleIncomingIpc.handleIncomingIpc
+  JsonRpc.invokeAndTransfer(ipc, [port], 'initialize', 'message-port', port)
   HandleIpc.unhandleIpc(ipc)
   return undefined
 }
