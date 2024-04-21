@@ -16,7 +16,7 @@ test('upgradeWebSocket', () => {
   const handle = {
     isHandle: true,
   }
-  expect(HandleIpcTerminalProcess.upgradeWebSocket(message, handle)).toEqual({
+  expect(HandleIpcTerminalProcess.upgradeWebSocket(handle, message)).toEqual({
     type: 'send',
     method: 'HandleWebSocket.handleWebSocket',
     params: [{}],
