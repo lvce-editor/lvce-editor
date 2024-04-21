@@ -17,8 +17,7 @@ const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
 }
 
-const handleChildExit = (event) => {
-  const code = event.data
+const handleChildExit = (code) => {
   Logger.info(`[main process] shared process exited with code ${code}`)
   Process.exit(code)
 }
@@ -46,9 +45,9 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
     path: sharedProcessPath,
     name: 'shared-process',
   })
-  sharedProcess.on('error', handleChildError)
-  sharedProcess.on('exit', handleChildExit)
-  sharedProcess.on('disconnect', handleChildDisconnect)
+  sharedProcess._rawIpc.on('error', handleChildError)
+  sharedProcess._rawIpc.on('exit', handleChildExit)
+  sharedProcess._rawIpc.on('disconnect', handleChildDisconnect)
   HandleIpc.handleIpc(sharedProcess)
 
   // create secondary ipc to support transferring objects
