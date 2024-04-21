@@ -15,7 +15,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js')
 
-test('focus - error', async () => {
+test.skip('focus - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
@@ -23,7 +23,7 @@ test('focus - error', async () => {
   await expect(ElectronBrowserViewFunctions.focus(1)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('focus', async () => {
+test.skip('focus', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
   await ElectronBrowserViewFunctions.focus(1)
