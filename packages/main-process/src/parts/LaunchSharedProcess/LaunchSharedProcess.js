@@ -17,8 +17,7 @@ const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
 }
 
-const handleChildExit = (event) => {
-  const code = event.data
+const handleChildExit = (code) => {
   Logger.info(`[main process] shared process exited with code ${code}`)
   Process.exit(code)
 }
