@@ -1,6 +1,5 @@
 import exitHook from 'exit-hook'
 import * as Debug from '../Debug/Debug.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
 import * as PtyHostState from '../PtyHostState/PtyHostState.js'
@@ -27,14 +26,16 @@ export const launchPtyHost = async (method) => {
     stdio: 'inherit',
     name: 'Terminal Process',
   })
-  HandleIpc.handleIpc(ptyHost)
-  const handleClose = () => {
-    // @ts-ignore
-    ptyHost.off('close', handleClose)
-    PtyHostState.state.ipc = undefined
-    PtyHostState.state.ptyHostPromise = undefined
-  }
-  ptyHost.on('close', handleClose)
+  // HandleIpc.handleIpc(ptyHost)
+  // TODO
+  // const handleClose = () => {
+  //   // @ts-ignore
+  //   ptyHost._rawIpc.off('close', handleClose)
+  //   PtyHostState.state.ipc = undefined
+  //   PtyHostState.state.ptyHostPromise = undefined
+  // }
+  // // @ts-ignore
+  // ptyHost._rawIpc.on('close', handleClose)
   PtyHostState.state.ipc = ptyHost
   return ptyHost
 }
