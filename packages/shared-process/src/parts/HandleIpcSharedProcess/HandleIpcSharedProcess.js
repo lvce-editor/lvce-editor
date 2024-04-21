@@ -5,7 +5,7 @@ import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as IpcId from '../IpcId/IpcId.js'
 
-export const targetWebSocket = async (message, handle) => {
+export const targetWebSocket = async (handle, message) => {
   handle.on('error', HandleSocketError.handleSocketError)
   const ipc = await IpcChild.listen({
     method: IpcChildType.WebSocket,

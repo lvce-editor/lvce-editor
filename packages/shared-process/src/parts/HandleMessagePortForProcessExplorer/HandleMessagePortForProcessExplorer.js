@@ -1,9 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
+import * as HandleIncomingIpc from '../HandleIncomingIpc/HandleIncomingIpc.js'
+import * as IpcId from '../IpcId/IpcId.js'
 
-export const handleMessagePortForProcessExplorer = async (port) => {
-  Assert.object(port)
-  const ipc = await ProcessExplorer.getOrCreate()
-  await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
+export const handleMessagePortForProcessExplorer = (port) => {
+  return HandleIncomingIpc.handleIncomingIpc(IpcId.ProcessExplorer, port, {})
 }
