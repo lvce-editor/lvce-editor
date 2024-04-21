@@ -1,11 +1,12 @@
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, value) => {
   return [
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet SimpleBrowser',
+      childCount: 1,
+    },
     {
       type: VirtualDomElements.Div,
       className: 'SimpleBrowserHeader',
