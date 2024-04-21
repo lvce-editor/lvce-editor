@@ -5,7 +5,7 @@ export const targetWebSocket = () => {
   return PtyHost.getOrCreate()
 }
 
-export const upgradeWebSocket = (message, handle) => {
+export const upgradeWebSocket = (handle, message) => {
   return {
     type: 'send',
     method: 'HandleWebSocket.handleWebSocket',
