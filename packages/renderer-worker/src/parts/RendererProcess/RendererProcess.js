@@ -31,11 +31,11 @@ export const send = (message) => {
   state.ipc.send(message)
 }
 
-export const invoke = async (method, ...params) => {
+export const invoke = (method, ...params) => {
   return JsonRpc.invoke(state.ipc, method, ...params)
 }
 
-export const invokeAndTransfer = async (method, transfer, ...params) => {
+export const invokeAndTransfer = (method, transfer, ...params) => {
   return JsonRpc.invokeAndTransfer(state.ipc, transfer, method, ...params)
 }
 
