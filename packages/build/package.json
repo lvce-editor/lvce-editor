@@ -1,5 +1,5 @@
 {
-  "name": "build",
+  "name": "@lvce-editor/build",
   "version": "0.0.0-dev",
   "description": "",
   "main": "src/build.js",
@@ -11,7 +11,7 @@
     "type-check": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "LVCE Editor",
   "license": "MIT",
   "engines": {
     "node": ">=18"
