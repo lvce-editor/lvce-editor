@@ -1,6 +1,6 @@
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const state = {
   ports: Object.create(null),
@@ -26,18 +26,11 @@ export const sendTo = async (name, port) => {
   await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo', [port], name)
 }
 
-/**
- * @deprecated
- */
-export const handlePort = (port, name) => {
-  Assert.number(name)
-  Assert.object(port)
-  state.ports[name] = port
-}
-
 export const handlePorts = (port1, port2, id1, id2) => {
   Assert.number(id1)
   Assert.number(id2)
-  state.ports[port1] = port1
-  state.ports[port2] = port2
+  Assert.object(port1)
+  Assert.object(port2)
+  state.ports[id1] = port1
+  state.ports[id2] = port2
 }
