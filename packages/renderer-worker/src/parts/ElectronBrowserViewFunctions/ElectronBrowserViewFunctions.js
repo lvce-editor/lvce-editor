@@ -1,4 +1,4 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
 // TODO improve and test function
@@ -18,61 +18,61 @@ const getZoomLevelToPercentValue = (zoomLevel) => {
 export const resizeBrowserView = async (id, x, y, width, height) => {
   // TODO speed up resizing by avoid too many round trips
   const windowId = await GetWindowId.getWindowId()
-  const zoomLevel = await SharedProcess.invoke('ElectronWindow.getZoom', windowId)
+  const zoomLevel = await EmbedsWorker.invoke('ElectronWindow.getZoom', windowId)
   const zoomValue = getZoomLevelToPercentValue(zoomLevel)
   const modifiedWidth = Math.round(width * zoomValue)
   const modifiedHeight = Math.round(height * zoomValue)
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.resizeBrowserView', id, x, y, modifiedWidth, modifiedHeight)
+  return EmbedsWorker.invoke('ElectronWebContentsView.resizeBrowserView', id, x, y, modifiedWidth, modifiedHeight)
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.setIframeSrc', id, iframeSrc)
+  return EmbedsWorker.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
 }
 
 export const focus = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.focus', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.focus', id)
 }
 
 export const openDevtools = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.openDevtools', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.openDevtools', id)
 }
 
 export const reload = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.reload', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.reload', id)
 }
 
 export const forward = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.forward', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.forward', id)
 }
 
 export const backward = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.backward', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.backward', id)
 }
 
 export const cancelNavigation = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.cancelNavigation', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.cancelNavigation', id)
 }
 
 export const show = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.show', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.show', id)
 }
 
 export const hide = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.hide', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.hide', id)
 }
 
 export const inspectElement = (id, x, y) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.inspectElement', id, x, y)
+  return EmbedsWorker.invoke('ElectronWebContentsView.inspectElement', id, x, y)
 }
 
 export const copyImageAt = (id, x, y) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.copyImageAt', id, x, y)
+  return EmbedsWorker.invoke('ElectronWebContentsView.copyImageAt', id, x, y)
 }
 
 export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.setFallthroughKeyBindings', fallthroughKeyBindings)
+  return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', fallthroughKeyBindings)
 }
 
 export const getStats = (id) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.getStats', id)
+  return EmbedsWorker.invoke('ElectronWebContentsView.getStats', id)
 }
