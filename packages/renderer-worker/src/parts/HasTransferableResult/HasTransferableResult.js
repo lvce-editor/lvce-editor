@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 export const hasTransferrableResult = (method) => {
   switch (method) {
     case 'IpcParent.create':
