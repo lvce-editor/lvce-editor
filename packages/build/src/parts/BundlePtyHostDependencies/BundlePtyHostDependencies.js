@@ -64,7 +64,7 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/interfaces.js`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/interfaces.js.map`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/node-addon-api`))
-  await Remove.remove(Path.absolute(`${to}/node_modules/`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/node-addon-api`))
   await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js')
   await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js.map')
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/node-pty`)
