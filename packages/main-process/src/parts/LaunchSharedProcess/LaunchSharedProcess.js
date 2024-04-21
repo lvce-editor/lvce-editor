@@ -4,6 +4,7 @@ import * as GetSharedProcessArgv from '../GetSharedProcessArgv/GetSharedProcessA
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
@@ -60,7 +61,7 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
     messagePort: port1,
   })
   HandleIpc.handleIpc(childIpc)
-  await JsonRpc.invokeAndTransfer(sharedProcess, [port2], 'HandleElectronMessagePort.handleElectronMessagePort', -5)
+  await JsonRpc.invokeAndTransfer(sharedProcess, [port2], 'HandleElectronMessagePort.handleElectronMessagePort', IpcId.MainProcess)
   SharedProcessState.state.sharedProcess = sharedProcess
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   return sharedProcess
