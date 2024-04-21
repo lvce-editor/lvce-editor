@@ -27,14 +27,15 @@ export const launchPtyHost = async (method) => {
     stdio: 'inherit',
     name: 'Terminal Process',
   })
-  HandleIpc.handleIpc(ptyHost)
-  const handleClose = () => {
-    // @ts-ignore
-    ptyHost.off('close', handleClose)
-    PtyHostState.state.ipc = undefined
-    PtyHostState.state.ptyHostPromise = undefined
-  }
-  ptyHost.on('close', handleClose)
+  // TODO
+  // const handleClose = () => {
+  //   // @ts-ignore
+  //   ptyHost._rawIpc.off('close', handleClose)
+  //   PtyHostState.state.ipc = undefined
+  //   PtyHostState.state.ptyHostPromise = undefined
+  // }
+  // // @ts-ignore
+  // ptyHost._rawIpc.on('close', handleClose)
   PtyHostState.state.ipc = ptyHost
   return ptyHost
 }

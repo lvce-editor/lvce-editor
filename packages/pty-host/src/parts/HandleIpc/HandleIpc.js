@@ -3,5 +3,10 @@ import * as HandleMessage from '../HandleMessage/HandleMessage.js'
 
 export const handleIpc = (ipc) => {
   Assert.object(ipc)
-  ipc.addEventListener('message', HandleMessage.handleMessage)
+  if ('addEventListener' in ipc) {
+    ipc.addEventListener('message', HandleMessage.handleMessage)
+  } else if ('onmessage' in ipc) {
+    // deprecated
+    ipc.onmessage = HandleMessage.handleMessage
+  }
 }
