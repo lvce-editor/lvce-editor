@@ -3,5 +3,5 @@ import * as HandleMessage from '../HandleMessage/HandleMessage.js'
 
 export const handleIpc = (ipc) => {
   Assert.object(ipc)
-  ipc.on('message', HandleMessage.handleMessage)
+  ipc.addEventListener('message', HandleMessage.handleMessage)
 }
