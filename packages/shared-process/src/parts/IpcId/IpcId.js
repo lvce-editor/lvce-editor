@@ -1,3 +1,8 @@
 export const SharedProcess = 1
 export const MainProcess = -5
 export const EmbedsProcess = 2
+export const TerminalProcess = 7
+export const ExtensionHostHelperProcess = 3
+export const ProcessExplorer = 11
+export const SearchProcess = 13
+export const Unknown = 0
