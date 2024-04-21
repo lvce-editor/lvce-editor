@@ -1,22 +1,13 @@
-import { IpcError } from '../IpcError/IpcError.ts'
-import * as IsMessagePort from '../IsMessagePort/IsMessagePort.ts'
-import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.ts'
-import * as Rpc from '../Rpc/Rpc.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
+import * as SendMessagePortToElectron from '../SendMessagePortToElectron/SendMessagePortToElectron.ts'
 
 const getPort = async (type) => {
-  const port = await Rpc.invoke('IpcParent.create', {
-    method: RendererWorkerIpcParentType.NodeAlternate,
-    type,
-    raw: true,
-    initialCommand: 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
-  })
-  if (!port) {
-    throw new IpcError(`port must be defined`)
-  }
-  if (!IsMessagePort.isMessagePort(port)) {
-    throw new IpcError('port must be of type MessagePort')
-  }
-  return port
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  await SendMessagePortToElectron.sendMessagePortToElectron(
+    port1,
+    'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
+  )
+  return port2
 }
 
 export const create = async ({ type }) => {
