@@ -27,6 +27,7 @@ export const launchPtyHost = async (method) => {
     stdio: 'inherit',
     name: 'Terminal Process',
   })
+  HandleIpc.handleIpc(ptyHost)
   // TODO
   // const handleClose = () => {
   //   // @ts-ignore
