@@ -1,23 +1,12 @@
-import * as Assert from '../Assert/Assert.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcChild from '../IpcChild/IpcChild.js'
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as HandleIncomingIpc from '../HandleIncomingIpc/HandleIncomingIpc.js'
 import * as IpcId from '../IpcId/IpcId.js'
 
-export const handleElectronMessagePort = async (messagePort, ...params) => {
-  Assert.object(messagePort)
-  const ipc = await IpcChild.listen({
-    method: IpcChildType.ElectronMessagePort,
-    messagePort,
-  })
-  HandleIpc.handleIpc(ipc)
-  if (params[0] === IpcId.MainProcess) {
-    // update ipc with message port ipc that supports transferring objects
-    // @ts-ignore
-    ParentIpc.state.ipc = ipc
+export const handleElectronMessagePort = (messagePort, ...params) => {
+  const ipcId = params[0]
+  const windowId = params[1]
+  const message = {
+    ipcId,
+    windowId,
   }
-  // TODO find better way to associate configuration with ipc
-  // @ts-ignore
-  ipc.windowId = params[1]
+  return HandleIncomingIpc.handleIncomingIpc(IpcId.SharedProcess, messagePort, message)
 }

@@ -1,17 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as HandleSocketError from '../HandleSocketError/HandleSocketError.js'
-import * as IpcChild from '../IpcChild/IpcChild.js'
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as HandleIncomingIpc from '../HandleIncomingIpc/HandleIncomingIpc.js'
+import * as IpcId from '../IpcId/IpcId.js'
 
-export const handleWebSocket = async (request, handle) => {
-  Assert.object(request)
-  Assert.object(handle)
-  handle.on('error', HandleSocketError.handleSocketError)
-  const ipc = await IpcChild.listen({
-    method: IpcChildType.WebSocket,
-    request,
-    handle,
-  })
-  HandleIpc.handleIpc(ipc)
+export const handleWebSocket = (request, handle) => {
+  return HandleIncomingIpc.handleIncomingIpc(IpcId.SharedProcess, handle, request)
 }

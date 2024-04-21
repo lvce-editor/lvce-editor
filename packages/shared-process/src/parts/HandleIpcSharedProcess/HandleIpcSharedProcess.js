@@ -2,10 +2,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as HandleSocketError from '../HandleSocketError/HandleSocketError.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as IpcId from '../IpcId/IpcId.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
-export const targetWebSocket = async (message, handle) => {
+export const targetWebSocket = async (handle, message) => {
   handle.on('error', HandleSocketError.handleSocketError)
   const ipc = await IpcChild.listen({
     method: IpcChildType.WebSocket,
@@ -21,20 +21,20 @@ export const upgradeWebSocket = () => {
   }
 }
 
-export const targetMessagePort = async (messagePort, ...params) => {
+export const targetMessagePort = async (messagePort, message) => {
   Assert.object(messagePort)
   const ipc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,
     messagePort,
   })
-  if (params[0] === IpcId.MainProcess) {
+  if (message.ipcId === IpcId.MainProcess) {
     // update ipc with message port ipc that supports transferring objects
     // @ts-ignore
     ParentIpc.state.ipc = ipc
   }
   // TODO find better way to associate configuration with ipc
   // @ts-ignore
-  ipc.windowId = params[1]
+  ipc.windowId = message.windowId
   return ipc
 }
 

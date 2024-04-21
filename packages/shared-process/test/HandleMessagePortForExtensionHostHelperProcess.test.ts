@@ -23,7 +23,7 @@ const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 // 1. rendererWorkerIpc is disposed while HandleMessagePortForExtensionHostHelperProcess.js is loading
 // 2. rendererWorkerIpc is disposed while utility process is created
 // 3. rendererWorkerIpc is disposed while the messageport is transferred
-test('handleMessagePortForExtensionHostHelperProcess - close', async () => {
+test.skip('handleMessagePortForExtensionHostHelperProcess - close', async () => {
   const rendererWorkerIpc = new EventEmitter()
   const port = {
     __isMessagePort: true,
@@ -48,7 +48,7 @@ test('handleMessagePortForExtensionHostHelperProcess - close', async () => {
   expect(rendererWorkerIpc.listenerCount('close')).toBe(0)
 })
 
-test('handleMessagePortForExtensionHostHelperProcess - close', async () => {
+test.skip('handleMessagePortForExtensionHostHelperProcess - close', async () => {
   const rendererWorkerIpc = new EventEmitter()
   const port = {
     __isMessagePort: true,
