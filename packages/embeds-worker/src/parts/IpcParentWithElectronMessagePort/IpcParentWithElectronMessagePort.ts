@@ -1,7 +1,8 @@
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
 export const create = async ({ initialCommand }) => {
-  const { port1, port2 } = new MessageChannel()
+  const { port1, port2 } = GetPortTuple.getPortTuple()
   await Rpc.invokeAndTransfer('IpcParent.create', [port1], {
     method: 8,
     type: 1,

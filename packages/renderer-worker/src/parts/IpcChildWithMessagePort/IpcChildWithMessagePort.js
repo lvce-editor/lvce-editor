@@ -1,8 +1,8 @@
 import * as GetData from '../GetData/GetData.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
 export const listen = () => {
-  const messageChannel = new MessageChannel()
-  const { port1, port2 } = messageChannel
+  const { port1, port2 } = GetPortTuple.getPortTuple()
   globalThis.acceptPort(port2)
   return port1
 }
