@@ -4,6 +4,8 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderDom = {
   isEqual(oldState, newState) {
     return oldState.iframeSrc === newState.iframeSrc && oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
@@ -15,7 +17,7 @@ const renderDom = {
       newState.isLoading,
       newState.iframeSrc,
     )
-    return [RenderMethod.SetDom, dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
