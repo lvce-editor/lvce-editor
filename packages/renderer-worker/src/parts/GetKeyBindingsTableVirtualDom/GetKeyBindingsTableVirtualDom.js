@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetKeyBindingsTableBodyVirtualDom from '../GetKeyBindingsTableBodyVirtualDom/GetKeyBindingsTableBodyVirtualDom.js'
 import * as GetKeyBindingsTableHeadVirtualDom from '../GetKeyBindingsTableHeadVirtualDom/GetKeyBindingsTableHeadVirtualDom.js'
 import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
@@ -11,7 +12,7 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
       className: ClassNames.KeyBindingsTable,
       ariaLabel: ViewletKeyBindingsStrings.keyBindings(),
       ariaRowCount: filteredKeyBindings.length,
-      onClick: 'handleTableClick',
+      onClick: DomEventListenerFunctions.HandleTableClick,
       tabIndex: 0,
       childCount: 3,
     },
