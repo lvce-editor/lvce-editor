@@ -39,6 +39,7 @@ const getManagersWithExtensionsToActivate = (manager, extensions) => {
 }
 
 const startSynching = async (extensionHost) => {
+  // TODO when extension host closes, remove event listeners
   if (extensionHost.ipc.isSynching) {
     return
   }
@@ -112,10 +113,7 @@ const actuallyActivateByEvent = async (event) => {
   const extensionHostsWithExtensions = getManagersWithExtensionsToActivate(extensionHostManagerTypes, extensionsToActivate)
   const extensionHosts = []
   for (const managerWithExtensions of extensionHostsWithExtensions) {
-    const extensionHost = await ExtensionHostManagementShared.startExtensionHost(
-      managerWithExtensions.manager.name,
-      managerWithExtensions.manager.ipc,
-    )
+    const extensionHost = await ExtensionHostManagementShared.startExtensionHost(managerWithExtensions.manager.ipc)
     // TODO register text document change listener and sync text documents
     await startSynching(extensionHost)
     Assert.object(extensionHost)
