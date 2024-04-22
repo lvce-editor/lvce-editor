@@ -114,7 +114,7 @@ const getTableRowDom = (keyBinding) => {
   return dom
 }
 
-const getTableBodyDom = (displayKeyBindings) => {
+export const getKeyBindingsTableBodyDom = (displayKeyBindings) => {
   return [
     {
       type: VirtualDomElements.TBody,
@@ -123,8 +123,4 @@ const getTableBodyDom = (displayKeyBindings) => {
     },
     ...displayKeyBindings.flatMap(getTableRowDom),
   ]
-}
-
-export const getKeyBindingsTableBodyDom = (displayKeyBindings) => {
-  return getTableBodyDom(displayKeyBindings)
 }
