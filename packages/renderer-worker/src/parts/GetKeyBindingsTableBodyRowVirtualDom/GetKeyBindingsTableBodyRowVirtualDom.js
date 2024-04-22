@@ -1,5 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
+import * as GetKeyBindingsTableBodyRowClassName from '../GetKeyBindingsTableBodyRowClassName/GetKeyBindingsTableBodyRowClassName.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -64,20 +64,12 @@ const tableCellProps = {
   className: ClassNames.KeyBindingsTableCell,
 }
 
-const getRowClassName = (isEven, selected) => {
-  return MergeClassNames.mergeClassNames(
-    ClassNames.KeyBindingsTableRow,
-    isEven ? ClassNames.KeyBindingsTableRowEven : ClassNames.KeyBindingsTableRowOdd,
-    selected ? ClassNames.KeyBindingsTableRowSelected : '',
-  )
-}
-
 export const getKeyBindingsTableBodyRowDom = (keyBinding) => {
   const { children, childCount } = getKeyBindingCellChildren(keyBinding)
   const { rowIndex, selected, commandMatches, command } = keyBinding
   const commandHighlights = commandMatches.slice(1)
   const isEven = rowIndex % 2 === 0
-  const className = getRowClassName(isEven, selected)
+  const className = GetKeyBindingsTableBodyRowClassName.getRowClassName(isEven, selected)
   const dom = []
   dom.push({
     type: VirtualDomElements.Tr,
