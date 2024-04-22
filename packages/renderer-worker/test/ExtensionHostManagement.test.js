@@ -45,13 +45,6 @@ jest.unstable_mockModule('../src/parts/ExtensionHostManagement/ExtensionHostMana
     }),
   }
 })
-jest.unstable_mockModule('../src/parts/ExtensionHostManagement/ExtensionHostManagementNode.js', () => {
-  return {
-    canActivate: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
 jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => {
   return {
     getExtensions: jest.fn(() => {
@@ -70,7 +63,6 @@ jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => {
 })
 
 const ExtensionHostManagement = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagement.js')
-const ExtensionHostManagementNode = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagementNode.js')
 const ExtensionHostManagementShared = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagementShared.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 const ExtensionMeta = await import('../src/parts/ExtensionMeta/ExtensionMeta.js')
