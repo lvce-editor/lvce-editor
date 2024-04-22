@@ -1,7 +1,7 @@
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
-import * as IpcId from '../IpcId/IpcId.js'
 
 export const connectIpcToElectron = async (ipc) => {
   const { port1, port2 } = await GetPortTuple.getPortTuple()
