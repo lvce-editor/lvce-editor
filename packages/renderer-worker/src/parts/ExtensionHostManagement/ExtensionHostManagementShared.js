@@ -12,44 +12,28 @@ const ExtensionHostState = {
 }
 
 export const state = {
-  extensionPromiseCache: Object.create(null),
-  extensionHosts: Object.create(null),
-  pendingIpcs: Object.create(null),
+  /**
+   * @type {any}
+   */
+  pendingIpc: undefined,
 }
 
-const toActivatableExtension = (extension) => {
-  return {
-    path: extension.path,
-    id: extension.id,
-    main: extension.main,
-  }
-}
-
-// const startExtensionHost = async (type) => {
-//   return ExtensionHostIpc.listen(ExtensionHostIpc.Methods.SharedProcess)
-// }
-
-export const startExtensionHost = async (name, ipcType) => {
-  const exisingIpcPromise = state.pendingIpcs[name]
+export const startExtensionHost = async (ipcType) => {
+  const exisingIpcPromise = state.pendingIpc
   if (exisingIpcPromise) {
     const ipc = await exisingIpcPromise
     return {
-      name: ipcType,
+      type: ipcType,
       ipc,
     }
   }
-  if (state.extensionHosts[name]) {
-    return state.extensionHosts[name]
-  }
   const promise = ExtensionHostIpc.listen(ipcType).then(ExtensionHostRpc.listen)
-  state.pendingIpcs[name] = promise
+  state.pendingIpc = promise
   const ipc = await promise
-  state.extensionHosts[name] = {
-    state: ExtensionHostState.Running,
+  return {
+    type: ipcType,
     ipc,
-    name: ipcType,
   }
-  return state.extensionHosts[name]
 }
 
 export const stopExtensionHost = async (key) => {

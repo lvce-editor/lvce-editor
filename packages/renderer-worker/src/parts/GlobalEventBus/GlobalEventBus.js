@@ -6,6 +6,7 @@
 // pros
 // 1. it decouples event emitter (e.g. Editor creation) from other module (Document syncing when editor was created)
 
+// TODO use normal event target
 export const state = {
   listenerMap: Object.create(null),
 }
