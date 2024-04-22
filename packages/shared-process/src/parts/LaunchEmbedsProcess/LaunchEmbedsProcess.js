@@ -14,5 +14,6 @@ export const launchEmbedsProcess = async () => {
   })
   HandleIpc.handleIpc(ipc)
   await ConnectIpcToElectron.connectIpcToElectron(ipc)
+  HandleIpc.unhandleIpc(ipc)
   return ipc
 }

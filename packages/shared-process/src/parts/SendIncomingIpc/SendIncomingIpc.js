@@ -25,6 +25,8 @@ const hasState = (ipcId) => {
 const supportsPartialIpcHandling = (ipcId) => {
   switch (ipcId) {
     case IpcId.TerminalProcess:
+    case IpcId.ProcessExplorer:
+    case IpcId.EmbedsProcess:
       return true
     default:
       return false

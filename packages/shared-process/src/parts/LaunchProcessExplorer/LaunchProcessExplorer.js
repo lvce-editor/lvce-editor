@@ -14,5 +14,6 @@ export const launchProcessExplorer = async () => {
   })
   HandleIpc.handleIpc(ipc)
   await ConnectIpcToElectron.connectIpcToElectron(ipc)
+  HandleIpc.unhandleIpc(ipc)
   return ipc
 }
