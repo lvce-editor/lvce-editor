@@ -2,6 +2,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetKeyBindingsTableHeadVirtualDom from '../GetKeyBindingsTableHeadVirtualDom/GetKeyBindingsTableHeadVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const kbdDom = {
@@ -85,60 +86,35 @@ const getTableRowDom = (keyBinding) => {
     ariaRowIndex: rowIndex,
     className,
     key: rowIndex,
-    childCount: 3,
+    childCount: 4,
   })
   const tableCell = {
     type: VirtualDomElements.Td,
     ...tableCellProps,
     childCount: 0,
   }
+  dom.push({
+    type: VirtualDomElements.Td,
+    childCount: 0,
+    className: ClassNames.KeyBindingsTableCell,
+  })
   addHighlights(tableCell, dom, commandHighlights, command)
   dom.push(
     {
       type: VirtualDomElements.Td,
-      ...tableCellProps,
+      className: ClassNames.KeyBindingsTableCell,
       childCount,
     },
     ...children,
     {
       type: VirtualDomElements.Td,
-      ...tableCellProps,
+      className: ClassNames.KeyBindingsTableCell,
       childCount: 1,
     },
     text(keyBinding.when || ''),
   )
   return dom
 }
-
-const tableHead = {
-  type: VirtualDomElements.THead,
-  className: ClassNames.KeyBindingsTableHead,
-  childCount: 1,
-}
-
-const tableHeadRow = {
-  type: VirtualDomElements.Tr,
-  className: ClassNames.KeyBindingsTableRow,
-  ariaRowIndex: 1,
-  childCount: 3,
-}
-
-const tableHeading = {
-  type: VirtualDomElements.Th,
-  ...tableCellProps,
-  childCount: 1,
-}
-
-const staticTableHeadDom = [
-  tableHead,
-  tableHeadRow,
-  tableHeading,
-  text(ViewletKeyBindingsStrings.command()),
-  tableHeading,
-  text(ViewletKeyBindingsStrings.key()),
-  tableHeading,
-  text(ViewletKeyBindingsStrings.when()),
-]
 
 const getTableBodyDom = (displayKeyBindings) => {
   return [
@@ -165,7 +141,13 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
     {
       type: VirtualDomElements.ColGroup,
       className: ClassNames.KeyBindingsTableColGroup,
-      childCount: 3,
+      childCount: 4,
+    },
+    {
+      type: VirtualDomElements.Col,
+      className: ClassNames.KeyBindingsTableCol,
+      width: 30,
+      childCount: 0,
     },
     {
       type: VirtualDomElements.Col,
@@ -182,10 +164,10 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
     {
       type: VirtualDomElements.Col,
       className: ClassNames.KeyBindingsTableCol,
-      width: columnWidth3,
+      width: columnWidth3 - 30,
       childCount: 0,
     },
-    ...staticTableHeadDom,
+    ...GetKeyBindingsTableHeadVirtualDom.getKeyBindingsTableHeadVirtualDom(),
     ...getTableBodyDom(displayKeyBindings),
   ]
   return tableDom
