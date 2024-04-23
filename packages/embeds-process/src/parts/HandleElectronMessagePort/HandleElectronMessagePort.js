@@ -1,13 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as HandleIpcClosed from '../HandleIpcClosed/HandleIpcClosed.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcId from '../IpcId/IpcId.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
-
-const handleClose = (event) => {
-  console.log('embeds worker closed', event.target)
-}
 
 export const handleElectronMessagePort = async (messagePort, ipcId) => {
   Assert.object(messagePort)
@@ -20,6 +17,6 @@ export const handleElectronMessagePort = async (messagePort, ipcId) => {
   if (ipcId === IpcId.MainProcess) {
     ParentIpc.state.ipc = ipc
   } else if (ipcId === IpcId.EmbedsWorker) {
-    ipc.addEventListener('close', handleClose)
+    ipc.addEventListener('close', HandleIpcClosed.handleIpcClosed)
   }
 }
