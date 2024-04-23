@@ -19,7 +19,7 @@ export const create = async (options) => {
       }
     case PlatformType.Electron:
       const { port1, port2 } = GetPortTuple.getPortTuple(options.port)
-      await SendMessagePortToElectron.sendMessagePortToElectron(port2, options.initialCommand)
+      await SendMessagePortToElectron.sendMessagePortToElectron(port2, options.initialCommand, options.ipcId)
       return port1
     default:
       throw new Error('unsupported platform')

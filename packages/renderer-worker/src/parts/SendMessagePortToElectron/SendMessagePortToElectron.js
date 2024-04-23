@@ -1,10 +1,8 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const sendMessagePortToElectron = async (port, initialCommand) => {
+export const sendMessagePortToElectron = async (port, initialCommand, ipcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  const ipc = SharedProcessState.state.ipc
-  await JsonRpc.invokeAndTransfer(ipc, [port], initialCommand)
+  await SharedProcess.invokeAndTransfer([port], initialCommand, ipcId)
 }
