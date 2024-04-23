@@ -1,4 +1,4 @@
-export const state = {
+const state = {
   ipcMap: Object.create(null),
 }
 
@@ -15,5 +15,5 @@ export const remove = (id) => {
 }
 
 export const getAll = () => {
-  return Object.values(state.ipcMap)
+  return Object.entries(state.ipcMap)
 }

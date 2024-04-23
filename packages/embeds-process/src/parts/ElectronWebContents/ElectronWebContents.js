@@ -1,4 +1,4 @@
-import * as ElectronBrowserViewIpcState from '../ElectronBrowserViewIpcState/ElectronBrowserViewIpcState.js'
+import * as ElectronBrowserViewIpcState from '../ElectronWebContentsViewIpcState/ElectronWebContentsViewIpcState.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
