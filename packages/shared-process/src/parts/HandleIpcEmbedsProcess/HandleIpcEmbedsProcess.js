@@ -4,11 +4,11 @@ export const targetMessagePort = () => {
   return EmbedsProcess.getOrCreate()
 }
 
-export const upgradeMessagePort = (port) => {
+export const upgradeMessagePort = (port, message) => {
   return {
     type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
-    params: [],
+    params: [message.ipcId],
     transfer: [port],
   }
 }

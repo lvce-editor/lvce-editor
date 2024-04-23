@@ -12,7 +12,14 @@ export const listen = async () => {
 }
 
 export const invoke = async (method, ...params) => {
-  const result = await JsonRpc.invoke(SharedProcessState.state.ipc, method, ...params)
+  const { ipc } = SharedProcessState.state
+  const result = await JsonRpc.invoke(ipc, method, ...params)
+  return result
+}
+
+export const invokeAndTransfer = async (transfer, method, ...params) => {
+  const { ipc } = SharedProcessState.state
+  const result = await JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
   return result
 }
 
