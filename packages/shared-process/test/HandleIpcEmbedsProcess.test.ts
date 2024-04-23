@@ -3,10 +3,13 @@ import * as HandleIpcEmbedsProcess from '../src/parts/HandleIpcEmbedsProcess/Han
 
 test('upgradeMessagePort', () => {
   const port = {}
-  expect(HandleIpcEmbedsProcess.upgradeMessagePort(port)).toEqual({
+  const message = {
+    ipcId: 1,
+  }
+  expect(HandleIpcEmbedsProcess.upgradeMessagePort(port, message)).toEqual({
     type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
-    params: [],
+    params: [1],
     transfer: [port],
   })
 })
