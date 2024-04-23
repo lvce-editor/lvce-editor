@@ -1,28 +1,15 @@
-import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-
-const reloadWeb = () => {
-  return RendererProcess.invoke('Window.reload')
-}
-
-const reloadRemote = () => {
-  return RendererProcess.invoke('Window.reload')
-}
-
-const reloadElectron = () => {
-  return ElectronWindow.reload()
-}
+import * as ReloadElectron from '../ReloadElectron/ReloadElectron.js'
+import * as ReloadWeb from '../ReloadWeb/ReloadWeb.js'
 
 const getFn = () => {
   switch (Platform.platform) {
     case PlatformType.Web:
-      return reloadWeb
     case PlatformType.Remote:
-      return reloadRemote
+      return ReloadWeb.reloadWeb
     case PlatformType.Electron:
-      return reloadElectron
+      return ReloadElectron.reloadElectron
     default:
       throw new Error('unexpected platform')
   }
