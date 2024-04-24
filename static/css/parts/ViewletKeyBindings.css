@@ -81,6 +81,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   contain: strict;
+  text-align: left;
 }
 
 .Resizer {
