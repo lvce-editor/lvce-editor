@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as LocationStrings from '../LocationStrings/LocationsStrings.js'
 import * as LocationType from '../LocationType/LocationType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -18,7 +19,7 @@ const getLeafVirtualDom = (location) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'Label',
+        className: ClassNames.Label,
         childCount: 1,
       },
       text(lineText || '(empty line)'),
@@ -30,13 +31,13 @@ const getLeafVirtualDom = (location) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'Label',
+        className: ClassNames.Label,
         childCount: 3,
       },
       text(before),
       {
         type: VirtualDomElements.Span,
-        className: 'Highlight',
+        className: ClassNames.Highlight,
         childCount: 1,
       },
       text(middle),
@@ -73,7 +74,7 @@ const getExpandedVirtualDom = (location) => {
     },
     {
       type: VirtualDomElements.Img,
-      className: 'FileIcon',
+      className: ClassNames.FileIcon,
       src: icon,
     },
     text(name),
@@ -113,9 +114,9 @@ export const getLocationsVirtualDom = (locations, message) => {
     text(message),
     {
       type: VirtualDomElements.Div,
-      className: 'LocationList',
+      className: ClassNames.LocationList,
       role: AriaRoles.Tree,
-      ariaLabel: 'Locations',
+      ariaLabel: LocationStrings.locations(),
       tabIndex: 0,
       ariaDescribedBy: 'LocationsMessage',
       childCount: locations.length,

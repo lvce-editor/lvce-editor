@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetSearchFieldButtonVirtualDom from '../GetSearchFieldButtonVirtualDom/GetSearchFieldButtonVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
@@ -6,13 +7,13 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButto
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'SearchField',
+      className: ClassNames.SearchField,
       role: AriaRoles.None,
       childCount: 2,
     },
     {
       type: VirtualDomElements.TextArea,
-      className: 'MultilineInputBox',
+      className: ClassNames.MultilineInputBox,
       spellcheck: false,
       autocapitalize: 'off',
       autocorrect: 'off',
@@ -24,7 +25,7 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButto
     },
     {
       type: VirtualDomElements.Div,
-      className: 'SearchFieldButtons',
+      className: ClassNames.SearchFieldButtons,
       childCount: insideButtons.length,
     },
     ...insideButtons.flatMap(GetSearchFieldButtonVirtualDom.getSearchFieldButtonVirtualDom),
@@ -32,7 +33,7 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButto
   if (outsideButtons.length > 0) {
     dom.unshift({
       type: VirtualDomElements.Div,
-      className: 'SearchFieldContainer',
+      className: ClassNames.SearchFieldContainer,
       role: AriaRoles.None,
       childCount: 1 + outsideButtons.length,
     })
