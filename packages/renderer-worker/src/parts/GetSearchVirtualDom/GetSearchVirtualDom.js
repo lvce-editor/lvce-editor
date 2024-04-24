@@ -1,7 +1,8 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetSearchHeaderVirtualDom from '../GetSearchHeaderVirtualDom/GetSearchHeaderVirtualDom.js'
 import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression, message, detailsExpanded) => {
@@ -18,7 +19,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'ViewletSearchMessage',
+      className: ClassNames.ViewletSearchMessage,
       role: AriaRoles.Status,
       tabIndex: 0,
       childCount: 1,

@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -20,9 +21,9 @@ export const getProblemsNoProblemsFoundVirtualDom = (filterValue) => {
       text(ProblemStrings.noResultsFoundWithProvidedFilterCriteria()),
       {
         type: VirtualDomElements.A,
-        className: 'MessageAction',
+        className: ClassNames.MessageAction,
         childCount: 1,
-        onClick: 'handleClearFilterClick',
+        onClick: DomEventListenerFunctions.HandleClearFilterClick,
       },
       text(ProblemStrings.clearFilter()),
       text('.'),

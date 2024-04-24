@@ -1,6 +1,7 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetKeyBindingsHeaderVirtualDom from '../GetKeyBindingsHeaderVirtualDom/GetKeyBindingsHeaderVirtualDom.js'
 import * as GetKeyBindingsTableVirtualDom from '../GetKeyBindingsTableVirtualDom/GetKeyBindingsTableVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as GetKeyBindingsHeaderVirtualDom from '../GetKeyBindingsHeaderVirtualDom/GetKeyBindingsHeaderVirtualDom.js'
 
 export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3) => {
   return [
@@ -15,28 +16,28 @@ export const getKeyBindingsVirtualDom = (filteredKeyBindings, displayKeyBindings
     ...GetKeyBindingsHeaderVirtualDom.getKeyBindingsHeaderVirtualDom(),
     {
       type: VirtualDomElements.Div,
-      className: 'KeyBindingsTableWrapper',
+      className: ClassNames.KeyBindingsTableWrapper,
       childCount: 3,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'Resizer',
+      className: ClassNames.Resizer,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'Resizer',
+      className: ClassNames.Resizer,
       childCount: 0,
     },
     ...GetKeyBindingsTableVirtualDom.getTableDom(filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3),
     {
       type: VirtualDomElements.Div,
-      className: 'ScrollBar',
+      className: ClassNames.ScrollBar,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ScrollBarThumb',
+      className: ClassNames.ScrollBarThumb,
       childCount: 0,
     },
   ]

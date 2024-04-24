@@ -1,11 +1,12 @@
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 
 const getTabClassName = (isSelected) => {
-  let className = 'TerminalTab'
+  let className = ClassNames.TerminalTab
   if (isSelected) {
-    className += ' TerminalTabSelected'
+    className += ' ' + ClassNames.TerminalTabSelected
   }
   return className
 }
@@ -23,7 +24,7 @@ const createTabDom = (tab, isSelected) => {
     ),
     div(
       {
-        className: 'TerminalTabIcon',
+        className: ClassNames.TerminalTabIcon,
         maskImage: icon,
       },
       0,
@@ -41,7 +42,7 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
   const dom = [
     div(
       {
-        className: 'TerminalTabs',
+        className: ClassNames.TerminalTabs,
         left: x,
         width,
         height,

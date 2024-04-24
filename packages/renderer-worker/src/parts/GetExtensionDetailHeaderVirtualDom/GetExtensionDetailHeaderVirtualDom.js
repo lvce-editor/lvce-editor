@@ -7,7 +7,7 @@ export const getExtensionDetailHeaderVirtualDom = (extensionDetail) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'ExtensionDetailHeader',
+      className: ClassNames.ExtensionDetailHeader,
       childCount: 2,
     },
     {

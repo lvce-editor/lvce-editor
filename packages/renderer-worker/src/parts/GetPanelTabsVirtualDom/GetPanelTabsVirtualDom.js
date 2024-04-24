@@ -1,12 +1,13 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const createPanelTab = (tab, badgeCount, isSelected) => {
   const label = tab
-  let className = 'PanelTab'
+  let className = ClassNames.PanelTab
   if (isSelected) {
-    className += ' PanelTabSelected'
+    className += ' ' + ClassNames.PanelTabSelected
   }
   const dom = [
     div(
@@ -24,7 +25,7 @@ const createPanelTab = (tab, badgeCount, isSelected) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'Badge',
+        className: ClassNames.Badge,
         childCount: 1,
       },
       text(' ' + badgeCount),
