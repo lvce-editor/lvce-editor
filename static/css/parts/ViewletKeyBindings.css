@@ -65,6 +65,10 @@
   background: rgba(64, 92, 80, 0.2);
 }
 
+.KeyBindingsTableRow:where(:not(:hover, .KeyBindingsTableRowSelected)) .KeyBindingsEditButton {
+  display: none;
+}
+
 .KeyBindingsTableRowOdd {
   background: rgba(156, 162, 160, 0.04);
 }

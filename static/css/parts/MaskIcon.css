@@ -281,6 +281,11 @@
   mask-image: url(/icons/symbol-field.svg);
 }
 
+.MaskIconEdit,
+.IconEdit {
+  mask-image: url(/icons/edit.svg);
+}
+
 .MaskIconSymbolFile,
 .IconSymbolFile {
   mask-image: url(/icons/symbol-file.svg);

@@ -2,6 +2,9 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetKeyBindingsTableBodyRowClassName from '../GetKeyBindingsTableBodyRowClassName/GetKeyBindingsTableBodyRowClassName.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
+import * as GetKeyBindingsTableEditCellVirtualDom from '../GetKeyBindingsTableEditCellVirtualDom/GetKeyBindingsTableEditCellVirtualDom.js'
+import * as Icon from '../Icon/Icon.js'
 
 const kbdDom = {
   type: VirtualDomElements.Kbd,
@@ -60,10 +63,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
   return { children, childCount }
 }
 
-const tableCellProps = {
-  className: ClassNames.KeyBindingsTableCell,
-}
-
 export const getKeyBindingsTableBodyRowDom = (keyBinding) => {
   const { children, childCount } = getKeyBindingCellChildren(keyBinding)
   const { rowIndex, selected, commandMatches, command } = keyBinding
@@ -78,16 +77,12 @@ export const getKeyBindingsTableBodyRowDom = (keyBinding) => {
     key: rowIndex,
     childCount: 4,
   })
+  dom.push(...GetKeyBindingsTableEditCellVirtualDom.getKeyBindingsTableEditCellDom())
   const tableCell = {
     type: VirtualDomElements.Td,
-    ...tableCellProps,
+    className: ClassNames.KeyBindingsTableCell,
     childCount: 0,
   }
-  dom.push({
-    type: VirtualDomElements.Td,
-    childCount: 0,
-    className: ClassNames.KeyBindingsTableCell,
-  })
   addHighlights(tableCell, dom, commandHighlights, command)
   dom.push(
     {
