@@ -8,14 +8,6 @@
   background: var(--MainBackground);
 }
 
-.KeyBindingsHeader {
-  height: 50px;
-  contain: strict;
-  display: flex;
-  place-items: center;
-  padding: 0 15px;
-}
-
 .Key {
   background-color: rgba(128, 128, 128, 0.17);
   border-color: rgba(51, 51, 51, 0.6) rgba(51, 51, 51, 0.6) rgba(68, 68, 68, 0.6);
@@ -34,54 +26,6 @@
   display: flex;
   align-items: center;
   line-height: 10px;
-}
-
-.KeyBindingsTableWrapper {
-  padding: 0 15px;
-  position: relative;
-}
-
-.KeyBindingsTable {
-  width: 100%;
-  table-layout: fixed;
-  contain: content;
-  border-collapse: collapse;
-}
-
-.KeyBindingsTableBody {
-  white-space: pre;
-  overflow-y: auto;
-  user-select: none;
-  contain: content;
-}
-
-.KeyBindingsTableRow {
-  height: 24px;
-  contain: strict;
-}
-
-.KeyBindingsTableRow:where(:hover) {
-  color: #e0e0e0;
-  background: rgba(64, 92, 80, 0.2);
-}
-
-.KeyBindingsTableRow:where(:not(:hover, .KeyBindingsTableRowSelected)) .KeyBindingsEditButton {
-  display: none;
-}
-
-.KeyBindingsTableRowOdd {
-  background: rgba(156, 162, 160, 0.04);
-}
-
-.KeyBindingsTableRowSelected {
-  background: #515f59;
-}
-
-.KeyBindingsTableCell {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  contain: strict;
-  text-align: left;
 }
 
 .Resizer {
