@@ -39,6 +39,8 @@ export const create = (id, uri, x, y, width, height) => {
     defineKeyBindingsId: -1,
     editIconSize: 22,
     padding: 15,
+    searchHeaderHeight: 50,
+    tableHeaderHeight: 24,
   }
 }
 
@@ -61,12 +63,10 @@ const getMaxVisibleItems = (height, searchHeaderHeight, tableHeaderHeight, rowHe
 }
 
 export const loadContent = async (state, savedState) => {
-  const { height, rowHeight, width, contentPadding } = state
+  const { height, rowHeight, width, contentPadding, searchHeaderHeight, tableHeaderHeight } = state
   Assert.number(width)
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
   const parsedKeyBindings = ParseKeyBindings.parseKeyBindings(keyBindings)
-  const searchHeaderHeight = 50
-  const tableHeaderHeight = 24
   const maxVisibleItems = getMaxVisibleItems(height, searchHeaderHeight, tableHeaderHeight, rowHeight)
   const savedValue = getSavedValue(savedState)
   const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, savedValue)
@@ -91,8 +91,6 @@ export const loadContent = async (state, savedState) => {
     columnWidth1,
     columnWidth2,
     columnWidth3,
-    searchHeaderHeight,
-    tableHeaderHeight,
   }
 }
 
