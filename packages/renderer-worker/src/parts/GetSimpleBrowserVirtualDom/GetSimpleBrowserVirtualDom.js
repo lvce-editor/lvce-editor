@@ -1,3 +1,4 @@
+import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, value) => {
@@ -51,7 +52,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     {
       type: VirtualDomElements.Input,
       className: 'InputBox',
-      inputType: 'url',
+      inputType: HtmlInputType.Url,
       enterKeyHint: 'Go',
       onInput: 'handleInput',
       onFocus: 'handleFocus',
