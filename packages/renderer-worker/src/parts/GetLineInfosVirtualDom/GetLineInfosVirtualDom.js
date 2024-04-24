@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -5,7 +6,7 @@ const getLineInfoVirtualDom = (lineInfo) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'HoverEditorRow',
+      className: ClassNames.HoverEditorRow,
       childCount: lineInfo.length / 2,
     },
   ]

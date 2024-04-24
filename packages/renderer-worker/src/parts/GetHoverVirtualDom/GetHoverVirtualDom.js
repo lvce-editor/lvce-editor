@@ -5,13 +5,13 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const hoverProblemMessage = {
   type: VirtualDomElements.Span,
-  className: 'HoverProblemMessage',
+  className: ClassNames.HoverProblemMessage,
   childCount: 1,
 }
 
 const hoverProblemDetail = {
   type: VirtualDomElements.Span,
-  className: 'HoverProblemDetail',
+  className: ClassNames.HoverProblemDetail,
   childCount: 1,
 }
 
@@ -29,7 +29,7 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
   if (diagnostics && diagnostics.length > 0) {
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'HoverDisplayString HoverProblem',
+      className: `${ClassNames.HoverDisplayString} ${ClassNames.HoverProblem}`,
       childCount: diagnostics.length * 2,
     })
     for (const diagnostic of diagnostics) {

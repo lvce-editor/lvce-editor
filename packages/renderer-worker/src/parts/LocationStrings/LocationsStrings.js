@@ -8,6 +8,7 @@ const UiStrings = {
   OneResultInOneFile: '1 result in 1 file',
   ManyResultsInOneFile: '{PH1} results in 1 file',
   ManyResultsInManyFiles: '{PH1} results in {PH2} files',
+  Locations: 'Locations',
 }
 
 export const noResults = () => {
@@ -16,6 +17,10 @@ export const noResults = () => {
 
 export const oneResultInOneFile = () => {
   return I18nString.i18nString(UiStrings.OneResultInOneFile)
+}
+
+export const locations = () => {
+  return I18nString.i18nString(UiStrings.Locations)
 }
 
 export const manyResultsInOneFile = (resultCount) => {

@@ -1,7 +1,8 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetActionButtonVirtualDom from '../GetActionButtonVirtualDom/GetActionButtonVirtualDom.js'
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as InputName from '../InputName/InputName.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getProblemsFilterVirtualDom = (action) => {
@@ -9,12 +10,12 @@ export const getProblemsFilterVirtualDom = (action) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'Filter',
+      className: ClassNames.Filter,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       spellcheck: false,
       autocapitalize: 'off',
       autocorrect: 'off',
@@ -30,7 +31,7 @@ export const getProblemsFilterVirtualDom = (action) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'FilterBadge',
+        className: ClassNames.FilterBadge,
         childCount: 1,
       },
       text(action.badgeText),
