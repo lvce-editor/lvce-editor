@@ -2,13 +2,14 @@ import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearch
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWholeWord, useRegularExpression, detailsExpanded) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'SearchHeader',
+      className: ClassNames.SearchHeader,
       role: AriaRoles.None,
       childCount: 2,
       onClick: DomEventListenerFunctions.HandleHeaderClick,
@@ -16,13 +17,13 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     },
     {
       type: VirtualDomElements.Div,
-      className: 'SearchHeaderTop',
+      className: ClassNames.SearchHeaderTop,
       role: AriaRoles.None,
       childCount: 2,
     },
     {
       type: VirtualDomElements.Button,
-      className: `IconButton SearchToggleButton ${replaceExpanded ? 'SearchToggleButtonExpanded' : ''}`,
+      className: `IconButton SearchToggleButton ${replaceExpanded ? ClassNames.SearchToggleButtonExpanded : ''}`,
       title: 'Toggle Replace',
       ariaLabel: 'Toggle Replace',
       ariaExpanded: replaceExpanded,
@@ -31,7 +32,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     },
     {
       type: VirtualDomElements.Div,
-      className: `MaskIcon ${replaceExpanded ? 'MaskIconChevronDown' : 'MaskIconChevronRight'}`,
+      className: `${ClassNames.MaskIcon} ${replaceExpanded ? ClassNames.MaskIconChevronDown : ClassNames.MaskIconChevronRight}`,
       childCount: 0,
     },
     {
