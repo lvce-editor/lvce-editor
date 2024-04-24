@@ -9,17 +9,18 @@ export const getKeyBindingsTableBodyRowDom = (keyBinding) => {
   const { rowIndex, selected } = keyBinding
   const isEven = rowIndex % 2 === 0
   const className = GetKeyBindingsTableBodyRowClassName.getRowClassName(isEven, selected)
-  const dom = []
-  dom.push({
-    type: VirtualDomElements.Tr,
-    ariaRowIndex: rowIndex,
-    className,
-    key: rowIndex,
-    childCount: 4,
-  })
-  dom.push(...GetKeyBindingsTableCellEditVirtualDom.getKeyBindingsTableEditCellDom())
-  dom.push(...GetKeyBindingsTableCellCommandVirtualDom.getKeyBindingsTableCellCommandDom(keyBinding))
-  dom.push(...GetKeyBindingsTableCellKeyVirtualDom.getKeyBindingsTableCellKeyDom(keyBinding))
-  dom.push(...GetKeyBindingsTableCellWhenVirtualDom.getKeyBindingsTableCellWhenDom(keyBinding))
+  const dom = [
+    {
+      type: VirtualDomElements.Tr,
+      ariaRowIndex: rowIndex,
+      className,
+      key: rowIndex,
+      childCount: 4,
+    },
+    ...GetKeyBindingsTableCellEditVirtualDom.getKeyBindingsTableEditCellDom(),
+    ...GetKeyBindingsTableCellCommandVirtualDom.getKeyBindingsTableCellCommandDom(keyBinding),
+    ...GetKeyBindingsTableCellKeyVirtualDom.getKeyBindingsTableCellKeyDom(keyBinding),
+    ...GetKeyBindingsTableCellWhenVirtualDom.getKeyBindingsTableCellWhenDom(keyBinding),
+  ]
   return dom
 }
