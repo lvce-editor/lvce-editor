@@ -37,6 +37,8 @@ export const create = (id, uri, x, y, width, height) => {
     contentPadding: 30,
     resizerDownId: 0,
     defineKeyBindingsId: -1,
+    editIconSize: 22,
+    padding: 15,
   }
 }
 
@@ -138,8 +140,15 @@ const getIndex = (state, eventX, eventY) => {
 }
 
 export const handleClick = (state, eventX, eventY) => {
-  Focus.setFocus(WhenExpression.FocusKeyBindingsTable)
+  const { padding, editIconSize, x } = state
   const selectedIndex = getIndex(state, eventX, eventY)
+  const relativeX = eventX - x
+  if (relativeX > padding && relativeX < padding + editIconSize) {
+    showDefineWidget(state, selectedIndex)
+  } else {
+    // TODO avoid side effect, make focus functional
+    Focus.setFocus(WhenExpression.FocusKeyBindingsTable)
+  }
   return {
     ...state,
     focusedIndex: selectedIndex,
