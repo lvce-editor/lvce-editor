@@ -14,6 +14,7 @@ const UiStrings = {
   InstallAnotherVersion: 'Install Another Version',
   SearchExtensionsInMarketplace: 'Search Extensions in Marketplace',
   ViewsAndMoreActions: 'Views and more Actions...',
+  Extensions: 'Extensions',
 }
 
 export const noExtensionsFound = () => {
@@ -26,6 +27,10 @@ export const filter = () => {
 
 export const refresh = () => {
   return I18nString.i18nString(UiStrings.Refresh)
+}
+
+export const extensions = () => {
+  return I18nString.i18nString(UiStrings.Extensions)
 }
 
 export const clearExtensionSearchResults = () => {
