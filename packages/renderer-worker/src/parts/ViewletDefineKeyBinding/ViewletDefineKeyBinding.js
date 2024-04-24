@@ -1,6 +1,6 @@
 import * as BrowserKey from '../BrowserKey/BrowserKey.js'
-import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as GetKeyBindingsString from '../GetKeyBindingsString/GetKeyBindingsString.js'
+import * as KeyBindingsStrings from '../KeyBindingStrings/KeyBindingStrings.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -17,7 +17,7 @@ export const loadContent = (state) => {
   return {
     ...state,
     focused: true,
-    message: ViewletKeyBindingsStrings.pressDesiredKeyCombinationThenPressEnter(),
+    message: KeyBindingsStrings.pressDesiredKeyCombinationThenPressEnter(),
   }
 }
 
@@ -32,6 +32,7 @@ export const handleBlur = (state) => {
 }
 
 export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
+  // TODO handle with keybindings?
   if (key === BrowserKey.Control || key === BrowserKey.Shift || key === BrowserKey.Alt) {
     return state
   }

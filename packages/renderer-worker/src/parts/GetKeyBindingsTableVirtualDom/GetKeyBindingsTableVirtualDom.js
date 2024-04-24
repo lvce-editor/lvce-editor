@@ -3,7 +3,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetKeyBindingsTableBodyVirtualDom from '../GetKeyBindingsTableBodyVirtualDom/GetKeyBindingsTableBodyVirtualDom.js'
 import * as GetKeyBindingsTableColGroupVirtualDom from '../GetKeyBindingsTableColGroupVirtualDom/GetKeyBindingsTableColGroupVirtualDom.js'
 import * as GetKeyBindingsTableHeadVirtualDom from '../GetKeyBindingsTableHeadVirtualDom/GetKeyBindingsTableHeadVirtualDom.js'
-import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
+import * as KeyBindingsStrings from '../KeyBindingStrings/KeyBindingStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3) => {
@@ -11,7 +11,7 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
     {
       type: VirtualDomElements.Table,
       className: ClassNames.KeyBindingsTable,
-      ariaLabel: ViewletKeyBindingsStrings.keyBindings(),
+      ariaLabel: KeyBindingsStrings.keyBindings(),
       ariaRowCount: filteredKeyBindings.length,
       onClick: DomEventListenerFunctions.HandleTableClick,
       tabIndex: 0,
