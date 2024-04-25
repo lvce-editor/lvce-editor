@@ -1,23 +1,15 @@
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
-export const handleDidNavigate = (id, url) => {
-  // console.log({ id, url })
-  GlobalEventBus.emitEvent('browser-view-did-navigate', id, url)
-}
+const dispatch =
+  (key) =>
+  (...args) => {
+    GlobalEventBus.emitEvent(key, ...args)
+  }
+export const handleDidNavigate = dispatch('browser-view-did-navigate')
 
-export const handleTitleUpdated = (id, title) => {
-  // TODO dispatch event to global view event bus (send to all views?)
-  // views return new state, causing rerender
-  // console.log({ id, title })
-  GlobalEventBus.emitEvent('browser-view-title-updated', id, title)
-}
+export const handleTitleUpdated = dispatch('browser-view-title-updated')
 
-export const handleWillNavigate = (id, url) => {
-  // TODO dispatch event to global view event bus (send to all views?)
-  // views return new state, causing rerender
-  // console.log({ id, title })
-  GlobalEventBus.emitEvent('browser-view-will-navigate', id, url)
-}
+export const handleWillNavigate = dispatch('browser-view-will-navigate')
 
 export const isOpen = () => {
   return false

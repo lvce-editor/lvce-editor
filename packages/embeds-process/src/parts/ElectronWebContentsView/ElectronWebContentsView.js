@@ -35,30 +35,22 @@ export const show = async (id, ...args) => {
   return ParentIpc.invoke('ElectronWebContentsViewFunctions.show', id, ...args)
 }
 
-// TODO duplicate code
-export const handleDidNavigate = (id, ...args) => {
-  const ipc = ElectronWebContentsViewIpcState.get(id)
-  if (!ipc) {
-    return
+const forwardIpcEvent =
+  (key) =>
+  (id, ...args) => {
+    const ipc = ElectronWebContentsViewIpcState.get(id)
+    if (!ipc) {
+      return
+    }
+    console.log({ key, id, args })
+    JsonRpc.send(ipc, key, id, ...args)
   }
-  JsonRpc.send(ipc, 'ElectronWebContentsView.handleDidNavigate', id, ...args)
-}
 
-export const handleTitleUpdated = (id, ...args) => {
-  const ipc = ElectronWebContentsViewIpcState.get(id)
-  if (!ipc) {
-    return
-  }
-  JsonRpc.send(ipc, 'ElectronWebContentsView.handleTitleUpdated', id, ...args)
-}
+export const handleDidNavigate = forwardIpcEvent('ElectronWebContentsView.handleDidNavigate')
 
-export const handleWillNavigate = (id, ...args) => {
-  const ipc = ElectronWebContentsViewIpcState.get(id)
-  if (!ipc) {
-    return
-  }
-  JsonRpc.send(ipc, 'ElectronWebContentsView.handleWillNavigate', id, ...args)
-}
+export const handleTitleUpdated = forwardIpcEvent('ElectronWebContentsView.handleTitleUpdated')
+
+export const handleWillNavigate = forwardIpcEvent('ElectronWebContentsView.handleWillNavigate')
 
 export const handleBrowserViewDestroyed = (id, ...args) => {
   // TODO send to embeds worker?

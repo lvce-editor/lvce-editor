@@ -76,6 +76,6 @@ export const handleTitleUpdated = (id, title) => {
   return Rpc.invoke('ElectronBrowserView.handleTitleUpdated', title)
 }
 
-export const handleWillNavigate = (id, title) => {
-  return Rpc.invoke('ElectronBrowserView.handleWillNavigate', title)
+export const handleWillNavigate = (id, url) => {
+  return Rpc.invoke('ElectronBrowserView.handleWillNavigate', url)
 }

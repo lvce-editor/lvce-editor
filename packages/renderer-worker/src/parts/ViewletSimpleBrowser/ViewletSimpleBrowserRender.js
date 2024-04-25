@@ -1,5 +1,4 @@
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
@@ -8,7 +7,12 @@ export const hasFunctionalRootRender = true
 
 const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc && oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
+    return (
+      oldState.iframeSrc === newState.iframeSrc &&
+      oldState.canGoBack === newState.canGoBack &&
+      oldState.canGoForward === newState.canGoForward &&
+      oldState.isLoading === newState.isLoading
+    )
   },
   apply(oldState, newState) {
     const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
