@@ -1,8 +1,8 @@
 import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
 import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
-import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
+import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
 import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
 import * as Logger from '../Logger/Logger.js'
 

@@ -67,15 +67,16 @@ export const getStats = (id, fallthroughKeybindings) => {
   return EmbedsProcess.invoke('ElectronWebContentsView.getStats', id, fallthroughKeybindings)
 }
 
-export const handleDidNavigate = (id, url) => {
-  // TODO use send or invoke?
-  return Rpc.invoke('ElectronBrowserView.handleDidNavigate', url)
-}
+const forwardEvent =
+  (key) =>
+  (id, ...args) => {
+    Rpc.send(key, ...args)
+  }
 
-export const handleTitleUpdated = (id, title) => {
-  return Rpc.invoke('ElectronBrowserView.handleTitleUpdated', title)
-}
+export const handleDidNavigate = forwardEvent('ElectronBrowserView.handleDidNavigate')
 
-export const handleWillNavigate = (id, url) => {
-  return Rpc.invoke('ElectronBrowserView.handleWillNavigate', url)
-}
+export const handleTitleUpdated = forwardEvent('ElectronBrowserView.handleTitleUpdated')
+
+export const handleWillNavigate = forwardEvent('ElectronBrowserView.handleWillNavigate')
+
+export const handleContextMenu = forwardEvent('ElectronBrowserView.handleContextMenu')
