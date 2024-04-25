@@ -1,4 +1,9 @@
 import * as ElectronBrowserView from './ElectronBrowserView.js'
 
-// prettier-ignore
-export const Commands = {}
+export const name = 'ElectronBrowserView'
+
+export const Commands = {
+  handleDidNavigate: ElectronBrowserView.handleDidNavigate,
+  handleTitleUpdated: ElectronBrowserView.handleTitleUpdated,
+  handleWillNavigate: ElectronBrowserView.handleWillNavigate,
+}

@@ -9,6 +9,8 @@ export const commandMap = {
   'ElectronWebContentsView.focus': ElectronWebContentsView.focus,
   'ElectronWebContentsView.forward': ElectronWebContentsView.forward,
   'ElectronWebContentsView.getStats': ElectronWebContentsView.getStats,
+  'ElectronWebContentsView.handleDidNavigate': ElectronWebContentsView.handleDidNavigate,
+  'ElectronWebContentsView.handleTitleUpdated': ElectronWebContentsView.handleTitleUpdated,
   'ElectronWebContentsView.hide': ElectronWebContentsView.hide,
   'ElectronWebContentsView.inspectElement': ElectronWebContentsView.inspectElement,
   'ElectronWebContentsView.openDevtools': ElectronWebContentsView.openDevtools,
@@ -17,4 +19,5 @@ export const commandMap = {
   'ElectronWebContentsView.setFallthroughKeyBindings': ElectronWebContentsView.setFallthroughKeyBindings,
   'ElectronWebContentsView.setIframeSrc': ElectronWebContentsView.setIframeSrc,
   'ElectronWebContentsView.show': ElectronWebContentsView.show,
+  'ElectronWebContentsView.handleWillNavigate': ElectronWebContentsView.handleWillNavigate,
 }

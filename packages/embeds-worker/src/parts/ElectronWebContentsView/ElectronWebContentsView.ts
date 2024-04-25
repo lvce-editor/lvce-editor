@@ -1,4 +1,5 @@
 import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 export const createWebContentsView = async (restoreId, fallThroughKeyBindings) => {
   const id = await EmbedsProcess.invoke('ElectronWebContentsView.createWebContentsView', restoreId, fallThroughKeyBindings)
@@ -64,4 +65,17 @@ export const setFallthroughKeyBindings = (id, fallthroughKeybindings) => {
 
 export const getStats = (id, fallthroughKeybindings) => {
   return EmbedsProcess.invoke('ElectronWebContentsView.getStats', id, fallthroughKeybindings)
+}
+
+export const handleDidNavigate = (id, url) => {
+  // TODO use send or invoke?
+  return Rpc.invoke('ElectronBrowserView.handleDidNavigate', url)
+}
+
+export const handleTitleUpdated = (id, title) => {
+  return Rpc.invoke('ElectronBrowserView.handleTitleUpdated', title)
+}
+
+export const handleWillNavigate = (id, title) => {
+  return Rpc.invoke('ElectronBrowserView.handleWillNavigate', title)
 }

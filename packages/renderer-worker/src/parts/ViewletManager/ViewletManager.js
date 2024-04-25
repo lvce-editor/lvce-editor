@@ -263,6 +263,9 @@ const maybeRegisterEvents = (module) => {
     for (const [key, value] of Object.entries(module.Events)) {
       const handleUpdate = async (...params) => {
         const instance = ViewletStates.getInstance(module.name)
+        if (!instance) {
+          return
+        }
         const newState = await value(instance.state, ...params)
         if (!newState) {
           throw new Error('newState must be defined')

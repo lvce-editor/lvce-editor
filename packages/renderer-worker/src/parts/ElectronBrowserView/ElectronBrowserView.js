@@ -1,23 +1,20 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
-export const state = {
-  openCount: 0,
+export const handleDidNavigate = (id, url) => {
+  // console.log({ id, url })
+  GlobalEventBus.emitEvent('browser-view-did-navigate', id, url)
 }
 
-export const createBrowserView = (restoreId, fallThroughKeyBindings) => {
-  state.openCount++
-  return SharedProcess.invoke('ElectronBrowserView.createBrowserView', restoreId, fallThroughKeyBindings)
+export const handleTitleUpdated = (id, title) => {
+  // TODO dispatch event to global view event bus (send to all views?)
+  // views return new state, causing rerender
+  // console.log({ id, title })
+  GlobalEventBus.emitEvent('browser-view-title-updated', id, title)
 }
 
-export const disposeBrowserView = (id) => {
-  state.openCount--
-  return SharedProcess.invoke('ElectronBrowserView.disposeBrowserView', id)
-}
-
-export const getOpenCount = () => {
-  return state.openCount
-}
-
-export const isOpen = () => {
-  return state.openCount > 0
+export const handleWillNavigate = (id, url) => {
+  // TODO dispatch event to global view event bus (send to all views?)
+  // views return new state, causing rerender
+  // console.log({ id, title })
+  GlobalEventBus.emitEvent('browser-view-will-navigate', id, url)
 }

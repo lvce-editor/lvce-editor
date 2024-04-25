@@ -23,3 +23,8 @@ export const LazyCommands = {
   reload: () => import('./ViewletSimpleBrowserReload.js'),
   cancelNavigation: () => import('./ViewletSimpleBrowserCancelNavigation.js'),
 }
+
+export const Events = {
+  'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
+  'browser-view-title-updated': SimpleBrowser.handleTitleUpdated,
+}
