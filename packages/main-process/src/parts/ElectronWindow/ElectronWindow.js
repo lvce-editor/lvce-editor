@@ -40,6 +40,9 @@ export const getFocusedWindowId = () => {
 }
 
 export const getZoom = (windowId) => {
+  if (!windowId) {
+    return 1
+  }
   const browserWindow = Electron.BrowserWindow.fromId(windowId)
   if (!browserWindow) {
     return 1
