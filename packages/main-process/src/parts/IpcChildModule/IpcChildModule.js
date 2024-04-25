@@ -4,6 +4,7 @@ import {
   IpcChildWithNodeForkedProcess,
   IpcChildWithNodeWorker,
   IpcChildWithWebSocket,
+  IpcChildWithRendererProcess2,
 } from '@lvce-editor/ipc'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
@@ -19,10 +20,8 @@ export const getModule = (method) => {
       return IpcChildWithElectronUtilityProcess
     case IpcChildType.ElectronMessagePort:
       return IpcChildWithElectronMessagePort
-    case IpcChildType.RendererProcess:
-      return import('../IpcChildWithRendererProcess/IpcChildWithRendererProcess.js')
     case IpcChildType.RendererProcess2:
-      return import('../IpcChildWithRendererProcess2/IpcChildWithRendererProcess2.js')
+      return IpcChildWithRendererProcess2
     default:
       throw new Error('unexpected ipc type')
   }
