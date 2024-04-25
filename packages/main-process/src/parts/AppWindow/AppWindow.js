@@ -4,8 +4,11 @@ import * as Session from '../ElectronSession/ElectronSession.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import { VError } from '../VError/VError.js'
 import { WindowLoadError } from '../WindowLoadError/WindowLoadError.js'
 
@@ -62,5 +65,12 @@ export const createAppWindow = async (windowOptions, parsedArgs, workingDirector
     }
   }
   window.on('close', handleWindowClose)
+
+  const ipc = await IpcChild.listen({
+    method: IpcChildType.RendererProcess2,
+    webContentsIpc: window.webContents.ipc,
+  })
+  // TODO only handle first message, then ignore
+  HandleIpc.handleIpc(ipc)
   await loadUrl(window, url)
 }

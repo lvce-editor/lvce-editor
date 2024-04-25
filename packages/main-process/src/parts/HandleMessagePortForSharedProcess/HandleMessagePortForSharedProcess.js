@@ -14,7 +14,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 // can just send browserWindowPort to shared process
 // else need proxy events through this process
 
-export const handlePort = async (browserWindowPort, browserWindowId) => {
+export const handlePort = async (browserWindowPort) => {
   const method = IpcParentType.ElectronUtilityProcess
   const sharedProcess = await SharedProcess.hydrate({
     method,
@@ -22,5 +22,5 @@ export const handlePort = async (browserWindowPort, browserWindowId) => {
       FOLDER: '',
     },
   })
-  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, '', browserWindowId)
+  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, '')
 }

@@ -13,11 +13,8 @@ import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApp
 import * as Exit from '../Exit/Exit.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as HandleSecondInstance from '../HandleSecondInstance/HandleSecondInstance.js'
 import * as HandleWindowAllClosed from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
-import * as IpcChild from '../IpcChild/IpcChild.js'
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Performance from '../Performance/Performance.js'
@@ -85,10 +82,10 @@ export const hydrate = async () => {
   Protocol.enable(Electron.protocol)
 
   // ipcMain
-  const ipc = await IpcChild.listen({
-    method: IpcChildType.RendererProcess,
-  })
-  HandleIpc.handleIpc(ipc)
+  // const ipc = await IpcChild.listen({
+  //   method: IpcChildType.RendererProcess,
+  // })
+  // HandleIpc.handleIpc(ipc)
 
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, HandleWindowAllClosed.handleWindowAllClosed)
