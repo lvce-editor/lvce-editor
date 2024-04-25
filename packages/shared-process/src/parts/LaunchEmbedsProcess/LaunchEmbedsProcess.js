@@ -3,6 +3,7 @@ import * as EmbedsProcessPath from '../EmbedsProcessPath/EmbedsProcessPath.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as IpcId from '../IpcId/IpcId.js'
 
 export const launchEmbedsProcess = async () => {
   const ipc = await IpcParent.create({
@@ -13,7 +14,7 @@ export const launchEmbedsProcess = async () => {
     name: 'Embeds Process',
   })
   HandleIpc.handleIpc(ipc)
-  await ConnectIpcToElectron.connectIpcToElectron(ipc)
+  await ConnectIpcToElectron.connectIpcToElectron(ipc, IpcId.EmbedsProcess)
   HandleIpc.unhandleIpc(ipc)
   return ipc
 }

@@ -3,6 +3,7 @@ import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as IpcId from '../IpcId/IpcId.js'
 
 export const handleElectronMessagePort = async (messagePort, ipcId) => {
   Assert.object(messagePort)
@@ -11,7 +12,7 @@ export const handleElectronMessagePort = async (messagePort, ipcId) => {
     messagePort,
   })
   HandleIpc.handleIpc(ipc)
-  if (ipcId === 2) {
+  if (ipcId === IpcId.EmbedsProcess) {
     EmbedsProcess.set(ipc)
   }
 }

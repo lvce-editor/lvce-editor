@@ -33,3 +33,13 @@ export const getStats = async (id, ...args) => {
 export const show = async (id, ...args) => {
   return ParentIpc.invoke('ElectronWebContentsViewFunctions.show', id, ...args)
 }
+
+export const handleDidNavigate = (id, ...args) => {
+  // TODO send to matching ipc
+  console.log({ id, args })
+}
+
+export const handleTitleUpdated = (id, ...args) => {
+  // TODO send to matching ipc
+  console.log({ id, args })
+}
