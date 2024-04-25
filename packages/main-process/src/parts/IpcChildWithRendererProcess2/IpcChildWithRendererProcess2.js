@@ -1,5 +1,3 @@
-import { BrowserWindow } from 'electron'
-
 export const listen = ({ webContentsIpc }) => {
   return webContentsIpc
 }
