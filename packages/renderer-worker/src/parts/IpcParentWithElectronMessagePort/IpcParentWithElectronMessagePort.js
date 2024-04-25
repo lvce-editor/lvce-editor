@@ -4,13 +4,13 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
-const getPort = async (type, name) => {
+const getPort = async (ipcId) => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
+  // TODO call sendMessagePortToElectron function
   await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
     method: RendererProcessIpcParentType.Electron,
-    type,
-    name,
     port: port1,
+    ipcId,
   })
   return port2
 }
@@ -18,9 +18,10 @@ const getPort = async (type, name) => {
 export const create = async (options) => {
   const type = options.type
   const name = options.name || 'electron ipc'
+  const ipcId = options.ipcId
   Assert.string(type)
   Assert.string(name)
-  const port = await getPort(type, name)
+  const port = await getPort(ipcId)
   return port
 }
 

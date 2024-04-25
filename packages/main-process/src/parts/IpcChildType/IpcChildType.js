@@ -5,3 +5,4 @@ export const ElectronMessagePort = 4
 export const NodeMessagePort = 5
 export const WebSocket = 6
 export const RendererProcess = 7
+export const RendererProcess2 = 8

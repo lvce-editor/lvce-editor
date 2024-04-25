@@ -1,39 +1,15 @@
+import * as ApplyIncomingIpcResponse from '../ApplyIncomingIpcResponse/ApplyIncomingIpcResponse.js'
 import * as Assert from '../Assert/Assert.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as HandleIncomingIpcMessagePort from '../HandleIncomingIpcMessagePort/HandleIncomingIpcMessagePort.js'
 import * as HandleIpcModule from '../HandleIpcModule/HandleIpcModule.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-
-const handleIncomingIpcMessagePort = async (module, handle, message) => {
-  const target = await module.targetMessagePort(handle, message)
-  const response = module.upgradeMessagePort(handle, message)
-  return {
-    target,
-    response,
-  }
-}
 
 const getIpcAndResponse = (module, handle, message) => {
-  return handleIncomingIpcMessagePort(module, handle, message)
-}
-
-const applyResponse = async (target, response) => {
-  switch (response.type) {
-    case 'handle':
-      HandleIpc.handleIpc(target)
-      break
-    case 'send':
-      HandleIpc.handleIpc(target)
-      await JsonRpc.invokeAndTransfer(target, response.transfer, response.method, ...response.params)
-      HandleIpc.unhandleIpc(target)
-      break
-    default:
-      throw new Error('unexpected response')
-  }
+  return HandleIncomingIpcMessagePort.handleIncomingIpcMessagePort(module, handle, message)
 }
 
 export const handleIncomingIpc = async (ipcId, handle, message) => {
   Assert.number(ipcId)
   const module = HandleIpcModule.getModule(ipcId)
   const { target, response } = await getIpcAndResponse(module, handle, message)
-  await applyResponse(target, response)
+  await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response)
 }
