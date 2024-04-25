@@ -18,3 +18,7 @@ export const handleWillNavigate = (id, url) => {
   // console.log({ id, title })
   GlobalEventBus.emitEvent('browser-view-will-navigate', id, url)
 }
+
+export const isOpen = () => {
+  return false
+}
