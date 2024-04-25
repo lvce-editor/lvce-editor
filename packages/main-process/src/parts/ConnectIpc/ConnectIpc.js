@@ -11,7 +11,7 @@ const getModule = (method) => {
   }
 }
 
-export const connectIpc = async (method, ipc, browserWindowPort, folder, webContentsId) => {
+export const connectIpc = async (method, ipc, browserWindowPort, ipcId) => {
   const module = await getModule(method)
-  return module.connectIpc(ipc, browserWindowPort, folder, webContentsId)
+  return module.connectIpc(ipc, browserWindowPort, ipcId)
 }
