@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
-export const getWindowId = (ipc) => {
-  Assert.object(ipc)
-  return ipc.windowId
+export const getWindowId = (webContentsId) => {
+  Assert.number(webContentsId)
+  return ParentIpc.invoke('GetWindowId.getWindowId', webContentsId)
 }

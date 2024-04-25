@@ -73,6 +73,8 @@ export const load = async (moduleId) => {
       return import('../CreateMessagePort/CreateMessagePort.ipc.js')
     case ModuleId.HandleElectronMessagePort:
       return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
+    case ModuleId.GetWindowId:
+      return import('../GetWindowId/GetWindowId.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
