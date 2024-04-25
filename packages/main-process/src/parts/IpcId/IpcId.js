@@ -8,3 +8,4 @@ export const SharedProcess = 1
 export const TerminalProcess = 7
 export const Unknown = 0
 export const UtilityProcess = 99
+export const ProcessExplorerRenderer = 33
