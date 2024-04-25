@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getDiagnosticVirtualDom = (diagnostic) => {
@@ -5,7 +6,7 @@ const getDiagnosticVirtualDom = (diagnostic) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Diagnostic',
+      className: ClassNames.Diagnostic,
       width,
       height,
       top: y,

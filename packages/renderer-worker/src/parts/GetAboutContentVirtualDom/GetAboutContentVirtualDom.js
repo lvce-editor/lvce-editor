@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const br = {
@@ -17,7 +18,7 @@ export const getAboutContentVirtualDom = (lines) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'DialogMessage',
+      className: ClassNames.DialogMessage,
       childCount: lines.length * 2 - 1,
     },
     ...lines.flatMap(renderLine),

@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getStatusBarItemVirtualDom = (statusBarItem) => {
@@ -8,7 +9,7 @@ const getStatusBarItemVirtualDom = (statusBarItem) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'StatusBarItem',
+      className: ClassNames.StatusBarItem,
       role: AriaRoles.Button,
       tabIndex: -1,
       title: tooltip,
