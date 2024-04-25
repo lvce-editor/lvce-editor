@@ -1,5 +1,6 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
@@ -7,7 +8,7 @@ const getItemVirtualDom = (item) => {
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'TitleBarTopLevelEntry',
+    className: ClassNames.TitleBarTopLevelEntry,
     ariaHasPopup: true,
     ariaExpanded: isOpen,
     role: AriaRoles.MenuItem,
@@ -19,12 +20,12 @@ const getItemVirtualDom = (item) => {
     dom[0].ariaOwns = 'Menu-0'
   }
   if (isFocused) {
-    dom[0].className += ' TitleBarEntryActive'
+    dom[0].className += ' ' + ClassNames.TitleBarEntryActive
     // @ts-ignore
     dom[0].id = 'TitleBarEntryActive'
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'TitleBarTopLevelEntryLabel',
+      className: ClassNames.TitleBarTopLevelEntryLabel,
       childCount: 1,
     })
   }

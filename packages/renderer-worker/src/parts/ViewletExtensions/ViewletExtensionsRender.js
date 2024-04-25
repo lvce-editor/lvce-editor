@@ -2,6 +2,7 @@ import * as ActionType from '../ActionType/ActionType.js'
 import * as GetExtensionHeaderVirtualDom from '../GetExtensionHeaderVirtualDom/GetExtensionHeaderVirtualDom.js'
 import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensionsVirtualDom.js'
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -50,11 +51,12 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       scrollBarHeight,
     )
+    const roundedScrollBarY = Math.round(scrollBarY)
     const heightString = `${scrollBarHeight}px`
-    const translateString = `0 ${scrollBarY}px`
-    let className = 'ScrollBarThumb'
+    const translateString = `0 ${roundedScrollBarY}px`
+    let className = ClassNames.ScrollBarThumb
     if (newState.scrollBarActive) {
-      className += ' ScrollBarThumbActive'
+      className += ' ' + ClassNames.ScrollBarThumbActive
     }
     return [/* method */ RenderMethod.SetScrollBar, translateString, heightString, className]
   },

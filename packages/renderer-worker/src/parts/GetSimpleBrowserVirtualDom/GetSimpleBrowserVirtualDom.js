@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
@@ -10,12 +11,12 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     },
     {
       type: VirtualDomElements.Div,
-      className: 'SimpleBrowserHeader',
+      className: ClassNames.SimpleBrowserHeader,
       childCount: 5,
     },
     {
       type: VirtualDomElements.Button,
-      className: 'IconButton',
+      className: ClassNames.IconButton,
       childCount: 1,
       title: 'Back',
       onClick: 'handleClickBackward',
@@ -27,7 +28,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     },
     {
       type: VirtualDomElements.Button,
-      className: 'IconButton',
+      className: ClassNames.IconButton,
       childCount: 1,
       title: 'Forward',
       onClick: 'handleClickForward',
@@ -39,7 +40,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     },
     {
       type: VirtualDomElements.Button,
-      className: 'IconButton',
+      className: ClassNames.IconButton,
       childCount: 1,
       title: 'Reload',
       onClick: 'handleClickReload',
@@ -51,7 +52,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     },
     {
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       inputType: HtmlInputType.Url,
       enterKeyHint: 'Go',
       onInput: 'handleInput',
@@ -61,7 +62,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     },
     {
       type: VirtualDomElements.Button,
-      className: 'IconButton',
+      className: ClassNames.IconButton,
       title: 'Open External',
       childCount: 1,
     },

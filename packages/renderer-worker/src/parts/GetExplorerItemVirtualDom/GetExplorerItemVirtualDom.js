@@ -35,7 +35,7 @@ const getItemVirtualDomFile = (item) => {
   if (isEditing) {
     dom.push({
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       id: 'ExplorerInput',
       onInput: 'handleEditingInput',
       childCount: 0,

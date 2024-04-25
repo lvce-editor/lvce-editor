@@ -53,7 +53,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'EditorTabCloseButton',
+        className: ClassNames.EditorTabCloseButton,
         childCount: 1,
       },
       {
@@ -67,7 +67,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     dom.push(
       {
         type: VirtualDomElements.Button,
-        className: 'EditorTabCloseButton',
+        className: ClassNames.EditorTabCloseButton,
         title: 'Close',
         childCount: 1,
       },

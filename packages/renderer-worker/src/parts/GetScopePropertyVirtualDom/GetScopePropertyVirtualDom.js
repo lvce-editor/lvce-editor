@@ -1,14 +1,15 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DebugItemFlags from '../DebugItemFlags/DebugItemFlags.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as DebugItemFlags from '../DebugItemFlags/DebugItemFlags.js'
-import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const separator = text(': ')
 const debugPropertyKey = {
   type: VirtualDomElements.Span,
-  className: 'DebugValue ' + ClassNames.DebugPropertyKey,
+  className: ClassNames.DebugValue + ' ' + ClassNames.DebugPropertyKey,
   childCount: 1,
 }
 
@@ -24,14 +25,14 @@ export const getScopePropertyVirtualDom = (scope) => {
     className: ClassNames.DebugRow,
     paddingLeft: indent,
     childCount: 3,
-    onPointerDown: 'handleClickScopeValue',
+    onPointerDown: DomEventListenerFunctions.HandleClickScopeValue,
   })
   if (isExpanded) {
     dom[0].childCount++
-    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom('DebugPropertyChevron'))
+    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom(ClassNames.DebugPropertyChevron))
   } else if (isCollapsed) {
     dom[0].childCount++
-    dom.push(GetChevronVirtualDom.getChevronRightVirtualDom('DebugPropertyChevron'))
+    dom.push(GetChevronVirtualDom.getChevronRightVirtualDom(ClassNames.DebugPropertyChevron))
   }
   dom.push(
     debugPropertyKey,
@@ -39,7 +40,7 @@ export const getScopePropertyVirtualDom = (scope) => {
     separator,
     {
       type: VirtualDomElements.Span,
-      className: 'DebugValue ' + className,
+      className: ClassNames.DebugValue + ' ' + className,
       childCount: 1,
     },
     text(value),
