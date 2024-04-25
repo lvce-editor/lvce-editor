@@ -19,7 +19,6 @@ const initializeModule = (module) => {
     }
     return
   }
-  console.log({ module })
   throw new Error(`module ${module.name || '<unnamed module>'} is missing commands`)
 }
 
