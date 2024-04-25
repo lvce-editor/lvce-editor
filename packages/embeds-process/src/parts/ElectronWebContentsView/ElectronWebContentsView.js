@@ -42,7 +42,6 @@ const forwardIpcEvent =
     if (!ipc) {
       return
     }
-    console.log({ key, id, args })
     JsonRpc.send(ipc, key, id, ...args)
   }
 
