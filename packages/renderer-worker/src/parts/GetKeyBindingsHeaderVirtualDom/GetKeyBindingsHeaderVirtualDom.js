@@ -13,8 +13,13 @@ export const getKeyBindingsHeaderVirtualDom = () => {
       childCount: 1,
     },
     {
+      type: VirtualDomElements.Div,
+      className: ClassNames.KeyBindingsSearchWrapper,
+      childCount: 1,
+    },
+    {
       type: VirtualDomElements.Input,
-      className: ClassNames.InputBox,
+      className: `KeyBindingsSearchInputBox`,
       inputType: HtmlInputType.Search,
       placeholder: KeyBindingStrings.typeToSearchKeyBindings(),
       name: InputName.KeyBindingsFilter,
