@@ -47,7 +47,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
     },
     {
       type: VirtualDomElements.Div,
-      className: 'MaskIcon MaskIconRefresh',
+      className: isLoading ? 'MaskIcon MaskIconClose' : 'MaskIcon MaskIconRefresh',
       childCount: 0,
     },
     {
