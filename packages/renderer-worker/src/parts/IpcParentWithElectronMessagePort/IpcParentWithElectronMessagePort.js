@@ -3,15 +3,18 @@ import * as GetData from '../GetData/GetData.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
+import * as WebContentsId from '../WebContentsId/WebContentsId.js'
 
 const getPort = async (ipcId) => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
   // TODO call sendMessagePortToElectron function
-  await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
+  const webContentsId = await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
     method: RendererProcessIpcParentType.Electron,
     port: port1,
     ipcId,
   })
+  // TODO avoid side effect?
+  WebContentsId.set(webContentsId)
   return port2
 }
 
