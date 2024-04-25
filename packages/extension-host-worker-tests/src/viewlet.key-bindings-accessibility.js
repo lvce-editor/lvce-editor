@@ -17,7 +17,7 @@ export const test = async ({ Main, Locator, expect }) => {
   await Main.openUri('app://keybindings')
 
   // assert
-  const inputBox = Locator('.KeyBindingsHeader .InputBox')
+  const inputBox = Locator('.KeyBindingsSearchInputBox')
   await expect(inputBox).toBeVisible()
   await expect(inputBox).toHaveAttribute('type', 'search')
   await expect(inputBox).toHaveAttribute('placeholder', 'Type to search in keybindings')
