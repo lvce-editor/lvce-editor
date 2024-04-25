@@ -5,7 +5,7 @@ import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 export const targetMessagePort = async (messagePort, message) => {
   Assert.object(messagePort)
   const ipc = await IpcChild.listen({
-    method: IpcChildType.ElectronMessagePort, // TODO
+    method: IpcChildType.ElectronMessagePort,
     messagePort,
   })
   return ipc
