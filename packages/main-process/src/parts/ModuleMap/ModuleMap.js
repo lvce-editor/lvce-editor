@@ -85,6 +85,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.CreateMessagePort
     case 'HandleElectronMessagePort':
       return ModuleId.HandleElectronMessagePort
+    case 'GetWindowId':
+      return ModuleId.GetWindowId
     default:
       throw new CommandNotFoundError(commandId)
   }

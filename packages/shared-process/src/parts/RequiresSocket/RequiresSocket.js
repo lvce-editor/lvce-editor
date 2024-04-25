@@ -1,6 +1,8 @@
 // TODO find a better way to do this
 // most commands don't require sockets
 // but output channel and terminal need to continuously send data through the socket
+
+// TODO remove all of these
 const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'OutputChannel.open',
   'ExtensionHost.start',
@@ -9,7 +11,6 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'Terminal.create',
   'IncrementalTextSearch.start',
   'ElectronApplicationMenu.setItems',
-  'GetWindowId.getWindowId',
   'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
   'ElectronBrowserView.createBrowserView',
   'ElectronWebContentsView.createWebContentsView',
