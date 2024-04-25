@@ -51,6 +51,8 @@ export const handleTitleUpdated = forwardIpcEvent('ElectronWebContentsView.handl
 
 export const handleWillNavigate = forwardIpcEvent('ElectronWebContentsView.handleWillNavigate')
 
+export const handleContextMenu = forwardIpcEvent('ElectronWebContentsView.handleContextMenu')
+
 export const handleBrowserViewDestroyed = (id, ...args) => {
   // TODO send to embeds worker?
 }
