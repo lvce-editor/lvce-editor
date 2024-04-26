@@ -815,6 +815,10 @@ const unwrapJsonRpcResult = (responseMessage) => {
   return undefined
 }
 
+const IpcId = {
+  ProcessExplorerRenderer: 33,
+}
+
 const getPort = async (type, name) => {
   // @ts-ignore
   window.addEventListener('message', handleMessageFromWindow)
@@ -824,7 +828,7 @@ const getPort = async (type, name) => {
     jsonrpc: JsonRpcVersion.Two,
     id,
     method: 'CreateMessagePort.createMessagePort',
-    params: [type, name],
+    params: [IpcId.ProcessExplorerRenderer],
   }
   // @ts-ignore
   if (!globalThis.isElectron) {
