@@ -5,6 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 import * as Assert from '../Assert/Assert.ts'
 
+// TODO use handleIncomingIpc function
 export const create = async ({ port, ipcId }) => {
   Assert.number(ipcId)
   if (!IsElectron.isElectron) {
