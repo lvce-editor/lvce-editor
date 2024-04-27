@@ -154,6 +154,31 @@ export const getSharedProcessCachePath = async (extraContents) => {
   return cachePath
 }
 
+const getNetworkProcessCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/network-process/src',
+    [
+      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'packages/build/src/parts/BuildServer/BuildServer.js',
+      'packages/build/src/parts/BundleJs/BundleJs.js',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'packages/build/src/parts/CachePaths/CachePaths.js',
+      'packages/build/src/parts/BundleNetworkProcess/BundleNetworkProcess.js',
+      'packages/build/src/parts/BundleNetworkProcessCached/BundleNetworkProcessCached.js',
+      'packages/build/src/parts/BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js',
+      'packages/build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents,
+  )
+  return hash
+}
+
+export const getNetworkProcessCachePath = async (extraContents) => {
+  const cacheHash = await getNetworkProcessCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/network-process'), cacheHash)
+  return cachePath
+}
+
 const getPtyHostCacheHash = async (extraContents) => {
   const hash = await Hash.computeFolderHash(
     'packages/pty-host/src',
