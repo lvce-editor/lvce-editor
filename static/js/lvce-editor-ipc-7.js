@@ -319,12 +319,13 @@ class IpcChildWithWindow extends Ipc {
     this._rawIpc.postMessage(message)
   }
   sendAndTransfer(message, transfer) {
-    this._rawIpc.postMessage(message, location.origin, transfer)
+    this._rawIpc.postMessage(message, '*', transfer)
   }
   dispose() {}
   onClose(callback) {}
   onMessage(callback) {
-    this._rawIpc.addEventListener('message', callback)
+    this._rawIpc.onmessage = callback
+    // this._rawIpc.addEventListener('message', callback)
   }
 }
 const wrap$2 = (window2) => {
