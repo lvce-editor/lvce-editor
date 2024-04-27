@@ -12,17 +12,9 @@ export const create = async ({ port, ipcId }) => {
     throw new Error('Electron api was requested but is not available')
   }
   const windowIpc = IpcChildWithWindow.wrap(window)
-
-  const promise = JsonRpc.invokeAndTransfer(windowIpc, [port], 'CreateMessagePort.createMessagePort', ipcId)
-  // windowIpc.addEventListener('message', (x) => {
-  //   // if (x.target === windowIpc) {
-  //   //   return
-  //   // }
-  //   console.trace({ x })
-  // })
   HandleIpcOnce.handleIpcOnce(windowIpc)
   console.log('before wait')
-  const webContentsIds = await promise
+  const webContentsIds = await JsonRpc.invokeAndTransfer(windowIpc, [port], 'CreateMessagePort.createMessagePort', ipcId)
   console.log('after wait')
   return webContentsIds
 }

@@ -4,7 +4,10 @@ const getData$1 = (event) => {
 const attachEvents = (that) => {
   const handleMessage = (...args) => {
     const data = that.getData(...args)
-    console.log({ data })
+    if (args[0].target === window && 'method' in data) {
+      return
+    }
+    console.log({ data, args })
     that.dispatchEvent(
       new MessageEvent('message', {
         data,
