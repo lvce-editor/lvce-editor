@@ -14,13 +14,13 @@ export const create = async ({ port, ipcId }) => {
   const windowIpc = IpcChildWithWindow.wrap(window)
 
   const promise = JsonRpc.invokeAndTransfer(windowIpc, [port], 'CreateMessagePort.createMessagePort', ipcId)
-  windowIpc.addEventListener('message', (x) => {
-    // if (x.target === windowIpc) {
-    //   return
-    // }
-    console.trace({ x })
-  })
-  // HandleIpcOnce.handleIpcOnce(windowIpc)
+  // windowIpc.addEventListener('message', (x) => {
+  //   // if (x.target === windowIpc) {
+  //   //   return
+  //   // }
+  //   console.trace({ x })
+  // })
+  HandleIpcOnce.handleIpcOnce(windowIpc)
   console.log('before wait')
   const webContentsIds = await promise
   console.log('after wait')
