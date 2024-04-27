@@ -14,13 +14,7 @@ export const bundleNetworkProcessCached = async ({ commitHash, product, version,
     const BundleNetworkProcess = await import('../BundleNetworkProcess/BundleNetworkProcess.js')
     await BundleNetworkProcess.bundleNetworkProcess({
       cachePath,
-      commitHash,
-      product,
-      version,
-      date,
       target,
-      isArchLinux,
-      isAppImage,
     })
     console.timeEnd('bundleNetworkProcess')
   }
