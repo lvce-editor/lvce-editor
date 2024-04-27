@@ -3,6 +3,7 @@ import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApp
 import * as Session from '../ElectronSession/ElectronSession.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as HandleIpcOnce from '../HandleIpcOnce/HandleIpcOnce.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
@@ -66,10 +67,12 @@ export const createAppWindow = async (windowOptions, parsedArgs, workingDirector
   }
   window.on('close', handleWindowClose)
 
+  window.webContents.openDevTools()
+
   const ipc = await IpcChild.listen({
     method: IpcChildType.RendererProcess2,
     webContents: window.webContents,
   })
-  HandleIpcOnce.handleIpcOnce(ipc)
+  HandleIpc.handleIpc(ipc)
   await loadUrl(window, url)
 }

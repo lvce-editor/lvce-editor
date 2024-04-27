@@ -7,18 +7,21 @@ const handleElectronMessage = (event, message) => {
   const { origin } = location
   // @ts-ignore
   window.postMessage(message, origin)
-  ipcRenderer.off(channelName, handleElectronMessage)
+  // ipcRenderer.off(channelName, handleElectronMessage)
 }
 
 const handleWindowMessage = (event) => {
   const { data, ports } = event
+  if (!data.params) {
+    return
+  }
   ipcRenderer.postMessage(channelName, data, ports)
 }
 
 const main = () => {
   ipcRenderer.on(channelName, handleElectronMessage)
   // @ts-ignore
-  window.addEventListener('message', handleWindowMessage, { once: true })
+  window.addEventListener('message', handleWindowMessage)
   contextBridge.exposeInMainWorld('isElectron', true)
 }
 
