@@ -5,6 +5,10 @@ export const handleIpcOnce = (ipc) => {
     ipc.addEventListener('message', HandleMessage.handleMessage, { once: true })
   } else {
     // deprecated
-    ipc.onmessage = HandleMessage.handleMessage
+    const x = (a) => {
+      console.log({ a })
+      return HandleMessage.handleMessage(a)
+    }
+    ipc.onmessage = x
   }
 }
