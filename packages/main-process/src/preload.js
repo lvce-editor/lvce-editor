@@ -12,11 +12,11 @@ const handleElectronMessage = (event, message) => {
 
 const handleWindowMessage = (event) => {
   const { data, ports } = event
-  ipcRenderer.on(channelName, handleElectronMessage)
   ipcRenderer.postMessage(channelName, data, ports)
 }
 
 const main = () => {
+  ipcRenderer.on(channelName, handleElectronMessage)
   // @ts-ignore
   window.addEventListener('message', handleWindowMessage, { once: true })
   contextBridge.exposeInMainWorld('isElectron', true)
