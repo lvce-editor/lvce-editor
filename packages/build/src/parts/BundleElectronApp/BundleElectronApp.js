@@ -16,6 +16,7 @@ import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleS
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
+import * as BundlePreload from '../BundlePreload/BundlePreload.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopyElectron from '../CopyElectron/CopyElectron.js'
@@ -354,6 +355,19 @@ export const build = async ({
   await Copy.copy({
     from: mainProcessCachePath,
     to: `${resourcesPath}/app/packages/main-process`,
+  })
+  console.timeEnd('copyMainProcessFiles')
+
+  const preloadCachePath = await BundlePreload.bundlePreload({
+    commitHash,
+    product,
+    version,
+  })
+
+  console.time('copyMainProcessFiles')
+  await Copy.copy({
+    from: preloadCachePath,
+    to: `${resourcesPath}/app/packages/preload`,
   })
   console.timeEnd('copyMainProcessFiles')
 

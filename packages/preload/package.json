@@ -1,7 +1,7 @@
 {
   "name": "@lvce-editor/preload",
   "version": "0.0.0-dev",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "type-check": "tsc"
