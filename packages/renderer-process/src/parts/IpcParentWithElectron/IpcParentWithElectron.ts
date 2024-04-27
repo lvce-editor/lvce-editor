@@ -13,8 +13,6 @@ export const create = async ({ port, ipcId }) => {
   }
   const windowIpc = IpcChildWithWindow.wrap(window)
   HandleIpcOnce.handleIpcOnce(windowIpc)
-  console.log('before wait')
   const webContentsIds = await JsonRpc.invokeAndTransfer(windowIpc, [port], 'CreateMessagePort.createMessagePort', ipcId)
-  console.log('after wait')
   return webContentsIds
 }
