@@ -2,13 +2,13 @@ import { writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
-import * as GetPreloadUrl from '../GetPreloadUrl/GetPreloadUrl.js'
+import * as PreloadUrl from '../PreloadUrl/PreloadUrl.js'
 import * as GetProcessExplorerUrl from '../GetProcessExplorerUrl/GetProcessExplorerUrl.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 const getOptions = async (colorThemeJson) => {
   const backgroundColor = colorThemeJson.MainBackground
-  const preload = GetPreloadUrl.getPreloadUrl()
+  const preload = PreloadUrl.preloadUrl
   const options = {
     width: 800,
     height: 500,
