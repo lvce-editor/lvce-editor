@@ -1,6 +1,6 @@
 import * as HandleIpcOnce from '../HandleIpcOnce/HandleIpcOnce.ts'
 // @ts-ignore
-import { IpcChildWithWindow } from '../../../../../static/js/lvce-editor-ipc.js'
+import { IpcChildWithWindow } from '../../../../../static/js/lvce-editor-ipc-7.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
@@ -12,7 +12,17 @@ export const create = async ({ port, ipcId }) => {
     throw new Error('Electron api was requested but is not available')
   }
   const windowIpc = IpcChildWithWindow.wrap(window)
-  HandleIpcOnce.handleIpcOnce(windowIpc)
-  const webContentsIds = await JsonRpc.invokeAndTransfer(windowIpc, [port], 'CreateMessagePort.createMessagePort', ipcId)
+
+  const promise = JsonRpc.invokeAndTransfer(windowIpc, [port], 'CreateMessagePort.createMessagePort', ipcId)
+  windowIpc.addEventListener('message', (x) => {
+    // if (x.target === windowIpc) {
+    //   return
+    // }
+    console.trace({ x })
+  })
+  // HandleIpcOnce.handleIpcOnce(windowIpc)
+  console.log('before wait')
+  const webContentsIds = await promise
+  console.log('after wait')
   return webContentsIds
 }
