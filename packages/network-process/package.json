@@ -1,0 +1,102 @@
+{
+  "name": "@lvce-editor/network-process",
+  "version": "0.0.0-dev",
+  "description": "Network Process",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "#test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "#test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
+    "type-check": "tsc"
+  },
+  "keywords": [
+    "Lvce Editor"
+  ],
+  "author": "Lvce Editor",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvce-editor/lvce-editor.git",
+    "directory": "packages/network-process"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@lvce-editor/assert": "^1.2.0",
+    "@lvce-editor/ipc": "^7.4.0",
+    "@lvce-editor/json-rpc": "^1.3.0",
+    "@lvce-editor/jsonc-parser": "^1.2.0",
+    "@lvce-editor/pretty-error": "^1.5.0",
+    "@lvce-editor/verror": "^1.2.0",
+    "@lvce-editor/web-socket-server": "^1.1.0",
+    "got": "^14.2.1",
+    "tar-fs": "^3.0.6"
+  },
+  "devDependencies": {
+    "@types/tar-fs": "^2.0.4"
+  },
+  "xo": {
+    "rules": {
+      "unicorn/filename-case": "off",
+      "indent": "off",
+      "semi": "off",
+      "no-unused-vars": "off",
+      "unicorn/numeric-separators-style": "off",
+      "no-extra-semi": "off",
+      "arrow-body-style": "off",
+      "padded-blocks": "off",
+      "capitalized-comments": "off",
+      "padding-line-between-statements": "off",
+      "arrow-parens": "off",
+      "no-warning-comments": "off",
+      "array-bracket-spacing": "off",
+      "comma-spacing": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "comma-dangle": "off",
+      "operator-linebreak": "off",
+      "no-case-declarations": "off",
+      "no-undef": "off",
+      "object-curly-spacing": "off",
+      "object-shorthand": "off",
+      "complexity": "off",
+      "no-labels": "off",
+      "no-multi-assign": "off",
+      "max-params": "off",
+      "no-bitwise": "off",
+      "unicorn/prefer-math-trunc": "off",
+      "no-await-in-loop": "off",
+      "unicorn/prefer-add-event-listener": "off",
+      "no-unused-expressions": "off",
+      "node/prefer-global/process": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/no-process-exit": "off",
+      "quotes": "off",
+      "n/prefer-global/process": [
+        "error",
+        "always"
+      ]
+    },
+    "ignores": [
+      "distmin"
+    ]
+  },
+  "jest": {
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "moduleNameMapper": {
+      "@vscode/windows-process-tree": "<rootDir>/mocks/windows-process-tree.js",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    }
+  }
+}
