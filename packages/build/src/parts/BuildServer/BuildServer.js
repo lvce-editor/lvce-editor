@@ -10,6 +10,7 @@ import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWor
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
+import * as BundleNetworkProcessCached from '../BundleNetworkProcessCached/BundleNetworkProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -950,6 +951,21 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
+
+  const networkProcessCachePath = await BundleNetworkProcessCached.bundleNetworkProcessCached({
+    commitHash,
+    product,
+    version,
+    date,
+    target: 'server',
+  })
+
+  console.time('copyNetworkProcessFiles')
+  await Copy.copy({
+    from: networkProcessCachePath,
+    to: 'packages/build/.tmp/server/network-process',
+  })
+  console.timeEnd('copyNetworkProcessFiles')
 
   console.time('copyStaticFiles')
   await copyStaticFiles({ commitHash })
