@@ -30,7 +30,7 @@ test('handleContextMenuMouse', async () => {
     focusedIndex: -1,
   })
   expect(ContextMenu.show).toHaveBeenCalledTimes(1)
-  expect(ContextMenu.show).toHaveBeenCalledWith('ContextMenu.show', 0, 100, MenuEntryId.Explorer)
+  expect(ContextMenu.show).toHaveBeenCalledWith(0, 100, MenuEntryId.Explorer)
 })
 
 test('event - issue with blur event after context menu event', async () => {

@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
@@ -10,7 +10,7 @@ beforeEach(() => {
 
 jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
   return {
-    execute: jest.fn(() => {
+    show: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
