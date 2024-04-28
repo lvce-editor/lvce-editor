@@ -14,7 +14,7 @@ export const create = async (options) => {
   })
   const { port1, port2 } = await GetPortTuple.getPortTuple()
   // TODO use uuid instead of name
-  await TemporaryMessagePort.sendTo(options.name, port2)
+  await TemporaryMessagePort.sendTo(options.name, port2, options.ipcId)
   port1.start()
   return port1
 }

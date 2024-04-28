@@ -30,14 +30,15 @@ export const bundleNetworkProcess = async ({ cachePath, target }) => {
     to: `${cachePath}/package.json`,
   })
   if (target === 'server') {
-    await Copy.copy({
-      from: 'packages/network-process/bin',
-      to: `${cachePath}/bin`,
-    })
-    await Copy.copy({
-      from: 'packages/network-process/index.js',
-      to: `${cachePath}/index.js`,
-    })
+    // TODO
+    // await Copy.copy({
+    //   from: 'packages/network-process/bin',
+    //   to: `${cachePath}/bin`,
+    // })
+    // await Copy.copy({
+    //   from: 'packages/network-process/index.js',
+    //   to: `${cachePath}/index.js`,
+    // })
     await Copy.copyFile({
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,

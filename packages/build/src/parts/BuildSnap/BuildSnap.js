@@ -163,6 +163,7 @@ const copyCode = async (arch) => {
   })
 }
 
+// @ts-ignore
 const copyExtensions = async (arch) => {}
 
 const printSnapSize = async ({ arch, product, version }) => {
