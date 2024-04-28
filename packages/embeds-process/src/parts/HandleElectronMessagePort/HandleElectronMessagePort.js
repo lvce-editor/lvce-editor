@@ -9,7 +9,6 @@ import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 export const handleElectronMessagePort = async (messagePort, ipcId) => {
   Assert.object(messagePort)
   // Assert.number(ipcId)
-  // console.log({ messagePort, ipcId })
   // TODO use handleIncomingIpc function
   const ipc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,
