@@ -16,7 +16,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const handlePort = async (browserWindowPort, ipcId) => {
   const method = IpcParentType.ElectronUtilityProcess
-  const sharedProcess = await SharedProcess.getOrCreate({
+  const sharedProcess = await SharedProcess.hydrate({
     method,
     env: {
       FOLDER: '',
