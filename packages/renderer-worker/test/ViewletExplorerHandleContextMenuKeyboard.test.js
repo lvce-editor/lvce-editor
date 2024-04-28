@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
@@ -6,15 +6,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
   return {
-    execute: jest.fn(() => {
+    show: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
 })
 
-const Command = await import('../src/parts/Command/Command.js')
+const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 const ViewletExplorerHandleContextMenuKeyboard = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleContextMenuKeyboard.js')
 const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
@@ -56,10 +56,10 @@ test('handleContextMenuKeyboard', async () => {
     ],
   }
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  ContextMenu.show.mockImplementation(() => {})
   expect(await ViewletExplorerHandleContextMenuKeyboard.handleContextMenuKeyboard(state)).toMatchObject({
     focusedIndex: 2,
   })
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 10, 80, MenuEntryId.Explorer)
+  expect(ContextMenu.show).toHaveBeenCalledTimes(1)
+  expect(ContextMenu.show).toHaveBeenCalledWith(10, 80, MenuEntryId.Explorer)
 })
