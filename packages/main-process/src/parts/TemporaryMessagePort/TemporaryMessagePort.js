@@ -25,14 +25,14 @@ export const createPortTuple = async (id1, id2) => {
   await SharedProcess.invokeAndTransfer([port1, port2], 'TemporaryMessagePort.handlePorts', id1, id2)
 }
 
-export const sendTo = async (port, name) => {
+export const sendTo = async (port, name, ipcId) => {
   Assert.string(name)
   Assert.object(port)
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   const utilityProcess = UtilityProcessState.getByName(formattedName)
   const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   HandleIpc.handleIpc(utilityProcessIpc)
-  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
+  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port], 'HandleElectronMessagePort.handleElectronMessagePort', ipcId)
   HandleIpc.unhandleIpc(utilityProcessIpc)
 }
 
