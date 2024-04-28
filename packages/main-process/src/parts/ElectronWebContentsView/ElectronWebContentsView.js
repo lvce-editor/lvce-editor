@@ -45,7 +45,11 @@ export const attachEventListeners = (webContentsId) => {
 
 export const disposeWebContentsView = (browserViewId) => {
   console.log('[main process] dispose browser view', browserViewId)
-  const { view, browserWindow } = ElectronWebContentsViewState.get(browserViewId)
+  const instance = ElectronWebContentsViewState.get(browserViewId)
+  if (!instance) {
+    return
+  }
+  const { view, browserWindow } = instance
   ElectronWebContentsViewState.remove(browserViewId)
   browserWindow.removeBrowserView(view)
 }
