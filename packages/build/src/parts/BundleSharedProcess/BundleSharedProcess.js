@@ -186,6 +186,16 @@ export const getPtyHostPath = async () => {
 }
 `,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const networkProcessPath = Path.join(Root.root, 'packages', 'network-process', 'src', 'networkProcessMain.js')
+`,
+      replacement: `export { networkProcessPath } from '@lvce-editor/network-process'
+`,
+    })
     await Copy.copyFile({
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,
