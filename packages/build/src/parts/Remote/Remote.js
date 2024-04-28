@@ -5,13 +5,20 @@ import cpy from 'cpy'
 import { VError } from '@lvce-editor/verror'
 // @ts-ignore
 import execa from 'execa'
+// @ts-ignore
 import { getTmpDir, root } from '../Shared/Shared.js'
 
+// @ts-ignore
 const PACKAGE_EXTENSION_HOST = join(root, 'packages', 'extension-host')
+// @ts-ignore
 const PACKAGE_MAIN_PROCESS = join(root, 'packages', 'main-process')
+// @ts-ignore
 const PACKAGE_RENDERER_PROCESS = join(root, 'packages', 'renderer-process')
+// @ts-ignore
 const PACKAGE_RENDERER_WORKER = join(root, 'packages', 'renderer-worker')
+// @ts-ignore
 const PACKAGE_SHARED_PROCESS = join(root, 'packages', 'shared-process')
+// @ts-ignore
 const PACKAGE_WEB = join(root, 'packages', 'web')
 
 const TO_COPY = [

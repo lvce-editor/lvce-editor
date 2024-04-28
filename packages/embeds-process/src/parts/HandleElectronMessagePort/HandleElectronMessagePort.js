@@ -9,6 +9,7 @@ import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
 
 export const handleElectronMessagePort = async (messagePort, ipcId) => {
   Assert.object(messagePort)
+  // Assert.number(ipcId)
   // TODO use handleIncomingIpc function
   const ipc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,

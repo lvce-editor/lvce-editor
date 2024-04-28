@@ -7,12 +7,15 @@ import * as Process from './parts/Process/Process.js'
 const getProduct = (productName) => {
   switch (productName) {
     case 'lvce':
+      // @ts-ignore
       return import('../files/products/lvce.js')
     default:
+      // @ts-ignore
       return import('../files/products/lvce-oss.js')
   }
 }
 
+// @ts-ignore
 const getBuildModule = (target) => {
   console.log({ target })
   switch (target) {
