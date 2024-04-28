@@ -88,11 +88,6 @@ export const hydrate = async () => {
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
 
-  // start shared process
-  await SharedProcess.getOrCreate({
-    method: IpcParentType.ElectronUtilityProcess,
-  })
-
   await HandleElectronReady.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')
 }
