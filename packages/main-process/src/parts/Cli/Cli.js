@@ -1,5 +1,6 @@
 import * as CliCommandType from '../CliCommandType/CliCommandType.js'
 import * as CliForwardToSharedProcess from '../CliForwardToSharedProcess/CliForwardToSharedProcess.js'
+import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 
 /**
  * @enum {number}
@@ -41,9 +42,10 @@ const handleArgs = (moduleId, parsedArgs) => {
   return module.handleCliArgs(parsedArgs)
 }
 
-export const handleFastCliArgsMaybe = (parsedArgs) => {
+export const handleFastCliArgsMaybe = async (parsedArgs) => {
   const moduleId = getModuleId(parsedArgs)
   if (moduleId) {
+    await ElectronApp.whenReady()
     return handleArgs(moduleId, parsedArgs)
   }
   return false

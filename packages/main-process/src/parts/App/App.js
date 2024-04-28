@@ -47,7 +47,7 @@ export const hydrate = async () => {
   // see https://github.com/microsoft/playwright/issues/12345
 
   const parsedCliArgs = ParseCliArgs.parseCliArgs(Argv.argv)
-  const handled = Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
+  const handled = await Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
   if (handled) {
     return
   }
