@@ -19,4 +19,5 @@ export const handleIpcClosed = async (event) => {
     ElectronWebContentsViewIpcState.remove(id)
     await ElectronWebContentsView.disposeWebContentsView(id)
   }
+  // SharedProcessIpc.send('HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed')
 }
