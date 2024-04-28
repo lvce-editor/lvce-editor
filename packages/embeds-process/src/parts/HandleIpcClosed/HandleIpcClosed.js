@@ -1,6 +1,5 @@
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewIpcState from '../ElectronWebContentsViewIpcState/ElectronWebContentsViewIpcState.js'
-import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
 
 const getIdsToDispose = (ipc) => {
   const entries = ElectronWebContentsViewIpcState.getAll()
