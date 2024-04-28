@@ -2,7 +2,7 @@
   "name": "@lvce-editor/shared-process",
   "version": "0.0.0-dev",
   "description": "Utility package for @lvce-editor/server",
-  "main": "index.js",
+  "main": "src/sharedProcessMain.js",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
@@ -33,9 +33,7 @@
     "debug": "^4.3.4",
     "execa": "^8.0.1",
     "exit-hook": "^4.0.0",
-    "got": "^14.2.1",
     "is-object": "^1.0.2",
-    "p-queue": "^8.0.1",
     "tar-fs": "^3.0.6",
     "xdg-basedir": "^5.1.0"
   },

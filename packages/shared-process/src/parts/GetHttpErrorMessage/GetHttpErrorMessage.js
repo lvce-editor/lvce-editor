@@ -1,8 +1,6 @@
-import { HTTPError } from 'got'
-
 /**
  *
- * @param {HTTPError} error
+ * @param {any} error
  */
 export const getHttpErrorMessage = (error) => {
   try {
