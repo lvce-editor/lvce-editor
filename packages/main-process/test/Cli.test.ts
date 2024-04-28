@@ -10,6 +10,7 @@ jest.unstable_mockModule('electron', () => {
       exit() {},
     },
     BrowserWindow: class {},
+    MessageChannelMain: class {},
   }
 })
 
