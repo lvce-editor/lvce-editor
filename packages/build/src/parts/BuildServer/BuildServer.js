@@ -105,6 +105,7 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
+// @ts-ignore
 const copySharedProcessFiles = async ({ product, version, commitHash, date }) => {
   await CopySharedProcessSources.copySharedProcessSources({
     to: 'packages/build/.tmp/server/shared-process',

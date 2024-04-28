@@ -53,8 +53,11 @@ const copyMetaFiles = async ({ arch, product }) => {
 
 const createRpm = async ({ arch, product }) => {
   const rpmArch = getRpmArch(arch)
+  // @ts-ignore
   const cwd = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
+  // @ts-ignore
   const rpmBuildPath = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
+  // @ts-ignore
   const rpmOut = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/RPMS/${rpmArch}`)
   const destination = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}`)
   const specPath = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/SPECS/${product.applicationName}.spec`)

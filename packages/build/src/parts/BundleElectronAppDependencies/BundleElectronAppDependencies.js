@@ -31,6 +31,7 @@ const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
   })
 }
 
+// @ts-ignore
 const copyExtensionHostFiles = async ({ cachePath }) => {
   await BundleExtensionHostDependencies.bundleExtensionHostDependencies({
     to: `${cachePath}/extension-host`,
@@ -75,6 +76,7 @@ const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supports
   })
 }
 
+// @ts-ignore
 const copyResults = async () => {
   await Copy.copy({
     from: `packages/build/.tmp/bundle/electron/packages/renderer-process/src`,
@@ -140,6 +142,7 @@ export const bundleElectronAppDependencies = async ({
   cachePath,
   arch,
   electronVersion,
+  // @ts-ignore
   product,
   supportsAutoUpdate,
   bundleMainProcess,
