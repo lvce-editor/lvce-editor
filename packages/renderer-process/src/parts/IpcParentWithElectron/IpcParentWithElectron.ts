@@ -1,6 +1,6 @@
 import * as HandleIpcOnce from '../HandleIpcOnce/HandleIpcOnce.ts'
 // @ts-ignore
-import { IpcChildWithWindow } from '../../../../../static/js/lvce-editor-ipc-7.js'
+import { IpcChildWithWindow } from '../../../../../static/js/lvce-editor-ipc-8.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
