@@ -1,5 +1,3 @@
-import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
-
 const state = {
   ref: 0,
 }

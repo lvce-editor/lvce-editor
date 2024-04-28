@@ -4,7 +4,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
-export const bundleNetworkProcessCached = async ({ commitHash, product, version, date, target, isArchLinux, isAppImage }) => {
+export const bundleNetworkProcessCached = async ({ commitHash, product, version, date, target }) => {
   const cachePath = await CachePaths.getNetworkProcessCachePath([product, version, date, commitHash])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleNetworkprocess')
