@@ -7,6 +7,7 @@ import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmb
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
+import * as BundleNetworkProcessCached from '../BundleNetworkProcessCached/BundleNetworkProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleProcessExplorerCached from '../BundleProcessExplorerCached/BundleProcessExplorerCached.js'
 import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
@@ -358,18 +359,33 @@ export const build = async ({
   })
   console.timeEnd('copyMainProcessFiles')
 
+  const networkProcessCachePath = await BundleNetworkProcessCached.bundleNetworkProcessCached({
+    commitHash,
+    product,
+    version,
+    date,
+    target: '',
+  })
+
+  console.time('copyNetworkProcessFiles')
+  await Copy.copy({
+    from: networkProcessCachePath,
+    to: `${resourcesPath}/app/packages/network-process`,
+  })
+  console.timeEnd('copyNetworkProcessFiles')
+
   const preloadCachePath = await BundlePreload.bundlePreload({
     commitHash,
     product,
     version,
   })
 
-  console.time('copyMainProcessFiles')
+  console.time('copyPreloadFiles')
   await Copy.copy({
     from: preloadCachePath,
     to: `${resourcesPath}/app/packages/preload`,
   })
-  console.timeEnd('copyMainProcessFiles')
+  console.timeEnd('copyPreloadFiles')
 
   const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({
     commitHash,
