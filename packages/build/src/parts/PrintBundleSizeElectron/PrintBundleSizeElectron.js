@@ -5,6 +5,7 @@ import { root } from '../Root/Root.js'
 
 const bundlePath = join(root, 'packages/build/.tmp/linux/deb/amd64/app/usr/lib/lvce-oss')
 
+// @ts-ignore
 const getAbsolutePath = (relativePath) => {
   return join(bundlePath, relativePath)
 }
@@ -19,6 +20,7 @@ const getSize = async (relativePath) => {
   }
 }
 
+// @ts-ignore
 const parseLine = (line) => {
   const [size, path] = line.split('\t')
   return {
@@ -27,6 +29,7 @@ const parseLine = (line) => {
   }
 }
 
+// @ts-ignore
 const isRelevant = ({ path }) => {
   console.log({ path })
   return !path.includes('/')

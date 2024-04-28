@@ -276,6 +276,7 @@ export const getModuleId = (commandId) => {
     case 'ContentSecurityPolicy.set':
       return ModuleId.ContentSecurityPolicy
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
+    case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
       return ModuleId.HandleMessagePortForEmbedsProcess
     case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
       return ModuleId.HandleMessagePortForProcessExplorer

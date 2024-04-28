@@ -9,7 +9,6 @@ const formatModuleMap = async (absolutePath) => {
   const content = await ReadFile.readFile(absolutePath)
   const lines = SplitLines.splitLines(content)
   const newLines = []
-  let i = 1
   const State = {
     Top: 0,
     Switch: 1,

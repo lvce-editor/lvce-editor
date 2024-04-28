@@ -3,7 +3,6 @@ import * as ArchType from '../ArchType/ArchType.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
-import * as Tag from '../Tag/Tag.js'
 import * as Version from '../Version/Version.js'
 
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
