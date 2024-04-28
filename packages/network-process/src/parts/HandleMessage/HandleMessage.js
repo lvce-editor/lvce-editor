@@ -7,7 +7,7 @@ const prepare = (error) => {
 }
 
 const requiresSocket = (method) => {
-  return false
+  return method === 'ElectronWebContentsView.createWebContentsView'
 }
 
 const logError = (error, prettyError) => {
