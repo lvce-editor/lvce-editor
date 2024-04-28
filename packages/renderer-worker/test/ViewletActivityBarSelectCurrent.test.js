@@ -8,7 +8,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
   return {
     execute: jest.fn(() => {
       throw new Error('not implemented')
@@ -19,7 +19,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
 
 const ViewletActivityBarSelectCurrent = await import('../src/parts/ViewletActivityBar/ViewletActivityBarSelectCurrent.js')
-const Command = await import('../src/parts/Command/Command.js')
+const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 
 test('selectCurrent - settings', async () => {
   // TODO mock menu instead
@@ -85,10 +85,10 @@ test('selectCurrent - settings', async () => {
     ],
   }
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  ContextMenu.show.mockImplementation(() => {})
   expect(await ViewletActivityBarSelectCurrent.selectCurrent(state)).toBe(state)
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 750, 408, MenuEntryId.Settings)
+  expect(ContextMenu.show).toHaveBeenCalledTimes(1)
+  expect(ContextMenu.show).toHaveBeenCalledWith('ContextMenu.show', 750, 408, MenuEntryId.Settings)
 })
 
 test('selectCurrent - no item focused', async () => {
@@ -150,7 +150,7 @@ test('selectCurrent - no item focused', async () => {
     ],
   }
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  ContextMenu.show.mockImplementation(() => {})
   await ViewletActivityBarSelectCurrent.selectCurrent(state)
-  expect(Command.execute).not.toHaveBeenCalled()
+  expect(ContextMenu.show).not.toHaveBeenCalled()
 })
