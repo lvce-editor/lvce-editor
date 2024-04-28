@@ -33,7 +33,7 @@ export const bundleNetworkProcess = async ({ cachePath, target }) => {
   })
   if (target === 'server') {
     await WriteFile.writeFile({
-      to: ``,
+      to: `${cachePath}.index.js`,
       content: `import { dirname, isAbsolute, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
