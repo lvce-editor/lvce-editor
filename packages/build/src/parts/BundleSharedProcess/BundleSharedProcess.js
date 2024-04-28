@@ -27,6 +27,8 @@ const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   }
   if (bundleSharedProcess) {
     newPackageJson.main = 'dist/sharedProcessMain.js'
+  } else {
+    newPackageJson.main = 'index.js'
   }
   return newPackageJson
 }
