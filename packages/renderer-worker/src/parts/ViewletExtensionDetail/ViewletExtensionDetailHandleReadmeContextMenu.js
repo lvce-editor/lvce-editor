@@ -1,13 +1,7 @@
-import * as Command from '../Command/Command.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const handleReadmeContextMenu = async (state, x, y, props) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.ExtensionDetailReadme,
-    /* props */ props,
-  )
+  await ContextMenu.show(x, y, MenuEntryId.ExtensionDetailReadme, props)
   return state
 }

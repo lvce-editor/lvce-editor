@@ -1,14 +1,15 @@
+import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as InputSource from '../InputSource/InputSource.js'
-import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
-import * as Arrays from '../Arrays/Arrays.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
@@ -91,7 +92,7 @@ const handleEditorChange = async (editor) => {
 }
 
 export const handleContextMenu = async (state, eventX, eventY) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ eventX, /* y */ eventY, /* id */ MenuEntryId.Problems)
+  await ContextMenu.show(eventX, eventY, MenuEntryId.Problems)
   return state
 }
 
