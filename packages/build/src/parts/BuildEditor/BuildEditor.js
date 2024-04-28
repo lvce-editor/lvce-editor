@@ -151,6 +151,7 @@ const copySources = async () => {
   })
 }
 
+// @ts-ignore
 const bundle = async () => {
   await BundleJs.bundleJs({
     cwd: Path.absolute('packages/build/.tmp/editor/packages/renderer-process'),
@@ -172,6 +173,7 @@ const bundle = async () => {
   })
 }
 
+// @ts-ignore
 const generateTypings = async () => {
   await WriteFile.writeFile({
     to: 'packages/build/.tmp/editor/dist/editor.d.ts',
