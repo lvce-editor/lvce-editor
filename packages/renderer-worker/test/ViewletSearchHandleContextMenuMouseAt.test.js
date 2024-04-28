@@ -30,5 +30,5 @@ test('handleContextMenuMouseAt', async () => {
   const state = { ...ViewletSearch.create(), x: 0, y: 0 }
   expect(await ViewletSearchHandleContextMenuMouseAt.handleContextMenuMouseAt(state, 10, 10)).toBe(state)
   expect(ContextMenu.show).toHaveBeenCalledTimes(1)
-  expect(ContextMenu.show).toHaveBeenCalledWith('ContextMenu.show', 10, 10, MenuEntryId.Search)
+  expect(ContextMenu.show).toHaveBeenCalledWith(10, 10, MenuEntryId.Search)
 })
