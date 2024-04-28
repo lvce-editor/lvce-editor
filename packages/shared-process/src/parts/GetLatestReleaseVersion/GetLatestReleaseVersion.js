@@ -20,11 +20,10 @@ const parseVersionFromUrl = (url, repository) => {
 export const getLatestReleaseVersion = async (repository) => {
   try {
     const url = `https://github.com/${repository}/releases/latest`
-    const json = await NetworkProcess.invoke('Download.getJson', {
+    const finalUrl = await NetworkProcess.invoke('Download.getUrl', {
       method: 'HEAD',
       url,
     })
-    const finalUrl = json.url
     const version = parseVersionFromUrl(finalUrl, repository)
     return version
   } catch (error) {
