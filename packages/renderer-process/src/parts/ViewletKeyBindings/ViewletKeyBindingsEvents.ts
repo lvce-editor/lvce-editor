@@ -62,3 +62,4 @@ export const handlePointerDown = (event) => {
 }
 
 export * from '../VirtualListEvents/VirtualListEvents.ts'
+export * from '../ContextMenuEvents/ContextMenuEvents.ts'

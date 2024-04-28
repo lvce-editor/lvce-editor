@@ -12,4 +12,5 @@ export const Commands = {
   focusPrevious: ViewletKeyBindings.focusPrevious,
   focusFirst: ViewletKeyBindings.focusFirst,
   focusLast: ViewletKeyBindings.focusLast,
+  handleContextMenu: ViewletKeyBindings.handleContextMenu,
 }

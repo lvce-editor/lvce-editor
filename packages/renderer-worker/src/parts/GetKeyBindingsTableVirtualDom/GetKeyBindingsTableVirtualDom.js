@@ -14,6 +14,7 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
       ariaLabel: KeyBindingsStrings.keyBindings(),
       ariaRowCount: filteredKeyBindings.length,
       onClick: DomEventListenerFunctions.HandleTableClick,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       tabIndex: 0,
       childCount: 3,
     },
