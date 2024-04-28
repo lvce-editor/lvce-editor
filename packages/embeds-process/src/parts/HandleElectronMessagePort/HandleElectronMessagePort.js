@@ -5,6 +5,7 @@ import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcId from '../IpcId/IpcId.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
 
 export const handleElectronMessagePort = async (messagePort, ipcId) => {
   Assert.object(messagePort)
@@ -16,6 +17,8 @@ export const handleElectronMessagePort = async (messagePort, ipcId) => {
   HandleIpc.handleIpc(ipc)
   if (ipcId === IpcId.MainProcess) {
     ParentIpc.state.ipc = ipc
+  } else if (ipcId === IpcId.SharedProcess) {
+    SharedProcessIpc.state.ipc = ipc
   } else if (ipcId === IpcId.EmbedsWorker) {
     ipc.addEventListener('close', HandleIpcClosed.handleIpcClosed)
   }

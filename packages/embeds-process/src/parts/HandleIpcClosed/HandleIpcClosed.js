@@ -1,6 +1,6 @@
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewIpcState from '../ElectronWebContentsViewIpcState/ElectronWebContentsViewIpcState.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
 
 const getIdsToDispose = (ipc) => {
   const entries = ElectronWebContentsViewIpcState.getAll()
@@ -20,5 +20,5 @@ export const handleIpcClosed = async (event) => {
     ElectronWebContentsViewIpcState.remove(id)
     await ElectronWebContentsView.disposeWebContentsView(id)
   }
-  ParentIpc.send('HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed')
+  SharedProcessIpc.send('HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed')
 }
