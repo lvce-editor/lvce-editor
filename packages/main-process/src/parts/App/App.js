@@ -80,12 +80,6 @@ export const hydrate = async () => {
   // protocol
   Protocol.enable(Electron.protocol)
 
-  // ipcMain
-  // const ipc = await IpcChild.listen({
-  //   method: IpcChildType.RendererProcess,
-  // })
-  // HandleIpc.handleIpc(ipc)
-
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, HandleWindowAllClosed.handleWindowAllClosed)
   ElectronApp.on(ElectronAppEventType.BeforeQuit, ElectronAppListeners.handleBeforeQuit)
