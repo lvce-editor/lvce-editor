@@ -96,7 +96,7 @@ export const hydrate = async () => {
   Performance.mark(PerformanceMarkerType.AppReady)
 
   // start shared process
-  await SharedProcess.hydrate({
+  await SharedProcess.getOrCreate({
     method: IpcParentType.ElectronUtilityProcess,
   })
 
