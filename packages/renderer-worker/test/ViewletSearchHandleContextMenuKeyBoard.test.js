@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
@@ -30,5 +30,5 @@ test('handleContextMenuKeyBoard', async () => {
   const state = { ...ViewletSearch.create(), x: 0, y: 0 }
   expect(await ViewletSearchHandleContextMenuKeyBoard.handleContextMenuKeyboard(state)).toBe(state)
   expect(ContextMenu.show).toHaveBeenCalledTimes(1)
-  expect(ContextMenu.show).toHaveBeenCalledWith('ContextMenu.show', 0, 0, MenuEntryId.Search)
+  expect(ContextMenu.show).toHaveBeenCalledWith(0, 0, MenuEntryId.Search)
 })
