@@ -50,5 +50,13 @@ export const wrap = (port) => {
     sendAndTransfer(message, transfer) {
       this.port.postMessage(message, transfer)
     },
+    dispose() {
+      this.port.postMessage({
+        jsonrpc: '2.0',
+        method: 'Exit.exit',
+        params: [],
+      })
+      this.port.close()
+    },
   }
 }
