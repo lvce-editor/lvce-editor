@@ -36,8 +36,8 @@ const getModuleId = (parsedArgs) => {
   return ModuleId.None
 }
 
-const handleArgs = (moduleId, parsedArgs) => {
-  const module = getModule(moduleId)
+const handleArgs = async (moduleId, parsedArgs) => {
+  const module = await getModule(moduleId)
   return module.handleCliArgs(parsedArgs)
 }
 
