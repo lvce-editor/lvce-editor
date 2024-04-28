@@ -15,14 +15,12 @@ import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as HandleSecondInstance from '../HandleSecondInstance/HandleSecondInstance.js'
 import * as HandleWindowAllClosed from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as Protocol from '../Protocol/Protocol.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SingleInstanceLock from '../SingleInstanceLock/SingleInstanceLock.js'
 
 // TODO maybe handle critical (first render) request via ipcMain
@@ -47,11 +45,10 @@ export const hydrate = async () => {
   // see https://github.com/microsoft/playwright/issues/12345
 
   const parsedCliArgs = ParseCliArgs.parseCliArgs(Argv.argv)
-  const handled = Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
-  if (handled) {
+  const handled = await Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
+  if (handled !== false) {
     return
   }
-
   if (Platform.isLinux && Platform.chromeUserDataPath) {
     AppPaths.setUserDataPath(Platform.chromeUserDataPath)
     AppPaths.setSessionDataPath(Platform.chromeUserDataPath)
@@ -81,12 +78,6 @@ export const hydrate = async () => {
   // protocol
   Protocol.enable(Electron.protocol)
 
-  // ipcMain
-  // const ipc = await IpcChild.listen({
-  //   method: IpcChildType.RendererProcess,
-  // })
-  // HandleIpc.handleIpc(ipc)
-
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, HandleWindowAllClosed.handleWindowAllClosed)
   ElectronApp.on(ElectronAppEventType.BeforeQuit, ElectronAppListeners.handleBeforeQuit)
@@ -94,11 +85,6 @@ export const hydrate = async () => {
   ElectronApp.on(ElectronAppEventType.SecondInstance, HandleSecondInstance.handleSecondInstance)
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
-
-  // start shared process
-  await SharedProcess.getOrCreate({
-    method: IpcParentType.ElectronUtilityProcess,
-  })
 
   await HandleElectronReady.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')
