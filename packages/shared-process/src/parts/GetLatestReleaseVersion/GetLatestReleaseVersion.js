@@ -1,5 +1,5 @@
-import got, { HTTPError } from 'got'
 import * as GetHttpErrorMessage from '../GetHttpErrorMessage/GetHttpErrorMessage.js'
+import * as NetworkProcess from '../NetworkProcess/NetworkProcess.js'
 import { VError } from '../VError/VError.js'
 
 const parseVersionFromUrl = (url, repository) => {
@@ -19,12 +19,15 @@ const parseVersionFromUrl = (url, repository) => {
 
 export const getLatestReleaseVersion = async (repository) => {
   try {
-    const json = await got.head(`https://github.com/${repository}/releases/latest`)
-    const finalUrl = json.url
+    const url = `https://github.com/${repository}/releases/latest`
+    const finalUrl = await NetworkProcess.invoke('Download.getUrl', {
+      method: 'HEAD',
+      url,
+    })
     const version = parseVersionFromUrl(finalUrl, repository)
     return version
   } catch (error) {
-    if (error instanceof HTTPError) {
+    if (error && error.name === 'HTTPError') {
       const httpErrorMessage = GetHttpErrorMessage.getHttpErrorMessage(error)
       throw new VError(`Failed to get latest release for ${repository}: ${httpErrorMessage}`)
     }

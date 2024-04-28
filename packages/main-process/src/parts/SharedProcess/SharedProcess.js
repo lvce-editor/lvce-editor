@@ -1,9 +1,9 @@
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 
-export const hydrate = async ({ method, env = {} }) => {
+export const getOrCreate = async ({ method, env = {} }) => {
   if (!SharedProcessState.state.promise) {
     SharedProcessState.state.promise = LaunchSharedProcess.launchSharedProcess({ method, env })
   }
@@ -11,17 +11,22 @@ export const hydrate = async ({ method, env = {} }) => {
 }
 
 export const send = async (method, ...params) => {
-  const message = JsonRpcEvent.create(method, params)
-  const ipc = await SharedProcessState.state.promise
-  ipc.send(message)
+  const ipc = await getOrCreate({
+    method: IpcChildType.ElectronUtilityProcess,
+  })
+  JsonRpc.send(ipc, method, ...params)
 }
 
 export const invoke = async (method, ...params) => {
-  const ipc = await SharedProcessState.state.promise
+  const ipc = await getOrCreate({
+    method: IpcChildType.ElectronUtilityProcess,
+  })
   return JsonRpc.invoke(ipc, method, ...params)
 }
 
 export const invokeAndTransfer = async (transfer, method, ...params) => {
-  const ipc = await SharedProcessState.state.promise
+  const ipc = await getOrCreate({
+    method: IpcChildType.ElectronUtilityProcess,
+  })
   return JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
 }
