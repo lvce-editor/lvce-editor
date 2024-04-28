@@ -1,19 +1,11 @@
-import { readdir } from 'node:fs/promises'
 import * as BundleEmbedsProcessDependencies from '../BundleEmbedsProcessDependencies/BundleEmbedsProcessDependencies.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
+import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js'
 import * as BundleProcessExplorerDependencies from '../BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
-import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js'
-import * as Copy from '../Copy/Copy.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as Path from '../Path/Path.js'
-
-const isLanguageBasics = (name) => {
-  return name.startsWith('builtin.language-basics')
-}
 
 const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) => {
   await BundlePtyHostDependencies.bundlePtyHostDependencies({
