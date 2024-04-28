@@ -70,6 +70,14 @@
   color: color-mix(in oklab, var(--ListActiveSelectionForeground), var(--ListActiveSelectionBackground) 30%);
 }
 
+.QuickPickItemLabel {
+  contain: content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  flex-shrink: 0;
+}
+
 .QuickPickItemDescription {
   font-size: 0.9em;
   pointer-events: none;

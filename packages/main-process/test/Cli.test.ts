@@ -16,10 +16,10 @@ jest.unstable_mockModule('electron', () => {
 
 const Cli = await import('../src/parts/Cli/Cli.js')
 
-test('handleFastCliArgsMaybe - nothing matches', () => {
+test('handleFastCliArgsMaybe - nothing matches', async () => {
   const spy = jest.spyOn(console, 'info')
   expect(
-    Cli.handleFastCliArgsMaybe({
+    await Cli.handleFastCliArgsMaybe({
       _: ['/tmp/'],
       help: false,
       v: false,
