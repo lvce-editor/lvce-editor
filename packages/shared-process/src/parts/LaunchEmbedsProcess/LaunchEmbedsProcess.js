@@ -12,6 +12,7 @@ export const launchEmbedsProcess = async () => {
     argv: [],
     stdio: 'inherit',
     name: 'Embeds Process',
+    ipcId: IpcId.SharedProcess,
   })
   HandleIpc.handleIpc(ipc)
   await ConnectIpcToElectron.connectIpcToElectron(ipc, IpcId.EmbedsProcess)
