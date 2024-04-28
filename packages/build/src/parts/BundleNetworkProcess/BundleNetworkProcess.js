@@ -1,5 +1,6 @@
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const createNewPackageJson = (oldPackageJson, target) => {
   const newPackageJson = {
@@ -16,6 +17,7 @@ const createNewPackageJson = (oldPackageJson, target) => {
     delete newPackageJson.license
     delete newPackageJson.repository
     delete newPackageJson.engines
+    newPackageJson.main = 'index.js'
   }
   return newPackageJson
 }
@@ -30,15 +32,16 @@ export const bundleNetworkProcess = async ({ cachePath, target }) => {
     to: `${cachePath}/package.json`,
   })
   if (target === 'server') {
-    // TODO
-    // await Copy.copy({
-    //   from: 'packages/network-process/bin',
-    //   to: `${cachePath}/bin`,
-    // })
-    // await Copy.copy({
-    //   from: 'packages/network-process/index.js',
-    //   to: `${cachePath}/index.js`,
-    // })
+    await WriteFile.writeFile({
+      to: `${cachePath}.index.js`,
+      content: `import { dirname, isAbsolute, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+export const networkProcessPath = join(__dirname, 'src', 'sharedProcessMain.js')
+`,
+    })
     await Copy.copyFile({
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,
