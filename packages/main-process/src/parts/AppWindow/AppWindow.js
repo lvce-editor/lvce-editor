@@ -66,7 +66,6 @@ export const createAppWindow = async (windowOptions, parsedArgs, workingDirector
   }
   window.on('close', handleWindowClose)
 
-  window.webContents.openDevTools()
   const ipc = await IpcChild.listen({
     method: IpcChildType.RendererProcess2,
     webContents: window.webContents,
