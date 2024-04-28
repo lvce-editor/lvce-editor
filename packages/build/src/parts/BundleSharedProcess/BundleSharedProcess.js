@@ -187,7 +187,7 @@ export const getPtyHostPath = async () => {
 `,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
+      path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 
