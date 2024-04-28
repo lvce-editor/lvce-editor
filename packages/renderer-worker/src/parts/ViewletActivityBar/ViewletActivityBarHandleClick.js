@@ -3,14 +3,15 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 
 const handleClickSettings = async (state, x, y, viewletId) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Settings)
+  await ContextMenu.show(x, y, MenuEntryId.Settings)
   return state
 }
 
 const handleClickAdditionalViews = async (state, x, y, viewletId) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.ActivityBarAdditionalViews)
+  await ContextMenu.show(x, y, MenuEntryId.ActivityBarAdditionalViews)
   return state
 }
 
