@@ -17,7 +17,6 @@ jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
 })
 
 const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
-
 const ViewletActivityBarSelectCurrent = await import('../src/parts/ViewletActivityBar/ViewletActivityBarSelectCurrent.js')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 
@@ -88,7 +87,7 @@ test('selectCurrent - settings', async () => {
   ContextMenu.show.mockImplementation(() => {})
   expect(await ViewletActivityBarSelectCurrent.selectCurrent(state)).toBe(state)
   expect(ContextMenu.show).toHaveBeenCalledTimes(1)
-  expect(ContextMenu.show).toHaveBeenCalledWith('ContextMenu.show', 750, 408, MenuEntryId.Settings)
+  expect(ContextMenu.show).toHaveBeenCalledWith(750, 408, MenuEntryId.Settings)
 })
 
 test('selectCurrent - no item focused', async () => {
