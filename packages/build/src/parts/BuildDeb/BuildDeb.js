@@ -159,7 +159,7 @@ const printDebSize = async ({ product, debArch }) => {
   }
 }
 
-const fixPermissions = async ({ debArch }) => {
+const fixPermissions = async ({ debArch, product }) => {
   try {
     const folder = Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app`)
     // change permissions from 775 to 755
@@ -172,15 +172,7 @@ const fixPermissions = async ({ debArch }) => {
       stdout: 'ignore',
       stderr: 'inherit',
     })
-    const extraFiles = [
-      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/web/bin/web.js`,
-      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
-      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
-      // `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
-    ]
-    for (const extraFile of extraFiles) {
-      await chmod(Path.absolute(extraFile), 0o755)
-    }
+    await chmod(Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/chrome-sandbox`), 0o4755)
   } catch (error) {
     throw new VError(error, 'Failed to fix permissions')
   }
@@ -217,7 +209,7 @@ export const build = async ({ product, arch }) => {
   console.timeEnd('copyMetaFiles')
 
   console.time('fixPermissions')
-  await fixPermissions({ debArch })
+  await fixPermissions({ product, debArch })
   console.timeEnd('fixPermissions')
 
   console.time('compressData')
