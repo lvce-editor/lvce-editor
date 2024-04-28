@@ -13,7 +13,7 @@ const quickPickHighlight = {
 const addHighlights = (dom, highlights, label) => {
   const labelDom = {
     type: VirtualDomElements.Div,
-    className: ClassNames.Label,
+    className: ClassNames.QuickPickItemLabel,
     childCount: 0,
   }
   dom.push(labelDom)
