@@ -3,8 +3,7 @@ const { ipcRenderer, contextBridge } = require('electron')
 const channelName = 'port'
 
 const handleElectronMessage = (event, message) => {
-  const { origin } = location
-  window.postMessage(message, origin)
+  window.postMessage(message, location.origin)
 }
 
 const handleWindowMessage = (event) => {
