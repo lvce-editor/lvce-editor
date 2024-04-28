@@ -27,6 +27,8 @@ const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   }
   if (bundleSharedProcess) {
     newPackageJson.main = 'dist/sharedProcessMain.js'
+  } else {
+    newPackageJson.main = 'index.js'
   }
   return newPackageJson
 }
@@ -184,6 +186,16 @@ export const getPtyHostPath = async () => {
     return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
   }
 }
+`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const networkProcessPath = Path.join(Root.root, 'packages', 'network-process', 'src', 'networkProcessMain.js')
+`,
+      replacement: `export { networkProcessPath } from '@lvce-editor/network-process'
 `,
     })
     await Copy.copyFile({
