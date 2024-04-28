@@ -48,10 +48,9 @@ export const hydrate = async () => {
 
   const parsedCliArgs = ParseCliArgs.parseCliArgs(Argv.argv)
   const handled = await Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
-  if (handled) {
+  if (handled !== false) {
     return
   }
-
   if (Platform.isLinux && Platform.chromeUserDataPath) {
     AppPaths.setUserDataPath(Platform.chromeUserDataPath)
     AppPaths.setSessionDataPath(Platform.chromeUserDataPath)
