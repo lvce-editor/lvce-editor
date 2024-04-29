@@ -34,7 +34,6 @@
     "execa": "^8.0.1",
     "exit-hook": "^4.0.0",
     "is-object": "^1.0.2",
-    "tar-fs": "^3.0.6",
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
