@@ -12,7 +12,7 @@ export const handleSecondInstance = async (
   Debug.debug('[info] second instance')
   const parsedArgs = ParseCliArgs.parseCliArgs(additionalData)
   Debug.debug('[info] second instance args', additionalData, parsedArgs)
-  const handled = Cli.handleFastCliArgsMaybe(parsedArgs) // TODO don't like the side effect here
+  const handled = await Cli.handleFastCliArgsMaybe(parsedArgs) // TODO don't like the side effect here
   if (handled) {
     return
   }

@@ -12,6 +12,7 @@ const UiStrings = {
   TypeToSearchKeyBindings: 'Type to search in keybindings',
   PressDesiredKeyCombinationThenPressEnter: 'Press Desired Key Combination, Then Press Enter',
   ResultsWillUpdateAsYouType: 'Results will update as you type',
+  Copy: 'copy',
 }
 
 export const keyBindings = () => {
@@ -40,4 +41,8 @@ export const pressDesiredKeyCombinationThenPressEnter = () => {
 
 export const resultsWillUpdateAsYouType = () => {
   return I18nString.i18nString(UiStrings.ResultsWillUpdateAsYouType)
+}
+
+export const copy = () => {
+  return I18nString.i18nString(UiStrings.Copy)
 }

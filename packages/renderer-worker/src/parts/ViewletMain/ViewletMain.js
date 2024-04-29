@@ -5,6 +5,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as DeserializeEditorGroups from '../DeserializeEditorGroups/DeserializeEditorGroups.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
@@ -579,7 +580,7 @@ export const handleTabContextMenu = async (state, eventX, eventY) => {
     return state
   }
   group.focusedIndex = index
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ eventX, /* y */ eventY, /* id */ MenuEntryId.Tab)
+  await ContextMenu.show(eventX, eventY, MenuEntryId.Tab)
   return {
     ...state,
   }

@@ -12,6 +12,8 @@ import * as Focus from '../Focus/Focus.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Command from '../Command/Command.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -227,6 +229,11 @@ export const focusLast = (state) => {
     ...state,
     selectedIndex: filteredKeyBindings.length - 1,
   }
+}
+
+export const handleContextMenu = async (state, button, x, y) => {
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.KeyBindingsTable)
+  return state
 }
 
 export const focusNext = (state) => {
