@@ -57,9 +57,3 @@ export const handleDebugInput = (event) => {
   const { value } = target
   ViewletRunAndDebugFunctions.handleDebugInput(value)
 }
-
-export const handleClickSectionHeading = (event) => {
-  const { target } = event
-  const { textContent } = target
-  ViewletRunAndDebugFunctions.handleClickSectionHeading(textContent)
-}
