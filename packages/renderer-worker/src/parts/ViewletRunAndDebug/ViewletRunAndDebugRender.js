@@ -1,5 +1,5 @@
-import * as GetRunAndDebugVirtualDom2 from '../GetRunAndDebugVirtualDom2/GetRunAndDebugVirtualDom2.ts'
-import * as GetRunAndDebugVisibleRows from '../GetRunAndDebugVisibleRows/GetRunAndDebugVisibleRows.ts'
+import * as DiffDom from '../DiffDom/DiffDom.js'
+import * as GetRunAndDebugVirtualDom from '../GetRunAndDebugVirtualDom/GetRunAndDebugVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -10,9 +10,10 @@ const renderDebug = {
     return false
   },
   apply(oldState, newState) {
-    const rows = GetRunAndDebugVisibleRows.getRunAndDebugVisibleRows(newState)
-    const dom = GetRunAndDebugVirtualDom2.getRunAndDebugVirtualDom2(rows)
-    return ['Viewlet.setDom2', dom]
+    const oldDom = GetRunAndDebugVirtualDom.getRunAndDebugVirtualDom(oldState)
+    const newDom = GetRunAndDebugVirtualDom.getRunAndDebugVirtualDom(newState)
+    const diff = DiffDom.diffDom(oldDom, newDom)
+    return ['Viewlet.setDom2', newDom]
   },
 }
 
