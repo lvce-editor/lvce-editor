@@ -124,6 +124,11 @@ const getCollapsedScopeChain = (scopeChain, element, index) => {
   return scopeChain
 }
 
+// TODO maybe store scope chain elements as tree
+// TODO when collapsing, store collapsed elements by parent id in cache
+// TODO when expanding, retrieve items from cache by parent id first
+// if they don't exist, query the actual items
+
 const collapse = (state, expandedIds, scopeChain, element, index) => {
   const newExpandedIds = Arrays.removeElement(expandedIds, element.objectId)
   const newScopeChain = getCollapsedScopeChain(scopeChain, element, index)
