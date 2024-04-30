@@ -115,6 +115,7 @@ const getRowRenderer = (type: number) => {
     case DebugRowType.Scope:
       return renderScope
     case DebugRowType.Value:
+    case DebugRowType.Property:
       return renderValue
     default:
       return renderNoop
