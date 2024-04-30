@@ -121,6 +121,7 @@ const getRowRenderer = (type: number) => {
       return renderNoop
   }
 }
+
 const renderDebugRow = (row) => {
   const renderer = getRowRenderer(row.type)
   return renderer(row)
