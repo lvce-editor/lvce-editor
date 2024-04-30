@@ -5,6 +5,9 @@ import * as VirtualDomHelpers from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as DebugRowType from '../DebugRowType/DebugRowType.ts'
 import type { VirtualDomNode } from '../VirtualDomNode/VirtualDomNode.ts'
+import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
+
+const separator = VirtualDomHelpers.text(': ')
 
 const renderNoop = (row: DebugRow): readonly VirtualDomNode[] => {
   return [
@@ -74,6 +77,33 @@ const renderScope = (row: DebugRow): readonly VirtualDomNode[] => {
   ]
 }
 
+const renderValue = (row: DebugRow): readonly VirtualDomNode[] => {
+  const { indent, key, value, valueType } = row
+  const className = GetDebugValueClassName.getDebugValueClassName(valueType)
+
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugRow,
+      paddingLeft: indent,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Span,
+      className: 'DebugValue DebugPropertyKey',
+      childCount: 1,
+    },
+    VirtualDomHelpers.text(key),
+    separator,
+    {
+      type: VirtualDomElements.Span,
+      className: 'DebugValue ' + className,
+      childCount: 1,
+    },
+    VirtualDomHelpers.text(value),
+  ]
+}
+
 const getRowRenderer = (type: number) => {
   switch (type) {
     case DebugRowType.Message:
@@ -84,6 +114,8 @@ const getRowRenderer = (type: number) => {
       return renderCallStack
     case DebugRowType.Scope:
       return renderScope
+    case DebugRowType.Value:
+      return renderValue
     default:
       return renderNoop
   }
