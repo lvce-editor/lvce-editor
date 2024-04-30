@@ -44,6 +44,10 @@ export const handleClickScopeValue = (text) => {
   RendererWorker.send('Run And Debug.handleClickScopeValue', text)
 }
 
+export const handleClickSectionHeading = (text) => {
+  RendererWorker.send('Run And Debug.handleClickSectionHeading', text)
+}
+
 /**
  *
  * @param {string} value

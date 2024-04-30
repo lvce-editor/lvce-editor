@@ -42,6 +42,7 @@ const renderSectionHeading = (row: DebugRow): readonly VirtualDomNode[] => {
       ariaExpanded: expanded,
       ariaLevel: 1,
       childCount: 2,
+      onClick: 'handleClickSectionHeading',
     },
     expanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
     VirtualDomHelpers.text(row.text),

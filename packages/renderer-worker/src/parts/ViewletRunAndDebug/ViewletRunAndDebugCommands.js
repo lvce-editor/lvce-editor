@@ -8,6 +8,7 @@ export const Commands = {
   handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
   handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,
   handleClickSectionWatch: ViewletRunAndDebug.handleClickSectionWatch,
+  handleClickSectionHeading: ViewletRunAndDebug.handleClickSectionHeading,
   handleDebugInput: ViewletRunAndDebug.handleDebugInput,
   handleEvaluate: ViewletRunAndDebug.handleEvaluate,
   pause: ViewletRunAndDebug.pause,

@@ -227,6 +227,21 @@ export const handleClickSectionCallstack = (state) => {
   }
 }
 
+export const handleClickSectionHeading = (state, text) => {
+  switch (text) {
+    case 'Watch':
+      return handleClickSectionWatch(state)
+    case 'Breakpoints':
+      return handleClickSectionBreakPoints(state)
+    case 'Scope':
+      return handleClickSectionScope(state)
+    case 'Call Stack':
+      return handleClickSectionCallstack(state)
+    default:
+      return state
+  }
+}
+
 export const handleDebugInput = (state, value) => {
   return {
     ...state,
