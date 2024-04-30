@@ -1,8 +1,9 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as DebugRowType from '../DebugRowType/DebugRowType.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as VirtualDomHelpers from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -74,6 +75,7 @@ const renderScope = (row: DebugRow): readonly VirtualDomNode[] => {
       ariaExpanded: expanded,
       ariaLevel: 2,
       childCount: 2,
+      onPointerDown: DomEventListenerFunctions.HandleClickScopeValue,
     },
     expanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
     {
