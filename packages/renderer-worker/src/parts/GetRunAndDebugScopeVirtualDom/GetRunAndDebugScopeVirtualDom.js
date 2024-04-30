@@ -6,6 +6,7 @@ import * as GetScopeExceptionVirtualDom from '../GetScopeExceptionVirtualDom/Get
 import * as GetScopePropertyVirtualDom from '../GetScopePropertyVirtualDom/GetScopePropertyVirtualDom.js'
 import * as GetScopeScopeVirtualDom from '../GetScopeScopeVirtualDom/GetScopeScopeVirtualDom.js'
 import * as GetScopeThisVirtualDom from '../GetScopeThisVirtualDom/GetScopeThisVirtualDom.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -19,7 +20,7 @@ const scopeHeader = {
   ariaExpanded: false,
   tabIndex: 0,
   childCount: 2,
-  onPointerDown: 'handleClickSectionScope',
+  onPointerDown: DomEventListenerFunctions.HandleClickSectionScope,
 }
 
 const scopeHeaderExpanded = {
@@ -29,7 +30,7 @@ const scopeHeaderExpanded = {
   ariaLevel: 1,
   ariaExpanded: true,
   childCount: 2,
-  onPointerDown: 'handleClickSectionScope',
+  onPointerDown: DomEventListenerFunctions.HandleClickSectionScope,
 }
 
 const debugPausedMessage = {

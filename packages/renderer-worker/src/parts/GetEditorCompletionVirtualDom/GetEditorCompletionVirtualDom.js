@@ -1,5 +1,7 @@
 import * as GetCompletionItemsVirtualDom from '../GetCompletionItemsVirtualDom/GetCompletionItemsVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const getEditorCompletionVirtualDom = (visibleItems) => {
   const dom = []
@@ -9,22 +11,22 @@ export const getEditorCompletionVirtualDom = (visibleItems) => {
       className: 'Viewlet EditorCompletion',
       id: 'Completions',
       childCount: 2,
-      onWheel: 'handleWheel',
+      onWheel: DomEventListenerFunctions.HandleWheel,
     },
     {
       type: VirtualDomElements.Div,
       className: 'ListItems',
-      role: 'listbox',
+      role: AriaRoles.ListBox,
       ariaLabel: 'Suggest',
       childCount: visibleItems.length,
-      onMouseDown: 'handleMousedown',
+      onMouseDown: DomEventListenerFunctions.HandleMouseDown,
     },
     ...GetCompletionItemsVirtualDom.getCompletionItemsVirtualDom(visibleItems),
     {
       type: VirtualDomElements.Div,
       className: 'ScrollBarSmall',
       childCount: 1,
-      onPointerDown: 'handleScrollBarPointerDown',
+      onPointerDown: DomEventListenerFunctions.HandleScrollBarPointerDown,
     },
     {
       type: VirtualDomElements.Div,

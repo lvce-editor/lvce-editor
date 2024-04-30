@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetButtonVirtualDom from '../GetButtonVirtualDom/GetButtonVirtualDom.js'
 import * as TabIndex from '../TabIndex/TabIndex.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -14,7 +15,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
       role: AriaRoles.Dialog,
       ariaModal: 'true',
       ariaLabelledBy: 'DialogIcon DialogHeading',
-      onFocusIn: 'handleFocusIn',
+      onFocusIn: DomEventListenerFunctions.HandleFocusIn,
       childCount: 3,
     },
     {
@@ -27,7 +28,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
       className: ClassNames.DialogClose,
       ariaLabel: closeMessage,
       role: AriaRoles.Button,
-      onClick: 'handleClickClose',
+      onClick: DomEventListenerFunctions.HandleClickClose,
       childCount: 1,
     },
     {
@@ -65,8 +66,8 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
       className: ClassNames.DialogButtonsRow,
       childCount: 2,
     },
-    ...GetButtonVirtualDom.getSecondaryButtonVirtualDom(okMessage, 'handleClickOk'),
-    ...GetButtonVirtualDom.getPrimaryButtonVirtualDom(copyMessage, 'handleClickCopy'),
+    ...GetButtonVirtualDom.getSecondaryButtonVirtualDom(okMessage, DomEventListenerFunctions.HandleClickOk),
+    ...GetButtonVirtualDom.getPrimaryButtonVirtualDom(copyMessage, DomEventListenerFunctions.HandleClickCopy),
   ]
   return dom
 }
