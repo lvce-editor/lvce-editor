@@ -3,12 +3,13 @@ import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugStrings from '../DebugStrings/DebugStrings.js'
 import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
+import * as DebugRowType from '../DebugRowType/DebugRowType.ts'
 
 const getRunAndDebugVisibleRowsWatch = (state): readonly DebugRow[] => {
   const { watchExpanded } = state
   return [
     {
-      type: 'section-heading',
+      type: DebugRowType.SectionHeading,
       text: DebugStrings.watch(),
       expanded: watchExpanded,
       key: '',
@@ -23,7 +24,7 @@ const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
   const { breakPointsExpanded } = state
   return [
     {
-      type: 'section-heading',
+      type: DebugRowType.SectionHeading,
       text: DebugStrings.breakPoints(),
       expanded: breakPointsExpanded,
       key: '',
@@ -38,7 +39,7 @@ const getScopeThisRows = (scope): readonly DebugRow[] => {
   const { indent, key, value, valueType } = scope
   return [
     {
-      type: 'value',
+      type: DebugRowType.Value,
       text: '',
       expanded: false,
       key,
@@ -53,7 +54,7 @@ const getScopeExceptionRows = (scope): readonly DebugRow[] => {
   const { key, value } = scope
   return [
     {
-      type: 'exception',
+      type: DebugRowType.Exception,
       text: '',
       expanded: false,
       key,
@@ -68,7 +69,7 @@ const getScopeScopeRows = (scope): readonly DebugRow[] => {
   const { key, flags } = scope
   return [
     {
-      type: 'scope',
+      type: DebugRowType.Scope,
       text: '',
       expanded: flags & DebugItemFlags.Expanded,
       key,
@@ -83,7 +84,7 @@ const getScopePropertyRows = (scope): readonly DebugRow[] => {
   const { indent, key, value, valueType, flags } = scope
   return [
     {
-      type: 'property',
+      type: DebugRowType.Property,
       text: '',
       expanded: flags & DebugItemFlags.Expanded,
       key,
@@ -118,7 +119,7 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
   const { scopeChain, scopeExpanded, expandedIds, scopeFocusedIndex } = state
   if (scopeExpanded) {
     rows.push({
-      type: 'section-heading',
+      type: DebugRowType.SectionHeading,
       text: DebugStrings.scope(),
       expanded: true,
       key: '',
@@ -128,7 +129,7 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
     })
     if (scopeChain.length === 0) {
       rows.push({
-        type: 'message',
+        type: DebugRowType.Message,
         text: DebugStrings.notPaused(),
         expanded: false,
         key: '',
@@ -145,7 +146,7 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
     }
   } else {
     rows.push({
-      type: 'section-heading',
+      type: DebugRowType.SectionHeading,
       text: DebugStrings.scope(),
       expanded: false,
       key: '',
@@ -162,7 +163,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
   const rows: DebugRow[] = []
   if (callStackExpanded) {
     rows.push({
-      type: 'section-heading',
+      type: DebugRowType.SectionHeading,
       text: DebugStrings.callStack(),
       expanded: true,
       key: '',
@@ -172,7 +173,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
     })
     if (callStack.length === 0) {
       rows.push({
-        type: 'message',
+        type: DebugRowType.Message,
         text: DebugStrings.notPaused(),
         expanded: false,
         key: '',
@@ -183,7 +184,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
     } else {
       for (const item of callStack) {
         rows.push({
-          type: 'callstack',
+          type: DebugRowType.CallStack,
           text: item.functionName,
           expanded: false,
           key: '',
@@ -195,7 +196,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
     }
   } else {
     rows.push({
-      type: 'section-heading',
+      type: DebugRowType.SectionHeading,
       text: DebugStrings.callStack(),
       expanded: false,
       key: '',

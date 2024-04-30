@@ -3,6 +3,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomHelpers from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
+import * as DebugRowType from '../DebugRowType/DebugRowType.ts'
 import type { VirtualDomNode } from '../VirtualDomNode/VirtualDomNode.ts'
 
 const renderNoop = (row: DebugRow): readonly VirtualDomNode[] => {
@@ -12,6 +13,18 @@ const renderNoop = (row: DebugRow): readonly VirtualDomNode[] => {
       childCount: 1,
     },
     VirtualDomHelpers.text('unknown row type'),
+  ]
+}
+
+const renderMessage = (row: DebugRow): readonly VirtualDomNode[] => {
+  const { text } = row
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugPausedMessage,
+      childCount: 1,
+    },
+    VirtualDomHelpers.text(text),
   ]
 }
 
@@ -29,11 +42,48 @@ const renderSectionHeading = (row: DebugRow): readonly VirtualDomNode[] => {
   ]
 }
 
-// TODO use number for type
-const getRowRenderer = (type: string) => {
+const renderCallStack = (row: DebugRow): readonly VirtualDomNode[] => {
+  const { text } = row
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugRow + ' DebugRowCallStack',
+      childCount: 1,
+    },
+    VirtualDomHelpers.text(text),
+  ]
+}
+
+const renderScope = (row: DebugRow): readonly VirtualDomNode[] => {
+  const { key, expanded } = row
+  let className = ClassNames.DebugRow
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className,
+      ariaExpanded: expanded,
+      childCount: 2,
+    },
+    expanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
+    {
+      type: VirtualDomElements.Span,
+      className: 'DebugValue DebugValueScopeName',
+      childCount: 1,
+    },
+    VirtualDomHelpers.text(key),
+  ]
+}
+
+const getRowRenderer = (type: number) => {
   switch (type) {
-    case 'section-heading':
+    case DebugRowType.Message:
+      return renderMessage
+    case DebugRowType.SectionHeading:
       return renderSectionHeading
+    case DebugRowType.CallStack:
+      return renderCallStack
+    case DebugRowType.Scope:
+      return renderScope
     default:
       return renderNoop
   }
