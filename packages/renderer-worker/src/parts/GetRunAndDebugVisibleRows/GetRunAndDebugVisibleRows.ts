@@ -1,14 +1,10 @@
+import * as DebugItemFlags from '../DebugItemFlags/DebugItemFlags.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugStrings from '../DebugStrings/DebugStrings.js'
-import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
-import * as GetScopeExceptionVirtualDom from '../GetScopeExceptionVirtualDom/GetScopeExceptionVirtualDom.js'
-import * as GetScopePropertyVirtualDom from '../GetScopePropertyVirtualDom/GetScopePropertyVirtualDom.js'
-import * as GetScopeScopeVirtualDom from '../GetScopeScopeVirtualDom/GetScopeScopeVirtualDom.js'
-import * as GetScopeThisVirtualDom from '../GetScopeThisVirtualDom/GetScopeThisVirtualDom.js'
+import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
-import * as DebugItemFlags from '../DebugItemFlags/DebugItemFlags.js'
 
-const getRunAndDebugVisibleRowsWatch = (state) => {
+const getRunAndDebugVisibleRowsWatch = (state): readonly DebugRow[] => {
   const { watchExpanded } = state
   return [
     {
@@ -23,7 +19,7 @@ const getRunAndDebugVisibleRowsWatch = (state) => {
   ]
 }
 
-const getRunAndDebugVisibleRowsBreakPoints = (state) => {
+const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
   const { breakPointsExpanded } = state
   return [
     {
@@ -38,7 +34,7 @@ const getRunAndDebugVisibleRowsBreakPoints = (state) => {
   ]
 }
 
-const getScopeThisRows = (scope) => {
+const getScopeThisRows = (scope): readonly DebugRow[] => {
   const { indent, key, value, valueType } = scope
   return [
     {
@@ -53,7 +49,7 @@ const getScopeThisRows = (scope) => {
   ]
 }
 
-const getScopeExceptionRows = (scope) => {
+const getScopeExceptionRows = (scope): readonly DebugRow[] => {
   const { key, value } = scope
   return [
     {
@@ -68,7 +64,7 @@ const getScopeExceptionRows = (scope) => {
   ]
 }
 
-const getScopeScopeRows = (scope) => {
+const getScopeScopeRows = (scope): readonly DebugRow[] => {
   const { key, flags } = scope
   return [
     {
@@ -83,7 +79,7 @@ const getScopeScopeRows = (scope) => {
   ]
 }
 
-const getScopePropertyRows = (scope) => {
+const getScopePropertyRows = (scope): readonly DebugRow[] => {
   const { indent, key, value, valueType, flags } = scope
   return [
     {
@@ -117,8 +113,8 @@ const getScopeRenderer = (type) => {
   }
 }
 
-const getRunAndDebugVisibleRowsScope = (state) => {
-  const rows = []
+const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
+  const rows: DebugRow[] = []
   const { scopeChain, scopeExpanded, expandedIds, scopeFocusedIndex } = state
   if (scopeExpanded) {
     rows.push({
