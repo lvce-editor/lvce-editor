@@ -1,7 +1,7 @@
 import * as DebugItemFlags from '../DebugItemFlags/DebugItemFlags.js'
+import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugStrings from '../DebugStrings/DebugStrings.js'
-import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
 
 const getRunAndDebugVisibleRowsWatch = (state): readonly DebugRow[] => {
@@ -157,8 +157,62 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
   return rows
 }
 
-export const getRunAndDebugVisibleRows = (state) => {
-  const rows = [...getRunAndDebugVisibleRowsWatch(state), ...getRunAndDebugVisibleRowsBreakPoints(state), ...getRunAndDebugVisibleRowsScope(state)]
+const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
+  const { callStack, callStackExpanded } = state
+  const rows: DebugRow[] = []
+  if (callStackExpanded) {
+    rows.push({
+      type: 'section-heading',
+      text: DebugStrings.callStack(),
+      expanded: true,
+      key: '',
+      value: '',
+      indent: 0,
+      valueType: '',
+    })
+    if (callStack.length === 0) {
+      rows.push({
+        type: 'message',
+        text: DebugStrings.notPaused(),
+        expanded: false,
+        key: '',
+        value: '',
+        indent: 0,
+        valueType: '',
+      })
+    } else {
+      for (const item of callStack) {
+        rows.push({
+          type: 'callstack',
+          text: item.functionName,
+          expanded: false,
+          key: '',
+          value: '',
+          indent: 0,
+          valueType: '',
+        })
+      }
+    }
+  } else {
+    rows.push({
+      type: 'section-heading',
+      text: DebugStrings.callStack(),
+      expanded: false,
+      key: '',
+      value: '',
+      indent: 0,
+      valueType: '',
+    })
+  }
+  return rows
+}
 
+export const getRunAndDebugVisibleRows = (state) => {
+  const rows = [
+    ...getRunAndDebugVisibleRowsWatch(state),
+    ...getRunAndDebugVisibleRowsBreakPoints(state),
+    ...getRunAndDebugVisibleRowsScope(state),
+    ...getRunAndDebugVisibleRowsCallStack(state),
+  ]
   return rows
 }
