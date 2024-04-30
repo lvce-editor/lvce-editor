@@ -53,3 +53,11 @@ export const evaluate = (id, expression, callFrameId) => {
 export const scriptParsed = (script) => {
   GlobalEventBus.emitEvent('Debug.scriptParsed', script)
 }
+
+export const paused = (params) => {
+  GlobalEventBus.emitEvent('Debug.paused', params)
+}
+
+export const resumed = (params) => {
+  GlobalEventBus.emitEvent('Debug.resumed', params)
+}
