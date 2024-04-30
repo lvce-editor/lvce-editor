@@ -1,6 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, value) => {
   return [
@@ -19,7 +20,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
       className: ClassNames.IconButton,
       childCount: 1,
       title: 'Back',
-      onClick: 'handleClickBackward',
+      onClick: DomEventListenerFunctions.HandleClickBackward,
     },
     {
       type: VirtualDomElements.Div,
@@ -31,7 +32,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
       className: ClassNames.IconButton,
       childCount: 1,
       title: 'Forward',
-      onClick: 'handleClickForward',
+      onClick: DomEventListenerFunctions.HandleClickForward,
     },
     {
       type: VirtualDomElements.Div,
@@ -43,7 +44,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
       className: ClassNames.IconButton,
       childCount: 1,
       title: 'Reload',
-      onClick: 'handleClickReload',
+      onClick: DomEventListenerFunctions.HandleClickReload,
     },
     {
       type: VirtualDomElements.Div,
@@ -55,9 +56,9 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
       className: ClassNames.InputBox,
       inputType: HtmlInputType.Url,
       enterKeyHint: 'Go',
-      onInput: 'handleInput',
-      onFocus: 'handleFocus',
-      onBlur: 'handleBlur',
+      onInput: DomEventListenerFunctions.HandleInput,
+      onFocus: DomEventListenerFunctions.HandleFocus,
+      onBlur: DomEventListenerFunctions.HandleBlur,
       value,
     },
     {
@@ -70,7 +71,7 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
       type: VirtualDomElements.Div,
       className: 'MaskIcon MaskIconLinkExternal',
       childCount: 0,
-      onClick: 'handleClickOpenExternal',
+      onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
   ]
 }

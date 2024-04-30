@@ -2,6 +2,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetKeyBindingsHeaderVirtualDom from '../GetKeyBindingsHeaderVirtualDom/GetKeyBindingsHeaderVirtualDom.js'
 import * as GetKeyBindingsTableVirtualDom from '../GetKeyBindingsTableVirtualDom/GetKeyBindingsTableVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 export const getKeyBindingsVirtualDom = (
   filteredKeyBindings,
@@ -16,9 +17,9 @@ export const getKeyBindingsVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet KeyBindings',
-      onPointerDown: 'handlePointerDown',
-      onDblClick: 'handleTableDoubleClick',
-      onWheel: 'handleWheel',
+      onPointerDown: DomEventListenerFunctions.HandlePointerDown,
+      onDblClick: DomEventListenerFunctions.HandleTableDoubleClick,
+      onWheel: DomEventListenerFunctions.HandleWheel,
       childCount: 3,
     },
     ...GetKeyBindingsHeaderVirtualDom.getKeyBindingsHeaderVirtualDom(),

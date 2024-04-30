@@ -1,6 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 
@@ -22,14 +23,14 @@ const headerCallStack = {
   className: ClassNames.DebugSectionHeader,
   ariaExpanded: false,
   childCount: 2,
-  onPointerDown: 'handleClickSectionCallstack',
+  onPointerDown: DomEventListenerFunctions.HandleClickSectionCallstack,
 }
 const headerCallStackExpanded = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugSectionHeader,
   ariaExpanded: true,
   childCount: 2,
-  onPointerDown: 'handleClickSectionCallstack',
+  onPointerDown: DomEventListenerFunctions.HandleClickSectionCallstack,
 }
 const textCallStack = text(ViewletRunAndDebugStrings.callStack())
 
