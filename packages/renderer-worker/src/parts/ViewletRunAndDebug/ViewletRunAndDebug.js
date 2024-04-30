@@ -4,12 +4,12 @@ import * as Debug from '../Debug/Debug.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as Focus from '../Focus/Focus.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id, uri, x, y, width, height, args, parentUid) => {
@@ -124,6 +124,11 @@ const getCollapsedScopeChain = (scopeChain, element, index) => {
   return scopeChain
 }
 
+// TODO maybe store scope chain elements as tree
+// TODO when collapsing, store collapsed elements by parent id in cache
+// TODO when expanding, retrieve items from cache by parent id first
+// if they don't exist, query the actual items
+
 const collapse = (state, expandedIds, scopeChain, element, index) => {
   const newExpandedIds = Arrays.removeElement(expandedIds, element.objectId)
   const newScopeChain = getCollapsedScopeChain(scopeChain, element, index)
@@ -131,6 +136,18 @@ const collapse = (state, expandedIds, scopeChain, element, index) => {
     ...state,
     expandedIds: newExpandedIds,
     scopeChain: newScopeChain,
+    scopeFocusedIndex: index,
+  }
+}
+
+const expand = async (state, expandedIds, scopeChain, element, index, debugId) => {
+  const newScopeChain = await GetChildScopeChain.getChildScopeChain(index, debugId, scopeChain)
+  const objectId = scopeChain[index].objectId
+  const newExpandedIds = [...expandedIds, objectId]
+  return {
+    ...state,
+    scopeChain: newScopeChain,
+    expandedIds: newExpandedIds,
     scopeFocusedIndex: index,
   }
 }
@@ -143,15 +160,7 @@ export const handleClickScopeValue = async (state, text) => {
   if (expandedIds.includes(element.objectId)) {
     return collapse(state, expandedIds, scopeChain, element, index)
   }
-  const newScopeChain = await GetChildScopeChain.getChildScopeChain(index, debugId, scopeChain)
-  const objectId = scopeChain[index].objectId
-  const newExpandedIds = [...expandedIds, objectId]
-  return {
-    ...state,
-    scopeChain: newScopeChain,
-    expandedIds: newExpandedIds,
-    scopeFocusedIndex: index,
-  }
+  return expand(state, expandedIds, scopeChain, element, index, debugId)
 }
 
 export const resume = async (state) => {
@@ -224,6 +233,21 @@ export const handleClickSectionCallstack = (state) => {
   return {
     ...state,
     callStackExpanded: !callStackExpanded,
+  }
+}
+
+export const handleClickSectionHeading = (state, text) => {
+  switch (text) {
+    case 'Watch':
+      return handleClickSectionWatch(state)
+    case 'Breakpoints':
+      return handleClickSectionBreakPoints(state)
+    case 'Scope':
+      return handleClickSectionScope(state)
+    case 'Call Stack':
+      return handleClickSectionCallstack(state)
+    default:
+      return state
   }
 }
 
