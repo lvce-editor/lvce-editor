@@ -51,7 +51,7 @@ const getScopeThisRows = (scope): readonly DebugRow[] => {
 }
 
 const getScopeExceptionRows = (scope): readonly DebugRow[] => {
-  const { key, value } = scope
+  const { key, value, indent } = scope
   return [
     {
       type: DebugRowType.Exception,
@@ -59,7 +59,7 @@ const getScopeExceptionRows = (scope): readonly DebugRow[] => {
       expanded: false,
       key,
       value,
-      indent: 0,
+      indent,
       valueType: '',
     },
   ]
