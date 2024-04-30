@@ -38,6 +38,10 @@ export const handleClickSectionCallstack = () => {
   ViewletRunAndDebugFunctions.handleClickSectionCallstack()
 }
 
+export const handleClickSectionBreakPoints = () => {
+  ViewletRunAndDebugFunctions.handleClickSectionBreakPoints()
+}
+
 export const handleDebugInputFocus = () => {
   RendererWorker.send('Focus.setFocus', WhenExpression.FocusDebugInput)
 }

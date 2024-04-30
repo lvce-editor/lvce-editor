@@ -16,4 +16,10 @@ export const Commands = {
   stepOut: ViewletRunAndDebug.stepOut,
   stepOver: ViewletRunAndDebug.stepOver,
   togglePause: ViewletRunAndDebug.togglePause,
+  handleArrowLeft: ViewletRunAndDebug.handleArrowLeft,
+  handleArrowUp: ViewletRunAndDebug.handleArrowUp,
+  handleArrowDown: ViewletRunAndDebug.handleArrowDown,
+  handleArrowRight: ViewletRunAndDebug.handleArrowRight,
+  focusPrevious: ViewletRunAndDebug.focusPrevious,
+  focusNext: ViewletRunAndDebug.focusNext,
 }
