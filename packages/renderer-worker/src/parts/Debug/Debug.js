@@ -1,4 +1,5 @@
 import * as ExtensionHostDebug from '../ExtensionHost/ExtensionHostDebug.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const create = (debugId) => {
   return {
@@ -47,4 +48,16 @@ export const getProperties = (id, objectId) => {
 
 export const evaluate = (id, expression, callFrameId) => {
   return ExtensionHostDebug.evaluate(id, expression, callFrameId)
+}
+
+export const scriptParsed = (script) => {
+  GlobalEventBus.emitEvent('Debug.scriptParsed', script)
+}
+
+export const paused = (params) => {
+  GlobalEventBus.emitEvent('Debug.paused', params)
+}
+
+export const resumed = (params) => {
+  GlobalEventBus.emitEvent('Debug.resumed', params)
 }

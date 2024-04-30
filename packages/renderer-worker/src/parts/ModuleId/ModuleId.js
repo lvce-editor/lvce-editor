@@ -81,3 +81,4 @@ export const TestFrameWork = 80
 export const ExtensionHostWorkerContentSecurityPolicy = 81
 export const SendMessagePortToElectron = 82
 export const OffscreenCanvas = 83
+export const Debug = 84

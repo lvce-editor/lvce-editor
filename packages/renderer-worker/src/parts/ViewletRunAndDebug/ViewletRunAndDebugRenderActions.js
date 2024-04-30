@@ -2,7 +2,7 @@ import * as GetRunAndDebugButtonsVirtualDom from '../GetRunAndDebugButtonsVirtua
 
 export const renderActions = {
   isEqual(oldState, newState) {
-    return oldState.debugState === newState.debugState
+    return false // TODO
   },
   apply(oldState, newState) {
     const dom = GetRunAndDebugButtonsVirtualDom.getRunAndDebugButtonsVirtualDom(newState.debugState)
