@@ -8,7 +8,7 @@ const textBreakPoints = text(ViewletRunAndDebugStrings.breakPoints())
 
 export const renderBreakPoints = (state) => {
   const { breakPointsExpanded } = state
-  const dom = [
+  return [
     {
       type: VirtualDomElements.Div,
       className: ClassNames.DebugSectionHeader,
@@ -19,5 +19,4 @@ export const renderBreakPoints = (state) => {
     breakPointsExpanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
     textBreakPoints,
   ]
-  return dom
 }

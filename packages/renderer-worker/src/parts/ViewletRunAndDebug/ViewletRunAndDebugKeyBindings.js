@@ -6,11 +6,16 @@ export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.Backslash | KeyModifier.CtrlCmd,
-      command: 'Run And Debug.continue',
+      command: 'Run And Debug.togglePause',
     },
     {
       key: KeyCode.LeftArrow,
       command: 'Run And Debug.handleArrowLeft',
+      when: WhenExpression.FocusDebugScope,
+    },
+    {
+      key: KeyCode.RightArrow,
+      command: 'Run And Debug.handleArrowRight',
       when: WhenExpression.FocusDebugScope,
     },
     {
