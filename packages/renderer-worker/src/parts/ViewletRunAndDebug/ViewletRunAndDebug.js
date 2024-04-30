@@ -4,12 +4,12 @@ import * as Debug from '../Debug/Debug.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as Focus from '../Focus/Focus.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id, uri, x, y, width, height, args, parentUid) => {
@@ -135,14 +135,7 @@ const collapse = (state, expandedIds, scopeChain, element, index) => {
   }
 }
 
-export const handleClickScopeValue = async (state, text) => {
-  const { scopeChain, debugId, expandedIds } = state
-  Focus.setFocus(WhenExpression.FocusDebugScope)
-  const index = getElementIndex(debugId, scopeChain, text)
-  const element = scopeChain[index]
-  if (expandedIds.includes(element.objectId)) {
-    return collapse(state, expandedIds, scopeChain, element, index)
-  }
+const expand = async (state, expandedIds, scopeChain, element, index, debugId) => {
   const newScopeChain = await GetChildScopeChain.getChildScopeChain(index, debugId, scopeChain)
   const objectId = scopeChain[index].objectId
   const newExpandedIds = [...expandedIds, objectId]
@@ -152,6 +145,17 @@ export const handleClickScopeValue = async (state, text) => {
     expandedIds: newExpandedIds,
     scopeFocusedIndex: index,
   }
+}
+
+export const handleClickScopeValue = async (state, text) => {
+  const { scopeChain, debugId, expandedIds } = state
+  Focus.setFocus(WhenExpression.FocusDebugScope)
+  const index = getElementIndex(debugId, scopeChain, text)
+  const element = scopeChain[index]
+  if (expandedIds.includes(element.objectId)) {
+    return collapse(state, expandedIds, scopeChain, element, index)
+  }
+  return expand(state, expandedIds, scopeChain, element, index, debugId)
 }
 
 export const resume = async (state) => {
