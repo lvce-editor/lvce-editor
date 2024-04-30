@@ -9,6 +9,7 @@ import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
+import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id, uri, x, y, width, height, args, parentUid) => {
@@ -32,6 +33,8 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     callFrameId: '',
     expandedIds: [],
     scopeFocusedIndex: -1,
+    focusedIndex: -1,
+    pauseOnExceptionState: PauseOnExceptionState.None,
   }
 }
 
@@ -194,6 +197,7 @@ export const handleClickSectionWatch = (state) => {
   return {
     ...state,
     watchExpanded: !watchExpanded,
+    focusedIndex: 0, // TODO don't hardcode number
   }
 }
 
@@ -202,6 +206,7 @@ export const handleClickSectionBreakPoints = (state) => {
   return {
     ...state,
     breakPointsExpanded: !breakPointsExpanded,
+    focusedIndex: 1, // TODO don't hardcode number
   }
 }
 
@@ -210,6 +215,7 @@ export const handleClickSectionScope = (state) => {
   return {
     ...state,
     scopeExpanded: !scopeExpanded,
+    focusedIndex: 2, // TODO don't hardcode number
   }
 }
 
@@ -237,6 +243,44 @@ export const handleEvaluate = async (state) => {
     debugInputValue: '',
     debugOutputValue: `${actualResult}`,
   }
+}
+
+export const handleArrowLeft = (state) => {
+  const { focusedIndex } = state
+  if (focusedIndex === 2) {
+    return {
+      ...state,
+      scopeExpanded: false,
+    }
+  }
+  return state
+}
+
+export const handleArrowRight = (state) => {
+  const { focusedIndex, scopeExpanded } = state
+  if (focusedIndex === 2) {
+    return {
+      ...state,
+      scopeExpanded: true,
+    }
+  }
+  return state
+}
+
+export const handleArrowUp = (state) => {
+  return state
+}
+
+export const handleArrowDown = (state) => {
+  return state
+}
+
+export const focusPrevious = (state) => {
+  return state
+}
+
+export const focusNext = (state) => {
+  return state
 }
 
 // TODO make sure dispose is actually called
