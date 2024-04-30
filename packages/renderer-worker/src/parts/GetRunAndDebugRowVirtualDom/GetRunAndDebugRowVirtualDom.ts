@@ -2,6 +2,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as DebugRowType from '../DebugRowType/DebugRowType.ts'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as VirtualDomHelpers from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -37,7 +38,9 @@ const renderSectionHeading = (row: DebugRow): readonly VirtualDomNode[] => {
     {
       type: VirtualDomElements.Div,
       className: ClassNames.DebugSectionHeader,
+      role: AriaRoles.TreeItem,
       ariaExpanded: expanded,
+      ariaLevel: 1,
       childCount: 2,
     },
     expanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
@@ -64,6 +67,7 @@ const renderScope = (row: DebugRow): readonly VirtualDomNode[] => {
     {
       type: VirtualDomElements.Div,
       className,
+      role: AriaRoles.TreeItem,
       ariaExpanded: expanded,
       childCount: 2,
     },
@@ -78,13 +82,15 @@ const renderScope = (row: DebugRow): readonly VirtualDomNode[] => {
 }
 
 const renderValue = (row: DebugRow): readonly VirtualDomNode[] => {
-  const { indent, key, value, valueType } = row
+  const { indent, key, value, valueType, expanded } = row
   const className = GetDebugValueClassName.getDebugValueClassName(valueType)
 
   return [
     {
       type: VirtualDomElements.Div,
       className: ClassNames.DebugRow,
+      role: AriaRoles.TreeItem,
+      ariaExpanded: expanded,
       paddingLeft: indent,
       childCount: 3,
     },

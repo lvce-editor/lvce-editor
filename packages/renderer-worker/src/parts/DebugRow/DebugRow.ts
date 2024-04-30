@@ -1,7 +1,7 @@
 export interface DebugRow {
   readonly type: number
   readonly text: string
-  readonly expanded: boolean | number
+  readonly expanded: boolean
   readonly key: string
   readonly value: string
   readonly indent: number

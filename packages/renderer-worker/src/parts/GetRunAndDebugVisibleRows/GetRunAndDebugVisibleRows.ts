@@ -71,7 +71,7 @@ const getScopeScopeRows = (scope): readonly DebugRow[] => {
     {
       type: DebugRowType.Scope,
       text: '',
-      expanded: flags & DebugItemFlags.Expanded,
+      expanded: Boolean(flags & DebugItemFlags.Expanded),
       key,
       value: '',
       indent: 0,
@@ -86,7 +86,7 @@ const getScopePropertyRows = (scope): readonly DebugRow[] => {
     {
       type: DebugRowType.Property,
       text: '',
-      expanded: flags & DebugItemFlags.Expanded,
+      expanded: Boolean(flags & DebugItemFlags.Expanded),
       key,
       value,
       indent,
