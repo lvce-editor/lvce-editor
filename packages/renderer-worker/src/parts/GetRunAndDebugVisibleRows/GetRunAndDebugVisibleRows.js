@@ -85,15 +85,17 @@ const getScopeScopeRows = (scope) => {
 
 const getScopePropertyRows = (scope) => {
   const { indent, key, value, valueType, flags } = scope
-  return {
-    type: 'property',
-    text: '',
-    expanded: flags & DebugItemFlags.Expanded,
-    key,
-    value,
-    indent,
-    valueType,
-  }
+  return [
+    {
+      type: 'property',
+      text: '',
+      expanded: flags & DebugItemFlags.Expanded,
+      key,
+      value,
+      indent,
+      valueType,
+    },
+  ]
 }
 
 const getNoopRows = () => {
