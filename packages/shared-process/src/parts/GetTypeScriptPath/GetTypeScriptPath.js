@@ -1,10 +1,11 @@
 import { join } from 'node:path'
 import * as IsBuiltServer from '../IsBuiltServer/IsBuiltServer.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+import * as Platform from '../Platform/Platform.js'
 import { pathToFileURL } from 'node:url'
 
 export const getTypeScriptUri = () => {
-  if (IsBuiltServer.isBuiltServer) {
+  if (!Platform.isProduction || IsBuiltServer.isBuiltServer) {
     return 'typescript'
   }
   const typescriptPath = join(
