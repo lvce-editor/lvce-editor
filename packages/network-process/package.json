@@ -31,6 +31,7 @@
     "@lvce-editor/verror": "^1.2.0",
     "@lvce-editor/web-socket-server": "^1.2.0",
     "got": "^14.2.1",
+    "symlink-dir": "^6.0.0",
     "tar-fs": "^3.0.6"
   },
   "devDependencies": {
