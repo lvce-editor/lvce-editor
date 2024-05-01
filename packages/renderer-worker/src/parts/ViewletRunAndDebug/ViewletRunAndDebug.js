@@ -145,7 +145,6 @@ const collapse = (state, expandedIds, scopeChain, element, index) => {
   const { cache } = state
   const newExpandedIds = Arrays.removeElement(expandedIds, element.objectId)
   const { newScopeChain, newCache } = getCollapsedScopeChain(cache, scopeChain, element, index)
-  console.log({ newCache })
   return {
     ...state,
     expandedIds: newExpandedIds,
