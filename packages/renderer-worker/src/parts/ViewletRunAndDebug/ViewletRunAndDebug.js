@@ -35,7 +35,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     scopeFocusedIndex: -1,
     focusedIndex: -1,
     pauseOnExceptionState: PauseOnExceptionState.None,
-    cache: Object.create(null),
+    cache: Object.create(null), // TODO maybe store cache in extension host worker
   }
 }
 
