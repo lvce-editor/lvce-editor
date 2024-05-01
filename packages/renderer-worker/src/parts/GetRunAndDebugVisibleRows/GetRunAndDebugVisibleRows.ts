@@ -43,7 +43,7 @@ const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
         value: '',
         indent: 0,
         valueType: '',
-        name: '',
+        name: 'pause-on-exceptions',
       },
       {
         type: DebugRowType.CheckBox,
@@ -53,7 +53,7 @@ const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
         value: '',
         indent: 0,
         valueType: '',
-        name: '',
+        name: 'pause-on-uncaught-exceptions',
       },
     ]
   }

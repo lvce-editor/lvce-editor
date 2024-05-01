@@ -8,6 +8,7 @@ import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
+import * as ExceptionBreakPoints from '../ExceptionBreakPoints/ExceptionBreakPoints.js'
 import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -36,6 +37,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     focusedIndex: -1,
     pauseOnExceptionState: PauseOnExceptionState.None,
     cache: Object.create(null), // TODO maybe store cache in extension host worker
+    exceptionBreakPoints: ExceptionBreakPoints.None,
   }
 }
 
@@ -323,9 +325,23 @@ export const focusNext = (state) => {
   return state
 }
 
-export const handleClickCheckBox = (state, name) => {
-  console.log('click checkbox', name)
+export const handleClickPauseOnExceptions = (state) => {
   return state
+}
+
+export const handleClickPauseOnUncaughtExceptions = (state) => {
+  return state
+}
+
+export const handleClickCheckBox = (state, name) => {
+  switch (name) {
+    case 'pause-on-exceptions':
+      return handleClickPauseOnExceptions(state)
+    case 'pause-on-uncaught-exceptions':
+      return handleClickPauseOnUncaughtExceptions(state)
+    default:
+      return state
+  }
 }
 
 // TODO make sure dispose is actually called
