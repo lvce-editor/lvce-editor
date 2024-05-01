@@ -34,7 +34,7 @@ export const bundleSearchProcess = async ({ cachePath, target }) => {
   if (target === 'server') {
     await WriteFile.writeFile({
       to: `${cachePath}/index.js`,
-      content: `import { dirname, isAbsolute, join } from 'node:path'
+      content: `import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
