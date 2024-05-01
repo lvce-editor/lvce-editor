@@ -35,6 +35,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     scopeFocusedIndex: -1,
     focusedIndex: -1,
     pauseOnExceptionState: PauseOnExceptionState.None,
+    cache: Object.create(null),
   }
 }
 
@@ -141,7 +142,8 @@ const collapse = (state, expandedIds, scopeChain, element, index) => {
 }
 
 const expand = async (state, expandedIds, scopeChain, element, index, debugId) => {
-  const newScopeChain = await GetChildScopeChain.getChildScopeChain(index, debugId, scopeChain)
+  const { cache } = state
+  const newScopeChain = await GetChildScopeChain.getChildScopeChain(cache, index, debugId, scopeChain)
   const objectId = scopeChain[index].objectId
   const newExpandedIds = [...expandedIds, objectId]
   return {
