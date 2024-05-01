@@ -233,8 +233,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Terminal
     case 4820:
       return ModuleId.TextDocument
-    case 'WebSocketServer.handleUpgrade':
-      return ModuleId.WebSocketServer
     case 'ElectronWindow.close':
     case 'ElectronWindow.focus':
     case 'ElectronWindow.getZoom':

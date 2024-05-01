@@ -14,7 +14,6 @@ export const ElectronWindowProcessExplorer = 12
 export const SearchFile = 13
 export const Terminal = 14
 export const TextDocument = 15
-export const WebSocketServer = 16
 export const Workspace = 17
 export const ChromeExtension = 18
 export const Download = 19
