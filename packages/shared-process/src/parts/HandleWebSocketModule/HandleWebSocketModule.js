@@ -12,6 +12,8 @@ export const load = (protocol) => {
       return import('../HandleWebSocketForExtensionHostHelperProcess/HandleWebSocketForExtensionHostHelperProcess.js')
     case ProtocolType.TerminalProcess:
       return import('../HandleWebSocketForTerminalProcess/HandleWebSocketForTerminalProcess.js')
+    case ProtocolType.SearchProcess:
+      return import('../HandleWebSocketForSearchProcess/HandleWebSocketForSearchProcess.js')
     default:
       return import('../HandleWebSocketForUnknown/HandleWebSocketForUnknown.js')
   }
