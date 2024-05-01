@@ -5,6 +5,7 @@
     { "path": "./packages/build" },
     { "path": "./packages/diff-worker" },
     { "path": "./packages/editor-worker" },
+    { "path": "./packages/typescript-compile-process" },
     { "path": "./packages/embeds-process" },
     { "path": "./packages/embeds-worker" },
     { "path": "./packages/extension-host-helper-process" },
