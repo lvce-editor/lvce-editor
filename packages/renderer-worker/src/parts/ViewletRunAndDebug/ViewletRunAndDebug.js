@@ -115,14 +115,25 @@ const getElementIndex = (debugId, scopeChain, text) => {
   return -1
 }
 
-const getCollapsedScopeChain = (scopeChain, element, index) => {
+const getCollapsedScopeChain = (cache, scopeChain, element, index) => {
   const indent = element.indent
   for (let i = index + 1; i < scopeChain.length; i++) {
     if (scopeChain[i].indent <= indent) {
-      return [...scopeChain.slice(0, index + 1), ...scopeChain.slice(i)]
+      const newItems = scopeChain.slice(index + 1, i)
+      const newCache = {
+        ...cache,
+        [scopeChain[i].objectId]: newItems,
+      }
+      return {
+        newScopeChain: [...scopeChain.slice(0, index + 1), ...scopeChain.slice(i)],
+        newCache,
+      }
     }
   }
-  return scopeChain
+  return {
+    newScopeChain: scopeChain,
+    newCache: cache,
+  }
 }
 
 // TODO maybe store scope chain elements as tree
@@ -131,13 +142,16 @@ const getCollapsedScopeChain = (scopeChain, element, index) => {
 // if they don't exist, query the actual items
 
 const collapse = (state, expandedIds, scopeChain, element, index) => {
+  const { cache } = state
   const newExpandedIds = Arrays.removeElement(expandedIds, element.objectId)
-  const newScopeChain = getCollapsedScopeChain(scopeChain, element, index)
+  const { newScopeChain, newCache } = getCollapsedScopeChain(cache, scopeChain, element, index)
+  console.log({ newCache })
   return {
     ...state,
     expandedIds: newExpandedIds,
     scopeChain: newScopeChain,
     scopeFocusedIndex: index,
+    cache: newCache,
   }
 }
 
