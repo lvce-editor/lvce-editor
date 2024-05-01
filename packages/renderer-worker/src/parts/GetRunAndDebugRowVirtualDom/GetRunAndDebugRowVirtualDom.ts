@@ -99,6 +99,7 @@ const renderValue = (row: DebugRow): readonly VirtualDomNode[] => {
       ariaExpanded: expanded,
       ariaLevel: 3,
       paddingLeft: indent,
+      onPointerDown: DomEventListenerFunctions.HandleClickScopeValue,
       childCount: 3,
     },
     {
