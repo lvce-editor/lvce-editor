@@ -48,6 +48,28 @@ const renderCallStack = (row: DebugRow): readonly VirtualDomNode[] => {
   ]
 }
 
+const renderCheckBox = (row: DebugRow): readonly VirtualDomNode[] => {
+  const { text, expanded, name } = row
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugRow + ' DebugRowCheckBox',
+      role: AriaRoles.TreeItem,
+      ariaLevel: 2,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Input,
+      inputType: 'checkbox',
+      name,
+      checked: expanded,
+      childCount: 0,
+      onChange: 'handleClickCheckBox',
+    },
+    VirtualDomHelpers.text(text),
+  ]
+}
+
 const renderScope = (row: DebugRow): readonly VirtualDomNode[] => {
   const { key, expanded } = row
   let className = ClassNames.DebugRow
@@ -116,6 +138,8 @@ export const getRowRenderer = (type: number) => {
     case DebugRowType.Property:
     case DebugRowType.Exception:
       return renderValue
+    case DebugRowType.CheckBox:
+      return renderCheckBox
     default:
       return renderNoop
   }

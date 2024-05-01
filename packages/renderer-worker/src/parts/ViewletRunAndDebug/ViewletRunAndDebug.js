@@ -256,6 +256,7 @@ export const handleClickSectionHeading = (state, text) => {
     case 'Watch':
       return handleClickSectionWatch(state)
     case 'Breakpoints':
+    case 'BreakPoints':
       return handleClickSectionBreakPoints(state)
     case 'Scope':
       return handleClickSectionScope(state)
@@ -319,6 +320,11 @@ export const focusPrevious = (state) => {
 }
 
 export const focusNext = (state) => {
+  return state
+}
+
+export const handleClickCheckBox = (state, name) => {
+  console.log('click checkbox', name)
   return state
 }
 

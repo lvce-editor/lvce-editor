@@ -6,4 +6,5 @@ export interface DebugRow {
   readonly value: string
   readonly indent: number
   readonly valueType: string | number // TODO convert to number
+  readonly name: string
 }

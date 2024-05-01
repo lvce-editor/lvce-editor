@@ -63,3 +63,9 @@ export const handleClickSectionHeading = (event) => {
   const { textContent } = target
   ViewletRunAndDebugFunctions.handleClickSectionHeading(textContent)
 }
+
+export const handleClickCheckBox = (event) => {
+  const { target } = event
+  const { name } = target
+  ViewletRunAndDebugFunctions.handleClickCheckBox(name)
+}

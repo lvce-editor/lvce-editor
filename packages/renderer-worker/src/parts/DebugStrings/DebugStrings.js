@@ -29,6 +29,8 @@ const UiStrings = {
   Stop: 'Stop',
   Watch: 'Watch',
   With: '`With` block',
+  PauseOnExceptions: 'Pause on Exceptions',
+  PauseOnUncaughtExceptions: 'Pause on uncaught Exceptions',
 }
 
 export const local = () => {
@@ -131,4 +133,12 @@ export const restart = () => {
 
 export const stop = () => {
   return I18NString.i18nString(UiStrings.Stop)
+}
+
+export const pauseOnExceptions = () => {
+  return I18NString.i18nString(UiStrings.PauseOnExceptions)
+}
+
+export const pauseOnUncaughtExceptions = () => {
+  return I18NString.i18nString(UiStrings.PauseOnUncaughtExceptions)
 }
