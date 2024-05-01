@@ -179,6 +179,31 @@ export const getNetworkProcessCachePath = async (extraContents) => {
   return cachePath
 }
 
+const getTypeScriptCompileProcessCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/typescript-compile-process/src',
+    [
+      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'packages/build/src/parts/BuildServer/BuildServer.js',
+      'packages/build/src/parts/BundleJs/BundleJs.js',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'packages/build/src/parts/CachePaths/CachePaths.js',
+      'packages/build/src/parts/BundleTypeScriptCompileProcess/BundleTypeScriptCompileProcess.js',
+      'packages/build/src/parts/BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js',
+      'packages/build/src/parts/BundleTypeScriptCompileProcessDependencies/BundleTypeScriptCompileProcessDependencies.js',
+      'packages/build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents,
+  )
+  return hash
+}
+
+export const getTypeScriptCompileProcessCachePath = async (extraContents) => {
+  const cacheHash = await getTypeScriptCompileProcessCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/typescript-compile-process'), cacheHash)
+  return cachePath
+}
+
 const getPtyHostCacheHash = async (extraContents) => {
   const hash = await Hash.computeFolderHash(
     'packages/pty-host/src',
