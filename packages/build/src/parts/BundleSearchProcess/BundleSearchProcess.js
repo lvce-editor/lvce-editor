@@ -14,7 +14,11 @@ const createNewPackageJson = (oldPackageJson, target) => {
   delete newPackageJson.jest
   delete newPackageJson.directories
   delete newPackageJson.dependencies
-  newPackageJson.main = 'dist/searchProcessMain.js'
+  if (target === 'server') {
+    newPackageJson.main = 'index.js'
+  } else {
+    newPackageJson.main = 'dist/searchProcessMain.js'
+  }
   return newPackageJson
 }
 
