@@ -13,6 +13,7 @@ export const getTypeFromUrl = (url) => {
     }
     return rest
   }
+  // deprecated
   const rest = url.slice(questionMarkIndex)
   const searchParams = new URLSearchParams(rest)
   const type = searchParams.get('type')
