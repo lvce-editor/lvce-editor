@@ -1,6 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DiffType from '../DiffType/DiffType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deletion = {
@@ -96,7 +97,7 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet DiffEditor',
       childCount: 4,
-      onWheel: 'handleWheel',
+      onWheel: DomEventListenerFunctions.HandleWheel,
     },
     ...getLinesVirtualDom(linesLeft, ClassNames.DiffEditorContentLeft),
     {

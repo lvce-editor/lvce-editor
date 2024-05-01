@@ -36,7 +36,6 @@ export const launchSharedProcess = async ({ method, env = {} }) => {
     ...env,
   }
   if (!Platform.isProduction) {
-    // fullEnv['NODE_OPTIONS'] = '--import=@swc-node/register/esm-register'
   }
   const sharedProcess = await IpcParent.create({
     method,

@@ -22,7 +22,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "0.1.1"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.language-basics-coffeescript",
@@ -42,7 +42,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   {
     "name": "builtin.language-basics-dart",

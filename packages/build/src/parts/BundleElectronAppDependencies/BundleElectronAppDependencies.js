@@ -6,6 +6,7 @@ import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDepend
 import * as BundleProcessExplorerDependencies from '../BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
+import * as BundleSearchProcessDependencies from '../BundleSearchProcessDependencies/BundleSearchProcessDependencies.js'
 
 const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) => {
   await BundlePtyHostDependencies.bundlePtyHostDependencies({
@@ -34,6 +35,16 @@ const copyExtensionHostFiles = async ({ cachePath }) => {
 const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
   await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
     to: `${cachePath}/shared-process`,
+    arch,
+    electronVersion,
+    exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
+    platform,
+  })
+}
+
+const copySearchProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
+  await BundleSearchProcessDependencies.bundleSearchProcessDependencies({
+    to: `${cachePath}/search-process`,
     arch,
     electronVersion,
     exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
@@ -110,6 +121,15 @@ export const bundleElectronAppDependencies = async ({
     platform,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  console.time('copySearchProcessFiles')
+  await copySearchProcessFiles({
+    cachePath,
+    arch,
+    electronVersion,
+    platform,
+  })
+  console.timeEnd('copySearchProcessFiles')
 
   console.time('copyEmbedsProcessFiles')
   await copyEmbedsProcessFiles({

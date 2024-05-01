@@ -1,3 +1,5 @@
 export const Filter = 'filter'
 export const ExplorerInput = 'ExploreerInput'
 export const KeyBindingsFilter = 'keybindings-filter'
+export const PauseOnExceptions = 'pause-on-exceptions'
+export const PauseOnUncaughtExceptions = 'pause-on-uncaught-exceptions'

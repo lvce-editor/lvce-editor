@@ -1,6 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const separator = text(': ')
@@ -14,7 +15,7 @@ export const getScopeThisVirtualDom = (scope) => {
       className: ClassNames.DebugRow,
       paddingLeft: indent,
       childCount: 3,
-      onPointerDown: 'handleClickScopeValue',
+      onPointerDown: DomEventListenerFunctions.HandleClickScopeValue,
     },
     {
       type: VirtualDomElements.Span,

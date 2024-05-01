@@ -36,8 +36,20 @@ export const handleClickSectionCallstack = () => {
   RendererWorker.send('Run And Debug.handleClickSectionCallstack')
 }
 
+export const handleClickSectionBreakPoints = () => {
+  RendererWorker.send('Run And Debug.handleClickSectionBreakPoints')
+}
+
 export const handleClickScopeValue = (text) => {
   RendererWorker.send('Run And Debug.handleClickScopeValue', text)
+}
+
+export const handleClickSectionHeading = (text) => {
+  RendererWorker.send('Run And Debug.handleClickSectionHeading', text)
+}
+
+export const handleClickCheckBox = (text) => {
+  RendererWorker.send('Run And Debug.handleClickCheckBox', text)
 }
 
 /**

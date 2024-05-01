@@ -63,6 +63,11 @@
 .DebugRowFocused {
 }
 
+.DebugRowCheckBox {
+  padding-left: 22px;
+  gap: 10px;
+}
+
 .DebugRowCallStack {
   padding-left: 32px;
 }

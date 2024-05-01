@@ -25,6 +25,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Ajax
     case 'Audio':
       return ModuleId.Audio
+    case 'Debug':
+      return ModuleId.Debug
     case 'AutoUpdater':
       return ModuleId.AutoUpdater
     case 'Base64':

@@ -4,13 +4,12 @@ import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHo
 import * as ExtensionHostCodeActions from '../ExtensionHostCodeActions/ExtensionHostCodeActions.ts'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
-import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.ts'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.ts'
+import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.ts'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.ts'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.ts'
 import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.ts'
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.ts'
-import * as ExtensionHostSelection from '../ExtensionHostSelection/ExtensionHostSelection.ts'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.ts'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.ts'
 import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.ts'
@@ -18,6 +17,7 @@ import * as ExtensionHostImplementation from '../ExtensionHostImplementation/Ext
 import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMockExec.ts'
 import * as ExtensionHostMockRpc from '../ExtensionHostMockRpc/ExtensionHostMockRpc.ts'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.ts'
+import * as ExtensionHostSelection from '../ExtensionHostSelection/ExtensionHostSelection.ts'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.ts'
 import * as ExtensionHostStatusBar from '../ExtensionHostStatusBar/ExtensionHostStatusBar.ts'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.ts'
@@ -108,6 +108,8 @@ export const getFn = (method) => {
       return ExtensionHostDebug.getProperties
     case 'ExtensionHostDebug.evaluate':
       return ExtensionHostDebug.evaluate
+    case 'ExtensionHostDebug.setPauseOnExceptions':
+      return ExtensionHostDebug.setPauseOnExceptions
     case ExtensionHostCommandType.ClosingTagExecuteClosingTagProvider:
       return ExtensionHostClosingTag.executeClosingTagProvider
     case ExtensionHostCommandType.ImplementationExecuteImplementationProvider:

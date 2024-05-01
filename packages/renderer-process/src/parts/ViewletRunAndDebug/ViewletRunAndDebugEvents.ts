@@ -38,6 +38,10 @@ export const handleClickSectionCallstack = () => {
   ViewletRunAndDebugFunctions.handleClickSectionCallstack()
 }
 
+export const handleClickSectionBreakPoints = () => {
+  ViewletRunAndDebugFunctions.handleClickSectionBreakPoints()
+}
+
 export const handleDebugInputFocus = () => {
   RendererWorker.send('Focus.setFocus', WhenExpression.FocusDebugInput)
 }
@@ -52,4 +56,16 @@ export const handleDebugInput = (event) => {
   const { target } = event
   const { value } = target
   ViewletRunAndDebugFunctions.handleDebugInput(value)
+}
+
+export const handleClickSectionHeading = (event) => {
+  const { target } = event
+  const { textContent } = target
+  ViewletRunAndDebugFunctions.handleClickSectionHeading(textContent)
+}
+
+export const handleClickCheckBox = (event) => {
+  const { target } = event
+  const { name } = target
+  ViewletRunAndDebugFunctions.handleClickCheckBox(name)
 }

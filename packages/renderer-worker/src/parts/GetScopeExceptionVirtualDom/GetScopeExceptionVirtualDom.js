@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -6,7 +7,7 @@ const debugRow3 = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugRow,
   childCount: 3,
-  onPointerDown: 'handleClickScopeValue',
+  onPointerDown: DomEventListenerFunctions.HandleClickScopeValue,
 }
 
 const separator = text(': ')
