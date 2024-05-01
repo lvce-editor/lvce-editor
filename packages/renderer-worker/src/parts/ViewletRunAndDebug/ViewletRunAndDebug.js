@@ -7,6 +7,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
+import * as InputName from '../InputName/InputName.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as ExceptionBreakPoints from '../ExceptionBreakPoints/ExceptionBreakPoints.js'
 import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
@@ -326,21 +327,59 @@ export const focusNext = (state) => {
 }
 
 export const handleClickPauseOnExceptions = (state) => {
-  return state
+  const { exceptionBreakPoints } = state
+  switch (exceptionBreakPoints) {
+    case ExceptionBreakPoints.None:
+      return {
+        ...state,
+        exceptionBreakPoints: ExceptionBreakPoints.All,
+      }
+    case ExceptionBreakPoints.Uncaught:
+      return {
+        ...state,
+        exceptionBreakPoints: ExceptionBreakPoints.All,
+      }
+    case ExceptionBreakPoints.All:
+      return {
+        ...state,
+        exceptionBreakPoints: ExceptionBreakPoints.None,
+      }
+    default:
+      return state
+  }
 }
 
 export const handleClickPauseOnUncaughtExceptions = (state) => {
-  return state
+  const { exceptionBreakPoints } = state
+  switch (exceptionBreakPoints) {
+    case ExceptionBreakPoints.None:
+      return {
+        ...state,
+        exceptionBreakPoints: ExceptionBreakPoints.Uncaught,
+      }
+    case ExceptionBreakPoints.Uncaught:
+      return {
+        ...state,
+        exceptionBreakPoints: ExceptionBreakPoints.None,
+      }
+    case ExceptionBreakPoints.All:
+      return {
+        ...state,
+        exceptionBreakPoints: ExceptionBreakPoints.None,
+      }
+    default:
+      return state
+  }
 }
 
 export const handleClickCheckBox = (state, name) => {
   switch (name) {
-    case 'pause-on-exceptions':
+    case InputName.PauseOnExceptions:
       return handleClickPauseOnExceptions(state)
-    case 'pause-on-uncaught-exceptions':
+    case InputName.PauseOnUncaughtExceptions:
       return handleClickPauseOnUncaughtExceptions(state)
     default:
-      return state
+      throw new Error('unknown input name')
   }
 }
 
