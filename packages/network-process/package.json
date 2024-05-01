@@ -2,7 +2,7 @@
   "name": "@lvce-editor/network-process",
   "version": "0.0.0-dev",
   "description": "Network Process",
-  "main": "index.js",
+  "main": "src/networkProcessMain.js",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
@@ -26,10 +26,7 @@
     "@lvce-editor/assert": "^1.2.0",
     "@lvce-editor/ipc": "^8.1.0",
     "@lvce-editor/json-rpc": "^1.3.0",
-    "@lvce-editor/jsonc-parser": "^1.2.0",
-    "@lvce-editor/pretty-error": "^1.5.0",
     "@lvce-editor/verror": "^1.2.0",
-    "@lvce-editor/web-socket-server": "^1.2.0",
     "got": "^14.2.1",
     "tar-fs": "^3.0.6"
   },
