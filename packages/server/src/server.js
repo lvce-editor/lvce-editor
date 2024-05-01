@@ -460,7 +460,7 @@ const launchSharedProcess = () => {
     env: {
       ...process.env,
     },
-    execArgv: isProduction ? [] : ['--import', '@swc-node/register/esm-register'],
+    execArgv: [],
   })
   const handleFirstMessage = (message) => {
     state.sharedProcessState = /* on */ 2
