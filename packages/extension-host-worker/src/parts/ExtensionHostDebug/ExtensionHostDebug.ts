@@ -132,3 +132,12 @@ export const evaluate = async (protocol, expression, callFrameId) => {
     throw new VError(error, 'Failed to execute debug provider')
   }
 }
+
+export const setPauseOnExceptions = async (protocol, value) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.setPauseOnExceptions(value)
+  } catch (error) {
+    throw new VError(error, 'Failed to execute setPauseOnExceptions')
+  }
+}

@@ -3,6 +3,8 @@ import type { DebugRow } from '../DebugRow/DebugRow.ts'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugStrings from '../DebugStrings/DebugStrings.js'
 import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
+import * as InputName from '../InputName/InputName.js'
+import * as ExceptionBreakPoints from '../ExceptionBreakPoints/ExceptionBreakPoints.js'
 import * as DebugRowType from '../DebugRowType/DebugRowType.ts'
 
 const getRunAndDebugVisibleRowsWatch = (state): readonly DebugRow[] => {
@@ -22,7 +24,7 @@ const getRunAndDebugVisibleRowsWatch = (state): readonly DebugRow[] => {
 }
 
 const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
-  const { breakPointsExpanded } = state
+  const { breakPointsExpanded, exceptionBreakPoints } = state
   if (breakPointsExpanded) {
     return [
       {
@@ -38,22 +40,22 @@ const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
       {
         type: DebugRowType.CheckBox,
         text: DebugStrings.pauseOnExceptions(),
-        expanded: true,
+        expanded: exceptionBreakPoints === ExceptionBreakPoints.All,
         key: '',
         value: '',
         indent: 0,
         valueType: '',
-        name: 'pause-on-exceptions',
+        name: InputName.PauseOnExceptions,
       },
       {
         type: DebugRowType.CheckBox,
         text: DebugStrings.pauseOnUncaughtExceptions(),
-        expanded: true,
+        expanded: exceptionBreakPoints === ExceptionBreakPoints.Uncaught,
         key: '',
         value: '',
         indent: 0,
         valueType: '',
-        name: 'pause-on-uncaught-exceptions',
+        name: InputName.PauseOnUncaughtExceptions,
       },
     ]
   }
