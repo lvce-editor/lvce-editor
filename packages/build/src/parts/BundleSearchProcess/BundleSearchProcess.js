@@ -14,7 +14,11 @@ const createNewPackageJson = (oldPackageJson, target) => {
   delete newPackageJson.jest
   delete newPackageJson.directories
   delete newPackageJson.dependencies
-  newPackageJson.main = 'dist/searchProcessMain.js'
+  if (target === 'server') {
+    newPackageJson.main = 'index.js'
+  } else {
+    newPackageJson.main = 'dist/searchProcessMain.js'
+  }
   return newPackageJson
 }
 
@@ -30,7 +34,7 @@ export const bundleSearchProcess = async ({ cachePath, target }) => {
   if (target === 'server') {
     await WriteFile.writeFile({
       to: `${cachePath}/index.js`,
-      content: `import { dirname, isAbsolute, join } from 'node:path'
+      content: `import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))

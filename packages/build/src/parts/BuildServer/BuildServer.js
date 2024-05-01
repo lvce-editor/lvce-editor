@@ -6,6 +6,7 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
+import * as BundleSearchProcessCached from '../BundleSearchProcessCached/BundleSearchProcessCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
@@ -718,6 +719,7 @@ const setVersionsAndDependencies = async ({ version }) => {
     'packages/build/.tmp/server/pty-host/package.json',
     'packages/build/.tmp/server/server/package.json',
     'packages/build/.tmp/server/shared-process/package.json',
+    'packages/build/.tmp/server/search-process/package.json',
     'packages/build/.tmp/server/network-process/package.json',
     'packages/build/.tmp/server/extension-host-helper-process/package.json',
     'packages/build/.tmp/server/jest-environment/package.json',
@@ -970,6 +972,20 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/network-process',
   })
   console.timeEnd('copyNetworkProcessFiles')
+
+  const searchProcessCachePath = await BundleSearchProcessCached.bundleSearchProcessCached({
+    commitHash,
+    product,
+    version,
+    target: 'server',
+  })
+
+  console.time('copySearchProcessFiles')
+  await Copy.copy({
+    from: searchProcessCachePath,
+    to: 'packages/build/.tmp/server/search-process',
+  })
+  console.timeEnd('copySearchProcessFiles')
 
   console.time('copyStaticFiles')
   await copyStaticFiles({ commitHash })
