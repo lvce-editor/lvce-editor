@@ -1,6 +1,7 @@
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const createNewPackageJson = (oldPackageJson, target) => {
   const newPackageJson = {
@@ -26,6 +27,23 @@ export const bundleSearchProcess = async ({ cachePath, target }) => {
     from: 'packages/search-process/package.json',
     to: `${cachePath}/package.json`,
   })
+  if (target === 'server') {
+    await WriteFile.writeFile({
+      to: `${cachePath}/index.js`,
+      content: `import { dirname, isAbsolute, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+export const searchProcessPath = join(__dirname, 'dist', 'searchProcessMain.js')
+`,
+    })
+    await Copy.copyFile({
+      from: 'LICENSE',
+      to: `${cachePath}/LICENSE`,
+    })
+  }
+
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
   const newPackageJson = createNewPackageJson(oldPackageJson, target)
   await JsonFile.writeJson({
