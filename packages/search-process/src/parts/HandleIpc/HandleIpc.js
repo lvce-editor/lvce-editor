@@ -1,7 +1,6 @@
 import * as HandleMessage from '../HandleMessage/HandleMessage.js'
 
 export const handleIpc = (ipc) => {
-  console.log({ ipc })
   if ('addEventListener' in ipc) {
     ipc.addEventListener('message', HandleMessage.handleMessage)
   } else if ('on' in ipc) {
