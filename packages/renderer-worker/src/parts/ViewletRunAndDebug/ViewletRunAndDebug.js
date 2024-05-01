@@ -326,24 +326,24 @@ export const focusNext = (state) => {
   return state
 }
 
+export const setPauseOnExceptions = async (state, value) => {
+  const { debugId } = state
+  await Debug.setPauseOnExceptions(debugId, value)
+  return {
+    ...state,
+    exceptionBreakPoints: value,
+  }
+}
+
 export const handleClickPauseOnExceptions = (state) => {
   const { exceptionBreakPoints } = state
   switch (exceptionBreakPoints) {
     case ExceptionBreakPoints.None:
-      return {
-        ...state,
-        exceptionBreakPoints: ExceptionBreakPoints.All,
-      }
+      return setPauseOnExceptions(state, ExceptionBreakPoints.All)
     case ExceptionBreakPoints.Uncaught:
-      return {
-        ...state,
-        exceptionBreakPoints: ExceptionBreakPoints.All,
-      }
+      return setPauseOnExceptions(state, ExceptionBreakPoints.All)
     case ExceptionBreakPoints.All:
-      return {
-        ...state,
-        exceptionBreakPoints: ExceptionBreakPoints.None,
-      }
+      return setPauseOnExceptions(state, ExceptionBreakPoints.None)
     default:
       return state
   }
@@ -353,20 +353,11 @@ export const handleClickPauseOnUncaughtExceptions = (state) => {
   const { exceptionBreakPoints } = state
   switch (exceptionBreakPoints) {
     case ExceptionBreakPoints.None:
-      return {
-        ...state,
-        exceptionBreakPoints: ExceptionBreakPoints.Uncaught,
-      }
+      return setPauseOnExceptions(state, ExceptionBreakPoints.Uncaught)
     case ExceptionBreakPoints.Uncaught:
-      return {
-        ...state,
-        exceptionBreakPoints: ExceptionBreakPoints.None,
-      }
+      return setPauseOnExceptions(state, ExceptionBreakPoints.None)
     case ExceptionBreakPoints.All:
-      return {
-        ...state,
-        exceptionBreakPoints: ExceptionBreakPoints.None,
-      }
+      return setPauseOnExceptions(state, ExceptionBreakPoints.None)
     default:
       return state
   }
