@@ -22,13 +22,13 @@ const createNewPackageJson = (oldPackageJson, target) => {
   return newPackageJson
 }
 
-export const bundleNetworkProcess = async ({ cachePath, target }) => {
+export const bundleTypeScriptCompileProcess = async ({ cachePath, target }) => {
   await Copy.copy({
-    from: 'packages/network-process/src',
+    from: 'packages/typescript-compile-process/src',
     to: `${cachePath}/src`,
   })
   await Copy.copy({
-    from: 'packages/network-process/package.json',
+    from: 'packages/typescript-compile-process/package.json',
     to: `${cachePath}/package.json`,
   })
   if (target === 'server') {
@@ -39,7 +39,7 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export const networkProcessPath = join(__dirname, 'src', 'networkProcessMain.js')
+export const typescriptCompileProcessPath = join(__dirname, 'src', 'typescriptCompileProcessMain.js')
 `,
     })
     await Copy.copyFile({
