@@ -1,3 +1,3 @@
-// see https://archlinux.org/packages/extra/x86_64/electron25/
+// see https://archlinux.org/packages/extra/x86_64/electron28
 export const name = 'electron28'
-export const exactVersion = '28.2.4-1'
+export const exactVersion = '28.3.1-2'
