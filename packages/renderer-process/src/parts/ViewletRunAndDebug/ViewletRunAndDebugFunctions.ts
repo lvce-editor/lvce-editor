@@ -48,6 +48,10 @@ export const handleClickSectionHeading = (text) => {
   RendererWorker.send('Run And Debug.handleClickSectionHeading', text)
 }
 
+export const handleClickCheckBox = (text) => {
+  RendererWorker.send('Run And Debug.handleClickCheckBox', text)
+}
+
 /**
  *
  * @param {string} value

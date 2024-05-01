@@ -23,4 +23,5 @@ export const Commands = {
   handleArrowRight: ViewletRunAndDebug.handleArrowRight,
   focusPrevious: ViewletRunAndDebug.focusPrevious,
   focusNext: ViewletRunAndDebug.focusNext,
+  handleClickCheckBox: ViewletRunAndDebug.handleClickCheckBox,
 }

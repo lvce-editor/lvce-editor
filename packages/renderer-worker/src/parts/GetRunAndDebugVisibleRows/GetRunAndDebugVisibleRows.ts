@@ -16,12 +16,47 @@ const getRunAndDebugVisibleRowsWatch = (state): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     },
   ]
 }
 
 const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
   const { breakPointsExpanded } = state
+  if (breakPointsExpanded) {
+    return [
+      {
+        type: DebugRowType.SectionHeading,
+        text: DebugStrings.breakPoints(),
+        expanded: true,
+        key: '',
+        value: '',
+        indent: 0,
+        valueType: '',
+        name: '',
+      },
+      {
+        type: DebugRowType.CheckBox,
+        text: DebugStrings.pauseOnExceptions(),
+        expanded: true,
+        key: '',
+        value: '',
+        indent: 0,
+        valueType: '',
+        name: '',
+      },
+      {
+        type: DebugRowType.CheckBox,
+        text: DebugStrings.pauseOnUncaughtExceptions(),
+        expanded: true,
+        key: '',
+        value: '',
+        indent: 0,
+        valueType: '',
+        name: '',
+      },
+    ]
+  }
   return [
     {
       type: DebugRowType.SectionHeading,
@@ -31,6 +66,7 @@ const getRunAndDebugVisibleRowsBreakPoints = (state): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     },
   ]
 }
@@ -46,6 +82,7 @@ const getScopeThisRows = (scope): readonly DebugRow[] => {
       value,
       indent,
       valueType,
+      name: '',
     },
   ]
 }
@@ -61,6 +98,7 @@ const getScopeExceptionRows = (scope): readonly DebugRow[] => {
       value,
       indent,
       valueType: '',
+      name: '',
     },
   ]
 }
@@ -76,6 +114,7 @@ const getScopeScopeRows = (scope): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     },
   ]
 }
@@ -91,6 +130,7 @@ const getScopePropertyRows = (scope): readonly DebugRow[] => {
       value,
       indent,
       valueType,
+      name: '',
     },
   ]
 }
@@ -126,6 +166,7 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     })
     if (scopeChain.length === 0) {
       rows.push({
@@ -136,6 +177,7 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
         value: '',
         indent: 0,
         valueType: '',
+        name: '',
       })
     } else {
       const visible = GetVisibleScopeItems.getVisibleScopeItems(scopeChain, expandedIds, scopeFocusedIndex)
@@ -153,6 +195,7 @@ const getRunAndDebugVisibleRowsScope = (state): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     })
   }
   return rows
@@ -170,6 +213,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     })
     if (callStack.length === 0) {
       rows.push({
@@ -180,6 +224,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
         value: '',
         indent: 0,
         valueType: '',
+        name: '',
       })
     } else {
       for (const item of callStack) {
@@ -191,6 +236,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
           value: '',
           indent: 0,
           valueType: '',
+          name: '',
         })
       }
     }
@@ -203,6 +249,7 @@ const getRunAndDebugVisibleRowsCallStack = (state): readonly DebugRow[] => {
       value: '',
       indent: 0,
       valueType: '',
+      name: '',
     })
   }
   return rows

@@ -46,6 +46,7 @@ export const setProp = ($Element: HTMLElement, key: string, value: any, eventMap
       $Element.setAttribute('aria-labelledby', value)
       break
     case 'onBlur':
+    case 'onChange':
     case 'onClick':
     case 'onContextMenu':
     case 'onDblClick':
