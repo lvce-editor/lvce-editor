@@ -57,10 +57,10 @@ export const contentLoaded = async (state) => {
 }
 
 export const handlePaused = async (state, params) => {
+  const { debugId } = state
   const callStack = GetCallStack.getCallStack(params.callFrames)
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
   const callFrameId = params.callFrames[0].callFrameId
-  const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
   const thisObject = params.callFrames[0].this
   Assert.object(thisObject)
@@ -122,7 +122,7 @@ const getCollapsedScopeChain = (cache, scopeChain, element, index) => {
       const newItems = scopeChain.slice(index + 1, i)
       const newCache = {
         ...cache,
-        [scopeChain[i].objectId]: newItems,
+        [scopeChain[index].objectId]: newItems,
       }
       return {
         newScopeChain: [...scopeChain.slice(0, index + 1), ...scopeChain.slice(i)],
