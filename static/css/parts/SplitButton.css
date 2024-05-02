@@ -17,6 +17,7 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  outline: none;
 }
 
 .SplitButtonContent:where(:hover),
@@ -49,4 +50,5 @@
   contain: strict;
   cursor: pointer;
   border-right: 1px solid transparent;
+  outline: none;
 }
