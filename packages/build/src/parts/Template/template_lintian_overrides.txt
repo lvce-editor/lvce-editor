@@ -9,6 +9,9 @@
 @@NAME@@: embedded-library srtp [usr/lib/@@NAME@@/@@NAME@@]
 @@NAME@@: embedded-library tiff [usr/lib/@@NAME@@/@@NAME@@]
 
+# electron sandbox
+@@NAME@@: elevated-privileges 4755 root/root [usr/lib/@@NAME@@/chrome-sandbox]
+
 # electron executables
 @@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/libEGL.so]
 @@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/libGLESv2.so]
