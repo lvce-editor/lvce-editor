@@ -1,6 +1,6 @@
 // Based on https://johnresig.com/projects/javascript-diff-algorithm/ by John Resig (License MIT)
 
-export const makeDiffMap = (linesA, linesB) => {
+export const makeDiffMap = (linesA: readonly string[], linesB: readonly string[]) => {
   const map = Object.create(null)
   // pass one
   const na: any[] = []

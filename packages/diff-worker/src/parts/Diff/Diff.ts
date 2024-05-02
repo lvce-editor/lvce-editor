@@ -1,15 +1,10 @@
 // Based on https://johnresig.com/projects/javascript-diff-algorithm/ by John Resig (License MIT)
 
+import type { Change } from '../Change/Change.ts'
 import * as DiffType from '../DiffType/DiffType.ts'
 import * as MakeDiffMap from '../MakeDiffMap/MakeDiffMap.ts'
 
-/**
- *
- * @param {string[]} linesA
- * @param {string[]} linesB
- * @returns
- */
-export const diff = (linesA: string[], linesB: string[]) => {
+export const diff = (linesA: readonly string[], linesB: readonly string[]) => {
   // create hashmaps of which line corresponds to which indices
   const { oa, na } = MakeDiffMap.makeDiffMap(linesA, linesB)
 
@@ -40,8 +35,8 @@ export const diff = (linesA: string[], linesB: string[]) => {
     }
   }
 
-  const changesRight: any[] = []
-  const changesLeft: any[] = []
+  const changesRight: Change[] = []
+  const changesLeft: Change[] = []
 
   for (let i = 0; i < na.length; i++) {
     const j = na[i]
