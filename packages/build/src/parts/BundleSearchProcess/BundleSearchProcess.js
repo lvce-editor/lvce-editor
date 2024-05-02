@@ -13,7 +13,6 @@ const createNewPackageJson = (oldPackageJson, target) => {
   delete newPackageJson.xo
   delete newPackageJson.jest
   delete newPackageJson.directories
-  delete newPackageJson.dependencies
   if (target === 'server') {
     newPackageJson.main = 'index.js'
   } else {
