@@ -220,10 +220,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
-    case 'TextSearch.search':
-      return ModuleId.Search
-    case 'SearchFile.searchFile':
-      return ModuleId.SearchFile
     case 'Terminal.create':
     case 'Terminal.dispose':
     case 'Terminal.resize':
