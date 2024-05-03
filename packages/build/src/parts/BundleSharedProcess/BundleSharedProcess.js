@@ -208,6 +208,16 @@ export const searchProcessPath = Path.join(Root.root, 'packages', 'search-proces
       replacement: `export { searchProcessPath } from '@lvce-editor/search-process'
 `,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/TypeScriptCompileProcessPath/TypeScriptCompileProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const typescriptCompileProcessPath = Path.join(Root.root, 'packages', 'typescript-compile-process', 'src', 'typescriptCompileProcessMain.js')
+`,
+      replacement: `export { typescriptCompileProcessPath } from '@lvce-editor/typescript-compile-process'
+`,
+    })
     await Copy.copyFile({
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,
