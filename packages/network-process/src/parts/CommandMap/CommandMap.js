@@ -3,6 +3,7 @@ import * as Download from '../Download/Download.js'
 import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
 import * as Extract from '../Extract/Extract.js'
 import * as GetUrl from '../GetUrl/GetUrl.js'
+import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
 import * as SymLink from '../SymLink/SymLink.js'
 import * as TrashNode from '../TrashNode/TrashNode.js'
 
@@ -14,6 +15,7 @@ export const commandMap = {
   'Download.getUrl': GetUrl.getUrl,
   'Extract.extractTarBr': Extract.extractTarBr,
   'Extract.extractTarGz': Extract.extractTarGz,
+  'OpenNativeFolder.openNativeFolder': OpenNativeFolder.openFolder,
   'Symlink.createSymLink': SymLink.createSymLink,
   'TrashNode.trash': TrashNode.trash,
 }

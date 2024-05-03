@@ -40,7 +40,7 @@
 @@NAME@@: desktop-command-not-in-package @@NAME@@ [usr/share/applications/@@NAME@@.desktop]
 
 # too much effort to create another changelog file, skip this
-@@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.Debian.gz (non-native package)
+@@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.gz (native package)
 
 # node modules
 @@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
