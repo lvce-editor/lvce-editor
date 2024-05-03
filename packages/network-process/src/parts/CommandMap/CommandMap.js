@@ -5,6 +5,7 @@ import * as Extract from '../Extract/Extract.js'
 import * as GetUrl from '../GetUrl/GetUrl.js'
 import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
 import * as SymLink from '../SymLink/SymLink.js'
+import * as TrashNode from '../TrashNode/TrashNode.js'
 
 export const commandMap = {
   'ClipBoard.readFiles': ClipBoard.readFiles,
@@ -16,4 +17,5 @@ export const commandMap = {
   'Extract.extractTarGz': Extract.extractTarGz,
   'OpenNativeFolder.openNativeFolder': OpenNativeFolder.openFolder,
   'Symlink.createSymLink': SymLink.createSymLink,
+  'TrashNode.trash': TrashNode.trash,
 }
