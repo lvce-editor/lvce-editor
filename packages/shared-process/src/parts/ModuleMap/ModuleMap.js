@@ -157,8 +157,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleNodeMessagePort
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
-    case 'IncrementalTextSearch.start':
-      return ModuleId.IncrementalTextSearch
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
@@ -222,10 +220,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
-    case 'TextSearch.search':
-      return ModuleId.Search
-    case 'SearchFile.searchFile':
-      return ModuleId.SearchFile
     case 'Terminal.create':
     case 'Terminal.dispose':
     case 'Terminal.resize':
