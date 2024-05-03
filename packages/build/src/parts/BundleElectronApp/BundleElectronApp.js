@@ -8,6 +8,7 @@ import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmb
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
+import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as BundleNetworkProcessCached from '../BundleNetworkProcessCached/BundleNetworkProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundlePreload from '../BundlePreload/BundlePreload.js'
@@ -447,6 +448,21 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/search-process`,
   })
   console.timeEnd('copySearchProcessFiles')
+
+  const typescriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
+    commitHash,
+    product,
+    version,
+    target: '',
+    date: '',
+  })
+
+  console.time('copyTypeScriptCompileProcessFiles')
+  await Copy.copy({
+    from: typescriptCompileProcessCachePath,
+    to: `${resourcesPath}/app/packages/typescript-compile-process`,
+  })
+  console.timeEnd('copyTypeScriptCompileProcessFiles')
 
   const processExplorerCachePath = await BundleProcessExplorerCached.bundleProcessExplorerCached({
     commitHash,

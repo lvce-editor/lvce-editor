@@ -5,8 +5,9 @@ import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies
 import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js'
 import * as BundleProcessExplorerDependencies from '../BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
-import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
 import * as BundleSearchProcessDependencies from '../BundleSearchProcessDependencies/BundleSearchProcessDependencies.js'
+import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
+import * as BundleTypeScriptCompileProcessDependencies from '../BundleTypeScriptCompileProcessDependencies/BundleTypeScriptCompileProcessDependencies.js'
 
 const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) => {
   await BundlePtyHostDependencies.bundlePtyHostDependencies({
@@ -65,6 +66,13 @@ const copyEmbedsProcessFiles = async ({ cachePath, arch, electronVersion, platfo
 const copyNetworkProcessFiles = async ({ cachePath }) => {
   await BundleNetworkProcessDependencies.bundleNetworkProcessDependencies({
     to: `${cachePath}/network-process`,
+    exclude: ['ws', '@lvce-editor/web-socket-server'],
+  })
+}
+
+const copyTypeScriptCompileProcessFiles = async ({ cachePath }) => {
+  await BundleTypeScriptCompileProcessDependencies.bundleTypeScriptCompileProcessDependencies({
+    to: `${cachePath}/typescript-compile-process`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
   })
 }
@@ -130,6 +138,12 @@ export const bundleElectronAppDependencies = async ({
     platform,
   })
   console.timeEnd('copySearchProcessFiles')
+
+  console.time('copyTypeScriptCompileProcessFiles')
+  await copyTypeScriptCompileProcessFiles({
+    cachePath,
+  })
+  console.timeEnd('copyTypeScriptCompileProcessFiles')
 
   console.time('copyEmbedsProcessFiles')
   await copyEmbedsProcessFiles({

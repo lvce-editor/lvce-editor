@@ -1,24 +1,9 @@
-import * as Desktop from '../Desktop/Desktop.js'
-import * as DesktopType from '../DesktopType/DesktopType.js'
+import * as NetworkProcess from '../NetworkProcess/NetworkProcess.js'
 
-const getClipboard = () => {
-  const desktop = Desktop.getDesktop()
-  switch (desktop) {
-    case DesktopType.Gnome:
-      return import('./ClipBoardGnome.js')
-    case DesktopType.Windows:
-      return import('./ClipBoardWindows.js')
-    default:
-      return import('./ClipBoardNoop.js')
-  }
+export const readFiles = () => {
+  return NetworkProcess.invoke('ClipBoard.readFiles')
 }
 
-export const readFiles = async () => {
-  const clipboard = await getClipboard()
-  return clipboard.readFiles()
-}
-
-export const writeFiles = async (type, files) => {
-  const clipboard = await getClipboard()
-  await clipboard.writeFiles(type, files)
+export const writeFiles = (type, files) => {
+  return NetworkProcess.invoke('ClipBoard.writeFiles', type, files)
 }
