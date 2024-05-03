@@ -63,10 +63,11 @@ const copyEmbedsProcessFiles = async ({ cachePath, arch, electronVersion, platfo
   })
 }
 
-const copyNetworkProcessFiles = async ({ cachePath, arch }) => {
+const copyNetworkProcessFiles = async ({ cachePath, platform, arch }) => {
   await BundleNetworkProcessDependencies.bundleNetworkProcessDependencies({
     to: `${cachePath}/network-process`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
+    platform,
     arch,
   })
 }
@@ -158,6 +159,7 @@ export const bundleElectronAppDependencies = async ({
   console.time('copyNetworkProcessFiles')
   await copyNetworkProcessFiles({
     cachePath,
+    platform,
     arch,
   })
   console.timeEnd('copyNetworkProcessFiles')
