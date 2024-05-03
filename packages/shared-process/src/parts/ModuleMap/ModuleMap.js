@@ -157,8 +157,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleNodeMessagePort
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
-    case 'IncrementalTextSearch.start':
-      return ModuleId.IncrementalTextSearch
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':

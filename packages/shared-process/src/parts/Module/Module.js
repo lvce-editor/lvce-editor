@@ -68,8 +68,6 @@ export const load = (moduleId) => {
       return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.js')
     case ModuleId.HandleWebSocket:
       return import('../HandleWebSocket/HandleWebSocket.ipc.js')
-    case ModuleId.IncrementalTextSearch:
-      return import('../IncrementalTextSearch/IncremetalTextSearch.ipc.js')
     case ModuleId.InstallExtension:
       return import('../InstallExtension/InstallExtension.ipc.js')
     case ModuleId.IsAutoUpdateSupported:
