@@ -97,5 +97,8 @@
         }
       ]
     }
+  },
+  "optionalDependencies": {
+    "open": "^10.1.0"
   }
 }
