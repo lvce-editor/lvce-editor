@@ -1,8 +1,8 @@
+import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as Download from '../Download/Download.js'
 import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
 import * as Extract from '../Extract/Extract.js'
 import * as GetUrl from '../GetUrl/GetUrl.js'
-import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.js'
 import * as SymLink from '../SymLink/SymLink.js'
 
 export const commandMap = {
@@ -12,5 +12,6 @@ export const commandMap = {
   'Extract.extractTarBr': Extract.extractTarBr,
   'Extract.extractTarGz': Extract.extractTarGz,
   'Symlink.createSymLink': SymLink.createSymLink,
-  'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
+  'ClipBoard.readFiles': ClipBoard.readFiles,
+  'ClipBoard.writeFiles': ClipBoard.writeFiles,
 }
