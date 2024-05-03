@@ -2,7 +2,7 @@ import * as IsElectron from '../IsElectron/IsElectron.js'
 import { VError } from '../VError/VError.js'
 
 const getModule = () => {
-  if (IsElectron.isElectron()) {
+  if (IsElectron.isElectron) {
     return import('../TrashElectron/TrashElectron.js')
   }
   return import('../TrashNode/TrashNode.js')
