@@ -78,7 +78,7 @@ const main = async () => {
   const module = await getBuildModule(target)
   try {
     // @ts-ignore
-    await module.build({ product, arch })
+    await module.build({ product, arch, target })
   } catch (error) {
     console.error(`Build failed:`)
     console.error(error)

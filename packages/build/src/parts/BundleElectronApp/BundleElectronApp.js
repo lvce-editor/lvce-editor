@@ -268,6 +268,7 @@ export const build = async ({
   isMacos = process.platform === 'darwin',
   isArchLinux = false,
   isAppImage = false,
+  target,
 }) => {
   Assert.object(product)
   Assert.string(version)
@@ -316,6 +317,7 @@ export const build = async ({
       supportsAutoUpdate,
       bundleMainProcess,
       platform,
+      target,
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
