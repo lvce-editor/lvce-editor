@@ -5,8 +5,8 @@ import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies
 import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js'
 import * as BundleProcessExplorerDependencies from '../BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
-import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
 import * as BundleSearchProcessDependencies from '../BundleSearchProcessDependencies/BundleSearchProcessDependencies.js'
+import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
 import * as BundleTypeScriptCompileProcessDependencies from '../BundleTypeScriptCompileProcessDependencies/BundleTypeScriptCompileProcessDependencies.js'
 
 const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) => {
