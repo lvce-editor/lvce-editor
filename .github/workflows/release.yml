@@ -323,6 +323,11 @@ jobs:
         working-directory: ./packages/build/.tmp/server/search-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
+        working-directory: ./packages/build/.tmp/server/typescript-compile-process
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
