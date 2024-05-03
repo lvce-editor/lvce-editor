@@ -38,7 +38,7 @@ const bundleElectronMaybe = async ({
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform, isArchLinux, isAppImage })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform, isArchLinux, isAppImage, target: '' })
 }
 
 const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {

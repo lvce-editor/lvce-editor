@@ -13,12 +13,12 @@ import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
-import * as Version from '../Version/Version.js'
 import * as Template from '../Template/Template.js'
+import * as Version from '../Version/Version.js'
 
 const bundleElectronMaybe = async ({ product, version }) => {
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version })
+  await build({ product, version, target: '' })
 }
 
 const copyElectronResult = async ({ product, version }) => {

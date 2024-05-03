@@ -13,7 +13,7 @@ const bundleElectronMaybe = async ({ product, version }) => {
     return
   }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version })
+  await build({ product, version, target: '' })
 }
 
 const copyElectronResult = async ({ arch, product, version }) => {
