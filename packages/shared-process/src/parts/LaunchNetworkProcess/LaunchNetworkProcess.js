@@ -5,7 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as NetworkProcessPath from '../NetworkProcessPath/NetworkProcessPath.js'
 
 export const launchNetworkProcess = async () => {
-  const method = IsElectron.isElectron() ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
+  const method = IsElectron.isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
   const networkProcess = await IpcParent.create({
     method,
     path: NetworkProcessPath.networkProcessPath,

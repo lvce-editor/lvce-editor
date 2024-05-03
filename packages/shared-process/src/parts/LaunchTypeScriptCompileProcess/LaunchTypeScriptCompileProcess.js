@@ -5,7 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as TypeScriptCompileProcessPath from '../TypeScriptCompileProcessPath/TypeScriptCompileProcessPath.js'
 
 export const launchTypeScriptCompileProcess = async () => {
-  const method = IsElectron.isElectron() ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
+  const method = IsElectron.isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
   const typescriptCompileProcess = await IpcParent.create({
     method,
     path: TypeScriptCompileProcessPath.typescriptCompileProcessPath,
