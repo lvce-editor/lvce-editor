@@ -1,6 +1,6 @@
 // @ts-ignore
 import clipboardEx from 'electron-clipboard-ex'
-import { VError } from '../../../../shared-process/src/parts/VError/VError.js'
+import { VError } from '../VError/VError.js'
 
 export const readFiles = async () => {
   const filePaths = clipboardEx.readFilePaths()

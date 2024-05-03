@@ -1,4 +1,4 @@
-import * as Desktop from '../../../../shared-process/src/parts/Desktop/Desktop.js'
+import * as Desktop from '../Desktop/Desktop.js'
 
 export const readFiles = async () => {
   return {
