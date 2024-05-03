@@ -1,1 +1,4 @@
-export { rgPath } from '@lvce-editor/ripgrep'
+/**
+ * @deprecated use search process instead
+ */
+export const rgPath = ''
