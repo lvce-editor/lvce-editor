@@ -1,15 +1,15 @@
 import * as CopyDependencies from '../CopyDependencies/CopyDependencies.js'
-import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependencies/FilterSharedProcessDependencies.js'
+import * as FilterNetworkProcessDependencies from '../FilterNetworkProcessDependencies/FilterNetworkProcessDependencies.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
-export const bundleNetworkProcessDependencies = async ({ to, exclude = [] }) => {
+export const bundleNetworkProcessDependencies = async ({ to, exclude = [], platform }) => {
   const projectPath = Path.absolute('packages/network-process')
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
-  const npmDependencies = FilterSharedProcessDependencies.filterDependencies(npmDependenciesRaw, exclude)
+  const npmDependencies = FilterNetworkProcessDependencies.filterDependencies(npmDependenciesRaw, exclude)
   const packageJson = await JsonFile.readJson('packages/network-process/package.json')
   await JsonFile.writeJson({
     to: `${to}/package.json`,
@@ -44,6 +44,7 @@ export const bundleNetworkProcessDependencies = async ({ to, exclude = [] }) => 
   await Remove.remove(`${to}/node_modules/b4a/browser.js`)
   await Remove.remove(`${to}/node_modules/tail/.nyc_output`)
   await Remove.remove(`${to}/node_modules/which/bin`)
+  await Remove.remove(`${to}/node_modules/trash`)
   await Remove.remove(`${to}/node_modules/symlink-dir/dist/cli.js`)
   await Remove.remove(`${to}/node_modules/extract-zip/cli.js`)
   await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
