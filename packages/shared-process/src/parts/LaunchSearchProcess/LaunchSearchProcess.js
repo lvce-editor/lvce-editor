@@ -5,7 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as SearchProcessPath from '../SearchProcessPath/SearchProcessPath.js'
 
 export const launchSearchProcess = async () => {
-  const method = IsElectron.isElectron() ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
+  const method = IsElectron.isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
   const searchProcess = await IpcParent.create({
     method,
     path: SearchProcessPath.searchProcessPath,

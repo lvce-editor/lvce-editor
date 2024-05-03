@@ -1,6 +1,7 @@
 import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as Download from '../Download/Download.js'
 import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
+import * as TmpFile from '../TmpFile/TmpFile.js'
 import * as Extract from '../Extract/Extract.js'
 import * as GetUrl from '../GetUrl/GetUrl.js'
 import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
@@ -17,5 +18,7 @@ export const commandMap = {
   'Extract.extractTarGz': Extract.extractTarGz,
   'OpenNativeFolder.openNativeFolder': OpenNativeFolder.openFolder,
   'Symlink.createSymLink': SymLink.createSymLink,
+  'TmpFile.getTmpDir': TmpFile.getTmpDir,
+  'TmpFile.getTmpFile': TmpFile.getTmpFile,
   'TrashNode.trash': TrashNode.trash,
 }

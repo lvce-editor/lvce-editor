@@ -8,7 +8,7 @@ const getPtyHostPath = () => {
 }
 
 const getModule = () => {
-  if (IsElectron.isElectron()) {
+  if (IsElectron.isElectron) {
     return import('../RebuildForElectron/RebuildForElectron.js')
   }
   return import('../RebuildForNode/RebuildForNode.js')

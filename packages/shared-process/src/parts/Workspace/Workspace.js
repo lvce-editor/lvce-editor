@@ -40,7 +40,7 @@ const toUri = (path) => {
 }
 
 export const resolveRoot = async () => {
-  if (IsElectron.isElectron()) {
+  if (IsElectron.isElectron) {
     const argv = await ParentIpc.invoke('Process.getArgv')
     const relevantArgv = argv.slice(2)
     const last = relevantArgv.at(-1)
