@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
+import * as HandleIpcClosed from '../HandleIpcClosed/HandleIpcClosed.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const targetMessagePort = async (messagePort, message) => {
   Assert.object(messagePort)
@@ -9,7 +9,7 @@ export const targetMessagePort = async (messagePort, message) => {
     method: IpcChildType.ElectronMessagePort,
     messagePort,
   })
-  ParentIpc.state.ipc = ipc
+  ipc.addEventListener('close', HandleIpcClosed.handleIpcClosed)
   return ipc
 }
 
