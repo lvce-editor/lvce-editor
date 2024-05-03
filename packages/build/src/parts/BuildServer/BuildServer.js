@@ -8,6 +8,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleSearchProcessCached from '../BundleSearchProcessCached/BundleSearchProcessCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
+import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
@@ -987,6 +988,21 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/search-process',
   })
   console.timeEnd('copySearchProcessFiles')
+
+  const typscriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
+    commitHash,
+    product,
+    version,
+    target: 'server',
+    date: '',
+  })
+
+  console.time('copyTypeScriptCompileProcessPath')
+  await Copy.copy({
+    from: typscriptCompileProcessCachePath,
+    to: 'packages/build/.tmp/server/typescript-compile-process',
+  })
+  console.timeEnd('copyTypeScriptCompileProcessPath')
 
   console.time('copyStaticFiles')
   await copyStaticFiles({ commitHash })

@@ -49,6 +49,7 @@ export const bundleSearchProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/downloadRipGrep.js`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/postinstall.js`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/ipc/dist/browser.js`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')

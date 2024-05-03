@@ -6,7 +6,7 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
-export const bundleNetworkProcessDependencies = async ({ to, exclude = [], platform }) => {
+export const bundleNetworkProcessDependencies = async ({ to, exclude = [], arch, platform }) => {
   const projectPath = Path.absolute('packages/network-process')
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
   const npmDependencies = FilterNetworkProcessDependencies.filterDependencies(npmDependenciesRaw, exclude)
@@ -51,4 +51,11 @@ export const bundleNetworkProcessDependencies = async ({ to, exclude = [], platf
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
+  if (arch === 'x64') {
+    await Remove.remove(`${to}/node_modules/bare-fs/prebuilds/linux-arm64`)
+    await Remove.remove(`${to}/node_modules/bare-os/prebuilds/linux-arm64`)
+  } else {
+    await Remove.remove(`${to}/node_modules/bare-fs/prebuilds/linux-x64`)
+    await Remove.remove(`${to}/node_modules/bare-os/prebuilds/linux-x64`)
+  }
 }

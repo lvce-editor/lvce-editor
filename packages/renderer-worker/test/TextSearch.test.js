@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostTextSearch.js'
   }
 })
 
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+jest.unstable_mockModule('../src/parts/SearchProcess/SearchProcess.js', () => {
   return {
     invoke: jest.fn(() => {
       throw new Error('not implemented')
@@ -23,7 +23,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const ExtensionHostTextSearch = await import('../src/parts/ExtensionHost/ExtensionHostTextSearch.js')
-const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const SearchProcess = await import('../src/parts/SearchProcess/SearchProcess.js')
 
 test('textSearch - extension search - error', async () => {
   // @ts-ignore
@@ -61,7 +61,7 @@ test('textSearch - extension search', async () => {
 
 test('textSearch - file - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
+  SearchProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrow(new TypeError('x is not a function'))
@@ -69,7 +69,7 @@ test('textSearch - file - error', async () => {
 
 test('textSearch - file', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
+  SearchProcess.invoke.mockImplementation(() => {
     return {
       results: [
         {
@@ -105,8 +105,8 @@ test('textSearch - file', async () => {
       lineNumber: 0,
     },
   ])
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('TextSearch.search', {
+  expect(SearchProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SearchProcess.invoke).toHaveBeenCalledWith('TextSearch.search', {
     ripGrepArgs: [
       '--hidden',
       '--no-require-git',
