@@ -1,6 +1,3 @@
-import { execa } from 'execa'
-import * as Assert from '../Assert/Assert.js'
-
 /**
  *
  * @param {string} command
@@ -9,12 +6,5 @@ import * as Assert from '../Assert/Assert.js'
  * @returns
  */
 export const exec = async (command, args, options) => {
-  Assert.string(command)
-  Assert.array(args)
-  Assert.object(options)
-  const { stdout, stderr } = await execa(command, args, options)
-  return {
-    stdout,
-    stderr,
-  }
+  throw new Error('deprecated')
 }
