@@ -2,10 +2,10 @@
 // see also http://manpages.ubuntu.com/manpages/bionic/man1/xclip.1.html
 // on gnome, get current selection targets with `xclip -selection clipboard -t TARGETS -o`
 
-import * as Exec from '../../../../shared-process/src/parts/Exec/Exec.js'
-import * as JoinLines from '../../../../shared-process/src/parts/JoinLines/JoinLines.js'
-import * as SplitLines from '../../../../shared-process/src/parts/SplitLines/SplitLines.js'
-import { VError } from '../../../../shared-process/src/parts/VError/VError.js'
+import * as Exec from '../Exec/Exec.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
+import { VError } from '../VError/VError.js'
 
 const removePrefix = (file) => {
   if (file.startsWith('file://')) {
