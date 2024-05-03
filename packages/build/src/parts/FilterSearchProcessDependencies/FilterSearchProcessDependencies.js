@@ -1,6 +1,6 @@
 import * as WalkDependencies from '../WalkDependencies/WalkDependencies.js'
 
-export const filterDependencies = (rawDependencies, exclude = []) => {
+export const filterDependencies = (rawDependencies, exclude, isElectronDeb) => {
   const dependencyPaths = []
   const handleDependency = (dependency) => {
     if (!dependency.path) {
@@ -22,7 +22,9 @@ export const filterDependencies = (rawDependencies, exclude = []) => {
       return false
     }
     if (dependency.name === '@lvce-editor/ripgrep') {
-      dependencyPaths.push(dependency.path)
+      if (!isElectronDeb) {
+        dependencyPaths.push(dependency.path)
+      }
       return false
     }
     dependencyPaths.push(dependency.path)

@@ -1,6 +1,7 @@
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const createNewPackageJson = (oldPackageJson, target) => {
@@ -45,8 +46,13 @@ export const searchProcessPath = join(__dirname, 'dist', 'searchProcessMain.js')
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,
     })
+  } else if (target === 'electron-deb') {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/RipGrepPath/RipGrepPath.js`,
+      occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
+      replacement: `export const rgPath = 'rg'`,
+    })
   }
-
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
   const newPackageJson = createNewPackageJson(oldPackageJson, target)
   await JsonFile.writeJson({

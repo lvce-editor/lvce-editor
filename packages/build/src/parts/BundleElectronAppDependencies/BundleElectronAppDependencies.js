@@ -43,13 +43,11 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platfo
   })
 }
 
-const copySearchProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
+const copySearchProcessFiles = async ({ cachePath, target }) => {
   await BundleSearchProcessDependencies.bundleSearchProcessDependencies({
     to: `${cachePath}/search-process`,
-    arch,
-    electronVersion,
     exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
-    platform,
+    target,
   })
 }
 
@@ -107,6 +105,7 @@ export const bundleElectronAppDependencies = async ({
   supportsAutoUpdate,
   bundleMainProcess,
   platform,
+  target,
 }) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
@@ -135,9 +134,7 @@ export const bundleElectronAppDependencies = async ({
   console.time('copySearchProcessFiles')
   await copySearchProcessFiles({
     cachePath,
-    arch,
-    electronVersion,
-    platform,
+    target,
   })
   console.timeEnd('copySearchProcessFiles')
 

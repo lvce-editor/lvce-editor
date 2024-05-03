@@ -6,10 +6,11 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
-export const bundleSearchProcessDependencies = async ({ to, arch, electronVersion, exclude = [], platform = process.platform }) => {
+export const bundleSearchProcessDependencies = async ({ to, target, exclude = [] }) => {
   const projectPath = Path.absolute('packages/search-process')
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
-  const npmDependencies = FilterSearchProcessDependencies.filterDependencies(npmDependenciesRaw, exclude)
+  const isElectronDeb = target === 'electron-deb'
+  const npmDependencies = FilterSearchProcessDependencies.filterDependencies(npmDependenciesRaw, exclude, isElectronDeb)
   const packageJson = await JsonFile.readJson('packages/search-process/package.json')
   await JsonFile.writeJson({
     to: `${to}/package.json`,
