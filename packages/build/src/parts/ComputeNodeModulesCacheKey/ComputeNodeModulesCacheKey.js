@@ -24,6 +24,7 @@ const locations = [
   'packages/search-process/package-lock.json',
   'packages/server/package-lock.json',
   'packages/shared-process/package-lock.json',
+  'packages/typescript-compile-process/package-lock.json',
   'packages/syntax-highlighting-worker/package-lock.json',
   'packages/terminal-worker/package-lock.json',
   'packages/test-worker/package-lock.json',

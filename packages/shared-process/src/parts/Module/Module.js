@@ -68,8 +68,6 @@ export const load = (moduleId) => {
       return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.js')
     case ModuleId.HandleWebSocket:
       return import('../HandleWebSocket/HandleWebSocket.ipc.js')
-    case ModuleId.IncrementalTextSearch:
-      return import('../IncrementalTextSearch/IncremetalTextSearch.ipc.js')
     case ModuleId.InstallExtension:
       return import('../InstallExtension/InstallExtension.ipc.js')
     case ModuleId.IsAutoUpdateSupported:
@@ -98,14 +96,10 @@ export const load = (moduleId) => {
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
-    case ModuleId.SearchFile:
-      return import('../SearchFile/SearchFile.ipc.js')
     case ModuleId.Terminal:
       return import('../Terminal/Terminal.ipc.js')
     case ModuleId.TextDocument:
       return import('../TextDocument/TextDocument.ipc.js')
-    case ModuleId.Search:
-      return import('../TextSearch/TextSearch.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.ElectronNet:
