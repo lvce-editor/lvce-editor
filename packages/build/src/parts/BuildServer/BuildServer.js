@@ -747,6 +747,10 @@ const setVersionsAndDependencies = async ({ version }) => {
       json.optionalDependencies['@lvce-editor/search-process'] = version
       json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
     }
+    if (file === 'packages/build/.tmp/server/search-process/package.json') {
+      json.dependencies['@lvce-editor/ripgrep'] = json.optionalDependencies['@lvce-editor/ripgrep']
+      delete json.optionalDependencies
+    }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
     }
