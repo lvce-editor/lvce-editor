@@ -1,4 +1,4 @@
-import * as GetEventListeneroptions from '../GetEventListenerOptions/GetEventListenerOptions.ts'
+import * as AttachEvent from '../AttachEvent/AttachEvent.ts'
 
 export const setProp = ($Element: HTMLElement, key: string, value: any, eventMap: any) => {
   switch (key) {
@@ -65,13 +65,7 @@ export const setProp = ($Element: HTMLElement, key: string, value: any, eventMap
       if (!eventMap || !value) {
         return
       }
-      const listener = eventMap[value]
-      if (!listener) {
-        console.warn('listener not found', value)
-        return
-      }
-      const options = GetEventListeneroptions.getEventListenerOptions(eventMap)
-      $Element.addEventListener(eventName, listener, options)
+      AttachEvent.attachEvent($Element, eventMap, eventName, value)
       break
     default:
       if (key.startsWith('data-')) {
