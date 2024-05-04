@@ -4,6 +4,8 @@ import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Focus from '../Focus/Focus.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
@@ -82,6 +84,7 @@ export const handleKeyDown = (state, key) => {
 
 export const handleMouseDown = (state) => {
   const { terminal } = state
+  Focus.setFocus(WhenExpression.FocusTerminal)
   terminal.handleMouseDown()
   return state
 }
