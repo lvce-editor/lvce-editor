@@ -15,6 +15,8 @@ export const getSymbolName = (item) => {
       return SymbolName.SymbolKeyword
     case EditorCompletionType.Field:
       return SymbolName.SymbolField
+    case EditorCompletionType.File:
+      return SymbolName.SymbolNone
     default:
       return SymbolName.SymbolDefault
   }
