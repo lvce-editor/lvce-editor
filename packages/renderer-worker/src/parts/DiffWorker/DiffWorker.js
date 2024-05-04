@@ -1,24 +1,6 @@
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import * as LaunchDiffWorker from '../LaunchDiffWorker/LaunchDiffWorker.js'
 
-const state = {
-  /**
-   * @type {any}
-   */
-  workerPromise: undefined,
-}
+const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(LaunchDiffWorker.launchDiffWorker)
 
-export const getOrCreate = () => {
-  state.workerPromise ||= LaunchDiffWorker.launchDiffWorker()
-  return state.workerPromise
-}
-
-export const invokeAndTransfer = async (transfer, method, ...params) => {
-  const ipc = await getOrCreate()
-  return JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
-}
-
-export const invoke = async (method, ...params) => {
-  const ipc = await getOrCreate()
-  return JsonRpc.invoke(ipc, method, ...params)
-}
+export { invoke, invokeAndTransfer }

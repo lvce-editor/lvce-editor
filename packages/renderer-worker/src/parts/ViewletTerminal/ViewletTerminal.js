@@ -29,7 +29,6 @@ export const loadContent = async (state) => {
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const canvasTextId = Id.create()
   const canvasCursorId = Id.create()
-  await TerminalWorker.getOrCreate()
   await TerminalWorker.invoke('Terminal.create', canvasTextId, canvasCursorId, uid, Workspace.state.workspacePath, command, args)
   const terminal = {
     handleBlur() {
