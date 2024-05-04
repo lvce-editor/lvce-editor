@@ -39,7 +39,6 @@ const getLineInfos = (lines, tokenizer, languageId) => {
 }
 
 const tokenizeCodeBlockWorker = async (codeBlock, languageId, tokenizePath) => {
-  await SyntaxHighlightingWorker.getOrCreate()
   return SyntaxHighlightingWorker.invoke('Tokenizer.tokenizeCodeBlock', codeBlock, languageId, tokenizePath)
 }
 
