@@ -65,9 +65,7 @@ export const setProp = ($Element: HTMLElement, key: string, value: any, eventMap
       if (!eventMap || !value) {
         return
       }
-      AttachEvent.attachEvent($Element, eventMap, value)
-
-      $Element.addEventListener(eventName, listener, options)
+      AttachEvent.attachEvent($Element, eventMap, eventName, value)
       break
     default:
       if (key.startsWith('data-')) {

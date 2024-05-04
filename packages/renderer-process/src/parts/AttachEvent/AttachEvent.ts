@@ -26,15 +26,13 @@ const getWrappedListener = (listener, returnValue) => {
   return cache.get(listener)
 }
 
-export const attachEvent = ($Node, eventMap, value) => {
-  const listener = eventMap[value]
+export const attachEvent = ($Node, eventMap, key, value) => {
+  const listener = eventMap[key]
   if (!listener) {
     console.warn('listener not found', value)
     return
   }
   const options = GetEventListeneroptions.getEventListenerOptions(eventMap)
-  for (const [key, value] of Object.entries(eventMap)) {
-    const wrapped = getWrappedListener(value, eventMap.returnValue)
-    $Node.addEventListener(key, wrapped, options)
-  }
+  const wrapped = getWrappedListener(value, eventMap.returnValue)
+  $Node.addEventListener(key, wrapped, options)
 }
