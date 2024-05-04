@@ -7,16 +7,16 @@ import * as Remove from '../Remove/Remove.js'
 export const bundleTypeScriptCompileProcessCached = async ({ commitHash, product, version, date, target }) => {
   const cachePath = await CachePaths.getNetworkProcessCachePath([product, version, date, commitHash])
   if (existsSync(cachePath)) {
-    Logger.info('[build step skipped] bundleNetworkprocess')
+    Logger.info('[build step skipped] bundleTypeScriptCompileProcess')
   } else {
-    console.time('bundleNetworkProcess')
+    console.time('bundleTypeScriptCompileProcess')
     await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/shared-process'))
-    const BundleNetworkProcess = await import('../BundleNetworkProcess/BundleNetworkProcess.js')
-    await BundleNetworkProcess.bundleNetworkProcess({
+    const BundleTypeScriptCompileProcess = await import('../BundleTypeScriptCompileProcess/BundleTypeScriptCompileProcess.js')
+    await BundleTypeScriptCompileProcess.bundleTypeScriptCompileProcess({
       cachePath,
       target,
     })
-    console.timeEnd('bundleNetworkProcess')
+    console.timeEnd('bundleTypeScriptCompileProcess')
   }
   return cachePath
 }
