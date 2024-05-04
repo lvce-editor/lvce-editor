@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
@@ -15,7 +16,7 @@ export const handleMessagePortForExtensionHostHelperProcess = async (rendererWor
     method: IpcParentType.ElectronUtilityProcess,
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
+  await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort', IpcId.ExtensionHostWorker)
   // const cleanup = () => {
   //   ipc.dispose()
   //   rendererWorkerIpc.off('close', cleanup)
