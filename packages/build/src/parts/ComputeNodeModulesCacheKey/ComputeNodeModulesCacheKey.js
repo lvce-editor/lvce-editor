@@ -22,6 +22,7 @@ const locations = [
   'packages/renderer-process/package-lock.json',
   'packages/renderer-worker/package-lock.json',
   'packages/search-process/package-lock.json',
+  'packages/search-worker/package-lock.json',
   'packages/server/package-lock.json',
   'packages/shared-process/package-lock.json',
   'packages/typescript-compile-process/package-lock.json',
