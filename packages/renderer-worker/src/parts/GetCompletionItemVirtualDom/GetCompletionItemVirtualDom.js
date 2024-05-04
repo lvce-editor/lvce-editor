@@ -1,19 +1,8 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetCompletionItemIconVirtualDom from '../GetCompletionItemIconVirtualDom/GetCompletionItemIconVirtualDom.js'
 import * as GetHighlightedLabelDom from '../GetHighlightedLabelDom/GetHighlightedLabelDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
-
-const getIconDom = (fileIcon, symbolName) => {
-  if (fileIcon) {
-    return GetFileIconVirtualDom.getFileIconVirtualDom(fileIcon)
-  }
-  return {
-    type: VirtualDomElements.Div,
-    className: `${ClassNames.ColoredMaskIcon} ${symbolName}`,
-    childCount: 0,
-  }
-}
 
 export const getCompletionItemVirtualDom = (visibleItem) => {
   const { top, label, symbolName, highlights, focused, deprecated, fileIcon } = visibleItem
@@ -32,7 +21,7 @@ export const getCompletionItemVirtualDom = (visibleItem) => {
       top,
       childCount: 2,
     },
-    getIconDom(fileIcon, symbolName),
+    GetCompletionItemIconVirtualDom.getIconDom(fileIcon, symbolName),
     ...GetHighlightedLabelDom.getHighlightedLabelDom(label, highlights),
   ]
 }
