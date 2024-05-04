@@ -89,6 +89,7 @@ export const bundleNetworkProcessDependencies = async ({ to, exclude = [], arch,
   await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
+  await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/signal-exit`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
   await Remove.remove(`${to}/node_modules/bare-os/binding.c`)
   await Remove.remove(`${to}/node_modules/bare-os/CMakeLists.txt`)
