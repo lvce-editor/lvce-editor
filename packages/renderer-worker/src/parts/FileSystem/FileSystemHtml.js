@@ -148,5 +148,4 @@ export const getPathSeparator = () => {
   return pathSeparator
 }
 
-// not possible because FileHandle permissions are on preserved on reload
-export const canBeRestored = false
+export const canBeRestored = true
