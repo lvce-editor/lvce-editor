@@ -50,19 +50,23 @@ export const getFileIcon = (file) => {
   return getFileNameIcon(file.name)
 }
 
-export const getFolderIcon = (folder) => {
+export const getFolderNameIcon = (folderName) => {
   const iconTheme = IconThemeState.state.iconTheme
   // @ts-ignore
   if (!iconTheme || !iconTheme.folderNames || !iconTheme.iconDefinitions) {
     return ''
   }
-  const folderNameLower = folder.name.toLowerCase()
+  const folderNameLower = folderName.toLowerCase()
   // @ts-ignore
   const folderIcon = iconTheme.folderNames[folderNameLower]
   if (folderIcon) {
     return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, folderIcon)
   }
   return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.Folder)
+}
+
+export const getFolderIcon = (folder) => {
+  return getFolderNameIcon(folder.name)
 }
 
 const getFolderIconExpanded = (folder) => {
