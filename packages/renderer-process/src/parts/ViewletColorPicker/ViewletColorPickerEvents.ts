@@ -16,13 +16,15 @@ const handleSliderPointerMove = (event) => {
 const handleSliderPointerDown = (event) => {
   const { clientX, clientY, target, pointerId } = event
   PointerEvents.startTracking(target, pointerId, handleSliderPointerMove, handleSliderPointerCaptureLost)
-  const uid = ComponentUid.fromEvent(event)
-  ViewletColorPickerFunctions.handleSliderPointerDown(uid, clientX - 20, clientY)
+  return ['handleSliderPointerDown', clientX - 20, clientY]
 }
 
 export const handlePointerDown = (event) => {
   const { target } = event
   if (target.className === 'ColorPickerSliderThumb' || target.className === 'ColorPickerSlider') {
-    handleSliderPointerDown(event)
+    return handleSliderPointerDown(event)
   }
+  return []
 }
+
+export const returnValue = true
