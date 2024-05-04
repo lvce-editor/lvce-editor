@@ -1,24 +1,6 @@
+import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import * as LaunchSyntaxHighlightingWorker from '../LaunchSyntaxHighlightingWorker/LaunchSyntaxHighlightingWorker.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
-const state = {
-  /**
-   * @type {any}
-   */
-  workerPromise: undefined,
-}
+const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(LaunchSyntaxHighlightingWorker.launchSyntaxHighlightingWorker)
 
-export const getOrCreate = () => {
-  state.workerPromise ||= LaunchSyntaxHighlightingWorker.launchSyntaxHighlightingWorker()
-  return state.workerPromise
-}
-
-export const invokeAndTransfer = async (transfer, method, ...params) => {
-  const ipc = await state.workerPromise
-  return JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
-}
-
-export const invoke = async (method, ...params) => {
-  const ipc = await state.workerPromise
-  return JsonRpc.invoke(ipc, method, ...params)
-}
+export { invoke, invokeAndTransfer }
