@@ -1,9 +1,7 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
-import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
 import * as IsMobile from '../IsMobile/IsMobile.ts'
-import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.ts'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -30,20 +28,17 @@ export const handlePointerDown = (event) => {
   }
   Event.preventDefault(event)
   const { clientX, clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletQuickPickFunctions.handleClickAt(uid, clientX, clientY)
+  return ['handleClickAt', clientX, clientY]
 }
 
 export const handleInput = (event) => {
   const $Target = event.target
   const { value } = $Target
-  const uid = ComponentUid.fromEvent(event)
-  ViewletQuickPickFunctions.handleInput(uid, value)
+  return ['handleInput', value]
 }
 
 export const handleBlur = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ViewletQuickPickFunctions.handleBlur(uid)
+  return ['handleBlur']
 }
 
 // TODO
@@ -53,8 +48,13 @@ export const handleBlur = (event) => {
 export const handleBeforeInput = (event) => {
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
-  const uid = ComponentUid.fromEvent(event)
-  ViewletQuickPickFunctions.handleBeforeInput(uid, inputType, data, selectionStart, selectionEnd)
+  return ['handleBeforeInput', inputType, data, selectionStart, selectionEnd]
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.ts'
+// TODO use virtual list function again
+export const handleWheel = (event) => {
+  const { deltaMode, deltaY } = event
+  return ['handleWheel', deltaMode, deltaY]
+}
+
+export const returnValue = true
