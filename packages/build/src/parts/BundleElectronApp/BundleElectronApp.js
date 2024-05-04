@@ -6,6 +6,7 @@ import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWor
 import * as BundleEmbedsProcessCached from '../BundleEmbedsProcessCached/BundleEmbedsProcessCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
+import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
@@ -567,6 +568,7 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
+
   const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
     commitHash,
     platform: 'electron',
@@ -580,6 +582,20 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copyDiffWorkerFiles')
+
+  const searchWorkerCachePath = await BundleSearchWorkerCached.bundleSearchWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copySearchWorkerFiles')
+  await Copy.copy({
+    from: searchWorkerCachePath,
+    to: `${resourcesPath}/app/packages/search-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copySearchWorkerFiles')
 
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     commitHash,
