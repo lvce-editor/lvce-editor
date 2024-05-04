@@ -59,3 +59,7 @@ export const getLinks = () => {
 export const getLineNumbers = () => {
   return Preferences.get(kLineNumbers) ?? false
 }
+
+export const getCompletionTriggerCharacters = () => {
+  return ['.', '/']
+}

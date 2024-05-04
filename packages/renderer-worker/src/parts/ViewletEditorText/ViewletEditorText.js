@@ -102,6 +102,7 @@ export const loadContent = async (state, savedState, context) => {
   const isAutoClosingTagsEnabled = EditorPreferences.isAutoClosingTagsEnabled()
   const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
+  const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
@@ -153,6 +154,7 @@ export const loadContent = async (state, savedState, context) => {
     isAutoClosingQuotesEnabled,
     isQuickSuggestionsEnabled,
     isAutoClosingTagsEnabled,
+    completionTriggerCharacters,
   }
 }
 
