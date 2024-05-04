@@ -1,27 +1,24 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
-import * as ForwardCommand from '../ForwardCommand/ForwardCommand.ts'
 import * as Event from '../Event/Event.ts'
 
 export const handleClickOk = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleClickOk(uid)
+  return ['handleClickOk']
 }
 
 export const handleClickClose = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleClickClose(uid)
+  return ['handleClickClose']
 }
 
 export const handleClickCopy = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleClickCopy(uid)
+  return ['handleClickCopy']
 }
 
 export const handleFocusIn = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleFocusIn(uid)
+  return ['handleFocusIn']
 }
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
+  return []
 }
+
+export const returnValue = true
