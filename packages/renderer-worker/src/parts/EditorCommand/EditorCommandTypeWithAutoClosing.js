@@ -1,15 +1,11 @@
 import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
-import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as ShouldAutoTriggerSuggest from '../ShouldAutoTriggerSuggest/ShouldAutoTriggerSuggest.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
 import * as EditorCommandGetWordAt from './EditorCommandGetWordAt.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as EditorType from './EditorCommandType.js'
 import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.js'
 import * as EditorTypeWithAutoClosingEndBracket from './EditorCommandTypeWithAutoClosingEndBracket.js'
@@ -19,27 +15,6 @@ import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 export const state = {
   listeners: [],
-}
-
-const isAutoClosingBracketsEnabled = () => {
-  return Boolean(Preferences.get('editor.autoClosingBrackets'))
-}
-
-const isAutoClosingQuotesEnabled = () => {
-  return Boolean(Preferences.get('editor.autoClosingQuotes'))
-}
-
-const isQuickSuggestionsEnabled = () => {
-  return Boolean(Preferences.get('editor.quickSuggestions'))
-}
-
-const typeWithAutoClosingDisabled = (editor, text) => {
-  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-}
-
-const isAutoClosingTagsEnabled = () => {
-  return true
 }
 
 const openCompletion = async (editor, text) => {
@@ -59,11 +34,12 @@ const openCompletion = async (editor, text) => {
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
+  const { isAutoClosingBracketsEnabled, isAutoClosingQuotesEnabled, isAutoClosingTagsEnabled, isQuickSuggestionsEnabled } = editor
   switch (text) {
     case Bracket.CurlyOpen:
     case Bracket.RoundOpen:
     case Bracket.SquareOpen:
-      if (isAutoClosingBracketsEnabled()) {
+      if (isAutoClosingBracketsEnabled) {
         return {
           newState: EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text),
           commands: [],
@@ -73,7 +49,7 @@ export const typeWithAutoClosing = async (editor, text) => {
     case Bracket.CurlyClose:
     case Bracket.RoundClose:
     case Bracket.SquareClose:
-      if (isAutoClosingBracketsEnabled()) {
+      if (isAutoClosingBracketsEnabled) {
         return {
           newState: EditorTypeWithAutoClosingEndBracket.typeWithAutoClosingEndBracket(editor, text),
           commands: [],
@@ -83,7 +59,7 @@ export const typeWithAutoClosing = async (editor, text) => {
     case Quote.DoubleQuote:
     case Quote.SingleQuote:
     case Quote.BackTick:
-      if (isAutoClosingQuotesEnabled()) {
+      if (isAutoClosingQuotesEnabled) {
         return {
           newState: EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text),
           commands: [],
@@ -92,7 +68,7 @@ export const typeWithAutoClosing = async (editor, text) => {
       break
     // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
     case AutoClosing.Slash:
-      if (isAutoClosingTagsEnabled()) {
+      if (isAutoClosingTagsEnabled) {
         return {
           newState: await EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text),
           commands: [],
@@ -105,7 +81,7 @@ export const typeWithAutoClosing = async (editor, text) => {
 
   const newEditor = EditorType.type(editor, text)
   const extraCommands = RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
-  if (isQuickSuggestionsEnabled() && newEditor.completionState === EditorCompletionState.None) {
+  if (isQuickSuggestionsEnabled && newEditor.completionState === EditorCompletionState.None) {
     openCompletion(newEditor, text)
   }
 
