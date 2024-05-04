@@ -1,12 +1,11 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as GetEventListeneroptions from '../GetEventListenerOptions/GetEventListenerOptions.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.ts'
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
-import * as GetEventListeneroptions from '../GetEventListenerOptions/GetEventListenerOptions.ts'
 
 const cache = new Map()
 
 const getWrappedListener = (listener, returnValue) => {
-  console.log({ returnValue })
   if (!returnValue) {
     return listener
   }
