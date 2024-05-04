@@ -34,7 +34,13 @@ const openCompletion = async (editor, text) => {
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
-  const { isAutoClosingBracketsEnabled, isAutoClosingQuotesEnabled, isAutoClosingTagsEnabled, isQuickSuggestionsEnabled } = editor
+  const {
+    isAutoClosingBracketsEnabled,
+    isAutoClosingQuotesEnabled,
+    isAutoClosingTagsEnabled,
+    isQuickSuggestionsEnabled,
+    completionTriggerCharacters,
+  } = editor
   switch (text) {
     case Bracket.CurlyOpen:
     case Bracket.RoundOpen:
@@ -68,7 +74,11 @@ export const typeWithAutoClosing = async (editor, text) => {
       break
     // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
     case AutoClosing.Slash:
-      if (isAutoClosingTagsEnabled) {
+      const { lines, selections } = editor
+      const [rowIndex, columnIndex] = selections
+      const line = lines[rowIndex]
+      const characterBefore = line[columnIndex - 1]
+      if (isAutoClosingTagsEnabled && characterBefore === '<') {
         return {
           newState: await EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text),
           commands: [],
@@ -81,7 +91,9 @@ export const typeWithAutoClosing = async (editor, text) => {
 
   const newEditor = EditorType.type(editor, text)
   const extraCommands = RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
-  if (isQuickSuggestionsEnabled && newEditor.completionState === EditorCompletionState.None) {
+  if (isQuickSuggestionsEnabled && completionTriggerCharacters.includes(text)) {
+    openCompletion(newEditor, text)
+  } else if (isQuickSuggestionsEnabled && newEditor.completionState === EditorCompletionState.None) {
     openCompletion(newEditor, text)
   }
 
@@ -89,21 +101,4 @@ export const typeWithAutoClosing = async (editor, text) => {
     newState: newEditor,
     commands: extraCommands,
   }
-  // if (isBrace(text)) {
-  //   console.log('is brace')
-  //   return editorTypeWithBraceCompletion(editor, text)
-  // }
-  // if (isSlash(text)) {
-  //   return editorTypeWithSlashCompletion(editor, text)
-  // }
-  // // TODO trigger characters should be monomorph -> then skip this check
-  // if (
-  //   editor.completionTriggerCharacters &&
-  //   editor.completionTriggerCharacters.includes(text)
-  // ) {
-  //   Command.execute(/* EditorCompletion.openFromType */ 988)
-  // }
-
-  // TODO should editor type command know about editor completion? -> no
-  // EditorCommandCompletion.openFromType(editor, text)
 }
