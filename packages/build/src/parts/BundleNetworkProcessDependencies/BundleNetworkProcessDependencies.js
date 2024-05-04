@@ -38,7 +38,9 @@ const removeBarePrebuilds = async (to, platform, arch) => {
       throw new Error('missing files to keep')
     }
     for (const dirent of dirents) {
-      await Remove.remove(`${to}/node_modules/${module}/prebuilds/${dirent}`)
+      if (dirent !== toKeep) {
+        await Remove.remove(`${to}/node_modules/${module}/prebuilds/${dirent}`)
+      }
     }
   }
 }
