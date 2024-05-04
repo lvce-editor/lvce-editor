@@ -33,7 +33,7 @@ export const bundleTypeScriptCompileProcess = async ({ cachePath, target }) => {
   })
   if (target === 'server') {
     await WriteFile.writeFile({
-      to: `${cachePath}.index.js`,
+      to: `${cachePath}/index.js`,
       content: `import { dirname, isAbsolute, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 

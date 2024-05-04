@@ -78,6 +78,12 @@ export const getTerminalWorkerCachePath = async (extraContents) => {
   return cachePath
 }
 
+export const getSearchWorkerCachePath = async (extraContents) => {
+  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/search-worker'), hash)
+  return cachePath
+}
+
 export const getSyntaxHighlightingWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/syntax-highlighting-worker'), hash)
