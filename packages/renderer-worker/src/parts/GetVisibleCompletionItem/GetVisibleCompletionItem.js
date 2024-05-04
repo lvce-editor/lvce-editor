@@ -9,10 +9,14 @@ const getLabel = (item) => {
 }
 
 const getFileIcon = (item) => {
-  if (item.kind !== EditorCompletionType.File) {
-    return ''
+  switch (item.kind) {
+    case EditorCompletionType.File:
+      return IconTheme.getFileNameIcon(item.label)
+    case EditorCompletionType.Folder:
+      return IconTheme.getFolderNameIcon(item.label)
+    default:
+      return ''
   }
-  return IconTheme.getFileNameIcon(item.label)
 }
 
 export const getVisibleIem = (item, itemHeight, leadingWord, i, focusedIndex) => {
