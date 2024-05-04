@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
+import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
@@ -14,7 +15,6 @@ import * as Languages from '../Languages/Languages.js'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
-import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as UnquoteString from '../UnquoteString/UnquoteString.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -69,13 +69,6 @@ const getSavedSelections = (savedState) => {
   return new Uint32Array([0, 0, 0, 0])
 }
 
-const getSavedFocus = (savedState) => {
-  if (savedState && savedState.focused) {
-    return true
-  }
-  return false
-}
-
 const getSavedDeltaY = (savedState) => {
   if (savedState && savedState.deltaY) {
     return savedState.deltaY
@@ -95,31 +88,21 @@ const getLanguageId = (state) => {
   return languageId
 }
 
-const kLineHeight = 'editor.lineHeight'
-const kFontSize = 'editor.fontSize'
-const kFontFamily = 'editor.fontFamily'
-const kLetterSpacing = 'editor.letterSpacing'
-const kLinks = 'editor.links'
-const kTabSize = 'editor.tabSize'
-const kLineNumbers = 'editor.lineNumbers'
-
-const getLetterSpacing = () => {
-  if (!SupportsLetterSpacing.supportsLetterSpacing()) {
-    return 0
-  }
-  return Preferences.get(kLetterSpacing) ?? 0.5
-}
-
 export const loadContent = async (state, savedState, context) => {
   const { uri } = state
-  const rowHeight = Preferences.get(kLineHeight) || 20
-  const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
-  const hoverEnabled = Preferences.get('editor.hover') ?? false
-  const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
-  const letterSpacing = getLetterSpacing()
-  const tabSize = Preferences.get(kTabSize) || 2
-  const links = Preferences.get(kLinks) || false
-  const lineNumbers = Preferences.get(kLineNumbers) ?? false
+  const rowHeight = EditorPreferences.getRowHeight()
+  const fontSize = EditorPreferences.getFontSize()
+  const hoverEnabled = EditorPreferences.getHoverEnabled()
+  const fontFamily = EditorPreferences.getFontFamily()
+  const letterSpacing = EditorPreferences.getLetterSpacing()
+  const tabSize = EditorPreferences.getTabSize()
+  const links = EditorPreferences.getLinks()
+  const lineNumbers = EditorPreferences.getLineNumbers()
+  const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled()
+  const isAutoClosingTagsEnabled = EditorPreferences.isAutoClosingTagsEnabled()
+  const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
+  const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
+  const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
@@ -167,6 +150,11 @@ export const loadContent = async (state, savedState, context) => {
     isMonospaceFont,
     lineNumbers,
     hoverEnabled,
+    isAutoClosingBracketsEnabled,
+    isAutoClosingQuotesEnabled,
+    isQuickSuggestionsEnabled,
+    isAutoClosingTagsEnabled,
+    completionTriggerCharacters,
   }
 }
 
