@@ -745,6 +745,7 @@ const setVersionsAndDependencies = async ({ version }) => {
       json.optionalDependencies ||= {}
       json.optionalDependencies['@lvce-editor/network-process'] = version
       json.optionalDependencies['@lvce-editor/search-process'] = version
+      json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
