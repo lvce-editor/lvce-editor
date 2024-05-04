@@ -1,21 +1,21 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as Event from '../Event/Event.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as InputSource from '../InputSource/InputSource.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.ts'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleInput(uid, value, InputSource.User)
+  return ['handleInput', value, InputSource.User]
 }
 
 export const handleFocus = (event) => {
-  RendererWorker.send('Focus.setFocus', WhenExpression.FocusSearchInput)
+  // TODO send focus event to search view first
+  return ['Focus.setFocus', WhenExpression.FocusSearchInput]
 }
 
 const getIndexTreeItem = ($Target) => {
@@ -40,11 +40,10 @@ const getIndex = ($Target) => {
 export const handleClick = (event) => {
   const { target, button } = event
   if (button === MouseEventType.RightClick) {
-    return
+    return []
   }
-  const uid = ComponentUid.fromEvent(event)
   const index = getIndex(target)
-  ViewletSearchFunctions.handleClick(uid, index)
+  return ['handleClick', index]
 }
 
 export const handleScrollBarThumbPointerMove = (event) => {
@@ -61,37 +60,29 @@ export const handleScrollBarPointerUp = (event) => {
 export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
   PointerEvents.startTracking(target, pointerId, handleScrollBarThumbPointerMove, handleScrollBarPointerUp)
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleScrollBarClick(uid, clientY)
+  return ['handleScrollBarClick', clientY]
 }
 
 export const handleToggleButtonClick = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.toggleReplace(uid)
+  return ['toggleReplace']
 }
 
 export const handleHeaderClick = (event) => {
   const { target } = event
   const { title } = target
-  const uid = ComponentUid.fromEvent(event)
   switch (title) {
     case 'Toggle Replace':
-      ViewletSearchFunctions.toggleReplace(uid)
-      break
+      return ['toggleReplace']
     case 'Match Case':
-      ViewletSearchFunctions.toggleMatchCase(uid)
-      break
+      return ['toggleMatchCase']
     case 'Use Regular Expression':
-      ViewletSearchFunctions.toggleUseRegularExpression(uid)
-      break
+      return ['toggleUseRegularExpression']
     case 'Replace All':
-      ViewletSearchFunctions.replaceAll(uid)
-      break
+      return ['replaceAll']
     case 'Match Whole Word':
-      ViewletSearchFunctions.toggleMatchWholeWord(uid)
-      break
+      return ['toggleMatchWholeWord']
     default:
-      break
+      return []
   }
   // TODO better way to determine which button was clicked
 }
@@ -99,29 +90,35 @@ export const handleHeaderClick = (event) => {
 export const handleReplaceInput = (event) => {
   const { target } = event
   const { value } = target
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleReplaceInput(uid, value)
+  return ['handleReplaceInput', value]
 }
 
 export const handleListFocus = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleListFocus(uid)
+  return ['handleListFocus']
 }
 
 export const handleListBlur = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleListBlur(uid)
+  return ['handleListBlur']
 }
 
 export const handleHeaderFocusIn = (event) => {
   const { target } = event
   const key = target.name || target.title
   if (!key) {
-    return
+    return []
   }
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleFocusIn(uid, key)
+  return ['handleFocusIn', key]
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.ts'
-export * from '../VirtualListEvents/VirtualListEvents.ts'
+export const handleContextMenu = (event) => {
+  Event.preventDefault(event)
+  const { button, clientX, clientY } = event
+  return ['handleContextMenu', button, clientX, clientY]
+}
+
+export const handleWheel = (event) => {
+  const { deltaMode, deltaY } = event
+  return ['handleWheel', deltaMode, deltaY]
+}
+
+export const returnValue = true
