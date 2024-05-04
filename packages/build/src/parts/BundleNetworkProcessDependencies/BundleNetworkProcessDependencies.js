@@ -94,5 +94,7 @@ export const bundleNetworkProcessDependencies = async ({ to, exclude = [], arch,
   await Remove.remove(`${to}/node_modules/bare-os/CMakeLists.txt`)
   await Remove.remove(`${to}/node_modules/bare-fs/binding.c`)
   await Remove.remove(`${to}/node_modules/bare-fs/CMakeLists.txt`)
+  await Remove.remove(`${to}/node_modules/cacheable-request/dist/types.d.ts.map`)
+  await Remove.remove(`${to}/node_modules/cacheable-request/dist/index.d.ts.map`)
   await removeBarePrebuilds(to, platform, arch)
 }
