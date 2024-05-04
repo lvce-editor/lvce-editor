@@ -1,30 +1,25 @@
-import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as ForwardCommand from '../ForwardCommand/ForwardCommand.ts'
-import * as ViewletProblemsFunctions from './ViewletProblemsFunctions.ts'
 
 export const handlePointerDown = (event) => {
   Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
   const { clientX, clientY } = event
-  ViewletProblemsFunctions.handleClickAt(uid, clientX, clientY)
+  return ['handleClickAt', clientX, clientY]
 }
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
   const { clientX, clientY } = event
-  ViewletProblemsFunctions.handleContextMenu(uid, clientX, clientY)
+  return ['handleContextMenu', clientX, clientY]
 }
 
 export const handleFilterInput = (event) => {
   const { target } = event
   const { value } = target
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleFilterInput(uid, value)
+  return ['handleFilterInput', value]
 }
 
 export const handleClearFilterClick = (event) => {
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.clearFilter(uid)
+  return ['clearFilter']
 }
+
+export const returnValue = true
