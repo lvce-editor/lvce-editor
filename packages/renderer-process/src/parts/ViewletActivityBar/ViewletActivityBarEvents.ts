@@ -1,4 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
+import * as ContextMenuFunctions from '../ContextMenuFunctions/ContextMenuFunctions.ts'
 import * as Event from '../Event/Event.ts'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.ts'
@@ -37,4 +38,13 @@ export const handleFocus = (event) => {
   ViewletActivityBarFunctions.handleFocus(uid)
 }
 
-export * from '../ContextMenuEvents/ContextMenuEvents.ts'
+// TODO use context menu events function again
+
+export const handleContextMenu = (event) => {
+  Event.preventDefault(event)
+  const { button, clientX, clientY } = event
+  const uid = ComponentUid.fromEvent(event)
+  ContextMenuFunctions.handleContextMenu(uid, button, clientX, clientY)
+}
+
+export const returnValue = true
