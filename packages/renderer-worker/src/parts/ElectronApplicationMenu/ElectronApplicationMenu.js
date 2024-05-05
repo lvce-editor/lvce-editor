@@ -1,9 +1,31 @@
 import * as Command from '../Command/Command.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
-import * as MenuEntries from '../MenuEntries/MenuEntries.js'
+import * as MenuEntriesEdit from '../MenuEntriesEdit/MenuEntriesEdit.js'
+import * as MenuEntriesFile from '../MenuEntriesFile/MenuEntriesFile.js'
+import * as MenuEntriesGo from '../MenuEntriesGo/MenuEntriesGo.js'
+import * as MenuEntriesHelp from '../MenuEntriesHelp/MenuEntriesHelp.js'
+import * as MenuEntriesRun from '../MenuEntriesRun/MenuEntriesRun.js'
+import * as MenuEntriesOpenRecent from '../MenuEntriesOpenRecent/MenuEntriesOpenRecent.js'
+import * as MenuEntriesSelection from '../MenuEntriesSelection/MenuEntriesSelection.js'
+import * as MenuEntriesTerminal from '../MenuEntriesTerminal/MenuEntriesTerminal.js'
+import * as MenuEntriesTitleBar from '../MenuEntriesTitleBar/MenuEntriesTitleBar.js'
+import * as MenuEntriesView from '../MenuEntriesView/MenuEntriesView.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ToElectronMenu from '../ToElectronMenu/ToElectronMenu.js'
+
+const menuEntries = [
+  MenuEntriesFile,
+  MenuEntriesEdit,
+  MenuEntriesSelection,
+  MenuEntriesView,
+  MenuEntriesGo,
+  MenuEntriesRun,
+  MenuEntriesTerminal,
+  MenuEntriesHelp,
+  MenuEntriesTitleBar,
+  MenuEntriesOpenRecent,
+]
 
 export const state = {
   commandMap: Object.create(null),
@@ -14,35 +36,18 @@ const setItems = async (items) => {
   return SharedProcess.invoke('ElectronApplicationMenu.setItems', windowId, items)
 }
 
-const getEntries = (ids) => {
-  return Promise.all(ids.map(MenuEntries.getMenuEntries))
-}
-
-const getEntryMap = (ids, entries) => {
+const getEntryMap = async (modules) => {
   const map = Object.create(null)
-  for (let i = 0; i < ids.length; i++) {
-    const id = ids[i]
-    const value = entries[i]
-    map[id] = value
+  for (const module of modules) {
+    const id = module.id
+    const entries = await module.getMenuEntries()
+    map[id] = entries
   }
   return map
 }
 
 export const hydrate = async () => {
-  const ids = [
-    MenuEntryId.TitleBar,
-    MenuEntryId.File,
-    MenuEntryId.Edit,
-    MenuEntryId.Selection,
-    MenuEntryId.View,
-    MenuEntryId.Go,
-    MenuEntryId.Run,
-    MenuEntryId.Terminal,
-    MenuEntryId.Help,
-    MenuEntryId.OpenRecent,
-  ]
-  const entries = await getEntries(ids)
-  const map = getEntryMap(ids, entries)
+  const map = await getEntryMap(menuEntries)
   const { electronMenu, commandMap } = ToElectronMenu.toElectronMenu(map, MenuEntryId.TitleBar)
   state.commandMap = commandMap
   // console.log({ electronMenu })
