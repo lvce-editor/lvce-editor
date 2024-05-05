@@ -8,6 +8,7 @@ const toElectronMenuInternal = (commandMap, map, id, electronMenu) => {
   Assert.number(id)
   Assert.array(electronMenu)
   const entries = map[id]
+  Assert.array(entries)
   for (const entry of entries) {
     if (entry.command) {
       commandMap[entry.label] = {
