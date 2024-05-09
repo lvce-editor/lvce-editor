@@ -13,7 +13,6 @@ import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompil
 import * as BundleNetworkProcessCached from '../BundleNetworkProcessCached/BundleNetworkProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundlePreload from '../BundlePreload/BundlePreload.js'
-import * as BundleProcessExplorerCached from '../BundleProcessExplorerCached/BundleProcessExplorerCached.js'
 import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
@@ -466,20 +465,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/typescript-compile-process`,
   })
   console.timeEnd('copyTypeScriptCompileProcessFiles')
-
-  const processExplorerCachePath = await BundleProcessExplorerCached.bundleProcessExplorerCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copyProcessExplorerFiles')
-  await Copy.copy({
-    from: processExplorerCachePath,
-    to: `${resourcesPath}/app/packages/process-explorer`,
-  })
-  console.timeEnd('copyProcessExplorerFiles')
 
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ resourcesPath })
