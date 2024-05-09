@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
+    "@lvce-editor/embeds-process": "^1.0.0",
     "@types/is-object": "^1.0.5",
     "@types/tail": "^2.2.3",
     "@types/tar-fs": "^2.0.4",
