@@ -27,6 +27,7 @@ test('getDirentType - file', () => {
       return false
     },
     name: '',
+    parentPath: ''
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.File)
 })
@@ -56,6 +57,8 @@ test('getDirentType - directory', () => {
       return false
     },
     name: '',
+    parentPath: ''
+
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Directory)
 })
@@ -85,6 +88,8 @@ test('getDirentType - symlink', () => {
       return false
     },
     name: '',
+    parentPath: ''
+
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Symlink)
 })
@@ -114,6 +119,8 @@ test('getDirentType - socket', () => {
       return false
     },
     name: '',
+    parentPath: ''
+
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Socket)
 })
@@ -143,6 +150,8 @@ test('getDirentType - block device', () => {
       return false
     },
     name: '',
+    parentPath: ''
+
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.BlockDevice)
 })
@@ -172,6 +181,7 @@ test('getDirentType - character device', () => {
       return false
     },
     name: '',
+    parentPath: ''
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.CharacterDevice)
 })
@@ -201,6 +211,8 @@ test('getDirentType - unknown', () => {
       return false
     },
     name: '',
+    parentPath: ''
+
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Unknown)
 })

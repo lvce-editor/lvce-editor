@@ -1,8 +1,6 @@
-import * as BundleEmbedsProcessDependencies from '../BundleEmbedsProcessDependencies/BundleEmbedsProcessDependencies.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
-import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleSearchProcessDependencies from '../BundleSearchProcessDependencies/BundleSearchProcessDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
@@ -47,25 +45,6 @@ const copySearchProcessFiles = async ({ cachePath, target }) => {
     to: `${cachePath}/search-process`,
     exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
     target,
-  })
-}
-
-const copyEmbedsProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
-  await BundleEmbedsProcessDependencies.bundleEmbedsProcessDependencies({
-    to: `${cachePath}/embeds-process`,
-    arch,
-    electronVersion,
-    exclude: ['ws', '@lvce-editor/web-socket-server'],
-    platform,
-  })
-}
-
-const copyNetworkProcessFiles = async ({ cachePath, platform, arch }) => {
-  await BundleNetworkProcessDependencies.bundleNetworkProcessDependencies({
-    to: `${cachePath}/network-process`,
-    exclude: ['ws', '@lvce-editor/web-socket-server'],
-    platform,
-    arch,
   })
 }
 
@@ -132,23 +111,6 @@ export const bundleElectronAppDependencies = async ({
     cachePath,
   })
   console.timeEnd('copyTypeScriptCompileProcessFiles')
-
-  console.time('copyEmbedsProcessFiles')
-  await copyEmbedsProcessFiles({
-    cachePath,
-    arch,
-    electronVersion,
-    platform,
-  })
-  console.timeEnd('copyEmbedsProcessFiles')
-
-  console.time('copyNetworkProcessFiles')
-  await copyNetworkProcessFiles({
-    cachePath,
-    platform,
-    arch,
-  })
-  console.timeEnd('copyNetworkProcessFiles')
 
   if (!bundleMainProcess) {
     console.time('copyMainProcessFiles')

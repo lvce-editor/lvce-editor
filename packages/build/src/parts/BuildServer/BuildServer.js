@@ -1,18 +1,17 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleSearchProcessCached from '../BundleSearchProcessCached/BundleSearchProcessCached.js'
-import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
-import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
+import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
-import * as BundleNetworkProcessCached from '../BundleNetworkProcessCached/BundleNetworkProcessCached.js'
+import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
+import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -719,7 +718,6 @@ const setVersionsAndDependencies = async ({ version }) => {
     'packages/build/.tmp/server/extension-host-helper-process/package.json',
     'packages/build/.tmp/server/extension-host/package.json',
     'packages/build/.tmp/server/jest-environment/package.json',
-    'packages/build/.tmp/server/network-process/package.json',
     'packages/build/.tmp/server/pty-host/package.json',
     'packages/build/.tmp/server/search-process/package.json',
     'packages/build/.tmp/server/server/package.json',
@@ -745,7 +743,6 @@ const setVersionsAndDependencies = async ({ version }) => {
       json.dependencies['@lvce-editor/pty-host'] = version
       json.optionalDependencies ||= {}
       delete json.optionalDependencies['@lvce-editor/process-explorer']
-      json.optionalDependencies['@lvce-editor/network-process'] = version
       json.optionalDependencies['@lvce-editor/search-process'] = version
       json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
     }
@@ -966,21 +963,6 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
-
-  const networkProcessCachePath = await BundleNetworkProcessCached.bundleNetworkProcessCached({
-    commitHash,
-    product,
-    version,
-    date,
-    target: 'server',
-  })
-
-  console.time('copyNetworkProcessFiles')
-  await Copy.copy({
-    from: networkProcessCachePath,
-    to: 'packages/build/.tmp/server/network-process',
-  })
-  console.timeEnd('copyNetworkProcessFiles')
 
   const searchProcessCachePath = await BundleSearchProcessCached.bundleSearchProcessCached({
     commitHash,
