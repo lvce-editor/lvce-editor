@@ -17,7 +17,6 @@
     { "path": "./packages/pty-host" },
     { "path": "./packages/renderer-process" },
     { "path": "./packages/renderer-worker" },
-    { "path": "./packages/search-process" },
     { "path": "./packages/search-worker" },
     { "path": "./packages/server" },
     { "path": "./packages/shared-process" },
