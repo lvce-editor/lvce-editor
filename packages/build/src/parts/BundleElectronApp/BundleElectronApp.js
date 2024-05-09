@@ -10,7 +10,6 @@ import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSea
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
-import * as BundleNetworkProcessCached from '../BundleNetworkProcessCached/BundleNetworkProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundlePreload from '../BundlePreload/BundlePreload.js'
 import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
@@ -362,21 +361,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/main-process`,
   })
   console.timeEnd('copyMainProcessFiles')
-
-  const networkProcessCachePath = await BundleNetworkProcessCached.bundleNetworkProcessCached({
-    commitHash,
-    product,
-    version,
-    date,
-    target: '',
-  })
-
-  console.time('copyNetworkProcessFiles')
-  await Copy.copy({
-    from: networkProcessCachePath,
-    to: `${resourcesPath}/app/packages/network-process`,
-  })
-  console.timeEnd('copyNetworkProcessFiles')
 
   const preloadCachePath = await BundlePreload.bundlePreload({
     commitHash,

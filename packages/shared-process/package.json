@@ -35,15 +35,17 @@
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
+    "@lvce-editor/network-process": "^1.0.0",
+    "@lvce-editor/process-explorer": "^1.1.0",
     "electron-clipboard-ex": "^1.3.3",
     "open": "^10.1.0",
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
-    "trash": "^8.1.1",
-    "@lvce-editor/process-explorer": "^1.1.0"
+    "trash": "^8.1.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
+    "@lvce-editor/embeds-process": "^1.0.0",
     "@types/is-object": "^1.0.5",
     "@types/tail": "^2.2.3",
     "@types/tar-fs": "^2.0.4",
