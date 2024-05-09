@@ -2,7 +2,6 @@ import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependen
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
-import * as BundleSearchProcessDependencies from '../BundleSearchProcessDependencies/BundleSearchProcessDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
 import * as BundleTypeScriptCompileProcessDependencies from '../BundleTypeScriptCompileProcessDependencies/BundleTypeScriptCompileProcessDependencies.js'
 
@@ -37,14 +36,6 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platfo
     electronVersion,
     exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
     platform,
-  })
-}
-
-const copySearchProcessFiles = async ({ cachePath, target }) => {
-  await BundleSearchProcessDependencies.bundleSearchProcessDependencies({
-    to: `${cachePath}/search-process`,
-    exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
-    target,
   })
 }
 
@@ -98,13 +89,6 @@ export const bundleElectronAppDependencies = async ({
     platform,
   })
   console.timeEnd('copySharedProcessFiles')
-
-  console.time('copySearchProcessFiles')
-  await copySearchProcessFiles({
-    cachePath,
-    target,
-  })
-  console.timeEnd('copySearchProcessFiles')
 
   console.time('copyTypeScriptCompileProcessFiles')
   await copyTypeScriptCompileProcessFiles({
