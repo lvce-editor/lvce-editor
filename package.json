@@ -23,7 +23,7 @@
   "devDependencies": {
     "@lerna/legacy-package-management": "^8.1.2",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.11",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "lerna": "^8.1.2",
@@ -55,6 +55,6 @@
     "exec": "node packages/server/bin/server.js"
   },
   "dependencies": {
-    "execa": "^8.0.1"
+    "execa": "^9.0.0"
   }
 }
