@@ -17,7 +17,6 @@ const locations = [
   'packages/main-process/package-lock.json',
   'packages/network-process/package-lock.json',
   'packages/preload/package-lock.json',
-  'packages/process-explorer/package-lock.json',
   'packages/pty-host/package-lock.json',
   'packages/renderer-process/package-lock.json',
   'packages/renderer-worker/package-lock.json',
