@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-12, windows-2022]
+        os: [ubuntu-24.04, macos-12, windows-2022]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 80
     steps:
@@ -87,10 +87,10 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-24.04'
         run: node packages/build/bin/build.js --target=electron-deb
       - name: Build Electron App (snap)
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-24.04'
         run: node packages/build/bin/build.js --target=electron-builder-snap
       - name: Build Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-12'
@@ -106,15 +106,15 @@ jobs:
         if: matrix.os == 'windows-2022'
         run: node packages/build/bin/build.js --target=electron-builder-windows-exe
       - name: Build Electron App (AppImage)
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-24.04'
         run: node packages/build/bin/build.js --target=electron-builder-app-image
       - name: Build static site
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-24.04'
         run: node packages/build/bin/build.js --target=static
         env:
           PATH_PREFIX: /lvce-editor
       - name: Upload artifact
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-24.04'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./packages/build/.tmp/dist
@@ -126,7 +126,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: ci
     steps:
       - name: Deploy to GitHub Pages
