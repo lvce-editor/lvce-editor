@@ -3,7 +3,6 @@ import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
-import * as BundleEmbedsProcessCached from '../BundleEmbedsProcessCached/BundleEmbedsProcessCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
@@ -405,20 +404,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/pty-host`,
   })
   console.timeEnd('copyPtyHostFiles')
-
-  const embedsProcessCachePath = await BundleEmbedsProcessCached.bundleEmbedsProcessCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copyEmbedsProcessFiles')
-  await Copy.copy({
-    from: embedsProcessCachePath,
-    to: `${resourcesPath}/app/packages/embeds-process`,
-  })
-  console.timeEnd('copyEmbedsProcessFiles')
 
   const typescriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
     commitHash,

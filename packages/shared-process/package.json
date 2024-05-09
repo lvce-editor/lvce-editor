@@ -38,6 +38,7 @@
     "@lvce-editor/network-process": "^1.0.0",
     "@lvce-editor/preload": "^1.0.0",
     "@lvce-editor/process-explorer": "^1.1.0",
+    "@lvce-editor/search-process": "^1.0.0",
     "electron-clipboard-ex": "^1.3.3",
     "open": "^10.1.0",
     "tail": "^2.2.6",
