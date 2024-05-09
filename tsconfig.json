@@ -13,7 +13,6 @@
     { "path": "./packages/extension-host-worker-tests" },
     { "path": "./packages/extension-host-worker" },
     { "path": "./packages/main-process" },
-    { "path": "./packages/network-process" },
     { "path": "./packages/preload" },
     { "path": "./packages/process-explorer" },
     { "path": "./packages/pty-host" },
