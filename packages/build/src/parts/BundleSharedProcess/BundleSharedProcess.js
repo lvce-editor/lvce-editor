@@ -193,9 +193,18 @@ export const getPtyHostPath = async () => {
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 
-export const searchProcessPath = Path.join(Root.root, 'packages', 'search-process', 'src', 'searchProcessMain.js')
+export const searchProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'search-process',
+  'src',
+  'searchProcessMain.js',
+)
 `,
-      replacement: `export { searchProcessPath } from '@lvce-editor/search-process'
+      replacement: `export const searchProcessPath = '@lvce-editor/search-process'
 `,
     })
     await Replace.replace({
