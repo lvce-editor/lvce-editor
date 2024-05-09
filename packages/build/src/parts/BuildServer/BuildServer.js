@@ -745,7 +745,6 @@ const setVersionsAndDependencies = async ({ version }) => {
       json.dependencies['@lvce-editor/pty-host'] = version
       json.optionalDependencies ||= {}
       delete json.optionalDependencies['@lvce-editor/process-explorer']
-      json.optionalDependencies['@lvce-editor/network-process'] = version
       json.optionalDependencies['@lvce-editor/search-process'] = version
       json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
     }
