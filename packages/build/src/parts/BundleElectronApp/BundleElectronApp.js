@@ -8,7 +8,6 @@ import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWo
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
-import * as BundlePreload from '../BundlePreload/BundlePreload.js'
 import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
@@ -360,19 +359,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/main-process`,
   })
   console.timeEnd('copyMainProcessFiles')
-
-  const preloadCachePath = await BundlePreload.bundlePreload({
-    commitHash,
-    product,
-    version,
-  })
-
-  console.time('copyPreloadFiles')
-  await Copy.copy({
-    from: preloadCachePath,
-    to: `${resourcesPath}/app/packages/preload`,
-  })
-  console.timeEnd('copyPreloadFiles')
 
   const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({
     commitHash,
