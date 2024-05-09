@@ -3,7 +3,6 @@ import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependen
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
 import * as BundleNetworkProcessDependencies from '../BundleNetworkProcessDependencies/BundleNetworkProcessDependencies.js'
-import * as BundleProcessExplorerDependencies from '../BundleProcessExplorerDependencies/BundleProcessExplorerDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleSearchProcessDependencies from '../BundleSearchProcessDependencies/BundleSearchProcessDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
@@ -74,16 +73,6 @@ const copyTypeScriptCompileProcessFiles = async ({ cachePath }) => {
   await BundleTypeScriptCompileProcessDependencies.bundleTypeScriptCompileProcessDependencies({
     to: `${cachePath}/typescript-compile-process`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
-  })
-}
-
-const copyProcessExplorerFiles = async ({ cachePath, arch, electronVersion, platform }) => {
-  await BundleProcessExplorerDependencies.bundleProcessExplorerDependencies({
-    to: `${cachePath}/process-explorer`,
-    arch,
-    electronVersion,
-    exclude: ['ws', '@lvce-editor/web-socket-server'],
-    platform,
   })
 }
 
@@ -160,15 +149,6 @@ export const bundleElectronAppDependencies = async ({
     arch,
   })
   console.timeEnd('copyNetworkProcessFiles')
-
-  console.time('copyProcessExplorerFiles')
-  await copyProcessExplorerFiles({
-    cachePath,
-    arch,
-    electronVersion,
-    platform,
-  })
-  console.timeEnd('copyProcessExplorerFiles')
 
   if (!bundleMainProcess) {
     console.time('copyMainProcessFiles')
