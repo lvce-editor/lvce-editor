@@ -5,7 +5,7 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
 export const bundleTypeScriptCompileProcessCached = async ({ commitHash, product, version, date, target }) => {
-  const cachePath = await CachePaths.getNetworkProcessCachePath([product, version, date, commitHash])
+  const cachePath = await CachePaths.getTypeScriptCompileProcessCachePath([product, version, date, commitHash])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleTypeScriptCompileProcess')
   } else {
