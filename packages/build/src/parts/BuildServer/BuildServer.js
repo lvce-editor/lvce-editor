@@ -967,21 +967,6 @@ export const build = async ({ product }) => {
   })
   console.timeEnd('copySharedProcessFiles')
 
-  const networkProcessCachePath = await BundleNetworkProcessCached.bundleNetworkProcessCached({
-    commitHash,
-    product,
-    version,
-    date,
-    target: 'server',
-  })
-
-  console.time('copyNetworkProcessFiles')
-  await Copy.copy({
-    from: networkProcessCachePath,
-    to: 'packages/build/.tmp/server/network-process',
-  })
-  console.timeEnd('copyNetworkProcessFiles')
-
   const searchProcessCachePath = await BundleSearchProcessCached.bundleSearchProcessCached({
     commitHash,
     product,
