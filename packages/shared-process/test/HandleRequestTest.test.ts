@@ -30,8 +30,8 @@ test('handleRequestTest', async () => {
       status: 200,
     },
   })
-  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
-  await HandleRequestTest.handleRequestTest(request, indexHtmlPath, socket)
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => { })
+  await HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
   expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
   expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
 })
