@@ -696,18 +696,6 @@ const copyExtensionHostHelperProcessFiles = async () => {
   })
 }
 
-const copyPtyHostFiles = async () => {
-  await Copy.copy({
-    from: 'packages/pty-host',
-    to: 'packages/build/.tmp/server/pty-host',
-    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', '.nvmrc', 'package-lock.json'],
-  })
-  await Copy.copyFile({
-    from: 'LICENSE',
-    to: 'packages/build/.tmp/server/pty-host/LICENSE',
-  })
-}
-
 const sortObject = (object) => {
   return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
@@ -987,10 +975,6 @@ export const build = async ({ product }) => {
   console.time('copyExtensionHostHelperProcessFiles')
   await copyExtensionHostHelperProcessFiles()
   console.timeEnd('copyExtensionHostHelperProcessFiles')
-
-  console.time('copyPtyHostFiles')
-  await copyPtyHostFiles()
-  console.timeEnd('copyPtyHostFiles')
 
   console.time('copyJestEnvironment')
   await copyJestEnvironment({ commitHash })
