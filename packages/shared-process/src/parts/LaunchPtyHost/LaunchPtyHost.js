@@ -18,10 +18,9 @@ const handleProcessExit = () => {
 
 export const launchPtyHost = async (method) => {
   exitHook(handleProcessExit)
-  const ptyHostPath = await PtyHostPath.getPtyHostPath()
   const ptyHost = await IpcParent.create({
     method,
-    path: ptyHostPath,
+    path: PtyHostPath.ptyHostPath,
     argv: [],
     stdio: 'inherit',
     name: 'Terminal Process',

@@ -208,6 +208,25 @@ export const searchProcessPath = Path.join(
 `,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const ptyHostPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'pty-host',
+  'src',
+  'ptyHostMain.js',
+)
+`,
+      replacement: `export const ptyHostPath = '@lvce-editor/pty-host'
+`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/TypeScriptCompileProcessPath/TypeScriptCompileProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
