@@ -564,19 +564,6 @@ app.on('error', (error) => {
   }
 })
 
-const cleanup = () => {
-  app.close()
-  if (state.sharedProcess && !state.sharedProcess.killed) {
-    state.sharedProcess.kill()
-    state.sharedProcess = undefined
-  }
-}
-
-const handleProcessExit = (code) => {
-  console.info(`[server] Process will exit with code ${code}`)
-  cleanup()
-}
-
 const handleAppReady = () => {
   if (process.send) {
     process.send('ready')
@@ -590,14 +577,7 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
   console.info(error)
 }
 
-const handleDisconnect = () => {
-  console.info(`[server] disconnected`)
-  cleanup()
-}
-
 const main = () => {
-  process.on('disconnect', handleDisconnect)
-  process.on('exit', handleProcessExit)
   process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   app.on('listening', handleAppReady)
