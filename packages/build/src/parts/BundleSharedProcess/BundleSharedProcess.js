@@ -210,7 +210,7 @@ export const searchProcessPath = ResolveBin.resolveBin('@lvce-editor/search-proc
 `,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
+      path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 
@@ -228,6 +228,18 @@ export const networkProcessPath = Path.join(
       replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
 
 export const networkProcessPath = ResolveBin.resolveBin('@lvce-editor/network-process')
+`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const ptyHostPath = Path.join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'pty-host', 'src', 'ptyHostMain.js')
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const ptyHostPath = ResolveBin.resolveBin('@lvce-editor/pty-host')
 `,
     })
     await Replace.replace({
