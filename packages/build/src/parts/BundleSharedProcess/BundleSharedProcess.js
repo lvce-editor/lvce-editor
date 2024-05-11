@@ -166,28 +166,7 @@ export const bundleSharedProcess = async ({
 }
 `,
     })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
-      occurrence: `import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
 
-export const getPtyHostPath = async () => {
-  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
-}
-`,
-      replacement: `import * as Root from '../Root/Root.js'
-import * as Path from '../Path/Path.js'
-
-export const getPtyHostPath = async () => {
-  try {
-    const { ptyHostPath } = await import('@lvce-editor/pty-host')
-    return ptyHostPath
-  } catch {
-    return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
-  }
-}
-`,
-    })
     await Replace.replace({
       path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
