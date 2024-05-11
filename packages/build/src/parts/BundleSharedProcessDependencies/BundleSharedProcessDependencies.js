@@ -21,14 +21,12 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     },
   })
   await CopyDependencies.copyDependencies(projectPath, to, npmDependencies)
-  if (platform === 'win32') {
-    const Rebuild = await import('../Rebuild/Rebuild.js')
-    await Rebuild.rebuild({
-      arch,
-      buildPath: Path.absolute(to),
-      electronVersion,
-    })
-  }
+  const Rebuild = await import('../Rebuild/Rebuild.js')
+  await Rebuild.rebuild({
+    arch,
+    buildPath: Path.absolute(to),
+    electronVersion,
+  })
   await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/node-addon-api`)
   await Remove.remove(`${to}/node_modules/uuid/dist/esm-browser`)
