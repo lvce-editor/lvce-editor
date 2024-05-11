@@ -204,7 +204,8 @@ export const searchProcessPath = Path.join(
   'searchProcessMain.js',
 )
 `,
-      replacement: `export const searchProcessPath = '@lvce-editor/search-process'
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+export const searchProcessPath = ResolveBin.resolveBin('@lvce-editor/search-process')
 `,
     })
     await Replace.replace({
