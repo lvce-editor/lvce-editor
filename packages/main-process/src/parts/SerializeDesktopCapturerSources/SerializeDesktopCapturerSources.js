@@ -1,11 +1,5 @@
-const serializeSource = (source) => {
-  return {
-    display_id: source.display_id,
-    id: source.id,
-    name: source.name,
-  }
-}
+import * as SerializeDesktopCapturerSource from '../SerializeDesktopCapturerSource/SerializeDesktopCapturerSource.js'
 
 export const serializeDeskopCapturerSources = (sources) => {
-  return sources.map(serializeSource)
+  return sources.map(SerializeDesktopCapturerSource.serializeDeskopCapturerSource)
 }
