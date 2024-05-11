@@ -12,7 +12,6 @@
     { "path": "./packages/extension-host-worker-tests" },
     { "path": "./packages/extension-host-worker" },
     { "path": "./packages/main-process" },
-    { "path": "./packages/pty-host" },
     { "path": "./packages/renderer-process" },
     { "path": "./packages/renderer-worker" },
     { "path": "./packages/search-worker" },

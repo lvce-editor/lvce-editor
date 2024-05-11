@@ -8,7 +8,6 @@ import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWo
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
-import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
@@ -37,7 +36,6 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
-    'packages/pty-host/package-lock.json',
     'packages/extension-host-worker/package-lock.json',
     'packages/extension-host-sub-worker/package-lock.json',
     'packages/extension-host-helper-process/package-lock.json',
@@ -47,9 +45,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.js',
-    'packages/build/src/parts/FilterPtyHostDependencies/FilterPtyHostDependencies.js',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.js',
-    'packages/build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
     'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
     'packages/build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
     'packages/build/src/parts/NpmDependencies/NpmDependencies.js',
@@ -376,20 +372,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
-
-  const ptyHostCachePath = await BundlePtyHostCached.bundlePtyHostCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copyPtyHostFiles')
-  await Copy.copy({
-    from: ptyHostCachePath,
-    to: `${resourcesPath}/app/packages/pty-host`,
-  })
-  console.timeEnd('copyPtyHostFiles')
 
   const typescriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
     commitHash,
