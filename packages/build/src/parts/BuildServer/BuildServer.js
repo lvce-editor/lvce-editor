@@ -705,7 +705,6 @@ const setVersionsAndDependencies = async ({ version }) => {
     'packages/build/.tmp/server/extension-host-helper-process/package.json',
     'packages/build/.tmp/server/extension-host/package.json',
     'packages/build/.tmp/server/jest-environment/package.json',
-    'packages/build/.tmp/server/pty-host/package.json',
     'packages/build/.tmp/server/server/package.json',
     'packages/build/.tmp/server/shared-process/package.json',
     'packages/build/.tmp/server/typescript-compile-process/package.json',
