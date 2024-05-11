@@ -259,25 +259,3 @@ export const getProcessExplorerCachePath = async (extraContents) => {
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/process-explorer'), cacheHash)
   return cachePath
 }
-
-const getPreloadCacheHash = async (extraContents) => {
-  const hash = await Hash.computeFolderHash(
-    'packages/preload/src',
-    [
-      'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
-      'packages/build/src/parts/BuildServer/BuildServer.js',
-      'packages/build/src/parts/BundleJs/BundleJs.js',
-      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.js',
-      'packages/build/src/parts/CachePaths/CachePaths.js',
-      'packages/build/src/parts/BundleOptions/BundleOptions.js',
-    ],
-    extraContents,
-  )
-  return hash
-}
-
-export const getPreloadCachePath = async (extraContents) => {
-  const cacheHash = await getPreloadCacheHash(extraContents)
-  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/preload'), cacheHash)
-  return cachePath
-}
