@@ -11,7 +11,6 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleSearchProcessCached from '../BundleSearchProcessCached/BundleSearchProcessCached.js'
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
@@ -391,20 +390,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/pty-host`,
   })
   console.timeEnd('copyPtyHostFiles')
-
-  const searchProcessCachePath = await BundleSearchProcessCached.bundleSearchProcessCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copySearchProcessFiles')
-  await Copy.copy({
-    from: searchProcessCachePath,
-    to: `${resourcesPath}/app/packages/search-process`,
-  })
-  console.timeEnd('copySearchProcessFiles')
 
   const typescriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
     commitHash,
