@@ -8,7 +8,6 @@ import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWo
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
-import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
@@ -376,20 +375,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
-
-  const ptyHostCachePath = await BundlePtyHostCached.bundlePtyHostCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copyPtyHostFiles')
-  await Copy.copy({
-    from: ptyHostCachePath,
-    to: `${resourcesPath}/app/packages/pty-host`,
-  })
-  console.timeEnd('copyPtyHostFiles')
 
   const typescriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
     commitHash,
