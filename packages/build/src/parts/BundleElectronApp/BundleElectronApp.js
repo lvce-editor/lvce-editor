@@ -36,7 +36,6 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
-    'packages/pty-host/package-lock.json',
     'packages/extension-host-worker/package-lock.json',
     'packages/extension-host-sub-worker/package-lock.json',
     'packages/extension-host-helper-process/package-lock.json',
@@ -46,9 +45,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.js',
-    'packages/build/src/parts/FilterPtyHostDependencies/FilterPtyHostDependencies.js',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.js',
-    'packages/build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
     'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
     'packages/build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
     'packages/build/src/parts/NpmDependencies/NpmDependencies.js',
