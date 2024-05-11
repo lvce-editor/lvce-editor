@@ -18,7 +18,7 @@ const handleProcessExit = () => {
 
 export const launchPtyHost = async (method) => {
   exitHook(handleProcessExit)
-  const ptyHostPath = await PtyHostPath.getPtyHostPath()
+  const ptyHostPath = await PtyHostPath.ptyHostPath
   const ptyHost = await IpcParent.create({
     method,
     path: ptyHostPath,

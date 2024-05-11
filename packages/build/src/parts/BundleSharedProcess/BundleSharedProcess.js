@@ -166,36 +166,59 @@ export const bundleSharedProcess = async ({
 }
 `,
     })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
-      occurrence: `import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
 
-export const getPtyHostPath = async () => {
-  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
-}
-`,
-      replacement: `import * as Root from '../Root/Root.js'
-import * as Path from '../Path/Path.js'
-
-export const getPtyHostPath = async () => {
-  try {
-    const { ptyHostPath } = await import('@lvce-editor/pty-host')
-    return ptyHostPath
-  } catch {
-    return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
-  }
-}
-`,
-    })
     await Replace.replace({
       path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 
-export const searchProcessPath = Path.join(Root.root, 'packages', 'search-process', 'src', 'searchProcessMain.js')
+export const searchProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'search-process',
+  'src',
+  'searchProcessMain.js',
+)
 `,
-      replacement: `export { searchProcessPath } from '@lvce-editor/search-process'
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const searchProcessPath = ResolveBin.resolveBin('@lvce-editor/search-process')
+`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const networkProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'network-process',
+  'src',
+  'networkProcessMain.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const networkProcessPath = ResolveBin.resolveBin('@lvce-editor/network-process')
+`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const ptyHostPath = Path.join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'pty-host', 'src', 'ptyHostMain.js')
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const ptyHostPath = ResolveBin.resolveBin('@lvce-editor/pty-host')
 `,
     })
     await Replace.replace({

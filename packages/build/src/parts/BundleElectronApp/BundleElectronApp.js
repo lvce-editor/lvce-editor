@@ -3,22 +3,18 @@ import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
-import * as BundleEmbedsProcessCached from '../BundleEmbedsProcessCached/BundleEmbedsProcessCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
-import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
-import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
-import * as BundlePreload from '../BundlePreload/BundlePreload.js'
-import * as BundlePtyHostCached from '../BundlePtyHostCached/BundlePtyHostCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleSearchProcessCached from '../BundleSearchProcessCached/BundleSearchProcessCached.js'
+import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopyElectron from '../CopyElectron/CopyElectron.js'
@@ -40,7 +36,6 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
-    'packages/pty-host/package-lock.json',
     'packages/extension-host-worker/package-lock.json',
     'packages/extension-host-sub-worker/package-lock.json',
     'packages/extension-host-helper-process/package-lock.json',
@@ -50,9 +45,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.js',
-    'packages/build/src/parts/FilterPtyHostDependencies/FilterPtyHostDependencies.js',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.js',
-    'packages/build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
     'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
     'packages/build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
     'packages/build/src/parts/NpmDependencies/NpmDependencies.js',
@@ -362,19 +355,6 @@ export const build = async ({
   })
   console.timeEnd('copyMainProcessFiles')
 
-  const preloadCachePath = await BundlePreload.bundlePreload({
-    commitHash,
-    product,
-    version,
-  })
-
-  console.time('copyPreloadFiles')
-  await Copy.copy({
-    from: preloadCachePath,
-    to: `${resourcesPath}/app/packages/preload`,
-  })
-  console.timeEnd('copyPreloadFiles')
-
   const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({
     commitHash,
     product,
@@ -392,48 +372,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
-
-  const ptyHostCachePath = await BundlePtyHostCached.bundlePtyHostCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copyPtyHostFiles')
-  await Copy.copy({
-    from: ptyHostCachePath,
-    to: `${resourcesPath}/app/packages/pty-host`,
-  })
-  console.timeEnd('copyPtyHostFiles')
-
-  const embedsProcessCachePath = await BundleEmbedsProcessCached.bundleEmbedsProcessCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copyEmbedsProcessFiles')
-  await Copy.copy({
-    from: embedsProcessCachePath,
-    to: `${resourcesPath}/app/packages/embeds-process`,
-  })
-  console.timeEnd('copyEmbedsProcessFiles')
-
-  const searchProcessCachePath = await BundleSearchProcessCached.bundleSearchProcessCached({
-    commitHash,
-    product,
-    version,
-    target: '',
-  })
-
-  console.time('copySearchProcessFiles')
-  await Copy.copy({
-    from: searchProcessCachePath,
-    to: `${resourcesPath}/app/packages/search-process`,
-  })
-  console.timeEnd('copySearchProcessFiles')
 
   const typescriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
     commitHash,

@@ -27,7 +27,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/tar-fs": "^2.0.4",
     "electron-builder": "^24.13.3",
-    "execa": "^9.0.0",
+    "execa": "^9.0.2",
     "extract-zip": "^2.0.1",
     "glob": "^10.3.14",
     "xdg-basedir": "^5.1.0"
@@ -45,7 +45,7 @@
     "pretty-bytes": "^6.1.1",
     "rollup": "^4.17.2",
     "tar-fs": "^3.0.6",
-    "verdaccio": "^5.30.3"
+    "verdaccio": "^5.31.0"
   },
   "xo": {
     "rules": {

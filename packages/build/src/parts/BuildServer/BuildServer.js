@@ -6,7 +6,6 @@ import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCa
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleSearchProcessCached from '../BundleSearchProcessCached/BundleSearchProcessCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
@@ -697,18 +696,6 @@ const copyExtensionHostHelperProcessFiles = async () => {
   })
 }
 
-const copyPtyHostFiles = async () => {
-  await Copy.copy({
-    from: 'packages/pty-host',
-    to: 'packages/build/.tmp/server/pty-host',
-    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', '.nvmrc', 'package-lock.json'],
-  })
-  await Copy.copyFile({
-    from: 'LICENSE',
-    to: 'packages/build/.tmp/server/pty-host/LICENSE',
-  })
-}
-
 const sortObject = (object) => {
   return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
@@ -718,8 +705,6 @@ const setVersionsAndDependencies = async ({ version }) => {
     'packages/build/.tmp/server/extension-host-helper-process/package.json',
     'packages/build/.tmp/server/extension-host/package.json',
     'packages/build/.tmp/server/jest-environment/package.json',
-    'packages/build/.tmp/server/pty-host/package.json',
-    'packages/build/.tmp/server/search-process/package.json',
     'packages/build/.tmp/server/server/package.json',
     'packages/build/.tmp/server/shared-process/package.json',
     'packages/build/.tmp/server/typescript-compile-process/package.json',
@@ -740,21 +725,12 @@ const setVersionsAndDependencies = async ({ version }) => {
     }
     if (file === 'packages/build/.tmp/server/shared-process/package.json') {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
-      json.dependencies['@lvce-editor/pty-host'] = version
       json.optionalDependencies ||= {}
       delete json.optionalDependencies['@lvce-editor/process-explorer']
-      json.optionalDependencies['@lvce-editor/search-process'] = version
       json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
-    }
-    if (file === 'packages/build/.tmp/server/search-process/package.json') {
-      json.dependencies['@lvce-editor/ripgrep'] = json.optionalDependencies['@lvce-editor/ripgrep']
-      delete json.optionalDependencies
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
-    }
-    if (json.dependencies && json.dependencies['@lvce-editor/pty-host']) {
-      json.dependencies['@lvce-editor/pty-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
       json.dependencies['@lvce-editor/extension-host'] = version
@@ -964,20 +940,6 @@ export const build = async ({ product }) => {
   })
   console.timeEnd('copySharedProcessFiles')
 
-  const searchProcessCachePath = await BundleSearchProcessCached.bundleSearchProcessCached({
-    commitHash,
-    product,
-    version,
-    target: 'server',
-  })
-
-  console.time('copySearchProcessFiles')
-  await Copy.copy({
-    from: searchProcessCachePath,
-    to: 'packages/build/.tmp/server/search-process',
-  })
-  console.timeEnd('copySearchProcessFiles')
-
   const typscriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
     commitHash,
     product,
@@ -1008,10 +970,6 @@ export const build = async ({ product }) => {
   console.time('copyExtensionHostHelperProcessFiles')
   await copyExtensionHostHelperProcessFiles()
   console.timeEnd('copyExtensionHostHelperProcessFiles')
-
-  console.time('copyPtyHostFiles')
-  await copyPtyHostFiles()
-  console.timeEnd('copyPtyHostFiles')
 
   console.time('copyJestEnvironment')
   await copyJestEnvironment({ commitHash })

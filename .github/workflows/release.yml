@@ -300,22 +300,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./packages/build/.tmp/server/pty-host
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: npm publish --access public
-        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./packages/build/.tmp/server/server
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
         working-directory: ./packages/build/.tmp/server/shared-process
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: npm publish --access public
-        if: matrix.os == 'ubuntu-22.04'
-        working-directory: ./packages/build/.tmp/server/search-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
