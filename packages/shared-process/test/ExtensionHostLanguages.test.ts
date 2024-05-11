@@ -103,7 +103,7 @@ test('getLanguages - language without tokenize property', async () => {
 
 test('getLanguages - error - property tokenize is of type array', async () => {
   const tmpDir = await getTmpDir()
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
@@ -227,7 +227,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
       `Failed to load language configuration for javascript: Failed to parse json at ${join(
         tmpDir,
         'languageConfiguration.json',
-      )}: SyntaxError: Expected property name or '}' in JSON at position 1`,
+      )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
     ),
   )
 })

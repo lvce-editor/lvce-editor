@@ -168,7 +168,7 @@ test.skip('getExtensions', async () => {
 })
 
 test('getExtensions - invalid extension.json', async () => {
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
   const tmpDir1 = await getTmpDir()
   const manifestPath = join(tmpDir1, 'test-extension', 'extension.json')
   await mkdir(dirname(manifestPath))
@@ -193,7 +193,7 @@ test('getExtensions - invalid extension.json', async () => {
           tmpDir1,
           'test-extension',
           'extension.json',
-        )}: SyntaxError: Expected property name or '}' in JSON at position 1`,
+        )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
     },
@@ -381,7 +381,7 @@ test('getExtensions - error - invalid json', async () => {
           tmpDir1,
           'test-extension-1',
           'extension.json',
-        )}: SyntaxError: Expected property name or '}' in JSON at position 1`,
+        )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
