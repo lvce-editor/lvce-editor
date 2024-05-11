@@ -738,16 +738,12 @@ const setVersionsAndDependencies = async ({ version }) => {
     }
     if (file === 'packages/build/.tmp/server/shared-process/package.json') {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
-      json.dependencies['@lvce-editor/pty-host'] = version
       json.optionalDependencies ||= {}
       delete json.optionalDependencies['@lvce-editor/process-explorer']
       json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
-    }
-    if (json.dependencies && json.dependencies['@lvce-editor/pty-host']) {
-      json.dependencies['@lvce-editor/pty-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
       json.dependencies['@lvce-editor/extension-host'] = version
