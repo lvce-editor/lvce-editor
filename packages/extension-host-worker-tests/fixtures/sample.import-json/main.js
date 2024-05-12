@@ -1,4 +1,4 @@
-import extension from './extension.json' assert { type: 'json' }
+import extension from './extension.json' with { type: 'json' }
 
 const sampleCommand = {
   id: 'xyz.sampleCommand',

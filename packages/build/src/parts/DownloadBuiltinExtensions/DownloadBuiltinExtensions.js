@@ -10,7 +10,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Path from '../Path/Path.js'
 import * as Process from '../Process/Process.js'
-import extensions from './builtinExtensions.json' assert { type: 'json' }
+import extensions from './builtinExtensions.json' with { type: 'json' }
 
 const downloadUrl = async (url, outFile) => {
   try {

@@ -93,8 +93,6 @@ export const typeWithAutoClosing = async (editor, text) => {
   const extraCommands = RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
   if (isQuickSuggestionsEnabled && completionTriggerCharacters.includes(text)) {
     openCompletion(newEditor, text)
-  } else if (isQuickSuggestionsEnabled && newEditor.completionState === EditorCompletionState.None) {
-    openCompletion(newEditor, text)
   }
 
   return {
