@@ -79,7 +79,12 @@ export const withResolvers = () => {
 const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
   if (ci) {
     const app = express()
-    app.use(express.static(CI_DIST_PATH))
+    app.use(
+      express.static(CI_DIST_PATH, {
+        immutable: true,
+        maxAge: 86400,
+      }),
+    )
     const { resolve, promise } = withResolvers()
     const server = app.listen(3000, 'localhost', resolve)
     await promise
