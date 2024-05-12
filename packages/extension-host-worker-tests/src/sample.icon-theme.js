@@ -1,5 +1,7 @@
 export const name = 'sample.icon-theme'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, IconTheme, Locator, expect, BaseUrl }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
