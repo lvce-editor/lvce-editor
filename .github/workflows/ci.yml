@@ -82,10 +82,8 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build server
-        if: matrix.os == 'ubuntu-22.04'
         run: node packages/build/bin/build.js --target=server
       - name: Test Static Export
-        if: matrix.os == 'ubuntu-22.04'
         run: node packages/build/src/parts/TestStaticExport/TestStaticExport.js
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
