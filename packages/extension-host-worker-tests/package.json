@@ -6,14 +6,18 @@
   "type": "module",
   "scripts": {
     "e2e": "node src/_all.js",
+    "e2e:ci": "node src/_all.js --headless --ci",
     "e2e:headless": "node src/_all.js --headless",
+    "e2e:headless:ci": "node src/_all.js --headless --ci",
     "type-check": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.44.0"
+    "@playwright/test": "^1.44.0",
+    "@types/express": "^4.17.21",
+    "express": "^4.19.2"
   },
   "xo": {
     "rules": {

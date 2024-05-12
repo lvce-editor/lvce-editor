@@ -1,5 +1,4 @@
 import { VError } from '@lvce-editor/verror'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import * as Copy from '../Copy/Copy.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
@@ -10,7 +9,7 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 const main = async () => {
   const indexPath = Path.absolute('packages/build/.tmp/server/shared-process/index.js')
   const module = await import(indexPath)
-  const tmpDir = join(tmpdir(), 'export-test')
+  const tmpDir = Path.absolute(`packages/build/.tmp/export-test`)
   await Remove.remove(tmpDir)
   await Mkdir.mkdir(tmpDir)
   const extensionPath = join(tmpDir, 'extension')

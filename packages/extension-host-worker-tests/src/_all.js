@@ -5,11 +5,13 @@ import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import express from 'express'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
 
 const SERVER_PATH = join(root, 'packages', 'server', 'src', 'server.js')
+const CI_DIST_PATH = join(root, 'packages', 'build', '.tmp', 'export-test', 'dist')
 
 const isTestFile = (dirent) => {
   return dirent !== '_all.js'
@@ -54,10 +56,39 @@ const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-const runTests = async () => {
-  const configDir = await getTmpDir()
-  const cacheDir = await getTmpDir()
-  const dataDir = await getTmpDir()
+export const withResolvers = () => {
+  /**
+   * @type {any}
+   */
+  let _resolve
+  /**
+   * @type {any}
+   */
+  let _reject
+  const promise = new Promise((resolve, reject) => {
+    _resolve = resolve
+    _reject = reject
+  })
+  return {
+    resolve: _resolve,
+    reject: _reject,
+    promise,
+  }
+}
+
+const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
+  if (ci) {
+    const app = express()
+    app.use(express.static(CI_DIST_PATH))
+    const { resolve, promise } = withResolvers()
+    const server = app.listen(3000, 'localhost', resolve)
+    await promise
+    return {
+      dispose() {
+        server.close()
+      },
+    }
+  }
   const server = fork(SERVER_PATH, {
     stdio: 'inherit',
     env: {
@@ -66,8 +97,27 @@ const runTests = async () => {
       XDG_DATA_HOME: dataDir,
     },
   })
+  return {
+    dispose() {
+      server.kill('SIGKILL')
+    },
+  }
+}
+
+const runTests = async () => {
+  // TODO use build tmp folder
+  const configDir = await getTmpDir()
+  const cacheDir = await getTmpDir()
+  const dataDir = await getTmpDir()
   const argv = process.argv
   const headless = argv.includes('--headless')
+  const ci = argv.includes('--ci')
+  const server = await launchServer({
+    configDir,
+    cacheDir,
+    ci,
+    dataDir,
+  })
   const recordVideos = argv.includes('--record-videos')
   if (recordVideos) {
     await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
@@ -97,7 +147,7 @@ const runTests = async () => {
     await page.close()
     await context.close()
     await browser.close()
-    server.kill('SIGKILL')
+    server.dispose()
   }
 }
 
