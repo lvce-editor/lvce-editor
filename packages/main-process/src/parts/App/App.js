@@ -7,6 +7,7 @@ import * as Cli from '../Cli/Cli.js'
 import * as CommandLineSwitches from '../CommandLineSwitches/CommandLineSwitches.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronApp from '../ElectronApp/ElectronApp.js'
+import * as HandleWebContentsCreated from '../HandleWebContentsCreated/HandleWebContentsCreated.js'
 import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventType.js'
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
 import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
@@ -81,7 +82,7 @@ export const hydrate = async () => {
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, HandleWindowAllClosed.handleWindowAllClosed)
   ElectronApp.on(ElectronAppEventType.BeforeQuit, ElectronAppListeners.handleBeforeQuit)
-  ElectronApp.on(ElectronAppEventType.WebContentsCreated, ElectronAppListeners.handleWebContentsCreated)
+  ElectronApp.on(ElectronAppEventType.WebContentsCreated, HandleWebContentsCreated.handleWebContentsCreated)
   ElectronApp.on(ElectronAppEventType.SecondInstance, HandleSecondInstance.handleSecondInstance)
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
