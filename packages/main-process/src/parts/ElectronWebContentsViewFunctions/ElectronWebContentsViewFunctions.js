@@ -81,28 +81,6 @@ export const setIframeSrc = async (view, iframeSrc) => {
     betterError.dontPrint = true
     throw betterError
   }
-  // } catch (error) {
-  //   console.log({ error })
-  //   // TODO send error back to embeds worker,
-  //   // embeds worker decides how to handle error
-  //   // @ts-ignore
-  //   if (error && error.code === LoadErrorCode.ERR_ABORTED) {
-  //     Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
-  //     return
-  //   }
-  //   // @ts-ignore
-  //   if (error && error.code === LoadErrorCode.ERR_FAILED && ElectronWebContentsViewState.isCanceled(webContents.id)) {
-  //     Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
-  //     ElectronWebContentsViewState.removeCanceled(webContents.id)
-  //     return
-  //   }
-  //   try {
-  //     await setIframeSrcFallback(view, error)
-  //   } catch (error) {
-  //     throw new VError(error, `Failed to set iframe src`)
-  //   }
-  //   ElectronWebContentsViewState.removeCanceled(webContents.id)
-  // }
 }
 /**
  *
