@@ -2,7 +2,7 @@ import * as DownloadStaticFile from '../DownloadStaticFile/DownloadStaticFile.js
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Process from '../Process/Process.js'
 import * as Remove from '../Remove/Remove.js'
-import staticFiles from './StaticFiles.json' assert { type: 'json' }
+import staticFiles from './StaticFiles.json' with { type: 'json' }
 
 const downloadStaticFiles = async (staticFiles) => {
   for (const staticFile of staticFiles) {
