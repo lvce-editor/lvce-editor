@@ -3,7 +3,7 @@ import { writeFile } from 'fs/promises'
 import got, { HTTPError } from 'got'
 import { join } from 'node:path'
 import { performance } from 'node:perf_hooks'
-import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' assert { type: 'json' }
+import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' with { type: 'json' }
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Process from '../Process/Process.js'
