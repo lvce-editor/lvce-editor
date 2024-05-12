@@ -7,6 +7,7 @@ import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFun
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
+import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
@@ -31,6 +32,7 @@ export const create = (id, uri, x, y, width, height) => {
     isLoading: false,
     hasSuggestionsOverlay: false,
     suggestionsEnabled: false,
+    shortcuts: [],
   }
 }
 
@@ -45,13 +47,14 @@ const getUrlFromSavedState = (savedState) => {
   if (savedState && savedState.iframeSrc) {
     return savedState.iframeSrc
   }
-  return 'https://example.com'
+  return SimpleBrowserPreferences.getDefaultUrl()
 }
 
 export const backgroundLoadContent = async (state, savedState) => {
   // TODO duplicate code with loadContent
   const { x, y, width, height, headerHeight } = state
   const iframeSrc = getUrlFromSavedState(savedState)
+  const shortcuts = SimpleBrowserPreferences.getShortCuts()
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
@@ -65,6 +68,7 @@ export const backgroundLoadContent = async (state, savedState) => {
     title: newTitle,
     uri: `simple-browser://${browserViewId}`,
     iframeSrc,
+    shortcuts,
   }
 }
 
@@ -87,6 +91,8 @@ export const loadContent = async (state, savedState) => {
   const browserViewY = y + headerHeight
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
+  const shortcuts = SimpleBrowserPreferences.getShortCuts()
+
   if (id) {
     const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
     await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(keyBindings)
@@ -100,6 +106,7 @@ export const loadContent = async (state, savedState) => {
       title: 'Simple Browser',
       browserViewId: actualId,
       suggestionsEnabled,
+      shortcuts,
     }
   }
 
@@ -119,6 +126,7 @@ export const loadContent = async (state, savedState) => {
     canGoForward,
     uri: `simple-browser://${browserViewId}`,
     suggestionsEnabled,
+    shortcuts,
   }
 }
 
@@ -153,8 +161,8 @@ export const handleInput = async (state, value) => {
 }
 
 export const go = (state) => {
-  const { inputValue, browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
-  const iframeSrc = IframeSrc.toIframeSrc(inputValue)
+  const { inputValue, browserViewId, suggestionsEnabled, hasSuggestionsOverlay, shortcuts } = state
+  const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
   // TODO await promises
   void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   void ElectronWebContentsViewFunctions.focus(browserViewId)
