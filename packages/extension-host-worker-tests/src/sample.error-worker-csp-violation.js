@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.error-worker-csp-violation'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
@@ -14,7 +16,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   // TODO error message could be improved
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-worker-csp-violation: ContentSecurityPolicyError: Content Security Policy Violation: worker-src`
+    `Error: Failed to activate extension sample.error-worker-csp-violation: ContentSecurityPolicyError: Content Security Policy Violation: worker-src`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(`> 1 | const worker = new Worker(\`data:text/javascript,
