@@ -18,5 +18,6 @@ export const Commands = {
   setBackgroundColor: ElectronWebContentsViewFunctions.wrapBrowserViewCommand(ElectronWebContentsViewFunctions.setBackgroundColor),
   setFallthroughKeyBindings: ElectronWebContentsViewFunctions.setFallThroughKeyBindings,
   setIframeSrc: ElectronWebContentsViewFunctions.wrapBrowserViewCommand(ElectronWebContentsViewFunctions.setIframeSrc),
+  setIframeSrcFallback: ElectronWebContentsViewFunctions.wrapBrowserViewCommand(ElectronWebContentsViewFunctions.setIframeSrcFallback),
   show: ElectronWebContentsViewFunctions.show,
 }

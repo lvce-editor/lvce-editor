@@ -2,7 +2,6 @@ import { BrowserWindow } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
-import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
 import { VError } from '../VError/VError.js'
 import * as WebContentsViewErrorPath from '../WebContentsViewErrorPath/WebContentsViewErrorPath.js'
 
@@ -43,10 +42,11 @@ export const resizeBrowserView = (view, x, y, width, height) => {
   })
 }
 
-const setIframeSrcFallback = async (view, error) => {
+export const setIframeSrcFallback = async (view, code, message) => {
   await view.webContents.loadFile(WebContentsViewErrorPath.webContentsViewErrorPath, {
     query: {
-      code: error.code,
+      code,
+      message,
     },
   })
 }
@@ -70,29 +70,39 @@ const getTitle = (webContents) => {
  * @param {string} iframeSrc
  */
 export const setIframeSrc = async (view, iframeSrc) => {
-  const { webContents } = view
   try {
+    Assert.object(view)
+    Assert.string(iframeSrc)
+    const { webContents } = view
     await webContents.loadURL(iframeSrc)
   } catch (error) {
+    const betterError = new VError(error, `Failed to set iframe src`)
     // @ts-ignore
-    if (error && error.code === LoadErrorCode.ERR_ABORTED) {
-      Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
-      return
-    }
-    // @ts-ignore
-    if (error && error.code === LoadErrorCode.ERR_FAILED && ElectronWebContentsViewState.isCanceled(webContents.id)) {
-      Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
-      ElectronWebContentsViewState.removeCanceled(webContents.id)
-      return
-    }
-    try {
-      await setIframeSrcFallback(view, error)
-    } catch (error) {
-      // @ts-ignore
-      throw new VError(error, `Failed to set iframe src`)
-    }
-    ElectronWebContentsViewState.removeCanceled(webContents.id)
+    betterError.dontPrint = true
+    throw betterError
   }
+  // } catch (error) {
+  //   console.log({ error })
+  //   // TODO send error back to embeds worker,
+  //   // embeds worker decides how to handle error
+  //   // @ts-ignore
+  //   if (error && error.code === LoadErrorCode.ERR_ABORTED) {
+  //     Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
+  //     return
+  //   }
+  //   // @ts-ignore
+  //   if (error && error.code === LoadErrorCode.ERR_FAILED && ElectronWebContentsViewState.isCanceled(webContents.id)) {
+  //     Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
+  //     ElectronWebContentsViewState.removeCanceled(webContents.id)
+  //     return
+  //   }
+  //   try {
+  //     await setIframeSrcFallback(view, error)
+  //   } catch (error) {
+  //     throw new VError(error, `Failed to set iframe src`)
+  //   }
+  //   ElectronWebContentsViewState.removeCanceled(webContents.id)
+  // }
 }
 /**
  *

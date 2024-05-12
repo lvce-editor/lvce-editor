@@ -17,6 +17,8 @@ const main = () => {
   $Main.append($Heading, $ErrorCode)
 
   document.body.append($Main)
+
+  document.body.textContent = location.href
 }
 
 main()
