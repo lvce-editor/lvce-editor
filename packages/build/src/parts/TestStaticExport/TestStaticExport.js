@@ -6,10 +6,12 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import { pathToFileURL } from 'node:url'
 
 const main = async () => {
   const indexPath = Path.absolute('packages/build/.tmp/server/shared-process/index.js')
-  const module = await import(indexPath)
+  const indexUri = pathToFileURL(indexPath).toString()
+  const module = await import(indexUri)
   const tmpDir = Path.absolute(`packages/build/.tmp/export-test`)
   await Remove.remove(tmpDir)
   await Mkdir.mkdir(tmpDir)
