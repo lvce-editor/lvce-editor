@@ -3,9 +3,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
 import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
-import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
 import { VError } from '../VError/VError.js'
+import * as WebContentsViewErrorPath from '../WebContentsViewErrorPath/WebContentsViewErrorPath.js'
 
 // TODO create output channel for browser view debug logs
 
@@ -45,7 +44,7 @@ export const resizeBrowserView = (view, x, y, width, height) => {
 }
 
 const setIframeSrcFallback = async (view, error) => {
-  await view.webContents.loadFile(Path.join(Root.root, 'packages', 'main-process', 'pages', 'error', 'error.html'), {
+  await view.webContents.loadFile(WebContentsViewErrorPath.webContentsViewErrorPath, {
     query: {
       code: error.code,
     },
