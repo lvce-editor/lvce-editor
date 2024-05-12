@@ -42,7 +42,6 @@ const isLocalHostUrlWithOutHttp = (input) => {
 }
 
 export const toIframeSrc = (input, shortcuts = []) => {
-  console.log({ shortcuts })
   for (const shortcut of shortcuts) {
     if (shortcut && shortcut.prefix === input) {
       return shortcut.url
