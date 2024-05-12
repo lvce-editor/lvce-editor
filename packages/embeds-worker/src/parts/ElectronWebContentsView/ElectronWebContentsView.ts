@@ -1,5 +1,6 @@
 import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
+import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.ts'
 
 export const createWebContentsView = async (restoreId, fallThroughKeyBindings) => {
   const id = await EmbedsProcess.invoke('ElectronWebContentsView.createWebContentsView', restoreId, fallThroughKeyBindings)
@@ -14,8 +15,42 @@ export const resizeWebContentsView = (id, x, y, width, height) => {
   return EmbedsProcess.invoke('ElectronWebContentsView.resizeBrowserView', id, x, y, width, height)
 }
 
-export const setIframeSrc = (id, iframeSrc) => {
-  return EmbedsProcess.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
+
+export const setIframeSrcFallback = async (id, error) => {
+  const { code, message } = error
+  await EmbedsProcess.invoke('ElectronWebContentsView.setIframeSrcFallback', id, code, message)
+
+}
+
+export const setIframeSrc = async (id, iframeSrc) => {
+  try {
+
+    await EmbedsProcess.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
+
+  } catch (error) {
+
+    console.log({ error })
+    // TODO send error back to embeds worker,
+    // embeds worker decides how to handle error
+    // @ts-ignore
+    if (error && error.code === LoadErrorCode.ERR_ABORTED) {
+      console.info(`[embeds worker] navigation to ${iframeSrc} aborted`)
+      return
+    }
+    // @ts-ignore
+    if (error && error.code === LoadErrorCode.ERR_FAILED
+    ) {
+      console.info(`[embeds worker] navigation to ${iframeSrc} canceled`)
+      // ElectronWebContentsViewState.removeCanceled(webContents.id)
+      return
+    }
+    try {
+      await setIframeSrcFallback(id, error)
+    } catch (error) {
+      console.warn(`Failed to set iframe src`, error)
+    }
+
+  }
 }
 
 export const focus = (id) => {
@@ -69,9 +104,9 @@ export const getStats = (id, fallthroughKeybindings) => {
 
 const forwardEvent =
   (key) =>
-  (id, ...args) => {
-    Rpc.send(key, ...args)
-  }
+    (id, ...args) => {
+      Rpc.send(key, ...args)
+    }
 
 export const handleDidNavigate = forwardEvent('ElectronBrowserView.handleDidNavigate')
 
