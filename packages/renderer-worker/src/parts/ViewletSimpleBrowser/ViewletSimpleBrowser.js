@@ -93,9 +93,10 @@ export const loadContent = async (state, savedState) => {
   const browserViewHeight = height - headerHeight
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
 
+  console.log({ keyBindings })
   if (id) {
     const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
-    await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(keyBindings)
+    await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(actualId, keyBindings)
     await ElectronWebContentsViewFunctions.resizeWebContentsView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
     if (id !== actualId) {
       await ElectronWebContentsViewFunctions.setIframeSrc(actualId, iframeSrc)
@@ -112,7 +113,7 @@ export const loadContent = async (state, savedState) => {
 
   const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(/* restoreId */ 0, uid)
-  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)

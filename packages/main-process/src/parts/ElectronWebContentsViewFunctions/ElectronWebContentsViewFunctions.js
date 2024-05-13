@@ -209,8 +209,8 @@ export const copyImageAt = (view, x, y) => {
   webContents.copyImageAt(x, y)
 }
 
-export const setFallThroughKeyBindings = (fallthroughKeyBindings) => {
-  ElectronWebContentsViewState.setFallthroughKeyBindings(fallthroughKeyBindings)
+export const setFallThroughKeyBindings = (id, fallthroughKeyBindings) => {
+  ElectronWebContentsViewState.setFallthroughKeyBindings(id, fallthroughKeyBindings)
 }
 
 // TODO maybe move some of these to webContentFunctions

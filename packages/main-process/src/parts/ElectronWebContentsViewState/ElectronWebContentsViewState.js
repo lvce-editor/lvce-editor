@@ -2,6 +2,9 @@ import * as Assert from '../Assert/Assert.js'
 
 const state = {
   views: Object.create(null),
+  /**
+   * @type {any[]}
+   */
   fallThroughKeyBindings: [],
   canceled: Object.create(null),
 }
@@ -54,7 +57,8 @@ export const getWindow = (webContents) => {
   return undefined
 }
 
-export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
+export const setFallthroughKeyBindings = (id, fallthroughKeyBindings) => {
+  Assert.array(fallthroughKeyBindings)
   state.fallThroughKeyBindings = fallthroughKeyBindings
 }
 

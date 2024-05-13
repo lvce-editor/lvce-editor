@@ -1,6 +1,7 @@
 import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.ts'
+import * as Assert from '../Assert/Assert.ts'
 
 export const createWebContentsView = async (restoreId, fallThroughKeyBindings) => {
   const id = await EmbedsProcess.invoke('ElectronWebContentsView.createWebContentsView', restoreId, fallThroughKeyBindings)
@@ -94,8 +95,10 @@ export const copyImageAt = (id, x, y) => {
 }
 
 export const setFallthroughKeyBindings = (id, fallthroughKeybindings) => {
-  // TODO
-  // return EmbedsProcess.invoke('ElectronWebContentsView.setFallthroughKeyBindings', id, fallthroughKeybindings)
+  console.log({ id, fallthroughKeybindings })
+  Assert.number(id)
+  Assert.array(fallthroughKeybindings)
+  return EmbedsProcess.invoke('ElectronWebContentsView.setFallthroughKeyBindings', id, fallthroughKeybindings)
 }
 
 export const getStats = (id, fallthroughKeybindings) => {
@@ -115,3 +118,5 @@ export const handleTitleUpdated = forwardEvent('ElectronBrowserView.handleTitleU
 export const handleWillNavigate = forwardEvent('ElectronBrowserView.handleWillNavigate')
 
 export const handleContextMenu = forwardEvent('ElectronBrowserView.handleContextMenu')
+
+export const handleKeyBinding = forwardEvent('ElectronBrowserView.handleKeyBinding')
