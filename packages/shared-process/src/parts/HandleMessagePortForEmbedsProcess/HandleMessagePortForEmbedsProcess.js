@@ -12,10 +12,11 @@ export const handleMessagePortForEmbedsProcess = (port, ipcId) => {
 
 export const handleEmbedsProcessIpcClosed = async () => {
   EmbedsProcessState.decrement()
-  if (EmbedsProcessState.get() === 0) {
-    const promise = EmbedsProcess.state.ipc
-    EmbedsProcess.state.ipc = undefined
-    const ipc = await promise
-    ipc.dispose()
+  if (EmbedsProcessState.hasRef()) {
+    return
   }
+  const promise = EmbedsProcess.state.ipc
+  EmbedsProcess.state.ipc = undefined
+  const ipc = await promise
+  ipc.dispose()
 }
