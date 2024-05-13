@@ -28,4 +28,5 @@ export const Events = {
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
   'browser-view-title-updated': SimpleBrowser.handleTitleUpdated,
   'browser-view-will-navigate': SimpleBrowser.handleWillNavigate,
+  'browser-view-key-binding': SimpleBrowser.handleKeyBinding,
 }

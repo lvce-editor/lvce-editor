@@ -186,6 +186,7 @@ export const handleWillNavigate = (state, url) => {
 }
 
 export const handleKeyBinding = async (state, keyBinding) => {
+  console.log({ keyBinding })
   await KeyBindings.handleKeyBinding(keyBinding)
   return state
 }
