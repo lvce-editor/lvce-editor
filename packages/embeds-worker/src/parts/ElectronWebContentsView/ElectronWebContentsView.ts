@@ -118,5 +118,16 @@ export const handleTitleUpdated = forwardEvent('ElectronBrowserView.handleTitleU
 export const handleWillNavigate = forwardEvent('ElectronBrowserView.handleWillNavigate')
 
 export const handleContextMenu = forwardEvent('ElectronBrowserView.handleContextMenu')
+<<<<<<< Updated upstream
 
 export const handleKeyBinding = forwardEvent('ElectronBrowserView.handleKeyBinding')
+=======
+<<<<<<< Updated upstream
+=======
+
+export const handleKeyBinding = x => {
+  console.log({ x })
+}
+// forwardEvent('ElectronBrowserView.handleKeyBinding')
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes

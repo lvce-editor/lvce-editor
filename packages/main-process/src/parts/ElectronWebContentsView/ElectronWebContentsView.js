@@ -33,7 +33,11 @@ export const attachEventListeners = (webContentsId) => {
       const { result, messages } = value.handler(...args)
       for (const message of messages) {
         const [key, ...rest] = message
-        EmbedsProcess.send(`ElectronWebContents.${key}`, webContentsId, ...rest)
+        let prefix = 'ElectronWebContents'
+        if (key === 'handleKeyBinding') {
+          prefix = 'ElectronWebContentsView'
+        }
+        EmbedsProcess.send(`${prefix}.${key}`, webContentsId, ...rest)
       }
       return result
     }
