@@ -39,6 +39,7 @@ export const LazyCommands = {
   focusNext: () => import('./ViewletSearchFocusNext.js'),
   focusPrevious: () => import('./ViewletSearchFocusPrevious.js'),
   handleClick: () => import('./ViewletSearchHandleClick.js'),
+  handleClickAt: () => import('./ViewletSearchHandleClick.js'),
   selectIndex: () => import('./ViewletSearchSelectIndex.js'),
   dismissItem: () => import('./ViewletSearchDismissItem.js'),
   copy: () => import('./ViewletSearchCopy.js'),
