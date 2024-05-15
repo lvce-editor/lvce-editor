@@ -7,13 +7,13 @@ import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.ts'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.ts'
 
-export const handleInput = (event) => {
+export const handleInput = (event: InputEvent) => {
   const { target } = event
-  const { value } = target
+  const { value } = target as HTMLInputElement
   return ['handleInput', value, InputSource.User]
 }
 
-export const handleFocus = (event) => {
+export const handleFocus = () => {
   // TODO send focus event to search view first
   return ['Focus.setFocus', WhenExpression.FocusSearchInput]
 }
