@@ -3,6 +3,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetSearchHeaderVirtualDom from '../GetSearchHeaderVirtualDom/GetSearchHeaderVirtualDom.js'
 import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression, message, detailsExpanded) => {
@@ -32,6 +33,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
     role: AriaRoles.Tree,
     tabIndex: 0,
     childCount: visibleItems.length,
+    onClick: DomEventListenerFunctions.HandleClick,
   })
   dom.push(...GetSearchResultsVirtualDom.getSearchResultsVirtualDom(visibleItems))
   return dom

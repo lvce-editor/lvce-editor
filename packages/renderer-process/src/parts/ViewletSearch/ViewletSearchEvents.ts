@@ -1,6 +1,5 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.ts'
 import * as Event from '../Event/Event.ts'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.ts'
 import * as InputSource from '../InputSource/InputSource.ts'
 import * as MouseEventType from '../MouseEventType/MouseEventType.ts'
 import * as PointerEvents from '../PointerEvents/PointerEvents.ts'
@@ -18,32 +17,14 @@ export const handleFocus = (event) => {
   return ['Focus.setFocus', WhenExpression.FocusSearchInput]
 }
 
-const getIndexTreeItem = ($Target) => {
-  return GetNodeIndex.getNodeIndex($Target)
-}
 
-const getIndexLabel = ($Target) => {
-  return GetNodeIndex.getNodeIndex($Target.parentNode)
-}
-
-const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'TreeItem':
-      return getIndexTreeItem($Target)
-    case 'Label':
-      return getIndexLabel($Target)
-    default:
-      return -1
-  }
-}
 
 export const handleClick = (event) => {
-  const { target, button } = event
+  const { button, clientX, clientY } = event
   if (button === MouseEventType.RightClick) {
     return []
   }
-  const index = getIndex(target)
-  return ['handleClick', index]
+  return ['handleClickAt', clientX, clientY]
 }
 
 export const handleScrollBarThumbPointerMove = (event) => {
