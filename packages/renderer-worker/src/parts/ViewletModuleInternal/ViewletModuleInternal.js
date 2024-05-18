@@ -2,6 +2,8 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
+    case ViewletModuleId.Confirm:
+      return import('../ViewletConfirm/ViewletConfirm.ipc.js')
     case ViewletModuleId.ActivityBar:
       return import('../ViewletActivityBar/ViewletActivityBar.ipc.js')
     case ViewletModuleId.Audio:
