@@ -1,9 +1,13 @@
-export const setFocused = (state, value) => {
-  if (!value) {
+export const setFocused = (state, selector) => {
+  if (selector === true) {
+    selector = 'button'
+  }
+  if (!selector) {
     return
   }
   const { $Viewlet } = state
-  const $Focusable = $Viewlet.querySelector('button')
+  const $Focusable = $Viewlet.querySelector(selector)
+  console.log({ $Focusable, selector })
   $Focusable.focus()
 }
 

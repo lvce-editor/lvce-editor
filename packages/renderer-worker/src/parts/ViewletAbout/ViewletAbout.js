@@ -1,3 +1,4 @@
+import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
@@ -11,7 +12,7 @@ export const create = () => {
   return {
     productName: '',
     lines: [],
-    focused: false,
+    focusId: AboutFocusId.None,
   }
 }
 
@@ -21,7 +22,7 @@ export const loadContent = async (state) => {
     ...state,
     productName: Product.productNameLong,
     lines,
-    focused: true,
+    focusId: AboutFocusId.Ok,
   }
 }
 
@@ -45,4 +46,42 @@ export const handleClickClose = async (state) => {
 export const handleFocusIn = (state) => {
   Focus.setFocus(FocusKey.About)
   return state
+}
+
+const getNextFocus = (focusId) => {
+  switch (focusId) {
+    case AboutFocusId.Ok:
+      return AboutFocusId.Copy
+    case AboutFocusId.Copy:
+      return AboutFocusId.Ok
+    default:
+      return AboutFocusId.None
+  }
+}
+
+export const focusNext = (state) => {
+  const { focusId } = state
+  return {
+    ...state,
+    focusId: getNextFocus(focusId),
+  }
+}
+
+const getPreviousFocus = (focusId) => {
+  switch (focusId) {
+    case AboutFocusId.Ok:
+      return AboutFocusId.Copy
+    case AboutFocusId.Copy:
+      return AboutFocusId.Ok
+    default:
+      return AboutFocusId.None
+  }
+}
+
+export const focusPrevious = (state) => {
+  const { focusId } = state
+  return {
+    ...state,
+    focusId: getPreviousFocus(focusId),
+  }
 }
