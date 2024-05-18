@@ -1,41 +1,11 @@
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as Editor from '../Editor/Editor.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
-const getChanges = (editor, getDelta) => {
-  const selections = editor.selections
-  if (EditorSelection.isEverySelectionEmpty(selections)) {
-    const changes = []
-    const lines = editor.lines
-    for (let i = 0; i < selections.length; i += 4) {
-      const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
-      const start = {
-        rowIndex: selectionStartRow,
-        columnIndex: selectionStartColumn,
-      }
-      const positionRight = EditorGetPositionRight.editorGetPositionRight(start, lines, getDelta)
-      changes.push({
-        start: start,
-        end: positionRight,
-        inserted: [''],
-        deleted: TextDocument.getSelectionText(editor, {
-          start: start,
-          end: positionRight,
-        }),
-        origin: EditOrigin.DeleteHorizontalRight,
-      })
-    }
-    return changes
+export const editorDeleteHorizontalRight = async (editor, deltaId) => {
+  const { tokenizer, ...rest } = editor // TODO new tokenizer api
+  const newState = await EditorWorker.invoke('Editor.deleteHorizontalRight', rest, deltaId)
+  const newEditor = {
+    ...newState,
+    tokenizer,
   }
-  const changes = editorReplaceSelections(editor, [''], EditOrigin.DeleteHorizontalRight)
-  return changes
-}
-
-export const editorDeleteHorizontalRight = (editor, getDelta) => {
-  const changes = getChanges(editor, getDelta)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  return newEditor
 }
