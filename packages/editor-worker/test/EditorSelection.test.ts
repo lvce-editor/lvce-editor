@@ -1,5 +1,5 @@
 import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditOrigin from '../parts/EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', ()
   }
 })
 
-const EditorSelection = await import('../parts/Editor/EditorSelection.js')
+const EditorSelection = await import('../Editor/EditorSelection.js')
 
 test('getVisible', () => {
   const editor = {
@@ -43,21 +43,21 @@ test('getVisible', () => {
     // prettier-ignore
     [
       /* x */ '0px', /* y */
-'0px', /* width */
-'48px', /* height */
-'20px',
+      '0px', /* width */
+      '48px', /* height */
+      '20px',
       /* x */ '0px', /* y */
-'20px', /* width */
-'48px', /* height */
-'20px',
+      '20px', /* width */
+      '48px', /* height */
+      '20px',
       /* x */ '0px', /* y */
-'40px', /* width */
-'48px', /* height */
-'20px',
+      '40px', /* width */
+      '48px', /* height */
+      '20px',
       /* x */ '16px', /* y */
-'80px', /* width */
-'8px', /* height */
-'20px',
+      '80px', /* width */
+      '8px', /* height */
+      '20px',
     ],
   )
 })
@@ -90,13 +90,13 @@ test('getVisible - bug with two lines', () => {
   expect(selectionInfos).toEqual(
     [
       /* x */ '32px', /* y */
-'0px', /* width */
-'16px', /* height */
-'20px',
+      '0px', /* width */
+      '16px', /* height */
+      '20px',
       /* x */ '0px', /* y */
-'20px', /* width */
-'32px', /* height */
-'20px',
+      '20px', /* width */
+      '32px', /* height */
+      '20px',
     ],
   )
 })
@@ -156,17 +156,17 @@ test('getVisible - bug with multiple lines', () => {
   expect(selectionInfos).toEqual(
     [
       /* x */ '24px',/* y */
-'0px', /* width */
-'24px', /* height */
-'20px',
+      '0px', /* width */
+      '24px', /* height */
+      '20px',
       /* x */ '0px', /* y */
-'20px', /* width */
-'48px', /* height */
-'20px',
+      '20px', /* width */
+      '48px', /* height */
+      '20px',
       /* x */ '0px', /* y */
-'40px', /* width */
-'24px', /* height */
-'20px',
+      '40px', /* width */
+      '24px', /* height */
+      '20px',
     ],
   )
 })
@@ -298,37 +298,37 @@ test('getVisible - only start of selection visible', () => {
   expect(selectionInfos).toEqual(
     [
      /* x */ '0px', /* y */
-'0px', /* width */
-'48px', /* height */
-'20px',
+      '0px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'20px', /* width */
-'48px', /* height */
-'20px',
+      '20px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'40px', /* width */
-'48px', /* height */
-'20px',
+      '40px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'60px', /* width */
-'48px', /* height */
-'20px',
+      '60px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'80px', /* width */
-'48px', /* height */
-'20px',
+      '80px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'100px', /* width */
-'48px', /* height */
-'20px',
+      '100px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'120px', /* width */
-'48px', /* height */
-'20px',
+      '120px', /* width */
+      '48px', /* height */
+      '20px',
      /* x */ '0px', /* y */
-'140px', /* width */
-'48px', /* height */
-'20px',
+      '140px', /* width */
+      '48px', /* height */
+      '20px',
     ])
 })
 

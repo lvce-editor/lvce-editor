@@ -1,7 +1,7 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditorSelectAllRight from '../parts/EditorCommand/EditorCommandSelectAllRight.js'
-import * as TokenizePlainText from '../parts/TokenizePlainText/TokenizePlainText.js'
-import * as EditorSelection from '../parts/EditorSelection/EditorSelection.js'
+import * as EditorSelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.js'
+import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 test('editorSelectAllRight = at start', () => {
   const editor = {
