@@ -4,7 +4,7 @@ import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as GetX from '../GetX/GetX.js'
 
 const getSelectionFromChange = (change) => {
-  const { start, inserted, end } = change
+  const { start, inserted } = change
   const startRowIndex = start.rowIndex
   const startColumnIndex = start.columnIndex
   const insertedLength = inserted.length

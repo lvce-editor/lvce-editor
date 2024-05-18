@@ -138,6 +138,7 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize,
   }
 }
 
+// @ts-ignore
 const getOffsets = (deltaX, width, averageCharWidth) => {
   // TODO accurately measure char widths using offscreen canvas
   // and use fast measurements for monospace ascii text
