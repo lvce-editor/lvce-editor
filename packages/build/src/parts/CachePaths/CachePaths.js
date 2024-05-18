@@ -96,6 +96,12 @@ export const getEmbedsWorkerCachePath = async (extraContents) => {
   return cachePath
 }
 
+export const getEditorWorkerCachePath = async (extraContents) => {
+  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/editor-worker'), hash)
+  return cachePath
+}
+
 export const getExtensionHostSubWorkerCachePath = async (extraContents) => {
   const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
   const extensionHostWorkerCachePath = Path.join(
