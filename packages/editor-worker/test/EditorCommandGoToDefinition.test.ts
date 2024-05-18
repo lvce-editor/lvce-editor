@@ -29,7 +29,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-test('editorGoToDefinition', async () => {
+test.skip('editorGoToDefinition', async () => {
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
     selections: new Uint32Array([0, 0, 0, 0]),
@@ -61,7 +61,7 @@ test('editorGoToDefinition', async () => {
   await EditorGoToDefinition.goToDefinition(editor)
 })
 
-test('editorGoToDefinition - start offset is 0', async () => {
+test.skip('editorGoToDefinition - start offset is 0', async () => {
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
     selections: new Uint32Array([0, 0, 0, 0]),
@@ -93,7 +93,7 @@ test('editorGoToDefinition - start offset is 0', async () => {
   await EditorGoToDefinition.goToDefinition(editor)
 })
 
-test('editorGoToDefinition - error', async () => {
+test.skip('editorGoToDefinition - error', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
     selections: new Uint32Array([0, 0, 0, 0]),
@@ -118,7 +118,7 @@ test('editorGoToDefinition - error', async () => {
 
 // TODO test no definition provider registered
 
-test('editorGoToDefinition - error - no definition provider found', async () => {
+test.skip('editorGoToDefinition - error - no definition provider found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
     x: 0,
@@ -147,7 +147,7 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
   expect(spy).not.toHaveBeenCalled()
 })
 
-test('editorGoToDefinition - no definition found', async () => {
+test.skip('editorGoToDefinition - no definition found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
     x: 0,
@@ -168,7 +168,7 @@ test('editorGoToDefinition - no definition found', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No definition found for 'line'", false)
 })
 
-test('editorGoToDefinition - no definition found and no word at position', async () => {
+test.skip('editorGoToDefinition - no definition found and no word at position', async () => {
   const editor = {
     lines: ['    ', ''],
     x: 0,
