@@ -1,4 +1,4 @@
-const state: any = {
+export const state: any = {
   identifiers: new Uint32Array(),
 }
 
