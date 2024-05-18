@@ -21,10 +21,12 @@ import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPa
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.js'
 import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.js'
+import * as SelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
 import * as SelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.js'
 import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
 import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.js'
+import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.js'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.js'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
@@ -60,4 +62,6 @@ export const commandMap = {
   'Editor.selectUp': SelectUp.selectUp,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
+  'Editor.selectNextOccurrence': SelectNextOccurrence.selectNextOccurrence,
+  'Editor.selectAllOccurrences': SelectAllOccurrences.selectAllOccurrences,
 }
