@@ -73,4 +73,14 @@ const renderHeight = {
   },
 }
 
-export const render = [renderItems, renderValue, renderCursorOffset, renderFocusedIndex, renderHeight]
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focused === newState.focused
+  },
+  apply(oldState, newState) {
+    const selector = newState.focused ? '.InputBox' : ''
+    return ['Viewlet.focusSelector', selector]
+  },
+}
+
+export const render = [renderFocus, renderItems, renderValue, renderCursorOffset, renderFocusedIndex, renderHeight]
