@@ -184,6 +184,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.SendMessagePortToElectron
     case 'OffscreenCanvas':
       return ModuleId.OffscreenCanvas
+    case 'Languages':
+      return ModuleId.Languages
     default:
       throw new Error(`module ${prefix} not found`)
   }
