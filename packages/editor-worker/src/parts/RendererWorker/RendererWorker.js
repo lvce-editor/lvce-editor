@@ -1,3 +1,5 @@
+import * as Rpc from '../Rpc/Rpc.ts'
+
 /**
  *
  * @param {string} method
@@ -5,5 +7,5 @@
  * @returns {Promise<any>}
  */
 export const invoke = async (method, ...params) => {
-  console.warn('not implemented')
+  return Rpc.invoke(method, ...params)
 }
