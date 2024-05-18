@@ -3,6 +3,8 @@ import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.js'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.js'
 import * as CursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.js'
 import * as CursorDown from '../EditorCommand/EditorCommandCursorDown.js'
+import * as CursorEnd from '../EditorCommand/EditorCommandCursorEnd.js'
+import * as CursorHome from '../EditorCommand/EditorCommandCursorHome.js'
 import * as CursorUp from '../EditorCommand/EditorCommandCursorUp.js'
 import * as CursorWordLeft from '../EditorCommand/EditorCommandCursorWordLeft.js'
 import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPartLeft.js'
@@ -15,8 +17,6 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
-import * as CursorEnd from '../EditorCommand/EditorCommandCursorEnd.js'
-import * as CursorHome from '../EditorCommand/EditorCommandCursorHome.js'
 
 export const commandMap = {
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
@@ -24,6 +24,8 @@ export const commandMap = {
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
+  'Editor.cursorEnd': CursorEnd.cursorEnd,
+  'Editor.cursorHome': CursorHome.cursorHome,
   'Editor.cursorUp': CursorUp.cursorUp,
   'Editor.cursorWordLeft': CursorWordLeft.cursorWordLeft,
   'Editor.cursorWordPartLeft': CursorWordPartLeft.cursorWordPartLeft,
@@ -36,6 +38,4 @@ export const commandMap = {
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
-  'Editor.cursorHome': CursorHome.cursorHome,
-  'Editor.cursorEnd': CursorEnd.cursorEnd,
 }
