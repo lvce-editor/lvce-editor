@@ -24,7 +24,6 @@ import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoCl
 import * as EditorTypeWithAutoClosingEndBracket from './EditorCommandTypeWithAutoClosingEndBracket.js'
 import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
 import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
-import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 export const state = {
   listeners: [],
@@ -114,7 +113,7 @@ export const typeWithAutoClosing = async (editor, text) => {
   }
 
   const newEditor = EditorType.type(editor, text)
-  const extraCommands = RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
+  const extraCommands = []
   if (isQuickSuggestionsEnabled() && newEditor.completionState === EditorCompletionState.None) {
     openCompletion(newEditor, text)
   }
