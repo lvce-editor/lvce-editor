@@ -1,11 +1,8 @@
 import * as Command from '../Command/Command.js'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
-// @ts-ignore
-import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 
 const getSelectionRange = (lines, copyFullLine, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   if (copyFullLine) {
@@ -59,6 +56,6 @@ export const copy = async (editor) => {
   const selectedLines = TextDocument.getSelectionText(editor, range)
   const text = JoinLines.joinLines(selectedLines)
   const fullText = copyFullLine ? '\n' + text : text
-  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, fullText)
+  await ClipBoard.writeText(fullText)
   return editor
 }
