@@ -5,7 +5,6 @@
     { "path": "./packages/build" },
     { "path": "./packages/diff-worker" },
     { "path": "./packages/editor-worker" },
-    { "path": "./packages/typescript-compile-process" },
     { "path": "./packages/embeds-worker" },
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
@@ -19,6 +18,7 @@
     { "path": "./packages/shared-process" },
     { "path": "./packages/syntax-highlighting-worker" },
     { "path": "./packages/terminal-worker" },
-    { "path": "./packages/test-worker" }
+    { "path": "./packages/test-worker" },
+    { "path": "./packages/typescript-compile-process" }
   ]
 }
