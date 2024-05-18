@@ -3,9 +3,15 @@ import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.js'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.js'
 import * as CursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.js'
 import * as CursorDown from '../EditorCommand/EditorCommandCursorDown.js'
+import * as CursorEnd from '../EditorCommand/EditorCommandCursorEnd.js'
+import * as CursorHome from '../EditorCommand/EditorCommandCursorHome.js'
 import * as CursorUp from '../EditorCommand/EditorCommandCursorUp.js'
 import * as CursorWordLeft from '../EditorCommand/EditorCommandCursorWordLeft.js'
 import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPartLeft.js'
+import * as CursorWordPartRight from '../EditorCommand/EditorCommandCursorWordPartRight.js'
+import * as CursorWordRight from '../EditorCommand/EditorCommandCursorWordRight.js'
+import * as DeleteAllLeft from '../EditorCommand/EditorCommandDeleteAllLeft.js'
+import * as DeleteAllRight from '../EditorCommand/EditorCommandDeleteAllRight.js'
 import * as DeleteCharacterLeft from '../EditorCommand/EditorCommandDeleteCharacterLeft.js'
 import * as DeleteCharacterRight from '../EditorCommand/EditorCommandDeleteCharacterRight.js'
 import * as DeleteHorizontalRight from '../EditorCommand/EditorCommandDeleteHorizontalRight.js'
@@ -29,9 +35,15 @@ export const commandMap = {
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
+  'Editor.cursorEnd': CursorEnd.cursorEnd,
+  'Editor.cursorHome': CursorHome.cursorHome,
   'Editor.cursorUp': CursorUp.cursorUp,
   'Editor.cursorWordLeft': CursorWordLeft.cursorWordLeft,
   'Editor.cursorWordPartLeft': CursorWordPartLeft.cursorWordPartLeft,
+  'Editor.cursorWordPartRight': CursorWordPartRight.cursorWordPartRight,
+  'Editor.cursorWordRight': CursorWordRight.cursorWordRight,
+  'Editor.deleteAllLeft': DeleteAllLeft.deleteAllLeft,
+  'Editor.deleteAllRight': DeleteAllRight.deleteAllRight,
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.deleteCharacterRight': DeleteCharacterRight.deleteCharacterRight,
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
@@ -44,8 +56,8 @@ export const commandMap = {
   'Editor.selectAllRight': SelectAllRight.editorSelectAllRight,
   'Editor.selectCharacterLeft': SelectCharacterLeft.selectCharacterLeft,
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
-  'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
-  'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.selectDown': SelectDown.selectDown,
   'Editor.selectUp': SelectUp.selectUp,
+  'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
+  'Editor.selectWordRight': SelectWordRight.selectWordRight,
 }
