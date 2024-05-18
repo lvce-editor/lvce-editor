@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
@@ -105,7 +105,7 @@ test('editorGoToDefinition - error', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
@@ -130,8 +130,8 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
     throw new Error('Failed to execute definition provider: No definition provider found')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => { })
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
@@ -159,7 +159,7 @@ test('editorGoToDefinition - no definition found', async () => {
     return undefined
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No definition found for 'line'", false)
@@ -180,7 +180,7 @@ test('editorGoToDefinition - no definition found and no word at position', async
     return undefined
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'No definition found', false)

@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, expect, jest, test } from '@jest/globals'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => ({
@@ -33,7 +33,7 @@ beforeAll(() => {
 
 test('editorCopy', async () => {
   // @ts-ignore
-  const spy = ClipBoard.writeText.mockImplementation(() => {})
+  const spy = ClipBoard.writeText.mockImplementation(() => { })
   const editor = {
     uri: '/tmp/foo-fiiHjX/test.txt',
     languageId: 'plaintext',
@@ -71,7 +71,7 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
   ClipBoard.writeText.mockImplementation(() => {
     throw new DOMException('Document is not focused.')
   })
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
   const editor = {
     uri: '/tmp/foo-fiiHjX/test.txt',
     languageId: 'plaintext',

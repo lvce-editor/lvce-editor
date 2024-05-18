@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
@@ -106,7 +106,7 @@ test('editorGoToTypeDefinition - error', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
@@ -129,8 +129,8 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
     throw new Error('Failed to execute type definition provider: No type definition provider found')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => { })
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
@@ -158,7 +158,7 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
     return undefined
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No type definition found for 'line'", false)

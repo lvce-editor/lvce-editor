@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -26,7 +26,7 @@ const EditorSelection = await import('../src/parts/EditorSelection/EditorSelecti
 
 test('editorCut', async () => {
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => { })
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,
@@ -72,7 +72,7 @@ test('editorCut - error with clipboard', async () => {
 
 test.skip('editorCut - no selection', async () => {
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => { })
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,

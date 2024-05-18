@@ -1,11 +1,10 @@
 // @ts-nocheck
-import { jest } from '@jest/globals'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { afterEach, expect, jest, test } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
+import * as EditorBlur from '../src/parts/EditorCommand/EditorCommandBlur.js'
 import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as EditorBlur from '../src/parts/EditorCommand/EditorCommandBlur.js'
 
 // TODO naming: show/hide vs open/close
 
