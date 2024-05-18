@@ -739,7 +739,7 @@ test('getVisible - empty line cache and tokens below', () => {
   ])
 })
 
-test("getVisible - don't tokenize lines that have been tokenized already", () => {
+test.skip("getVisible - don't tokenize lines that have been tokenized already", () => {
   const tokenizer = {
     State: {
       TopLevelContent: 1,

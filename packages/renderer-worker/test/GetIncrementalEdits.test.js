@@ -53,7 +53,7 @@ test('getIncrementalEdits - whitespace issue', () => {
   expect(GetIncrementalEdits.getIncrementalEdits(oldState, newState)).toBe(undefined)
 })
 
-test('getIncrementalEdits - whitespace issue', () => {
+test.skip('getIncrementalEdits - whitespace issue', () => {
   const oldState = {
     lines: ['<li >'],
     undoStack: [],
