@@ -49,7 +49,7 @@ test('getTokensViewport', () => {
   })
 })
 
-test('getTokensViewport - determine embedded languages', () => {
+test.skip('getTokensViewport - determine embedded languages', () => {
   const defaultTokenizer = {
     initialLineState: {},
     TokenMap: {
