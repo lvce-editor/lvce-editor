@@ -62,7 +62,6 @@ test('string - error', () => {
 })
 
 
-
 test('boolean', () => {
   expect(Assert.boolean(true)).toBeUndefined()
 })
