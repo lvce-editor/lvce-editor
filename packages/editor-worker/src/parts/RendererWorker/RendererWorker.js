@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {string} method
+ * @param  {...any} params
+ * @returns {Promise<any>}
+ */
 export const invoke = async (method, ...params) => {
-  throw new Error('not implemented')
+  console.warn('not implemented')
 }

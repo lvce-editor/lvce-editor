@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Definition from '../Definition/Definition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 const getTokenIndex = (tokens, offset) => {
