@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Definition from '../Definition/Definition.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 const getTokenIndex = (tokens, offset) => {
@@ -35,7 +35,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y) => {
     const definitionRelativeStartX = definitionStartPosition.columnIndex
     // @ts-ignore
     const definitionRelativeEndX = definitionEndPosition.columnIndex
-    const definitionRelativeY = definitionStartPosition.rowIndex - editor.minLineY
+    // const definitionRelativeY = definitionStartPosition.rowIndex - editor.minLineY
 
     const lineTokenMap = editor.lineCache[definitionStartPosition.rowIndex + 1]
     console.log({ tokenMap: lineTokenMap })
@@ -52,13 +52,13 @@ export const handleMouseMoveWithAltKey = async (editor, x, y) => {
     }
     console.log({ token: tokenIndex })
     // .tokens
-    await RendererProcess.invoke(
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorText,
-      /* method */ 'highlightAsLink',
-      /* relativeY */ definitionRelativeY,
-      /* tokenIndex */ tokenIndex,
-    )
+    // await RendererProcess.invoke(
+    //   /* Viewlet.invoke */ 'Viewlet.send',
+    //   /* id */ ViewletModuleId.EditorText,
+    //   /* method */ 'highlightAsLink',
+    //   /* relativeY */ definitionRelativeY,
+    //   /* tokenIndex */ tokenIndex,
+    // )
     console.log({ definition })
     return editor
   } catch (error) {
