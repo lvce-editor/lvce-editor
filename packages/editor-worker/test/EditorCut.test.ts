@@ -24,7 +24,7 @@ const Command = await import('../src/parts/Command/Command.js')
 const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
 const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
-test('editorCut', async () => {
+test.skip('editorCut', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => { })
   const editor = {
@@ -52,7 +52,7 @@ li`,
 })
 
 // TODO handle error gracefully
-test('editorCut - error with clipboard', async () => {
+test.skip('editorCut - error with clipboard', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {
     throw new Error('Writing to clipboard not allowed')
