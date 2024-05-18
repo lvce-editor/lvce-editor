@@ -3,6 +3,8 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
+import * as Id from '../Id/Id.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
@@ -39,9 +41,11 @@ export const handleTokenizeChange = () => {
   }
   const state = instance.state
   const tokenizer = Tokenizer.getTokenizer(state.languageId)
+  const tokenizerId = Id.create()
+  TokenizerMap.set(tokenizerId, tokenizer)
   const newState = {
     ...instance.state,
-    tokenizer,
+    tokenizerId,
   }
   Viewlet.setState('EditorText', newState)
 }
@@ -107,6 +111,8 @@ export const loadContent = async (state, savedState, context) => {
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
   const tokenizer = Tokenizer.getTokenizer(languageId)
+  const tokenizerId = Id.create()
+  TokenizerMap.set(tokenizerId, tokenizer)
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
@@ -140,7 +146,6 @@ export const loadContent = async (state, savedState, context) => {
     rowHeight,
     fontSize,
     letterSpacing,
-    tokenizer,
     selections: savedSelections,
     fontFamily,
     links,
@@ -155,6 +160,7 @@ export const loadContent = async (state, savedState, context) => {
     isQuickSuggestionsEnabled,
     isAutoClosingTagsEnabled,
     completionTriggerCharacters,
+    tokenizerId,
   }
 }
 
