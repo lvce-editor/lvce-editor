@@ -1,5 +1,4 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 jest.unstable_mockModule('../src/parts/Definition/Definition.js', () => ({
@@ -45,13 +44,15 @@ test('editorGoToDefinition', async () => {
       endOffset: 1,
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
+  // @ts-ignore
+  RendererWorker.state.send = jest.fn((message) => {
     // @ts-ignore
     switch (message[0]) {
       case 909090:
         // @ts-ignore
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
+        // @ts-ignore
+        RendererWorker.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')
@@ -75,13 +76,15 @@ test('editorGoToDefinition - start offset is 0', async () => {
       endOffset: 0,
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
+  // @ts-ignore
+  RendererWorker.state.send = jest.fn((message) => {
     // @ts-ignore
     switch (message[0]) {
       case 909090:
         // @ts-ignore
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
+        // @ts-ignore
+        RendererWorker.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')
