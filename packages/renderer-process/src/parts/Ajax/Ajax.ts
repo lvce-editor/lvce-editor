@@ -35,11 +35,6 @@ export const getJson = async (url, options = {}) => {
   }
 }
 
-export const getJsonLocal = (url) => {
-  return getJson(url, {
-    mode: 'no-cors',
-  })
-}
 
 export const getText = async (url, options = {}) => {
   try {
@@ -50,23 +45,5 @@ export const getText = async (url, options = {}) => {
       throw new VError(error, `Failed to request text from "${url}". Make sure that the server is running and has CORS enabled`)
     }
     throw new VError(error, `Failed to request text from "${url}"`)
-  }
-}
-
-export const getBlob = async (url, options = {}) => {
-  try {
-    const { default: ky } = await LoadKy.loadKy()
-    return await ky(url, options).blob()
-  } catch (error) {
-    throw new VError(error, `Failed to request blob from "${url}"`)
-  }
-}
-
-export const getResponse = async (url, options) => {
-  try {
-    const { default: ky } = await LoadKy.loadKy()
-    return await ky(url, options)
-  } catch (error) {
-    throw new VError(error, `Failed to request response from "${url}"`)
   }
 }

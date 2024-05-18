@@ -46,23 +46,11 @@ export const array = (value) => {
   }
 }
 
-export const float32Array = (value) => {
-  if (!(value instanceof Float32Array)) {
-    throw new AssertionError('expected value to be of float32Array')
-  }
-}
 
 export const string = (value) => {
   const type = getType(value)
   if (type !== 'string') {
     throw new AssertionError('expected value to be of type string')
-  }
-}
-
-export const null_ = (value) => {
-  const type = getType(value)
-  if (type !== 'null') {
-    throw new AssertionError('expected value to be of type null')
   }
 }
 

@@ -88,8 +88,6 @@ export const BracketLeft = '['
 export const Backslash = '\\'
 export const BracketRight = ']'
 export const Quote = `'`
-export const OEM_8 = '???'
-export const IntlBackslash = '???'
 
 export const Star = '*'
 export const Plus = '+'
