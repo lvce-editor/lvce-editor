@@ -1,6 +1,7 @@
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 
 export const getIncrementalEdits = (oldState, newState) => {
   const lastChanges = newState.undoStack.at(-1)
@@ -12,19 +13,21 @@ export const getIncrementalEdits = (oldState, newState) => {
       const oldLine = oldState.lines[rowIndex]
       const newLine = lines[rowIndex]
       const initialLineState = newState.lineCache[rowIndex] || GetInitialLineState.getInitialLineState(newState.tokenizer.initialLineState)
+      const oldTokenizer = TokenizerMap.get(oldState.tokenizerId)
+      const newTokenizer = TokenizerMap.get(newState.tokenizerId)
       const { tokens: oldTokens } = SafeTokenizeLine.safeTokenizeLine(
         newState.languageId,
-        oldState.tokenizer.tokenizeLine,
+        oldTokenizer.tokenizeLine,
         oldLine,
         initialLineState,
-        newState.tokenizer.hasArrayReturn,
+        newTokenizer.hasArrayReturn,
       )
       const { tokens: newTokens, lineState } = SafeTokenizeLine.safeTokenizeLine(
         newState.languageId,
-        newState.tokenizer.tokenizeLine,
+        newTokenizer.tokenizeLine,
         newLine,
         initialLineState,
-        newState.tokenizer.hasArrayReturn,
+        newTokenizer.hasArrayReturn,
       )
       if (newTokens.length !== oldTokens.length) {
         return undefined
