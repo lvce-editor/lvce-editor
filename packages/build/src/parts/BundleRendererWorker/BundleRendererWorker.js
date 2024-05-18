@@ -111,6 +111,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/diff-worker/dist/diffWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/EditorWorkerUrl/EditorWorkerUrl.js`,
+      occurrence: '/packages/editor-worker/src/editorWorkerMain.ts',
+      replacement: `/packages/editor-worker/dist/editorWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/Product/Product.js`,
       occurrence: `productNameLong = 'Lvce Editor - OSS'`,
       replacement: `productNameLong = '${product.nameLong}'`,
