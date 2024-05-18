@@ -1,6 +1,5 @@
 import { expect, jest, test } from '@jest/globals'
 import * as EditorDeleteSelection from '../src/parts/EditorCommand/EditorCommandDeleteSelection.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 test.skip('editorDeleteSelection', () => {
@@ -28,7 +27,6 @@ test.skip('editorDeleteSelection', () => {
     columnWidth: 8,
     tokenizer: TokenizePlainText,
   }
-  RendererProcess.state.send = jest.fn()
   EditorDeleteSelection.editorDeleteSelection(editor)
   expect(editor.lines).toEqual(['lne 2'])
   expect(editor.selections).toEqual([])
@@ -47,7 +45,6 @@ test('editorDeleteSelection - when there is no selection', () => {
     },
     selections: [],
   }
-  RendererProcess.state.send = jest.fn()
   EditorDeleteSelection.editorDeleteSelection(editor)
   expect(editor.lines).toEqual(['line 1', 'line 2'])
   expect(editor.selections).toEqual([])

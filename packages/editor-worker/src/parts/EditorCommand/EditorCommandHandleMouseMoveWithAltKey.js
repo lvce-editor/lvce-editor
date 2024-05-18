@@ -1,11 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-// @ts-ignore
-import * as Definition from '../Definition/Definition.js'
-// @ts-ignore
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
-// @ts-ignore
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
