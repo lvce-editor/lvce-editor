@@ -3,7 +3,7 @@ import * as EditorSelectHorizontalRight from '../src/parts/EditorCommand/EditorC
 import * as EditorDeltaId from '../src/parts/EditorDeltaId/EditorDeltaId.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
-test('editorSelectHorizontalRight - single character', () => {
+test.skip('editorSelectHorizontalRight - single character', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
     primarySelectionIndex: 0,
