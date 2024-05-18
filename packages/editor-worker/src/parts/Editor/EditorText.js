@@ -1,9 +1,4 @@
-import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
-import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
-import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
 // const getTokens = (editor) => {
 //   const tokens = []
@@ -56,17 +51,6 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 // to implement for now
 
 // TODO only send changed lines to renderer process instead of all lines in viewport
-
-const invalidateLine = (editor, index) => {
-  editor.validLines[index] = false
-  if (index < editor.invalidStartIndex) {
-    editor.invalidStartIndex = index
-  }
-}
-
-const applyChangesToSyntaxHighlighting = (editor, changes) => {
-  // TODO invalidate lines that are affected
-}
 
 // const getTokensIncremental = (editor, min, max) => {
 //   const currentLength = editor.lineStateCache.length
@@ -125,6 +109,7 @@ const getStartDefaults = (tokens, minOffset) => {
   }
 }
 
+// @ts-ignore
 const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize, tabSize, width, deltaX, averageCharWidth, minOffset, maxOffset) => {
   const lineInfo = []
   const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
@@ -174,155 +159,4 @@ const getDifference = (start, averageCharWidth, deltaX) => {
   const beforeWidth = start * averageCharWidth
   const difference = beforeWidth - deltaX
   return difference
-}
-
-const getLineInfoDefault = (
-  line,
-  tokenResults,
-  embeddedResults,
-  decorations,
-  TokenMap,
-  lineOffset,
-  normalize,
-  tabSize,
-  width,
-  deltaX,
-  averageCharWidth,
-  minOffset,
-  maxOffset,
-) => {
-  const lineInfo = []
-  let decorationIndex = 0
-  for (; decorationIndex < decorations.length; decorationIndex += 3) {
-    const decorationOffset = decorations[decorationIndex]
-    if (decorationOffset >= lineOffset) {
-      break
-    }
-  }
-  const tokens = tokenResults.tokens
-  let { startIndex, start, end } = getStartDefaults(tokens, minOffset)
-  const difference = getDifference(start, averageCharWidth, deltaX)
-  const tokensLength = tokens.length
-  for (let i = startIndex; i < tokensLength; i += 2) {
-    const tokenType = tokens[i]
-    const tokenLength = tokens[i + 1]
-    const decorationOffset = decorations[decorationIndex]
-    let extraClassName = ''
-    if (decorationOffset !== undefined && decorationOffset - lineOffset === start) {
-      const decorationLength = decorations[++decorationIndex]
-      const decorationType = decorations[++decorationIndex]
-      const decorationModifiers = decorations[++decorationIndex]
-      // console.log('MATCHING DECORATION', {
-      //   decorationIndex,
-      //   decorationLength,
-      //   decorationType,
-      //   decorationModifiers,
-      // })
-      extraClassName = GetDecorationClassName.getDecorationClassName(decorationType)
-    }
-
-    end += tokenLength
-    const text = line.slice(start, end)
-    const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
-    const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
-    lineInfo.push(normalizedText, className)
-    start = end
-    if (end >= maxOffset) {
-      break
-    }
-  }
-  return {
-    lineInfo,
-    difference,
-  }
-}
-
-const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize, width, deltaX, averageCharWidth) => {
-  const { minOffset, maxOffset } = getOffsets(deltaX, width, averageCharWidth)
-  if (embeddedResults.length > 0 && tokenResults.embeddedResultIndex !== undefined) {
-    const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
-    if (embeddedResult && embeddedResult.isFull) {
-      return getLineInfoEmbeddedFull(embeddedResults, tokenResults, line, normalize, tabSize, width, deltaX, averageCharWidth, minOffset, maxOffset)
-    }
-  }
-  return getLineInfoDefault(
-    line,
-    tokenResults,
-    embeddedResults,
-    decorations,
-    TokenMap,
-    lineOffset,
-    normalize,
-    tabSize,
-    width,
-    deltaX,
-    averageCharWidth,
-    minOffset,
-    maxOffset,
-  )
-}
-
-// TODO need lots of tests for this
-const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLineY, minLineOffset, width, deltaX, averageCharWidth) => {
-  const result = []
-  const differences = []
-  const { lines, tokenizer, decorations } = editor
-  const { TokenMap } = tokenizer
-  let offset = minLineOffset
-  const tabSize = 2
-  for (let i = minLineY; i < maxLineY; i++) {
-    const line = lines[i]
-    const normalize = NormalizeText.shouldNormalizeText(line)
-    const { lineInfo, difference } = getLineInfo(
-      line,
-      tokens[i - minLineY],
-      embeddedResults,
-      decorations,
-      TokenMap,
-      offset,
-      normalize,
-      tabSize,
-      width,
-      deltaX,
-      averageCharWidth,
-    )
-    result.push(lineInfo)
-    differences.push(difference)
-    offset += line.length + 1
-  }
-  return {
-    result,
-    differences,
-  }
-}
-
-export const getVisible = (editor) => {
-  // console.log({ editor })
-  // TODO should separate rendering from business logic somehow
-  // currently hard to test because need to mock editor height, top, left,
-  // invalidStartIndex, lineCache, etc. just for testing editorType
-  // editor.invalidStartIndex = changes[0].start.rowIndex
-  const { minLineY, numberOfVisibleLines, lines, width, deltaX, fontWeight, fontSize, fontFamily, letterSpacing, charWidth } = editor
-  const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
-  const { tokens, tokenizersToLoad, embeddedResults } = GetTokensViewport.getTokensViewport(editor, minLineY, maxLineY)
-  const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
-  const averageCharWidth = charWidth
-  const { result, differences } = getLineInfosViewport(
-    editor,
-    tokens,
-    embeddedResults,
-    minLineY,
-    maxLineY,
-    minLineOffset,
-    width,
-    deltaX,
-    averageCharWidth,
-  )
-  if (tokenizersToLoad.length > 0) {
-    LoadTokenizers.loadTokenizers(tokenizersToLoad)
-  }
-  return {
-    textInfos: result,
-    differences,
-  }
 }
