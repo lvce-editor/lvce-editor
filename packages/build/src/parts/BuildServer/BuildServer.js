@@ -8,6 +8,7 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
@@ -846,6 +847,20 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
+
+  const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copyEditorWorkerFiles')
+  await Copy.copy({
+    from: editorWorkerCachePath,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/editor-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyEditorWorkerFiles')
+
   const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
     commitHash,
     platform: 'remote',
