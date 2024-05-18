@@ -13,10 +13,21 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
+import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.js'
+import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.js'
+import * as SelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.js'
+import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
+import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
+import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
+import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
 
 export const commandMap = {
+  'Editor.copyLineDown': CopyLineDown.copyLineDown,
+  'Editor.copyLineUp': CopyLineUp.copyLineUp,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
+  'Editor.cursorDown': CursorDown.cursorDown,
+  'Editor.cursorUp': CursorUp.cursorUp,
   'Editor.cursorWordLeft': CursorWordLeft.cursorWordLeft,
   'Editor.cursorWordPartLeft': CursorWordPartLeft.cursorWordPartLeft,
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
@@ -24,10 +35,13 @@ export const commandMap = {
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
   'Editor.deleteWordLeft': DeleteWordLeft.deleteWordLeft,
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
-  'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
-  'Editor.cursorDown': CursorDown.cursorDown,
-  'Editor.cursorUp': CursorUp.cursorUp,
-  'Editor.copyLineDown': CopyLineDown.copyLineDown,
-  'Editor.copyLineUp': CopyLineUp.copyLineUp,
+  'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.selectAll': SelectAll.selectAll,
+  'Editor.selectAllLeft': SelectAllLeft.editorSelectAllLeft,
+  'Editor.selectAllRight': SelectAllRight.editorSelectAllRight,
+  'Editor.selectCharacterLeft': SelectCharacterLeft.selectCharacterLeft,
+  'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
+  'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
+  'Editor.selectWordRight': SelectWordRight.selectWordRight,
 }
