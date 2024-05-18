@@ -1,11 +1,7 @@
-import * as Command from '../Command/Command.js'
-// @ts-ignore
-import * as Editor from '../Editor/Editor.js'
-// @ts-ignore
+import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as Editor from '../Editor/Editor.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
-// @ts-ignore
-import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 export const cutSelectedText = async (editor) => {
@@ -15,6 +11,6 @@ export const cutSelectedText = async (editor) => {
   const selectionChanges = new Uint32Array([startRowIndex, startColumnIndex, endRowIndex, endColumnIndex])
   const text = JoinLines.joinLines(changes[0].deleted)
   // TODO remove selected text from document
-  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ text)
+  await ClipBoard.writeText(text)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }
