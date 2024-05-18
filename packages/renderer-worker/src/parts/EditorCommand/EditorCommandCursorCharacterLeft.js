@@ -1,7 +1,9 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorCursorHorizontalLeft from './EditorCommandCursorHorizontalLeft.js'
+import * as EditorDelta from './EditorCommandDelta.js'
+import * as EditorDeltaId from '../EditorDeltaId/EditorDeltaId.js'
 
 export const cursorCharacterLeft = (editor) => {
-  return EditorWorker.invoke('Editor.cursorCharacterLeft', editor)
+  return EditorCursorHorizontalLeft.editorCursorHorizontalLeft(editor, EditorDeltaId.CharacterLeft)
 }
 
 export const cursorLeft = cursorCharacterLeft
