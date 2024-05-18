@@ -51,6 +51,7 @@ export const create = (id, uri, x, y, width, height, args) => {
     }),
     inputSource: InputSource.User,
     args,
+    focused: false,
   }
 }
 
@@ -96,6 +97,7 @@ export const loadContent = async (state) => {
     cursorOffset: value.length,
     provider,
     inputSource: InputSource.Script,
+    focused: true,
   }
 }
 

@@ -94,6 +94,19 @@ export const focus = (viewletId) => {
   }
 }
 
+export const focusSelector = (viewletId, selector) => {
+  const instance = state.instances[viewletId]
+  if (!instance) {
+    return
+  }
+  const { $Viewlet } = instance.state
+  const $Element = $Viewlet.querySelector(selector)
+  if (!$Element) {
+    return
+  }
+  $Element.focus()
+}
+
 /**
  * @deprecated
  */
@@ -242,6 +255,9 @@ export const sendMultiple = (commands) => {
         // @ts-ignore
         setDom2(viewletId, method, ...args)
         break
+      case 'Viewlet.focusSelector':
+        // @ts-ignore
+        return focusSelector(viewletId, method, ...args)
       default: {
         invoke(viewletId, method, ...args)
       }
