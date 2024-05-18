@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
-import * as EditorSelectHorizontalRight from '../EditorCommand/EditorCommandSelectHorizontalRight.js'
+import * as EditorSelectHorizontalRight from '../src/parts/EditorCommand/EditorCommandSelectHorizontalRight.js'
 import * as EditorDeltaId from '../EditorDeltaId/EditorDeltaId.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test.skip('editorSelectHorizontalRight - single character', () => {
   const editor = {

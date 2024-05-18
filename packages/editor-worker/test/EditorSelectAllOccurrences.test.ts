@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorSelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelectAllOccurrences from '../src/parts/EditorCommand/EditorCommandSelectAllOccurrences.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('selectAllOccurrences - single line selection', () => {
   const editor = {
