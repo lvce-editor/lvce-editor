@@ -5,17 +5,17 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as Id from '../Id/Id.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
 
 // TODO
 export const create = (id, uri, languageId, content) => {
-  const tokenizer = Tokenizer.getTokenizer(languageId)
-
   // TODO flatten structure
   return {
     uri,
@@ -31,7 +31,6 @@ export const create = (id, uri, languageId, content) => {
     selections: new Uint32Array([0, 0, 0, 0]),
     id,
     uid: id,
-    tokenizer,
     deltaX: 0,
     deltaY: 0,
     minLineY: 0,
@@ -76,6 +75,7 @@ export const create = (id, uri, languageId, content) => {
     width: 0,
     completionUid: 0,
     lineNumbers: false,
+    tokenizerId: 0,
   }
 }
 
@@ -100,8 +100,10 @@ export const renderText = (editor) => {
 }
 
 export const setTokenizer = (editor, tokenizer) => {
-  editor.tokenizer = Tokenizer.getTokenizer(editor.languageId)
+  const tokenizerId = Id.create()
+  TokenizerMap.set(tokenizerId, Tokenizer.getTokenizer(editor.languageId))
   editor.invalidStartIndex = 0
+  editor.tokenizerId = tokenizerId
 }
 
 // TODO

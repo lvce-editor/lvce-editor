@@ -12,7 +12,7 @@ const renderLines = {
   isEqual(oldState, newState) {
     return (
       oldState.lines === newState.lines &&
-      oldState.tokenizer === newState.tokenizer &&
+      oldState.tokenizerId === newState.tokenizerId &&
       oldState.minLineY === newState.minLineY &&
       oldState.decorations === newState.decorations &&
       oldState.embeds === newState.embeds &&
