@@ -173,7 +173,7 @@ test('getVisible - normalize tabs', () => {
     deltaX: 0,
   }
   const { textInfos } = EditorText.getVisible(editor)
-  expect(textInfos).toEqual([['  test', 'Token Text']])
+  expect(textInfos).toEqual([['  test', 'Token PunctuationTag']])
 })
 
 test('getVisible - with semantic tokens decorations', () => {
