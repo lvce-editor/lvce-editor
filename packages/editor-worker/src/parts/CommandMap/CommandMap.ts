@@ -1,3 +1,5 @@
+import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.js'
+import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.js'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.js'
 import * as CursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.js'
 import * as CursorDown from '../EditorCommand/EditorCommandCursorDown.js'
@@ -5,6 +7,7 @@ import * as CursorUp from '../EditorCommand/EditorCommandCursorUp.js'
 import * as CursorWordLeft from '../EditorCommand/EditorCommandCursorWordLeft.js'
 import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPartLeft.js'
 import * as DeleteCharacterLeft from '../EditorCommand/EditorCommandDeleteCharacterLeft.js'
+import * as DeleteCharacterRight from '../EditorCommand/EditorCommandDeleteCharacterRight.js'
 import * as DeleteHorizontalRight from '../EditorCommand/EditorCommandDeleteHorizontalRight.js'
 import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js'
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
@@ -17,6 +20,7 @@ export const commandMap = {
   'Editor.cursorWordLeft': CursorWordLeft.cursorWordLeft,
   'Editor.cursorWordPartLeft': CursorWordPartLeft.cursorWordPartLeft,
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
+  'Editor.deleteCharacterRight': DeleteCharacterRight.deleteCharacterRight,
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
   'Editor.deleteWordLeft': DeleteWordLeft.deleteWordLeft,
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
@@ -24,4 +28,6 @@ export const commandMap = {
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.cursorDown': CursorDown.cursorDown,
   'Editor.cursorUp': CursorUp.cursorUp,
+  'Editor.copyLineDown': CopyLineDown.copyLineDown,
+  'Editor.copyLineUp': CopyLineUp.copyLineUp,
 }
