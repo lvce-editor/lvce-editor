@@ -1,16 +1,6 @@
-import * as EditorCursorVertical from './EditorCommandCursorVertical.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
-const getEdgePosition = (editor) => {
-  return {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
-}
-
-const getPosition = (selection) => {
-  return selection.start
-}
-
-export const cursorUp = (editor) => {
-  return EditorCursorVertical.cursorVertical(editor, getPosition, getEdgePosition, -1)
+export const cursorUp = async (editor) => {
+  const newEditor = await EditorWorker.invoke('Editor.cursorUp', editor)
+  return newEditor
 }
