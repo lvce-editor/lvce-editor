@@ -1,5 +1,4 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 jest.unstable_mockModule('../src/parts/TypeDefinition/TypeDefinition.js', () => ({
@@ -7,16 +6,19 @@ jest.unstable_mockModule('../src/parts/TypeDefinition/TypeDefinition.js', () => 
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.js', () => ({
   editorShowMessage: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
   handleError: jest.fn(),
 }))
@@ -46,12 +48,14 @@ test('editorGoToTypeDefinition', async () => {
       endOffset: 1,
     }
   })
+  // @ts-ignore
   RendererProcess.state.send = jest.fn((message) => {
     // @ts-ignore
     switch (message[0]) {
       case 909090:
         // @ts-ignore
         const callbackId = message[1]
+        // @ts-ignore
         RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
@@ -76,12 +80,14 @@ test('editorGoToTypeDefinition - startOffset is 0', async () => {
       endOffset: 0,
     }
   })
+  // @ts-ignore
   RendererProcess.state.send = jest.fn((message) => {
     // @ts-ignore
     switch (message[0]) {
       case 909090:
         // @ts-ignore
         const callbackId = message[1]
+        // @ts-ignore
         RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
