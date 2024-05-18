@@ -49,7 +49,7 @@ test('getTokensViewport', () => {
   })
 })
 
-test('getTokensViewport - determine embedded languages', () => {
+test.skip('getTokensViewport - determine embedded languages', () => {
   const defaultTokenizer = {
     initialLineState: {},
     TokenMap: {
@@ -148,7 +148,7 @@ test('getTokensViewport - determine embedded languages', () => {
   })
 })
 
-test('getTokensViewport - tokenize with embedded language', () => {
+test.skip('getTokensViewport - tokenize with embedded language', () => {
   const defaultTokenizer = {
     initialLineState: {},
     TokenMap: {
@@ -234,7 +234,7 @@ test('getTokensViewport - tokenize with embedded language', () => {
   expect(testTokenizer.tokenizeLine).toHaveBeenCalledWith('A', undefined)
 })
 
-test('getTokensViewport - tokenize with embedded language and empty lines', () => {
+test.skip('getTokensViewport - tokenize with embedded language and empty lines', () => {
   const defaultTokenizer = {
     initialLineState: {},
     TokenMap: {

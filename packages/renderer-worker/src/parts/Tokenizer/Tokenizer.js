@@ -4,6 +4,8 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerState from '../TokenizerState/TokenizerState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
+import * as Id from '../Id/Id.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const handleTokenizeChange = async () => {
@@ -14,10 +16,12 @@ export const handleTokenizeChange = async () => {
       if (!TokenizerState.isConnectedEditor(state.id)) {
         return
       }
+      const tokenizerId = Id.create()
       const tokenizer = Tokenizer.getTokenizer(state.languageId)
+      TokenizerMap.set(tokenizerId, tokenizer)
       const newState = {
         ...instance.state,
-        tokenizer,
+        tokenizerId,
         embeds: [], // force rendering
       }
       await Viewlet.setState(newState.uid, newState)
