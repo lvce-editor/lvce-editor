@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditorSelectWordLeft from '../src/parts/EditorCommand/EditorCommandSelectWordLeft.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorSelectWordLeft from '../../renderer-worker/src/parts/EditorCommand/EditorCommandSelectWordLeft.js'
+import * as EditorSelection from '../../renderer-worker/src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectWordLeft', () => {
   const editor = {

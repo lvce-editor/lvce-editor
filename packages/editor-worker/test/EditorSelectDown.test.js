@@ -1,29 +1,29 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditorSelectUp from '../src/parts/EditorCommand/EditorCommandSelectUp.js'
+import * as EditorSelectDown from '../../renderer-worker/src/parts/EditorCommand/EditorCommandSelectDown.js'
 
-test('selectUp', () => {
+test('selectDown', () => {
   const editor = {
     lines: ['1', '2'],
-    selections: new Uint32Array([1, 0, 1, 0]),
+    selections: new Uint32Array([0, 0, 0, 0]),
   }
-  const newEditor = EditorSelectUp.selectUp(editor)
+  const newEditor = EditorSelectDown.selectDown(editor)
   expect(newEditor.selections).toEqual(new Uint32Array([0, 0, 1, 0]))
 })
 
-test('selectUp - already at top', () => {
+test('selectDown - already at bottom', () => {
   const editor = {
     lines: ['1', '2'],
     selections: new Uint32Array([0, 0, 1, 0]),
   }
-  const newEditor = EditorSelectUp.selectUp(editor)
+  const newEditor = EditorSelectDown.selectDown(editor)
   expect(newEditor.selections).toEqual(new Uint32Array([0, 0, 1, 0]))
 })
 
-test('selectUp - keep indent', () => {
+test('selectDown - keep indent', () => {
   const editor = {
     lines: ['11', '22'],
-    selections: new Uint32Array([1, 1, 1, 1]),
+    selections: new Uint32Array([0, 1, 0, 1]),
   }
-  const newEditor = EditorSelectUp.selectUp(editor)
+  const newEditor = EditorSelectDown.selectDown(editor)
   expect(newEditor.selections).toEqual(new Uint32Array([0, 1, 1, 1]))
 })
