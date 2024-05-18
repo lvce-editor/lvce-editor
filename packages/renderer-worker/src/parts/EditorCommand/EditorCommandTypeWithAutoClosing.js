@@ -34,6 +34,7 @@ const openCompletion = async (editor, text) => {
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
+  console.log('type with auto closing')
   const {
     isAutoClosingBracketsEnabled,
     isAutoClosingQuotesEnabled,
