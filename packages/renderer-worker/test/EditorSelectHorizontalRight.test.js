@@ -1,5 +1,6 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as EditorSelectHorizontalRight from '../src/parts/EditorCommand/EditorCommandSelectHorizontalRight.js'
+import * as EditorDeltaId from '../src/parts/EditorDeltaId/EditorDeltaId.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectHorizontalRight - single character', () => {
@@ -8,7 +9,7 @@ test('editorSelectHorizontalRight - single character', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorSelectHorizontalRight.editorSelectHorizontalRight(editor, () => 1)).toMatchObject({
+  expect(EditorSelectHorizontalRight.editorSelectHorizontalRight(editor, EditorDeltaId.CharacterLeft)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 1),
   })
 })
