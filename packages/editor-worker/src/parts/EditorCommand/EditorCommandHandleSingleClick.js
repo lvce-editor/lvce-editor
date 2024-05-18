@@ -13,6 +13,7 @@ import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 // TODO first change cursor position, then run go to definition
 // cursor should appear at mousedown position immediately
@@ -88,7 +89,7 @@ export const handleSingleClick = async (editor, modifier, x, y) => {
     case EditorCompletionState.Loading:
       return {
         newState: newEditor,
-        commands: [],
+        commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorClick),
       }
     default:
       break
