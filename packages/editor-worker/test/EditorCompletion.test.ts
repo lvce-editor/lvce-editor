@@ -1,10 +1,7 @@
-// @ts-nocheck
 import { afterEach, expect, jest, test } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
 import * as EditorBlur from '../src/parts/EditorCommand/EditorCommandBlur.js'
 import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 
 // TODO naming: show/hide vs open/close
 
@@ -21,6 +18,7 @@ const EMPTY_EDITOR = {
 }
 
 const setState = (state) => {
+  // @ts-ignore
   Object.assign(EditorCompletion.state, state)
 }
 
