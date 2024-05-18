@@ -47,12 +47,31 @@ const getDisplayResult = (result, itemHeight, i, setSize, searchTermLength, repl
   }
 }
 
-export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY, replacement) => {
+const getFilteredResults = (results, collapsedPaths) => {
+  const filteredResults = []
+  let isExcluded = false
+  for (const result of results) {
+    if (result.type === TextSearchResultType.File) {
+      if (collapsedPaths.includes(result.text)) {
+        isExcluded = true
+      } else {
+        isExcluded = false
+      }
+    }
+    if (!isExcluded) {
+      filteredResults.push(result)
+    }
+  }
+  return filteredResults
+}
+
+export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY, replacement, collapsedPaths) => {
   const displayResults = []
+  const filteredResults = getFilteredResults(results, collapsedPaths)
   const setSize = resultCount
   let fileIndex = 0
   for (let i = 0; i < minLineY; i++) {
-    const result = results[i]
+    const result = filteredResults[i]
     switch (result.type) {
       case TextSearchResultType.File:
         fileIndex++
@@ -66,7 +85,7 @@ export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, 
     matchCount: 0,
   }
   for (let i = minLineY; i < maxLineY; i++) {
-    const result = results[i]
+    const result = filteredResults[i]
     const displayResult = getDisplayResult(result, itemHeight, i, setSize, searchTermLength, replacement)
     displayResults.push(displayResult)
     if (result.type === TextSearchResultType.File) {

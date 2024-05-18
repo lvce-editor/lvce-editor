@@ -46,6 +46,7 @@ export const create = (id, uri, x, y, width, height) => {
     focus: WhenExpression.Empty,
     loaded: false,
     message: '',
+    collapsedPaths: [],
   }
 }
 
@@ -62,6 +63,18 @@ const getSavedReplaceExpanded = (savedState) => {
   return false
 }
 
+const getSavedCollapsedPaths = (savedState) => {
+  if (
+    savedState &&
+    'collapsedPaths' in savedState &&
+    Array.isArray(savedState.collapsedPaths) &&
+    savedState.collapsedPaths.every((path) => typeof path === 'string')
+  ) {
+    return savedState.collapsedPaths
+  }
+  return []
+}
+
 const getThreads = () => {
   const value = Preferences.get('search.threads')
   if (typeof value !== 'number' || value < 0 || value > 8) {
@@ -73,6 +86,7 @@ const getThreads = () => {
 export const loadContent = async (state, savedState) => {
   const savedValue = getSavedValue(savedState)
   const savedReplaceExpanded = getSavedReplaceExpanded(savedState)
+  const savedCollapsedPaths = getSavedCollapsedPaths(savedState)
   const threads = getThreads()
   if (savedValue) {
     return ViewletSearchHandleUpdate.handleUpdate(state, {
@@ -80,6 +94,7 @@ export const loadContent = async (state, savedState) => {
       threads,
       replaceExpanded: savedReplaceExpanded,
       inputSource: InputSource.Script,
+      collapsedPaths: savedCollapsedPaths,
     })
   }
   return {
