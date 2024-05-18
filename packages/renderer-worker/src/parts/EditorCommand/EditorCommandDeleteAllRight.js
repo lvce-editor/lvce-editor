@@ -1,6 +1,6 @@
-import * as EditorDeltaId from '../EditorDeltaId/EditorDeltaId.js'
-import * as EditorDeleteHorizontalRight from './EditorCommandDeleteHorizontalRight.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
-export const deleteAllRight = (editor) => {
-  return EditorDeleteHorizontalRight.editorDeleteHorizontalRight(editor, EditorDeltaId.LineEnd)
+export const deleteAllRight = async (editor) => {
+  const newEditor = await EditorWorker.invoke('Editor.deleteAllRight', editor)
+  return newEditor
 }
