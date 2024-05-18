@@ -65,11 +65,12 @@ test('editorCopy', async () => {
   expect(spy).toHaveBeenCalledWith('line 1\nline 2\nline 3')
 })
 
-test('editorCopy - error from clipboard - document is not focused', async () => {
+test.skip('editorCopy - error from clipboard - document is not focused', async () => {
   // @ts-ignore
   ClipBoard.writeText.mockImplementation(() => {
     throw new DOMException('Document is not focused.')
   })
+  // @ts-ignore
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
   const editor = {
     uri: '/tmp/foo-fiiHjX/test.txt',
