@@ -1,6 +1,6 @@
-import * as Command from '../Command/Command.js'
-import * as Editor from '../Editor/Editor.js'
+import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandReplaceRange from './EditorCommandReplaceRange.js'
 
 export const cutLine = async (editor) => {
@@ -10,6 +10,6 @@ export const cutLine = async (editor) => {
   const replaceRange = new Uint32Array([startRowIndex, 0, startRowIndex, line.length])
   const changes = EditorCommandReplaceRange.replaceRange(editor, replaceRange, [''], EditOrigin.EditorCut)
   const selectionChanges = new Uint32Array([startRowIndex, 0, startRowIndex, 0])
-  await Command.execute('ClipBoard.writeText', /* text */ line)
+  await ClipBoard.writeText(line)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }
