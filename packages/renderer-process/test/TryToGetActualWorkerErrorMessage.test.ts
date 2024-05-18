@@ -33,7 +33,7 @@ test('getActualErrorMessage - missing content type header', async () => {
     })
   }
   expect(await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({ url, name })).toBe(
-    `Failed to start test worker: Content type for worker must be application/javascript`,
+    `Failed to start test worker: Content type for worker must be application/javascript but is text/plain`,
   )
 })
 
