@@ -6,14 +6,9 @@ import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import { VError } from '../VError/VError.ts'
 import * as ViewletModule from '../ViewletModule/ViewletModule.ts'
+import { state } from '../ViewletState/ViewletState.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
-export const state = {
-  instances: Object.create(null),
-  currentSideBarView: undefined,
-  currentPanelView: undefined,
-  modules: Object.create(null),
-}
 
 export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)

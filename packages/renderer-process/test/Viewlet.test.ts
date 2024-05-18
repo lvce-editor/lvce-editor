@@ -4,6 +4,7 @@
 import { beforeEach, expect, test } from '@jest/globals'
 import * as Layout from '../src/parts/Layout/Layout.ts'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.ts'
+import * as ViewletState from '../src/parts/ViewletState/ViewletState.ts'
 
 beforeEach(() => {
   // @ts-ignore
@@ -23,5 +24,5 @@ test.skip('appendViewlet - callbacks should be invoked', async () => {
   Viewlet.invoke('Extensions', 'setExtensions', [])
   // @ts-ignore
   await Viewlet.appendViewlet('SideBar', 'Extensions')
-  expect(Viewlet.state.instances.SideBar.state.$SideBar.textContent).toContain('ExtensionsNo extensions found.')
+  expect(ViewletState.state.instances.SideBar.state.$SideBar.textContent).toContain('ExtensionsNo extensions found.')
 })

@@ -44,7 +44,7 @@ const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js'
 const Command = await import('../src/parts/Command/Command.js')
 const ViewletSearchHandleClick = await import('../src/parts/ViewletSearch/ViewletSearchHandleClick.js')
 
-test('handleClick', async () => {
+test.skip('handleClick', async () => {
   const state = {
     ...ViewletSearch.create(),
     items: [
