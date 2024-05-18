@@ -27,6 +27,7 @@ const renderLines = {
     }
     console.log('ren lin')
     const { textInfos, differences } = EditorText.getVisible(newState)
+    console.log({ textInfos, differences })
     newState.differences = differences
     const dom = GetEditorRowsVirtualDom.getEditorRowsVirtualDom(textInfos, differences)
     return [/* method */ 'setText', dom]

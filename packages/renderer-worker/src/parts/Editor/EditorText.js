@@ -1,6 +1,7 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -266,7 +267,8 @@ const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap,
 const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLineY, minLineOffset, width, deltaX, averageCharWidth) => {
   const result = []
   const differences = []
-  const { lines, tokenizer, decorations } = editor
+  const { lines, tokenizerId, decorations } = editor
+  const tokenizer = TokenizerMap.get(tokenizerId)
   const { TokenMap } = tokenizer
   let offset = minLineOffset
   const tabSize = 2
