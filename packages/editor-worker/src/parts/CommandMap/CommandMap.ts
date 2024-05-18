@@ -17,6 +17,8 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
+import * as CursorWordRight from '../EditorCommand/EditorCommandCursorWordRight.js'
+import * as CursorWordPartRight from '../EditorCommand/EditorCommandCursorWordPartRight.js'
 
 export const commandMap = {
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
@@ -38,4 +40,6 @@ export const commandMap = {
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.cursorWordRight': CursorWordRight.cursorWordRight,
+  'Editor.cursorWordPartRight': CursorWordPartRight.cursorWordPartRight,
 }
