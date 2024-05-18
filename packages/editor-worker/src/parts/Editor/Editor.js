@@ -1,107 +1,13 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
-import * as EditorText from './EditorText.js'
 
-// TODO
-export const create = (id, uri, languageId, content) => {
-  const tokenizer = Tokenizer.getTokenizer(languageId)
-
-  // TODO flatten structure
-  return {
-    uri,
-    languageId,
-    lines: SplitLines.splitLines(content),
-    // TODO cursor should be part of selection,
-    // codemirror has selections: Selection[]
-    //            selectionIndex: number
-
-    // TODO how to get the trigger characters here from extension host
-    completionTriggerCharacters: [],
-    primarySelectionIndex: 0,
-    selections: new Uint32Array([0, 0, 0, 0]),
-    id,
-    uid: id,
-    tokenizer,
-    deltaX: 0,
-    deltaY: 0,
-    minLineY: 0,
-    maxLineY: 0,
-    numberOfVisibleLines: 0,
-    finalY: 0,
-    finalDeltaY: 0,
-    height: 0,
-    y: 0,
-    x: 0,
-    columnWidth: 0,
-    rowHeight: 0,
-    fontSize: 15, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
-    letterSpacing: 0,
-    scrollBarWidth: 0,
-    scrollBarHeight: 0,
-    undoStack: [],
-    // TODO maybe put these into separate tokenization module
-    lineCache: [],
-    validLines: [],
-    invalidStartIndex: 0,
-    decorations: [],
-    focused: false,
-    /**
-     * Offset at which the vertical scrollbar thumb has been clicked
-     * TODO: rename this to handleOffsetY
-     */
-    handleOffset: 0,
-    /**
-     * Offset at which the horizontal scrollbar thumb has been clicked
-     */
-    handleOffsetX: 0,
-    itemHeight: 20,
-    fontFamily: '',
-    fontWeight: 400,
-    tabSize: 2,
-    cursorWidth: 2,
-    completionState: EditorCompletionState.None,
-    longestLineWidth: 0,
-    minimumSliderSize: MinimumSliderSize.minimumSliderSize,
-    differences: [],
-    width: 0,
-    completionUid: 0,
-    lineNumbers: false,
-  }
-}
+export const create = (id, uri, languageId, content) => {}
 
 export const dispose = (id) => {
   // delete state.editors[id]
-}
-
-export const renderText = (editor) => {
-  Assert.object(editor)
-  const textInfos = EditorText.getVisible(editor)
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'EditorText',
-    /* method */ 'renderText',
-    /* scrollBarY */ editor.scrollBarY,
-    /* scrollBarHeight */ editor.scrollBarHeight,
-    /* textInfos */ textInfos,
-    /* fontSize */ editor.fontSize, // TODO only send these properties once on first render
-    /* lineHeight */ editor.rowHeight,
-    /* letterSpacing */ editor.letterSpacing,
-  )
-}
-
-export const setTokenizer = (editor, tokenizer) => {
-  editor.tokenizer = Tokenizer.getTokenizer(editor.languageId)
-  editor.invalidStartIndex = 0
 }
 
 // TODO
@@ -111,39 +17,6 @@ export const setDeltaYFixedValue = (editor, value) => {
 
 export const setDeltaY = (editor, value) => {
   return setDeltaYFixedValue(editor, editor.deltaY + value)
-}
-
-export const scheduleSelections = (editor, selectionEdits) => {
-  return EditorSelection.setSelections(editor, selectionEdits)
-}
-
-export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, deltaY) => {
-  Assert.object(editor)
-  Assert.uint32array(selectionEdits)
-  Assert.number(deltaY)
-  const newEditor1 = EditorSelection.setSelections(editor, selectionEdits)
-  const newEditor2 = EditorScrolling.setDeltaY(newEditor1, deltaY)
-  return newEditor2
-  // EditorScrolling.setDeltaY(editor, deltaY)
-  // EditorSelection.setSelections(editor, selectionEdits)
-  // const cursorInfos = EditorCursor.getVisible(editor)
-  // const selectionInfos = EditorSelection.getVisible(editor)
-  // const textInfos = EditorText.getVisible(editor)
-  // // TODO scrollbar calculation duplicate code
-  // const scrollBarY =
-  //   (editor.deltaY / editor.finalDeltaY) *
-  //   (editor.height - editor.scrollBarHeight)
-  // const scrollBarHeight = editor.scrollBarHeight
-  // RendererProcess.send([
-  //   /* Viewlet.invoke */ 'Viewlet.send',
-  //   /* id */ 'EditorText',
-  //   /* method */ 'renderTextAndCursorsAndSelections',
-  //   /* deltaY */ scrollBarY,
-  //   /* scrollBarHeight */ scrollBarHeight,
-  //   /* textInfos */ textInfos,
-  //   /* cursorInfos */ cursorInfos,
-  //   /* selectionInfos */ selectionInfos,
-  // ])
 }
 
 const isAutoClosingChange = (change) => {
@@ -221,8 +94,6 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
     invalidStartIndex,
     autoClosingRanges,
   }
-  GlobalEventBus.emitEvent('editor.change', newEditor, changes)
-
   return newEditor
 }
 export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
@@ -245,7 +116,6 @@ export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
     // undoStack: [...editor.undoStack.slice(0, -2)],
     invalidStartIndex,
   }
-  GlobalEventBus.emitEvent('editor.change', newEditor, changes)
   return newEditor
 }
 
@@ -275,7 +145,6 @@ export const scheduleDocument = async (editor, changes) => {
     invalidStartIndex,
   }
   // TODO change event should be emitted after rendering
-  GlobalEventBus.emitEvent('editor.change', editor, changes)
   return newEditor
   // RendererProcess.send([
   //   /* Viewlet.invoke */ 'Viewlet.send',
@@ -314,24 +183,3 @@ export const setBounds = (editor, x, y, width, height, columnWidth) => {
     finalDeltaY,
   }
 }
-
-export const setText = (editor, text) => {
-  const lines = SplitLines.splitLines(text)
-  const { itemHeight, numberOfVisibleLines, minimumSliderSize } = editor
-  const total = lines.length
-  const maxLineY = Math.min(numberOfVisibleLines, total)
-  const finalY = Math.max(total - numberOfVisibleLines, 0)
-  const finalDeltaY = finalY * itemHeight
-  const contentHeight = lines.length * editor.rowHeight
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(editor.height, contentHeight, minimumSliderSize)
-  return {
-    ...editor,
-    lines,
-    maxLineY,
-    finalY,
-    finalDeltaY,
-    scrollBarHeight,
-  }
-}
-
-export * from './EditorRender.js'
