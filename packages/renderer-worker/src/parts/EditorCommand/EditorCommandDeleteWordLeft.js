@@ -1,11 +1,12 @@
+import * as EditorDeltaId from '../EditorDeltaId/EditorDeltaId.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
-export const deleteWordLeft = async (editor) => {
-  const { newState } = await EditorWorker.invoke('Editor.deleteWordLeft', editor)
+export const deleteWordLeft = (editor) => {
+  const newEditor = EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDeltaId.WordLeft)
   return {
-    newState,
-    commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newState, EditorFunctionType.HandleEditorDeleteLeft),
+    newState: newEditor,
+    commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorDeleteLeft),
   }
 }
