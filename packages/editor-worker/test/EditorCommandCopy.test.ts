@@ -15,8 +15,6 @@ beforeAll(() => {
 })
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
-const Command = await import('../src/parts/Command/Command.js')
-
 const EditorCopy = await import('../src/parts/EditorCommand/EditorCommandCopy.js')
 
 beforeAll(() => {
