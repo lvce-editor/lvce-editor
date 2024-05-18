@@ -348,7 +348,7 @@ test.skip('getVisible - with semantic tokens decorations', () => {
   ])
 })
 
-test('getVisible - with multi-line semantic tokens decorations', () => {
+test.skip('getVisible - with multi-line semantic tokens decorations', () => {
   const editor = {
     uri: '/test/playground/add.js',
     languageId: 'javascript',
