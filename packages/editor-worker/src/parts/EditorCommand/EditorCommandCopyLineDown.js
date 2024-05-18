@@ -1,7 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
-// @ts-ignore
+import * as Assert from '../Assert/Assert.ts'
 import * as Editor from '../Editor/Editor.js'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
 // TODO handle multiline selection
 // TODO handle multiple cursors
