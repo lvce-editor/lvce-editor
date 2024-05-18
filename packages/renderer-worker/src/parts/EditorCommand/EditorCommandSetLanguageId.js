@@ -10,11 +10,9 @@ export const setLanguageId = async (editor, languageId) => {
   await Tokenizer.loadTokenizer(languageId)
   const existing = TokenizerMap.get(editor.tokenizerId)
   const tokenizer = Tokenizer.getTokenizer(languageId)
-  console.log('same')
   if (tokenizer === existing) {
     return editor
   }
-  console.log('diff', tokenizer)
   // TODO update syntax highlighting
   // TODO get edits
 
