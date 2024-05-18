@@ -1,5 +1,6 @@
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
+import * as GetEditorDeltaFunction from '../GetEditorDeltaFunction/GetEditorDeltaFunction.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
@@ -35,7 +36,8 @@ const getChanges = (editor, getDelta) => {
   return changes
 }
 
-export const editorDeleteHorizontalRight = (editor, getDelta) => {
-  const changes = getChanges(editor, getDelta)
+export const editorDeleteHorizontalRight = (editor, deltaId) => {
+  const fn = GetEditorDeltaFunction.getEditorDeltaFunction(deltaId)
+  const changes = getChanges(editor, fn)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

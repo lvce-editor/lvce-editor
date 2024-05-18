@@ -1,6 +1,6 @@
+import * as EditorDeltaId from '../EditorDeltaId/EditorDeltaId.js'
 import * as EditorCursorHorizontalRight from './EditorCommandCursorHorizontalRight.js'
-import * as EditorDelta from './EditorCommandDelta.js'
 
 export const cursorWordPartRight = (editor) => {
-  return EditorCursorHorizontalRight.editorCursorHorizontalRight(editor, EditorDelta.wordPartRight)
+  return EditorCursorHorizontalRight.editorCursorHorizontalRight(editor, EditorDeltaId.WordPartRight)
 }
