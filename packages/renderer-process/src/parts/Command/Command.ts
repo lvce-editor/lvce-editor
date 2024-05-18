@@ -1,7 +1,7 @@
 import * as ModuleMap from '../ModuleMap/ModuleMap.ts'
 import { VError } from '../VError/VError.ts'
 
-const state = {
+export const state = {
   commands: Object.create(null),
   pendingModules: Object.create(null),
   async load(moduleId) {},
@@ -46,7 +46,7 @@ const loadCommand = async (command) => {
   await getOrLoadModule(ModuleMap.getModuleId(command))
 }
 
-const register = (commandId, listener) => {
+export const register = (commandId, listener) => {
   state.commands[commandId] = listener
 }
 
