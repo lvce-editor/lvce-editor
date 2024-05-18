@@ -12,9 +12,9 @@ export const getIncrementalEdits = (oldState, newState) => {
       const lines = newState.lines
       const oldLine = oldState.lines[rowIndex]
       const newLine = lines[rowIndex]
-      const initialLineState = newState.lineCache[rowIndex] || GetInitialLineState.getInitialLineState(newState.tokenizer.initialLineState)
       const oldTokenizer = TokenizerMap.get(oldState.tokenizerId)
       const newTokenizer = TokenizerMap.get(newState.tokenizerId)
+      const initialLineState = newState.lineCache[rowIndex] || GetInitialLineState.getInitialLineState(newTokenizer.initialLineState)
       const { tokens: oldTokens } = SafeTokenizeLine.safeTokenizeLine(
         newState.languageId,
         oldTokenizer.tokenizeLine,
