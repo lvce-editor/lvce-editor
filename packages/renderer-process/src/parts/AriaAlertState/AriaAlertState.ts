@@ -1,6 +1,6 @@
 // based on https://github.com/microsoft/vscode/blob/5f87632829dc3ac80203e2377727935184399431/src/vs/base/browser/ui/aria/aria.ts (License MIT)
 
-const state = {
+export const state = {
   $AriaAlert1: undefined,
   $AriaAlert2: undefined,
   $AriaMessages: undefined,
