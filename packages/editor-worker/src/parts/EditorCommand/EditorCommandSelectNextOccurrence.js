@@ -220,6 +220,6 @@ export const selectNextOccurrence = (editor) => {
     return Editor.scheduleSelections(editor, selectionEdits)
   }
   // TODO what is this magic number 5?
-  const deltaY = (revealRangeStartRowIndex - 5) * editor.rowHeight
-  return Editor.scheduleSelectionsAndScrollPosition(editor, selectionEdits, deltaY)
+  // const deltaY = (revealRangeStartRowIndex - 5) * editor.rowHeight
+  return Editor.scheduleDocumentAndCursorsSelections(editor, [], selectionEdits)
 }

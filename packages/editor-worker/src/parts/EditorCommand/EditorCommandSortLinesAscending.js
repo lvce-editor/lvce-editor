@@ -1,8 +1,5 @@
-// @ts-ignore
 import * as Compare from '../Compare/Compare.js'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.js'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const getSortedLines = (lines) => {

@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.js'
 
 const inverseChange = (edit) => {
