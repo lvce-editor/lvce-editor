@@ -14,10 +14,13 @@ const getFileIndex = (items, index) => {
 }
 
 const selectIndexFile = async (state, searchResult, index) => {
+  const { collapsedPaths } = state
   const path = Workspace.getAbsolutePath(searchResult.text)
   Assert.string(path)
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
-  return state
+  return {
+    ...state,
+    collapsedPaths: [...collapsedPaths, path],
+  }
 }
 
 const selectIndexPreview = async (state, searchResult, index) => {
