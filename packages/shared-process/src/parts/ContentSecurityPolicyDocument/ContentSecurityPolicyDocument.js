@@ -4,7 +4,7 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
   `img-src 'self' https: data:`,
-  `script-src 'self'`,
   `media-src 'self'`,
+  `script-src 'self'`,
   `style-src 'self'`,
 ])
