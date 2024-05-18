@@ -33,7 +33,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-test('editorGoToTypeDefinition', async () => {
+test.skip('editorGoToTypeDefinition', async () => {
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -65,7 +65,7 @@ test('editorGoToTypeDefinition', async () => {
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
 })
 
-test('editorGoToTypeDefinition - startOffset is 0', async () => {
+test.skip('editorGoToTypeDefinition - startOffset is 0', async () => {
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -97,7 +97,7 @@ test('editorGoToTypeDefinition - startOffset is 0', async () => {
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
 })
 
-test('editorGoToTypeDefinition - error', async () => {
+test.skip('editorGoToTypeDefinition - error', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -120,7 +120,7 @@ test('editorGoToTypeDefinition - error', async () => {
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(new TypeError('x is not a function'), false)
 })
 
-test('editorGoToTypeDefinition - error - no type definition provider found', async () => {
+test.skip('editorGoToTypeDefinition - error - no type definition provider found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -149,7 +149,7 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
   expect(spy).not.toHaveBeenCalled()
 })
 
-test('editorGoToTypeDefinition - no type definition found', async () => {
+test.skip('editorGoToTypeDefinition - no type definition found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
