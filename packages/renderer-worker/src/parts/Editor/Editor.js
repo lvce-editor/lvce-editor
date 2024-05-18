@@ -16,8 +16,6 @@ import * as EditorText from './EditorText.js'
 
 // TODO
 export const create = (id, uri, languageId, content) => {
-  const tokenizer = Tokenizer.getTokenizer(languageId)
-
   // TODO flatten structure
   return {
     uri,
@@ -33,7 +31,6 @@ export const create = (id, uri, languageId, content) => {
     selections: new Uint32Array([0, 0, 0, 0]),
     id,
     uid: id,
-    tokenizer,
     deltaX: 0,
     deltaY: 0,
     minLineY: 0,

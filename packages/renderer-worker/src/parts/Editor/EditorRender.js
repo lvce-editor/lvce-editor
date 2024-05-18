@@ -25,6 +25,7 @@ const renderLines = {
     if (incrementalEdits) {
       return [/* method */ 'setIncrementalEdits', /* incrementalEdits */ incrementalEdits]
     }
+    console.log('ren lin')
     const { textInfos, differences } = EditorText.getVisible(newState)
     newState.differences = differences
     const dom = GetEditorRowsVirtualDom.getEditorRowsVirtualDom(textInfos, differences)
