@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Arrays from '../Arrays/Arrays.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
+import * as JoinLines from '../JoinLines/JoinLines.ts'
 
 export const create = (text) => {
   const lines = SplitLines.splitLines(text)
