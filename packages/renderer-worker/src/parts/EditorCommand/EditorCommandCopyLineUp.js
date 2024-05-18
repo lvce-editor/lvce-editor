@@ -1,20 +1,6 @@
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Editor from '../Editor/Editor.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
-export const copyLineUp = (editor) => {
-  const { selections, primarySelectionIndex } = editor
-  const rowIndex = selections[primarySelectionIndex]
-  const position = {
-    rowIndex: rowIndex,
-    columnIndex: 0,
-  }
-  const changes = [
-    {
-      start: position,
-      end: position,
-      inserted: [TextDocument.getLine(editor, rowIndex), ''],
-      deleted: [''],
-    },
-  ]
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+export const copyLineUp = async (editor) => {
+  const newEditor = await EditorWorker.invoke('Editor.copyLineUp', editor)
+  return newEditor
 }
