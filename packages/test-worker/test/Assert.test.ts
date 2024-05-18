@@ -32,7 +32,7 @@ test('array - error', () => {
 })
 
 test('fn', () => {
-  expect(Assert.fn(() => { })).toBeUndefined()
+  expect(Assert.fn(() => {})).toBeUndefined()
 })
 
 test('fn - error', () => {
@@ -61,6 +61,15 @@ test('string - error', () => {
   }).toThrow(new Error('expected value to be of type string'))
 })
 
+test('null_', () => {
+  expect(Assert.null_(null)).toBeUndefined()
+})
+
+test('null_ - error', () => {
+  expect(() => {
+    Assert.null_(1)
+  }).toThrow(new Error('expected value to be of type null'))
+})
 
 test('boolean', () => {
   expect(Assert.boolean(true)).toBeUndefined()
