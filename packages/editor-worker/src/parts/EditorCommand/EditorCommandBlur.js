@@ -1,3 +1,7 @@
+// @ts-ignore
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
+
 export const state = {
   blurListeners: [],
 }
@@ -14,7 +18,7 @@ export const handleBlur = (editor) => {
   }
   return {
     newState: newEditor,
-    commands: [],
+    commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorBlur),
   }
 }
 
