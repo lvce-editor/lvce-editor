@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as EditorCommandCutLine from './EditorCommandCutLine.js'
 import * as EditorCommandCutSelectedText from './EditorCommandCutSelectedText.js'
