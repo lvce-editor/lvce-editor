@@ -1,13 +1,7 @@
 import * as PrettyError from '../PrettyError/PrettyError.ts'
 
-export const state = {
-  /**
-   * @type {string[]}
-   */
-  seenWarnings: [],
-}
 
-export const logError = async (error, prefix = '') => {
+const logError = async (error, prefix = '') => {
   const prettyError = await PrettyError.prepare(error)
   PrettyError.print(prettyError, prefix)
   return prettyError
