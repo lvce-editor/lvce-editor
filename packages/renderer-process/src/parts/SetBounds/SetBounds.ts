@@ -5,16 +5,7 @@ export const setBounds = ($Element, x, y, width, height) => {
   $Element.style.height = `${height}px`
 }
 
-export const setBoundsPixelString = ($Element, x, y, width, height) => {
-  $Element.style.top = y
-  $Element.style.left = x
-  $Element.style.width = width
-  $Element.style.height = height
-}
 
-export const setX = ($Element, x) => {
-  $Element.style.translate = `${x}px 0`
-}
 
 export const setYAndHeight = ($Element, y, height) => {
   if (!$Element) {
@@ -29,9 +20,7 @@ export const setXAndWidth = ($Element, x, width) => {
   $Element.style.width = `${width}px`
 }
 
-export const setWidth = ($Element, width) => {
-  $Element.style.width = `${width}px`
-}
+
 
 export const setTop = ($Element, top) => {
   $Element.style.top = `${top}px`
