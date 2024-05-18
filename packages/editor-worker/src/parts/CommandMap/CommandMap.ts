@@ -6,6 +6,8 @@ import * as DeleteCharacterLeft from '../EditorCommand/EditorCommandDeleteCharac
 import * as DeleteHorizontalRight from '../EditorCommand/EditorCommandDeleteHorizontalRight.js'
 import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js'
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
+import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
+import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
 
 export const commandMap = {
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
@@ -16,4 +18,6 @@ export const commandMap = {
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
   'Editor.deleteWordLeft': DeleteWordLeft.deleteWordLeft,
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
+  'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
 }
