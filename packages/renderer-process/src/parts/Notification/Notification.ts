@@ -1,10 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as Widget from '../Widget/Widget.ts'
 
-export const state = {
-  $Notifications: undefined,
-}
-
 const create$Notification = (message) => {
   const $Notification = document.createElement('div')
   $Notification.className = 'Notification'
