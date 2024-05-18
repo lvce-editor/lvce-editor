@@ -13,7 +13,11 @@ const deleteLeftWithAutoClose = (editor) => {
     selections[i + 1]++
     selections[i + 3]++
   }
-  const changes = GetDeleteHorizontalLeftChanges.getChanges(lines, selections, EditorDeltaId.TwoCharactersLeft)
+  const changes = GetDeleteHorizontalLeftChanges.getChanges(
+    lines,
+    selections,
+    GetEditorDeltaFunction.getEditorDeltaFunction(EditorDeltaId.TwoCharactersLeft),
+  )
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
