@@ -7,6 +7,7 @@ import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWor
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -445,6 +446,15 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   await Copy.copy({
     from: terminalWorkerCachePath,
     to: `packages/build/.tmp/dist/${commitHash}/packages/terminal-worker`,
+  })
+  const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
+    assetDir,
+    platform,
+    commitHash,
+  })
+  await Copy.copy({
+    from: editorWorkerCachePath,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/editor-worker`,
   })
   const testWorkerCachePath = await BundleTestWorkerCached.bundleTestWorkerCached({
     assetDir,
