@@ -18,6 +18,8 @@ import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.js'
 import * as SelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.js'
 import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
+import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.js'
+import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.js'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
 
@@ -44,4 +46,6 @@ export const commandMap = {
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
+  'Editor.selectDown': SelectDown.selectDown,
+  'Editor.selectUp': SelectUp.selectUp,
 }
