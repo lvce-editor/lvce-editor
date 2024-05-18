@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditorSelectInsideString from '../../renderer-worker/src/parts/EditorCommand/EditorCommandSelectInsideString.js'
-import * as EditorSelection from '../../renderer-worker/src/parts/EditorSelection/EditorSelection.js'
+import * as EditorSelectInsideString from '../parts/EditorCommand/EditorCommandSelectInsideString.js'
+import * as EditorSelection from '../parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectInsideString', () => {
   const editor = {

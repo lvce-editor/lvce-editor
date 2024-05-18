@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditorSelectNextOccurrence from '../../renderer-worker/src/parts/EditorCommand/EditorCommandSelectNextOccurrence.js'
-import * as EditorSelection from '../../renderer-worker/src/parts/EditorSelection/EditorSelection.js'
+import * as EditorSelectNextOccurrence from '../parts/EditorCommand/EditorCommandSelectNextOccurrence.js'
+import * as EditorSelection from '../parts/EditorSelection/EditorSelection.js'
 
 test.skip('editorSelectNextOccurrence - no selection and no word at cursor position', () => {
   const cursor = {

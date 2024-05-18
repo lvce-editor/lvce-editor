@@ -1,5 +1,5 @@
 import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditOrigin from '../../renderer-worker/src/parts/EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../parts/EditOrigin/EditOrigin.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', ()
   }
 })
 
-const EditorSelection = await import('../../renderer-worker/src/parts/Editor/EditorSelection.js')
+const EditorSelection = await import('../parts/Editor/EditorSelection.js')
 
 test('getVisible', () => {
   const editor = {

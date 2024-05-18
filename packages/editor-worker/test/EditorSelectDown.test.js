@@ -1,5 +1,5 @@
 import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as EditorSelectDown from '../../renderer-worker/src/parts/EditorCommand/EditorCommandSelectDown.js'
+import * as EditorSelectDown from '../parts/EditorCommand/EditorCommandSelectDown.js'
 
 test('selectDown', () => {
   const editor = {
