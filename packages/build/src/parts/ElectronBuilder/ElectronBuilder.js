@@ -111,7 +111,7 @@ const copyBuildResources = async ({ config }) => {
   }
 }
 
-const getFinalFileName = ({ config, version, product }) => {
+const getFinalFileName = ({ config, version, product, arch }) => {
   switch (config) {
     case ElectronBuilderConfigType.ArchLinux:
       return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Pacman}`
@@ -122,7 +122,10 @@ const getFinalFileName = ({ config, version, product }) => {
     case ElectronBuilderConfigType.Snap:
       return `packages/build/.tmp/electron-builder/dist/${product.snapName}_${version}_amd64.${FileExtension.Snap}`
     case ElectronBuilderConfigType.Mac:
-      return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Dmg}`
+      if (arch === 'arm64') {
+        return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}-arm64.${FileExtension.Dmg}`
+      }
+      throw new Error('macos x64 is not yet supported')
     case ElectronBuilderConfigType.AppImage:
       return `packages/build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.AppImage}`
     default:
@@ -259,7 +262,7 @@ const copyElectronResult = async ({
 }
 
 const renameReleaseFile = async ({ config, version, product, arch }) => {
-  const finalFileName = getFinalFileName({ config, version, product })
+  const finalFileName = getFinalFileName({ config, version, product, arch })
   const releaseFileName = getReleaseFileName({ config, product, arch })
   const releaseFilePath = `packages/build/.tmp/releases/${releaseFileName}`
   await Rename.rename({

@@ -10,6 +10,7 @@ import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleS
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -847,6 +848,19 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     ignore: ['static'],
   })
   console.timeEnd('copyTerminalWorkerFiles')
+
+  const searchWorkerCachePath = await BundleSearchWorkerCached.bundleSearchWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copySearchWorkerFiles')
+  await Copy.copy({
+    from: searchWorkerCachePath,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/search-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copySearchWorkerFiles')
 
   const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
     commitHash,
