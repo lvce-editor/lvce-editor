@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
-import { VError } from '../VError/VError.js'
+import * as Command from '../Command/Command.ts'
+import { VError } from '../VError/VError.ts'
 
 export const state = {
   handles: Object.create(null),
@@ -16,7 +16,7 @@ export const addHandle = async (uri, handle) => {
 }
 
 export const addHandles = async (parentUri, childHandles) => {
-  const promises = []
+  const promises: any[] = []
   for (const childHandle of childHandles) {
     const childUri = parentUri + '/' + childHandle.name
     if (childUri in state.handles) {
