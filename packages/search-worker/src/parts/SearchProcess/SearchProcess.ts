@@ -1,5 +1,5 @@
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
-import * as LaunchSearchProcess from '../LaunchSearchProcess/LaunchSearchProcess.js'
+import * as LaunchSearchProcess from '../LaunchSearchProcess/LaunchSearchProcess.ts'
 
 const state = {
   /**

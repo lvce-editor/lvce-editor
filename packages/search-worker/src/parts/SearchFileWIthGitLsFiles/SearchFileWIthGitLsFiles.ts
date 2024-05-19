@@ -1,6 +1,6 @@
 import * as FileSearchCache from '../FileSearchCache/FileSearchCache.js'
 import * as GitLsFiles from '../GitLsFiles/GitLsFiles.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 
 export const state = {
   resolvedGit: '',
