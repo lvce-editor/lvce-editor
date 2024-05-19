@@ -1,10 +1,9 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.ts'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
-import * as Workspace from '../Workspace/Workspace.js'
 
 const removeLeadingSlash = (path) => {
-  const workspacePath = Workspace.state.workspacePath
+  const workspacePath = '' // TODO ask renderer worker for path
   return path.slice(workspacePath.length - FileSystemProtocol.Fetch.length - 2)
 }
 
