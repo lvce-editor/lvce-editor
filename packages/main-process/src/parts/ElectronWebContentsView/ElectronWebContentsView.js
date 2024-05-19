@@ -51,5 +51,5 @@ export const disposeWebContentsView = (browserViewId) => {
   }
   const { view, browserWindow } = instance
   ElectronWebContentsViewState.remove(browserViewId)
-  browserWindow.removeBrowserView(view)
+  browserWindow.contentView.removeChildView(view)
 }
