@@ -35,7 +35,7 @@
   },
   "optionalDependencies": {
     "@lvce-editor/network-process": "^1.2.0",
-    "@lvce-editor/preload": "^1.1.0",
+    "@lvce-editor/preload": "^1.2.0",
     "@lvce-editor/process-explorer": "^1.1.0",
     "@lvce-editor/search-process": "^1.2.0",
     "@lvce-editor/pty-host": "^1.2.0",
