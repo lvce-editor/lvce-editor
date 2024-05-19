@@ -1,8 +1,8 @@
-import * as FileHandleType from '../FileHandleType/FileHandleType.js'
-import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
-import * as Path from '../Path/Path.js'
-import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
-import { VError } from '../VError/VError.js'
+import * as FileHandleType from '../FileHandleType/FileHandleType.ts'
+import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.ts'
+import * as Path from '../Path/Path.ts'
+import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.ts'
+import { VError } from '../VError/VError.ts'
 
 const getDirectoryHandle = async (uri) => {
   const handle = await PersistentFileHandle.getHandle(uri)
