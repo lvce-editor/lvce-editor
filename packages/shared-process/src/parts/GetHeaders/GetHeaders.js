@@ -51,7 +51,6 @@ const getExtraHeaders = (pathName, fileExtension) => {
           }
           return GetHeadersDefault.getHeadersDefault()
       }
-
     default:
       return GetHeadersDefault.getHeadersDefault()
   }
