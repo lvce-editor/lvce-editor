@@ -25,6 +25,7 @@ export const eagerLoadedCss = [
   'ScrollBar.css',
   'SearchField.css',
   'SearchHeader.css',
+  'SearchMessage.css',
   'SplitButton.css',
   'TreeItem.css',
   'Viewlet.css',
