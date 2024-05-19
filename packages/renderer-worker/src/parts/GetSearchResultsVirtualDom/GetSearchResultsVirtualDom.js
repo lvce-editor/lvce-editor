@@ -1,10 +1,10 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
-import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -64,7 +64,7 @@ const renderRow = (rowInfo) => {
     ariaLabel: title,
     ariaDescription: '',
     childCount: 1,
-    paddingLeft: `${Number(depth) + 1}rem`,
+    paddingLeft: `${Number(depth) + 1}rem`, // TODO use classname and dynamic css
     paddingRight: TreeItemPadding.PaddingRight,
   }
   if (focused) {
@@ -87,7 +87,7 @@ const renderRow = (rowInfo) => {
   dom.push(...getLabelVirtualDom(displayText, matchLength, matchStart, replacement))
   if (matchCount) {
     treeItem.childCount++
-    dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom('SourceControlBadge', matchCount))
+    dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.SourceControlBadge, matchCount))
   }
   treeItem.childCount++
   dom.push(
@@ -98,7 +98,7 @@ const renderRow = (rowInfo) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'MaskIcon MaskIconClose',
+      className: ClassNames.CloseMaskIcon,
       childCount: 0,
     },
   )
