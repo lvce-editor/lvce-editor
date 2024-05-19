@@ -1,10 +1,9 @@
 import { BrowserWindow } from 'electron'
-import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
 export const createPidMap = () => {
   const browserWindows = BrowserWindow.getAllWindows()
-  const browserViews = ElectronBrowserViewState.getAll()
+  const browserViews = []
   const utilityProcesses = UtilityProcessState.getAll()
   const pidWindowMap = Object.create(null)
   for (const browserWindow of browserWindows) {
@@ -16,7 +15,7 @@ export const createPidMap = () => {
       const pid = devToolsWebContents.getOSProcessId()
       pidWindowMap[pid] = 'chrome-devtools'
     }
-    const views = browserWindow.getBrowserViews()
+    const views = browserWindow.getBrowserViews() // TODO use webcontents views
     for (const view of views) {
       const viewWebContents = view.webContents
       const pid = viewWebContents.getOSProcessId()
