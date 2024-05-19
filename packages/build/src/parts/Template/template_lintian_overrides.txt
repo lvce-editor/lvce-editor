@@ -56,14 +56,14 @@
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 
 # bare os, bare fs
-@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
-@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-fs/prebuilds/linux-x64/bare-fs.bare]
-@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
-@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-os/prebuilds/linux-x64/bare-os.bare]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
-@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
-@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/network-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
+@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
+@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-x64/bare-fs.bare]
+@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
+@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-x64/bare-os.bare]
+@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
+@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
+@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
+@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
 
 # extensions
 @@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
