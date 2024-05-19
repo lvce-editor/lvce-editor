@@ -1,0 +1,13 @@
+import * as DomExceptionType from '../DomExceptionType/DomExceptionType.ts'
+
+export const isNotAllowedError = (error) => {
+  return error && error.name === DomExceptionType.NotAllowedError
+}
+
+export const isNotFoundError = (error) => {
+  return error && error.name === DomExceptionType.NotFoundError
+}
+
+export const isNotReadableError = (error) => {
+  return error && error.name === DomExceptionType.NotReadableError
+}
