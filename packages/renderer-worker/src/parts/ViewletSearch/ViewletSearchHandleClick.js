@@ -1,9 +1,9 @@
 import * as ViewletSearchSelectIndex from './ViewletSearchSelectIndex.js'
 
-export const handleClick = (state, index) => {
+export const handleClick = (state, index, isClose) => {
   const { minLineY } = state
   const actualIndex = index + minLineY
-  return ViewletSearchSelectIndex.selectIndex(state, actualIndex)
+  return ViewletSearchSelectIndex.selectIndex(state, actualIndex, isClose)
 }
 
 export const handleClickAt = (state, eventX, eventY) => {
