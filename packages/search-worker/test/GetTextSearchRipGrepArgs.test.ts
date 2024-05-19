@@ -1,5 +1,5 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as GetTextSearchRipGrepArgs from '../src/parts/GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.js'
+import { expect, test } from '@jest/globals'
+import * as GetTextSearchRipGrepArgs from '../src/parts/GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.ts'
 
 test('getRipGrepArgs - threads', () => {
   expect(
