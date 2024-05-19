@@ -53,12 +53,8 @@ const renderRow = (rowInfo) => {
 
   dom.push(treeItem)
   if (type === TextSearchResultType.File) {
-    treeItem.childCount++
-    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom())
-  }
-  if (type === TextSearchResultType.File) {
-    treeItem.childCount++
-    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
+    treeItem.childCount += 2
+    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom(), GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   }
   const label = {
     type: VirtualDomElements.Div,
