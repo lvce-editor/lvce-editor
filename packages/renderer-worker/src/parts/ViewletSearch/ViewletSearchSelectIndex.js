@@ -41,7 +41,7 @@ const selectIndexPreview = async (state, searchResult, index) => {
   return state
 }
 
-export const selectIndex = (state, index) => {
+export const selectIndex = (state, index, isClose) => {
   if (index === -1) {
     return {
       ...state,
