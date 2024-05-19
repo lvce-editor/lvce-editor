@@ -92,6 +92,7 @@ export const textSearch = async (scheme, root, query) => {
   const relativeRoot = root.slice('html://'.length)
   const handle = await getDirectoryHandle(relativeRoot)
   if (!handle) {
+    // @ts-ignore
     throw new VError(`Folder not found ${relativeRoot}`)
   }
   const all = []
