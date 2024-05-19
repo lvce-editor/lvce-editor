@@ -3,14 +3,6 @@
   flex-direction: column;
 }
 
-.ViewletSearchMessage {
-  color: rgba(156, 162, 160, 0.65);
-  padding-bottom: 8px;
-  padding-top: 5px;
-  padding-left: 22px;
-  contain: content;
-}
-
 .SearchResults {
   overflow-y: auto;
   height: 100%;
