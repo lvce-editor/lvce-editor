@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
   },
 }))
 
-jest.unstable_mockModule('../src/parts/FileSystemWatch/FileSystemWatch.js', () => ({
+jest.unstable_mockModule('../src/parts/WatchFile/WatchFile.js', () => ({
   watchFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
