@@ -5,6 +5,7 @@ import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
+import * as RemoveNodePtyFiles from '../RemoveNodePtyFiles/RemoveNodePtyFiles.js'
 
 export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [], platform = process.platform }) => {
   const projectPath = Path.absolute('packages/shared-process')
@@ -56,4 +57,5 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
+  await RemoveNodePtyFiles.removeNodePtyFiles(to, platform)
 }
