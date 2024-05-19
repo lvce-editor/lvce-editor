@@ -1,4 +1,4 @@
-import * as Character from '../Character/Character.js'
+import * as Character from '../Character/Character.ts'
 import * as Assert from '../Assert/Assert.ts'
 
 export const getFileExtensionIndex = (file) => {
