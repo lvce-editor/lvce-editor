@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.js'
+import * as Command from '../Command/Command.ts'
 
 export const getText = (file) => {
   return file.text()

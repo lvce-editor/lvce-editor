@@ -1,4 +1,4 @@
-import * as MergeStacks from '../MergeStacks/MergeStacks.js'
+import * as MergeStacks from '../MergeStacks/MergeStacks.ts'
 
 const stringifyError = (error) => {
   if (error instanceof DOMException && error.message) {

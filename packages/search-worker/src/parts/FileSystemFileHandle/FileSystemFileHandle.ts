@@ -1,4 +1,4 @@
-import * as HtmlFile from '../HtmlFile/HtmlFile.js'
+import * as HtmlFile from '../HtmlFile/HtmlFile.ts'
 
 /**
  *

@@ -1,4 +1,4 @@
-import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.js'
+import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.ts'
 // import * as SearchProcess from '../SearchProcess/SearchProcess.js'
 // import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
