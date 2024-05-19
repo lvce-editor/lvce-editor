@@ -19,12 +19,6 @@ export const load = async (moduleId) => {
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.Beep:
       return import('../ElectronBeep/ElectronBeep.js')
-    case ModuleId.ElectronBrowserView:
-      return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
-    case ModuleId.ElectronBrowserViewQuickPick:
-      return import('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
-    case ModuleId.ElectronBrowserViewSuggestions:
-      return import('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
     case ModuleId.ElectronClipBoard:
       return import('../ElectronClipBoard/ElectronClipBoard.ipc.js')
     case ModuleId.ElectronContentTracing:
