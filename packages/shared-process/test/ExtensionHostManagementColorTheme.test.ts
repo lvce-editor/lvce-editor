@@ -32,13 +32,12 @@ const FileSystemWatch = await import('../src/parts/WatchFile/WatchFile.js')
 
 test('watch', async () => {
   // @ts-ignore
-  FileSystemWatch.watchFile.mockImplementation(() => {
-    return [{}]
+  FileSystemWatch.watchFile.mockImplementation((path, fn) => {
+    fn()
   })
   const webSocket = {
     send: jest.fn(),
   }
-
   await ExtensionHostManagementColorTheme.watch(webSocket, 'test-theme-1')
   expect(webSocket.send).toHaveBeenCalledTimes(1)
   expect(webSocket.send).toHaveBeenCalledWith({
