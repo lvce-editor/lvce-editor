@@ -1,7 +1,7 @@
 import * as Arrays from '../Arrays/Arrays.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.ts'
-import * as FileHandleType from '../FileHandleType/FileHandleType.js'
+import * as FileHandleType from '../FileHandleType/FileHandleType.ts'
 import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.ts'
 import * as Path from '../Path/Path.ts'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.ts'
