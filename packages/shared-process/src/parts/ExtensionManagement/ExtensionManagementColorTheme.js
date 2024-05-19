@@ -1,10 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
-import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as Path from '../Path/Path.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
+import * as FileSystemWatch from '../WatchFile/WatchFile.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 // TODO test this function
@@ -75,8 +75,8 @@ export const watch = async (socket, colorThemeId) => {
   if (verbose) {
     console.info(`[shared-process] starting to watch color theme ${colorThemeId} at ${colorThemePath}`)
   }
-  const watcher = FileSystemWatch.watchFile(colorThemePath)
-  for await (const event of watcher) {
+  const callback = () => {
     socket.send({ jsonrpc: JsonRpcVersion.Two, method: 'ColorTheme.reload', params: [] })
   }
+  await FileSystemWatch.watchFile(colorThemePath, callback)
 }
