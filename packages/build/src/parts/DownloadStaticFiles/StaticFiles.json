@@ -15,6 +15,11 @@
     "type": "javascript"
   },
   {
+    "name": "@lvce-editor/verror",
+    "version": "1.2.0",
+    "type": "javascript"
+  },
+  {
     "name": "ky",
     "version": "1.2.1",
     "type": "javascript"
