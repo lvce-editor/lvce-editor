@@ -90,11 +90,18 @@ const renderRow = (rowInfo) => {
     dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom('SourceControlBadge', matchCount))
   }
   treeItem.childCount++
-  dom.push({
-    type: VirtualDomElements.Div,
-    className: 'SearchRemove',
-    childCount: 0,
-  })
+  dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.SearchRemove,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconClose',
+      childCount: 0,
+    },
+  )
   return dom
 }
 
