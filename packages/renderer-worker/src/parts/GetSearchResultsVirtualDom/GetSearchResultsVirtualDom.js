@@ -27,7 +27,7 @@ const highlighted = {
 }
 
 const renderRow = (rowInfo) => {
-  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount } = rowInfo
+  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount, focused } = rowInfo
   const treeItem = {
     type: VirtualDomElements.Div,
     role: AriaRoles.TreeItem,
@@ -41,6 +41,9 @@ const renderRow = (rowInfo) => {
     childCount: 1,
     paddingLeft: `${Number(depth) + 1}rem`,
     paddingRight: TreeItemPadding.PaddingRight,
+  }
+  if (focused) {
+    treeItem.className += ' ' + ClassNames.TreeItemActive
   }
   switch (type) {
     case TextSearchResultType.File:

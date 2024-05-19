@@ -4,8 +4,8 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as InputName from '../InputName/InputName.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const useChevrons = false
@@ -54,6 +54,8 @@ const getItemVirtualDomFile = (item) => {
   if (isFocused) {
     // @ts-ignore
     dom[0].id = 'TreeItemActive'
+    // @ts-ignore
+    dom[0].className + ' ' + ClassNames.TreeItemActive
   }
   return dom
 }
