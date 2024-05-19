@@ -18,7 +18,7 @@ const getDirectoryHandle = async (uri) => {
 
 const searchFilesRecursively = async (all, parent, handle) => {
   const childHandles = await FileSystemDirectoryHandle.getChildHandles(handle)
-  const promises = []
+  const promises: any[] = []
   for (const childHandle of childHandles) {
     const absolutePath = parent + '/' + childHandle.name
     switch (childHandle.kind) {
@@ -39,6 +39,7 @@ export const searchFile = async (uri) => {
   const path = uri.slice('html://'.length)
   const handle = await getDirectoryHandle(path)
   if (!handle) {
+    // @ts-ignore
     throw new VError(`Folder not found ${uri}`)
   }
   const all = []
