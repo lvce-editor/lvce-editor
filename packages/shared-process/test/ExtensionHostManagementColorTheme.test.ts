@@ -21,24 +21,23 @@ jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
   },
 }))
 
-jest.unstable_mockModule('../src/parts/FileSystemWatch/FileSystemWatch.js', () => ({
+jest.unstable_mockModule('../src/parts/WatchFile/WatchFile.js', () => ({
   watchFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
 
 const ExtensionHostManagementColorTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js')
-const FileSystemWatch = await import('../src/parts/FileSystemWatch/FileSystemWatch.js')
+const FileSystemWatch = await import('../src/parts/WatchFile/WatchFile.js')
 
 test('watch', async () => {
   // @ts-ignore
-  FileSystemWatch.watchFile.mockImplementation(() => {
-    return [{}]
+  FileSystemWatch.watchFile.mockImplementation((path, fn) => {
+    fn()
   })
   const webSocket = {
     send: jest.fn(),
   }
-
   await ExtensionHostManagementColorTheme.watch(webSocket, 'test-theme-1')
   expect(webSocket.send).toHaveBeenCalledTimes(1)
   expect(webSocket.send).toHaveBeenCalledWith({
