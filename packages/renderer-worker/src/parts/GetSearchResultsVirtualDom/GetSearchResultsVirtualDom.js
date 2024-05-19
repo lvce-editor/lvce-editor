@@ -26,6 +26,31 @@ const highlighted = {
   childCount: 1,
 }
 
+const getLabelVirtualDom = (displayText, matchLength, matchStart, replacement) => {
+  const dom = []
+  const label = {
+    type: VirtualDomElements.Div,
+    className: ClassNames.Label + ' Grow',
+    childCount: 1,
+  }
+  dom.push(label)
+  if (matchLength) {
+    const before = displayText.slice(0, matchStart)
+    const highlight = displayText.slice(matchStart, matchStart + matchLength)
+    const after = displayText.slice(matchStart + matchLength)
+    if (replacement) {
+      dom.push(text(before), deleted, text(highlight), inserted, text(replacement), text(after))
+      label.childCount = 4
+    } else {
+      label.childCount = 3
+      dom.push(text(before), highlighted, text(highlight), text(after))
+    }
+  } else {
+    dom.push(text(displayText))
+  }
+  return dom
+}
+
 const renderRow = (rowInfo) => {
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount } = rowInfo
   const treeItem = {
@@ -60,30 +85,17 @@ const renderRow = (rowInfo) => {
     treeItem.childCount++
     dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   }
-  const label = {
-    type: VirtualDomElements.Div,
-    className: ClassNames.Label + ' Grow',
-    childCount: 1,
-  }
-  dom.push(label)
-  if (matchLength) {
-    const before = displayText.slice(0, matchStart)
-    const highlight = displayText.slice(matchStart, matchStart + matchLength)
-    const after = displayText.slice(matchStart + matchLength)
-    if (replacement) {
-      dom.push(text(before), deleted, text(highlight), inserted, text(replacement), text(after))
-      label.childCount = 4
-    } else {
-      label.childCount = 3
-      dom.push(text(before), highlighted, text(highlight), text(after))
-    }
-  } else {
-    dom.push(text(displayText))
-  }
+  dom.push(...getLabelVirtualDom(displayText, matchLength, matchStart, replacement))
   if (matchCount) {
     treeItem.childCount++
     dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom('SourceControlBadge', matchCount))
   }
+  treeItem.childCount++
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'SearchRemove',
+    childCount: 0,
+  })
   return dom
 }
 
