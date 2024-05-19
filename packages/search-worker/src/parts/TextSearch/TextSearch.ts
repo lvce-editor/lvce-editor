@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as GetProtocol from '../GetProtocol/GetProtocol.ts'
-import * as TextSearchProvider from '../TextSearchProvider/TextSearchProvider.js'
+import * as TextSearchProvider from '../TextSearchProvider/TextSearchProvider.ts'
 
 export const textSearch = async (root, query, options) => {
   Assert.string(root)

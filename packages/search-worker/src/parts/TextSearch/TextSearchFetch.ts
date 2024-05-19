@@ -1,8 +1,8 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as AssetDir from '../AssetDir/AssetDir.ts'
 import * as Command from '../Command/Command.ts'
-import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.ts'
 
 const textSearchInFile = (file, content, query) => {
   const results: any[] = []

@@ -1,13 +1,13 @@
-import * as Arrays from '../Arrays/Arrays.js'
+import * as Arrays from '../Arrays/Arrays.ts'
 import * as Assert from '../Assert/Assert.ts'
-import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
+import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.ts'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
-import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
+import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.ts'
 import * as Path from '../Path/Path.js'
-import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-import { VError } from '../VError/VError.js'
+import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.ts'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.ts'
+import { VError } from '../VError/VError.ts'
 
 const getDirectoryHandle = async (uri) => {
   const handle = await PersistentFileHandle.getHandle(uri)
