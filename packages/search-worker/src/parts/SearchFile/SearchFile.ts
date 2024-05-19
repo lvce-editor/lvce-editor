@@ -1,16 +1,15 @@
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
-import * as Preferences from '../Preferences/Preferences.js'
 
 const getModule = (protocol) => {
-  if (IsEmptyString.isEmptyString(protocol)) {
-    // TODO only read preference once when opening quickpick
-    const preference = Preferences.get('search.searchWith')
-    if (preference === 'git-ls-files') {
-      return import('../SearchFileWIthGitLsFiles/SearchFileWIthGitLsFiles.js')
-    }
-  }
+  // TODO read preferences from renderer worker
+  // if (IsEmptyString.isEmptyString(protocol)) {
+  //   // TODO only read preference once when opening quickpick
+  //   const preference = Preferences.get('search.searchWith')
+  //   if (preference === 'git-ls-files') {
+  //     return import('../SearchFileWIthGitLsFiles/SearchFileWIthGitLsFiles.js')
+  //   }
+  // }
   switch (protocol) {
     case FileSystemProtocol.Web:
       return import('../SearchFileWeb/SearchFileWeb.js')
