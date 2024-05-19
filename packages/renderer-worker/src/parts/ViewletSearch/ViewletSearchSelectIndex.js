@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Command from '../Command/Command.js'
+import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -35,13 +35,13 @@ const selectIndexPreview = async (state, searchResult, index) => {
   const fileResult = items[fileIndex]
   const path = Workspace.getAbsolutePath(fileResult.text)
   Assert.string(path)
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path, /* focus */ true, {
+  await OpenUri.openUri(path, true, {
     selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
   })
   return state
 }
 
-export const selectIndex = (state, index) => {
+export const selectIndex = (state, index, isClose) => {
   if (index === -1) {
     return {
       ...state,
