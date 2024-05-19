@@ -1,7 +1,7 @@
 import * as AriaOrientationType from '../AriaOrientationType/AriaOrientationType.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
-import * as DomId from '../DomId/DomId.ts'
+import * as DomId from '../DomId/DomId.js'
 import * as GetActivityBarItemsVirtualDom from '../GetActivityBarItemsVirtualDom/GetActivityBarItemsVirtualDom.js'
 import * as ActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
