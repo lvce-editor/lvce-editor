@@ -18,7 +18,7 @@ export const hasWebContents = (id) => {
 /**
  *
  * @param {number} id
- * @returns {{browserWindow: Electron.BrowserWindow, view: Electron.BrowserView}}
+ * @returns {{browserWindow: Electron.BrowserWindow, view: Electron.WebContentsView}}
  */
 export const get = (id) => {
   return state.views[id]
