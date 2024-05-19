@@ -1,9 +1,10 @@
-import * as FileSystemWeb from '../FileSystem/FileSystemWeb.js'
 
 export const textSearch = (scheme, root, query) => {
-  const entries = Object.entries(FileSystemWeb.state.files)
-  const results = []
+  // TODO ask renderer worker for files
+  const entries = Object.entries({})
+  const results: any[] = []
   for (const [key, value] of entries) {
+    // @ts-ignore
     if (value.includes(query)) {
       results.push([
         key,
