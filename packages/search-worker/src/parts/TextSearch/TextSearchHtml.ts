@@ -2,7 +2,6 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
-import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
 import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as Path from '../Path/Path.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
@@ -66,7 +65,9 @@ const textSearchInFile = async (all, handle, absolutePath, query) => {
 }
 
 const textSearchRecursively = async (all, parent, handle, query) => {
-  const childHandles = await FileSystemHtml.getChildHandles(handle)
+  const childHandles: any[] = []
+  // TODO
+  // await FileSystemHtml.getChildHandles(handle)
   const promises: any[] = []
   for (const childHandle of childHandles) {
     const absolutePath = parent + '/' + childHandle.name
