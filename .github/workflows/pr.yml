@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-12, windows-2022]
+        os: [ubuntu-22.04, macos-14, windows-2022]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
@@ -93,8 +93,8 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         run: node packages/build/bin/build.js --target=electron-builder-snap
       - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.os == 'macos-12'
-        run: node packages/build/bin/build.js --target=electron-builder-mac --arch=x64
+        if: matrix.os == 'macos-14'
+        run: node packages/build/bin/build.js --target=electron-builder-mac --arch=arm64
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v4
         id: electron-builder-cache-windows
