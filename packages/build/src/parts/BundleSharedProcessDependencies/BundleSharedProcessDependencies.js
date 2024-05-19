@@ -27,6 +27,9 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     buildPath: Path.absolute(to),
     electronVersion,
   })
+  if (platform !== 'win32') {
+    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree`)
+  }
   await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/node-addon-api`)
   await Remove.remove(`${to}/node_modules/uuid/dist/esm-browser`)
