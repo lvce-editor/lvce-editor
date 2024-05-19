@@ -14,11 +14,11 @@
 
 .TreeItem {
   --SearchRemoveDisplay: none;
-  --SearchBadgeDisplay: block;
+  --SearchBadgeDisplay: flex;
 }
 
 .TreeItem:hover {
-  --SearchRemoveDisplay: block;
+  --SearchRemoveDisplay: flex;
   --SearchBadgeDisplay: none;
 }
 
