@@ -1,6 +1,5 @@
-import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.js'
-import * as EditorDelta from './EditorCommandDelta.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
 export const deleteAllLeft = (editor) => {
-  return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.lineCharacterStart)
+  return EditorWorker.invoke('Editor.deleteAllLeft', editor)
 }

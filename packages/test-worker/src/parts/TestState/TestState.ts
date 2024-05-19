@@ -2,7 +2,7 @@
 
 import * as Assert from '../Assert/Assert.ts'
 
-export const state = {
+const state = {
   /**
    * @type {any[]}
    */

@@ -1,6 +1,5 @@
-import * as EditorSelectHorizontalLeft from './EditorCommandSelectHorizontalLeft.js'
-import * as EditorDelta from './EditorCommandDelta.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
 export const editorSelectAllLeft = (editor) => {
-  EditorSelectHorizontalLeft.editorSelectHorizontalLeft(editor, EditorDelta.lineCharacterStart)
+  return EditorWorker.invoke('Editor.selectAllLeft', editor)
 }

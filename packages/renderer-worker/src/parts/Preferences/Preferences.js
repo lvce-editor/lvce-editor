@@ -8,15 +8,16 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as OpenUri from '../OpenUri/OpenUri.js'
 
 export const state = Object.create(null)
 
 export const openSettingsJson = async () => {
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://settings.json')
+  await OpenUri.openUri('app://settings.json')
 }
 
 export const openKeyBindingsJson = async () => {
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://keyBindings.json')
+  await OpenUri.openUri('app://keyBindings.json')
 }
 
 // TODO command for opening workspace settings

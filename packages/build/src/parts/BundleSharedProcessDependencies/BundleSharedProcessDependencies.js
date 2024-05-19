@@ -4,6 +4,8 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
+import * as RemoveBarePrebuilds from '../RemoveBarePrebuilds/RemoveBarePrebuilds.js'
+import * as RemoveNodePtyFiles from '../RemoveNodePtyFiles/RemoveNodePtyFiles.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
 export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [], platform = process.platform }) => {
@@ -27,6 +29,9 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     buildPath: Path.absolute(to),
     electronVersion,
   })
+  if (platform !== 'win32') {
+    await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree`)
+  }
   await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/node-addon-api`)
   await Remove.remove(`${to}/node_modules/uuid/dist/esm-browser`)
@@ -56,4 +61,6 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
+  await RemoveNodePtyFiles.removeNodePtyFiles(to, platform)
+  await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
 }

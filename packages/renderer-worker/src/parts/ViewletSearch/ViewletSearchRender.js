@@ -18,7 +18,9 @@ const renderItems = {
       oldState.useRegularExpression === newState.useRegularExpression &&
       oldState.message === newState.message &&
       oldState.detailsExpanded === newState.detailsExpanded &&
-      oldState.loaded === newState.loaded
+      oldState.loaded === newState.loaded &&
+      oldState.collapsedPaths === newState.collapsedPaths &&
+      oldState.focusedIndex === newState.focusedIndex
     )
   },
   apply(oldState, newState) {
@@ -30,6 +32,8 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY,
       newState.replacement,
+      newState.collapsedPaths,
+      newState.focusedIndex,
     )
     const dom = GetSearchVirtualDom.getSearchVirtualDom(
       displayResults,

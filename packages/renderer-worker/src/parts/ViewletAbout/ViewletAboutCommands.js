@@ -5,4 +5,6 @@ export const Commands = {
   handleClickCopy: ViewletAbout.handleClickCopy,
   handleClickOk: ViewletAbout.handleClickOk,
   handleFocusIn: ViewletAbout.handleFocusIn,
+  focusNext: ViewletAbout.focusNext,
+  focusPrevious: ViewletAbout.focusPrevious,
 }

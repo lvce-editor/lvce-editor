@@ -41,7 +41,12 @@ const isLocalHostUrlWithOutHttp = (input) => {
   return input.startsWith('localhost:')
 }
 
-export const toIframeSrc = (input) => {
+export const toIframeSrc = (input, shortcuts = []) => {
+  for (const shortcut of shortcuts) {
+    if (shortcut && shortcut.prefix === input && typeof shortcut.url === 'string') {
+      return shortcut.url
+    }
+  }
   if (isValidHttpUrl(input) || isValidFileUrl(input)) {
     return input
   }

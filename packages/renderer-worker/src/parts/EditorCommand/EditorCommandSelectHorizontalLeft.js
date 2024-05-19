@@ -1,4 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
+import * as GetEditorDeltaFunction from '../GetEditorDeltaFunction/GetEditorDeltaFunction.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
@@ -28,8 +29,9 @@ const getNewSelections = (selections, lines, getDelta) => {
   return newSelections
 }
 
-export const editorSelectHorizontalLeft = (editor, getDelta) => {
+export const editorSelectHorizontalLeft = (editor, deltaId) => {
   const { lines, selections } = editor
-  const newSelections = getNewSelections(selections, lines, getDelta)
+  const fn = GetEditorDeltaFunction.getEditorDeltaFunction(deltaId)
+  const newSelections = getNewSelections(selections, lines, fn)
   return Editor.scheduleSelections(editor, newSelections)
 }

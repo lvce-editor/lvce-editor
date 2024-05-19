@@ -21,3 +21,4 @@ export const SourceControlInput = WhenExpression.FocusSourceControlInput
 export const Terminal = WhenExpression.FocusTerminal
 export const TitleBarMenuBar = WhenExpression.FocusTitleBarMenuBar
 export const ViewletList = WhenExpression.FocusViewletList
+export const Confirm = WhenExpression.FocusConfirm

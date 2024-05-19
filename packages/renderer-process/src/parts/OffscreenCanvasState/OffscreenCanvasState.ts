@@ -1,4 +1,4 @@
-export const state = {
+const state = {
   canvasObjects: Object.create(null),
 }
 

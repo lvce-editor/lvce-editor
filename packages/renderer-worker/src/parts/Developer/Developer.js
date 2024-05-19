@@ -5,6 +5,7 @@ import * as FormatStartupPerformance from '../FormatStartupPerformance/FormatSta
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceEntryType from '../PerformanceEntryType/PerformanceEntryType.js'
+import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
@@ -66,7 +67,7 @@ export const getStartupPerformanceContent = async () => {
 }
 
 export const showStartupPerformance = async () => {
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://startup-performance')
+  await OpenUri.openUri('app://startup-performance')
 }
 
 const formatNodeMemoryUsage = (memoryUsage) => {
@@ -171,8 +172,8 @@ ${formattedSharedProcessMemoryUsage}
   return text
 }
 
-export const showMemoryUsage = () => {
-  return Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://memory-usage')
+export const showMemoryUsage = async () => {
+  await OpenUri.openUri('app://memory-usage')
 }
 
 // TODO not sure if this function is useful
@@ -230,13 +231,13 @@ export const downloadViewletState = async () => {
 }
 
 export const openStorageOverview = async () => {
-  await Command.execute('Main.openUri', 'storage-overview://')
+  await OpenUri.openUri('storage-overview://')
 }
 
 export const openBrowserViewOverview = async () => {
-  await Command.execute('Main.openUri', 'browser-view-overview://')
+  await OpenUri.openUri('browser-view-overview://')
 }
 
 export const openScreenCastView = async () => {
-  await Command.execute('Main.openUri', 'screen-cast://')
+  await OpenUri.openUri('screen-cast://')
 }

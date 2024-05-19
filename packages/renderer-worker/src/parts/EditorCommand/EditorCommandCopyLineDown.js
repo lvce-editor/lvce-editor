@@ -1,24 +1,6 @@
-import * as Assert from '../Assert/Assert.ts'
-import * as Editor from '../Editor/Editor.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-// TODO handle multiline selection
-// TODO handle multiple cursors
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
-export const copyLineDown = (editor) => {
-  const { selections, primarySelectionIndex } = editor
-  const rowIndex = selections[primarySelectionIndex]
-  Assert.number(rowIndex)
-  const position = {
-    rowIndex,
-    columnIndex: 0,
-  }
-  const changes = [
-    {
-      inserted: [TextDocument.getLine(editor, rowIndex), ''],
-      deleted: [''],
-      start: position,
-      end: position,
-    },
-  ]
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+export const copyLineDown = async (editor) => {
+  const newEditor = await EditorWorker.invoke('Editor.copyLineDown', editor)
+  return newEditor
 }

@@ -4,9 +4,6 @@ import * as TestFrameWork from '../TestFrameWork/TestFrameWork.ts'
 import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.ts'
 import * as TestState from '../TestState/TestState.ts'
 
-export const state = {
-  tests: [],
-}
 
 export const execute = async (href) => {
   const globals = {
@@ -24,7 +21,7 @@ export const execute = async (href) => {
   }
   if (module.test) {
     if (module.skip) {
-      await TestFrameWork.test.skip(module.name, () => {})
+      await TestFrameWork.test.skip(module.name, () => { })
     } else {
       await ExecuteTest.executeTest(module.name, module.test, globals)
     }
@@ -40,17 +37,4 @@ export const execute = async (href) => {
   // 4. run the test
   // 5. if test fails, display error message
   // 6. if test succeeds, display success message
-}
-
-export const executeMockRpcFunction = async (name, command, ...args) => {
-  const map = TestState.getMockRpc(name)
-  if (!map) {
-    throw new Error(`Mock rpc ${name} not found`)
-  }
-  const fn = map.commands[command]
-  if (!fn) {
-    throw new Error(`Command ${command} not found`)
-  }
-  const result = await fn(...args)
-  return result
 }

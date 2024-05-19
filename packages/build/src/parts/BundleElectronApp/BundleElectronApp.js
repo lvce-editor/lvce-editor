@@ -10,6 +10,7 @@ import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainP
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
@@ -461,6 +462,20 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostSubWorkerFiles')
+
+  const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyEditorWorkerFiles')
+  await Copy.copy({
+    from: editorWorkerCachePath,
+    to: `${resourcesPath}/app/packages/editor-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyEditorWorkerFiles')
 
   const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
     commitHash,

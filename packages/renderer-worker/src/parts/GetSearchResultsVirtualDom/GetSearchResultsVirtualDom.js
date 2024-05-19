@@ -1,10 +1,10 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
-import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -26,40 +26,8 @@ const highlighted = {
   childCount: 1,
 }
 
-const renderRow = (rowInfo) => {
-  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount } = rowInfo
-  const treeItem = {
-    type: VirtualDomElements.Div,
-    role: AriaRoles.TreeItem,
-    className: ClassNames.TreeItem,
-    title,
-    ariaSetSize: setSize,
-    ariaLevel: depth,
-    ariaPosInSet: posInSet,
-    ariaLabel: title,
-    ariaDescription: '',
-    childCount: 1,
-    paddingLeft: `${Number(depth) + 1}rem`,
-    paddingRight: TreeItemPadding.PaddingRight,
-  }
-  switch (type) {
-    case TextSearchResultType.File:
-      treeItem.ariaExpanded = 'true'
-      break
-    default:
-      break
-  }
+const getLabelVirtualDom = (displayText, matchLength, matchStart, replacement) => {
   const dom = []
-
-  dom.push(treeItem)
-  if (type === TextSearchResultType.File) {
-    treeItem.childCount++
-    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom())
-  }
-  if (type === TextSearchResultType.File) {
-    treeItem.childCount++
-    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
-  }
   const label = {
     type: VirtualDomElements.Div,
     className: ClassNames.Label + ' Grow',
@@ -80,10 +48,60 @@ const renderRow = (rowInfo) => {
   } else {
     dom.push(text(displayText))
   }
+  return dom
+}
+
+const renderRow = (rowInfo) => {
+  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount, focused } = rowInfo
+  const treeItem = {
+    type: VirtualDomElements.Div,
+    role: AriaRoles.TreeItem,
+    className: ClassNames.TreeItem,
+    title,
+    ariaSetSize: setSize,
+    ariaLevel: depth,
+    ariaPosInSet: posInSet,
+    ariaLabel: title,
+    ariaDescription: '',
+    childCount: 1,
+    paddingLeft: `${Number(depth) + 1}rem`, // TODO use classname and dynamic css
+    paddingRight: TreeItemPadding.PaddingRight,
+  }
+  if (focused) {
+    treeItem.className += ' ' + ClassNames.TreeItemActive
+  }
+  switch (type) {
+    case TextSearchResultType.File:
+      treeItem.ariaExpanded = 'true'
+      break
+    default:
+      break
+  }
+  const dom = []
+
+  dom.push(treeItem)
+  if (type === TextSearchResultType.File) {
+    treeItem.childCount += 2
+    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom(), GetFileIconVirtualDom.getFileIconVirtualDom(icon))
+  }
+  dom.push(...getLabelVirtualDom(displayText, matchLength, matchStart, replacement))
   if (matchCount) {
     treeItem.childCount++
-    dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom('SourceControlBadge', matchCount))
+    dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.SourceControlBadge, matchCount))
   }
+  treeItem.childCount++
+  dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.SearchRemove,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.CloseMaskIcon,
+      childCount: 0,
+    },
+  )
   return dom
 }
 

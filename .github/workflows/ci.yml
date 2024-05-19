@@ -81,9 +81,13 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Build server
+        run: node packages/build/bin/build.js --target=server
+      - name: Test Static Export
+        run: node packages/build/src/parts/TestStaticExport/TestStaticExport.js
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless
+        run: npm run e2e:headless:ci
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)

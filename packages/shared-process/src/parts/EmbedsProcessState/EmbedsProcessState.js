@@ -6,8 +6,8 @@ export const increment = () => {
   state.ref++
 }
 
-export const get = () => {
-  return state.ref
+export const hasRef = () => {
+  return state.ref > 0
 }
 
 export const decrement = async () => {

@@ -2,10 +2,8 @@ import { BrowserWindow } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
-import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
-import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
 import { VError } from '../VError/VError.js'
+import * as WebContentsViewErrorPath from '../WebContentsViewErrorPath/WebContentsViewErrorPath.js'
 
 // TODO create output channel for browser view debug logs
 
@@ -44,10 +42,11 @@ export const resizeBrowserView = (view, x, y, width, height) => {
   })
 }
 
-const setIframeSrcFallback = async (view, error) => {
-  await view.webContents.loadFile(Path.join(Root.root, 'packages', 'main-process', 'pages', 'error', 'error.html'), {
+export const setIframeSrcFallback = async (view, code, message) => {
+  await view.webContents.loadFile(WebContentsViewErrorPath.webContentsViewErrorPath, {
     query: {
-      code: error.code,
+      code,
+      message,
     },
   })
 }
@@ -71,28 +70,16 @@ const getTitle = (webContents) => {
  * @param {string} iframeSrc
  */
 export const setIframeSrc = async (view, iframeSrc) => {
-  const { webContents } = view
   try {
+    Assert.object(view)
+    Assert.string(iframeSrc)
+    const { webContents } = view
     await webContents.loadURL(iframeSrc)
   } catch (error) {
+    const betterError = new VError(error, `Failed to set iframe src`)
     // @ts-ignore
-    if (error && error.code === LoadErrorCode.ERR_ABORTED) {
-      Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
-      return
-    }
-    // @ts-ignore
-    if (error && error.code === LoadErrorCode.ERR_FAILED && ElectronWebContentsViewState.isCanceled(webContents.id)) {
-      Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
-      ElectronWebContentsViewState.removeCanceled(webContents.id)
-      return
-    }
-    try {
-      await setIframeSrcFallback(view, error)
-    } catch (error) {
-      // @ts-ignore
-      throw new VError(error, `Failed to set iframe src`)
-    }
-    ElectronWebContentsViewState.removeCanceled(webContents.id)
+    betterError.dontPrint = true
+    throw betterError
   }
 }
 /**
@@ -162,7 +149,7 @@ export const show = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.addBrowserView(view)
+  browserWindow.contentView.addChildView(view)
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {
@@ -172,9 +159,7 @@ export const addToWindow = (browserWindowId, browserViewId) => {
   if (!browserWindow) {
     return
   }
-  browserWindow.addBrowserView(view)
-  // workaround for electron bug, view not being shown
-  view.setBounds(view.getBounds())
+  browserWindow.contentView.addChildView(view)
 }
 
 export const hide = (id) => {
@@ -184,7 +169,7 @@ export const hide = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.removeBrowserView(view)
+  browserWindow.contentView.removeChildView(view)
 }
 
 /**

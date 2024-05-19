@@ -1,14 +1,8 @@
-// @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.js'
-// @ts-ignore
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-// @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
-// @ts-ignore
 import * as Languages from '../Languages/Languages.js'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const getIncreaseIndentRegex = (languageConfiguration) => {

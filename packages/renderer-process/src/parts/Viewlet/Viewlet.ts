@@ -6,14 +6,9 @@ import * as RememberFocus from '../RememberFocus/RememberFocus.ts'
 import * as SetBounds from '../SetBounds/SetBounds.ts'
 import { VError } from '../VError/VError.ts'
 import * as ViewletModule from '../ViewletModule/ViewletModule.ts'
+import { state } from '../ViewletState/ViewletState.ts'
 import * as VirtualDom from '../VirtualDom/VirtualDom.ts'
 
-export const state = {
-  instances: Object.create(null),
-  currentSideBarView: undefined,
-  currentPanelView: undefined,
-  modules: Object.create(null),
-}
 
 export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
@@ -97,6 +92,19 @@ export const focus = (viewletId) => {
   } else {
     // TODO push focusContext
   }
+}
+
+export const focusSelector = (viewletId, selector) => {
+  const instance = state.instances[viewletId]
+  if (!instance) {
+    return
+  }
+  const { $Viewlet } = instance.state
+  const $Element = $Viewlet.querySelector(selector)
+  if (!$Element) {
+    return
+  }
+  $Element.focus()
 }
 
 /**
@@ -247,6 +255,9 @@ export const sendMultiple = (commands) => {
         // @ts-ignore
         setDom2(viewletId, method, ...args)
         break
+      case 'Viewlet.focusSelector':
+        // @ts-ignore
+        return focusSelector(viewletId, method, ...args)
       default: {
         invoke(viewletId, method, ...args)
       }

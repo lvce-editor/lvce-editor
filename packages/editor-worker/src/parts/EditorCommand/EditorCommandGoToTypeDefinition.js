@@ -1,8 +1,5 @@
-// @ts-ignore
 import * as GoToTypeDefinitionStrings from '../GoToTypeDefinitionStrings/GoToTypeDefinitionStrings.js'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
-// @ts-ignore
 import * as TypeDefinition from '../TypeDefinition/TypeDefinition.js'
 import * as EditorGoTo from './EditorCommandGoTo.js'
 

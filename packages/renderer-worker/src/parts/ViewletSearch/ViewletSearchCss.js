@@ -14,4 +14,5 @@ export const Css = [
   '/css/parts/TreeItem.css',
   '/css/parts/ViewletList.css',
   '/css/parts/ViewletSearch.css',
+  '/css/parts/SearchMessage.css',
 ]

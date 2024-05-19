@@ -8,6 +8,7 @@ export const Commands = {
   dispose: Viewlet.dispose,
   executeCommands: Viewlet.executeCommands,
   focus: Viewlet.focus,
+  focusSelector: Viewlet.focusSelector,
   handleError: Viewlet.handleError,
   invoke: Viewlet.invoke,
   loadModule: Viewlet.loadModule,

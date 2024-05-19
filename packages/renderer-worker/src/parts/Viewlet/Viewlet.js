@@ -351,6 +351,7 @@ export const openWidget = async (moduleId, ...args) => {
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
   commands.push(['Viewlet.append', layout.uid, childUid])
+  // TODO ask view to render, rendering focus
   commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this

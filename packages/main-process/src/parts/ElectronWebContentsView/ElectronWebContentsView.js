@@ -1,5 +1,5 @@
 import * as Electron from 'electron'
-import { BrowserView, BrowserWindow } from 'electron'
+import { BrowserWindow, WebContentsView } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
@@ -8,7 +8,7 @@ import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
 
 // TODO use electron 30 webcontentsview api
 export const createWebContentsView = async () => {
-  const view = new BrowserView({
+  const view = new WebContentsView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
     },
@@ -51,5 +51,5 @@ export const disposeWebContentsView = (browserViewId) => {
   }
   const { view, browserWindow } = instance
   ElectronWebContentsViewState.remove(browserViewId)
-  browserWindow.removeBrowserView(view)
+  browserWindow.contentView.removeChildView(view)
 }

@@ -18,6 +18,7 @@ const UiStrings = {
   RefreshExplorer: 'Refresh Explorer',
   CollapseAllFoldersInExplorer: 'Collapse All Folders in Explorer',
   Explorer: 'Explorer',
+  FilesExplorer: 'Files Explorer',
 }
 
 export const newFile = () => {
@@ -74,4 +75,8 @@ export const collapseAll = () => {
 
 export const explorer = () => {
   return I18nString.i18nString(UiStrings.Explorer)
+}
+
+export const filesExplorer = () => {
+  return I18nString.i18nString(UiStrings.FilesExplorer)
 }

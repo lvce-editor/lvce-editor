@@ -1,5 +1,6 @@
 import * as GetAboutVirtualDom from '../GetAboutVirtualDom/GetAboutVirtualDom.js'
 import * as AboutStrings from '../AboutStrings/AboutStrings.js'
+import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
 
 export const hasFunctionalRender = true
 
@@ -19,12 +20,24 @@ export const renderDialog = {
   },
 }
 
+const getFocusSelector = (focusId) => {
+  switch (focusId) {
+    case AboutFocusId.Copy:
+      return '.ButtonPrimary'
+    case AboutFocusId.Ok:
+      return '.ButtonSecondary'
+    default:
+      return ''
+  }
+}
+
 export const renderFocus = {
   isEqual(oldState, newState) {
-    return oldState.focused === newState.focused
+    return oldState.focusId === newState.focusId
   },
   apply(oldState, newState) {
-    return ['setFocused', newState.focused]
+    const selector = getFocusSelector(newState.focusId)
+    return ['setFocused', selector]
   },
 }
 

@@ -18,7 +18,7 @@ fi
 
 function updateDependencies {
   echo "updating dependencies..."
-  OUTPUT=`ncu -u -x msw -x electron  -x electron-unhandled`
+  OUTPUT=`ncu -u -x msw -x electron -x @types/node -x rollup -x electron-unhandled`
   SUB='All dependencies match the latest package versions'
   if [[ "$OUTPUT" == *"$SUB"* ]]; then
     echo "$OUTPUT"
@@ -30,14 +30,15 @@ function updateDependencies {
 
                                                        updateDependencies             &&
 cd packages/build                                   && updateDependencies && cd ../.. &&
+cd packages/editor-worker                           && updateDependencies && cd ../.. &&
 cd packages/extension-host-helper-process           && updateDependencies && cd ../.. &&
 cd packages/extension-host-worker-tests             && updateDependencies && cd ../.. &&
 cd packages/main-process                            && updateDependencies && cd ../.. &&
 cd packages/renderer-process                        && updateDependencies && cd ../.. &&
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&
+cd packages/search-worker                           && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
-cd packages/search-worker                           && updateDependencies && cd ../.. &&
 cd packages/syntax-highlighting-worker              && updateDependencies && cd ../.. &&
 cd packages/typescript-compile-process              && updateDependencies && cd ../.. &&
 

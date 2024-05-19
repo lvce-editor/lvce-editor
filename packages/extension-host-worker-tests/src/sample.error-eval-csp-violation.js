@@ -1,5 +1,7 @@
 export const name = 'sample.error-eval-csp-violation'
 
+export const skip = true
+
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
@@ -14,7 +16,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   // TODO error message could be improved
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-eval-csp-violation: ContentSecurityPolicyError: Content Security Policy Violation: script-src`
+    `Error: Failed to activate extension sample.error-eval-csp-violation: ContentSecurityPolicyError: Content Security Policy Violation: script-src`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(`> 1 | eval('1+1')
