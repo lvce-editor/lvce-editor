@@ -1,5 +1,5 @@
-import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
-import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.ts'
+import * as GetProtocol from '../GetProtocol/GetProtocol.ts'
 
 const getModule = (protocol) => {
   // TODO read preferences from renderer worker
@@ -12,15 +12,15 @@ const getModule = (protocol) => {
   // }
   switch (protocol) {
     case FileSystemProtocol.Web:
-      return import('../SearchFileWeb/SearchFileWeb.js')
+      return import('../SearchFileWeb/SearchFileWeb.ts')
     case FileSystemProtocol.Memfs:
-      return import('../SearchFileMemfs/SearchFileMemfs.js')
+      return import('../SearchFileMemfs/SearchFileMemfs.ts')
     case FileSystemProtocol.Fetch:
-      return import('../SearchFileWithFetch/SearchFileWithFetch.js')
+      return import('../SearchFileWithFetch/SearchFileWithFetch.ts')
     case FileSystemProtocol.Html:
-      return import('../SearchFileWithHtml/SearchFIleWithHtml.js')
+      return import('../SearchFileWithHtml/SearchFIleWithHtml.ts')
     default:
-      return import('../SearchFileWithRipGrep/SearchFileWithRipGrep.js')
+      return import('../SearchFileWithRipGrep/SearchFileWithRipGrep.ts')
   }
 }
 

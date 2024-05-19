@@ -1,6 +1,6 @@
-import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as AssetDir from '../AssetDir/AssetDir.ts'
 import * as Command from '../Command/Command.ts'
-import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
+import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.ts'
 
 const removeLeadingSlash = (path) => {
   const workspacePath = '' // TODO ask renderer worker for path
