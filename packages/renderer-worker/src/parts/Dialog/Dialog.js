@@ -5,6 +5,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const state = {
@@ -21,7 +22,7 @@ const openFileRemote = () => {
 
 const openFileElectron = async () => {
   const [file] = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
-  await Command.execute('Main.openUri', file)
+  await OpenUri.openUri(file)
 }
 
 export const openFile = () => {
@@ -44,7 +45,7 @@ export const handleClick = async (index) => {
   switch (option) {
     case 'Show Command Output':
       const uri = 'data://'
-      await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
+      await OpenUri.openUri(uri)
       // TODO show stderr in editor
       // TODO close dialog
       break
