@@ -28,7 +28,7 @@ jest.unstable_mockModule('../src/parts/FileSystemWatch/FileSystemWatch.js', () =
 }))
 
 const ExtensionHostManagementColorTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js')
-const FileSystemWatch = await import('../src/parts/FileSystemWatch/FileSystemWatch.js')
+const FileSystemWatch = await import('../src/parts/WatchFile/WatchFile.js')
 
 test('watch', async () => {
   // @ts-ignore
