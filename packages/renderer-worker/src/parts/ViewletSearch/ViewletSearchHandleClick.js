@@ -7,9 +7,13 @@ export const handleClick = (state, index) => {
 }
 
 export const handleClickAt = (state, eventX, eventY) => {
-  const { y, itemHeight } = state
+  const { y, itemHeight, x, width } = state
   const top = 94.19 // TODO search store boxes height integer
   const relativeY = eventY - y - top
+  const relativeX = eventX - x
   const relativeIndex = Math.floor(relativeY / itemHeight)
-  return handleClick(state, relativeIndex)
+  const paddingRight = 10
+  const closeButtonSize = 20
+  const isClose = width - relativeX - paddingRight < closeButtonSize
+  return handleClick(state, relativeIndex, isClose)
 }
