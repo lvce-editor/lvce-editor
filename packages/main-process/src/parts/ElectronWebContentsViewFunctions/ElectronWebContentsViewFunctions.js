@@ -149,7 +149,7 @@ export const show = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.addBrowserView(view)
+  browserWindow.contentView.addChildView(view)
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {
@@ -159,9 +159,7 @@ export const addToWindow = (browserWindowId, browserViewId) => {
   if (!browserWindow) {
     return
   }
-  browserWindow.addBrowserView(view)
-  // workaround for electron bug, view not being shown
-  view.setBounds(view.getBounds())
+  browserWindow.contentView.addChildView(view)
 }
 
 export const hide = (id) => {
@@ -171,7 +169,7 @@ export const hide = (id) => {
     return
   }
   const { view, browserWindow } = state
-  browserWindow.removeBrowserView(view)
+  browserWindow.contentView.removeChildView(view)
 }
 
 /**

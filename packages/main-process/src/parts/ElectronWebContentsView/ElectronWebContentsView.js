@@ -8,7 +8,6 @@ import * as EmbedsProcess from '../EmbedsProcess/EmbedsProcess.js'
 
 // TODO use electron 30 webcontentsview api
 export const createWebContentsView = async () => {
-  console.log('create web view')
   const view = new WebContentsView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
