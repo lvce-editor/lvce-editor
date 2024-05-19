@@ -186,7 +186,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-14'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=x64
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
       - name: Rename Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-14'
         shell: bash
