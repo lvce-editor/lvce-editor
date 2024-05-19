@@ -261,6 +261,9 @@ const copyElectronResult = async ({
 const renameReleaseFile = async ({ config, version, product, arch }) => {
   const finalFileName = getFinalFileName({ config, version, product })
   const releaseFileName = getReleaseFileName({ config, product, arch })
+  const distPath = Path.absolute(`packages/build/.tmp/electron-builder/dist/`)
+  const dirents = await readdir(distPath)
+  console.log({ dirents })
   const releaseFilePath = `packages/build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
     from: finalFileName,
