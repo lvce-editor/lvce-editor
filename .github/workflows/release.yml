@@ -36,7 +36,7 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        os: [windows-2022, macos-12, ubuntu-22.04]
+        os: [windows-2022, macos-14, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 80
     steps:
@@ -185,10 +185,10 @@ jobs:
           asset_name: ${{ env.ASSET_SNAP_X64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, x64)
-        if: matrix.os == 'macos-12'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=x64
+        if: matrix.os == 'macos-14'
+        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
       - name: Rename Electron App (Macos dmg, x64)
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
@@ -196,7 +196,7 @@ jobs:
           echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -205,10 +205,10 @@ jobs:
           asset_name: ${{ env.ASSET_DMG_X64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
       - name: Rename Electron App (Macos dmg, arm64)
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
@@ -216,7 +216,7 @@ jobs:
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
