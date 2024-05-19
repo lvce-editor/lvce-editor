@@ -15,6 +15,7 @@
   color: var(--TreeItemHoverForeground, #e0e0e0);
 }
 
+/* TODO don't use id for styling */
 #TreeItemActive,
 .TreeItemActive {
   background: var(--TreeItemActiveBackground, rgba(59, 71, 66, 0.5));

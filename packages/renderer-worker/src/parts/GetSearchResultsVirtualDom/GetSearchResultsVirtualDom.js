@@ -27,7 +27,7 @@ const highlighted = {
 }
 
 const renderRow = (rowInfo) => {
-  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount } = rowInfo
+  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount, focused } = rowInfo
   const treeItem = {
     type: VirtualDomElements.Div,
     role: AriaRoles.TreeItem,
@@ -42,6 +42,9 @@ const renderRow = (rowInfo) => {
     paddingLeft: `${Number(depth) + 1}rem`,
     paddingRight: TreeItemPadding.PaddingRight,
   }
+  if (focused) {
+    treeItem.className += ' ' + ClassNames.TreeItemActive
+  }
   switch (type) {
     case TextSearchResultType.File:
       treeItem.ariaExpanded = 'true'
@@ -53,12 +56,8 @@ const renderRow = (rowInfo) => {
 
   dom.push(treeItem)
   if (type === TextSearchResultType.File) {
-    treeItem.childCount++
-    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom())
-  }
-  if (type === TextSearchResultType.File) {
-    treeItem.childCount++
-    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
+    treeItem.childCount += 2
+    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom(), GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   }
   const label = {
     type: VirtualDomElements.Div,

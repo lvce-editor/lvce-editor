@@ -20,6 +20,7 @@ const selectIndexFile = async (state, searchResult, index) => {
   return {
     ...state,
     collapsedPaths: [...collapsedPaths, path],
+    focusedIndex: index,
   }
 }
 
