@@ -11,3 +11,24 @@
 .DropTarget {
   background: rgba(0, 0, 90, 0.5);
 }
+
+.TreeItem {
+  --SearchRemoveDisplay: none;
+  --SearchBadgeDisplay: block;
+}
+
+.TreeItem:hover {
+  --SearchRemoveDisplay: block;
+  --SearchBadgeDisplay: none;
+}
+
+.SearchRemove {
+  width: 20px;
+  height: 20px;
+  contain: strict;
+  display: var(--SearchRemoveDisplay);
+}
+
+.Badge {
+  display: var(--SearchBadgeDisplay);
+}
