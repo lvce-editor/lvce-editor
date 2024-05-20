@@ -96,7 +96,7 @@ jobs:
       - name: Build Electron App (snap)
         if: matrix.os == 'ubuntu-24.04'
         run: node packages/build/bin/build.js --target=electron-builder-snap
-      - name: Build Electron App (Macos dmg, x64)
+      - name: Build Electron App (Macos dmg, arm64)
         if: matrix.os == 'macos-14'
         run: node packages/build/bin/build.js --target=electron-builder-mac --arch=arm64
       - name: Cache Electron Builder Dependencies (Windows)
