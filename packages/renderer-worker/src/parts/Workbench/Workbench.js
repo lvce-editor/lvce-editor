@@ -21,6 +21,7 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
+import * as Bounds from '../Bounds/Bounds.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -52,6 +53,8 @@ export const startup = async () => {
     await SessionReplay.replaySession(replayId)
     return
   }
+
+  Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
 
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()

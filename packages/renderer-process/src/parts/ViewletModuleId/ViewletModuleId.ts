@@ -46,6 +46,8 @@ export const FindWidget = 'FindWidget'
 
 export const ImagePreview = 'ImagePreview'
 
+export const InlineDiffEditor = 'InlineDiffEditor'
+
 export const Implementations = 'Implementations'
 
 export const KeyBindings = 'KeyBindings'
