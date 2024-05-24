@@ -102,6 +102,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorSourceActions/ViewletEditorSourceActions.ipc.js')
     case ViewletModuleId.EmptyEditor:
       return import('../ViewletEmptyEditor/ViewletEmptyEditor.ipc.js')
+    case ViewletModuleId.InlineDiffEditor:
+      return import('../ViewletInlineDiffEditor/ViewletInlineDiffEditor.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

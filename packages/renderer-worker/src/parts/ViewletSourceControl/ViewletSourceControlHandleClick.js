@@ -2,7 +2,10 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as Command from '../Command/Command.js'
+import * as Bounds from '../Bounds/Bounds.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
+
+const inlineDiffEditorBreakpoint = 800
 
 const handleClickFile = async (state, item) => {
   const { enabledProviderIds, gitRoot, root } = state
@@ -10,8 +13,11 @@ const handleClickFile = async (state, item) => {
   const absolutePath = `${root}/${item.file}`
   // TODO handle error
   const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(providerId, item.file), FileSystem.readFile(absolutePath)])
-  console.log({ fileBefore, fileNow })
-  await Command.execute('Main.openUri', `diff://data://${fileBefore}<->${absolutePath}`)
+  if (Bounds.get().width < inlineDiffEditorBreakpoint) {
+    await Command.execute('Main.openUri', `inline-diff://data://${fileBefore}<->${absolutePath}`)
+  } else {
+    await Command.execute('Main.openUri', `diff://data://${fileBefore}<->${absolutePath}`)
+  }
   return state
 }
 

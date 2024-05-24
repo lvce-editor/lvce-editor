@@ -118,6 +118,9 @@ export const canBeRestored = async (uri) => {
   if (protocol === 'diff') {
     return true
   }
+  if (protocol === 'inline-diff') {
+    return true
+  }
   if (protocol === 'simple-browser') {
     return true
   }
