@@ -1,5 +1,3 @@
-import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.ts'
-
-export const Events = ViewletDiffEditorEvents
+export * as Events from './ViewletDiffEditorEvents.ts'
 
 export * from '../ViewletScrollable/ViewletScrollable.ts'
