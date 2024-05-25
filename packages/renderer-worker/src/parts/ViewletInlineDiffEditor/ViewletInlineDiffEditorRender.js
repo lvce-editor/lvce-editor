@@ -1,4 +1,4 @@
-import * as GetDiffEditorVirtualDom from '../GetDiffEditorVirtualDom/GetDiffEditorVirtualDom.js'
+import * as GetInlineDiffEditorVirtualDom from '../GetInlineDiffEditorVirtualDom/GetInlineDiffEditorVirtualDom.js'
 import * as GetVisibleDiffLinesWithTokens from '../GetVisibleDiffLinesWithTokens/GetVisibleDiffLinesWithTokens.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -26,7 +26,7 @@ const renderChanges = {
       newState.maxLineY,
       newState.languageRight,
     )
-    const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(mergedLeft, mergedRight)
+    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(mergedLeft, mergedRight)
     return ['Viewlet.setDom2', dom]
   },
 }

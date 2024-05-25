@@ -1,0 +1,27 @@
+:root {
+  --InsertionBackground: rgba(155, 185, 85, 0.4);
+  --DeletionBackground: rgba(255, 0, 0, 0.4);
+  --ScrollBarShadow: rgba(0, 0, 0, 0.14);
+}
+
+.InlineDiffEditor {
+  display: flex;
+  color: rgb(188, 190, 190);
+  position: absolute;
+}
+
+.InlineDiffEditorContent {
+  contain: strict;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative !important;
+}
+
+.Deletion {
+  background: var(--DeletionBackground);
+}
+
+.Insertion {
+  background: var(--InsertionBackground);
+}
