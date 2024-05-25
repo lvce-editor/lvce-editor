@@ -74,7 +74,7 @@ const getLinesVirtualDom = (lines, className) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `Editor ${ClassNames.DiffEditorContent} ${className}`,
+      className: `${ClassNames.Editor} ${ClassNames.DiffEditorContent} ${className}`,
       childCount: 1,
     },
     {
@@ -95,7 +95,7 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Viewlet DiffEditor',
+      className: `${ClassNames.Viewlet} ${ClassNames.DiffEditor}`,
       childCount: 4,
       onWheel: DomEventListenerFunctions.HandleWheel,
     },
