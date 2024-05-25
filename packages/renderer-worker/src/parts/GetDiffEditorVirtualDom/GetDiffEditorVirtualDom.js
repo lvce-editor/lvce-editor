@@ -1,7 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DiffType from '../DiffType/DiffType.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deletion = {
@@ -79,12 +79,12 @@ const getLinesVirtualDom = (lines, className) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'EditorContent',
+      className: ClassNames.EditorContent,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'EditorRows',
+      className: ClassNames.EditorRows,
       childCount: lines.length,
     },
     ...lines.flatMap(renderLine),
@@ -102,7 +102,7 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     ...getLinesVirtualDom(linesLeft, ClassNames.DiffEditorContentLeft),
     {
       type: VirtualDomElements.Div,
-      className: 'Sash SashVertical',
+      className: `${ClassNames.Sash} ${ClassNames.SashVertical}`,
       childcount: 0,
     },
     ...getLinesVirtualDom(linesRight, ClassNames.DiffEditorContentRight),

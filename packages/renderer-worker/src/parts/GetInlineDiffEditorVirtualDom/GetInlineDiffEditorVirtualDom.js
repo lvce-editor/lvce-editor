@@ -79,12 +79,12 @@ const getLinesVirtualDom = (linesLeft, linesRight, className) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'EditorContent',
+      className: ClassNames.EditorContent,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'EditorRows',
+      className: ClassNames.EditorRows,
       childCount: linesLeft.length + linesRight.length,
     },
     ...linesLeft.flatMap(renderLine),
