@@ -1,7 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DiffType from '../DiffType/DiffType.js'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deletion = {
@@ -70,7 +70,7 @@ const renderLine = (value) => {
   return [getPrefix(type), text(line)]
 }
 
-const getLinesVirtualDom = (lines, className) => {
+const getLinesVirtualDom = (linesLeft, linesRight, className) => {
   return [
     {
       type: VirtualDomElements.Div,
@@ -85,27 +85,22 @@ const getLinesVirtualDom = (lines, className) => {
     {
       type: VirtualDomElements.Div,
       className: ClassNames.EditorRows,
-      childCount: lines.length,
+      childCount: linesLeft.length + linesRight.length,
     },
-    ...lines.flatMap(renderLine),
+    ...linesLeft.flatMap(renderLine),
+    ...linesRight.flatMap(renderLine),
   ]
 }
 
-export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
+export const getInlineDiffEditorVirtualDom = (linesLeft, linesRight) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `${ClassNames.Viewlet} ${ClassNames.DiffEditor}`,
-      childCount: 4,
+      className: `${ClassNames.Viewlet} ${ClassNames.InlineDiffEditor}`,
+      childCount: 3,
       onWheel: DomEventListenerFunctions.HandleWheel,
     },
-    ...getLinesVirtualDom(linesLeft, ClassNames.DiffEditorContentLeft),
-    {
-      type: VirtualDomElements.Div,
-      className: `${ClassNames.Sash} ${ClassNames.SashVertical}`,
-      childcount: 0,
-    },
-    ...getLinesVirtualDom(linesRight, ClassNames.DiffEditorContentRight),
+    ...getLinesVirtualDom(linesLeft, linesRight, ClassNames.DiffEditorContentLeft),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBar,
