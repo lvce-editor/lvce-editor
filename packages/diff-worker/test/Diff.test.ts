@@ -1,39 +1,87 @@
 import { expect, test } from '@jest/globals'
 import * as Diff from '../src/parts/Diff/Diff.ts'
+import * as DiffType from '../src/parts/DiffType/DiffType.ts'
 
-test.skip('deletion', () => {
+test('deletion', () => {
   const linesA = ['a']
   const linesB = []
-  const expected = [1, 1, 0, 0]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual({
+    changesLeft: [
+      {
+        index: 0,
+        type: DiffType.Deletion,
+      },
+    ],
+    changesRight: [],
+  })
 })
 
-test.skip('insertion', () => {
+test('insertion', () => {
   const linesA = []
   const linesB = ['a']
-  const expected = [0, 0, 1, 1]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual({
+    changesLeft: [],
+    changesRight: [
+      {
+        index: 0,
+        type: DiffType.Insertion,
+      },
+    ],
+  })
 })
 
-test.skip('two insertions', () => {
+test('two insertions', () => {
   const linesA = []
   const linesB = ['a', 'b']
-  const expected = [0, 0, 1, 1]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual({
+    changesLeft: [],
+    changesRight: [
+      {
+        index: 0,
+        type: DiffType.Insertion,
+      },
+      {
+        index: 1,
+        type: DiffType.Insertion,
+      },
+    ],
+  })
 })
 
-test.skip('three insertions', () => {
+test('three insertions', () => {
   const linesA = []
   const linesB = ['a', 'b', 'c']
-  const expected = [0, 0, 1, 1]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual({
+    changesLeft: [],
+    changesRight: [
+      {
+        index: 0,
+        type: DiffType.Insertion,
+      },
+      {
+        index: 1,
+        type: DiffType.Insertion,
+      },
+      {
+        index: 2,
+        type: DiffType.Insertion,
+      },
+    ],
+  })
 })
 
-test.skip('insertion at start', () => {
+test('insertion at start', () => {
   const linesA = ['b', 'c']
   const linesB = ['a', 'b', 'c']
-  const expected = [0, 0, 1, 1]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual({
+    changesLeft: [],
+    changesRight: [
+      {
+        index: 0,
+        type: 1,
+      },
+    ],
+  })
 })
 
 test.skip('insertion at end', () => {
