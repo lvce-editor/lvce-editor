@@ -33,15 +33,38 @@ test('insertion', () => {
 test('two insertions', () => {
   const linesA = []
   const linesB = ['a', 'b']
-  const expected = [0, 0, 1, 1]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual({
+    changesLeft: [],
+    changesRight: [
+      {
+        index: 0,
+        type: DiffType.Insertion,
+      },
+      {
+        index: 1,
+        type: DiffType.Insertion,
+      },
+    ],
+  })
 })
 
 test('three insertions', () => {
   const linesA = []
   const linesB = ['a', 'b', 'c']
-  const expected = [0, 0, 1, 1]
-  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+  expect(Diff.diff(linesA, linesB)).toEqual([
+    {
+      index: 0,
+      type: DiffType.Insertion,
+    },
+    {
+      index: 1,
+      type: DiffType.Insertion,
+    },
+    {
+      index: 2,
+      type: DiffType.Insertion,
+    },
+  ])
 })
 
 test('insertion at start', () => {
