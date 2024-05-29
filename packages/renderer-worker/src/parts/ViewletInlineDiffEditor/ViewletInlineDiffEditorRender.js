@@ -1,8 +1,7 @@
-import * as GetInlineDiffEditorVirtualDom from '../GetInlineDiffEditorVirtualDom/GetInlineDiffEditorVirtualDom.js'
-import * as GetVisibleDiffLinesWithTokens from '../GetVisibleDiffLinesWithTokens/GetVisibleDiffLinesWithTokens.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as GetInlineDiffEditorLines from '../GetInlineDiffEditorLines/GetInlineDiffEditorLines.js'
+import * as GetInlineDiffEditorVirtualDom from '../GetInlineDiffEditorVirtualDom/GetInlineDiffEditorVirtualDom.js'
+import * as GetVisibleInlineDiffEditorLines from '../GetVisibleInlineDiffEditorLines/GetVisibleInlineDiffEditorLines.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
 
@@ -30,7 +29,8 @@ const renderChanges = {
     const size = lines.length * newState.itemHeight
     const minimumSliderSize = 20
     const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(newState.height, size, minimumSliderSize)
-    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(lines, scrollBarY, scrollBarHeight)
+    const visibleLines = GetVisibleInlineDiffEditorLines.getVisibleInlineDiffEditorLines(lines, newState.minLineY, newState.maxLineY)
+    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(visibleLines, scrollBarY, scrollBarHeight)
     return ['Viewlet.setDom2', dom]
   },
 }
