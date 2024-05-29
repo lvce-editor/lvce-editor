@@ -1,20 +1,3 @@
-.ScrollBarThumb {
-  width: 100%;
-  /* height: 40px; */
-  position: absolute;
-  contain: strict;
-  background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
-}
-
-.ScrollBarThumbActive {
-  background: var(--ScrollBarThumbActiveBackground, rgba(83, 100, 100, 0.4));
-}
-
-.ScrollBarThumbHorizontal {
-  height: 100%;
-  width: auto;
-}
-
 .ScrollBar {
   position: absolute;
   right: 0;
