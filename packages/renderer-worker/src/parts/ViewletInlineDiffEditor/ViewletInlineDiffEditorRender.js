@@ -10,14 +10,14 @@ export const hasFunctionalRootRender = true
 
 const renderChanges = {
   isEqual(oldState, newState) {
-    return oldState.changes === newState.changes && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return oldState.chanesLeft === newState.changesLeft && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
     const lines = GetInlineDiffEditorLines.getInlineDiffEditorLines(
       newState.linesLeft,
       newState.linesRight,
-      newState.changes.changesLeft,
-      newState.changes.changesRight,
+      newState.changesLeft,
+      newState.changesRight,
     )
     const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(lines)
     return ['Viewlet.setDom2', dom]
