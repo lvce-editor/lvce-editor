@@ -1,59 +1,72 @@
 import * as DiffType from '../DiffType/DiffType.js'
 
 export const getInlineDiffEditorLines = (linesLeft, linesRight, changesLeft, changesRight) => {
+  const lengthLeft = linesLeft.length
+  const lengthRight = linesRight.length
   const inlineDiffLinesLeft = []
   const inlineDiffLinesRight = []
-  for (const line of linesLeft) {
-    inlineDiffLinesLeft.push({
-      type: DiffType.None,
-      text: line,
-    })
+  for (let i = 0; i < linesLeft.length; i++) {
+    inlineDiffLinesLeft.push(DiffType.None)
   }
-  for (const line of linesRight) {
-    inlineDiffLinesRight.push({
-      type: DiffType.None,
-      text: line,
-    })
+  for (let i = 0; i < linesRight.length; i++) {
+    inlineDiffLinesRight.push(DiffType.None)
   }
   for (const change of changesLeft) {
-    inlineDiffLinesLeft[change.index].type = change.type
+    inlineDiffLinesLeft[change.index] = change.type
   }
   for (const change of changesRight) {
-    inlineDiffLinesRight[change.index].type = change.type
+    inlineDiffLinesRight[change.index] = change.type
   }
   const merged = []
   let leftIndex = 0
   let rightIndex = 0
-  while (leftIndex < inlineDiffLinesLeft.length && rightIndex < inlineDiffLinesRight.length) {
+  while (leftIndex < lengthLeft && rightIndex < lengthRight) {
     const left = inlineDiffLinesLeft[leftIndex]
     const right = inlineDiffLinesRight[rightIndex]
-    if (left.type === right.type) {
-      leftIndex++
-      rightIndex++
+    if (left === right) {
       merged.push({
-        text: left.text,
+        text: linesLeft[leftIndex],
         type: DiffType.None,
       })
-    } else if (left.type === DiffType.Deletion) {
       leftIndex++
-      merged.push(left)
-    } else if (leftIndex <= rightIndex) {
-      leftIndex++
-      merged.push(left)
-    } else if (leftIndex > rightIndex) {
       rightIndex++
-      merged.push(right)
+    } else if (left === DiffType.Deletion) {
+      merged.push({
+        text: linesLeft[leftIndex],
+        type: left,
+      })
+      leftIndex++
+    } else if (leftIndex <= rightIndex) {
+      merged.push({
+        text: linesLeft[leftIndex],
+        type: left,
+      })
+      leftIndex++
+    } else if (leftIndex > rightIndex) {
+      merged.push({
+        text: linesRight[rightIndex],
+        type: right,
+      })
+      rightIndex++
     } else {
       throw new Error('should not happen')
     }
   }
-  while (leftIndex < inlineDiffLinesLeft.length) {
-    const left = inlineDiffLinesLeft[leftIndex++]
-    merged.push(left)
+  while (leftIndex < lengthLeft) {
+    const left = inlineDiffLinesLeft[leftIndex]
+    merged.push({
+      text: linesLeft[leftIndex],
+      type: left,
+    })
+    leftIndex++
   }
-  while (rightIndex < inlineDiffLinesRight.length) {
-    const right = inlineDiffLinesRight[rightIndex++]
-    merged.push(right)
+  while (rightIndex < lengthRight) {
+    const right = inlineDiffLinesRight[rightIndex]
+    merged.push({
+      text: linesRight[rightIndex],
+      type: right,
+    })
+    rightIndex++
   }
   return merged
 }
