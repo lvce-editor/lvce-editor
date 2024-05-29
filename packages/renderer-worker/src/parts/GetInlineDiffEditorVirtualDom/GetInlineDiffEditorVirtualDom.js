@@ -3,11 +3,11 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetInlineDiffEditorLineVirtualDom from '../GetInlineDiffEditorLineVirtualDom/GetInlineDiffEditorLineVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const getLinesVirtualDom = (lines, className) => {
+const getLinesVirtualDom = (lines) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `${ClassNames.Editor} ${ClassNames.DiffEditorContent} ${className}`,
+      className: `${ClassNames.Editor} ${ClassNames.DiffEditorContent} ${ClassNames.InlineDiffEditorContent}`,
       childCount: 1,
     },
     {
@@ -32,7 +32,7 @@ export const getInlineDiffEditorVirtualDom = (lines) => {
       childCount: 3,
       onWheel: DomEventListenerFunctions.HandleWheel,
     },
-    ...getLinesVirtualDom(lines, ClassNames.InlineDiffEditorContent),
+    ...getLinesVirtualDom(lines),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBar,
