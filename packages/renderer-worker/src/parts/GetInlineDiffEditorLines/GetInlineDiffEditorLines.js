@@ -34,6 +34,9 @@ export const getInlineDiffEditorLines = (linesLeft, linesRight, changesLeft, cha
         text: left.text,
         type: DiffType.None,
       })
+    } else if (left.type === DiffType.Deletion) {
+      leftIndex++
+      merged.push(left)
     } else if (leftIndex <= rightIndex) {
       leftIndex++
       merged.push(left)
