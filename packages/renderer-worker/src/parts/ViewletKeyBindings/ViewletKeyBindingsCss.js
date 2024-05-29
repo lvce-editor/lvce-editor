@@ -4,5 +4,6 @@ export const Css = [
   '/css/parts/KeyBindingsHeader.css',
   '/css/parts/KeyBindingsTable.css',
   '/css/parts/ScrollBar.css',
+  '/css/parts/ScrollBarThumb.css',
   '/css/parts/ViewletKeyBindings.css',
 ]
