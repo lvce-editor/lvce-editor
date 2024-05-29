@@ -1,85 +1,13 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as DiffType from '../DiffType/DiffType.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetInlineDiffEditorLineVirtualDom from '../GetInlineDiffEditorLineVirtualDom/GetInlineDiffEditorLineVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const deletion = {
-  type: VirtualDomElements.Div,
-  className: `${ClassNames.EditorRow} ${ClassNames.Deletion}`,
-  childCount: 1,
-}
-
-const insertion = {
-  type: VirtualDomElements.Div,
-  className: `${ClassNames.EditorRow} ${ClassNames.Insertion}`,
-  childCount: 1,
-}
-
-const normal = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.EditorRow,
-  childCount: 1,
-}
-
-const getPrefix = (type) => {
-  switch (type) {
-    case DiffType.Insertion:
-      return insertion
-    case DiffType.Deletion:
-      return deletion
-    case DiffType.None:
-      return normal
-  }
-}
-
-const getClassName = (type) => {
-  switch (type) {
-    case DiffType.Deletion:
-      return ClassNames.Deletion
-    case DiffType.Insertion:
-      return ClassNames.Insertion
-    case DiffType.None:
-      return ''
-  }
-}
-
-const renderLine = (value) => {
-  if (Math) {
-    const { type } = value
-    const prefix = getPrefix(type)
-    return [prefix, text(value.text)]
-  }
-  const { line, lineInfo, type } = value
-  if (lineInfo) {
-    const dom = []
-    dom.push({
-      type: VirtualDomElements.Div,
-      className: `${ClassNames.EditorRow} ${getClassName(type)}`,
-      childCount: lineInfo.length / 2,
-    })
-    for (let i = 0; i < lineInfo.length; i += 2) {
-      const tokenText = lineInfo[i]
-      const className = lineInfo[i + 1]
-      dom.push(
-        {
-          type: VirtualDomElements.Span,
-          className,
-          childCount: 1,
-        },
-        text(tokenText),
-      )
-    }
-    return dom
-  }
-  return [getPrefix(type), text(line)]
-}
-
-const getLinesVirtualDom = (lines, className) => {
+const getLinesVirtualDom = (lines) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `${ClassNames.Editor} ${ClassNames.DiffEditorContent} ${className}`,
+      className: `${ClassNames.Editor} ${ClassNames.DiffEditorContent} ${ClassNames.InlineDiffEditorContent}`,
       childCount: 1,
     },
     {
@@ -92,7 +20,7 @@ const getLinesVirtualDom = (lines, className) => {
       className: ClassNames.EditorRows,
       childCount: lines.length,
     },
-    ...lines.flatMap(renderLine),
+    ...lines.flatMap(GetInlineDiffEditorLineVirtualDom.renderLine),
   ]
 }
 
@@ -104,7 +32,7 @@ export const getInlineDiffEditorVirtualDom = (lines) => {
       childCount: 3,
       onWheel: DomEventListenerFunctions.HandleWheel,
     },
-    ...getLinesVirtualDom(lines, ClassNames.InlineDiffEditorContent),
+    ...getLinesVirtualDom(lines),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBar,
