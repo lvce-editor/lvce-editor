@@ -24,7 +24,7 @@ const getLinesVirtualDom = (lines) => {
   ]
 }
 
-export const getInlineDiffEditorVirtualDom = (lines) => {
+export const getInlineDiffEditorVirtualDom = (lines, scrollBarY, scrollBarHeight) => {
   return [
     {
       type: VirtualDomElements.Div,
@@ -42,6 +42,8 @@ export const getInlineDiffEditorVirtualDom = (lines) => {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBarThumb,
       childCount: 0,
+      top: `${scrollBarY}px`,
+      height: `${scrollBarHeight}px`,
     },
   ]
 }
