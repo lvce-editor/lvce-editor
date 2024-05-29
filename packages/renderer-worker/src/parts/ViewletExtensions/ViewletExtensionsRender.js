@@ -4,6 +4,7 @@ import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensio
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as Px from '../Px/Px.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as ViewletExtensionStrings from '../ViewletExtensions/ViewletExtensionsStrings.js'
@@ -52,8 +53,8 @@ const renderScrollBar = {
       scrollBarHeight,
     )
     const roundedScrollBarY = Math.round(scrollBarY)
-    const heightString = `${scrollBarHeight}px`
-    const translateString = `0 ${roundedScrollBarY}px`
+    const heightString = Px.px(scrollBarHeight)
+    const translateString = Px.position(0, roundedScrollBarY)
     let className = ClassNames.ScrollBarThumb
     if (newState.scrollBarActive) {
       className += ' ' + ClassNames.ScrollBarThumbActive
