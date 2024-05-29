@@ -107,7 +107,7 @@ export const load = (moduleId) => {
     case ViewletModuleId.EmptyEditor:
       return import('../ViewletEmptyEditor/ViewletEmptyEditor.ts')
     case ViewletModuleId.InlineDiffEditor:
-      return import('../ViewletDiffEditor/ViewletDiffEditor.ts')
+      return import('../ViewletInlineDiffEditor/ViewletInlineDiffEditor.ts')
     default:
       throw new Error(`${moduleId} module not found in renderer process`)
   }
