@@ -54,7 +54,7 @@ const renderScrollBar = {
     )
     const roundedScrollBarY = Math.round(scrollBarY)
     const heightString = Px.px(scrollBarHeight)
-    const translateString = `0 ${Px.px(roundedScrollBarY)}`
+    const translateString = Px.position(0, roundedScrollBarY)
     let className = ClassNames.ScrollBarThumb
     if (newState.scrollBarActive) {
       className += ' ' + ClassNames.ScrollBarThumbActive
