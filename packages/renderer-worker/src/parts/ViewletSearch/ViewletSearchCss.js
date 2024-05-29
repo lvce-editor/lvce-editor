@@ -8,11 +8,12 @@ export const Css = [
   '/css/parts/Label.css',
   '/css/parts/MaskIcon.css',
   '/css/parts/ScrollBar.css',
+  '/css/parts/ScrollBarThumb.css',
   '/css/parts/SearchField.css',
   '/css/parts/SearchHeader.css',
+  '/css/parts/SearchMessage.css',
   '/css/parts/SearchToggleButton.css',
   '/css/parts/TreeItem.css',
   '/css/parts/ViewletList.css',
   '/css/parts/ViewletSearch.css',
-  '/css/parts/SearchMessage.css',
 ]
