@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as Px from '../Px/Px.js'
 import * as GetX from '../GetX/GetX.js'
 
 const getSelectionFromChange = (change) => {
@@ -60,7 +61,7 @@ const getCursorArray = (visibleCursors, isFocused) => {
   for (let i = 0; i < visibleCursors.length; i += 2) {
     const x = visibleCursors[i]
     const y = visibleCursors[i + 1]
-    cursorArray.push(`${x}px ${y}px`)
+    cursorArray.push(`${Px.px(x)} ${Px.px(y)}`)
   }
   return cursorArray
 }
@@ -72,7 +73,7 @@ const getSelectionArray = (visibleSelections) => {
     const y = visibleSelections[i + 1]
     const width = visibleSelections[i + 2]
     const height = visibleSelections[i + 3]
-    selectionsArray.push(`${x}px`, `${y}px`, `${width}px`, `${height}px`)
+    selectionsArray.push(Px.px(x), Px.px(y), Px.px(width), Px.px(height))
   }
   return selectionsArray
 }

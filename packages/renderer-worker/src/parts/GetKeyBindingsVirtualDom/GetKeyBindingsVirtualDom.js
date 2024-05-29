@@ -2,6 +2,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetKeyBindingsHeaderVirtualDom from '../GetKeyBindingsHeaderVirtualDom/GetKeyBindingsHeaderVirtualDom.js'
 import * as GetKeyBindingsTableVirtualDom from '../GetKeyBindingsTableVirtualDom/GetKeyBindingsTableVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as Px from '../Px/Px.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 export const getKeyBindingsVirtualDom = (
@@ -48,8 +49,8 @@ export const getKeyBindingsVirtualDom = (
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBarThumb,
       childCount: 0,
-      height: `${scrollBarThumbHeight}px`,
-      top: `${scrollBarThumbTop}px`,
+      height: Px.px(scrollBarThumbHeight),
+      top: Px.px(scrollBarThumbTop),
     },
   ]
 }
