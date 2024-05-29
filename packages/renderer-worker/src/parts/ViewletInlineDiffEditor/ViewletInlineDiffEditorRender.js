@@ -2,6 +2,7 @@ import * as GetInlineDiffEditorVirtualDom from '../GetInlineDiffEditorVirtualDom
 import * as GetVisibleDiffLinesWithTokens from '../GetVisibleDiffLinesWithTokens/GetVisibleDiffLinesWithTokens.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as GetInlineDiffEditorLines from '../GetInlineDiffEditorLines/GetInlineDiffEditorLines.js'
 
 export const hasFunctionalRender = true
 
@@ -12,21 +13,13 @@ const renderChanges = {
     return oldState.changes === newState.changes && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const mergedLeft = GetVisibleDiffLinesWithTokens.getVisibleDiffLinesWithTokens(
+    const lines = GetInlineDiffEditorLines.getInlineDiffEditorLines(
       newState.linesLeft,
-      newState.changes.changesLeft,
-      newState.minLineY,
-      newState.maxLineY,
-      newState.languageLeft,
-    )
-    const mergedRight = GetVisibleDiffLinesWithTokens.getVisibleDiffLinesWithTokens(
       newState.linesRight,
+      newState.changes.changesLeft,
       newState.changes.changesRight,
-      newState.minLineY,
-      newState.maxLineY,
-      newState.languageRight,
     )
-    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(mergedLeft, mergedRight)
+    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(lines)
     return ['Viewlet.setDom2', dom]
   },
 }

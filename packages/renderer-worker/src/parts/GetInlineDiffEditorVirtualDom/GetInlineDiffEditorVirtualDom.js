@@ -45,6 +45,11 @@ const getClassName = (type) => {
 }
 
 const renderLine = (value) => {
+  if (Math) {
+    const { type } = value
+    const prefix = getPrefix(type)
+    return [prefix, text(value.text)]
+  }
   const { line, lineInfo, type } = value
   if (lineInfo) {
     const dom = []
@@ -70,7 +75,7 @@ const renderLine = (value) => {
   return [getPrefix(type), text(line)]
 }
 
-const getLinesVirtualDom = (linesLeft, linesRight, className) => {
+const getLinesVirtualDom = (lines, className) => {
   return [
     {
       type: VirtualDomElements.Div,
@@ -85,14 +90,13 @@ const getLinesVirtualDom = (linesLeft, linesRight, className) => {
     {
       type: VirtualDomElements.Div,
       className: ClassNames.EditorRows,
-      childCount: linesLeft.length + linesRight.length,
+      childCount: lines.length,
     },
-    ...linesLeft.flatMap(renderLine),
-    ...linesRight.flatMap(renderLine),
+    ...lines.flatMap(renderLine),
   ]
 }
 
-export const getInlineDiffEditorVirtualDom = (linesLeft, linesRight) => {
+export const getInlineDiffEditorVirtualDom = (lines) => {
   return [
     {
       type: VirtualDomElements.Div,
@@ -100,7 +104,7 @@ export const getInlineDiffEditorVirtualDom = (linesLeft, linesRight) => {
       childCount: 3,
       onWheel: DomEventListenerFunctions.HandleWheel,
     },
-    ...getLinesVirtualDom(linesLeft, linesRight, ClassNames.DiffEditorContentLeft),
+    ...getLinesVirtualDom(lines, ClassNames.InlineDiffEditorContent),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBar,
