@@ -3,7 +3,8 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetInlineDiffEditorLineVirtualDom from '../GetInlineDiffEditorLineVirtualDom/GetInlineDiffEditorLineVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const getLinesVirtualDom = (lines) => {
+const getLinesVirtualDom = (lines, lineNumbers) => {
+  const renderLine = lineNumbers ? GetInlineDiffEditorLineVirtualDom.renderLineWithLineNumber : GetInlineDiffEditorLineVirtualDom.renderLine
   return [
     {
       type: VirtualDomElements.Div,
@@ -20,11 +21,11 @@ const getLinesVirtualDom = (lines) => {
       className: ClassNames.EditorRows,
       childCount: lines.length,
     },
-    ...lines.flatMap(GetInlineDiffEditorLineVirtualDom.renderLine),
+    ...lines.flatMap(renderLine),
   ]
 }
 
-export const getInlineDiffEditorVirtualDom = (lines, scrollBarY, scrollBarHeight) => {
+export const getInlineDiffEditorVirtualDom = (lines, scrollBarY, scrollBarHeight, lineNumbers) => {
   return [
     {
       type: VirtualDomElements.Div,
@@ -32,7 +33,7 @@ export const getInlineDiffEditorVirtualDom = (lines, scrollBarY, scrollBarHeight
       childCount: 3,
       onWheel: DomEventListenerFunctions.HandleWheel,
     },
-    ...getLinesVirtualDom(lines),
+    ...getLinesVirtualDom(lines, lineNumbers),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBar,

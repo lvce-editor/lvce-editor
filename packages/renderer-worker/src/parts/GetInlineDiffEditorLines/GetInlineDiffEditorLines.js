@@ -27,6 +27,7 @@ export const getInlineDiffEditorLines = (linesLeft, linesRight, changesLeft, cha
       merged.push({
         text: linesLeft[leftIndex],
         type: DiffType.None,
+        index: leftIndex,
       })
       leftIndex++
       rightIndex++
@@ -34,18 +35,21 @@ export const getInlineDiffEditorLines = (linesLeft, linesRight, changesLeft, cha
       merged.push({
         text: linesLeft[leftIndex],
         type: left,
+        index: leftIndex,
       })
       leftIndex++
     } else if (leftIndex <= rightIndex) {
       merged.push({
         text: linesLeft[leftIndex],
         type: left,
+        index: leftIndex,
       })
       leftIndex++
     } else if (leftIndex > rightIndex) {
       merged.push({
         text: linesRight[rightIndex],
         type: right,
+        index: rightIndex,
       })
       rightIndex++
     } else {
@@ -57,6 +61,7 @@ export const getInlineDiffEditorLines = (linesLeft, linesRight, changesLeft, cha
     merged.push({
       text: linesLeft[leftIndex],
       type: left,
+      index: leftIndex,
     })
     leftIndex++
   }
@@ -65,6 +70,7 @@ export const getInlineDiffEditorLines = (linesLeft, linesRight, changesLeft, cha
     merged.push({
       text: linesRight[rightIndex],
       type: right,
+      index: rightIndex,
     })
     rightIndex++
   }
