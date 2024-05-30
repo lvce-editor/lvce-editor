@@ -20,6 +20,10 @@
   height: 3px;
 }
 
+.ScrollBarLarge {
+  width: 28px;
+}
+
 .ScrollBarSmall {
   width: 10px;
 }

@@ -35,7 +35,7 @@ export const getInlineDiffEditorVirtualDom = (lines, scrollBarY, scrollBarHeight
     ...getLinesVirtualDom(lines),
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.ScrollBar,
+      className: `${ClassNames.ScrollBar} ${ClassNames.ScrollBarLarge}`,
       childCount: 1,
     },
     {
