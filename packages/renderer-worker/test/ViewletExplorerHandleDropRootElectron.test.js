@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
@@ -16,6 +16,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     copy: jest.fn(() => {
@@ -26,10 +27,19 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: PlatformType.Electron,
     assetDir: '',
+  }
+})
+
+jest.unstable_mockModule('../src/parts/GetFilePathElectron/GetFilePathElectron.js', () => {
+  return {
+    getFilePathElectron() {
+      return '/test/file.txt'
+    },
   }
 })
 
@@ -81,7 +91,7 @@ test('handleDrop - single file', async () => {
     ],
   })
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
-  expect(FileSystem.copy).toHaveBeenCalledWith('/source/file.txt', '/test/file.txt')
+  expect(FileSystem.copy).toHaveBeenCalledWith('/test/file.txt', '/test/file.txt')
 })
 
 test('handleDrop - single file - merge with existing files', async () => {
@@ -174,7 +184,7 @@ test('handleDrop - single file - merge with existing files', async () => {
     ],
   })
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
-  expect(FileSystem.copy).toHaveBeenCalledWith('/source/file-2.txt', '/test/file-2.txt')
+  expect(FileSystem.copy).toHaveBeenCalledWith('/test/file.txt', '/test/file-2.txt')
 })
 
 test('handleDrop - error', async () => {

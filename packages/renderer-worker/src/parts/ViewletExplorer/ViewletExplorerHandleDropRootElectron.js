@@ -1,4 +1,5 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetFilePathElectron from '../GetFilePathElectron/GetFilePathElectron.js'
 import * as Path from '../Path/Path.js'
 import { getChildDirents } from './ViewletExplorerShared.js'
 
@@ -9,7 +10,8 @@ const mergeDirents = (oldDirents, newDirents) => {
 // TODO copy files in parallel
 const copyFilesElectron = async (root, pathSeparator, files) => {
   for (const file of files) {
-    const from = file.path
+    const from = await GetFilePathElectron.getFilePathElectron(file)
+    // const from = file.path
     const to = Path.join(pathSeparator, root, file.name)
     await FileSystem.copy(from, to)
   }
