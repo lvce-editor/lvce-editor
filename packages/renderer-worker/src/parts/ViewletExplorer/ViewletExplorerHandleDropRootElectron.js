@@ -28,7 +28,6 @@ const getMergedDirents = async (root, pathSeparator, dirents) => {
 
 export const handleDrop = async (state, files) => {
   const { root, pathSeparator, items } = state
-  console.log({ root, pathSeparator, files })
   await copyFilesElectron(root, pathSeparator, files)
   const mergedDirents = await getMergedDirents(root, pathSeparator, items)
   return {
