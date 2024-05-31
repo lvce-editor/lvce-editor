@@ -1,5 +1,6 @@
 import * as Character from '../Character/Character.js'
 import * as Diff from '../Diff/Diff.js'
+import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as GetDiffEditorContents from '../GetDiffEditorContents/GetDiffEditorContents.js'
 import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as Languages from '../Languages/Languages.js'
@@ -22,6 +23,7 @@ export const create = (id, uri, x, y, width, height) => {
     languageLeft: '',
     languageRight: '',
     ...VirtualList.create({ itemHeight: 20 }),
+    lineNumbers: false,
   }
 }
 
@@ -59,6 +61,7 @@ export const loadContent = async (state, savedState) => {
   const deltaY = minLineY * state.itemHeight
 
   const finalDeltaY = Math.max(contentHeight - height, 0)
+  const lineNumbers = EditorPreferences.getLineNumbers()
 
   return {
     ...state,
@@ -73,5 +76,6 @@ export const loadContent = async (state, savedState) => {
     languageLeft,
     languageRight,
     deltaY,
+    lineNumbers,
   }
 }
