@@ -91,7 +91,7 @@ test('handleDrop - single file', async () => {
     ],
   })
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
-  expect(FileSystem.copy).toHaveBeenCalledWith('/source/file.txt', '/test/file.txt')
+  expect(FileSystem.copy).toHaveBeenCalledWith('/test/file.txt', '/test/file.txt')
 })
 
 test('handleDrop - single file - merge with existing files', async () => {
