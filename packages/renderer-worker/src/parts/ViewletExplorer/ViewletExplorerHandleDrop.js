@@ -5,7 +5,6 @@ import { getIndexFromPosition } from './ViewletExplorerShared.js'
 
 export const handleDrop = async (state, x, y, files) => {
   try {
-    console.log({ x, y, files })
     const index = getIndexFromPosition(state, x, y)
     switch (index) {
       case -1:
