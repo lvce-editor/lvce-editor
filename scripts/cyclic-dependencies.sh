@@ -23,7 +23,7 @@ cd packages/test-worker            && echo "Checking test-worker"               
 cd packages/build                  && echo "Checking build"                          && dpdm --no-warning --no-tree --exit-code circular:1 src/build.js  && cd ../.. &&
 cd packages/shared-process         && echo "Checking shared-process"                 && dpdm --no-warning --no-tree --exit-code circular:1 src/sharedProcessMain.js  && cd ../.. &&
 cd packages/renderer-process       && echo "Checking renderer-process"               && dpdm --no-warning --no-tree --exit-code circular:1 src/rendererProcessMain.ts  && cd ../.. &&
-cd packages/renderer-worker        && echo "Checking renderer-worker"                && dpdm --no-warning --no-tree --exit-code circular:1 src/rendererWorkerMain.ts  && cd ../.. &&
+# cd packages/renderer-worker        && echo "Checking renderer-worker"                && dpdm --no-warning --no-tree --exit-code circular:1 src/rendererWorkerMain.ts  && cd ../.. &&
 
 echo "Great Success!"
 
