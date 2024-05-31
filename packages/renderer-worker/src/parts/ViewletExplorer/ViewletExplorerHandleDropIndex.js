@@ -49,7 +49,6 @@ const handleDropIntoFile = (state, dirent, index, files) => {
 export const handleDropIndex = (state, index, files) => {
   const { items } = state
   const dirent = items[index]
-  console.log({ index, files })
   // TODO if it is a file, drop into the folder of the file
   // TODO if it is a folder, drop into the folder
   // TODO if it is a symlink, read symlink and determine if file can be dropped
