@@ -3,6 +3,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const transferToRendererProcess = (objectId, transferable) => {
   const { id, promise } = Callback.registerPromise()
+  // TODO use invoke and transfer
   RendererProcess.sendAndTransfer(
     {
       jsonrpc: '2.0',
