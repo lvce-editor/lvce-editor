@@ -37,7 +37,3 @@ export const sendAndTransfer = (message, transfer) => {
   // @ts-expect-error
   state.ipc.sendAndTransfer(message, transfer)
 }
-
-export const invokeAndTransfer = (method, transfer, ...params) => {
-  return JsonRpc.invokeAndTransfer(state.ipc, transfer, method, ...params)
-}
