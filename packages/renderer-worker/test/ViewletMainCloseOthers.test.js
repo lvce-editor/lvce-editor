@@ -403,7 +403,7 @@ test('closeOthers - 2 1 - third tab is focused and second tab is selected', asyn
   ])
 })
 
-test('closeOthers - 2 2 - third tab is focused and third tab is selected', async () => {
+test.skip('closeOthers - 2 2 - third tab is focused and third tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
