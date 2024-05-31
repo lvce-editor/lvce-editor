@@ -1,3 +1,4 @@
+import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
@@ -21,10 +22,11 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
-import * as Bounds from '../Bounds/Bounds.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleInternal.js'
+import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -34,6 +36,7 @@ export const startup = async () => {
   // @ts-ignore
   onerror = UnhandledErrorHandling.handleUnhandledError
 
+  ViewletModuleInternal.registerAll(ViewletModuleMap.map)
   Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
