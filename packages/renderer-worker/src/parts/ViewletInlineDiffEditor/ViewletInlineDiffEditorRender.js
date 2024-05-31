@@ -11,11 +11,12 @@ const renderChanges = {
   isEqual(oldState, newState) {
     return (
       oldState.chanesLeft === newState.changesLeft &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY &&
-      oldState.deltaY === newState.deltaY &&
-      oldState.height === newState.height &&
-      oldState.finalDeltaY === newState.finalDeltaY
+        oldState.minLineY === newState.minLineY &&
+        oldState.maxLineY === newState.maxLineY &&
+        oldState.deltaY === newState.deltaY &&
+        oldState.height === newState.height &&
+        oldState.finalDeltaY === newState.finalDeltaY,
+      oldState.lineNumbers === newState.lineNumbers
     )
   },
   apply(oldState, newState) {
@@ -30,7 +31,7 @@ const renderChanges = {
     const minimumSliderSize = 20
     const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(newState.height, size, minimumSliderSize)
     const visibleLines = GetVisibleInlineDiffEditorLines.getVisibleInlineDiffEditorLines(lines, newState.minLineY, newState.maxLineY)
-    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(visibleLines, scrollBarY, scrollBarHeight)
+    const dom = GetInlineDiffEditorVirtualDom.getInlineDiffEditorVirtualDom(visibleLines, scrollBarY, scrollBarHeight, newState.lineNumbers)
     return ['Viewlet.setDom2', dom]
   },
 }

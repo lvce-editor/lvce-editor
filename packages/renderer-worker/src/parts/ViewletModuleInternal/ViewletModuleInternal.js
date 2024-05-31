@@ -1,110 +1,13 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+const map = Object.create(null)
+
+export const register = (id, importFn) => {
+  map[id] = importFn
+}
+
+export const registerAll = (input) => {
+  Object.assign(map, input)
+}
 
 export const load = (moduleId) => {
-  switch (moduleId) {
-    case ViewletModuleId.Confirm:
-      return import('../ViewletConfirm/ViewletConfirm.ipc.js')
-    case ViewletModuleId.ActivityBar:
-      return import('../ViewletActivityBar/ViewletActivityBar.ipc.js')
-    case ViewletModuleId.Audio:
-      return import('../ViewletAudio/ViewletAudio.ipc.js')
-    case ViewletModuleId.BrowserViewOverview:
-      return import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js')
-    case ViewletModuleId.Clock:
-      return import('../ViewletClock/ViewletClock.ipc.js')
-    case ViewletModuleId.DebugConsole:
-      return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
-    case ViewletModuleId.DefineKeyBinding:
-      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js')
-    case ViewletModuleId.Dialog:
-      return import('../ViewletDialog/ViewletDialog.ipc.js')
-    case ViewletModuleId.DiffEditor:
-      return import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js')
-    case ViewletModuleId.EditorCompletion:
-      return import('../ViewletEditorCompletion/ViewletEditorCompletion.ipc.js')
-    case ViewletModuleId.EditorHover:
-      return import('../ViewletEditorHover/ViewletEditorHover.ipc.js')
-    case ViewletModuleId.EditorImage:
-      return import('../ViewletEditorImage/ViewletEditorImage.ipc.js')
-    case ViewletModuleId.EditorPlainText:
-      return import('../ViewletEditorPlainText/ViewletEditorPlainText.ipc.js')
-    case ViewletModuleId.EditorText:
-      return import('../ViewletEditorText/ViewletEditorText.ipc.js')
-    case ViewletModuleId.EditorWidgetError:
-      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js')
-    case ViewletModuleId.Explorer:
-      return import('../ViewletExplorer/ViewletExplorer.ipc.js')
-    case ViewletModuleId.ExtensionDetail:
-      return import('../ViewletExtensionDetail/ViewletExtensionDetail.ipc.js')
-    case ViewletModuleId.Extensions:
-      return import('../ViewletExtensions/ViewletExtensions.ipc.js')
-    case ViewletModuleId.FindWidget:
-      return import('../ViewletFindWidget/ViewletFindWidget.ipc.js')
-    case ViewletModuleId.Implementations:
-      return import('../ViewletImplementations/ViewletImplementations.ipc.js')
-    case ViewletModuleId.KeyBindings:
-      return import('../ViewletKeyBindings/ViewletKeyBindings.ipc.js')
-    case ViewletModuleId.Layout:
-      return import('../ViewletLayout/ViewletLayout.ipc.js')
-    case ViewletModuleId.Main:
-      return import('../ViewletMain/ViewletMain.ipc.js')
-    case ViewletModuleId.Noop:
-      return import('../ViewletNoop/ViewletNoop.ipc.js')
-    case ViewletModuleId.Output:
-      return import('../ViewletOutput/ViewletOutput.ipc.js')
-    case ViewletModuleId.Panel:
-      return import('../ViewletPanel/ViewletPanel.ipc.js')
-    case ViewletModuleId.Problems:
-      return import('../ViewletProblems/ViewletProblems.ipc.js')
-    case ViewletModuleId.QuickPick:
-      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
-    case ViewletModuleId.References:
-      return import('../ViewletReferences/ViewletReferences.ipc.js')
-    case ViewletModuleId.RunAndDebug:
-      return import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js')
-    case ViewletModuleId.ScreenCapture:
-      return import('../ViewletScreenCapture/ViewletScreenCapture.ipc.js')
-    case ViewletModuleId.Search:
-      return import('../ViewletSearch/ViewletSearch.ipc.js')
-    case ViewletModuleId.SideBar:
-      return import('../ViewletSideBar/ViewletSideBar.ipc.js')
-    case ViewletModuleId.SimpleBrowser:
-      return import('../ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
-    case ViewletModuleId.SourceControl:
-      return import('../ViewletSourceControl/ViewletSourceControl.ipc.js')
-    case ViewletModuleId.StatusBar:
-      return import('../ViewletStatusBar/ViewletStatusBar.ipc.js')
-    case ViewletModuleId.MarkDownPreview:
-      return import('../ViewletMarkDownPreview/ViewletMarkDownPreview.ipc.js')
-    case ViewletModuleId.Storage:
-      return import('../ViewletStorage/ViewletStorage.ipc.js')
-    case ViewletModuleId.Terminal:
-      return import('../ViewletTerminal/ViewletTerminal.ipc.js')
-    case ViewletModuleId.Terminals:
-      return import('../ViewletTerminals/ViewletTerminals.ipc.js')
-    case ViewletModuleId.TitleBar:
-      return import('../ViewletTitleBar/ViewletTitleBar.ipc.js')
-    case ViewletModuleId.TitleBarButtons:
-      return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.ipc.js')
-    case ViewletModuleId.TitleBarIcon:
-      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.ipc.js')
-    case ViewletModuleId.TitleBarMenuBar:
-      return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ipc.js')
-    case ViewletModuleId.Video:
-      return import('../ViewletVideo/ViewletVideo.ipc.js')
-    case ViewletModuleId.ColorPicker:
-      return import('../ViewletColorPicker/ViewletColorPicker.ipc.js')
-    case ViewletModuleId.TitleBarTitle:
-      return import('../ViewletTitleBarTitle/ViewletTitleBarTitle.ipc.js')
-    case ViewletModuleId.About:
-      return import('../ViewletAbout/ViewletAbout.ipc.js')
-    case ViewletModuleId.EditorSourceActions:
-      return import('../ViewletEditorSourceActions/ViewletEditorSourceActions.ipc.js')
-    case ViewletModuleId.EmptyEditor:
-      return import('../ViewletEmptyEditor/ViewletEmptyEditor.ipc.js')
-    case ViewletModuleId.InlineDiffEditor:
-      return import('../ViewletInlineDiffEditor/ViewletInlineDiffEditor.ipc.js')
-    default:
-      throw new Error(`unknown module ${moduleId}`)
-  }
+  return map[moduleId]()
 }

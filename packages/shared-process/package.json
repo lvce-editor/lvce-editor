@@ -29,13 +29,13 @@
     "@lvce-editor/jsonc-parser": "^1.2.0",
     "@lvce-editor/pretty-error": "^1.5.0",
     "@lvce-editor/verror": "^1.3.0",
-    "debug": "^4.3.4",
+    "debug": "^4.3.5",
     "is-object": "^1.0.2",
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
     "@lvce-editor/network-process": "^1.2.0",
-    "@lvce-editor/preload": "^1.2.0",
+    "@lvce-editor/preload": "^1.3.0",
     "@lvce-editor/process-explorer": "^1.1.0",
     "@lvce-editor/search-process": "^1.2.0",
     "@lvce-editor/pty-host": "^1.2.0",

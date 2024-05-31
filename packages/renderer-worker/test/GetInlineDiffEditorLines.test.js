@@ -29,14 +29,17 @@ test('one line equal, one line replaced', () => {
     {
       text: 'abc;',
       type: 0,
+      index: 0,
     },
     {
       text: 'a',
       type: 2,
+      index: 1,
     },
     {
       text: 'b',
       type: 1,
+      index: 1,
     },
   ])
 })
@@ -76,22 +79,27 @@ test('one line equal, two lines replaced', () => {
     {
       text: 'abc;',
       type: 0,
+      index: 0,
     },
     {
       text: 'a',
       type: 2,
+      index: 1,
     },
     {
       text: 'a',
       type: 2,
+      index: 2,
     },
     {
       text: 'b',
       type: 1,
+      index: 1,
     },
     {
       text: 'b',
       type: 1,
+      index: 2,
     },
   ])
 })
