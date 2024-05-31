@@ -1,3 +1,4 @@
+import * as BrowserWindowV8CacheOptions from '../BrowserWindowV8CacheOptions/BrowserWindowV8CacheOptions.js'
 import * as GetIcon from '../GetIcon/GetIcon.js'
 import * as PreloadUrl from '../PreloadUrl/PreloadUrl.js'
 
@@ -21,9 +22,9 @@ export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, ti
       spellcheck: false,
       sandbox: true,
       contextIsolation: true,
-      v8CacheOptions: 'bypassHeatCheck', // TODO this is what vscode uses, but it doesn't work properly in electron https://github.com/electron/electron/issues/27075
+      v8CacheOptions: BrowserWindowV8CacheOptions.browserWindowV8CacheOptions,
       preload: PreloadUrl.preloadUrl,
-      additionalArguments: ['--lvce-window-kind'],
+      additionalArguments: [],
     },
     backgroundColor: background,
     show: false,
