@@ -148,6 +148,8 @@ export const getModuleId = (commandId) => {
     case 'PointerCapture.mock':
     case 'PointerCapture.unmock':
       return ModuleId.PointerCapture
+    case 'GetFilePathElectron.getFilePathElectron':
+      return ModuleId.GetFilePathElectron
     default:
       throw new CommandNotFoundError(commandId)
   }

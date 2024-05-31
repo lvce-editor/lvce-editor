@@ -66,6 +66,8 @@ export const load = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.ts')
     case ModuleId.PointerCapture:
       return import('../PointerCapture/PointerCapture.ipc.ts')
+    case ModuleId.GetFilePathElectron:
+      return import('../GetFilePathElectron/GetFilePathElectron.ipc.ts')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
