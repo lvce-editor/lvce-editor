@@ -1,2 +1,2 @@
 export const BypassHeatCheck = 'bypassHeatCheck'
-export const None = ''
+export const None = 'none'
