@@ -9,6 +9,7 @@ import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
+import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
@@ -200,6 +201,8 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
+
+  await DevelopFileWatcher.hydrate()
 
   Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
   Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)

@@ -136,3 +136,7 @@ export const getDownloadDir = () => {
 export const getRepository = () => {
   return `lvce-editor/lvce-editor`
 }
+
+export const getRoot = () => {
+  return Root.root
+}
