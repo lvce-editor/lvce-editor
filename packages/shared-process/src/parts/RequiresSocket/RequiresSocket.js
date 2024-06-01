@@ -14,6 +14,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
   'ElectronBrowserView.createBrowserView',
   'ElectronWebContentsView.createWebContentsView',
+  'FileWatcher.watch',
 ])
 
 export const requiresSocket = (method) => {

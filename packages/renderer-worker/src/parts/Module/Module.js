@@ -162,6 +162,8 @@ export const load = (moduleId) => {
       return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
     case ModuleId.Languages:
       return import('../Languages/Languages.ipc.js')
+    case ModuleId.FileWatcher:
+      return import('../FileWatcher/FileWatcher.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

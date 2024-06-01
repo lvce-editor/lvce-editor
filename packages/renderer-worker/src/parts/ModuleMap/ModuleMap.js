@@ -186,6 +186,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.OffscreenCanvas
     case 'Languages':
       return ModuleId.Languages
+    case 'FileWatcher':
+      return ModuleId.FileWatcher
     default:
       throw new Error(`module ${prefix} not found`)
   }

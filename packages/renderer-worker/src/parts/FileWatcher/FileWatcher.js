@@ -1,5 +1,20 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Id from '../Id/Id.js'
 
-export const watch = (options) => {
-  return SharedProcess.invoke('FileWatcher.watch', options)
+const map = Object.create(null)
+
+export const handleEvent = (id, event) => {
+  const eventTarget = map[id]
+  eventTarget.dispatchEvent(
+    new CustomEvent('watcher-event', {
+      detail: event,
+    }),
+  )
+}
+
+export const watch = async (options) => {
+  const id = Id.create()
+  map[id] = new EventTarget()
+  await SharedProcess.invoke('FileWatcher.watch', id, options)
+  return map[id]
 }
