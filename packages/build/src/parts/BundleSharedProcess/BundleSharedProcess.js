@@ -189,6 +189,27 @@ export const searchProcessPath = ResolveBin.resolveBin('@lvce-editor/search-proc
 `,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/TypeScriptCompileProcessPath/TypeScriptCompileProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const typescriptCompileProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'typescript-compile-process',
+  'src',
+  'typescriptCompileProcessMain.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const typescriptCompileProcessPath = ResolveBin.resolveBin('@lvce-editor/typescript-compile-process')
+`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
