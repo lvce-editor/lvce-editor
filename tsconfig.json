@@ -18,7 +18,6 @@
     { "path": "./packages/shared-process" },
     { "path": "./packages/syntax-highlighting-worker" },
     { "path": "./packages/terminal-worker" },
-    { "path": "./packages/test-worker" },
-    { "path": "./packages/typescript-compile-process" }
+    { "path": "./packages/test-worker" }
   ]
 }

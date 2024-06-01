@@ -1,18 +1,17 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
+import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
-import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
-import * as BundleTypeScriptCompileProcessCached from '../BundleTypeScriptCompileProcessCached/BundleTypeScriptCompileProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -709,7 +708,6 @@ const setVersionsAndDependencies = async ({ version }) => {
     'packages/build/.tmp/server/jest-environment/package.json',
     'packages/build/.tmp/server/server/package.json',
     'packages/build/.tmp/server/shared-process/package.json',
-    'packages/build/.tmp/server/typescript-compile-process/package.json',
   ]
   for (const file of files) {
     const json = await JsonFile.readJson(file)
@@ -728,7 +726,6 @@ const setVersionsAndDependencies = async ({ version }) => {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
       json.optionalDependencies ||= {}
       delete json.optionalDependencies['@lvce-editor/process-explorer']
-      json.optionalDependencies['@lvce-editor/typescript-compile-process'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
@@ -967,21 +964,6 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
-
-  const typscriptCompileProcessCachePath = await BundleTypeScriptCompileProcessCached.bundleTypeScriptCompileProcessCached({
-    commitHash,
-    product,
-    version,
-    target: 'server',
-    date: '',
-  })
-
-  console.time('copyTypeScriptCompileProcessPath')
-  await Copy.copy({
-    from: typscriptCompileProcessCachePath,
-    to: 'packages/build/.tmp/server/typescript-compile-process',
-  })
-  console.timeEnd('copyTypeScriptCompileProcessPath')
 
   console.time('copyStaticFiles')
   await copyStaticFiles({ commitHash })
