@@ -1,15 +1,11 @@
-import * as Character from '../Character/Character.js'
 import * as CssState from '../CssState/CssState.js'
 import * as GetCss from '../GetCss/GetCss.js'
+import * as GetCssId from '../GetCssId/GetCssId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-
-const getId = (path) => {
-  return 'Css' + path.replace('/css/parts/', '').replaceAll(Character.Slash, Character.Dash).replace('.css', Character.EmptyString)
-}
 
 const actuallyLoadCssStyleSheet = async (css) => {
   const text = await GetCss.getCss(css)
-  const id = getId(css)
+  const id = GetCssId.getCssId(css)
   await addCssStyleSheet(id, text)
 }
 
