@@ -1,76 +1,50 @@
 import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
 import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.js'
+import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
+
+const readFile = jest.fn()
+const writeFile = jest.fn()
+const remove = jest.fn()
+
+FileSystemState.registerAll({
+  test() {
+    return {
+      readFile,
+      writeFile,
+      remove,
+    }
+  },
+})
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
-  return {
-    invoke: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
-const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-
-// TODO duplicate test code with FileSystemDisk.test.js
-
 test('readFile', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readFile':
-        return 'sample text'
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  expect(await FileSystem.readFile('/tmp/some-file.txt')).toEqual('sample text')
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.readFile', '/tmp/some-file.txt', EncodingType.Utf8)
+  readFile.mockReturnValue('sample text')
+  expect(await FileSystem.readFile('test://some-file.txt')).toEqual('sample text')
+  expect(readFile).toHaveBeenCalledWith('FileSystem.readFile', '/tmp/some-file.txt')
 })
 
 test('readFile - error', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readFile':
-        throw new TypeError('x is not a function')
-      default:
-        throw new Error('unexpected message')
-    }
+  readFile.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
   await expect(FileSystem.readFile('/tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('removeFile', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  await FileSystem.remove('/tmp/some-file.txt')
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.remove', '/tmp/some-file.txt')
+  remove.mockReturnValue(null)
+  await FileSystem.remove('test://some-file.txt')
+  expect(remove).toHaveBeenCalledTimes(1)
+  expect(remove).toHaveBeenCalledWith('some-file.txt')
 })
 
 test('removeFile - error', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        throw new TypeError('x is not a function')
-      default:
-        throw new Error('unexpected message')
-    }
+  remove.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
   await expect(FileSystem.remove('/tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
