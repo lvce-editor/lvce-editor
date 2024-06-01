@@ -1,27 +1,12 @@
-import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as CssState from '../CssState/CssState.js'
+import * as GetCss from '../GetCss/GetCss.js'
 import * as GetCssId from '../GetCssId/GetCssId.js'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Response from '../Response/Response.js'
-import { VError } from '../VError/VError.js'
 
 const actuallyLoadCssStyleSheet = async (css) => {
-  try {
-    const url = `${AssetDir.assetDir}${css}`
-    const response = await fetch(url)
-    if (!response.ok) {
-      if (response.status === HttpStatusCode.NotFound) {
-        throw new Error(`File not found ${url}`)
-      }
-      throw new Error(response.statusText)
-    }
-    const text = await Response.getText(response)
-    const id = GetCssId.getCssId(css)
-    await addCssStyleSheet(id, text)
-  } catch (error) {
-    throw new VError(error, `Failed to load css "${css}"`)
-  }
+  const text = await GetCss.getCss(css)
+  const id = GetCssId.getCssId(css)
+  await addCssStyleSheet(id, text)
 }
 
 export const loadCssStyleSheet = (id) => {
@@ -49,4 +34,9 @@ export const addDynamicCss = (id, getCss, preferences) => {
     CssState.set(id, actuallyAddDynamicCss(id, getCss, preferences))
   }
   return CssState.get(id)
+}
+
+export const reload = async (css) => {
+  console.info(`[renderer-worker] reload ${css}`)
+  await actuallyLoadCssStyleSheet(css)
 }
