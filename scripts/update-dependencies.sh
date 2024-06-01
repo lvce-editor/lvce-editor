@@ -40,7 +40,6 @@ cd packages/search-worker                           && updateDependencies && cd 
 cd packages/server                                  && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
 cd packages/syntax-highlighting-worker              && updateDependencies && cd ../.. &&
-cd packages/typescript-compile-process              && updateDependencies && cd ../.. &&
 
 
 echo "Great Success!"
