@@ -54,3 +54,8 @@ export const addDynamicCss = (id, getCss, preferences) => {
   }
   return CssState.get(id)
 }
+
+export const reload = async (css) => {
+  console.info(`[renderer-worker] reload ${css}`)
+  await actuallyLoadCssStyleSheet(css)
+}

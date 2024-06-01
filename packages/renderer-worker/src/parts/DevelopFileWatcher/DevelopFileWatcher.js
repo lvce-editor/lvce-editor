@@ -4,6 +4,7 @@ import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Reload from '../Reload/Reload.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Css from '../Css/Css.js'
 
 export const hydrate = async () => {
   if (IsProduction.isProduction) {
@@ -21,12 +22,11 @@ export const hydrate = async () => {
   })
   const handleEvent = async (event) => {
     const { detail } = event
-    if (detail && detail.eventType === 'change') {
-      await Reload.reload()
+    if (detail && detail.eventType === 'change' && detail.filename.endsWith('.css')) {
+      const cssLoadFile = `/${detail.filename}`
+      await Css.reload(cssLoadFile)
     }
-    // console.log(detail)
   }
   // TODO use async iterator
   watcher.addEventListener('watcher-event', handleEvent)
-  // const watcher =
 }
