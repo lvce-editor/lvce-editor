@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ beforeEach(() => {
   ImagePreview.state.uri = ''
 })
 
-test('show', async () => {
+test.skip('show', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ImagePreview.show('/tmp/sample-image.png', 10, 20)

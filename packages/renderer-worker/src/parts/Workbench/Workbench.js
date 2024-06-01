@@ -1,6 +1,8 @@
 import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
+import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
@@ -37,6 +39,7 @@ export const startup = async () => {
   onerror = UnhandledErrorHandling.handleUnhandledError
 
   ViewletModuleInternal.registerAll(ViewletModuleMap.map)
+  FileSystemState.registerAll(FileSystemMap.map)
   Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
