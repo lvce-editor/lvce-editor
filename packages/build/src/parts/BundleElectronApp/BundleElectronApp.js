@@ -235,7 +235,7 @@ const copyStaticFiles = async ({ resourcesPath }) => {
   })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
-    occurrence: '\n    <meta name="description" content="Online Code Editor" />',
+    occurrence: '\n    <meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />',
     replacement: ``,
   })
   await Remove.remove(`${resourcesPath}/app/static/manifest.json`)

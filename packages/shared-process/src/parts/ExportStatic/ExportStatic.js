@@ -206,13 +206,13 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
 }
 
 const addExtensionSeo = async ({ root, name, description, commitHash }) => {
-  await replace(Path.join(root, 'dist', 'index.html'), '<title>Code Editor</title>', `<title>${name}</title>`)
+  await replace(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"description": "Web Code Editor."`, `"description": "${description}"`)
   await replace(
     Path.join(root, 'dist', 'index.html'),
-    '<meta name="description" content="Online Code Editor" />',
+    '<meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />',
     `<meta name="description" content="${description}" />`,
   )
 }
