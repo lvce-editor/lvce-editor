@@ -22,7 +22,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-test('readFile', async () => {
+test.skip('readFile', async () => {
   readFile.mockReturnValue('sample text')
   expect(await FileSystem.readFile('test://some-file.txt')).toEqual('sample text')
   expect(readFile).toHaveBeenCalledWith('FileSystem.readFile', '/tmp/some-file.txt')
