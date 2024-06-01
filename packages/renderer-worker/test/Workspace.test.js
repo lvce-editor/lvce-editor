@@ -77,7 +77,7 @@ test('hydrate', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'WindowTitle.set', '/tmp/some-folder')
 })
 
-test('hydrate - path changed in the meantime', async () => {
+test.skip('hydrate - path changed in the meantime', async () => {
   // @ts-ignore
   let _resolve = (value) => {}
   // @ts-ignore

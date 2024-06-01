@@ -15,10 +15,12 @@ test('create', () => {
 
 test('loadContent', async () => {
   FileSystemState.registerAll({
-    test: {
-      readFile(uri) {
-        return 'test content'
-      },
+    test() {
+      return {
+        readFile(uri) {
+          return 'test content'
+        },
+      }
     },
   })
   const state = ViewletEditorPlainText.create(0, 'test://sample-file', 0, 0, 0, 0)
