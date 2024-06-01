@@ -8,6 +8,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
@@ -22,7 +23,6 @@ import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -46,7 +46,7 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
   if (Platform.platform !== PlatformType.Web) {
-    await SharedProcess.listen()
+    await LaunchSharedProcess.launchSharedProcess()
   }
 
   LifeCycle.mark(LifeCyclePhase.One)
