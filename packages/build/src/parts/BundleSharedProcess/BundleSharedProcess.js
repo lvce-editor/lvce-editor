@@ -200,8 +200,8 @@ export const typescriptCompileProcessPath = Path.join(
   'node_modules',
   '@lvce-editor',
   'typescript-compile-process',
-  'src',
-  'typescriptCompileProcessMain.js',
+  'dist',
+  'index.js',
 )
 `,
       replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'

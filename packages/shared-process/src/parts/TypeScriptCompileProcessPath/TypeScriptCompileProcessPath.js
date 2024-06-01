@@ -8,6 +8,6 @@ export const typescriptCompileProcessPath = Path.join(
   'node_modules',
   '@lvce-editor',
   'typescript-compile-process',
-  'src',
-  'typescriptCompileProcessMain.js',
+  'dist',
+  'index.js',
 )
