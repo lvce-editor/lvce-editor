@@ -83,3 +83,4 @@ export const SendMessagePortToElectron = 82
 export const OffscreenCanvas = 83
 export const Debug = 84
 export const Languages = 85
+export const FileWatcher = 86
