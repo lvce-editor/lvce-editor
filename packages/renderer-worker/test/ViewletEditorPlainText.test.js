@@ -1,5 +1,5 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as GetFileSystem from '../src/parts/GetFileSystem/GetFileSystem.js'
+import { expect, test } from '@jest/globals'
+import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.js'
 import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.js'
 import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
@@ -14,11 +14,13 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
-  GetFileSystem.state.fileSystems.test = {
-    readFile(uri) {
-      return 'test content'
+  FileSystemState.registerAll({
+    test: {
+      readFile(uri) {
+        return 'test content'
+      },
     },
-  }
+  })
   const state = ViewletEditorPlainText.create(0, 'test://sample-file', 0, 0, 0, 0)
   expect(await ViewletEditorPlainText.loadContent(state)).toEqual({
     content: 'test content',
