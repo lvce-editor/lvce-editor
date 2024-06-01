@@ -1,6 +1,5 @@
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerState from '../TokenizerState/TokenizerState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -17,7 +16,7 @@ export const handleTokenizeChange = async () => {
         return
       }
       const tokenizerId = Id.create()
-      const tokenizer = Tokenizer.getTokenizer(state.languageId)
+      const tokenizer = getTokenizer(state.languageId)
       TokenizerMap.set(tokenizerId, tokenizer)
       const newState = {
         ...instance.state,
