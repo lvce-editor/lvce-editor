@@ -1,14 +1,10 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as Character from '../Character/Character.js'
 import * as CssState from '../CssState/CssState.js'
+import * as GetCssId from '../GetCssId/GetCssId.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
-
-const getId = (path) => {
-  return 'Css' + path.replace('/css/parts/', '').replaceAll(Character.Slash, Character.Dash).replace('.css', Character.EmptyString)
-}
 
 const actuallyLoadCssStyleSheet = async (css) => {
   try {
@@ -21,7 +17,7 @@ const actuallyLoadCssStyleSheet = async (css) => {
       throw new Error(response.statusText)
     }
     const text = await Response.getText(response)
-    const id = getId(css)
+    const id = GetCssId.getCssId(css)
     await addCssStyleSheet(id, text)
   } catch (error) {
     throw new VError(error, `Failed to load css "${css}"`)
