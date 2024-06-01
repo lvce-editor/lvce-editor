@@ -180,7 +180,6 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
       cwd: cachePath,
       from: `./src/rendererWorkerMain.ts`,
       platform: 'webworker',
-      allowCyclicDependencies: true, // TODO
     })
     if (platform === 'remote') {
       await Replace.replace({
