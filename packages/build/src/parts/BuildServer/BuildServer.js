@@ -718,7 +718,6 @@ const setVersionsAndDependencies = async ({ version }) => {
     delete json['devDependencies']
     delete json['jest']
     if (json['optionalDependencies']) {
-      delete json['optionalDependencies']['electron-clipboard-ex']
       delete json['optionalDependencies']['@vscode/windows-process-tree']
       delete json['optionalDependencies']['symlink-dir']
     }
