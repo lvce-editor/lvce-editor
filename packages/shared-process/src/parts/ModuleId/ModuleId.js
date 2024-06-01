@@ -66,3 +66,4 @@ export const ContentSecurityPolicy = 70
 export const HandleMessagePortForEmbedsProcess = 72
 export const HandleMessagePortForProcessExplorer = 73
 export const HandleMessagePortForSearchProcess = 74
+export const FileWatcher = 75

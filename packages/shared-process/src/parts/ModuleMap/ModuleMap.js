@@ -275,6 +275,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleMessagePortForProcessExplorer
     case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':
       return ModuleId.HandleMessagePortForSearchProcess
+    case 'FileWatcher.watch':
+      return ModuleId.FileWatcher
     default:
       throw new CommandNotFoundError(commandId)
   }
