@@ -162,7 +162,7 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
       })
       await Replace.replace({
         path: `${cachePath}/src/parts/Workbench/Workbench.js`,
-        occurrence: `await SharedProcess.listen()`,
+        occurrence: `await LaunchSharedProcess.launchSharedProcess()`,
         replacement: ``,
       })
       await Replace.replace({
