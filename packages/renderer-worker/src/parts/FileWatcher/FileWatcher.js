@@ -5,6 +5,10 @@ const map = Object.create(null)
 
 export const handleEvent = (id, event) => {
   const eventTarget = map[id]
+  if (!eventTarget) {
+    console.warn(`target not found ${id}`)
+    return
+  }
   eventTarget.dispatchEvent(
     new CustomEvent('watcher-event', {
       detail: event,
