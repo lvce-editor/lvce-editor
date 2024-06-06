@@ -13,12 +13,14 @@ const handleEvents = async (watcher, id, ipc) => {
 }
 
 // TODO  run file watcher in a separate process to not crash application when file watcher crashes
-export const watch = async (ipc, id, { root, exclude }) => {
+export const watch = async (ipc, id, { roots, exclude }) => {
   try {
-    const watcher = fs.watch(root, {
-      recursive: true,
-    })
-    handleEvents(watcher, id, ipc)
+    for (const root of roots) {
+      const watcher = fs.watch(root, {
+        recursive: true,
+      })
+      handleEvents(watcher, id, ipc)
+    }
   } catch (error) {
     console.error(error)
   }

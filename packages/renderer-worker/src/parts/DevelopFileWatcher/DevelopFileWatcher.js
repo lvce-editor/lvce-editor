@@ -1,10 +1,13 @@
+import * as Css from '../Css/Css.js'
 import * as FileWatcher from '../FileWatcher/FileWatcher.js'
-import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Reload from '../Reload/Reload.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Css from '../Css/Css.js'
+
+const getWatchPaths = (root) => {
+  return [`${root}/static`, `${root}/packages/renderer-worker/src`]
+}
 
 export const hydrate = async () => {
   if (IsProduction.isProduction) {
@@ -15,9 +18,9 @@ export const hydrate = async () => {
     return
   }
   const root = await SharedProcess.invoke('Platform.getRoot')
-  const staticPath = `${root}/static`
+  const watchPaths = getWatchPaths(root)
   const watcher = await FileWatcher.watch({
-    root: staticPath,
+    roots: watchPaths,
     exclude: ['node_modules', 'dist', '.tmp'],
   })
   const handleEvent = async (event) => {
@@ -25,6 +28,8 @@ export const hydrate = async () => {
     if (detail && detail.eventType === 'change' && detail.filename.endsWith('.css')) {
       const cssLoadFile = `/${detail.filename}`
       await Css.reload(cssLoadFile)
+    } else if (detail && detail.eventType === 'change' && detail.filename.endsWith('.js')) {
+      await Reload.reload()
     }
   }
   // TODO use async iterator
