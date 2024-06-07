@@ -66,8 +66,8 @@
     "@lvce-editor/pretty-error": "^1.5.0",
     "@lvce-editor/verror": "^1.3.0",
     "@lvce-editor/web-socket-server": "^1.2.0",
-    "execa": "^9.1.0",
-    "got": "^14.4.0",
+    "execa": "^9.2.0",
+    "got": "^14.4.1",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
