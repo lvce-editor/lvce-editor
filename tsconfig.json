@@ -4,7 +4,6 @@
   "references": [
     { "path": "./packages/build" },
     { "path": "./packages/debug-worker" },
-    { "path": "./packages/diff-worker" },
     { "path": "./packages/editor-worker" },
     { "path": "./packages/embeds-worker" },
     { "path": "./packages/extension-host-helper-process" },
