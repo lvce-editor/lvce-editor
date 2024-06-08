@@ -5,6 +5,7 @@ const locations = [
   'lerna.json',
   'package-lock.json',
   'packages/build/package-lock.json',
+  'packages/debug-worker/package-lock.json',
   'packages/diff-worker/package-lock.json',
   'packages/editor-worker/package-lock.json',
   'packages/embeds-worker/package-lock.json',
