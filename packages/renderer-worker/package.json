@@ -84,6 +84,6 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/diff-worker": "^1.1.1"
+    "@lvce-editor/diff-worker": "^1.1.2"
   }
 }
