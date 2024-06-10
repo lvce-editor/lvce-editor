@@ -1,20 +1,20 @@
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
-import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
-import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
-import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
@@ -28,91 +28,11 @@ import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
-  await Copy.copy({
-    from: 'packages/renderer-process/src',
-    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.ts`,
-    occurrence: `ASSET_DIR`,
-    replacement: `'${pathPrefix}/${commitHash}'`,
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.ts`,
-    occurrence: `PLATFORM`,
-    replacement: 'PlatformType.Web',
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.ts`,
-    occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
-
-export const getModule = (method) => {
-  switch (method) {
-    case IpcParentType.ModuleWorker:
-      return import('../IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts')
-    case IpcParentType.MessagePort:
-      return import('../IpcParentWithMessagePort/IpcParentWithMessagePort.ts')
-    case IpcParentType.ReferencePort:
-      return import('../IpcParentWithReferencePort/IpcParentWithReferencePort.ts')
-    case IpcParentType.ModuleWorkerWithMessagePort:
-      return import('../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.ts')
-    case IpcParentType.Electron:
-      return import('../IpcParentWithElectron/IpcParentWithElectron.ts')
-    default:
-      throw new Error('unexpected ipc type')
-  }
-}`,
-    replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
-import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.ts'
-import * as IpcParentWithModuleWorkerWithMessagePort from '../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.ts'
-import * as IpcParentWithMessagePort from '../IpcParentWithMessagePort/IpcParentWithMessagePort.ts'
-import * as IpcParentWithReferencePort from '../IpcParentWithReferencePort/IpcParentWithReferencePort.ts'
-
-export const getModule = (method) => {
-  switch (method) {
-    case IpcParentType.ModuleWorker:
-      return IpcParentWithModuleWorker
-    case IpcParentType.MessagePort:
-      return IpcParentWithMessagePort
-    case IpcParentType.ReferencePort:
-      return IpcParentWithReferencePort
-    case IpcParentType.ModuleWorkerWithMessagePort:
-      return IpcParentWithModuleWorkerWithMessagePort
-    case IpcParentType.Electron:
-      return IpcParentWithElectron
-    default:
-      throw new Error('unexpected ipc type')
-  }
-}`,
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
-    occurrence: `/src/rendererWorkerMain.ts`,
-    replacement: '/dist/rendererWorkerMain.js',
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Icon/Icon.ts`,
-    occurrence: `/icons`,
-    replacement: `${pathPrefix}/${commitHash}/icons`,
-  })
-  await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.ts`,
-    eagerlyLoadedModules: ['Css', 'InitData', 'Layout', 'Location', 'Meta', 'Viewlet', 'WebStorage', 'Window'],
-    ipcPostFix: true,
-  })
-  await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/ViewletModule/ViewletModule.ts`,
-    eagerlyLoadedModules: [
-      'ViewletMain',
-      'ViewletLayout',
-      'ViewletSideBar',
-      'ViewletActivityBar',
-      'ViewletTitleBar',
-      'ViewletStatusBar',
-      'ViewletExplorer',
-      'ViewletTitleBarMenuBar',
-    ],
-    viewlet: true,
+  await BundleRendererProcess.bundleRendererProcess({
+    cachePath: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process`,
+    commitHash,
+    platform: 'web',
+    assetDir: `${pathPrefix}/${commitHash}`,
   })
 }
 

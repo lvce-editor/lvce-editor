@@ -39,11 +39,6 @@ const TO_COPY = [
     from: 'packages/extension-host/package-lock.json',
     to: 'packages/build/.tmp/packages/extension-host',
   },
-  // renderer process
-  {
-    from: 'packages/renderer-process/src',
-    to: 'packages/build/.tmp/packages/renderer-process/src',
-  },
   // renderer worker
   {
     from: 'packages/renderer-worker/src',
