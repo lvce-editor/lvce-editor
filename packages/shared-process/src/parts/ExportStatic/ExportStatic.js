@@ -92,18 +92,13 @@ const copyStaticFiles = async (root, commitHash) => {
 const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
-    'platform = getPlatform();',
-    'platform = "web"',
+    'platform = Remote;',
+    'platform = Web',
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`,
-  )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    'platform = Remote;',
-    'platform = Web$1;',
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
