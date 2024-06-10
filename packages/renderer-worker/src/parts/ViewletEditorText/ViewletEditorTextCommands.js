@@ -1,7 +1,61 @@
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+
 // prettier-ignore
 export const Commands = {
     // TODO command to set cursor position
 }
+
+const wrapEditorCommand = (id) => {
+  return (...args) => {
+    console.log({ args })
+    return EditorWorker.invoke(`Editor.${id}`, ...args)
+  }
+}
+
+const wrapEditorCommands = (ids) => {
+  let all = {}
+  for (const id of ids) {
+    all = { ...all, [id]: wrapEditorCommand(id) }
+  }
+  return all
+}
+
+const ids = [
+  'copyLineDown',
+  'copyLineUp',
+  'cursorLeft',
+  'cursorRight',
+  'cursorCharacterLeft',
+  'cursorCharacterRight',
+  'cursorDown',
+  'cursorEnd',
+  'cursorHome',
+  'cursorUp',
+  'cursorWordLeft',
+  'cursorWordPartLeft',
+  'cursorWordPartRight',
+  'cursorWordRight',
+  'deleteAllLeft',
+  'deleteAllRight',
+  'deleteCharacterLeft',
+  'deleteCharacterRight',
+  'deleteHorizontalRight',
+  'deleteWordLeft',
+  'deleteWordPartLeft',
+  'deleteWordPartRight',
+  'deleteWordRight',
+  'selectAll',
+  'selectAllLeft',
+  'selectAllRight',
+  'selectCharacterLeft',
+  'selectCharacterRight',
+  'selectUp',
+  'selectDown',
+  'selectWordLeft',
+  'selectWordRight',
+  'selectNextOccurrence',
+  'selectAllOccurrences',
+]
 
 // prettier-ignore
 export const LazyCommands = {
@@ -18,25 +72,8 @@ export const LazyCommands = {
   copy: () => import('../EditorCommand/EditorCommandCopy.js'),
   copyLineDown: () => import('../EditorCommand/EditorCommandCopyLineDown.js'),
   copyLineUp: () => import('../EditorCommand/EditorCommandCopyLineUp.js'),
-  cursorCharacterLeft: () => import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
-  cursorCharacterRight: () => import('../EditorCommand/EditorCommandCursorCharacterRight.js'),
-  cursorDown: () => import('../EditorCommand/EditorCommandCursorDown.js'),
-  cursorEnd: () => import('../EditorCommand/EditorCommandCursorEnd.js'),
-  cursorHome: () => import('../EditorCommand/EditorCommandCursorHome.js'),
-  cursorLeft: () => import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
-  cursorRight: () => import('../EditorCommand/EditorCommandCursorCharacterRight.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
-  cursorUp: () => import('../EditorCommand/EditorCommandCursorUp.js'),
-  cursorWordLeft: () => import('../EditorCommand/EditorCommandCursorWordLeft.js'),
-  cursorWordPartLeft: () => import('../EditorCommand/EditorCommandCursorWordPartLeft.js'),
-  cursorWordPartRight: () => import('../EditorCommand/EditorCommandCursorWordPartRight.js'),
-  cursorWordRight: () => import('../EditorCommand/EditorCommandCursorWordRight.js'),
   cut: () => import('../EditorCommand/EditorCommandCut.js'),
-  deleteAllLeft: () => import('../EditorCommand/EditorCommandDeleteAllLeft.js'),
-  deleteAllRight: () => import('../EditorCommand/EditorCommandDeleteAllRight.js'),
-  deleteRight: () => import('../EditorCommand/EditorCommandDeleteCharacterRight.js'),
-  deleteWordPartRight: () => import('../EditorCommand/EditorCommandDeleteWordPartRight.js'),
-  deleteWordRight: () => import('../EditorCommand/EditorCommandDeleteWordRight.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
   goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
   goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
@@ -72,10 +109,6 @@ export const LazyCommands = {
   paste: () => import('../EditorCommand/EditorCommandPaste.js'),
   pasteText: () => import('../EditorCommand/EditorCommandPasteText.js'),
   save: () => import('../EditorCommand/EditorCommandSave.js'),
-  selectAll: () => import('../EditorCommand/EditorCommandSelectAll.js'),
-  selectAllOccurrences: () => import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
-  selectCharacterLeft: () => import('../EditorCommand/EditorCommandSelectCharacterLeft.js'),
-  selectCharacterRight: () => import('../EditorCommand/EditorCommandSelectCharacterRight.js'),
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   selectDown: () => import('../EditorCommand/EditorCommandSelectDown.js'),
   selectInsideString: () => import('../EditorCommand/EditorCommandSelectInsideString.js'),
@@ -83,8 +116,6 @@ export const LazyCommands = {
   selectNextOccurrence: () => import('../EditorCommand/EditorCommandSelectNextOccurrence.js'),
   selectUp: () => import('../EditorCommand/EditorCommandSelectUp.js'),
   selectWord: () => import('../EditorCommand/EditorCommandSelectWord.js'),
-  selectWordLeft: () => import('../EditorCommand/EditorCommandSelectWordLeft.js'),
-  selectWordRight: () => import('../EditorCommand/EditorCommandSelectWordRight.js'),
   setDecorations: () => import('../EditorCommand/EditorCommandSetDecorations.js'),
   setDeltaY: () => import('../EditorCommand/EditorCommandSetDelta.js'),
   setDelta: () => import('../EditorCommand/EditorCommandSetDelta.js'),
@@ -102,6 +133,7 @@ export const LazyCommands = {
   findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
+  ...wrapEditorCommands(ids)
 }
 
 export const CommandsWithSideEffectsLazy = {
