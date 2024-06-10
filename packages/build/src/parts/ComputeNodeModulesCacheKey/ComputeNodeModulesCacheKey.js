@@ -14,7 +14,6 @@ const locations = [
   'packages/extension-host-worker/package-lock.json',
   'packages/extension-host/package-lock.json',
   'packages/main-process/package-lock.json',
-  'packages/renderer-process/package-lock.json',
   'packages/renderer-worker/package-lock.json',
   'packages/search-worker/package-lock.json',
   'packages/server/package-lock.json',
