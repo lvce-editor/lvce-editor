@@ -89,7 +89,7 @@ const copyStaticFiles = async (root, commitHash) => {
   await FileSystem.copy(Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static'), Path.join(root, 'dist'))
 }
 
-const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
+const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }) => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
     'platform = Remote;',
@@ -99,6 +99,15 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`,
+  )
+}
+
+const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
+  await applyOverridesRendererProcess({ root, commitHash, pathPrefix })
+  await replace(
+    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
+    'platform = Remote;',
+    'platform = Web$1;',
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
