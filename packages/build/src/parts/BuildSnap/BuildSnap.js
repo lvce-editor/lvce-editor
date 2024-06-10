@@ -129,10 +129,6 @@ const copyCode = async (arch) => {
     from: 'packages/renderer-process/package-lock.json',
     to: `packages/build/.tmp/linux/snap/${arch}/files/packages/renderer-process/package-lock.json`,
   })
-  await Copy.copy({
-    from: 'packages/renderer-process/src',
-    to: `packages/build/.tmp/linux/snap/${arch}/files/packages/renderer-process/src`,
-  })
 
   // renderer worker
   await Copy.copyFile({
