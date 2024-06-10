@@ -1,17 +1,15 @@
 import { VError } from '@lvce-editor/verror'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
-import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
 const getPlatformCode = (platform) => {
   switch (platform) {
     case 'electron':
-      return `PlatformType.Electron`
+      return `Electron$1`
     case 'remote':
-      return `PlatformType.Remote`
+      return `Remote`
     case 'web':
-      return 'PlatformType.Web'
+      return 'Web'
     default:
       throw new Error(`unsupported platform ${platform}`)
   }
@@ -20,53 +18,37 @@ const getPlatformCode = (platform) => {
 export const bundleRendererProcess = async ({ cachePath, commitHash, platform, assetDir }) => {
   try {
     await Copy.copy({
-      from: 'packages/renderer-process/src',
-      to: Path.join(cachePath, 'src'),
+      from: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process',
+      to: `${cachePath}`,
     })
-    await Copy.copy({
-      from: 'static/js',
-      to: Path.join(cachePath, 'static', 'js'),
-    })
-    for (const file of ['Terminal', 'JsonRpc', 'IpcParentWithElectron']) {
-      await Replace.replace({
-        path: `${cachePath}/src/parts/${file}/${file}.ts`,
-        occurrence: `../../../../../static/`,
-        replacement: `../../../static/`,
-      })
-    }
     await Replace.replace({
-      path: `${cachePath}/src/parts/RendererWorkerUrl/RendererWorkerUrl.ts`,
+      path: `${cachePath}/dist/rendererProcessMain.js`,
       occurrence: '/packages/renderer-worker/src/rendererWorkerMain.ts',
       replacement: `/packages/renderer-worker/dist/rendererWorkerMain.js`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/AssetDir/AssetDir.ts`,
-      occurrence: `ASSET_DIR`,
-      replacement: `'${assetDir}'`,
+      path: `${cachePath}/dist/rendererProcessMain.js`,
+      occurrence: `const assetDir = getAssetDir();`,
+      replacement: `const assetDir = '${assetDir}';`,
     })
     const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.ts`,
-      occurrence: 'PLATFORM',
+      occurrence: 'const platform = getPlatform();',
       replacement: `${platformCode}`,
     })
     if (platform === 'electron') {
       await Replace.replace({
         path: `${cachePath}/src/parts/IsFirefox/IsFirefox.ts`,
-        occurrence: `export const isFirefox = getIsFirefox()`,
-        replacement: `export const isFirefox = false`,
+        occurrence: `const isFirefox = getIsFirefox()`,
+        replacement: `const isFirefox = false`,
       })
       await Replace.replace({
         path: `${cachePath}/src/parts/IsMobile/IsMobile.ts`,
-        occurrence: `export const isMobile = getIsMobile()`,
-        replacement: `export const isMobile = false`,
+        occurrence: `const isMobile = getIsMobile()`,
+        replacement: `const isMobile = false`,
       })
     }
-    await BundleJs.bundleJs({
-      cwd: cachePath,
-      from: `./src/rendererProcessMain.ts`,
-      platform: 'web',
-    })
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer process`)
   }
