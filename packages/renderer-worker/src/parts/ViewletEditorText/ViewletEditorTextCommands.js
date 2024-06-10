@@ -54,6 +54,8 @@ const ids = [
   'selectWordRight',
   'selectNextOccurrence',
   'selectAllOccurrences',
+  'moveLineUp',
+  'moveLineDown',
 ]
 
 export const Commands = {
@@ -102,8 +104,6 @@ export const LazyCommands = {
   indentLess: () => import('../EditorCommand/EditorCommandIndentLess.js'),
   indentMore: () => import('../EditorCommand/EditorCommandIndentMore.js'),
   insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),
-  moveLineDown: () => import('../EditorCommand/EditorCommandMoveLineDown.js'),
-  moveLineUp: () => import('../EditorCommand/EditorCommandMoveLineUp.js'),
   moveRectangleSelection: () => import('../EditorCommand/EditorCommandMoveRectangleSelection.js'),
   moveRectangleSelectionPx: () => import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),
   moveSelection: () => import('../EditorCommand/EditorCommandMoveSelection.js'),
