@@ -1,13 +1,12 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 
 // prettier-ignore
-export const Commands = {
-    // TODO command to set cursor position
-}
 
 const wrapEditorCommand = (id) => {
   return (...args) => {
-    console.log({ args })
+    if (args.length === 0) {
+      throw new Error('missing arg')
+    }
     return EditorWorker.invoke(`Editor.${id}`, ...args)
   }
 }
@@ -56,6 +55,11 @@ const ids = [
   'selectNextOccurrence',
   'selectAllOccurrences',
 ]
+
+export const Commands = {
+  // TODO command to set cursor position
+  ...wrapEditorCommands(ids),
+}
 
 // prettier-ignore
 export const LazyCommands = {
@@ -133,7 +137,6 @@ export const LazyCommands = {
   findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
-  ...wrapEditorCommands(ids)
 }
 
 export const CommandsWithSideEffectsLazy = {
