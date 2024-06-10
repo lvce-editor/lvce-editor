@@ -1,16 +1,11 @@
 // @ts-nocheck
-import { jest } from '@jest/globals'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'
-import * as EditorCommandCursorCharacterLeft from '../src/parts/EditorCommand/EditorCommandCursorCharacterLeft.js'
-import * as EditorCommandCursorCharacterRight from '../src/parts/EditorCommand/EditorCommandCursorCharacterRight.js'
-import * as EditorCommandCursorDown from '../src/parts/EditorCommand/EditorCommandCursorDown.js'
-import * as EditorCommandCursorUp from '../src/parts/EditorCommand/EditorCommandCursorUp.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as Languages from '../src/parts/Languages/Languages.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   EditorCompletion.state.isOpened = false
