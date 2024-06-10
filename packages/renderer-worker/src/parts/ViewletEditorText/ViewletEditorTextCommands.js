@@ -58,6 +58,8 @@ const ids = [
   'moveLineDown',
   'copyLineDown',
   'copyLineUp',
+  'indentLess',
+  'indentMore',
 ]
 
 export const Commands = {
@@ -101,8 +103,6 @@ export const LazyCommands = {
   handleTouchEnd: () => import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
   handleTouchStart: () => import('../EditorCommand/EditorCommandHandleTouchStart.js'),
-  indentLess: () => import('../EditorCommand/EditorCommandIndentLess.js'),
-  indentMore: () => import('../EditorCommand/EditorCommandIndentMore.js'),
   insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),
   moveRectangleSelection: () => import('../EditorCommand/EditorCommandMoveRectangleSelection.js'),
   moveRectangleSelectionPx: () => import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),

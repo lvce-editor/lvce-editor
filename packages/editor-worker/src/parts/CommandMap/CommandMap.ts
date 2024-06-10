@@ -19,6 +19,8 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
+import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.js'
+import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.js'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.js'
 import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.js'
 import * as SelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
@@ -57,6 +59,8 @@ export const commandMap = {
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.indendLess': IndentLess.indentLess,
+  'Editor.indentMore': IndentMore.indentMore,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
   'Editor.selectAll': SelectAll.selectAll,
