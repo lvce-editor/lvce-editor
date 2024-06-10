@@ -213,7 +213,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   }
   await Replace.replace({
     path: `packages/build/.tmp/dist/index.html`,
-    occurrence: '/packages/renderer-process/src/rendererProcessMain.ts',
+    occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
     replacement: `${pathPrefix}/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({

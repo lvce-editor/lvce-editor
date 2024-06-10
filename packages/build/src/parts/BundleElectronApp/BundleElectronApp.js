@@ -214,7 +214,7 @@ const copyStaticFiles = async ({ resourcesPath }) => {
   })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
-    occurrence: 'packages/renderer-process/src/rendererProcessMain.ts',
+    occurrence: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
     replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
