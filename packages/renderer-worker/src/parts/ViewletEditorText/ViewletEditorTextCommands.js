@@ -54,6 +54,12 @@ const ids = [
   'selectWordRight',
   'selectNextOccurrence',
   'selectAllOccurrences',
+  'moveLineUp',
+  'moveLineDown',
+  'copyLineDown',
+  'copyLineUp',
+  'indentLess',
+  'indentMore',
 ]
 
 export const Commands = {
@@ -74,8 +80,6 @@ export const LazyCommands = {
   compositionUpdate: () => import('../EditorCommand/EditorCommandComposition.js'),
   contextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
   copy: () => import('../EditorCommand/EditorCommandCopy.js'),
-  copyLineDown: () => import('../EditorCommand/EditorCommandCopyLineDown.js'),
-  copyLineUp: () => import('../EditorCommand/EditorCommandCopyLineUp.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   cut: () => import('../EditorCommand/EditorCommandCut.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
@@ -99,11 +103,7 @@ export const LazyCommands = {
   handleTouchEnd: () => import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
   handleTouchStart: () => import('../EditorCommand/EditorCommandHandleTouchStart.js'),
-  indentLess: () => import('../EditorCommand/EditorCommandIndentLess.js'),
-  indentMore: () => import('../EditorCommand/EditorCommandIndentMore.js'),
   insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),
-  moveLineDown: () => import('../EditorCommand/EditorCommandMoveLineDown.js'),
-  moveLineUp: () => import('../EditorCommand/EditorCommandMoveLineUp.js'),
   moveRectangleSelection: () => import('../EditorCommand/EditorCommandMoveRectangleSelection.js'),
   moveRectangleSelectionPx: () => import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),
   moveSelection: () => import('../EditorCommand/EditorCommandMoveSelection.js'),
