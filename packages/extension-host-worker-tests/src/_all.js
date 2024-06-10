@@ -123,9 +123,6 @@ const runTests = async () => {
     ci,
     dataDir,
   })
-  if (Math) {
-    return
-  }
   const recordVideos = argv.includes('--record-videos')
   if (recordVideos) {
     await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
