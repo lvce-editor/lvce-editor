@@ -3,7 +3,7 @@ import * as Path from '../Path/Path.js'
 
 const getRendererProcessCacheHash = async (extraContents) => {
   const hash = await Hash.computeFolderHash(
-    'packages/renderer-process/src',
+    'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist',
     [
       'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
       'packages/build/src/parts/BuildServer/BuildServer.js',

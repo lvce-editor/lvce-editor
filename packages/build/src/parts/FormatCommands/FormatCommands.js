@@ -66,12 +66,7 @@ const getIpcFiles = async (...roots) => {
 }
 
 export const formatAllCommands = async () => {
-  const allIpcFiles = await getIpcFiles(
-    'packages/shared-process/src',
-    'packages/renderer-process/src',
-    'packages/renderer-worker/src',
-    'packages/main-process/src',
-  )
+  const allIpcFiles = await getIpcFiles('packages/shared-process/src', 'packages/renderer-worker/src', 'packages/main-process/src')
   for (const path of allIpcFiles) {
     await formatCommands(path)
   }

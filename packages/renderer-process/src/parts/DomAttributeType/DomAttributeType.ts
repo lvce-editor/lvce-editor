@@ -1,7 +1,0 @@
-export const AriaOwns = 'aria-owns'
-export const AriaLabelledBy = 'aria-labelledby'
-export const AriaDescribedBy = 'aria-describedby'
-export const AriaActiveDescendant = 'aria-activedescendant'
-export const AriaSelected = 'aria-selected'
-export const AriaControls = 'aria-controls'
-export const AriaHidden = 'aria-hidden'
