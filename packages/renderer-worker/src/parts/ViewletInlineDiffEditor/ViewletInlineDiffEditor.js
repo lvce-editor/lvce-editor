@@ -4,6 +4,7 @@ import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as GetDiffEditorContents from '../GetDiffEditorContents/GetDiffEditorContents.js'
 import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as Languages from '../Languages/Languages.js'
+import * as GetInlineDiffChanges from '../GetInlineDiffChanges/GetInlineDiffChanges.js'
 import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -14,8 +15,6 @@ export const create = (id, uri, x, y, width, height) => {
     uri,
     linesLeft: [],
     linesRight: [],
-    changesLeft: [],
-    changesRight: [],
     x,
     y,
     width,
@@ -24,6 +23,7 @@ export const create = (id, uri, x, y, width, height) => {
     languageRight: '',
     ...VirtualList.create({ itemHeight: 20 }),
     lineNumbers: false,
+    inlineChanges: [],
   }
 }
 
@@ -48,7 +48,7 @@ export const loadContent = async (state, savedState) => {
 
   const linesLeft = SplitLines.splitLines(contentLeft)
   const linesRight = SplitLines.splitLines(contentRight)
-  const { changesLeft, changesRight } = await Diff.diff(linesLeft, linesRight)
+  const inlineChanges = await GetInlineDiffChanges.getInlineDiffChanges(linesLeft, linesRight)
 
   const total = Math.max(linesLeft.length, linesRight.length)
   const contentHeight = total * itemHeight
@@ -67,8 +67,7 @@ export const loadContent = async (state, savedState) => {
     ...state,
     linesLeft,
     linesRight,
-    changesLeft,
-    changesRight,
+    inlineChanges,
     scrollBarHeight,
     finalDeltaY,
     minLineY,

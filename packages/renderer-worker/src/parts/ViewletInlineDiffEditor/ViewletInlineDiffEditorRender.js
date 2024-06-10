@@ -10,22 +10,17 @@ export const hasFunctionalRootRender = true
 const renderChanges = {
   isEqual(oldState, newState) {
     return (
-      oldState.chanesLeft === newState.changesLeft &&
-        oldState.minLineY === newState.minLineY &&
-        oldState.maxLineY === newState.maxLineY &&
-        oldState.deltaY === newState.deltaY &&
-        oldState.height === newState.height &&
-        oldState.finalDeltaY === newState.finalDeltaY,
+      oldState.inlineChanges === newState.inlineChanges &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY &&
       oldState.lineNumbers === newState.lineNumbers
     )
   },
   apply(oldState, newState) {
-    const lines = GetInlineDiffEditorLines.getInlineDiffEditorLines(
-      newState.linesLeft,
-      newState.linesRight,
-      newState.changesLeft,
-      newState.changesRight,
-    )
+    const lines = GetInlineDiffEditorLines.getInlineDiffEditorLines(newState.linesLeft, newState.linesRight, newState.inlineChanges)
     const scrollBarY = ScrollBarFunctions.getScrollBarY(newState.deltaY, newState.finalDeltaY, newState.height, newState.scrollBarHeight)
     const size = lines.length * newState.itemHeight
     const minimumSliderSize = 20
