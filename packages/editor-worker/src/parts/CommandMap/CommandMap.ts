@@ -34,6 +34,8 @@ import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.
 export const commandMap = {
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
   'Editor.copyLineUp': CopyLineUp.copyLineUp,
+  'Editor.cursorLeft': CursorCharacterLeft.cursorCharacterLeft,
+  'Editor.cursorRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
