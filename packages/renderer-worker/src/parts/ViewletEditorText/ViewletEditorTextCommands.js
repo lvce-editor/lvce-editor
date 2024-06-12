@@ -62,6 +62,7 @@ const ids = [
   'selectWord',
   'selectWordLeft',
   'selectWordRight',
+  'handleDoubleClick',
 ]
 
 export const Commands = {
@@ -144,7 +145,6 @@ export const CommandsWithSideEffectsLazy = {
   typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
   handleSingleClick: () => import('../EditorCommand/EditorCommandHandleSingleClick.js'),
   handleBlur: () => import('../EditorCommand/EditorCommandBlur.js'),
-  handleDoubleClick: () => import('../EditorCommand/EditorCommandHandleDoubleClick.js'),
   handleMouseDown: () => import('../EditorCommand/EditorCommandHandleMouseDown.js'),
   handleTripleClick: () => import('../EditorCommand/EditorCommandHandleTripleClick.js'),
 }
