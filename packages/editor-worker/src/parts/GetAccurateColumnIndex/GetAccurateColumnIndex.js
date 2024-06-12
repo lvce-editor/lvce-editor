@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Character from '../Character/Character.js'
+import * as Character from '../Character/Character.ts'
 import * as GetAccurateColumnIndexAscii from '../GetAccurateColumnIndexAscii/GetAccurateColumnIndexAscii.js'
 import * as GetAccurateColumnIndexUnicode from '../GetAccurateColumnIndexUnicode/GetAccurateColumnIndexUnicode.js'
 import * as IsAscii from '../IsAscii/IsAscii.js'
