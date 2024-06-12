@@ -63,6 +63,12 @@ const ids = [
   'selectWord',
   'selectWordLeft',
   'selectWordRight',
+  'addCursorAbove',
+  'addCursorBelow',
+  'pasteText',
+  'cut',
+  'selectUp',
+  'copy',
 ]
 
 export const Commands = {
@@ -72,8 +78,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  addCursorAbove: () => import('../EditorCommand/EditorCommandAddCursorAbove.js'),
-  addCursorBelow: () => import('../EditorCommand/EditorCommandAddCursorBelow.js'),
   applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
   cancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
@@ -82,9 +86,7 @@ export const LazyCommands = {
   compositionStart: () => import('../EditorCommand/EditorCommandComposition.js'),
   compositionUpdate: () => import('../EditorCommand/EditorCommandComposition.js'),
   contextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
-  copy: () => import('../EditorCommand/EditorCommandCopy.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
-  cut: () => import('../EditorCommand/EditorCommandCut.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
   goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
   goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
@@ -113,14 +115,12 @@ export const LazyCommands = {
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   openFind: () => import('../EditorCommand/EditorCommandOpenFind.js'),
   paste: () => import('../EditorCommand/EditorCommandPaste.js'),
-  pasteText: () => import('../EditorCommand/EditorCommandPasteText.js'),
   save: () => import('../EditorCommand/EditorCommandSave.js'),
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   selectDown: () => import('../EditorCommand/EditorCommandSelectDown.js'),
   selectInsideString: () => import('../EditorCommand/EditorCommandSelectInsideString.js'),
   selectLine: () => import('../EditorCommand/EditorCommandSelectLine.js'),
   selectNextOccurrence: () => import('../EditorCommand/EditorCommandSelectNextOccurrence.js'),
-  selectUp: () => import('../EditorCommand/EditorCommandSelectUp.js'),
   setDecorations: () => import('../EditorCommand/EditorCommandSetDecorations.js'),
   setDeltaY: () => import('../EditorCommand/EditorCommandSetDelta.js'),
   setDelta: () => import('../EditorCommand/EditorCommandSetDelta.js'),

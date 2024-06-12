@@ -1,7 +1,7 @@
 import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 export const cutSelectedText = async (editor) => {

@@ -2,7 +2,7 @@
 import * as Editor from '../Editor/Editor.js'
 // @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 export const pasteText = (editor, text) => {
