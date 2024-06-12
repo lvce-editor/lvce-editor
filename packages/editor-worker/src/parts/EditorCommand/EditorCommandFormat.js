@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as Format from '../Format/Format.js'
 import * as ApplyDocumentEdits from './EditorCommandApplyDocumentEdits.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
