@@ -10,5 +10,9 @@ export const isIgnoredError = (error) => {
     // parent process is disposed, ignore
     return true
   }
+  if (error && error.code === ErrorCodes.ECONNRESET) {
+    // TODO investigate why this error occurs sometimes when reloading the page
+    return true
+  }
   return false
 }

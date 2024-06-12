@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as EditorSelectionAutoMoveState from '../EditorSelectionAutoMoveState/EditorSelectionAutoMoveState.js'
 
 export const handlePointerCaptureLost = (editor) => {

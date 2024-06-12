@@ -1,3 +1,6 @@
+import * as AddCursorAbove from '../EditorCommand/EditorCommandAddCursorAbove.js'
+import * as AddCursorBelow from '../EditorCommand/EditorCommandAddCursorBelow.js'
+import * as Copy from '../EditorCommand/EditorCommandCopy.js'
 import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.js'
 import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.js'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.js'
@@ -10,6 +13,7 @@ import * as CursorWordLeft from '../EditorCommand/EditorCommandCursorWordLeft.js
 import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPartLeft.js'
 import * as CursorWordPartRight from '../EditorCommand/EditorCommandCursorWordPartRight.js'
 import * as CursorWordRight from '../EditorCommand/EditorCommandCursorWordRight.js'
+import * as Cut from '../EditorCommand/EditorCommandCut.js'
 import * as DeleteAllLeft from '../EditorCommand/EditorCommandDeleteAllLeft.js'
 import * as DeleteAllRight from '../EditorCommand/EditorCommandDeleteAllRight.js'
 import * as DeleteCharacterLeft from '../EditorCommand/EditorCommandDeleteCharacterLeft.js'
@@ -24,6 +28,7 @@ import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.js'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.js'
+import * as PasteText from '../EditorCommand/EditorCommandPasteText.js'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.js'
 import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.js'
 import * as SelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
@@ -41,8 +46,12 @@ import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
 export const commandMap = {
+  'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
+  'Editor.addCursorBelow': AddCursorBelow.addCursorBelow,
+  'Editor.copy': Copy.copy,
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
   'Editor.copyLineUp': CopyLineUp.copyLineUp,
+  'Editor.deleteLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
@@ -55,6 +64,7 @@ export const commandMap = {
   'Editor.cursorWordPartLeft': CursorWordPartLeft.cursorWordPartLeft,
   'Editor.cursorWordPartRight': CursorWordPartRight.cursorWordPartRight,
   'Editor.cursorWordRight': CursorWordRight.cursorWordRight,
+  'Editor.cut': Cut.cut,
   'Editor.deleteAllLeft': DeleteAllLeft.deleteAllLeft,
   'Editor.deleteAllRight': DeleteAllRight.deleteAllRight,
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
@@ -64,10 +74,14 @@ export const commandMap = {
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
+  'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
+  'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
   'Editor.indendLess': IndentLess.indentLess,
   'Editor.indentMore': IndentMore.indentMore,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
+  'Editor.pasteText': PasteText.pasteText,
   'Editor.selectAll': SelectAll.selectAll,
   'Editor.selectAllLeft': SelectAllLeft.editorSelectAllLeft,
   'Editor.selectAllOccurrences': SelectAllOccurrences.selectAllOccurrences,
@@ -81,7 +95,4 @@ export const commandMap = {
   'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
-  'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
-  'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
-  'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
 }

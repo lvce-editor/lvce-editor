@@ -1,6 +1,6 @@
 import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as Editor from '../Editor/Editor.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.ts'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const getSelectionRange = (lines, copyFullLine, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
