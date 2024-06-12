@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.js'
 // import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
