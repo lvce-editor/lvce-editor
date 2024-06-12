@@ -1,7 +1,7 @@
 import * as Command from '../Command/Command.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+// import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 // import * as Logger from '../Logger/Logger.js'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
@@ -52,7 +52,7 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
       return editor
     }
     // @ts-ignore
-    ErrorHandling.handleError(error, false)
+    // ErrorHandling.handleError(error, false)
     const displayErrorMessage = getErrorMessage(error)
     await EditorShowMessage.editorShowMessage(editor, rowIndex, columnIndex, displayErrorMessage, true)
     return editor
