@@ -63,6 +63,8 @@ const ids = [
   'selectWordLeft',
   'selectWordRight',
   'handleDoubleClick',
+  'handleMouseDown',
+  'handleTouchEnd',
 ]
 
 export const Commands = {
@@ -103,7 +105,6 @@ export const LazyCommands = {
   handleScrollBarPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
   handleScrollBarVerticalPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
-  handleTouchEnd: () => import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
   handleTouchStart: () => import('../EditorCommand/EditorCommandHandleTouchStart.js'),
   insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),

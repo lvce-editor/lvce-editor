@@ -20,6 +20,7 @@ import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPar
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
 import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.js'
+import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.js'
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.js'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.js'
@@ -82,4 +83,5 @@ export const commandMap = {
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
+  'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
 }
