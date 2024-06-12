@@ -48,6 +48,7 @@ const UiStrings = {
   EditorCopyLineDown: 'Editor: Copy Line Down',
   EditorCopyLineUp: 'Editor: Copy Line Up',
   Replace: 'replace',
+  NoResults: 'No Results',
 }
 
 export const goToDefinition = () => {
@@ -228,4 +229,8 @@ export const editorCopyLineUp = () => {
 
 export const replace = () => {
   return I18nString.i18nString(UiStrings.Replace)
+}
+
+export const noResults = () => {
+  return I18nString.i18nString(UiStrings.NoResults)
 }
