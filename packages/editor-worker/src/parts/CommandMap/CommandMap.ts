@@ -51,6 +51,7 @@ export const commandMap = {
   'Editor.copy': Copy.copy,
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
   'Editor.copyLineUp': CopyLineUp.copyLineUp,
+  'Editor.deleteLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
