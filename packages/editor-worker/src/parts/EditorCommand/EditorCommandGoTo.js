@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.js'
+import * as Command from '../Command/Command.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
