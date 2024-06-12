@@ -1,3 +1,4 @@
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as GetCompletionItemVirtualDom from '../GetCompletionItemVirtualDom/GetCompletionItemVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -9,7 +10,7 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
         type: VirtualDomElements.Div,
         childCount: 1,
       },
-      text('No Results'),
+      text(EditorStrings.noResults()),
     ]
   }
   const root = {
