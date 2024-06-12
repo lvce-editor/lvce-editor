@@ -8,6 +8,7 @@ const kLetterSpacing = 'editor.letterSpacing'
 const kLinks = 'editor.links'
 const kTabSize = 'editor.tabSize'
 const kLineNumbers = 'editor.lineNumbers'
+const kFormatOnSave = 'editor.formatOnSave'
 
 export const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get('editor.autoClosingBrackets'))
@@ -62,4 +63,8 @@ export const getLineNumbers = () => {
 
 export const getCompletionTriggerCharacters = () => {
   return ['.', '/']
+}
+
+export const getFormatOnSave = () => {
+  return Preferences.get(kFormatOnSave) ?? false
 }
