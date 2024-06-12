@@ -21,10 +21,6 @@ export const editorShowMessage = async (editor, rowIndex, columnIndex, message, 
   Assert.number(rowIndex)
   Assert.number(columnIndex)
   Assert.string(message)
-  const x = EditorPosition.x(editor, rowIndex, columnIndex)
-  // @ts-ignore
-  const y = EditorPosition.y(editor, rowIndex, columnIndex)
-  const displayErrorMessage = message
   // await RendererProcess.invoke(
   //   /* Viewlet.send */ 'Viewlet.send',
   //   /* id */ editor.uid,
