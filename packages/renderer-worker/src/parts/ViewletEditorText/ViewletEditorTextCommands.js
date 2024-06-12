@@ -21,8 +21,6 @@ const wrapEditorCommands = (ids) => {
 
 const ids = [
   'copyLineDown',
-  'copyLineDown',
-  'copyLineUp',
   'copyLineUp',
   'cursorCharacterLeft',
   'cursorCharacterRight',
@@ -46,6 +44,9 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
+  'handleDoubleClick',
+  'handleMouseDown',
+  'handleTouchEnd',
   'indentLess',
   'indentMore',
   'moveLineDown',
@@ -62,9 +63,6 @@ const ids = [
   'selectWord',
   'selectWordLeft',
   'selectWordRight',
-  'handleDoubleClick',
-  'handleMouseDown',
-  'handleTouchEnd',
 ]
 
 export const Commands = {
@@ -146,6 +144,5 @@ export const CommandsWithSideEffectsLazy = {
   typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
   handleSingleClick: () => import('../EditorCommand/EditorCommandHandleSingleClick.js'),
   handleBlur: () => import('../EditorCommand/EditorCommandBlur.js'),
-  handleMouseDown: () => import('../EditorCommand/EditorCommandHandleMouseDown.js'),
   handleTripleClick: () => import('../EditorCommand/EditorCommandHandleTripleClick.js'),
 }
