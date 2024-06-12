@@ -102,6 +102,7 @@ export const loadContent = async (state, savedState, context) => {
   const tabSize = EditorPreferences.getTabSize()
   const links = EditorPreferences.getLinks()
   const lineNumbers = EditorPreferences.getLineNumbers()
+  const formatOnSave = EditorPreferences.getFormatOnSave()
   const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled()
   const isAutoClosingTagsEnabled = EditorPreferences.isAutoClosingTagsEnabled()
   const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
@@ -161,6 +162,7 @@ export const loadContent = async (state, savedState, context) => {
     isAutoClosingTagsEnabled,
     completionTriggerCharacters,
     tokenizerId,
+    formatOnSave,
   }
 }
 
