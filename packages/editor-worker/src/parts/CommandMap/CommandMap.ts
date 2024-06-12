@@ -29,7 +29,9 @@ import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharac
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
 import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.js'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.js'
+import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.js'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.js'
+import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.js'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
@@ -71,7 +73,9 @@ export const commandMap = {
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
   'Editor.selectDown': SelectDown.selectDown,
   'Editor.selectNextOccurrence': SelectNextOccurrence.selectNextOccurrence,
+  'Editor.selectPreviousOccurrence': SelectPreviousOccurrence.selectPreviousOccurrence,
   'Editor.selectUp': SelectUp.selectUp,
+  'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
 }

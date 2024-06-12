@@ -15,6 +15,246 @@ const getCompletions = (text, offset) => {
       snippet: `Option C`,
       kind: vscode.EditorCompletionType.Function,
     },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
+    {
+      label: 'Option C',
+      snippet: `Option C`,
+      kind: vscode.EditorCompletionType.Function,
+    },
   ]
 }
 
