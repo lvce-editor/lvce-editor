@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as EditorSelectLine from './EditorCommandSelectLine.js'
 
 // TODO rowIndex and columnIndex should already be set because of singleClick which occurred before triple click

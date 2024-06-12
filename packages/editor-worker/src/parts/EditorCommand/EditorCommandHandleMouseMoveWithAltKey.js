@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as Definition from '../Definition/Definition.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorPosition from './EditorCommandPosition.js'

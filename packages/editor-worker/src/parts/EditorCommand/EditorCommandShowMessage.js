@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+// import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 export const state = {
@@ -21,18 +21,14 @@ export const editorShowMessage = async (editor, rowIndex, columnIndex, message, 
   Assert.number(rowIndex)
   Assert.number(columnIndex)
   Assert.string(message)
-  const x = EditorPosition.x(editor, rowIndex, columnIndex)
-  // @ts-ignore
-  const y = EditorPosition.y(editor, rowIndex, columnIndex)
-  const displayErrorMessage = message
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ editor.uid,
-    /* method */ 'showOverlayMessage',
-    /* x */ x,
-    /* y */ y,
-    /* content */ displayErrorMessage,
-  )
+  // await RendererProcess.invoke(
+  //   /* Viewlet.send */ 'Viewlet.send',
+  //   /* id */ editor.uid,
+  //   /* method */ 'showOverlayMessage',
+  //   /* x */ x,
+  //   /* y */ y,
+  //   /* content */ displayErrorMessage,
+  // )
 
   if (!isError) {
     const handleTimeout = () => {
@@ -61,6 +57,6 @@ export const showErrorMessage = (editor, rowIndex, columnIndex, message) => {
 export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ editor.uid, /* method */ 'hideOverlayMessage')
+  // await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ editor.uid, /* method */ 'hideOverlayMessage')
   return editor
 }

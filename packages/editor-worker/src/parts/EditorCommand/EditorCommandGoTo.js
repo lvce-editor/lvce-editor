@@ -1,8 +1,8 @@
-import * as Command from '../Command/Command.js'
+import * as Command from '../Command/Command.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as Logger from '../Logger/Logger.js'
+// import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+// import * as Logger from '../Logger/Logger.js'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorGetWordAt from './EditorCommandGetWordAt.js'
@@ -23,7 +23,7 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
       return EditorShowMessage.editorShowMessage(editor, rowIndex, columnIndex, message, false)
     }
     if (typeof definition.uri !== 'string' || typeof definition.startOffset !== 'number' || typeof definition.endOffset !== 'number') {
-      Logger.warn('invalid definition result', definition)
+      // Logger.warn('invalid definition result', definition)
       return editor
     }
     const uri = definition.uri
@@ -52,7 +52,7 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
       return editor
     }
     // @ts-ignore
-    ErrorHandling.handleError(error, false)
+    // ErrorHandling.handleError(error, false)
     const displayErrorMessage = getErrorMessage(error)
     await EditorShowMessage.editorShowMessage(editor, rowIndex, columnIndex, displayErrorMessage, true)
     return editor

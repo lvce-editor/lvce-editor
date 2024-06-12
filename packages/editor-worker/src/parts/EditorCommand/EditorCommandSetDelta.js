@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
 import * as Clamp from '../Clamp/Clamp.js'
 // @ts-ignore

@@ -19,6 +19,9 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
+import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.js'
+import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.js'
+import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.js'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.js'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.js'
@@ -29,7 +32,9 @@ import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharac
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
 import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.js'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.js'
+import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.js'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.js'
+import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.js'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
@@ -71,7 +76,12 @@ export const commandMap = {
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
   'Editor.selectDown': SelectDown.selectDown,
   'Editor.selectNextOccurrence': SelectNextOccurrence.selectNextOccurrence,
+  'Editor.selectPreviousOccurrence': SelectPreviousOccurrence.selectPreviousOccurrence,
   'Editor.selectUp': SelectUp.selectUp,
+  'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
+  'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
+  'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
+  'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
 }

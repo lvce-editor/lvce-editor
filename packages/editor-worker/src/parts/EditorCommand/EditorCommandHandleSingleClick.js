@@ -1,8 +1,7 @@
-import * as Assert from '../Assert/Assert.js'
+import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.js'
-// @ts-ignore
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+// import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 // @ts-ignore
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
 // @ts-ignore
@@ -82,17 +81,17 @@ export const handleSingleClick = async (editor, modifier, x, y) => {
   const position = EditorPosition.at(editor, x, y)
   const fn = getFn(modifier)
   const newEditor = await fn(editor, position)
-  switch (newEditor.completionState) {
-    case EditorCompletionState.None:
-    case EditorCompletionState.Visible:
-    case EditorCompletionState.Loading:
-      return {
-        newState: newEditor,
-        commands: [],
-      }
-    default:
-      break
-  }
+  // switch (newEditor.completionState) {
+  //   case EditorCompletionState.None:
+  //   case EditorCompletionState.Visible:
+  //   case EditorCompletionState.Loading:
+  //     return {
+  //       newState: newEditor,
+  //       commands: [],
+  //     }
+  //   default:
+  //     break
+  // }
   return {
     newState: newEditor,
     commands: [],
