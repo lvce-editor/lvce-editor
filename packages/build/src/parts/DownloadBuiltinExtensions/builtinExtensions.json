@@ -257,7 +257,7 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   {
     "name": "builtin.language-features-typescript",
