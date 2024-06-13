@@ -3,7 +3,7 @@ import * as Arrays from '../Arrays/Arrays.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 
-export const create = (text) => {
+export const create = (text: string) => {
   const lines = SplitLines.splitLines(text)
   const state = {
     lines,
@@ -86,7 +86,7 @@ export const getText = (state) => {
 const RE_WHITESPACE = /^\s+/
 
 // TODO this doesn't belong here
-export const getIndent = (line) => {
+export const getIndent = (line: string) => {
   const whitespaceMatch = line.match(RE_WHITESPACE)
   if (!whitespaceMatch) {
     return ''
@@ -117,7 +117,7 @@ export const getSelectionText = (textDocument, range) => {
   return selectedLines
 }
 
-export const offsetAt = (textDocument, positionRowIndex, positionColumnIndex) => {
+export const offsetAt = (textDocument: any, positionRowIndex: number, positionColumnIndex: number) => {
   Assert.object(textDocument)
   Assert.number(positionRowIndex)
   Assert.number(positionColumnIndex)

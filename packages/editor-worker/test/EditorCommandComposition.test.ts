@@ -18,7 +18,7 @@ test.skip('editorCompositionUpdate', () => {
 
 test.skip('editorCompositionEnd', () => {
   EditorComposition.state.isComposing = true
-  EditorComposition.compositionEnd({})
+  EditorComposition.compositionEnd({}, {})
   expect(EditorComposition.state.isComposing).toBe(false)
 })
 
