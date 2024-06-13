@@ -6,11 +6,11 @@ export const create = () => {
   // @ts-ignore
   const segmenter = new Intl.Segmenter()
   return {
-    at(line, index) {
+    at(line: string, index: number) {
       const segments = segmenter.segment(line)
       return segments.containing(index)
     },
-    visualIndex(line, index) {
+    visualIndex(line: string, index: number) {
       const segments = segmenter.segment(line)
       let currentVisualIndex = 0
       for (const segment of segments) {
@@ -21,7 +21,7 @@ export const create = () => {
       }
       return currentVisualIndex
     },
-    modelIndex(line, visualIndex) {
+    modelIndex(line: string, visualIndex: number) {
       const segments = segmenter.segment(line)
       let currentVisualIndex = 0
       for (const segment of segments) {
@@ -32,7 +32,7 @@ export const create = () => {
       }
       return line.length
     },
-    getSegments(line) {
+    getSegments(line: string) {
       return segmenter.segment(line)
     },
   }

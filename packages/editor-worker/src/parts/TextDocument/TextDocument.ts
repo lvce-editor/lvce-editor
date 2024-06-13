@@ -13,7 +13,7 @@ export const create = (text: string) => {
 }
 
 // TODO have function for single edit (most common, avoid one array)
-export const applyEdits = (textDocument, changes) => {
+export const applyEdits = (textDocument: any, changes: any[]) => {
   Assert.object(textDocument)
   Assert.array(changes)
   // TODO don't copy all lines (can be expensive, e.g. 10000 lines = 10000 * 64bit = 64kB on every keystroke)
@@ -72,15 +72,15 @@ export const applyEdits = (textDocument, changes) => {
   return newLines
 }
 
-export const getLine = (textDocument, index) => {
+export const getLine = (textDocument: any, index: number) => {
   return textDocument.lines[index]
 }
 
-export const getLineLength = (textDocument, index) => {
+export const getLineLength = (textDocument: any, index: number) => {
   return textDocument.lines[index].length
 }
 
-export const getText = (state) => {
+export const getText = (state: any) => {
   return JoinLines.joinLines(state.lines)
 }
 const RE_WHITESPACE = /^\s+/
@@ -95,7 +95,7 @@ export const getIndent = (line: string) => {
 }
 
 // TDOO this doesn;t belong here
-export const getSelectionText = (textDocument, range) => {
+export const getSelectionText = (textDocument: any, range: any) => {
   Assert.object(textDocument)
   // console.log(range)
   // console.log(textDocument)
