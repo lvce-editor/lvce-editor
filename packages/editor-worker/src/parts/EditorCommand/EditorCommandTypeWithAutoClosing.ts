@@ -51,7 +51,7 @@ const isAutoClosingTagsEnabled = () => {
   return true
 }
 
-const openCompletion = async (editor, text) => {
+const openCompletion = async (editor: any, text: string) => {
   const { selections } = editor
   const rowIndex = selections[0]
   const columnIndex = selections[1]
@@ -67,7 +67,7 @@ const openCompletion = async (editor, text) => {
 }
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
-export const typeWithAutoClosing = async (editor, text) => {
+export const typeWithAutoClosing = async (editor: any, text: string) => {
   switch (text) {
     case Bracket.CurlyOpen:
     case Bracket.RoundOpen:
@@ -113,7 +113,7 @@ export const typeWithAutoClosing = async (editor, text) => {
   }
 
   const newEditor = EditorType.type(editor, text)
-  const extraCommands = []
+  const extraCommands: any[] = []
   if (isQuickSuggestionsEnabled() && newEditor.completionState === EditorCompletionState.None) {
     openCompletion(newEditor, text)
   }

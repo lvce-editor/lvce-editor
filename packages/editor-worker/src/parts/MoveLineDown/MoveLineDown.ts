@@ -4,7 +4,7 @@ import * as Editor from '../Editor/Editor.ts'
 // TODO move cursor
 // TODO multiple cursors -> vscode removes multiple cursors
 // TODO with selection -> vscode moves whole selection
-export const moveLineDown = (editor) => {
+export const moveLineDown = (editor: any) => {
   const rowIndex = editor.cursor.rowIndex
   if (rowIndex === editor.lines.length - 1) {
     return
