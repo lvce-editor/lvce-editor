@@ -1,7 +1,7 @@
 import * as GoToTypeDefinitionStrings from '../GoToTypeDefinitionStrings/GoToTypeDefinitionStrings.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TypeDefinition from '../TypeDefinition/TypeDefinition.js'
-import * as EditorGoTo from './EditorCommandGoTo.js'
+import * as EditorGoTo from './EditorCommandGoTo.ts'
 
 // TODO duplicate code with editorCommandGoToDefinition
 // TODO race condition, check that editor hasn't been closed in the meantime

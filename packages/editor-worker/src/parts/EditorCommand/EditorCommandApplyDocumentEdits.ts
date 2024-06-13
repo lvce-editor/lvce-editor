@@ -1,9 +1,9 @@
 // @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
-import * as Logger from '../Logger/Logger.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Editor from '../Editor/Editor.ts'
+import * as Logger from '../Logger/Logger.ts'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
 

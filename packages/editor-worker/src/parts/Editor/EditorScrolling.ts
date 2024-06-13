@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Clamp from '../Clamp/Clamp.js'
+import * as Clamp from '../Clamp/Clamp.ts'
 import * as ScrollingFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 // TODO this should be in a separate scrolling module

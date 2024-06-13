@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'

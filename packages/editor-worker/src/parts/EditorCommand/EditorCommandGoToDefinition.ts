@@ -1,10 +1,10 @@
 // @ts-ignore
-import * as Definition from '../Definition/Definition.js'
+import * as Definition from '../Definition/Definition.ts'
 // @ts-ignore
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorGoTo from './EditorCommandGoTo.js'
+import * as EditorGoTo from './EditorCommandGoTo.ts'
 
 // TODO race condition, check that editor hasn't been closed in the meantime
 

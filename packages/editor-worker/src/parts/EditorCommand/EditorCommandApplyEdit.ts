@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 import * as Assert from '../Assert/Assert.ts'
 
 export const applyEdit = async (editor, changes) => {

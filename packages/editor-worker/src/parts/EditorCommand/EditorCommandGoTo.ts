@@ -1,11 +1,11 @@
 import * as Command from '../Command/Command.ts'
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 // import * as Logger from '../Logger/Logger.js'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorGetWordAt from './EditorCommandGetWordAt.js'
+import * as EditorGetWordAt from './EditorCommandGetWordAt.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, getErrorMessage, isNoProviderFoundError }) => {

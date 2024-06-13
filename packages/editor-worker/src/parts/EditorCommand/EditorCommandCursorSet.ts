@@ -1,6 +1,6 @@
 // @ts-ignore
 import * as Assert from '../Assert/Assert.ts'
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 

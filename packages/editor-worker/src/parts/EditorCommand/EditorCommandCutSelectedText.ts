@@ -1,6 +1,6 @@
-import * as ClipBoard from '../ClipBoard/ClipBoard.js'
+import * as ClipBoard from '../ClipBoard/ClipBoard.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
