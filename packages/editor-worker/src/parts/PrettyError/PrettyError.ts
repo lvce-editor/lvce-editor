@@ -1,7 +1,7 @@
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 
-const getErrorMessage = (error) => {
+const getErrorMessage = (error: any) => {
   if (!error) {
     return `Error: ${error}`
   }
@@ -13,7 +13,7 @@ const getErrorMessage = (error) => {
   return message
 }
 
-const prepareErrorMessageWithCodeFrame = (error) => {
+const prepareErrorMessageWithCodeFrame = (error: any) => {
   if (!error) {
     return {
       message: error,
@@ -48,7 +48,7 @@ const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
  * @param {readonly string[]} lines
  * @returns
  */
-const getFile = (lines) => {
+const getFile = (lines: readonly string[]) => {
   for (const line of lines) {
     if (RE_PATH_1.test(line) || RE_PATH_2.test(line)) {
       return line
@@ -57,7 +57,7 @@ const getFile = (lines) => {
   return ''
 }
 
-const prepareErrorMessageWithoutCodeFrame = async (error) => {
+const prepareErrorMessageWithoutCodeFrame = async (error: any) => {
   try {
     const lines = SplitLines.splitLines(error.stack)
     const file = getFile(lines)
@@ -82,7 +82,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
   }
 }
 
-export const prepare = async (error) => {
+export const prepare = async (error: any) => {
   if (error && error.message && error.codeFrame) {
     return prepareErrorMessageWithCodeFrame(error)
   }
@@ -92,7 +92,7 @@ export const prepare = async (error) => {
   return error
 }
 
-export const print = (error) => {
+export const print = (error: any) => {
   if (error && error.type && error.message && error.codeFrame) {
     return `${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`
   }
