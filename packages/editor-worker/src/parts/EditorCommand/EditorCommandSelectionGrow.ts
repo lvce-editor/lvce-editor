@@ -2,13 +2,16 @@
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.js'
+// import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.js'
 
 const getNewSelections = async (editor, selections) => {
-  const newSelections = await ExtensionHostSelection.executeGrowSelection(editor, selections)
-  if (newSelections.length === 0) {
-    return selections
-  }
-  return new Uint32Array(newSelections)
+  // TODO
+  // const newSelections = await ExtensionHostSelection.executeGrowSelection(editor, selections)
+  // if (newSelections.length === 0) {
+  //   return selections
+  // }
+  // return new Uint32Array(newSelections)
+  return selections
 }
 
 export const selectionGrow = async (editor) => {

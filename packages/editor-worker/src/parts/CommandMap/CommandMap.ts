@@ -1,5 +1,7 @@
 import * as AddCursorAbove from '../EditorCommand/EditorCommandAddCursorAbove.js'
 import * as AddCursorBelow from '../EditorCommand/EditorCommandAddCursorBelow.js'
+import * as CancelSelection from '../EditorCommand/EditorCommandCancelSelection.js'
+import * as Composition from '../EditorCommand/EditorCommandComposition.js'
 import * as Copy from '../EditorCommand/EditorCommandCopy.js'
 import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.js'
 import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.js'
@@ -23,6 +25,7 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
+import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.js'
 import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.js'
 import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.js'
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
@@ -42,16 +45,23 @@ import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.js'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.js'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
+import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.js'
+import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.js'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
+import * as Save from '../EditorCommand/EditorCommandSave.js'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
   'Editor.addCursorBelow': AddCursorBelow.addCursorBelow,
+  'Editor.cancelSelection': CancelSelection.cancelSelection,
+  'Editor.compositionEnd': Composition.compositionEnd,
+  'Editor.compositionStart': Composition.compositionStart,
+  'Editor.compositionUpdate': Composition.compositionUpdate,
+  'Editor.contextMenu': ContextMenu.handleContextMenu,
   'Editor.copy': Copy.copy,
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
   'Editor.copyLineUp': CopyLineUp.copyLineUp,
-  'Editor.deleteLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
@@ -70,6 +80,7 @@ export const commandMap = {
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.deleteCharacterRight': DeleteCharacterRight.deleteCharacterRight,
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
+  'Editor.deleteLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.deleteWordLeft': DeleteWordLeft.deleteWordLeft,
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
@@ -82,6 +93,7 @@ export const commandMap = {
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
   'Editor.pasteText': PasteText.pasteText,
+  'Editor.save': Save.save,
   'Editor.selectAll': SelectAll.selectAll,
   'Editor.selectAllLeft': SelectAllLeft.editorSelectAllLeft,
   'Editor.selectAllOccurrences': SelectAllOccurrences.selectAllOccurrences,
@@ -89,10 +101,12 @@ export const commandMap = {
   'Editor.selectCharacterLeft': SelectCharacterLeft.selectCharacterLeft,
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
   'Editor.selectDown': SelectDown.selectDown,
+  'Editor.selectionGrow': SelectionGrow.selectionGrow,
   'Editor.selectNextOccurrence': SelectNextOccurrence.selectNextOccurrence,
   'Editor.selectPreviousOccurrence': SelectPreviousOccurrence.selectPreviousOccurrence,
   'Editor.selectUp': SelectUp.selectUp,
   'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
+  'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
 }
