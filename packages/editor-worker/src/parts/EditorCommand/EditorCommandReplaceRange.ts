@@ -4,7 +4,7 @@ import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 export const replaceRange = (editor, ranges, replacement, origin) => {
-  const changes = []
+  const changes: any[] = []
   const rangesLength = ranges.length
   for (let i = 0; i < rangesLength; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(ranges, i)

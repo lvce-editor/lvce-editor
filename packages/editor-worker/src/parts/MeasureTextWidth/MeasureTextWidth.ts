@@ -24,7 +24,9 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterS
   const ctx = GetTextMeasureContext.getContext()
   // @ts-ignore
   ctx.letterSpacing = letterSpacingString
+  // @ts-ignore
   ctx.font = fontString
+  // @ts-ignore
   const metrics = ctx.measureText(text)
   const width = metrics.width
   return width

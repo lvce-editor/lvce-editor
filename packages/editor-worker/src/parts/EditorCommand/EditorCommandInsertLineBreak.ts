@@ -26,8 +26,8 @@ const shouldIncreaseIndent = (before, increaseIndentRegex) => {
 }
 
 const getChanges = (lines, selections, languageConfiguration) => {
-  const changes = []
-  const selectionChanges = []
+  const changes: any[] = []
+  const selectionChanges: any[] = []
   const increaseIndentRegex = getIncreaseIndentRegex(languageConfiguration)
   for (let i = 0; i < selections.length; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
@@ -85,5 +85,6 @@ export const insertLineBreak = async (editor) => {
   const { lines, selections } = editor
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)
   const { changes, selectionChanges } = getChanges(lines, selections, languageConfiguration)
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

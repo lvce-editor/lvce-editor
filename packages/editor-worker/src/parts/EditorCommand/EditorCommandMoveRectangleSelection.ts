@@ -11,7 +11,7 @@ export const moveRectangleSelection = (editor, position) => {
   const startColumnIndex = anchor.columnIndex
   const endRowIndex = position.rowIndex
   const endColumnIndex = position.columnIndex
-  const selectionEdits = []
+  const selectionEdits: any[] = []
   for (let i = startRowIndex; i <= endRowIndex; i++) {
     selectionEdits.push({
       start: {

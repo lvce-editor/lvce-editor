@@ -9,8 +9,10 @@ export const cutSelectedText = async (editor) => {
   const [startRowIndex, startColumnIndex, endRowIndex, endColumnIndex] = selections
   const changes = editorReplaceSelections(editor, [''], EditOrigin.EditorCut)
   const selectionChanges = new Uint32Array([startRowIndex, startColumnIndex, endRowIndex, endColumnIndex])
+  // @ts-ignore
   const text = JoinLines.joinLines(changes[0].deleted)
   // TODO remove selected text from document
   await ClipBoard.writeText(text)
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

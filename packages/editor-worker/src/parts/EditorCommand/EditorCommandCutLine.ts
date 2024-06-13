@@ -11,5 +11,6 @@ export const cutLine = async (editor) => {
   const changes = EditorCommandReplaceRange.replaceRange(editor, replaceRange, [''], EditOrigin.EditorCut)
   const selectionChanges = new Uint32Array([startRowIndex, 0, startRowIndex, 0])
   await ClipBoard.writeText(line)
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

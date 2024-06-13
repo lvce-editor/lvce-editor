@@ -62,6 +62,7 @@ const continueScrollingAndMovingSelection = async () => {
   }
   await Viewlet.setState(ViewletModuleId.EditorText, newEditor)
   EditorSelectionAutoMoveState.setEditor(newEditor)
+  // @ts-ignore
   const delta = position.rowIndex < editor.minLineY ? -1 : 1
   EditorSelectionAutoMoveState.setPosition({ rowIndex: position.rowIndex + delta, columnIndex: position.columnIndex })
   RequestAnimationFrame.requestAnimationFrame(continueScrollingAndMovingSelection)

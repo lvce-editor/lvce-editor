@@ -25,7 +25,7 @@ const isAutoClosingChange = (change) => {
 
 const applyAutoClosingRangesEdit = (editor, changes) => {
   const { autoClosingRanges = [] } = editor
-  const newAutoClosingRanges = []
+  const newAutoClosingRanges: any[] = []
   const change = changes[0]
   const changeStartRowIndex = change.start.rowIndex
   const changeStartColumnIndex = change.start.columnIndex

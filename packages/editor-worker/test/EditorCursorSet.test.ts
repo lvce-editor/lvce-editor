@@ -4,6 +4,7 @@ import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.t
 
 test('editorCursorSet - invalid argument - array', () => {
   const editor = {}
+  // @ts-ignore
   expect(() => EditorCursorSet.cursorSet(editor, [0, 1])).toThrow(new Error('expected value to be of type number'))
 })
 

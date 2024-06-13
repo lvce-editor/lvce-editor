@@ -14,7 +14,7 @@ export const compositionStart = (editor, event) => {
 }
 
 const getCompositionChanges = (selections, data) => {
-  const changes = []
+  const changes: any[] = []
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]

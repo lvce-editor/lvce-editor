@@ -221,5 +221,6 @@ export const selectNextOccurrence = (editor) => {
   }
   // TODO what is this magic number 5?
   // const deltaY = (revealRangeStartRowIndex - 5) * editor.rowHeight
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, [], selectionEdits)
 }
