@@ -3,7 +3,7 @@ import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as IpcParentWithElectron from '../IpcParentWithElectron/IpcParentWithElectron.ts'
 
-export const create = async (options) => {
+export const create = async (options: any) => {
   switch (Platform.platform) {
     case PlatformType.Web:
     case PlatformType.Remote:
@@ -23,7 +23,7 @@ export const create = async (options) => {
   }
 }
 
-export const wrap = (port) => {
+export const wrap = (port: any) => {
   if (!(port instanceof MessagePort)) {
     return port.module.wrap(port.rawIpc)
   }
@@ -38,17 +38,17 @@ export const wrap = (port) => {
     },
     set onmessage(listener) {
       this.listener = listener
-      const wrappedListener = (event) => {
+      const wrappedListener = (event: any) => {
         const data = GetData.getData(event)
         // @ts-ignore
         listener(data)
       }
       this.port.onmessage = wrappedListener
     },
-    send(message) {
+    send(message: any) {
       this.port.postMessage(message)
     },
-    sendAndTransfer(message, transfer) {
+    sendAndTransfer(message: any, transfer: any) {
       this.port.postMessage(message, transfer)
     },
   }
