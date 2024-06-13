@@ -1,7 +1,7 @@
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as IsAutoClosingPairDelete from '../IsAutoClosingPairDelete/IsAutoClosingPairDelete.ts'
 
-export const isAllAutoClosingPairDelete = (autoClosingRanges, selections) => {
+export const isAllAutoClosingPairDelete = (autoClosingRanges: any, selections: any[]) => {
   for (let i = 0; i < selections.length; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
     if (
