@@ -1,29 +1,29 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
-jest.unstable_mockModule('../src/parts/Definition/Definition.js', () => ({
+jest.unstable_mockModule('../src/parts/Definition/Definition.ts', () => ({
   getDefinition: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
-jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.js', () => ({
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.ts', () => ({
   editorShowMessage: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+jest.unstable_mockModule('../src/parts/Command/Command.ts', () => ({
   execute: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
-jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.ts', () => ({
   handleError: jest.fn(),
 }))
 
-const Definition = await import('../src/parts/Definition/Definition.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
-const EditorGoToDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToDefinition.js')
-const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
+const Definition = await import('../src/parts/Definition/Definition.ts')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.ts')
+const EditorGoToDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToDefinition.ts')
+const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.ts')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -108,7 +108,7 @@ test.skip('editorGoToDefinition - error', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
@@ -133,8 +133,8 @@ test.skip('editorGoToDefinition - error - no definition provider found', async (
     throw new Error('Failed to execute definition provider: No definition provider found')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
@@ -162,7 +162,7 @@ test.skip('editorGoToDefinition - no definition found', async () => {
     return undefined
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No definition found for 'line'", false)
@@ -183,7 +183,7 @@ test.skip('editorGoToDefinition - no definition found and no word at position', 
     return undefined
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'No definition found', false)

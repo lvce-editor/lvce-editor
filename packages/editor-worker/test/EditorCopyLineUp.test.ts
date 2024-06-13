@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCopyLineUp from '../src/parts/EditorCommand/EditorCommandCopyLineUp.js'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as EditorCopyLineUp from '../src/parts/EditorCommand/EditorCommandCopyLineUp.ts'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
 test.skip('editorCopyLineUp', () => {
   const cursor = {

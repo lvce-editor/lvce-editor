@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCommandSetSelections from '../src/parts/EditorCommand/EditorCommandSetSelections.js'
+import * as EditorCommandSetSelections from '../src/parts/EditorCommand/EditorCommandSetSelections.ts'
 
 test('setSelections', () => {
   const editor = {

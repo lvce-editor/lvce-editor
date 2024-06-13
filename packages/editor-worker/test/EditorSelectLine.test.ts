@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorSelectLine from '../src/parts/EditorCommand/EditorCommandSelectLine.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorSelectLine from '../src/parts/EditorCommand/EditorCommandSelectLine.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 // TODO test with multiple cursors
 test('editorSelectLine', () => {

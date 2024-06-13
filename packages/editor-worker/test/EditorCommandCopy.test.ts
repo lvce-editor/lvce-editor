@@ -1,6 +1,6 @@
 import { beforeAll, expect, jest, test } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => ({
+jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.ts', () => ({
   writeText: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
@@ -14,14 +14,14 @@ beforeAll(() => {
   }
 })
 
-const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
-const EditorCopy = await import('../src/parts/EditorCommand/EditorCommandCopy.js')
+const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.ts')
+const EditorCopy = await import('../src/parts/EditorCommand/EditorCommandCopy.ts')
 
 beforeAll(() => {
   // Command.setLoad((moduleId) => {
   //   switch (moduleId) {
   //     case ModuleId.ClipBoard:
-  //       return import('../src/parts/ClipBoard/ClipBoard.ipc.js')
+  //       return import('../src/parts/ClipBoard/ClipBoard.ipc.ts')
   //     default:
   //       throw new Error(`module not found ${moduleId}`)
   //   }
@@ -30,7 +30,7 @@ beforeAll(() => {
 
 test('editorCopy', async () => {
   // @ts-ignore
-  const spy = ClipBoard.writeText.mockImplementation(() => { })
+  const spy = ClipBoard.writeText.mockImplementation(() => {})
   const editor = {
     uri: '/tmp/foo-fiiHjX/test.txt',
     languageId: 'plaintext',
@@ -69,7 +69,7 @@ test.skip('editorCopy - error from clipboard - document is not focused', async (
     throw new DOMException('Document is not focused.')
   })
   // @ts-ignore
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const editor = {
     uri: '/tmp/foo-fiiHjX/test.txt',
     languageId: 'plaintext',

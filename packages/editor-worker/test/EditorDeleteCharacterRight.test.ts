@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorDeleteCharacterRight from '../src/parts/EditorCommand/EditorCommandDeleteCharacterRight.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorDeleteCharacterRight from '../src/parts/EditorCommand/EditorCommandDeleteCharacterRight.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 test('deleteCharacterRight', () => {
   const editor = {

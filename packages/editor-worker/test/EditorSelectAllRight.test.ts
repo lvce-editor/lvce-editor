@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorSelectAllRight from '../src/parts/EditorCommand/EditorCommandSelectAllRight.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorSelectAllRight from '../src/parts/EditorCommand/EditorCommandSelectAllRight.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 test('editorSelectAllRight = at start', () => {
   const editor = {

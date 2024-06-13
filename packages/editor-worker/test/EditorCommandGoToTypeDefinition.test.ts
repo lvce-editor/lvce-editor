@@ -1,33 +1,33 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
-jest.unstable_mockModule('../src/parts/TypeDefinition/TypeDefinition.js', () => ({
+jest.unstable_mockModule('../src/parts/TypeDefinition/TypeDefinition.ts', () => ({
   getTypeDefinition: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
 
-jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.js', () => ({
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.ts', () => ({
   editorShowMessage: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+jest.unstable_mockModule('../src/parts/Command/Command.ts', () => ({
   execute: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
 
-jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.ts', () => ({
   handleError: jest.fn(),
 }))
 
-const EditorGoToTypeDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToTypeDefinition.js')
-const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
-const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
-const TypeDefinition = await import('../src/parts/TypeDefinition/TypeDefinition.js')
+const EditorGoToTypeDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToTypeDefinition.ts')
+const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.ts')
+const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.ts')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.ts')
+const TypeDefinition = await import('../src/parts/TypeDefinition/TypeDefinition.ts')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -112,7 +112,7 @@ test.skip('editorGoToTypeDefinition - error', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
@@ -135,8 +135,8 @@ test.skip('editorGoToTypeDefinition - error - no type definition provider found'
     throw new Error('Failed to execute type definition provider: No type definition provider found')
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
@@ -164,7 +164,7 @@ test.skip('editorGoToTypeDefinition - no type definition found', async () => {
     return undefined
   })
   // @ts-ignore
-  EditorShowMessage.editorShowMessage.mockImplementation(() => { })
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, "No type definition found for 'line'", false)

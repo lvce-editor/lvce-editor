@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCursorLeft from '../src/parts/EditorCommand/EditorCommandCursorCharacterLeft.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorCursorLeft from '../src/parts/EditorCommand/EditorCommandCursorCharacterLeft.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 test('editorCursorCharacterLeft - at start', () => {
   const editor = {

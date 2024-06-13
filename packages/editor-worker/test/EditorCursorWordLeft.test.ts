@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCursorWordLeft from '../src/parts/EditorCommand/EditorCommandCursorWordLeft.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorCursorWordLeft from '../src/parts/EditorCommand/EditorCommandCursorWordLeft.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 test.skip('editorCursorWordLeft', () => {
   const editor = {

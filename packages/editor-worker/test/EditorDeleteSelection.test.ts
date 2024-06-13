@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorDeleteSelection from '../src/parts/EditorCommand/EditorCommandDeleteSelection.js'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as EditorDeleteSelection from '../src/parts/EditorCommand/EditorCommandDeleteSelection.ts'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
 test.skip('editorDeleteSelection', () => {
   const editor = {
