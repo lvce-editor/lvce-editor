@@ -1,16 +1,15 @@
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-// @ts-ignore
-import * as FileSystem from '../FileSystem/FileSystem.js'
-// @ts-ignore
-import * as Preferences from '../Preferences/Preferences.js'
-// @ts-ignore
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
+// import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import { VError } from '../VError/VError.js'
+import { VError } from '../VError/VError.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as EditorFormat from './EditorCommandFormat.js'
 
 const getFormatOnSave = () => {
-  const value = Preferences.get('editor.formatOnSave')
-  return Boolean(value)
+  // TODO query setting on editor creation
+  // const value = Preferences.get('editor.formatOnSave')
+  // return Boolean(value)
+  return false
 }
 
 const getNewEditor = async (editor) => {
@@ -26,7 +25,7 @@ export const save = async (editor) => {
     const uri = editor.uri
     const newEditor = await getNewEditor(editor)
     const content = TextDocument.getText(newEditor)
-    await FileSystem.writeFile(uri, content)
+    await RendererWorker.invoke('FileSystem.writeFile', uri, content)
     return newEditor
   } catch (error) {
     // @ts-ignore
