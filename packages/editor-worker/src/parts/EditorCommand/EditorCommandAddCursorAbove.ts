@@ -1,5 +1,5 @@
 const getNewSelections = (selections) => {
-  const newSelections = []
+  const newSelections: number[] = []
   for (let i = 0; i < selections.length; i += 4) {
     const startRowIndex = selections[i]
     const startColumnIndex = selections[i + 1]

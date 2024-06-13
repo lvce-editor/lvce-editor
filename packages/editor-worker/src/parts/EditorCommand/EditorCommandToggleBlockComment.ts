@@ -42,7 +42,7 @@ export const toggleBlockComment = async (editor) => {
     }
     startRowIndex--
   }
-  const changes = []
+  const changes: any[] = []
 
   if (startColumnIndex !== -1 && endColumnIndex !== -1) {
     if (startRowIndex === endRowIndex) {
@@ -72,6 +72,7 @@ export const toggleBlockComment = async (editor) => {
         deleted: [blockCommentEnd],
         origin: EditOrigin.ToggleBlockComment,
       }
+      // @ts-ignore
       changes.push(change1, change2)
       // Editor.moveCursors(editor, (editor, cursor) => {
       //   let newColumnIndex = cursor.columnIndex - blockComment[0].length

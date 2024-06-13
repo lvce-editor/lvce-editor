@@ -111,7 +111,7 @@ const getStartDefaults = (tokens, minOffset) => {
 
 // @ts-ignore
 const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize, tabSize, width, deltaX, averageCharWidth, minOffset, maxOffset) => {
-  const lineInfo = []
+  const lineInfo: any[] = []
   const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
   const embeddedTokens = embeddedResult.result.tokens
   const embeddedTokenMap = embeddedResult.TokenMap

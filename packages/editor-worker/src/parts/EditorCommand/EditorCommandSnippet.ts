@@ -11,8 +11,8 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
   const insertedLines = SplitLines.splitLines(snippet.inserted)
-  const changes = []
-  const selectionChanges = []
+  const changes: any[] = []
+  const selectionChanges: any[] = []
   for (let i = 0; i < selections.length; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
     if (insertedLines.length > 1) {
@@ -47,7 +47,9 @@ const getChanges = (lines, selections, snippet) => {
       const placeholderIndex = line.indexOf('$0')
       if (placeholderIndex === -1) {
         const cursorColumnIndex = selectionStartColumn - snippet.deleted
+        // @ts-ignore
         selectionChanges.push(selectionStartRow, cursorColumnIndex, selectionStartRow, cursorColumnIndex)
+        // @ts-ignore
         changes.push({
           start: {
             rowIndex: selectionStartRow,
@@ -91,5 +93,6 @@ export const editorSnippet = (editor, snippet) => {
   // TODO verify that deleted fits in the line
   const { lines, selections } = editor
   const { changes, selectionChanges } = getChanges(lines, selections, snippet)
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

@@ -7,7 +7,7 @@ const getNewSelectionsSingleLineWord = (lines, word) => {
   if (word.length === 0) {
     throw new Error('word length must be greater than zero')
   }
-  const newSelections = []
+  const newSelections: number[] = []
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     let columnIndex = -word.length
@@ -41,7 +41,7 @@ const isMultiLineMatch = (lines, rowIndex, wordParts) => {
 // TODO this is very expensive, there might be a better algorithm for this
 // TODO if this matches the given selections, don't schedule selections/rerender
 const getAllOccurrencesMultiLine = (lines, wordParts) => {
-  const newSelections = []
+  const newSelections: any[] = []
   for (let rowIndex = 0; rowIndex < lines.length - wordParts.length + 1; rowIndex) {
     lines
     rowIndex
@@ -115,7 +115,7 @@ const getNewSelections = (lines, selections) => {
     const newSelections = getNewSelectionsSingleLineWord(lines, word)
     return newSelections
   }
-  const wordParts = []
+  const wordParts: string[] = []
   wordParts.push(lines[startRowIndex].slice(startColumnIndex))
   for (let i = startRowIndex + 1; i < endRowIndex - 1; i++) {
     wordParts.push(lines[i])

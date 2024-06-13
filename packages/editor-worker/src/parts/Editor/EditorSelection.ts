@@ -56,7 +56,7 @@ const getCursorArray = (visibleCursors, isFocused) => {
   if (!isFocused) {
     return emptyCursors
   }
-  const cursorArray = []
+  const cursorArray: string[] = []
   for (let i = 0; i < visibleCursors.length; i += 2) {
     const x = visibleCursors[i]
     const y = visibleCursors[i + 1]
@@ -66,7 +66,7 @@ const getCursorArray = (visibleCursors, isFocused) => {
 }
 
 const getSelectionArray = (visibleSelections) => {
-  const selectionsArray = []
+  const selectionsArray: string[] = []
   for (let i = 0; i < visibleSelections.length; i += 4) {
     const x = visibleSelections[i]
     const y = visibleSelections[i + 1]
@@ -78,8 +78,8 @@ const getSelectionArray = (visibleSelections) => {
 }
 
 export const getVisible = (editor) => {
-  const visibleCursors = []
-  const visibleSelections = []
+  const visibleCursors: any[] = []
+  const visibleSelections: any[] = []
   // // TODO binary search
 
   const {

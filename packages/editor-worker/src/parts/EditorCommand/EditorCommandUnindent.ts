@@ -73,6 +73,7 @@ export const editorUnindent = (editor) => {
   if (!editor.lines[editor.cursor.rowIndex].startsWith(INDENT)) {
     return
   }
+  // @ts-ignore
   documentEdits.push({
     type: /* singleLineEdit */ 1,
     rowIndex: editor.cursor.rowIndex,
@@ -80,6 +81,7 @@ export const editorUnindent = (editor) => {
     columnIndex: 2,
     deleted: 2,
   })
+  // @ts-ignore
   cursorEdits.push({
     rowIndex: editor.cursor.rowIndex,
     columnIndex: editor.cursor.columnIndex - 2,

@@ -47,7 +47,7 @@ export const lastIndex = (array) => {
 }
 
 export const fromAsync = async (asyncIterable) => {
-  const children = []
+  const children: any[] = []
   for await (const value of asyncIterable) {
     children.push(value)
   }
