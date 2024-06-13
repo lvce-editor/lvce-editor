@@ -5,7 +5,7 @@ import { JsonRpcError } from '../JsonRpcError/JsonRpcError.ts'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 
-const constructError = (message, type, name) => {
+const constructError = (message: string, type: string, name: string) => {
   const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
   if (ErrorConstructor === DOMException && name) {
     return new ErrorConstructor(message, name)
@@ -20,14 +20,14 @@ const constructError = (message, type, name) => {
   return new ErrorConstructor(message)
 }
 
-const recreateStack = (message, stack) => {
+const recreateStack = (message: string, stack: string) => {
   if (message && !stack.includes(message)) {
     return message + Character.NewLine + stack
   }
   return stack
 }
 
-const getErrorType = (error) => {
+const getErrorType = (error: any) => {
   if (error && error.type) {
     return error.type
   }
@@ -37,7 +37,7 @@ const getErrorType = (error) => {
   return ''
 }
 
-export const restoreJsonRpcError = (error) => {
+export const restoreJsonRpcError = (error: any) => {
   if (error && error instanceof Error) {
     return error
   }
