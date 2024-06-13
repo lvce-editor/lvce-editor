@@ -39,7 +39,7 @@ export const forEach = (selections: any[], fn: any) => {
   }
 }
 
-export const moveRangeToPosition = (selections: any[], i: number, rowIndex: number, columnIndex: number) => {
+export const moveRangeToPosition = (selections: any[] | Uint32Array, i: number, rowIndex: number, columnIndex: number) => {
   selections[i] = selections[i + 2] = rowIndex
   selections[i + 1] = selections[i + 3] = columnIndex
 }
