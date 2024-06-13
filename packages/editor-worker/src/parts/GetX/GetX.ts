@@ -4,7 +4,7 @@ import * as NormalizeText from '../NormalizeText/NormalizeText.ts'
 
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
-const getTabCount = (string) => {
+const getTabCount = (string: string) => {
   let count = 0
   for (const element of string) {
     if (element === '\t') {
@@ -15,17 +15,17 @@ const getTabCount = (string) => {
 }
 
 export const getX = (
-  line,
-  column,
-  fontWeight,
-  fontSize,
-  fontFamily,
-  isMonospaceFont,
-  letterSpacing,
-  tabSize,
-  halfCursorWidth,
-  width,
-  averageCharWidth,
+  line: string,
+  column: number,
+  fontWeight: number,
+  fontSize: number,
+  fontFamily: string,
+  isMonospaceFont: boolean,
+  letterSpacing: number,
+  tabSize: number,
+  halfCursorWidth: number,
+  width: number,
+  averageCharWidth: number,
   difference = 0,
 ) => {
   if (!line) {
@@ -56,6 +56,6 @@ export const getX = (
   )
 }
 
-export const getY = (row, minLineY, rowHeight) => {
+export const getY = (row: number, minLineY: number, rowHeight: number) => {
   return (row - minLineY) * rowHeight
 }
