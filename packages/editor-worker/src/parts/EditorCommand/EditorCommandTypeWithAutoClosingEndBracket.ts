@@ -1,8 +1,8 @@
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as IsAllAutoClosingPairDelete from '../IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.js'
-import * as EditorType from './EditorCommandType.js'
+import * as EditorType from './EditorCommandType.ts'
 
 const overType = (editor) => {
   const { selections } = editor

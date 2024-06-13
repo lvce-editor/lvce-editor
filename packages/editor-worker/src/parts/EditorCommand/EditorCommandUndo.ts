@@ -1,4 +1,4 @@
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 
 const inverseChange = (edit) => {
   const endColumnIndex = edit.end.columnIndex - edit.deleted[0].length + edit.inserted[0].length

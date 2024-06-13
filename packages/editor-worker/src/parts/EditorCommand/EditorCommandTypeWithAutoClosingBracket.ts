@@ -1,10 +1,10 @@
 // @ts-ignore
 import * as Bracket from '../Bracket/Bracket.js'
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
 const getMatchingClosingBrace = (brace) => {
   switch (brace) {
