@@ -2,11 +2,19 @@ import * as Assert from '../Assert/Assert.ts'
 import * as GetTextMeasureContext from '../GetTextMeasureContext/GetTextMeasureContext.ts'
 import * as GetFontString from '../GetFontString/GetFontString.ts'
 
-const getLetterSpacingString = (letterSpacing) => {
+const getLetterSpacingString = (letterSpacing: number) => {
   return `${letterSpacing}px`
 }
 
-export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterSpacing, isMonoSpaceFont, charWidth) => {
+export const measureTextWidth = (
+  text: string,
+  fontWeight: number,
+  fontSize: number,
+  fontFamily: string,
+  letterSpacing: number,
+  isMonoSpaceFont: boolean,
+  charWidth: number,
+) => {
   Assert.string(text)
   Assert.number(fontWeight)
   Assert.number(fontSize)
