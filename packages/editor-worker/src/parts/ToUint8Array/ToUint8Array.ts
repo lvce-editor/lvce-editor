@@ -2,7 +2,7 @@
 // websocket sends the data as an object with data property
 // conpty sends the data as a string
 
-export const toUint8Array = (data) => {
+export const toUint8Array = (data: any) => {
   if (data instanceof Uint8Array) {
     return data
   }
