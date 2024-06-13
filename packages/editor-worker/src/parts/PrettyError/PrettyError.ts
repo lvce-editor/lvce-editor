@@ -111,7 +111,7 @@ export const print = (error) => {
   return `${error}`
 }
 
-export const getMessage = (error) => {
+export const getMessage = (error: any) => {
   if (error && error.type && error.message) {
     return `${error.type}: ${error.message}`
   }
