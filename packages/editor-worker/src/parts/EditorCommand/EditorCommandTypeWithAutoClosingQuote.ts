@@ -17,5 +17,6 @@ export const typeWithAutoClosingQuote = (editor, text) => {
     // @ts-ignore
     changes[0].end.columnIndex + 1,
   ])
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

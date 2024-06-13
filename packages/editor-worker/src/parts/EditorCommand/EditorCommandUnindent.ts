@@ -5,9 +5,9 @@ const INDENT = '  '
 
 export const editorUnindent = (editor) => {
   if (Editor.hasSelection(editor)) {
-    const documentEdits = []
-    const cursorEdits = []
-    const selectionEdits = []
+    const documentEdits: any[] = []
+    const cursorEdits: any[] = []
+    const selectionEdits: any[] = []
     const canUnindentSelection = (selection) => {
       for (let i = selection.start.rowIndex; i <= selection.end.rowIndex; i++) {
         if (editor.lines[i].startsWith(INDENT)) {

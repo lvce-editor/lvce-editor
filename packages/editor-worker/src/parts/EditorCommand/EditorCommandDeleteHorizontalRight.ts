@@ -14,7 +14,7 @@ import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 const getChanges = (editor, getDelta) => {
   const selections = editor.selections
   if (EditorSelection.isEverySelectionEmpty(selections)) {
-    const changes = []
+    const changes: any[] = []
     const lines = editor.lines
     for (let i = 0; i < selections.length; i += 4) {
       // @ts-ignore

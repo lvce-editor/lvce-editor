@@ -29,5 +29,6 @@ export const typeWithAutoClosingBracket = (editor, text) => {
     changes[0].end.rowIndex,
     changes[0].end.columnIndex + 1,
   ])
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }
