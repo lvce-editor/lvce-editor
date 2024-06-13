@@ -133,7 +133,7 @@ export const offsetAt = (textDocument: any, positionRowIndex: number, positionCo
   return offset
 }
 
-export const positionAt = (textDocument, offset) => {
+export const positionAt = (textDocument: any, offset: number) => {
   // console.log({ textDocument, offset })
   let rowIndex = 0
   let columnIndex = 0

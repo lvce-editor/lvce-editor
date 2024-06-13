@@ -1,6 +1,12 @@
 import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
-export const isAutoClosingPairDelete = (autoClosingRanges, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
+export const isAutoClosingPairDelete = (
+  autoClosingRanges: any,
+  startRowIndex: number,
+  startColumnIndex: number,
+  endRowIndex: number,
+  endColumnIndex: number,
+) => {
   if (!EditorSelection.isEmpty(startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)) {
     return false
   }
