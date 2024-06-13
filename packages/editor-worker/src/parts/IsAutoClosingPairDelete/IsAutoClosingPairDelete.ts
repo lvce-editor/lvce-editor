@@ -1,4 +1,4 @@
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
 export const isAutoClosingPairDelete = (autoClosingRanges, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   if (!EditorSelection.isEmpty(startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)) {

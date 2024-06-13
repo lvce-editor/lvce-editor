@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Arrays from '../Arrays/Arrays.js'
+import * as Arrays from '../Arrays/Arrays.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 

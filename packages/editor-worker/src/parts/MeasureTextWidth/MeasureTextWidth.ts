@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as GetTextMeasureContext from '../GetTextMeasureContext/GetTextMeasureContext.js'
-import * as GetFontString from '../GetFontString/GetFontString.js'
+import * as GetTextMeasureContext from '../GetTextMeasureContext/GetTextMeasureContext.ts'
+import * as GetFontString from '../GetFontString/GetFontString.ts'
 
 const getLetterSpacingString = (letterSpacing) => {
   return `${letterSpacing}px`
