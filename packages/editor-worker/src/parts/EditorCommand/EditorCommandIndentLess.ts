@@ -2,8 +2,8 @@ import * as Editor from '../Editor/Editor.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 
 const getChanges = (selections) => {
-  const changes = []
-  const rowsToIndentLess = []
+  const changes: any[] = []
+  const rowsToIndentLess: number[] = []
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionEndRow = selections[i + 2]

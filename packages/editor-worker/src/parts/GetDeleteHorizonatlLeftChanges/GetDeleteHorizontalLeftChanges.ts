@@ -5,7 +5,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 // TODO optimize this function by profiling and not allocating too many objects
 export const getChanges = (lines, selections, getDelta) => {
-  const changes = []
+  const changes: any[] = []
   const deleteSelection = (selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
     const positionLeft = EditorGetPositionLeft.editorGetPositionLeft(selectionStartRow, selectionStartColumn, lines, getDelta)
     const selectionEnd = {

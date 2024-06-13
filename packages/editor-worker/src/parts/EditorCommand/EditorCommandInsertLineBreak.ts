@@ -85,5 +85,6 @@ export const insertLineBreak = async (editor) => {
   const { lines, selections } = editor
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)
   const { changes, selectionChanges } = getChanges(lines, selections, languageConfiguration)
+  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

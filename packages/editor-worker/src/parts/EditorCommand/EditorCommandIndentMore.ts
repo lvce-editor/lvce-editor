@@ -4,7 +4,7 @@ import * as Editor from '../Editor/Editor.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 
 const getChanges = (selections) => {
-  const rowsToIndent = []
+  const rowsToIndent: any[] = []
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionEndRow = selections[i + 2]
@@ -12,7 +12,7 @@ const getChanges = (selections) => {
       rowsToIndent.push(i)
     }
   }
-  const changes = []
+  const changes: any[] = []
   for (const rowToIndent of rowsToIndent) {
     changes.push({
       start: {
