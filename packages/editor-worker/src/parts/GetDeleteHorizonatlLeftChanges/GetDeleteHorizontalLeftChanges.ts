@@ -1,6 +1,6 @@
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as EditorGetPositionLeft from '../EditorCommand/EditorCommandGetPositionLeft.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
+import * as EditorGetPositionLeft from '../EditorCommand/EditorCommandGetPositionLeft.ts'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 // TODO optimize this function by profiling and not allocating too many objects

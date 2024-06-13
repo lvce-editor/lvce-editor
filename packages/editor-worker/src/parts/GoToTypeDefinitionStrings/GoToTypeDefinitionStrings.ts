@@ -1,4 +1,4 @@
-import * as EditorStrings from '../EditorStrings/EditorStrings.js'
+import * as EditorStrings from '../EditorStrings/EditorStrings.ts'
 
 export const getNoLocationFoundMessage = (info) => {
   if (info.word) {
