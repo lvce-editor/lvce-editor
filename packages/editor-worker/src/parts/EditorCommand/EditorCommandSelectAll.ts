@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
+// @ts-ignore
 export const selectAll = (editor) => {
   const lines = editor.lines
   const startRowIndex = 0

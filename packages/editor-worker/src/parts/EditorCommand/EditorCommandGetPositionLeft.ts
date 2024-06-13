@@ -1,3 +1,4 @@
+// @ts-ignore
 export const editorGetPositionLeft = (rowIndex, columnIndex, lines, getDelta) => {
   if (columnIndex === 0) {
     if (rowIndex === 0) {
@@ -15,16 +16,19 @@ export const editorGetPositionLeft = (rowIndex, columnIndex, lines, getDelta) =>
   }
 }
 
+// @ts-ignore
 export const moveToPositionEqual = (selections, i, rowIndex, columnIndex) => {
   selections[i] = rowIndex
   selections[i + 1] = columnIndex
 }
 
+// @ts-ignore
 export const moveRangeToPosition = (selections, i, rowIndex, columnIndex) => {
   selections[i] = selections[i + 2] = rowIndex
   selections[i + 1] = selections[i + 3] = columnIndex
 }
 
+// @ts-ignore
 export const moveToPositionLeft = (selections, i, rowIndex, columnIndex, lines, getDelta) => {
   if (columnIndex === 0) {
     if (rowIndex === 0) {

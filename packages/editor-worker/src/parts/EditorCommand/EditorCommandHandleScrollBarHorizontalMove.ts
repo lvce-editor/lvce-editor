@@ -3,6 +3,7 @@ import * as Clamp from '../Clamp/Clamp.ts'
 // @ts-ignore
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
+// @ts-ignore
 const getNewPercent = (size, scrollBarSize, relativeX) => {
   if (relativeX <= 0) {
     return 0
@@ -20,6 +21,7 @@ const getNewPercent = (size, scrollBarSize, relativeX) => {
   return 1
 }
 
+// @ts-ignore
 export const handleScrollBarHorizontalMove = (state, eventX) => {
   const { x, width, longestLineWidth, handleOffsetX } = state
   const spaceRight = 20 // TODO make this configurable

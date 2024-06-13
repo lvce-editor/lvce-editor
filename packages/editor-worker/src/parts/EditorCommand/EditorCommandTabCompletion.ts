@@ -4,10 +4,12 @@ import * as TabCompletion from '../TabCompletion/TabCompletion.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 import * as EditorSnippet from './EditorCommandSnippet.ts'
 
+// @ts-ignore
 const getErrorMessage = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 export const tabCompletion = async (editor) => {
   try {
     // TODO race condition

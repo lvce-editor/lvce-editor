@@ -1,6 +1,7 @@
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.ts'
 import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.ts'
 
+// @ts-ignore
 export const getResponse = async (message, execute) => {
   try {
     const result = await execute(message.method, ...message.params)

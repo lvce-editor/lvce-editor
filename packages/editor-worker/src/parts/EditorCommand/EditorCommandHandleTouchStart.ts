@@ -3,6 +3,7 @@ export const state = {
   deltaY: 0,
 }
 
+// @ts-ignore
 export const handleTouchStart = (editor, touchEvent) => {
   if (touchEvent.touches.length === 0) {
     return

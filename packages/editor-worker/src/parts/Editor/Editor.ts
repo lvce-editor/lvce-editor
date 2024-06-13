@@ -4,25 +4,31 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorScrolling from './EditorScrolling.ts'
 import * as EditorSelection from './EditorSelection.ts'
 
+// @ts-ignore
 export const create = (id, uri, languageId, content) => {}
 
+// @ts-ignore
 export const dispose = (id) => {
   // delete state.editors[id]
 }
 
 // TODO
+// @ts-ignore
 export const setDeltaYFixedValue = (editor, value) => {
   return EditorScrolling.setDeltaY(editor, value)
 }
 
+// @ts-ignore
 export const setDeltaY = (editor, value) => {
   return setDeltaYFixedValue(editor, editor.deltaY + value)
 }
 
+// @ts-ignore
 const isAutoClosingChange = (change) => {
   return change.origin === EditOrigin.EditorTypeWithAutoClosing
 }
 
+// @ts-ignore
 const applyAutoClosingRangesEdit = (editor, changes) => {
   const { autoClosingRanges = [] } = editor
   const newAutoClosingRanges: any[] = []
@@ -57,6 +63,7 @@ const applyAutoClosingRangesEdit = (editor, changes) => {
   return newAutoClosingRanges
 }
 
+// @ts-ignore
 export const scheduleSelections = (editor, selectionEdits) => {
   return EditorSelection.setSelections(editor, selectionEdits)
 }
@@ -68,6 +75,7 @@ export const scheduleSelections = (editor, selectionEdits) => {
  * @param {Uint32Array|undefined} selectionChanges
  * @returns
  */
+// @ts-ignore
 export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined) => {
   Assert.object(editor)
   Assert.array(changes)
@@ -100,6 +108,7 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
   }
   return newEditor
 }
+// @ts-ignore
 export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
   Assert.object(editor)
   Assert.array(changes)
@@ -123,6 +132,7 @@ export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
   return newEditor
 }
 
+// @ts-ignore
 export const scheduleDocument = async (editor, changes) => {
   // console.log('before')
   // console.log([...editor.lines])
@@ -162,11 +172,13 @@ export const scheduleDocument = async (editor, changes) => {
   // ])
 }
 
+// @ts-ignore
 export const hasSelection = (editor) => {
   // TODO editor.selections should always be defined
   return editor.selections && editor.selections.length > 0
 }
 
+// @ts-ignore
 export const setBounds = (editor, x, y, width, height, columnWidth) => {
   const { itemHeight } = editor
   const numberOfVisibleLines = Math.floor(height / itemHeight)

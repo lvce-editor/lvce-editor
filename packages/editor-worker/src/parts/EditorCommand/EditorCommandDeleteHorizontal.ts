@@ -1,6 +1,7 @@
 // @ts-ignore
 import * as Editor from './Editor.ts'
 
+// @ts-ignore
 export const editorDeleteHorizontalRight = (editor, getDelta) => {
   if (Editor.hasSelection(editor)) {
     return

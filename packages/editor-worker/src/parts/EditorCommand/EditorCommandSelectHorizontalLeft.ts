@@ -13,6 +13,7 @@ import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.ts'
 // else if new range is overlapping -> merge ranges
 // else add cursor and selection
 
+// @ts-ignore
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = EditorSelection.clone(selections)
   for (let i = 0; i < selections.length; i += 4) {
@@ -32,6 +33,7 @@ const getNewSelections = (selections, lines, getDelta) => {
   return newSelections
 }
 
+// @ts-ignore
 export const editorSelectHorizontalLeft = (editor, getDelta) => {
   const { lines, selections } = editor
   const newSelections = getNewSelections(selections, lines, getDelta)

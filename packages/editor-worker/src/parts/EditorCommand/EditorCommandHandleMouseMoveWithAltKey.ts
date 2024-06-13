@@ -3,6 +3,7 @@ import * as Definition from '../Definition/Definition.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
+// @ts-ignore
 const getTokenIndex = (tokens, offset) => {
   let currentOffset = 0
   for (let i = 0; i < tokens.length; i++) {
@@ -15,6 +16,7 @@ const getTokenIndex = (tokens, offset) => {
   return -1
 }
 
+// @ts-ignore
 export const handleMouseMoveWithAltKey = async (editor, x, y) => {
   Assert.object(editor)
   Assert.number(x)

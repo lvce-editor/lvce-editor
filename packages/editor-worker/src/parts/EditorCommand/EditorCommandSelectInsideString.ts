@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
+// @ts-ignore
 const getNewSelections = (lines, selections) => {
   const newSelections = new Uint32Array(selections.length)
   for (let i = 0; i < selections.length; i += 4) {
@@ -35,6 +36,7 @@ const getNewSelections = (lines, selections) => {
   return newSelections
 }
 
+// @ts-ignore
 export const selectInsideString = (editor) => {
   const selections = editor.selections
   const lines = editor.lines

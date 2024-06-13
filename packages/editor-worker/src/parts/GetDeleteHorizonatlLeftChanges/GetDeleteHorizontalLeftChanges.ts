@@ -4,8 +4,10 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 // TODO optimize this function by profiling and not allocating too many objects
+// @ts-ignore
 export const getChanges = (lines, selections, getDelta) => {
   const changes: any[] = []
+  // @ts-ignore
   const deleteSelection = (selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
     const positionLeft = EditorGetPositionLeft.editorGetPositionLeft(selectionStartRow, selectionStartColumn, lines, getDelta)
     const selectionEnd = {

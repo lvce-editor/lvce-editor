@@ -5,6 +5,7 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
+// @ts-ignore
 export const pasteText = (editor, text) => {
   const insertedLines = SplitLines.splitLines(text)
   const changes = editorReplaceSelections(editor, insertedLines, EditOrigin.EditorPasteText)

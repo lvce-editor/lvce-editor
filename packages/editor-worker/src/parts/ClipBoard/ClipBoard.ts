@@ -22,6 +22,7 @@ export const readText = async () => {
   }
 }
 
+// @ts-ignore
 export const writeText = async (text) => {
   try {
     Assert.string(text)

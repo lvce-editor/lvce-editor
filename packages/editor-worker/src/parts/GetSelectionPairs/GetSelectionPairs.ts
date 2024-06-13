@@ -1,3 +1,4 @@
+// @ts-ignore
 export const getSelectionPairs = (selections, i) => {
   const first = selections[i]
   const second = selections[i + 1]

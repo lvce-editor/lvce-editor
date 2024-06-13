@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 
 // TODO handle virtual space
 
+// @ts-ignore
 const getNewSelectionsSingleLineWord = (lines, word) => {
   if (word.length === 0) {
     throw new Error('word length must be greater than zero')
@@ -18,6 +19,7 @@ const getNewSelectionsSingleLineWord = (lines, word) => {
   return new Uint32Array(newSelections)
 }
 
+// @ts-ignore
 const isMultiLineMatch = (lines, rowIndex, wordParts) => {
   let j = 0
   if (!lines[rowIndex + j].endsWith(wordParts[j])) {
@@ -40,6 +42,7 @@ const isMultiLineMatch = (lines, rowIndex, wordParts) => {
 
 // TODO this is very expensive, there might be a better algorithm for this
 // TODO if this matches the given selections, don't schedule selections/rerender
+// @ts-ignore
 const getAllOccurrencesMultiLine = (lines, wordParts) => {
   const newSelections: any[] = []
   for (let rowIndex = 0; rowIndex < lines.length - wordParts.length + 1; rowIndex) {
@@ -58,10 +61,12 @@ const getAllOccurrencesMultiLine = (lines, wordParts) => {
 // TODO duplicate code with EditorSelectNextOccurrence
 const RE_ALPHA_NUMERIC = /[a-zA-Z\d]/
 
+// @ts-ignore
 const isAlphaNumeric = (char) => {
   return RE_ALPHA_NUMERIC.test(char)
 }
 
+// @ts-ignore
 const getWordStartIndex = (line, index) => {
   for (let i = index - 1; i >= 0; i--) {
     if (!isAlphaNumeric(line[i])) {
@@ -71,6 +76,7 @@ const getWordStartIndex = (line, index) => {
   return 0
 }
 
+// @ts-ignore
 const getWordEndIndex = (line, index) => {
   for (let i = index; i < line.length; i++) {
     if (!isAlphaNumeric(line[i])) {
@@ -80,6 +86,7 @@ const getWordEndIndex = (line, index) => {
   return line.length - 1
 }
 
+// @ts-ignore
 const getWordMatchAtPosition = (lines, rowIndex, columnIndex) => {
   const line = lines[rowIndex]
   const start = getWordStartIndex(line, columnIndex)
@@ -92,6 +99,7 @@ const getWordMatchAtPosition = (lines, rowIndex, columnIndex) => {
   }
 }
 
+// @ts-ignore
 const getNewSelections = (lines, selections) => {
   if (selections.length < 4) {
     throw new Error('selections must have at least one entry')
@@ -125,6 +133,7 @@ const getNewSelections = (lines, selections) => {
   return newSelections
 }
 
+// @ts-ignore
 export const selectAllOccurrences = (editor) => {
   // when there are no selections -> first selection is word -> find all selection that include word
   const lines = editor.lines

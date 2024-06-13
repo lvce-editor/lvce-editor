@@ -3,6 +3,7 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as GetX from '../GetX/GetX.ts'
 
+// @ts-ignore
 const getSelectionFromChange = (change) => {
   const { start, inserted } = change
   const startRowIndex = start.rowIndex
@@ -28,6 +29,7 @@ const getSelectionFromChange = (change) => {
   }
 }
 
+// @ts-ignore
 export const setSelections = (editor, selections) => {
   Assert.object(editor)
   Assert.uint32array(selections)
@@ -42,6 +44,7 @@ export const setSelections = (editor, selections) => {
 // TODO maybe only accept sorted selection edits in the first place
 
 // TODO avoid allocating too many objects when creating new selection from changes
+// @ts-ignore
 export const applyEdit = (editor, changes) => {
   Assert.object(editor)
   Assert.array(changes)
@@ -50,10 +53,13 @@ export const applyEdit = (editor, changes) => {
   return newSelections
 }
 
+// @ts-ignore
 const emptyCursors = []
 
+// @ts-ignore
 const getCursorArray = (visibleCursors, isFocused) => {
   if (!isFocused) {
+    // @ts-ignore
     return emptyCursors
   }
   const cursorArray: string[] = []
@@ -65,6 +71,7 @@ const getCursorArray = (visibleCursors, isFocused) => {
   return cursorArray
 }
 
+// @ts-ignore
 const getSelectionArray = (visibleSelections) => {
   const selectionsArray: string[] = []
   for (let i = 0; i < visibleSelections.length; i += 4) {
@@ -77,6 +84,7 @@ const getSelectionArray = (visibleSelections) => {
   return selectionsArray
 }
 
+// @ts-ignore
 export const getVisible = (editor) => {
   const visibleCursors: any[] = []
   const visibleSelections: any[] = []

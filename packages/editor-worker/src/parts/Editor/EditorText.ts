@@ -86,6 +86,7 @@ import * as NormalizeText from '../NormalizeText/NormalizeText.ts'
 //   return result
 // }
 
+// @ts-ignore
 const getStartDefaults = (tokens, minOffset) => {
   let start = 0
   let end = 0
@@ -156,6 +157,7 @@ const getOffsets = (deltaX, width, averageCharWidth) => {
   }
 }
 
+// @ts-ignore
 const getDifference = (start, averageCharWidth, deltaX) => {
   const beforeWidth = start * averageCharWidth
   const difference = beforeWidth - deltaX

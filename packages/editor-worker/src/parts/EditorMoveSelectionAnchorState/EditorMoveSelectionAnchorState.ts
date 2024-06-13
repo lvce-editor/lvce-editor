@@ -9,6 +9,7 @@ export const getPosition = () => {
   return state.position
 }
 
+// @ts-ignore
 export const setPosition = (position) => {
   state.position = position
 }

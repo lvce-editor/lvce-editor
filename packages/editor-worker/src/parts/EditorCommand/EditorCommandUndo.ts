@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.ts'
 
+// @ts-ignore
 const inverseChange = (edit) => {
   const endColumnIndex = edit.end.columnIndex - edit.deleted[0].length + edit.inserted[0].length
   return {
@@ -13,6 +14,7 @@ const inverseChange = (edit) => {
   }
 }
 
+// @ts-ignore
 export const undo = (state) => {
   const { undoStack } = state
   if (undoStack.length === 0) {

@@ -3,6 +3,7 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import * as Editor from '../Editor/Editor.ts'
 import * as EditorCommandReplaceRange from './EditorCommandReplaceRange.ts'
 
+// @ts-ignore
 export const cutLine = async (editor) => {
   const { lines, selections } = editor
   const [startRowIndex] = selections

@@ -1,6 +1,7 @@
 // TODO add as custom editor command 369
 
 // TODO handle multiple cursors
+// @ts-ignore
 export const editorDeleteSelection = (editor) => {
   // for(const selection of editor.selections){
   // }

@@ -106,12 +106,14 @@ export const noDefinitionFound = () => {
   return I18nString.i18nString(UiStrings.NoDefinitionFound)
 }
 
+// @ts-ignore
 export const noDefinitionFoundFor = (word) => {
   return I18nString.i18nString(UiStrings.NoDefinitionFoundFor, {
     PH1: word,
   })
 }
 
+// @ts-ignore
 export const noTypeDefinitionFoundFor = (word) => {
   return I18nString.i18nString(UiStrings.NoTypeDefinitionFoundFor, {
     PH1: word,

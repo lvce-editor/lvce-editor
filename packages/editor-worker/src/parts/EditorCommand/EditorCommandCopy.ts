@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+// @ts-ignore
 const getSelectionRange = (lines, copyFullLine, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   if (copyFullLine) {
     const lineLength = lines[endRowIndex].length
@@ -29,10 +30,12 @@ const getSelectionRange = (lines, copyFullLine, startRowIndex, startColumnIndex,
   }
 }
 
+// @ts-ignore
 const shouldCopyFullLine = (startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   return startRowIndex === endRowIndex && startColumnIndex === endColumnIndex
 }
 
+// @ts-ignore
 export const copy = async (editor) => {
   if (!Editor.hasSelection(editor)) {
     // TODO copy line where cursor is

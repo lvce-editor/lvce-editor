@@ -8,11 +8,13 @@ export const state = {
   compositionText: '',
 }
 
+// @ts-ignore
 export const compositionStart = (editor, event) => {
   state.isComposing = true
   return editor
 }
 
+// @ts-ignore
 const getCompositionChanges = (selections, data) => {
   const changes: any[] = []
   for (let i = 0; i < selections.length; i += 4) {
@@ -38,6 +40,7 @@ const getCompositionChanges = (selections, data) => {
   return changes
 }
 
+// @ts-ignore
 export const compositionUpdate = (editor, data) => {
   const selections = editor.selections
   const changes = getCompositionChanges(selections, data)
@@ -45,6 +48,7 @@ export const compositionUpdate = (editor, data) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
+// @ts-ignore
 export const compositionEnd = (editor, data) => {
   const selections = editor.selections
   const changes = getCompositionChanges(selections, data)

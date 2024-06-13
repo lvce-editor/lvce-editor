@@ -4,6 +4,7 @@ import * as Editor from '../Editor/Editor.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
+// @ts-ignore
 export const typeWithAutoClosingQuote = (editor, text) => {
   const newText = text + text
   const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)

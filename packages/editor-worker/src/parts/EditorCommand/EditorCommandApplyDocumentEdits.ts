@@ -7,6 +7,7 @@ import * as SplitLines from '../SplitLines/SplitLines.ts'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+// @ts-ignore
 export const applyDocumentEdits = (editor, edits) => {
   if (!Array.isArray(edits)) {
     Logger.warn('something is wrong with format on save', edits)

@@ -1,6 +1,7 @@
 import * as EditorHandleTouchStart from './EditorCommandHandleTouchStart.ts'
 import * as EditorSetDelta from './EditorCommandSetDelta.ts'
 
+// @ts-ignore
 export const handleTouchMove = (editor, touchEvent) => {
   if (touchEvent.touches.length === 0) {
     return

@@ -2,6 +2,7 @@
 
 import { AssertionError } from '../AssertionError/AssertionError.ts'
 
+// @ts-ignore
 const getType = (value) => {
   switch (typeof value) {
     case 'number':
@@ -28,6 +29,7 @@ const getType = (value) => {
   }
 }
 
+// @ts-ignore
 export const object = (value) => {
   const type = getType(value)
   if (type !== 'object') {
@@ -35,6 +37,7 @@ export const object = (value) => {
   }
 }
 
+// @ts-ignore
 export const number = (value) => {
   const type = getType(value)
   if (type !== 'number') {
@@ -45,6 +48,7 @@ export const number = (value) => {
   }
 }
 
+// @ts-ignore
 export const array = (value) => {
   const type = getType(value)
   if (type !== 'array') {
@@ -52,6 +56,7 @@ export const array = (value) => {
   }
 }
 
+// @ts-ignore
 export const string = (value) => {
   const type = getType(value)
   if (type !== 'string') {
@@ -59,6 +64,7 @@ export const string = (value) => {
   }
 }
 
+// @ts-ignore
 export const null_ = (value) => {
   const type = getType(value)
   if (type !== 'null') {
@@ -66,6 +72,7 @@ export const null_ = (value) => {
   }
 }
 
+// @ts-ignore
 export const boolean = (value) => {
   const type = getType(value)
   if (type !== 'boolean') {
@@ -73,6 +80,7 @@ export const boolean = (value) => {
   }
 }
 
+// @ts-ignore
 export const fn = (value) => {
   const type = getType(value)
   if (type !== 'function') {
@@ -80,6 +88,7 @@ export const fn = (value) => {
   }
 }
 
+// @ts-ignore
 export const uint32array = (value) => {
   const type = getType(value)
   if (type !== 'uint32array') {
@@ -87,6 +96,7 @@ export const uint32array = (value) => {
   }
 }
 
+// @ts-ignore
 export const greaterZero = (value) => {
   if (value <= 0) {
     throw new Error('value must be greater than zero')

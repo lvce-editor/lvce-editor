@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 
+// @ts-ignore
 const getChanges = (selections) => {
   const rowsToIndent: any[] = []
   for (let i = 0; i < selections.length; i += 4) {
@@ -31,6 +32,7 @@ const getChanges = (selections) => {
   return changes
 }
 
+// @ts-ignore
 export const indentMore = (editor) => {
   const selections = editor.selections
   const changes = getChanges(selections)

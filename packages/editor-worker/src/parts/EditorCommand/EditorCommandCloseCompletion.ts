@@ -5,6 +5,7 @@ import * as Viewlet from '../Viewlet/Viewlet.ts'
 // @ts-ignore
 import * as ViewletStates from '../ViewletStates/ViewletStates.ts'
 
+// @ts-ignore
 export const closeCompletion = async (editor) => {
   const completionUid = editor.completionUid
   const instance = ViewletStates.getInstance(completionUid)

@@ -3,6 +3,7 @@ import * as Viewlet from '../Viewlet/Viewlet.ts'
 // @ts-ignore
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 
+// @ts-ignore
 export const showSourceActions = async (editor) => {
   // TODO
   // 1. hide hover, completions, color picker

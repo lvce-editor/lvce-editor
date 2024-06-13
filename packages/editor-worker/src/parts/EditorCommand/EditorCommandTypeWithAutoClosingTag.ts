@@ -8,6 +8,7 @@ import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingT
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
+// @ts-ignore
 export const typeWithAutoClosingTag = async (editor, text) => {
   const offset = TextDocument.offsetAt(editor, editor.selections[0], editor.selections[1])
   const result = await ExtensionHostClosingTag.executeClosingTagProvider(editor, offset, text)

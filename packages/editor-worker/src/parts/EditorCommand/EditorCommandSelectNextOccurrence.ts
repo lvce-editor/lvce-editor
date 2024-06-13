@@ -29,6 +29,7 @@ const isBetween = (value, min, max) => {
   return min <= value && value <= max
 }
 
+// @ts-ignore
 const getSelectionEditsSingleLineWord = (lines, selections) => {
   const lastSelectionIndex = selections.length - 4
   const rowIndex = selections[lastSelectionIndex]
@@ -132,10 +133,12 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
 
 const RE_ALPHA_NUMERIC = /[a-zA-Z\d]/
 
+// @ts-ignore
 const isAlphaNumeric = (char) => {
   return RE_ALPHA_NUMERIC.test(char)
 }
 
+// @ts-ignore
 const getWordStartIndex = (line, index) => {
   for (let i = index - 1; i >= 0; i--) {
     if (!isAlphaNumeric(line[i])) {
@@ -145,6 +148,7 @@ const getWordStartIndex = (line, index) => {
   return 0
 }
 
+// @ts-ignore
 const getWordEndIndex = (line, index) => {
   for (let i = index; i < line.length; i++) {
     if (!isAlphaNumeric(line[i])) {
@@ -154,6 +158,7 @@ const getWordEndIndex = (line, index) => {
   return line.length - 1
 }
 
+// @ts-ignore
 const getWordMatchAtPosition = (lines, rowIndex, columnIndex) => {
   const line = lines[rowIndex]
   const index = columnIndex
@@ -167,6 +172,7 @@ const getWordMatchAtPosition = (lines, rowIndex, columnIndex) => {
   }
 }
 
+// @ts-ignore
 const getSelectNextOccurrenceResult = (editor) => {
   const lines = editor.lines
   const selections = editor.selections
@@ -202,11 +208,13 @@ const getSelectNextOccurrenceResult = (editor) => {
   return undefined
 }
 
+// @ts-ignore
 const isRangeInViewPort = (minLineY, maxLineY, startRowIndex, endRowIndex) => {
   return startRowIndex >= minLineY && endRowIndex <= maxLineY
 }
 
 // TODO handle virtual space
+// @ts-ignore
 export const selectNextOccurrence = (editor) => {
   const result = getSelectNextOccurrenceResult(editor)
   if (!result) {

@@ -5,6 +5,7 @@ import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as Languages from '../Languages/Languages.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+// @ts-ignore
 const getIncreaseIndentRegex = (languageConfiguration) => {
   if (
     languageConfiguration &&
@@ -18,6 +19,7 @@ const getIncreaseIndentRegex = (languageConfiguration) => {
   return undefined
 }
 
+// @ts-ignore
 const shouldIncreaseIndent = (before, increaseIndentRegex) => {
   if (!increaseIndentRegex) {
     return false
@@ -25,6 +27,7 @@ const shouldIncreaseIndent = (before, increaseIndentRegex) => {
   return increaseIndentRegex.test(before)
 }
 
+// @ts-ignore
 const getChanges = (lines, selections, languageConfiguration) => {
   const changes: any[] = []
   const selectionChanges: any[] = []
@@ -81,6 +84,7 @@ const getChanges = (lines, selections, languageConfiguration) => {
   return { changes, selectionChanges: new Uint32Array(selectionChanges) }
 }
 
+// @ts-ignore
 export const insertLineBreak = async (editor) => {
   const { lines, selections } = editor
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)

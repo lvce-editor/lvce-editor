@@ -8,6 +8,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorGetWordAt from './EditorCommandGetWordAt.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 
+// @ts-ignore
 export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, getErrorMessage, isNoProviderFoundError }) => {
   const { selections } = editor
   const rowIndex = selections[0]

@@ -9,6 +9,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 // TODO format with cursor
 // TODO should be in editor folder
 
+// @ts-ignore
 export const format = async (editor) => {
   const edits = await RendererWorker.invoke('Format.format', editor)
   return edits

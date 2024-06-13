@@ -5,6 +5,7 @@ import * as EditorTabCompletion from './EditorCommandTabCompletion.ts'
 import * as EditorType from './EditorCommandType.ts'
 
 // TODO tab doesn't work well with configurable keybindings
+// @ts-ignore
 export const handleTab = async (editor) => {
   if (EditorSelection.isEverySelectionEmpty(editor.selections)) {
     const applied = await EditorTabCompletion.tabCompletion(editor)

@@ -16,6 +16,7 @@ export const state = {
  * @param {boolean} isError
  * @returns
  */
+// @ts-ignore
 export const editorShowMessage = async (editor, rowIndex, columnIndex, message, isError) => {
   Assert.object(editor)
   Assert.number(rowIndex)
@@ -50,10 +51,12 @@ export const editorShowMessage = async (editor, rowIndex, columnIndex, message, 
  * @param {string} message
  * @returns
  */
+// @ts-ignore
 export const showErrorMessage = (editor, rowIndex, columnIndex, message) => {
   return editorShowMessage(editor, rowIndex, columnIndex, message, /* isError */ true)
 }
 
+// @ts-ignore
 export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1

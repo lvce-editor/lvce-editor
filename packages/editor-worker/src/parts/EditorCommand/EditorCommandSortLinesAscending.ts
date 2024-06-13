@@ -2,6 +2,7 @@ import * as Compare from '../Compare/Compare.ts'
 import * as Editor from '../Editor/Editor.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+// @ts-ignore
 const getSortedLines = (lines) => {
   const newLines = [...lines]
   newLines.sort(Compare.compareString)
@@ -10,6 +11,7 @@ const getSortedLines = (lines) => {
 
 const origin = 'sort-lines-ascending'
 
+// @ts-ignore
 const getSortLinesAscendingChanges = (lines, selections) => {
   const startRowIndex = selections[0]
   // @ts-ignore
@@ -52,6 +54,7 @@ const getSortLinesAscendingChanges = (lines, selections) => {
   return changes
 }
 
+// @ts-ignore
 export const sortLinesAscending = (editor) => {
   const { lines, selections } = editor
   const changes = getSortLinesAscendingChanges(lines, selections)

@@ -14,6 +14,7 @@ export const registerPromise = () => {
   return { id, promise }
 }
 
+// @ts-ignore
 export const resolve = (id, args) => {
   Assert.number(id)
   if (!(id in state.callbacks)) {

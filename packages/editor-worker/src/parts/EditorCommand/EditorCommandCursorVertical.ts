@@ -10,6 +10,7 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 // @ts-ignore
 const editorCursorsVerticalWithIntlSegmenter = (editor, getPosition, getEdgePosition, delta) => {
   const edgePosition = getEdgePosition(editor)
+  // @ts-ignore
   const moveSelection = (selection) => {
     const position = getPosition(selection)
     if (position.rowIndex === edgePosition.rowIndex) {
@@ -40,6 +41,7 @@ const editorCursorsVerticalWithIntlSegmenter = (editor, getPosition, getEdgePosi
   return Editor.scheduleSelections(editor, selectionEdits)
 }
 
+// @ts-ignore
 const moveSelectionWithoutIntlSegmenter = (selections, i, selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
   if (selectionStartRow === 0) {
     EditorSelection.moveRangeToPosition(selections, i, 0, 0)
@@ -48,10 +50,12 @@ const moveSelectionWithoutIntlSegmenter = (selections, i, selectionStartRow, sel
   }
 }
 
+// @ts-ignore
 const getNewSelections = (selections) => {
   return EditorSelection.map(selections, moveSelectionWithoutIntlSegmenter)
 }
 
+// @ts-ignore
 export const cursorVertical = (editor, getPosition, getEdgePosition, delta) => {
   // if (TextSegmenter.supported()) {
   //   return editorCursorsVerticalWithIntlSegmenter(

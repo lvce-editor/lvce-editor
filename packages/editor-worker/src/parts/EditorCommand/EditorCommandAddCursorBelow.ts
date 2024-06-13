@@ -1,3 +1,4 @@
+// @ts-ignore
 const getNewSelections = (selections, linesLength) => {
   const newSelections: number[] = []
   for (let i = 0; i < selections.length; i += 4) {
@@ -13,6 +14,7 @@ const getNewSelections = (selections, linesLength) => {
   return new Uint32Array(newSelections)
 }
 
+// @ts-ignore
 export const addCursorBelow = (editor) => {
   const { selections, lines } = editor
   const newSelections = getNewSelections(selections, lines.length)

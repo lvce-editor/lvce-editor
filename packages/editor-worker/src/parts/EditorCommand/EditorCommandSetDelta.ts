@@ -4,14 +4,17 @@ import * as Clamp from '../Clamp/Clamp.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 
+// @ts-ignore
 export const setDeltaY = (editor, deltaY) => {
   return Editor.setDeltaY(editor, deltaY)
 }
 
+// @ts-ignore
 export const setDeltaYFixedValue = (editor, deltaY) => {
   return Editor.setDeltaYFixedValue(editor, deltaY)
 }
 
+// @ts-ignore
 export const setDelta = (editor, deltaMode, eventDeltaX, eventDeltaY) => {
   Assert.number(deltaMode)
   Assert.number(eventDeltaX)

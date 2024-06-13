@@ -7,6 +7,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const RE_WHITESPACE_AT_START = /^\s+/
 
+// @ts-ignore
 const getLineCommentEdit = (rowIndex, line, lineComment) => {
   const whitespaceMatch = line.match(RE_WHITESPACE_AT_START)
   const index = whitespaceMatch ? whitespaceMatch[0].length : 0
@@ -56,6 +57,7 @@ const getLineCommentEdit = (rowIndex, line, lineComment) => {
   }
 }
 
+// @ts-ignore
 export const editorToggleLineComment = async (editor) => {
   const lineComment = await GetLineComment.getLineComment(editor)
   if (!lineComment) {

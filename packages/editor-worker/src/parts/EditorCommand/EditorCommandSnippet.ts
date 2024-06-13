@@ -8,6 +8,7 @@ import * as SplitLines from '../SplitLines/SplitLines.ts'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+// @ts-ignore
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
   const insertedLines = SplitLines.splitLines(snippet.inserted)
@@ -89,6 +90,7 @@ const getChanges = (lines, selections, snippet) => {
 // const getIndent =
 // TODO rename to insertSnippet
 // TODO handle snippet tabstops and cursors $0 -> becomes cursor
+// @ts-ignore
 export const editorSnippet = (editor, snippet) => {
   // TODO verify that deleted fits in the line
   const { lines, selections } = editor

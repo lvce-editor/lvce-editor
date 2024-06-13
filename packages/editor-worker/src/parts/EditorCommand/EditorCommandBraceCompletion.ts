@@ -10,10 +10,12 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 
+// @ts-ignore
 const getErrorMessage = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 const getMatchingClosingBrace = (brace) => {
   switch (brace) {
     case '{':
@@ -27,6 +29,7 @@ const getMatchingClosingBrace = (brace) => {
   }
 }
 
+// @ts-ignore
 export const braceCompletion = async (editor, text) => {
   try {
     // @ts-ignore

@@ -9,6 +9,7 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts
 // when clicked at y > editor.height - editor.scrollBarHeight/2, position scrollbar at (y - scrollbarHeight/2)
 // additionally, when clicked on scrollbar, scrollbar position shouldn't move
 
+// @ts-ignore
 export const handleScrollBarPointerDown = (state, eventY) => {
   const { y, deltaY, finalDeltaY, height, scrollBarHeight } = state
   const relativeY = eventY - y
