@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCommandSortLinesAscending from '../src/parts/EditorCommand/EditorCommandSortLinesAscending.js'
+import * as EditorCommandSortLinesAscending from '../src/parts/EditorCommand/EditorCommandSortLinesAscending.ts'
 
 test('sortLinesAscending - two unsorted lines', () => {
   const editor = {

@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as NormalizeText from '../NormalizeText/NormalizeText.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.ts'
+import * as NormalizeText from '../NormalizeText/NormalizeText.ts'
 
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]

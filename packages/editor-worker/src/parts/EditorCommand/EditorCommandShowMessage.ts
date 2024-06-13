@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
-// import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+// import * as RendererProcess from '../RendererProcess/RendererProcess.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
 export const state = {

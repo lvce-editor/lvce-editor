@@ -1,7 +1,7 @@
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
 // TODO scrollbar position can be in interval [0, editor.height - editor.scrollBarHeight]
 // when clicked at y <= editor.scrollbarHeight/2, position is set to zero

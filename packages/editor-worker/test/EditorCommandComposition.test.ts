@@ -1,7 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as EditorComposition from '../src/parts/EditorCommand/EditorCommandComposition.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as EditorComposition from '../src/parts/EditorCommand/EditorCommandComposition.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
 beforeEach(() => {
   EditorComposition.state.isComposing = false

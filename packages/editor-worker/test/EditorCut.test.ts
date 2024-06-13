@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {
+jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.ts', () => {
   return {
     writeText: jest.fn(() => {
       throw new Error('not implemented')
@@ -12,7 +12,7 @@ jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+jest.unstable_mockModule('../src/parts/Command/Command.ts', () => {
   return {
     execute: jest.fn(() => {
       throw new Error('not implemented')
@@ -20,13 +20,13 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const Command = await import('../src/parts/Command/Command.js')
-const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
-const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
+const Command = await import('../src/parts/Command/Command.ts')
+const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.ts')
+const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.ts')
 
 test.skip('editorCut', async () => {
   // @ts-ignore
-  Command.execute.mockImplementation(() => { })
+  Command.execute.mockImplementation(() => {})
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,
@@ -72,7 +72,7 @@ test.skip('editorCut - error with clipboard', async () => {
 
 test.skip('editorCut - no selection', async () => {
   // @ts-ignore
-  Command.execute.mockImplementation(() => { })
+  Command.execute.mockImplementation(() => {})
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,

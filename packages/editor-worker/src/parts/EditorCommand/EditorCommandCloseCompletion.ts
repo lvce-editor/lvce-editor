@@ -1,9 +1,9 @@
 // @ts-ignore
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.ts'
 // @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.ts'
 // @ts-ignore
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.ts'
 
 export const closeCompletion = async (editor) => {
   const completionUid = editor.completionUid

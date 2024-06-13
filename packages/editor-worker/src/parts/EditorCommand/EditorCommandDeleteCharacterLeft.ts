@@ -1,5 +1,5 @@
-import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.js'
-import * as EditorDelta from './EditorCommandDelta.js'
+import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.ts'
+import * as EditorDelta from './EditorCommandDelta.ts'
 
 export const deleteCharacterLeft = (editor) => {
   const newEditor = EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.characterLeft)

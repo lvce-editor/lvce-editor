@@ -1,11 +1,11 @@
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 export const applyDocumentEdits = (editor, edits) => {
   if (!Array.isArray(edits)) {

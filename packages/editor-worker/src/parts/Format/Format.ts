@@ -1,4 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 // TODO format should be executed in parallel with saving
 // -> fast save, no need to wait for formatting

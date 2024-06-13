@@ -1,5 +1,5 @@
 import * as Editor from '../Editor/Editor.ts'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 
 const getChanges = (selections) => {
   const changes = []

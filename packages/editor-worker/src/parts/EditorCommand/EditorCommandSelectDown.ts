@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
 const getSelectUpChanges = (lines, selections) => {
   const max = lines.length - 1

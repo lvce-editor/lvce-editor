@@ -1,29 +1,29 @@
 // @ts-ignore
-import * as AutoClosing from '../AutoClosing/AutoClosing.js'
+import * as AutoClosing from '../AutoClosing/AutoClosing.ts'
 // @ts-ignore
-import * as Bracket from '../Bracket/Bracket.js'
+import * as Bracket from '../Bracket/Bracket.ts'
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.ts'
 // @ts-ignore
-import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.ts'
 // @ts-ignore
-import * as Preferences from '../Preferences/Preferences.js'
+import * as Preferences from '../Preferences/Preferences.ts'
 // @ts-ignore
-import * as Quote from '../Quote/Quote.js'
+import * as Quote from '../Quote/Quote.ts'
 // @ts-ignore
-import * as ShouldAutoTriggerSuggest from '../ShouldAutoTriggerSuggest/ShouldAutoTriggerSuggest.js'
+import * as ShouldAutoTriggerSuggest from '../ShouldAutoTriggerSuggest/ShouldAutoTriggerSuggest.ts'
 import * as CommandOpenCompletion from './EditorCommandCompletion.ts'
 import * as EditorCommandGetWordAt from './EditorCommandGetWordAt.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 import * as EditorType from './EditorCommandType.ts'
-import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.js'
-import * as EditorTypeWithAutoClosingEndBracket from './EditorCommandTypeWithAutoClosingEndBracket.js'
-import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
-import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
+import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.ts'
+import * as EditorTypeWithAutoClosingEndBracket from './EditorCommandTypeWithAutoClosingEndBracket.ts'
+import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.ts'
+import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.ts'
 
 export const state = {
   listeners: [],

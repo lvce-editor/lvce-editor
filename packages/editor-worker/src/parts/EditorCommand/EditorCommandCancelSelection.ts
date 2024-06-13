@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
 export const cancelSelection = (editor) => {
   const selections = editor.selections

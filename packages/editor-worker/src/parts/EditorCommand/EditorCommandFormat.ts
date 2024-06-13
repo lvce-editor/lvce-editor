@@ -1,6 +1,6 @@
-import * as Format from '../Format/Format.js'
+import * as Format from '../Format/Format.ts'
 import * as ApplyDocumentEdits from './EditorCommandApplyDocumentEdits.ts'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 
 const expectedErrorMessage = 'Failed to execute formatting provider: FormattingError:'
 

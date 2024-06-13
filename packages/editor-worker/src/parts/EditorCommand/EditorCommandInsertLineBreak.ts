@@ -1,9 +1,9 @@
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import * as Editor from '../Editor/Editor.ts'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
-import * as Languages from '../Languages/Languages.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
+import * as Languages from '../Languages/Languages.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const getIncreaseIndentRegex = (languageConfiguration) => {
   if (

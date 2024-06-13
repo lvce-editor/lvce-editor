@@ -1,8 +1,8 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.js'
-// import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.js'
+import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.ts'
+// import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.ts'
 
 const getNewSelections = async (editor, selections) => {
   // TODO

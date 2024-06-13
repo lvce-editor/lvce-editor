@@ -1,10 +1,10 @@
 // @ts-ignore
-import * as EditorHoverState from '../EditorHoverState/EditorHoverState.js'
+import * as EditorHoverState from '../EditorHoverState/EditorHoverState.ts'
 // @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.ts'
 // @ts-ignore
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
+import * as EditorPosition from './EditorCommandPosition.ts'
 
 const showHover = async (editor, position) => {
   // TODO race condition

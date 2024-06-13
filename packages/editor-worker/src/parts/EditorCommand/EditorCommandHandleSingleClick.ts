@@ -1,17 +1,17 @@
 import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+// import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.ts'
 // @ts-ignore
-import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.ts'
 // @ts-ignore
-import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
+import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.ts'
 // @ts-ignore
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 // @ts-ignore
-import * as ModifierKey from '../ModifierKey/ModifierKey.js'
+import * as ModifierKey from '../ModifierKey/ModifierKey.ts'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.ts'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorPosition from './EditorCommandPosition.ts'
 
 // TODO first change cursor position, then run go to definition
 // cursor should appear at mousedown position immediately

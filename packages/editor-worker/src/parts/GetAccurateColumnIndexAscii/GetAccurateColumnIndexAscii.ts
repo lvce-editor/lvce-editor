@@ -1,4 +1,4 @@
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.ts'
 
 export const getAccurateColumnIndexAscii = (
   line,

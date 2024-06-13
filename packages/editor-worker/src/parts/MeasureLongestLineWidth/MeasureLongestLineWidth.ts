@@ -1,4 +1,4 @@
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.ts'
 
 export const measureLongestLineWidth = (lines, fontWeight, fontSize, fontFamily, letterSpacing, isMonoSpaceFont, charWidth) => {
   let longest = 0

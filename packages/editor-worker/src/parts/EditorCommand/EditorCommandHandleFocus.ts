@@ -1,7 +1,7 @@
 // @ts-ignore
-import * as Focus from '../Focus/Focus.js'
+import * as Focus from '../Focus/Focus.ts'
 // @ts-ignore
-import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as FocusKey from '../FocusKey/FocusKey.ts'
 
 export const handleFocus = (editor) => {
   Focus.setFocus(FocusKey.EditorText)

@@ -1,5 +1,5 @@
-import * as EditorSelectWord from './EditorCommandSelectWord.js'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorSelectWord from './EditorCommandSelectWord.ts'
+import * as EditorPosition from './EditorCommandPosition.ts'
 
 export const handleDoubleClick = (editor, modifier, x, y) => {
   const position = EditorPosition.at(editor, x, y)

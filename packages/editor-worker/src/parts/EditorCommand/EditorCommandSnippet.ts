@@ -1,12 +1,12 @@
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line

@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
 // TODO duplicate code with vertical pointer down event listener
 

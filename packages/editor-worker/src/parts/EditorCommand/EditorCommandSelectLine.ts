@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const getNewSelections = (line, rowIndex) => {
   // TODO handle virtual space when columnIndex is greater than line length

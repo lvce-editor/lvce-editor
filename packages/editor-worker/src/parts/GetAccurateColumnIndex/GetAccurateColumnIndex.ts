@@ -1,10 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.ts'
-import * as GetAccurateColumnIndexAscii from '../GetAccurateColumnIndexAscii/GetAccurateColumnIndexAscii.js'
-import * as GetAccurateColumnIndexUnicode from '../GetAccurateColumnIndexUnicode/GetAccurateColumnIndexUnicode.js'
-import * as IsAscii from '../IsAscii/IsAscii.js'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as NormalizeText from '../NormalizeText/NormalizeText.js'
+import * as GetAccurateColumnIndexAscii from '../GetAccurateColumnIndexAscii/GetAccurateColumnIndexAscii.ts'
+import * as GetAccurateColumnIndexUnicode from '../GetAccurateColumnIndexUnicode/GetAccurateColumnIndexUnicode.ts'
+import * as IsAscii from '../IsAscii/IsAscii.ts'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.ts'
+import * as NormalizeText from '../NormalizeText/NormalizeText.ts'
 
 const guessOffset = (eventX, averageCharWidth) => {
   const guess = Math.round(eventX / averageCharWidth)

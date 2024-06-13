@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCopyLineDown from '../src/parts/EditorCommand/EditorCommandCopyLineDown.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as EditorCopyLineDown from '../src/parts/EditorCommand/EditorCommandCopyLineDown.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
 test('editorCopyLineDown - cursor at start of line', () => {
   const editor = {

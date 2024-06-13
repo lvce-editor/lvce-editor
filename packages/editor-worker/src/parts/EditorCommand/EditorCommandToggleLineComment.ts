@@ -1,9 +1,9 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as GetLineComment from '../GetLineComment/GetLineComment.js'
+import * as GetLineComment from '../GetLineComment/GetLineComment.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const RE_WHITESPACE_AT_START = /^\s+/
 

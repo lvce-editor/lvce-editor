@@ -1,15 +1,15 @@
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 // @ts-ignore
-import * as GetDeleteHorizontalLeftChanges from '../GetDeleteHorizonatlLeftChanges/GetDeleteHorizontalLeftChanges.js'
+import * as GetDeleteHorizontalLeftChanges from '../GetDeleteHorizonatlLeftChanges/GetDeleteHorizontalLeftChanges.ts'
 // @ts-ignore
-import * as IsAllAutoClosingPairDelete from '../IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.js'
-import * as EditorDelta from './EditorCommandDelta.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as IsAllAutoClosingPairDelete from '../IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.ts'
+import * as EditorDelta from './EditorCommandDelta.ts'
+import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
 const deleteLeftWithAutoClose = (editor) => {
   const { selections, lines } = editor

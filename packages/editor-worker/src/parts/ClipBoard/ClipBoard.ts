@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import { VError } from '../VError/VError.ts'
 
 export const readText = async () => {

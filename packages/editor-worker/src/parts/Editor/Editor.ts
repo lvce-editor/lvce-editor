@@ -1,8 +1,8 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorScrolling from './EditorScrolling.js'
-import * as EditorSelection from './EditorSelection.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
+import * as EditorScrolling from './EditorScrolling.ts'
+import * as EditorSelection from './EditorSelection.ts'
 
 export const create = (id, uri, languageId, content) => {}
 

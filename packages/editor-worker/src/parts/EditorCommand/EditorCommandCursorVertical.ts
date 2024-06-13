@@ -1,11 +1,11 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 // @ts-ignore
-import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
+import * as TextSegmenter from '../TextSegmenter/TextSegmenter.ts'
 // @ts-ignore
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
 // @ts-ignore
 const editorCursorsVerticalWithIntlSegmenter = (editor, getPosition, getEdgePosition, delta) => {

@@ -1,7 +1,7 @@
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 
 // TODO move cursor
 // TODO multiple cursors -> vscode removes multiple cursors

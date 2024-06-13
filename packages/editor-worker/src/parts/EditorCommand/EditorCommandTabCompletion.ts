@@ -1,6 +1,6 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
 // @ts-ignore
-import * as TabCompletion from '../TabCompletion/TabCompletion.js'
+import * as TabCompletion from '../TabCompletion/TabCompletion.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 import * as EditorSnippet from './EditorCommandSnippet.ts'
 

@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Clamp from '../Clamp/Clamp.ts'
 // @ts-ignore
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
 const getNewPercent = (size, scrollBarSize, relativeX) => {
   if (relativeX <= 0) {

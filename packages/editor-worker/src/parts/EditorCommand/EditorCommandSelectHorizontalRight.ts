@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = new Uint32Array(selections.length)

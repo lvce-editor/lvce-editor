@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
-import * as EditorCommandUndo from '../src/parts/EditorCommand/EditorCommandUndo.js'
+import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.ts'
+import * as EditorCommandUndo from '../src/parts/EditorCommand/EditorCommandUndo.ts'
 
 test('undo - inserted character', () => {
   const editor = {

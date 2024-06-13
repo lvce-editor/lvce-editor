@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
-import * as GetX from '../GetX/GetX.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
+import * as GetX from '../GetX/GetX.ts'
 
 const getSelectionFromChange = (change) => {
   const { start, inserted } = change

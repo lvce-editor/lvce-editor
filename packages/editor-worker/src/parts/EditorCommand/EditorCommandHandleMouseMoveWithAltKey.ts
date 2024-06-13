@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Definition from '../Definition/Definition.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as Definition from '../Definition/Definition.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
+import * as EditorPosition from './EditorCommandPosition.ts'
 
 const getTokenIndex = (tokens, offset) => {
   let currentOffset = 0

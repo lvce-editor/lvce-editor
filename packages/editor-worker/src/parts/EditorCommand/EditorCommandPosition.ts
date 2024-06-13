@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
 import * as Clamp from '../Clamp/Clamp.ts'
 // @ts-ignore
-import * as GetAccurateColumnIndex from '../GetAccurateColumnIndex/GetAccurateColumnIndex.js'
+import * as GetAccurateColumnIndex from '../GetAccurateColumnIndex/GetAccurateColumnIndex.ts'
 
 export const at = (editor, eventX, eventY) => {
   Assert.object(editor)

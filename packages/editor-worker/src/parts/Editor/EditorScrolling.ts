@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Clamp from '../Clamp/Clamp.ts'
-import * as ScrollingFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as ScrollingFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
 // TODO this should be in a separate scrolling module
 export const setDeltaY = (state, value) => {

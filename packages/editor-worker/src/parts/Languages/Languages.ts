@@ -1,4 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 export const getLanguageConfiguration = (editor) => {
   return RendererWorker.invoke('Languages.getLanguageConfiguration', {

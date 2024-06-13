@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as EditorSelectUp from '../src/parts/EditorCommand/EditorCommandSelectUp.js'
+import * as EditorSelectUp from '../src/parts/EditorCommand/EditorCommandSelectUp.ts'
 
 test('selectUp', () => {
   const editor = {

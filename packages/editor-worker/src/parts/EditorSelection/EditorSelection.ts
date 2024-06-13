@@ -1,4 +1,4 @@
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
 export const fromRange = (startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   return new Uint32Array([startRowIndex, startColumnIndex, endRowIndex, endColumnIndex])

@@ -1,4 +1,4 @@
-import * as EditorSelectHorizontalRight from './EditorCommandSelectHorizontalRight.js'
+import * as EditorSelectHorizontalRight from './EditorCommandSelectHorizontalRight.ts'
 import * as EditorDelta from './EditorCommandDelta.ts'
 
 export const editorSelectAllRight = (editor) => {

@@ -1,4 +1,4 @@
-import * as NormalizeText from '../NormalizeText/NormalizeText.js'
+import * as NormalizeText from '../NormalizeText/NormalizeText.ts'
 
 // const getTokens = (editor) => {
 //   const tokens = []

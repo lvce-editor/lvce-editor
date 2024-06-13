@@ -1,16 +1,16 @@
 import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
-import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
+import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.ts'
 // @ts-ignore
-import * as EditorSelectionAutoMoveState from '../EditorSelectionAutoMoveState/EditorSelectionAutoMoveState.js'
+import * as EditorSelectionAutoMoveState from '../EditorSelectionAutoMoveState/EditorSelectionAutoMoveState.ts'
 // @ts-ignore
-import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.js'
+import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.ts'
 // @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.ts'
 // @ts-ignore
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.ts'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorPosition from './EditorCommandPosition.ts'
 
 const getNewEditor = (editor, position) => {
   const { minLineY, maxLineY, rowHeight } = editor

@@ -1,4 +1,4 @@
-import * as Format from './Format.js'
+import * as Format from './Format.ts'
 
 export const name = 'Format'
 

@@ -1,6 +1,6 @@
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as EditorCommandCutLine from './EditorCommandCutLine.js'
-import * as EditorCommandCutSelectedText from './EditorCommandCutSelectedText.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
+import * as EditorCommandCutLine from './EditorCommandCutLine.ts'
+import * as EditorCommandCutSelectedText from './EditorCommandCutSelectedText.ts'
 
 export const cut = (editor) => {
   const { selections } = editor

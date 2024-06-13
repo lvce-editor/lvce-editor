@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 

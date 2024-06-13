@@ -3,7 +3,7 @@ import * as CompareResultType from '../CompareResultType/CompareResultType.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
+import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.ts'
 
 const compare = (positionA, positionB) => {
   if (positionA.rowIndex > positionB.rowIndex) {

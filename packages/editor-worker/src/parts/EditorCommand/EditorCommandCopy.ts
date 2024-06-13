@@ -1,7 +1,7 @@
 import * as ClipBoard from '../ClipBoard/ClipBoard.ts'
 import * as Editor from '../Editor/Editor.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const getSelectionRange = (lines, copyFullLine, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   if (copyFullLine) {

@@ -1,15 +1,15 @@
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 // @ts-ignore
-import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
+import * as EditorGetPositionRight from './EditorCommandGetPositionRight.ts'
+import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
 const getChanges = (editor, getDelta) => {
   const selections = editor.selections

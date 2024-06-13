@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
-import * as EditorDeleteAllRight from '../src/parts/EditorCommand/EditorCommandDeleteAllRight.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
-import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
+import * as EditorDeleteAllRight from '../src/parts/EditorCommand/EditorCommandDeleteAllRight.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.ts'
 
 test('editorDeleteAllRight - at start', () => {
   const editor = {

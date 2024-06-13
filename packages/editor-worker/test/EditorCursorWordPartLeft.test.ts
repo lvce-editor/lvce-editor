@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorCursorWordPartLeft from '../src/parts/EditorCommand/EditorCommandCursorWordPartLeft.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorCursorWordPartLeft from '../src/parts/EditorCommand/EditorCommandCursorWordPartLeft.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 test('editorCursorWordPartLeft - camelCase', () => {
   const editor = {

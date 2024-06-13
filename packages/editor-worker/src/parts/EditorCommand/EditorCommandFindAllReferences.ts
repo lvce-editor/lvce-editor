@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.js'
+import * as Command from '../Command/Command.ts'
 
 export const findAllReferences = async (editor) => {
   await Command.execute('SideBar.show', 'References', /* focus */ true)

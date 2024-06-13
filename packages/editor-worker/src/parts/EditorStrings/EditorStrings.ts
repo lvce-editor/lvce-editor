@@ -1,4 +1,4 @@
-import * as I18nString from '../I18NString/I18NString.js'
+import * as I18nString from '../I18NString/I18NString.ts'
 
 /**
  * @enum {string}

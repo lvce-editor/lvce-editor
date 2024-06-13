@@ -1,10 +1,10 @@
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as EditorGetSelectionFromNativeRange from './EditorCommandGetSelectionFromNativeRange.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
+import * as EditorGetSelectionFromNativeRange from './EditorCommandGetSelectionFromNativeRange.ts'
 
 const getChanges = (editor, data, range) => {
   const selection = EditorGetSelectionFromNativeRange.getSelectionFromNativeRange(editor, range)

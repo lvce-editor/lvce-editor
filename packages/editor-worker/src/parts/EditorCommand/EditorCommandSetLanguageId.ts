@@ -1,7 +1,7 @@
 // @ts-ignore
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.ts'
 // @ts-ignore
-import * as ViewletState from '../ViewletStates/ViewletStates.js'
+import * as ViewletState from '../ViewletStates/ViewletStates.ts'
 
 export const setLanguageId = async (editor, languageId) => {
   const { uid } = editor

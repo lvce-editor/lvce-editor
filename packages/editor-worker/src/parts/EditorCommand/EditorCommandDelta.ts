@@ -1,6 +1,6 @@
 import * as Character from '../Character/Character.ts'
 // @ts-ignore
-import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
+import * as TextSegmenter from '../TextSegmenter/TextSegmenter.ts'
 
 export const characterLeft = (line, columnIndex) => {
   if (!TextSegmenter.supported()) {

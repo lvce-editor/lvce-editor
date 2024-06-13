@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as EditorIndentLess from '../src/parts/EditorCommand/EditorCommandIndentLess.js'
-import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as EditorIndentLess from '../src/parts/EditorCommand/EditorCommandIndentLess.ts'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.ts'
 
 test.skip('editorIndentLess - already at start of line', () => {
   const editor = {

@@ -2,11 +2,11 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
 // @ts-ignore
 // @ts-ignore
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 import { VError } from '../VError/VError.ts'
 import * as EditorFormat from './EditorCommandFormat.ts'
-// import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+// import * as FileSystem from '../FileSystem/FileSystem.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 const getFormatOnSave = () => {
   // TODO query setting on editor creation

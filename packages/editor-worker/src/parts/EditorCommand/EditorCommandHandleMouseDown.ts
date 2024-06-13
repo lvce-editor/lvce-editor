@@ -1,8 +1,8 @@
 // @ts-ignore
 import * as ClickDetailType from '../ClickDetailType/ClickDetailType.ts'
 import * as EditorHandleDoubleClick from './EditorCommandHandleDoubleClick.ts'
-import * as EditorHandleSingleClick from './EditorCommandHandleSingleClick.js'
-import * as EditorHandleTripleClick from './EditorCommandHandleTripleClick.js'
+import * as EditorHandleSingleClick from './EditorCommandHandleSingleClick.ts'
+import * as EditorHandleTripleClick from './EditorCommandHandleTripleClick.ts'
 
 export const handleMouseDown = (state, modifier, x, y, detail) => {
   switch (detail) {

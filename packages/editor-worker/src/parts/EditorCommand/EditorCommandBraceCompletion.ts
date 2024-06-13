@@ -1,14 +1,14 @@
-// import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
+// import * as EditorCompletion from '../EditorCompletion/EditorCompletion.ts'
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 // @ts-ignore
-import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
+import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.ts'
 // @ts-ignore
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
+import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
+import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 
 const getErrorMessage = (error) => {
   return `${error}`
