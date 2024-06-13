@@ -1,6 +1,6 @@
 // @ts-ignore
-import * as ClickDetailType from '../ClickDetailType/ClickDetailType.js'
-import * as EditorHandleDoubleClick from './EditorCommandHandleDoubleClick.js'
+import * as ClickDetailType from '../ClickDetailType/ClickDetailType.ts'
+import * as EditorHandleDoubleClick from './EditorCommandHandleDoubleClick.ts'
 import * as EditorHandleSingleClick from './EditorCommandHandleSingleClick.js'
 import * as EditorHandleTripleClick from './EditorCommandHandleTripleClick.js'
 

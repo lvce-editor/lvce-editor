@@ -1,4 +1,4 @@
-import * as EditorMoveRectangleSelection from './EditorCommandMoveRectangleSelection.js'
+import * as EditorMoveRectangleSelection from './EditorCommandMoveRectangleSelection.ts'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 export const moveRectangleSelectionPx = (editor, x, y) => {

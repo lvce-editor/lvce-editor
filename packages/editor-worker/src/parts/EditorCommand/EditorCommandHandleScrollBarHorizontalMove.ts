@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as Clamp from '../Clamp/Clamp.js'
+import * as Clamp from '../Clamp/Clamp.ts'
 // @ts-ignore
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 

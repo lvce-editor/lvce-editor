@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 // @ts-ignore
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
@@ -10,7 +10,7 @@ import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorSta
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 // @ts-ignore
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
-import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
+import * as EditorGoToDefinition from './EditorCommandGoToDefinition.ts'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 // TODO first change cursor position, then run go to definition

@@ -1,5 +1,5 @@
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as Languages from '../Languages/Languages.js'

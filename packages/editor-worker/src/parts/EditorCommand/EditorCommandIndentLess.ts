@@ -1,4 +1,4 @@
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const getChanges = (selections) => {

@@ -1,7 +1,7 @@
 import * as EditorPosition from './EditorCommandPosition.js'
 import * as EditorHandleTouchStart from './EditorCommandHandleTouchStart.js'
 import * as EditorSelectWord from './EditorCommandSelectWord.js'
-import * as EditorCursorSet from './EditorCommandCursorSet.js'
+import * as EditorCursorSet from './EditorCommandCursorSet.ts'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 
 const LONG_TOUCH_THRESHOLD = 150

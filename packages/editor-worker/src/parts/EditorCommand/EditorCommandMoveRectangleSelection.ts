@@ -1,7 +1,7 @@
 // @ts-ignore
-import * as Editor from '../Editor/Editor.js'
+import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
-import * as EditorHandleClick from './EditorCommandHandleSingleClick.js'
+import * as EditorHandleClick from './EditorCommandHandleSingleClick.ts'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 
 export const moveRectangleSelection = (editor, position) => {

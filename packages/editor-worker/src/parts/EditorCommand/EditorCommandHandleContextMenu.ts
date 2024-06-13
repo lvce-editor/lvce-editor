@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.js'
+import * as Command from '../Command/Command.ts'
 // @ts-ignore
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
