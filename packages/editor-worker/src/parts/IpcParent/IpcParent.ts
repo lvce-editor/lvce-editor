@@ -4,6 +4,7 @@ export const create = async ({ method, ...options }: { method: string; options: 
   const module = await IpcParentModule.getModule(method)
   // @ts-ignore
   const rawIpc = await module.create(options)
+  // @ts-ignore
   if (options.raw) {
     return rawIpc
   }
