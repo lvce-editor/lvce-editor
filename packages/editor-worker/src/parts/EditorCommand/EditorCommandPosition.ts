@@ -4,6 +4,7 @@ import * as Clamp from '../Clamp/Clamp.ts'
 // @ts-ignore
 import * as GetAccurateColumnIndex from '../GetAccurateColumnIndex/GetAccurateColumnIndex.ts'
 
+// @ts-ignore
 export const at = (editor, eventX, eventY) => {
   Assert.object(editor)
   Assert.number(eventX)
@@ -46,12 +47,14 @@ export const at = (editor, eventX, eventY) => {
  * @param {number} columnIndex
  * @returns
  */
+// @ts-ignore
 export const x = (editor, rowIndex, columnIndex) => {
   const { columnWidth, x } = editor
   const offsetX = columnIndex * columnWidth + x
   return offsetX
 }
 
+// @ts-ignore
 export const y = (editor, rowIndex) => {
   const { rowHeight, y } = editor
   const offsetY = (rowIndex + 1) * rowHeight + y

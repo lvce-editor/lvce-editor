@@ -4,6 +4,7 @@ import * as Editor from '../Editor/Editor.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as EditorGetPositionRight from './EditorCommandGetPositionRight.ts'
 
+// @ts-ignore
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = new Uint32Array(selections.length)
   for (let i = 0; i < selections.length; i += 4) {
@@ -18,6 +19,7 @@ const getNewSelections = (selections, lines, getDelta) => {
   return newSelections
 }
 
+// @ts-ignore
 export const editorCursorHorizontalRight = (editor, getDelta) => {
   const { lines, selections } = editor
   const newSelections = getNewSelections(selections, lines, getDelta)

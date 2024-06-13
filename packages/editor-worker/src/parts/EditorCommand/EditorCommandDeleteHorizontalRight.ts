@@ -11,6 +11,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorGetPositionRight from './EditorCommandGetPositionRight.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
+// @ts-ignore
 const getChanges = (editor, getDelta) => {
   const selections = editor.selections
   if (EditorSelection.isEverySelectionEmpty(selections)) {
@@ -41,6 +42,7 @@ const getChanges = (editor, getDelta) => {
   return changes
 }
 
+// @ts-ignore
 export const editorDeleteHorizontalRight = (editor, getDelta) => {
   const changes = getChanges(editor, getDelta)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)

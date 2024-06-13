@@ -6,7 +6,7 @@ import { IpcError } from '../IpcError/IpcError.ts'
 import * as Json from '../Json/Json.ts'
 import { VError } from '../VError/VError.ts'
 
-export const create = async ({ type }) => {
+export const create = async ({ type }: { type: string }) => {
   Assert.string(type)
   const wsUrl = GetWebSocketUrl.getWsUrl(type)
   const webSocket = new WebSocket(wsUrl)
@@ -20,7 +20,7 @@ export const create = async ({ type }) => {
   return webSocket
 }
 
-export const wrap = (webSocket) => {
+export const wrap = (webSocket: any) => {
   return {
     /**
      * @type {any}
@@ -50,7 +50,7 @@ export const wrap = (webSocket) => {
       }
       this.webSocket.onmessage = this.handleMessage
     },
-    send(message) {
+    send(message: any) {
       if (this.webSocket.readyState !== webSocket.OPEN) {
         // @ts-ignore
         throw new VError(`Failed to send message: WebSocket is not open`)

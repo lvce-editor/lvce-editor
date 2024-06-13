@@ -2,6 +2,7 @@ export const state = {
   blurListeners: [],
 }
 
+// @ts-ignore
 export const handleBlur = (editor) => {
   // for (const listener of state.blurListeners) {
   //   listener(editor)
@@ -18,11 +19,13 @@ export const handleBlur = (editor) => {
   }
 }
 
+// @ts-ignore
 export const registerListener = (fn) => {
   // @ts-ignore
   state.blurListeners.push(fn)
 }
 
+// @ts-ignore
 export const removeListener = (fn) => {
   // @ts-ignore
   state.blurListeners.splice(state.blurListeners.indexOf(fn), 1)

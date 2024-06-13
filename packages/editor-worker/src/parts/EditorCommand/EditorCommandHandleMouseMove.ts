@@ -6,6 +6,7 @@ import * as Viewlet from '../Viewlet/Viewlet.ts'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
+// @ts-ignore
 const showHover = async (editor, position) => {
   // TODO race condition
   await Viewlet.closeWidget(ViewletModuleId.EditorHover)
@@ -28,6 +29,7 @@ const onHoverIdle = async () => {
 
 const hoverDelay = 300
 
+// @ts-ignore
 export const handleMouseMove = (editor, x, y) => {
   if (!editor.hoverEnabled) {
     return editor

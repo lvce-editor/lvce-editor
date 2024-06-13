@@ -17,12 +17,14 @@ import * as EditorGoTo from './EditorCommandGoTo.ts'
 // TODO there are still race conditions in this function:
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
+// @ts-ignore
 const getLocation = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const definition = await Definition.getDefinition(editor, offset)
   return definition
 }
 
+// @ts-ignore
 const getNoLocationFoundMessage = (info) => {
   if (info.word) {
     return EditorStrings.noDefinitionFoundFor(info.word)
@@ -30,6 +32,7 @@ const getNoLocationFoundMessage = (info) => {
   return EditorStrings.noDefinitionFound()
 }
 
+// @ts-ignore
 const getErrorMessage = (error) => {
   // if (
   //   error &&
@@ -41,6 +44,7 @@ const getErrorMessage = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 const isNoProviderFoundError = (error) => {
   return (
     error &&
@@ -51,6 +55,7 @@ const isNoProviderFoundError = (error) => {
   )
 }
 
+// @ts-ignore
 export const goToDefinition = (editor) => {
   return EditorGoTo.goTo({
     editor,

@@ -1,5 +1,6 @@
 import * as ErrorType from '../ErrorType/ErrorType.ts'
 
+// @ts-ignore
 export const getErrorConstructor = (message, type) => {
   if (type) {
     switch (type) {

@@ -3,11 +3,13 @@ import * as Editor from '../Editor/Editor.ts'
 
 const INDENT = '  '
 
+// @ts-ignore
 export const editorUnindent = (editor) => {
   if (Editor.hasSelection(editor)) {
     const documentEdits: any[] = []
     const cursorEdits: any[] = []
     const selectionEdits: any[] = []
+    // @ts-ignore
     const canUnindentSelection = (selection) => {
       for (let i = selection.start.rowIndex; i <= selection.end.rowIndex; i++) {
         if (editor.lines[i].startsWith(INDENT)) {
@@ -22,6 +24,7 @@ export const editorUnindent = (editor) => {
     if (!editor.selections.some(canUnindentSelection)) {
       return
     }
+    // @ts-ignore
     const indentLineMaybe = (rowIndex) => {
       if (editor.lines[rowIndex].startsWith(INDENT)) {
         documentEdits.push({

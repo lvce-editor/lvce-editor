@@ -15,6 +15,7 @@ const getFormatOnSave = () => {
   return false
 }
 
+// @ts-ignore
 const getNewEditor = async (editor) => {
   const formatOnSave = getFormatOnSave()
   if (formatOnSave) {
@@ -23,6 +24,7 @@ const getNewEditor = async (editor) => {
   return editor
 }
 
+// @ts-ignore
 export const save = async (editor) => {
   try {
     const uri = editor.uri

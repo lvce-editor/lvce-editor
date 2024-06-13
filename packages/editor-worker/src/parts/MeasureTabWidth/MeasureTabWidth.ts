@@ -1,6 +1,6 @@
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.ts'
 
-export const measureTabWidth = (label, fontWeight, fontSize, fontFamily, letterSpacing) => {
+export const measureTabWidth = (label: string, fontWeight: number, fontSize: number, fontFamily: string, letterSpacing: number) => {
   const isMonospaceFont = false
   const charWidth = 0
   const width = MeasureTextWidth.measureTextWidth(label, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth)

@@ -1,5 +1,6 @@
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.ts'
 
+// @ts-ignore
 export const getSuccessResponse = (message, result) => {
   return {
     jsonrpc: JsonRpcVersion.Two,

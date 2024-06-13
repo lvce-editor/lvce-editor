@@ -3,7 +3,7 @@ import * as Arrays from '../Arrays/Arrays.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 
-export const create = (text) => {
+export const create = (text: string) => {
   const lines = SplitLines.splitLines(text)
   const state = {
     lines,
@@ -13,7 +13,7 @@ export const create = (text) => {
 }
 
 // TODO have function for single edit (most common, avoid one array)
-export const applyEdits = (textDocument, changes) => {
+export const applyEdits = (textDocument: any, changes: any[]) => {
   Assert.object(textDocument)
   Assert.array(changes)
   // TODO don't copy all lines (can be expensive, e.g. 10000 lines = 10000 * 64bit = 64kB on every keystroke)
@@ -72,21 +72,21 @@ export const applyEdits = (textDocument, changes) => {
   return newLines
 }
 
-export const getLine = (textDocument, index) => {
+export const getLine = (textDocument: any, index: number) => {
   return textDocument.lines[index]
 }
 
-export const getLineLength = (textDocument, index) => {
+export const getLineLength = (textDocument: any, index: number) => {
   return textDocument.lines[index].length
 }
 
-export const getText = (state) => {
+export const getText = (state: any) => {
   return JoinLines.joinLines(state.lines)
 }
 const RE_WHITESPACE = /^\s+/
 
 // TODO this doesn't belong here
-export const getIndent = (line) => {
+export const getIndent = (line: string) => {
   const whitespaceMatch = line.match(RE_WHITESPACE)
   if (!whitespaceMatch) {
     return ''
@@ -95,7 +95,7 @@ export const getIndent = (line) => {
 }
 
 // TDOO this doesn;t belong here
-export const getSelectionText = (textDocument, range) => {
+export const getSelectionText = (textDocument: any, range: any) => {
   Assert.object(textDocument)
   // console.log(range)
   // console.log(textDocument)
@@ -117,7 +117,7 @@ export const getSelectionText = (textDocument, range) => {
   return selectedLines
 }
 
-export const offsetAt = (textDocument, positionRowIndex, positionColumnIndex) => {
+export const offsetAt = (textDocument: any, positionRowIndex: number, positionColumnIndex: number) => {
   Assert.object(textDocument)
   Assert.number(positionRowIndex)
   Assert.number(positionColumnIndex)
@@ -133,7 +133,7 @@ export const offsetAt = (textDocument, positionRowIndex, positionColumnIndex) =>
   return offset
 }
 
-export const positionAt = (textDocument, offset) => {
+export const positionAt = (textDocument: any, offset: number) => {
   // console.log({ textDocument, offset })
   let rowIndex = 0
   let columnIndex = 0

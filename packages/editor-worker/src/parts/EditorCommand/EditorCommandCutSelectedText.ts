@@ -4,6 +4,7 @@ import * as Editor from '../Editor/Editor.ts'
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
+// @ts-ignore
 export const cutSelectedText = async (editor) => {
   const { selections } = editor
   const [startRowIndex, startColumnIndex, endRowIndex, endColumnIndex] = selections

@@ -1,6 +1,7 @@
 import * as Editor from '../Editor/Editor.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 
+// @ts-ignore
 const getChanges = (selections) => {
   const changes: any[] = []
   const rowsToIndentLess: number[] = []
@@ -29,6 +30,7 @@ const getChanges = (selections) => {
   return changes
 }
 
+// @ts-ignore
 export const indentLess = (editor) => {
   const selections = editor.selections
   const changes = getChanges(selections)

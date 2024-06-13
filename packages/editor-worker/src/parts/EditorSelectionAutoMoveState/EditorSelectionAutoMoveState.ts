@@ -10,6 +10,7 @@ export const state = {
   },
 }
 
+// @ts-ignore
 export const setEditor = (editor) => {
   state.currentEditor = editor
   state.hasListener = true
@@ -20,6 +21,7 @@ export const clearEditor = () => {
   state.hasListener = false
 }
 
+// @ts-ignore
 export const setPosition = (position) => {
   state.position = position
 }

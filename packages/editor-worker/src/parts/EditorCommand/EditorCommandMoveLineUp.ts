@@ -4,6 +4,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as Editor from '../Editor/Editor.ts'
 
 // TODO handle multiple cursors
+// @ts-ignore
 export const moveLineUp = (editor) => {
   const rowIndex = editor.cursor.rowIndex
   if (rowIndex === 0) {

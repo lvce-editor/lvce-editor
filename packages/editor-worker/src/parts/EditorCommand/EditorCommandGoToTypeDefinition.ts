@@ -20,12 +20,14 @@ const getTypeDefinitionErrorMessage = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 const getLocation = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const definition = await TypeDefinition.getTypeDefinition(editor, offset)
   return definition
 }
 
+// @ts-ignore
 const getErrorMessage = (error) => {
   // if (
   //   error &&
@@ -40,6 +42,7 @@ const getErrorMessage = (error) => {
   return `${error}`
 }
 
+// @ts-ignore
 const isNoProviderFoundError = (error) => {
   return (
     error &&
@@ -50,6 +53,7 @@ const isNoProviderFoundError = (error) => {
   )
 }
 
+// @ts-ignore
 export const goToTypeDefinition = (editor, explicit = true) => {
   return EditorGoTo.goTo({
     editor,

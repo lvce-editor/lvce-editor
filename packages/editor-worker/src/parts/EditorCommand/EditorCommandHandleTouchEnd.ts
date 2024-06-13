@@ -6,6 +6,7 @@ import * as EditorMoveSelection from './EditorCommandMoveSelection.ts'
 
 const LONG_TOUCH_THRESHOLD = 150
 
+// @ts-ignore
 export const handleTouchEnd = (editor, touchEvent) => {
   if (touchEvent.changedTouches.length === 0) {
     return

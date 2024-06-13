@@ -1,5 +1,6 @@
 import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
+// @ts-ignore
 export const getModule = (method) => {
   switch (method) {
     case IpcChildType.MessagePort:

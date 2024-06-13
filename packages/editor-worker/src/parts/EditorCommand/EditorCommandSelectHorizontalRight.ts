@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
+// @ts-ignore
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = new Uint32Array(selections.length)
   for (let i = 0; i < selections.length; i += 4) {
@@ -22,6 +23,7 @@ const getNewSelections = (selections, lines, getDelta) => {
   return newSelections
 }
 
+// @ts-ignore
 export const editorSelectHorizontalRight = (editor, getDelta) => {
   const lines = editor.lines
   const selections = editor.selections

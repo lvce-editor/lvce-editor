@@ -3,6 +3,7 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts
 
 // TODO duplicate code with vertical pointer down event listener
 
+// @ts-ignore
 export const handleScrollBarHorizontalPointerDown = (state, eventX) => {
   // @ts-ignore
   const { x, deltaX, width, finalDeltaY, height, scrollBarHeight, longestLineWidth } = state

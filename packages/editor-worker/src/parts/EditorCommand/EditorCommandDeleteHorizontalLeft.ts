@@ -11,6 +11,7 @@ import * as IsAllAutoClosingPairDelete from '../IsAllAutoClosingPairDelete/IsAll
 import * as EditorDelta from './EditorCommandDelta.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
+// @ts-ignore
 const deleteLeftWithAutoClose = (editor) => {
   const { selections, lines } = editor
   for (let i = 0; i < selections.length; i += 4) {
@@ -21,6 +22,7 @@ const deleteLeftWithAutoClose = (editor) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
+// @ts-ignore
 export const editorDeleteHorizontalLeft = (editor, getDelta) => {
   const { autoClosingRanges = [], selections, lines } = editor
   if (IsAllAutoClosingPairDelete.isAllAutoClosingPairDelete(autoClosingRanges, selections)) {

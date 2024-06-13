@@ -1,3 +1,4 @@
+// @ts-ignore
 export const setSelections = (editor, selections) => {
   const { minLineY, maxLineY, rowHeight } = editor
   const startRowIndex = selections[0]

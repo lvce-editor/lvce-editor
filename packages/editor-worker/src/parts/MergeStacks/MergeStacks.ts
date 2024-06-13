@@ -1,7 +1,7 @@
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.ts'
 import * as NormalizeErrorLine from '../NormalizeErrorLine/NormalizeErrorLine.ts'
 
-export const mergeStacks = (parent, child) => {
+export const mergeStacks = (parent: string, child: string) => {
   if (!child) {
     return parent
   }

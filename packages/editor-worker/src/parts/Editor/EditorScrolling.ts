@@ -3,6 +3,7 @@ import * as Clamp from '../Clamp/Clamp.ts'
 import * as ScrollingFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
 // TODO this should be in a separate scrolling module
+// @ts-ignore
 export const setDeltaY = (state, value) => {
   Assert.object(state)
   Assert.number(value)

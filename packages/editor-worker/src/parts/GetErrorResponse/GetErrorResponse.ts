@@ -3,6 +3,7 @@ import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.ts'
 import * as PrettyError from '../PrettyError/PrettyError.ts'
 import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.ts'
 
+// @ts-ignore
 export const getErrorResponse = async (message, error) => {
   if (error && error instanceof Error && error.message && error.message.startsWith('method not found')) {
     return {

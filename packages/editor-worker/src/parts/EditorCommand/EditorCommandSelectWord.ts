@@ -7,6 +7,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 const RE_WORD_START = /^[a-z\u00C0-\u017F\d]+/i
 const RE_WORD_END = /[a-z\u00C0-\u017F\d]+$/i
 
+// @ts-ignore
 const getNewSelections = (line, rowIndex, columnIndex) => {
   const before = line.slice(0, columnIndex)
   const after = line.slice(columnIndex)
@@ -18,6 +19,7 @@ const getNewSelections = (line, rowIndex, columnIndex) => {
   return newSelections
 }
 
+// @ts-ignore
 export const selectWord = (editor, rowIndex, columnIndex) => {
   const line = TextDocument.getLine(editor, rowIndex)
   const newSelections = getNewSelections(line, rowIndex, columnIndex)

@@ -1,26 +1,26 @@
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
-export const fromRange = (startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
+export const fromRange = (startRowIndex: number, startColumnIndex: number, endRowIndex: number, endColumnIndex: number) => {
   return new Uint32Array([startRowIndex, startColumnIndex, endRowIndex, endColumnIndex])
 }
 
-export const fromRanges = (...items) => {
+export const fromRanges = (...items: any[]) => {
   return new Uint32Array(items.flat(1))
 }
 
-export const fromPosition = (rowIndex, columnIndex) => {
+export const fromPosition = (rowIndex: number, columnIndex: number) => {
   return fromRange(rowIndex, columnIndex, rowIndex, columnIndex)
 }
 
-export const alloc = (length) => {
+export const alloc = (length: number) => {
   return new Uint32Array(length)
 }
 
-export const clone = (selections) => {
+export const clone = (selections: any[]) => {
   return alloc(selections.length)
 }
 
-export const map = (selections, fn) => {
+export const map = (selections: any[], fn: any) => {
   const newSelections = clone(selections)
   for (let i = 0; i < newSelections.length; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
@@ -29,7 +29,7 @@ export const map = (selections, fn) => {
   return newSelections
 }
 
-export const forEach = (selections, fn) => {
+export const forEach = (selections: any[], fn: any) => {
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]
@@ -39,20 +39,20 @@ export const forEach = (selections, fn) => {
   }
 }
 
-export const moveRangeToPosition = (selections, i, rowIndex, columnIndex) => {
+export const moveRangeToPosition = (selections: any[] | Uint32Array, i: number, rowIndex: number, columnIndex: number) => {
   selections[i] = selections[i + 2] = rowIndex
   selections[i + 1] = selections[i + 3] = columnIndex
 }
 
-export const isEmpty = (selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
+export const isEmpty = (selectionStartRow: number, selectionStartColumn: number, selectionEndRow: number, selectionEndColumn: number) => {
   return selectionStartRow === selectionEndRow && selectionStartColumn === selectionEndColumn
 }
 
-const isSelectionSingleLine = (selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
+const isSelectionSingleLine = (selectionStartRow: number, selectionStartColumn: number, selectionEndRow: number, selectionEndColumn: number) => {
   return selectionStartRow === selectionEndRow
 }
 
-export const isEverySelection = (selections, fn) => {
+export const isEverySelection = (selections: any[], fn: any) => {
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]
@@ -65,15 +65,15 @@ export const isEverySelection = (selections, fn) => {
   return true
 }
 
-export const isEverySelectionEmpty = (selections) => {
+export const isEverySelectionEmpty = (selections: any[]) => {
   return isEverySelection(selections, isEmpty)
 }
 
-export const isEverySelectionSingleLine = (selections) => {
+export const isEverySelectionSingleLine = (selections: any[]) => {
   return isEverySelection(selections, isSelectionSingleLine)
 }
 
-export const from = (array, getSelection) => {
+export const from = (array: any[], getSelection: any) => {
   const newSelections = alloc(array.length * 4)
   let i = 0
   for (const item of array) {
@@ -86,7 +86,7 @@ export const from = (array, getSelection) => {
   return newSelections
 }
 
-export const push = (selections, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
+export const push = (selections: any[], startRowIndex: number, startColumnIndex: number, endRowIndex: number, endColumnIndex: number) => {
   const oldLength = selections.length
   const newSelections = alloc(oldLength + 4)
   newSelections.set(selections)

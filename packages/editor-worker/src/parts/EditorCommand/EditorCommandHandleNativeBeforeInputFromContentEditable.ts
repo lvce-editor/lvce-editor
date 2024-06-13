@@ -6,6 +6,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import * as EditorGetSelectionFromNativeRange from './EditorCommandGetSelectionFromNativeRange.ts'
 
+// @ts-ignore
 const getChanges = (editor, data, range) => {
   const selection = EditorGetSelectionFromNativeRange.getSelectionFromNativeRange(editor, range)
   const selectionRange = {
@@ -30,6 +31,7 @@ const getChanges = (editor, data, range) => {
   return changes
 }
 
+// @ts-ignore
 export const handleBeforeInputFromContentEditable = (editor, data, range) => {
   const changes = getChanges(editor, data, range)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)

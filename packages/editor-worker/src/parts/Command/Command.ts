@@ -1,6 +1,7 @@
 import * as CommandState from '../CommandState/CommandState.ts'
 import * as ProcessName from '../ProcessName/ProcessName.ts'
 
+// @ts-ignore
 export const execute = (command, ...args) => {
   const fn = CommandState.getCommand(command)
   if (!fn) {

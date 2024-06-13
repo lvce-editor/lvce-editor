@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 // @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
+// @ts-ignore
 const getSelectUpChanges = (lines, selections) => {
   const newSelections = new Uint32Array(selections.length)
   for (let i = 0; i < selections.length; i += 4) {
@@ -15,6 +16,7 @@ const getSelectUpChanges = (lines, selections) => {
   return newSelections
 }
 
+// @ts-ignore
 export const selectUp = (editor) => {
   const { lines, selections } = editor
   const newSelections = getSelectUpChanges(lines, selections)

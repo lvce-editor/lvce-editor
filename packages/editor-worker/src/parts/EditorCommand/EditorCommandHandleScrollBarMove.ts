@@ -1,6 +1,7 @@
 // @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
 
+// @ts-ignore
 const getNewPercent = (state, relativeY) => {
   const { height, scrollBarHeight } = state
   // if (relativeY <= editor.scrollBarHeight / 2) {
@@ -16,6 +17,7 @@ const getNewPercent = (state, relativeY) => {
   return 1
 }
 
+// @ts-ignore
 export const handleScrollBarMove = (state, eventY) => {
   const { y, finalDeltaY, handleOffset } = state
   const relativeY = eventY - y - handleOffset

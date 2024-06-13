@@ -3,6 +3,7 @@ import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+// @ts-ignore
 export const replaceRange = (editor, ranges, replacement, origin) => {
   const changes: any[] = []
   const rangesLength = ranges.length

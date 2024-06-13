@@ -15,6 +15,7 @@ import * as EditorPosition from './EditorCommandPosition.ts'
 
 // TODO first change cursor position, then run go to definition
 // cursor should appear at mousedown position immediately
+// @ts-ignore
 const handleSingleClickWithAlt = async (editor, position) => {
   const { rowIndex, columnIndex } = position
   const newEditor = { ...editor, selections: new Uint32Array([rowIndex, columnIndex, rowIndex, columnIndex]) }
@@ -24,6 +25,7 @@ const handleSingleClickWithAlt = async (editor, position) => {
   return newEditor2
 }
 
+// @ts-ignore
 const handleSingleClickWithCtrl = async (editor, position) => {
   const selections = editor.selections
   for (let i = 0; i < selections.length; i += 4) {
@@ -53,6 +55,7 @@ const handleSingleClickWithCtrl = async (editor, position) => {
   return Editor.scheduleSelections(editor, newSelections)
 }
 
+// @ts-ignore
 const handleSingleClickDefault = (editor, position) => {
   EditorMoveSelectionAnchorState.setPosition(position)
   return {
@@ -62,6 +65,7 @@ const handleSingleClickDefault = (editor, position) => {
   }
 }
 
+// @ts-ignore
 const getFn = (modifier) => {
   switch (modifier) {
     case ModifierKey.Alt:
@@ -73,6 +77,7 @@ const getFn = (modifier) => {
   }
 }
 
+// @ts-ignore
 export const handleSingleClick = async (editor, modifier, x, y) => {
   Assert.object(editor)
   Assert.number(modifier)

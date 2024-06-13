@@ -12,6 +12,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
+// @ts-ignore
 const getNewEditor = (editor, position) => {
   const { minLineY, maxLineY, rowHeight } = editor
   const diff = maxLineY - minLineY
@@ -72,6 +73,7 @@ const continueScrollingAndMovingSelection = async () => {
   //
 }
 
+// @ts-ignore
 export const moveSelectionPx = (editor, x, y) => {
   Assert.object(editor)
   Assert.number(x)

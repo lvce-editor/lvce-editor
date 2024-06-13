@@ -4,6 +4,7 @@ import * as Editor from '../Editor/Editor.ts'
 import * as EditorHandleClick from './EditorCommandHandleSingleClick.ts'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.ts'
 
+// @ts-ignore
 export const moveRectangleSelection = (editor, position) => {
   // @ts-ignore
   const anchor = EditorMoveSelection.state.position

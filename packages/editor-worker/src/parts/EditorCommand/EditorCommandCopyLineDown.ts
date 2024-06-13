@@ -4,6 +4,7 @@ import * as TextDocument from '../TextDocument/TextDocument.ts'
 // TODO handle multiline selection
 // TODO handle multiple cursors
 
+// @ts-ignore
 export const copyLineDown = (editor) => {
   const { selections, primarySelectionIndex } = editor
   const rowIndex = selections[primarySelectionIndex]
