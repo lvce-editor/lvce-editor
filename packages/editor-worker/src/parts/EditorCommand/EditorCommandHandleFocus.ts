@@ -1,10 +1,8 @@
-// @ts-ignore
-import * as Focus from '../Focus/Focus.ts'
-// @ts-ignore
-import * as FocusKey from '../FocusKey/FocusKey.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
-// @ts-ignore
-export const handleFocus = (editor) => {
-  Focus.setFocus(FocusKey.EditorText)
+const WhenExpressionEditorText = 12
+
+export const handleFocus = async (editor: any) => {
+  await RendererWorker.invoke('Focus.setFocus', WhenExpressionEditorText)
   return editor
 }
