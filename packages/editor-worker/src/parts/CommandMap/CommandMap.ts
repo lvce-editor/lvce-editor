@@ -1,6 +1,9 @@
 import * as AddCursorAbove from '../EditorCommand/EditorCommandAddCursorAbove.ts'
 import * as AddCursorBelow from '../EditorCommand/EditorCommandAddCursorBelow.ts'
+import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.ts'
+import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.ts'
 import * as CancelSelection from '../EditorCommand/EditorCommandCancelSelection.ts'
+import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
 import * as Composition from '../EditorCommand/EditorCommandComposition.ts'
 import * as Copy from '../EditorCommand/EditorCommandCopy.ts'
 import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.ts'
@@ -10,6 +13,7 @@ import * as CursorCharacterRight from '../EditorCommand/EditorCommandCursorChara
 import * as CursorDown from '../EditorCommand/EditorCommandCursorDown.ts'
 import * as CursorEnd from '../EditorCommand/EditorCommandCursorEnd.ts'
 import * as CursorHome from '../EditorCommand/EditorCommandCursorHome.ts'
+import * as EditorCursorSet from '../EditorCommand/EditorCommandCursorSet.ts'
 import * as CursorUp from '../EditorCommand/EditorCommandCursorUp.ts'
 import * as CursorWordLeft from '../EditorCommand/EditorCommandCursorWordLeft.ts'
 import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPartLeft.ts'
@@ -25,9 +29,13 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.ts
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.ts'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.ts'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.ts'
+import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
+import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
+import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
 import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
 import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.ts'
 import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.ts'
+import * as EditorCommandHandleNativeBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.ts'
 import * as HandleScrollBarHorizontalMove from '../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.ts'
 import * as HandleScrollBarHorizontalPointerDown from '../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.ts'
 import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.ts'
@@ -37,6 +45,7 @@ import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
+import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.ts'
@@ -49,22 +58,16 @@ import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.ts'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.ts'
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
+import * as HandleFocus from '../EditorCommand/EditorCommandHandleFocus.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
+import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
+import * as HandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
-import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
-import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
-import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
-import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.ts'
-import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.ts'
-import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
-import * as EditorCursorSet from '../EditorCommand/EditorCommandCursorSet.ts'
-import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
-import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -139,4 +142,7 @@ export const commandMap = {
   'Editor.cursorSet': EditorCursorSet.cursorSet,
   'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
+  'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
+  'Editor.handleFocus': HandleFocus.handleFocus,
+  'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
 }

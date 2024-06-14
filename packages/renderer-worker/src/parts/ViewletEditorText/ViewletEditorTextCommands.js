@@ -86,6 +86,8 @@ const ids = [
   'cursorSet',
   'goToDefinition',
   'goToTypeDefinition',
+  'handleBeforeInputFromContentEditable',
+  'handleContextMenu',
 ]
 
 export const Commands = {
@@ -95,11 +97,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
-  goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
-  handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
-  handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
-  handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
   handleMouseMove: () => import('../EditorCommand/EditorCommandHandleMouseMove.js'),
   handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
