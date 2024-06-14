@@ -1,6 +1,6 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as WebSocketProtocol from '../src/parts/WebSocketProtocol/WebSocketProtocol.js'
+import { expect, test } from '@jest/globals'
 import * as Protocol from '../src/parts/Protocol/Protocol.js'
+import * as WebSocketProtocol from '../src/parts/WebSocketProtocol/WebSocketProtocol.js'
 
 test('getWebSocketProtocol = https', () => {
   // @ts-ignore
