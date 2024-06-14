@@ -88,6 +88,8 @@ const ids = [
   'goToTypeDefinition',
   'handleBeforeInputFromContentEditable',
   'handleContextMenu',
+  'handleMouseMove',
+  'handleMouseMoveWithAltKey',
 ]
 
 export const Commands = {
@@ -97,8 +99,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  handleMouseMove: () => import('../EditorCommand/EditorCommandHandleMouseMove.js'),
-  handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
   handlePointerCaptureLost: () => import('../EditorCommand/EditorCommandHandlePointerCaptureLost.js'),
   handleScrollBarClick: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),

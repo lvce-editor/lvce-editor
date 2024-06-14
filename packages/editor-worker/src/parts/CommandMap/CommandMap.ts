@@ -66,6 +66,7 @@ import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as HandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.ts'
+import * as EditorCommandHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
@@ -145,4 +146,5 @@ export const commandMap = {
   'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
   'Editor.handleFocus': HandleFocus.handleFocus,
   'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
+  'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
 }
