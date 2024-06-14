@@ -81,6 +81,9 @@ const ids = [
   'paste',
   'undo',
   'format',
+  'braceCompletion',
+  'closeCompletion',
+  'cursorSet',
 ]
 
 export const Commands = {
@@ -90,9 +93,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
-  closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
-  cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
   goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),

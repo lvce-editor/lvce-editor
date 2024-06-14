@@ -62,6 +62,7 @@ import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
 import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.ts'
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.ts'
 import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
+import * as EditorCursorSet from '../EditorCommand/EditorCommandCursorSet.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -133,4 +134,5 @@ export const commandMap = {
   'Editor.applyEdit': EditorApplyEdit.applyEdit,
   'Editor.braceCompletion': EditorBraceCompletion.braceCompletion,
   'Editor.closeCompletion': EditorCloseCompletion.closeCompletion,
+  'Editor.cursorSet': EditorCursorSet.cursorSet,
 }
