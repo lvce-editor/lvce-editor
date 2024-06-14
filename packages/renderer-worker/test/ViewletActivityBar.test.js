@@ -1,7 +1,7 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -31,6 +31,7 @@ const render = (oldState, newState) => {
 }
 
 test('loadContent', async () => {
+  // @ts-ignore
   const state = ViewletActivityBar.create()
   ViewletStates.set('SideBar', {
     state: {
@@ -99,6 +100,7 @@ test('loadContent', async () => {
 })
 
 test.skip('render - all items fit but little space is remaining', async () => {
+  // @ts-ignore
   const oldState = ViewletActivityBar.create()
   const newState = {
     ...oldState,
@@ -220,6 +222,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     activityBarItems: [
       // Top
@@ -330,6 +333,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
 })
 
 test.skip('render - two items do not fit', () => {
+  // @ts-ignore
   const oldState = ViewletActivityBar.create()
   const newState = {
     ...oldState,
@@ -441,6 +445,7 @@ test.skip('render - two items do not fit', () => {
 
 test.skip('handleContextMenu', async () => {
   RendererProcess.state.send = jest.fn()
+  // @ts-ignore
   const state = ViewletActivityBar.create()
   // @ts-ignore
   await ViewletActivityBar.handleContextMenu(state, 0, 0)

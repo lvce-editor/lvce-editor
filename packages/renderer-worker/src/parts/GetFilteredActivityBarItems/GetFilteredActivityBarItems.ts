@@ -1,20 +1,20 @@
+import type { ActivityBarItem } from '../ActivityBarItem/ActivityBarItem.ts'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as Icon from '../Icon/Icon.js'
 import { getNumberOfVisibleItems } from '../ViewletActivityBar/ViewletActivityBarGetHiddenItems.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 
-export const getFilteredActivityBarItems = (items, height, itemHeight) => {
+export const getFilteredActivityBarItems = (items: readonly ActivityBarItem[], height: number, itemHeight: number): readonly ActivityBarItem[] => {
   const numberOfVisibleItems = getNumberOfVisibleItems({ height, itemHeight })
   if (numberOfVisibleItems >= items.length) {
     return items
   }
-  const showMoreItem = {
+  const showMoreItem: ActivityBarItem = {
     id: 'Additional Views',
     title: ViewletActivityBarStrings.additionalViews(),
     icon: Icon.Ellipsis,
-    enabled: true,
     flags: ActivityBarItemFlags.Button,
-    keyShortCuts: '',
+    keyShortcuts: '',
   }
-  return [...items.slice(0, numberOfVisibleItems - 2), showMoreItem, items.at(-1)]
+  return [...items.slice(0, numberOfVisibleItems - 2), showMoreItem, items.at(-1)!]
 }
