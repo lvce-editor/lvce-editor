@@ -1,16 +1,10 @@
-// @ts-ignore
 import * as EditorHoverState from '../EditorHoverState/EditorHoverState.ts'
-// @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.ts'
-// @ts-ignore
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
-// @ts-ignore
-const showHover = async (editor, position) => {
+const showHover = async (editor: any, position: any) => {
   // TODO race condition
-  await Viewlet.closeWidget(ViewletModuleId.EditorHover)
-  await Viewlet.openWidget(ViewletModuleId.EditorHover, position)
+  // await Viewlet.closeWidget(ViewletModuleId.EditorHover)
+  // await Viewlet.openWidget(ViewletModuleId.EditorHover, position)
 }
 
 // TODO several things can happen:
