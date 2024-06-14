@@ -1,7 +1,4 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Icon from '../Icon/Icon.js'
-import { getNumberOfVisibleItems } from '../ViewletActivityBar/ViewletActivityBarGetHiddenItems.js'
-import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 
 const toVisibleItems = (items, selectedIndex, focusedIndex) => {
   const visibleItems = []
@@ -25,20 +22,6 @@ const toVisibleItems = (items, selectedIndex, focusedIndex) => {
 }
 
 export const getVisibleActivityBarItems = (state) => {
-  const numberOfVisibleItems = getNumberOfVisibleItems(state)
-  const { activityBarItems, selectedIndex, focusedIndex } = state
-  const items = activityBarItems
-  if (numberOfVisibleItems >= items.length) {
-    return toVisibleItems(items, selectedIndex, focusedIndex)
-  }
-  const showMoreItem = {
-    id: 'Additional Views',
-    title: ViewletActivityBarStrings.additionalViews(),
-    icon: Icon.Ellipsis,
-    enabled: true,
-    flags: ActivityBarItemFlags.Button,
-    keyShortCuts: '',
-  }
-  const visibleItems = toVisibleItems([...items.slice(0, numberOfVisibleItems - 2), showMoreItem, items.at(-1)], selectedIndex, focusedIndex)
-  return visibleItems
+  const { filteredItems, selectedIndex, focusedIndex } = state
+  return toVisibleItems(filteredItems, selectedIndex, focusedIndex)
 }

@@ -8,7 +8,7 @@ export const hasFunctionalRootRender = true
 const renderItems = {
   isEqual(oldState, newState) {
     return (
-      oldState.activityBarItems === newState.activityBarItems &&
+      oldState.filteredItems === newState.filteredItems &&
       oldState.height === newState.height &&
       oldState.selectedIndex === newState.selectedIndex &&
       oldState.focusedIndex === newState.focusedIndex
