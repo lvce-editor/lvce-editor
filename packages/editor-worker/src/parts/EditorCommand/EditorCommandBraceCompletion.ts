@@ -1,11 +1,6 @@
-// import * as EditorCompletion from '../EditorCompletion/EditorCompletion.ts'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
-// @ts-ignore
-import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.ts'
-// @ts-ignore
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
@@ -34,7 +29,7 @@ export const braceCompletion = async (editor, text) => {
   try {
     // @ts-ignore
     const offset = TextDocument.offsetAt(editor, editor.cursor)
-    const result = await ExtensionHostBraceCompletion.executeBraceCompletionProvider(editor, offset, text)
+    const result = await RendererWorker.invoke('ExtensionHostBraceCompletion.executeBraceCompletionProvider', editor, offset, text)
     if (result) {
       const closingBrace = getMatchingClosingBrace(text)
       const insertText = text + closingBrace

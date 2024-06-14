@@ -182,6 +182,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostWorkerContentSecurityPolicy
     case 'SendMessagePortToElectron':
       return ModuleId.SendMessagePortToElectron
+    case 'ExtensionHostBraceCompletion':
+      return ModuleId.ExtensionHostBraceCompletion
     case 'OffscreenCanvas':
       return ModuleId.OffscreenCanvas
     case 'Languages':
