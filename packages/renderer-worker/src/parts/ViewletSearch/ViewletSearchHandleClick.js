@@ -3,7 +3,8 @@ import * as ViewletSearchSelectIndex from './ViewletSearchSelectIndex.js'
 const handleClickOutside = (state) => {
   return {
     ...state,
-    focusedIndex: -1,
+    listFocusedIndex: -1,
+    listFocused: true,
   }
 }
 
@@ -18,8 +19,8 @@ export const handleClick = (state, index, isClose) => {
 }
 
 export const handleClickAt = (state, eventX, eventY) => {
-  const { y, itemHeight, x, width } = state
-  const top = 94.19 // TODO search store boxes height integer
+  const { y, itemHeight, x, width, replaceExpanded } = state
+  const top = replaceExpanded ? 94.19 : 57 // TODO search store boxes height integer
   const relativeY = eventY - y - top
   const relativeX = eventX - x
   const relativeIndex = Math.floor(relativeY / itemHeight)

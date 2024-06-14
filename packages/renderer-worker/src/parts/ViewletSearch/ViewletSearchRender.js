@@ -20,7 +20,8 @@ const renderItems = {
       oldState.detailsExpanded === newState.detailsExpanded &&
       oldState.loaded === newState.loaded &&
       oldState.collapsedPaths === newState.collapsedPaths &&
-      oldState.focusedIndex === newState.focusedIndex
+      oldState.listFocusedIndex === newState.listFocusedIndex &&
+      oldState.listFocused === newState.listFocused
     )
   },
   apply(oldState, newState) {
@@ -35,7 +36,7 @@ const renderItems = {
       newState.collapsedPaths,
       newState.focusedIndex,
     )
-    const focusOutline = newState.focusedIndex === -1
+    const focusOutline = newState.listFocused && newState.listFocusedIndex === -1
     const dom = GetSearchVirtualDom.getSearchVirtualDom(
       displayResults,
       newState.replaceExpanded,
