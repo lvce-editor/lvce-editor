@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 // @ts-ignore
 // import * as RendererProcess from '../RendererProcess/RendererProcess.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
@@ -22,14 +23,10 @@ export const editorShowMessage = async (editor, rowIndex, columnIndex, message, 
   Assert.number(rowIndex)
   Assert.number(columnIndex)
   Assert.string(message)
-  // await RendererProcess.invoke(
-  //   /* Viewlet.send */ 'Viewlet.send',
-  //   /* id */ editor.uid,
-  //   /* method */ 'showOverlayMessage',
-  //   /* x */ x,
-  //   /* y */ y,
-  //   /* content */ displayErrorMessage,
-  // )
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex)
+  const displayErrorMessage = message
+  await RendererWorker.invoke('Editor.showOverlayMessage', editor, 'Viewlet.send', editor.uid, 'showOverlayMessage', x, y, displayErrorMessage)
 
   if (!isError) {
     const handleTimeout = () => {
