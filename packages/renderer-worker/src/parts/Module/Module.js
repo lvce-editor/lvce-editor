@@ -166,6 +166,8 @@ export const load = (moduleId) => {
       return import('../FileWatcher/FileWatcher.ipc.js')
     case ModuleId.ExtensionHostBraceCompletion:
       return import('../ExtensionHost/ExtensionHostBraceCompletion.ipc.js')
+    case ModuleId.ExtensionHostDefinition:
+      return import('../ExtensionHost/ExtensionHostDefinition.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

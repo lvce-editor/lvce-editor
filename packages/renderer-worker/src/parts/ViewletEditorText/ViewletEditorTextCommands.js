@@ -1,4 +1,5 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 // prettier-ignore
 
@@ -96,6 +97,11 @@ const ids = [
 export const Commands = {
   // TODO command to set cursor position
   ...wrapEditorCommands(ids),
+
+  // keep
+  showOverlayMessage(...args) {
+    return RendererProcess.invoke(...args)
+  },
 }
 
 // prettier-ignore

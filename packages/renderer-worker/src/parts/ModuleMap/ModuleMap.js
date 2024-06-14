@@ -176,6 +176,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostQuickPick
     case 'ExtensionHostDialog':
       return ModuleId.ExtensionHostDialog
+    case 'ExtensionHostDefinition':
+      return ModuleId.ExtensionHostDefinition
     case 'TestFrameWork':
       return ModuleId.TestFrameWork
     case 'ExtensionHostWorkerContentSecurityPolicy':
