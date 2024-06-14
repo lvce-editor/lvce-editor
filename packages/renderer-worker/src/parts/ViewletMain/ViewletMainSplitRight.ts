@@ -12,6 +12,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
         height: height,
         editors: [],
         tabsUid: 0,
+        activeIndex: -1,
       },
       {
         x: x + width / 2,
@@ -20,6 +21,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
         height: height,
         editors: [],
         tabsUid: 0,
+        activeIndex: -1,
       },
     ]
   }
@@ -35,6 +37,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
       y: lastGroup.y,
       width: lastGroup.width / 2,
       height: lastGroup.height,
+      activeIndex: -1,
     },
     {
       x: lastGroup.x + lastGroup.width / 2,
@@ -43,6 +46,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
       height: lastGroup.height,
       editors: [],
       tabsUid: 0,
+      activeIndex: -1,
     },
   ]
 }

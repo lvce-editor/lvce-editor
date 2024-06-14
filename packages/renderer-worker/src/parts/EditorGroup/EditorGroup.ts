@@ -5,4 +5,5 @@ export interface EditorGroup {
   readonly height: number
   readonly editors: readonly any[]
   readonly tabsUid: number
+  readonly activeIndex: number
 }
