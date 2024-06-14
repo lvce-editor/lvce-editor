@@ -3,8 +3,7 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as GetX from '../GetX/GetX.ts'
 
-// @ts-ignore
-const getSelectionFromChange = (change) => {
+const getSelectionFromChange = (change: any) => {
   const { start, inserted } = change
   const startRowIndex = start.rowIndex
   const startColumnIndex = start.columnIndex
