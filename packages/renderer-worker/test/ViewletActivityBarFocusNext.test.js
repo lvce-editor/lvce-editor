@@ -4,6 +4,7 @@ import * as ViewletActivityBarFocusNext from '../src/parts/ViewletActivityBar/Vi
 
 test('focusNext', () => {
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: 0,
   }

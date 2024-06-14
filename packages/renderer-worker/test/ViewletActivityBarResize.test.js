@@ -7,6 +7,7 @@ const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
 test.skip('resize', () => {
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: -1,
     height: ACTIVITY_BAR_ITEM_HEIGHT * 8,

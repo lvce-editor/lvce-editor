@@ -4,6 +4,7 @@ import * as ViewletActivityBarFocusPrevious from '../src/parts/ViewletActivityBa
 
 test('focusPrevious', () => {
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: 1,
   }

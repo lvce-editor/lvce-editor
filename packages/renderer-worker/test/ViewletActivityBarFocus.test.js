@@ -3,6 +3,7 @@ import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActi
 import * as ViewletActivityBarFocus from '../src/parts/ViewletActivityBar/ViewletActivityBarFocus.js'
 
 test('focus', () => {
+  // @ts-ignore
   const state = ViewletActivityBar.create()
   expect(ViewletActivityBarFocus.focus(state)).toMatchObject({
     focusedIndex: 0,

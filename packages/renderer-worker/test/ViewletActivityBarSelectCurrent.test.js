@@ -25,6 +25,7 @@ test('selectCurrent - settings', async () => {
   // Layout.state.windowWidth = 1000
   // Layout.state.windowHeight = 1000
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: 5,
     height: ACTIVITY_BAR_ITEM_HEIGHT * 6 + 100,
@@ -92,6 +93,7 @@ test('selectCurrent - settings', async () => {
 
 test('selectCurrent - no item focused', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: -1,
     height: ACTIVITY_BAR_ITEM_HEIGHT * 5,

@@ -4,6 +4,7 @@ import * as ViewletActivityBarFocusFirst from '../src/parts/ViewletActivityBar/V
 
 test('focusFirst', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: 2,
   }
