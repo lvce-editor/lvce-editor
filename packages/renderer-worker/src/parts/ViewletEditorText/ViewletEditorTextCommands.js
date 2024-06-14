@@ -56,7 +56,7 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
-  'format',
+  // 'format', TODO
   'goToDefinition',
   'goToTypeDefinition',
   'handleBeforeInputFromContentEditable',
@@ -107,6 +107,10 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
+  // TODO
+  format: () => import('../EditorCommand/EditorCommandFormat.js'),
+
+
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
   handlePointerCaptureLost: () => import('../EditorCommand/EditorCommandHandlePointerCaptureLost.js'),
   handleScrollBarClick: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
