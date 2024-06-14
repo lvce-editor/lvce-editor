@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,7 +14,6 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostTextSearch.js'
 
 const TextSearchExtension = await import('../src/parts/TextSearch/TextSearchExtension.js')
 const ExtensionHostTextSearch = await import('../src/parts/ExtensionHost/ExtensionHostTextSearch.js')
-const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('textSearch - extension search - error', async () => {
   // @ts-ignore

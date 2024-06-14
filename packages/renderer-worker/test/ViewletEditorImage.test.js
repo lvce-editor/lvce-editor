@@ -1,10 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, expect, test } from '@jest/globals'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.ipc.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
-import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting DOMMatrixReadonly
