@@ -46,6 +46,7 @@ const ids = [
   'deleteAllRight',
   'deleteCharacterLeft',
   'deleteCharacterRight',
+  'deleteRight',
   'deleteHorizontalRight',
   'deleteLeft',
   'deleteWordLeft',

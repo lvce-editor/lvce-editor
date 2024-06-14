@@ -1,13 +1,9 @@
 import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.ts'
 import * as EditorDelta from './EditorCommandDelta.ts'
 
-// @ts-ignore
-export const deleteCharacterLeft = (editor) => {
+export const deleteCharacterLeft = (editor: any) => {
   const newEditor = EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.characterLeft)
-  return {
-    newState: newEditor,
-    commands: [],
-  }
+  return newEditor
 }
 
 export const deleteLeft = deleteCharacterLeft

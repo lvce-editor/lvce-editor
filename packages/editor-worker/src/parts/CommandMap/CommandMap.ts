@@ -98,6 +98,7 @@ export const commandMap = {
   'Editor.deleteAllRight': DeleteAllRight.deleteAllRight,
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.deleteCharacterRight': DeleteCharacterRight.deleteCharacterRight,
+  'Editor.deleteRight': DeleteCharacterRight.deleteCharacterRight,
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
   'Editor.deleteLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.deleteWordLeft': DeleteWordLeft.deleteWordLeft,
