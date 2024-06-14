@@ -4,16 +4,26 @@ import * as GetSearchHeaderVirtualDom from '../GetSearchHeaderVirtualDom/GetSear
 import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression, message, detailsExpanded) => {
+export const getSearchVirtualDom = (
+  visibleItems,
+  replaceExpanded,
+  matchCase,
+  matchWholeWord,
+  useRegularExpression,
+  message,
+  detailsExpanded,
+  focusOutline,
+) => {
   /**
    * @type {any[]}
    */
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
-    className: `${ClassNames.Viewlet} ${ClassNames.Search}`,
+    className: MergeClassNames.mergeClassNames(ClassNames.Viewlet, ClassNames.Search),
     childCount: 2,
   })
   dom.push(...GetSearchHeaderVirtualDom.getSearchHeaderVirtualDom(replaceExpanded, matchCase, matchWholeWord, useRegularExpression, detailsExpanded))
@@ -29,7 +39,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
   )
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'Viewlet List',
+    className: MergeClassNames.mergeClassNames(ClassNames.Viewlet, ClassNames.List, focusOutline ? ClassNames.FocusOutline : ClassNames.Empty),
     role: AriaRoles.Tree,
     tabIndex: 0,
     childCount: visibleItems.length,
