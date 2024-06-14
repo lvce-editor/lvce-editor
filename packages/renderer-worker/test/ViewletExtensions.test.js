@@ -1,5 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -65,17 +64,11 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const SearchExtensions = await import('../src/parts/SearchExtensions/SearchExtensions.js')
-const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
-const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
-
-const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletExtensions, oldState, newState, ViewletModuleId.Extensions)
-}
 
 test('create', () => {
   const state = ViewletExtensions.create()

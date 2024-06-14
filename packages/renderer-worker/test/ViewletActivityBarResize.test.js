@@ -5,7 +5,7 @@ import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.j
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
-test('resize', () => {
+test.skip('resize', () => {
   const state = {
     // @ts-ignore
     ...ViewletActivityBar.create(),

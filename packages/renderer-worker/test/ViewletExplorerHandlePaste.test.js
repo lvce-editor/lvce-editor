@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
@@ -58,8 +58,6 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 })
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
-
-const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 const ViewletExplorerHandlePaste = await import('../src/parts/ViewletExplorer/ViewletExplorerHandlePaste.js')

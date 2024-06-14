@@ -1,48 +1,16 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as ViewletLayout from '../src/parts/ViewletLayout/ViewletLayout.js'
-
-const kWindowWidth = 0
-const kWindowHeight = 1
-
-const kMainVisible = 2
-const kMainTop = 3
-const kMainLeft = 4
-const kMainWidth = 5
-const kMainHeight = 6
-
-const kActivityBarVisible = 7
-const kActivityBarTop = 8
-const kActivityBarLeft = 9
-const kActivityBarWidth = 10
-const kActivityBarHeight = 11
 
 const kSideBarVisible = 12
 const kSideBarTop = 13
 const kSideBarLeft = 14
 const kSideBarWidth = 15
 const kSideBarHeight = 16
-const kSideBarMinWidth = 17
-const kSideBarMaxWidth = 18
-
-const kPanelVisible = 19
-const kpanelTop = 20
-const kPanelLeft = 21
-const kPanelWidth = 22
-const kPanelHeight = 23
-const kPanelMinHeight = 24
-const kPanelMaxHeight = 25
 
 const kStatusBarVisible = 26
 const kStatusBarTop = 27
 const kStatusBarLeft = 28
-const kStatusBarWidth = 29
 const kStatusBarHeight = 30
-
-const kTitleBarVisible = 31
-const kTitleBarTop = 32
-const kTitleBarLeft = 33
-const kTitleBarWidth = 34
-const kTitleBarHeight = 35
 
 const kTotal = 36
 

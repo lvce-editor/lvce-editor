@@ -25,6 +25,7 @@ const renderProblems = {
   },
 }
 
+// TODO set focusoutline classname in renderer worker
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return oldState.focusedIndex === newState.focusedIndex

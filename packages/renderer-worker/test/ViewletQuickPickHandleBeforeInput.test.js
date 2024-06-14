@@ -1,6 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,11 +12,6 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
 
 const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.js')
 const ViewletQuickPickHandleBeforeInput = await import('../src/parts/ViewletQuickPick/ViewletQuickPickHandleBeforeInput.js')
-const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
-
-const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletQuickPick, oldState, newState, ViewletModuleId.QuickPick)
-}
 
 test('handleBeforeInput - insertText - at end', async () => {
   const state = {
