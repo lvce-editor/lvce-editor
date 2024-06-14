@@ -1,4 +1,4 @@
-import * as ViewletActivityBar from './ViewletActivityBar.js'
+import * as ViewletActivityBar from './ViewletActivityBar.ts'
 
 // prettier-ignore
 export const Commands = {
