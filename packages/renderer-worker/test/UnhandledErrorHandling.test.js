@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 import { VError } from '../src/parts/VError/VError.js'
 
@@ -35,7 +35,6 @@ class PromiseRejectionEvent extends Event {
 
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const Command = await import('../src/parts/Command/Command.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const UnhandledErrorHandling = await import('../src/parts/UnhandledErrorHandling/UnhandledErrorHandling.js')

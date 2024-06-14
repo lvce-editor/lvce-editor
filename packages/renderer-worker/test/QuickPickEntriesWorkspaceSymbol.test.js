@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as QuickPickEntriesWorkspaceSymbol from '../src/parts/QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
