@@ -2,6 +2,8 @@ import * as GetActivityBarItems from '../GetActivityBarItems/GetActivityBarItems
 import * as Height from '../Height/Height.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as GetVisibleActivityBarItems from '../GetVisibleActivityBarItems/GetVisibleActivityBarItems.js'
+import * as GetFilteredActivityBarItems from '../GetFilteredActivityBarItems/GetFilteredActivityBarItems.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
@@ -25,6 +27,7 @@ export const create = (id, uri, x, y, width, height) => {
       'SideBar.viewletChange': 8013,
     },
     activityBarItems: [],
+    filteredItems: [],
     focusedIndex: -1,
     selectedIndex: -1,
     focused: false,
@@ -41,10 +44,12 @@ export const loadContent = async (state) => {
   const sideBar = ViewletStates.getInstance(ViewletModuleId.SideBar)
   const viewletId = sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
   const selectedIndex = findIndex(activityBarItems, viewletId)
+  const filteredItems = GetFilteredActivityBarItems.getFilteredActivityBarItems(activityBarItems, state.height, state.itemHeight)
   return {
     ...state,
     selectedIndex,
     activityBarItems,
+    filteredItems,
   }
 }
 

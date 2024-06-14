@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as ViewletCounter from '../src/parts/ViewletCounter/ViewletCounter.js'
 import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
