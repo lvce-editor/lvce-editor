@@ -50,6 +50,8 @@ import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAsce
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
+import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
+import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -109,4 +111,6 @@ export const commandMap = {
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
+  'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
+  'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
 }
