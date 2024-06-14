@@ -28,10 +28,17 @@ import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.
 import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
 import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.ts'
 import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.ts'
+import * as HandleScrollBarHorizontalMove from '../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.ts'
+import * as HandleScrollBarHorizontalPointerDown from '../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.ts'
+import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.ts'
+import * as HandleScrollBarPointerDown from '../EditorCommand/EditorCommandHandleScrollBarPointerDown.ts'
+import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts'
+import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
+import * as Save from '../EditorCommand/EditorCommandSave.ts'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.ts'
 import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.ts'
 import * as SelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.ts'
@@ -48,10 +55,9 @@ import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
-import * as Save from '../EditorCommand/EditorCommandSave.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
-import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
-import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
+import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
+import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -113,4 +119,10 @@ export const commandMap = {
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
+  'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarMove': HandleScrollBarMove.handleScrollBarMove,
+  'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
+  'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
+  'Editor.paste': EditorPaste.paste,
+  'Editor.undo': EditorUndo.undo,
 }
