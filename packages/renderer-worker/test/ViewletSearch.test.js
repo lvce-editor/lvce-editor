@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 beforeEach(() => {
@@ -29,7 +29,6 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.ipc.js')
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
-const Command = await import('../src/parts/Command/Command.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
 test('create', () => {

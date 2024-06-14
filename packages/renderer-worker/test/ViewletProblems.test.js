@@ -1,5 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,12 +13,7 @@ jest.unstable_mockModule('../src/parts/Diagnostics/Diagnostics.js', () => {
 })
 
 const ViewletProblems = await import('../src/parts/ViewletProblems/ViewletProblems.ipc.js')
-const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Diagnostics = await import('../src/parts/Diagnostics/Diagnostics.js')
-
-const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletProblems, oldState, newState, ViewletModuleId.Problems)
-}
 
 test('create', () => {
   const state = ViewletProblems.create()
