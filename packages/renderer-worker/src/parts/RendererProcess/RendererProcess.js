@@ -32,6 +32,7 @@ export const send = (message) => {
 }
 
 export const invoke = (method, ...params) => {
+  console.log({ ethod, params })
   return JsonRpc.invoke(state.ipc, method, ...params)
 }
 

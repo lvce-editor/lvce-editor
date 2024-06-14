@@ -35,6 +35,7 @@ const renderItems = {
       newState.collapsedPaths,
       newState.focusedIndex,
     )
+    const focusOutline = newState.focusedIndex === -1
     const dom = GetSearchVirtualDom.getSearchVirtualDom(
       displayResults,
       newState.replaceExpanded,
@@ -43,6 +44,7 @@ const renderItems = {
       newState.useRegularExpression,
       newState.message,
       newState.detailsExpanded,
+      focusOutline,
     )
     return ['Viewlet.setDom2', dom]
   },
