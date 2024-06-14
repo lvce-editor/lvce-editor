@@ -58,6 +58,10 @@ import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
+import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
+import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.ts'
+import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.ts'
+import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -125,4 +129,8 @@ export const commandMap = {
   'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
   'Editor.paste': EditorPaste.paste,
   'Editor.undo': EditorUndo.undo,
+  'Editor.format': EditorFormat.format,
+  'Editor.applyEdit': EditorApplyEdit.applyEdit,
+  'Editor.braceCompletion': EditorBraceCompletion.braceCompletion,
+  'Editor.closeCompletion': EditorCloseCompletion.closeCompletion,
 }

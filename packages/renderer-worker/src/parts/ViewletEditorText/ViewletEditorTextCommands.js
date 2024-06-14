@@ -80,6 +80,7 @@ const ids = [
   'sortLinesAscending',
   'paste',
   'undo',
+  'format',
 ]
 
 export const Commands = {
@@ -89,11 +90,9 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
   closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
-  format: () => import('../EditorCommand/EditorCommandFormat.js'),
   goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
   goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
