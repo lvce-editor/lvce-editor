@@ -76,6 +76,8 @@ const ids = [
   'compositionUpdate',
   'compositionEnd',
   'save',
+  'handleTripleClick',
+  'handleSingleClick',
 ]
 
 export const Commands = {
@@ -141,7 +143,5 @@ export const LazyCommands = {
 
 export const CommandsWithSideEffectsLazy = {
   typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
-  handleSingleClick: () => import('../EditorCommand/EditorCommandHandleSingleClick.js'),
   handleBlur: () => import('../EditorCommand/EditorCommandBlur.js'),
-  handleTripleClick: () => import('../EditorCommand/EditorCommandHandleTripleClick.js'),
 }
