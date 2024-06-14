@@ -42,8 +42,7 @@ const getChanges = (editor, getDelta) => {
   return changes
 }
 
-// @ts-ignore
-export const editorDeleteHorizontalRight = (editor, getDelta) => {
+export const editorDeleteHorizontalRight = (editor: any, getDelta: any) => {
   const changes = getChanges(editor, getDelta)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
