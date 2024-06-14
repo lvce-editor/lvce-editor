@@ -99,8 +99,9 @@ export const Commands = {
   ...wrapEditorCommands(ids),
 
   // keep
-  showOverlayMessage(...args) {
-    return RendererProcess.invoke(...args)
+  async showOverlayMessage(editor, ...args) {
+    await RendererProcess.invoke(...args.slice(1))
+    return editor
   },
 }
 
