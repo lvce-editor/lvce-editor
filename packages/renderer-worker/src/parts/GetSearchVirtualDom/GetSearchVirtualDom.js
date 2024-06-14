@@ -13,7 +13,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'Viewlet Search',
+    className: `${ClassNames.Viewlet} ${ClassNames.Search}`,
     childCount: 2,
   })
   dom.push(...GetSearchHeaderVirtualDom.getSearchHeaderVirtualDom(replaceExpanded, matchCase, matchWholeWord, useRegularExpression, detailsExpanded))
