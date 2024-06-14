@@ -20,7 +20,8 @@ const selectIndexFile = async (state, searchResult, index) => {
   return {
     ...state,
     collapsedPaths: [...collapsedPaths, path],
-    focusedIndex: index,
+    listFocusedIndex: index,
+    listFocused: true,
   }
 }
 
@@ -38,7 +39,11 @@ const selectIndexPreview = async (state, searchResult, index) => {
   await OpenUri.openUri(path, true, {
     selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
   })
-  return state
+  return {
+    ...state,
+    listFocusedIndex: index,
+    listFocused: false,
+  }
 }
 
 export const selectIndex = (state, index, isClose) => {

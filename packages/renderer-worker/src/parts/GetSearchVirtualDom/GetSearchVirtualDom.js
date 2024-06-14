@@ -44,6 +44,7 @@ export const getSearchVirtualDom = (
     tabIndex: 0,
     childCount: visibleItems.length,
     onClick: DomEventListenerFunctions.HandleClick,
+    onBlur: DomEventListenerFunctions.HandleListBlur,
   })
   dom.push(...GetSearchResultsVirtualDom.getSearchResultsVirtualDom(visibleItems))
   return dom
