@@ -84,6 +84,8 @@ const ids = [
   'braceCompletion',
   'closeCompletion',
   'cursorSet',
+  'goToDefinition',
+  'goToTypeDefinition',
 ]
 
 export const Commands = {
