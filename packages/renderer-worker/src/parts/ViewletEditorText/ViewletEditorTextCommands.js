@@ -1,5 +1,4 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 // prettier-ignore
 
@@ -27,8 +26,6 @@ const ids = [
   'addCursorAbove',
   'addCursorBelow',
   'compositionEnd',
-  'braceCompletion',
-  'closeCompletion',
   'compositionStart',
   'compositionUpdate',
   'contextMenu',
@@ -39,7 +36,6 @@ const ids = [
   'cursorHome',
   'cursorLeft',
   'cursorRight',
-  'cursorSet',
   'cursorUp',
   'cursorWordLeft',
   'cursorWordPartLeft',
@@ -56,16 +52,8 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
-  // 'format', TODO
-  'goToDefinition',
-  'goToTypeDefinition',
-  'handleBeforeInputFromContentEditable',
-  'handleContextMenu',
   'handleDoubleClick',
-  'handleFocus',
   'handleMouseDown',
-  'handleMouseMove',
-  'handleMouseMoveWithAltKey',
   'handleSingleClick',
   'handleTouchEnd',
   'handleTripleClick',
@@ -73,7 +61,6 @@ const ids = [
   'indentMore',
   'moveLineDown',
   'moveLineUp',
-  'paste',
   'pasteText',
   'save',
   'selectAll',
@@ -91,26 +78,29 @@ const ids = [
   'selectWordLeft',
   'selectWordRight',
   'sortLinesAscending',
+  'paste',
   'undo',
 ]
 
 export const Commands = {
   // TODO command to set cursor position
   ...wrapEditorCommands(ids),
-
-  // keep
-  async showOverlayMessage(editor, ...args) {
-    await RendererProcess.invoke(...args.slice(1))
-    return editor
-  },
 }
 
 // prettier-ignore
 export const LazyCommands = {
-  // TODO
+  applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
+  braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
+  closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
+  cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
-
-
+  goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
+  goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
+  handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
+  handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
+  handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
+  handleMouseMove: () => import('../EditorCommand/EditorCommandHandleMouseMove.js'),
+  handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
   handlePointerCaptureLost: () => import('../EditorCommand/EditorCommandHandlePointerCaptureLost.js'),
   handleScrollBarClick: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
