@@ -1,8 +1,19 @@
 import * as ViewletSearchSelectIndex from './ViewletSearchSelectIndex.js'
 
+const handleClickOutside = (state) => {
+  return {
+    ...state,
+    focusedIndex: -1,
+  }
+}
+
 export const handleClick = (state, index, isClose) => {
-  const { minLineY } = state
+  const { minLineY, items } = state
   const actualIndex = index + minLineY
+  const isOutside = actualIndex > items.length
+  if (isOutside) {
+    return handleClickOutside(state)
+  }
   return ViewletSearchSelectIndex.selectIndex(state, actualIndex, isClose)
 }
 
