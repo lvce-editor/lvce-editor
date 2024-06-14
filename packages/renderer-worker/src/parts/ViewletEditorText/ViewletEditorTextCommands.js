@@ -90,6 +90,7 @@ const ids = [
   'handleContextMenu',
   'handleMouseMove',
   'handleMouseMoveWithAltKey',
+  'handleFocus',
 ]
 
 export const Commands = {
