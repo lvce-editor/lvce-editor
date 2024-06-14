@@ -30,7 +30,7 @@ export const CommandsWithSideEffectsLazy = {
   focusNext: () => import('./ViewletMainFocusIndex.js'),
   focusPrevious: () => import('./ViewletMainFocusIndex.js'),
   handleDropFilePath: () => import('./ViewletMainHandleDropFilePath.js'),
-  splitRight: () => import('./ViewletMainSplitRight.js'),
+  splitRight: () => import('./ViewletMainSplitRight.ts'),
 }
 
 export const LazyCommands = {
