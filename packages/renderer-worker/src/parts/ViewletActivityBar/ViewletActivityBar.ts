@@ -1,4 +1,4 @@
-import * as GetActivityBarItems from '../GetActivityBarItems/GetActivityBarItems.js'
+import * as GetActivityBarItems from '../GetActivityBarItems/GetActivityBarItems.ts'
 import * as GetFilteredActivityBarItems from '../GetFilteredActivityBarItems/GetFilteredActivityBarItems.ts'
 import * as Height from '../Height/Height.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
