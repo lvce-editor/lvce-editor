@@ -47,6 +47,8 @@ import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScroll
 import * as HandleScrollBarPointerDown from '../EditorCommand/EditorCommandHandleScrollBarPointerDown.ts'
 import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts'
+import * as HandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.ts'
+import * as HandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.ts'
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
@@ -143,6 +145,8 @@ export const commandMap = {
   'Editor.handleScrollBarVerticalPointerMove': HandleScrollBarMove.handleScrollBarMove,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
+  'Editor.handleTouchMove': HandleTouchMove.handleTouchMove,
+  'Editor.handleTouchStart': HandleTouchStart.handleTouchStart,
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
   'Editor.indendLess': IndentLess.indentLess,
   'Editor.indentMore': IndentMore.indentMore,
