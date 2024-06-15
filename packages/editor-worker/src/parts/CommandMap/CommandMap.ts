@@ -80,6 +80,7 @@ import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as EditorTabCompletion from '../EditorCommand/EditorCommandTabCompletion.ts'
+import * as EditorType from '../EditorCommand/EditorCommandType.ts'
 import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleBlockComment.ts'
 import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
 import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
@@ -185,5 +186,6 @@ export const commandMap = {
   'Editor.toggleBlockComment': EditorToggleBlockComment.toggleBlockComment,
   'Editor.toggleComment': EditorToggleComment.toggleComment,
   'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
+  'Editor.type': EditorType.type,
   'Editor.undo': EditorUndo.undo,
 }
