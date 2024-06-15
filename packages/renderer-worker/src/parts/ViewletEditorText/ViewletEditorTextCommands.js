@@ -23,6 +23,7 @@ const wrapEditorCommands = (ids) => {
 const ids = [
   'addCursorAbove',
   'addCursorBelow',
+  'applyEdit',
   'braceCompletion',
   'compositionEnd',
   'compositionStart',
@@ -123,7 +124,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
