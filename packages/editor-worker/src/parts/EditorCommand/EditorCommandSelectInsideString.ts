@@ -1,10 +1,7 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 
-// @ts-ignore
-const getNewSelections = (lines, selections) => {
+const getNewSelections = (lines: readonly string[], selections: any) => {
   const newSelections = new Uint32Array(selections.length)
   for (let i = 0; i < selections.length; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
@@ -36,8 +33,7 @@ const getNewSelections = (lines, selections) => {
   return newSelections
 }
 
-// @ts-ignore
-export const selectInsideString = (editor) => {
+export const selectInsideString = (editor: any) => {
   const selections = editor.selections
   const lines = editor.lines
   const newSelections = getNewSelections(lines, selections)
