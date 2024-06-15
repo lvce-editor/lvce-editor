@@ -1,14 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
-// @ts-ignore
 import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.ts'
-// @ts-ignore
 import * as EditorSelectionAutoMoveState from '../EditorSelectionAutoMoveState/EditorSelectionAutoMoveState.ts'
-// @ts-ignore
 import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.ts'
-// @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.ts'
-// @ts-ignore
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
@@ -61,7 +54,7 @@ const continueScrollingAndMovingSelection = async () => {
   if (editor === newEditor) {
     return
   }
-  await Viewlet.setState(ViewletModuleId.EditorText, newEditor)
+  // await Viewlet.setState(ViewletModuleId.EditorText, newEditor)
   EditorSelectionAutoMoveState.setEditor(newEditor)
   // @ts-ignore
   const delta = position.rowIndex < editor.minLineY ? -1 : 1
