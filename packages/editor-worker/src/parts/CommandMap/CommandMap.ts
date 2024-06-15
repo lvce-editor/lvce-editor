@@ -70,16 +70,19 @@ import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharac
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.ts'
 import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.ts'
 import * as EditorSelectInsideString from '../EditorCommand/EditorCommandSelectInsideString.ts'
+import * as ReplaceRange from '../EditorCommand/EditorCommandReplaceRange.ts'
 import * as SelectLine from '../EditorCommand/EditorCommandSelectLine.ts'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.ts'
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
+import * as HandleNativeSelectionChange from '../EditorCommand/EditorCommandHandleNativeSelectionChange.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
 import * as SetSelections from '../EditorCommand/EditorCommandSetSelections.ts'
+import * as SetDecorations from '../EditorCommand/EditorCommandSetDecorations.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
@@ -141,6 +144,7 @@ export const commandMap = {
   'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
   'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
   'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
+  'Editor.handleNativeSelectionChange': HandleNativeSelectionChange.editorHandleNativeSelectionChange,
   'Editor.handlePointerCaptureLost': HandlePointerCaptureLost.handlePointerCaptureLost,
   'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
   'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
@@ -167,6 +171,7 @@ export const commandMap = {
   'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
+  'Editor.replaceRange': ReplaceRange.replaceRange,
   'Editor.save': Save.save,
   'Editor.selectAll': SelectAll.selectAll,
   'Editor.selectAllLeft': SelectAllLeft.editorSelectAllLeft,
@@ -185,6 +190,7 @@ export const commandMap = {
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.setSelections': SetSelections.setSelections,
+  'Editor.setDecorations': SetDecorations.setDecorations,
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
   'Editor.showHover': EditorShowHover.showHover,
