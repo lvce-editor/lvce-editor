@@ -1,5 +1,4 @@
-// @ts-ignore
-export const setSelections = (editor, selections) => {
+export const setSelections = (editor: any, selections: any) => {
   const { minLineY, maxLineY, rowHeight } = editor
   const startRowIndex = selections[0]
   if (startRowIndex < minLineY) {
