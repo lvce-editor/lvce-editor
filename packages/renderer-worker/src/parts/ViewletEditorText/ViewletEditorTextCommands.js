@@ -87,6 +87,9 @@ const ids = [
   'selectWordLeft',
   'selectWordRight',
   'sortLinesAscending',
+  'toggleBlockComment',
+  'toggleComment',
+  'toggleLineComment',
   'undo',
 ]
 
@@ -130,8 +133,6 @@ export const LazyCommands = {
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
   setSelections: () => import('../EditorCommand/EditorCommandSetSelections.js'),
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
-  toggleBlockComment: () => import('../EditorCommand/EditorCommandToggleBlockComment.js'),
-  toggleComment: () => import('../EditorCommand/EditorCommandToggleComment.js'),
   type: () => import('../EditorCommand/EditorCommandType.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
