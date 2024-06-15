@@ -53,6 +53,7 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
+  'findAllReferences',
   'handleDoubleClick',
   'handleMouseDown',
   'handleSingleClick',
@@ -75,7 +76,6 @@ const ids = [
   'selectDown',
   'selectLine',
   'selectNextOccurrence',
-  'selectNextOccurrence',
   'selectUp',
   'selectUp',
   'selectWord',
@@ -83,6 +83,7 @@ const ids = [
   'selectWordRight',
   'sortLinesAscending',
   'undo',
+  'insertLineBreak',
 ]
 
 export const Commands = {
@@ -116,7 +117,6 @@ export const LazyCommands = {
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
   handleTouchStart: () => import('../EditorCommand/EditorCommandHandleTouchStart.js'),
-  insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),
   moveRectangleSelection: () => import('../EditorCommand/EditorCommandMoveRectangleSelection.js'),
   moveRectangleSelectionPx: () => import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),
   moveSelection: () => import('../EditorCommand/EditorCommandMoveSelection.js'),
@@ -137,7 +137,6 @@ export const LazyCommands = {
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
-  findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
 }
