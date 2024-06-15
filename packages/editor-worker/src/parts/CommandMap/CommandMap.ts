@@ -47,11 +47,14 @@ import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScroll
 import * as HandleScrollBarPointerDown from '../EditorCommand/EditorCommandHandleScrollBarPointerDown.ts'
 import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts'
+import * as HandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.ts'
+import * as HandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.ts'
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
+import * as OrganizeImports from '../EditorCommand/EditorCommandOrganizeImports.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
@@ -78,6 +81,8 @@ import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleB
 import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
 import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
+import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
+import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
@@ -140,6 +145,8 @@ export const commandMap = {
   'Editor.handleScrollBarVerticalPointerMove': HandleScrollBarMove.handleScrollBarMove,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
+  'Editor.handleTouchMove': HandleTouchMove.handleTouchMove,
+  'Editor.handleTouchStart': HandleTouchStart.handleTouchStart,
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
   'Editor.indendLess': IndentLess.indentLess,
   'Editor.indentMore': IndentMore.indentMore,
@@ -147,6 +154,7 @@ export const commandMap = {
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
   'Editor.openFind': OpenFind.openFind,
+  'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
   'Editor.save': Save.save,
@@ -173,4 +181,6 @@ export const commandMap = {
   'Editor.toggleComment': EditorToggleComment.toggleComment,
   'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
   'Editor.undo': EditorUndo.undo,
+  'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
+  'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
 }

@@ -88,3 +88,4 @@ export const ExtensionHostSelection = 119
 export const ExtensionHostBraceCompletion = 114
 export const ExtensionHostDefinition = 115
 export const ExtensionHostTypeDefinition = 116
+export const ExtensionHostOrganizeImports = 117
