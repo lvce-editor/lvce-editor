@@ -1,10 +1,8 @@
-// @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.ts'
-// @ts-ignore
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
-// @ts-ignore
-export const openFind = async (state) => {
-  await Viewlet.openWidget(ViewletModuleId.FindWidget)
+const FindWidget = 'FindWidget'
+
+export const openFind = async (state: any) => {
+  await RendererWorker.invoke('Viewlet.openWidget', FindWidget)
   return state
 }
