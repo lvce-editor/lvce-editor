@@ -75,9 +75,6 @@ const startSynching = async (extensionHost) => {
 
   const instances = ViewletStates.getAllInstances()
   const editorInstance = ViewletStates.getInstance(ViewletModuleId.EditorText)
-  console.log({ editorInstance })
-  console.log({ all: ViewletStates.getAllInstances() })
-  console.log({ allCopy: { ...ViewletStates.getAllInstances() } })
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
