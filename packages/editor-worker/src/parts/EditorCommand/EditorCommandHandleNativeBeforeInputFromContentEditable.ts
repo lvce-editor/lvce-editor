@@ -1,8 +1,5 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
-// @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import * as EditorGetSelectionFromNativeRange from './EditorCommandGetSelectionFromNativeRange.ts'
 
@@ -31,8 +28,7 @@ const getChanges = (editor, data, range) => {
   return changes
 }
 
-// @ts-ignore
-export const handleBeforeInputFromContentEditable = (editor, data, range) => {
+export const handleBeforeInputFromContentEditable = (editor: any, data: any, range: any) => {
   const changes = getChanges(editor, data, range)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
