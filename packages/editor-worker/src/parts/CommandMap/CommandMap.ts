@@ -53,6 +53,8 @@ import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleCl
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
+import * as MoveRectangleSelection from '../EditorCommand/EditorCommandMoveRectangleSelection.ts'
+import * as MoveRectangleSelectionPx from '../EditorCommand/EditorCommandMoveRectangleSelectionPx.ts'
 import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
 import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
@@ -79,6 +81,7 @@ import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
 import * as SetSelections from '../EditorCommand/EditorCommandSetSelections.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
+import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as EditorTabCompletion from '../EditorCommand/EditorCommandTabCompletion.ts'
 import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleBlockComment.ts'
@@ -156,6 +159,8 @@ export const commandMap = {
   'Editor.insertLineBreak': InsertLineBreak.insertLineBreak,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
+  'Editor.moveRectangleSelection': MoveRectangleSelection.moveRectangleSelection,
+  'Editor.moveRectangleSelectionPx': MoveRectangleSelectionPx.moveRectangleSelectionPx,
   'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
   'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
   'Editor.openFind': OpenFind.openFind,
@@ -183,6 +188,7 @@ export const commandMap = {
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
   'Editor.showHover': EditorShowHover.showHover,
+  'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
   'Editor.tabCompletion': EditorTabCompletion.tabCompletion,
   'Editor.toggleBlockComment': EditorToggleBlockComment.toggleBlockComment,
