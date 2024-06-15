@@ -1,4 +1,4 @@
-import * as ViewletActivityBar from './ViewletActivityBar.js'
+import * as ViewletActivityBar from './ViewletActivityBar.ts'
 
 export const Events = {
   'SourceControl.changeBadgeCount': ViewletActivityBar.updateSourceControlCount,
@@ -6,7 +6,7 @@ export const Events = {
   'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
 }
 
-export * from './ViewletActivityBar.js'
+export * from './ViewletActivityBar.ts'
 export * from './ViewletActivityBarCommands.js'
 export * from './ViewletActivityBarCss.js'
 export * from './ViewletActivityBarKeyBindings.js'

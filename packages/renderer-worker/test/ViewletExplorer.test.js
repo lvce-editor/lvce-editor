@@ -3242,7 +3242,6 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
 })
 
 test.skip('event - workspace change', async () => {
-  const state = ViewletExplorer.create(1, 0, 0, 0, 0)
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {

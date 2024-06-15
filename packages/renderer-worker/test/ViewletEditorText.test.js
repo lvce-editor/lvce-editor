@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -13,7 +13,6 @@ jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', ()
 })
 
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
-const MeasureTextWidth = await import('../src/parts/MeasureTextWidth/MeasureTextWidth.js')
 
 test('resize - increase height', () => {
   const state = {

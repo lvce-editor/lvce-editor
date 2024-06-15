@@ -2,7 +2,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const map = {
   [ViewletModuleId.About]: () => import('../ViewletAbout/ViewletAbout.ipc.js'),
-  [ViewletModuleId.ActivityBar]: () => import('../ViewletActivityBar/ViewletActivityBar.ipc.js'),
+  [ViewletModuleId.ActivityBar]: () => import('../ViewletActivityBar/ViewletActivityBar.ipc.ts'),
   [ViewletModuleId.Audio]: () => import('../ViewletAudio/ViewletAudio.ipc.js'),
   [ViewletModuleId.BrowserViewOverview]: () => import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js'),
   [ViewletModuleId.Clock]: () => import('../ViewletClock/ViewletClock.ipc.js'),

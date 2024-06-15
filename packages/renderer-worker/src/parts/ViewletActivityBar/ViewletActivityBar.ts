@@ -1,7 +1,9 @@
-import * as GetActivityBarItems from '../GetActivityBarItems/GetActivityBarItems.js'
+import * as GetActivityBarItems from '../GetActivityBarItems/GetActivityBarItems.ts'
+import * as GetFilteredActivityBarItems from '../GetFilteredActivityBarItems/GetFilteredActivityBarItems.ts'
 import * as Height from '../Height/Height.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import type { ActivityBarState } from './ActivityBarState.ts'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
@@ -12,7 +14,7 @@ import { focusIndex } from './ViewletActivityBarFocusIndex.js'
 // TODO this should be create
 // TODO unregister listeners when hidden
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height): ActivityBarState => {
   return {
     uid: id,
     // TODO declarative event api is good, but need to bind
@@ -25,6 +27,7 @@ export const create = (id, uri, x, y, width, height) => {
       'SideBar.viewletChange': 8013,
     },
     activityBarItems: [],
+    filteredItems: [],
     focusedIndex: -1,
     selectedIndex: -1,
     focused: false,
@@ -36,15 +39,17 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state: ActivityBarState): Promise<ActivityBarState> => {
   const activityBarItems = GetActivityBarItems.getActivityBarItems()
   const sideBar = ViewletStates.getInstance(ViewletModuleId.SideBar)
   const viewletId = sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
   const selectedIndex = findIndex(activityBarItems, viewletId)
+  const filteredItems = GetFilteredActivityBarItems.getFilteredActivityBarItems(activityBarItems, state.height, state.itemHeight)
   return {
     ...state,
     selectedIndex,
     activityBarItems,
+    filteredItems,
   }
 }
 

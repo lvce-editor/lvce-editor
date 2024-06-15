@@ -3,17 +3,20 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetProblemsItemsVirtualDom from '../GetProblemsItemsVirtualDom/GetProblemsItemsVirtualDom.js'
 import * as ProblemStrings from '../ProblemStrings/ProblemStrings.js'
 import * as GetProblemsFilterVirtualDom from '../GetProblemsFilterVirtualDom/GetProblemsFilterVirtualDom.js'
+import * as DomId from '../DomId/DomId.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 
 export const getProblemsVirtualDom = (viewMode, problems, filterValue, isSmall) => {
   const dom = []
-
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'Viewlet Problems',
+    className: MergeClassNames.mergeClassNames(ClassNames.Viewlet, ClassNames.Problems),
     tabIndex: 0,
     onPointerDown: DomEventListenerFunctions.HandlePointerDown,
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
+    onBlur: DomEventListenerFunctions.HandleBlur,
     childCount: 1,
   })
   if (isSmall) {
@@ -21,7 +24,7 @@ export const getProblemsVirtualDom = (viewMode, problems, filterValue, isSmall) 
     dom.push(
       ...GetProblemsFilterVirtualDom.getProblemsFilterVirtualDom({
         type: ActionType.ProblemsFilter,
-        id: 'Filter',
+        id: DomId.Filter,
         command: DomEventListenerFunctions.HandleFilterInput,
         badgeText: '',
         placeholder: ProblemStrings.filter(),

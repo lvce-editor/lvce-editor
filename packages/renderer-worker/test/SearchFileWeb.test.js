@@ -1,6 +1,6 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as SearchFileWeb from '../src/parts/SearchFileWeb/SearchFileWeb.js'
+import { beforeEach, expect, test } from '@jest/globals'
 import * as FileSystemWeb from '../src/parts/FileSystem/FileSystemWeb.js'
+import * as SearchFileWeb from '../src/parts/SearchFileWeb/SearchFileWeb.js'
 
 beforeEach(() => {
   FileSystemWeb.state.files = Object.create(null)

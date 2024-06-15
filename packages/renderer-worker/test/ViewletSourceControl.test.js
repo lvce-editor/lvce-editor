@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -19,7 +19,6 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostSourceControl.
 })
 
 const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.ipc.js')
-const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 test('create', () => {
   const state = ViewletSourceControl.create()

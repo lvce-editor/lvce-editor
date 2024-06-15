@@ -1,9 +1,10 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 import * as ViewletActivityBarFocusNext from '../src/parts/ViewletActivityBar/ViewletActivityBarFocusNext.js'
 
 test('focusNext', () => {
   const state = {
+    // @ts-ignore
     ...ViewletActivityBar.create(),
     focusedIndex: 0,
   }

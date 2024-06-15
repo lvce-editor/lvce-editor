@@ -10,6 +10,7 @@ export const Commands = {
   focusPrevious: ViewletProblems.focusPrevious,
   getBadgeCount: ViewletProblems.getBadgeCount,
   handleClickAt: ViewletProblems.handleClickAt,
+  handleBlur: ViewletProblems.handleBlur,
   handleContextMenu: ViewletProblems.handleContextMenu,
   handleFilterInput: ViewletProblems.handleFilterInput,
   handleArrowLeft: ViewletProblems.handleArrowLeft,

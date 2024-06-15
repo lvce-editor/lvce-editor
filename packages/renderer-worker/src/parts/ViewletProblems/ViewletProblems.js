@@ -239,3 +239,10 @@ export const handleArrowRight = (state) => {
     collapsedUris: newCollapsedUris,
   }
 }
+
+export const handleBlur = (state) => {
+  return {
+    ...state,
+    focusedIndex: -2,
+  }
+}

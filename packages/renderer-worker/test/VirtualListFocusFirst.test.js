@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as VirtualListFocusFirst from '../src/parts/VirtualList/VirtualListFocusFirst.js'
 
 test('focusFirst', () => {

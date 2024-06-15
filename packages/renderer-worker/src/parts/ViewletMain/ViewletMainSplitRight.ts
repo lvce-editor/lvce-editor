@@ -1,8 +1,34 @@
 import * as Assert from '../Assert/Assert.ts'
+import type { EditorGroup } from '../EditorGroup/EditorGroup.ts'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-const getNewGroups = (groups, x, y, width, height) => {
+const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, width: number, height: number): readonly EditorGroup[] => {
+  if (groups.length === 0) {
+    return [
+      {
+        x: x,
+        y: y,
+        width: width / 2,
+        height: height,
+        editors: [],
+        tabsUid: 0,
+        activeIndex: -1,
+      },
+      {
+        x: x + width / 2,
+        y: y,
+        width: width / 2,
+        height: height,
+        editors: [],
+        tabsUid: 0,
+        activeIndex: -1,
+      },
+    ]
+  }
   const lastGroup = groups.at(-1)
+  if (!lastGroup) {
+    throw new Error('missing last group')
+  }
   return [
     ...groups.slice(0, -1),
     {
@@ -11,6 +37,7 @@ const getNewGroups = (groups, x, y, width, height) => {
       y: lastGroup.y,
       width: lastGroup.width / 2,
       height: lastGroup.height,
+      activeIndex: -1,
     },
     {
       x: lastGroup.x + lastGroup.width / 2,
@@ -19,6 +46,7 @@ const getNewGroups = (groups, x, y, width, height) => {
       height: lastGroup.height,
       editors: [],
       tabsUid: 0,
+      activeIndex: -1,
     },
   ]
 }
@@ -26,8 +54,11 @@ const getNewGroups = (groups, x, y, width, height) => {
 export const splitRight = (state) => {
   const { groups, x, y, width, height, tabHeight } = state
   const newGroups = getNewGroups(groups, x, y, width, height)
-  const commands = []
+  const commands: any[] = []
   const lastGroup = newGroups.at(-2)
+  if (!lastGroup) {
+    throw new Error('group not found')
+  }
   const { activeIndex, editors, tabsUid } = lastGroup
   const editor = editors[activeIndex]
   const dimensions = {

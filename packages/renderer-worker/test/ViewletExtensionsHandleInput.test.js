@@ -1,5 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -69,10 +68,6 @@ const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
 const ViewletExtensionsHandleInput = await import('../src/parts/ViewletExtensions/ViewletExtensionsHandleInput.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
-
-const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
-const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
 // TODO test when error handling when `getMarketplaceUrl` fails
 test.skip('handleInput', async () => {

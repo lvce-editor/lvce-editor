@@ -2,8 +2,9 @@ import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFl
 import * as Icon from '../Icon/Icon.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import type { ActivityBarItem } from '../ActivityBarItem/ActivityBarItem.ts'
 
-export const getActivityBarItems = () => {
+export const getActivityBarItems = (): readonly ActivityBarItem[] => {
   return [
     // Top
     {

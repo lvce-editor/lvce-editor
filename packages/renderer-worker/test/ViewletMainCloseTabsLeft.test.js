@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as Id from '../src/parts/Id/Id.js'
 
 beforeEach(() => {
@@ -44,7 +44,6 @@ jest.unstable_mockModule('../src/parts/ViewletEditorText/ViewletEditorText.js', 
 })
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
-const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const ViewletMainCloseTabsLeft = await import('../src/parts/ViewletMain/ViewletMainCloseTabsLeft.js')
