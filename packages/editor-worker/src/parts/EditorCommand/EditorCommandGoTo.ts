@@ -1,9 +1,5 @@
-import * as Command from '../Command/Command.ts'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
-// import * as Logger from '../Logger/Logger.ts'
-// @ts-ignore
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorGetWordAt from './EditorCommandGetWordAt.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
@@ -43,7 +39,7 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
       endRowIndex: definition.endRowIndex,
       endColumnIndex: definition.endColumnIndex,
     }
-    await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ uri, /* focus */ true, context)
+    await RendererWorker.invoke(/* Main.openUri */ 'Main.openUri', /* uri */ uri, /* focus */ true, context)
     return editor
   } catch (error) {
     // TODO if editor is already disposed at this point, do nothing

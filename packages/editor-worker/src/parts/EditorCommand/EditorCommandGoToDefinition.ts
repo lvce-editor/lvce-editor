@@ -1,8 +1,5 @@
-// @ts-ignore
 import * as Definition from '../Definition/Definition.ts'
-// @ts-ignore
 import * as EditorStrings from '../EditorStrings/EditorStrings.ts'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorGoTo from './EditorCommandGoTo.ts'
 
@@ -55,8 +52,7 @@ const isNoProviderFoundError = (error) => {
   )
 }
 
-// @ts-ignore
-export const goToDefinition = (editor) => {
+export const goToDefinition = (editor: any) => {
   return EditorGoTo.goTo({
     editor,
     getLocation,

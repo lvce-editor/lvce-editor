@@ -86,3 +86,4 @@ export const Languages = 85
 export const FileWatcher = 86
 export const ExtensionHostBraceCompletion = 114
 export const ExtensionHostDefinition = 115
+export const ExtensionHostTypeDefinition = 116

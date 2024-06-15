@@ -1,4 +1,5 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 // prettier-ignore
 
@@ -54,6 +55,8 @@ const ids = [
   'deleteWordPartRight',
   'deleteWordRight',
   'findAllReferences',
+  'goToDefinition',
+  'goToTypeDefinition',
   'handleDoubleClick',
   'handleMouseDown',
   'handleMouseMove',
@@ -101,6 +104,12 @@ const ids = [
 export const Commands = {
   // TODO command to set cursor position
   ...wrapEditorCommands(ids),
+
+  // TODO
+  async showOverlayMessage(state, editor, ...args) {
+    await RendererProcess.invoke(...args)
+    return state
+  },
 }
 
 // prettier-ignore
@@ -110,8 +119,6 @@ export const LazyCommands = {
   closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
-  goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
-  goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
   handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
