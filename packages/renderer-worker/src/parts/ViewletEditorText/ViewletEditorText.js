@@ -231,7 +231,6 @@ export const contentLoadedEffects = async (state) => {
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   await updateDiagnostics(state)
-  console.log('dispatch load')
 }
 
 export const handleLanguagesChanged = (state) => {
