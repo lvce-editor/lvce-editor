@@ -44,7 +44,6 @@ const startSynching = async (extensionHost) => {
     return
   }
   extensionHost.ipc.isSynching = true
-  console.log('add change listener')
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
     return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncFull', editor.uri, editor.uid, editor.languageId, text)
