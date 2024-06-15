@@ -34,7 +34,10 @@ import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinit
 import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
 import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
 import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.ts'
+import * as HandleFocus from '../EditorCommand/EditorCommandHandleFocus.ts'
 import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.ts'
+import * as HandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.ts'
+import * as EditorCommandHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.ts'
 import * as EditorCommandHandleNativeBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.ts'
 import * as HandleScrollBarHorizontalMove from '../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.ts'
 import * as HandleScrollBarHorizontalPointerDown from '../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.ts'
@@ -58,22 +61,25 @@ import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.ts'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.ts'
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
-import * as HandleFocus from '../EditorCommand/EditorCommandHandleFocus.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
+import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleBlockComment.ts'
+import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
+import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
-import * as HandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.ts'
-import * as EditorCommandHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
   'Editor.addCursorBelow': AddCursorBelow.addCursorBelow,
+  'Editor.applyEdit': EditorApplyEdit.applyEdit,
+  'Editor.braceCompletion': EditorBraceCompletion.braceCompletion,
   'Editor.cancelSelection': CancelSelection.cancelSelection,
+  'Editor.closeCompletion': EditorCloseCompletion.closeCompletion,
   'Editor.compositionEnd': Composition.compositionEnd,
   'Editor.compositionStart': Composition.compositionStart,
   'Editor.compositionUpdate': Composition.compositionUpdate,
@@ -88,6 +94,7 @@ export const commandMap = {
   'Editor.cursorHome': CursorHome.cursorHome,
   'Editor.cursorLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorRight': CursorCharacterRight.cursorCharacterRight,
+  'Editor.cursorSet': EditorCursorSet.cursorSet,
   'Editor.cursorUp': CursorUp.cursorUp,
   'Editor.cursorWordLeft': CursorWordLeft.cursorWordLeft,
   'Editor.cursorWordPartLeft': CursorWordPartLeft.cursorWordPartLeft,
@@ -98,20 +105,34 @@ export const commandMap = {
   'Editor.deleteAllRight': DeleteAllRight.deleteAllRight,
   'Editor.deleteCharacterLeft': DeleteCharacterLeft.deleteCharacterLeft,
   'Editor.deleteCharacterRight': DeleteCharacterRight.deleteCharacterRight,
-  'Editor.deleteRight': DeleteCharacterRight.deleteCharacterRight,
   'Editor.deleteHorizontalRight': DeleteHorizontalRight.editorDeleteHorizontalRight,
   'Editor.deleteLeft': DeleteCharacterLeft.deleteCharacterLeft,
+  'Editor.deleteRight': DeleteCharacterRight.deleteCharacterRight,
   'Editor.deleteWordLeft': DeleteWordLeft.deleteWordLeft,
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.format': EditorFormat.format,
+  'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
+  'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
+  'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
   'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
+  'Editor.handleFocus': HandleFocus.handleFocus,
   'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
+  'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
+  'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
+  'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
+  'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
+  'Editor.handleScrollBarMove': HandleScrollBarMove.handleScrollBarMove,
+  'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
+  'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
   'Editor.indendLess': IndentLess.indentLess,
   'Editor.indentMore': IndentMore.indentMore,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
+  'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
   'Editor.save': Save.save,
   'Editor.selectAll': SelectAll.selectAll,
@@ -129,23 +150,8 @@ export const commandMap = {
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
-  'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
-  'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
-  'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
-  'Editor.handleScrollBarMove': HandleScrollBarMove.handleScrollBarMove,
-  'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
-  'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
-  'Editor.paste': EditorPaste.paste,
+  'Editor.toggleBlockComment': EditorToggleBlockComment.toggleBlockComment,
+  'Editor.toggleComment': EditorToggleComment.toggleComment,
+  'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
   'Editor.undo': EditorUndo.undo,
-  'Editor.format': EditorFormat.format,
-  'Editor.applyEdit': EditorApplyEdit.applyEdit,
-  'Editor.braceCompletion': EditorBraceCompletion.braceCompletion,
-  'Editor.closeCompletion': EditorCloseCompletion.closeCompletion,
-  'Editor.cursorSet': EditorCursorSet.cursorSet,
-  'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
-  'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
-  'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
-  'Editor.handleFocus': HandleFocus.handleFocus,
-  'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
-  'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
 }

@@ -1,14 +1,10 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as GetLineComment from '../GetLineComment/GetLineComment.ts'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 const RE_WHITESPACE_AT_START = /^\s+/
 
-// @ts-ignore
-const getLineCommentEdit = (rowIndex, line, lineComment) => {
+const getLineCommentEdit = (rowIndex: number, line: string, lineComment: any) => {
   const whitespaceMatch = line.match(RE_WHITESPACE_AT_START)
   const index = whitespaceMatch ? whitespaceMatch[0].length : 0
   if (line.slice(index).startsWith(lineComment)) {
