@@ -1,16 +1,13 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
-// @ts-ignore
 import * as TabCompletion from '../TabCompletion/TabCompletion.ts'
 import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 import * as EditorSnippet from './EditorCommandSnippet.ts'
 
-// @ts-ignore
-const getErrorMessage = (error) => {
+const getErrorMessage = (error: any) => {
   return `${error}`
 }
 
-// @ts-ignore
-export const tabCompletion = async (editor) => {
+export const tabCompletion = async (editor: any) => {
   try {
     // TODO race condition
     // TODO get tab completion for each cursor
