@@ -51,6 +51,8 @@ import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleCl
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
+import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
+import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
@@ -72,14 +74,13 @@ import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
+import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as EditorTabCompletion from '../EditorCommand/EditorCommandTabCompletion.ts'
 import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleBlockComment.ts'
 import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
 import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
-import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
-import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
@@ -148,6 +149,8 @@ export const commandMap = {
   'Editor.insertLineBreak': InsertLineBreak.insertLineBreak,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
+  'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
+  'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
   'Editor.openFind': OpenFind.openFind,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
@@ -169,12 +172,11 @@ export const commandMap = {
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.showHover': EditorShowHover.showHover,
+  'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
   'Editor.tabCompletion': EditorTabCompletion.tabCompletion,
   'Editor.toggleBlockComment': EditorToggleBlockComment.toggleBlockComment,
   'Editor.toggleComment': EditorToggleComment.toggleComment,
   'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
   'Editor.undo': EditorUndo.undo,
-  'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
-  'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
 }
