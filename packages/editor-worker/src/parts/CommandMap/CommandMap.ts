@@ -80,6 +80,7 @@ import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
+import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as EditorTabCompletion from '../EditorCommand/EditorCommandTabCompletion.ts'
 import * as EditorType from '../EditorCommand/EditorCommandType.ts'
@@ -185,6 +186,7 @@ export const commandMap = {
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
   'Editor.showHover': EditorShowHover.showHover,
+  'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
   'Editor.tabCompletion': EditorTabCompletion.tabCompletion,
   'Editor.toggleBlockComment': EditorToggleBlockComment.toggleBlockComment,

@@ -105,6 +105,7 @@ const ids = [
   'setDelta',
   'setDeltaY',
   'showHover',
+  'showSourceActions',
   'sortLinesAscending',
   'toggleBlockComment',
   'toggleComment',
@@ -143,7 +144,6 @@ export const LazyCommands = {
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
-  showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
