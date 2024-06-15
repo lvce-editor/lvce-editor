@@ -126,7 +126,6 @@ export const LazyCommands = {
   openFind: () => import('../EditorCommand/EditorCommandOpenFind.js'),
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   selectInsideString: () => import('../EditorCommand/EditorCommandSelectInsideString.js'),
-  selectNextOccurrence: () => import('../EditorCommand/EditorCommandSelectNextOccurrence.js'),
   setDecorations: () => import('../EditorCommand/EditorCommandSetDecorations.js'),
   setDeltaY: () => import('../EditorCommand/EditorCommandSetDelta.js'),
   setDelta: () => import('../EditorCommand/EditorCommandSetDelta.js'),
