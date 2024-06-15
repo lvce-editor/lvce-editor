@@ -222,15 +222,15 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
+  GlobalEventBus.emitEvent('editor.create', state)
+  GlobalEventBus.addListener('editor.change', handleEditorChange)
+  Tokenizer.addConnectedEditor(state.uid)
   const newLanguageId = getLanguageId(state)
   await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   await updateDiagnostics(state)
-  GlobalEventBus.emitEvent('editor.create', state)
-  GlobalEventBus.addListener('editor.change', handleEditorChange)
-  Tokenizer.addConnectedEditor(state.uid)
 }
 
 export const handleLanguagesChanged = (state) => {
