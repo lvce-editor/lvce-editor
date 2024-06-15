@@ -13,7 +13,6 @@ import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  console.log('opn uri')
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, uid, tabHeight } = state
   const x = state.x
   const y = state.y + tabHeight
