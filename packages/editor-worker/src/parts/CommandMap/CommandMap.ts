@@ -47,6 +47,8 @@ import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScroll
 import * as HandleScrollBarPointerDown from '../EditorCommand/EditorCommandHandleScrollBarPointerDown.ts'
 import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
 import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts'
+import * as HandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.ts'
+import * as HandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.ts'
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
@@ -74,6 +76,7 @@ import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
+import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
@@ -144,6 +147,8 @@ export const commandMap = {
   'Editor.handleScrollBarVerticalPointerMove': HandleScrollBarMove.handleScrollBarMove,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
+  'Editor.handleTouchMove': HandleTouchMove.handleTouchMove,
+  'Editor.handleTouchStart': HandleTouchStart.handleTouchStart,
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
   'Editor.indendLess': IndentLess.indentLess,
   'Editor.indentMore': IndentMore.indentMore,
@@ -173,6 +178,8 @@ export const commandMap = {
   'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
+  'Editor.setDelta': SetDelta.setDelta,
+  'Editor.setDeltaY': SetDelta.setDeltaY,
   'Editor.showHover': EditorShowHover.showHover,
   'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
