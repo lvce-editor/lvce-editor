@@ -40,6 +40,7 @@ import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.
 import * as HandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.ts'
 import * as EditorCommandHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.ts'
 import * as EditorCommandHandleNativeBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.ts'
+import * as HandlePointerCaptureLost from '../EditorCommand/EditorCommandHandlePointerCaptureLost.ts'
 import * as HandleScrollBarHorizontalMove from '../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.ts'
 import * as HandleScrollBarHorizontalPointerDown from '../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.ts'
 import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.ts'
@@ -124,10 +125,14 @@ export const commandMap = {
   'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
   'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
   'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
+  'Editor.handlePointerCaptureLost': HandlePointerCaptureLost.handlePointerCaptureLost,
   'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
   'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
   'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
   'Editor.handleScrollBarMove': HandleScrollBarMove.handleScrollBarMove,
+  'Editor.handleScrollBarPointerDown': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarVerticalPointerDown': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarVerticalPointerMove': HandleScrollBarMove.handleScrollBarMove,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
