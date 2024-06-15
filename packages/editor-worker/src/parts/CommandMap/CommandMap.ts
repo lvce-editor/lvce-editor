@@ -40,6 +40,7 @@ import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.
 import * as HandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.ts'
 import * as EditorCommandHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.ts'
 import * as EditorCommandHandleNativeBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.ts'
+import * as HandlePointerCaptureLost from '../EditorCommand/EditorCommandHandlePointerCaptureLost.ts'
 import * as HandleScrollBarHorizontalMove from '../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.ts'
 import * as HandleScrollBarHorizontalPointerDown from '../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.ts'
 import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.ts'
@@ -49,6 +50,7 @@ import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
+import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
@@ -64,7 +66,6 @@ import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextO
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
-import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
@@ -123,10 +124,14 @@ export const commandMap = {
   'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
   'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
   'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
+  'Editor.handlePointerCaptureLost': HandlePointerCaptureLost.handlePointerCaptureLost,
   'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
   'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
   'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
   'Editor.handleScrollBarMove': HandleScrollBarMove.handleScrollBarMove,
+  'Editor.handleScrollBarPointerDown': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarVerticalPointerDown': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarVerticalPointerMove': HandleScrollBarMove.handleScrollBarMove,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
