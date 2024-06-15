@@ -77,6 +77,7 @@ import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
+import * as SetDecorations from '../EditorCommand/EditorCommandSetDecorations.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
 import * as EditorTabCompletion from '../EditorCommand/EditorCommandTabCompletion.ts'
@@ -178,6 +179,7 @@ export const commandMap = {
   'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
+  'Editor.setDecorations': SetDecorations.setDecorations,
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
   'Editor.showHover': EditorShowHover.showHover,
