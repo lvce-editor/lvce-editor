@@ -1,16 +1,9 @@
-// import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.ts'
-// import * as Viewlet from '../Viewlet/Viewlet.ts'
-// import * as ViewletStates from '../ViewletStates/ViewletStates.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
 export const closeCompletion = async (editor: any) => {
   // TODO
-  // const completionUid = editor.completionUid
-  // const instance = ViewletStates.getInstance(completionUid)
-  // editor.completionState = EditorCompletionState.None
-  // editor.completionUid = 0
-  // if (!instance) {
-  //   return editor
-  // }
-  // await Viewlet.dispose(completionUid)
+  const completionUid = editor.completionUid
+  await RendererWorker.invoke('Viewlet.dispose', completionUid)
+  editor.completionUid = 0
   return editor
 }

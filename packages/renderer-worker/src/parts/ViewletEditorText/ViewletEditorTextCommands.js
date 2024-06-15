@@ -26,6 +26,7 @@ const ids = [
   'applyEdit',
   'braceCompletion',
   'compositionEnd',
+  'closeCompletion',
   'compositionStart',
   'compositionUpdate',
   'contextMenu',
@@ -133,7 +134,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
