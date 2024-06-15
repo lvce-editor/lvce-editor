@@ -76,7 +76,7 @@ export const scheduleSelections = (editor, selectionEdits) => {
  * @returns
  */
 // @ts-ignore
-export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined) => {
+export const scheduleDocumentAndCursorsSelections = (editor: any, changes: any, selectionChanges: any = undefined) => {
   Assert.object(editor)
   Assert.array(changes)
   if (changes.length === 0) {
