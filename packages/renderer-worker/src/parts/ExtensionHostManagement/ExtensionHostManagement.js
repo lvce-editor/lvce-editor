@@ -44,6 +44,7 @@ const startSynching = async (extensionHost) => {
     return
   }
   extensionHost.ipc.isSynching = true
+  console.log('add change listener')
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
     return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncFull', editor.uri, editor.uid, editor.languageId, text)
@@ -75,12 +76,15 @@ const startSynching = async (extensionHost) => {
   const instances = ViewletStates.getAllInstances()
   const editorInstance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   console.log({ editorInstance })
+  console.log({ all: ViewletStates.getAllInstances() })
+  console.log({ allCopy: { ...ViewletStates.getAllInstances() } })
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
   // @ts-ignore
   await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
   extensionHost.ipc.invoke('ExtensionHostConfiguration.setConfiguration', Preferences.getAll())
+  console.trace('did start sync')
 }
 
 const actuallyActivateExtension = async (extensionHost, extension) => {
