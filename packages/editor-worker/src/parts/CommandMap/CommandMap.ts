@@ -52,6 +52,7 @@ import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
+import * as OrganizeImports from '../EditorCommand/EditorCommandOrganizeImports.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
@@ -147,6 +148,7 @@ export const commandMap = {
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
   'Editor.openFind': OpenFind.openFind,
+  'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
   'Editor.save': Save.save,
