@@ -104,6 +104,7 @@ const ids = [
   'toggleBlockComment',
   'toggleComment',
   'toggleLineComment',
+  'type',
   'undo',
 ]
 
@@ -142,7 +143,6 @@ export const LazyCommands = {
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
   setSelections: () => import('../EditorCommand/EditorCommandSetSelections.js'),
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
-  type: () => import('../EditorCommand/EditorCommandType.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
