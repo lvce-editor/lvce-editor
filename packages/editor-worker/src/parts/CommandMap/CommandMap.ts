@@ -62,6 +62,7 @@ import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectP
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
 import * as HandleFocus from '../EditorCommand/EditorCommandHandleFocus.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
+import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
@@ -75,11 +76,11 @@ import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
   'Editor.addCursorBelow': AddCursorBelow.addCursorBelow,
-  'Editor.cancelSelection': CancelSelection.cancelSelection,
-  'Editor.compositionEnd': Composition.compositionEnd,
   'Editor.applyEdit': EditorApplyEdit.applyEdit,
   'Editor.braceCompletion': EditorBraceCompletion.braceCompletion,
+  'Editor.cancelSelection': CancelSelection.cancelSelection,
   'Editor.closeCompletion': EditorCloseCompletion.closeCompletion,
+  'Editor.compositionEnd': Composition.compositionEnd,
   'Editor.compositionStart': Composition.compositionStart,
   'Editor.compositionUpdate': Composition.compositionUpdate,
   'Editor.contextMenu': ContextMenu.handleContextMenu,
@@ -129,6 +130,7 @@ export const commandMap = {
   'Editor.handleTripleClick': HandleTripleClick.handleTripleClick,
   'Editor.indendLess': IndentLess.indentLess,
   'Editor.indentMore': IndentMore.indentMore,
+  'Editor.insertLineBreak': InsertLineBreak.insertLineBreak,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
   'Editor.paste': EditorPaste.paste,

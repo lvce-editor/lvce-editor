@@ -82,6 +82,7 @@ const ids = [
   'sortLinesAscending',
   'paste',
   'undo',
+  'insertLineBreak',
 ]
 
 export const Commands = {
@@ -115,7 +116,6 @@ export const LazyCommands = {
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
   handleTouchStart: () => import('../EditorCommand/EditorCommandHandleTouchStart.js'),
-  insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),
   moveRectangleSelection: () => import('../EditorCommand/EditorCommandMoveRectangleSelection.js'),
   moveRectangleSelectionPx: () => import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),
   moveSelection: () => import('../EditorCommand/EditorCommandMoveSelection.js'),
