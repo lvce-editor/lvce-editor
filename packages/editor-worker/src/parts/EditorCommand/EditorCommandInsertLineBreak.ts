@@ -5,8 +5,7 @@ import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as Languages from '../Languages/Languages.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
-// @ts-ignore
-const getIncreaseIndentRegex = (languageConfiguration) => {
+const getIncreaseIndentRegex = (languageConfiguration: any): RegExp | undefined => {
   if (
     languageConfiguration &&
     languageConfiguration.indentationRules &&
@@ -19,16 +18,14 @@ const getIncreaseIndentRegex = (languageConfiguration) => {
   return undefined
 }
 
-// @ts-ignore
-const shouldIncreaseIndent = (before, increaseIndentRegex) => {
+const shouldIncreaseIndent = (before: any, increaseIndentRegex: any) => {
   if (!increaseIndentRegex) {
     return false
   }
   return increaseIndentRegex.test(before)
 }
 
-// @ts-ignore
-const getChanges = (lines, selections, languageConfiguration) => {
+const getChanges = (lines: string[], selections: any, languageConfiguration: any) => {
   const changes: any[] = []
   const selectionChanges: any[] = []
   const increaseIndentRegex = getIncreaseIndentRegex(languageConfiguration)
@@ -84,11 +81,9 @@ const getChanges = (lines, selections, languageConfiguration) => {
   return { changes, selectionChanges: new Uint32Array(selectionChanges) }
 }
 
-// @ts-ignore
-export const insertLineBreak = async (editor) => {
+export const insertLineBreak = async (editor: any) => {
   const { lines, selections } = editor
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)
   const { changes, selectionChanges } = getChanges(lines, selections, languageConfiguration)
-  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

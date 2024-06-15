@@ -60,6 +60,7 @@ import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectP
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
 import * as HandleFocus from '../EditorCommand/EditorCommandHandleFocus.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
+import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
@@ -148,4 +149,5 @@ export const commandMap = {
   'Editor.handleFocus': HandleFocus.handleFocus,
   'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
   'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
+  'Editor.insertLineBreak': InsertLineBreak.insertLineBreak,
 }
