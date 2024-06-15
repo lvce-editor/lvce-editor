@@ -168,6 +168,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostBraceCompletion.ipc.js')
     case ModuleId.ExtensionHostDefinition:
       return import('../ExtensionHost/ExtensionHostDefinition.ipc.js')
+    case ModuleId.ExtensionHostTypeDefinition:
+      return import('../ExtensionHost/ExtensionHostTypeDefinition.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

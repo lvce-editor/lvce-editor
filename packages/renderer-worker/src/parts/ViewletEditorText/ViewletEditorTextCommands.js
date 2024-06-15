@@ -1,4 +1,5 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 // prettier-ignore
 
@@ -54,8 +55,12 @@ const ids = [
   'deleteWordPartRight',
   'deleteWordRight',
   'findAllReferences',
+  'goToDefinition',
+  'goToTypeDefinition',
   'handleDoubleClick',
   'handleMouseDown',
+  'handleMouseMove',
+  'handleMouseMoveWithAltKey',
   'handleScrollBarClick',
   'handleScrollBarMove',
   'handleScrollBarPointerDown',
@@ -82,6 +87,7 @@ const ids = [
   'selectCharacterRight',
   'selectDown',
   'selectDown',
+  'selectInsideString',
   'selectLine',
   'selectNextOccurrence',
   'selectUp',
@@ -100,6 +106,12 @@ const ids = [
 export const Commands = {
   // TODO command to set cursor position
   ...wrapEditorCommands(ids),
+
+  // TODO
+  async showOverlayMessage(state, editor, ...args) {
+    await RendererProcess.invoke(...args)
+    return state
+  },
 }
 
 // prettier-ignore
@@ -109,13 +121,9 @@ export const LazyCommands = {
   closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
-  goToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
-  goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
   handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
-  handleMouseMove: () => import('../EditorCommand/EditorCommandHandleMouseMove.js'),
-  handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
   handleScrollBarHorizontalMove: () => import('../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.js'),
   handleScrollBarHorizontalPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.js'),
@@ -126,7 +134,6 @@ export const LazyCommands = {
   moveRectangleSelectionPx: () => import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
-  selectInsideString: () => import('../EditorCommand/EditorCommandSelectInsideString.js'),
   setDecorations: () => import('../EditorCommand/EditorCommandSetDecorations.js'),
   setDeltaY: () => import('../EditorCommand/EditorCommandSetDelta.js'),
   setDelta: () => import('../EditorCommand/EditorCommandSetDelta.js'),
