@@ -29,6 +29,7 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.ts
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.ts'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.ts'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.ts'
+import * as FindAllReferences from '../EditorCommand/EditorCommandFindAllReferences.ts'
 import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
 import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
 import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
@@ -113,6 +114,7 @@ export const commandMap = {
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.findAllReferences': FindAllReferences.findAllReferences,
   'Editor.format': EditorFormat.format,
   'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,

@@ -53,6 +53,7 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
+  'findAllReferences',
   'handleDoubleClick',
   'handleMouseDown',
   'handleSingleClick',
@@ -137,7 +138,6 @@ export const LazyCommands = {
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
-  findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
 }

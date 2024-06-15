@@ -1,7 +1,6 @@
-import * as Command from '../Command/Command.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
-// @ts-ignore
-export const findAllReferences = async (editor) => {
-  await Command.execute('SideBar.show', 'References', /* focus */ true)
+export const findAllReferences = async (editor: any) => {
+  await RendererWorker.invoke('SideBar.show', 'References', /* focus */ true)
   return editor
 }
