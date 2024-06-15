@@ -10,8 +10,7 @@ const isFormattingError = (error) => {
 }
 
 // TODO also format with cursor
-// @ts-ignore
-export const format = async (editor) => {
+export const format = async (editor: any) => {
   try {
     const edits = await Format.format(editor)
 
