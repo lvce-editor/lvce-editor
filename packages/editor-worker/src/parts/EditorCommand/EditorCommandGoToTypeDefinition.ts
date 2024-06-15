@@ -16,12 +16,11 @@ import * as EditorGoTo from './EditorCommandGoTo.ts'
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
 // @ts-ignore
-const getTypeDefinitionErrorMessage = (error) => {
+const getTypeDefinitionErrorMessage = (error: any) => {
   return `${error}`
 }
 
-// @ts-ignore
-const getLocation = async (editor, rowIndex, columnIndex) => {
+const getLocation = async (editor: any, rowIndex: number, columnIndex: number) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const definition = await TypeDefinition.getTypeDefinition(editor, offset)
   return definition
@@ -42,8 +41,7 @@ const getErrorMessage = (error) => {
   return `${error}`
 }
 
-// @ts-ignore
-const isNoProviderFoundError = (error) => {
+const isNoProviderFoundError = (error: any) => {
   return (
     error &&
     // @ts-ignore
@@ -53,8 +51,7 @@ const isNoProviderFoundError = (error) => {
   )
 }
 
-// @ts-ignore
-export const goToTypeDefinition = (editor, explicit = true) => {
+export const goToTypeDefinition = (editor: any, explicit = true) => {
   return EditorGoTo.goTo({
     editor,
     getLocation,
