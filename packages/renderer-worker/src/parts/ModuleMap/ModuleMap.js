@@ -194,6 +194,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.FileWatcher
     case 'ExtensionHostTypeDefinition':
       return ModuleId.ExtensionHostTypeDefinition
+    case 'ExtensionHostSelection':
+      return ModuleId.ExtensionHostSelection
     default:
       throw new Error(`module ${prefix} not found`)
   }
