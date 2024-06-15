@@ -1,9 +1,7 @@
-// @ts-ignore
-import * as OrganizeImports from '../OrganizeImports/OrganizeImports.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 import * as ApplyDocumentEdits from './EditorCommandApplyDocumentEdits.ts'
 
-// @ts-ignore
-export const organizeImports = async (editor) => {
-  const edits = await OrganizeImports.organizeImports(editor)
+export const organizeImports = async (editor: any) => {
+  const edits = await RendererWorker.invoke('ExtensionHostOrganizeImports.organizeImports', editor)
   return ApplyDocumentEdits.applyDocumentEdits(editor, edits)
 }

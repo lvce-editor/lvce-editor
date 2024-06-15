@@ -59,6 +59,7 @@ const ids = [
   'goToTypeDefinition',
   'handleDoubleClick',
   'handleMouseDown',
+  'handlePointerCaptureLost',
   'handleMouseMove',
   'handleMouseMoveWithAltKey',
   'handleScrollBarClick',
@@ -76,6 +77,7 @@ const ids = [
   'moveSelection',
   'moveSelectionPx',
   'openFind',
+  'organizeImports',
   'paste',
   'pasteText',
   'save',
@@ -144,7 +146,6 @@ export const LazyCommands = {
   type: () => import('../EditorCommand/EditorCommandType.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
-  organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {

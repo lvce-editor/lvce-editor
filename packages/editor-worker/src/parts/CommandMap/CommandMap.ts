@@ -54,6 +54,7 @@ import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.
 import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
 import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
+import * as OrganizeImports from '../EditorCommand/EditorCommandOrganizeImports.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
@@ -152,6 +153,7 @@ export const commandMap = {
   'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
   'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
   'Editor.openFind': OpenFind.openFind,
+  'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
   'Editor.save': Save.save,
