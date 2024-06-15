@@ -53,6 +53,10 @@ import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleCl
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
+import * as MoveRectangleSelection from '../EditorCommand/EditorCommandMoveRectangleSelection.ts'
+import * as MoveRectangleSelectionPx from '../EditorCommand/EditorCommandMoveRectangleSelectionPx.ts'
+import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
+import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
 import * as OrganizeImports from '../EditorCommand/EditorCommandOrganizeImports.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
@@ -81,8 +85,6 @@ import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleB
 import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
 import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
-import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
-import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
@@ -153,6 +155,10 @@ export const commandMap = {
   'Editor.insertLineBreak': InsertLineBreak.insertLineBreak,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
+  'Editor.moveRectangleSelection': MoveRectangleSelection.moveRectangleSelection,
+  'Editor.moveRectangleSelectionPx': MoveRectangleSelectionPx.moveRectangleSelectionPx,
+  'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
+  'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
   'Editor.openFind': OpenFind.openFind,
   'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
@@ -181,6 +187,4 @@ export const commandMap = {
   'Editor.toggleComment': EditorToggleComment.toggleComment,
   'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
   'Editor.undo': EditorUndo.undo,
-  'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
-  'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
 }
