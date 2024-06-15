@@ -51,6 +51,7 @@ import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleCl
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
+import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
@@ -143,6 +144,7 @@ export const commandMap = {
   'Editor.insertLineBreak': InsertLineBreak.insertLineBreak,
   'Editor.moveLineDown': MoveLineDown.moveLineDown,
   'Editor.moveLineUp': MoveLineUp.moveLineUp,
+  'Editor.openFind': OpenFind.openFind,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
   'Editor.save': Save.save,
