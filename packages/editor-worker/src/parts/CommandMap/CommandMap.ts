@@ -20,6 +20,7 @@ import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPar
 import * as CursorWordPartRight from '../EditorCommand/EditorCommandCursorWordPartRight.ts'
 import * as CursorWordRight from '../EditorCommand/EditorCommandCursorWordRight.ts'
 import * as Cut from '../EditorCommand/EditorCommandCut.ts'
+import * as SelectLine from '../EditorCommand/EditorCommandSelectLine.ts'
 import * as DeleteAllLeft from '../EditorCommand/EditorCommandDeleteAllLeft.ts'
 import * as DeleteAllRight from '../EditorCommand/EditorCommandDeleteAllRight.ts'
 import * as DeleteCharacterLeft from '../EditorCommand/EditorCommandDeleteCharacterLeft.ts'
@@ -144,6 +145,7 @@ export const commandMap = {
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
   'Editor.selectDown': SelectDown.selectDown,
   'Editor.selectionGrow': SelectionGrow.selectionGrow,
+  'Editor.selectLine': SelectLine.selectLine,
   'Editor.selectNextOccurrence': SelectNextOccurrence.selectNextOccurrence,
   'Editor.selectPreviousOccurrence': SelectPreviousOccurrence.selectPreviousOccurrence,
   'Editor.selectUp': SelectUp.selectUp,
