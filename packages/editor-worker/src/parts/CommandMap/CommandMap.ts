@@ -75,6 +75,7 @@ import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextO
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
+import * as HandleNativeSelectionChange from '../EditorCommand/EditorCommandHandleNativeSelectionChange.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
@@ -140,6 +141,7 @@ export const commandMap = {
   'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
   'Editor.handleMouseMove': HandleMouseMove.handleMouseMove,
   'Editor.handleMouseMoveWithAltKey': EditorCommandHandleMouseMoveWithAltKey.handleMouseMoveWithAltKey,
+  'Editor.handleNativeSelectionChange': HandleNativeSelectionChange.editorHandleNativeSelectionChange,
   'Editor.handlePointerCaptureLost': HandlePointerCaptureLost.handlePointerCaptureLost,
   'Editor.handleScrollBarClick': HandleScrollBarPointerDown.handleScrollBarPointerDown,
   'Editor.handleScrollBarHorizontalMove': HandleScrollBarHorizontalMove.handleScrollBarHorizontalMove,
