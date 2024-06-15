@@ -89,6 +89,7 @@ const ids = [
   'organizeImports',
   'paste',
   'pasteText',
+  'replaceRange',
   'save',
   'selectAll',
   'selectAllLeft',
@@ -143,7 +144,6 @@ export const LazyCommands = {
   setSelections: () => import('../EditorCommand/EditorCommandSetSelections.js'),
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
-  replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
