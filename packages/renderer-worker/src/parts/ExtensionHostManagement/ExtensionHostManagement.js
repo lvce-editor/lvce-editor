@@ -80,7 +80,6 @@ const startSynching = async (extensionHost) => {
   // @ts-ignore
   await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
   extensionHost.ipc.invoke('ExtensionHostConfiguration.setConfiguration', Preferences.getAll())
-  console.trace('did start sync')
 }
 
 const actuallyActivateExtension = async (extensionHost, extension) => {
