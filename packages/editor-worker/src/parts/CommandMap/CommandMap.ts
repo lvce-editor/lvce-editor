@@ -76,6 +76,7 @@ import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
+import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
 import * as SetSelections from '../EditorCommand/EditorCommandSetSelections.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as SortLinesAscending from '../EditorCommand/EditorCommandSortLinesAscending.ts'
@@ -83,6 +84,7 @@ import * as EditorTabCompletion from '../EditorCommand/EditorCommandTabCompletio
 import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleBlockComment.ts'
 import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
 import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
+import * as EditorType from '../EditorCommand/EditorCommandType.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
@@ -178,11 +180,14 @@ export const commandMap = {
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.setSelections': SetSelections.setSelections,
+  'Editor.setDelta': SetDelta.setDelta,
+  'Editor.setDeltaY': SetDelta.setDeltaY,
   'Editor.showHover': EditorShowHover.showHover,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
   'Editor.tabCompletion': EditorTabCompletion.tabCompletion,
   'Editor.toggleBlockComment': EditorToggleBlockComment.toggleBlockComment,
   'Editor.toggleComment': EditorToggleComment.toggleComment,
   'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
+  'Editor.type': EditorType.type,
   'Editor.undo': EditorUndo.undo,
 }

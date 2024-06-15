@@ -23,6 +23,7 @@ const wrapEditorCommands = (ids) => {
 const ids = [
   'addCursorAbove',
   'addCursorBelow',
+  'braceCompletion',
   'compositionEnd',
   'compositionStart',
   'compositionUpdate',
@@ -96,16 +97,18 @@ const ids = [
   'selectLine',
   'selectNextOccurrence',
   'selectUp',
-  'selectUp',
   'selectWord',
   'selectWordLeft',
   'selectWordRight',
   'setSelections',
+  'setDelta',
+  'setDeltaY',
   'showHover',
   'sortLinesAscending',
   'toggleBlockComment',
   'toggleComment',
   'toggleLineComment',
+  'type',
   'undo',
 ]
 
@@ -123,7 +126,6 @@ export const Commands = {
 // prettier-ignore
 export const LazyCommands = {
   applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
-  braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
   closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
@@ -137,11 +139,8 @@ export const LazyCommands = {
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   setDecorations: () => import('../EditorCommand/EditorCommandSetDecorations.js'),
-  setDeltaY: () => import('../EditorCommand/EditorCommandSetDelta.js'),
-  setDelta: () => import('../EditorCommand/EditorCommandSetDelta.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
-  type: () => import('../EditorCommand/EditorCommandType.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
