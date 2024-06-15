@@ -62,6 +62,7 @@ import * as SelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.ts
 import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.ts'
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.ts'
 import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.ts'
+import * as EditorSelectInsideString from '../EditorCommand/EditorCommandSelectInsideString.ts'
 import * as SelectLine from '../EditorCommand/EditorCommandSelectLine.ts'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.ts'
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
@@ -156,6 +157,7 @@ export const commandMap = {
   'Editor.selectCharacterLeft': SelectCharacterLeft.selectCharacterLeft,
   'Editor.selectCharacterRight': SelectCharacterRight.selectCharacterRight,
   'Editor.selectDown': SelectDown.selectDown,
+  'Editor.selectInsideString': EditorSelectInsideString.selectInsideString,
   'Editor.selectionGrow': SelectionGrow.selectionGrow,
   'Editor.selectLine': SelectLine.selectLine,
   'Editor.selectNextOccurrence': SelectNextOccurrence.selectNextOccurrence,
