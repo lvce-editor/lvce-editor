@@ -7,10 +7,8 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   await Workspace.setPath(tmpDir)
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await Main.openUri(`${tmpDir}/test.xyz`)
-  console.log('did open')
   await Editor.setCursor(0, 5)
 
-  console.log('ask format')
   // act
   await Editor.format()
 
