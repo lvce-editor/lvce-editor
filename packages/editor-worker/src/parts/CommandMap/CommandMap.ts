@@ -62,6 +62,7 @@ import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
 import * as SelectAll from '../EditorCommand/EditorCommandSelectAll.ts'
 import * as SelectAllLeft from '../EditorCommand/EditorCommandSelectAllLeft.ts'
+import * as SetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.ts'
 import * as SelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.ts'
 import * as SelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.ts'
 import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.ts'
@@ -179,6 +180,7 @@ export const commandMap = {
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
+  'Editor.setLanguageId': SetLanguageId.setLanguageId,
   'Editor.showHover': EditorShowHover.showHover,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
   'Editor.tabCompletion': EditorTabCompletion.tabCompletion,
