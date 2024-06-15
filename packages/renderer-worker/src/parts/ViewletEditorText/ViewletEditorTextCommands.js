@@ -20,10 +20,6 @@ const wrapEditorCommands = (ids) => {
 }
 
 const ids = [
-  'selectLine',
-  'copyLineDown',
-  'copyLineUp',
-  'cursorCharacterLeft',
   'addCursorAbove',
   'addCursorBelow',
   'compositionEnd',
@@ -31,6 +27,9 @@ const ids = [
   'compositionUpdate',
   'contextMenu',
   'copy',
+  'copyLineDown',
+  'copyLineUp',
+  'cursorCharacterLeft',
   'cursorCharacterRight',
   'cursorDown',
   'cursorEnd',
@@ -54,6 +53,7 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
+  'findAllReferences',
   'handleDoubleClick',
   'handleMouseDown',
   'handleSingleClick',
@@ -75,6 +75,7 @@ const ids = [
   'selectCharacterRight',
   'selectDown',
   'selectDown',
+  'selectLine',
   'selectNextOccurrence',
   'selectUp',
   'selectUp',
@@ -138,7 +139,6 @@ export const LazyCommands = {
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
-  findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
 }

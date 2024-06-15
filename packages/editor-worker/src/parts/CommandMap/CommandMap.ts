@@ -20,7 +20,6 @@ import * as CursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPar
 import * as CursorWordPartRight from '../EditorCommand/EditorCommandCursorWordPartRight.ts'
 import * as CursorWordRight from '../EditorCommand/EditorCommandCursorWordRight.ts'
 import * as Cut from '../EditorCommand/EditorCommandCut.ts'
-import * as SelectLine from '../EditorCommand/EditorCommandSelectLine.ts'
 import * as DeleteAllLeft from '../EditorCommand/EditorCommandDeleteAllLeft.ts'
 import * as DeleteAllRight from '../EditorCommand/EditorCommandDeleteAllRight.ts'
 import * as DeleteCharacterLeft from '../EditorCommand/EditorCommandDeleteCharacterLeft.ts'
@@ -30,6 +29,7 @@ import * as DeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.ts
 import * as DeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.ts'
 import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.ts'
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.ts'
+import * as FindAllReferences from '../EditorCommand/EditorCommandFindAllReferences.ts'
 import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
 import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
 import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
@@ -49,6 +49,7 @@ import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
+import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
 import * as Save from '../EditorCommand/EditorCommandSave.ts'
@@ -59,11 +60,11 @@ import * as SelectAllRight from '../EditorCommand/EditorCommandSelectAllRight.ts
 import * as SelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.ts'
 import * as SelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.ts'
 import * as SelectDown from '../EditorCommand/EditorCommandSelectDown.ts'
+import * as SelectLine from '../EditorCommand/EditorCommandSelectLine.ts'
 import * as SelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.ts'
 import * as SelectPreviousOccurrence from '../EditorCommand/EditorCommandSelectPreviousOccurrence.ts'
 import * as SelectUp from '../EditorCommand/EditorCommandSelectUp.ts'
 import * as SelectWord from '../EditorCommand/EditorCommandSelectWord.ts'
-import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
 import * as SelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.ts'
 import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.ts'
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
@@ -115,6 +116,7 @@ export const commandMap = {
   'Editor.deleteWordPartLeft': DeleteWordPartLeft.deleteWordPartLeft,
   'Editor.deleteWordPartRight': DeleteWordPartRight.deleteWordPartRight,
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
+  'Editor.findAllReferences': FindAllReferences.findAllReferences,
   'Editor.format': EditorFormat.format,
   'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
