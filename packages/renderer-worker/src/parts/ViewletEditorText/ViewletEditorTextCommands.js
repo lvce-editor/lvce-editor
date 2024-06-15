@@ -90,6 +90,7 @@ const ids = [
   'selectWord',
   'selectWordLeft',
   'selectWordRight',
+  'showHover',
   'sortLinesAscending',
   'toggleBlockComment',
   'toggleComment',
@@ -142,7 +143,6 @@ export const LazyCommands = {
   type: () => import('../EditorCommand/EditorCommandType.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
-  showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
   showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
 }
