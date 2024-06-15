@@ -101,7 +101,6 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     commands.push(['Viewlet.focus', instanceUid])
   }
   const latestState = ViewletStates.getState(state.uid)
-  console.log({ latestState })
   const latestPendingUid = latestState.pendingUid
   if (latestPendingUid !== instanceUid) {
     return {
