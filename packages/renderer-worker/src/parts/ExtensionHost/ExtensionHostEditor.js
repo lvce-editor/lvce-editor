@@ -6,6 +6,7 @@ import * as ExtensionHostShared from './ExtensionHostShared.js'
  * @returns
  */
 export const execute = ({ editor, args, event, method, combineResults, noProviderFoundMessage, noProviderFoundResult = undefined }) => {
+  console.log({ editor })
   return ExtensionHostShared.executeProviders({
     event: `${event}:${editor.languageId}`,
     method: method,

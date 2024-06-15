@@ -74,6 +74,7 @@ const startSynching = async (extensionHost) => {
 
   const instances = ViewletStates.getAllInstances()
   const editorInstance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+  console.log({ editorInstance })
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
