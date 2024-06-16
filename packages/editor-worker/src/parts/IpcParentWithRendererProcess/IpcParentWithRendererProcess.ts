@@ -1,9 +1,17 @@
 import * as GetData from '../GetData/GetData.ts'
+import * as SendMessagePortToRendererProcess from '../SendMessagePortToRendererProcess/SendMessagePortToRendererProcess.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.ts'
+import { IpcError } from '../IpcError/IpcError.ts'
 
-export const create = async ({ port }: { port: MessagePort }) => {
-  // TODO send messageprt to renderer process
-  // then wait for ready message
-  return port
+export const create = async () => {
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  await SendMessagePortToRendererProcess.sendMessagePortToRendererProcess(port1)
+  const event = await WaitForFirstMessage.waitForFirstMessage(port2)
+  if (event.data !== 'ready') {
+    throw new IpcError('unexpected first message')
+  }
+  return port2
 }
 
 export const wrap = (port: any) => {

@@ -1,3 +1,5 @@
-export const sendMessagePortToRendererProcess = (port: MessagePort) => {
-  // TODO send port to renderer process
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+
+export const sendMessagePortToRendererProcess = async (port: MessagePort) => {
+  await RendererWorker.invokeAndTransfer([port], 'SendMessagePortToRendererProcess.sendMessagePortToRendererProcess', port)
 }
