@@ -1,14 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.ts'
-// @ts-ignore
-import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.ts'
-// @ts-ignore
 import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.ts'
-// @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
-// @ts-ignore
 import * as ModifierKey from '../ModifierKey/ModifierKey.ts'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
@@ -97,8 +90,5 @@ export const handleSingleClick = async (editor, modifier, x, y) => {
   //   default:
   //     break
   // }
-  return {
-    newState: newEditor,
-    commands: [],
-  }
+  return newEditor
 }
