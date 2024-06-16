@@ -63,8 +63,7 @@ const applyAutoClosingRangesEdit = (editor, changes) => {
   return newAutoClosingRanges
 }
 
-// @ts-ignore
-export const scheduleSelections = (editor, selectionEdits) => {
+export const scheduleSelections = (editor: any, selectionEdits: any) => {
   return EditorSelection.setSelections(editor, selectionEdits)
 }
 
