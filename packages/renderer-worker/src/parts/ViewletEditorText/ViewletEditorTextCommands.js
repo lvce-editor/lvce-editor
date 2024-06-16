@@ -147,6 +147,8 @@ export const LazyCommands = {
 }
 
 export const CommandsWithSideEffectsLazy = {
-  typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
+  ...wrapEditorCommands(['typeWithAutoClosing']),
+
+  // TODO
   handleBlur: () => import('../EditorCommand/EditorCommandBlur.js'),
 }

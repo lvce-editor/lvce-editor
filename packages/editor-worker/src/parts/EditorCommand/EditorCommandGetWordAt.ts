@@ -4,8 +4,7 @@ const RE_WORD_START = /^\w+/
 
 const RE_WORD_END = /\w+$/
 
-// @ts-ignore
-export const getWordAt = (editor, rowIndex, columnIndex) => {
+export const getWordAt = (editor: any, rowIndex: number, columnIndex: number) => {
   const { lines } = editor
   const line = lines[rowIndex]
   const before = line.slice(0, columnIndex)
@@ -24,8 +23,7 @@ export const getWordAt = (editor, rowIndex, columnIndex) => {
   }
 }
 
-// @ts-ignore
-export const getWordBefore = (editor, rowIndex, columnIndex) => {
+export const getWordBefore = (editor: any, rowIndex: number, columnIndex: number) => {
   const { lines } = editor
   const line = lines[rowIndex]
   const before = line.slice(0, columnIndex)
