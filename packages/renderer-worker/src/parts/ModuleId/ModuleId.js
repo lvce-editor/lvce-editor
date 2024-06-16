@@ -85,6 +85,7 @@ export const Debug = 84
 export const Languages = 85
 export const FileWatcher = 86
 export const ExtensionHostSelection = 119
+export const ExtensionHostTabCompletion = 120
 export const ExtensionHostBraceCompletion = 114
 export const ExtensionHostDefinition = 115
 export const ExtensionHostTypeDefinition = 116
