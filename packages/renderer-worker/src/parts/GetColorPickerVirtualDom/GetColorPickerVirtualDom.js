@@ -1,12 +1,13 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getColorPickerVirtualDom = () => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Viewlet ColorPicker',
+      className: MergeClassNames.mergeClassNames(ClassNames.Viewlet, ClassNames.ColorPicker),
       onPointerDown: DomEventListenerFunctions.HandlePointerDown,
       childCount: 3,
     },
