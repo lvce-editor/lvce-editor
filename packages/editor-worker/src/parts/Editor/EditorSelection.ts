@@ -20,7 +20,7 @@ const getSelectionFromChange = (change: any) => {
   }
   const newPosition = {
     rowIndex: startRowIndex + insertedLength - 1,
-    columnIndex: inserted.at(-1).length,
+    columnIndex: startColumnIndex,
   }
   return {
     start: newPosition,
@@ -28,8 +28,7 @@ const getSelectionFromChange = (change: any) => {
   }
 }
 
-// @ts-ignore
-export const setSelections = (editor, selections) => {
+export const setSelections = (editor: any, selections: any) => {
   Assert.object(editor)
   Assert.uint32array(selections)
   return {

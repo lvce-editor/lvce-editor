@@ -82,6 +82,11 @@ export const bundleSharedProcess = async ({
     occurrence: `export const scheme = 'lvce-oss'`,
     replacement: `export const scheme = '${product.applicationName}'`,
   })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const isProduction = false`,
+    replacement: `export const isProduction = true`,
+  })
   if (isArchLinux) {
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,

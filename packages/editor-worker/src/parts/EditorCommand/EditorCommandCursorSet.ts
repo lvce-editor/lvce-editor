@@ -1,11 +1,8 @@
-// @ts-ignore
 import * as Assert from '../Assert/Assert.ts'
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
-// @ts-ignore
-export const cursorSet = (editor, rowIndex, columnIndex) => {
+export const cursorSet = (editor: any, rowIndex: number, columnIndex: number) => {
   Assert.object(editor)
   Assert.number(rowIndex)
   Assert.number(columnIndex)
