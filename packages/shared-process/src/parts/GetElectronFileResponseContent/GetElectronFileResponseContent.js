@@ -9,7 +9,9 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
   if (ShouldTranspileTypescript.shouldTranspileTypescript(request, url)) {
     const content = await readFile(absolutePath)
     const newContent = await TranspileTypeScript.transpileTypeScript(content.toString())
-    return newContent.outputText
+    const newContentString = newContent.outputText
+    const newContentBuffer = Buffer.from(newContentString)
+    return newContentBuffer
   }
   let content = await readFile(absolutePath)
   if (!Platform.isProduction && url === `${Platform.scheme}://-/`) {
@@ -28,6 +30,9 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
           '/remote' + pathToFileURL(preferences['develop.rendererProcessPath']).toString().slice(7),
         )
     }
+  }
+  if (typeof content === 'string') {
+    content = Buffer.from(content)
   }
   return content
 }
