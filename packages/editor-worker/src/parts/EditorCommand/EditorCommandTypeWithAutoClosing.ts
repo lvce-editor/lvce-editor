@@ -1,10 +1,6 @@
 import * as AutoClosing from '../AutoClosing/AutoClosing.ts'
 import * as Bracket from '../Bracket/Bracket.ts'
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.ts'
 import * as Quote from '../Quote/Quote.ts'
-import * as ShouldAutoTriggerSuggest from '../ShouldAutoTriggerSuggest/ShouldAutoTriggerSuggest.ts'
-import * as CommandOpenCompletion from './EditorCommandCompletion.ts'
-import * as EditorCommandGetWordAt from './EditorCommandGetWordAt.ts'
 import * as EditorType from './EditorCommandType.ts'
 import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.ts'
 import * as EditorTypeWithAutoClosingEndBracket from './EditorCommandTypeWithAutoClosingEndBracket.ts'
@@ -15,20 +11,20 @@ export const state = {
   listeners: [],
 }
 
-const openCompletion = async (editor: any, text: string) => {
-  const { selections } = editor
-  const rowIndex = selections[0]
-  const columnIndex = selections[1]
-  const word = EditorCommandGetWordAt.getWordAt(editor, rowIndex, columnIndex)
-  if (!ShouldAutoTriggerSuggest.shouldAutoTriggerSuggest(word)) {
-    return
-  }
-  editor.completionState = EditorCompletionState.Loading
-  editor.widgets = editor.widgets || []
-  editor.widgets.push('EditorCompletion')
-  await CommandOpenCompletion.openCompletion(editor)
-  editor.completionState = EditorCompletionState.Visible
-}
+// const openCompletion = async (editor: any, text: string) => {
+//   const { selections } = editor
+//   const rowIndex = selections[0]
+//   const columnIndex = selections[1]
+//   const word = EditorCommandGetWordAt.getWordAt(editor, rowIndex, columnIndex)
+//   if (!ShouldAutoTriggerSuggest.shouldAutoTriggerSuggest(word)) {
+//     return
+//   }
+//   editor.completionState = EditorCompletionState.Loading
+//   editor.widgets = editor.widgets || []
+//   editor.widgets.push('EditorCompletion')
+//   await CommandOpenCompletion.openCompletion(editor)
+//   editor.completionState = EditorCompletionState.Visible
+// }
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor: any, text: string) => {
@@ -37,39 +33,27 @@ export const typeWithAutoClosing = async (editor: any, text: string) => {
     case Bracket.RoundOpen:
     case Bracket.SquareOpen:
       if (editor.autoClosingBracketsEnabled) {
-        return {
-          newState: EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text),
-          commands: [],
-        }
+        return EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text)
       }
       break
     case Bracket.CurlyClose:
     case Bracket.RoundClose:
     case Bracket.SquareClose:
       if (editor.autoClosingBracketsEnabled) {
-        return {
-          newState: EditorTypeWithAutoClosingEndBracket.typeWithAutoClosingEndBracket(editor, text),
-          commands: [],
-        }
+        return EditorTypeWithAutoClosingEndBracket.typeWithAutoClosingEndBracket(editor, text)
       }
       break
     case Quote.DoubleQuote:
     case Quote.SingleQuote:
     case Quote.BackTick:
       if (editor.autoClosingQuotesEnabled) {
-        return {
-          newState: EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text),
-          commands: [],
-        }
+        return EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text)
       }
       break
     // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
     case AutoClosing.Slash:
       if (editor.autoClosingTagsEnabled) {
-        return {
-          newState: await EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text),
-          commands: [],
-        }
+        return await EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text)
       }
       break
     default:
@@ -77,15 +61,12 @@ export const typeWithAutoClosing = async (editor: any, text: string) => {
   }
 
   const newEditor = EditorType.type(editor, text)
-  const extraCommands: any[] = []
-  if (editor.quickSuggestionsEnabled && newEditor.completionState === EditorCompletionState.None) {
-    openCompletion(newEditor, text)
-  }
+  // const extraCommands: any[] = []
+  // if (editor.quickSuggestionsEnabled && newEditor.completionState === EditorCompletionState.None) {
+  //   openCompletion(newEditor, text)
+  // }
 
-  return {
-    newState: newEditor,
-    commands: extraCommands,
-  }
+  return newEditor
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)
