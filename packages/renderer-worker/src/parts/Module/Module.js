@@ -164,12 +164,16 @@ export const load = (moduleId) => {
       return import('../Languages/Languages.ipc.js')
     case ModuleId.FileWatcher:
       return import('../FileWatcher/FileWatcher.ipc.js')
+    case ModuleId.ExtensionHostSelection:
+      return import('../ExtensionHost/ExtensionHostSelection.ipc.js')
     case ModuleId.ExtensionHostBraceCompletion:
       return import('../ExtensionHost/ExtensionHostBraceCompletion.ipc.js')
     case ModuleId.ExtensionHostDefinition:
       return import('../ExtensionHost/ExtensionHostDefinition.ipc.js')
     case ModuleId.ExtensionHostTypeDefinition:
       return import('../ExtensionHost/ExtensionHostTypeDefinition.ipc.js')
+    case ModuleId.ExtensionHostOrganizeImports:
+      return import('../ExtensionHost/ExtensionHostOrganizeImports.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

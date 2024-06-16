@@ -1,9 +1,7 @@
-import * as Command from '../Command/Command.ts'
-// @ts-ignore
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
-// @ts-ignore
-export const handleContextMenu = async (editor, button, x, y) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Editor)
+export const handleContextMenu = async (editor: any, button: any, x: number, y: number) => {
+  await RendererWorker.invoke(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Editor)
   return editor
 }

@@ -10,4 +10,5 @@ export const Commands = {
   getAllStates: Viewlet.getAllStates,
   openWidget: Viewlet.openWidget,
   send: Viewlet.send,
+  dispose: Viewlet.dispose,
 }

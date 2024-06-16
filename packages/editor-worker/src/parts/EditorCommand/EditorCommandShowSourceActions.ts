@@ -1,15 +1,13 @@
-// @ts-ignore
-import * as Viewlet from '../Viewlet/Viewlet.ts'
-// @ts-ignore
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
-// @ts-ignore
-export const showSourceActions = async (editor) => {
+const EditorSourceActions = 'EditorSourceActions'
+
+export const showSourceActions = async (editor: any) => {
   // TODO
   // 1. hide hover, completions, color picker
   // 2. query source actions from extension host
   // 3. show source actions menu
-  await Viewlet.openWidget(ViewletModuleId.EditorSourceActions)
 
+  await RendererWorker.invoke('Viewlet.openWidget', EditorSourceActions)
   return editor
 }
