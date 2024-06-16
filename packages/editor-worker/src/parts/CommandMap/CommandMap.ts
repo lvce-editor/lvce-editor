@@ -92,6 +92,7 @@ import * as EditorToggleBlockComment from '../EditorCommand/EditorCommandToggleB
 import * as EditorToggleComment from '../EditorCommand/EditorCommandToggleComment.ts'
 import * as EditorToggleLineComment from '../EditorCommand/EditorCommandToggleLineComment.ts'
 import * as EditorType from '../EditorCommand/EditorCommandType.ts'
+import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWithAutoClosing.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
@@ -202,6 +203,7 @@ export const commandMap = {
   'Editor.toggleComment': EditorToggleComment.toggleComment,
   'Editor.toggleLineComment': EditorToggleLineComment.editorToggleLineComment,
   'Editor.type': EditorType.type,
+  'Editor.typeWithAutoClosing': EditorTypeWithAutoClosing.typeWithAutoClosing,
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
 }

@@ -200,6 +200,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostOrganizeImports
     case 'ExtensionHostTabCompletion':
       return ModuleId.ExtensionHostTabCompletion
+    case 'ExtensionHostClosingTagCompletion':
+      return ModuleId.ExtensionHostClosingTag
     default:
       throw new Error(`module ${prefix} not found`)
   }
