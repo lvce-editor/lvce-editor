@@ -174,6 +174,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostTypeDefinition.ipc.js')
     case ModuleId.ExtensionHostOrganizeImports:
       return import('../ExtensionHost/ExtensionHostOrganizeImports.ipc.js')
+    case ModuleId.ExtensionHostTabCompletion:
+      return import('../ExtensionHost/ExtensionHostTabCompletion.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

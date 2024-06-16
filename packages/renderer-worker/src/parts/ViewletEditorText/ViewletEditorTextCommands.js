@@ -117,6 +117,7 @@ const ids = [
   'showHover',
   'showSourceActions',
   'sortLinesAscending',
+  'tabCompletion',
   'toggleBlockComment',
   'toggleComment',
   'toggleLineComment',
@@ -143,7 +144,6 @@ export const LazyCommands = {
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
-  tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
