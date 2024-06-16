@@ -6,3 +6,4 @@ export const WebSocket = 5
 export const ModuleWorkerAndWorkaroundForChromeDevtoolsBug = 6
 export const Node = 7
 export const NodeAlternate = 8
+export const RendererProcess = 9
