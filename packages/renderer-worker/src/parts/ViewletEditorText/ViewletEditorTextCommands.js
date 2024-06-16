@@ -120,6 +120,7 @@ const ids = [
   'toggleLineComment',
   'type',
   'undo',
+  'unIndent',
 ]
 
 export const Commands = {
@@ -143,7 +144,6 @@ export const LazyCommands = {
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
-  unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
