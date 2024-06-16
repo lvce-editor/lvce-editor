@@ -106,6 +106,7 @@ const ids = [
   'selectNextOccurrence',
   'selectUp',
   'selectWord',
+  'cursorSet',
   'selectWordLeft',
   'selectWordRight',
   'setSelections',
@@ -135,7 +136,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
