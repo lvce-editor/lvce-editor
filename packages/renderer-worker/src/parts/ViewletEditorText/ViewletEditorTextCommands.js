@@ -5,9 +5,9 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const wrapEditorCommand = (id) => {
   return (...args) => {
-    if (args.length === 0) {
-      throw new Error('missing arg')
-    }
+    // if (args.length === 0) {
+    //   throw new Error('missing arg')
+    // }
     return EditorWorker.invoke(`Editor.${id}`, ...args)
   }
 }

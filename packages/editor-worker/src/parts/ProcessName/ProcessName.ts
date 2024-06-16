@@ -1,1 +1,1 @@
-export const processName = 'terminal-worker'
+export const processName = 'editor-worker'
