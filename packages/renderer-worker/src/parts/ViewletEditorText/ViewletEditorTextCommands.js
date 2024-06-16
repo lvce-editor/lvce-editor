@@ -61,8 +61,8 @@ const ids = [
   'format',
   'goToDefinition',
   'goToTypeDefinition',
-  'handleContextMenu',
   'handleBeforeInputFromContentEditable',
+  'handleContextMenu',
   'handleDoubleClick',
   'handleMouseDown',
   'handleMouseMove',
@@ -103,16 +103,18 @@ const ids = [
   'selectCharacterRight',
   'selectDown',
   'selectInsideString',
+  'selectionGrow',
   'selectLine',
   'selectNextOccurrence',
   'selectUp',
   'selectWord',
+  'cursorSet',
   'selectWordLeft',
   'selectWordRight',
-  'setSelections',
   'setDecorations',
   'setDelta',
   'setDeltaY',
+  'setSelections',
   'showHover',
   'showSourceActions',
   'sortLinesAscending',
@@ -121,6 +123,7 @@ const ids = [
   'toggleLineComment',
   'type',
   'undo',
+  'unIndent',
 ]
 
 export const Commands = {
@@ -136,14 +139,11 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  cursorSet: () => import('../EditorCommand/EditorCommandCursorSet.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
-  selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
   tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
-  unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
