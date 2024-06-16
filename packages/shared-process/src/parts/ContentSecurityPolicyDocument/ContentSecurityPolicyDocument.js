@@ -1,4 +1,5 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
 
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
@@ -7,4 +8,5 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
+  ...(IsElectron.isElectron ? [] : [`manifest-src 'self'`]),
 ])
