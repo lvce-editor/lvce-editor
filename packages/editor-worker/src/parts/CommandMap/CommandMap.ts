@@ -58,6 +58,7 @@ import * as MoveRectangleSelectionPx from '../EditorCommand/EditorCommandMoveRec
 import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.ts'
 import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.ts'
 import * as OpenFind from '../EditorCommand/EditorCommandOpenFind.ts'
+import * as OpenCompletion from '../EditorCommand/EditorCommandCompletion.ts'
 import * as OrganizeImports from '../EditorCommand/EditorCommandOrganizeImports.ts'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.ts'
 import * as PasteText from '../EditorCommand/EditorCommandPasteText.ts'
