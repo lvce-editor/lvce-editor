@@ -129,6 +129,7 @@ const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
       throw new TypeError(`${id}.${key} is not a function`)
     }
     const activeInstance = ViewletStates.getInstance(id)
+    console.log({ activeInstance })
     await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
   }
   NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
