@@ -1,13 +1,11 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-// prettier-ignore
-
 const wrapEditorCommand = (id) => {
   return (...args) => {
-    // if (args.length === 0) {
-    //   throw new Error('missing arg')
-    // }
+    if (args.length === 0) {
+      throw new Error('missing arg')
+    }
     return EditorWorker.invoke(`Editor.${id}`, ...args)
   }
 }
@@ -147,7 +145,11 @@ export const LazyCommands = {
 }
 
 export const CommandsWithSideEffectsLazy = {
-  ...wrapEditorCommands(['typeWithAutoClosing']),
+  typeWithAutoClosing: () => {
+    return {
+      typeWithAutoClosing: wrapEditorCommand('typeWithAutoClosing'),
+    }
+  },
 
   // TODO
   handleBlur: () => import('../EditorCommand/EditorCommandBlur.js'),

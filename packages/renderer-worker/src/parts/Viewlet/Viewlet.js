@@ -421,6 +421,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
   const actualNewState = 'newState' in newState ? newState.newState : newState
+  console.log({ actualNewState })
   if (oldState === actualNewState) {
     return
   }
