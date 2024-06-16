@@ -108,13 +108,14 @@ const ids = [
   'selectWord',
   'selectWordLeft',
   'selectWordRight',
-  'setSelections',
   'setDecorations',
   'setDelta',
   'setDeltaY',
+  'setSelections',
   'showHover',
   'showSourceActions',
   'sortLinesAscending',
+  'tabCompletion',
   'toggleBlockComment',
   'toggleComment',
   'toggleLineComment',
@@ -142,7 +143,6 @@ export const LazyCommands = {
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
-  tabCompletion: () => import('../EditorCommand/EditorCommandTabCompletion.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
 }
 
