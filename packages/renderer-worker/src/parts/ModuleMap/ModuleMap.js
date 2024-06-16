@@ -202,6 +202,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostTabCompletion
     case 'ExtensionHostClosingTagCompletion':
       return ModuleId.ExtensionHostClosingTag
+    case 'SendMessagePortToRendererProcess':
+      return ModuleId.SendMessagePortToRendererProcess
     default:
       throw new Error(`module ${prefix} not found`)
   }
