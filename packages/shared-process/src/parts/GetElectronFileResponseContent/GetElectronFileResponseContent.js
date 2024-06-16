@@ -21,7 +21,6 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
   if (!Platform.isProduction && url === '/') {
     const preferences = await Preferences.getUserPreferences()
     if (preferences['develop.rendererProcessPath']) {
-      console.log('custom renderer process path')
       // @ts-ignore
       content = content
         .toString()

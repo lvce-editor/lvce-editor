@@ -1,8 +1,7 @@
-import * as EditorSelectWord from './EditorCommandSelectWord.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
+import * as EditorSelectWord from './EditorCommandSelectWord.ts'
 
-// @ts-ignore
-export const handleDoubleClick = (editor, modifier, x, y) => {
+export const handleDoubleClick = (editor: any, modifier: any, x: number, y: number) => {
   const position = EditorPosition.at(editor, x, y)
-  return { newState: EditorSelectWord.selectWord(editor, position.rowIndex, position.columnIndex), commands: [] }
+  return EditorSelectWord.selectWord(editor, position.rowIndex, position.columnIndex)
 }
