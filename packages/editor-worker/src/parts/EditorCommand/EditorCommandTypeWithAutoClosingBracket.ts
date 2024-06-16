@@ -1,13 +1,9 @@
-// @ts-ignore
 import * as Bracket from '../Bracket/Bracket.ts'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.ts'
 
-// @ts-ignore
-const getMatchingClosingBrace = (brace) => {
+const getMatchingClosingBrace = (brace: string) => {
   switch (brace) {
     case Bracket.CurlyOpen:
       return Bracket.CurlyClose
@@ -20,8 +16,7 @@ const getMatchingClosingBrace = (brace) => {
   }
 }
 
-// @ts-ignore
-export const typeWithAutoClosingBracket = (editor, text) => {
+export const typeWithAutoClosingBracket = (editor: any, text: string) => {
   const closingBracket = getMatchingClosingBrace(text)
   const newText = text + closingBracket
   const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)
