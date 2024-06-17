@@ -11,11 +11,11 @@ import * as EditorText from './EditorText.js'
 const renderLines = {
   isEqual(oldState, newState) {
     return (
-      oldState.lines === newState.lines &&
+      JSON.stringify(oldState.lines) === JSON.stringify(newState.lines) &&
       oldState.tokenizerId === newState.tokenizerId &&
       oldState.minLineY === newState.minLineY &&
-      oldState.decorations === newState.decorations &&
-      oldState.embeds === newState.embeds &&
+      JSON.stringify(oldState.decorations) === JSON.stringify(newState.decorations) &&
+      JSON.stringify(oldState.embeds) === JSON.stringify(newState.embeds) &&
       oldState.deltaX === newState.deltaX &&
       oldState.width === newState.width
     )
