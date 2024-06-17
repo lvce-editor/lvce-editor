@@ -51,8 +51,7 @@ const getNewSelections = (anchor, position) => {
   }
 }
 
-// @ts-ignore
-export const editorMoveSelection = (editor, position) => {
+export const editorMoveSelection = (editor: any, position: any) => {
   const anchor = EditorMoveSelectionAnchorState.getPosition()
   const newSelections = getNewSelections(anchor, position)
   // TODO if selection equals previous selection -> do nothing

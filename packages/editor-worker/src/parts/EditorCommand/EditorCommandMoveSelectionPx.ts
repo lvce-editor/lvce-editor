@@ -5,8 +5,7 @@ import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimatio
 import * as EditorMoveSelection from './EditorCommandMoveSelection.ts'
 import * as EditorPosition from './EditorCommandPosition.ts'
 
-// @ts-ignore
-const getNewEditor = (editor, position) => {
+const getNewEditor = (editor: any, position: any) => {
   const { minLineY, maxLineY, rowHeight } = editor
   const diff = maxLineY - minLineY
   if (position.rowIndex < minLineY) {
@@ -66,11 +65,11 @@ const continueScrollingAndMovingSelection = async () => {
   //
 }
 
-// @ts-ignore
-export const moveSelectionPx = (editor, x, y) => {
+export const moveSelectionPx = (editor: any, x: number, y: number) => {
   Assert.object(editor)
   Assert.number(x)
   Assert.number(y)
+  console.log('move', x, y)
   const position = EditorPosition.at(editor, x, y)
   if (!EditorSelectionAutoMoveState.hasListener() && (position.rowIndex < editor.minLineY || position.rowIndex > editor.maxLineY)) {
     RequestAnimationFrame.requestAnimationFrame(continueScrollingAndMovingSelection)
