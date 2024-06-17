@@ -95,6 +95,7 @@ import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWi
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
 import * as EditorCreate from '../EditorCreate/EditorCreate.ts'
+import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
@@ -142,6 +143,7 @@ export const commandMap = {
   'Editor.format': EditorFormat.format,
   'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
+  'Editor.handleBeforeInput': HandleBeforeInput.handleBeforeInput,
   'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
   'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
   'Editor.handleFocus': HandleFocus.handleFocus,
@@ -193,10 +195,10 @@ export const commandMap = {
   'Editor.selectWord': SelectWord.selectWord,
   'Editor.selectWordLeft': SelectWordLeft.selectWordLeft,
   'Editor.selectWordRight': SelectWordRight.selectWordRight,
-  'Editor.setSelections': SetSelections.setSelections,
   'Editor.setDecorations': SetDecorations.setDecorations,
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
+  'Editor.setSelections': SetSelections.setSelections,
   'Editor.showHover': EditorShowHover.showHover,
   'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,
   'Editor.sortLinesAscending': SortLinesAscending.sortLinesAscending,
