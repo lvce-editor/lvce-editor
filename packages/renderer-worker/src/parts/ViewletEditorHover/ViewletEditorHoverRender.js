@@ -9,8 +9,9 @@ const renderHover = {
   isEqual(oldState, newState) {
     return (
       oldState.lineInfos === newState.lineInfos &&
-      oldState.documentation === newState.minLineY &&
-      oldState.maxLineY === newState.documentation &&
+      oldState.documentation === newState.documentation &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
       oldState.diagnostics === newState.diagnostics
     )
   },
