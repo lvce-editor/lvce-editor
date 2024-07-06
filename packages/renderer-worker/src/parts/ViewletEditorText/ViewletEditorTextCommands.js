@@ -59,6 +59,7 @@ const ids = [
   'goToDefinition',
   'goToTypeDefinition',
   'handleBeforeInputFromContentEditable',
+  'handleBeforeInput',
   'handleContextMenu',
   'handleDoubleClick',
   'handleMouseDown',
