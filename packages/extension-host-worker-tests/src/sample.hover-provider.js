@@ -12,4 +12,10 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
   await Editor.openHover()
+
+  // assert
+  const hover = Locator('.EditorHover')
+  await expect(hover).toBeVisible()
+  await expect(hover).toHaveText('abc')
+  // await expect(hover).toHaveCSS('translate', '0px -528px')
 }
