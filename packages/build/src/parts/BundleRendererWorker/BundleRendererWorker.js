@@ -106,6 +106,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/embeds-worker/dist/embedsWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/SyntaxHighlightingWorkerUrl/SyntaxHighlightingWorkerUrl.js`,
+      occurrence: '/packages/syntax-highlighting-worker/src/syntaxHighlightingWorkerMain.ts',
+      replacement: `/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/DiffWorkerUrl/DiffWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/diff-worker/dist/diffWorkerMain.js',
       replacement: `/packages/diff-worker/dist/diffWorkerMain.js`,
