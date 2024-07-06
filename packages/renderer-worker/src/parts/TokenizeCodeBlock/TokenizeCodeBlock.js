@@ -1,10 +1,14 @@
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
-import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as SyntaxHighlightingWorker from '../SyntaxHighlightingWorker/SyntaxHighlightingWorker.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+
+const getTokenClassName = (TokenMap, tokenType) => {
+  return `Token ${TokenMap[tokenType] || 'Unknown'}`
+}
 
 const getLineInfo = (line, tokens, TokenMap) => {
   const tokensLength = tokens.length
@@ -16,7 +20,7 @@ const getLineInfo = (line, tokens, TokenMap) => {
     const tokenLength = tokens[i + 1]
     end += tokenLength
     const text = line.slice(start, end)
-    const className = `Token ${TokenMap[tokenType] || 'Unknown'}`
+    const className = getTokenClassName(TokenMap, tokenType)
     const normalizedText = text
     lineInfo.push(normalizedText, className)
     start = end

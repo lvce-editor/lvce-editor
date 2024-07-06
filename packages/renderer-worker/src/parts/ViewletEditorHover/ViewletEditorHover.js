@@ -43,6 +43,8 @@ const getMatchingDiagnostics = (diagnostics, rowIndex, columnIndex) => {
   return matching
 }
 
+const fallbackDisplayStringLanguageId = 'typescript' // TODO remove this
+
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
   const { selections, height, lines } = editor
@@ -52,17 +54,14 @@ export const loadContent = async (state, savedState, position) => {
   if (!hover) {
     return state
   }
-  const { displayString, documentation } = hover
-  // TODO
-  const languageId = 'typescript'
-  const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, languageId)
+  const { displayString, documentation, displayStringLanguageId } = hover
+  const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, displayStringLanguageId || fallbackDisplayStringLanguageId)
   const wordPart = EditorCommandGetWordAt.getWordBefore(editor, rowIndex, columnIndex)
   const wordStart = columnIndex - wordPart.length
   const x = EditorPosition.x(editor, rowIndex, wordStart)
   const y = height - EditorPosition.y(editor, rowIndex) + editor.y + 40
   const diagnostics = editor.diagnostics || []
   const matchingDiagnostics = getMatchingDiagnostics(diagnostics, rowIndex, columnIndex)
-
   return {
     ...state,
     lineInfos,

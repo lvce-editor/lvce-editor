@@ -37,15 +37,18 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
     }
   }
 
-  const lineInfosDom = GetLineInfosVirtualDom.getLineInfosVirtualDom(lineInfos)
-  dom.push(
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.HoverDisplayString,
-      childCount: lineInfos.length,
-    },
-    ...lineInfosDom,
-  )
+  if (lineInfos.length > 0) {
+    const lineInfosDom = GetLineInfosVirtualDom.getLineInfosVirtualDom(lineInfos)
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: ClassNames.HoverDisplayString,
+        childCount: lineInfos.length,
+      },
+      ...lineInfosDom,
+    )
+  }
+
   if (documentation) {
     dom.push(
       {
@@ -56,6 +59,8 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
       text(documentation),
     )
   }
+
+  console.log({ dom })
 
   return dom
 }
