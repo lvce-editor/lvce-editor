@@ -11,49 +11,36 @@ export const state = {
   listeners: [],
 }
 
-// const openCompletion = async (editor: any, text: string) => {
-//   const { selections } = editor
-//   const rowIndex = selections[0]
-//   const columnIndex = selections[1]
-//   const word = EditorCommandGetWordAt.getWordAt(editor, rowIndex, columnIndex)
-//   if (!ShouldAutoTriggerSuggest.shouldAutoTriggerSuggest(word)) {
-//     return
-//   }
-//   editor.completionState = EditorCompletionState.Loading
-//   editor.widgets = editor.widgets || []
-//   editor.widgets.push('EditorCompletion')
-//   await CommandOpenCompletion.openCompletion(editor)
-//   editor.completionState = EditorCompletionState.Visible
-// }
-
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor: any, text: string) => {
+  const { isAutoClosingBracketsEnabled, isAutoClosingQuotesEnabled, isAutoClosingTagsEnabled } = editor
   switch (text) {
     case Bracket.CurlyOpen:
     case Bracket.RoundOpen:
     case Bracket.SquareOpen:
-      if (editor.autoClosingBracketsEnabled) {
+      if (isAutoClosingBracketsEnabled) {
         return EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text)
       }
       break
     case Bracket.CurlyClose:
     case Bracket.RoundClose:
     case Bracket.SquareClose:
-      if (editor.autoClosingBracketsEnabled) {
+      if (isAutoClosingBracketsEnabled) {
         return EditorTypeWithAutoClosingEndBracket.typeWithAutoClosingEndBracket(editor, text)
       }
       break
     case Quote.DoubleQuote:
     case Quote.SingleQuote:
     case Quote.BackTick:
-      if (editor.autoClosingQuotesEnabled) {
+      console.log({ auto: editor })
+      if (isAutoClosingQuotesEnabled) {
         return EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text)
       }
       break
     // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
     case AutoClosing.Slash:
-      if (editor.autoClosingTagsEnabled) {
-        return await EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text)
+      if (isAutoClosingTagsEnabled) {
+        return EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text)
       }
       break
     default:
