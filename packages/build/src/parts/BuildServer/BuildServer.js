@@ -150,6 +150,11 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
+    occurrence: `app.use('/', servePackages, serve404())`,
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `import { ChildProcess, fork } from 'node:child_process'`,
     replacement: `import { sharedProcessPath } from '@lvce-editor/shared-process'
 import { ChildProcess, fork } from 'node:child_process'`,
