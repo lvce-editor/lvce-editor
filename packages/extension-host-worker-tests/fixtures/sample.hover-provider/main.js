@@ -7,7 +7,7 @@ const getHover = (text, offset) => {
 
 const hoverProvider = {
   languageId: 'xyz',
-  provideCompletions(textDocument, offset) {
+  provideHover(textDocument, offset) {
     const text = vscode.getTextFromTextDocument(textDocument)
     return getHover(text, offset)
   },

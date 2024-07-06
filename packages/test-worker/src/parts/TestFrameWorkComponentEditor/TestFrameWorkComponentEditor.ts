@@ -56,6 +56,10 @@ export const goToDefinition = async () => {
   await Rpc.invoke('Editor.goToDefinition')
 }
 
+export const openHover = async () => {
+  await Rpc.invoke('Editor.showHover')
+}
+
 export const goToTypeDefinition = async () => {
   await Rpc.invoke('Editor.goToTypeDefinition')
 }
