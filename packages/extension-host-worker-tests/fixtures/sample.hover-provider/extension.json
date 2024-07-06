@@ -1,0 +1,10 @@
+{
+  "browser": "main.js",
+  "activation": ["onHover:xyz"],
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [".xyz"]
+    }
+  ]
+}
