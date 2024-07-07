@@ -1,5 +1,6 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetLineInfosVirtualDom from '../GetLineInfosVirtualDom/GetLineInfosVirtualDom.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -24,7 +25,7 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
   dom.push({
     type: VirtualDomElements.Div,
     className: 'Viewlet EditorHover',
-    childCount: getChildCount(lineInfos, documentation, diagnostics),
+    childCount: getChildCount(lineInfos, documentation, diagnostics) + 1,
   })
   if (diagnostics && diagnostics.length > 0) {
     dom.push({
@@ -60,5 +61,13 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
     )
   }
 
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'Sash SashVertical SashResize',
+    childCount: 0,
+    onPointerDown: DomEventListenerFunctions.HandleSashPointerDown,
+  })
+
+  console.log({ dom })
   return dom
 }

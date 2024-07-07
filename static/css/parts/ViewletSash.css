@@ -22,3 +22,9 @@
 .SashActive {
   background: var(--SashHoverBorder, #3d5252);
 }
+
+.SashResize {
+  top: 0;
+  right: 0;
+  height: 100%;
+}

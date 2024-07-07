@@ -23,11 +23,12 @@ const renderHover = {
 
 const renderBounds = {
   isEqual(oldState, newState) {
-    return oldState.x === newState.x && oldState.y === newState.y
+    return oldState.x === newState.x && oldState.y === newState.y && oldState.resizedWidth === newState.resizedWidth
   },
   apply(oldState, newState) {
-    const { x, y, width, height } = newState
-    return [/* method */ RenderMethod.SetBounds, /* x */ x, /* y */ y]
+    const { x, y, width, height, resizedWidth, uid } = newState
+    console.log('apply')
+    return [RenderMethod.SetBounds, x, y, resizedWidth, height]
   },
 }
 

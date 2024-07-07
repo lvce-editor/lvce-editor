@@ -19,6 +19,7 @@ export const create = (id, uri, x, y, width, height) => {
     documentation: '',
     lineInfos: [],
     diagnostics: [],
+    resizedWidth: 250,
   }
 }
 
@@ -96,4 +97,22 @@ export const loadContent = async (state, savedState, position) => {
     y,
     diagnostics: matchingDiagnostics,
   }
+}
+
+export const handleSashPointerDown = (state, eventX, eventY) => {
+  return state
+}
+
+export const handleSashPointerMove = (state, eventX, eventY) => {
+  const { x, y } = state
+  const minWidth = 100
+  const newWidth = Math.max(eventX - x, minWidth)
+  return {
+    ...state,
+    resizedWidth: newWidth,
+  }
+}
+
+export const handleSashPointerUp = (state, eventX, eventY) => {
+  return state
 }
