@@ -2,6 +2,7 @@ import * as EditorCommandGetWordAt from '../EditorCommand/EditorCommandGetWordAt
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Hover from '../Hover/Hover.js'
+import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.js'
 
@@ -45,6 +46,21 @@ const getMatchingDiagnostics = (diagnostics, rowIndex, columnIndex) => {
 
 const fallbackDisplayStringLanguageId = 'typescript' // TODO remove this
 
+const hoverDocumentationFontSize = 15
+const hoverDocumentationFontFamily = 'Fira Code'
+const hoverDocumentationLineHeight = '1.33333'
+const hoverDocumentationWidth = 398 // 400px minus 1px border
+
+const getHoverPositionXy = (editor, rowIndex, wordStart, documentationHeight) => {
+  const x = EditorPosition.x(editor, rowIndex, wordStart)
+  const y = editor.height - EditorPosition.y(editor, rowIndex) + editor.y + 40
+  console.log({ y, documentationHeight })
+  return {
+    x,
+    y,
+  }
+}
+
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
   const { selections, height, lines } = editor
@@ -58,8 +74,14 @@ export const loadContent = async (state, savedState, position) => {
   const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, displayStringLanguageId || fallbackDisplayStringLanguageId)
   const wordPart = EditorCommandGetWordAt.getWordBefore(editor, rowIndex, columnIndex)
   const wordStart = columnIndex - wordPart.length
-  const x = EditorPosition.x(editor, rowIndex, wordStart)
-  const y = height - EditorPosition.y(editor, rowIndex) + editor.y + 40
+  const documentationHeight = await MeasureTextHeight.measureTextBlockHeight(
+    documentation,
+    hoverDocumentationFontFamily,
+    hoverDocumentationFontSize,
+    hoverDocumentationLineHeight,
+    hoverDocumentationWidth,
+  )
+  const { x, y } = getHoverPositionXy(editor, rowIndex, wordStart, documentationHeight)
   const diagnostics = editor.diagnostics || []
   const matchingDiagnostics = getMatchingDiagnostics(diagnostics, rowIndex, columnIndex)
   return {
