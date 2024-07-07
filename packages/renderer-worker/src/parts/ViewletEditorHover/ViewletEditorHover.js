@@ -97,3 +97,17 @@ export const loadContent = async (state, savedState, position) => {
     diagnostics: matchingDiagnostics,
   }
 }
+
+export const handleSashPointerDown = (state, x, y) => {
+  console.log({ x, y })
+  return state
+}
+
+export const handleSashPointerMove = (state, x, y) => {
+  console.log({ x, y })
+  return state
+}
+
+export const handleSashPointerUp = (state, x, y) => {
+  return state
+}
