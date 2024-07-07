@@ -31,6 +31,7 @@ export const Commands = {
   setDeltaY: ViewletExplorer.setDeltaY,
   updateEditingValue: ViewletExplorer.updateEditingValue,
   handleFocus: ViewletExplorer.handleFocus,
+  refresh: ViewletExplorer.refresh,
 }
 
 // prettier-ignore

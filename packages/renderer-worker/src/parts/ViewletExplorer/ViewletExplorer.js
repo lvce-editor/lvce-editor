@@ -511,6 +511,11 @@ export const handleFocus = (state) => {
   return state
 }
 
+export const refresh = (state) => {
+  console.log('TODO refresh explorer')
+  return state
+}
+
 export const newFolder = (state) => {
   return newDirent(state, ExplorerEditingType.CreateFolder)
 }
