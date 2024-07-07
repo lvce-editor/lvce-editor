@@ -100,7 +100,6 @@ export const loadContent = async (state, savedState, position) => {
 }
 
 export const handleSashPointerDown = (state, eventX, eventY) => {
-  console.log({ x: eventX, y: eventY })
   return state
 }
 
@@ -108,7 +107,6 @@ export const handleSashPointerMove = (state, eventX, eventY) => {
   const { x, y } = state
   const minWidth = 100
   const newWidth = Math.max(eventX - x, minWidth)
-  console.log({ newWidth, eventX, x })
   return {
     ...state,
     resizedWidth: newWidth,

@@ -15,10 +15,8 @@
   flex-direction: column;
   gap: 3px;
   min-height: 20px;
-  min-width: 400px;
   position: absolute;
   user-select: text;
-  max-width: 400px;
   overflow: auto;
 }
 

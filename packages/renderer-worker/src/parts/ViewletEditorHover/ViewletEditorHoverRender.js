@@ -27,6 +27,7 @@ const renderBounds = {
   },
   apply(oldState, newState) {
     const { x, y, width, height, resizedWidth, uid } = newState
+    console.log('apply')
     return [RenderMethod.SetBounds, x, y, resizedWidth, height]
   },
 }
