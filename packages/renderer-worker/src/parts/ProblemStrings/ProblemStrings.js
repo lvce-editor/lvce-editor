@@ -17,6 +17,9 @@ const UiStrings = {
   ProblemsDetected: 'Some problems have been detected in the workspace.',
   ShowingOfItems: 'Showing {PH1} of {PH2} ',
   Source: 'Source',
+  CollapseAll: 'Collapse All',
+  ViewAsTable: 'View as Table',
+  ViewAsList: 'View as List',
 }
 
 export const noProblemsDetected = () => {
@@ -78,4 +81,16 @@ export const copyMessage = () => {
 
 export const noResultsFoundWithProvidedFilterCriteria = () => {
   return I18NString.i18nString(UiStrings.NoResultsFoundWithProvidedFilterCriteria)
+}
+
+export const collapseAll = () => {
+  return I18NString.i18nString(UiStrings.CollapseAll)
+}
+
+export const viewAsList = () => {
+  return I18NString.i18nString(UiStrings.ViewAsList)
+}
+
+export const viewAsTable = () => {
+  return I18NString.i18nString(UiStrings.ViewAsTable)
 }
