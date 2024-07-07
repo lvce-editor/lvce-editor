@@ -84,6 +84,6 @@
   },
   "dependencies": {
     "@lvce-editor/diff-worker": "^1.2.0",
-    "@lvce-editor/renderer-process": "^3.0.0"
+    "@lvce-editor/renderer-process": "^3.2.1"
   }
 }
