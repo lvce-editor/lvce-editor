@@ -3,17 +3,17 @@
 // see https://github.com/microsoft/vscode/blob/6a5e3aad96929a7d35e09ed8d22e87a72bd16ff6/src/vs/workbench/contrib/preferences/browser/keybindingsEditor.ts
 
 import * as Assert from '../Assert/Assert.ts'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
-import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as Focus from '../Focus/Focus.js'
+import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Command from '../Command/Command.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -232,7 +232,7 @@ export const focusLast = (state) => {
 }
 
 export const handleContextMenu = async (state, button, x, y) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.KeyBindingsTable)
+  await ContextMenu.show(x, y, MenuEntryId.KeyBindingsTable)
   return state
 }
 
