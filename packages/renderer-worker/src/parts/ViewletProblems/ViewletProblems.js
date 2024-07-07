@@ -2,6 +2,7 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
+import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetListIndex from '../GetListIndex/GetListIndex.js'
@@ -158,7 +159,7 @@ export const handleFilterInput = (state, value) => {
 export const copyMessage = async (state) => {
   const { problems, focusedIndex } = state
   const problem = problems[focusedIndex]
-  await Command.execute('ClipBoard.writeText', problem.message)
+  await ClipBoard.writeText(problem.message)
   return state
 }
 

@@ -1,5 +1,5 @@
 import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
-import * as Command from '../Command/Command.js'
+import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDetailStringWeb.js'
@@ -34,7 +34,7 @@ export const handleClickOk = async (state) => {
 export const handleClickCopy = async (state) => {
   const { lines } = state
   const message = JoinLines.joinLines(lines)
-  await Command.execute('ClipBoard.writeText', message)
+  await ClipBoard.writeText(message)
   return state
 }
 
