@@ -7,7 +7,7 @@ import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
-export const getActions = (state): readonly ViewletAction[] => {
+export const getActions = (state: any): readonly ViewletAction[] => {
   const visibleCount = GetVisibleProblems.getVisibleProblems(state.problems, state.collapsedUris, state.focusedIndex, state.filterValue).length
   const problemsCount = state.problems.length
   const isSmall = state.width <= state.smallWidthBreakPoint
@@ -25,7 +25,7 @@ export const getActions = (state): readonly ViewletAction[] => {
   if (state.viewMode === ProblemsViewMode.Table) {
     actions.push({
       type: ActionType.Button,
-      id: 'View as list',
+      id: ProblemStrings.viewAsList(),
       command: 'viewAsList',
       icon: MaskIcon.ListTree,
     })
@@ -33,13 +33,13 @@ export const getActions = (state): readonly ViewletAction[] => {
     actions.push(
       {
         type: ActionType.Button,
-        id: 'Collapse All',
+        id: ProblemStrings.collapseAll(),
         command: 'collapseAll',
         icon: MaskIcon.CollapseAll,
       },
       {
         type: ActionType.Button,
-        id: 'View as table',
+        id: ProblemStrings.viewAsTable(),
         command: 'viewAsTable',
         icon: MaskIcon.ListFlat,
       },
