@@ -51,8 +51,8 @@ const hoverDocumentationFontFamily = 'Fira Code'
 const hoverDocumentationLineHeight = '1.33333'
 const hoverBorderLeft = 1
 const hoverBorderRight = 1
-const hoverPaddingLeft = 10
-const hoverPaddingRight = 10
+const hoverPaddingLeft = 8
+const hoverPaddingRight = 8
 const hovverFullWidth = 400
 const hoverDocumentationWidth = hovverFullWidth - hoverPaddingLeft - hoverPaddingRight - hoverBorderLeft - hoverBorderRight
 
