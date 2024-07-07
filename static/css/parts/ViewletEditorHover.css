@@ -61,6 +61,7 @@
   contain: content;
   font-size: 15px;
   line-height: 1.33333;
+  padding: 4px 8px;
 }
 
 .HoverProblem {

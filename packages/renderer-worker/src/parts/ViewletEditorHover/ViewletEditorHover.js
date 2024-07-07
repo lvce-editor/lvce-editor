@@ -49,12 +49,16 @@ const fallbackDisplayStringLanguageId = 'typescript' // TODO remove this
 const hoverDocumentationFontSize = 15
 const hoverDocumentationFontFamily = 'Fira Code'
 const hoverDocumentationLineHeight = '1.33333'
-const hoverDocumentationWidth = 398 // 400px minus 1px border
+const hoverBorderLeft = 1
+const hoverBorderRight = 1
+const hoverPaddingLeft = 8
+const hoverPaddingRight = 8
+const hovverFullWidth = 400
+const hoverDocumentationWidth = hovverFullWidth - hoverPaddingLeft - hoverPaddingRight - hoverBorderLeft - hoverBorderRight
 
 const getHoverPositionXy = (editor, rowIndex, wordStart, documentationHeight) => {
   const x = EditorPosition.x(editor, rowIndex, wordStart)
   const y = editor.height - EditorPosition.y(editor, rowIndex) + editor.y + 40
-  console.log({ y, documentationHeight })
   return {
     x,
     y,
