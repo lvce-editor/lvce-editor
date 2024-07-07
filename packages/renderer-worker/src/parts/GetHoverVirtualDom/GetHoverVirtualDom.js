@@ -60,7 +60,5 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
     )
   }
 
-  console.log({ dom })
-
   return dom
 }

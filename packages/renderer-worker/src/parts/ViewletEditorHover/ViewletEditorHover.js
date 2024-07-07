@@ -59,7 +59,6 @@ const hoverDocumentationWidth = hovverFullWidth - hoverPaddingLeft - hoverPaddin
 const getHoverPositionXy = (editor, rowIndex, wordStart, documentationHeight) => {
   const x = EditorPosition.x(editor, rowIndex, wordStart)
   const y = editor.height - EditorPosition.y(editor, rowIndex) + editor.y + 40
-  console.log({ y, documentationHeight })
   return {
     x,
     y,
