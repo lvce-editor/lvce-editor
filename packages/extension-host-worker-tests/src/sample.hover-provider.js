@@ -16,6 +16,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // assert
   const hover = Locator('.EditorHover')
   await expect(hover).toBeVisible()
-  await expect(hover).toHaveText('abc')
+  await expect(hover).toHaveText('abcdef')
   // await expect(hover).toHaveCSS('translate', '0px -528px')
 }
