@@ -7,12 +7,6 @@ export const getSourceActionListItemVirtualDom = (sourceAction) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.SourceActionHeading,
-      childCount: 1,
-    },
-    text(EditorStrings.sourceAction()),
-    {
-      type: VirtualDomElements.Div,
       className: ClassNames.SourceActionItem,
       childCount: 2,
     },
