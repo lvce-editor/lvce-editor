@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as GetSourceActionListItemVirtualDom from '../GetSourceActionListItemVirtualDom/GetSourceActionListItemVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
