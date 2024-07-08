@@ -34,6 +34,7 @@ import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
 import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
 import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
 import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
+import * as EditorCommandHandleContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
 import * as HandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.ts'
 import * as HandleFocus from '../EditorCommand/EditorCommandHandleFocus.ts'
 import * as HandleMouseDown from '../EditorCommand/EditorCommandHandleMouseDown.ts'
@@ -100,7 +101,6 @@ import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 
 export const commandMap = {
-  'Editor.create': EditorCreate.editorCreate,
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
   'Editor.addCursorBelow': AddCursorBelow.addCursorBelow,
   'Editor.applyEdit': EditorApplyEdit.applyEdit,
@@ -114,6 +114,7 @@ export const commandMap = {
   'Editor.copy': Copy.copy,
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
   'Editor.copyLineUp': CopyLineUp.copyLineUp,
+  'Editor.create': EditorCreate.editorCreate,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
@@ -145,6 +146,7 @@ export const commandMap = {
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
   'Editor.handleBeforeInput': HandleBeforeInput.handleBeforeInput,
   'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
+  'Editor.handleContextMenu': EditorCommandHandleContextMenu.handleContextMenu,
   'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
   'Editor.handleFocus': HandleFocus.handleFocus,
   'Editor.handleMouseDown': HandleMouseDown.handleMouseDown,
