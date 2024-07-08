@@ -49,6 +49,7 @@ const UiStrings = {
   EditorCopyLineUp: 'Editor: Copy Line Up',
   Replace: 'replace',
   NoResults: 'No Results',
+  SortImports: 'Sort Imports',
 }
 
 export const goToDefinition = () => {
@@ -57,6 +58,10 @@ export const goToDefinition = () => {
 
 export const organizeImports = () => {
   return I18nString.i18nString(UiStrings.OrganizeImports)
+}
+
+export const sortImports = () => {
+  return I18nString.i18nString(UiStrings.SortImports)
 }
 
 export const goToTypeDefinition = () => {
