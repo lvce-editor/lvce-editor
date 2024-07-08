@@ -5,6 +5,9 @@ export const getEditorSourceActions = async () => {
     {
       name: EditorStrings.organizeImports(),
     },
+    {
+      name: EditorStrings.sortImports(),
+    },
   ]
   return sourceActions
 }
