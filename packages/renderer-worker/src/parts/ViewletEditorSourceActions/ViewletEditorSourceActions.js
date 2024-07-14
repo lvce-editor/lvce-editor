@@ -34,3 +34,8 @@ export const loadContent = async (state, savedState, position) => {
 export const handleFocus = () => {
   Focus.setFocus(WhenExpression.FocusSourceActions)
 }
+
+export const handleClick = (state, x, y) => {
+  console.log('click', x, y)
+  return state
+}
