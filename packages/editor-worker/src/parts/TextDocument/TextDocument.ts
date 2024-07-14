@@ -20,7 +20,6 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
   const newLines = [...textDocument.lines]
   let linesDelta = 0
   for (const change of changes) {
-    console.log({ linesDelta })
     const startRowIndex = change.start.rowIndex + linesDelta
     const endRowIndex = change.end.rowIndex + linesDelta
     const startColumnIndex = change.start.columnIndex
