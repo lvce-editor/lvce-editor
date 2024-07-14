@@ -509,7 +509,7 @@ test('applyEdits - replace multiple lines', () => {
 
 test('applyEdits - two lines deleted and two lines inserted', () => {
   const editor = {
-    lines: ['a', 'b'],
+    lines: ['a', 'b', ''],
     cursor: {
       rowIndex: 0,
       columnIndex: 0,
@@ -538,7 +538,7 @@ test('applyEdits - two lines deleted and two lines inserted', () => {
         rowIndex: 1,
         columnIndex: 0,
       },
-      inserted: [],
+      inserted: [''],
       deleted: ['a'],
       origin: EditOrigin.Unknown,
     },
@@ -551,10 +551,10 @@ test('applyEdits - two lines deleted and two lines inserted', () => {
         rowIndex: 2,
         columnIndex: 0,
       },
-      inserted: [],
+      inserted: [''],
       deleted: [''],
       origin: EditOrigin.Unknown,
     },
   ])
-  expect(newLines).toEqual(['a', 'b'])
+  expect(newLines).toEqual(['a', 'b', ''])
 })
