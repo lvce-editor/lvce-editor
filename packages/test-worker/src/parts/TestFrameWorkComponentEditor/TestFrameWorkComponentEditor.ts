@@ -99,3 +99,7 @@ export const insertLineBreak = async () => {
 export const openSourceActions = async () => {
   await Rpc.invoke('Editor.showSourceActions')
 }
+
+export const sourceActionsSelectCurrent = async () => {
+  await Rpc.invoke('EditorSourceActions.selectCurrent')
+}
