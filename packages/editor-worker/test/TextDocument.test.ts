@@ -135,7 +135,7 @@ test('applyEdits - new line inserted in middle', () => {
   ).toEqual(['  ', '  11111', '22222'])
 })
 
-test.only('applyEdits - multiple insertions in one line', () => {
+test('applyEdits - multiple insertions in one line', () => {
   const textDocument = {
     lines: ['  <body>', '    sample test', '  </body>'],
   }

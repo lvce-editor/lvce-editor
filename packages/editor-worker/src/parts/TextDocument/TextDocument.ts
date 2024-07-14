@@ -17,7 +17,6 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
   Assert.object(textDocument)
   Assert.array(changes)
   // TODO don't copy all lines (can be expensive, e.g. 10000 lines = 10000 * 64bit = 64kB on every keystroke)
-  const originalLines = textDocument.lines
   const newLines = [...textDocument.lines]
   let linesDelta = 0
   for (const change of changes) {
@@ -35,16 +34,17 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
     Assert.array(inserted)
     Assert.array(deleted)
     console.log({ inserted, deleted, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex })
+    console.log({ linesDelta })
     if (startRowIndex === endRowIndex) {
       console.log('is same')
       if (inserted.length === 0) {
-        const line = originalLines[startRowIndex]
+        const line = newLines[startRowIndex]
         const before = line.slice(0, startColumnIndex)
         const after = line.slice(endColumnIndex)
         newLines[startRowIndex] = before + after
       } else if (inserted.length === 1) {
         console.log('else if')
-        const line = originalLines[startRowIndex]
+        const line = newLines[startRowIndex]
         let before = line.slice(0, startColumnIndex)
         if (startColumnIndex > line.length) {
           before += ' '.repeat(startColumnIndex - line.length)
@@ -55,7 +55,7 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
         newLines[startRowIndex] = before + text + after
       } else {
         console.log('else')
-        const line = originalLines[startRowIndex]
+        const line = newLines[startRowIndex]
         const before = line.slice(0, startColumnIndex) + inserted[0]
         const after = inserted.at(-1) + line.slice(endColumnIndex)
         Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before, ...inserted.slice(1, -1), after])
@@ -65,12 +65,12 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
     } else {
       console.log('two lines')
       if (inserted.length === 1) {
-        const before = originalLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
+        const before = newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
         const after = endRowIndex >= newLines.length ? '' : newLines[endRowIndex].slice(endColumnIndex)
         Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before + after])
       } else {
         console.log('second')
-        const before = originalLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
+        const before = newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
         const middle = inserted.slice(1, -1)
         const after = inserted.at(-1) + (endRowIndex >= newLines.length ? '' : newLines[endRowIndex].slice(endColumnIndex))
         console.log({ before, middle, after, inserted })
