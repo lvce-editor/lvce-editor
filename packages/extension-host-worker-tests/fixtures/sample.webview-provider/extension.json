@@ -1,0 +1,9 @@
+{
+  "browser": "main.js",
+  "activation": "onWebview:xyz",
+  "webViews": [
+    {
+      "id": "xyz"
+    }
+  ]
+}

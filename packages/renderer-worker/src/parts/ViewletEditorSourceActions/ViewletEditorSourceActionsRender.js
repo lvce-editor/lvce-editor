@@ -1,4 +1,5 @@
 import * as GetSourceActionsVirtualDom from '../GetSourceActionsVirtualDom/GetSourceActionsVirtualDom.js'
+import * as GetVisibleSourceActions from '../GetVisibleSourceActions/GetVisibleSourceActions.js'
 
 export const hasFunctionalRender = true
 
@@ -6,10 +7,11 @@ export const hasFunctionalRootRender = true
 
 const renderSourceActions = {
   isEqual(oldState, newState) {
-    return oldState.sourceActions === newState.sourceActions
+    return oldState.sourceActions === newState.sourceActions && oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldStatem, newState) {
-    const dom = GetSourceActionsVirtualDom.getSourceActionsVirtualDom(newState.sourceActions)
+    const visible = GetVisibleSourceActions.getVisibleSourceActions(newState.sourceActions, newState.focusedIndex)
+    const dom = GetSourceActionsVirtualDom.getSourceActionsVirtualDom(visible)
     return ['Viewlet.setDom2', dom]
   },
 }
