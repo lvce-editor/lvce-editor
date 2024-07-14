@@ -18,9 +18,10 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
   Assert.array(changes)
   // TODO don't copy all lines (can be expensive, e.g. 10000 lines = 10000 * 64bit = 64kB on every keystroke)
   const newLines = [...textDocument.lines]
+  let linesDelta = 0
   for (const change of changes) {
-    const startRowIndex = change.start.rowIndex
-    const endRowIndex = change.end.rowIndex
+    const startRowIndex = change.start.rowIndex + linesDelta
+    const endRowIndex = change.end.rowIndex + linesDelta
     const startColumnIndex = change.start.columnIndex
     const endColumnIndex = change.end.columnIndex
     const inserted = change.inserted
@@ -68,6 +69,7 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
       // TODO only do this once after all edits, not inside loop
       textDocument.maxLineY = Math.min(textDocument.numberOfVisibleLines, textDocument.lines.length)
     }
+    linesDelta += Math.max(inserted.length - deleted.length, 0)
   }
   return newLines
 }

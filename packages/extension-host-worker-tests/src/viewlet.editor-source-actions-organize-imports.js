@@ -1,5 +1,3 @@
-export const skip = true
-
 export const name = 'viewlet.editor-source-actions-organize-imports'
 
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, Extension }) => {
@@ -24,6 +22,6 @@ import { a } from './a.ts'
   const editorRows = Locator('.EditorRow')
   const firstRow = editorRows.nth(0)
   await expect(firstRow).toHaveText(`import { a } from './a.ts'`)
-  const secondRow = editorRows.nth(0)
+  const secondRow = editorRows.nth(1)
   await expect(secondRow).toHaveText(`import { b } from './b.ts'`)
 }

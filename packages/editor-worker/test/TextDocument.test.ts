@@ -145,14 +145,14 @@ test('applyEdits - multiple insertions in one line', () => {
         start: { rowIndex: 1, columnIndex: 4 },
         end: { rowIndex: 1, columnIndex: 4 },
         inserted: ['<!--'],
-        deleted: [],
+        deleted: [''],
         origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 1, columnIndex: 20 },
         end: { rowIndex: 1, columnIndex: 20 },
         inserted: ['-->'],
-        deleted: [],
+        deleted: [''],
         origin: EditOrigin.ToggleBlockComment,
       },
     ]),
@@ -185,42 +185,42 @@ test('applyEdits - multiple deletions in one line', () => {
       {
         start: { rowIndex: 1, columnIndex: 4 },
         end: { rowIndex: 1, columnIndex: 8 },
-        inserted: [],
+        inserted: [''],
         deleted: ['<!--'],
         origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 1, columnIndex: 15 },
         end: { rowIndex: 1, columnIndex: 18 },
-        inserted: [],
+        inserted: [''],
         deleted: ['-->'],
         origin: EditOrigin.ToggleBlockComment,
       },
     ]),
   ).toEqual(['  <body>', '    sample test', '  </body>'])
 })
+
 test('applyEdits - deletions in multiple lines', () => {
   const textDocument = {
     lines: ['  <body>', '    <!--sample test', '-->', '  </body>'],
   }
-  expect(
-    TextDocument.applyEdits(textDocument, [
-      {
-        start: { rowIndex: 1, columnIndex: 4 },
-        end: { rowIndex: 1, columnIndex: 8 },
-        inserted: [],
-        deleted: ['<!--'],
-        origin: EditOrigin.ToggleBlockComment,
-      },
-      {
-        start: { rowIndex: 2, columnIndex: 0 },
-        end: { rowIndex: 2, columnIndex: 3 },
-        inserted: [],
-        deleted: ['-->'],
-        origin: EditOrigin.ToggleBlockComment,
-      },
-    ]),
-  ).toEqual(['  <body>', '    sample test', '', '  </body>'])
+  const edits = [
+    {
+      start: { rowIndex: 1, columnIndex: 4 },
+      end: { rowIndex: 1, columnIndex: 8 },
+      inserted: [],
+      deleted: ['<!--'],
+      origin: EditOrigin.ToggleBlockComment,
+    },
+    {
+      start: { rowIndex: 2, columnIndex: 0 },
+      end: { rowIndex: 2, columnIndex: 3 },
+      inserted: [],
+      deleted: ['-->'],
+      origin: EditOrigin.ToggleBlockComment,
+    },
+  ]
+  expect(TextDocument.applyEdits(textDocument, edits)).toEqual(['  <body>', '    sample test', '', '  </body>'])
 })
 
 test('positionAt - in first line', () => {
@@ -466,4 +466,95 @@ test('applyEdits - replace multiple lines', () => {
     },
   ])
   expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])
+})
+
+test('applyEdits - replace multiple lines', () => {
+  const editor = {
+    lines: ['h1 {', '  font-size: 20px', '}'],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 2,
+    },
+    selections: [
+      {
+        start: {
+          rowIndex: 0,
+          columnIndex: 2,
+        },
+        end: {
+          rowIndex: 0,
+          columnIndex: 2,
+        },
+      },
+    ],
+    undoStack: [],
+  }
+  const newLines = TextDocument.applyEdits(editor, [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 3,
+        columnIndex: 0,
+      },
+      inserted: ['h1 {', '  font-size: 20px;', '}', ''],
+      deleted: ['h1 {', '  font-size: 20px', '}'],
+      origin: EditOrigin.Format,
+    },
+  ])
+  expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])
+})
+
+test('applyEdits - two lines deleted and two lines inserted', () => {
+  const editor = {
+    lines: ['b', 'a', ''],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 0,
+    },
+    selections: [
+      {
+        start: {
+          rowIndex: 0,
+          columnIndex: 0,
+        },
+        end: {
+          rowIndex: 0,
+          columnIndex: 0,
+        },
+      },
+    ],
+    undoStack: [],
+  }
+  const newLines = TextDocument.applyEdits(editor, [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 1,
+        columnIndex: 0,
+      },
+      inserted: ['a', 'b', ''],
+      deleted: ['b', ''],
+      origin: EditOrigin.Unknown,
+    },
+    {
+      start: {
+        rowIndex: 1,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 2,
+        columnIndex: 0,
+      },
+      inserted: [''],
+      deleted: ['a', ''],
+      origin: EditOrigin.Unknown,
+    },
+  ])
+  expect(newLines).toEqual(['a', 'b', ''])
 })
