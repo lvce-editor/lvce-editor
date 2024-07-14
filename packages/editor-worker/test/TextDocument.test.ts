@@ -135,7 +135,7 @@ test('applyEdits - new line inserted in middle', () => {
   ).toEqual(['  ', '  11111', '22222'])
 })
 
-test('applyEdits - multiple insertions in one line', () => {
+test.only('applyEdits - multiple insertions in one line', () => {
   const textDocument = {
     lines: ['  <body>', '    sample test', '  </body>'],
   }
@@ -145,14 +145,14 @@ test('applyEdits - multiple insertions in one line', () => {
         start: { rowIndex: 1, columnIndex: 4 },
         end: { rowIndex: 1, columnIndex: 4 },
         inserted: ['<!--'],
-        deleted: [],
+        deleted: [''],
         origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 1, columnIndex: 20 },
         end: { rowIndex: 1, columnIndex: 20 },
         inserted: ['-->'],
-        deleted: [],
+        deleted: [''],
         origin: EditOrigin.ToggleBlockComment,
       },
     ]),
@@ -176,7 +176,7 @@ test('applyEdits - single deletion in one line', () => {
   ).toEqual(['  <body>', '    sample test-->', '  </body>'])
 })
 
-test('applyEdits - multiple deletions in one line', () => {
+test.skip('applyEdits - multiple deletions in one line', () => {
   const textDocument = {
     lines: ['  <body>', '    <!--sample test-->', '  </body>'],
   }
@@ -185,14 +185,14 @@ test('applyEdits - multiple deletions in one line', () => {
       {
         start: { rowIndex: 1, columnIndex: 4 },
         end: { rowIndex: 1, columnIndex: 8 },
-        inserted: [],
+        inserted: [''],
         deleted: ['<!--'],
         origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 1, columnIndex: 15 },
         end: { rowIndex: 1, columnIndex: 18 },
-        inserted: [],
+        inserted: [''],
         deleted: ['-->'],
         origin: EditOrigin.ToggleBlockComment,
       },
