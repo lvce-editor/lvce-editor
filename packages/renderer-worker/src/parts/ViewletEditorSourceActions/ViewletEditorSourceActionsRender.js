@@ -6,10 +6,10 @@ export const hasFunctionalRootRender = true
 
 const renderSourceActions = {
   isEqual(oldState, newState) {
-    return oldState.sourceActions === newState.sourceActions
+    return oldState.sourceActions === newState.sourceActions && oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldStatem, newState) {
-    const dom = GetSourceActionsVirtualDom.getSourceActionsVirtualDom(newState.sourceActions)
+    const dom = GetSourceActionsVirtualDom.getSourceActionsVirtualDom(newState.sourceActions, newState.focusedIndex)
     return ['Viewlet.setDom2', dom]
   },
 }

@@ -13,6 +13,7 @@ export const create = (id, uri, x, y, width, height) => {
     height: 0,
     maxHeight: 0,
     sourceActions: [],
+    focusedIndex: -1,
   }
 }
 
@@ -30,6 +31,7 @@ export const loadContent = async (state, savedState, position) => {
     width: 250,
     height: 150,
     maxHeight: 150,
+    focusedIndex: -1,
   }
 }
 
@@ -43,12 +45,21 @@ export const handleClick = (state, x, y) => {
 }
 
 export const focusNext = (state) => {
-  console.log('focus next')
-  return state
+  const { focusedIndex } = state
+  const nextFocusedIndex = focusedIndex + 1
+  return {
+    ...state,
+    focusedIndex: nextFocusedIndex,
+  }
 }
 
 export const focusPrevious = (state) => {
-  return state
+  const { focusedIndex } = state
+  const previousFocusedIndex = focusedIndex - 1
+  return {
+    ...state,
+    focusedIndex: previousFocusedIndex,
+  }
 }
 
 export const focusLast = (state) => {
