@@ -39,3 +39,19 @@ export const handleClick = (state, x, y) => {
   console.log('click', x, y)
   return state
 }
+
+export const focusNext = (state) => {
+  return state
+}
+
+export const focusPrevious = (state) => {
+  return state
+}
+
+export const focusLast = (state) => {
+  return state
+}
+
+export const focusFirst = (state) => {
+  return state
+}
