@@ -1,5 +1,3 @@
-export const skip = true
-
 export const name = 'viewlet.editor-source-actions-organize-imports'
 
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, Extension }) => {
