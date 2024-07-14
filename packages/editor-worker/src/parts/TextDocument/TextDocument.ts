@@ -17,6 +17,7 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
   Assert.object(textDocument)
   Assert.array(changes)
   // TODO don't copy all lines (can be expensive, e.g. 10000 lines = 10000 * 64bit = 64kB on every keystroke)
+  // const originalLines = textDocument.lines
   const newLines = [...textDocument.lines]
   for (const change of changes) {
     const startRowIndex = change.start.rowIndex
@@ -31,7 +32,9 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
     Assert.number(endColumnIndex)
     Assert.array(inserted)
     Assert.array(deleted)
+    console.log({ inserted, deleted, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex })
     if (startRowIndex === endRowIndex) {
+      console.log('is same')
       if (inserted.length === 0) {
         const line = newLines[startRowIndex]
         const before = line.slice(0, startColumnIndex)
@@ -44,6 +47,7 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
           before += ' '.repeat(startColumnIndex - line.length)
         }
         const after = line.slice(endColumnIndex)
+        console.log({ before, after })
         const text = inserted[0]
         newLines[startRowIndex] = before + text + after
       } else {
