@@ -7,6 +7,27 @@ import * as SplitLines from '../SplitLines/SplitLines.ts'
 // @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
+const getDocumentEdits = (editor: any, edits: any[]) => {
+  const documentEdits = []
+  for (const edit of edits) {
+    const start = TextDocument.positionAt(editor, edit.startOffset)
+    const end = TextDocument.positionAt(editor, edit.endOffset)
+    const deleted = TextDocument.getSelectionText(editor, {
+      start,
+      end,
+    })
+    const documentEdit = {
+      start,
+      end,
+      inserted: SplitLines.splitLines(edit.inserted),
+      deleted,
+      origin: EditOrigin.Format,
+    }
+    documentEdits.push(documentEdit)
+  }
+  return documentEdits
+}
+
 // @ts-ignore
 export const applyDocumentEdits = (editor, edits) => {
   if (!Array.isArray(edits)) {
@@ -16,22 +37,6 @@ export const applyDocumentEdits = (editor, edits) => {
   if (edits.length === 0) {
     return editor
   }
-  // TODO support multiple edits?
-  const edit = edits[0]
-  const start = TextDocument.positionAt(editor, edit.startOffset)
-  const end = TextDocument.positionAt(editor, edit.endOffset)
-  const deleted = TextDocument.getSelectionText(editor, {
-    start,
-    end,
-  })
-  const documentEdits = [
-    {
-      start,
-      end,
-      inserted: SplitLines.splitLines(edit.inserted),
-      deleted,
-      origin: EditOrigin.Format,
-    },
-  ]
+  const documentEdits = getDocumentEdits(editor, edits)
   return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
 }
