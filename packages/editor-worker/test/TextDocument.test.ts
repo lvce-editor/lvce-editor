@@ -200,28 +200,27 @@ test('applyEdits - multiple deletions in one line', () => {
   ).toEqual(['  <body>', '    sample test', '  </body>'])
 })
 
-test.only('applyEdits - deletions in multiple lines', () => {
+test('applyEdits - deletions in multiple lines', () => {
   const textDocument = {
     lines: ['  <body>', '    <!--sample test', '-->', '  </body>'],
   }
-  expect(
-    TextDocument.applyEdits(textDocument, [
-      {
-        start: { rowIndex: 1, columnIndex: 4 },
-        end: { rowIndex: 1, columnIndex: 8 },
-        inserted: [],
-        deleted: ['<!--'],
-        origin: EditOrigin.ToggleBlockComment,
-      },
-      {
-        start: { rowIndex: 2, columnIndex: 0 },
-        end: { rowIndex: 2, columnIndex: 3 },
-        inserted: [],
-        deleted: ['-->'],
-        origin: EditOrigin.ToggleBlockComment,
-      },
-    ]),
-  ).toEqual(['  <body>', '    sample test', '', '  </body>'])
+  const edits = [
+    {
+      start: { rowIndex: 1, columnIndex: 4 },
+      end: { rowIndex: 1, columnIndex: 8 },
+      inserted: [],
+      deleted: ['<!--'],
+      origin: EditOrigin.ToggleBlockComment,
+    },
+    {
+      start: { rowIndex: 2, columnIndex: 0 },
+      end: { rowIndex: 2, columnIndex: 3 },
+      inserted: [],
+      deleted: ['-->'],
+      origin: EditOrigin.ToggleBlockComment,
+    },
+  ]
+  expect(TextDocument.applyEdits(textDocument, edits)).toEqual(['  <body>', '    sample test', '', '  </body>'])
 })
 
 test('positionAt - in first line', () => {
