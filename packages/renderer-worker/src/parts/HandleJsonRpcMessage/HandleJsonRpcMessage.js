@@ -1,7 +1,6 @@
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve, source) => {
-  console.log({ message })
   if (!message || typeof message === 'string') {
     console.warn(`unexpected message from ${source}: ${message}`)
     return
