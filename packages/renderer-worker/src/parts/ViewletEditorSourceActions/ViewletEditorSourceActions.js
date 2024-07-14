@@ -20,6 +20,8 @@ export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
   // TODO request source actions information from extensions
   const sourceActions = await GetEditorSourceActions.getEditorSourceActions()
+  // TODO avoid side effect
+  Focus.setAdditionalFocus(WhenExpression.FocusSourceActions)
   return {
     ...state,
     sourceActions,
@@ -41,6 +43,7 @@ export const handleClick = (state, x, y) => {
 }
 
 export const focusNext = (state) => {
+  console.log('focus next')
   return state
 }
 
