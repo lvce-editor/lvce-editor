@@ -45,6 +45,7 @@ import * as HandleNativeSelectionChange from '../EditorCommand/EditorCommandHand
 import * as HandlePointerCaptureLost from '../EditorCommand/EditorCommandHandlePointerCaptureLost.ts'
 import * as HandleScrollBarHorizontalMove from '../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.ts'
 import * as HandleScrollBarHorizontalPointerDown from '../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.ts'
+import * as EditorCommandHandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.ts'
 import * as HandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.ts'
 import * as HandleScrollBarPointerDown from '../EditorCommand/EditorCommandHandleScrollBarPointerDown.ts'
 import * as HandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.ts'
@@ -159,8 +160,9 @@ export const commandMap = {
   'Editor.handleScrollBarHorizontalPointerDown': HandleScrollBarHorizontalPointerDown.handleScrollBarHorizontalPointerDown,
   'Editor.handleScrollBarMove': HandleScrollBarMove.handleScrollBarMove,
   'Editor.handleScrollBarPointerDown': HandleScrollBarPointerDown.handleScrollBarPointerDown,
+  'Editor.handleScrollBarVerticalMove': EditorCommandHandleScrollBarMove.handleScrollBarVerticalPointerMove,
   'Editor.handleScrollBarVerticalPointerDown': HandleScrollBarPointerDown.handleScrollBarPointerDown,
-  'Editor.handleScrollBarVerticalPointerMove': HandleScrollBarMove.handleScrollBarMove,
+  'Editor.handleScrollBarVerticalPointerMove': EditorCommandHandleScrollBarMove.handleScrollBarVerticalPointerMove,
   'Editor.handleSingleClick': HandleSingleClick.handleSingleClick,
   'Editor.handleTouchEnd': HandleTouchEnd.handleTouchEnd,
   'Editor.handleTouchMove': HandleTouchMove.handleTouchMove,

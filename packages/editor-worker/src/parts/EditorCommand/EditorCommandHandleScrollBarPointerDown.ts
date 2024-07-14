@@ -1,6 +1,4 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 
 // TODO scrollbar position can be in interval [0, editor.height - editor.scrollBarHeight]
@@ -11,6 +9,7 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts
 
 // @ts-ignore
 export const handleScrollBarPointerDown = (state, eventY) => {
+  console.log('pointer down', eventY)
   const { y, deltaY, finalDeltaY, height, scrollBarHeight } = state
   const relativeY = eventY - y
   const currentScrollBarY = ScrollBarFunctions.getScrollBarY(deltaY, finalDeltaY, height, scrollBarHeight)
