@@ -33,8 +33,6 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
     Assert.number(endColumnIndex)
     Assert.array(inserted)
     Assert.array(deleted)
-    console.log({ inserted, deleted, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex })
-    console.log({ linesDelta })
     if (startRowIndex === endRowIndex) {
       console.log('is same')
       if (inserted.length === 0) {

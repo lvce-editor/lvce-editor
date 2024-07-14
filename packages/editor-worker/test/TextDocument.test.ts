@@ -176,7 +176,7 @@ test('applyEdits - single deletion in one line', () => {
   ).toEqual(['  <body>', '    sample test-->', '  </body>'])
 })
 
-test.skip('applyEdits - multiple deletions in one line', () => {
+test('applyEdits - multiple deletions in one line', () => {
   const textDocument = {
     lines: ['  <body>', '    <!--sample test-->', '  </body>'],
   }
