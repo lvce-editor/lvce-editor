@@ -535,8 +535,8 @@ test('applyEdits - two lines deleted and two lines inserted', () => {
         columnIndex: 0,
       },
       end: {
-        rowIndex: 0,
-        columnIndex: 1,
+        rowIndex: 1,
+        columnIndex: 0,
       },
       inserted: [],
       deleted: ['a'],
@@ -548,8 +548,8 @@ test('applyEdits - two lines deleted and two lines inserted', () => {
         columnIndex: 0,
       },
       end: {
-        rowIndex: 0,
-        columnIndex: 1,
+        rowIndex: 2,
+        columnIndex: 0,
       },
       inserted: [],
       deleted: [''],
