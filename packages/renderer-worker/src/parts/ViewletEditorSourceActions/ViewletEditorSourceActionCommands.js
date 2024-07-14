@@ -7,4 +7,5 @@ export const Commands = {
   focusPrevious: ViewletEditorSourceActions.focusPrevious,
   focusFirst: ViewletEditorSourceActions.focusFirst,
   focusLast: ViewletEditorSourceActions.focusLast,
+  selectCurrent: ViewletEditorSourceActions.selectCurrent,
 }

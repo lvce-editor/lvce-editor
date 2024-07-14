@@ -1,6 +1,7 @@
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetEditorSourceActions from '../GetEditorSourceActions/GetEditorSourceActions.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Command from '../Command/Command.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -31,7 +32,7 @@ export const loadContent = async (state, savedState, position) => {
     width: 250,
     height: 150,
     maxHeight: 150,
-    focusedIndex: -1,
+    focusedIndex: 0,
   }
 }
 
@@ -67,5 +68,16 @@ export const focusLast = (state) => {
 }
 
 export const focusFirst = (state) => {
+  return state
+}
+
+export const selectCurrent = async (state) => {
+  const { focusedIndex, sourceActions } = state
+  if (focusedIndex === -1) {
+    return
+  }
+  const action = sourceActions[focusedIndex]
+  const { command } = action
+  await Command.execute(command)
   return state
 }

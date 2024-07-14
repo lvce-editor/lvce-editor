@@ -28,5 +28,10 @@ export const getKeyBindings = () => {
       command: 'EditorSourceActions.focusLast',
       when: WhenExpression.FocusSourceActions,
     },
+    {
+      key: KeyCode.Enter,
+      command: 'EditorSourceActions.selectCurrent',
+      when: WhenExpression.FocusSourceActions,
+    },
   ]
 }
