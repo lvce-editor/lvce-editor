@@ -1,7 +1,7 @@
+import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetEditorSourceActions from '../GetEditorSourceActions/GetEditorSourceActions.js'
-import * as Focus from '../Focus/Focus.js'
-import * as Command from '../Command/Command.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (id, uri, x, y, width, height) => {
