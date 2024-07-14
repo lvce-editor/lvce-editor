@@ -2,8 +2,19 @@ const organizeImports = {
   kind: 'source.organizeImports', // TODO use numeric code action type
   name: 'Organize Imports',
   async execute(textDocument) {
-    console.log({ textDocument })
-    return undefined
+    const edits = [
+      {
+        startOffset: 0,
+        endOffset: 27,
+        inserted: "import { a } from './a.ts'\nimport { b } from './b.ts'\n",
+      },
+      {
+        startOffset: 27,
+        endOffset: 54,
+        inserted: '',
+      },
+    ]
+    return edits
   },
 }
 
