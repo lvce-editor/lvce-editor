@@ -23,6 +23,9 @@ const getDocumentEdits = (editor: any, edits: any[]) => {
       deleted,
       origin: EditOrigin.Format,
     }
+    if (documentEdit.inserted.length === 0) {
+      documentEdit.inserted = ['']
+    }
     documentEdits.push(documentEdit)
   }
   return documentEdits
