@@ -41,6 +41,5 @@ export const applyDocumentEdits = (editor, edits) => {
     return editor
   }
   const documentEdits = getDocumentEdits(editor, edits)
-  console.log({ edits, documentEdits })
   return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
 }
