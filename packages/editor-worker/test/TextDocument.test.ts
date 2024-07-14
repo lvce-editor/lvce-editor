@@ -467,3 +467,81 @@ test('applyEdits - replace multiple lines', () => {
   ])
   expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])
 })
+
+test('applyEdits - one line deleted and one line inserted', () => {
+  const editor = {
+    lines: ['a', 'b'],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 0,
+    },
+    selections: [
+      {
+        start: {
+          rowIndex: 0,
+          columnIndex: 0,
+        },
+        end: {
+          rowIndex: 0,
+          columnIndex: 0,
+        },
+      },
+    ],
+    undoStack: [],
+  }
+  const newLines = TextDocument.applyEdits(editor, [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 0,
+        columnIndex: 2,
+      },
+      inserted: ['<div>', '    test', '  </div>'],
+      deleted: [''],
+      origin: EditOrigin.EditorSnippet,
+    },
+  ])
+  expect(newLines).toEqual(['  <div>', '    test', '  </div>'])
+})
+
+test('applyEdits - replace multiple lines', () => {
+  const editor = {
+    lines: ['h1 {', '  font-size: 20px', '}'],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 2,
+    },
+    selections: [
+      {
+        start: {
+          rowIndex: 0,
+          columnIndex: 2,
+        },
+        end: {
+          rowIndex: 0,
+          columnIndex: 2,
+        },
+      },
+    ],
+    undoStack: [],
+  }
+  const newLines = TextDocument.applyEdits(editor, [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 3,
+        columnIndex: 0,
+      },
+      inserted: ['h1 {', '  font-size: 20px;', '}', ''],
+      deleted: ['h1 {', '  font-size: 20px', '}'],
+      origin: EditOrigin.Format,
+    },
+  ])
+  expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])
+})
