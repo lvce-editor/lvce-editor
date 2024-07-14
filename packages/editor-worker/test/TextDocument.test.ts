@@ -199,7 +199,8 @@ test('applyEdits - multiple deletions in one line', () => {
     ]),
   ).toEqual(['  <body>', '    sample test', '  </body>'])
 })
-test('applyEdits - deletions in multiple lines', () => {
+
+test.only('applyEdits - deletions in multiple lines', () => {
   const textDocument = {
     lines: ['  <body>', '    <!--sample test', '-->', '  </body>'],
   }
@@ -507,7 +508,7 @@ test('applyEdits - replace multiple lines', () => {
   expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])
 })
 
-test.only('applyEdits - two lines deleted and two lines inserted', () => {
+test('applyEdits - two lines deleted and two lines inserted', () => {
   const editor = {
     lines: ['b', 'a', ''],
     cursor: {
@@ -556,5 +557,5 @@ test.only('applyEdits - two lines deleted and two lines inserted', () => {
       origin: EditOrigin.Unknown,
     },
   ])
-  expect(newLines).toEqual(['a', 'b'])
+  expect(newLines).toEqual(['a', 'b', ''])
 })

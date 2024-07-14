@@ -17,11 +17,13 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
   Assert.object(textDocument)
   Assert.array(changes)
   // TODO don't copy all lines (can be expensive, e.g. 10000 lines = 10000 * 64bit = 64kB on every keystroke)
-  // const originalLines = textDocument.lines
+  const originalLines = textDocument.lines
   const newLines = [...textDocument.lines]
+  let linesDelta = 0
   for (const change of changes) {
-    const startRowIndex = change.start.rowIndex
-    const endRowIndex = change.end.rowIndex
+    console.log({ linesDelta })
+    const startRowIndex = change.start.rowIndex + linesDelta
+    const endRowIndex = change.end.rowIndex + linesDelta
     const startColumnIndex = change.start.columnIndex
     const endColumnIndex = change.end.columnIndex
     const inserted = change.inserted
@@ -36,12 +38,13 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
     if (startRowIndex === endRowIndex) {
       console.log('is same')
       if (inserted.length === 0) {
-        const line = newLines[startRowIndex]
+        const line = originalLines[startRowIndex]
         const before = line.slice(0, startColumnIndex)
         const after = line.slice(endColumnIndex)
         newLines[startRowIndex] = before + after
       } else if (inserted.length === 1) {
-        const line = newLines[startRowIndex]
+        console.log('else if')
+        const line = originalLines[startRowIndex]
         let before = line.slice(0, startColumnIndex)
         if (startColumnIndex > line.length) {
           before += ' '.repeat(startColumnIndex - line.length)
@@ -51,7 +54,8 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
         const text = inserted[0]
         newLines[startRowIndex] = before + text + after
       } else {
-        const line = newLines[startRowIndex]
+        console.log('else')
+        const line = originalLines[startRowIndex]
         const before = line.slice(0, startColumnIndex) + inserted[0]
         const after = inserted.at(-1) + line.slice(endColumnIndex)
         Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before, ...inserted.slice(1, -1), after])
@@ -59,19 +63,24 @@ export const applyEdits = (textDocument: any, changes: any[]) => {
         textDocument.maxLineY = Math.min(textDocument.numberOfVisibleLines, newLines.length)
       }
     } else {
+      console.log('two lines')
       if (inserted.length === 1) {
-        const before = newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
+        const before = originalLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
         const after = endRowIndex >= newLines.length ? '' : newLines[endRowIndex].slice(endColumnIndex)
         Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before + after])
       } else {
-        const before = newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
+        console.log('second')
+        const before = originalLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
         const middle = inserted.slice(1, -1)
         const after = inserted.at(-1) + (endRowIndex >= newLines.length ? '' : newLines[endRowIndex].slice(endColumnIndex))
+        console.log({ before, middle, after, inserted })
         Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before, ...middle, after])
+        console.log([...newLines])
       }
       // TODO only do this once after all edits, not inside loop
       textDocument.maxLineY = Math.min(textDocument.numberOfVisibleLines, textDocument.lines.length)
     }
+    linesDelta += inserted.length - deleted.length
   }
   return newLines
 }
