@@ -30,6 +30,11 @@
   color: var(--ListHoverForeground);
 }
 
+.SourceActionItemFocused {
+  background: var(--ListHoverBackground);
+  color: var(--ListHoverForeground);
+}
+
 .SourceActionIcon {
   position: relative;
   width: 20px;

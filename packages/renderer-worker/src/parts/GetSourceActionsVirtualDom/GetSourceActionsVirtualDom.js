@@ -5,7 +5,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const getSourceActionsVirtualDom = (sourceActions, focusedIndex) => {
+export const getSourceActionsVirtualDom = (sourceActions) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
