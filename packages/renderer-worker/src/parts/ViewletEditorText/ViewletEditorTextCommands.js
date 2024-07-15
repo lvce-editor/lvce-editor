@@ -142,7 +142,6 @@ export const Commands = {
 export const LazyCommands = {
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
-  handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
 }
