@@ -77,6 +77,7 @@ export const loadContent = async (state, savedState, position) => {
   }
   const { displayString, documentation, displayStringLanguageId } = hover
   const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, displayStringLanguageId || fallbackDisplayStringLanguageId)
+  // @ts-ignore
   const wordPart = await EditorTextCommands.Commands.getWordBefore(editor, rowIndex, columnIndex)
   const wordStart = columnIndex - wordPart.length
   const documentationHeight = await MeasureTextHeight.measureTextBlockHeight(
