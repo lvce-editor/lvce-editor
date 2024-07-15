@@ -53,6 +53,7 @@ import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts
 import * as HandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.ts'
 import * as HandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.ts'
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
+import * as GetWordAt from '../EditorCommand/EditorCommandGetWordAt.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
@@ -214,6 +215,8 @@ export const commandMap = {
   'Editor.typeWithAutoClosing': EditorTypeWithAutoClosing.typeWithAutoClosing,
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
+  'Editor.getWordAt': GetWordAt.getWordAt,
+  'Editor.getWordBefore': GetWordAt.getWordBefore,
 }
 
 const map = Object.create(null)
