@@ -76,6 +76,7 @@ const ids = [
   'handleScrollBarVerticalMove',
   'handleScrollBarVerticalPointerDown',
   'handleSingleClick',
+  'handleTab',
   'handleTouchEnd',
   'handleTouchMove',
   'handleTouchStart',
