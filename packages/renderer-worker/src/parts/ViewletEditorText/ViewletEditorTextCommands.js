@@ -57,6 +57,8 @@ const ids = [
   'deleteWordPartRight',
   'deleteWordRight',
   'findAllReferences',
+  'getWordAt',
+  'getWordBefore',
   'goToDefinition',
   'goToTypeDefinition',
   'handleBeforeInput',

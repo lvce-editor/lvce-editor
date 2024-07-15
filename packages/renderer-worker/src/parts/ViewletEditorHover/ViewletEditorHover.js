@@ -2,6 +2,7 @@ import * as EditorCommandGetWordAt from '../EditorCommand/EditorCommandGetWordAt
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Hover from '../Hover/Hover.js'
+import * as EditorTextCommands from '../ViewletEditorText/ViewletEditorTextCommands.js'
 import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.js'
@@ -77,7 +78,7 @@ export const loadContent = async (state, savedState, position) => {
   }
   const { displayString, documentation, displayStringLanguageId } = hover
   const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, displayStringLanguageId || fallbackDisplayStringLanguageId)
-  const wordPart = EditorCommandGetWordAt.getWordBefore(editor, rowIndex, columnIndex)
+  const wordPart = await EditorTextCommands.Commands.getWordBefore(editor, rowIndex, columnIndex)
   const wordStart = columnIndex - wordPart.length
   const documentationHeight = await MeasureTextHeight.measureTextBlockHeight(
     documentation,
