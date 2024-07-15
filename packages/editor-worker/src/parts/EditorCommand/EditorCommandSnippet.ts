@@ -1,15 +1,10 @@
-// @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
-// @ts-ignore
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
-// @ts-ignore
-const getChanges = (lines, selections, snippet) => {
+const getChanges = (lines: string[], selections: any, snippet: any) => {
   // TODO verify that deleted fits in the line
   const insertedLines = SplitLines.splitLines(snippet.inserted)
   const changes: any[] = []
@@ -90,11 +85,9 @@ const getChanges = (lines, selections, snippet) => {
 // const getIndent =
 // TODO rename to insertSnippet
 // TODO handle snippet tabstops and cursors $0 -> becomes cursor
-// @ts-ignore
-export const editorSnippet = (editor, snippet) => {
+export const editorSnippet = (editor: any, snippet: any) => {
   // TODO verify that deleted fits in the line
   const { lines, selections } = editor
   const { changes, selectionChanges } = getChanges(lines, selections, snippet)
-  // @ts-ignore
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }
