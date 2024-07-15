@@ -1,11 +1,10 @@
-import * as EditorCommandGetWordAt from '../EditorCommand/EditorCommandGetWordAt.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Hover from '../Hover/Hover.js'
-import * as EditorTextCommands from '../ViewletEditorText/ViewletEditorTextCommands.js'
 import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.js'
+import * as EditorTextCommands from '../ViewletEditorText/ViewletEditorTextCommands.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
