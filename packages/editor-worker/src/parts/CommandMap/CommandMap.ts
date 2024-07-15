@@ -144,6 +144,8 @@ export const commandMap = {
   'Editor.deleteWordRight': DeleteWordRight.deleteWordRight,
   'Editor.findAllReferences': FindAllReferences.findAllReferences,
   'Editor.format': EditorFormat.format,
+  'Editor.getWordAt': GetWordAt.getWordAt,
+  'Editor.getWordBefore': GetWordAt.getWordBefore,
   'Editor.goToDefinition': EditorGoToDefinition.goToDefinition,
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
   'Editor.handleBeforeInput': HandleBeforeInput.handleBeforeInput,
@@ -215,8 +217,6 @@ export const commandMap = {
   'Editor.typeWithAutoClosing': EditorTypeWithAutoClosing.typeWithAutoClosing,
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
-  'Editor.getWordAt': GetWordAt.getWordAt,
-  'Editor.getWordBefore': GetWordAt.getWordBefore,
 }
 
 const map = Object.create(null)
