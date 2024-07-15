@@ -1,10 +1,7 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 
-// @ts-ignore
-const getChanges = (selections) => {
+const getChanges = (selections: any) => {
   const rowsToIndent: any[] = []
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
@@ -32,9 +29,8 @@ const getChanges = (selections) => {
   return changes
 }
 
-// @ts-ignore
-export const indentMore = (editor) => {
-  const selections = editor.selections
+export const indentMore = (editor: any) => {
+  const { selections } = editor
   const changes = getChanges(selections)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

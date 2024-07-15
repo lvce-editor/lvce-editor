@@ -57,6 +57,8 @@ const ids = [
   'deleteWordPartRight',
   'deleteWordRight',
   'findAllReferences',
+  'getWordAt',
+  'getWordBefore',
   'goToDefinition',
   'goToTypeDefinition',
   'handleBeforeInput',
@@ -76,6 +78,7 @@ const ids = [
   'handleScrollBarVerticalMove',
   'handleScrollBarVerticalPointerDown',
   'handleSingleClick',
+  'handleTab',
   'handleTouchEnd',
   'handleTouchMove',
   'handleTouchStart',
@@ -142,7 +145,6 @@ export const Commands = {
 export const LazyCommands = {
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
-  handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
 }
