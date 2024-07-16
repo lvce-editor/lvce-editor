@@ -117,6 +117,7 @@ const ids = [
   'setDecorations',
   'setDelta',
   'setDeltaY',
+  'setLanguageId',
   'setSelections',
   'showHover',
   'showSourceActions',
