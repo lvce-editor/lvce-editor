@@ -31,11 +31,11 @@ export const handleTokenizeChange = async () => {
 // TODO loadTokenizer should be invoked from renderer worker
 export const loadTokenizer = async (languageId) => {
   if (TokenizerState.has(languageId)) {
-    return
+    return TokenizerMap.getFromLanguage(languageId)
   }
   const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
   if (!tokenizePath) {
-    return
+    return TokenizerMap.getFromLanguage(languageId)
   }
   try {
     // TODO check that tokenizer is valid
@@ -57,6 +57,7 @@ export const loadTokenizer = async (languageId) => {
     return
   }
   await handleTokenizeChange()
+  return TokenizerMap.getFromLanguage(languageId)
 }
 
 export const getTokenizer = (languageId) => {

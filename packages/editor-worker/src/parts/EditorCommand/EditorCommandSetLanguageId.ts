@@ -7,7 +7,9 @@ export const setLanguageId = async (editor: any, languageId: any) => {
   // if already loaded just set tokenizer and rerender text
   // TODO race condition
   const newTokenizerId = await RendererWorker.invoke('Tokenizer.loadTokenizer', languageId)
+  console.log({ newTokenizerId })
   if (newTokenizerId === editor.tokenizerId) {
+    console.log({ same: true })
     return editor
   }
   // TODO update syntax highlighting
