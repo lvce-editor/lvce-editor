@@ -21,12 +21,14 @@ const renderLines = {
     )
   },
   apply(oldState, newState) {
+    console.log({ tokId: newState.tokenizerId })
     const incrementalEdits = GetIncrementalEdits.getIncrementalEdits(oldState, newState)
     if (incrementalEdits) {
       return [/* method */ 'setIncrementalEdits', /* incrementalEdits */ incrementalEdits]
     }
     const { textInfos, differences } = EditorText.getVisible(newState)
     newState.differences = differences
+    console.log({ textInfos, differences })
     const dom = GetEditorRowsVirtualDom.getEditorRowsVirtualDom(textInfos, differences)
     return [/* method */ 'setText', dom]
   },

@@ -24,3 +24,5 @@ export const getFromLanguage = (languageId) => {
   }
   return -1
 }
+
+globalThis.tokenizers = tokenizers

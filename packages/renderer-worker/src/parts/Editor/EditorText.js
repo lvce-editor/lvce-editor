@@ -269,6 +269,8 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
   const differences = []
   const { lines, tokenizerId, decorations } = editor
   const tokenizer = TokenizerMap.get(tokenizerId)
+
+  console.log({ tokenizer })
   const { TokenMap } = tokenizer
   let offset = minLineOffset
   const tabSize = 2
