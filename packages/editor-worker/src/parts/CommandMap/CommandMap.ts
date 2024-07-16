@@ -31,6 +31,7 @@ import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPa
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.ts'
 import * as FindAllReferences from '../EditorCommand/EditorCommandFindAllReferences.ts'
 import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
+import * as GetWordAt from '../EditorCommand/EditorCommandGetWordAt.ts'
 import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
 import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
 import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
@@ -53,7 +54,6 @@ import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts
 import * as HandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.ts'
 import * as HandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.ts'
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
-import * as GetWordAt from '../EditorCommand/EditorCommandGetWordAt.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
@@ -85,6 +85,7 @@ import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SetDecorations from '../EditorCommand/EditorCommandSetDecorations.ts'
 import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
+import * as SetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.ts'
 import * as SetSelections from '../EditorCommand/EditorCommandSetSelections.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
@@ -205,6 +206,7 @@ export const commandMap = {
   'Editor.setDecorations': SetDecorations.setDecorations,
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
+  'Editor.setLanguageId': SetLanguageId.setLanguageId,
   'Editor.setSelections': SetSelections.setSelections,
   'Editor.showHover': EditorShowHover.showHover,
   'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,

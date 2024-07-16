@@ -1,10 +1,7 @@
-// @ts-ignore
 import * as Tokenizer from '../Tokenizer/Tokenizer.ts'
-// @ts-ignore
 import * as ViewletState from '../ViewletStates/ViewletStates.ts'
 
-// @ts-ignore
-export const setLanguageId = async (editor, languageId) => {
+export const setLanguageId = async (editor: any, languageId: any) => {
   const { uid } = editor
   // TODO only load tokenizer if not already loaded
   // if already loaded just set tokenizer and rerender text
