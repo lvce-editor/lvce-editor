@@ -180,6 +180,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostClosingTagCompletion.ipc.js')
     case ModuleId.SendMessagePortToRendererProcess:
       return import('../SendMessagePortToRendererProcess/SendMessagePortToRendererProcess.ipc.js')
+    case ModuleId.Tokenizer:
+      return import('../Tokenizer/Tokenizer.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

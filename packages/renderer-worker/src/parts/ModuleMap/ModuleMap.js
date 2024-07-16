@@ -204,6 +204,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostClosingTag
     case 'SendMessagePortToRendererProcess':
       return ModuleId.SendMessagePortToRendererProcess
+    case 'Tokenizer':
+      return ModuleId.Tokenizer
     default:
       throw new Error(`module ${prefix} not found`)
   }
