@@ -1,6 +1,5 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
@@ -14,6 +13,7 @@ import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagno
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -233,9 +233,11 @@ export const contentLoadedEffects = async (state) => {
   await updateDiagnostics(state)
 }
 
-export const handleLanguagesChanged = (state) => {
+export const handleLanguagesChanged = async (state) => {
   const newLanguageId = getLanguageId(state)
-  return EditorCommandSetLanguageId.setLanguageId(state, newLanguageId)
+  // TODO send to editor worker
+  const newEditor = await EditorWorker.invoke('Editor.setLanguageId', newLanguageId)
+  return newEditor
 }
 
 export const hasFunctionalResize = true
