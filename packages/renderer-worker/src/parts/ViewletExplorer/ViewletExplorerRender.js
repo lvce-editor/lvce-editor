@@ -3,6 +3,8 @@ import * as GetVisibleExplorerItems from '../GetVisibleExplorerItems/GetVisibleE
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalRootRender = true
+
 const renderItems = {
   isEqual(oldState, newState) {
     return (
@@ -25,30 +27,30 @@ const renderItems = {
       newState.editingType,
       newState.editingValue,
     )
-    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents).slice(1)
-    return ['setDom', dom]
+    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
-  },
-  apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-    const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [/* method */ 'setFocusedIndex', /* oldindex */ oldFocusedIndex, /* newIndex */ newFocusedIndex, /* focused */ newState.focused]
-  },
-}
+// const renderFocusedIndex = {
+//   isEqual(oldState, newState) {
+//     return oldState.focusedIndex === newState.focusedIndex && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
+//   },
+//   apply(oldState, newState) {
+//     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+//     const newFocusedIndex = newState.focusedIndex - newState.minLineY
+//     return [/* method */ 'setFocusedIndex', /* oldindex */ oldFocusedIndex, /* newIndex */ newFocusedIndex, /* focused */ newState.focused]
+//   },
+// }
 
-const renderDropTargets = {
-  isEqual(oldState, newState) {
-    return oldState.dropTargets === newState.dropTargets
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setDropTargets', /* oldDropTargets */ oldState.dropTargets, /* newDropTargets */ newState.dropTargets]
-  },
-}
+// const renderDropTargets = {
+//   isEqual(oldState, newState) {
+//     return oldState.dropTargets === newState.dropTargets
+//   },
+//   apply(oldState, newState) {
+//     return [/* method */ 'setDropTargets', /* oldDropTargets */ oldState.dropTargets, /* newDropTargets */ newState.dropTargets]
+//   },
+// }
 
 const renderEditingIndex = {
   isEqual(oldState, newState) {
@@ -60,4 +62,4 @@ const renderEditingIndex = {
   },
 }
 
-export const render = [renderItems, renderDropTargets, renderFocusedIndex, renderEditingIndex]
+export const render = [renderItems, renderEditingIndex]
