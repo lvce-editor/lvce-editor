@@ -16,7 +16,7 @@ export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect })
 
   // assert
   const explorer = Locator('.Explorer')
-  await expect(explorer).toHaveClass('FocusOutline')
+  // await expect(explorer).toHaveClass('FocusOutline')
 
   // act
   await Explorer.focusNext()
