@@ -1,9 +1,12 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetExplorerMaxLineY from '../GetExplorerMaxLineY/GetExplorerMaxLineY.js'
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
@@ -15,10 +18,8 @@ import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
 import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Focus from '../Focus/Focus.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
-import * as Character from '../Character/Character.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
@@ -507,6 +508,7 @@ export const updateEditingValue = (state, value) => {
 }
 
 export const handleFocus = (state) => {
+  console.log('handle focus')
   Focus.setFocus(FocusKey.Explorer)
   return state
 }
@@ -646,6 +648,7 @@ export const handleClickAt = (state, button, x, y) => {
   if (button !== MouseEventType.LeftClick) {
     return state
   }
+
   const index = getIndexFromPosition(state, x, y)
   return handleClick(state, index)
 }
