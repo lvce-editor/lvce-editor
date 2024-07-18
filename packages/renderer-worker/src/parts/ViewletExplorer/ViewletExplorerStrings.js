@@ -19,6 +19,8 @@ const UiStrings = {
   CollapseAllFoldersInExplorer: 'Collapse All Folders in Explorer',
   Explorer: 'Explorer',
   FilesExplorer: 'Files Explorer',
+  YouHaveNotYetOpenedAFolder: 'You have not yet opened a folder',
+  OpenFolder: 'Open folder',
 }
 
 export const newFile = () => {
@@ -79,4 +81,12 @@ export const explorer = () => {
 
 export const filesExplorer = () => {
   return I18nString.i18nString(UiStrings.FilesExplorer)
+}
+
+export const youHaveNotYetOpenedAFolder = () => {
+  return I18nString.i18nString(UiStrings.YouHaveNotYetOpenedAFolder)
+}
+
+export const openFolder = () => {
+  return I18nString.i18nString(UiStrings.OpenFolder)
 }
