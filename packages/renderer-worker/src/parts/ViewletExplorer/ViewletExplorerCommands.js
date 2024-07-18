@@ -32,6 +32,7 @@ export const Commands = {
   updateEditingValue: ViewletExplorer.updateEditingValue,
   handleFocus: ViewletExplorer.handleFocus,
   refresh: ViewletExplorer.refresh,
+  handleClickOpenFolder:ViewletExplorer.handleClickOpenFolder,
 }
 
 // prettier-ignore

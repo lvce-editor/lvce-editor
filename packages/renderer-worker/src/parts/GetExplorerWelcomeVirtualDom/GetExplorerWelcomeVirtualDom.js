@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as ExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -14,14 +15,20 @@ export const getExplorerWelcomeVirtualDom = () => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'Welcome',
+      className: ClassNames.Welcome,
       childCount: 2,
+    },
+    {
+      type: VirtualDomElements.P,
+      className: ClassNames.WelcomeMessage,
+      childCount: 1,
     },
     text(ExplorerStrings.youHaveNotYetOpenedAFolder()),
     {
       type: VirtualDomElements.Button,
-      className: 'Button ButtonPrimary',
+      className: MergeClassNames.mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       childCount: 1,
+      onClick: DomEventListenerFunctions.handleClickOpenFolder,
     },
     text(ExplorerStrings.openFolder()),
   ]

@@ -3,7 +3,10 @@ import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletExplorerStrings from './ViewletExplorerStrings.js'
 import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
-export const getActions = (): readonly ViewletAction[] => {
+export const getActions = (root: string): readonly ViewletAction[] => {
+  if (!root) {
+    return []
+  }
   return [
     {
       type: ActionType.Button,
