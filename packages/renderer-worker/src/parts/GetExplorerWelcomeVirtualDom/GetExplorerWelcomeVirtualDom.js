@@ -22,6 +22,7 @@ export const getExplorerWelcomeVirtualDom = () => {
       type: VirtualDomElements.Button,
       className: 'Button ButtonPrimary',
       childCount: 1,
+      onClick: 'handleClickOpenFolder',
     },
     text(ExplorerStrings.openFolder()),
   ]

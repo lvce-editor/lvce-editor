@@ -12,13 +12,13 @@ import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as OpenFolder from '../OpenFolder/OpenFolder.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
 import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
@@ -1102,4 +1102,9 @@ export const revealItem = async (state, uri) => {
     return revealItemHidden(state, uri)
   }
   return revealItemVisible(state, index)
+}
+
+export const handleClickOpenFolder = async (state) => {
+  await OpenFolder.openFolder()
+  return state
 }
