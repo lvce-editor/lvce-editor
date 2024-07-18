@@ -17,6 +17,11 @@ export const getExplorerWelcomeVirtualDom = () => {
       className: 'Welcome',
       childCount: 2,
     },
+    {
+      type: VirtualDomElements.P,
+      className: 'WelcomeMessage',
+      childCount: 1,
+    },
     text(ExplorerStrings.youHaveNotYetOpenedAFolder()),
     {
       type: VirtualDomElements.Button,
