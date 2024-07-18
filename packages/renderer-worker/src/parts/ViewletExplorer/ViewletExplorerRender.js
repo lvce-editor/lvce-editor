@@ -27,7 +27,7 @@ const renderItems = {
       newState.editingType,
       newState.editingValue,
     )
-    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex)
+    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex, newState.root)
     return ['Viewlet.setDom2', dom]
   },
 }
