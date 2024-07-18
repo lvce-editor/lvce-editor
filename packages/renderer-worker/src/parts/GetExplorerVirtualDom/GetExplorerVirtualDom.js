@@ -25,6 +25,7 @@ export const getExplorerVirtualDom = (visibleItems, focusedIndex, root) => {
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     onPointerDown: DomEventListenerFunctions.HandlePointerDown,
     onWheel: DomEventListenerFunctions.HandleWheel,
+    onClick: DomEventListenerFunctions.HandleClick,
   })
   dom.push(...visibleItems.flatMap(GetExplorerItemVirtualDom.getExplorerItemVirtualDom))
   return dom
