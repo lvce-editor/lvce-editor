@@ -553,7 +553,7 @@ const loadIfVisible = async (state, module) => {
       )
       if (commands) {
         const referenceNodes = getReferenceNodes(sideBarLocation)
-        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+        commands.push(['Viewlet.send', parentUid, 'appendLayoutItem', childUid, sideBarLocation, moduleId])
       }
     }
     return {
