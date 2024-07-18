@@ -1,6 +1,8 @@
 .StatusBar {
   display: flex;
   justify-content: space-between;
+  flex-basis: 23px;
+  flex-grow: 0;
 }
 
 .StatusBar {
