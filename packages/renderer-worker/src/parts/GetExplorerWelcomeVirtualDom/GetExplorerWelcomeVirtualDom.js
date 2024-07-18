@@ -10,6 +10,11 @@ export const getExplorerWelcomeVirtualDom = () => {
       type: VirtualDomElements.Div,
       className: MergeClassNames.mergeClassNames(ClassNames.Viewlet, ClassNames.Explorer),
       tabIndex: 0,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Welcome',
       childCount: 2,
     },
     text(ExplorerStrings.youHaveNotYetOpenedAFolder()),
