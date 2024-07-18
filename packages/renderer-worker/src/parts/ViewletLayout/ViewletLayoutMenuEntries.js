@@ -348,5 +348,9 @@ export const getQuickPickMenuEntries = () => {
       id: 'SimpleBrowser.openDevtools',
       label: 'Simple Browser: Open Dev Devtools',
     },
+    {
+      id: 'Workspace.close',
+      label: 'Workspace: Close',
+    },
   ]
 }

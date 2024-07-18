@@ -6,4 +6,5 @@ export const Commands = {
   hydrate: Workspace.hydrate,
   setPath: Workspace.setPath,
   setUri: Workspace.setUri,
+  close: Workspace.close,
 }

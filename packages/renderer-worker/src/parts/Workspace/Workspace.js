@@ -44,6 +44,10 @@ export const setUri = async (uri) => {
   await onWorkspaceChange()
 }
 
+export const close = () => {
+  return setPath('')
+}
+
 const getResolvedRootFromSharedProcess = async () => {
   const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot)
   return resolvedRoot
