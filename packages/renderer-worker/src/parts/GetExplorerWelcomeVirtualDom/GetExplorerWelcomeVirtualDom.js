@@ -1,4 +1,5 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as ExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -22,7 +23,7 @@ export const getExplorerWelcomeVirtualDom = () => {
       type: VirtualDomElements.Button,
       className: 'Button ButtonPrimary',
       childCount: 1,
-      onClick: 'handleClickOpenFolder',
+      onClick: DomEventListenerFunctions.handleClickOpenFolder,
     },
     text(ExplorerStrings.openFolder()),
   ]
