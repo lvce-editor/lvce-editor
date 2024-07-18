@@ -14,18 +14,18 @@ export const getExplorerWelcomeVirtualDom = () => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'Welcome',
+      className: ClassNames.Welcome,
       childCount: 2,
     },
     {
       type: VirtualDomElements.P,
-      className: 'WelcomeMessage',
+      className: ClassNames.WelcomeMessage,
       childCount: 1,
     },
     text(ExplorerStrings.youHaveNotYetOpenedAFolder()),
     {
       type: VirtualDomElements.Button,
-      className: 'Button ButtonPrimary',
+      className: MergeClassNames.mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       childCount: 1,
     },
     text(ExplorerStrings.openFolder()),
