@@ -2,6 +2,7 @@ export const Css = [
   '/css/parts/Viewlet.css',
   '/css/parts/ViewletLayout.css',
   '/css/parts/ViewletSash.css',
+  '/css/parts/SplitView.css',
 
   // TODO remove these
   '/css/parts/AriaAlert.css',
