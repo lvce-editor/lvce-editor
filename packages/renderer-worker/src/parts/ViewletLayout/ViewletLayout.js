@@ -748,7 +748,7 @@ const showAsync = async (uid, points, module) => {
       true,
     )
     if (commands) {
-      commands.push(['Viewlet.append', uid, viewletUid])
+      commands.push(['Viewlet.send', uid, 'appendLayoutItem', viewletUid, sideBarLocation, moduleId])
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // TODO
