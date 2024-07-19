@@ -6,4 +6,5 @@ export interface EditorGroup {
   readonly editors: readonly any[]
   readonly tabsUid: number
   readonly activeIndex: number
+  readonly focusedIndex?: number
 }
