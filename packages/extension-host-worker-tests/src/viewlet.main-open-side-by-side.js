@@ -2,8 +2,9 @@ export const skip = true
 
 export const name = 'viewlet.main-open-side-by-side'
 
-export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
+export const test = async ({ FileSystem, Workspace, Main, Locator, expect, SideBar }) => {
   // arrange
+  await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file-1.txt`, `abc`)
   await FileSystem.writeFile(`${tmpDir}/file-2.txt`, `def`)

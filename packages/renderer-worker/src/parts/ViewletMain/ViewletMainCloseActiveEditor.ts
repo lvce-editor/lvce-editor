@@ -1,6 +1,7 @@
 import { closeEditor } from './ViewletMainCloseEditor.js'
+import type { MainState } from './ViewletMainTypes.ts'
 
-export const closeActiveEditor = (state) => {
+export const closeActiveEditor = (state: MainState) => {
   const { groups, activeGroupIndex } = state
   if (activeGroupIndex === -1) {
     return state

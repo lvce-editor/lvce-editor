@@ -1,4 +1,6 @@
-export const closeTabsLeft = (state) => {
+import type { MainState } from './ViewletMainTypes.ts'
+
+export const closeTabsLeft = (state: MainState) => {
   const commands = []
   if (state.focusedIndex <= state.activeIndex) {
     // view is kept the same, only tabs are closed
