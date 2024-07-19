@@ -1,7 +1,7 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as DebugDisplay from '../src/parts/DebugDisplay/DebugDisplay.js'
-import * as DebugScopeType from '../src/parts/DebugScopeType/DebugScopeType.js'
 import * as DebuggerPausedReason from '../src/parts/DebugPausedReason/DebugPausedReason.js'
+import * as DebugScopeType from '../src/parts/DebugScopeType/DebugScopeType.js'
 
 test('getScopeLabel - local', () => {
   expect(

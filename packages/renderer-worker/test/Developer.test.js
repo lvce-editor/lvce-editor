@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
@@ -60,12 +60,10 @@ jest.unstable_mockModule('../src/parts/ProcessExplorer/ProcessExplorer.js', () =
   }
 })
 
-const Platform = await import('../src/parts/Platform/Platform.js')
 const ProcessExplorer = await import('../src/parts/ProcessExplorer/ProcessExplorer.js')
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
 const Command = await import('../src/parts/Command/Command.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const Download = await import('../src/parts/Download/Download.js')
