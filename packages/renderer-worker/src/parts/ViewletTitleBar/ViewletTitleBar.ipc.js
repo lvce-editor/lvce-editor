@@ -1,6 +1,6 @@
 export * from './ViewletTitleBar.js'
 export * from './ViewletTitleBarCommands.js'
-export * from './ViewletTitleBarCss.js'
+export * from './ViewletTitleBarCss.ts'
 export * from './ViewletTitleBarName.js'
 export * from './ViewletTitleBarRender.js'
 export * from './ViewletTitleBarResize.js'

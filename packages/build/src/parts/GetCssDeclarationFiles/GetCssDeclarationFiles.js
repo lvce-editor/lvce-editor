@@ -20,10 +20,12 @@ export const getCssDeclarationFiles = async (cachePath) => {
   const viewletDirents = dirents.filter(isViewletDirent)
   const results = []
   for (const dirent of viewletDirents) {
-    const relativePath = `src/parts/${dirent}/${dirent}Css.js`
-    const cssPath = Path.join(cachePath, relativePath)
-    if (await exists(cssPath)) {
-      results.push(cssPath)
+    const relativePathCandidates = [`src/parts/${dirent}/${dirent}Css.js`, `src/parts/${dirent}/${dirent}Css.ts`]
+    for (const relativePath of relativePathCandidates) {
+      const cssPath = Path.join(cachePath, relativePath)
+      if (await exists(cssPath)) {
+        results.push(cssPath)
+      }
     }
   }
   return results
