@@ -3,6 +3,9 @@ export const renderTitle = {
     return oldState === newState
   },
   apply(oldState, newState) {
-    return 'test title'
+    const prefix = `Extensions`
+    const postfix = `Installed`
+    const title = `${prefix}: ${postfix}`
+    return title
   },
 }
