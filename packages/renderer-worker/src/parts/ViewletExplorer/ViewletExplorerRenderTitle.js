@@ -1,4 +1,4 @@
-import * as ExplorerStrings from '../ViewletExplorer/ExplorerStrings.js'
+import * as ExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
 
 const getPostFix = (root) => {
   if (!root) {
