@@ -1,4 +1,4 @@
-import { closeEditor } from './ViewletMainCloseEditor.js'
+import { closeEditor } from './ViewletMainCloseEditor.ts'
 import type { MainState } from './ViewletMainTypes.ts'
 
 export const closeActiveEditor = (state: MainState) => {
