@@ -21,6 +21,7 @@ const UiStrings = {
   FilesExplorer: 'Files Explorer',
   YouHaveNotYetOpenedAFolder: 'You have not yet opened a folder',
   OpenFolder: 'Open folder',
+  NoFolderOpen: 'No Folder Open',
 }
 
 export const newFile = () => {
@@ -89,4 +90,8 @@ export const youHaveNotYetOpenedAFolder = () => {
 
 export const openFolder = () => {
   return I18nString.i18nString(UiStrings.OpenFolder)
+}
+
+export const noFolderOpen = () => {
+  return I18nString.i18nString(UiStrings.NoFolderOpen)
 }
