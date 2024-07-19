@@ -66,6 +66,7 @@ export const handlePointerDown = (state, pointerId, x, y) => {
 }
 
 const handleZoom = (state) => {
+  // @ts-ignore
   const { domMatrix, eventCache, previousDiff, touchZoomFactor } = state
   const currentDiff = Distance.distance(eventCache[0], eventCache[1])
   if (previousDiff !== 0) {
@@ -237,6 +238,7 @@ export const handleWheel = (state, eventX, eventY, deltaX, deltaY) => {
   const { x, y } = state
   const relativeX = eventX - x
   const relativeY = eventY - y
+  // @ts-ignore
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, normalizedDeltaY)
   const newDomMatrix = DomMatrix.zoomInto(domMatrix, currentZoomFactor, relativeX, relativeY)

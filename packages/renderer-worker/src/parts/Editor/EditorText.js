@@ -4,6 +4,7 @@ import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+// @ts-ignore
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
 // const getTokens = (editor) => {
@@ -58,6 +59,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
 // TODO only send changed lines to renderer process instead of all lines in viewport
 
+// @ts-ignore
 const invalidateLine = (editor, index) => {
   editor.validLines[index] = false
   if (index < editor.invalidStartIndex) {
@@ -65,6 +67,7 @@ const invalidateLine = (editor, index) => {
   }
 }
 
+// @ts-ignore
 const applyChangesToSyntaxHighlighting = (editor, changes) => {
   // TODO invalidate lines that are affected
 }
@@ -210,8 +213,10 @@ const getLineInfoDefault = (
     const decorationOffset = decorations[decorationIndex]
     let extraClassName = ''
     if (decorationOffset !== undefined && decorationOffset - lineOffset === start) {
+      // @ts-ignore
       const decorationLength = decorations[++decorationIndex]
       const decorationType = decorations[++decorationIndex]
+      // @ts-ignore
       const decorationModifiers = decorations[++decorationIndex]
       // console.log('MATCHING DECORATION', {
       //   decorationIndex,
@@ -304,6 +309,7 @@ export const getVisible = (editor) => {
   // currently hard to test because need to mock editor height, top, left,
   // invalidStartIndex, lineCache, etc. just for testing editorType
   // editor.invalidStartIndex = changes[0].start.rowIndex
+  // @ts-ignore
   const { minLineY, numberOfVisibleLines, lines, width, deltaX, fontWeight, fontSize, fontFamily, letterSpacing, charWidth } = editor
   const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
   const { tokens, tokenizersToLoad, embeddedResults } = GetTokensViewport.getTokensViewport(editor, minLineY, maxLineY)

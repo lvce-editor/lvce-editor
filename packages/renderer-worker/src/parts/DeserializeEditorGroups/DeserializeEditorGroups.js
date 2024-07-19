@@ -10,6 +10,7 @@ export const deserializeEditorGroups = (savedState, state) => {
   if (!savedState) {
     return []
   }
+  // @ts-ignore
   const { groups, activeGroupIndex } = savedState
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
   if (!groups || !Array.isArray(groups)) {

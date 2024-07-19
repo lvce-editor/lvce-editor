@@ -6,6 +6,7 @@ import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as SessionReplayStorage from '../SessionReplayStorage/SessionReplayStorage.js'
+// @ts-ignore
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 import { VError } from '../VError/VError.js'

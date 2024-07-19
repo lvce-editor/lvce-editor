@@ -22,6 +22,7 @@ export const getIncrementalEdits = (oldState, newState) => {
         initialLineState,
         newTokenizer.hasArrayReturn,
       )
+      // @ts-ignore
       const { tokens: newTokens, lineState } = SafeTokenizeLine.safeTokenizeLine(
         newState.languageId,
         newTokenizer.tokenizeLine,

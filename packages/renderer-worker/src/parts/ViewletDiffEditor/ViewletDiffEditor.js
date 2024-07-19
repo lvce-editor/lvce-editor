@@ -32,6 +32,7 @@ const getMinLineY = (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
+  // @ts-ignore
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)

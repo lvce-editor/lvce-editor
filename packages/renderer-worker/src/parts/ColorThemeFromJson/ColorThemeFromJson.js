@@ -1,6 +1,7 @@
 import * as Character from '../Character/Character.js'
 import * as Logger from '../Logger/Logger.js'
 
+// @ts-ignore
 const rgba = (r, g, b, a) => {
   r = Math.min(255, Math.max(0, r)) | 0
   g = Math.min(255, Math.max(0, g)) | 0
@@ -13,14 +14,17 @@ const rgba = (r, g, b, a) => {
   }
 }
 
+// @ts-ignore
 const darken = () => {}
 
+// @ts-ignore
 const lighten = () => {}
 
 const transparent = (color, factor) => {
   return color
 }
 
+// @ts-ignore
 const isValidHexColor = (value) => {
   return true
 }

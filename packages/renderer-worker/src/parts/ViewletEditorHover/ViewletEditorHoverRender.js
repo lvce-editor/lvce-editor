@@ -26,6 +26,7 @@ const renderBounds = {
     return oldState.x === newState.x && oldState.y === newState.y && oldState.resizedWidth === newState.resizedWidth
   },
   apply(oldState, newState) {
+    // @ts-ignore
     const { x, y, width, height, resizedWidth, uid } = newState
     console.log('apply')
     return [RenderMethod.SetBounds, x, y, resizedWidth, height]

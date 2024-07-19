@@ -38,8 +38,11 @@ const RE_COMMENT_END = /^-->/
 const RE_TAG_TEXT = /^[^\s>]+/
 const RE_ANY_TEXT = /^[^\n]+/
 const RE_BLOCK_COMMENT_START = /^<!--/
+// @ts-ignore
 const RE_BLOCK_COMMENT_CONTENT_1 = /^.+?(?=-->)/s
+// @ts-ignore
 const RE_BLOCK_COMMENT_CONTENT_2 = /^.+$/s
+// @ts-ignore
 const RE_BLOCK_COMMENT_END = /^-->/
 const RE_SELF_CLOSING = /^\/>/
 

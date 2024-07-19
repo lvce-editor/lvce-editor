@@ -52,6 +52,7 @@ const getLabelVirtualDom = (displayText, matchLength, matchStart, replacement) =
 }
 
 const renderRow = (rowInfo) => {
+  // @ts-ignore
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount, focused } = rowInfo
   const treeItem = {
     type: VirtualDomElements.Div,

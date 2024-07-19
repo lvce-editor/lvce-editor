@@ -1,8 +1,10 @@
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
+// @ts-ignore
 const handleContextMenuMouse = (state, x, y) => {}
 
+// @ts-ignore
 const handleContextMenuIndex = (state, index) => {}
 
 // TODO pass index instead

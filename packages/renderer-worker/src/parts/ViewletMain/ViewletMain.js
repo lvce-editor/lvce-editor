@@ -28,6 +28,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 import { openUri } from './ViewletMainOpenUri.js'
 
+// @ts-ignore
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 // interface Editor {
@@ -119,6 +120,7 @@ export const create = (id, uri, x, y, width, height) => {
 
 // TODO there is also openEditor function
 
+// @ts-ignore
 const findEditorWithUri = (editors, uri) => {
   for (const [i, editor] of editors.entries()) {
     if (editor.uri === uri) {
@@ -140,6 +142,7 @@ const getSavedActiveIndex = (savedState, restoredGroups) => {
 }
 
 const getRestoredGroups = (savedState, state) => {
+  // @ts-ignore
   const { x, y, width, height } = state
   if (Workspace.isTest()) {
     return {
@@ -212,6 +215,7 @@ const handleEditorChange = async (editor) => {
     return state
   }
   const group = groups[activeGroupIndex]
+  // @ts-ignore
   const { editors, activeIndex, tabsUid } = group
   if (activeIndex === -1) {
     return state
@@ -253,6 +257,7 @@ const handleTitleUpdated = async (uid, title) => {
     return state
   }
   const group = groups[activeGroupIndex]
+  // @ts-ignore
   const { editors, activeIndex, tabsUid } = group
   if (activeIndex === -1) {
     return state
@@ -307,6 +312,7 @@ export const getChildren = (state) => {
   if (groups.length === 0) {
     return []
   }
+  // @ts-ignore
   const editor = groups[0]
   return [
     // {
@@ -573,6 +579,7 @@ export const handleClickClose = (state, button, index) => {
 export const handleTabContextMenu = async (state, eventX, eventY) => {
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
+  // @ts-ignore
   const { editors, x, y } = group
   const index = GetTabIndex.getTabIndex(editors, x, eventX)
   if (index === -1) {

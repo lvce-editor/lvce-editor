@@ -196,6 +196,7 @@ export const handleResizerClick = (state, id, x) => {
 }
 
 export const handleResizerMove = (state, eventX) => {
+  // @ts-ignore
   const { resizerDownId, contentPadding, width, columnWidth1, columnWidth2, columnWidth3, x } = state
   const contentWidth = width - contentPadding
   if (resizerDownId === 1) {

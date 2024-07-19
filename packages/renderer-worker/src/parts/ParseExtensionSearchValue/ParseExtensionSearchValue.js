@@ -1,3 +1,4 @@
+// @ts-ignore
 import { VError } from '../VError/VError.js'
 import * as ExtensionFilterParameter from '../ExtensionFilterParameter/ExtensionFilterParameter.js'
 

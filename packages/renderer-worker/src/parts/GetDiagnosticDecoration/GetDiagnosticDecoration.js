@@ -15,6 +15,7 @@ export const getDiagnosticDecoration = (
   averageCharWidth,
   diagnostic,
 ) => {
+  // @ts-ignore
   const { rowIndex, columnIndex, endRowIndex, endColumnIndex, type } = diagnostic
   const y = GetX.getY(rowIndex, minLineY, rowHeight)
   const line = lines[rowIndex]

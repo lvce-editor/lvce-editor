@@ -58,6 +58,7 @@ test.skip('open - can rename', async () => {
 })
 
 test.skip('open - cannot rename', async () => {
+  // @ts-ignore
   const editor = {
     lines: [''],
     primarySelectionIndex: 0,
@@ -110,6 +111,7 @@ test.skip('finish - empty workspace edits', async () => {
 })
 
 test.skip('abort', async () => {
+  // @ts-ignore
   const editor = {
     lines: [''],
     primarySelectionIndex: 0,

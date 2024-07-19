@@ -1,6 +1,9 @@
 import * as I18nString from '../I18NString/I18NString.js'
+// @ts-ignore
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+// @ts-ignore
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
+// @ts-ignore
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 /**

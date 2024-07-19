@@ -23,6 +23,7 @@ const getTitleBarButtonsElectron = () => {
   return []
 }
 
+// @ts-ignore
 export const get = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:

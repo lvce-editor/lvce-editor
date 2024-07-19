@@ -1,6 +1,7 @@
 import * as DiffDomType from '../DiffDomType/DiffDomType.js'
 import * as GetTotalChildCount from '../GetTotalChildCount/GetTotalChildCount.js'
 
+// @ts-ignore
 const isEqualElement = (oldDom, i, newDom, j) => {
   const oldElement = oldDom[i]
   const newElement = newDom[j]

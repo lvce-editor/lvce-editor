@@ -182,6 +182,7 @@ export const showFunctional = (id) => {
   const commands = ViewletManager.render(instance.factory, initialState, instance.state)
   // TODO avoid side effect, instead return an array of
   // commands to send to shared process
+  // @ts-ignore
   const promise = instance.factory.show(instance.state)
   return commands
 }
@@ -438,6 +439,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }
 
+// @ts-ignore
 export const disposeWidgetWithValue = async (id, value) => {
   try {
     if (!id) {
@@ -480,6 +482,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     if (!parentInstance) {
       return
     }
+    // @ts-ignore
     const newState = parentInstance.factory.handleDefineKeyBindingDisposed(parentInstance.state, value)
   } catch (error) {
     console.error(error)

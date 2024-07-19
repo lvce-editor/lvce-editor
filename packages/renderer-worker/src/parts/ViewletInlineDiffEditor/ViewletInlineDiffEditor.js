@@ -1,4 +1,5 @@
 import * as Character from '../Character/Character.js'
+// @ts-ignore
 import * as Diff from '../Diff/Diff.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as GetDiffEditorContents from '../GetDiffEditorContents/GetDiffEditorContents.js'
@@ -35,6 +36,7 @@ const getMinLineY = (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
+  // @ts-ignore
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('inline-diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)
