@@ -30,10 +30,15 @@ export const closeOthers = async (state: MainState) => {
     commands.push(...disposeCommands)
     const instanceUid = Id.create()
     const moduleId = ViewletMap.getModuleId(activeEditor.uri)
+    // @ts-ignore
     const x = state.x
+    // @ts-ignore
     const y = state.y + state.tabHeight
+    // @ts-ignore
     const width = state.width
+    // @ts-ignore
     const contentHeight = state.height - state.tabHeight
+    // @ts-ignore
     const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, focusedEditor.uri, x, y, width, contentHeight)
     instance.uid = instanceUid
     instance.show = false
@@ -41,7 +46,9 @@ export const closeOthers = async (state: MainState) => {
     // @ts-ignore
     const instanceCommands = await ViewletManager.load(instance, false, false, {})
     commands.push(...instanceCommands)
+    // @ts-ignore
     commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
+    // @ts-ignore
     commands.push(['Viewlet.append', state.uid, instanceUid])
   }
   const newGroup = {

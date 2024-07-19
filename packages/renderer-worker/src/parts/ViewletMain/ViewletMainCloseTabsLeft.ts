@@ -9,6 +9,7 @@ export const closeTabsLeft = (state: MainState) => {
     commands.push(['Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsLeft', /* index */ state.focusedIndex])
   } else {
     // view needs to be switched to focused index
+    // @ts-ignore
     commands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsLeft', /* index */ state.focusedIndex])
   }
   return {

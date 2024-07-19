@@ -10,6 +10,7 @@ const getEditors = (group) => {
 }
 
 export const closeAllEditors = (state: MainState) => {
+  // @ts-ignore
   const { groups, uid } = state
   const editors = groups.flatMap(getEditors)
   const ids = editors.map(getUid)
