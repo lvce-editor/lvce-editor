@@ -1,5 +1,5 @@
 import { VError } from '@lvce-editor/verror'
-import { readFile, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
@@ -8,6 +8,9 @@ import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFi
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Root from '../Root/Root.js'
+import { dirname, join } from 'node:path'
+import { tmpDir } from '../Shared/Shared.js'
 
 const getNewCssDeclarationFile = (content, filteredCss) => {
   const lines = content.split('\n')
@@ -51,7 +54,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(cachePath)
     for (const file of cssDeclarationFiles) {
-      const url = pathToFileURL(file).toString()
+      let url = pathToFileURL(file).toString()
+      if (file.endsWith('.ts')) {
+        const tmpFile = join(Root.root, 'packages', 'build', '.tmp', 'css-js', 'tmp.js')
+        await mkdir(dirname(tmpFile), { recursive: true })
+        await cp(file, tmpFile)
+        url = pathToFileURL(tmpFile).toString()
+      }
       const module = await import(url)
       const Css = module.Css
       if (Css) {
