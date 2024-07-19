@@ -216,6 +216,7 @@ state.files['/sample-folder/a.txt'] = ''
 state.files['/sample-folder/b.txt'] = ''
 state.files['/sample-folder/c.txt'] = ''
 
+// @ts-ignore
 const getName = (path) => {
   return path.slice(path.lastIndexOf(PathSeparatorType.Slash) + 1)
 }

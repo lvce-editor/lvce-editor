@@ -1,11 +1,18 @@
 // TODO merge all of this with extension host languages module
 
+// @ts-ignore
 import * as Assert from '../Assert/Assert.ts'
+// @ts-ignore
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
+// @ts-ignore
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
+// @ts-ignore
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+// @ts-ignore
 import * as Logger from '../Logger/Logger.js'
+// @ts-ignore
 import * as Preferences from '../Preferences/Preferences.js'
+// @ts-ignore
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export const state = {

@@ -300,7 +300,7 @@ export const handleArrowLeft = (state) => {
 }
 
 export const handleArrowRight = (state) => {
-  const { focusedIndex, scopeExpanded } = state
+  const { focusedIndex } = state
   if (focusedIndex === 2) {
     return {
       ...state,

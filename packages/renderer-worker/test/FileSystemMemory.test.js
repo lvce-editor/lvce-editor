@@ -1,6 +1,6 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as FileSystemMemory from '../src/parts/FileSystem/FileSystemMemory.js'
+import { beforeEach, expect, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as FileSystemMemory from '../src/parts/FileSystem/FileSystemMemory.js'
 
 beforeEach(() => {
   FileSystemMemory.state.files = Object.create(null)

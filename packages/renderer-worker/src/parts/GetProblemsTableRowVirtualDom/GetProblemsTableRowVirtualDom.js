@@ -12,6 +12,7 @@ const getClassName = (isEven) => {
 }
 
 export const getProblemsTableRowVirtualDom = (problem) => {
+  // @ts-ignore
   const { code, source, uri, message, file, isEven, type } = problem
   // TODO problems are grouped by uri, depending
   // on which renderer is used the data needs to look different

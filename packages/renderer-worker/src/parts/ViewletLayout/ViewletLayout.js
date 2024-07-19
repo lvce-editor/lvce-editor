@@ -144,11 +144,13 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     let p2 = /* End of Title Bar */ 0
     let p3 = /* End of Main */ 0
     let p4 = /* End of Panel */ 0
+    // @ts-ignore
     const p5 = /* End of StatusBar */ windowHeight
 
     const p6 = /* Left */ 0
     let p7 = /* End of Main */ windowWidth - activityBarWidth
     let p8 = /* End of SideBar */ windowWidth
+    // @ts-ignore
     const p9 = /* End of ActivityBar */ windowWidth
 
     if (titleBarVisible) {
@@ -207,11 +209,13 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     let p2 = /* End of Title Bar */ 0
     let p3 = /* End of Main */ 0
     let p4 = /* End of Panel */ 0
+    // @ts-ignore
     const p5 = /* End of StatusBar */ windowHeight
 
     const p6 = /* Left */ 0
     let p7 = /* End of ActivityBar */ 0
     let p8 = /* End of SideBar */ 0
+    // @ts-ignore
     const p9 = /* End of Main */ 0
 
     if (titleBarVisible) {

@@ -14,6 +14,7 @@ export const at = (editor, eventX, eventY) => {
       columnIndex: 0,
     }
   }
+  // @ts-ignore
   const difference = differences[rowIndex]
   const clampedRowIndex = Clamp.clamp(rowIndex, 0, lines.length - 1)
   const line = lines[clampedRowIndex]

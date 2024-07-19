@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'

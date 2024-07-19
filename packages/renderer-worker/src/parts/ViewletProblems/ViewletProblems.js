@@ -133,8 +133,6 @@ export const handleClickAt = (state, eventX, eventY) => {
   if (index > problems.length) {
     return focusIndex(state, -1)
   }
-  const problem = problems[index]
-  const { rowIndex, columnIndex } = problem
   return {
     ...state,
     focusedIndex: index,

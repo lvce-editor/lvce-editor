@@ -10,6 +10,7 @@ export const getHelpEntries = () => {
   return undefined
 }
 
+// @ts-ignore
 const toPick = (view) => ({
   label: view,
 })

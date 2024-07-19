@@ -1,4 +1,3 @@
-import * as Compare from '../Compare/Compare.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetSearchFocusKey from '../GetSearchFocusKey/GetSearchFocusKey.js'
 import * as Height from '../Height/Height.js'
@@ -123,20 +122,6 @@ export const dispose = async (state) => {
     ...state,
     disposed: true,
   }
-}
-
-const compareResults = (resultA, resultB) => {
-  const pathA = resultA.text
-  const pathB = resultB.text
-  return Compare.compareString(pathA, pathB)
-}
-
-const getMatchStart = (preview, searchTerm) => {
-  const index = preview.preview.indexOf(searchTerm)
-  if (index === -1) {
-    return preview.preview.toLowerCase().indexOf(searchTerm)
-  }
-  return index
 }
 
 // TODO implement virtual list, only send visible items to renderer process

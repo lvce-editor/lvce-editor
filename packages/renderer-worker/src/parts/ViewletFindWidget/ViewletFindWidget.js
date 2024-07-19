@@ -54,6 +54,7 @@ export const loadContent = (state) => {
   const { selections, lines } = editor
   const startRowIndex = selections[0]
   const startColumnIndex = selections[1]
+  // @ts-ignore
   const endRowIndex = selections[2]
   const endColumnIndex = selections[3]
   const line = lines[startRowIndex]

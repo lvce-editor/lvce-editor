@@ -22,6 +22,7 @@ const normal = {
   childCount: 1,
 }
 
+// @ts-ignore
 const getPrefix = (type) => {
   switch (type) {
     case DiffType.Insertion:
@@ -33,6 +34,7 @@ const getPrefix = (type) => {
   }
 }
 
+// @ts-ignore
 const getClassName = (type) => {
   switch (type) {
     case DiffType.Deletion:

@@ -72,6 +72,7 @@ const startSyncing = async (extensionHost) => {
   GlobalEventBus.addListener('workspace.change', handleWorkspaceChange, { prepend: true })
   GlobalEventBus.addListener('preferences.changed', handlePreferencesChange, { prepend: true })
 
+  // @ts-ignore
   const instances = ViewletStates.getAllInstances()
   const editorInstance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (editorInstance) {

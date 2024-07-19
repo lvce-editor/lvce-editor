@@ -62,7 +62,7 @@ export const handleBlur = (state) => {
 }
 
 export const handleData = async (state, data) => {
-  const { uid, terminal } = state
+  const { terminal } = state
   terminal.write(data)
 }
 
@@ -98,10 +98,9 @@ export const resize = (state, dimensions) => {
 }
 
 export const resizeEffect = async (state) => {
-  const { width, height } = state
+  const { height } = state
   const { uid, terminal } = state
   // TODO columnWidth etc. should be in renderer process
-  const columnWidth = 8.43332
   const rowHeight = 14
   // const columns = Math.round(width / columnWidth)
   const columns = 7

@@ -45,6 +45,7 @@ const renderKeyBindings = {
   },
 }
 
+// @ts-ignore
 const renderColumnWidths = {
   isEqual(oldState, newState) {
     return (
@@ -67,6 +68,7 @@ const renderValue = {
   },
 }
 
+// @ts-ignore
 const renderNoResults = {
   isEqual(oldState, newState) {
     return oldState.value === newState.value && newState.filteredKeyBindings.length === 0
@@ -77,6 +79,7 @@ const renderNoResults = {
   },
 }
 
+// @ts-ignore
 const renderScrollBar = {
   isEqual(oldState, newState) {
     return (

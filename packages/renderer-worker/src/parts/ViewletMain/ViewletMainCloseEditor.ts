@@ -14,7 +14,8 @@ export const closeEditor = (state: MainState, index: number) => {
     }
   }
   const group = groups[activeGroupIndex]
-  const { editors, x, y, width, height, activeIndex } = group
+  // @ts-ignore
+  const { editors, x, y, activeIndex } = group
   if (editors.length === 1) {
     return closeAllEditors(state)
   }

@@ -64,10 +64,12 @@ const getPathSeparator = (root) => {
   return FileSystem.getPathSeparator(root)
 }
 
+// @ts-ignore
 const isExpandedDirectory = (dirent) => {
   return dirent.type === DirentType.DirectoryExpanded
 }
 
+// @ts-ignore
 const getPath = (dirent) => {
   return dirent.path
 }
@@ -384,6 +386,7 @@ export const computeRenamedDirent = (dirents, index, newName) => {
     }
     if (insertIndex === -1 && SortExplorerItems.compareDirent(dirent, newDirent === -1)) {
       for (; endIndex < dirents.length; endIndex++) {
+        // @ts-ignore
         const childDirent = dirents[endIndex]
       }
       insertIndex = endIndex
@@ -955,6 +958,7 @@ const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
     seen[item.path] = true
     unique.push(item)
   }
+  // @ts-ignore
   const ordered = []
 
   // depth one

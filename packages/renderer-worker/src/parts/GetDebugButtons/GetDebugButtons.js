@@ -1,4 +1,5 @@
 import * as DebugState from '../DebugState/DebugState.js'
+// @ts-ignore
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 

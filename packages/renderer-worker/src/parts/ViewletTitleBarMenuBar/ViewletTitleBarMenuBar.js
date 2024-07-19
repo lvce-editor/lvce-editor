@@ -32,7 +32,7 @@ const addWidths = (entries, labelPadding, fontWeight, fontSize, fontFamily, lett
 }
 
 export const loadContent = async (state) => {
-  const { labelFontFamily, labelFontSize, labelFontWeight, labelLetterSpacing, labelPadding, width } = state
+  const { labelFontFamily, labelFontSize, labelFontWeight, labelLetterSpacing, labelPadding } = state
   const titleBarEntries = await TitleBarMenuBarEntries.getEntries()
   const withWidths = addWidths(titleBarEntries, labelPadding, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
   // const visible = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(withWidths, width)

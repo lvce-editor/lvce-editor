@@ -5,6 +5,7 @@ import * as GetSourceMapMatch from '../GetSourceMapMatch/GetSourceMapMatch.js'
 import * as IsActualSourceFile from '../IsActualSourceFile/IsActualSourceFile.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
+// @ts-ignore
 import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
 import * as IsFirefox from '../IsFirefox/IsFirefox.js'

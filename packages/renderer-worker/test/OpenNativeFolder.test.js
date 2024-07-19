@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
@@ -28,7 +28,6 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const OpenNativeFolder = await import('../src/parts/OpenNativeFolder/OpenNativeFolder.js')
 
 test('openNativeFolder', async () => {

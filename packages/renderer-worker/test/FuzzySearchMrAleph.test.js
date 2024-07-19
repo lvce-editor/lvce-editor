@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import { fuzzySearch } from '../src/parts/FuzzySearch/FuzzySearchMrAleph.js'
 
 test('fuzzySearch', () => {
