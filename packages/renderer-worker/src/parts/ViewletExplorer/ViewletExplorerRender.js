@@ -29,9 +29,6 @@ const renderItems = {
       newState.editingValue,
     )
     const isWide = newState.width > 450
-    console.log({
-      width: newState.width,
-    })
     const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex, newState.root, isWide)
     return ['Viewlet.setDom2', dom]
   },
