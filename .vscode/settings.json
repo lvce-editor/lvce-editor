@@ -7,6 +7,5 @@
     "**/extensions/**": true,
     "**/.tmp/**": true,
     "**/static/**": true
-  },
-  "typescript.tsdk": "./node_modules/typescript/lib"
+  }
 }
