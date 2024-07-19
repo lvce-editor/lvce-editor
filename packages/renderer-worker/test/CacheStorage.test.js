@@ -1,8 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { afterEach, expect, jest, test } from '@jest/globals'
 import * as CacheStorage from '../src/parts/CacheStorage/CacheStorage.js'
 
 // Cache Api is not supported in jsdom https://github.com/jsdom/jsdom/issues/2422
