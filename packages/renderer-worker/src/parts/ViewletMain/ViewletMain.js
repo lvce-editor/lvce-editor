@@ -431,7 +431,7 @@ export const save = async (state) => {
     return state
   }
   const group = groups[activeGroupIndex]
-  const { editors, activeIndex, tabsUid } = group
+  const { editors, activeIndex } = group
   if (activeIndex === -1) {
     return state
   }

@@ -65,7 +65,6 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
   const id = ViewletModuleId.EditorText
   const instanceUid = Id.create()
   const tabsUid = Id.create()
-  const sashUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, id, state.uid, uri, overlayX, overlayY, overlayWidth, overlayHeight)
   instance.show = false
   instance.uid = instanceUid

@@ -80,7 +80,6 @@ export const loadContent = async (state) => {
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
   const items = ViewletQuickPickGetFilteredItems.getFilteredItems(state, newPicks, filterValue, provider)
-  const placeholder = provider.getPlaceholder()
   // @ts-ignore
   const label = provider.getLabel()
   const minLineY = 0
