@@ -15,6 +15,7 @@ const UiStrings = {
   SearchExtensionsInMarketplace: 'Search Extensions in Marketplace',
   ViewsAndMoreActions: 'Views and more Actions...',
   Extensions: 'Extensions',
+  Installed: 'Installed',
 }
 
 export const noExtensionsFound = () => {
@@ -59,4 +60,8 @@ export const searchExtensionsInMarketPlace = () => {
 
 export const viewsAndMoreActions = () => {
   return I18nString.i18nString(UiStrings.ViewsAndMoreActions)
+}
+
+export const installed = () => {
+  return I18nString.i18nString(UiStrings.Installed)
 }
