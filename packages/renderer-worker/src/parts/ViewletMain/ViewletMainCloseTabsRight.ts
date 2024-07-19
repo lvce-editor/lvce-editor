@@ -4,7 +4,12 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import type { MainState } from './ViewletMainTypes.ts'
 
-export const closeTabsRight = async (state: MainState) => {
+export const closeTabsRight = async (
+  state: MainState,
+): {
+  newState: MainState
+  commands: any
+} => {
   const { groups, activeGroupIndex } = state
   if (activeGroupIndex === -1) {
     return state
