@@ -223,6 +223,16 @@ const getRenderActionCommands = (module, oldState, newState, uid = newState.uid 
   return []
 }
 
+const getRenderTitleCommands = (module, oldState, newState, uid = newState.uid || module.name) => {
+  if (module.renderTitle) {
+    if (module.renderTitle.isEqual(oldState, newState)) {
+      return []
+    }
+    return module.renderTitle.apply(oldState, newState)
+  }
+  return []
+}
+
 const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
   if (key.startsWith(moduleName)) {
     Command.register(key, wrappedCommand)
@@ -577,4 +587,8 @@ export const render = (module, oldState, newState, uid = newState.uid || module.
 
 export const renderActions = (module, oldState, newState, uid = newState.uid || module.name) => {
   return getRenderActionCommands(module, oldState, newState, uid)
+}
+
+export const renderTitle = (module, oldState, newState, uid = newState.uid || module.name) => {
+  return getRenderTitleCommands(module, oldState, newState, uid)
 }
