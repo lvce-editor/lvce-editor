@@ -211,6 +211,6 @@ export const handleTitleUpdated = async (state, title) => {
 }
 
 export const dispose = async (state) => {
-  const { browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
+  const { browserViewId } = state
   await ElectronWebContentsView.disposeWebContentsView(browserViewId)
 }
