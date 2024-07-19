@@ -1,8 +1,6 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as MenuEntriesActivityBarAdditionalViews from '../src/parts/MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-
-const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
 test.skip('getMenuEntries - all views fit', async () => {
   // Layout.state.activityBarHeight = ACTIVITY_BAR_ITEM_HEIGHT * 6
