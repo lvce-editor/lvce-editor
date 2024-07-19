@@ -42,6 +42,7 @@ export const create = (id, uri, x, y, width, height) => {
     hoverIndex: -1,
     x,
     y,
+    width,
     height,
     deltaY: 0,
     minLineY: 0,

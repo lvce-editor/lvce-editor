@@ -7,9 +7,9 @@ import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as ExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-export const getExplorerVirtualDom = (visibleItems, focusedIndex, root) => {
+export const getExplorerVirtualDom = (visibleItems, focusedIndex, root, isWide) => {
   if (!root) {
-    return GetExplorerWelcomeVirtualDom.getExplorerWelcomeVirtualDom()
+    return GetExplorerWelcomeVirtualDom.getExplorerWelcomeVirtualDom(isWide)
   }
   const dom = []
   dom.push({

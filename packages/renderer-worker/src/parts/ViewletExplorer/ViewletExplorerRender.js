@@ -14,7 +14,8 @@ const renderItems = {
       oldState.focusedIndex === newState.focusedIndex &&
       oldState.editingIndex === newState.editingIndex &&
       oldState.editingType === newState.editingType &&
-      oldState.editingValue === newState.editingValue
+      oldState.editingValue === newState.editingValue &&
+      oldState.width === newState.width
     )
   },
   apply(oldState, newState) {
@@ -27,7 +28,11 @@ const renderItems = {
       newState.editingType,
       newState.editingValue,
     )
-    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex, newState.root)
+    const isWide = newState.width > 450
+    console.log({
+      width: newState.width,
+    })
+    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex, newState.root, isWide)
     return ['Viewlet.setDom2', dom]
   },
 }
