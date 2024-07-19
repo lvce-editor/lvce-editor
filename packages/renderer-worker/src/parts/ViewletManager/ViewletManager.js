@@ -173,6 +173,13 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
       // console.warn('parent id not found')
     }
   }
+  if (module.renderTitle && !module.renderTitle.isEqual(oldState, newState)) {
+    const title = module.renderTitle.apply(oldState, newState)
+    if (parentId) {
+      commands.push(['Viewlet.send', parentId, 'setTtile', title])
+    }
+  }
+
   if (module.getBadgeCount && parentId) {
     const badgeCount = module.getBadgeCount(newState)
     const parentInstance = ViewletStates.getInstance(parentId)
