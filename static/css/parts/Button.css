@@ -35,3 +35,14 @@
 .ButtonSecondary:where(:focus) {
   background: var(--ButtonSecondaryHoverBackground, #45494e);
 }
+
+.ButtonNarrow {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.ButtonWide {
+  max-width: 300px;
+}
