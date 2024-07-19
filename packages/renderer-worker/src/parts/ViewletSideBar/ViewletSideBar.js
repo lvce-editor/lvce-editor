@@ -77,7 +77,7 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
 
 // TODO
 export const getChildren = (state) => {
-  const { y, x, width, height, titleAreaHeight, currentViewletId } = state
+  const { titleAreaHeight, currentViewletId } = state
   return [
     {
       id: currentViewletId,
@@ -155,10 +155,6 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
   // await ViewletManager.load(viewlet, focus, /* restore */ true)
   await savePromise
   return { ...state }
-}
-
-const handleSideBarClose = (state) => {
-  state.currentViewletId = ''
 }
 
 export const dispose = (state) => {

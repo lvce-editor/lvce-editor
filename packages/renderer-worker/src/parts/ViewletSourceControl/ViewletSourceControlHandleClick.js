@@ -8,11 +8,11 @@ import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
 const inlineDiffEditorBreakpoint = 800
 
 const handleClickFile = async (state, item) => {
-  const { enabledProviderIds, gitRoot, root } = state
+  const { enabledProviderIds, root } = state
   const providerId = enabledProviderIds[0]
   const absolutePath = `${root}/${item.file}`
   // TODO handle error
-  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(providerId, item.file), FileSystem.readFile(absolutePath)])
+  const [fileBefore] = await Promise.all([SourceControl.getFileBefore(providerId, item.file), FileSystem.readFile(absolutePath)])
   if (Bounds.get().width < inlineDiffEditorBreakpoint) {
     await Command.execute('Main.openUri', `inline-diff://data://${fileBefore}<->${absolutePath}`)
   } else {

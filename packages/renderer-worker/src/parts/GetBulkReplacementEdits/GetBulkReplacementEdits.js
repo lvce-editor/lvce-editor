@@ -9,6 +9,7 @@ export const getBulkReplacementEdits = (workspacePath, matches) => {
   const ranges = []
   let currentRanges = []
   for (const match of matches) {
+    // @ts-ignore
     const { type, title, text } = match
     switch (type) {
       case TextSearchResultType.File:

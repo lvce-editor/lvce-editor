@@ -68,6 +68,7 @@ const getHoverPositionXy = (editor, rowIndex, wordStart, documentationHeight) =>
 
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
+  // @ts-ignore
   const { selections, height, lines } = editor
   const { rowIndex, columnIndex } = getHoverPosition(position, selections)
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
@@ -105,6 +106,7 @@ export const handleSashPointerDown = (state, eventX, eventY) => {
 }
 
 export const handleSashPointerMove = (state, eventX, eventY) => {
+  // @ts-ignore
   const { x, y } = state
   const minWidth = 100
   const newWidth = Math.max(eventX - x, minWidth)

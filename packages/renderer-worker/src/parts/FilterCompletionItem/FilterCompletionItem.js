@@ -11,8 +11,10 @@ const gridSize = 128
 
 const table = CreateTable.createTable(gridSize)
 const arrows = CreateTable.createTable(gridSize)
+// @ts-ignore
 const diag = CreateTable.createTable(gridSize)
 
+// @ts-ignore
 const printTables = (pattern, patternStart, word, wordStart) => {
   pattern = pattern.slice(patternStart)
   word = word.slice(wordStart)

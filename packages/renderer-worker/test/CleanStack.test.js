@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as CleanStack from '../src/parts/CleanStack/CleanStack.js'
 
 test('cleanStack - firefox stack', () => {

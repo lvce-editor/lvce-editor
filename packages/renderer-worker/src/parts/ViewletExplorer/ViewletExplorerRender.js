@@ -59,6 +59,7 @@ const renderEditingIndex = {
     return oldState.editingIndex === newState.editingIndex && oldState.editingType === newState.editingType
   },
   apply(oldState, newState) {
+    // @ts-ignore
     const { editingIndex, editingType, editingValue } = newState
     return ['focusInput', 'ExplorerInput']
   },

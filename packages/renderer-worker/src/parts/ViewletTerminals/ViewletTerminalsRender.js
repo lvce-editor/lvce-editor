@@ -7,7 +7,7 @@ const renderTabs = {
     return oldState.tabs === newState.tabs && oldState.selectedIndex === newState.selectedIndex
   },
   apply(oldState, newState) {
-    const { x, y, width, height, tabsWidth, tabs, selectedIndex, terminalTabsEnabled } = newState
+    const { y, width, height, tabsWidth, tabs, selectedIndex, terminalTabsEnabled } = newState
     if (!terminalTabsEnabled) {
       return []
     }

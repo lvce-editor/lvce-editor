@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, expect, test } from '@jest/globals'
 import * as MeasureTextWidth from '../src/parts/MeasureTextWidth/MeasureTextWidth.js'
 import * as MeasureTextWidthState from '../src/parts/MeasureTextWidthState/MeasureTextWidthState.js'
 

@@ -87,7 +87,7 @@ const getContentDimensions = (dimensions) => {
 
 // TODO
 export const getChildren = (state) => {
-  const { y, x, width, height, titleAreaHeight, currentViewletId } = state
+  const { currentViewletId } = state
   return [
     {
       id: currentViewletId,
@@ -127,7 +127,6 @@ export const openViewlet = async (state, id, focus = false) => {
     height: childDimensions.height,
     append: true,
   })
-  const uid = state.uid
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
     const currentViewletUid = currentViewletState.uid

@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
@@ -18,7 +18,6 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const MenuEntriesOpenRecent = await import('../src/parts/MenuEntriesOpenRecent/MenuEntriesOpenRecent.js')
-const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('getMenuEntries', async () => {

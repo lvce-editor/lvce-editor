@@ -87,6 +87,7 @@ const getTestPathWeb = () => {
   return `${AssetDir.assetDir}/packages/extension-host-worker-tests`
 }
 
+// @ts-ignore
 export const getTestPath = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:

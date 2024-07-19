@@ -10,6 +10,7 @@ const normalizeCacheKey = (cacheKey) => {
   return `/${cacheKey}`
 }
 
+// @ts-ignore
 const cacheName = 'file-search-cache'
 
 export const get = async (cacheKey) => {

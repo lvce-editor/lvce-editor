@@ -23,6 +23,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     tabClassName += ' ' + ClassNames.MainTabSelected
   }
   const isDirty = flags & TabFlags.Dirty
+  // @ts-ignore
   const isHovered = flags & TabFlags.Hovered
   const actualTabWidth = fixedWidth || tabWidth
   const tabElement = {

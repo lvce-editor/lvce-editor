@@ -10,7 +10,9 @@ export const isAutoClosingPairDelete = (autoClosingRanges, startRowIndex, startC
   for (let j = 0; j < autoClosingRanges.length; j += 4) {
     const autoStartRowIndex = autoClosingRanges[j]
     const autoStartColumnIndex = autoClosingRanges[j + 1]
+    // @ts-ignore
     const autoEndRowIndex = autoClosingRanges[j + 2]
+    // @ts-ignore
     const autoEndColumnIndex = autoClosingRanges[j + 3]
     if (startRowIndex === autoStartRowIndex && startColumnIndex === autoStartColumnIndex) {
       return true

@@ -1,4 +1,5 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
+// @ts-ignore
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
