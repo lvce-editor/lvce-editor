@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as TokenizerMap from '../src/parts/TokenizerMap/TokenizerMap.js'
 
 beforeEach(() => {
@@ -12,7 +12,6 @@ jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', ()
 }))
 
 const EditorText = await import('../src/parts/Editor/EditorText.js')
-const MeasureTextWidth = await import('../src/parts/MeasureTextWidth/MeasureTextWidth.js')
 
 const tokenizerId = 1
 const tokenizer = {
