@@ -6,7 +6,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import type { MainState } from './ViewletMainTypes.ts'
 
 export const closeOthers = async (state: MainState) => {
-  const commands = []
+  const commands: any[] = []
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
   const { editors, focusedIndex, activeIndex } = group
@@ -21,6 +21,7 @@ export const closeOthers = async (state: MainState) => {
   } else {
     // view needs to be switched to focused index
     const activeEditor = editors[activeIndex]
+    // @ts-ignore
     const focusedEditor = editors[focusedIndex]
     newEditors = [focusedEditor]
     newFocusedIndex = 0
