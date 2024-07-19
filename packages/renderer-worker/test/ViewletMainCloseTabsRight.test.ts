@@ -51,7 +51,7 @@ jest.unstable_mockModule('../src/parts/ViewletEditorText/ViewletEditorText.js', 
 
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
-const ViewletMainCloseTabsRight = await import('../src/parts/ViewletMain/ViewletMainCloseTabsRight.js')
+const ViewletMainCloseTabsRight = await import('../src/parts/ViewletMain/ViewletMainCloseTabsRight.ts')
 
 test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', async () => {
   const state = {

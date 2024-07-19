@@ -5,3 +5,8 @@ export interface MainState {
   readonly groups: readonly EditorGroup[]
   readonly focusedIndex: number
 }
+
+export interface MainStateResult {
+  readonly newState: MainState
+  readonly commands: any
+}
