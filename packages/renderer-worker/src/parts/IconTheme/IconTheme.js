@@ -13,6 +13,7 @@ export const setIconTheme = async (iconThemeId) => {
     IconThemeState.state.extensionPath = iconTheme.extensionPath
     const instances = ViewletStates.getAllInstances()
     // TODO have one recalculate style and one paint
+    // @ts-ignore
     for (const [key, value] of Object.entries(instances)) {
       const { factory, state } = value
       if (factory.handleIconThemeChange) {

@@ -4,6 +4,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
+  // @ts-ignore
   const { keyboardShortCut, label, icon, isOpen, isFocused } = item
   const dom = []
   dom.push({

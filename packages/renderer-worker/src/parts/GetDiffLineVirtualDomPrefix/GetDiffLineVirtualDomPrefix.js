@@ -1,6 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DiffType from '../DiffType/DiffType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+// @ts-ignore
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deletion = {
@@ -21,6 +22,7 @@ const normal = {
   childCount: 1,
 }
 
+// @ts-ignore
 export const getPrefix = (type) => {
   switch (type) {
     case DiffType.Insertion:

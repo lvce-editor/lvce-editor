@@ -17,6 +17,7 @@ export const executePrepareRenameProvider = (editor, offset) => {
   })
 }
 
+// @ts-ignore
 const combineResultsRename = (results) => {
   return results[0]
 }

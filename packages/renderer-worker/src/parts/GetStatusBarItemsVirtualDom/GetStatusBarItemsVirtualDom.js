@@ -4,6 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getStatusBarItemVirtualDom = (statusBarItem) => {
+  // @ts-ignore
   const { tooltip, icon } = statusBarItem
   const dom = []
   dom.push(

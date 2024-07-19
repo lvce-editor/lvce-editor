@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import * as IsAllAutoClosingPairDelete from '../src/parts/IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.js'
 
 test('isAllAutoClosingPairDelete - single range', () => {

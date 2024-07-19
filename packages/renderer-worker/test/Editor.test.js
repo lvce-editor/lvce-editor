@@ -1,7 +1,7 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
+import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 test('create', () => {

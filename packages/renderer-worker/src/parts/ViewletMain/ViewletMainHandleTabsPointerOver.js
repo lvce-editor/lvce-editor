@@ -7,7 +7,7 @@ export const handleTabsPointerOver = (state, eventX, eventY) => {
   Assert.number(eventY)
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
-  const { editors, x, y } = group
+  const { editors, x } = group
   const index = GetTabIndex.getTabIndex(editors, x, eventX)
   if (index === -1) {
     return state

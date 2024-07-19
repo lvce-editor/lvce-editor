@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
@@ -44,16 +44,6 @@ beforeAll(() => {
 
 // TODO rename open or openWidget, but should be consistent with editorCompletions, editorHover
 test.skip('open - can rename', async () => {
-  const editor = {
-    lines: [''],
-    primarySelectionIndex: 0,
-    selections: EditorSelection.fromRange(0, 0, 0, 0),
-    x: 0,
-    y: 0,
-    columnWidth: 8,
-    rowHeight: 20,
-  }
-
   // @ts-ignore
   ExtensionHostRename.executePrepareRenameProvider.mockImplementation(() => {
     return {
@@ -68,6 +58,7 @@ test.skip('open - can rename', async () => {
 })
 
 test.skip('open - cannot rename', async () => {
+  // @ts-ignore
   const editor = {
     lines: [''],
     primarySelectionIndex: 0,
@@ -120,6 +111,7 @@ test.skip('finish - empty workspace edits', async () => {
 })
 
 test.skip('abort', async () => {
+  // @ts-ignore
   const editor = {
     lines: [''],
     primarySelectionIndex: 0,

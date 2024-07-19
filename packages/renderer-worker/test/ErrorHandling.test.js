@@ -1,6 +1,5 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
-import { VError } from '../src/parts/VError/VError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -25,13 +24,6 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
     warn: jest.fn(),
   }
 })
-
-class PromiseRejectionEvent extends Event {
-  constructor(type, options) {
-    super(type, options)
-    this.reason = options.reason
-  }
-}
 
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const Command = await import('../src/parts/Command/Command.js')

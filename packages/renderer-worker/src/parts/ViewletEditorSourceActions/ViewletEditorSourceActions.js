@@ -19,6 +19,7 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const loadContent = async (state, savedState, position) => {
+  // @ts-ignore
   const editor = GetActiveEditor.getActiveEditor()
   // TODO request source actions information from extensions
   const sourceActions = await GetEditorSourceActions.getEditorSourceActions()

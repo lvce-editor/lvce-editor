@@ -18,6 +18,7 @@ export const getScopePropertyVirtualDom = (scope) => {
   const className = GetDebugValueClassName.getDebugValueClassName(valueType)
   const isExpanded = flags & DebugItemFlags.Expanded
   const isCollapsed = flags & DebugItemFlags.Collapsed
+  // @ts-ignore
   const isFocused = flags & DebugItemFlags.Focused
   const dom = []
   dom.push({

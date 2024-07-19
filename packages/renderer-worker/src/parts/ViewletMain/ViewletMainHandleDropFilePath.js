@@ -27,34 +27,55 @@ const handleDropFilePathNoSplit = async (state, filePath) => {
 }
 
 const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDirection) => {
+  // @ts-ignore
   const { x, y, width, height, tabHeight, groups, activeGroupIndex, uid } = state
   const sashVisibleSize = 1
   const sashSize = 4
   const {
+    // @ts-ignore
     originalX,
+    // @ts-ignore
     originalY,
+    // @ts-ignore
     originalWidth,
+    // @ts-ignore
     originalHeight,
+    // @ts-ignore
     originalTabsX,
+    // @ts-ignore
     originalTabsY,
+    // @ts-ignore
     originalTabsWidth,
+    // @ts-ignore
     originalTabsHeight,
     overlayX,
     overlayY,
     overlayWidth,
     overlayHeight,
+    // @ts-ignore
     overlayTabsX,
+    // @ts-ignore
     overlayTabsY,
+    // @ts-ignore
     overlayTabsWidth,
+    // @ts-ignore
     overlayTabsHeight,
+    // @ts-ignore
     sashX,
+    // @ts-ignore
     sashY,
+    // @ts-ignore
     sashWidth,
+    // @ts-ignore
     sashHeight,
+    // @ts-ignore
     sashOrientation,
+    // @ts-ignore
     leafSize,
+    // @ts-ignore
     branchSize,
   } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
+  // @ts-ignore
   const tabs = [
     {
       label: PathDisplay.getLabel(filePath),
@@ -64,8 +85,8 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
   const uri = filePath
   const id = ViewletModuleId.EditorText
   const instanceUid = Id.create()
+  // @ts-ignore
   const tabsUid = Id.create()
-  const sashUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, id, state.uid, uri, overlayX, overlayY, overlayWidth, overlayHeight)
   instance.show = false
   instance.uid = instanceUid

@@ -56,6 +56,7 @@ export const computeExplorerRenamedDirent = (dirents, index, newName) => {
     }
     if (insertIndex === -1 && SortExplorerItems.compareDirent(dirent, newDirent === -1)) {
       for (; endIndex < dirents.length; endIndex++) {
+        // @ts-ignore
         const childDirent = dirents[endIndex]
       }
       insertIndex = endIndex

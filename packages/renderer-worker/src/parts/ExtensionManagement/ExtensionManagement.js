@@ -47,5 +47,6 @@ const getValue = (result) => {
 
 export const getWorkingExtensions = async () => {
   const allExtensions = await getAllExtensions()
+  // @ts-ignore
   const fullFilledExtensions = allExtensions.filter(isFulfilled).map(getValue)
 }

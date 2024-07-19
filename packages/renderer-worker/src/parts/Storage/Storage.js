@@ -1,10 +1,12 @@
 export const save = (key, value) => {
+  // @ts-ignore
   let db
   const request = indexedDB.open('vscode-db', 4)
 
   request.onsuccess = (event) => {
     // @ts-ignore
     const db = event.target.result
+    // @ts-ignore
     const tx = db.transaction('vscode', 'readwrite')
     // var store = tx.objectStore('vscode')
 

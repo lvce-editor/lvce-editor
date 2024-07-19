@@ -10,6 +10,7 @@ const getEditor = () => {
 }
 
 const getEdits = async (state, editor, completionItem) => {
+  // @ts-ignore
   const { leadingWord, uid } = state
   const word = completionItem.label
   const resolvedItem = await Completions.resolveCompletion(editor, word, completionItem)

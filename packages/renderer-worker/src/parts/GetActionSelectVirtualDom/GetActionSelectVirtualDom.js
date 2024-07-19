@@ -14,6 +14,7 @@ const getOptionVirtualDom = (option) => {
 }
 
 export const getActionSelectVirtualDom = (action) => {
+  // @ts-ignore
   const { id, options } = action
   return [
     {

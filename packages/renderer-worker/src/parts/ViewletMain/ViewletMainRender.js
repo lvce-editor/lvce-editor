@@ -36,7 +36,7 @@ const renderGroupTabs = {
     const newGroups = newState.groups
     const { insertedGroups, deletedGroups, updatedGroups } = PartitionEditorGroups.partitionEditorGroups(oldGroups, newGroups)
     for (const { oldGroup, newGroup } of updatedGroups) {
-      const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = newGroup
+      const { tabsUid, editors, x, y, width, activeIndex, tabsDeltaX } = newGroup
       if (oldGroup.editors.length === 0) {
         insertedGroups.push(newGroup)
       }
@@ -52,7 +52,7 @@ const renderGroupTabs = {
       }
     }
     for (const insertedGroup of insertedGroups) {
-      const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = insertedGroup
+      const { tabsUid, editors, x, y, width, activeIndex, tabsDeltaX } = insertedGroup
       if (editors.length > 0) {
         commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
         commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])

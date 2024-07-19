@@ -1,7 +1,7 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRpc.js'
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
+import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 

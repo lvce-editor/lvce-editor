@@ -117,6 +117,7 @@ export const show = async (x, y, id, mouseBlocking = false, ...args) => {
 }
 
 export const closeSubMenu = () => {
+  // @ts-ignore
   const menu = state.menus.pop()
   const parentMenu = state.menus.at(-1)
   RendererProcess.invoke(/* Menu.hideSubMenu */ 7903, /* parentIndex */ parentMenu.focusedIndex)

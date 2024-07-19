@@ -1,17 +1,16 @@
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
 import * as Assert from '../Assert/Assert.ts'
-import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
-import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -141,7 +140,7 @@ export const hide = async (state) => {
 }
 
 export const handleInput = async (state, value) => {
-  const { x, y, width, height, hasSuggestionsOverlay, suggestionsEnabled, headerHeight } = state
+  const { hasSuggestionsOverlay, suggestionsEnabled } = state
   if (suggestionsEnabled) {
     if (IsEmptyString.isEmptyString(value) && hasSuggestionsOverlay) {
       return {
@@ -151,7 +150,6 @@ export const handleInput = async (state, value) => {
       }
     }
     // TODO maybe show autocomplete for urls like browsers do
-    const suggestions = await BrowserSearchSuggestions.get(value)
   }
   return {
     ...state,
@@ -211,6 +209,6 @@ export const handleTitleUpdated = async (state, title) => {
 }
 
 export const dispose = async (state) => {
-  const { browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
+  const { browserViewId } = state
   await ElectronWebContentsView.disposeWebContentsView(browserViewId)
 }

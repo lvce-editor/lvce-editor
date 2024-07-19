@@ -5,6 +5,7 @@ import * as QuickPickPrefix from '../QuickPIckPrefix/QuickPickPrefix.js'
 // maybe cache by id opening commands -> has all commands cached
 // when filtering -> sends all indices (uint16Array) to renderer process instead of filtered/sorted command objects
 
+// @ts-ignore
 const RECENT_PICKS_MAX_SIZE = 3
 
 // TODO avoid global variable
@@ -89,6 +90,7 @@ export const getPicks = async (value) => {
   return picks
 }
 
+// @ts-ignore
 const getPick = (state, index) => {
   // if (index < state.recentPicks.length) {
   //   return state.recentPicks[index]

@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // const loadHistoryFromStorage = async () => {

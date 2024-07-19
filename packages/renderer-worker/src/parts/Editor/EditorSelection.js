@@ -5,6 +5,7 @@ import * as Px from '../Px/Px.js'
 import * as GetX from '../GetX/GetX.js'
 
 const getSelectionFromChange = (change) => {
+  // @ts-ignore
   const { start, inserted, end } = change
   const startRowIndex = start.rowIndex
   const startColumnIndex = start.columnIndex

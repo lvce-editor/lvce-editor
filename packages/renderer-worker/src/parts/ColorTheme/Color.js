@@ -1,5 +1,6 @@
 // Based on https://github.com/microsoft/vscode/blob/main/src/vs/platform/theme/common/colorRegistry.ts by Microsoft (LICENSE MIT)
 
+// @ts-ignore
 const rgba = (r, g, b, a) => {
   r = Math.min(255, Math.max(0, r)) | 0
   g = Math.min(255, Math.max(0, g)) | 0

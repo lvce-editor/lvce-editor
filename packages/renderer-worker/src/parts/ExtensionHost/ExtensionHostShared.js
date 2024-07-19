@@ -38,6 +38,7 @@ export const executeProvider = async ({ event, method, params, noProviderFoundMe
 export const execute = async ({ method, params }) => {
   const extensionHosts = ExtensionHostManagement.getExtensionHosts()
   for (const extensionHost of extensionHosts) {
+    // @ts-ignore
     const result = await extensionHost.ipc.invoke(method, ...params)
   }
 }

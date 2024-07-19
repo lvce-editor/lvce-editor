@@ -1,4 +1,4 @@
-import { jest, beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
@@ -53,7 +53,6 @@ test('openFolder - electron', async () => {
       }),
     }
   })
-  const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
   jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     return {
