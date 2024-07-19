@@ -1,4 +1,4 @@
-export * from './ViewletAbout.js'
+export * from './ViewletAbout.ts'
 export * from './ViewletAboutCommands.js'
 export * from './ViewletAboutCss.js'
 export * from './ViewletAboutKeyBindings.js'
