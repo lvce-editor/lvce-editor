@@ -41,6 +41,7 @@ test.skip('show - multiple times and out of order promises', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   FileSystem.state.fileSystems.test = {
+    // @ts-ignore
     async getBlobUrl(protocol, uri) {
       if (uri === 'test:///image-1.png') {
         await new Promise((resolve) => {
