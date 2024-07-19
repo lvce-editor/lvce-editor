@@ -8,5 +8,5 @@ export interface MainState {
 
 export interface MainStateResult {
   readonly newState: MainState
-  readonly commands: any
+  readonly commands: any[]
 }
