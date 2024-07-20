@@ -1,3 +1,5 @@
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
+import * as EditorText from '../EditorText/EditorText.ts'
 import * as GetCursorsVirtualDom from '../GetCursorsVirtualDom/GetCursorsVirtualDom.ts'
 import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
 import * as GetEditorGutterVirtualDom from '../GetEditorGutterVirtualDom/GetEditorGutterVirtualDom.ts'
@@ -5,8 +7,6 @@ import * as GetEditorRowsVirtualDom from '../GetEditorRowsVirtualDom/GetEditorRo
 import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.ts'
 import * as GetSelectionsVirtualDom from '../GetSelectionsVirtualDom/GetSelectionsVirtualDom.ts'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
-import * as EditorText from './EditorText.js'
 
 const renderLines = {
   isEqual(oldState: any, newState: any) {

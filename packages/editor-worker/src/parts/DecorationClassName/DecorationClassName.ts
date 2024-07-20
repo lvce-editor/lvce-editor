@@ -1,0 +1,6 @@
+export const Link = 'Link'
+export const Function = 'Function'
+export const Parameter = 'Parameter'
+export const Type = 'Type'
+export const VariableName = 'VariableName'
+export const Class = 'Class'
