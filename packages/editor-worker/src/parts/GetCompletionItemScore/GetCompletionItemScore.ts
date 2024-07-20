@@ -1,7 +1,16 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
 import * as IsGap from '../IsGap/IsGap.ts'
 
-export const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch) => {
+export const getScore = (
+  rowCharLow: any,
+  rowChar: any,
+  columnCharBefore: any,
+  columnCharLow: any,
+  columnChar: any,
+  column: any,
+  wordLength: any,
+  isDiagonalMatch: any,
+) => {
   if (rowCharLow !== columnCharLow) {
     return -1
   }

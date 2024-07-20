@@ -1,7 +1,7 @@
 import * as Character from '../Character/Character.js'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.ts'
 import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.ts'
-import * as CompletionItemFlags from '../CompletionItemFlags/CompletionItemFlags.js'
+import * as CompletionItemFlags from '../CompletionItemFlags/CompletionItemFlags.ts'
 
 const addEmptyMatch = (item: any) => {
   return {
