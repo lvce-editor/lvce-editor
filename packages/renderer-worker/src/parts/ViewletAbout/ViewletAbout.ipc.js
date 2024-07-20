@@ -1,6 +1,0 @@
-export * from './ViewletAbout.js'
-export * from './ViewletAboutCommands.js'
-export * from './ViewletAboutCss.ts'
-export * from './ViewletAboutKeyBindings.js'
-export * from './ViewletAboutName.js'
-export * from './ViewletAboutRender.js'

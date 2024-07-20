@@ -1,4 +1,4 @@
-import * as ViewletAbout from './ViewletAbout.js'
+import * as ViewletAbout from './ViewletAbout.ts'
 
 export const Commands = {
   handleClickClose: ViewletAbout.handleClickClose,
