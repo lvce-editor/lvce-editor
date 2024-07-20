@@ -11,6 +11,7 @@ import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.ts'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.ts'
 import * as CursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.ts'
 import * as CursorDown from '../EditorCommand/EditorCommandCursorDown.ts'
+import * as SetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.ts'
 import * as CursorEnd from '../EditorCommand/EditorCommandCursorEnd.ts'
 import * as CursorHome from '../EditorCommand/EditorCommandCursorHome.ts'
 import * as EditorCursorSet from '../EditorCommand/EditorCommandCursorSet.ts'
@@ -205,6 +206,7 @@ export const commandMap = {
   'Editor.setDecorations': SetDecorations.setDecorations,
   'Editor.setDelta': SetDelta.setDelta,
   'Editor.setDeltaY': SetDelta.setDeltaY,
+  'Editor.setLanguageId': SetLanguageId.setLanguageId,
   'Editor.setSelections': SetSelections.setSelections,
   'Editor.showHover': EditorShowHover.showHover,
   'Editor.showSourceActions': EditorShowSourceActions.showSourceActions,
