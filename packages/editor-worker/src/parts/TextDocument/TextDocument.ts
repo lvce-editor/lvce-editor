@@ -119,6 +119,22 @@ export const getSelectionText = (textDocument: any, range: any) => {
   return selectedLines
 }
 
+export const offsetAtSync = async (textDocument: any, positionRowIndex: any, positionColumnIndex: any) => {
+  Assert.object(textDocument)
+  Assert.number(positionRowIndex)
+  Assert.number(positionColumnIndex)
+  let offset = 0
+  let rowIndex = 0
+  const lines = textDocument.lines
+  const max = Math.min(positionRowIndex, textDocument.lines.length)
+  while (rowIndex < max) {
+    offset += lines[rowIndex].length + 1
+    rowIndex++
+  }
+  offset += positionColumnIndex
+  return offset
+}
+
 export const offsetAt = (textDocument: any, positionRowIndex: number, positionColumnIndex: number) => {
   Assert.object(textDocument)
   Assert.number(positionRowIndex)
