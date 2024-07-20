@@ -112,6 +112,9 @@ import * as GetHoverInfo from '../GetHoverInfo/GetHoverInfo.ts'
 import * as WrapCommands from '../WrapCommands/WrapCommands.ts'
 
 export const commandMap = {
+  'ColorPicker.handleSliderPointerDown': ColorPicker.handleSliderPointerDown,
+  'ColorPicker.handleSliderPointerMove': ColorPicker.handleSliderPointerMove,
+  'ColorPicker.loadContent': ColorPicker.loadContent,
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
   'Editor.addCursorBelow': AddCursorBelow.addCursorBelow,
   'Editor.applyEdit': EditorApplyEdit.applyEdit,
@@ -230,17 +233,14 @@ export const commandMap = {
   'Editor.typeWithAutoClosing': EditorTypeWithAutoClosing.typeWithAutoClosing,
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
-  'Font.ensure': Font.ensure,
-  'ColorPicker.loadContent': ColorPicker.loadContent,
-  'ColorPicker.handleSliderPointerDown': ColorPicker.handleSliderPointerDown,
-  'ColorPicker.handleSliderPointerMove': ColorPicker.handleSliderPointerMove,
-  'FindWidget.loadContent': FindWidget.loadContent,
-  'FindWidget.handleInput': FindWidget.handleInput,
-  'FindWidget.focusIndex': FindWidget.focusIndex,
   'FindWidget.focusFirst': FindWidget.focusFirst,
+  'FindWidget.focusIndex': FindWidget.focusIndex,
   'FindWidget.focusLast': FindWidget.focusLast,
   'FindWidget.focusNext': FindWidget.focusNext,
   'FindWidget.focusPrevious': FindWidget.focusPrevious,
+  'FindWidget.handleInput': FindWidget.handleInput,
+  'FindWidget.loadContent': FindWidget.loadContent,
+  'Font.ensure': Font.ensure,
   'Hover.getHoverInfo': GetHoverInfo.getEditorHoverInfo,
 }
 
