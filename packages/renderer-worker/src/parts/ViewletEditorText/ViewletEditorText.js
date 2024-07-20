@@ -151,6 +151,7 @@ export const loadContent = async (state, savedState, context) => {
     isMonospaceFont,
     fontFamily,
     fontWeight,
+    uri,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
