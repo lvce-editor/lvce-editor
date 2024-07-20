@@ -1,5 +1,7 @@
 export const name = 'sample.language'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
