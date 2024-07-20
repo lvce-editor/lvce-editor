@@ -63,8 +63,10 @@ const ids = [
   'goToTypeDefinition',
   'handleBeforeInput',
   'handleBeforeInputFromContentEditable',
+  'handleBlur',
   'handleContextMenu',
   'handleDoubleClick',
+  'handleFocus',
   'handleMouseDown',
   'handleMouseMove',
   'handleMouseMoveWithAltKey',
@@ -144,7 +146,6 @@ export const Commands = {
 // prettier-ignore
 export const LazyCommands = {
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
-  handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
 }
@@ -155,7 +156,4 @@ export const CommandsWithSideEffectsLazy = {
       typeWithAutoClosing: wrapEditorCommand('typeWithAutoClosing'),
     }
   },
-
-  // TODO
-  handleBlur: () => import('../EditorCommand/EditorCommandBlur.js'),
 }
