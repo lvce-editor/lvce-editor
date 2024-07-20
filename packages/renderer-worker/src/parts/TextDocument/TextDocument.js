@@ -1,5 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 
 // TODO have function for single edit (most common, avoid one array)
@@ -89,7 +90,10 @@ export const getSelectionText = (textDocument, range) => {
   return selectedLines
 }
 
-export const offsetAt = (textDocument, positionRowIndex, positionColumnIndex) => {
+/**
+ * @deprecated this will be moved to editor worker
+ */
+export const offsetAtSync = async (textDocument, positionRowIndex, positionColumnIndex) => {
   Assert.object(textDocument)
   Assert.number(positionRowIndex)
   Assert.number(positionColumnIndex)
@@ -103,6 +107,13 @@ export const offsetAt = (textDocument, positionRowIndex, positionColumnIndex) =>
   }
   offset += positionColumnIndex
   return offset
+}
+
+export const offsetAt = async (textDocument, positionRowIndex, positionColumnIndex) => {
+  Assert.object(textDocument)
+  Assert.number(positionRowIndex)
+  Assert.number(positionColumnIndex)
+  return EditorWorker.invoke('Editor.offsetAt', textDocument, positionRowIndex, positionColumnIndex)
 }
 
 export const positionAt = (textDocument, offset) => {

@@ -20,7 +20,8 @@ export const getElectronFileResponse = async (url, request) => {
       const stats = await stat(absolutePath)
       etag = GetEtag.getEtag(stats)
       if (request.headers['if-none-match'] === etag) {
-        return GetNotModifiedResponse.getNotModifiedResponse()
+        const headers = GetHeaders.getHeaders(absolutePath, pathName)
+        return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
     }
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
