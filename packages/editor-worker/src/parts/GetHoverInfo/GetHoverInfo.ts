@@ -39,7 +39,7 @@ const hoverPaddingRight = 8
 const hovverFullWidth = 400
 const hoverDocumentationWidth = hovverFullWidth - hoverPaddingLeft - hoverPaddingRight - hoverBorderLeft - hoverBorderRight
 
-const getHoverPositionXy = (editor, rowIndex, wordStart, documentationHeight) => {
+const getHoverPositionXy = (editor: any, rowIndex: number, wordStart: any, documentationHeight: any) => {
   const x = EditorPosition.x(editor, rowIndex, wordStart)
   const y = editor.height - EditorPosition.y(editor, rowIndex) + editor.y + 40
   return {
@@ -51,7 +51,7 @@ const getHoverPositionXy = (editor, rowIndex, wordStart, documentationHeight) =>
 export const getEditorHoverInfo = async (editorUid: number, position: any) => {
   const instance = Editors.get(editorUid)
   const editor = instance.newState
-  const { selections, height, lines } = editor
+  const { selections } = editor
   const { rowIndex, columnIndex } = getHoverPosition(position, selections)
   const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const hover = await Hover.getHover(editor, offset)
