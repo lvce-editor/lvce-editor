@@ -125,7 +125,7 @@ export const loadContent = async (state, savedState, context) => {
     const fontName = UnquoteString.unquoteString(fontFamily)
     const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
     await Font.ensure(fontName, fontUrl)
-    // await EditorWorker.invoke('Font.ensure', fontName, fontFamily)
+    await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
