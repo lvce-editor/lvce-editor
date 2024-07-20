@@ -102,6 +102,7 @@ import * as EditorCreate from '../EditorCreate/EditorCreate.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -219,6 +220,7 @@ export const commandMap = {
   'Editor.typeWithAutoClosing': EditorTypeWithAutoClosing.typeWithAutoClosing,
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
+  'Editor.offsetAt': TextDocument.offsetAt,
 }
 
 const map = Object.create(null)

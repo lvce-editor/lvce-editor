@@ -313,7 +313,7 @@ export const getVisible = (editor) => {
   const { minLineY, numberOfVisibleLines, lines, width, deltaX, fontWeight, fontSize, fontFamily, letterSpacing, charWidth } = editor
   const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
   const { tokens, tokenizersToLoad, embeddedResults } = GetTokensViewport.getTokensViewport(editor, minLineY, maxLineY)
-  const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
+  const minLineOffset = TextDocument.offsetAtSync(editor, minLineY, 0)
   const averageCharWidth = charWidth
   const { result, differences } = getLineInfosViewport(
     editor,

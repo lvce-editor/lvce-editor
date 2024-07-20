@@ -8,7 +8,7 @@ export const getCompletions = async (editor) => {
   const rowIndex = selections[0]
   const columnIndex = selections[1]
   // Editor.sync(editor)
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
+  const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const completions = await ExtensionHostCompletion.executeCompletionProvider(editor, offset)
   return completions
 }
@@ -21,7 +21,7 @@ export const resolveCompletion = async (editor, name, completionItem) => {
     Assert.object(completionItem)
     const rowIndex = editor.selections[0]
     const columnIndex = editor.selections[1]
-    const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
+    const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
     const resolvedCompletionItem = await ExtensionHostCompletion.executeResolveCompletionItem(editor, offset, name, completionItem)
     return resolvedCompletionItem
   } catch {
