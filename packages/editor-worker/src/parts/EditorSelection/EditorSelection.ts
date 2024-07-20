@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
 import * as GetX from '../GetX/GetX.ts'
 import * as Px from '../Px/Px.ts'
@@ -144,7 +143,7 @@ export const setSelections = (editor: any, selections: any) => {
 export const applyEdit = (editor: any, changes: any) => {
   Assert.object(editor)
   Assert.array(changes)
-  const newSelections = EditorSelection.from(changes, getSelectionFromChange)
+  const newSelections = from(changes, getSelectionFromChange)
   // setSelections(editor, newSelections)
   return newSelections
 }
@@ -228,7 +227,7 @@ export const getVisible = (editor: any) => {
       endLineDifference,
     )
     const endLineY = GetX.getY(selectionEndRow, minLineY, rowHeight)
-    if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) && endLineEndX > 0) {
+    if (isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) && endLineEndX > 0) {
       visibleCursors.push(endLineEndX, endLineY)
       continue
     }
