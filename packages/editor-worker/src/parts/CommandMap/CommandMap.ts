@@ -1,3 +1,4 @@
+import * as ColorPicker from '../ColorPicker/ColorPicker.ts'
 import * as CreateEditor from '../CreateEditor/CreateEditor.ts'
 import * as AddCursorAbove from '../EditorCommand/EditorCommandAddCursorAbove.ts'
 import * as AddCursorBelow from '../EditorCommand/EditorCommandAddCursorBelow.ts'
@@ -100,8 +101,8 @@ import * as EditorType from '../EditorCommand/EditorCommandType.ts'
 import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWithAutoClosing.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
+import * as FindWidget from '../FindWidget/FindWidget.ts'
 import * as Font from '../Font/Font.ts'
-import * as ColorPicker from '../ColorPicker/ColorPicker.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
@@ -232,6 +233,13 @@ export const commandMap = {
   'ColorPicker.loadContent': ColorPicker.loadContent,
   'ColorPicker.handleSliderPointerDown': ColorPicker.handleSliderPointerDown,
   'ColorPicker.handleSliderPointerMove': ColorPicker.handleSliderPointerMove,
+  'FindWidget.loadContent': FindWidget.loadContent,
+  'FindWidget.handleInput': FindWidget.handleInput,
+  'FindWidget.focusIndex': FindWidget.focusIndex,
+  'FindWidget.focusFirst': FindWidget.focusFirst,
+  'FindWidget.focusLast': FindWidget.focusLast,
+  'FindWidget.focusNext': FindWidget.focusNext,
+  'FindWidget.focusPrevious': FindWidget.focusPrevious,
 }
 
 WrapCommands.wrapCommands(commandMap)
