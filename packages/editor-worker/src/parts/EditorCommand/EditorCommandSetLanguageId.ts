@@ -1,27 +1,24 @@
-// @ts-ignore
-import * as Tokenizer from '../Tokenizer/Tokenizer.ts'
-// @ts-ignore
-import * as ViewletState from '../ViewletStates/ViewletStates.ts'
+import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
 
-// @ts-ignore
-export const setLanguageId = async (editor, languageId) => {
-  const { uid } = editor
+export const setLanguageId = async (editor: any, languageId: any) => {
+  const { tokenizerId } = editor
+  // TODO move tokenizer to syntax highlighting worker
   // TODO only load tokenizer if not already loaded
   // if already loaded just set tokenizer and rerender text
-  await Tokenizer.loadTokenizer(languageId)
-  const tokenizer = Tokenizer.getTokenizer(languageId)
-  if (tokenizer === editor.tokenizer) {
+  // TODO race condition
+  const newTokenizerId = await RendererWorker.invoke('Tokenizer.loadTokenizer', languageId)
+  console.log({ newTokenizerId })
+  if (newTokenizerId === editor.tokenizerId) {
+    console.log({ same: true })
     return editor
   }
   // TODO update syntax highlighting
   // TODO get edits
 
-  const latestEditor = ViewletState.getState(uid)
-
   return {
-    ...latestEditor,
+    ...editor,
     languageId,
     invalidStartIndex: 0,
-    tokenizer,
+    tokenizerId,
   }
 }
