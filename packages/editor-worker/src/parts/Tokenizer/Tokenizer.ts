@@ -27,7 +27,7 @@ export const loadTokenizer = async (languageId: string, tokenizePath: string) =>
   }
 }
 
-export const getTokenizer = (languageId) => {
+export const getTokenizer = (languageId: any) => {
   if (TokenizerState.has(languageId)) {
     return TokenizerState.get(languageId)
   }
