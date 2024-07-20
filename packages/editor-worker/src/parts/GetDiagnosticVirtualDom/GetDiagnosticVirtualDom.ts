@@ -1,6 +1,6 @@
-import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DiagnosticType from '../DiagnosticType/DiagnosticType.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
 
 const getDiagnosticClassName = (type) => {
   // TODO use classnames enum
