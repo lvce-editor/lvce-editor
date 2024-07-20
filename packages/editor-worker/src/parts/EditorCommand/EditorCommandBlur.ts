@@ -13,10 +13,7 @@ export const handleBlur = (editor) => {
     ...editor,
     focused: false,
   }
-  return {
-    newState: newEditor,
-    commands: [],
-  }
+  return newEditor
 }
 
 // @ts-ignore
