@@ -4,14 +4,12 @@ import * as EditorShowMessage from './EditorCommandShowMessage.ts'
 
 const expectedErrorMessage = 'Failed to execute formatting provider: FormattingError:'
 
-// @ts-ignore
-const isFormattingError = (error) => {
+const isFormattingError = (error: unknown) => {
   return error && error instanceof Error && error.message.startsWith(expectedErrorMessage)
 }
 
 // TODO also format with cursor
-// @ts-ignore
-export const format = async (editor) => {
+export const format = async (editor: any) => {
   try {
     const edits = await Format.format(editor)
 
