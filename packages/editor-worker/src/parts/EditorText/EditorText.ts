@@ -105,7 +105,7 @@ const applyChangesToSyntaxHighlighting = (editor, changes) => {
 //   return result
 // }
 
-const getStartDefaults = (tokens, minOffset) => {
+const getStartDefaults = (tokens: any, minOffset: any) => {
   let start = 0
   let end = 0
   let startIndex = 0
@@ -128,7 +128,18 @@ const getStartDefaults = (tokens, minOffset) => {
   }
 }
 
-const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize, tabSize, width, deltaX, averageCharWidth, minOffset, maxOffset) => {
+const getLineInfoEmbeddedFull = (
+  embeddedResults: any,
+  tokenResults: any,
+  line: any,
+  normalize: any,
+  tabSize: any,
+  width: any,
+  deltaX: any,
+  averageCharWidth: any,
+  minOffset: any,
+  maxOffset: any,
+) => {
   const lineInfo = []
   const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
   const embeddedTokens = embeddedResult.result.tokens
@@ -156,7 +167,7 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize,
   }
 }
 
-const getOffsets = (deltaX, width, averageCharWidth) => {
+const getOffsets = (deltaX: any, width: any, averageCharWidth: any) => {
   // TODO accurately measure char widths using offscreen canvas
   // and use fast measurements for monospace ascii text
   if (deltaX === 0) {
@@ -173,26 +184,26 @@ const getOffsets = (deltaX, width, averageCharWidth) => {
   }
 }
 
-const getDifference = (start, averageCharWidth, deltaX) => {
+const getDifference = (start: any, averageCharWidth: any, deltaX: any) => {
   const beforeWidth = start * averageCharWidth
   const difference = beforeWidth - deltaX
   return difference
 }
 
 const getLineInfoDefault = (
-  line,
-  tokenResults,
-  embeddedResults,
-  decorations,
-  TokenMap,
-  lineOffset,
-  normalize,
-  tabSize,
-  width,
-  deltaX,
-  averageCharWidth,
-  minOffset,
-  maxOffset,
+  line: any,
+  tokenResults: any,
+  embeddedResults: any,
+  decorations: any,
+  TokenMap: any,
+  lineOffset: any,
+  normalize: any,
+  tabSize: any,
+  width: any,
+  deltaX: any,
+  averageCharWidth: any,
+  minOffset: any,
+  maxOffset: any,
 ) => {
   const lineInfo = []
   let decorationIndex = 0
@@ -242,7 +253,19 @@ const getLineInfoDefault = (
   }
 }
 
-const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize, width, deltaX, averageCharWidth) => {
+const getLineInfo = (
+  line: any,
+  tokenResults: any,
+  embeddedResults: any,
+  decorations: any,
+  TokenMap: any,
+  lineOffset: any,
+  normalize: any,
+  tabSize: any,
+  width: any,
+  deltaX: any,
+  averageCharWidth: any,
+) => {
   const { minOffset, maxOffset } = getOffsets(deltaX, width, averageCharWidth)
   if (embeddedResults.length > 0 && tokenResults.embeddedResultIndex !== undefined) {
     const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
