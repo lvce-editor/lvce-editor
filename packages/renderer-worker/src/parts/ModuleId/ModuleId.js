@@ -92,3 +92,4 @@ export const ExtensionHostTabCompletion = 120
 export const ExtensionHostTypeDefinition = 121
 export const ExtensionHostClosingTag = 122
 export const SendMessagePortToRendererProcess = 123
+export const ExtensionHostHover = 124

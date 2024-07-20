@@ -108,6 +108,7 @@ import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 import * as RenderEditor from '../RenderEditor/RenderEditor.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
+import * as GetHoverInfo from '../GetHoverInfo/GetHoverInfo.ts'
 import * as WrapCommands from '../WrapCommands/WrapCommands.ts'
 
 export const commandMap = {
@@ -240,6 +241,7 @@ export const commandMap = {
   'FindWidget.handleInput': FindWidget.handleInput,
   'FindWidget.loadContent': FindWidget.loadContent,
   'Font.ensure': Font.ensure,
+  'Hover.getHoverInfo': GetHoverInfo.getEditorHoverInfo,
 }
 
 WrapCommands.wrapCommands(commandMap)
