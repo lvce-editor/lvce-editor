@@ -1,0 +1,16 @@
+export const keep = [
+  'Editor.offsetAt',
+  'Font.ensure',
+  'Editor.getWordAt',
+  'Editor.getWordBefore',
+  'ColorPicker.loadContent',
+  'ColorPicker.handleSliderPointerDown',
+  'ColorPicker.handleSliderPointerMove',
+  'FindWidget.loadContent',
+  'FindWidget.handleInput',
+  'FindWidget.focusIndex',
+  'FindWidget.focusFirst',
+  'FindWidget.focusLast',
+  'FindWidget.focusNext',
+  'FindWidget.focusPrevious',
+]
