@@ -2,7 +2,7 @@ import * as GetFindWidgetVirtualDom from '../GetFindWidgetVirtualDom/GetFindWidg
 import * as GetMatchCountText from '../GetMatchCountText/GetMatchCountText.js'
 import * as Icon from '../Icon/Icon.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.js'
+import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.ts'
 
 export const hasFunctionalRender = true
 
