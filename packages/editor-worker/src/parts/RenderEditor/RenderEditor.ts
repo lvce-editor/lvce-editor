@@ -5,7 +5,7 @@ import * as GetEditorRowsVirtualDom from '../GetEditorRowsVirtualDom/GetEditorRo
 import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.ts'
 import * as GetSelectionsVirtualDom from '../GetSelectionsVirtualDom/GetSelectionsVirtualDom.ts'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as EditorSelection from './EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as EditorText from './EditorText.js'
 
 const renderLines = {

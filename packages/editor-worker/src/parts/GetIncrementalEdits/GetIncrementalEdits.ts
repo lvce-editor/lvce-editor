@@ -1,5 +1,5 @@
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
+import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.ts'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 
