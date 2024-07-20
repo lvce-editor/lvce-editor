@@ -36,7 +36,7 @@ const getHoverPosition = (position, selections) => {
 }
 
 const getMatchingDiagnostics = (diagnostics, rowIndex, columnIndex) => {
-  const matching = []
+  const matching: any[] = []
   for (const diagnostic of diagnostics) {
     if (diagnostic.rowIndex === rowIndex) {
       matching.push(diagnostic)
