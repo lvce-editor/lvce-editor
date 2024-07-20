@@ -1,12 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
-import * as Editor from '../Editor/Editor.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
-import * as Rename from '../Rename/Rename.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as Rename from '../Rename/Rename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 // TODO memory leak
