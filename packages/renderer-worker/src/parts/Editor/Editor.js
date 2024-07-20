@@ -227,69 +227,6 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
 
   return newEditor
 }
-export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
-  Assert.object(editor)
-  Assert.array(changes)
-  if (changes.length === 0) {
-    return editor
-  }
-  const newLines = TextDocument.applyEdits(editor, changes)
-  const partialNewEditor = {
-    ...editor,
-    lines: newLines,
-  }
-  const newSelections = EditorSelection.applyEdit(partialNewEditor, changes)
-  const invalidStartIndex = Math.min(editor.invalidStartIndex, changes[0].start.rowIndex)
-  const newEditor = {
-    ...partialNewEditor,
-    lines: newLines,
-    selections: newSelections,
-    // undoStack: [...editor.undoStack.slice(0, -2)],
-    invalidStartIndex,
-  }
-  GlobalEventBus.emitEvent('editor.change', newEditor, changes)
-  return newEditor
-}
-
-export const scheduleDocument = async (editor, changes) => {
-  // console.log('before')
-  // console.log([...editor.lines])
-  const newLines = TextDocument.applyEdits(editor, changes)
-  // console.log('after')
-  // console.log([...editor.lines])
-  const invalidStartIndex = changes[0].start.rowIndex
-  // if (editor.undoStack) {
-  //   editor.undoStack.push(changes)
-  // }
-  // const cursorInfos = EditorCursor.getVisible(editor)
-  // const selectionInfos = EditorSelection.getVisible(editor)
-  // const textInfos = EditorText.getVisible(editor)
-  // TODO scrollbar calculation duplicate code
-  // const scrollBarY =
-  //   (editor.deltaY / editor.finalDeltaY) *
-  //   (editor.height - editor.scrollBarHeight)
-  // const scrollBarHeight = editor.scrollBarHeight
-
-  const newEditor = {
-    ...editor,
-    undoStack: [...editor.undoStack, changes],
-    lines: newLines,
-    invalidStartIndex,
-  }
-  // TODO change event should be emitted after rendering
-  GlobalEventBus.emitEvent('editor.change', editor, changes)
-  return newEditor
-  // RendererProcess.send([
-  //   /* Viewlet.invoke */ 'Viewlet.send',
-  //   /* id */ 'EditorText',
-  //   /* method */ 'renderTextAndCursorsAndSelections',
-  //   /* deltaY */ scrollBarY,
-  //   /* scrollBarHeight */ scrollBarHeight,
-  //   /* textInfos */ textInfos,
-  //   /* cursorInfos */ cursorInfos,
-  //   /* selectionInfos */ selectionInfos,
-  // ])
-}
 
 export const hasSelection = (editor) => {
   // TODO editor.selections should always be defined

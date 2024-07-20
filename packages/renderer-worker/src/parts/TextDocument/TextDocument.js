@@ -1,17 +1,7 @@
-import * as Assert from '../Assert/Assert.ts'
 import * as Arrays from '../Arrays/Arrays.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Assert from '../Assert/Assert.ts'
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
-
-export const create = (text) => {
-  const lines = SplitLines.splitLines(text)
-  const state = {
-    lines,
-  }
-  // TODO send to shared process somehow
-  return state
-}
 
 // TODO have function for single edit (most common, avoid one array)
 export const applyEdits = (textDocument, changes) => {
@@ -73,26 +63,8 @@ export const applyEdits = (textDocument, changes) => {
   return newLines
 }
 
-export const getLine = (textDocument, index) => {
-  return textDocument.lines[index]
-}
-
-export const getLineLength = (textDocument, index) => {
-  return textDocument.lines[index].length
-}
-
 export const getText = (state) => {
   return JoinLines.joinLines(state.lines)
-}
-const RE_WHITESPACE = /^\s+/
-
-// TODO this doesn't belong here
-export const getIndent = (line) => {
-  const whitespaceMatch = line.match(RE_WHITESPACE)
-  if (!whitespaceMatch) {
-    return ''
-  }
-  return whitespaceMatch[0]
 }
 
 // TDOO this doesn;t belong here

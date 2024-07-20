@@ -1,9 +1,8 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
-import * as Editor from '../Editor/Editor.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
-import * as Rename from '../Rename/Rename.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as Rename from '../Rename/Rename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
@@ -76,6 +75,7 @@ const toPositionBasedEdits = (textDocument, edits) => {
   return positionBasedEdits
 }
 
+// TODO apply to whole workspace
 // TODO how to best apply workspace edit?
 const applyWorkspaceEdits = async (editor, workspaceEdits) => {
   if (workspaceEdits.length === 0) {
@@ -83,9 +83,10 @@ const applyWorkspaceEdits = async (editor, workspaceEdits) => {
   }
   const workspaceEdit = workspaceEdits[0]
   const positionBasedEdits = toPositionBasedEdits(editor.textDocument, workspaceEdit.edits)
-  Editor.scheduleDocumentAndCursorsSelections(editor, positionBasedEdits)
+  await Command.execute('Editor.applyEdit', editor, positionBasedEdits)
 }
 
+// TODO make it functional
 export const finish = async (editor) => {
   // TODO what if cursor position changes while rename is in progress?
   // TODO what happens if file content changes while rename is in progress?
