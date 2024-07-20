@@ -3,6 +3,7 @@ import * as Hover from '../Hover/Hover.ts'
 import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as Editors from '../Editors/Editors.ts'
+import * as Assert from '../Assert/Assert.ts'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.ts'
 
 const getHoverPosition = (position: any, selections: any) => {
@@ -49,6 +50,7 @@ const getHoverPositionXy = (editor: any, rowIndex: number, wordStart: any, docum
 }
 
 export const getEditorHoverInfo = async (editorUid: number, position: any) => {
+  Assert.number(editorUid)
   const instance = Editors.get(editorUid)
   const editor = instance.newState
   const { selections } = editor

@@ -20,6 +20,7 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
+  console.log('editor uid', editor.uid)
   const hoverInfo = await EditorWorker.invoke('Hover.getHoverInfo', editor.uid, position)
   console.log({ editor, hoverInfo, position })
   if (!hoverInfo) {

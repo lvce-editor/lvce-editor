@@ -15,4 +15,5 @@ export const keep = [
   'FindWidget.handleInput',
   'FindWidget.loadContent',
   'Font.ensure',
+  'Hover.getHoverInfo',
 ]
