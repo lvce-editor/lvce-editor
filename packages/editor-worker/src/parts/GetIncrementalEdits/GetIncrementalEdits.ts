@@ -4,6 +4,9 @@ import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.ts'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.ts'
 
 export const getIncrementalEdits = (oldState: any, newState: any) => {
+  if (!newState.undoStack) {
+    return undefined
+  }
   const lastChanges = newState.undoStack.at(-1)
   if (lastChanges && lastChanges.length === 1) {
     const lastChange = lastChanges[0]

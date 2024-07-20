@@ -23,7 +23,7 @@ const wrapCommand =
     }
     return newEditor
   }
-const keep = ['Editor.offsetAt', 'Font.ensure']
+const keep = ['Editor.offsetAt', 'Font.ensure', 'Editor.getWordAt', 'Editor.getWordBefore']
 
 export const wrapCommands = (commands: any) => {
   for (const [key, value] of Object.entries(commands)) {
