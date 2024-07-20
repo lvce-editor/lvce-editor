@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.ts'
 import { EditorCreateOptions } from '../EditorCreateOptions/EditorCreateOptions.ts'
 import * as EditorState from '../Editors/Editors.ts'
 import * as EditorScrolling from '../EditorScrolling/EditorScrolling.ts'
+import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.ts'
 
 const emptyEditor = {
   uri: '',
@@ -51,9 +52,13 @@ export const createEditor = ({
   y,
   width,
   height,
+  fontWeight,
+  fontFamily,
+  isMonospaceFont,
 }: EditorCreateOptions) => {
   Assert.number(id)
   Assert.string(content)
+  const charWidth = MeasureCharacterWidth.measureCharacterWidth(fontWeight, fontSize, fontFamily, letterSpacing)
   const editor = {
     uri: '',
     isAutoClosingBracketsEnabled,
@@ -91,8 +96,8 @@ export const createEditor = ({
     focused: false,
     handleOffsetX: 0,
     itemHeight: 20,
-    fontFamily: '',
-    fontWeight: 400,
+    fontFamily,
+    fontWeight,
     tabSize,
     fontSize,
     cursorWidth: 2,
@@ -103,6 +108,9 @@ export const createEditor = ({
     completionUid: 0,
     lineNumbers,
     numberOfVisibleLines: 0,
+    isMonospaceFont,
+    letterSpacing,
+    charWidth,
   }
   // TODO avoid creating intermediate editors here
   const newEditor1 = Editor.setBounds(editor, x, y, width, height, 9)

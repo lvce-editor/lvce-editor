@@ -14,8 +14,6 @@ import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
-import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
-import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
@@ -125,6 +123,8 @@ export const loadContent = async (state, savedState, context) => {
     await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
+  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
+  const fontWeight = 400
   await EditorWorker.invoke('Editor.create', {
     id,
     content,
@@ -148,51 +148,16 @@ export const loadContent = async (state, savedState, context) => {
     y,
     width,
     height,
+    isMonospaceFont,
+    fontFamily,
+    fontWeight,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
   const commands = await EditorWorker.invoke('Editor.render', id)
-  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
-  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
-    newState2.lines,
-    newState2.fontWeight,
-    fontSize,
-    fontFamily,
-    letterSpacing,
-    isMonospaceFont,
-    charWidth,
-  )
-  if (context && context.startRowIndex) {
-    const lines = newState2.lines.length
-    const rowIndex = context.startRowIndex
-    const finalDeltaY = lines * rowHeight - newState2.height
-    const deltaY = (rowIndex / lines) * finalDeltaY
-    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
-    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
-  }
   return {
     ...newState2,
     commands,
-    rowHeight,
-    fontSize,
-    letterSpacing,
-    selections: savedSelections,
-    fontFamily,
-    links,
-    tabSize,
-    longestLineWidth,
-    charWidth,
-    isMonospaceFont,
-    lineNumbers,
-    hoverEnabled,
-    isAutoClosingBracketsEnabled,
-    isAutoClosingQuotesEnabled,
-    isQuickSuggestionsEnabled,
-    isAutoClosingTagsEnabled,
-    completionTriggerCharacters,
-    tokenizerId,
-    formatOnSave,
   }
 }
 

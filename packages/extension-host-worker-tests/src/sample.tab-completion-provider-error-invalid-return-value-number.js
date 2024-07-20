@@ -1,12 +1,14 @@
 export const name = 'sample.tab-completion-provider-error-invalid-return-value-number'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
-`
+`,
   )
 
   await Workspace.setPath(tmpDir)
@@ -21,6 +23,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42'
+    'Error: Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
   )
 }

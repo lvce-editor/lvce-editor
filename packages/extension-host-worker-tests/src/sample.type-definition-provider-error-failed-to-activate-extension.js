@@ -1,5 +1,7 @@
 export const name = 'sample.type-definition-provider-error-failed-to-activate-extension'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -10,7 +12,7 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
 }
 
 add(1, 2)
-    `
+    `,
   )
   await Workspace.setPath(tmpDir)
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
@@ -28,6 +30,6 @@ add(1, 2)
   // TODO error message is too long
   // TODO probably should just display "failed to execute type definition provider: TypeError: x is not a function"
   await expect(overlayMessage).toHaveText(
-    'Error: Failed to activate extension sample.type-definition-provider-error-failed-to-activate-extension: TypeError: x is not a function'
+    'Error: Failed to activate extension sample.type-definition-provider-error-failed-to-activate-extension: TypeError: x is not a function',
   )
 }

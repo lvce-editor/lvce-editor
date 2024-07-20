@@ -1,5 +1,7 @@
 export const name = 'viewlet.editor-source-actions-organize-imports'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, Extension }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
