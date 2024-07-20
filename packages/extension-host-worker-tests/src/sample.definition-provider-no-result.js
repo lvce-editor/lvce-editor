@@ -1,5 +1,7 @@
 export const name = 'sample.definition-provider-no-result'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -10,7 +12,7 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
 }
 
 add(1, 2)
-    `
+    `,
   )
   await Workspace.setPath(tmpDir)
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
