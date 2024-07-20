@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as FindMatchesCaseInsensitive from '../FindMatchesCaseInsensitive/FindMatchesCaseInsensitive.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
@@ -46,21 +47,12 @@ export const getPosition = () => {
   }
 }
 
-export const loadContent = (state) => {
+export const loadContent = async (state) => {
   const editor = GetActiveEditor.getActiveEditor()
   if (!editor) {
     return state
   }
-  const { selections, lines } = editor
-  const startRowIndex = selections[0]
-  const startColumnIndex = selections[1]
-  // @ts-ignore
-  const endRowIndex = selections[2]
-  const endColumnIndex = selections[3]
-  const line = lines[startRowIndex]
-  const value = line.slice(startColumnIndex, endColumnIndex)
-  const matches = FindMatchesCaseInsensitive.findMatchesCaseInsensitive(lines, value)
-  const matchCount = GetMatchCount.getMatchCount(matches)
+  const { value, matches, matchCount } = await EditorWorker.invoke('FindWidget.loadContent', editor.uid)
   return {
     ...state,
     value,

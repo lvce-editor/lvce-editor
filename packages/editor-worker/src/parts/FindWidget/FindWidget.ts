@@ -1,15 +1,9 @@
 import * as FindMatchesCaseInsensitive from '../FindMatchesCaseInsensitive/FindMatchesCaseInsensitive.ts'
+import * as GetEditor from '../GetEditor/GetEditor.ts'
 import * as GetMatchCount from '../GetMatchCount/GetMatchCount.ts'
-import * as Editors from '../Editors/Editors.ts'
-
-const getEditor = (editorUid: number) => {
-  const instance = Editors.get(editorUid)
-  const { newState } = instance
-  return newState
-}
 
 export const getPosition = (uid: number) => {
-  const editor = getEditor(uid)
+  const editor = GetEditor.getEditor(uid)
   if (!editor) {
     return {
       x: 0,
@@ -32,9 +26,8 @@ export const getPosition = (uid: number) => {
   }
 }
 
-export const loadContent = (state: any) => {
-  const { editorUid } = state
-  const editor = getEditor(editorUid)
+export const loadContent = (editorUid: number) => {
+  const editor = GetEditor.getEditor(editorUid)
   const { selections, lines } = editor
   const startRowIndex = selections[0]
   const startColumnIndex = selections[1]
@@ -44,7 +37,6 @@ export const loadContent = (state: any) => {
   const matches = FindMatchesCaseInsensitive.findMatchesCaseInsensitive(lines, value)
   const matchCount = GetMatchCount.getMatchCount(matches)
   return {
-    ...state,
     value,
     matches,
     matchIndex: 0,
@@ -56,7 +48,7 @@ export const refresh = (state: any, value = state.value) => {
   // TODO get focused editor
   const { editorUid } = state
   // highlight locations that match value
-  const editor = getEditor(editorUid)
+  const editor = GetEditor.getEditor(editorUid)
   const { lines } = editor
   const matches = FindMatchesCaseInsensitive.findMatchesCaseInsensitive(lines, value)
   const matchCount = GetMatchCount.getMatchCount(matches)
