@@ -1,11 +1,11 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
-import * as Arrow from '../Arrow/Arrow.js'
-import * as CreateTable from '../CreateTable/CreateTable.js'
-import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
-import * as GetCompletionItemScore from '../GetCompletionItemScore/GetCompletionItemScore.js'
-import * as IsPatternInWord from '../IsPatternInWord/IsPatternInWord.js'
-import * as PrintTable from '../PrintTable/PrintTable.js'
-import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
+import * as Arrow from '../Arrow/Arrow.ts'
+import * as CreateTable from '../CreateTable/CreateTable.ts'
+import * as EmptyMatches from '../EmptyMatches/EmptyMatches.ts'
+import * as GetCompletionItemScore from '../GetCompletionItemScore/GetCompletionItemScore.ts'
+import * as IsPatternInWord from '../IsPatternInWord/IsPatternInWord.ts'
+import * as PrintTable from '../PrintTable/PrintTable.ts'
+import * as TraceHighlights from '../TraceHighlights/TraceHighlights.ts'
 
 const gridSize = 128
 
