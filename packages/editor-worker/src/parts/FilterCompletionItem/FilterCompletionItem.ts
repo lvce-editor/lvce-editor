@@ -23,7 +23,7 @@ const printTables = (pattern, patternStart, word, wordStart) => {
   // console.log(printTable(_diag, pattern, pattern.length, word, word.length));
 }
 
-export const filterCompletionItem = (pattern, word) => {
+export const filterCompletionItem = (pattern: any, word: any) => {
   const patternLength = Math.min(pattern.length, gridSize - 1)
   const wordLength = Math.min(word.length, gridSize - 1)
   const patternLower = pattern.toLowerCase()
