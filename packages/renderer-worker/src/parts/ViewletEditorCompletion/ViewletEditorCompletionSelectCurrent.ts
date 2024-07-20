@@ -1,4 +1,4 @@
-import * as ViewletEditorCompletionSelectIndex from './ViewletEditorCompletionSelectIndex.js'
+import * as ViewletEditorCompletionSelectIndex from './ViewletEditorCompletionSelectIndex.ts'
 
 export const selectCurrent = (state) => {
   const { focusedIndex } = state

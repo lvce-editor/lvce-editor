@@ -1,5 +1,5 @@
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
-import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
+import * as ViewletEditorCompletion from './ViewletEditorCompletion.ts'
 
 // prettier-ignore
 export const Commands = {
@@ -12,7 +12,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  selectIndex: () => import('./ViewletEditorCompletionSelectIndex.js'),
-  selectCurrent: () => import('./ViewletEditorCompletionSelectCurrent.js'),
+  selectIndex: () => import('./ViewletEditorCompletionSelectIndex.ts'),
+  selectCurrent: () => import('./ViewletEditorCompletionSelectCurrent.ts'),
   ...VirtualList.LazyCommands
 }
