@@ -45,6 +45,7 @@ export const createEditor = (id: number, content: string) => {
     lineCache: [],
     selections: new Uint32Array(),
     diagnostics: [],
+    decorations: [],
   }
   EditorState.set(id, emptyEditor, editor)
 }
