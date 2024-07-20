@@ -119,7 +119,7 @@ export const loadContent = async (state, savedState, context) => {
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
 
-  await EditorWorker.invoke('Editor.create', id)
+  await EditorWorker.invoke('Editor.create', id, content)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
@@ -127,6 +127,10 @@ export const loadContent = async (state, savedState, context) => {
     await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
+  // TODO send render commands directly from editor worker
+  // to renderer process
+  const commands = await EditorWorker.invoke('Editor.render', id)
+  console.log({ commands })
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
   const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(

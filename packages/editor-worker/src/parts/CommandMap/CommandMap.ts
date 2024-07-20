@@ -103,6 +103,7 @@ import * as Font from '../Font/Font.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
+import * as RenderEditor from '../RenderEditor/RenderEditor.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as WrapCommands from '../WrapCommands/WrapCommands.ts'
 
@@ -189,6 +190,7 @@ export const commandMap = {
   'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
+  'Editor.render': RenderEditor.renderEditor,
   'Editor.replaceRange': ReplaceRange.replaceRange,
   'Editor.save': Save.save,
   'Editor.selectAll': SelectAll.selectAll,
