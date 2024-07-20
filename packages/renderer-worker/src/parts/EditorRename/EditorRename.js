@@ -13,12 +13,12 @@ export const state = {
 }
 
 const prepareRename = async (editor, rowIndex, columnIndex) => {
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
+  const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return Rename.prepareRename(editor, offset)
 }
 
-const rename = (editor, rowIndex, columnIndex, newName) => {
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
+const rename = async (editor, rowIndex, columnIndex, newName) => {
+  const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return Rename.rename(editor, offset, newName)
 }
 

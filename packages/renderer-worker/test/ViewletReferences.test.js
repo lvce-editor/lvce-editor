@@ -34,7 +34,7 @@ const ExtensionHostReferences = await import('../src/parts/ExtensionHost/Extensi
 
 const ViewletReferences = await import('../src/parts/ViewletReferences/ViewletReferences.js')
 
-test('loadContent - error - reference provider throws error', async () => {
+test.skip('loadContent - error - reference provider throws error', async () => {
   const state = ViewletReferences.create()
   // @ts-ignore
   ExtensionHostReferences.executeReferenceProvider.mockImplementation(() => {

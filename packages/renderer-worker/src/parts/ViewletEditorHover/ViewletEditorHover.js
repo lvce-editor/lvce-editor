@@ -71,7 +71,7 @@ export const loadContent = async (state, savedState, position) => {
   // @ts-ignore
   const { selections, height, lines } = editor
   const { rowIndex, columnIndex } = getHoverPosition(position, selections)
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
+  const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const hover = await Hover.getHover(editor, offset)
   if (!hover) {
     return state

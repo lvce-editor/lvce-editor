@@ -103,6 +103,7 @@ import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -182,6 +183,7 @@ export const commandMap = {
   'Editor.moveRectangleSelectionPx': MoveRectangleSelectionPx.moveRectangleSelectionPx,
   'Editor.moveSelection': EditorMoveSelection.editorMoveSelection,
   'Editor.moveSelectionPx': EditorMoveSelectionPx.moveSelectionPx,
+  'Editor.offsetAt': TextDocument.offsetAt,
   'Editor.openFind': OpenFind.openFind,
   'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
