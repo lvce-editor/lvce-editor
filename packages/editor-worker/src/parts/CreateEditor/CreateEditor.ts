@@ -2,6 +2,7 @@ import * as EditorState from '../Editors/Editors.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 import * as EditorScrolling from '../EditorScrolling/EditorScrolling.ts'
+import * as Editor from '../Editor/Editor.ts'
 import { EditorCreateOptions } from '../EditorCreateOptions/EditorCreateOptions.ts'
 
 const emptyEditor = {
@@ -54,10 +55,15 @@ export const createEditor = ({
 }: EditorCreateOptions) => {
   Assert.number(id)
   Assert.string(content)
-  const lines = SplitLines.splitLines(content)
   const editor = {
     uri: '',
-    languageId: '',
+    isAutoClosingBracketsEnabled,
+    isAutoClosingTagsEnabled,
+    isAutoClosingQuotesEnabled,
+    isQuickSuggestionsEnabled,
+    completionTriggerCharacters,
+    savedSelections,
+    languageId,
     x,
     y,
     width,
@@ -65,7 +71,7 @@ export const createEditor = ({
     tokenizerId: 0,
     minLineY: 0,
     maxLineY: 0,
-    lines,
+    lines: [],
     undoStack: [],
     lineCache: [],
     selections: new Uint32Array(),
@@ -88,7 +94,8 @@ export const createEditor = ({
     itemHeight: 20,
     fontFamily: '',
     fontWeight: 400,
-    tabSize: 2,
+    tabSize,
+    fontSize,
     cursorWidth: 2,
     completionState: '',
     longestLineWidth: 0,
@@ -96,8 +103,12 @@ export const createEditor = ({
     differences: [],
     completionUid: 0,
     lineNumbers,
+    numberOfVisibleLines: 0,
   }
-  const newEditor = EditorScrolling.setDeltaY(editor, 0)
-  console.log({ newEditor })
-  EditorState.set(id, emptyEditor, newEditor)
+  // TODO avoid creating intermediate editors here
+  const newEditor1 = Editor.setBounds(editor, x, y, width, height, 9)
+  const newEditor2 = Editor.setText(newEditor1, content)
+  const newEditor3 = EditorScrolling.setDeltaY(newEditor2, 0)
+  // console.log({ newEditor })
+  EditorState.set(id, emptyEditor, newEditor3)
 }
