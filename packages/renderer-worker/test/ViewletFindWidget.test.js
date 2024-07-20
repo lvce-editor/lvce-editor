@@ -24,6 +24,7 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 const Command = await import('../src/parts/Command/Command.js')
 
 test.skip('create', () => {
+  // @ts-ignore
   expect(ViewletFindWidget.create()).toBeDefined()
 })
 
@@ -33,6 +34,7 @@ test.skip('getPosition', () => {
 })
 
 test.skip('loadContent', async () => {
+  // @ts-ignore
   const state = ViewletFindWidget.create()
   expect(await ViewletFindWidget.loadContent(state)).toMatchObject({
     value: '',
@@ -47,6 +49,7 @@ test.skip('loadContent - initial value from editor selection', async () => {
       selections: new Uint32Array([0, 0, 0, 4]),
     }
   })
+  // @ts-ignore
   const state = ViewletFindWidget.create()
   expect(await ViewletFindWidget.loadContent(state)).toMatchObject({
     value: 'line',
@@ -61,6 +64,7 @@ test.skip('handleInput', () => {
       selections: new Uint32Array([0, 0, 0, 4]),
     }
   })
+  // @ts-ignore
   const state = ViewletFindWidget.create()
   expect(ViewletFindWidget.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
@@ -75,6 +79,7 @@ test.skip('handleInput - adjust matchCount', () => {
       selections: new Uint32Array([0, 0, 0, 4]),
     }
   })
+  // @ts-ignore
   const state = ViewletFindWidget.create()
   expect(ViewletFindWidget.handleInput(state, 'line 1')).toMatchObject({
     value: 'line 1',
@@ -93,6 +98,7 @@ test.skip('focusPrevious', async () => {
     }
   })
   const state = {
+    // @ts-ignore
     ...ViewletFindWidget.create(),
     matchIndex: 2,
     matchCount: 3,
@@ -116,6 +122,7 @@ test.skip('focusNext', async () => {
     }
   })
   const state = {
+    // @ts-ignore
     ...ViewletFindWidget.create(),
     value: 'line',
     matchIndex: 0,
@@ -141,6 +148,7 @@ test.skip('focusNext - only one match', async () => {
     }
   })
   const state = {
+    // @ts-ignore
     ...ViewletFindWidget.create(),
     value: 'line',
     matchIndex: 0,
@@ -162,6 +170,7 @@ test.skip('focusNext - at end', async () => {
     }
   })
   const state = {
+    // @ts-ignore
     ...ViewletFindWidget.create(),
     value: 'line',
     matchIndex: 1,

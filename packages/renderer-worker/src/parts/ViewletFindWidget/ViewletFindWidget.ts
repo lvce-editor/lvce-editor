@@ -6,7 +6,7 @@ import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetMatchCount from '../GetMatchCount/GetMatchCount.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-export const create = (uid) => {
+export const create = (uid: number) => {
   return {
     value: '',
     ariaAnnouncement: '',
