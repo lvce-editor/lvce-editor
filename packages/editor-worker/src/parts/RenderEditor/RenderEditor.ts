@@ -112,7 +112,11 @@ const renderGutterInfo = {
 export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations, renderGutterInfo]
 
 export const renderEditor = (id: number) => {
-  const { oldState, newState } = Editors.get(id)
+  const instance = Editors.get(id)
+  if (!instance) {
+    return []
+  }
+  const { oldState, newState } = instance
   const commands = []
   for (const item of render) {
     if (!item.isEqual(oldState, newState)) {
