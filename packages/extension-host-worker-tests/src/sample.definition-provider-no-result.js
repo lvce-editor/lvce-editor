@@ -10,7 +10,7 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
 }
 
 add(1, 2)
-    `
+    `,
   )
   await Workspace.setPath(tmpDir)
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
