@@ -175,6 +175,7 @@ export const loadContent = async (state, savedState, context) => {
   console.log({ newState2 })
   return {
     ...newState2,
+    commands,
     rowHeight,
     fontSize,
     letterSpacing,
