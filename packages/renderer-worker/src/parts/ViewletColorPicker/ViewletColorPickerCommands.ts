@@ -1,4 +1,4 @@
-import * as ViewletColorPicker from './ViewletColorPicker.js'
+import * as ViewletColorPicker from './ViewletColorPicker.ts'
 
 // prettier-ignore
 export const Commands = {
