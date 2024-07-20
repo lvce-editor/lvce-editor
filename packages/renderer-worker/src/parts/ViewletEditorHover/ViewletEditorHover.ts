@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 
 export const create = (id, uri, x, y, width, height) => {
