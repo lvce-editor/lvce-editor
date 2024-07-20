@@ -57,6 +57,7 @@ const ids = [
   'deleteWordPartRight',
   'deleteWordRight',
   'findAllReferences',
+  'format',
   'getWordAt',
   'getWordBefore',
   'goToDefinition',
@@ -143,7 +144,6 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  format: () => import('../EditorCommand/EditorCommandFormat.js'),
   handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
