@@ -1,9 +1,9 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.ts'
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.ts'
-import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
-import * as NormalizeText from '../NormalizeText/NormalizeText.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
+import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.ts'
+import * as NormalizeText from '../NormalizeText/NormalizeText.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.ts'
 // @ts-ignore
 
 // const getTokens = (editor) => {
