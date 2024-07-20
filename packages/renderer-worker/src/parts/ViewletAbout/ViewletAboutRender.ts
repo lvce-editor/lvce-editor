@@ -1,16 +1,17 @@
-import * as GetAboutVirtualDom from '../GetAboutVirtualDom/GetAboutVirtualDom.js'
-import * as AboutStrings from '../AboutStrings/AboutStrings.js'
 import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
+import * as AboutStrings from '../AboutStrings/AboutStrings.js'
+import * as GetAboutVirtualDom from '../GetAboutVirtualDom/GetAboutVirtualDom.js'
+import { AboutState } from './ViewletAboutTypes.ts'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
 export const renderDialog = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: AboutState, newState: AboutState) {
     return oldState.productName === newState.productName && oldState.lines === newState.lines
   },
-  apply(oldState, newState) {
+  apply(oldState: AboutState, newState: AboutState) {
     const okMessage = AboutStrings.ok()
     const copyMessage = AboutStrings.copy()
     const closeMessage = AboutStrings.closeDialog()
@@ -20,7 +21,7 @@ export const renderDialog = {
   },
 }
 
-const getFocusSelector = (focusId) => {
+const getFocusSelector = (focusId: number) => {
   switch (focusId) {
     case AboutFocusId.Copy:
       return '.ButtonPrimary'
@@ -32,10 +33,10 @@ const getFocusSelector = (focusId) => {
 }
 
 export const renderFocus = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: AboutState, newState: AboutState) {
     return oldState.focusId === newState.focusId
   },
-  apply(oldState, newState) {
+  apply(oldState: AboutState, newState: AboutState) {
     const selector = getFocusSelector(newState.focusId)
     return ['setFocused', selector]
   },

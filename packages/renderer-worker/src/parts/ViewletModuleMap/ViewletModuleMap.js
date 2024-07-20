@@ -1,7 +1,7 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const map = {
-  [ViewletModuleId.About]: () => import('../ViewletAbout/ViewletAbout.ipc.js'),
+  [ViewletModuleId.About]: () => import('../ViewletAbout/ViewletAbout.ipc.ts'),
   [ViewletModuleId.ActivityBar]: () => import('../ViewletActivityBar/ViewletActivityBar.ipc.ts'),
   [ViewletModuleId.Audio]: () => import('../ViewletAudio/ViewletAudio.ipc.js'),
   [ViewletModuleId.BrowserViewOverview]: () => import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js'),
