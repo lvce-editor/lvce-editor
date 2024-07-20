@@ -152,7 +152,6 @@ export const loadContent = async (state, savedState, context) => {
   // TODO send render commands directly from editor worker
   // to renderer process
   const commands = await EditorWorker.invoke('Editor.render', id)
-  console.log({ commands })
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
   const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
@@ -172,7 +171,6 @@ export const loadContent = async (state, savedState, context) => {
     newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
     savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
   }
-  console.log({ newState2 })
   return {
     ...newState2,
     commands,
