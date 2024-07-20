@@ -1,8 +1,8 @@
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as DiagnosticType from '../DiagnosticType/DiagnosticType.js'
+import * as DiagnosticType from '../DiagnosticType/DiagnosticType.ts'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
 
-const getDiagnosticClassName = (type) => {
+const getDiagnosticClassName = (type: any) => {
   // TODO use classnames enum
   switch (type) {
     case DiagnosticType.Error:
@@ -13,7 +13,7 @@ const getDiagnosticClassName = (type) => {
       return 'DiagnosticError'
   }
 }
-export const getDiagnosticVirtualDom = (diagnostic) => {
+export const getDiagnosticVirtualDom = (diagnostic: any) => {
   const { x, y, width, height, type } = diagnostic
   const extraClassName = getDiagnosticClassName(type)
   return [
