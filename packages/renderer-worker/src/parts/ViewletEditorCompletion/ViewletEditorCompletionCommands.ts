@@ -1,5 +1,5 @@
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
-import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
+import * as ViewletEditorCompletion from './ViewletEditorCompletion.ts'
 
 // prettier-ignore
 export const Commands = {
