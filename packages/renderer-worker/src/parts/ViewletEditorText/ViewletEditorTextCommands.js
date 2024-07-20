@@ -9,11 +9,12 @@ const wrapEditorCommand = (id) => {
     const editor = args[0]
     const restArgs = args.slice(1)
     const result = await EditorWorker.invoke(`Editor.${id}`, editor.uid, ...restArgs)
-    console.log({
-      result: {
-        ...result,
-      },
-    })
+    if (result && result.commands) {
+      return {
+        ...editor,
+        commands: result.commands,
+      }
+    }
     return result
   }
 }
