@@ -1,5 +1,6 @@
 import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as EditorText from '../EditorText/EditorText.ts'
+import * as Editors from '../Editors/Editors.ts'
 import * as GetCursorsVirtualDom from '../GetCursorsVirtualDom/GetCursorsVirtualDom.ts'
 import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.ts'
 import * as GetEditorGutterVirtualDom from '../GetEditorGutterVirtualDom/GetEditorGutterVirtualDom.ts'
@@ -111,6 +112,13 @@ const renderGutterInfo = {
 export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations, renderGutterInfo]
 
 export const renderEditor = (id: number) => {
-  // TODO
-  return []
+  const { oldState, newState } = Editors.get(id)
+  const commands = []
+  for (const item of render) {
+    if (!item.isEqual(oldState, newState)) {
+      commands.push(item.apply(oldState, newState))
+    }
+  }
+  Editors.set(id, newState, newState)
+  return commands
 }
