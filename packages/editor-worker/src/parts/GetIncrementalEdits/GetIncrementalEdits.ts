@@ -1,9 +1,9 @@
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.ts'
-import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
+import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.ts'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 
-export const getIncrementalEdits = (oldState, newState) => {
+export const getIncrementalEdits = (oldState: any, newState: any) => {
   const lastChanges = newState.undoStack.at(-1)
   if (lastChanges && lastChanges.length === 1) {
     const lastChange = lastChanges[0]
