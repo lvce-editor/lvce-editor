@@ -2,9 +2,8 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
-import * as Id from '../Id/Id.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
@@ -13,11 +12,13 @@ import * as Font from '../Font/Font.js'
 import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as UnquoteString from '../UnquoteString/UnquoteString.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -93,7 +94,7 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri } = state
+  const { uri, id } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
@@ -117,11 +118,14 @@ export const loadContent = async (state, savedState, context) => {
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
+
+  await EditorWorker.invoke('Editor.create', id)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
     const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
     await Font.ensure(fontName, fontUrl)
+    // await EditorWorker.invoke('Font.ensure', fontName, fontFamily)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
