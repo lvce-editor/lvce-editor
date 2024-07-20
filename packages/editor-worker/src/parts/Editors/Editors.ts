@@ -1,6 +1,6 @@
 const editors = Object.create(null)
 
-export const get = (id: number, editor: any) => {
+export const get = (id: number) => {
   return editors[id]
 }
 

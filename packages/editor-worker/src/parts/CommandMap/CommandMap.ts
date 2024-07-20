@@ -7,7 +7,6 @@ import * as CancelSelection from '../EditorCommand/EditorCommandCancelSelection.
 import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
 import * as Composition from '../EditorCommand/EditorCommandComposition.ts'
 import * as Copy from '../EditorCommand/EditorCommandCopy.ts'
-import * as Font from '../Font/Font.ts'
 import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.ts'
 import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.ts'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.ts'
@@ -100,9 +99,11 @@ import * as EditorType from '../EditorCommand/EditorCommandType.ts'
 import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWithAutoClosing.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
+import * as Font from '../Font/Font.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
+import * as RenderEditor from '../RenderEditor/RenderEditor.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 
 export const commandMap = {
@@ -188,6 +189,7 @@ export const commandMap = {
   'Editor.organizeImports': OrganizeImports.organizeImports,
   'Editor.paste': EditorPaste.paste,
   'Editor.pasteText': PasteText.pasteText,
+  'Editor.render': RenderEditor.renderEditor,
   'Editor.replaceRange': ReplaceRange.replaceRange,
   'Editor.save': Save.save,
   'Editor.selectAll': SelectAll.selectAll,
