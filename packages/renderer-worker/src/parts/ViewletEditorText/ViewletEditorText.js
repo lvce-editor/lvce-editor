@@ -94,7 +94,7 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id } = state
+  const { uri, id, x, y, width, height } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
@@ -118,8 +118,6 @@ export const loadContent = async (state, savedState, context) => {
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-
-  await EditorWorker.invoke('Editor.create', id, content)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
@@ -127,6 +125,30 @@ export const loadContent = async (state, savedState, context) => {
     await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
+  await EditorWorker.invoke('Editor.create', {
+    id,
+    content,
+    savedDeltaY,
+    rowHeight,
+    fontSize,
+    hoverEnabled,
+    letterSpacing,
+    tabSize,
+    links,
+    lineNumbers,
+    formatOnSave,
+    isAutoClosingBracketsEnabled,
+    isAutoClosingTagsEnabled,
+    isAutoClosingQuotesEnabled,
+    isQuickSuggestionsEnabled,
+    completionTriggerCharacters,
+    savedSelections,
+    languageId,
+    x,
+    y,
+    width,
+    height,
+  })
   // TODO send render commands directly from editor worker
   // to renderer process
   const commands = await EditorWorker.invoke('Editor.render', id)
@@ -150,6 +172,7 @@ export const loadContent = async (state, savedState, context) => {
     newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
     savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
   }
+  console.log({ newState2 })
   return {
     ...newState2,
     rowHeight,
@@ -224,6 +247,7 @@ export const handleEditorChange = async (editor, changes) => {
   return editor
 }
 
+// TODO move this to editor worker
 export const contentLoadedEffects = async (state) => {
   // TODO dispose listener
   // TODO don't like side effect here, where to put it?

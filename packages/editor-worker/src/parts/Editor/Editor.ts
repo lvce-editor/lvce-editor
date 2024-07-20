@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.ts'
+import * as SplitLines from '../SplitLines/SplitLines.ts'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as EditorScrolling from './EditorScrolling.ts'
 import * as EditorSelection from './EditorSelection.ts'
@@ -177,8 +179,7 @@ export const hasSelection = (editor) => {
   return editor.selections && editor.selections.length > 0
 }
 
-// @ts-ignore
-export const setBounds = (editor, x, y, width, height, columnWidth) => {
+export const setBounds = (editor: any, x: number, y: number, width: number, height: number, columnWidth: number) => {
   const { itemHeight } = editor
   const numberOfVisibleLines = Math.floor(height / itemHeight)
   const total = editor.lines.length
@@ -196,5 +197,24 @@ export const setBounds = (editor, x, y, width, height, columnWidth) => {
     maxLineY,
     finalY,
     finalDeltaY,
+  }
+}
+
+export const setText = (editor: any, text: string) => {
+  const lines = SplitLines.splitLines(text)
+  const { itemHeight, numberOfVisibleLines, minimumSliderSize } = editor
+  const total = lines.length
+  const maxLineY = Math.min(numberOfVisibleLines, total)
+  const finalY = Math.max(total - numberOfVisibleLines, 0)
+  const finalDeltaY = finalY * itemHeight
+  const contentHeight = lines.length * editor.rowHeight
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(editor.height, contentHeight, minimumSliderSize)
+  return {
+    ...editor,
+    lines,
+    maxLineY,
+    finalY,
+    finalDeltaY,
+    scrollBarHeight,
   }
 }
