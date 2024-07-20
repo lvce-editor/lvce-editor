@@ -1,7 +1,6 @@
 import * as EditorDeleteHorizontalRight from './EditorCommandDeleteHorizontalRight.ts'
 import * as EditorDelta from './EditorCommandDelta.ts'
 
-// @ts-ignore
-export const deleteWordPartRight = (editor) => {
-  EditorDeleteHorizontalRight.editorDeleteHorizontalRight(editor, EditorDelta.wordPartRight)
+export const deleteWordPartRight = (editor: any) => {
+  return EditorDeleteHorizontalRight.editorDeleteHorizontalRight(editor, EditorDelta.wordPartRight)
 }
