@@ -7,7 +7,6 @@ import * as CancelSelection from '../EditorCommand/EditorCommandCancelSelection.
 import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
 import * as Composition from '../EditorCommand/EditorCommandComposition.ts'
 import * as Copy from '../EditorCommand/EditorCommandCopy.ts'
-import * as Font from '../Font/Font.ts'
 import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.ts'
 import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.ts'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.ts'
@@ -100,10 +99,12 @@ import * as EditorType from '../EditorCommand/EditorCommandType.ts'
 import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWithAutoClosing.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
+import * as Font from '../Font/Font.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
+import * as WrapCommands from '../WrapCommands/WrapCommands.ts'
 
 export const commandMap = {
   'Editor.addCursorAbove': AddCursorAbove.addCursorAbove,
@@ -225,25 +226,4 @@ export const commandMap = {
   'Font.ensure': Font.ensure,
 }
 
-const map = Object.create(null)
-
-// TODO only store editor state in editor worker, not in renderer worker also
-const wrapCommand =
-  (fn: any) =>
-  async (editor: any, ...args: any[]) => {
-    if (!map[editor.uid]) {
-      map[editor.uid] = editor
-    }
-    const actual = map[editor.uid]
-    const newEditor = await fn(actual, ...args)
-    map[editor.uid] = newEditor
-    return newEditor
-  }
-
-const wrapCommands = (commands: any) => {
-  for (const [key, value] of Object.entries(commands)) {
-    commands[key] = wrapCommand(value)
-  }
-}
-
-wrapCommands(commandMap)
+WrapCommands.wrapCommands(commandMap)
