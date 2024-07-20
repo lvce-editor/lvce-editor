@@ -1,7 +1,7 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as Px from '../Px/Px.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as Px from '../Px/Px.ts'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.ts'
 
 export const getEditorRowsVirtualDom = (textInfos: any, differences: any, lineNumbers = true) => {
   const dom = []

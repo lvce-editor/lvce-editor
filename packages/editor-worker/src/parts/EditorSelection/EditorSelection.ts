@@ -1,8 +1,8 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.ts'
-import * as GetX from '../GetX/GetX.js'
-import * as Px from '../Px/Px.js'
+import * as GetX from '../GetX/GetX.ts'
+import * as Px from '../Px/Px.ts'
 
 export const fromRange = (startRowIndex: number, startColumnIndex: number, endRowIndex: number, endColumnIndex: number) => {
   return new Uint32Array([startRowIndex, startColumnIndex, endRowIndex, endColumnIndex])

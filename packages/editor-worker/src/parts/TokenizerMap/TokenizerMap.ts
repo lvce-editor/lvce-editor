@@ -1,4 +1,4 @@
-import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
+import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.ts'
 
 const tokenizers = Object.create(null)
 
