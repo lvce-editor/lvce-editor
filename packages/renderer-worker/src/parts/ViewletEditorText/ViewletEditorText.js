@@ -94,7 +94,7 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id } = state
+  const { uri, id, x, y, width, height } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
@@ -117,60 +117,45 @@ export const loadContent = async (state, savedState, context) => {
   TokenizerMap.set(tokenizerId, tokenizer)
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
-  let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-
-  await EditorWorker.invoke('Editor.create', id, content)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
     const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
-    await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
+  await EditorWorker.invoke('Editor.create', {
+    id,
+    content,
+    savedDeltaY,
+    rowHeight,
+    fontSize,
+    hoverEnabled,
+    letterSpacing,
+    tabSize,
+    links,
+    lineNumbers,
+    formatOnSave,
+    isAutoClosingBracketsEnabled,
+    isAutoClosingTagsEnabled,
+    isAutoClosingQuotesEnabled,
+    isQuickSuggestionsEnabled,
+    completionTriggerCharacters,
+    savedSelections,
+    languageId,
+    x,
+    y,
+    width,
+    height,
+  })
   // TODO send render commands directly from editor worker
   // to renderer process
   const commands = await EditorWorker.invoke('Editor.render', id)
+
   console.log({ commands })
-  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
-  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
-    newState2.lines,
-    newState2.fontWeight,
-    fontSize,
-    fontFamily,
-    letterSpacing,
-    isMonospaceFont,
-    charWidth,
-  )
-  if (context && context.startRowIndex) {
-    const lines = newState2.lines.length
-    const rowIndex = context.startRowIndex
-    const finalDeltaY = lines * rowHeight - newState2.height
-    const deltaY = (rowIndex / lines) * finalDeltaY
-    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
-    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
-  }
   return {
-    ...newState2,
-    rowHeight,
-    fontSize,
-    letterSpacing,
-    selections: savedSelections,
-    fontFamily,
-    links,
-    tabSize,
-    longestLineWidth,
-    charWidth,
-    isMonospaceFont,
-    lineNumbers,
-    hoverEnabled,
-    isAutoClosingBracketsEnabled,
-    isAutoClosingQuotesEnabled,
-    isQuickSuggestionsEnabled,
-    isAutoClosingTagsEnabled,
-    completionTriggerCharacters,
-    tokenizerId,
-    formatOnSave,
+    ...state,
+    languageId,
+    commands,
   }
 }
 
@@ -224,6 +209,7 @@ export const handleEditorChange = async (editor, changes) => {
   return editor
 }
 
+// TODO move this to editor worker
 export const contentLoadedEffects = async (state) => {
   // TODO dispose listener
   // TODO don't like side effect here, where to put it?
