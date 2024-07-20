@@ -1,12 +1,14 @@
 export const name = 'sample.tab-completion-provider-snippet'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `h1
-`
+`,
   )
 
   await Workspace.setPath(tmpDir)

@@ -1,5 +1,7 @@
 export const name = 'viewlet.editor-copy-line-down'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

@@ -10,7 +10,6 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
-import * as EditorBlur from './EditorCommandBlur.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 const handleBlur = () => {
@@ -219,7 +218,6 @@ export const openFromType = async (editor, text) => {
 }
 
 export const close = async (editor) => {
-  EditorBlur.removeListener(handleBlur)
   GlobalEventBus.removeListener('editor.selectionChange', handleSelectionChange)
   GlobalEventBus.removeListener('editor.cursorChange', handleCursorChange)
   await Viewlet.dispose('EditorCompletion')
