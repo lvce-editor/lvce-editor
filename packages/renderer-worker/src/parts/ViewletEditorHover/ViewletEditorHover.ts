@@ -1,5 +1,5 @@
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
-import * as GetEditorHoverInfo from '../GetEditorHoverInfo/GetEditorHoverInfo.ts'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -20,7 +20,8 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
-  const hoverInfo = await GetEditorHoverInfo.getEditorHoverInfo(editor, position)
+  const hoverInfo = await EditorWorker.invoke('Hover.getHoverInfo', editor.uid, position)
+  console.log({ editor, hoverInfo, position })
   if (!hoverInfo) {
     return state
   }
