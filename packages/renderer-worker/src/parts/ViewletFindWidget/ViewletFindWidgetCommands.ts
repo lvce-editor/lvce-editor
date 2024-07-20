@@ -1,4 +1,4 @@
-import * as ViewletFindWidget from './ViewletFindWidget.js'
+import * as ViewletFindWidget from './ViewletFindWidget.ts'
 
 // prettier-ignore
 export const Commands = {
