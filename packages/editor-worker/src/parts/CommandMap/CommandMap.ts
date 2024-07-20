@@ -2,6 +2,7 @@ import * as CreateEditor from '../CreateEditor/CreateEditor.ts'
 import * as AddCursorAbove from '../EditorCommand/EditorCommandAddCursorAbove.ts'
 import * as AddCursorBelow from '../EditorCommand/EditorCommandAddCursorBelow.ts'
 import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.ts'
+import * as EditorBlur from '../EditorCommand/EditorCommandBlur.ts'
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.ts'
 import * as CancelSelection from '../EditorCommand/EditorCommandCancelSelection.ts'
 import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
@@ -155,6 +156,7 @@ export const commandMap = {
   'Editor.goToTypeDefinition': EditorGoToTypeDefinition.goToTypeDefinition,
   'Editor.handleBeforeInput': HandleBeforeInput.handleBeforeInput,
   'Editor.handleBeforeInputFromContentEditable': EditorCommandHandleNativeBeforeInputFromContentEditable.handleBeforeInputFromContentEditable,
+  'Editor.handleBlur': EditorBlur.handleBlur,
   'Editor.handleContextMenu': EditorCommandHandleContextMenu.handleContextMenu,
   'Editor.handleDoubleClick': HandleDoubleClick.handleDoubleClick,
   'Editor.handleFocus': HandleFocus.handleFocus,
