@@ -109,3 +109,8 @@ const renderGutterInfo = {
 }
 
 export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations, renderGutterInfo]
+
+export const renderEditor = (id: number) => {
+  // TODO
+  return []
+}
