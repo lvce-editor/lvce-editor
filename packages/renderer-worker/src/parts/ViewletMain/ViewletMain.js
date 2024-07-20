@@ -25,7 +25,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import { closeEditor } from './ViewletMainCloseEditor.js'
+import { closeEditor } from './ViewletMainCloseEditor.ts'
 import { openUri } from './ViewletMainOpenUri.js'
 
 // @ts-ignore

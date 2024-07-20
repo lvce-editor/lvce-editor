@@ -1,4 +1,5 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import type { MainState } from './ViewletMainTypes.ts'
 
 const getUid = (editor) => {
   return editor.uid
@@ -8,7 +9,8 @@ const getEditors = (group) => {
   return group.editors
 }
 
-export const closeAllEditors = (state) => {
+export const closeAllEditors = (state: MainState) => {
+  // @ts-ignore
   const { groups, uid } = state
   const editors = groups.flatMap(getEditors)
   const ids = editors.map(getUid)

@@ -7,7 +7,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import { closeEditor } from './ViewletMainCloseEditor.js'
+import { closeEditor } from './ViewletMainCloseEditor.ts'
 
 export const focusIndex = async (state, index) => {
   const { groups, tabHeight, uid, activeGroupIndex } = state

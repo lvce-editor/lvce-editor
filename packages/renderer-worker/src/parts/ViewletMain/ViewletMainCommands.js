@@ -18,13 +18,13 @@ export const CommandsWithSideEffects = {
 }
 
 export const CommandsWithSideEffectsLazy = {
-  closeTabsLeft: () => import('./ViewletMainCloseTabsLeft.js'),
-  closeTabsRight: () => import('./ViewletMainCloseTabsRight.js'),
-  closeOthers: () => import('./ViewletMainCloseOthers.js'),
-  closeAllEditors: () => import('./ViewletMainCloseAllEditors.js'),
-  closeActiveEditor: () => import('./ViewletMainCloseActiveEditor.js'),
-  closeFocusedTab: () => import('./ViewletMainCloseActiveEditor.js'),
-  closeEditor: () => import('./ViewletMainCloseEditor.js'),
+  closeTabsLeft: () => import('./ViewletMainCloseTabsLeft.ts'),
+  closeTabsRight: () => import('./ViewletMainCloseTabsRight.ts'),
+  closeOthers: () => import('./ViewletMainCloseOthers.ts'),
+  closeAllEditors: () => import('./ViewletMainCloseAllEditors.ts'),
+  closeActiveEditor: () => import('./ViewletMainCloseActiveEditor.ts'),
+  closeFocusedTab: () => import('./ViewletMainCloseActiveEditor.ts'),
+  closeEditor: () => import('./ViewletMainCloseEditor.ts'),
   focusFirst: () => import('./ViewletMainFocusIndex.js'),
   focusLast: () => import('./ViewletMainFocusIndex.js'),
   focusNext: () => import('./ViewletMainFocusIndex.js'),
