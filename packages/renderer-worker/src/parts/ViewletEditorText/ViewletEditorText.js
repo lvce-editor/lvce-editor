@@ -117,10 +117,12 @@ export const loadContent = async (state, savedState, context) => {
   TokenizerMap.set(tokenizerId, tokenizer)
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
+  let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
     const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
+    await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   await EditorWorker.invoke('Editor.create', {
@@ -150,12 +152,47 @@ export const loadContent = async (state, savedState, context) => {
   // TODO send render commands directly from editor worker
   // to renderer process
   const commands = await EditorWorker.invoke('Editor.render', id)
-
   console.log({ commands })
+  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
+  const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
+  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
+    newState2.lines,
+    newState2.fontWeight,
+    fontSize,
+    fontFamily,
+    letterSpacing,
+    isMonospaceFont,
+    charWidth,
+  )
+  if (context && context.startRowIndex) {
+    const lines = newState2.lines.length
+    const rowIndex = context.startRowIndex
+    const finalDeltaY = lines * rowHeight - newState2.height
+    const deltaY = (rowIndex / lines) * finalDeltaY
+    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
+    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+  }
   return {
-    ...state,
-    languageId,
-    commands,
+    ...newState2,
+    rowHeight,
+    fontSize,
+    letterSpacing,
+    selections: savedSelections,
+    fontFamily,
+    links,
+    tabSize,
+    longestLineWidth,
+    charWidth,
+    isMonospaceFont,
+    lineNumbers,
+    hoverEnabled,
+    isAutoClosingBracketsEnabled,
+    isAutoClosingQuotesEnabled,
+    isQuickSuggestionsEnabled,
+    isAutoClosingTagsEnabled,
+    completionTriggerCharacters,
+    tokenizerId,
+    formatOnSave,
   }
 }
 
