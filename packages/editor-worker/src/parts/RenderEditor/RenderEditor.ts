@@ -9,7 +9,7 @@ import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
 
 const renderLines = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return (
       JSON.stringify(oldState.lines) === JSON.stringify(newState.lines) &&
       oldState.tokenizerId === newState.tokenizerId &&
@@ -20,7 +20,7 @@ const renderLines = {
       oldState.width === newState.width
     )
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     const incrementalEdits = GetIncrementalEdits.getIncrementalEdits(oldState, newState)
     if (incrementalEdits) {
       return [/* method */ 'setIncrementalEdits', /* incrementalEdits */ incrementalEdits]
@@ -33,7 +33,7 @@ const renderLines = {
 }
 
 const renderSelections = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return (
       oldState.selections === newState.selections &&
       oldState.focused === newState.focused &&
@@ -41,7 +41,7 @@ const renderSelections = {
       oldState.deltaX === newState.deltaX
     )
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)
     const cursorsDom = GetCursorsVirtualDom.getCursorsVirtualDom(cursorInfos)
     const selectionsDom = GetSelectionsVirtualDom.getSelectionsVirtualDom(selectionInfos)
@@ -50,10 +50,10 @@ const renderSelections = {
 }
 
 const renderScrollBarY = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return oldState.deltaY === newState.deltaY && oldState.scrollBarHeight === newState.scrollBarHeight
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     const scrollBarY = ScrollBarFunctions.getScrollBarY(newState.deltaY, newState.finalDeltaY, newState.height, newState.scrollBarHeight)
     const translate = `0 ${scrollBarY}px`
     const heightPx = `${newState.scrollBarHeight}px`
@@ -62,10 +62,10 @@ const renderScrollBarY = {
 }
 
 const renderScrollBarX = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return oldState.longestLineWidth === newState.longestLineWidth && oldState.deltaX === newState.deltaX
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, newState.longestLineWidth, newState.minimumSliderSize)
     const scrollBarX = (newState.deltaX / newState.longestLineWidth) * newState.width
     return [/* method */ 'setScrollBarHorizontal', /* scrollBarX */ scrollBarX, /* scrollBarWidth */ scrollBarWidth, /* deltaX */ newState.deltaX]
@@ -73,29 +73,29 @@ const renderScrollBarX = {
 }
 
 const renderFocus = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return oldState.focused === newState.focused
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     return [/* method */ 'setFocused', newState.focused]
   },
 }
 
 const renderDecorations = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return oldState.decorations === newState.decorations
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     const dom = GetDiagnosticsVirtualDom.getDiagnosticsVirtualDom(newState.decorations)
     return ['setDecorationsDom', dom]
   },
 }
 
 const renderGutterInfo = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: any, newState: any) {
     return oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
-  apply(oldState, newState) {
+  apply(oldState: any, newState: any) {
     const { minLineY, maxLineY, lineNumbers } = newState
     const gutterInfos = []
     if (lineNumbers) {
