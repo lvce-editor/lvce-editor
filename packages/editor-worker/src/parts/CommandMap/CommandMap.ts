@@ -101,6 +101,7 @@ import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWi
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
 import * as Font from '../Font/Font.ts'
+import * as ColorPicker from '../ColorPicker/ColorPicker.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
@@ -228,6 +229,9 @@ export const commandMap = {
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
   'Font.ensure': Font.ensure,
+  'ColorPicker.loadContent': ColorPicker.loadContent,
+  'ColorPicker.handleSliderPointerDown': ColorPicker.handleSliderPointerDown,
+  'ColorPicker.handleSliderPointerMove': ColorPicker.handleSliderPointerMove,
 }
 
 WrapCommands.wrapCommands(commandMap)
