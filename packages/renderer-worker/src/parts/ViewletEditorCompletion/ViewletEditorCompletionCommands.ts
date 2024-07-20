@@ -12,7 +12,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  selectIndex: () => import('./ViewletEditorCompletionSelectIndex.js'),
-  selectCurrent: () => import('./ViewletEditorCompletionSelectCurrent.js'),
+  selectIndex: () => import('./ViewletEditorCompletionSelectIndex.ts'),
+  selectCurrent: () => import('./ViewletEditorCompletionSelectCurrent.ts'),
   ...VirtualList.LazyCommands
 }
