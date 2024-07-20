@@ -152,47 +152,9 @@ export const loadContent = async (state, savedState, context) => {
   // TODO send render commands directly from editor worker
   // to renderer process
   const commands = await EditorWorker.invoke('Editor.render', id)
-  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
-  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
-    newState2.lines,
-    newState2.fontWeight,
-    fontSize,
-    fontFamily,
-    letterSpacing,
-    isMonospaceFont,
-    charWidth,
-  )
-  if (context && context.startRowIndex) {
-    const lines = newState2.lines.length
-    const rowIndex = context.startRowIndex
-    const finalDeltaY = lines * rowHeight - newState2.height
-    const deltaY = (rowIndex / lines) * finalDeltaY
-    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
-    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
-  }
   return {
     ...newState2,
     commands,
-    rowHeight,
-    fontSize,
-    letterSpacing,
-    selections: savedSelections,
-    fontFamily,
-    links,
-    tabSize,
-    longestLineWidth,
-    charWidth,
-    isMonospaceFont,
-    lineNumbers,
-    hoverEnabled,
-    isAutoClosingBracketsEnabled,
-    isAutoClosingQuotesEnabled,
-    isQuickSuggestionsEnabled,
-    isAutoClosingTagsEnabled,
-    completionTriggerCharacters,
-    tokenizerId,
-    formatOnSave,
   }
 }
 

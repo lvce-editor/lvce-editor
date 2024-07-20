@@ -2,11 +2,19 @@ import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const wrapEditorCommand = (id) => {
-  return (...args) => {
+  return async (...args) => {
     if (args.length === 0) {
       throw new Error('missing arg')
     }
-    return EditorWorker.invoke(`Editor.${id}`, ...args)
+    const editor = args[0]
+    const restArgs = args.slice(1)
+    const result = await EditorWorker.invoke(`Editor.${id}`, editor.uid, ...restArgs)
+    console.log({
+      result: {
+        ...result,
+      },
+    })
+    return result
   }
 }
 
