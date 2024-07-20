@@ -1,3 +1,4 @@
+import * as CreateEditor from '../CreateEditor/CreateEditor.ts'
 import * as AddCursorAbove from '../EditorCommand/EditorCommandAddCursorAbove.ts'
 import * as AddCursorBelow from '../EditorCommand/EditorCommandAddCursorBelow.ts'
 import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.ts'
@@ -6,12 +7,12 @@ import * as CancelSelection from '../EditorCommand/EditorCommandCancelSelection.
 import * as EditorCloseCompletion from '../EditorCommand/EditorCommandCloseCompletion.ts'
 import * as Composition from '../EditorCommand/EditorCommandComposition.ts'
 import * as Copy from '../EditorCommand/EditorCommandCopy.ts'
+import * as Font from '../Font/Font.ts'
 import * as CopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.ts'
 import * as CopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.ts'
 import * as CursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.ts'
 import * as CursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.ts'
 import * as CursorDown from '../EditorCommand/EditorCommandCursorDown.ts'
-import * as SetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.ts'
 import * as CursorEnd from '../EditorCommand/EditorCommandCursorEnd.ts'
 import * as CursorHome from '../EditorCommand/EditorCommandCursorHome.ts'
 import * as EditorCursorSet from '../EditorCommand/EditorCommandCursorSet.ts'
@@ -32,6 +33,7 @@ import * as DeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPa
 import * as DeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.ts'
 import * as FindAllReferences from '../EditorCommand/EditorCommandFindAllReferences.ts'
 import * as EditorFormat from '../EditorCommand/EditorCommandFormat.ts'
+import * as GetWordAt from '../EditorCommand/EditorCommandGetWordAt.ts'
 import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.ts'
 import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.ts'
 import * as ContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.ts'
@@ -54,7 +56,6 @@ import * as HandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.ts
 import * as HandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.ts'
 import * as HandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.ts'
 import * as HandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.ts'
-import * as GetWordAt from '../EditorCommand/EditorCommandGetWordAt.ts'
 import * as IndentLess from '../EditorCommand/EditorCommandIndentLess.ts'
 import * as IndentMore from '../EditorCommand/EditorCommandIndentMore.ts'
 import * as InsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.ts'
@@ -86,6 +87,7 @@ import * as SelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.
 import * as SelectionGrow from '../EditorCommand/EditorCommandSelectionGrow.ts'
 import * as SetDecorations from '../EditorCommand/EditorCommandSetDecorations.ts'
 import * as SetDelta from '../EditorCommand/EditorCommandSetDelta.ts'
+import * as SetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.ts'
 import * as SetSelections from '../EditorCommand/EditorCommandSetSelections.ts'
 import * as EditorShowHover from '../EditorCommand/EditorCommandShowHover.ts'
 import * as EditorShowSourceActions from '../EditorCommand/EditorCommandShowSourceActions.ts'
@@ -98,7 +100,6 @@ import * as EditorType from '../EditorCommand/EditorCommandType.ts'
 import * as EditorTypeWithAutoClosing from '../EditorCommand/EditorCommandTypeWithAutoClosing.ts'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
-import * as EditorCreate from '../EditorCreate/EditorCreate.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
@@ -117,7 +118,7 @@ export const commandMap = {
   'Editor.copy': Copy.copy,
   'Editor.copyLineDown': CopyLineDown.copyLineDown,
   'Editor.copyLineUp': CopyLineUp.copyLineUp,
-  'Editor.create': EditorCreate.editorCreate,
+  'Editor.create': CreateEditor.createEditor,
   'Editor.cursorCharacterLeft': CursorCharacterLeft.cursorCharacterLeft,
   'Editor.cursorCharacterRight': CursorCharacterRight.cursorCharacterRight,
   'Editor.cursorDown': CursorDown.cursorDown,
@@ -219,6 +220,7 @@ export const commandMap = {
   'Editor.typeWithAutoClosing': EditorTypeWithAutoClosing.typeWithAutoClosing,
   'Editor.undo': EditorUndo.undo,
   'Editor.unIndent': Unindent.editorUnindent,
+  'Font.ensure': Font.ensure,
 }
 
 const map = Object.create(null)
