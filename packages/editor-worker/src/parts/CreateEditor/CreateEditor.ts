@@ -55,12 +55,13 @@ export const createEditor = ({
   fontWeight,
   fontFamily,
   isMonospaceFont,
+  uri,
 }: EditorCreateOptions) => {
   Assert.number(id)
   Assert.string(content)
   const charWidth = MeasureCharacterWidth.measureCharacterWidth(fontWeight, fontSize, fontFamily, letterSpacing)
   const editor = {
-    uri: '',
+    uri,
     isAutoClosingBracketsEnabled,
     isAutoClosingTagsEnabled,
     isAutoClosingQuotesEnabled,
