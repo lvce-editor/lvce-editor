@@ -1,7 +1,7 @@
-import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
+import * as EditorPosition from '../EditorCommand/EditorCommandPosition.ts'
 import * as Hover from '../Hover/Hover.ts'
-import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as Editors from '../Editors/Editors.ts'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.ts'
 
