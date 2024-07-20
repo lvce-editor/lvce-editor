@@ -1,5 +1,5 @@
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
-import * as GetEditorHoverInfo from '../GetEditorHoverInfo/GetEditorHoverInfo.js'
+import * as GetEditorHoverInfo from '../GetEditorHoverInfo/GetEditorHoverInfo.ts'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
