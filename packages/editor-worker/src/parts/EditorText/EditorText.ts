@@ -1,5 +1,5 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.ts'
-import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
+import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.ts'
 import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
@@ -312,7 +312,7 @@ const getLineInfosViewport = (
   }
 }
 
-export const getVisible = (editor) => {
+export const getVisible = (editor: any) => {
   // console.log({ editor })
   // TODO should separate rendering from business logic somehow
   // currently hard to test because need to mock editor height, top, left,
