@@ -164,14 +164,14 @@ export const loadContent = async (state, savedState, context) => {
     isMonospaceFont,
     charWidth,
   )
-  // if (context && context.startRowIndex) {
-  //   const lines = newState2.lines.length
-  //   const rowIndex = context.startRowIndex
-  //   const finalDeltaY = lines * rowHeight - newState2.height
-  //   const deltaY = (rowIndex / lines) * finalDeltaY
-  //   newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
-  //   savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
-  // }
+  if (context && context.startRowIndex) {
+    const lines = newState2.lines.length
+    const rowIndex = context.startRowIndex
+    const finalDeltaY = lines * rowHeight - newState2.height
+    const deltaY = (rowIndex / lines) * finalDeltaY
+    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
+    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+  }
   console.log({ newState2 })
   return {
     ...newState2,
