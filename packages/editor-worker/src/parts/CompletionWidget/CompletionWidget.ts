@@ -3,8 +3,8 @@ import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.ts'
-import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.js'
-import * as GetListHeight from '../GetListHeight/GetListHeight.js'
+import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.ts'
+import * as GetListHeight from '../GetListHeight/GetListHeight.ts'
 
 const getEditor = (uid: number): any => {
   const editor = {}
@@ -95,8 +95,8 @@ export const handleEditorDeleteLeft = (state: any) => {
   }
 }
 
-export const loadContent = async (itemHeight: number, maxHeight: number, editorUid: numer) => {
-  const editor = getEditor()
+export const loadContent = async (itemHeight: number, maxHeight: number, editorUid: number) => {
+  const editor = getEditor(editorUid)
   const unfilteredItems = await Completions.getCompletions(editor)
   const wordAtOffset = getWordAtOffset(editor)
   const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
@@ -107,14 +107,13 @@ export const loadContent = async (itemHeight: number, maxHeight: number, editorU
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
   editor.widgets = editor.widgets || []
-  editor.widgets.push(ViewletModuleId.EditorCompletion)
+  // editor.widgets.push(ViewletModuleId.EditorCompletion)
   const itemsLength = items.length
   const newFocusedIndex = itemsLength === 0 ? -1 : 0
   const total = items.length
   const height = GetListHeight.getListHeight(items.length, itemHeight, maxHeight)
   const finalDeltaY = GetFinalDeltaY.getFinalDeltaY(height, itemHeight, total)
   return {
-    ...state,
     unfilteredItems,
     items,
     x,
@@ -129,9 +128,9 @@ export const loadContent = async (itemHeight: number, maxHeight: number, editorU
   }
 }
 
-export const handleError = async (error) => {
+export const handleError = async (error: any) => {
   const displayErrorMessage = getDisplayErrorMessage(error)
-  const editor = getEditor()
+  const editor = getEditor(-1)
   await EditorShowMessage.editorShowMessage(
     /* editor */ editor,
     /* rowIndex */ 0,
@@ -142,23 +141,12 @@ export const handleError = async (error) => {
 }
 
 export const loadingContent = () => {
-  const editor = getEditor()
+  const editor = getEditor(-1)
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
-  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  // const x = EditorPosition.x(editor, rowIndex, columnIndex)
   // @ts-ignore
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
-  const changes = [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.EditorCompletion, /* method */ 'showLoading', /* x */ x, /* y */ y]
-  return changes
+  // const changes = [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.EditorCompletion, /* method */ 'showLoading', /* x */ x, /* y */ y]
+  return []
 }
-
-export const handleSelectionChange = (state, selectionChanges) => {}
-
-export const advance = (state, word) => {
-  const filteredItems = FilterCompletionItems.filterCompletionItems(state.items, word)
-  return {
-    ...state,
-    filteredItems,
-  }
-}
-export * from '../VirtualList/VirtualList.js'

@@ -1,16 +1,16 @@
 import * as Character from '../Character/Character.js'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.ts'
-import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
+import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.ts'
 import * as CompletionItemFlags from '../CompletionItemFlags/CompletionItemFlags.js'
 
-const addEmptyMatch = (item) => {
+const addEmptyMatch = (item: any) => {
   return {
     ...item,
     matches: EmptyMatches.EmptyMatches,
   }
 }
 
-export const filterCompletionItems = (completionItems, word) => {
+export const filterCompletionItems = (completionItems: any, word: string) => {
   if (word === Character.EmptyString) {
     return completionItems.map(addEmptyMatch)
   }

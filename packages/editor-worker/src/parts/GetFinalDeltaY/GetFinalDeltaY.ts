@@ -1,4 +1,4 @@
-export const getFinalDeltaY = (height, itemHeight, itemsLength) => {
+export const getFinalDeltaY = (height: number, itemHeight: number, itemsLength: number) => {
   const contentHeight = itemsLength * itemHeight
   // @ts-ignore
   const numberOfVisible = Math.ceil(height / itemHeight)
