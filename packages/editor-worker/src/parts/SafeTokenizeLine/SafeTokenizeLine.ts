@@ -8,7 +8,7 @@ export const state: State = {
   warned: [],
 }
 
-const flattenTokensArray = (tokens) => {
+const flattenTokensArray = (tokens: any) => {
   const flattened: number[] = []
   for (const token of tokens) {
     Assert.object(token)
@@ -17,22 +17,15 @@ const flattenTokensArray = (tokens) => {
   return flattened
 }
 
-const warnDeprecatedArrayReturn = (languageId, fn) => {
+const warnDeprecatedArrayReturn = (languageId: string, fn: any) => {
   if (state.warned.includes(fn)) {
     return
   }
   state.warned.push(fn)
   console.warn(`tokenizers without hasArrayReturn=false are deprecated (language ${languageId})`)
 }
-/**
- *
- * @param {(line:string, lineState)=>any} tokenizeLine
- * @param {string} line
- * @param {any} lineStateAtStart
- * @param {boolean} hasArrayReturn
- * @returns
- */
-export const safeTokenizeLine = (languageId, tokenizeLine, line, lineStateAtStart, hasArrayReturn) => {
+
+export const safeTokenizeLine = (languageId: string, tokenizeLine: any, line: string, lineStateAtStart: any, hasArrayReturn: boolean) => {
   try {
     const lineState = tokenizeLine(line, lineStateAtStart)
     if (!lineState || !lineState.tokens || !lineState.state) {
