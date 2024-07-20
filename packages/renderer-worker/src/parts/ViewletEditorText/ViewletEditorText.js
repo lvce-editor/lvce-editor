@@ -123,6 +123,8 @@ export const loadContent = async (state, savedState, context) => {
     await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
+  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
+  const fontWeight = 400
   await EditorWorker.invoke('Editor.create', {
     id,
     content,
@@ -146,6 +148,9 @@ export const loadContent = async (state, savedState, context) => {
     y,
     width,
     height,
+    isMonospaceFont,
+    fontFamily,
+    fontWeight,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
