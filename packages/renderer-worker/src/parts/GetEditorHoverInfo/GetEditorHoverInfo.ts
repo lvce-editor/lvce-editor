@@ -1,5 +1,4 @@
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
-import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Hover from '../Hover/Hover.js'
 import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
