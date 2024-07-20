@@ -1,4 +1,4 @@
-import * as ViewletEditorSourceActions from './ViewletEditorSourceActions.js'
+import * as ViewletEditorSourceActions from './ViewletEditorSourceActions.ts'
 
 export const Commands = {
   handleFocusIn: ViewletEditorSourceActions.handleFocus,
