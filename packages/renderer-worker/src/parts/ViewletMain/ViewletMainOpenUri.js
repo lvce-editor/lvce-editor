@@ -19,7 +19,6 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const width = state.width
   const contentHeight = state.height - tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
-  console.log({ groups })
   let activeGroup = groups[activeGroupIndex]
   activeGroup ||= {
     uid: Id.create(),
