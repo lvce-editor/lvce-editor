@@ -24,4 +24,5 @@ export interface EditorCreateOptions {
   readonly fontWeight: number
   readonly fontFamily: string
   readonly isMonospaceFont: boolean
+  readonly uri: string
 }
