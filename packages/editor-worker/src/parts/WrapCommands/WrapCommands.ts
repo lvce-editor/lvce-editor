@@ -13,7 +13,18 @@ const wrapCommand =
     newEditor.commands = commands
     return newEditor
   }
-const keep = ['Editor.offsetAt', 'Font.ensure', 'Editor.getWordAt', 'Editor.getWordBefore', 'Editor.create', 'Editor.render']
+
+const keep = [
+  'ColorPicker.handleSliderPointerDown',
+  'ColorPicker.handleSliderPointerMove',
+  'ColorPicker.loadContent',
+  'Editor.create',
+  'Editor.getWordAt',
+  'Editor.getWordBefore',
+  'Editor.offsetAt',
+  'Editor.render',
+  'Font.ensure',
+]
 
 export const wrapCommands = (commands: any) => {
   for (const [key, value] of Object.entries(commands)) {
