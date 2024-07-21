@@ -6,6 +6,6 @@ export const getHover = async (editor: any, offset: number) => {
   Assert.object(editor)
   Assert.number(offset)
   // TODO invoke extension host worker directly
-  const hover = await ExtensionHostWorker.invoke(ExtensionHostCommandType.HoverExecute, editor, offset)
+  const hover = await ExtensionHostWorker.invoke(ExtensionHostCommandType.HoverExecute, editor.uid, offset)
   return hover
 }

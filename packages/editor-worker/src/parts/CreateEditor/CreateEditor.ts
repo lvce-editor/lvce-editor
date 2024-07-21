@@ -3,6 +3,8 @@ import * as Editor from '../Editor/Editor.ts'
 import { EditorCreateOptions } from '../EditorCreateOptions/EditorCreateOptions.ts'
 import * as EditorState from '../Editors/Editors.ts'
 import * as EditorScrolling from '../EditorScrolling/EditorScrolling.ts'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.ts'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.ts'
 
 const emptyEditor = {
@@ -112,6 +114,8 @@ export const createEditor = async ({
     isMonospaceFont,
     letterSpacing,
     charWidth,
+    uid: id,
+    id,
   }
   // TODO avoid creating intermediate editors here
   const newEditor1 = Editor.setBounds(editor, x, y, width, height, 9)
@@ -119,6 +123,5 @@ export const createEditor = async ({
   const newEditor3 = EditorScrolling.setDeltaY(newEditor2, 0)
   // console.log({ newEditor })
   EditorState.set(id, emptyEditor, newEditor3)
-  // TODO
-  // await ExtensionHostWorker.invoke(ExtensionHostCommandType.TextDocumentSyncFull, uri, id, languageId, content)
+  await ExtensionHostWorker.invoke(ExtensionHostCommandType.TextDocumentSyncFull, uri, id, languageId, content)
 }

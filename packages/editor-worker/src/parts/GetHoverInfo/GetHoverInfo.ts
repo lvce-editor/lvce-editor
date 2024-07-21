@@ -55,7 +55,7 @@ export const getEditorHoverInfo = async (editorUid: number, position: any) => {
   const editor = instance.newState
   const { selections } = editor
   const { rowIndex, columnIndex } = getHoverPosition(position, selections)
-  const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const hover = await Hover.getHover(editor, offset)
   if (!hover) {
     return undefined
