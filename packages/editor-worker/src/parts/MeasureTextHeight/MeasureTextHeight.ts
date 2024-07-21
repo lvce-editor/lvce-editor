@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as RendererProcess from '../RendererProcess/RendererProcess.ts'
 
 // TODO ask renderer process directly
 export const measureTextHeight = (text: string, fontFamily: string, fontSize: number) => {
@@ -6,5 +7,5 @@ export const measureTextHeight = (text: string, fontFamily: string, fontSize: nu
 }
 
 export const measureTextBlockHeight = (text: string, fontFamily: string, fontSize: number, lineHeight: number | string, width: number) => {
-  return RendererWorker.invoke('MeasureTextBlockHeight.measureTextBlockHeight', text, fontSize, fontFamily, lineHeight, width)
+  return RendererProcess.invoke('MeasureTextBlockHeight.measureTextBlockHeight', text, fontSize, fontFamily, lineHeight, width)
 }
