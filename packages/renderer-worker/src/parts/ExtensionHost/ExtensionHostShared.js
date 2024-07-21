@@ -15,16 +15,9 @@ export const executeProviders = async ({
 }
 
 export const executeProvider = async ({ event, method, params, noProviderFoundMessage }) => {
-  const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
-  if (extensionHosts.length === 0) {
-    throw new Error(noProviderFoundMessage)
-  }
-  const promises = []
-  for (const extensionHost of extensionHosts) {
-    promises.push(extensionHost.ipc.invoke(method, ...params))
-  }
-  const results = await Promise.all(promises)
-  return results[0]
+  await ExtensionHostManagement.activateByEvent(event)
+  const result = ExtensionHostWorker.invoke(method, ...params)
+  return result
 }
 
 export const execute = async ({ method, params }) => {
