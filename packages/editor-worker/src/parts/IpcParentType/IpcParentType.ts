@@ -7,3 +7,4 @@ export const ModuleWorkerAndWorkaroundForChromeDevtoolsBug = 6
 export const Node = 7
 export const NodeAlternate = 8
 export const RendererProcess = 9
+export const ExtensionHostWorker = 10
