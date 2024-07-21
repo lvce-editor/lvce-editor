@@ -1,6 +1,5 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
@@ -9,6 +8,7 @@ import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSema
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
@@ -223,16 +223,19 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   Tokenizer.addConnectedEditor(state.uid)
   const newLanguageId = getLanguageId(state)
-  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId)
+  const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
+  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   await updateDiagnostics(state)
 }
 
-export const handleLanguagesChanged = (state) => {
+export const handleLanguagesChanged = async (state) => {
   const newLanguageId = getLanguageId(state)
-  return EditorCommandSetLanguageId.setLanguageId(state, newLanguageId)
+  const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
+  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
+  return state
 }
 
 export const hasFunctionalResize = true
