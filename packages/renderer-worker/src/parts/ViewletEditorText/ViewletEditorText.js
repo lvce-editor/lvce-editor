@@ -1,6 +1,5 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
@@ -223,6 +222,7 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   Tokenizer.addConnectedEditor(state.uid)
   const newLanguageId = getLanguageId(state)
+  console.log('set language id', newLanguageId)
   await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
@@ -230,9 +230,10 @@ export const contentLoadedEffects = async (state) => {
   await updateDiagnostics(state)
 }
 
-export const handleLanguagesChanged = (state) => {
+export const handleLanguagesChanged = async (state) => {
   const newLanguageId = getLanguageId(state)
-  return EditorCommandSetLanguageId.setLanguageId(state, newLanguageId)
+  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId)
+  return state
 }
 
 export const hasFunctionalResize = true
