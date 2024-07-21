@@ -4,6 +4,5 @@ import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  console.log({ port })
   await ExtensionHostWorker.invokeAndTransfer([port], initialCommand, port)
 }
