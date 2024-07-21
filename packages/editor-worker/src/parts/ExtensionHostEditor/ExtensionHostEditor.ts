@@ -1,7 +1,6 @@
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.ts'
 
-export const execute = async ({ editor, args, event, method, combineResults, noProviderFoundMessage, noProviderFoundResult = undefined }: any) => {
-  // @ts-ignore
+export const execute = async ({ editor, args, event, method, noProviderFoundMessage, noProviderFoundResult = undefined }: any) => {
   const result = await ExtensionHostWorker.invoke(method, editor.uid, ...args)
   // promises.push(extensionHost.ipc.invoke(method, ...params))
 
@@ -13,4 +12,5 @@ export const execute = async ({ editor, args, event, method, combineResults, noP
   //   combineResults: combineResults,
   //   noProviderFoundResult,
   // })
+  return result
 }
