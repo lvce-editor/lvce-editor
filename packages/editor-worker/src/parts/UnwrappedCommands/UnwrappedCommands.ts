@@ -16,4 +16,5 @@ export const keep = [
   'FindWidget.loadContent',
   'Font.ensure',
   'Hover.getHoverInfo',
+  'Initialize.initialize',
 ]

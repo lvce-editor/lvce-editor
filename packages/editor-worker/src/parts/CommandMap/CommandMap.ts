@@ -103,12 +103,13 @@ import * as EditorUndo from '../EditorCommand/EditorCommandUndo.ts'
 import * as Unindent from '../EditorCommand/EditorCommandUnindent.ts'
 import * as FindWidget from '../FindWidget/FindWidget.ts'
 import * as Font from '../Font/Font.ts'
+import * as GetHoverInfo from '../GetHoverInfo/GetHoverInfo.ts'
 import * as HandleBeforeInput from '../HandleBeforeInput/HandleBeforeInput.ts'
+import * as Initialize from '../Initialize/Initialize.ts'
 import * as MoveLineDown from '../MoveLineDown/MoveLineDown.ts'
 import * as MoveLineUp from '../MoveLineUp/MoveLineUp.ts'
 import * as RenderEditor from '../RenderEditor/RenderEditor.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
-import * as GetHoverInfo from '../GetHoverInfo/GetHoverInfo.ts'
 import * as WrapCommands from '../WrapCommands/WrapCommands.ts'
 
 export const commandMap = {
@@ -242,6 +243,7 @@ export const commandMap = {
   'FindWidget.loadContent': FindWidget.loadContent,
   'Font.ensure': Font.ensure,
   'Hover.getHoverInfo': GetHoverInfo.getEditorHoverInfo,
+  'Initialize.initialize': Initialize.intialize,
 }
 
 WrapCommands.wrapCommands(commandMap)
