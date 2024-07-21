@@ -1,11 +1,10 @@
-// import * as IpcChildWithMessagePort from '../IpcChildWithMessagePort/IpcChildWithMessagePort.ts'
+import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
+import * as IpcChildModule from '../IpcChildModule/IpcChildModule.ts'
+import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
 export const handleMessagePort = (port: MessagePort) => {
-  // const ipc = IpcChildWithMessagePort.wrap(port)
-  // const handleMessage = (event: MessageEvent) => {
-  //   const { data } = event
-  //   console.log({ data })
-  // }
-  // ipc.onmessage = handleMessage
-  // ipc.send('ready')
+  const module = IpcChildModule.getModule(IpcChildType.MessagePort)
+  const ipc = module.wrap(port)
+  HandleIpc.handleIpc(ipc)
+  ipc.send('ready')
 }
