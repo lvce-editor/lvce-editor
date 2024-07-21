@@ -29,7 +29,7 @@ const emptyEditor = {
   diagnostics: [],
 }
 
-export const createEditor = ({
+export const createEditor = async ({
   id,
   content,
   savedDeltaY,
@@ -119,4 +119,6 @@ export const createEditor = ({
   const newEditor3 = EditorScrolling.setDeltaY(newEditor2, 0)
   // console.log({ newEditor })
   EditorState.set(id, emptyEditor, newEditor3)
+  // TODO
+  // await ExtensionHostWorker.invoke(ExtensionHostCommandType.TextDocumentSyncFull, uri, id, languageId, content)
 }
