@@ -15,7 +15,6 @@ const logError = (error) => {
 }
 
 export const handleMessage = (event) => {
-  console.log({ data: event.data })
   return HandleJsonRpcMessage.handleJsonRpcMessage(
     event.target,
     event.data,
