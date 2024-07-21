@@ -3,7 +3,7 @@ import * as TestType from '../TestType/TestType.ts'
 import * as Timestamp from '../Timestamp/Timestamp.ts'
 import { VError } from '../VError/VError.ts'
 
-const printError = (error) => {
+const printError = (error: any) => {
   if (error && error.constructor.name === 'AssertionError') {
     console.error(error.message)
   } else {
@@ -11,7 +11,7 @@ const printError = (error) => {
   }
 }
 
-const stringifyError = (error) => {
+const stringifyError = (error: any) => {
   if (!error) {
     return `${error}`
   }
@@ -21,10 +21,10 @@ const stringifyError = (error) => {
   return `${error.message}`
 }
 
-const formatDuration = (duration) => {
+const formatDuration = (duration: number) => {
   return duration.toFixed(2) + 'ms'
 }
-export const executeTest = async (name, fn, globals = {}) => {
+export const executeTest = async (name: string, fn: any, globals = {}) => {
   let _error
   let _start
   let _end

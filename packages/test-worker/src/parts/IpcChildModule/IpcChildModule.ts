@@ -2,7 +2,7 @@ import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 // @ts-ignore
 import { IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort } from '/static/js/lvce-editor-ipc.js'
 
-export const getModule = (method) => {
+export const getModule = (method: any) => {
   switch (method) {
     case IpcChildType.ModuleWorker:
       return IpcChildWithModuleWorker

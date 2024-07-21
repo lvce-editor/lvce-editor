@@ -9,12 +9,12 @@ export const getTmpDir = async () => {
   return 'memfs://'
 }
 
-export const test = async (name, fn) => {
+export const test = async (name: string, fn: any) => {
   NameAnonymousFunction.nameAnonymousFunction(fn, `test/${name}`)
   TestState.addTest(name, fn)
 }
 
-test.skip = async (id, fn) => {
+test.skip = async (id: string, fn: any) => {
   const state = 'skip'
   const background = 'yellow'
   const text = `test skipped ${id}`

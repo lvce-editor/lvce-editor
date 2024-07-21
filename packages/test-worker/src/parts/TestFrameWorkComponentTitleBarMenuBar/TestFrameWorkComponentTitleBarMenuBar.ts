@@ -12,7 +12,7 @@ export const focusFirst = async () => {
   await Rpc.invoke('TitleBarMenuBar.focusFirst')
 }
 
-export const focusIndex = async (index) => {
+export const focusIndex = async (index: number) => {
   await Rpc.invoke('TitleBarMenuBar.focusIndex', index)
 }
 
@@ -59,7 +59,7 @@ export const handleKeyEscape = async () => {
   await Rpc.invoke('TitleBarMenuBar.handleKeyEscape')
 }
 
-export const toggleIndex = async (index) => {
+export const toggleIndex = async (index: number) => {
   await Rpc.invoke('TitleBarMenuBar.toggleIndex', index)
 }
 
