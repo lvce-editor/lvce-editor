@@ -14,7 +14,7 @@ const logError = (error) => {
   console.error(error)
 }
 
-const handleMessage = (event) => {
+export const handleMessage = (event) => {
   return HandleJsonRpcMessage.handleJsonRpcMessage(
     event.target,
     event.data,
@@ -24,12 +24,4 @@ const handleMessage = (event) => {
     logError,
     requiresSocket,
   )
-}
-
-export const handleIpc = (ipc) => {
-  if ('addEventListener' in ipc) {
-    ipc.addEventListener('message', handleMessage)
-  } else {
-    ipc.onmessage = handleMessage
-  }
 }
