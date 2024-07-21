@@ -12,11 +12,11 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.ts
 const renderLines = {
   isEqual(oldState: any, newState: any) {
     return (
-      JSON.stringify(oldState.lines) === JSON.stringify(newState.lines) &&
+      oldState.lines === newState.lines &&
       oldState.tokenizerId === newState.tokenizerId &&
       oldState.minLineY === newState.minLineY &&
-      JSON.stringify(oldState.decorations) === JSON.stringify(newState.decorations) &&
-      JSON.stringify(oldState.embeds) === JSON.stringify(newState.embeds) &&
+      oldState.decorations === newState.decorations &&
+      oldState.embeds === newState.embeds &&
       oldState.deltaX === newState.deltaX &&
       oldState.width === newState.width
     )

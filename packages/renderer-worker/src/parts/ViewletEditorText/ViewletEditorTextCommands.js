@@ -140,6 +140,7 @@ const ids = [
   'type',
   'undo',
   'unIndent',
+  'setLanguageId',
 ]
 
 export const Commands = {
@@ -156,7 +157,6 @@ export const Commands = {
 // prettier-ignore
 export const LazyCommands = {
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
-  setLanguageId: () => import('../EditorCommand/EditorCommandSetLanguageId.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
