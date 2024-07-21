@@ -27,9 +27,5 @@ const handleMessage = (event) => {
 }
 
 export const handleIpc = (ipc) => {
-  if ('addEventListener' in ipc) {
-    ipc.addEventListener('message', handleMessage)
-  } else {
-    ipc.onmessage = handleMessage
-  }
+  ipc.addEventListener('message', handleMessage)
 }
