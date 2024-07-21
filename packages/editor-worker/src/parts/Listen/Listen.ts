@@ -14,11 +14,4 @@ export const listen = async () => {
   Rpc.listen(ipc)
   await RendererProcess.listen()
   await ExtensionHostWorker.listen()
-  const uri = '/test/file.js'
-  const editorId = 1
-  const languageId = 'javascript'
-  const text = 'abc'
-  await ExtensionHostWorker.invoke('ExtensionHostTextDocument.syncFull', uri, editorId, languageId, text)
-  await ExtensionHostWorker.invoke('ExtensionHostReference.executeFileReferenceProvider', editorId, 0)
-  console.log('list ext host worker')
 }
