@@ -1,6 +1,6 @@
 import * as Rpc from '../Rpc/Rpc.ts'
 
-export const openUri = async (uri) => {
+export const openUri = async (uri: string) => {
   await Rpc.invoke('Main.openUri', uri)
 }
 

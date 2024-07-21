@@ -1,6 +1,6 @@
 import * as Rpc from '../Rpc/Rpc.ts'
 
-export const openContextMenu = async (index) => {
+export const openContextMenu = async (index: number) => {
   await Rpc.invoke('Explorer.handleContextMenuKeyboard', index)
 }
 
@@ -12,7 +12,7 @@ export const focusNext = async () => {
   await Rpc.invoke('Explorer.focusNext')
 }
 
-export const focusIndex = async (index) => {
+export const focusIndex = async (index: number) => {
   await Rpc.invoke('Explorer.focusIndex', index)
 }
 
@@ -44,7 +44,7 @@ export const newFile = async () => {
   await Rpc.invoke('Explorer.newFile')
 }
 
-export const handleClick = async (index) => {
+export const handleClick = async (index: number) => {
   await Rpc.invoke('Explorer.handleClick', index)
 }
 
@@ -60,10 +60,10 @@ export const acceptEdit = async () => {
   await Rpc.invoke('Explorer.acceptEdit')
 }
 
-export const updateEditingValue = async (value) => {
+export const updateEditingValue = async (value: string) => {
   await Rpc.invoke('Explorer.updateEditingValue', value)
 }
 
-export const expandAll = async (value) => {
+export const expandAll = async (value: string) => {
   await Rpc.invoke('Explorer.expandAll', value)
 }

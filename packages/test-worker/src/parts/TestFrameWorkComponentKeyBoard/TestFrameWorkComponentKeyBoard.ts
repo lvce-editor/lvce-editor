@@ -1,7 +1,7 @@
 import * as GetKeyOptions from '../GetKeyOptions/GetKeyOptions.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
-export const press = async (key) => {
+export const press = async (key: string) => {
   const keyOptions = GetKeyOptions.getKeyOptions(key)
   const options = {
     cancelable: true,

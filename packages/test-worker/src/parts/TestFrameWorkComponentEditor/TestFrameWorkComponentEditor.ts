@@ -1,6 +1,6 @@
 import * as Rpc from '../Rpc/Rpc.ts'
 
-export const setCursor = async (rowIndex, columnIndex) => {
+export const setCursor = async (rowIndex: number, columnIndex: number) => {
   await Rpc.invoke('Editor.cursorSet', rowIndex, columnIndex)
 }
 
@@ -20,7 +20,7 @@ export const executeTabCompletion = async () => {
   await Rpc.invoke('Editor.tabCompletion')
 }
 
-export const invokeBraceCompletion = async (text) => {
+export const invokeBraceCompletion = async (text: string) => {
   await Rpc.invoke('Editor.braceCompletion', text)
 }
 
@@ -64,7 +64,7 @@ export const goToTypeDefinition = async () => {
   await Rpc.invoke('Editor.goToTypeDefinition')
 }
 
-export const type = async (text) => {
+export const type = async (text: string) => {
   await Rpc.invoke('Editor.type')
 }
 
@@ -76,7 +76,7 @@ export const findAllImplementations = async () => {
   await Rpc.invoke('SideBar.show', 'Implementations', /* focus */ true)
 }
 
-export const setSelections = async (selections) => {
+export const setSelections = async (selections: any) => {
   await Rpc.invoke('Editor.setSelections', selections)
 }
 
@@ -84,7 +84,7 @@ export const openFindWidget = async () => {
   await Rpc.invoke('Editor.openFind')
 }
 
-export const setDeltaY = async (deltaY) => {
+export const setDeltaY = async (deltaY: number) => {
   await Rpc.invoke('Editor.setDeltaY', deltaY)
 }
 

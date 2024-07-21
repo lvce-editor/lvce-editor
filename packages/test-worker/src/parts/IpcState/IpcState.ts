@@ -9,6 +9,6 @@ export const get = () => {
   return state.ipc
 }
 
-export const set = (ipc) => {
+export const set = (ipc: any) => {
   state.ipc = ipc
 }
