@@ -25,6 +25,7 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.ts'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.ts'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.ts'
+import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.ts'
 
 export const getFn = (method) => {
   switch (method) {
@@ -126,6 +127,8 @@ export const getFn = (method) => {
       return ExtensionHostSelection.executeSelectionProvider
     case ExtensionHostCommandType.ConfigurationSetConfiguration:
       return ExtensionHostConfiguration.setConfigurations
+    case 'HandleMessagePort.handleMessagePort':
+      return HandleMessagePort.handleMessagePort
     default:
       throw new CommandNotFoundError(method)
   }
