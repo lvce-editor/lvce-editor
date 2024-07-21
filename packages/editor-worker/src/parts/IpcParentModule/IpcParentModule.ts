@@ -1,13 +1,13 @@
 import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
+import * as IpcParentWithExtensionHostWorker from '../IpcParentWithExtensionHostWorker/IpcParentWithExtensionHostWorker.ts'
+import * as IpcParentWithRendererProcess from '../IpcParentWithRendererProcess/IpcParentWithRendererProcess.ts'
 
 export const getModule = (method: any) => {
   switch (method) {
-    case IpcParentType.NodeAlternate:
-      return import('../IpcParentWithNodeAlternate/IpcParentWithNodeAlternate.ts')
     case IpcParentType.RendererProcess:
-      return import('../IpcParentWithRendererProcess/IpcParentWithRendererProcess.ts')
+      return IpcParentWithRendererProcess
     case IpcParentType.ExtensionHostWorker:
-      return import('../IpcParentWithExtensionHostWorker/IpcParentWithExtensionHostWorker.ts')
+      return IpcParentWithExtensionHostWorker
     default:
       throw new Error('unexpected ipc type')
   }
