@@ -2,7 +2,7 @@
 
 import { AssertionError } from '../AssertionError/AssertionError.ts'
 
-const getType = (value) => {
+const getType = (value: any) => {
   switch (typeof value) {
     case 'number':
       return 'number'
@@ -28,14 +28,14 @@ const getType = (value) => {
   }
 }
 
-export const object = (value) => {
+export const object = (value: any) => {
   const type = getType(value)
   if (type !== 'object') {
     throw new AssertionError('expected value to be of type object')
   }
 }
 
-export const number = (value) => {
+export const number = (value: any) => {
   const type = getType(value)
   if (type !== 'number') {
     throw new AssertionError('expected value to be of type number')
@@ -45,49 +45,49 @@ export const number = (value) => {
   }
 }
 
-export const array = (value) => {
+export const array = (value: any) => {
   const type = getType(value)
   if (type !== 'array') {
     throw new AssertionError('expected value to be of type array')
   }
 }
 
-export const string = (value) => {
+export const string = (value: any) => {
   const type = getType(value)
   if (type !== 'string') {
     throw new AssertionError('expected value to be of type string')
   }
 }
 
-export const null_ = (value) => {
+export const null_ = (value: any) => {
   const type = getType(value)
   if (type !== 'null') {
     throw new AssertionError('expected value to be of type null')
   }
 }
 
-export const boolean = (value) => {
+export const boolean = (value: any) => {
   const type = getType(value)
   if (type !== 'boolean') {
     throw new AssertionError('expected value to be of type boolean')
   }
 }
 
-export const fn = (value) => {
+export const fn = (value: any) => {
   const type = getType(value)
   if (type !== 'function') {
     throw new AssertionError('expected value to be of type function')
   }
 }
 
-export const uint32array = (value) => {
+export const uint32array = (value: any) => {
   const type = getType(value)
   if (type !== 'uint32array') {
     throw new AssertionError('expected value to be of type uint32array')
   }
 }
 
-export const greaterZero = (value) => {
+export const greaterZero = (value: any) => {
   if (value <= 0) {
     throw new Error('value must be greater than zero')
   }

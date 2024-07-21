@@ -20,7 +20,7 @@ export const focusPrevious = async () => {
   await Rpc.invoke('ActivityBar.focusPrevious')
 }
 
-export const handleClick = async (index) => {
+export const handleClick = async (index: number) => {
   await Rpc.invoke('ActivityBar.handleClick', index)
 }
 

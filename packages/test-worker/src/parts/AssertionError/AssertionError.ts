@@ -1,5 +1,5 @@
 export class AssertionError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message)
     this.name = 'AssertionError'
   }
