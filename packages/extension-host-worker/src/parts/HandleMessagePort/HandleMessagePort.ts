@@ -9,5 +9,4 @@ export const handleMessagePort = (port: MessagePort) => {
   }
   ipc.onmessage = handleMessage
   ipc.send('ready')
-  console.log({ ipc })
 }
