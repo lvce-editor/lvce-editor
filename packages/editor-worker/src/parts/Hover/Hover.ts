@@ -1,10 +1,11 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as RendererWorker from '../RendererWorker/RendererWorker.ts'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.ts'
 
 export const getHover = async (editor: any, offset: number) => {
   Assert.object(editor)
   Assert.number(offset)
   // TODO invoke extension host worker directly
-  const hover = await RendererWorker.invoke('ExtensionHostHover.executeHoverProvider', editor, offset)
+  const hover = await ExtensionHostWorker.invoke(ExtensionHostCommandType.HoverExecute, editor, offset)
   return hover
 }
