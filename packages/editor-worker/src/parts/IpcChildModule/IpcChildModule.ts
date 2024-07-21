@@ -1,16 +1,15 @@
 import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
-
 // @ts-ignore
-export const getModule = (method) => {
+import { IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort, IpcChildWithMessagePort } from '/static/js/lvce-editor-ipc.js'
+
+export const getModule = (method: any) => {
   switch (method) {
-    case IpcChildType.MessagePort:
-      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.ts')
     case IpcChildType.ModuleWorker:
-      return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.ts')
-    case IpcChildType.ReferencePort:
-      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.ts')
+      return IpcChildWithModuleWorker
     case IpcChildType.ModuleWorkerAndMessagePort:
-      return import('../IpcChildWithModuleWorkerAndMessagePort/IpcChildWithModuleWorkerAndMessagePort.ts')
+      return IpcChildWithModuleWorkerAndMessagePort
+    case IpcChildType.MessagePort:
+      return IpcChildWithMessagePort
     default:
       throw new Error('unexpected ipc type')
   }

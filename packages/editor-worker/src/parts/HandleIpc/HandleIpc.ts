@@ -1,11 +1,10 @@
-import * as Callback from '../Callback/Callback.ts'
-import * as Command from '../Command/Command.ts'
-import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.ts'
+import * as HandleMessage from '../HandleMessage/HandleMessage.ts'
 
-export const handleIpc = (ipc: any, source = 'process') => {
-  const handleMessage = (message: any) => {
-    // @ts-ignore
-    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, source)
+export const handleIpc = (ipc: any) => {
+  if ('addEventListener' in ipc) {
+    ipc.addEventListener('message', HandleMessage.handleMessage)
+  } else {
+    // deprecated
+    ipc.onmessage = HandleMessage.handleMessage
   }
-  ipc.onmessage = handleMessage
 }
