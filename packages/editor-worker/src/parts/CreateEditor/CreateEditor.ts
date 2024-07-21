@@ -4,6 +4,8 @@ import { EditorCreateOptions } from '../EditorCreateOptions/EditorCreateOptions.
 import * as EditorState from '../Editors/Editors.ts'
 import * as EditorScrolling from '../EditorScrolling/EditorScrolling.ts'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.ts'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.ts'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 
 const emptyEditor = {
   uri: '',
@@ -29,7 +31,7 @@ const emptyEditor = {
   diagnostics: [],
 }
 
-export const createEditor = ({
+export const createEditor = async ({
   id,
   content,
   savedDeltaY,
@@ -119,4 +121,5 @@ export const createEditor = ({
   const newEditor3 = EditorScrolling.setDeltaY(newEditor2, 0)
   // console.log({ newEditor })
   EditorState.set(id, emptyEditor, newEditor3)
+  await ExtensionHostWorker.invoke(ExtensionHostCommandType.TextDocumentSyncFull, uri, id, languageId, content)
 }
