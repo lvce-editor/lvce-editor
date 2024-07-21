@@ -29,7 +29,10 @@ export const wrap = (port: any) => {
       const wrappedListener = (event: any) => {
         const data = GetData.getData(event)
         // @ts-ignore
-        listener(data)
+        listener({
+          target: this,
+          data,
+        })
       }
       this.port.onmessage = wrappedListener
     },

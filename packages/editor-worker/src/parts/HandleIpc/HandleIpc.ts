@@ -1,5 +1,10 @@
 import * as HandleMessage from '../HandleMessage/HandleMessage.ts'
 
 export const handleIpc = (ipc: any) => {
-  ipc.addEventListener('message', HandleMessage.handleMessage)
+  if ('addEventListener' in ipc) {
+    ipc.addEventListener('message', HandleMessage.handleMessage)
+  } else {
+    // deprecated
+    ipc.onmessage = HandleMessage.handleMessage
+  }
 }
