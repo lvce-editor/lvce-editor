@@ -1,4 +1,5 @@
 import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 
 export const executeProviders = async ({
   event,
@@ -8,18 +9,9 @@ export const executeProviders = async ({
   noProviderFoundResult,
   combineResults,
 }) => {
-  const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
-  if (extensionHosts.length === 0) {
-    return noProviderFoundResult ?? undefined
-  }
-
-  const promises = []
-  for (const extensionHost of extensionHosts) {
-    promises.push(extensionHost.ipc.invoke(method, ...params))
-  }
-  const results = await Promise.all(promises)
-  const combinedResult = combineResults(results)
-  return combinedResult
+  await ExtensionHostManagement.activateByEvent(event)
+  const result = await ExtensionHostWorker.invoke(method, ...params)
+  return result
 }
 
 export const executeProvider = async ({ event, method, params, noProviderFoundMessage }) => {
@@ -36,9 +28,5 @@ export const executeProvider = async ({ event, method, params, noProviderFoundMe
 }
 
 export const execute = async ({ method, params }) => {
-  const extensionHosts = ExtensionHostManagement.getExtensionHosts()
-  for (const extensionHost of extensionHosts) {
-    // @ts-ignore
-    const result = await extensionHost.ipc.invoke(method, ...params)
-  }
+  await ExtensionHostWorker.invoke(method, ...params)
 }
