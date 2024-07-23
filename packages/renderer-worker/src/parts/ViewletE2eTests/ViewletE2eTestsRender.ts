@@ -5,7 +5,7 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-export const renderTests = {
+const renderTests = {
   isEqual(oldState: E2eState, newState: E2eState) {
     return oldState.tests === newState.tests
   },
@@ -15,4 +15,13 @@ export const renderTests = {
   },
 }
 
-export const render = [renderTests]
+const renderIframe = {
+  isEqual(oldState: E2eState, newState: E2eState) {
+    return oldState.iframeSrc === newState.iframeSrc
+  },
+  apply(oldState: E2eState, newState: E2eState) {
+    return ['setIframe', newState.iframeSrc]
+  },
+}
+
+export const render = [renderTests, renderIframe]

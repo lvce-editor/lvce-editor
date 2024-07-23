@@ -9,4 +9,5 @@ export const Css = [
   '/css/parts/TreeItem.css',
   '/css/parts/ViewletExplorer.css',
   '/css/parts/Welcome.css',
+  '/css/parts/E2eTests.css',
 ]

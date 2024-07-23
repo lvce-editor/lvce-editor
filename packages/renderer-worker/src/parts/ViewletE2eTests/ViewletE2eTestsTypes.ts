@@ -4,4 +4,6 @@ export interface E2eState {
   readonly y: number
   readonly width: number
   readonly height: number
+  readonly index: number
+  readonly iframeSrc: string
 }

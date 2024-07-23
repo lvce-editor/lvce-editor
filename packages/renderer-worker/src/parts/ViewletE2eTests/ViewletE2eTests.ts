@@ -9,6 +9,8 @@ export const create = (id, uri, x, y, width, height): E2eState => {
     width,
     height,
     tests: [],
+    index: -1,
+    iframeSrc: '',
   }
 }
 
@@ -34,10 +36,14 @@ export const loadContent = async (state: E2eState): Promise<E2eState> => {
 export const executeTest = async (state: E2eState, index: number): Promise<E2eState> => {
   const { tests } = state
   const test = tests[index]
-  console.log({ test })
-  // const result = await SharedProcess.invoke('E2eTests.execute', test)
-  // console.log({ result })
-  return state
+  const htmlFileName = test.replace('.js', '.html')
+  const iframeSrc = `http://localhost:3000/tests/${htmlFileName}`
+  console.log({ iframeSrc })
+  return {
+    ...state,
+    index,
+    iframeSrc,
+  }
 }
 
 export const handleClickAt = (state: E2eState, eventX: number, eventY: number): Promise<E2eState> => {
