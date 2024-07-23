@@ -6,6 +6,7 @@ const getTestDom = (test) => {
     {
       type: VirtualDomElements.Div,
       childCount: 1,
+      className: 'TreeItem',
     },
     text(test),
   ]
@@ -15,8 +16,9 @@ export const getE2eTestsVirtualDom = (tests) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Viewlet E2eTests',
+      className: 'Viewlet E2eTests Tree',
       childCount: tests.length,
+      onClick: 'handleClickAt',
     },
     ...tests.flatMap(getTestDom),
   ]

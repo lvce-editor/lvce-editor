@@ -2,8 +2,12 @@ import type { E2eState } from './ViewletE2eTestsTypes.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 
-export const create = (): E2eState => {
+export const create = (id, uri, x, y, width, height): E2eState => {
   return {
+    x,
+    y,
+    width,
+    height,
     tests: [],
   }
 }
@@ -25,4 +29,13 @@ export const loadContent = async (state: E2eState): Promise<E2eState> => {
     ...state,
     tests,
   }
+}
+
+export const handleClickAt = (state: E2eState, eventX: number, eventY: number): E2eState => {
+  console.log('click', eventX, eventY)
+  const rowHeight = 22
+  const index = Math.floor((eventY - state.y) / rowHeight)
+  const element = state.tests[index]
+  console.log({ element })
+  return state
 }
