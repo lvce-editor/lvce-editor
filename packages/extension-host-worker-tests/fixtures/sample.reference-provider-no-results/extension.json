@@ -1,6 +1,6 @@
 {
   "browser": "main.js",
-  "activation": ["onReference:xyz"],
+  "activation": ["onReferences:xyz"],
   "languages": [
     {
       "id": "xyz",
