@@ -1,7 +1,5 @@
 export const name = 'sample.formatting-provider'
 
-export const skip = true
-
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
