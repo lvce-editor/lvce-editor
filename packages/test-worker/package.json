@@ -16,9 +16,7 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {
-    "@lvce-editor/test-worker": "^1.0.0"
-  },
+  "devDependencies": {},
   "jest": {
     "injectGlobals": false,
     "extensionsToTreatAsEsm": [
