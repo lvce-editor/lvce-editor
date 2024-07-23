@@ -31,11 +31,18 @@ export const loadContent = async (state: E2eState): Promise<E2eState> => {
   }
 }
 
-export const handleClickAt = (state: E2eState, eventX: number, eventY: number): E2eState => {
+export const executeTest = async (state: E2eState, index: number): Promise<E2eState> => {
+  const { tests } = state
+  const test = tests[index]
+  console.log({ test })
+  // const result = await SharedProcess.invoke('E2eTests.execute', test)
+  // console.log({ result })
+  return state
+}
+
+export const handleClickAt = (state: E2eState, eventX: number, eventY: number): Promise<E2eState> => {
   console.log('click', eventX, eventY)
   const rowHeight = 22
   const index = Math.floor((eventY - state.y) / rowHeight)
-  const element = state.tests[index]
-  console.log({ element })
-  return state
+  return executeTest(state, index)
 }
