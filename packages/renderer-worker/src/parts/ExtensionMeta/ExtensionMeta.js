@@ -6,7 +6,6 @@ import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js
 import * as GetWebExtensions from '../GetWebExtensions/GetWebExtensions.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
