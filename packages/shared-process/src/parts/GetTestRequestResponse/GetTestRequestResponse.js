@@ -16,7 +16,9 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
       body,
       init: {
         status: HttpStatusCode.Ok,
-        headers: {},
+        headers: {
+          'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
       },
     }
   }
