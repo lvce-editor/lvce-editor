@@ -14,9 +14,6 @@ export const bundleTestWorkerCached = async ({ commitHash, platform, assetDir })
     const BundleTestWorker = await import('../BundleTestWorker/BundleTestWorker.js')
     await BundleTestWorker.bundleTestWorker({
       cachePath: testWorkerCachePath,
-      commitHash,
-      platform,
-      assetDir,
     })
     console.timeEnd('bundleTestWorker')
   }

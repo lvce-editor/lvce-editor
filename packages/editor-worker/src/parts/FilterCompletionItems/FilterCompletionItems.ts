@@ -1,4 +1,4 @@
-import * as Character from '../Character/Character.js'
+import * as Character from '../Character/Character.ts'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.ts'
 import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.ts'
 import * as CompletionItemFlags from '../CompletionItemFlags/CompletionItemFlags.ts'
