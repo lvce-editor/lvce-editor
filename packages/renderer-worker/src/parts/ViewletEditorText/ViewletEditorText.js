@@ -8,10 +8,9 @@ import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSema
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
-import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -219,16 +218,16 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
-  GlobalEventBus.emitEvent('editor.create', state)
-  GlobalEventBus.addListener('editor.change', handleEditorChange)
-  Tokenizer.addConnectedEditor(state.uid)
+  // GlobalEventBus.emitEvent('editor.create', state)
+  // GlobalEventBus.addListener('editor.change', handleEditorChange)
+  // Tokenizer.addConnectedEditor(state.uid)
   const newLanguageId = getLanguageId(state)
   const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
   await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
-  await updateSemanticTokens(state)
-  await updateDiagnostics(state)
+  // await updateSemanticTokens(state)
+  // await updateDiagnostics(state)
 }
 
 export const handleLanguagesChanged = async (state) => {

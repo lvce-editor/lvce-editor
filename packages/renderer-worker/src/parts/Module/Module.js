@@ -184,6 +184,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostHover.ipc.js')
     case ModuleId.SendMessagePortToExtensionHostWorker:
       return import('../SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.ipc.js')
+    case ModuleId.ExtensionHostManagement:
+      return import('../ExtensionHostManagement/ExtensionHostManagement.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

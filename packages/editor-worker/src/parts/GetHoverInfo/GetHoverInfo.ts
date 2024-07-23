@@ -1,9 +1,10 @@
+import * as Assert from '../Assert/Assert.ts'
+import * as GetWordAt from '../EditorCommand/EditorCommandGetWordAt.ts'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.ts'
+import * as Editors from '../Editors/Editors.ts'
 import * as Hover from '../Hover/Hover.ts'
 import * as MeasureTextHeight from '../MeasureTextHeight/MeasureTextHeight.ts'
 import * as TextDocument from '../TextDocument/TextDocument.ts'
-import * as Editors from '../Editors/Editors.ts'
-import * as Assert from '../Assert/Assert.ts'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.ts'
 
 const getHoverPosition = (position: any, selections: any) => {
@@ -61,9 +62,13 @@ export const getEditorHoverInfo = async (editorUid: number, position: any) => {
     return undefined
   }
   const { displayString, documentation, displayStringLanguageId } = hover
-  const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, displayStringLanguageId || fallbackDisplayStringLanguageId)
-  // @ts-ignore
-  const wordPart = await EditorTextCommands.Commands.getWordBefore(editor, rowIndex, columnIndex)
+  const tokenizerPath = ''
+  const lineInfos = await TokenizeCodeBlock.tokenizeCodeBlock(
+    displayString,
+    displayStringLanguageId || fallbackDisplayStringLanguageId,
+    tokenizerPath,
+  )
+  const wordPart = await GetWordAt.getWordBefore(editor, rowIndex, columnIndex)
   const wordStart = columnIndex - wordPart.length
   const documentationHeight = await MeasureTextHeight.measureTextBlockHeight(
     documentation,

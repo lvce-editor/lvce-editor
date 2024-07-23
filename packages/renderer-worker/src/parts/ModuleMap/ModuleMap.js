@@ -208,6 +208,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostHover
     case 'SendMessagePortToExtensionHostWorker':
       return ModuleId.SendMessagePortToExtensionHostWorker
+    case 'ExtensionHostManagement':
+      return ModuleId.ExtensionHostManagement
     default:
       throw new Error(`module ${prefix} not found`)
   }
