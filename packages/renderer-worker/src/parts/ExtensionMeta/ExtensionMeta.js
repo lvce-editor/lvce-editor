@@ -50,8 +50,8 @@ export const addWebExtension = async (path) => {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)
   }
-  const absolutePath = manifest.path + '/' + manifest.browser
-  await ExtensionHostWorker.invoke('ExtensionHostExtension.activate', manifest, absolutePath)
+  // const absolutePath = manifest.path + '/' + manifest.browser
+  // await ExtensionHostWorker.invoke('ExtensionHostExtension.activate', manifest, absolutePath)
 }
 
 // TODO status fulfilled should be handled as resolved
