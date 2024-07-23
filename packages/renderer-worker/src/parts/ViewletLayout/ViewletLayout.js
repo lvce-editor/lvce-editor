@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as Command from '../Command/Command.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
@@ -840,6 +841,11 @@ const handleFocusChange = (state, isFocused) => {
 
 export const handleFocus = (state) => {
   return handleFocusChange(state, true)
+}
+
+export const showE2eTests = async (state) => {
+  await Command.execute('SideBar.show', 'E2eTests')
+  return state
 }
 
 export const handleBlur = (state) => {

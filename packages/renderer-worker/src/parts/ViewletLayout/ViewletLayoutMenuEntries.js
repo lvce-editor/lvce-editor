@@ -352,5 +352,9 @@ export const getQuickPickMenuEntries = () => {
       id: 'Workspace.close',
       label: 'Workspace: Close',
     },
+    {
+      id: 'Layout.showE2eTests',
+      label: 'Layout: Show E2E Tests',
+    },
   ]
 }
