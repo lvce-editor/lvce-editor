@@ -6,6 +6,7 @@ import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js
 import * as GetWebExtensions from '../GetWebExtensions/GetWebExtensions.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -16,9 +17,13 @@ const getId = (path) => {
   return path.slice(slashIndex + 1)
 }
 
-const getWebExtensionManifest = async (path) => {
+const getWebManifestPath = (path) => {
+  const manifestPath = `${path}/extension.json`
+  return manifestPath
+}
+
+const getWebExtensionManifest = async (path, manifestPath) => {
   try {
-    const manifestPath = `${path}/extension.json`
     const manifest = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ manifestPath)
     return {
       ...manifest,
@@ -31,7 +36,8 @@ const getWebExtensionManifest = async (path) => {
 }
 
 export const addWebExtension = async (path) => {
-  const manifest = await getWebExtensionManifest(path)
+  const manifestPath = getWebManifestPath(path)
+  const manifest = await getWebExtensionManifest(path, manifestPath)
   // TODO avoid side effect here
   if (manifest.languages) {
     for (const language of manifest.languages) {
@@ -44,6 +50,8 @@ export const addWebExtension = async (path) => {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)
   }
+  const absolutePath = manifest.path + '/' + manifest.browser
+  await ExtensionHostWorker.invoke('ExtensionHostExtension.activate', manifest, absolutePath)
 }
 
 // TODO status fulfilled should be handled as resolved
