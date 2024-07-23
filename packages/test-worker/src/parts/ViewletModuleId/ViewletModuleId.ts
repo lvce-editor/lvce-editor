@@ -111,3 +111,5 @@ export const About = 'About'
 export const EditorSourceActions = 'EditorSourceActions'
 
 export const MarkDownPreview = 'MarkDownPreview'
+
+export const E2eTests = 'E2e Tests'

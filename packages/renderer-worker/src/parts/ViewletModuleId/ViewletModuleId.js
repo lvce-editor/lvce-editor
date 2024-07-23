@@ -115,3 +115,5 @@ export const EditorSourceActions = 'EditorSourceActions'
 export const MarkDownPreview = 'MarkDownPreview'
 
 export const Confirm = 'Confirm'
+
+export const E2eTests = 'E2eTests'
