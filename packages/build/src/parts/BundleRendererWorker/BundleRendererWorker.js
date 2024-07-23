@@ -191,8 +191,8 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     }
     await Replace.replace({
       path: `${cachePath}/src/parts/TestWorkerUrl/TestWorkerUrl.js`,
-      occurrence: `src/testWorkerMain.ts`,
-      replacement: `dist/testWorkerMain.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/test-worker/dist/index.js`,
+      replacement: `/test-worker/dist/testWorkerMain.js`,
     })
     await BundleJs.bundleJs({
       cwd: cachePath,
