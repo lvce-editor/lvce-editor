@@ -38,4 +38,5 @@ export const CommandsWithSideEffects = {
   toggleSideBarPosition: ViewletLayout.toggleSideBarPosition,
   handleBlur: ViewletLayout.handleBlur,
   handleFocus: ViewletLayout.handleFocus,
+  showE2eTests: ViewletLayout.showE2eTests,
 }

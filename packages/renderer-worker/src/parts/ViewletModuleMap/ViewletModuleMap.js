@@ -12,6 +12,7 @@ export const map = {
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),
   [ViewletModuleId.Dialog]: () => import('../ViewletDialog/ViewletDialog.ipc.js'),
   [ViewletModuleId.DiffEditor]: () => import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js'),
+  [ViewletModuleId.E2eTests]: () => import('../ViewletE2eTests/ViewletE2eTests.ipc.ts'),
   [ViewletModuleId.EditorCompletion]: () => import('../ViewletEditorCompletion/ViewletEditorCompletion.ipc.ts'),
   [ViewletModuleId.EditorHover]: () => import('../ViewletEditorHover/ViewletEditorHover.ipc.ts'),
   [ViewletModuleId.EditorImage]: () => import('../ViewletEditorImage/ViewletEditorImage.ipc.js'),
