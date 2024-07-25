@@ -1,4 +1,4 @@
 export const getE2eTestsSandbox = (): readonly string[] => {
-  const sandbox = []
+  const sandbox = ['allow-scripts']
   return sandbox
 }
