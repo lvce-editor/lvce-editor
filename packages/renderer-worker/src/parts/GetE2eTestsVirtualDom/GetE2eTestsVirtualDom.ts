@@ -1,19 +1,26 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getTreeItemClassName = (isActive) => {
+  if (isActive) {
+    return 'TreeItem TestActive'
+  }
+  return 'TreeItem'
+}
+
 const getTestDom = (test) => {
   return [
     {
       type: VirtualDomElements.Div,
       childCount: 1,
-      className: 'TreeItem',
+      className: getTreeItemClassName(test.isActive),
     },
     {
       type: VirtualDomElements.Span,
       className: 'Label',
       childCount: 1,
     },
-    text(test),
+    text(test.name),
   ]
 }
 
