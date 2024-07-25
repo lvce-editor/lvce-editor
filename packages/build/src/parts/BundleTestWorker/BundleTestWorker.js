@@ -3,7 +3,7 @@ import * as Path from '../Path/Path.js'
 
 export const bundleTestWorker = async ({ cachePath }) => {
   await Copy.copyFile({
-    from: 'packages/renderer-worker/node_modules/@lvce-editor/test-worker/dist/index.js',
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/test-worker/dist/testWorkerMain.js',
     to: Path.join(cachePath, 'dist', 'testWorkerMain.js'),
   })
 }
