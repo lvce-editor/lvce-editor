@@ -8,6 +8,11 @@ const getTestDom = (test) => {
       childCount: 1,
       className: 'TreeItem',
     },
+    {
+      type: VirtualDomElements.Span,
+      className: 'Label',
+      childCount: 1,
+    },
     text(test),
   ]
 }
