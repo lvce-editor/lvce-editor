@@ -1,6 +1,7 @@
-import type { E2eState } from './ViewletE2eTestsTypes.ts'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import type { E2eState } from './ViewletE2eTestsTypes.ts'
 
 export const create = (id, uri, x, y, width, height): E2eState => {
   return {
@@ -11,6 +12,7 @@ export const create = (id, uri, x, y, width, height): E2eState => {
     tests: [],
     index: -1,
     iframeSrc: '',
+    sandbox: [],
   }
 }
 
@@ -27,9 +29,11 @@ const getTests = async () => {
 
 export const loadContent = async (state: E2eState): Promise<E2eState> => {
   const tests = await getTests()
+  const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
   return {
     ...state,
     tests,
+    sandbox,
   }
 }
 
