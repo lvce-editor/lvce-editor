@@ -20,7 +20,7 @@ const renderIframe = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState: E2eState, newState: E2eState) {
-    return ['setIframe', newState.iframeSrc]
+    return ['setIframe', newState.iframeSrc, newState.sandbox]
   },
 }
 
