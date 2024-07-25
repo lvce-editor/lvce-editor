@@ -8,6 +8,6 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
-  `frame-src 'self'`,
+  `frame-src 'self' http://localhost:3001`,
   ...(IsElectron.isElectron ? [] : [`manifest-src 'self'`]),
 ])
