@@ -41,7 +41,7 @@ export const executeTest = async (state: E2eState, index: number): Promise<E2eSt
   const { tests } = state
   const test = tests[index]
   const htmlFileName = test.replace('.js', '.html')
-  const iframeSrc = `http://localhost:3000/tests/${htmlFileName}`
+  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
   console.log({ iframeSrc })
   return {
     ...state,

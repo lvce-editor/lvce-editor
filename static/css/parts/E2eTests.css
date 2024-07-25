@@ -1,10 +1,10 @@
 .E2eTestsIframe {
   width: 800px;
   height: 600px;
+  contain: strict;
   border: none;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   top: 0;
   left: 0;
   z-index: 9999;
