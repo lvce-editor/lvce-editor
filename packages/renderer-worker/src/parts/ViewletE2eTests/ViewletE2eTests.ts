@@ -56,3 +56,7 @@ export const handleClickAt = (state: E2eState, eventX: number, eventY: number): 
   const index = Math.floor((eventY - state.y) / rowHeight)
   return executeTest(state, index)
 }
+
+export const runAll = (state: E2eState): E2eState => {
+  return state
+}
