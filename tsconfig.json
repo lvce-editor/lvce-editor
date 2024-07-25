@@ -16,7 +16,6 @@
     { "path": "./packages/server" },
     { "path": "./packages/shared-process" },
     { "path": "./packages/syntax-highlighting-worker" },
-    { "path": "./packages/terminal-worker" },
-    { "path": "./packages/test-worker" }
+    { "path": "./packages/terminal-worker" }
   ]
 }
