@@ -11,3 +11,7 @@
   position: fixed;
   display: none;
 }
+
+.TestActive {
+  color: yellowgreen;
+}
