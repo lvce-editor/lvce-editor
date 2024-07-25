@@ -20,6 +20,7 @@ const isProduction = false
 const { argv, env } = process
 
 const PORT = env.PORT ? parseInt(env.PORT) : 3000
+const SANDBOX_PORT = env.SANDBOX_PORT ? parseInt(env.SANDBOX_PORT) : 3001
 
 let argv2 = argv[2]
 
@@ -256,7 +257,7 @@ const serve404 = () =>
 
 const createApp = () => {
   const handlerMap = Object.create(null)
-  const server = createServer((req, res) => {
+  const callback = (req, res) => {
     req.on('error', (error) => {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ECONNRESET) {
@@ -275,15 +276,11 @@ const createApp = () => {
       fn(req, res, next)
     }
     next()
-  })
-  return {
-    use(path, ...handlers) {
-      handlerMap[path] = handlers
-    },
-    listen: server.listen.bind(server),
-    on: server.on.bind(server),
-    close: server.close.bind(server),
   }
+  callback.use = (path, ...handlers) => {
+    handlerMap[path] = handlers
+  }
+  return callback
 }
 
 const app = createApp()
@@ -554,16 +551,14 @@ const handleUpgrade = (request, socket) => {
   sendHandle(request, socket, 'HandleWebSocket.handleWebSocket')
 }
 
-app.on('upgrade', handleUpgrade)
-
-app.on('error', (error) => {
+const handleServerError = (error) => {
   // @ts-ignore
   if (error && error.code === ErrorCodes.EADDRINUSE) {
     console.error(`[server] Error: port ${PORT} is already taken (possible solution: Run \`killall node\` to free up the port)`)
   } else {
     console.error('[info: server error]', error)
   }
-})
+}
 
 const handleAppReady = () => {
   if (process.send) {
@@ -581,12 +576,12 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
 const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
-  app.on('listening', handleAppReady)
-  if (isPublic) {
-    app.listen(PORT)
-  } else {
-    app.listen(PORT, 'localhost')
-  }
+  const server = createServer(app)
+  server.on('listening', handleAppReady)
+  server.on('upgrade', handleUpgrade)
+  server.on('error', handleServerError)
+  const host = isPublic ? undefined : 'localhost'
+  server.listen(PORT, host)
 }
 
 main()
