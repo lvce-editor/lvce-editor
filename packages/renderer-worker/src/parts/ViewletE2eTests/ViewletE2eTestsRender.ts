@@ -17,10 +17,10 @@ const renderTests = {
 
 const renderIframe = {
   isEqual(oldState: E2eState, newState: E2eState) {
-    return oldState.iframeSrc === newState.iframeSrc
+    return oldState.iframeSrc === newState.iframeSrc && oldState.sandbox === newState.sandbox
   },
   apply(oldState: E2eState, newState: E2eState) {
-    return ['setIframe', newState.iframeSrc]
+    return ['setIframe', newState.iframeSrc, newState.sandbox]
   },
 }
 
