@@ -58,5 +58,6 @@ export const handleClickAt = (state: E2eState, eventX: number, eventY: number): 
 }
 
 export const runAll = (state: E2eState): E2eState => {
+  console.log('run all')
   return state
 }
