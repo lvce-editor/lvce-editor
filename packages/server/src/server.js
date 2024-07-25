@@ -577,11 +577,15 @@ const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   const server = createServer(app)
+  const sandboxServer = createServer(app)
   server.on('listening', handleAppReady)
   server.on('upgrade', handleUpgrade)
+  sandboxServer.on('upgrade', handleUpgrade)
   server.on('error', handleServerError)
+  sandboxServer.on('error', handleServerError)
   const host = isPublic ? undefined : 'localhost'
   server.listen(PORT, host)
+  sandboxServer.listen(SANDBOX_PORT, host)
 }
 
 main()
