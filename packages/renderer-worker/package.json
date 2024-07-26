@@ -86,6 +86,6 @@
     "@lvce-editor/diff-worker": "^1.2.0",
     "@lvce-editor/editor-worker": "^1.0.0",
     "@lvce-editor/renderer-process": "^6.4.0",
-    "@lvce-editor/test-worker": "^1.1.0"
+    "@lvce-editor/test-worker": "^1.2.0"
   }
 }
