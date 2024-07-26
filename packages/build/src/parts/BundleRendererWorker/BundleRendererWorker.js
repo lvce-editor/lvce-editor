@@ -145,7 +145,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/EditorWorkerUrl/EditorWorkerUrl.js`,
-      occurrence: '/packages/editor-worker/src/editorWorkerMain.ts',
+      occurrence: `/packages/editor-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js`,
       replacement: `/packages/editor-worker/dist/editorWorkerMain.js`,
     })
     await Replace.replace({
