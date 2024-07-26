@@ -22,7 +22,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
-const ViewletOutput = await import('../src/parts/ViewletOutput/ViewletOutput.js')
+const ViewletOutput = await import('../src/parts/ViewletOutput/ViewletOutput.ts')
 
 test('create', () => {
   const state = ViewletOutput.create()
