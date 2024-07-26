@@ -44,7 +44,7 @@
     "open": "^10.1.0",
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
-    "trash": "^8.1.1"
+    "trash": "^9.0.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
