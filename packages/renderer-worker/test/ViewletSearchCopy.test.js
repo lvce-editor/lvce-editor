@@ -20,6 +20,7 @@ const Command = await import('../src/parts/Command/Command.js')
 
 test('copy', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -36,6 +37,7 @@ test('copy', async () => {
 
 test('copy - no item focused', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {

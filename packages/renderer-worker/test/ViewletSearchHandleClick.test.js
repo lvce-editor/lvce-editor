@@ -46,6 +46,7 @@ const ViewletSearchHandleClick = await import('../src/parts/ViewletSearch/Viewle
 
 test.skip('handleClick', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -63,6 +64,7 @@ test.skip('handleClick', async () => {
     }
     return '/test' + path
   })
+  // @ts-ignore
   expect(await ViewletSearchHandleClick.handleClick(state, 0)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/test.txt')

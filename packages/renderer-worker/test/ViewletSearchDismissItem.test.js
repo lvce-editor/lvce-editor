@@ -5,6 +5,7 @@ import * as ViewletSearchDismissItem from '../src/parts/ViewletSearch/ViewletSea
 
 test('dismissItem - no items', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [],
     listFocusedIndex: -1,
@@ -16,6 +17,7 @@ test('dismissItem - no items', () => {
 
 test('dismissItem - remove one match', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -50,6 +52,7 @@ test('dismissItem - remove one match', () => {
 
 test('dismissItem - remove one file', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -93,6 +96,7 @@ test('dismissItem - remove one file', () => {
 
 test('dismissItem - remove first file', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -136,6 +140,7 @@ test('dismissItem - remove first file', () => {
 
 test('dismissItem - remove only match', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -160,6 +165,7 @@ test('dismissItem - remove only match', () => {
 
 test('dismissItem - remove only file', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -184,6 +190,7 @@ test('dismissItem - remove only file', () => {
 
 test('dismissItem - remove one file in the middle', () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {

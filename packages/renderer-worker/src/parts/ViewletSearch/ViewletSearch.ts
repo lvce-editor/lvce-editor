@@ -10,7 +10,7 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.ts'
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id: any, uri: string, x: number, y: number, width: number, height: number) => {
   return {
     uid: id,
     searchResults: [],
