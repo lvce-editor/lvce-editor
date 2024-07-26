@@ -14,9 +14,6 @@ export const bundleEditorWorkerCached = async ({ commitHash, platform, assetDir 
     const BundleEditorWorker = await import('../BundleEditorWorker/BundleEditorWorker.js')
     await BundleEditorWorker.bundleEditorWorker({
       cachePath,
-      commitHash,
-      platform,
-      assetDir,
     })
     console.timeEnd('bundleEditorWorker')
   }
