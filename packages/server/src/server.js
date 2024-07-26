@@ -99,6 +99,7 @@ const textMimeType = {
   '.svg': 'image/svg+xml',
   '.avif': 'image/avif',
   '.woff': 'application/font-woff',
+  '.ttf': 'font/ttf',
   '.png': 'image/png',
   '.jpe': 'image/jpg',
   '.ico': 'image/x-icon',
