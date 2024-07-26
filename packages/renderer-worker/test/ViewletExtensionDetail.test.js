@@ -45,12 +45,13 @@ class NodeError extends Error {
   }
 }
 
-const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.js')
+const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.ts')
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Markdown = await import('../src/parts/Markdown/Markdown.js')
 
 test('create', () => {
+  // @ts-ignore
   const state = ViewletExtensionDetail.create()
   expect(state).toBeDefined()
 })
@@ -72,6 +73,7 @@ test('loadContent', async () => {
     return '<h1 id="test-extension">Test Extension</h1>'
   })
   const state = {
+    // @ts-ignore
     ...ViewletExtensionDetail.create(),
     uri: 'extension-detail://test-extension',
   }
@@ -107,6 +109,7 @@ test('loadContent - error - readme not found', async () => {
     return '<h1 id="test-extension">Test Extension</h1>'
   })
   const state = {
+    // @ts-ignore
     ...ViewletExtensionDetail.create(),
     uri: 'extension-detail://test-extension',
   }
@@ -126,6 +129,7 @@ test('loadContent - error - readme not found', async () => {
 })
 
 test('handleIconError', () => {
+  // @ts-ignore
   const state = ViewletExtensionDetail.create()
   expect(ViewletExtensionDetail.handleIconError(state)).toMatchObject({
     iconSrc: '/icons/extensionDefaultIcon.png',
@@ -134,6 +138,7 @@ test('handleIconError', () => {
 
 test('handleIconError - already has default icon', () => {
   const state = {
+    // @ts-ignore
     ...ViewletExtensionDetail.create(),
     iconSrc: '/icons/extensionDefaultIcon.png',
   }

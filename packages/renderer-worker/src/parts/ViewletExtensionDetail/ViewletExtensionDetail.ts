@@ -9,7 +9,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id: any, uri: string, x: number, y: number, width: number, height: number) => {
   return {
     name: '',
     uri,
