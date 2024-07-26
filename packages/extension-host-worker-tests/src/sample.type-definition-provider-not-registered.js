@@ -22,6 +22,5 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  // TODO should say "no type definition provider found"
-  await expect(overlayMessage).toHaveText(`No type definition found for 'export'`)
+  await expect(overlayMessage).toHaveText(`Error: Failed to execute type definition provider: No type definition provider found for unknown`)
 }
