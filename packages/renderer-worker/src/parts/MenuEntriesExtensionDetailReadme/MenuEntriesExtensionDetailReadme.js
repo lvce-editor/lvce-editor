@@ -1,6 +1,6 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as ViewletExtensionDetailStrings from '../ViewletExtensionDetail/ViewletExtensionDetailStrings.js'
+import * as ViewletExtensionDetailStrings from '../ViewletExtensionDetail/ViewletExtensionDetailStrings.ts'
 
 export const id = MenuEntryId.ExtensionDetailReadme
 

@@ -1,6 +1,0 @@
-export * from './VielwetExtensionDetailCommands.js'
-export * from './ViewletExtensionDetail.js'
-export * from './ViewletExtensionDetailCss.js'
-export * from './ViewletExtensionDetailName.js'
-export * from './ViewletExtensionDetailRender.js'
-export * from './ViewletExtensionDetailMenuEntries.js'
