@@ -1,5 +1,3 @@
-export const skip = true
-
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, expect, Locator }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(

@@ -1,7 +1,5 @@
 export const name = 'sample.formatting-provider-formatting-error'
 
-export const skip = true
-
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

@@ -1,5 +1,4 @@
 export const name = 'viewlet.editor-cursor-word-right'
-export const skip = true
 
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange

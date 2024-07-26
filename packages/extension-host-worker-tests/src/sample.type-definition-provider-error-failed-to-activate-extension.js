@@ -1,7 +1,5 @@
 export const name = 'sample.type-definition-provider-error-failed-to-activate-extension'
 
-export const skip = true
-
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
