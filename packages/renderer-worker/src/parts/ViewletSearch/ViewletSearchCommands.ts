@@ -21,7 +21,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  handleContextMenu: () => import('./ViewletSearchHandleContextMenu.js'),
+  handleContextMenu: () => import('./ViewletSearchHandleContextMenu.ts'),
   handleContextMenuKeyboard: () => import('./ViewletSearchHandleContextMenuKeyBoard.ts'),
   handleContextMenuMouseAt: () => import('./ViewletSearchHandleContextMenuMouseAt.ts'),
   toggleReplace: () => import('./ViewletSearchToggleReplace.ts'),
@@ -31,7 +31,7 @@ export const LazyCommands = {
   replaceAll: () => import('./ViewletSearchReplaceAll.ts'),
   handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.ts'),
   handleUpdate: () => import('./ViewletSearchHandleUpdate.ts'),
-  handleListFocus: () => import('./ViewletSearchHandleListFocus.js'),
+  handleListFocus: () => import('./ViewletSearchHandleListFocus.ts'),
   handleListBlur: () => import('./ViewletSearchHandleListBlur.ts'),
   ...VirtualList.LazyCommands,
   focusFirst: () => import('./ViewletSearchFocusFirst.ts'),
