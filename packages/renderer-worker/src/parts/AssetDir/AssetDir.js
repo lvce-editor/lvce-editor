@@ -8,7 +8,7 @@ const getAssetDir = () => {
     return ASSET_DIR
   }
   if (Platform.platform === PlatformType.Electron) {
-    return '../../../../..'
+    return ''
   }
   return ''
 }
