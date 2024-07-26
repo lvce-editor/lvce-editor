@@ -21,15 +21,16 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-
 const ViewletOutput = await import('../src/parts/ViewletOutput/ViewletOutput.ts')
 
 test('create', () => {
+  // @ts-ignore
   const state = ViewletOutput.create()
   expect(state).toBeDefined()
 })
 
 test.skip('loadContent', async () => {
+  // @ts-ignore
   const state = ViewletOutput.create()
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
@@ -46,6 +47,7 @@ test.skip('contentLoaded', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
+    // @ts-ignore
     ...ViewletOutput.create(),
     options: [
       {
@@ -80,6 +82,7 @@ test.skip('contentLoaded', async () => {
 })
 
 test('setOutputChannel', async () => {
+  // @ts-ignore
   const state = ViewletOutput.create()
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
@@ -95,6 +98,7 @@ test('setOutputChannel', async () => {
 })
 
 test('dispose', async () => {
+  // @ts-ignore
   const state = ViewletOutput.create()
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
@@ -106,6 +110,7 @@ test('dispose', async () => {
 })
 
 test.skip('handleError', () => {
+  // @ts-ignore
   const state = ViewletOutput.create()
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   ViewletOutput.handleError(state, new Error("ENOENT: no such file or directory, access '/tmp/log-main.txt'"))
