@@ -22,5 +22,6 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
+  // TODO should include language id in error message only when available
   await expect(overlayMessage).toHaveText(`Error: Failed to execute type definition provider: No type definition provider found for unknown`)
 }
