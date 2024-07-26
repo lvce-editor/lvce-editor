@@ -21,12 +21,13 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 })
 
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
-const ViewletSearchHandleContextMenuMouseAt = await import('../src/parts/ViewletSearch/ViewletSearchHandleContextMenuMouseAt.js')
+const ViewletSearchHandleContextMenuMouseAt = await import('../src/parts/ViewletSearch/ViewletSearchHandleContextMenuMouseAt.ts')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 
 test('handleContextMenuMouseAt', async () => {
   // @ts-ignore
   ContextMenu.show.mockImplementation(() => {})
+  // @ts-ignore
   const state = { ...ViewletSearch.create(), x: 0, y: 0 }
   expect(await ViewletSearchHandleContextMenuMouseAt.handleContextMenuMouseAt(state, 10, 10)).toBe(state)
   expect(ContextMenu.show).toHaveBeenCalledTimes(1)

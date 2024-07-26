@@ -40,14 +40,16 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
 })
 
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
-const ViewletSearchSelectIndex = await import('../src/parts/ViewletSearch/ViewletSearchSelectIndex.js')
+const ViewletSearchSelectIndex = await import('../src/parts/ViewletSearch/ViewletSearchSelectIndex.ts')
 const Command = await import('../src/parts/Command/Command.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 test('selectIndex - negative index', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
   }
+  // @ts-ignore
   expect(await ViewletSearchSelectIndex.selectIndex(state, -1)).toMatchObject({
     listFocused: true,
     listFocusedIndex: -1,
@@ -65,6 +67,7 @@ test('selectIndex - match', async () => {
     return '/test' + path
   })
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -84,6 +87,7 @@ test('selectIndex - match', async () => {
     ],
     listFocusedIndex: 1,
   }
+  // @ts-ignore
   expect(await ViewletSearchSelectIndex.selectIndex(state, 1)).toMatchObject({
     listFocused: false,
     listFocusedIndex: 1,

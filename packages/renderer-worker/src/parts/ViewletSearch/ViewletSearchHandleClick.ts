@@ -1,4 +1,4 @@
-import * as ViewletSearchSelectIndex from './ViewletSearchSelectIndex.js'
+import * as ViewletSearchSelectIndex from './ViewletSearchSelectIndex.ts'
 
 const handleClickOutside = (state) => {
   return {
