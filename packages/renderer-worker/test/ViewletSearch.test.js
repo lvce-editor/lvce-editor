@@ -32,11 +32,13 @@ const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
 test('create', () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   expect(state).toBeDefined()
 })
 
 test.skip('dispose', () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // TODO should test that remaining searches are canceled
   ViewletSearch.dispose(state)
@@ -50,6 +52,7 @@ test.skip('dispose', () => {
 })
 
 test('loadContent - restore value', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -65,6 +68,7 @@ test('loadContent - restore value', async () => {
 })
 
 test('setValue - error - results is not of type array', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -84,6 +88,7 @@ test('setValue - error - results is not of type array', async () => {
 })
 
 test('setValue - one match in one file', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -127,6 +132,7 @@ test('setValue - one match in one file', async () => {
 })
 
 test('setValue - two matches in one file', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -184,6 +190,7 @@ test('setValue - two matches in one file', async () => {
 })
 
 test('setValue - two matches in two files', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -255,6 +262,7 @@ test('setValue - two matches in two files', async () => {
 })
 
 test('handleInput - empty results', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -266,6 +274,7 @@ test('handleInput - empty results', async () => {
 })
 
 test('handleInput - empty value', async () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
@@ -284,6 +293,7 @@ test('handleInput - error', async () => {
     throw new Error('could not load search results')
   })
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -309,6 +319,7 @@ test('handleInput - error', async () => {
 })
 
 test('resize', () => {
+  // @ts-ignore
   const state = ViewletSearch.create()
   const newState = ViewletSearch.resize(state, {
     x: 200,

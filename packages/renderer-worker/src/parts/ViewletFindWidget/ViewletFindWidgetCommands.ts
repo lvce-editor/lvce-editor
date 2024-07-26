@@ -14,10 +14,10 @@ export const Commands = {
 // prettier-ignore
 // TODO move these commands to a shared folder
 export const LazyCommands = {
-  toggleReplace: () => import('../ViewletSearch/ViewletSearchToggleReplace.js'),
-  toggleUseRegularExpression: () => import('../ViewletSearch/ViewletSearchToggleUseRegularExpression.js'),
-  toggleMatchWholeWord: () => import('../ViewletSearch/ViewletSearchToggleMatchWholeWord.js'),
-  toggleMatchCase: () => import('../ViewletSearch/ViewletSearchToggleMatchCase.js'),
-  replaceAll: () => import('../ViewletSearch/ViewletSearchReplaceAll.js'),
-  handleReplaceInput: () => import('../ViewletSearch/ViewletSearchHandleReplaceInput.js'),
+  toggleReplace: () => import('../ViewletSearch/ViewletSearchToggleReplace.ts'),
+  toggleUseRegularExpression: () => import('../ViewletSearch/ViewletSearchToggleUseRegularExpression.ts'),
+  toggleMatchWholeWord: () => import('../ViewletSearch/ViewletSearchToggleMatchWholeWord.ts'),
+  toggleMatchCase: () => import('../ViewletSearch/ViewletSearchToggleMatchCase.ts'),
+  replaceAll: () => import('../ViewletSearch/ViewletSearchReplaceAll.ts'),
+  handleReplaceInput: () => import('../ViewletSearch/ViewletSearchHandleReplaceInput.ts'),
 }

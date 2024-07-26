@@ -42,10 +42,11 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletSearchHandleClick = await import('../src/parts/ViewletSearch/ViewletSearchHandleClick.js')
+const ViewletSearchHandleClick = await import('../src/parts/ViewletSearch/ViewletSearchHandleClick.ts')
 
 test.skip('handleClick', async () => {
   const state = {
+    // @ts-ignore
     ...ViewletSearch.create(),
     items: [
       {
@@ -63,6 +64,7 @@ test.skip('handleClick', async () => {
     }
     return '/test' + path
   })
+  // @ts-ignore
   expect(await ViewletSearchHandleClick.handleClick(state, 0)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/test.txt')

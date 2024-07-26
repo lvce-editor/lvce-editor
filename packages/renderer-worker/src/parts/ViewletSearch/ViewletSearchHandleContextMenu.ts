@@ -1,6 +1,6 @@
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as ViewletSearchHandleContextMenuKeyBoard from './ViewletSearchHandleContextMenuKeyBoard.js'
-import * as ViewletSearchHandleContextMenuMouseAt from './ViewletSearchHandleContextMenuMouseAt.js'
+import * as ViewletSearchHandleContextMenuKeyBoard from './ViewletSearchHandleContextMenuKeyBoard.ts'
+import * as ViewletSearchHandleContextMenuMouseAt from './ViewletSearchHandleContextMenuMouseAt.ts'
 
 export const handleContextMenu = (state, button, x, y) => {
   switch (button) {

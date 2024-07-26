@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as ViewletSearchStrings from './ViewletSearchStrings.js'
+import * as ViewletSearchStrings from './ViewletSearchStrings.ts'
 
 export const getStatusMessage = (resultCount, fileResultCount) => {
   Assert.number(resultCount)

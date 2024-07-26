@@ -5,7 +5,7 @@ import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
+import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.ts'
 
 export const handleUpdate = async (state, update) => {
   const partialNewState = { ...state, ...update }

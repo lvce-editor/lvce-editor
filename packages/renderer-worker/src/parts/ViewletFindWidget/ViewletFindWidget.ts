@@ -6,8 +6,9 @@ import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetMatchCount from '../GetMatchCount/GetMatchCount.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import type { FindState } from './ViewletFindTypes.ts'
 
-export const create = (uid: number) => {
+export const create = (uid: number): FindState => {
   return {
     value: '',
     ariaAnnouncement: '',
@@ -47,7 +48,7 @@ export const getPosition = () => {
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state: FindState) => {
   const editor = GetActiveEditor.getActiveEditor()
   if (!editor) {
     return state
@@ -62,7 +63,7 @@ export const loadContent = async (state) => {
   }
 }
 
-export const refresh = (state, value = state.value) => {
+export const refresh = (state: FindState, value = state.value) => {
   // TODO get focused editor
   // highlight locations that match value
   const editor = GetActiveEditor.getActiveEditor()
@@ -78,22 +79,22 @@ export const refresh = (state, value = state.value) => {
   }
 }
 
-export const handleInput = (state, value) => {
+export const handleInput = (state: FindState, value: string): FindState => {
   return refresh(state, value)
 }
 
-export const handleFocus = (state) => {
+export const handleFocus = (state: FindState): FindState => {
   Focus.setFocus(FocusKey.FindWidget)
   return state
 }
 
-export const handleBlur = (state) => {
+export const handleBlur = (state: FindState): FindState => {
   Focus.setFocus(FocusKey.Empty)
   return state
 }
 
 // TODO this function should be synchronous
-export const focusIndex = async (state, index) => {
+export const focusIndex = async (state: FindState, index: number): Promise<FindState> => {
   const { value, matches, matchIndex } = state
   if (index === matchIndex) {
     return state
@@ -111,16 +112,16 @@ export const focusIndex = async (state, index) => {
   }
 }
 
-export const focusFirst = (state) => {
+export const focusFirst = (state: FindState): Promise<FindState> => {
   return focusIndex(state, 0)
 }
 
-export const focusLast = (state) => {
+export const focusLast = (state: FindState): Promise<FindState> => {
   const { matchCount } = state
   return focusIndex(state, matchCount - 1)
 }
 
-export const focusNext = (state) => {
+export const focusNext = (state: FindState): Promise<FindState> => {
   const { matchIndex, matchCount } = state
   if (matchIndex === matchCount - 1) {
     return focusFirst(state)
@@ -128,7 +129,7 @@ export const focusNext = (state) => {
   return focusIndex(state, matchIndex + 1)
 }
 
-export const focusPrevious = (state) => {
+export const focusPrevious = (state: FindState): Promise<FindState> => {
   const { matchIndex } = state
   if (matchIndex === 0) {
     return focusLast(state)
@@ -136,7 +137,7 @@ export const focusPrevious = (state) => {
   return focusIndex(state, matchIndex - 1)
 }
 
-export const close = async (state) => {
+export const close = async (state: FindState): Promise<FindState> => {
   const { uid } = state
   await Viewlet.closeWidget(uid)
   return {

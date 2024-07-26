@@ -2,28 +2,29 @@ import * as GetFindWidgetVirtualDom from '../GetFindWidgetVirtualDom/GetFindWidg
 import * as GetMatchCountText from '../GetMatchCountText/GetMatchCountText.js'
 import * as Icon from '../Icon/Icon.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import type { FindState } from './ViewletFindTypes.ts'
 import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.ts'
 
 export const hasFunctionalRender = true
 
 const renderValue = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: FindState, newState: FindState) {
     return oldState.value === newState.value
   },
-  apply(oldState, newState) {
+  apply(oldState: FindState, newState: FindState) {
     return [RenderMethod.SetValue, /* value */ newState.value]
   },
 }
 
 const renderDetails = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: FindState, newState: FindState) {
     return (
       oldState.matchIndex === newState.matchIndex &&
       oldState.matchCount === newState.matchCount &&
       oldState.replaceExpanded === newState.replaceExpanded
     )
   },
-  apply(oldState, newState) {
+  apply(oldState: FindState, newState: FindState) {
     const matchCountText = GetMatchCountText.getMatchCountText(newState.matchIndex, newState.matchCount)
     const buttonsEnabled = newState.matchCount > 0
     const buttons = [
@@ -61,7 +62,7 @@ const getAriaLabel = (state) => {
 }
 
 const renderAriaAnnouncement = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: FindState, newState: FindState) {
     return (
       oldState.ariaAnnouncement === newState.ariaAnnouncement &&
       oldState.matchIndex === newState.matchIndex &&
@@ -69,7 +70,7 @@ const renderAriaAnnouncement = {
       oldState.value === newState.value
     )
   },
-  apply(oldState, newState) {
+  apply(oldState: FindState, newState: FindState) {
     const ariaLabel = getAriaLabel(newState)
     return [/* Viewlet.invoke */ 'Viewlet.ariaAnnounce', /* text */ ariaLabel]
   },
