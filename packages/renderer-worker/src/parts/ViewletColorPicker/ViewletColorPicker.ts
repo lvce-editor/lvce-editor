@@ -1,6 +1,7 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import type { ColorPickerState } from './ViewletColorPickerTypes.ts'
 
-export const create = () => {
+export const create = (): ColorPickerState => {
   return {
     color: '',
     offsetX: 0,
@@ -9,14 +10,14 @@ export const create = () => {
   }
 }
 
-export const loadContent = (state) => {
+export const loadContent = (state: ColorPickerState) => {
   return EditorWorker.invoke('ColorPicker.loadContent', state)
 }
 
-export const handleSliderPointerDown = (state, x, y) => {
+export const handleSliderPointerDown = (state: ColorPickerState, x: number, y: number) => {
   return EditorWorker.invoke('ColorPicker.handleSliderPointerDown', state, x, y)
 }
 
-export const handleSliderPointerMove = (state, x, y) => {
+export const handleSliderPointerMove = (state: ColorPickerState, x: number, y: number) => {
   return EditorWorker.invoke('ColorPicker.handleSliderPointerMove', state, x, y)
 }
