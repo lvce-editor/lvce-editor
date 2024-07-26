@@ -121,7 +121,11 @@ export const createEditor = async ({
   const newEditor1 = Editor.setBounds(editor, x, y, width, height, 9)
   const newEditor2 = Editor.setText(newEditor1, content)
   const newEditor3 = EditorScrolling.setDeltaY(newEditor2, 0)
+  const newEditor4 = {
+    ...newEditor3,
+    focused: true,
+  }
   // console.log({ newEditor })
-  EditorState.set(id, emptyEditor, newEditor3)
+  EditorState.set(id, emptyEditor, newEditor4)
   await ExtensionHostWorker.invoke(ExtensionHostCommandType.TextDocumentSyncFull, uri, id, languageId, content)
 }

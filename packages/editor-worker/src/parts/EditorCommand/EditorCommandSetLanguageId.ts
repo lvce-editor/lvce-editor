@@ -1,3 +1,4 @@
+import * as GetEditor from '../GetEditor/GetEditor.ts'
 import * as Tokenizer from '../Tokenizer/Tokenizer.ts'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.ts'
 
@@ -14,12 +15,16 @@ export const setLanguageId = async (editor: any, languageId: string, tokenizePat
   const newTokenizerId = tokenizerId + 1
   TokenizerMap.set(newTokenizerId, tokenizer)
 
+  const latest = GetEditor.getEditor(editor.uid)
+  if (!latest) {
+    return editor
+  }
   // TODO don't update editor if tokenizer was already loaded
   // TODO update syntax highlighting
   // TODO get edits
 
   return {
-    ...editor,
+    ...latest,
     languageId,
     invalidStartIndex: 0,
     tokenizerId: newTokenizerId,

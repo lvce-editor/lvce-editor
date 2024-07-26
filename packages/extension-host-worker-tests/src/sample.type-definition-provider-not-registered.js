@@ -1,7 +1,5 @@
 export const name = 'sample.type-definition-provider-not-registered'
 
-export const skip = true
-
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -24,6 +22,6 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  // TODO should say "no type definition provider found"
-  await expect(overlayMessage).toHaveText(`No type definition found for 'export'`)
+  // TODO should include language id in error message only when available
+  await expect(overlayMessage).toHaveText(`Error: Failed to execute type definition provider: No type definition provider found for unknown`)
 }

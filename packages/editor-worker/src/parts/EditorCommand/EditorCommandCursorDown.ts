@@ -1,21 +1,23 @@
-// @ts-ignore
 import * as Editor from '../Editor/Editor.ts'
-// @ts-ignore
 import * as EditorSelection from '../EditorSelection/EditorSelection.ts'
 
-// @ts-ignore
-const moveSelectionDown = (selections, i, selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
+const moveSelectionDown = (
+  selections: any,
+  i: any,
+  selectionStartRow: any,
+  selectionStartColumn: any,
+  selectionEndRow: any,
+  selectionEndColumn: any,
+) => {
   EditorSelection.moveRangeToPosition(selections, i, selectionEndRow + 1, selectionEndColumn)
 }
 
-// @ts-ignore
-const getNewSelections = (selections) => {
+const getNewSelections = (selections: any) => {
   return EditorSelection.map(selections, moveSelectionDown)
 }
 
-// @ts-ignore
-export const cursorDown = (editor) => {
-  const selections = editor.selections
+export const cursorDown = (editor: any) => {
+  const { selections } = editor
   const newSelections = getNewSelections(selections)
   return Editor.scheduleSelections(editor, newSelections)
 }
