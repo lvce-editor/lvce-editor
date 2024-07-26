@@ -2,7 +2,7 @@ import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-export const create = (uid) => {
+export const create = (uid: any) => {
   return {
     uid,
     selectedIndex: -1,

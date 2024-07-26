@@ -1,4 +1,4 @@
-import * as ViewletOutput from './ViewletOutput.js'
+import * as ViewletOutput from './ViewletOutput.ts'
 
 export const Commands = {
   handleData: ViewletOutput.handleData,
