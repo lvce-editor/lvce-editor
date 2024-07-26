@@ -1,14 +1,11 @@
 import { VError } from '@lvce-editor/verror'
-import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { readFile, writeFile } from 'node:fs/promises'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
 import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
-import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getNewCssDeclarationFile = (content, filteredCss) => {
@@ -45,6 +42,31 @@ const getPlatformCode = (platform) => {
   }
 }
 
+const getCssDeclarationsFromText = (content) => {
+  const lines = content.split('\n')
+  const newLines = []
+  let skip = true
+  for (const line of lines) {
+    if (line.startsWith('export const Css')) {
+      skip = false
+    }
+    if (!skip) {
+      newLines.push(line)
+    }
+    if (!skip && line.includes(']')) {
+      skip = true
+    }
+  }
+  const halfParsed = newLines.join('\n')
+  const almostParsed = halfParsed
+    .replace('export const Css =', '')
+    .replaceAll("'", '"')
+    .replace(',\n]', '\n]')
+    .replaceAll(/\/\/.*/g, '')
+  const parsed = JSON.parse(almostParsed)
+  return parsed
+}
+
 export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date, product }) => {
   try {
     await Copy.copy({
@@ -53,15 +75,8 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(cachePath)
     for (const file of cssDeclarationFiles) {
-      let url = pathToFileURL(file).toString()
-      if (file.endsWith('.ts')) {
-        const tmpFile = join(Root.root, 'packages', 'build', '.tmp', 'css-js', 'tmp.js')
-        await mkdir(dirname(tmpFile), { recursive: true })
-        await cp(file, tmpFile)
-        url = pathToFileURL(tmpFile).toString()
-      }
-      const module = await import(url)
-      const Css = module.Css
+      const content = await readFile(file, 'utf8')
+      const Css = getCssDeclarationsFromText(content)
       if (Css) {
         const content = await readFile(file, 'utf8')
         const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
