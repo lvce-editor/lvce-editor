@@ -7,7 +7,6 @@ import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnost
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Font from '../Font/Font.js'
 import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
@@ -119,7 +118,6 @@ export const loadContent = async (state, savedState, context) => {
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
     const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
-    await Font.ensure(fontName, fontUrl)
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
