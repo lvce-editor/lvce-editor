@@ -1,6 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
+import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.ts'
 
 const getSetSize = (items, index) => {
   let setSize = 0

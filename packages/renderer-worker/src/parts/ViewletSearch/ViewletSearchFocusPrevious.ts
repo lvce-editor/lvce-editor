@@ -1,5 +1,5 @@
 import * as ListIndex from '../ListIndex/ListIndex.js'
-import * as ViewletSearchFocusIndex from './ViewletSearchFocusIndex.js'
+import * as ViewletSearchFocusIndex from './ViewletSearchFocusIndex.ts'
 
 export const focusPrevious = (state) => {
   const { items, listFocusedIndex } = state

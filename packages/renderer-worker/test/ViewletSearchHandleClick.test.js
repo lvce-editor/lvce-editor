@@ -42,7 +42,7 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletSearchHandleClick = await import('../src/parts/ViewletSearch/ViewletSearchHandleClick.js')
+const ViewletSearchHandleClick = await import('../src/parts/ViewletSearch/ViewletSearchHandleClick.ts')
 
 test.skip('handleClick', async () => {
   const state = {

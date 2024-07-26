@@ -1,4 +1,4 @@
-import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.js'
+import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.ts'
 
 export const getReplaceAllConfirmText = (matchCount, fileCount, replacement) => {
   if (matchCount === 1) {

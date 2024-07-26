@@ -8,7 +8,7 @@ import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
+import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.ts'
 
 export const create = (id, uri, x, y, width, height) => {
   return {

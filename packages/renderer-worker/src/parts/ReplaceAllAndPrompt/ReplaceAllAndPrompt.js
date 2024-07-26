@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as GetReplaceAllConfirmText from '../GetReplaceAllConfirmText/GetReplaceAllConfirmText.js'
 import * as TextSearchReplaceAll from '../TextSearchReplaceAll/TextSearchReplaceAll.js'
-import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.js'
+import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.ts'
 
 export const replaceAllAndPrompt = async (workspacePath, items, replacement, matchCount, fileCount) => {
   Assert.string(workspacePath)

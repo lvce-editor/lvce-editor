@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.js'
-import * as ViewletSearchDismissItem from '../src/parts/ViewletSearch/ViewletSearchDismissItem.js'
+import * as ViewletSearchDismissItem from '../src/parts/ViewletSearch/ViewletSearchDismissItem.ts'
 
 test('dismissItem - no items', () => {
   const state = {

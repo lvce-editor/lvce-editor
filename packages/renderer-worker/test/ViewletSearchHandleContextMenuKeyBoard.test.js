@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 })
 
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
-const ViewletSearchHandleContextMenuKeyBoard = await import('../src/parts/ViewletSearch/ViewletSearchHandleContextMenuKeyBoard.js')
+const ViewletSearchHandleContextMenuKeyBoard = await import('../src/parts/ViewletSearch/ViewletSearchHandleContextMenuKeyBoard.ts')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 
 test('handleContextMenuKeyBoard', async () => {

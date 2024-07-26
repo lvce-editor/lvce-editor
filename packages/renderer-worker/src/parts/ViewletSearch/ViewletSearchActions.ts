@@ -1,6 +1,6 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.js'
+import * as ViewletSearchStrings from './ViewletSearchStrings.ts'
 
 export const getActions = () => {
   return [

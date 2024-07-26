@@ -15,7 +15,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
-const ViewletSearchCopy = await import('../src/parts/ViewletSearch/ViewletSearchCopy.js')
+const ViewletSearchCopy = await import('../src/parts/ViewletSearch/ViewletSearchCopy.ts')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('copy', async () => {
