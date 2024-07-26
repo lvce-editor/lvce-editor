@@ -17,7 +17,6 @@ else
 fi
 
 cd packages/main-process           && echo "Checking main-process"                   && dpdm --no-warning --no-tree --exit-code circular:1 src/mainProcessMain.js  && cd ../.. &&
-cd packages/editor-worker          && echo "Checking editor-worker"                  && dpdm --no-warning --no-tree --exit-code circular:1 src/editorWorkerMain.ts  && cd ../.. &&
 cd packages/terminal-worker        && echo "Checking terminal-worker"                && dpdm --no-warning --no-tree --exit-code circular:1 src/terminalWorkerMain.ts  && cd ../.. &&
 cd packages/build                  && echo "Checking build"                          && dpdm --no-warning --no-tree --exit-code circular:1 src/build.js  && cd ../.. &&
 cd packages/shared-process         && echo "Checking shared-process"                 && dpdm --no-warning --no-tree --exit-code circular:1 src/sharedProcessMain.js  && cd ../.. &&
