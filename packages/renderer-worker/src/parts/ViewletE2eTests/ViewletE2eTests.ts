@@ -46,21 +46,26 @@ export const executeTest = async (state: E2eState, index: number): Promise<E2eSt
   const { tests } = state
   const test = tests[index]
   const htmlFileName = test.replace('.js', '.html')
+  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+  return {
+    ...state,
+    index,
+    iframeSrc,
+  }
+}
+
+export const handleLoad = async (state: E2eState): Promise<E2eState> => {
   const messagePortId = Id.create()
   const { port1, port2 } = new MessageChannel()
   await Transferrable.transferToRendererProcess(messagePortId, port1)
   port2.onmessage = (event) => {
     console.log({ event })
   }
-  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
-  console.log({ iframeSrc })
   const iframeOrigin = 'http://localhost:3001'
   return {
     ...state,
-    index,
-    iframeSrc,
-    iframeOrigin,
     portId: messagePortId,
+    iframeOrigin,
   }
 }
 

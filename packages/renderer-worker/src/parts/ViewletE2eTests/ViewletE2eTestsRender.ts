@@ -28,10 +28,10 @@ const renderIframe = {
 
 const renderMessagePort = {
   isEqual(oldState: E2eState, newState: E2eState) {
-    return oldState.portId === newState.portId && oldState.iframeSrc === newState.iframeSrc
+    return oldState.portId === newState.portId && oldState.iframeOrigin === newState.iframeOrigin
   },
   apply(oldState: E2eState, newState: E2eState) {
-    return ['setPort', newState.portId, newState.iframeSrc]
+    return ['setPort', newState.portId, newState.iframeOrigin]
   },
 }
 
