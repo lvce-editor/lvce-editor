@@ -1,8 +1,19 @@
 import type { E2eTestState } from './ViewletE2eTestTypes.ts'
+import * as GetE2eTestVirtualDom from '../GetE2eTestVirtualDom/GetE2eTestVirtualDom.ts'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
+
+const renderElements = {
+  isEqual(oldState: E2eTestState, newState: E2eTestState) {
+    return oldState.name === newState.name && oldState.content === newState.content
+  },
+  apply(oldState: E2eTestState, newState: E2eTestState) {
+    const dom = GetE2eTestVirtualDom.getE2eTestVirtualDom(newState.content)
+    return ['Viewlet.setDom2', dom]
+  },
+}
 
 const renderIframe = {
   isEqual(oldState: E2eTestState, newState: E2eTestState) {
@@ -21,4 +32,4 @@ const renderPreviewTransform = {
   },
 }
 
-export const render = [renderIframe, renderPreviewTransform]
+export const render = [renderElements, renderIframe, renderPreviewTransform]
