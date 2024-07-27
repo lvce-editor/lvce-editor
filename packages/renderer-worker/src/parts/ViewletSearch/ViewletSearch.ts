@@ -9,8 +9,9 @@ import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.ts'
+import type { SearchState } from './ViewletSearchTypes.ts'
 
-export const create = (id: any, uri: string, x: number, y: number, width: number, height: number) => {
+export const create = (id: any, uri: string, x: number, y: number, width: number, height: number): SearchState => {
   return {
     uid: id,
     searchResults: [],
@@ -82,7 +83,7 @@ const getThreads = () => {
   return value
 }
 
-export const loadContent = async (state, savedState) => {
+export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
   const savedValue = getSavedValue(savedState)
   const savedReplaceExpanded = getSavedReplaceExpanded(savedState)
   const savedCollapsedPaths = getSavedCollapsedPaths(savedState)
@@ -104,7 +105,7 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const handleIconThemeChange = (state) => {
+export const handleIconThemeChange = (state: SearchState): SearchState => {
   const { items } = state
   const newItems = [...items]
   return {
@@ -113,8 +114,9 @@ export const handleIconThemeChange = (state) => {
   }
 }
 
-export const dispose = async (state) => {
+export const dispose = async (state: SearchState) => {
   // TODO cancel pending search
+  // @ts-ignore
   if (state.state === 'searching') {
     await TextSearch.cancel(state.searchId)
   }
@@ -134,22 +136,22 @@ export const dispose = async (state) => {
 // TODO send results to renderer process
 // TODO use virtual list because there might be many results
 
-export const handleInput = (state, value, inputSource = InputSource.Script) => {
+export const handleInput = (state: SearchState, value, inputSource = InputSource.Script) => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value, inputSource })
 }
 
-export const submit = (state) => {
+export const submit = (state: SearchState): Promise<SearchState> => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value: state.value, inputSource: InputSource.User })
 }
 
-export const focusSearchValue = (state) => {
+export const focusSearchValue = (state: SearchState): SearchState => {
   return {
     ...state,
     focus: WhenExpression.FocusSearchInput,
   }
 }
 
-export const focusSearchValueNext = (state) => {
+export const focusSearchValueNext = (state: SearchState): SearchState => {
   const { replaceExpanded } = state
   if (replaceExpanded) {
     return focusReplaceValue(state)
@@ -157,7 +159,7 @@ export const focusSearchValueNext = (state) => {
   return focusMatchCase(state)
 }
 
-export const focusMatchCasePrevious = (state) => {
+export const focusMatchCasePrevious = (state: SearchState): SearchState => {
   const { replaceExpanded } = state
   if (replaceExpanded) {
     return focusReplaceValue(state)
@@ -165,50 +167,50 @@ export const focusMatchCasePrevious = (state) => {
   return focusSearchValue(state)
 }
 
-export const focusReplaceValuePrevious = (state) => {
+export const focusReplaceValuePrevious = (state: SearchState): SearchState => {
   return focusSearchValue(state)
 }
 
-export const focusReplaceValueNext = (state) => {
+export const focusReplaceValueNext = (state: SearchState): SearchState => {
   return focusMatchCase(state)
 }
 
-export const focusRegexNext = (state) => {
+export const focusRegexNext = (state: SearchState): SearchState => {
   return focusPreserveCase(state)
 }
 
-export const focusPreserveCasePrevious = (state) => {
+export const focusPreserveCasePrevious = (state: SearchState): SearchState => {
   return focusRegex(state)
 }
 
-export const focusReplaceValue = (state) => {
+export const focusReplaceValue = (state: SearchState): SearchState => {
   return {
     ...state,
     focus: WhenExpression.FocusSearchReplaceInput,
   }
 }
 
-export const focusMatchCase = (state) => {
+export const focusMatchCase = (state: SearchState): SearchState => {
   return { ...state, focus: WhenExpression.FocusMatchCase }
 }
 
-export const focusPreserveCase = (state) => {
+export const focusPreserveCase = (state: SearchState): SearchState => {
   return { ...state, focus: WhenExpression.FocusPreserveCase }
 }
 
-export const focusMatchWholeWord = (state) => {
+export const focusMatchWholeWord = (state: SearchState): SearchState => {
   return { ...state, focus: WhenExpression.FocusWholeWord }
 }
 
-export const focusRegex = (state) => {
+export const focusRegex = (state: SearchState): SearchState => {
   return { ...state, focus: WhenExpression.FocusRegex }
 }
 
-export const focusReplaceAll = (state) => {
+export const focusReplaceAll = (state: SearchState): SearchState => {
   return { ...state, focus: WhenExpression.FocusReplaceAll }
 }
 
-export const handleFocusIn = (state, key) => {
+export const handleFocusIn = (state: SearchState, key: any) => {
   const focusKey = GetSearchFocusKey.getSearchFocusKey(key)
   Focus.setFocus(focusKey)
   return {
