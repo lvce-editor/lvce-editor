@@ -2,6 +2,7 @@
   contain: strict;
   display: flex;
   flex-direction: column;
+  position: absolute;
 }
 
 .E2eTestContent {
@@ -13,4 +14,12 @@
 .E2eTestPreview {
   contain: strict;
   flex: 1;
+  display: flex;
+  padding: 15px;
+}
+
+.E2eTestIframe {
+  contain: strict;
+  flex: 1;
+  border: 1px solid darkblue;
 }

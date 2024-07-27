@@ -30,10 +30,13 @@ export const loadContent = async (state: E2eTestState): Promise<E2eTestState> =>
   const fileName = state.uri.slice('e2e-test://'.length)
   const filePath = `${absolutePath}/${fileName}`
   const content = await FileSystem.readFile(filePath)
+  const htmlFileName = fileName.replace('.js', '.html')
+  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
   return {
     ...state,
     name: '',
     iframeSandbox: sandbox,
+    iframeSrc,
     content,
   }
 }
