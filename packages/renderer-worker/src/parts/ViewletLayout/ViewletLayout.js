@@ -37,6 +37,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   const panelHeight = source[LayoutKeys.PanelHeight]
   const activityBarWidth = source[LayoutKeys.ActivityBarWidth]
   const statusBarHeight = source[LayoutKeys.StatusBarHeight]
+  const previewHeight = source[LayoutKeys.PreviewHeight]
 
   const newSideBarWidth = Clamp.clamp(sideBarWidth, sideBarMinWidth, sideBarMaxWidth)
 
@@ -45,6 +46,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   if (sideBarLocation === SideBarLocationType.Right) {
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
+    let p25 /* End of SideBar */ = 0
     let p3 = /* End of Main */ 0
     let p4 = /* End of Panel */ 0
     // @ts-ignore
@@ -61,6 +63,9 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     }
     if (statusBarVisible) {
       p4 = windowHeight - statusBarHeight
+    }
+    if (previewVisible) {
+      p25 = p4 - previewHeight
     }
     p3 = p4
     if (panelVisible) {
@@ -93,7 +98,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.SideBarLeft] = p7
     destination[LayoutKeys.SideBarTop] = p2
     destination[LayoutKeys.SideBarWidth] = p8 - p7
-    destination[LayoutKeys.SideBarHeight] = p3 - p2
+    destination[LayoutKeys.SideBarHeight] = p25 - p2
     destination[LayoutKeys.SideBarVisible] = sideBarVisible
 
     destination[LayoutKeys.StatusBarLeft] = p1
@@ -108,10 +113,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
 
-    destination[LayoutKeys.PreviewLeft] = 300
-    destination[LayoutKeys.PreviewTop] = 300
-    destination[LayoutKeys.PreviewWidth] = 300
-    destination[LayoutKeys.PreviewHeight] = 300
+    destination[LayoutKeys.PreviewLeft] = windowWidth / 2
+    destination[LayoutKeys.PreviewTop] = windowHeight / 2
+    destination[LayoutKeys.PreviewWidth] = windowWidth / 2
+    destination[LayoutKeys.PreviewHeight] = windowHeight / 3
     destination[LayoutKeys.PreviewVisible] = previewVisible
   } else {
     const p1 = /* Top */ 0
@@ -178,6 +183,12 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarWidth] = windowWidth
     destination[LayoutKeys.TitleBarHeight] = titleBarHeight
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
+
+    destination[LayoutKeys.PreviewLeft] = windowWidth / 2
+    destination[LayoutKeys.PreviewTop] = windowHeight / 2
+    destination[LayoutKeys.PreviewWidth] = windowWidth / 2
+    destination[LayoutKeys.PreviewHeight] = windowHeight / 3
+    destination[LayoutKeys.PreviewVisible] = previewVisible
   }
 }
 
@@ -512,6 +523,10 @@ export const loadStatusBarIfVisible = (state) => {
 
 export const loadTitleBarIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.TitleBar)
+}
+
+export const loadPreviewIfVisible = (state) => {
+  return loadIfVisible(state, LayoutModules.Preview)
 }
 
 export const handleSashPointerDown = (state, sashId) => {

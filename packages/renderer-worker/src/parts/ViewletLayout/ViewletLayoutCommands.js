@@ -17,6 +17,7 @@ export const CommandsWithSideEffects = {
   hideTitleBar: ViewletLayout.hideTitleBar,
   loadActivityBarIfVisible: ViewletLayout.loadActivityBarIfVisible,
   loadMainIfVisible: ViewletLayout.loadMainIfVisible,
+  loadPreviewIfVisible: ViewletLayout.loadPreviewIfVisible,
   loadPanelIfVisible: ViewletLayout.loadPanelIfVisible,
   loadSideBarIfVisible: ViewletLayout.loadSideBarIfVisible,
   loadStatusBarIfVisible: ViewletLayout.loadStatusBarIfVisible,
