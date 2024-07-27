@@ -1,1 +1,1 @@
-export * from '../ViewletTerminal/ViewletTerminalActions.js'
+export * from '../ViewletTerminal/ViewletTerminalActions.ts'

@@ -1,4 +1,4 @@
-import * as ViewletTerminal from './ViewletTerminal.js'
+import * as ViewletTerminal from './ViewletTerminal.ts'
 
 export const Commands = {
   clear: ViewletTerminal.clear,

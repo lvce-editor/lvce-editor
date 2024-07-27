@@ -72,7 +72,7 @@ jest.unstable_mockModule('../src/parts/TerminalWorker/TerminalWorker.js', () => 
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const ViewletTerminal = await import('../src/parts/ViewletTerminal/ViewletTerminal.js')
+const ViewletTerminal = await import('../src/parts/ViewletTerminal/ViewletTerminal.ts')
 
 test('create', () => {
   const state = ViewletTerminal.create(1)
