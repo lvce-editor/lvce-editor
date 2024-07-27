@@ -11,4 +11,5 @@ export interface E2eTestState {
   readonly portId: number
   readonly uri: string
   readonly content: string
+  readonly previewTransform: string
 }

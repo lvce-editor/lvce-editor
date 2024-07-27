@@ -17,6 +17,11 @@ export const getE2eTestVirtualDom = (content: any) => {
     {
       type: VirtualDomElements.Div,
       className: 'E2eTestPreview',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'E2eTestIframeWrapper',
       childCount: 0,
     },
   ]

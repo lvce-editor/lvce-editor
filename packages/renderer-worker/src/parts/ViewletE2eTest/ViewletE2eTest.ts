@@ -19,6 +19,7 @@ export const create = (id, uri, x, y, width, height): E2eTestState => {
     portId: -1,
     uri,
     content: '',
+    previewTransform: '',
   }
 }
 
@@ -32,12 +33,14 @@ export const loadContent = async (state: E2eTestState): Promise<E2eTestState> =>
   const content = await FileSystem.readFile(filePath)
   const htmlFileName = fileName.replace('.js', '.html')
   const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+  const previewTransform = `scale(0.6)`
   return {
     ...state,
     name: '',
     iframeSandbox: sandbox,
     iframeSrc,
     content,
+    previewTransform,
   }
 }
 

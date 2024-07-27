@@ -23,5 +23,13 @@ const renderIframe = {
     return ['setIframe', newState.iframeSrc, newState.iframeSandbox]
   },
 }
+const renderPreviewTransform = {
+  isEqual(oldState: E2eTestState, newState: E2eTestState) {
+    return oldState.previewTransform === newState.previewTransform
+  },
+  apply(oldState: E2eTestState, newState: E2eTestState) {
+    return ['setPreviewTransform', newState.previewTransform]
+  },
+}
 
-export const render = [renderTests, renderIframe]
+export const render = [renderTests, renderIframe, renderPreviewTransform]
