@@ -31,6 +31,8 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
   const sideBarMaxWidth = source[LayoutKeys.SideBarMaxWidth]
   const panelMinHeight = source[LayoutKeys.PanelMinHeight]
+  const previewMinHeight = source[LayoutKeys.PreviewMinHeight]
+  const previewMaxHeight = source[LayoutKeys.PreviewMaxHeight]
   const panelMaxHeight = source[LayoutKeys.PanelMaxHeight]
   const titleBarHeight = source[LayoutKeys.TitleBarHeight]
   const sideBarWidth = source[LayoutKeys.SideBarWidth]
@@ -39,9 +41,12 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   const statusBarHeight = source[LayoutKeys.StatusBarHeight]
   const previewHeight = source[LayoutKeys.PreviewHeight]
   const previewWidth = source[LayoutKeys.PreviewWidth]
+  const previewMinWidth = source[LayoutKeys.PreviewMinWidth]
+  const previewMaxWidth = source[LayoutKeys.PreviewMaxWidth]
 
   const newSideBarWidth = Clamp.clamp(sideBarWidth, sideBarMinWidth, sideBarMaxWidth)
-
+  const newPreviewHeight = Clamp.clamp(previewHeight, previewMinHeight, previewMaxHeight)
+  const newPreviewWidth = Clamp.clamp(previewWidth, previewMinWidth, previewMaxWidth)
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
 
   if (sideBarLocation === SideBarLocationType.Right) {
@@ -80,7 +85,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
       p7 = p8 - newSideBarWidth
     }
     if (previewVisible) {
-      p65 = p8 - previewWidth
+      p65 = p9 - previewWidth
     }
     destination[LayoutKeys.ActivityBarLeft] = p8
     destination[LayoutKeys.ActivityBarTop] = p2
@@ -120,8 +125,8 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
 
     destination[LayoutKeys.PreviewLeft] = p65
     destination[LayoutKeys.PreviewTop] = p25
-    destination[LayoutKeys.PreviewWidth] = previewWidth
-    destination[LayoutKeys.PreviewHeight] = previewHeight
+    destination[LayoutKeys.PreviewWidth] = newPreviewWidth
+    destination[LayoutKeys.PreviewHeight] = newPreviewHeight
     destination[LayoutKeys.PreviewVisible] = previewVisible
   } else {
     const p1 = /* Top */ 0
@@ -257,6 +262,12 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.SideBarWidth] ||= 240
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
+  newPoints[LayoutKeys.PreviewHeight] ||= 350
+  newPoints[LayoutKeys.PreviewMinHeight] = 200
+  newPoints[LayoutKeys.PreviewMaxHeight] = 500
+  newPoints[LayoutKeys.PreviewWidth] ||= 600
+  newPoints[LayoutKeys.PreviewMinWidth] = 400
+  newPoints[LayoutKeys.PreviewMaxWidth] = 800
   if (isNativeTitleBarStyle()) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
     newPoints[LayoutKeys.TitleBarVisible] = 0
