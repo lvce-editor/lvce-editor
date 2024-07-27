@@ -13,9 +13,9 @@ const getTreeItemClassName = (isActive: boolean) => {
 
 const getIconClass = (isActive) => {
   if (isActive) {
-    return 'MaskIconDebugPause'
+    return ClassNames.MaskIconDebugPause
   }
-  return 'MaskIconDebugAlt2'
+  return ClassNames.MaskIconPlay
 }
 
 const getTestDom = (test: any) => {
@@ -36,7 +36,7 @@ const getTestDom = (test: any) => {
     },
     {
       type: VirtualDomElements.I,
-      className: MergeClassNames.mergeClassNames(ClassNames.MaskIcon, iconClass, 'InlineMaskIcon'),
+      className: MergeClassNames.mergeClassNames(ClassNames.MaskIcon, iconClass),
       childCount: 0,
     },
     {

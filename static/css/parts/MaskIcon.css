@@ -40,6 +40,11 @@
   mask-image: url(/icons/chrome-restore.svg);
 }
 
+.MaskIconPlay,
+.IconPlay {
+  mask-image: url(/icons/play.svg);
+}
+
 .MaskIconChromeClose,
 .IconChromeClose {
   mask-image: url(/icons/chrome-close.svg);
