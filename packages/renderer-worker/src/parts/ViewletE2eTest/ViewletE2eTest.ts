@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.ts'
+import * as Command from '../Command/Command.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as Id from '../Id/Id.js'
 import * as SashType from '../SashType/SashType.js'
