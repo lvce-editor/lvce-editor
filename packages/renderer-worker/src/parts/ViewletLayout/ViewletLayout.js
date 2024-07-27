@@ -264,10 +264,10 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.StatusBarVisible] = 1
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = 200
-  newPoints[LayoutKeys.PreviewMaxHeight] = 500
+  newPoints[LayoutKeys.PreviewMaxHeight] = 1200
   newPoints[LayoutKeys.PreviewWidth] ||= 600
   newPoints[LayoutKeys.PreviewMinWidth] = 400
-  newPoints[LayoutKeys.PreviewMaxWidth] = 800
+  newPoints[LayoutKeys.PreviewMaxWidth] = 1800
   if (isNativeTitleBarStyle()) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
     newPoints[LayoutKeys.TitleBarVisible] = 0
