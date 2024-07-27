@@ -15,3 +15,15 @@
 .TestActive {
   color: yellowgreen;
 }
+
+.InlineButton {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  background: transparent;
+  border: none;
+  display: flex;
+  --MaskIconSize: 16px;
+  padding: 0;
+  flex-shrink: 0;
+}
