@@ -1,5 +1,4 @@
 import * as ActionType from '../ActionType/ActionType.js'
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import type { ViewletAction } from '../ViewletAction/ViewletAction.ts'
 
 export const getActions = (): readonly ViewletAction[] => {
@@ -7,7 +6,7 @@ export const getActions = (): readonly ViewletAction[] => {
     {
       type: ActionType.Button,
       id: 'runAll',
-      icon: MaskIcon.DebugAlt2,
+      icon: 'Play',
       command: 'runAll',
     },
   ]
