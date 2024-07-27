@@ -49,7 +49,7 @@ export const loadContent = async (state: E2eTestState): Promise<E2eTestState> =>
     name: '',
     // iframeSandbox: sandbox,
     // iframeSrc,
-    content: 'abc',
+    content: 'preview content here',
     // previewTransform,
   }
 }
