@@ -49,3 +49,5 @@ export const Main = 24
 export const ProblemsFilter = 25
 
 export const KeyBindingsTable = 26
+
+export const E2eTests = 27

@@ -2,7 +2,10 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Id from '../Id/Id.js'
+import * as Open from '../Open/Open.js'
 import type { E2eState } from './ViewletE2eTestsTypes.ts'
 
 export const create = (id, uri, x, y, width, height): E2eState => {
@@ -69,14 +72,36 @@ export const handleLoad = async (state: E2eState): Promise<E2eState> => {
   }
 }
 
+const getIndex = (stateY: number, eventY: number) => {
+  const rowHeight = 22
+  const index = Math.floor((eventY - stateY) / rowHeight)
+  return index
+}
+
 export const handleClickAt = (state: E2eState, eventX: number, eventY: number): Promise<E2eState> => {
   console.log('click', eventX, eventY)
-  const rowHeight = 22
-  const index = Math.floor((eventY - state.y) / rowHeight)
+  const index = getIndex(state.y, eventY)
   return executeTest(state, index)
 }
 
 export const runAll = (state: E2eState): E2eState => {
   console.log('run all')
+  return state
+}
+
+export const handleContextMenu = async (state: E2eState, button, x, y): Promise<E2eState> => {
+  const index = getIndex(state.y, y)
+  // @ts-ignore
+  state.index = index
+  await ContextMenu.show(x, y, MenuEntryId.E2eTests)
+  return state
+}
+
+export const openInNewTab = async (state: E2eState): Promise<E2eState> => {
+  const { index, tests } = state
+  const item = tests[index]
+  const url = '/tests/' + item.replace('.js', '.html')
+  await Open.openUrl(url)
+  console.log({ item, index })
   return state
 }

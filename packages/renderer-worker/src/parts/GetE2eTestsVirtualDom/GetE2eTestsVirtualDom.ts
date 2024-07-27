@@ -56,6 +56,7 @@ export const getE2eTestsVirtualDom = (tests: any[]) => {
       className: 'Viewlet E2eTests Tree',
       childCount: tests.length,
       onClick: DomEventListenerFunctions.HandleClickAt,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     },
     ...tests.flatMap(getTestDom),
   ]
