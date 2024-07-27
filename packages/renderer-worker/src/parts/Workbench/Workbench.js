@@ -158,6 +158,8 @@ export const startup = async () => {
   await Command.execute('Layout.loadStatusBarIfVisible')
   Performance.mark(PerformanceMarkerType.DidLoadStatusBar)
 
+  await Command.execute('Layout.loadPreviewIfVisible')
+
   LifeCycle.mark(LifeCyclePhase.Eleven)
 
   Performance.mark(PerformanceMarkerType.WillLoadIconTheme)

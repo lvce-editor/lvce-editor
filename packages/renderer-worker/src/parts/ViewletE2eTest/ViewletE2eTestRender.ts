@@ -5,7 +5,7 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderTests = {
+const renderElements = {
   isEqual(oldState: E2eTestState, newState: E2eTestState) {
     return oldState.name === newState.name && oldState.content === newState.content
   },
@@ -32,4 +32,4 @@ const renderPreviewTransform = {
   },
 }
 
-export const render = [renderTests, renderIframe, renderPreviewTransform]
+export const render = [renderElements, renderIframe, renderPreviewTransform]
