@@ -54,3 +54,12 @@ export const Panel = {
   kWidth: LayoutKeys.PanelWidth,
   kHeight: LayoutKeys.PanelHeight,
 }
+
+export const Preview = {
+  moduleId: ViewletModuleId.E2eTest,
+  kVisible: LayoutKeys.PreviewVisible,
+  kTop: LayoutKeys.PreviewTop,
+  kLeft: LayoutKeys.PreviewLeft,
+  kWidth: LayoutKeys.PreviewWidth,
+  kHeight: LayoutKeys.PreviewHeight,
+}

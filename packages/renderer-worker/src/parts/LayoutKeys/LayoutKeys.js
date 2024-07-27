@@ -41,6 +41,12 @@ export const TitleBarLeft = 33
 export const TitleBarWidth = 34
 export const TitleBarHeight = 35
 
-export const Total = 36
+export const PreviewVisible = 36
+export const PreviewTop = 37
+export const PreviewLeft = 38
+export const PreviewWidth = 39
+export const PreviewHeight = 40
+
+export const Total = 41
 
 export const SashId = 'sashId'

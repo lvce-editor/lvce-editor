@@ -13,6 +13,10 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Activity Bar',
     },
     {
+      id: 'Layout.togglePreview',
+      label: 'Layout: Toggle Preview',
+    },
+    {
       id: 'Layout.toggleSideBarPosition',
       label: 'Layout: Toggle Side Bar Position',
       aliases: ['Position Side Bar', 'Move Side Bar', 'Side Bar Location'],

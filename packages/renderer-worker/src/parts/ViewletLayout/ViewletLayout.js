@@ -25,6 +25,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   const sideBarVisible = source[LayoutKeys.SideBarVisible]
   const statusBarVisible = source[LayoutKeys.StatusBarVisible]
   const titleBarVisible = source[LayoutKeys.TitleBarVisible]
+  const previewVisible = source[LayoutKeys.PreviewVisible]
   const windowWidth = source[LayoutKeys.WindowWidth]
   const windowHeight = source[LayoutKeys.WindowHeight]
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
@@ -106,6 +107,12 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarWidth] = windowWidth
     destination[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
+
+    destination[LayoutKeys.PreviewLeft] = 300
+    destination[LayoutKeys.PreviewTop] = 300
+    destination[LayoutKeys.PreviewWidth] = 300
+    destination[LayoutKeys.PreviewHeight] = 300
+    destination[LayoutKeys.PreviewVisible] = previewVisible
   } else {
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
@@ -375,6 +382,18 @@ export const hideStatusBar = (state) => {
 
 export const toggleStatusBar = (state) => {
   return toggle(state, LayoutModules.StatusBar)
+}
+
+export const showPreview = (state) => {
+  return show(state, LayoutModules.Preview)
+}
+
+export const hidePreview = (state) => {
+  return hide(state, LayoutModules.Preview)
+}
+
+export const togglePreview = (state) => {
+  return toggle(state, LayoutModules.Preview)
 }
 
 export const showTitleBar = (state) => {
