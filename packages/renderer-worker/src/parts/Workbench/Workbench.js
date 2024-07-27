@@ -54,8 +54,6 @@ export const startup = async () => {
 
   const initData = await InitData.getInitData()
 
-  console.log({ initData })
-
   if (initData.Location.href.includes('?replayId')) {
     const url = new URL(initData.Location.href)
     const replayId = url.searchParams.get('replayId')
