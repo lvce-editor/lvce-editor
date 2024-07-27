@@ -1,9 +1,5 @@
-import * as ViewletE2eTests from './ViewletE2eTests.ts'
+import * as ViewletE2eTest from './ViewletE2eTest.ts'
 
 export const Commands = {
-  handleClickAt: ViewletE2eTests.handleClickAt,
-  handleLoad: ViewletE2eTests.handleLoad,
-  runAll: ViewletE2eTests.runAll,
-  handleContextMenu: ViewletE2eTests.handleContextMenu,
-  openInNewTab: ViewletE2eTests.openInNewTab,
+  handleClickAt: ViewletE2eTest.handleClickAt,
 }

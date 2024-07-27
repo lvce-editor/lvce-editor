@@ -1,5 +1,5 @@
-export interface E2eState {
-  readonly tests: readonly string[]
+export interface E2eTestState {
+  readonly name: string
   readonly x: number
   readonly y: number
   readonly width: number
@@ -7,6 +7,6 @@ export interface E2eState {
   readonly index: number
   readonly iframeSrc: string
   readonly iframeOrigin: string
-  readonly sandbox: readonly string[]
+  readonly iframeSandbox: readonly string[]
   readonly portId: number
 }

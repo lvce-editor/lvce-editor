@@ -1,63 +1,40 @@
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Transferrable from '../Transferrable/Transferrable.js'
-import * as ContextMenu from '../ContextMenu/ContextMenu.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Id from '../Id/Id.js'
-import * as Open from '../Open/Open.js'
-import type { E2eState } from './ViewletE2eTestsTypes.ts'
+import * as Transferrable from '../Transferrable/Transferrable.js'
+import type { E2eTestState } from './ViewletE2eTestTypes.ts'
 
-export const create = (id, uri, x, y, width, height): E2eState => {
+export const create = (id, uri, x, y, width, height): E2eTestState => {
   return {
     x,
     y,
     width,
     height,
-    tests: [],
+    name: '',
     index: -1,
     iframeSrc: '',
     iframeOrigin: '',
-    sandbox: [],
+    iframeSandbox: [],
     portId: -1,
   }
 }
 
-const getTests = async () => {
-  const root = await SharedProcess.invoke('Platform.getRoot')
-  const testPath = await SharedProcess.invoke('Platform.getTestPath')
-  const absolutePath = `${root}/${testPath}/src`
-  const dirents = await FileSystem.readDirWithFileTypes(absolutePath)
-  const filteredDirents = dirents.slice(1)
-  console.log({ filteredDirents })
-  const tests = filteredDirents.map((dirent) => dirent.name)
-  return tests
-}
-
-export const loadContent = async (state: E2eState): Promise<E2eState> => {
-  const tests = await getTests()
+export const loadContent = async (state: E2eTestState): Promise<E2eTestState> => {
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
 
   return {
     ...state,
-    tests,
-    sandbox,
+    name: '',
+    iframeSandbox: sandbox,
   }
 }
 
-export const executeTest = async (state: E2eState, index: number): Promise<E2eState> => {
-  const { tests } = state
-  const test = tests[index]
-  const htmlFileName = test.replace('.js', '.html')
-  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+export const executeTest = async (state: E2eTestState): Promise<E2eTestState> => {
   return {
     ...state,
-    index,
-    iframeSrc,
   }
 }
 
-export const handleLoad = async (state: E2eState): Promise<E2eState> => {
+export const handleLoad = async (state: E2eTestState): Promise<E2eTestState> => {
   const messagePortId = Id.create()
   const { port1, port2 } = new MessageChannel()
   await Transferrable.transferToRendererProcess(messagePortId, port1)
@@ -72,36 +49,7 @@ export const handleLoad = async (state: E2eState): Promise<E2eState> => {
   }
 }
 
-const getIndex = (stateY: number, eventY: number) => {
-  const rowHeight = 22
-  const index = Math.floor((eventY - stateY) / rowHeight)
-  return index
-}
-
-export const handleClickAt = (state: E2eState, eventX: number, eventY: number): Promise<E2eState> => {
+export const handleClickAt = async (state: E2eTestState, eventX: number, eventY: number): Promise<E2eTestState> => {
   console.log('click', eventX, eventY)
-  const index = getIndex(state.y, eventY)
-  return executeTest(state, index)
-}
-
-export const runAll = (state: E2eState): E2eState => {
-  console.log('run all')
-  return state
-}
-
-export const handleContextMenu = async (state: E2eState, button, x, y): Promise<E2eState> => {
-  const index = getIndex(state.y, y)
-  // @ts-ignore
-  state.index = index
-  await ContextMenu.show(x, y, MenuEntryId.E2eTests)
-  return state
-}
-
-export const openInNewTab = async (state: E2eState): Promise<E2eState> => {
-  const { index, tests } = state
-  const item = tests[index]
-  const url = '/tests/' + item.replace('.js', '.html')
-  await Open.openUrl(url)
-  console.log({ item, index })
   return state
 }

@@ -1,38 +1,26 @@
-import * as GetE2eTestsVirtualDom from '../GetE2eTestsVirtualDom/GetE2eTestsVirtualDom.ts'
-import * as GetVisibleE2eTests from '../GetVisibleE2eTests/GetVisibleE2eTests.ts'
-import type { E2eState } from './ViewletE2eTestsTypes.ts'
+import type { E2eTestState } from './ViewletE2eTestTypes.ts'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
 const renderTests = {
-  isEqual(oldState: E2eState, newState: E2eState) {
-    return oldState.tests === newState.tests && oldState.index === newState.index
+  isEqual(oldState: E2eTestState, newState: E2eTestState) {
+    return oldState.name === newState.name && oldState.index === newState.index
   },
-  apply(oldState: E2eState, newState: E2eState) {
-    const visible = GetVisibleE2eTests.getVisibleE2eTests(newState.tests, newState.index)
-    const dom = GetE2eTestsVirtualDom.getE2eTestsVirtualDom(visible)
+  apply(oldState: E2eTestState, newState: E2eTestState) {
+    const dom = []
     return ['Viewlet.setDom2', dom]
   },
 }
 
 const renderIframe = {
-  isEqual(oldState: E2eState, newState: E2eState) {
-    return oldState.iframeSrc === newState.iframeSrc && oldState.sandbox === newState.sandbox
+  isEqual(oldState: E2eTestState, newState: E2eTestState) {
+    return oldState.iframeSrc === newState.iframeSrc && oldState.iframeSandbox === newState.iframeSandbox
   },
-  apply(oldState: E2eState, newState: E2eState) {
-    return ['setIframe', newState.iframeSrc, newState.sandbox]
-  },
-}
-
-const renderMessagePort = {
-  isEqual(oldState: E2eState, newState: E2eState) {
-    return oldState.portId === newState.portId && oldState.iframeOrigin === newState.iframeOrigin
-  },
-  apply(oldState: E2eState, newState: E2eState) {
-    return ['setPort', newState.portId, newState.iframeOrigin]
+  apply(oldState: E2eTestState, newState: E2eTestState) {
+    return ['setIframe', newState.iframeSrc, newState.iframeSandbox]
   },
 }
 
-export const render = [renderTests, renderIframe, renderMessagePort]
+export const render = [renderTests, renderIframe]
