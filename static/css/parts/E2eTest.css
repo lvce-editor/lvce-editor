@@ -1,7 +1,7 @@
 .E2eTest {
   contain: strict;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   position: absolute;
 }
 
@@ -26,7 +26,7 @@
   contain: size;
   display: flex;
   transform: scale(0.5);
-  transform-origin: top;
+  transform-origin: 0 0;
 }
 
 .E2eTestIframe {

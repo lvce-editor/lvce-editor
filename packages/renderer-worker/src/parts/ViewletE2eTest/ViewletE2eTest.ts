@@ -23,6 +23,19 @@ export const create = (id, uri, x, y, width, height): E2eTestState => {
   }
 }
 
+const getPreviewTransform = (width: number, height: number) => {
+  const wantedWidth = 1000
+  const wantedHeight = 600
+  const availableWidth = width / 2
+  const availableHeight = height
+  const widthRatio = availableWidth / wantedWidth
+  const heightRatio = availableHeight / wantedHeight
+  const min = Math.min(widthRatio, heightRatio)
+  const scale = min
+  const previewTransform = `scale(${scale})`
+  return previewTransform
+}
+
 export const loadContent = async (state: E2eTestState): Promise<E2eTestState> => {
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
   const root = await SharedProcess.invoke('Platform.getRoot')
@@ -33,7 +46,7 @@ export const loadContent = async (state: E2eTestState): Promise<E2eTestState> =>
   const content = await FileSystem.readFile(filePath)
   const htmlFileName = fileName.replace('.js', '.html')
   const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
-  const previewTransform = `scale(0.6)`
+  const previewTransform = getPreviewTransform(state.width, state.height)
   return {
     ...state,
     name: '',
@@ -68,4 +81,15 @@ export const handleLoad = async (state: E2eTestState): Promise<E2eTestState> => 
 export const handleClickAt = async (state: E2eTestState, eventX: number, eventY: number): Promise<E2eTestState> => {
   console.log('click', eventX, eventY)
   return state
+}
+
+export const hasFunctionalResize = true
+
+export const resize = (state: E2eTestState, dimensions: any): E2eTestState => {
+  const newTransform = getPreviewTransform(dimensions.width, dimensions.height)
+  return {
+    ...state,
+    ...dimensions,
+    previewTransform: newTransform,
+  }
 }
