@@ -26,7 +26,7 @@ export const create = (id, uri, x, y, width, height): E2eTestState => {
 const getPreviewTransform = (width: number, height: number) => {
   const wantedWidth = 1000
   const wantedHeight = 600
-  const availableWidth = width / 2
+  const availableWidth = width
   const availableHeight = height
   const widthRatio = availableWidth / wantedWidth
   const heightRatio = availableHeight / wantedHeight
