@@ -61,8 +61,6 @@ export const handleLoad = async (state: E2eState): Promise<E2eState> => {
   port2.onmessage = (event) => {
     console.log({ event })
   }
-  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
-  console.log({ iframeSrc })
   const iframeOrigin = 'http://localhost:3001'
   return {
     ...state,
