@@ -2,10 +2,7 @@
   contain: strict;
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   position: absolute;
-=======
->>>>>>> origin/main
 }
 
 .E2eTestContent {
@@ -17,7 +14,6 @@
 .E2eTestPreview {
   contain: strict;
   flex: 1;
-<<<<<<< HEAD
   display: flex;
   padding: 15px;
 }
@@ -26,6 +22,4 @@
   contain: strict;
   flex: 1;
   border: 1px solid darkblue;
-=======
->>>>>>> origin/main
 }
