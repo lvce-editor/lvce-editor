@@ -617,7 +617,14 @@ const getNewStatePointerMovePanel = (points, x, y) => {
 }
 
 const getNewStatePointerMovePreview = (points, x, y) => {
-  return points
+  const windowHeight = points[LayoutKeys.WindowHeight]
+  const windowWidth = points[LayoutKeys.WindowWidth]
+  const newPoints = new Uint16Array(points)
+  newPoints[LayoutKeys.PreviewLeft] = x
+  newPoints[LayoutKeys.PreviewTop] = y
+  newPoints[LayoutKeys.PreviewWidth] = windowWidth - x
+  newPoints[LayoutKeys.PreviewHeight] = windowHeight - y
+  return newPoints
 }
 
 const getNewStatePointerMove = (sashId, points, x, y) => {
