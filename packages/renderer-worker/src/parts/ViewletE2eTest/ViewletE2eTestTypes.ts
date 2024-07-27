@@ -9,4 +9,6 @@ export interface E2eTestState {
   readonly iframeOrigin: string
   readonly iframeSandbox: readonly string[]
   readonly portId: number
+  readonly uri: string
+  readonly content: string
 }
