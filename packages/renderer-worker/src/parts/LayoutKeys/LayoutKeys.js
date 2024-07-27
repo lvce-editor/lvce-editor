@@ -46,7 +46,11 @@ export const PreviewTop = 37
 export const PreviewLeft = 38
 export const PreviewWidth = 39
 export const PreviewHeight = 40
+export const PreviewMinHeight = 41
+export const PreviewMaxHeight = 42
+export const PreviewMinWidth = 43
+export const PreviewMaxWidth = 44
 
-export const Total = 41
+export const Total = 45
 
 export const SashId = 'sashId'
