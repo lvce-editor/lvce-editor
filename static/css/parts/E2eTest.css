@@ -1,0 +1,16 @@
+.E2eTest {
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+}
+
+.E2eTestContent {
+  margin: 0;
+  contain: strict;
+  flex: 1;
+}
+
+.E2eTestPreview {
+  contain: strict;
+  flex: 1;
+}
