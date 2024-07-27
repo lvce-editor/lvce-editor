@@ -85,7 +85,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
       p7 = p8 - newSideBarWidth
     }
     if (previewVisible) {
-      p65 = p8 - previewWidth
+      p65 = p9 - previewWidth
     }
     destination[LayoutKeys.ActivityBarLeft] = p8
     destination[LayoutKeys.ActivityBarTop] = p2
@@ -266,7 +266,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.PreviewMinHeight] = 200
   newPoints[LayoutKeys.PreviewMaxHeight] = 500
   newPoints[LayoutKeys.PreviewWidth] ||= 600
-  newPoints[LayoutKeys.PreviewMinWidth] = 300
+  newPoints[LayoutKeys.PreviewMinWidth] = 400
   newPoints[LayoutKeys.PreviewMaxWidth] = 800
   if (isNativeTitleBarStyle()) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
