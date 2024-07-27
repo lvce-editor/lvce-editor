@@ -1,12 +1,13 @@
 import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDisplayResults.js'
 import * as GetSearchVirtualDom from '../GetSearchVirtualDom/GetSearchVirtualDom.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import type { SearchState } from './ViewletSearchTypes.ts'
 
 export const hasFunctionalRender = true
 export const hasFunctionalRootRender = true
 
 const renderItems = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: SearchState, newState: SearchState) {
     return (
       oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
@@ -24,7 +25,7 @@ const renderItems = {
       oldState.listFocused === newState.listFocused
     )
   },
-  apply(oldState, newState) {
+  apply(oldState: SearchState, newState: SearchState) {
     const displayResults = GetSearchDisplayResults.getDisplayResults(
       newState.items,
       newState.itemHeight,
@@ -69,10 +70,10 @@ const getSelector = (focusKey) => {
 }
 
 const renderFocus = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: SearchState, newState: SearchState) {
     return oldState.focus === newState.focus
   },
-  apply(oldState, newState) {
+  apply(oldState: SearchState, newState: SearchState) {
     const selector = getSelector(newState.focus)
     return ['setFocus', selector]
   },
