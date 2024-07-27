@@ -51,5 +51,8 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('screen-cast://')) {
     return ViewletModuleId.ScreenCapture
   }
+  if (uri.startsWith('e2e-test://')) {
+    return ViewletModuleId.E2eTest
+  }
   return ViewletModuleId.EditorText
 }
