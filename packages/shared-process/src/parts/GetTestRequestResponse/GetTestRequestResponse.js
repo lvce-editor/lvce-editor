@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import * as AddCustomRendererProcessPath from '../AddCustomRendererProcessPath/AddCustomRendererProcessPath.js'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
@@ -13,8 +14,9 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
   const pathName = GetPathName.getPathName(request)
   if (pathName.endsWith('.html')) {
     const body = await readFile(indexHtmlPath, 'utf8')
+    const content = await AddCustomRendererProcessPath.addCustomRendererProcessPath(body)
     return {
-      body,
+      body: content,
       init: {
         status: HttpStatusCode.Ok,
         headers: {
