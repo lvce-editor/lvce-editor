@@ -1,6 +1,8 @@
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as Id from '../Id/Id.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import type { E2eTestState } from './ViewletE2eTestTypes.ts'
 
 export const create = (id, uri, x, y, width, height): E2eTestState => {
@@ -15,32 +17,44 @@ export const create = (id, uri, x, y, width, height): E2eTestState => {
     iframeOrigin: '',
     iframeSandbox: [],
     portId: -1,
+    uri,
+    content: '',
   }
 }
 
 export const loadContent = async (state: E2eTestState): Promise<E2eTestState> => {
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> origin/main
   const root = await SharedProcess.invoke('Platform.getRoot')
   const testPath = await SharedProcess.invoke('Platform.getTestPath')
   const absolutePath = `${root}/${testPath}/src`
   const fileName = state.uri.slice('e2e-test://'.length)
   const filePath = `${absolutePath}/${fileName}`
   const content = await FileSystem.readFile(filePath)
+<<<<<<< HEAD
   const htmlFileName = fileName.replace('.js', '.html')
   const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
 >>>>>>> Stashed changes
 
+=======
+>>>>>>> origin/main
   return {
     ...state,
     name: '',
     iframeSandbox: sandbox,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
     iframeSrc,
     content,
 >>>>>>> Stashed changes
+=======
+    content,
+>>>>>>> origin/main
   }
 }
 
