@@ -657,6 +657,7 @@ const getResizeCommands = (oldPoints, newPoints) => {
     LayoutModules.TitleBar,
     LayoutModules.StatusBar,
     LayoutModules.Panel,
+    LayoutModules.Preview,
   ]
   const commands = []
   for (const module of modules) {
