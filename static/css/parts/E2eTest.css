@@ -35,3 +35,14 @@
   flex: 1;
   border: 1px solid darkblue;
 }
+
+.SashCorner {
+  width: 5px;
+  height: 5px;
+  background: red;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: 2;
+  cursor: nwse-resize;
+}

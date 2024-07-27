@@ -9,9 +9,10 @@ export const getE2eTestVirtualDom = (content: any) => {
       childCount: 2,
     },
     {
-      type: VirtualDomElements.Pre,
-      className: 'E2eTestContent',
-      childCount: 1,
+      type: VirtualDomElements.Div,
+      className: 'SashCorner',
+      childCount: 0,
+      onPointerDown: 'handleSashCornerPointerDown',
     },
     text(content),
     {

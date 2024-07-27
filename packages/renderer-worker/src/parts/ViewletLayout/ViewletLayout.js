@@ -605,12 +605,18 @@ const getNewStatePointerMovePanel = (points, x, y) => {
   return newPoints
 }
 
+const getNewStatePointerMovePreview = (points, x, y) => {
+  return points
+}
+
 const getNewStatePointerMove = (sashId, points, x, y) => {
   switch (sashId) {
     case SashType.SideBar:
       return getNewStatePointerMoveSideBar(points, x, y)
     case SashType.Panel:
       return getNewStatePointerMovePanel(points, x, y)
+    case SashType.Preview:
+      return getNewStatePointerMovePreview(points, x, y)
     default:
       throw new Error(`unsupported sash type ${sashId}`)
   }

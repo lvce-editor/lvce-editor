@@ -1,4 +1,8 @@
 import * as Id from '../Id/Id.js'
+import * as Command from '../Command/Command.ts'
+import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
+import * as Id from '../Id/Id.js'
+import * as SashType from '../SashType/SashType.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import type { E2eTestState } from './ViewletE2eTestTypes.ts'
 
@@ -77,6 +81,20 @@ export const handleLoad = async (state: E2eTestState): Promise<E2eTestState> => 
 
 export const handleClickAt = async (state: E2eTestState, eventX: number, eventY: number): Promise<E2eTestState> => {
   console.log('click', eventX, eventY)
+  return state
+}
+
+export const handleSashCornerPointerDown = async (state, eventX, eventY) => {
+  await Command.execute('Layout.handleSashPointerDown', SashType.Preview)
+  return state
+}
+
+export const handleSashCornerPointerMove = async (state, eventX, eventY) => {
+  await Command.execute('Layout.handleSashPointerMove', eventX, eventY)
+  return state
+}
+
+export const handleSashCornerPointerUp = (state) => {
   return state
 }
 
