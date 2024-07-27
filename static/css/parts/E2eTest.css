@@ -16,6 +16,17 @@
   flex: 1;
   display: flex;
   padding: 15px;
+  position: relative;
+}
+
+.E2eTestIframeWrapper {
+  position: absolute;
+  width: 1000px;
+  height: 600px;
+  contain: size;
+  display: flex;
+  transform: scale(0.5);
+  transform-origin: top;
 }
 
 .E2eTestIframe {
