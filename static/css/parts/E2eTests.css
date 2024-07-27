@@ -26,4 +26,5 @@
   --MaskIconSize: 16px;
   padding: 0;
   flex-shrink: 0;
+  color: var(--WorkbenchForeground);
 }

@@ -15,7 +15,7 @@ const getIconClass = (isActive) => {
   if (isActive) {
     return 'MaskIconDebugPause'
   }
-  return 'MaskIconDebug'
+  return 'MaskIconDebugAlt2'
 }
 
 const getTestDom = (test: any) => {
