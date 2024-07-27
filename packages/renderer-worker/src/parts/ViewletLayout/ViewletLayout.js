@@ -264,10 +264,10 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.StatusBarVisible] = 1
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = 200
-  newPoints[LayoutKeys.PreviewMaxHeight] = 500
+  newPoints[LayoutKeys.PreviewMaxHeight] = 1200
   newPoints[LayoutKeys.PreviewWidth] ||= 600
   newPoints[LayoutKeys.PreviewMinWidth] = 400
-  newPoints[LayoutKeys.PreviewMaxWidth] = 800
+  newPoints[LayoutKeys.PreviewMaxWidth] = 1800
   if (isNativeTitleBarStyle()) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
     newPoints[LayoutKeys.TitleBarVisible] = 0
@@ -616,12 +616,25 @@ const getNewStatePointerMovePanel = (points, x, y) => {
   return newPoints
 }
 
+const getNewStatePointerMovePreview = (points, x, y) => {
+  const windowHeight = points[LayoutKeys.WindowHeight]
+  const windowWidth = points[LayoutKeys.WindowWidth]
+  const newPoints = new Uint16Array(points)
+  newPoints[LayoutKeys.PreviewLeft] = x
+  newPoints[LayoutKeys.PreviewTop] = y
+  newPoints[LayoutKeys.PreviewWidth] = windowWidth - x
+  newPoints[LayoutKeys.PreviewHeight] = windowHeight - y
+  return newPoints
+}
+
 const getNewStatePointerMove = (sashId, points, x, y) => {
   switch (sashId) {
     case SashType.SideBar:
       return getNewStatePointerMoveSideBar(points, x, y)
     case SashType.Panel:
       return getNewStatePointerMovePanel(points, x, y)
+    case SashType.Preview:
+      return getNewStatePointerMovePreview(points, x, y)
     default:
       throw new Error(`unsupported sash type ${sashId}`)
   }
@@ -644,6 +657,7 @@ const getResizeCommands = (oldPoints, newPoints) => {
     LayoutModules.TitleBar,
     LayoutModules.StatusBar,
     LayoutModules.Panel,
+    LayoutModules.Preview,
   ]
   const commands = []
   for (const module of modules) {

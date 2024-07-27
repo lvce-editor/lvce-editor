@@ -1,6 +1,8 @@
-import * as Id from '../Id/Id.js'
-import * as Transferrable from '../Transferrable/Transferrable.js'
+import * as Command from '../Command/Command.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
+import * as Id from '../Id/Id.js'
+import * as SashType from '../SashType/SashType.js'
+import * as Transferrable from '../Transferrable/Transferrable.js'
 import type { E2eTestState } from './ViewletE2eTestTypes.ts'
 
 export const create = (id, uri, x, y, width, height): E2eTestState => {
@@ -24,7 +26,7 @@ export const create = (id, uri, x, y, width, height): E2eTestState => {
 const getPreviewTransform = (width: number, height: number) => {
   const wantedWidth = 1000
   const wantedHeight = 600
-  const availableWidth = width / 2
+  const availableWidth = width
   const availableHeight = height
   const widthRatio = availableWidth / wantedWidth
   const heightRatio = availableHeight / wantedHeight
@@ -79,6 +81,20 @@ export const handleLoad = async (state: E2eTestState): Promise<E2eTestState> => 
 
 export const handleClickAt = async (state: E2eTestState, eventX: number, eventY: number): Promise<E2eTestState> => {
   console.log('click', eventX, eventY)
+  return state
+}
+
+export const handleSashCornerPointerDown = async (state, eventX, eventY) => {
+  await Command.execute('Layout.handleSashPointerDown', SashType.Preview)
+  return state
+}
+
+export const handleSashCornerPointerMove = async (state, eventX, eventY) => {
+  await Command.execute('Layout.handleSashPointerMove', eventX, eventY)
+  return state
+}
+
+export const handleSashCornerPointerUp = (state) => {
   return state
 }
 

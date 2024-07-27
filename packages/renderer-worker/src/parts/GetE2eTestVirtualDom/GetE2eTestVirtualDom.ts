@@ -5,7 +5,13 @@ export const getE2eTestVirtualDom = (content: any) => {
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet E2eTest',
-      childCount: 1,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SashCorner',
+      childCount: 0,
+      onPointerDown: 'handleSashCornerPointerDown',
     },
     {
       type: VirtualDomElements.Div,
