@@ -20,11 +20,27 @@ export const create = (id, uri, x, y, width, height): E2eTestState => {
 
 export const loadContent = async (state: E2eTestState): Promise<E2eTestState> => {
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
+<<<<<<< Updated upstream
+=======
+  const root = await SharedProcess.invoke('Platform.getRoot')
+  const testPath = await SharedProcess.invoke('Platform.getTestPath')
+  const absolutePath = `${root}/${testPath}/src`
+  const fileName = state.uri.slice('e2e-test://'.length)
+  const filePath = `${absolutePath}/${fileName}`
+  const content = await FileSystem.readFile(filePath)
+  const htmlFileName = fileName.replace('.js', '.html')
+  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+>>>>>>> Stashed changes
 
   return {
     ...state,
     name: '',
     iframeSandbox: sandbox,
+<<<<<<< Updated upstream
+=======
+    iframeSrc,
+    content,
+>>>>>>> Stashed changes
   }
 }
 
