@@ -1,10 +1,8 @@
-import * as Id from '../Id/Id.js'
 import * as Command from '../Command/Command.ts'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as Id from '../Id/Id.js'
 import * as SashType from '../SashType/SashType.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
-import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import type { E2eTestState } from './ViewletE2eTestTypes.ts'
 
 export const create = (id, uri, x, y, width, height): E2eTestState => {
