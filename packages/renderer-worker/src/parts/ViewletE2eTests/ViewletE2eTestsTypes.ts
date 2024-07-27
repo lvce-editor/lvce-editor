@@ -6,5 +6,7 @@ export interface E2eState {
   readonly height: number
   readonly index: number
   readonly iframeSrc: string
+  readonly iframeOrigin: string
   readonly sandbox: readonly string[]
+  readonly portId: number
 }

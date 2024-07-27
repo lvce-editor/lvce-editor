@@ -1,6 +1,8 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Transferrable from '../Transferrable/Transferrable.js'
+import * as Id from '../Id/Id.js'
 import type { E2eState } from './ViewletE2eTestsTypes.ts'
 
 export const create = (id, uri, x, y, width, height): E2eState => {
@@ -12,7 +14,9 @@ export const create = (id, uri, x, y, width, height): E2eState => {
     tests: [],
     index: -1,
     iframeSrc: '',
+    iframeOrigin: '',
     sandbox: [],
+    portId: -1,
   }
 }
 
@@ -30,6 +34,7 @@ const getTests = async () => {
 export const loadContent = async (state: E2eState): Promise<E2eState> => {
   const tests = await getTests()
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
+
   return {
     ...state,
     tests,
@@ -41,12 +46,21 @@ export const executeTest = async (state: E2eState, index: number): Promise<E2eSt
   const { tests } = state
   const test = tests[index]
   const htmlFileName = test.replace('.js', '.html')
+  const messagePortId = Id.create()
+  const { port1, port2 } = new MessageChannel()
+  await Transferrable.transferToRendererProcess(messagePortId, port1)
+  port2.onmessage = (event) => {
+    console.log({ event })
+  }
   const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
   console.log({ iframeSrc })
+  const iframeOrigin = 'http://localhost:3001'
   return {
     ...state,
     index,
     iframeSrc,
+    iframeOrigin,
+    portId: messagePortId,
   }
 }
 
