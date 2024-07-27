@@ -26,4 +26,13 @@ const renderIframe = {
   },
 }
 
-export const render = [renderTests, renderIframe]
+const renderMessagePort = {
+  isEqual(oldState: E2eState, newState: E2eState) {
+    return oldState.portId === newState.portId && oldState.iframeSrc === newState.iframeSrc
+  },
+  apply(oldState: E2eState, newState: E2eState) {
+    return ['setPort', newState.portId, newState.iframeSrc]
+  },
+}
+
+export const render = [renderTests, renderIframe, renderMessagePort]
