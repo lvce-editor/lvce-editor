@@ -61,6 +61,10 @@ export const startup = async () => {
     return
   }
 
+  if (initData.Location.href.startsWith('http://localhost:3001/tests/')) {
+    // TODO aquire port from other renderer worker
+  }
+
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
 
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
