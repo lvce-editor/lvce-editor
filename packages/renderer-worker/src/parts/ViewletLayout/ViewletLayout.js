@@ -85,7 +85,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
       p7 = p8 - newSideBarWidth
     }
     if (previewVisible) {
-      p65 = p9 - previewWidth
+      p65 = p7 - previewWidth
     }
     destination[LayoutKeys.ActivityBarLeft] = p8
     destination[LayoutKeys.ActivityBarTop] = p2
@@ -108,7 +108,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.SideBarLeft] = p7
     destination[LayoutKeys.SideBarTop] = p2
     destination[LayoutKeys.SideBarWidth] = p8 - p7
-    destination[LayoutKeys.SideBarHeight] = p25 - p2
+    destination[LayoutKeys.SideBarHeight] = p3 - p2
     destination[LayoutKeys.SideBarVisible] = sideBarVisible
 
     destination[LayoutKeys.StatusBarLeft] = p1
