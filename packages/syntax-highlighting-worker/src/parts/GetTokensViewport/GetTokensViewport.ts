@@ -1,5 +1,6 @@
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.ts'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.ts'
+import * as TextDocument from '../TextDocument/TextDocument.ts'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.ts'
 import * as Tokenizer from '../Tokenizer/Tokenizer.ts'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.ts'
@@ -65,8 +66,12 @@ const getTokenizeEndIndex = (invalidStartIndex, endLineIndex, tokenizeStartIndex
 }
 
 // TODO only send changed lines to renderer process instead of all lines in viewport
-export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
-  const { invalidStartIndex, lines, languageId } = editor
+export const getTokensViewport = (editor, startLineIndex, endLineIndex, hasLinesToSend, id, linesToSend) => {
+  if (hasLinesToSend) {
+    TextDocument.setLines(id, linesToSend)
+  }
+  const { invalidStartIndex, languageId } = editor
+  const lines = TextDocument.getLines(id)
   const lineCache: any[] = []
   const tokenizer = TokenizerMap.get(languageId)
   const { hasArrayReturn, tokenizeLine, initialLineState } = tokenizer
