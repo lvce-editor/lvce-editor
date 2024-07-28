@@ -3,11 +3,17 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 export const launchEditorWorker = async () => {
+  let configuredWorkerUrl = Preferences.get('developer.editorWorkerPath') || ''
+  if (configuredWorkerUrl) {
+    configuredWorkerUrl = '/remote' + configuredWorkerUrl
+  }
+  configuredWorkerUrl = configuredWorkerUrl || EditorWorkerUrl.editorWorkerUrl
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
-    url: EditorWorkerUrl.editorWorkerUrl,
+    url: configuredWorkerUrl,
     name: 'Editor Worker',
   })
   HandleIpc.handleIpc(ipc)
