@@ -1,5 +1,5 @@
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.ts'
-import * as TokenizerState from '../TokenizerState/TokenizerState.ts'
+import * as TokenizerMap from '../TokenizerMap/TokenizerMap.ts'
 
 // TODO loadTokenizer should be invoked from renderer worker
 export const loadTokenizer = async (languageId: string, tokenizePath: string) => {
@@ -19,7 +19,7 @@ export const loadTokenizer = async (languageId: string, tokenizePath: string) =>
       console.warn(`tokenizer.TokenMap should be an object in "${tokenizePath}"`)
       return
     }
-    TokenizerState.set(languageId, tokenizer)
+    TokenizerMap.set(languageId, tokenizer)
   } catch (error) {
     // TODO better error handling
     console.error(error)
@@ -28,11 +28,8 @@ export const loadTokenizer = async (languageId: string, tokenizePath: string) =>
 }
 
 export const getTokenizer = (languageId) => {
-  if (TokenizerState.has(languageId)) {
-    return TokenizerState.get(languageId)
-  }
-  if (TokenizerState.isPending(languageId)) {
-    return TokenizePlainText
+  if (TokenizerMap.get(languageId)) {
+    return TokenizerMap.get(languageId)
   }
   return TokenizePlainText
 }
