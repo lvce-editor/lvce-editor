@@ -1,7 +1,7 @@
-import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
-import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
-import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.ts'
+import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.ts'
+import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.ts'
+import * as Tokenizer from '../Tokenizer/Tokenizer.ts'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.ts'
 
 const getTokensViewportEmbedded = (langageId, lines, lineCache, linesWithEmbed) => {
