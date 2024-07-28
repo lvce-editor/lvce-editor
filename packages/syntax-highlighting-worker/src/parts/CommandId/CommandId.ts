@@ -1,2 +1,3 @@
 export const TokenizeCodeBlock = 'Tokenizer.tokenizeCodeBlock'
 export const LoadTokenizer = 'Tokenizer.load'
+export const HandleMessagePort = 'HandleMessagePort.handleMessagePort'
