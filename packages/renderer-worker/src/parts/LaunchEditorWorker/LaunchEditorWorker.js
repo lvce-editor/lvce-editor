@@ -17,6 +17,7 @@ export const launchEditorWorker = async () => {
     name: 'Editor Worker',
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  const syntaxHighlightingEnabled = true
+  await JsonRpc.invoke(ipc, 'Initialize.initialize', syntaxHighlightingEnabled)
   return ipc
 }
