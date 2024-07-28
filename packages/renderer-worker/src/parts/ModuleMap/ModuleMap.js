@@ -208,6 +208,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostHover
     case 'SendMessagePortToExtensionHostWorker':
       return ModuleId.SendMessagePortToExtensionHostWorker
+    case 'SendMessagePortToSyntaxHighlightingWorker':
+      return ModuleId.SendMessagePortToSyntaxHighlightingWorker
     case 'ExtensionHostManagement':
       return ModuleId.ExtensionHostManagement
     default:
