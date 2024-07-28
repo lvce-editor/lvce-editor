@@ -72,7 +72,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
       p4 = windowHeight - statusBarHeight
     }
     if (previewVisible) {
-      p25 = p4 - previewHeight
+      p25 = Math.max(p4 - previewHeight, 300)
     }
     p3 = p4
     if (panelVisible) {
@@ -85,7 +85,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
       p7 = p8 - newSideBarWidth
     }
     if (previewVisible) {
-      p65 = p7 - previewWidth
+      p65 = Math.max(p7 - previewWidth, 300)
     }
     destination[LayoutKeys.ActivityBarLeft] = p8
     destination[LayoutKeys.ActivityBarTop] = p2
@@ -263,11 +263,11 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
   newPoints[LayoutKeys.PreviewHeight] ||= 350
-  newPoints[LayoutKeys.PreviewMinHeight] = 200
+  newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200
   newPoints[LayoutKeys.PreviewWidth] ||= 600
-  newPoints[LayoutKeys.PreviewMinWidth] = 400
-  newPoints[LayoutKeys.PreviewMaxWidth] = 1800
+  newPoints[LayoutKeys.PreviewMinWidth] = 100
+  newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
   if (isNativeTitleBarStyle()) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
     newPoints[LayoutKeys.TitleBarVisible] = 0
