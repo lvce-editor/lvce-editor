@@ -20,6 +20,7 @@ export const loadTokenizer = async (languageId: string, tokenizePath: string) =>
       return
     }
     TokenizerMap.set(languageId, tokenizer)
+    return tokenizer.TokenMap
   } catch (error) {
     // TODO better error handling
     console.error(error)
