@@ -66,8 +66,9 @@ const getTokenizeEndIndex = (invalidStartIndex, endLineIndex, tokenizeStartIndex
 
 // TODO only send changed lines to renderer process instead of all lines in viewport
 export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
-  const { invalidStartIndex, lineCache, tokenizerId, lines, languageId } = editor
-  const tokenizer = TokenizerMap.get(tokenizerId)
+  const { invalidStartIndex, lineCache, lines, languageId } = editor
+  // console.log({tokeni })
+  const tokenizer = TokenizerMap.get(languageId)
   const { hasArrayReturn, tokenizeLine, initialLineState } = tokenizer
   const tokenizeStartIndex = invalidStartIndex
   const tokenizeEndIndex = getTokenizeEndIndex(invalidStartIndex, endLineIndex, tokenizeStartIndex)
