@@ -86,9 +86,7 @@
     "@lvce-editor/diff-worker": "^1.2.0",
     "@lvce-editor/editor-worker": "^1.4.0",
     "@lvce-editor/renderer-process": "^6.8.0",
-    "@lvce-editor/test-worker": "^1.2.0"
-  },
-  "devDependencies": {
+    "@lvce-editor/test-worker": "^1.2.0",
     "@lvce-editor/syntax-highlighting-worker": "^1.0.1"
   }
 }
