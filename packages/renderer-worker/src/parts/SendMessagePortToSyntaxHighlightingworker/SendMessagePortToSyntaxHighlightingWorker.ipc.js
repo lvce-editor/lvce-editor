@@ -3,5 +3,5 @@ import * as SendMessagePortToSyntaxHighlightingWorker from './SendMessagePortToS
 export const name = 'SendMessagePortToSyntaxHighlightingWorker'
 
 export const Commands = {
-  sendMessagePortToSyntaxHighlightingWorker: SendMessagePortToSyntaxHighlightingWorker.sendMessagePortToExtensionHostWorker,
+  sendMessagePortToSyntaxHighlightingWorker: SendMessagePortToSyntaxHighlightingWorker.sendMessagePortToSyntaxHighlightingWorker,
 }
