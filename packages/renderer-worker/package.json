@@ -89,6 +89,6 @@
     "@lvce-editor/test-worker": "^1.2.0"
   },
   "devDependencies": {
-    "@lvce-editor/syntax-highlighting-worker": "^1.0.0"
+    "@lvce-editor/syntax-highlighting-worker": "^1.0.1"
   }
 }
