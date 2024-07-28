@@ -2,17 +2,15 @@ import * as Assert from '../Assert/Assert.ts'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Id from '../Id/Id.js'
+import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
-import * as EditorText from './EditorText.js'
 
 // TODO
 export const create = (id, uri, languageId, content) => {
@@ -81,22 +79,6 @@ export const create = (id, uri, languageId, content) => {
 
 export const dispose = (id) => {
   // delete state.editors[id]
-}
-
-export const renderText = (editor) => {
-  Assert.object(editor)
-  const textInfos = EditorText.getVisible(editor)
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'EditorText',
-    /* method */ 'renderText',
-    /* scrollBarY */ editor.scrollBarY,
-    /* scrollBarHeight */ editor.scrollBarHeight,
-    /* textInfos */ textInfos,
-    /* fontSize */ editor.fontSize, // TODO only send these properties once on first render
-    /* lineHeight */ editor.rowHeight,
-    /* letterSpacing */ editor.letterSpacing,
-  )
 }
 
 export const setTokenizer = (editor, tokenizer) => {
