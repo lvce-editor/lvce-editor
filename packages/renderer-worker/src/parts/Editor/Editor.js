@@ -13,12 +13,12 @@ import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 
 // TODO
-export const create = (id, uri, languageId, content) => {
+export const create = (id, uri, languageId) => {
   // TODO flatten structure
   return {
     uri,
     languageId,
-    lines: SplitLines.splitLines(content),
+    lines: [],
     // TODO cursor should be part of selection,
     // codemirror has selections: Selection[]
     //            selectionIndex: number

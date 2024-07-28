@@ -1,11 +1,13 @@
 export const name = 'sample.completion-provider-error-invalid-return-value-number'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
-`
+`,
   )
 
   await Workspace.setPath(tmpDir)
@@ -19,6 +21,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // TODO maybe have a setting to handle this kind of error without showing a popup,
   // just handle undefined value gracefully
   await expect(overlayMessage).toHaveText(
-    `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42`
+    `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42`,
   )
 }

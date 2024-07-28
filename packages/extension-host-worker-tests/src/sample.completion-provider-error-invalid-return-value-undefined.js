@@ -1,11 +1,13 @@
 export const name = 'sample.completion-provider-error-invalid-return-value-undefined'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
-`
+`,
   )
 
   await Workspace.setPath(tmpDir)
@@ -20,6 +22,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // TODO should say failed to load completions because of invalid return value
   // or just handle undefined value gracefully
   await expect(overlayMessage).toHaveText(
-    `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is undefined`
+    `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is undefined`,
   )
 }

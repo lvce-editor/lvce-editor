@@ -51,7 +51,7 @@ export const handleTokenizeChange = () => {
 export const create = (id, uri, x, y, width, height) => {
   const fileName = Workspace.pathBaseName(uri)
   const languageId = Languages.getLanguageId(fileName)
-  const state = Editor.create(id, uri, languageId, '')
+  const state = Editor.create(id, uri, languageId)
   const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
   return {
     ...newState,
@@ -106,14 +106,13 @@ export const loadContent = async (state, savedState, context) => {
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const content = await getContent(uri)
-  const newState1 = Editor.setText(state, content)
-  const languageId = getLanguageId(newState1)
+  const languageId = getLanguageId(state)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
-  let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
+  let newState2 = Editor.setDeltaYFixedValue(state, savedDeltaY)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
