@@ -1,5 +1,0 @@
-export const TokenizeCodeBlock = 'Tokenizer.tokenizeCodeBlock'
-export const LoadTokenizer = 'Tokenizer.load'
-export const HandleMessagePort = 'HandleMessagePort.handleMessagePort'
-export const GetTokensViewport = 'GetTokensViewport.getTokensViewport'
-export const SetLines = 'TextDocument.setLines'
