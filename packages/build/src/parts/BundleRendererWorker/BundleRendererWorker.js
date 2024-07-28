@@ -130,7 +130,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/SyntaxHighlightingWorkerUrl/SyntaxHighlightingWorkerUrl.js`,
-      occurrence: '/packages/syntax-highlighting-worker/src/syntaxHighlightingWorkerMain.ts',
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js`,
       replacement: `/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js`,
     })
     await Replace.replace({
