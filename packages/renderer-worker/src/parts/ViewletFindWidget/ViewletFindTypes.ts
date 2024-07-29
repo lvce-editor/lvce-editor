@@ -11,4 +11,5 @@ export interface FindState {
   readonly matchWholeWord: boolean
   readonly replacement: string
   readonly disposed?: boolean
+  readonly editorUid: number
 }
