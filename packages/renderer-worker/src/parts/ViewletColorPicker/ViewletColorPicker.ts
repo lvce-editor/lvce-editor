@@ -12,9 +12,15 @@ export const create = (uid: number): ColorPickerState => {
   }
 }
 
+const render = async (oldState: any, newState: any): Promise<any> => {
+  // @ts-ignore
+  const commands = await EditorWorker.invoke('ColorPicker.render', oldState, newState)
+  return commands
+}
+
 export const loadContent = async (state: ColorPickerState) => {
   const newState: ColorPickerState = await EditorWorker.invoke('ColorPicker.loadContent', state)
-  const commands = await EditorWorker.invoke('ColorPicker.render', state, newState)
+  const commands = await render(state, newState)
   return {
     ...newState,
     commands,
@@ -23,7 +29,7 @@ export const loadContent = async (state: ColorPickerState) => {
 
 export const handleSliderPointerDown = async (state: ColorPickerState, x: number, y: number) => {
   const newState: ColorPickerState = await EditorWorker.invoke('ColorPicker.handleSliderPointerDown', state, x, y)
-  const commands = await EditorWorker.invoke('ColorPicker.render', state, newState)
+  const commands = await render(state, newState)
   return {
     ...newState,
     commands,
@@ -32,7 +38,7 @@ export const handleSliderPointerDown = async (state: ColorPickerState, x: number
 
 export const handleSliderPointerMove = async (state: ColorPickerState, x: number, y: number) => {
   const newState: ColorPickerState = await EditorWorker.invoke('ColorPicker.handleSliderPointerMove', state, x, y)
-  const commands = await EditorWorker.invoke('ColorPicker.render', state, newState)
+  const commands = await render(state, newState)
   return {
     ...newState,
     commands,
