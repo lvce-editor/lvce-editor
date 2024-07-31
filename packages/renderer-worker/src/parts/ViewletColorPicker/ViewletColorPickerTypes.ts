@@ -3,4 +3,6 @@ export interface ColorPickerState {
   readonly offsetX: number
   readonly min: number
   readonly max: number
+  commands: any[]
+  readonly uid: number
 }
