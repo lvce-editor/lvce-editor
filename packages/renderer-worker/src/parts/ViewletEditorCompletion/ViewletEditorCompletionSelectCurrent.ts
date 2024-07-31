@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
 export const selectCurrent = (state) => {
   const { editorUid } = state

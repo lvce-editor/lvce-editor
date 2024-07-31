@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'

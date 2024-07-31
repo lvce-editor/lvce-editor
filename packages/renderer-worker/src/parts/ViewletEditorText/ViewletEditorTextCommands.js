@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const wrapEditorCommand = (id) => {
@@ -8,6 +8,7 @@ const wrapEditorCommand = (id) => {
     }
     const editor = args[0]
     const restArgs = args.slice(1)
+    // @ts-ignore
     const result = await EditorWorker.invoke(`Editor.${id}`, editor.uid, ...restArgs)
     if (result && result.commands) {
       return {
