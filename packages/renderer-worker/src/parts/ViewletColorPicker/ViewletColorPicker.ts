@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import type { ColorPickerState } from './ViewletColorPickerTypes.ts'
 
 export const create = (): ColorPickerState => {

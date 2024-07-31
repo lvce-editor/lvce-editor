@@ -1,6 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.ts'
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 
 // TODO have function for single edit (most common, avoid one array)

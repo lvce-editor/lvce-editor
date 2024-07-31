@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const wrapEditorCommand = (id) => {

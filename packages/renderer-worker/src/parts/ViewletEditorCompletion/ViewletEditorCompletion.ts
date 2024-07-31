@@ -1,7 +1,7 @@
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
