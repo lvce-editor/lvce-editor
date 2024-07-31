@@ -1,37 +1,29 @@
-import * as GetColorPickerVirtualDom from '../GetColorPickerVirtualDom/GetColorPickerVirtualDom.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import type { ColorPickerState } from './ViewletColorPickerTypes.ts'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderColor = {
+const renderAll = {
   isEqual(oldState: ColorPickerState, newState: ColorPickerState) {
-    return oldState.color === newState.color
+    return newState.commands && newState.commands.length === 0
   },
   apply(oldState: ColorPickerState, newState: ColorPickerState) {
-    return [/* method */ RenderMethod.SetColor, /* color */ newState.color]
+    const commands = newState.commands
+    newState.commands = []
+    if (!commands) {
+      return []
+    }
+    const adjustedCommands = commands.map((command) => {
+      if (command[0] === 'Viewlet.setDom2') {
+        return ['Viewlet.setDom2', newState.uid, ...command.slice(1)]
+      }
+      return ['Viewlet.send', newState.uid, ...command]
+    })
+    console.log({ adjustedCommands })
+    return adjustedCommands
   },
+  multiple: true,
 }
 
-const renderOffsetX = {
-  isEqual(oldState: ColorPickerState, newState: ColorPickerState) {
-    return oldState.offsetX === newState.offsetX
-  },
-  apply(oldState: ColorPickerState, newState: ColorPickerState) {
-    return [/* method */ RenderMethod.SetOffsetX, /* offsetX */ newState.offsetX]
-  },
-}
-
-const renderColorPicker = {
-  isEqual(oldState: ColorPickerState, newState: ColorPickerState) {
-    return oldState.min === newState.min && oldState.max === newState.max
-  },
-  apply(oldState: ColorPickerState, newState: ColorPickerState) {
-    const dom = GetColorPickerVirtualDom.getColorPickerVirtualDom()
-    return ['Viewlet.setDom2', dom]
-  },
-}
-
-export const render = [renderColorPicker, renderColor, renderOffsetX]
+export const render = [renderAll]
