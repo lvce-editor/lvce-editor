@@ -18,37 +18,39 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
+const render = async (oldState: any, newState: any): Promise<any> => {
+  // @ts-ignore
+  const commands = await EditorWorker.invoke('Hover.render', oldState, newState)
+  return commands
+}
+
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
-  console.log('editor uid', editor.uid)
-  const hoverInfo = await EditorWorker.invoke('Hover.getHoverInfo', editor.uid, position)
-  console.log({ editor, hoverInfo, position })
-  if (!hoverInfo) {
-    return state
-  }
-  const { lineInfos, documentation, x, y, matchingDiagnostics } = hoverInfo
-  return {
-    ...state,
-    lineInfos,
-    documentation,
-    x,
-    y,
-    diagnostics: matchingDiagnostics,
-  }
-}
-
-export const handleSashPointerDown = (state, eventX, eventY) => {
-  return state
-}
-
-export const handleSashPointerMove = (state, eventX, eventY) => {
   // @ts-ignore
-  const { x, y } = state
-  const minWidth = 100
-  const newWidth = Math.max(eventX - x, minWidth)
+  const newState = await EditorWorker.invoke('Hover.loadContent', editor.uid, state, position)
+  const commands = await render(state, newState)
   return {
-    ...state,
-    resizedWidth: newWidth,
+    ...newState,
+    commands,
+  }
+}
+
+export const handleSashPointerDown = async (state, eventX, eventY) => {
+  const newState = await EditorWorker.invoke('Hover.handleSashPointerDown', state, eventX, eventY)
+  const commands = await render(state, newState)
+  return {
+    ...newState,
+    commands,
+  }
+}
+
+export const handleSashPointerMove = async (state, eventX, eventY) => {
+  // @ts-ignore
+  const newState = await EditorWorker.invoke('Hover.handleSashPointerMove', state, eventX, eventY)
+  const commands = await render(state, newState)
+  return {
+    ...newState,
+    commands,
   }
 }
 

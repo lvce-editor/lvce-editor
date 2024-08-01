@@ -1,36 +1,26 @@
-import * as GetHoverVirtualDom from '../GetHoverVirtualDom/GetHoverVirtualDom.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderHover = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.lineInfos === newState.lineInfos &&
-      oldState.documentation === newState.documentation &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY &&
-      oldState.diagnostics === newState.diagnostics
-    )
+const renderAll = {
+  isEqual(oldState: any, newState: any) {
+    return newState.commands && newState.commands.length === 0
   },
-  apply(oldState, newState) {
-    const dom = GetHoverVirtualDom.getHoverVirtualDom(newState.lineInfos, newState.documentation, newState.diagnostics)
-    return [/* method */ 'Viewlet.setDom2', dom]
+  apply(oldState: any, newState: any) {
+    const commands = newState.commands
+    newState.commands = []
+    if (!commands) {
+      return []
+    }
+    const adjustedCommands = commands.map((command) => {
+      if (command[0] === 'Viewlet.setDom2') {
+        return ['Viewlet.setDom2', newState.uid, ...command.slice(1)]
+      }
+      return ['Viewlet.send', newState.uid, ...command]
+    })
+    return adjustedCommands
   },
+  multiple: true,
 }
 
-const renderBounds = {
-  isEqual(oldState, newState) {
-    return oldState.x === newState.x && oldState.y === newState.y && oldState.resizedWidth === newState.resizedWidth
-  },
-  apply(oldState, newState) {
-    // @ts-ignore
-    const { x, y, width, height, resizedWidth, uid } = newState
-    console.log('apply')
-    return [RenderMethod.SetBounds, x, y, resizedWidth, height]
-  },
-}
-
-export const render = [renderHover, renderBounds]
+export const render = [renderAll]
