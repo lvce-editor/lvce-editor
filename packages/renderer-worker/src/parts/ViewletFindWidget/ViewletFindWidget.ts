@@ -58,7 +58,7 @@ export const loadContent = async (state: FindState) => {
     matches,
     matchIndex,
     matchCount,
-    editorUId: editor.uid,
+    editorUid: editor.uid,
   }
 }
 
