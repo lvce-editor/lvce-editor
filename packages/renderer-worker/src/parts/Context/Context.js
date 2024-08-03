@@ -1,7 +1,4 @@
-export const state = {
-  // contexts: Object.create(null),
-  contexts: {},
-}
+const contexts = Object.create(null)
 
 // TODO all context keys should be numeric
 // comparing numbers is faster and more efficient than comparing strings every time
@@ -10,17 +7,17 @@ export const state = {
 // Context.get(1), Context.get(2)
 
 export const get = (key) => {
-  return state.contexts[key]
+  return contexts[key]
 }
 
 export const getAll = () => {
-  return state.contexts
+  return contexts
 }
 
 export const set = (key, value) => {
-  state.contexts[key] = value
+  contexts[key] = value
 }
 
 export const remove = (key) => {
-  delete state.contexts[key]
+  delete contexts[key]
 }
