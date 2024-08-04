@@ -8,8 +8,9 @@ const wrapEditorCommand = (id) => {
     }
     const editor = args[0]
     const restArgs = args.slice(1)
+    const fullId = id.includes('.') ? id : `Editor.${id}`
     // @ts-ignore
-    const result = await EditorWorker.invoke(`Editor.${id}`, editor.uid, ...restArgs)
+    const result = await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
     if (result && result.commands) {
       return {
         ...editor,
@@ -145,6 +146,23 @@ const ids = [
   'type',
   'undo',
   'unIndent',
+  'EditorCompletion.selectIndex',
+  'EditorCompletion.selectCurrent',
+  'EditorCompletion.dispose',
+  'EditorCompletion.focusFirst',
+  'EditorCompletion.focusIndex',
+  'EditorCompletion.focusLast',
+  'EditorCompletion.focusNext',
+  'EditorCompletion.focusNextPage',
+  'EditorCompletion.focusPrevious',
+  'EditorCompletion.focusPreviousPage',
+  'EditorCompletion.handleWheel',
+  'EditorCompletion.handleScrollBarMove',
+  'EditorCompletion.handleScrollBarThumbPointerMove',
+  'EditorCompletion.handleScrollBarClick',
+  'EditorCompletion.handleScrollBarCaptureLost',
+  'EditorCompletion.handleClickAt',
+  'EditorCompletion.scrollDown',
 ]
 
 export const Commands = {
