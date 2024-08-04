@@ -28,6 +28,9 @@ export const getInstance = (key) => {
   if (key === 'EditorText') {
     key = 'Editor'
   }
+  if (key === 'EditorCompletion') {
+    key = 'Editor'
+  }
   for (const value of Object.values(state.instances)) {
     if (value.moduleId === key) {
       return value

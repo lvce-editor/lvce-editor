@@ -9,6 +9,9 @@ const renderAll = {
       return []
     }
     const adjustedCommands = commands.map((command) => {
+      if (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.send') {
+        return command
+      }
       return ['Viewlet.send', newState.uid, ...command]
     })
     return adjustedCommands

@@ -2,7 +2,15 @@ import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 import * as CssVariable from '../CssVariable/CssVariable.js'
 
-export const Css = ['/css/parts/ViewletEditor.css', '/css/parts/ScrollBar.css', '/css/parts/ScrollBarThumb.css']
+export const Css = [
+  '/css/parts/MaskIcon.css',
+  '/css/parts/ScrollBar.css',
+  '/css/parts/ScrollBarThumb.css',
+  '/css/parts/Symbol.css',
+  '/css/parts/ViewletEditor.css',
+  '/css/parts/ViewletEditorCompletion.css',
+  '/css/parts/ViewletList.css',
+]
 
 export const getDynamicCss = (preferences) => {
   const styles = []
