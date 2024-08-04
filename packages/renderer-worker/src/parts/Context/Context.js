@@ -7,11 +7,6 @@ const contexts = Object.create(null)
 // Context.get(1), Context.get(2)
 
 export const get = (key) => {
-  console.log({
-    contexts: {
-      ...contexts,
-    },
-  })
   return contexts[key]
 }
 
