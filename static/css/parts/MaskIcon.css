@@ -23,6 +23,7 @@
   mask-position: 50% 50%;
   pointer-events: none;
   contain: strict;
+  flex-shrink: 0;
 }
 
 .MaskIconMinimize,
