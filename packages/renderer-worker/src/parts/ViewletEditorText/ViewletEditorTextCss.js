@@ -3,10 +3,13 @@ import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterS
 import * as CssVariable from '../CssVariable/CssVariable.js'
 
 export const Css = [
-  '/css/parts/ViewletEditor.css',
-  '/css/parts/ViewletEditorCompletion.css',
+  '/css/parts/MaskIcon.css',
   '/css/parts/ScrollBar.css',
   '/css/parts/ScrollBarThumb.css',
+  '/css/parts/Symbol.css',
+  '/css/parts/ViewletEditor.css',
+  '/css/parts/ViewletEditorCompletion.css',
+  '/css/parts/ViewletList.css',
 ]
 
 export const getDynamicCss = (preferences) => {
