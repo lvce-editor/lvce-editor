@@ -22,7 +22,6 @@ export const setFocus = (focusKey) => {
  * @param {number} key
  */
 export const setAdditionalFocus = (key) => {
-  console.log('set additional focus', key)
   Context.set(key, true)
   KeyBindingsState.update()
 }
