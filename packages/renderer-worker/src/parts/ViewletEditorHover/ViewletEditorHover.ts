@@ -36,6 +36,7 @@ export const loadContent = async (state, savedState, position) => {
 }
 
 export const handleSashPointerDown = async (state, eventX, eventY) => {
+  // @ts-ignore
   const newState = await EditorWorker.invoke('Hover.handleSashPointerDown', state, eventX, eventY)
   const commands = await render(state, newState)
   return {
