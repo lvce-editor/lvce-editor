@@ -142,6 +142,7 @@ const ids = [
   'undo',
   'unIndent',
   'setLanguageId',
+  'openCompletion',
 ]
 
 export const Commands = {
@@ -153,11 +154,6 @@ export const Commands = {
     await RendererProcess.invoke(...args)
     return state
   },
-}
-
-// prettier-ignore
-export const LazyCommands = {
-  openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {

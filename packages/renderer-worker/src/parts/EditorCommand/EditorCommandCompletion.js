@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
@@ -8,13 +7,10 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
 import * as EditorPosition from './EditorCommandPosition.js'
-
-const handleBlur = () => {
-  close()
-}
 
 /**
  *
@@ -26,12 +22,12 @@ const getLeadingWord = (line, columnIndex) => {
   console.log({ line })
   Assert.string(line)
   Assert.number(columnIndex)
-  for (let i = columnIndex - 1; i >= 0; i--) {
-    if (!RE_CHARACTER.test(line[i])) {
-      console.log({ i, columnIndex })
-      return line.slice(i + 1, columnIndex)
-    }
-  }
+  // for (let i = columnIndex - 1; i >= 0; i--) {
+  //   if (!RE_CHARACTER.test(line[i])) {
+  //     console.log({ i, columnIndex })
+  //     return line.slice(i + 1, columnIndex)
+  //   }
+  // }
   return line.slice(0, columnIndex)
 }
 
@@ -48,12 +44,14 @@ const filterCompletionItems = (completionItems, leadingWord) => {
 const handleSelectionChange = (editor, selectionChanges) => {
   const selection = selectionChanges[0]
   const end = selection.end
+  // @ts-ignore
   if (end.rowIndex !== state.rowIndex) {
     close()
     return
   }
   const line = editor.lines[end.rowIndex]
   const leadingWord = getLeadingWord(line, end.columnIndex)
+  // @ts-ignore
   const oldStart = state.columnIndex - state.leadingWord.length
   const newStart = end.columnIndex - leadingWord.length
   if (oldStart !== newStart) {
@@ -64,10 +62,14 @@ const handleSelectionChange = (editor, selectionChanges) => {
 
   // TODO this doesn't work for variable width characters (unicode/emoji)
 
+  // @ts-ignore
   const filteredCompletionItems = filterCompletionItems(state.completionItems, leadingWord)
+  // @ts-ignore
   state.filteredCompletionItems = filteredCompletionItems
+  // @ts-ignore
   state.leadingWord = leadingWord
   console.log({ leadingWord })
+  // @ts-ignore
   const x = EditorPosition.x(editor, editor.cursor)
   const y = EditorPosition.y(editor, editor.cursor)
   RendererProcess.invoke(
@@ -188,7 +190,9 @@ export const advance = (word) => {
   const includesWord = (completionItem) => {
     return completionItem.includes(word)
   }
+  // @ts-ignore
   const filteredCompletions = state.completionItems.filter(includesWord)
+  // @ts-ignore
   RendererProcess.invoke(/* EditorCompletion.open */ 836, /* items */ filteredCompletions, /* reason */ state.openingReason)
 }
 
@@ -196,17 +200,6 @@ export const advance = (word) => {
 
 // TODO possible race condition
 // also should cancel when new open request comes in
-
-const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
-
-const isCharacter = (text) => {
-  return RE_CHARACTER.test(text)
-}
-
-// TODO trigger characters should be specific per language id
-const isTriggerCharacter = (text) => {
-  return text === Character.OpenAngleBracket || text === Character.Dot
-}
 
 export const openFromType = async (editor, text) => {
   // if (isCharacter(text) || isTriggerCharacter(text)) {
