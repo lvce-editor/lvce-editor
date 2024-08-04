@@ -33,6 +33,8 @@ const ids = [
   'addCursorBelow',
   'applyEdit',
   'braceCompletion',
+  'cancelSelection',
+  'closeCompletion',
   'closeCompletion',
   'compositionEnd',
   'compositionStart',
@@ -105,6 +107,7 @@ const ids = [
   'moveRectangleSelectionPx',
   'moveSelection',
   'moveSelectionPx',
+  'openCompletion',
   'openFind',
   'organizeImports',
   'paste',
@@ -130,6 +133,7 @@ const ids = [
   'setDecorations',
   'setDelta',
   'setDeltaY',
+  'setLanguageId',
   'setSelections',
   'showHover',
   'showSourceActions',
@@ -141,8 +145,6 @@ const ids = [
   'type',
   'undo',
   'unIndent',
-  'setLanguageId',
-  'openCompletion',
 ]
 
 export const Commands = {
