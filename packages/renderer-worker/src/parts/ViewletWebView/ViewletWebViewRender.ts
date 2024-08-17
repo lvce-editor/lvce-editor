@@ -1,17 +1,17 @@
-import * as GetAudioVirtualDom from '../GetAudioVirtualDom/GetAudioVirtualDom.js'
+import * as GetWebViewVirtualDom from '../GetWebViewVirtualDom/GetWebViewVirtualDom.js'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderAudio = {
+const renderWebView = {
   isEqual(oldState, newState) {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    const dom = GetAudioVirtualDom.getAudioVirtualDom('https://example.com/audio.mp3', '')
+    const dom = GetWebViewVirtualDom.getWebViewVirtualDom()
     return ['Viewlet.setDom2', dom]
   },
 }
 
-export const render = [renderAudio]
+export const render = [renderWebView]
