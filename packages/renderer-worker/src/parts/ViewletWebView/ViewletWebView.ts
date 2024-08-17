@@ -32,7 +32,8 @@ export const loadContent = async (state) => {
     // TODO pass webview root, so that only these resources can be accessed
     // TODO pass csp configuration to server
     // TODO pass coop / coep configuration to server
-    await SharedProcess.invoke('WebViewServer.start', webViewPort)
+    const frameAncestors = 'http://localhost:3000'
+    await SharedProcess.invoke('WebViewServer.start', webViewPort, frameAncestors)
   }
   const webViews = await GetWebViews.getWebViews()
   const iframeSrc = getIframeSrc(webViews, webViewId)
