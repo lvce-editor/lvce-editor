@@ -16,12 +16,11 @@ const renderWebView = {
 
 const renderIframe = {
   isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc
+    return oldState.iframeSrc === newState.iframeSrc && oldState.sandbox === newState.sandbox
   },
   apply(oldState, newState) {
-    // TODO support sandbox
     // TODO support CSP
-    return ['setIframe', newState.iframeSrc]
+    return ['setIframe', newState.iframeSrc, newState.sandbox]
   },
 }
 
