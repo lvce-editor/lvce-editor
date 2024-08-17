@@ -67,3 +67,4 @@ export const HandleMessagePortForEmbedsProcess = 72
 export const HandleMessagePortForProcessExplorer = 73
 export const HandleMessagePortForSearchProcess = 74
 export const FileWatcher = 75
+export const WebViewServer = 76
