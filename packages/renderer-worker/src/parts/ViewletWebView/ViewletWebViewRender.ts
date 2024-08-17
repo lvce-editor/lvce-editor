@@ -1,4 +1,4 @@
-import * as GetWebViewVirtualDom from '../GetWebViewVirtualDom/GetWebViewVirtualDom.js'
+import * as GetWebViewVirtualDom from '../GetWebViewVirtualDom/GetWebViewVirtualDom.ts'
 
 export const hasFunctionalRender = true
 
