@@ -9,6 +9,6 @@ const getWebViewsNode = async () => {
 export const getWebViews = async () => {
   const nodeWebViews = await getWebViewsNode()
   const registeredWebViews = WebViews.get()
-  const allWebViews = [...nodeWebViews, registeredWebViews]
+  const allWebViews = [...nodeWebViews, ...registeredWebViews]
   return allWebViews
 }
