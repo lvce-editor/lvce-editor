@@ -1,0 +1,5 @@
+.WebView {
+  contain: strict;
+  position: absolute;
+  display: flex;
+}
