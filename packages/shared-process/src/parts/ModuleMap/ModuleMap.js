@@ -122,6 +122,7 @@ export const getModuleId = (commandId) => {
     case 'ExtensionHost.getIconThemeJson':
     case 'ExtensionHost.getLanguageConfiguration':
     case 'ExtensionHost.getLanguages':
+    case 'ExtensionHost.getWebViews':
     case 'ExtensionHost.watchColorTheme':
     case 'ExtensionManagement.disable':
     case 'ExtensionManagement.enable':

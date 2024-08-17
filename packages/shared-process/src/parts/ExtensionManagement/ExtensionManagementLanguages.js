@@ -42,6 +42,27 @@ export const getLanguages = async () => {
   return languages
 }
 
+const getWebViewsFromExtensions = (extensions) => {
+  const webViews = []
+  for (const extension of extensions) {
+    if (extension && extension.webViews) {
+      for (const webView of extension.webViews) {
+        webViews.push({
+          id: webView.id,
+          path: join(extension.path, webView.path),
+        })
+      }
+    }
+  }
+  return webViews
+}
+
+export const getWebViews = async () => {
+  const extensions = await ExtensionManagement.getExtensions()
+  const webViews = getWebViewsFromExtensions(extensions)
+  return webViews
+}
+
 const getLanguageConfigurationPathFromExtensions = (extensions, languageId) => {
   for (const extension of extensions) {
     if (extension.languages && extension.languages) {

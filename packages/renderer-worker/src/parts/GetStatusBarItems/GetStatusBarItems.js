@@ -23,7 +23,6 @@ export const getStatusBarItems = async (showItems) => {
     return []
   }
   await ExtensionHostManagement.activateByEvent('onSourceControl')
-
   const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
   const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return uiStatusBarItems
