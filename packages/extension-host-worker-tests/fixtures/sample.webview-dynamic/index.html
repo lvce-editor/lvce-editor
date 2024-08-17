@@ -4,16 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dynamic Webview Example</title>
+    <script type="module" src="webview.js"></script>
   </head>
   <body>
     <time></time>
-    <script>
-      const time = document.querySelector('time')
-      const handleMessage = (event) => {
-        const { data } = event
-        time.value = data.value
-      }
-      window.addEventListener('message', handleMessage)
-    </script>
   </body>
 </html>
