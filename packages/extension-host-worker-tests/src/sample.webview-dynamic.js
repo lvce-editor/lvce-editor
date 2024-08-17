@@ -1,6 +1,4 @@
-export const skip = true
-
-export const name = 'sample.webview-provider'
+export const name = 'sample.webview-dynamic'
 
 export const test = async ({ Extension, Main }) => {
   // TODO open sample webview

@@ -1,0 +1,16 @@
+.WebView {
+  contain: strict;
+  position: absolute;
+  display: flex;
+  background: white;
+}
+
+.WebViewWrapper {
+  display: flex;
+  flex: 1;
+}
+
+/* TODO rename class */
+.WebView .E2eTestIframe {
+  flex: 1;
+}

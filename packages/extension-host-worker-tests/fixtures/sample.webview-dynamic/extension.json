@@ -3,7 +3,8 @@
   "activation": "onWebview:xyz",
   "webViews": [
     {
-      "id": "xyz"
+      "id": "xyz",
+      "path": "./index.html"
     }
   ]
 }
