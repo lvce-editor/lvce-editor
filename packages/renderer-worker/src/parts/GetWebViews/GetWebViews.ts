@@ -1,4 +1,5 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as WebViews from '../WebViews/WebViews.ts'
 
 const getWebViewsNode = async () => {
   const webViews = await SharedProcess.invoke('ExtensionHost.getWebViews')
@@ -6,7 +7,8 @@ const getWebViewsNode = async () => {
 }
 
 export const getWebViews = async () => {
-  const webViews = await getWebViewsNode()
-  const allWebViews = [...webViews]
+  const nodeWebViews = await getWebViewsNode()
+  const registeredWebViews = WebViews.get()
+  const allWebViews = [...nodeWebViews, registeredWebViews]
   return allWebViews
 }

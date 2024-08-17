@@ -9,6 +9,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as WebViews from '../WebViews/WebViews.ts'
 import { VError } from '../VError/VError.js'
 
 const getId = (path) => {
@@ -48,6 +49,9 @@ export const addWebExtension = async (path) => {
   if (manifest.languages) {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)
+  }
+  if (manifest.webViews) {
+    WebViews.addMany(manifest.webViews)
   }
   // const absolutePath = manifest.path + '/' + manifest.browser
   // await ExtensionHostWorker.invoke('ExtensionHostExtension.activate', manifest, absolutePath)
