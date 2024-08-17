@@ -1,4 +1,4 @@
-import * as GetWebViews from '../GetWebViews/GetWebViews.js'
+import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
 export const create = (id, uri) => {
   return {

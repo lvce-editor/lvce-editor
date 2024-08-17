@@ -51,6 +51,9 @@ export const addWebExtension = async (path) => {
     await Languages.addLanguages(manifest.languages)
   }
   if (manifest.webViews) {
+    for (const webView of manifest.webViews) {
+      webView.path = manifest.path + Character.Slash + webView.path
+    }
     WebViews.addMany(manifest.webViews)
   }
   // const absolutePath = manifest.path + '/' + manifest.browser
