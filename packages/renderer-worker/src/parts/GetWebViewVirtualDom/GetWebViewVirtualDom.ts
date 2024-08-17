@@ -7,6 +7,12 @@ export const getWebViewVirtualDom = () => {
     {
       type: VirtualDomElements.Div,
       className: MergeClassNames.mergeClassNames(ClassNames.Viewlet, 'WebView'),
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'WebViewWrapper',
+      childCount: 0,
     },
   ]
 }
