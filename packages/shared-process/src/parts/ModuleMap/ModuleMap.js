@@ -278,6 +278,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleMessagePortForSearchProcess
     case 'FileWatcher.watch':
       return ModuleId.FileWatcher
+    case 'WebViewServer.start':
+      return ModuleId.WebViewServer
     default:
       throw new CommandNotFoundError(commandId)
   }
