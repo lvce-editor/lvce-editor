@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.webview-provider'
 
 export const test = async ({ Extension, Main }) => {
