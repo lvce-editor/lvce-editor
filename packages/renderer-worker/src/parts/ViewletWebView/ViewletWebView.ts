@@ -25,21 +25,25 @@ const getIframeSrc = (webViews, webViewId) => {
 export const loadContent = async (state) => {
   const { uri } = state
   const webViewId = uri.slice('webview://'.length)
+  // TODO make port configurable
+  const webViewPort = 3002
   if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
-    // TODO make port configurable
     // TODO pass webview root, so that only these resources can be accessed
     // TODO pass csp configuration to server
     // TODO pass coop / coep configuration to server
-    const port = 3002
-    await SharedProcess.invoke('WebViewServer.start', port)
+    await SharedProcess.invoke('WebViewServer.start', webViewPort)
   }
   const webViews = await GetWebViews.getWebViews()
   const iframeSrc = getIframeSrc(webViews, webViewId)
+  let actualIframeSrc = iframeSrc
+  if (Platform.platform === PlatformType.Remote) {
+    actualIframeSrc = iframeSrc.replace('http://localhost:3000', `http://localhost:${webViewPort}`)
+  }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
   return {
     ...state,
-    iframeSrc,
+    iframeSrc: actualIframeSrc,
     sandbox,
   }
 }
