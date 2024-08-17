@@ -75,6 +75,10 @@ export const getExtensionHostHelperProcessPath = async () => {
   return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
 
+export const getWebViewRoot = (relativePath) => {
+  return Path.join(Root.root, relativePath)
+}
+
 export const getRecentlyOpenedPath = () => {
   return Path.join(cacheDir, 'recently-opened.json')
 }
