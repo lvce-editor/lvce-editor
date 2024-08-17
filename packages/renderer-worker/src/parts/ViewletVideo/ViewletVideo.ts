@@ -1,5 +1,5 @@
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
-import * as ViewletVideoStrings from './ViewletVideoStrings.js'
+import * as ViewletVideoStrings from './ViewletVideoStrings.ts'
 
 export const create = (id, uri) => {
   return {
