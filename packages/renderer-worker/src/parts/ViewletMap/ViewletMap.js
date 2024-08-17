@@ -54,5 +54,8 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('e2e-test://')) {
     return ViewletModuleId.E2eTest
   }
+  if (uri.startsWith('webview://')) {
+    return ViewletModuleId.WebView
+  }
   return ViewletModuleId.EditorText
 }
