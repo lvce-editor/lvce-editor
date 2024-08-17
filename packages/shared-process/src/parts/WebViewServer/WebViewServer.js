@@ -7,9 +7,9 @@ const state = {
   promise: undefined,
 }
 
-export const start = async (port, frameAncestors) => {
+export const start = async (port, frameAncestors, webViewRoot) => {
   if (!state.promise) {
-    state.promise = CreateWebViewServer.createWebViewServer(port, frameAncestors)
+    state.promise = CreateWebViewServer.createWebViewServer(port, frameAncestors, webViewRoot)
   }
   return state.promise
 }
