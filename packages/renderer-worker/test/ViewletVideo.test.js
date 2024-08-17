@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/BlobSrc/BlobSrc.js', () => {
   }
 })
 
-const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.js')
+const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.ts')
 const BlobSrc = await import('../src/parts/BlobSrc/BlobSrc.js')
 
 test('create', () => {
