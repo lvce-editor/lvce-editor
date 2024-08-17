@@ -120,4 +120,4 @@ export const E2eTests = 'E2eTests'
 
 export const E2eTest = 'E2eTest'
 
-export const WebView = 'E2eTest'
+export const WebView = 'WebView'
