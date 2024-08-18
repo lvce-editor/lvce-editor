@@ -1,5 +1,3 @@
-import * as Promises from '../Promises/Promises.ts'
-
 const webViews = Object.create(null)
 const webViewProviders = Object.create(null)
 
