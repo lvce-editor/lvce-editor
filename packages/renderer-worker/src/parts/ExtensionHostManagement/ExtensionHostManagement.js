@@ -50,6 +50,9 @@ const actuallyActivateByEvent = async (event) => {
   }
   const additionalExtensions = ExtensionMetaState.state.webExtensions
   const additionalExtensionsToActivate = ExtensionMeta.filterByMatchingEvent(additionalExtensions, event)
+  for (const extension of additionalExtensionsToActivate) {
+    await actuallyActivateExtension(extension)
+  }
 }
 
 // TODO add tests for this
