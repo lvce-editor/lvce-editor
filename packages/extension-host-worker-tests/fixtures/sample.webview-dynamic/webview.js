@@ -19,6 +19,10 @@ const updateTime = () => {
 updateTime()
 setInterval(updateTime, 1000)
 
-window.addEventListener('message', handleFirstMessage, {
-  once: true,
-})
+const main = () => {
+  window.addEventListener('message', handleFirstMessage, {
+    once: true,
+  })
+}
+
+main()
