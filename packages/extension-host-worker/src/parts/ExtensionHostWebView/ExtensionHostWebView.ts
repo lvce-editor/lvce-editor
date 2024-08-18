@@ -9,11 +9,16 @@ export const createWebView = async (providerId, port) => {
     throw new Error(`webview provider ${providerId} not found`)
   }
 
+  // TODO cancel promise when webview is disposed before sending message
+  // TODO handle case when webview doesn't send ready message
   // TODO handle error
   const firstMessage = await new Promise((resolve) => {
     port.onmessage = resolve
   })
-  console.log({ firstMessage })
+  // @ts-ignore
+  if (firstMessage.data !== 'ready') {
+    // TODO handle error
+  }
   const rpc = {
     invoke(method, ...params) {
       // TODO return promise with result
