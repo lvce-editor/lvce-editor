@@ -17,5 +17,5 @@ const handleFirstMessage = (event) => {
 }
 
 window.addEventListener('message', handleFirstMessage, {
-  // once: true,
+  once: true,
 })
