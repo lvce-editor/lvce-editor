@@ -5,12 +5,14 @@
   background: white;
 }
 
+/* TODO this wrapper element might not be needed */
 .WebViewWrapper {
   display: flex;
   flex: 1;
+  contain: strict;
 }
 
-/* TODO rename class */
-.WebView .E2eTestIframe {
+.WebViewIframe {
   flex: 1;
+  contain: strict;
 }
