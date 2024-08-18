@@ -1,6 +1,6 @@
 import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
-import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.js'
+import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
