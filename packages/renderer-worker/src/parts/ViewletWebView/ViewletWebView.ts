@@ -62,7 +62,8 @@ export const loadContent = async (state) => {
       webViewRoot = webViewRoot.slice(0, -'./index.html'.length)
     }
     const frameAncestors = 'http://localhost:3000'
-    await WebViewServer.start(webViewPort, frameAncestors, webViewRoot)
+    await WebViewServer.start(webViewPort) // TODO move this up
+    await WebViewServer.setHandler(frameAncestors, webViewRoot)
     // TODO maybe allow same origin, so that iframe origin is not null
     origin = '*'
   } else {

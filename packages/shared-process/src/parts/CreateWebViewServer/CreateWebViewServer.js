@@ -38,35 +38,17 @@ const getContentType = (filePath) => {
 
 export const createWebViewServer = async (port, frameAncestors, webViewRoot) => {
   try {
-    const csp = GetContentSecurityPolicy.getContentSecurityPolicy([`default-src 'none'`, `script-src 'self'`, `frame-ancestors ${frameAncestors}`])
-    const handleRequest = async (request, response) => {
-      const pathName = getPathName(request)
-      const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
-      const isHtml = filePath.endsWith('index.html')
-      const contentType = getContentType(filePath)
-      if (isHtml) {
-        SetHeaders.setHeaders(response, {
-          'Cross-Origin-Resource-Policy': 'cross-origin',
-          'Cross-Origin-Embedder-Policy': 'require-corp',
-          'Content-Security-Policy': csp,
-          'Content-Type': contentType,
-        })
-      } else {
-        // TODO figure out which of these headers are actually needed
-        SetHeaders.setHeaders(response, {
-          'Cross-Origin-Resource-Policy': 'cross-origin',
-          'Cross-Origin-Embedder-Policy': 'require-corp',
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': contentType,
-        })
-      }
-      await pipeline(createReadStream(filePath), response)
-    }
     const server = createServer(handleRequest)
+    // server.
     const { resolve, promise } = Promises.withResolvers()
     server.listen(port, resolve)
     await promise
     console.log('launched preview server')
+    return {
+      setHandler(handleRequest) {
+        server.on('request', handleRequest)
+      },
+    }
   } catch (error) {
     throw new VError(error, `Failed to start webview server`)
   }
