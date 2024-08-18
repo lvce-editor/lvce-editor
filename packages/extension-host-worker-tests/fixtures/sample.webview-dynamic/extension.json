@@ -4,6 +4,7 @@
   "webViews": [
     {
       "id": "xyz",
+      "rpc": true,
       "path": "./index.html"
     }
   ]
