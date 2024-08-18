@@ -29,8 +29,9 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root) => {
   if (IsGitpod.isGitpod) {
     iframeSrc = iframeSrc
   }
+  const frameAncestors = location.protocol + '//' + location.host
   return {
-    frameAncestors: 'http://localhost:3000',
+    frameAncestors,
     iframeSrc,
     webViewRoot,
   }
