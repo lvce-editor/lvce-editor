@@ -5,6 +5,7 @@ import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
+import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
@@ -22,6 +23,7 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
         headers: {
           [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
           [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+          [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
         },
       },
     }
