@@ -4,7 +4,6 @@ const webViewProviders = Object.create(null)
 // TODO pass uuid to allow having multiple webviews open at the same time
 export const createWebView = async (providerId, port) => {
   const provider = webViewProviders[providerId]
-  console.log({ port })
   if (!provider) {
     console.log({ webViewProviders })
     throw new Error(`webview provider ${providerId} not found`)
