@@ -17,6 +17,14 @@ test('contentSecurityPolicyDocument - should allow only local scripts', () => {
   expect(ContentSecurityPolicyDocument.value).toContain(`script-src 'self'`)
 })
 
+test('contentSecurityPolicyDocument - should allow only local styles', () => {
+  expect(ContentSecurityPolicyDocument.value).toContain(`style-src 'self'`)
+})
+
 test('contentSecurityPolicyDocument - should allow images (local, https and data)', () => {
   expect(ContentSecurityPolicyDocument.value).toContain(`img-src 'self' https: data:`)
+})
+
+test('contentSecurityPolicyDocument - should disallow frame ancestors', () => {
+  expect(ContentSecurityPolicyDocument.value).toContain(`frame-ancestors 'none'`)
 })

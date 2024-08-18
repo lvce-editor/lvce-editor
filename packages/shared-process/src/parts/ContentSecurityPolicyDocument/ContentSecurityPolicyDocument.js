@@ -16,6 +16,7 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
+  `frame-ancestors 'none' `,
   IsGitpod.isGitpod
     ? `frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`
     : `frame-src 'self' http://localhost:3001 http://localhost:3002`,
