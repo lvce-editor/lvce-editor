@@ -50,7 +50,6 @@ const actuallyActivateByEvent = async (event) => {
   }
   const additionalExtensions = ExtensionMetaState.state.webExtensions
   const additionalExtensionsToActivate = ExtensionMeta.filterByMatchingEvent(additionalExtensions, event)
-  console.log({ additionalExtensionsToActivate, additionalExtensions, event })
 }
 
 // TODO add tests for this
