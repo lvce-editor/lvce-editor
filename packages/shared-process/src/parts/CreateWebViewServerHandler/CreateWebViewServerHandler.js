@@ -36,7 +36,11 @@ const getContentType = (filePath) => {
 export const createHandler = (frameAncestors, webViewRoot) => {
   const csp = GetContentSecurityPolicy.getContentSecurityPolicy([`default-src 'none'`, `script-src 'self'`, `frame-ancestors ${frameAncestors}`])
   const handleRequest = async (request, response) => {
-    const pathName = getPathName(request)
+    let pathName = getPathName(request)
+    if (pathName === '/') {
+      pathName += 'index.html'
+    }
+
     const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
     const isHtml = filePath.endsWith('index.html')
     const contentType = getContentType(filePath)
