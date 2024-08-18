@@ -39,6 +39,8 @@ export const loadContent = async (state) => {
     return state
   }
 
+  console.log({ iframeResult })
+
   const { frameAncestors, iframeSrc, webViewRoot } = iframeResult
   console.time('activate')
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)

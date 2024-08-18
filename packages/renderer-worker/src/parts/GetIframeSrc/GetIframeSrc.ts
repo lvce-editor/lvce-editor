@@ -19,7 +19,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root) => {
 
   console.log({ webViewPath })
   if (Platform.platform === PlatformType.Remote) {
-    const relativePath = new URL(webViewPath).pathname.replace('./index.html', '')
+    const relativePath = new URL(webViewPath).pathname.replace('/index.html', '')
     iframeSrc = `http://localhost:${webViewPort}`
 
     webViewRoot = root + relativePath
