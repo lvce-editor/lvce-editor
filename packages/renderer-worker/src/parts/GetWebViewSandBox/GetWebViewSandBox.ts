@@ -4,7 +4,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const getIframeSandbox = () => {
   if (Platform.platform === PlatformType.Remote) {
-    return [Sandbox.AllowScripts]
+    return [Sandbox.AllowScripts, Sandbox.AllowSameOrigin]
   }
   if (Platform.platform === PlatformType.Web) {
     return []
