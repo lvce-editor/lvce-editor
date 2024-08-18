@@ -19,10 +19,7 @@ export const start = async (port) => {
 }
 
 export const setHandler = async (frameAncestors, webViewRoot) => {
-  if (!state.promise) {
-    const server = await state.promise
-    const handler = CreateWebViewServerHandler.createHandler(frameAncestors, webViewRoot)
-    server.setHandler(frameAncestors, handler)
-  }
-  return state.promise
+  const server = await state.promise
+  const handler = CreateWebViewServerHandler.createHandler(frameAncestors, webViewRoot)
+  server.setHandler(handler)
 }
