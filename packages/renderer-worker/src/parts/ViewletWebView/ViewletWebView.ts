@@ -39,12 +39,8 @@ export const loadContent = async (state) => {
     return state
   }
 
-  console.log({ iframeResult })
-
   const { frameAncestors, iframeSrc, webViewRoot } = iframeResult
-  console.time('activate')
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
-  console.timeEnd('activate')
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
   await Transferrable.transferToRendererProcess(portId, port1)
