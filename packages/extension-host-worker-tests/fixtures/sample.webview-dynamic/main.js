@@ -1,11 +1,22 @@
+const getDate = () => {
+  return new Date().toLocaleTimeString()
+}
+
 const webViewProvider = {
   id: 'xyz',
-  async create(webView) {
-    const initialDate = new Date().toLocaleTimeString()
-    await webView.invoke('setDate', initialDate)
-    const interval = setInterval(async () => {
-      const date = new Date().toLocaleTimeString()
-      await webView.invoke('setDate', date)
+  async setup() {
+    return {
+      date: getDate(),
+    }
+  },
+  mounted() {
+    const interval = setInterval(() => {
+      this.setState((state) => {
+        return {
+          ...state,
+          date: getDate(),
+        }
+      })
     }, 1000)
 
     return () => {

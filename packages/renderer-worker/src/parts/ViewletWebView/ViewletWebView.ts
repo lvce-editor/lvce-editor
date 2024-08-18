@@ -42,10 +42,12 @@ export const loadContent = async (state) => {
   const portId = Id.create()
   await Transferrable.transferToRendererProcess(portId, port1)
   // TODO figure out order for events, e.g.
-  // 1. activate extension, create webview and ports in parallel
-  // 2. wait for webview to load (?)
-  // 3. setup extension host worker rpc
-  // 4. create webview in extension host worker and load content
+  // 1. launch webview server and get webviews in parallel
+  // 2. activate extension, create webview and ports in parallel
+  // 3. wait for server to load (?)
+  // 4. wait for webview to load (?)
+  // 5. setup extension host worker rpc
+  // 6. create webview in extension host worker and load content
 
   ExtensionHostWorker.invokeAndTransfer([port2], 'ExtensionHostWebView.create', webViewId, port2)
   let origin = ''
