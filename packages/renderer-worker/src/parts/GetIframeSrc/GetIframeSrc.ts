@@ -16,7 +16,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort) => {
   }
   let iframeSrc = webViewPath
   if (Platform.platform === PlatformType.Remote) {
-    iframeSrc = `http://localhost:${webViewPort}/index.html`
+    iframeSrc = `http://localhost:${webViewPort}`
   }
   return {
     frameAncestors: 'http://localhost:3000',

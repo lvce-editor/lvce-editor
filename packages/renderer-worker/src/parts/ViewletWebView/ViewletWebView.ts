@@ -63,6 +63,7 @@ export const loadContent = async (state) => {
     if (webViewRoot.endsWith('./index.html')) {
       webViewRoot = webViewRoot.slice(0, -'./index.html'.length)
     }
+    console.log({ webViewRoot, iframeSrc })
     console.time('server start')
     await WebViewServer.start(webViewPort) // TODO move this up
     console.timeEnd('server start')
