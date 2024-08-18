@@ -152,7 +152,7 @@ export const api = {
   executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
 
   // Webview
-  registerWebViewProvider: ExtensionHostWebView.registerDefinitionProvider,
+  registerWebViewProvider: ExtensionHostWebView.registerWebViewProvider,
 
   // Worker
   createWorker: ExtensionHostWorker.createWorker,

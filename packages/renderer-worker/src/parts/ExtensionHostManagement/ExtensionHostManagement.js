@@ -4,6 +4,7 @@ import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as Origin from '../Origin/Origin.js'
+import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
 
 export const state = {
   /**
@@ -47,6 +48,9 @@ const actuallyActivateByEvent = async (event) => {
   for (const extension of extensionsToActivate) {
     await actuallyActivateExtension(extension)
   }
+  const additionalExtensions = ExtensionMetaState.state.webExtensions
+  const additionalExtensionsToActivate = ExtensionMeta.filterByMatchingEvent(additionalExtensions, event)
+  console.log({ additionalExtensionsToActivate, additionalExtensions, event })
 }
 
 // TODO add tests for this

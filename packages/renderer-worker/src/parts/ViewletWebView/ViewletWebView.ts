@@ -3,6 +3,11 @@ import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
+import * as Transferrable from '../Transferrable/Transferrable.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as Id from '../Id/Id.js'
 
 export const create = (id, uri) => {
   return {
@@ -10,6 +15,7 @@ export const create = (id, uri) => {
     uri,
     iframeSrc: '',
     sandbox: [],
+    portId: 0,
   }
 }
 
@@ -29,6 +35,12 @@ export const loadContent = async (state) => {
   const iframeSrc = getIframeSrc(webViews, webViewId)
   // TODO make port configurable
   const webViewPort = 3002
+
+  await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  const portId = Id.create()
+  await Transferrable.transferToRendererProcess(portId, port1)
+  await ExtensionHostWorker.invokeAndTransfer([port2], 'ExtensionHostWebView.create', webViewId, port2)
   if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed
@@ -55,5 +67,6 @@ export const loadContent = async (state) => {
     ...state,
     iframeSrc: actualIframeSrc,
     sandbox,
+    portId,
   }
 }

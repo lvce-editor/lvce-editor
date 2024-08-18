@@ -131,7 +131,9 @@ export const getFn = (method) => {
     case 'HandleMessagePort.handleMessagePort':
       return HandleMessagePort.handleMessagePort
     case 'ExtensionHostWebView.create':
-      return ExtensionHostWebView.executeWebViewProvider
+      return ExtensionHostWebView.createWebView
+    case 'ExtensionHostWebView.dispose':
+      return ExtensionHostWebView.disposeWebView
     default:
       throw new CommandNotFoundError(method)
   }
