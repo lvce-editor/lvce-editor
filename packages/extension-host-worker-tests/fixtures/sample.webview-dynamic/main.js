@@ -1,6 +1,23 @@
 const webViewProvider = {
-  getHtmlPath() {
-    return new URL('./index.html', import.meta.url).toString()
+  id: 'xyz',
+  async create(webView) {
+    const date = new Date().toLocaleTimeString()
+    await webView.invoke({
+      jsonrpc: '2.0',
+      method: 'setDate',
+      params: [date],
+    })
+    const interval = setInterval(async () => {
+      await webView.invoke({
+        jsonrpc: '2.0',
+        method: 'setDate',
+        params: [date],
+      })
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
   },
 }
 
