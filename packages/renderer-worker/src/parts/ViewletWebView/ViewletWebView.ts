@@ -33,12 +33,16 @@ const getIframeSrc = (webViews, webViewId) => {
 export const loadContent = async (state) => {
   const { uri } = state
   const webViewId = uri.slice('webview://'.length)
+  console.time('webviews')
   const webViews = await GetWebViews.getWebViews()
+  console.timeEnd('webviews')
   const iframeSrc = getIframeSrc(webViews, webViewId)
   // TODO make port configurable
   const webViewPort = 3002
 
+  console.time('activate')
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
+  console.timeEnd('activate')
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
   await Transferrable.transferToRendererProcess(portId, port1)
@@ -55,15 +59,21 @@ export const loadContent = async (state) => {
     // TODO pass webview root, so that only these resources can be accessed
     // TODO pass csp configuration to server
     // TODO pass coop / coep configuration to server
+    console.time('getRoot')
     const root = await SharedProcess.invoke('Platform.getRoot')
+    console.timeEnd('getRoot')
     const relativePath = iframeSrc.slice('http://localhost:3000/'.length)
     let webViewRoot = root + '/' + relativePath
     if (webViewRoot.endsWith('./index.html')) {
       webViewRoot = webViewRoot.slice(0, -'./index.html'.length)
     }
     const frameAncestors = 'http://localhost:3000'
+    console.time('server start')
     await WebViewServer.start(webViewPort) // TODO move this up
+    console.timeEnd('server start')
+    console.time('setHandler')
     await WebViewServer.setHandler(frameAncestors, webViewRoot)
+    console.timeEnd('setHandler')
     // TODO maybe allow same origin, so that iframe origin is not null
     origin = '*'
   } else {

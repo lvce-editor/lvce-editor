@@ -9,7 +9,12 @@ export const createWebViewServer = async (port) => {
     server.listen(port, resolve)
     await promise
     return {
+      handler: undefined,
       setHandler(handleRequest) {
+        if (this.handler) {
+          return
+        }
+        this.handler = this.handler
         server.on('request', handleRequest)
       },
     }
