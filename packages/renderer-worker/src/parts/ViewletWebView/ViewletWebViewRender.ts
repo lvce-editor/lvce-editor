@@ -24,4 +24,13 @@ const renderIframe = {
   },
 }
 
-export const render = [renderWebView, renderIframe]
+const renderPort = {
+  isEqual(oldState, newState) {
+    return oldState.portId === newState.portId && oldState.origin === newState.origin
+  },
+  apply(oldState, newState) {
+    return ['setPort', newState.portId, newState.origin]
+  },
+}
+
+export const render = [renderWebView, renderIframe, renderPort]

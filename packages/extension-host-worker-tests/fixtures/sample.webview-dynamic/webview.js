@@ -5,7 +5,6 @@ const updateTime = (dateString) => {
 }
 
 const handleMessage = (event) => {
-  console.log('got port message')
   const message = event.data
   updateTime(...message.params)
 }
@@ -18,5 +17,5 @@ const handleFirstMessage = (event) => {
 }
 
 window.addEventListener('message', handleFirstMessage, {
-  once: true,
+  // once: true,
 })

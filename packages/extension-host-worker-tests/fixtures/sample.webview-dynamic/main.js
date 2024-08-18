@@ -1,18 +1,11 @@
 const webViewProvider = {
   id: 'xyz',
   async create(webView) {
-    const date = new Date().toLocaleTimeString()
-    await webView.invoke({
-      jsonrpc: '2.0',
-      method: 'setDate',
-      params: [date],
-    })
+    const initialDate = new Date().toLocaleTimeString()
+    await webView.invoke('setDate', initialDate)
     const interval = setInterval(async () => {
-      await webView.invoke({
-        jsonrpc: '2.0',
-        method: 'setDate',
-        params: [date],
-      })
+      const date = new Date().toLocaleTimeString()
+      await webView.invoke('setDate', date)
     }, 1000)
 
     return () => {

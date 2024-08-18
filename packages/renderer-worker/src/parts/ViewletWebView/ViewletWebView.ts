@@ -16,6 +16,7 @@ export const create = (id, uri) => {
     iframeSrc: '',
     sandbox: [],
     portId: 0,
+    origin: '',
   }
 }
 
@@ -40,7 +41,14 @@ export const loadContent = async (state) => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
   await Transferrable.transferToRendererProcess(portId, port1)
-  await ExtensionHostWorker.invokeAndTransfer([port2], 'ExtensionHostWebView.create', webViewId, port2)
+  // TODO figure out order for events, e.g.
+  // 1. activate extension, create webview and ports in parallel
+  // 2. wait for webview to load (?)
+  // 3. setup extension host worker rpc
+  // 4. create webview in extension host worker and load content
+
+  ExtensionHostWorker.invokeAndTransfer([port2], 'ExtensionHostWebView.create', webViewId, port2)
+  let origin = ''
   if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed
@@ -54,6 +62,10 @@ export const loadContent = async (state) => {
     }
     const frameAncestors = 'http://localhost:3000'
     await SharedProcess.invoke('WebViewServer.start', webViewPort, frameAncestors, webViewRoot)
+    // TODO maybe allow same origin, so that iframe origin is not null
+    origin = '*'
+  } else {
+    origin = '*'
   }
   let actualIframeSrc = iframeSrc
   if (Platform.platform === PlatformType.Remote) {
@@ -68,5 +80,6 @@ export const loadContent = async (state) => {
     iframeSrc: actualIframeSrc,
     sandbox,
     portId,
+    origin,
   }
 }
