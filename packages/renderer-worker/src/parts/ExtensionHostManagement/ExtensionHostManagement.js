@@ -2,9 +2,9 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
+import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as Origin from '../Origin/Origin.js'
-import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
 
 export const state = {
   /**
