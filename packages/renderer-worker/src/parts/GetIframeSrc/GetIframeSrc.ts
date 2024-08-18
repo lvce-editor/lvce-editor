@@ -1,3 +1,4 @@
+import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
@@ -18,9 +19,15 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root) => {
   let webViewRoot = webViewPath
   if (Platform.platform === PlatformType.Remote) {
     const relativePath = new URL(webViewPath).pathname.replace('/index.html', '')
-    iframeSrc = `http://localhost:${webViewPort}`
-
     webViewRoot = root + relativePath
+    if (IsGitpod.isGitpod) {
+      iframeSrc = `https://${location.host.replace('3000', webViewPort)}`
+    } else {
+      iframeSrc = `http://localhost:${webViewPort}`
+    }
+  }
+  if (IsGitpod.isGitpod) {
+    iframeSrc = iframeSrc
   }
   return {
     frameAncestors: 'http://localhost:3000',
