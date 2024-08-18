@@ -1,13 +1,14 @@
+import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
+import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
-import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
-import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
-import * as Id from '../Id/Id.js'
+import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
 export const create = (id, uri) => {
   return {
@@ -61,7 +62,7 @@ export const loadContent = async (state) => {
       webViewRoot = webViewRoot.slice(0, -'./index.html'.length)
     }
     const frameAncestors = 'http://localhost:3000'
-    await SharedProcess.invoke('WebViewServer.start', webViewPort, frameAncestors, webViewRoot)
+    await WebViewServer.start(webViewPort, frameAncestors, webViewRoot)
     // TODO maybe allow same origin, so that iframe origin is not null
     origin = '*'
   } else {
