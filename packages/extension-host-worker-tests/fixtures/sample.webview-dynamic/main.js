@@ -15,7 +15,6 @@ const webViewProvider = {
 }
 
 export const activate = () => {
-  console.log('activate')
   // @ts-ignore
   vscode.registerWebViewProvider(webViewProvider)
 }
