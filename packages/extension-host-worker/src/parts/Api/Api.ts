@@ -13,6 +13,7 @@ import * as ExtensionHostDialog from '../ExtensionHostDialog/ExtensionHostDialog
 import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.ts'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.ts'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.ts'
+import * as ExtensionHostWebView from '../ExtensionHostWebView/ExtensionHostWebView.ts'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.ts'
 import * as ExtensionHostGetOffset from '../ExtensionHostGetOffset/ExtensionHostGetOffset.ts'
 import * as ExtensionHostGetPosition from '../ExtensionHostGetPosition/ExtensionHostGetPosition.ts'
@@ -149,6 +150,9 @@ export const api = {
   // Type Definition
   registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
   executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+
+  // Webview
+  registerWebViewProvider: ExtensionHostWebView.registerWebViewProvider,
 
   // Worker
   createWorker: ExtensionHostWorker.createWorker,

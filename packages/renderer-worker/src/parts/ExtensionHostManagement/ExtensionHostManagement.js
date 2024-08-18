@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
+import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as Origin from '../Origin/Origin.js'
 
@@ -45,6 +46,11 @@ const actuallyActivateByEvent = async (event) => {
   // what happens when some of them take very long to activate?
 
   for (const extension of extensionsToActivate) {
+    await actuallyActivateExtension(extension)
+  }
+  const additionalExtensions = ExtensionMetaState.state.webExtensions
+  const additionalExtensionsToActivate = ExtensionMeta.filterByMatchingEvent(additionalExtensions, event)
+  for (const extension of additionalExtensionsToActivate) {
     await actuallyActivateExtension(extension)
   }
 }

@@ -1,6 +1,6 @@
 {
   "browser": "main.js",
-  "activation": "onWebview:xyz",
+  "activation": ["onWebView:xyz"],
   "webViews": [
     {
       "id": "xyz",

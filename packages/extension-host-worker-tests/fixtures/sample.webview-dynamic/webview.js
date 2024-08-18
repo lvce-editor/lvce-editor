@@ -1,7 +1,12 @@
 const time = document.querySelector('time')
 
+const updateTime = (dateString) => {
+  time.textContent = dateString
+}
+
 const handleMessage = (event) => {
-  console.log('got port message')
+  const message = event.data
+  updateTime(...message.params)
 }
 
 const handleFirstMessage = (event) => {
@@ -11,18 +16,6 @@ const handleFirstMessage = (event) => {
   port.postMessage('ready')
 }
 
-const updateTime = () => {
-  const dateString = new Date().toLocaleTimeString()
-  time.textContent = dateString
-}
-
-updateTime()
-setInterval(updateTime, 1000)
-
-const main = () => {
-  window.addEventListener('message', handleFirstMessage, {
-    once: true,
-  })
-}
-
-main()
+window.addEventListener('message', handleFirstMessage, {
+  // once: true,
+})
