@@ -1,13 +1,22 @@
+import * as Promises from '../Promises/Promises.ts'
+
 const webViews = Object.create(null)
 const webViewProviders = Object.create(null)
 
 // TODO pass uuid to allow having multiple webviews open at the same time
-export const createWebView = (id, port) => {
-  const provider = webViewProviders[id]
+export const createWebView = async (providerId, port) => {
+  const provider = webViewProviders[providerId]
+  console.log({ port })
   if (!provider) {
     console.log({ webViewProviders })
-    throw new Error(`webview provider ${id} not found`)
+    throw new Error(`webview provider ${providerId} not found`)
   }
+
+  // TODO handle error
+  const firstMessage = await new Promise((resolve) => {
+    port.onmessage = resolve
+  })
+  console.log({ firstMessage })
   const rpc = {
     invoke(method, ...params) {
       // TODO return promise with result
@@ -18,7 +27,7 @@ export const createWebView = (id, port) => {
       })
     },
   }
-  webViews[id] = rpc
+  webViews[providerId] = rpc
   provider.create(rpc)
 }
 
