@@ -4,4 +4,5 @@ export const name = 'WebViewServer'
 
 export const Commands = {
   start: WebViewServer.start,
+  setHandler: WebViewServer.setHandler,
 }
