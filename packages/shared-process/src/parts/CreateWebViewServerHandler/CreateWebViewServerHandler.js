@@ -54,7 +54,6 @@ const handleIndexHtml = async (response, filePath, frameAncestors) => {
       'Content-Type': contentType,
     })
     const newContent = injectPreviewScript(content)
-    console.log({ newContent })
     response.end(newContent)
   } catch (error) {
     console.error(`[preview-server] ${error}`)
