@@ -35,9 +35,9 @@ const getContentType = (filePath) => {
 }
 
 const injectPreviewScript = (html) => {
-  const injectedCode = `<script type="module" src="/preview-injected.js"></script>`
+  const injectedCode = `<script type="module" src="/preview-injected.js"></script>\n`
   const titleEndIndex = html.indexOf('</title>')
-  const newHtml = html.slice(titleEndIndex + '</title>'.length) + '\n' + +injectedCode + html.slice(titleEndIndex)
+  const newHtml = html.slice(0, titleEndIndex + '</title>'.length) + '\n' + injectedCode + html.slice(titleEndIndex)
   return newHtml
 }
 
@@ -53,6 +53,7 @@ const handleIndexHtml = async (response, filePath, frameAncestors) => {
       'Content-Type': contentType,
     })
     const newContent = injectPreviewScript(content)
+    console.log({ newContent })
     response.end(newContent)
   } catch (error) {
     console.error(`[preview-server] ${error}`)
@@ -72,7 +73,24 @@ const handleOther = async (response, filePath) => {
     await pipeline(createReadStream(filePath), response)
   } catch (error) {
     console.error(error)
-    response.end(`${error}`)
+    response.end(`[preview-server] ${error}`)
+  }
+}
+
+const handlePreviewInjected = (response) => {
+  try {
+    const injectedCode = `
+    globalThis.lvceRpc = () => {
+      // TODO create rpc using messageport
+      }
+      `
+    const contentType = getContentType('/test/file.js')
+    SetHeaders.setHeaders(response, {
+      'Content-Type': contentType,
+    })
+    response.end(injectedCode)
+  } catch (error) {
+    console.error(`[preview-server] ${error}`)
   }
 }
 
@@ -86,6 +104,9 @@ export const createHandler = (frameAncestors, webViewRoot) => {
     const isHtml = filePath.endsWith('index.html')
     if (isHtml) {
       return handleIndexHtml(response, filePath, frameAncestors)
+    }
+    if (filePath.endsWith('preview-injected.js')) {
+      return handlePreviewInjected(response)
     }
     return handleOther(response, filePath)
   }
