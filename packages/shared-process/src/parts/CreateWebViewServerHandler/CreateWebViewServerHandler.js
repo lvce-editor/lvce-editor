@@ -4,6 +4,7 @@ import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as SetHeaders from '../SetHeaders/SetHeaders.js'
+import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.js'
 import { readFile } from 'node:fs/promises'
 
 const getPathName = (request) => {
@@ -79,11 +80,7 @@ const handleOther = async (response, filePath) => {
 
 const handlePreviewInjected = (response) => {
   try {
-    const injectedCode = `
-    globalThis.lvceRpc = () => {
-      // TODO create rpc using messageport
-      }
-      `
+    const injectedCode = PreviewInjectedCode.injectedCode
     const contentType = getContentType('/test/file.js')
     SetHeaders.setHeaders(response, {
       'Content-Type': contentType,
