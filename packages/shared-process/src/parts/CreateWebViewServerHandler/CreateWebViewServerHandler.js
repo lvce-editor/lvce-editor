@@ -4,6 +4,7 @@ import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as SetHeaders from '../SetHeaders/SetHeaders.js'
+import { readFile } from 'node:fs/promises'
 
 const getPathName = (request) => {
   const { pathname } = new URL(request.url || '', `https://${request.headers.host}`)
@@ -33,34 +34,60 @@ const getContentType = (filePath) => {
   return textMimeType[extname(filePath)] || 'text/plain'
 }
 
+const injectPreviewScript = (html) => {
+  const injectedCode = `<script type="module" src="/preview-injected.js"></script>`
+  const titleEndIndex = html.indexOf('</title>')
+  const newHtml = html.slice(titleEndIndex + '</title>'.length) + '\n' + +injectedCode + html.slice(titleEndIndex)
+  return newHtml
+}
+
+const handleIndexHtml = async (response, filePath, frameAncestors) => {
+  try {
+    const csp = GetContentSecurityPolicy.getContentSecurityPolicy([`default-src 'none'`, `script-src 'self'`, `frame-ancestors ${frameAncestors}`])
+    const contentType = getContentType(filePath)
+    const content = await readFile(filePath, 'utf8')
+    SetHeaders.setHeaders(response, {
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Content-Security-Policy': csp,
+      'Content-Type': contentType,
+    })
+    const newContent = injectPreviewScript(content)
+    response.end(newContent)
+  } catch (error) {
+    console.error(`[preview-server] ${error}`)
+  }
+}
+
+const handleOther = async (response, filePath) => {
+  try {
+    const contentType = getContentType(filePath)
+    // TODO figure out which of these headers are actually needed
+    SetHeaders.setHeaders(response, {
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': contentType,
+    })
+    await pipeline(createReadStream(filePath), response)
+  } catch (error) {
+    console.error(error)
+    response.end(`${error}`)
+  }
+}
+
 export const createHandler = (frameAncestors, webViewRoot) => {
-  const csp = GetContentSecurityPolicy.getContentSecurityPolicy([`default-src 'none'`, `script-src 'self'`, `frame-ancestors ${frameAncestors}`])
   const handleRequest = async (request, response) => {
     let pathName = getPathName(request)
     if (pathName === '/') {
       pathName += 'index.html'
     }
-
     const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
     const isHtml = filePath.endsWith('index.html')
-    const contentType = getContentType(filePath)
     if (isHtml) {
-      SetHeaders.setHeaders(response, {
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Content-Security-Policy': csp,
-        'Content-Type': contentType,
-      })
-    } else {
-      // TODO figure out which of these headers are actually needed
-      SetHeaders.setHeaders(response, {
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': contentType,
-      })
+      return handleIndexHtml(response, filePath, frameAncestors)
     }
-    await pipeline(createReadStream(filePath), response)
+    return handleOther(response, filePath)
   }
   return handleRequest
 }
