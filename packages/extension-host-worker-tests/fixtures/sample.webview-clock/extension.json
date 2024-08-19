@@ -1,0 +1,11 @@
+{
+  "browser": "main.js",
+  "activation": ["onWebView:xyz"],
+  "webViews": [
+    {
+      "id": "xyz",
+      "rpc": true,
+      "path": "./index.html"
+    }
+  ]
+}
