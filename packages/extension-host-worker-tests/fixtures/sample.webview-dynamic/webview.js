@@ -1,21 +1,16 @@
-const time = document.querySelector('time')
+const button = document.querySelector('button')
 
-const updateTime = (dateString) => {
-  time.textContent = dateString
-}
-
-const handleMessage = (event) => {
-  const message = event.data
-  updateTime(...message.params)
-}
-
-const handleFirstMessage = (event) => {
-  const message = event.data
-  const port = message.params[0]
-  port.onmessage = handleMessage
-  port.postMessage('ready')
-}
-
-window.addEventListener('message', handleFirstMessage, {
-  once: true,
+const rpc = globalThis.lvceRpc({
+  commands: {
+    setButtonText(text) {
+      // @ts-ignore
+      button.textContent = text
+    },
+  },
 })
+
+const handleClick = async () => {
+  await rpc.invoke('handleClick')
+}
+
+button?.addEventListener('click', handleClick)
