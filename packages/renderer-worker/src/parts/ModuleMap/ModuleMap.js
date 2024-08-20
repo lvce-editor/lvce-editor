@@ -212,6 +212,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.SendMessagePortToSyntaxHighlightingWorker
     case 'ExtensionHostManagement':
       return ModuleId.ExtensionHostManagement
+    case 'Transferrable':
+      return ModuleId.Transferrable
     default:
       throw new Error(`module ${prefix} not found`)
   }
