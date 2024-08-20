@@ -278,6 +278,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleMessagePortForSearchProcess
     case 'FileWatcher.watch':
       return ModuleId.FileWatcher
+    case 'Transferrable.transfer':
+      return ModuleId.Transferrable
     case 'WebViewServer.start':
     case 'WebViewServer.setHandler':
       return ModuleId.WebViewServer

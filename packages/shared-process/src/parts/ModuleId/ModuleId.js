@@ -68,3 +68,4 @@ export const HandleMessagePortForProcessExplorer = 73
 export const HandleMessagePortForSearchProcess = 74
 export const FileWatcher = 75
 export const WebViewServer = 76
+export const Transferrable = 77
