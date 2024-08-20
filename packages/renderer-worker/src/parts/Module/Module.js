@@ -187,6 +187,7 @@ export const load = (moduleId) => {
     case ModuleId.ExtensionHostManagement:
       return import('../ExtensionHostManagement/ExtensionHostManagement.ipc.js')
     case ModuleId.SendMessagePortToSyntaxHighlightingWorker:
+      // TODO move this to transferrable module instead
       return import('../SendMessagePortToSyntaxHighlightingworker/SendMessagePortToSyntaxHighlightingWorker.ipc.js')
     case ModuleId.Transferrable:
       return import('../Transferrable/Transferrable.ipc.js')
