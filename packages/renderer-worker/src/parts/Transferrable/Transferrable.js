@@ -16,4 +16,7 @@ export const transferToRendererProcess = (objectId, transferable) => {
   return promise
 }
 
-export const transferToWebView = (objectId) => {}
+export const transferToWebView = async (objectId) => {
+  const portType = 'test'
+  await RendererProcess.invoke('Transferrable.transferToWebView', objectId, portType)
+}

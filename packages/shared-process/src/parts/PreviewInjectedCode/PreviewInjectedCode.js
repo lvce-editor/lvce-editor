@@ -3,7 +3,6 @@ let commandMap = {}
 let port
 const callbacks = Object.create(null)
 
-
 const isJsonRpcResponse = message => {
   return 'result' in message || 'error' in message
 }
@@ -23,16 +22,23 @@ const handleMessage = async (event) => {
   const result = await fn(...params)
 }
 
-const handleFirstMessage = (event) => {
-  const message = event.data
-  port = message.params[0]
-  port.onmessage = handleMessage
-  port.postMessage('ready')
+const handleWindowMessage = (event) => {
+  const { data } = event
+  const { params } = data
+  const _port = params[0]
+  const type = params[1]
+  if(type === 'test'){
+    // TODO handle test port
+    console.log('handle test port')
+  } else {
+    // TODO handle application port
+    port = _port
+    port.onmessage = handleMessage
+    port.postMessage('ready')
+  }
 }
 
-window.addEventListener('message', handleFirstMessage, {
-  once: true,
-})
+window.addEventListener('message', handleWindowMessage)
 
 const withResolvers = () => {
   let _resolve
