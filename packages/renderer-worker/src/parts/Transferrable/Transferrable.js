@@ -15,3 +15,5 @@ export const transferToRendererProcess = (objectId, transferable) => {
   )
   return promise
 }
+
+export const transferToWebView = (objectId) => {}
