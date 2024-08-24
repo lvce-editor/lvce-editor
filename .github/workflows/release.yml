@@ -311,6 +311,13 @@ jobs:
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
+      - name: Publish GitHub release
+        if: matrix.os == 'ubuntu-24.04'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.create-release.outputs.rg_version }}"
+          gh release edit $VERSION --draft=false
 
       # - name: Build archive
       #   shell: bash
