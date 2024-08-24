@@ -13,7 +13,6 @@ const getPort = async (ipcId) => {
     port: port1,
     ipcId,
   })
-  console.log({ webContentsId })
   // TODO avoid side effect?
   WebContentsId.set(webContentsId)
   return port2
