@@ -1,3 +1,1 @@
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-
-export const resolve = JsonRpc.resolve
+export { resolve } from '../JsonRpc/JsonRpc.js'
