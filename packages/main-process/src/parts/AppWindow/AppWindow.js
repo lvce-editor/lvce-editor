@@ -40,7 +40,6 @@ export const createAppWindow = async (windowOptions, parsedArgs, workingDirector
       session,
     },
   })
-  window.webContents.openDevTools()
   Performance.mark(PerformanceMarkerType.DidCreateCodeWindow)
 
   const handleReadyToShow = () => {
