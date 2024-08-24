@@ -22,13 +22,13 @@ class Ipc extends EventTarget {
   }
 }
 const readyMessage = "ready";
-const listen$3 = () => {
+const listen$4 = () => {
   if (typeof WorkerGlobalScope === "undefined") {
     throw new TypeError("module is not in web worker scope");
   }
   return globalThis;
 };
-const signal$2 = (global) => {
+const signal$3 = (global) => {
   global.postMessage(readyMessage);
 };
 class IpcChildWithModuleWorker extends Ipc {
@@ -49,14 +49,14 @@ class IpcChildWithModuleWorker extends Ipc {
     this._rawIpc.addEventListener("message", callback);
   }
 }
-const wrap$5 = (global) => {
+const wrap$6 = (global) => {
   return new IpcChildWithModuleWorker(global);
 };
 const IpcChildWithModuleWorker$1 = {
   __proto__: null,
-  listen: listen$3,
-  signal: signal$2,
-  wrap: wrap$5
+  listen: listen$4,
+  signal: signal$3,
+  wrap: wrap$6
 };
 const E_INCOMPATIBLE_NATIVE_MODULE = "E_INCOMPATIBLE_NATIVE_MODULE";
 const E_MODULES_NOT_SUPPORTED_IN_ELECTRON = "E_MODULES_NOT_SUPPORTED_IN_ELECTRON";
@@ -265,10 +265,10 @@ const waitForFirstMessage = async (port) => {
   const event = await promise;
   return event.data;
 };
-const listen$2 = async () => {
-  const parentIpcRaw = listen$3();
-  signal$2(parentIpcRaw);
-  const parentIpc = wrap$5(parentIpcRaw);
+const listen$3 = async () => {
+  const parentIpcRaw = listen$4();
+  signal$3(parentIpcRaw);
+  const parentIpc = wrap$6(parentIpcRaw);
   const firstMessage = await waitForFirstMessage(parentIpc);
   if (firstMessage.method !== "initialize") {
     throw new IpcError("unexpected first message");
@@ -306,18 +306,18 @@ class IpcChildWithModuleWorkerAndMessagePort extends Ipc {
     this._rawIpc.start();
   }
 }
-const wrap$4 = (port) => {
+const wrap$5 = (port) => {
   return new IpcChildWithModuleWorkerAndMessagePort(port);
 };
 const IpcChildWithModuleWorkerAndMessagePort$1 = {
   __proto__: null,
-  listen: listen$2,
-  wrap: wrap$4
+  listen: listen$3,
+  wrap: wrap$5
 };
-const listen$1 = () => {
+const listen$2 = () => {
   return window;
 };
-const signal$1 = (global) => {
+const signal$2 = (global) => {
   global.postMessage(readyMessage);
 };
 class IpcChildWithWindow extends Ipc {
@@ -348,10 +348,99 @@ class IpcChildWithWindow extends Ipc {
     this._rawIpc.addEventListener("message", wrapped);
   }
 }
-const wrap$3 = (window2) => {
+const wrap$4 = (window2) => {
   return new IpcChildWithWindow(window2);
 };
 const IpcChildWithWindow$1 = {
+  __proto__: null,
+  listen: listen$2,
+  signal: signal$2,
+  wrap: wrap$4
+};
+const isTransferrable = (value) => {
+  return value instanceof MessagePort;
+};
+const UntransferrableValue = {};
+const walkValue = (value, transferrables) => {
+  if (!value) {
+    return value;
+  }
+  if (isTransferrable(value)) {
+    transferrables.push(value);
+    return UntransferrableValue;
+  }
+  if (Array.isArray(value)) {
+    const newItems = [];
+    for (const item of value) {
+      const newItem = walkValue(item, transferrables);
+      if (newItem !== UntransferrableValue) {
+        newItems.push(newItem);
+      }
+    }
+    return newItems;
+  }
+  if (typeof value === "object") {
+    const newObject = Object.create(null);
+    for (const [key, property] of Object.entries(value)) {
+      const newValue = walkValue(property, transferrables);
+      if (newValue !== UntransferrableValue) {
+        newObject[key] = newValue;
+      }
+    }
+    return newObject;
+  }
+  return value;
+};
+const fixElectronParameters = (value) => {
+  const transfer = [];
+  const newValue = walkValue(value, transfer);
+  return {
+    newValue,
+    transfer
+  };
+};
+const listen$1 = () => {
+  return window;
+};
+const signal$1 = (global) => {
+  global.postMessage(readyMessage);
+};
+class IpcChildWithElectronWindow extends Ipc {
+  getData(event) {
+    return getData$1(event);
+  }
+  send(message) {
+    this._rawIpc.postMessage(message);
+  }
+  sendAndTransfer(message, _transfer) {
+    const {
+      newValue,
+      transfer
+    } = fixElectronParameters(message);
+    this._rawIpc.postMessage(newValue, location.origin, transfer);
+  }
+  dispose() {
+  }
+  onClose(callback) {
+  }
+  onMessage(callback) {
+    const wrapped = (event) => {
+      const {
+        ports
+      } = event;
+      if (ports.length) {
+        return;
+      }
+      callback(event);
+      this._rawIpc.removeEventListener("message", wrapped);
+    };
+    this._rawIpc.addEventListener("message", wrapped);
+  }
+}
+const wrap$3 = (window2) => {
+  return new IpcChildWithElectronWindow(window2);
+};
+const IpcChildWithElectronWindow$1 = {
   __proto__: null,
   listen: listen$1,
   signal: signal$1,
@@ -591,5 +680,5 @@ const IpcParentWithWebSocket$1 = {
   create,
   wrap
 };
-export {IpcChildWithMessagePort$1 as IpcChildWithMessagePort, IpcChildWithModuleWorker$1 as IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort$1 as IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow$1 as IpcChildWithWindow, IpcParentWithModuleWorker$1 as IpcParentWithModuleWorker, IpcParentWithWebSocket$1 as IpcParentWithWebSocket};
+export {IpcChildWithElectronWindow$1 as IpcChildWithElectronWindow, IpcChildWithMessagePort$1 as IpcChildWithMessagePort, IpcChildWithModuleWorker$1 as IpcChildWithModuleWorker, IpcChildWithModuleWorkerAndMessagePort$1 as IpcChildWithModuleWorkerAndMessagePort, IpcChildWithWindow$1 as IpcChildWithWindow, IpcParentWithModuleWorker$1 as IpcParentWithModuleWorker, IpcParentWithWebSocket$1 as IpcParentWithWebSocket};
 export default null;
