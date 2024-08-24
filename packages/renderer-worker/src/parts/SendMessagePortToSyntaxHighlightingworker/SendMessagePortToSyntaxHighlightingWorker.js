@@ -4,5 +4,5 @@ import * as SyntaxHighlightingWorker from '../SyntaxHighlightingWorker/SyntaxHig
 export const sendMessagePortToSyntaxHighlightingWorker = async (port, initialCommand) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  await SyntaxHighlightingWorker.invokeAndTransfer([port], initialCommand, port)
+  await SyntaxHighlightingWorker.invokeAndTransfer(initialCommand, port)
 }

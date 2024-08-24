@@ -4,7 +4,7 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
 export const create = async ({ url, name, port }) => {
   const { port1, port2 } = GetPortTuple.getPortTuple(port)
-  await RendererProcess.invokeAndTransfer('IpcParent.create', [port2], {
+  await RendererProcess.invokeAndTransfer('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     url,
     name,

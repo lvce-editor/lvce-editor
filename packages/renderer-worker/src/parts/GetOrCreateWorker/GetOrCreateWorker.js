@@ -15,9 +15,9 @@ export const getOrCreateWorker = (fn) => {
       const ipc = await getOrCreate(fn)
       return JsonRpc.invoke(ipc, method, ...params)
     },
-    async invokeAndTransfer(transfer, method, ...params) {
+    async invokeAndTransfer(method, ...params) {
       const ipc = await getOrCreate(fn)
-      return JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
+      return JsonRpc.invokeAndTransfer(ipc, method, ...params)
     },
     async dispose() {
       const promise = workers.get(fn)

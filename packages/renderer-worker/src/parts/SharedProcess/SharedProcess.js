@@ -8,9 +8,9 @@ export const invoke = async (method, ...params) => {
   return result
 }
 
-export const invokeAndTransfer = async (transfer, method, ...params) => {
+export const invokeAndTransfer = async (method, ...params) => {
   const { ipc } = SharedProcessState.state
-  const result = await JsonRpc.invokeAndTransfer(ipc, transfer, method, ...params)
+  const result = await JsonRpc.invokeAndTransfer(ipc, method, ...params)
   return result
 }
 
