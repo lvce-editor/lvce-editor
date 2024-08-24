@@ -39,7 +39,7 @@ test('create', async () => {
   })
   expect(ipc).toBeInstanceOf(MessagePort)
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('IpcParent.create', [new MessagePort()], {
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     name: 'test worker',
     raw: true,
