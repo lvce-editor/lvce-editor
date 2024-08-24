@@ -1,5 +1,4 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as Callback from '../src/parts/Callback/Callback.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 beforeEach(() => {
