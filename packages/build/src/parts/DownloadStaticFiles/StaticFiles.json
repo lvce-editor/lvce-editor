@@ -11,7 +11,7 @@
   },
   {
     "name": "@lvce-editor/ipc",
-    "version": "9.4.0",
+    "version": "9.5.1",
     "type": "javascript"
   },
   {
@@ -21,7 +21,7 @@
   },
   {
     "name": "ky",
-    "version": "1.2.1",
+    "version": "1.7.1",
     "type": "javascript"
   },
   {
@@ -68,7 +68,7 @@
   },
   {
     "name": "modern-normalize",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "type": "css",
     "path": "modern-normalize.css"
   },

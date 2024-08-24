@@ -1,29 +1,22 @@
 // @ts-nocheck
+var __defProp = Object.defineProperty;
+var __publicField = (obj, key, value) => {
+  if (typeof key !== "symbol")
+    key += "";
+  if (key in obj)
+    return __defProp(obj, key, {enumerable: true, configurable: true, writable: true, value});
+  return obj[key] = value;
+};
 class HTTPError extends Error {
   constructor(response, request, options) {
+    __publicField(this, "response");
+    __publicField(this, "request");
+    __publicField(this, "options");
     const code = response.status || response.status === 0 ? response.status : "";
     const title = response.statusText || "";
     const status = `${code} ${title}`.trim();
     const reason = status ? `status code ${status}` : "an unknown error";
-    super(`Request failed with ${reason}`);
-    Object.defineProperty(this, "response", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, "request", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, "options", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
+    super(`Request failed with ${reason}: ${request.method} ${request.url}`);
     this.name = "HTTPError";
     this.response = response;
     this.request = request;
@@ -32,13 +25,8 @@ class HTTPError extends Error {
 }
 class TimeoutError extends Error {
   constructor(request) {
-    super("Request timed out");
-    Object.defineProperty(this, "request", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
+    super(`Request timed out: ${request.method} ${request.url}`);
+    __publicField(this, "request");
     this.name = "TimeoutError";
     this.request = request;
   }
@@ -65,9 +53,20 @@ const mergeHeaders = (source1 = {}, source2 = {}) => {
   }
   return result;
 };
+function newHookValue(original, incoming, property) {
+  var _a, _b;
+  return Object.hasOwn(incoming, property) && incoming[property] === void 0 ? [] : deepMerge((_a = original[property]) != null ? _a : [], (_b = incoming[property]) != null ? _b : []);
+}
+const mergeHooks = (original = {}, incoming = {}) => ({
+  beforeRequest: newHookValue(original, incoming, "beforeRequest"),
+  beforeRetry: newHookValue(original, incoming, "beforeRetry"),
+  afterResponse: newHookValue(original, incoming, "afterResponse"),
+  beforeError: newHookValue(original, incoming, "beforeError")
+});
 const deepMerge = (...sources) => {
   let returnValue = {};
   let headers = {};
+  let hooks = {};
   for (const source of sources) {
     if (Array.isArray(source)) {
       if (!Array.isArray(returnValue)) {
@@ -80,6 +79,10 @@ const deepMerge = (...sources) => {
           value = deepMerge(returnValue[key], value);
         }
         returnValue = {...returnValue, [key]: value};
+      }
+      if (isObject(source.hooks)) {
+        hooks = mergeHooks(hooks, source.hooks);
+        returnValue.hooks = hooks;
       }
       if (isObject(source.headers)) {
         headers = mergeHeaders(headers, source.headers);
@@ -95,14 +98,21 @@ const supportsRequestStreams = (() => {
   const supportsReadableStream = typeof globalThis.ReadableStream === "function";
   const supportsRequest = typeof globalThis.Request === "function";
   if (supportsReadableStream && supportsRequest) {
-    hasContentType = new globalThis.Request("https://empty.invalid", {
-      body: new globalThis.ReadableStream(),
-      method: "POST",
-      get duplex() {
-        duplexAccessed = true;
-        return "half";
+    try {
+      hasContentType = new globalThis.Request("https://empty.invalid", {
+        body: new globalThis.ReadableStream(),
+        method: "POST",
+        get duplex() {
+          duplexAccessed = true;
+          return "half";
+        }
+      }).headers.has("Content-Type");
+    } catch (error) {
+      if (error instanceof Error && error.message === "unsupported BodyInit type") {
+        return false;
       }
-    }).headers.has("Content-Type");
+      throw error;
+    }
   }
   return duplexAccessed && !hasContentType;
 })();
@@ -122,6 +132,7 @@ const stop = Symbol("stop");
 const kyOptionKeys = {
   json: true,
   parseJson: true,
+  stringifyJson: true,
   searchParams: true,
   prefixUrl: true,
   retry: true,
@@ -146,7 +157,8 @@ const requestOptionsRegistry = {
   signal: true,
   window: true,
   dispatcher: true,
-  duplex: true
+  duplex: true,
+  priority: true
 };
 const normalizeRequestMethod = (input) => requestMethods.includes(input) ? input.toUpperCase() : input;
 const retryMethods = ["get", "put", "head", "delete", "options", "trace"];
@@ -176,8 +188,7 @@ const normalizeRetryOptions = (retry = {}) => {
   }
   return {
     ...defaultRetryOptions,
-    ...retry,
-    afterStatusCodes: retryAfterStatusCodes
+    ...retry
   };
 };
 async function timeout(request, init, abortController, options) {
@@ -219,6 +230,68 @@ const findUnknownOptions = (request, options) => {
   return unknownOptions;
 };
 class Ky {
+  constructor(input, options = {}) {
+    __publicField(this, "request");
+    __publicField(this, "abortController");
+    __publicField(this, "_retryCount", 0);
+    __publicField(this, "_input");
+    __publicField(this, "_options");
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    this._input = input;
+    this._options = {
+      ...options,
+      headers: mergeHeaders(this._input.headers, options.headers),
+      hooks: mergeHooks({
+        beforeRequest: [],
+        beforeRetry: [],
+        beforeError: [],
+        afterResponse: []
+      }, options.hooks),
+      method: normalizeRequestMethod((_a = options.method) != null ? _a : this._input.method),
+      prefixUrl: String(options.prefixUrl || ""),
+      retry: normalizeRetryOptions(options.retry),
+      throwHttpErrors: options.throwHttpErrors !== false,
+      timeout: (_b = options.timeout) != null ? _b : 1e4,
+      fetch: (_c = options.fetch) != null ? _c : globalThis.fetch.bind(globalThis)
+    };
+    if (typeof this._input !== "string" && !(this._input instanceof URL || this._input instanceof globalThis.Request)) {
+      throw new TypeError("`input` must be a string, URL, or Request");
+    }
+    if (this._options.prefixUrl && typeof this._input === "string") {
+      if (this._input.startsWith("/")) {
+        throw new Error("`input` must not begin with a slash when using `prefixUrl`");
+      }
+      if (!this._options.prefixUrl.endsWith("/")) {
+        this._options.prefixUrl += "/";
+      }
+      this._input = this._options.prefixUrl + this._input;
+    }
+    if (supportsAbortController) {
+      this.abortController = new globalThis.AbortController();
+      const originalSignal = (_d = this._options.signal) != null ? _d : this._input.signal;
+      originalSignal == null ? void 0 : originalSignal.addEventListener("abort", () => {
+        this.abortController.abort(originalSignal.reason);
+      });
+      this._options.signal = this.abortController.signal;
+    }
+    if (supportsRequestStreams) {
+      this._options.duplex = "half";
+    }
+    if (this._options.json !== void 0) {
+      this._options.body = (_g = (_f = (_e = this._options).stringifyJson) == null ? void 0 : _f.call(_e, this._options.json)) != null ? _g : JSON.stringify(this._options.json);
+      this._options.headers.set("content-type", (_h = this._options.headers.get("content-type")) != null ? _h : "application/json");
+    }
+    this.request = new globalThis.Request(this._input, this._options);
+    if (this._options.searchParams) {
+      const textSearchParams = typeof this._options.searchParams === "string" ? this._options.searchParams.replace(/^\?/, "") : new URLSearchParams(this._options.searchParams).toString();
+      const searchParams = "?" + textSearchParams;
+      const url = this.request.url.replace(/(?:\?.*?)?(?=#|$)/, searchParams);
+      if ((supportsFormData && this._options.body instanceof globalThis.FormData || this._options.body instanceof URLSearchParams) && !(this._options.headers && this._options.headers["content-type"])) {
+        this.request.headers.delete("content-type");
+      }
+      this.request = new globalThis.Request(new globalThis.Request(url, {...this.request}), this._options);
+    }
+  }
   static create(input, options) {
     const ky2 = new Ky(input, options);
     const function_ = async () => {
@@ -277,126 +350,33 @@ class Ky {
     }
     return result;
   }
-  constructor(input, options = {}) {
-    var _a, _b, _c, _d;
-    Object.defineProperty(this, "request", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, "abortController", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, "_retryCount", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: 0
-    });
-    Object.defineProperty(this, "_input", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, "_options", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
-    this._input = input;
-    const isCredentialsSupported = "credentials" in Request.prototype;
-    this._options = {
-      credentials: isCredentialsSupported ? this._input.credentials : void 0,
-      ...options,
-      headers: mergeHeaders(this._input.headers, options.headers),
-      hooks: deepMerge({
-        beforeRequest: [],
-        beforeRetry: [],
-        beforeError: [],
-        afterResponse: []
-      }, options.hooks),
-      method: normalizeRequestMethod((_a = options.method) != null ? _a : this._input.method),
-      prefixUrl: String(options.prefixUrl || ""),
-      retry: normalizeRetryOptions(options.retry),
-      throwHttpErrors: options.throwHttpErrors !== false,
-      timeout: (_b = options.timeout) != null ? _b : 1e4,
-      fetch: (_c = options.fetch) != null ? _c : globalThis.fetch.bind(globalThis)
-    };
-    if (typeof this._input !== "string" && !(this._input instanceof URL || this._input instanceof globalThis.Request)) {
-      throw new TypeError("`input` must be a string, URL, or Request");
-    }
-    if (this._options.prefixUrl && typeof this._input === "string") {
-      if (this._input.startsWith("/")) {
-        throw new Error("`input` must not begin with a slash when using `prefixUrl`");
-      }
-      if (!this._options.prefixUrl.endsWith("/")) {
-        this._options.prefixUrl += "/";
-      }
-      this._input = this._options.prefixUrl + this._input;
-    }
-    if (supportsAbortController) {
-      this.abortController = new globalThis.AbortController();
-      if (this._options.signal) {
-        const originalSignal = this._options.signal;
-        this._options.signal.addEventListener("abort", () => {
-          this.abortController.abort(originalSignal.reason);
-        });
-      }
-      this._options.signal = this.abortController.signal;
-    }
-    if (supportsRequestStreams) {
-      this._options.duplex = "half";
-    }
-    this.request = new globalThis.Request(this._input, this._options);
-    if (this._options.searchParams) {
-      const textSearchParams = typeof this._options.searchParams === "string" ? this._options.searchParams.replace(/^\?/, "") : new URLSearchParams(this._options.searchParams).toString();
-      const searchParams = "?" + textSearchParams;
-      const url = this.request.url.replace(/(?:\?.*?)?(?=#|$)/, searchParams);
-      if ((supportsFormData && this._options.body instanceof globalThis.FormData || this._options.body instanceof URLSearchParams) && !(this._options.headers && this._options.headers["content-type"])) {
-        this.request.headers.delete("content-type");
-      }
-      this.request = new globalThis.Request(new globalThis.Request(url, {...this.request}), this._options);
-    }
-    if (this._options.json !== void 0) {
-      this._options.body = JSON.stringify(this._options.json);
-      this.request.headers.set("content-type", (_d = this._options.headers.get("content-type")) != null ? _d : "application/json");
-      this.request = new globalThis.Request(this.request, {body: this._options.body});
-    }
-  }
   _calculateRetryDelay(error) {
+    var _a, _b, _c, _d;
     this._retryCount++;
-    if (this._retryCount <= this._options.retry.limit && !(error instanceof TimeoutError)) {
-      if (error instanceof HTTPError) {
-        if (!this._options.retry.statusCodes.includes(error.response.status)) {
-          return 0;
-        }
-        const retryAfter = error.response.headers.get("Retry-After");
-        if (retryAfter && this._options.retry.afterStatusCodes.includes(error.response.status)) {
-          let after = Number(retryAfter);
-          if (Number.isNaN(after)) {
-            after = Date.parse(retryAfter) - Date.now();
-          } else {
-            after *= 1e3;
-          }
-          if (this._options.retry.maxRetryAfter !== void 0 && after > this._options.retry.maxRetryAfter) {
-            return 0;
-          }
-          return after;
-        }
-        if (error.response.status === 413) {
-          return 0;
-        }
-      }
-      const retryDelay = this._options.retry.delay(this._retryCount);
-      return Math.min(this._options.retry.backoffLimit, retryDelay);
+    if (this._retryCount > this._options.retry.limit || error instanceof TimeoutError) {
+      throw error;
     }
-    return 0;
+    if (error instanceof HTTPError) {
+      if (!this._options.retry.statusCodes.includes(error.response.status)) {
+        throw error;
+      }
+      const retryAfter = (_c = (_b = (_a = error.response.headers.get("Retry-After")) != null ? _a : error.response.headers.get("RateLimit-Reset")) != null ? _b : error.response.headers.get("X-RateLimit-Reset")) != null ? _c : error.response.headers.get("X-Rate-Limit-Reset");
+      if (retryAfter && this._options.retry.afterStatusCodes.includes(error.response.status)) {
+        let after = Number(retryAfter) * 1e3;
+        if (Number.isNaN(after)) {
+          after = Date.parse(retryAfter) - Date.now();
+        } else if (after >= Date.parse("2024-01-01")) {
+          after -= Date.now();
+        }
+        const max = (_d = this._options.retry.maxRetryAfter) != null ? _d : after;
+        return after < max ? after : max;
+      }
+      if (error.response.status === 413) {
+        throw error;
+      }
+    }
+    const retryDelay = this._options.retry.delay(this._retryCount);
+    return Math.min(this._options.retry.backoffLimit, retryDelay);
   }
   _decorateResponse(response) {
     if (this._options.parseJson) {
@@ -409,22 +389,22 @@ class Ky {
       return await function_();
     } catch (error) {
       const ms = Math.min(this._calculateRetryDelay(error), maxSafeTimeout);
-      if (ms !== 0 && this._retryCount > 0) {
-        await delay(ms, {signal: this._options.signal});
-        for (const hook of this._options.hooks.beforeRetry) {
-          const hookResult = await hook({
-            request: this.request,
-            options: this._options,
-            error,
-            retryCount: this._retryCount
-          });
-          if (hookResult === stop) {
-            return;
-          }
-        }
-        return this._retry(function_);
+      if (this._retryCount < 1) {
+        throw error;
       }
-      throw error;
+      await delay(ms, {signal: this._options.signal});
+      for (const hook of this._options.hooks.beforeRetry) {
+        const hookResult = await hook({
+          request: this.request,
+          options: this._options,
+          error,
+          retryCount: this._retryCount
+        });
+        if (hookResult === stop) {
+          return;
+        }
+      }
+      return this._retry(function_);
     }
   }
   async _fetch() {
@@ -439,10 +419,12 @@ class Ky {
       }
     }
     const nonRequestOptions = findUnknownOptions(this.request, this._options);
+    const mainRequest = this.request;
+    this.request = mainRequest.clone();
     if (this._options.timeout === false) {
-      return this._options.fetch(this.request.clone(), nonRequestOptions);
+      return this._options.fetch(mainRequest, nonRequestOptions);
     }
-    return timeout(this.request.clone(), nonRequestOptions, this.abortController, this._options);
+    return timeout(mainRequest, nonRequestOptions, this.abortController, this._options);
   }
   _stream(response, onDownloadProgress) {
     const totalBytes = Number(response.headers.get("content-length")) || 0;
@@ -493,7 +475,12 @@ const createInstance = (defaults) => {
     ky2[method] = (input, options) => Ky.create(input, validateAndMerge(defaults, options, {method}));
   }
   ky2.create = (newDefaults) => createInstance(validateAndMerge(newDefaults));
-  ky2.extend = (newDefaults) => createInstance(validateAndMerge(defaults, newDefaults));
+  ky2.extend = (newDefaults) => {
+    if (typeof newDefaults === "function") {
+      newDefaults = newDefaults(defaults != null ? defaults : {});
+    }
+    return createInstance(validateAndMerge(defaults, newDefaults));
+  };
   ky2.stop = stop;
   return ky2;
 };
