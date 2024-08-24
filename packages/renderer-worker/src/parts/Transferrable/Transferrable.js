@@ -23,7 +23,8 @@ export const acquire = (objectId) => {
   return value
 }
 
-export const transferToWebView = async (objectId) => {
+export const transferToWebView = async (objectId, port) => {
+  console.log('transfer to webview')
   const portType = 'test'
-  await RendererProcess.invoke('Transferrable.transferToWebView', objectId, portType)
+  await RendererProcess.invokeAndTransfer('Transferrable.transferToWebView', objectId, portType, port)
 }
