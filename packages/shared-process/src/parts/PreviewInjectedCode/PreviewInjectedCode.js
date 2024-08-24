@@ -27,6 +27,7 @@ const handleWindowMessage = (event) => {
   const { params } = data
   const _port = params[0]
   const type = params[1]
+  console.log(data)
   if(type === 'test'){
     // TODO handle test port
     console.log('handle test port')
