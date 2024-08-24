@@ -6,5 +6,6 @@ export const createMessagePort = async (ipcId, webContentsId, port) => {
   Assert.number(ipcId)
   Assert.object(port)
   await HandleMessagePortForSharedProcess.handlePort(port, ipcId)
+  console.log({ ipcId, webContentsId, port })
   return webContentsId
 }
