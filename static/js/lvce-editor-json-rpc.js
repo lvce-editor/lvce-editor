@@ -173,6 +173,13 @@ const constructError = (message, type, name) => {
 const getNewLineIndex = (string, startIndex = void 0) => {
   return string.indexOf(NewLine, startIndex);
 };
+const getParentStack = (error) => {
+  let parentStack = error.stack || error.data || error.message || "";
+  if (parentStack.startsWith("    at")) {
+    parentStack = error.message + NewLine + parentStack;
+  }
+  return parentStack;
+};
 const joinLines = (lines) => {
   return lines.join(NewLine);
 };
@@ -181,18 +188,11 @@ const Custom = -32001;
 const splitLines = (lines) => {
   return lines.split(NewLine);
 };
-const getParentStack = (error) => {
-  let parentStack = error.stack || error.data || error.message || "";
-  if (parentStack.startsWith("    at")) {
-    parentStack = error.message + NewLine + parentStack;
-  }
-  return parentStack;
-};
 const restoreJsonRpcError = (error) => {
   if (error && error instanceof Error) {
     return error;
   }
-  const currentStack = joinLines(splitLines(new Error().stack).slice(1));
+  const currentStack = joinLines(splitLines(new Error().stack || "").slice(1));
   if (error && error.code && error.code === MethodNotFound) {
     const restoredError = new JsonRpcError(error.message);
     const parentStack = getParentStack(error);
@@ -244,24 +244,21 @@ const unwrapJsonRpcResult = (responseMessage) => {
   }
   throw new JsonRpcError("unexpected response message");
 };
+const isMessagePort = (value) => {
+  return typeof MessagePort !== "undefined" && value instanceof MessagePort;
+};
 const isInstanceOf = (value, constructorName) => {
   var _a;
   return ((_a = value == null ? void 0 : value.constructor) == null ? void 0 : _a.name) === constructorName;
-};
-const isSocket = (value) => {
-  return isInstanceOf(value, "Socket");
-};
-const isSingleTransferrable = (value) => {
-  return isSocket(value);
-};
-const isMessagePort = (value) => {
-  return typeof MessagePort !== "undefined" && value instanceof MessagePort;
 };
 const isMessagePortMain = (value) => {
   return isInstanceOf(value, "MessagePortMain");
 };
 const isOffscreenCanvas = (value) => {
   return typeof OffscreenCanvas !== "undefined" && value instanceof OffscreenCanvas;
+};
+const isSocket = (value) => {
+  return isInstanceOf(value, "Socket");
 };
 const transferrables = [isMessagePort, isMessagePortMain, isOffscreenCanvas, isSocket];
 const isTransferrable = (value) => {
@@ -272,21 +269,42 @@ const isTransferrable = (value) => {
   }
   return false;
 };
-const getTransferrableParams = (value) => {
+const walkValue = (value, transferrables2) => {
+  if (!value) {
+    return;
+  }
   if (isTransferrable(value)) {
-    return value;
+    transferrables2.push(value);
   }
   if (Array.isArray(value)) {
-    const result = value.filter(isTransferrable);
-    if (result.length === 0) {
-      return void 0;
+    for (const item of value) {
+      walkValue(item, transferrables2);
     }
-    if (result.length === 1 && isSingleTransferrable(result[0])) {
-      return result[0];
-    }
-    return result;
+    return;
   }
-  return void 0;
+  if (typeof value === "object") {
+    for (const property of Object.values(value)) {
+      walkValue(property, transferrables2);
+    }
+  }
+};
+const getTransferrables = (value) => {
+  const transferrables2 = [];
+  walkValue(value, transferrables2);
+  return transferrables2;
+};
+const isSingleTransferrable = (value) => {
+  return isSocket(value);
+};
+const getTransferrableParams = (value) => {
+  const transferrables2 = getTransferrables(value);
+  if (transferrables2.length === 0) {
+    return void 0;
+  }
+  if (isSingleTransferrable(transferrables2[0])) {
+    return transferrables2[0];
+  }
+  return transferrables2;
 };
 const create$1 = (message, error) => {
   return {
