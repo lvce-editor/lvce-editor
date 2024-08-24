@@ -1,9 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as JsonRpc from '../src/parts/JsonRpc/JsonRpc.js'
-import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
-import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 class NoErrorThrownError extends Error {}
 
@@ -28,7 +25,7 @@ test('send', async () => {
   }
   JsonRpc.send(mockTransport, 'Test.execute', 'test message')
   expect(mockTransport.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     method: 'Test.execute',
     params: ['test message'],
   })
@@ -52,7 +49,7 @@ test('invoke - error - string', async () => {
   expect(error.message).toBe('JsonRpc Error: something went wrong')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -81,7 +78,7 @@ test('invoke - error - TypeError', async () => {
   expect(error.message).toBe('x is not a function')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -113,7 +110,7 @@ test('invoke - error - TypeError object', async () => {
   expect(error.message).toBe("Cannot set properties of undefined (setting 'id')")
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -142,7 +139,7 @@ test('invoke - error - SyntaxError', async () => {
   expect(error.message).toBe('unexpected token')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -171,7 +168,7 @@ test('invoke - error - ReferenceError', async () => {
   expect(error.message).toBe('x is not defined')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -196,7 +193,7 @@ test('invoke - error - null', async () => {
   expect(error.message).toBe('JsonRpc Error: null')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -221,7 +218,7 @@ test('invoke - error - empty object', async () => {
   expect(error.message).toBe('JsonRpc Error: [object Object]')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -321,7 +318,7 @@ test('invoke - error - method not found', async () => {
         Callback.resolve(message.id, {
           error: {
             message: 'method not found',
-            code: JsonRpcErrorCode.MethodNotFound,
+            code: -32000,
             data: '',
           },
         })
@@ -331,11 +328,11 @@ test('invoke - error - method not found', async () => {
     }),
   }
   const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
-  expect(error).toBeInstanceOf(JsonRpcError)
+  expect(error.name).toBe('Error')
   expect(error.message).toBe('method not found')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -359,7 +356,7 @@ test('invoke', async () => {
   expect(await JsonRpc.invoke(ipc, 'Test.execute', 'test message')).toEqual('success')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
@@ -383,7 +380,7 @@ test('invoke - result is of type number', async () => {
   expect(await JsonRpc.invoke(ipc, 'Test.execute', 'test message')).toEqual(0)
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'Test.execute',
     params: ['test message'],
