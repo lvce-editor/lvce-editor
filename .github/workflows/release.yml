@@ -28,6 +28,7 @@ jobs:
         with:
           tag_name: ${{ env.RG_VERSION }}
           release_name: ${{ env.RG_VERSION }}
+          draft: true
 
   build-release:
     name: build-release
