@@ -173,6 +173,13 @@ const constructError = (message, type, name) => {
 const getNewLineIndex = (string, startIndex = void 0) => {
   return string.indexOf(NewLine, startIndex);
 };
+const getParentStack = (error) => {
+  let parentStack = error.stack || error.data || error.message || "";
+  if (parentStack.startsWith("    at")) {
+    parentStack = error.message + NewLine + parentStack;
+  }
+  return parentStack;
+};
 const joinLines = (lines) => {
   return lines.join(NewLine);
 };
@@ -181,18 +188,11 @@ const Custom = -32001;
 const splitLines = (lines) => {
   return lines.split(NewLine);
 };
-const getParentStack = (error) => {
-  let parentStack = error.stack || error.data || error.message || "";
-  if (parentStack.startsWith("    at")) {
-    parentStack = error.message + NewLine + parentStack;
-  }
-  return parentStack;
-};
 const restoreJsonRpcError = (error) => {
   if (error && error instanceof Error) {
     return error;
   }
-  const currentStack = joinLines(splitLines(new Error().stack).slice(1));
+  const currentStack = joinLines(splitLines(new Error().stack || "").slice(1));
   if (error && error.code && error.code === MethodNotFound) {
     const restoredError = new JsonRpcError(error.message);
     const parentStack = getParentStack(error);
@@ -244,6 +244,68 @@ const unwrapJsonRpcResult = (responseMessage) => {
   }
   throw new JsonRpcError("unexpected response message");
 };
+const isMessagePort = (value) => {
+  return typeof MessagePort !== "undefined" && value instanceof MessagePort;
+};
+const isInstanceOf = (value, constructorName) => {
+  var _a;
+  return ((_a = value == null ? void 0 : value.constructor) == null ? void 0 : _a.name) === constructorName;
+};
+const isMessagePortMain = (value) => {
+  return isInstanceOf(value, "MessagePortMain");
+};
+const isOffscreenCanvas = (value) => {
+  return typeof OffscreenCanvas !== "undefined" && value instanceof OffscreenCanvas;
+};
+const isSocket = (value) => {
+  return isInstanceOf(value, "Socket");
+};
+const transferrables = [isMessagePort, isMessagePortMain, isOffscreenCanvas, isSocket];
+const isTransferrable = (value) => {
+  for (const fn of transferrables) {
+    if (fn(value)) {
+      return true;
+    }
+  }
+  return false;
+};
+const walkValue = (value, transferrables2) => {
+  if (!value) {
+    return;
+  }
+  if (isTransferrable(value)) {
+    transferrables2.push(value);
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      walkValue(item, transferrables2);
+    }
+    return;
+  }
+  if (typeof value === "object") {
+    for (const property of Object.values(value)) {
+      walkValue(property, transferrables2);
+    }
+  }
+};
+const getTransferrables = (value) => {
+  const transferrables2 = [];
+  walkValue(value, transferrables2);
+  return transferrables2;
+};
+const isSingleTransferrable = (value) => {
+  return isSocket(value);
+};
+const getTransferrableParams = (value) => {
+  const transferrables2 = getTransferrables(value);
+  if (transferrables2.length === 0) {
+    return void 0;
+  }
+  if (isSingleTransferrable(transferrables2[0])) {
+    return transferrables2[0];
+  }
+  return transferrables2;
+};
 const create$1 = (message, error) => {
   return {
     jsonrpc: Two,
@@ -271,7 +333,7 @@ const getErrorProperty = (error, prettyError) => {
     }
   };
 };
-const getErrorResponse = (message, error, ipc, preparePrettyError, logError) => {
+const getErrorResponse = (message, error, preparePrettyError, logError) => {
   const prettyError = preparePrettyError(error);
   logError(error, prettyError);
   const errorProperty = getErrorProperty(error, prettyError);
@@ -293,17 +355,51 @@ const getResponse = async (message, ipc, execute, preparePrettyError, logError, 
     const result = requiresSocket(message.method) ? await execute(message.method, ipc, ...message.params) : await execute(message.method, ...message.params);
     return getSuccessResponse(message, result);
   } catch (error) {
-    return getErrorResponse(message, error, ipc, preparePrettyError, logError);
+    return getErrorResponse(message, error, preparePrettyError, logError);
   }
 };
-const handleJsonRpcMessage = async (ipc, message, execute, resolve2, preparePrettyError, logError, requiresSocket) => {
+const defaultPreparePrettyError = (error) => {
+  return error;
+};
+const defaultLogError = () => {
+};
+const defaultRequiresSocket = () => {
+  return false;
+};
+const defaultResolve = resolve;
+const handleJsonRpcMessage = async (...args) => {
+  let message;
+  let ipc;
+  let execute;
+  let preparePrettyError;
+  let logError;
+  let resolve2;
+  let requiresSocket;
+  if (args.length === 1) {
+    const arg = args[0];
+    message = arg.message;
+    ipc = arg.ipc;
+    execute = arg.execute;
+    preparePrettyError = arg.preparePrettyError || defaultPreparePrettyError;
+    logError = arg.logError || defaultLogError;
+    requiresSocket = arg.requiresSocket || defaultRequiresSocket;
+    resolve2 = arg.resolve || defaultResolve;
+  } else {
+    ipc = args[0];
+    message = args[1];
+    execute = args[2];
+    resolve2 = args[3];
+    preparePrettyError = args[4];
+    logError = args[5];
+    requiresSocket = args[6];
+  }
   if ("id" in message) {
     if ("method" in message) {
       const response = await getResponse(message, ipc, execute, preparePrettyError, logError, requiresSocket);
       try {
         ipc.send(response);
       } catch (error) {
-        const errorResponse = getErrorResponse(message, error, ipc, preparePrettyError, logError);
+        const errorResponse = getErrorResponse(message, error, preparePrettyError, logError);
         ipc.send(errorResponse);
       }
       return;
@@ -332,11 +428,17 @@ const invoke = async (ipc, method, ...params) => {
   return result;
 };
 const invokeAndTransfer = async (ipc, handle, method, ...params) => {
+  let transfer = handle;
+  if (typeof handle === "string") {
+    params = [method, ...params];
+    method = handle;
+    transfer = getTransferrableParams(params);
+  }
   const {
     message,
     promise
   } = create$2(method, params);
-  ipc.sendAndTransfer(message, handle);
+  ipc.sendAndTransfer(message, transfer);
   const responseMessage = await promise;
   const result = unwrapJsonRpcResult(responseMessage);
   return result;

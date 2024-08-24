@@ -1,5 +1,4 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as Callback from '../src/parts/Callback/Callback.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 beforeEach(() => {
@@ -17,10 +16,6 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostStatusBarItems
 const ExtensionHostStatusBarItems = await import('../src/parts/ExtensionHost/ExtensionHostStatusBarItems.js')
 
 const ViewletStatusBar = await import('../src/parts/ViewletStatusBar/ViewletStatusBar.js')
-
-beforeEach(() => {
-  Callback.state.id = 0
-})
 
 test('create', () => {
   const state = ViewletStatusBar.create()

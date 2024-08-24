@@ -1,14 +1,14 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Callback from '../Callback/Callback.js'
+import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as Transferrable from '../Transferrable/Transferrable.js'
 
 export const create = async (canvasId) => {
   Assert.number(canvasId)
-  const { id, promise } = Callback.registerPromise()
+  const id = Id.create()
   await RendererProcess.invoke('OffscreenCanvas.create', canvasId, id)
-  const response = await promise
-  const canvas = response.params[0]
+  const canvas = Transferrable.acquire(id)
   return canvas
 }
 

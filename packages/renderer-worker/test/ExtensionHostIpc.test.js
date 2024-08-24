@@ -1,9 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRpc.js'
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
-import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
-import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -37,10 +34,10 @@ test.skip('handleMessage - error - method not found', async () => {
       },
       send(message) {
         _onmessage({
-          jsonrpc: JsonRpcVersion.Two,
+          jsonrpc: '2.0',
           id: message.id,
           error: {
-            code: JsonRpcErrorCode.MethodNotFound,
+            code: -32001,
             message: `method not found: ${message.method}`,
             data: `Error: method not found: ${message.method}
   at getFn (/test/Command.js:19:13)
@@ -54,6 +51,6 @@ test.skip('handleMessage - error - method not found', async () => {
   const ipc = await ExtensionHostIpc.listen(IpcParentType.ModuleWorker)
   const rpc = ExtensionHostRpc.listen(ipc)
   await expect(rpc.invoke('ExtensionHostTypeDefinition.executeTypeDefinitionProvider')).rejects.toThrow(
-    new JsonRpcError('method not found: ExtensionHostTypeDefinition.executeTypeDefinitionProvider'),
+    new Error('method not found: ExtensionHostTypeDefinition.executeTypeDefinitionProvider'),
   )
 })
