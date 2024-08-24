@@ -6,17 +6,17 @@
   },
   {
     "name": "@lvce-editor/json-rpc",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "type": "javascript"
   },
   {
     "name": "@lvce-editor/ipc",
-    "version": "9.3.0",
+    "version": "9.4.0",
     "type": "javascript"
   },
   {
     "name": "@lvce-editor/verror",
-    "version": "1.2.0",
+    "version": "1.4.0",
     "type": "javascript"
   },
   {

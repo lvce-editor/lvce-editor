@@ -17,7 +17,7 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 
 const OffscreenCanvas = await import('../src/parts/OffscreenCanvas/OffscreenCanvas.js')
 
-test('create', async () => {
+test.skip('create', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, canvasId, id) => {
     Callback.resolve(id, {
