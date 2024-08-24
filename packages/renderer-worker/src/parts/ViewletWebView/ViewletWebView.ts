@@ -50,7 +50,7 @@ export const loadContent = async (state) => {
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  ExtensionHostWorker.invokeAndTransfer([port2], 'ExtensionHostWebView.create', webViewId, port2)
+  ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2)
   let origin = ''
   if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron

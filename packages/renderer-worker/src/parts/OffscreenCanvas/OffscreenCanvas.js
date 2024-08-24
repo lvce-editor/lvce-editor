@@ -14,5 +14,5 @@ export const create = async (canvasId) => {
 
 export const createForTerminal = async (canvasId, callbackId) => {
   const canvas = await create(canvasId)
-  await TerminalWorker.invokeAndTransfer([canvas], 'OffscreenCanvas.handleResult', callbackId, canvas)
+  await TerminalWorker.invokeAndTransfer('OffscreenCanvas.handleResult', callbackId, canvas)
 }
