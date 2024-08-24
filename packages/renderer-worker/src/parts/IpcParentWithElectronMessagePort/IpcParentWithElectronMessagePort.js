@@ -8,7 +8,7 @@ import * as WebContentsId from '../WebContentsId/WebContentsId.js'
 const getPort = async (ipcId) => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
   // TODO call sendMessagePortToElectron function
-  const webContentsId = await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
+  const webContentsId = await RendererProcess.invokeAndTransfer('IpcParent.create', {
     method: RendererProcessIpcParentType.Electron,
     port: port1,
     ipcId,
