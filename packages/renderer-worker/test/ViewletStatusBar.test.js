@@ -18,10 +18,6 @@ const ExtensionHostStatusBarItems = await import('../src/parts/ExtensionHost/Ext
 
 const ViewletStatusBar = await import('../src/parts/ViewletStatusBar/ViewletStatusBar.js')
 
-beforeEach(() => {
-  Callback.state.id = 0
-})
-
 test('create', () => {
   const state = ViewletStatusBar.create()
   expect(state).toBeDefined()
