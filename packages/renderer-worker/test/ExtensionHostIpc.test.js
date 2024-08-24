@@ -3,7 +3,6 @@ import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRp
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
 import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -37,7 +36,7 @@ test.skip('handleMessage - error - method not found', async () => {
       },
       send(message) {
         _onmessage({
-          jsonrpc: JsonRpcVersion.Two,
+          jsonrpc: '2.0',
           id: message.id,
           error: {
             code: JsonRpcErrorCode.MethodNotFound,
