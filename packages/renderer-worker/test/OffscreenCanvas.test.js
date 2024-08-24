@@ -14,7 +14,6 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
-
 const OffscreenCanvas = await import('../src/parts/OffscreenCanvas/OffscreenCanvas.js')
 
 test.skip('create', async () => {
