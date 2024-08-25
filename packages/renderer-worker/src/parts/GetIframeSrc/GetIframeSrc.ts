@@ -13,16 +13,28 @@ const getWebViewPath = (webViews, webViewId) => {
   return ''
 }
 
+const getWebViewUri = (webViews, webViewId) => {
+  const webViewPath = getWebViewPath(webViews, webViewId)
+  if (!webViewPath) {
+    return ''
+  }
+  if (webViewPath.startsWith('/')) {
+    // TODO make it work on windows also
+    return `file://${webViewPath}`
+  }
+  return webViewPath
+}
+
 export const getIframeSrc = (webViews, webViewId, webViewPort, root) => {
   try {
-    const webViewPath = getWebViewPath(webViews, webViewId)
-    if (!webViewPath) {
+    const webViewUri = getWebViewUri(webViews, webViewId)
+    if (!webViewUri) {
       return undefined
     }
-    let iframeSrc = webViewPath
-    let webViewRoot = webViewPath
+    let iframeSrc = webViewUri
+    let webViewRoot = webViewUri
     if (Platform.platform === PlatformType.Remote) {
-      const relativePath = new URL(webViewPath).pathname.replace('/index.html', '')
+      const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
       webViewRoot = root + relativePath
       if (IsGitpod.isGitpod) {
         iframeSrc = CreateUrl.createUrl(location.protocol, location.host.replace('3000', webViewPort))
