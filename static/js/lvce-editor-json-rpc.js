@@ -244,68 +244,6 @@ const unwrapJsonRpcResult = (responseMessage) => {
   }
   throw new JsonRpcError("unexpected response message");
 };
-const isMessagePort = (value) => {
-  return typeof MessagePort !== "undefined" && value instanceof MessagePort;
-};
-const isInstanceOf = (value, constructorName) => {
-  var _a;
-  return ((_a = value == null ? void 0 : value.constructor) == null ? void 0 : _a.name) === constructorName;
-};
-const isMessagePortMain = (value) => {
-  return isInstanceOf(value, "MessagePortMain");
-};
-const isOffscreenCanvas = (value) => {
-  return typeof OffscreenCanvas !== "undefined" && value instanceof OffscreenCanvas;
-};
-const isSocket = (value) => {
-  return isInstanceOf(value, "Socket");
-};
-const transferrables = [isMessagePort, isMessagePortMain, isOffscreenCanvas, isSocket];
-const isTransferrable = (value) => {
-  for (const fn of transferrables) {
-    if (fn(value)) {
-      return true;
-    }
-  }
-  return false;
-};
-const walkValue = (value, transferrables2) => {
-  if (!value) {
-    return;
-  }
-  if (isTransferrable(value)) {
-    transferrables2.push(value);
-  }
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      walkValue(item, transferrables2);
-    }
-    return;
-  }
-  if (typeof value === "object") {
-    for (const property of Object.values(value)) {
-      walkValue(property, transferrables2);
-    }
-  }
-};
-const getTransferrables = (value) => {
-  const transferrables2 = [];
-  walkValue(value, transferrables2);
-  return transferrables2;
-};
-const isSingleTransferrable = (value) => {
-  return isSocket(value);
-};
-const getTransferrableParams = (value) => {
-  const transferrables2 = getTransferrables(value);
-  if (transferrables2.length === 0) {
-    return void 0;
-  }
-  if (isSingleTransferrable(transferrables2[0])) {
-    return transferrables2[0];
-  }
-  return transferrables2;
-};
 const create$1 = (message, error) => {
   return {
     jsonrpc: Two,
@@ -428,17 +366,15 @@ const invoke = async (ipc, method, ...params) => {
   return result;
 };
 const invokeAndTransfer = async (ipc, handle, method, ...params) => {
-  let transfer = handle;
   if (typeof handle === "string") {
     params = [method, ...params];
     method = handle;
-    transfer = getTransferrableParams(params);
   }
   const {
     message,
     promise
   } = create$2(method, params);
-  ipc.sendAndTransfer(message, transfer);
+  ipc.sendAndTransfer(message);
   const responseMessage = await promise;
   const result = unwrapJsonRpcResult(responseMessage);
   return result;

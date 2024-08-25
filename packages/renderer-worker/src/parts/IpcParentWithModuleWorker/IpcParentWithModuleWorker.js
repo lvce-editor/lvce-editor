@@ -55,7 +55,8 @@ export const wrap = (worker) => {
     send(message) {
       this.worker.postMessage(message)
     },
-    sendAndTransfer(message, transfer) {
+    sendAndTransfer(message) {
+      const transfer = GetFirstWorkerEvent.getFirstWorkerEvent(message)
       this.worker.postMessage(message, transfer)
     },
   }

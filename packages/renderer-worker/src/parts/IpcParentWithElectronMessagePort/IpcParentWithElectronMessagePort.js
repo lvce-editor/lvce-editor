@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as FixElectronParameters from '../FixElectronParameters/FixElectronParameters.ts'
 import * as GetData from '../GetData/GetData.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -53,8 +54,9 @@ export const wrap = (port) => {
     send(message) {
       this.port.postMessage(message)
     },
-    sendAndTransfer(message, transfer) {
-      this.port.postMessage(message, transfer)
+    sendAndTransfer(message) {
+      const { newValue, transfer } = FixElectronParameters.fixElectronParameters(message)
+      this.port.postMessage(newValue, transfer)
     },
   }
 }
