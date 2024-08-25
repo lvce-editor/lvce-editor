@@ -15,6 +15,8 @@ const logError = (error, prettyError) => {
 }
 
 export const handleMessage = (event) => {
+  console.log('data', event.data)
+  // console.log('ports', event.ports)
   return JsonRpc.handleJsonRpcMessage(
     event.target,
     event.data,
