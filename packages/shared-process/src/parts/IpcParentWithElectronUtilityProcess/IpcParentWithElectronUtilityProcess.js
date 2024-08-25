@@ -1,3 +1,4 @@
+import * as FixElectronParameters from '../FixElectronParameters/FixElectronParameters.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.js'
@@ -30,8 +31,9 @@ export const wrap = (port) => {
     send(message) {
       this.port.postMessage(message)
     },
-    async sendAndTransfer(message, transfer) {
-      this.port.postMessage(message, transfer)
+    async sendAndTransfer(message) {
+      const { newValue, transfer } = FixElectronParameters.fixElectronParameters(message)
+      this.port.postMessage(newValue, transfer)
     },
     on(event, listener) {
       switch (event) {
