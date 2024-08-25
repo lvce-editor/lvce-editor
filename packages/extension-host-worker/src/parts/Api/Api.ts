@@ -90,7 +90,7 @@ export const api = {
 
   // File System
   registerFileSystemProvider: ExtensionHostFileSystem.registerFileSystemProvider,
-  readFile: ExtensionHostFileSystem.readFile,
+  readFile: ExtensionHostFileSystem.readFileExternal,
 
   // Formatting
   registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,

@@ -1,4 +1,5 @@
 import { VError } from '../VError/VError.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 export const state = {
   fileSystemProviderMap: Object.create(null),
@@ -36,6 +37,11 @@ export const readFile = async (protocol, path) => {
   } catch (error) {
     throw new VError(error, 'Failed to execute file system provider')
   }
+}
+
+export const readFileExternal = async (path) => {
+  const content = await Rpc.invoke('FileSystem.readFile', path)
+  return content
 }
 
 export const remove = async (protocol, path) => {
