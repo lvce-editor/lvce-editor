@@ -24,6 +24,17 @@ export const signal = (port) => {
   port.start()
 }
 
+const getActualData = (event) => {
+  const { data, ports } = event
+  if (ports.length > 0) {
+    return {
+      ...data,
+      params: [...ports, ...data.params],
+    }
+  }
+  return data
+}
+
 export const wrap = (port) => {
   return {
     port,
@@ -43,8 +54,9 @@ export const wrap = (port) => {
         case 'message':
           // @ts-ignore
           this.wrappedListener = (event) => {
+            console.log('ev', event)
             const syntheticEvent = {
-              data: event.data,
+              data: getActualData(event),
               target: this,
             }
             listener(syntheticEvent)
