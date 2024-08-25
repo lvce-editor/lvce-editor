@@ -39,7 +39,6 @@ export const loadContent = async (state) => {
   const { uri } = state
   const webViews = await GetWebViews.getWebViews()
   const webViewId = getWebViewId(uri)
-  console.log({ webViewId })
   // TODO make port configurable
   const webViewPort = 3002
   let root = ''
@@ -47,7 +46,6 @@ export const loadContent = async (state) => {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
-  console.log({ webViews })
   if (!iframeResult) {
     return state
   }
