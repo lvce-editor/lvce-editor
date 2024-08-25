@@ -4,7 +4,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 const objects = Object.create(null)
 
 export const transferToRendererProcess = async (objectId, transferable) => {
-  await RendererProcess.invokeAndTransfer('Transferrable.transfer', [transferable], objectId, transferable)
+  await RendererProcess.invokeAndTransfer('Transferrable.transfer', transferable, objectId)
 }
 
 export const transfer = (objectId, transferable) => {
