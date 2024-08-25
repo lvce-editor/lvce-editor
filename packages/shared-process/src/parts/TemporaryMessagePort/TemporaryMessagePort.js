@@ -23,7 +23,7 @@ export const getPortTuple = async () => {
 export const sendTo = async (name, port, ipcId) => {
   Assert.string(name)
   Assert.object(port)
-  await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo', [port], name, ipcId)
+  await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo', port, name, ipcId)
 }
 
 export const handlePorts = (port1, port2, id1, id2) => {
