@@ -18,7 +18,6 @@ const getIpcAndResponse = (module, handle, message) => {
 
 export const handleIncomingIpc = async (ipcId, handle, message) => {
   Assert.number(ipcId)
-  console.log({ ipcId, handle, message })
   const module = HandleIpcModule.getModule(ipcId)
   const { target, response } = await getIpcAndResponse(module, handle, message)
   await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
