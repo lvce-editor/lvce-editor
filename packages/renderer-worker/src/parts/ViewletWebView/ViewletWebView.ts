@@ -5,7 +5,6 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
-import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -23,30 +22,19 @@ export const create = (id, uri) => {
   }
 }
 
-const getWebViewId = (uri) => {
-  if (uri.startsWith('webview://')) {
-    const webViewId = uri.slice('webview://'.length)
-    return webViewId
-  }
-  if (uri.endsWith('.heapsnapshot')) {
-    return 'builtin.heap-snapshot-viewer'
-  }
-  return ''
-}
-
 export const loadContent = async (state) => {
   const { uri } = state
+  const webViewId = uri.slice('webview://'.length)
+  console.time('webviews')
   const webViews = await GetWebViews.getWebViews()
-  const webViewId = getWebViewId(uri)
-  console.log({ webViewId })
+  console.timeEnd('webviews')
   // TODO make port configurable
   const webViewPort = 3002
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
-  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod)
-  console.log({ webViews })
+  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root)
   if (!iframeResult) {
     return state
   }
