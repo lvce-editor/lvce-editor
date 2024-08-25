@@ -45,9 +45,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     if (isGitpod) {
       iframeSrc = iframeSrc
     }
-    const frameAncestors = CreateUrl.createUrl(locationProtocol, locationHost)
     return {
-      frameAncestors,
       iframeSrc,
       webViewRoot,
     }

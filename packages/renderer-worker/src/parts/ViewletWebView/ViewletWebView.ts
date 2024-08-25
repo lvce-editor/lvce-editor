@@ -11,6 +11,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
+import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
 
 export const create = (id, uri) => {
   return {
@@ -51,7 +52,8 @@ export const loadContent = async (state) => {
     return state
   }
 
-  const { frameAncestors, iframeSrc, webViewRoot } = iframeResult
+  const { iframeSrc, webViewRoot } = iframeResult
+  const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(location.protocol, location.host)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
