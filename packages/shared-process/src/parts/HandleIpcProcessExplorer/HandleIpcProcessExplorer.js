@@ -10,7 +10,6 @@ export const upgradeMessagePort = (port) => {
   return {
     type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
-    params: [],
-    transfer: [port],
+    params: [port],
   }
 }
