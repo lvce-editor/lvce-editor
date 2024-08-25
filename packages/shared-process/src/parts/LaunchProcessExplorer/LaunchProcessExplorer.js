@@ -6,6 +6,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ProcessExplorerPath from '../ProcessExplorerPath/ProcessExplorerPath.js'
 
 export const launchProcessExplorer = async () => {
+  console.log('will start process explorer')
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronUtilityProcess,
     path: ProcessExplorerPath.processExplorerPath,
@@ -16,5 +17,6 @@ export const launchProcessExplorer = async () => {
   HandleIpc.handleIpc(ipc)
   await ConnectIpcToElectron.connectIpcToElectron(ipc, IpcId.ProcessExplorerRenderer)
   HandleIpc.unhandleIpc(ipc)
+  console.log('did start process explorer')
   return ipc
 }
