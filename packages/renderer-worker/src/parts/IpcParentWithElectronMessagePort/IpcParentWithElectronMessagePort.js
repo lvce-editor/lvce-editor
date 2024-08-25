@@ -4,6 +4,7 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 import * as WebContentsId from '../WebContentsId/WebContentsId.js'
+import * as GetTransferrables from '../GetTransferrables/GetTransferrables.js'
 
 const getPort = async (ipcId) => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
@@ -53,7 +54,8 @@ export const wrap = (port) => {
     send(message) {
       this.port.postMessage(message)
     },
-    sendAndTransfer(message, transfer) {
+    sendAndTransfer(message) {
+      const transfer = GetTransferrables.getTransferrables(message)
       this.port.postMessage(message, transfer)
     },
   }
