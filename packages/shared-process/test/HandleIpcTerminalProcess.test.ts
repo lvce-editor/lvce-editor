@@ -6,8 +6,7 @@ test('upgradeMessagePort', () => {
   expect(HandleIpcTerminalProcess.upgradeMessagePort(port)).toEqual({
     type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
-    params: [],
-    transfer: [port],
+    params: [port],
   })
 })
 
