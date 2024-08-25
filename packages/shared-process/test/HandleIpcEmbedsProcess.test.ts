@@ -9,7 +9,6 @@ test('upgradeMessagePort', () => {
   expect(HandleIpcEmbedsProcess.upgradeMessagePort(port, message)).toEqual({
     type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
-    params: [1],
-    transfer: [port],
+    params: [port, 1],
   })
 })
