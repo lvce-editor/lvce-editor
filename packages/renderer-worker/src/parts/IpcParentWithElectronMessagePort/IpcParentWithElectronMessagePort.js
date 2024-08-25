@@ -1,10 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as FixElectronParameters from '../FixElectronParameters/FixElectronParameters.ts'
 import * as GetData from '../GetData/GetData.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 import * as WebContentsId from '../WebContentsId/WebContentsId.js'
-import * as GetTransferrables from '../GetTransferrables/GetTransferrables.ts'
 
 const getPort = async (ipcId) => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
@@ -55,8 +55,8 @@ export const wrap = (port) => {
       this.port.postMessage(message)
     },
     sendAndTransfer(message) {
-      const transfer = GetTransferrables.getTransferrables(message)
-      this.port.postMessage(message, transfer)
+      const { newValue, transfer } = FixElectronParameters.fixElectronParameters(message)
+      this.port.postMessage(newValue, transfer)
     },
   }
 }
