@@ -3,6 +3,7 @@ import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent
 import { IpcError } from '../IpcError/IpcError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
+import * as GetTransferrables from '../GetTransferrables/GetTransferrables.js'
 
 export const create = async ({ url, name }) => {
   const worker = new Worker(url, {
@@ -55,7 +56,8 @@ export const wrap = (worker) => {
     send(message) {
       this.worker.postMessage(message)
     },
-    sendAndTransfer(message, transfer) {
+    sendAndTransfer(message) {
+      const transfer = GetFirstWorkerEvent.getFirstWorkerEvent(message)
       this.worker.postMessage(message, transfer)
     },
   }
