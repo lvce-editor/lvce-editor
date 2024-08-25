@@ -20,4 +20,6 @@ export const getOrigin = () => {
   return location.origin
 }
 
-export const host = location.host
+export const getHost = () => {
+  return location.host
+}
