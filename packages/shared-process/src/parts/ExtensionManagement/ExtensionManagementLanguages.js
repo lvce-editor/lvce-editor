@@ -43,8 +43,12 @@ export const getLanguages = async () => {
 }
 
 const getWebViewsFromExtensions = (extensions) => {
+  // console.log({ extensions })
   const webViews = []
   for (const extension of extensions) {
+    if (extension.id === 'builtin.heap-snapshot-viewer') {
+      console.log({ extension })
+    }
     if (extension && extension.webViews) {
       for (const webView of extension.webViews) {
         webViews.push({
