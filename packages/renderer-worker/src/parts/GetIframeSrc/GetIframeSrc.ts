@@ -38,7 +38,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
       console.log({ relativePath })
       if (webViewUri.startsWith('file://')) {
         // ignore
-        webViewRoot = webViewUri.slice('file://'.length)
+        webViewRoot = webViewUri.slice('file://'.length).replace('/index.html', '')
       } else {
         webViewRoot = root + relativePath
       }
