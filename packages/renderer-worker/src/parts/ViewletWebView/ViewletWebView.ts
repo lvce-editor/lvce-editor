@@ -22,12 +22,22 @@ export const create = (id, uri) => {
   }
 }
 
+const getWebViewId = (uri) => {
+  if (uri.startsWith('webview://')) {
+    const webViewId = uri.slice('webview://'.length)
+    return webViewId
+  }
+  if (uri.endsWith('.heapsnapshot')) {
+    return 'builtin.heap-snapshot-viewer'
+  }
+  return ''
+}
+
 export const loadContent = async (state) => {
   const { uri } = state
-  const webViewId = uri.slice('webview://'.length)
-  console.time('webviews')
   const webViews = await GetWebViews.getWebViews()
-  console.timeEnd('webviews')
+  const webViewId = getWebViewId(uri)
+  console.log({ webViewId })
   // TODO make port configurable
   const webViewPort = 3002
   let root = ''
@@ -35,6 +45,7 @@ export const loadContent = async (state) => {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root)
+  console.log({ webViews })
   if (!iframeResult) {
     return state
   }

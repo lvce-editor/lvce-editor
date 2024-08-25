@@ -57,5 +57,10 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('webview://')) {
     return ViewletModuleId.WebView
   }
+  if (uri.endsWith('.heapsnapshot')) {
+    // TODO allow dynamic registration of extensions
+    // for custom editors / viewers
+    return ViewletModuleId.WebView
+  }
   return ViewletModuleId.EditorText
 }
