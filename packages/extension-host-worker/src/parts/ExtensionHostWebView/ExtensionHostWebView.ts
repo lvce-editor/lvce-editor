@@ -2,7 +2,7 @@ const webViews = Object.create(null)
 const webViewProviders = Object.create(null)
 
 // TODO pass uuid to allow having multiple webviews open at the same time
-export const createWebView = async (providerId, port) => {
+export const createWebView = async (providerId, port, uri) => {
   const provider = webViewProviders[providerId]
   if (!provider) {
     console.log({ webViewProviders })
@@ -30,7 +30,7 @@ export const createWebView = async (providerId, port) => {
     },
   }
   webViews[providerId] = rpc
-  provider.create(rpc)
+  provider.create(rpc, uri)
 }
 
 export const disposeWebView = (id) => {
