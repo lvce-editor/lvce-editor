@@ -12,7 +12,7 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     from: 'static/js',
     to: Path.join(cachePath, 'static', 'js'),
   })
-  for (const file of ['JsonRpc', 'IpcChildModule']) {
+  for (const file of ['IpcChildModule']) {
     await Replace.replace({
       path: `${cachePath}/src/parts/${file}/${file}.ts`,
       occurrence: `/static/`,
