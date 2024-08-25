@@ -45,7 +45,7 @@ export const sendIncomingIpc = async (target, response, ipcId) => {
     HandleIpc.handleIpc(target)
   }
   addState(ipcId)
-  await JsonRpc.invokeAndTransfer(target, response.method, response.transfer, ...response.params)
+  await JsonRpc.invokeAndTransfer(target, response.method, ...response.params)
   removeState(ipcId)
   if (!hasState(ipcId) && supportsPartialIpcHandling(ipcId)) {
     HandleIpc.unhandleIpc(target)
