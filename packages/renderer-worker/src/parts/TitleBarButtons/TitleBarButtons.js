@@ -12,6 +12,9 @@ const getTitleBarButtonsRemote = () => {
 }
 
 const getTitleBarButtonsElectron = () => {
+  if (Preferences.get('window.controlsOverlay.enabled')) {
+    return []
+  }
   if (Preferences.get('window.titleBarStyle') === 'custom') {
     // TODO don't render title bar buttons on windows when electron window controls overlay is enabled
     return [
