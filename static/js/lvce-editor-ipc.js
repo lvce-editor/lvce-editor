@@ -1,6 +1,57 @@
 const getData$1 = (event) => {
   return event.data;
 };
+const walkValue = (value, transferrables2, isTransferrable2) => {
+  if (!value) {
+    return;
+  }
+  if (isTransferrable2(value)) {
+    transferrables2.push(value);
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      walkValue(item, transferrables2, isTransferrable2);
+    }
+    return;
+  }
+  if (typeof value === "object") {
+    for (const property of Object.values(value)) {
+      walkValue(property, transferrables2, isTransferrable2);
+    }
+    return;
+  }
+};
+const isMessagePort = (value) => {
+  return value && value instanceof MessagePort;
+};
+const isMessagePortMain = (value) => {
+  return value && value.constructor && value.constructor.name === "MessagePortMain";
+};
+const isOffscreenCanvas = (value) => {
+  return typeof OffscreenCanvas !== "undefined" && value instanceof OffscreenCanvas;
+};
+const isInstanceOf = (value, constructorName) => {
+  var _a;
+  return ((_a = value == null ? void 0 : value.constructor) == null ? void 0 : _a.name) === constructorName;
+};
+const isSocket = (value) => {
+  return isInstanceOf(value, "Socket");
+};
+const transferrables = [isMessagePort, isMessagePortMain, isOffscreenCanvas, isSocket];
+const isTransferrable = (value) => {
+  for (const fn of transferrables) {
+    if (fn(value)) {
+      return true;
+    }
+  }
+  return false;
+};
+const getTransferrables = (value) => {
+  const transferrables2 = [];
+  walkValue(value, transferrables2, isTransferrable);
+  return transferrables2;
+};
 const attachEvents = (that) => {
   const handleMessage = (...args) => {
     const data = that.getData(...args);
@@ -38,7 +89,8 @@ class IpcChildWithModuleWorker extends Ipc {
   send(message) {
     this._rawIpc.postMessage(message);
   }
-  sendAndTransfer(message, transfer) {
+  sendAndTransfer(message) {
+    const transfer = getTransferrables(message);
     this._rawIpc.postMessage(message, transfer);
   }
   dispose() {
@@ -291,7 +343,8 @@ class IpcChildWithModuleWorkerAndMessagePort extends Ipc {
   send(message) {
     this._rawIpc.postMessage(message);
   }
-  sendAndTransfer(message, transfer) {
+  sendAndTransfer(message) {
+    const transfer = getTransferrables(message);
     this._rawIpc.postMessage(message, transfer);
   }
   dispose() {
@@ -327,7 +380,8 @@ class IpcChildWithWindow extends Ipc {
   send(message) {
     this._rawIpc.postMessage(message);
   }
-  sendAndTransfer(message, transfer) {
+  sendAndTransfer(message) {
+    const transfer = getTransferrables(message);
     this._rawIpc.postMessage(message, location.origin, transfer);
   }
   dispose() {
@@ -357,24 +411,15 @@ const IpcChildWithWindow$1 = {
   signal: signal$2,
   wrap: wrap$4
 };
-const isTransferrable = (value) => {
-  return value instanceof MessagePort;
-};
-const UntransferrableValue = {};
-const walkValue = (value, transferrables) => {
+const removeValues = (value, toRemove) => {
   if (!value) {
     return value;
-  }
-  if (isTransferrable(value)) {
-    transferrables.push(value);
-    return UntransferrableValue;
   }
   if (Array.isArray(value)) {
     const newItems = [];
     for (const item of value) {
-      const newItem = walkValue(item, transferrables);
-      if (newItem !== UntransferrableValue) {
-        newItems.push(newItem);
+      if (!toRemove.includes(item)) {
+        newItems.push(removeValues(item, toRemove));
       }
     }
     return newItems;
@@ -382,9 +427,8 @@ const walkValue = (value, transferrables) => {
   if (typeof value === "object") {
     const newObject = Object.create(null);
     for (const [key, property] of Object.entries(value)) {
-      const newValue = walkValue(property, transferrables);
-      if (newValue !== UntransferrableValue) {
-        newObject[key] = newValue;
+      if (!toRemove.includes(property)) {
+        newObject[key] = removeValues(property, toRemove);
       }
     }
     return newObject;
@@ -392,8 +436,8 @@ const walkValue = (value, transferrables) => {
   return value;
 };
 const fixElectronParameters = (value) => {
-  const transfer = [];
-  const newValue = walkValue(value, transfer);
+  const transfer = getTransferrables(value);
+  const newValue = removeValues(value, transfer);
   return {
     newValue,
     transfer
@@ -412,7 +456,7 @@ class IpcChildWithElectronWindow extends Ipc {
   send(message) {
     this._rawIpc.postMessage(message);
   }
-  sendAndTransfer(message, _transfer) {
+  sendAndTransfer(message) {
     const {
       newValue,
       transfer
@@ -464,7 +508,8 @@ class IpcChildWithMessagePort extends Ipc {
   send(message) {
     this._rawIpc.postMessage(message);
   }
-  sendAndTransfer(message, transfer) {
+  sendAndTransfer(message) {
+    const transfer = getTransferrables(message);
     this._rawIpc.postMessage(message, transfer);
   }
   dispose() {
@@ -603,7 +648,8 @@ class IpcParentWithModuleWorker extends Ipc {
   send(message) {
     this._rawIpc.postMessage(message);
   }
-  sendAndTransfer(message, transfer) {
+  sendAndTransfer(message) {
+    const transfer = getTransferrables(message);
     this._rawIpc.postMessage(message, transfer);
   }
   dispose() {
@@ -659,7 +705,7 @@ class IpcParentWithWebSocket extends Ipc {
   send(message) {
     this._rawIpc.send(stringifyCompact(message));
   }
-  sendAndTransfer(message, transfer) {
+  sendAndTransfer(message) {
     throw new Error("sendAndTransfer not supported");
   }
   dispose() {
