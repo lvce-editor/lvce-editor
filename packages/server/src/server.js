@@ -509,7 +509,7 @@ const sendHandle = (request, socket, method, ...params) => {
           {
             jsonrpc: '2.0',
             method,
-            params: [socket, getHandleMessage(request), ...params],
+            params: [getHandleMessage(request), ...params],
           },
           socket,
           {
@@ -530,7 +530,7 @@ const sendHandle = (request, socket, method, ...params) => {
         {
           jsonrpc: '2.0',
           method,
-          params: [socket, getHandleMessage(request), ...params],
+          params: [getHandleMessage(request), ...params],
         },
         socket,
         {
