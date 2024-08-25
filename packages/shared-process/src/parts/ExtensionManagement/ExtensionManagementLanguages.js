@@ -51,9 +51,12 @@ const getWebViewsFromExtensions = (extensions) => {
     }
     if (extension && extension.webViews) {
       for (const webView of extension.webViews) {
+        const path = join(extension.path, webView.path)
+        const remotePath = GetRemoteUrl.getRemoteUrl(path)
         webViews.push({
           id: webView.id,
-          path: join(extension.path, webView.path),
+          path,
+          remotePath,
         })
       }
     }
