@@ -3,6 +3,7 @@ import * as HandleMessage from '../HandleMessage/HandleMessage.js'
 const handled = new WeakSet()
 
 export const handleIpc = (ipc) => {
+  console.log({ ipc })
   if (handled.has(ipc)) {
     return
   }
