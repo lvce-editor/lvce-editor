@@ -24,7 +24,7 @@ const getWebViewUri = (webViews, webViewId) => {
   return webViewPath
 }
 
-export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod) => {
+export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
     const webViewUri = getWebViewUri(webViews, webViewId)
     if (!webViewUri) {
@@ -37,7 +37,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod) =
       console.log({ relativePath })
       webViewRoot = root + relativePath
       if (isGitpod) {
-        iframeSrc = CreateUrl.createUrl(location.protocol, location.host.replace('3000', webViewPort))
+        iframeSrc = CreateUrl.createUrl(locationProtocol, locationHost.replace('3000', webViewPort))
       } else {
         iframeSrc = `http://localhost:${webViewPort}`
       }
@@ -45,7 +45,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod) =
     if (isGitpod) {
       iframeSrc = iframeSrc
     }
-    const frameAncestors = CreateUrl.createUrl(location.protocol, location.host)
+    const frameAncestors = CreateUrl.createUrl(locationProtocol, locationHost)
     return {
       frameAncestors,
       iframeSrc,

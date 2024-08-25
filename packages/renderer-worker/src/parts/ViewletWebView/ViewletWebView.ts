@@ -45,7 +45,7 @@ export const loadContent = async (state) => {
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
-  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod)
+  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
   console.log({ webViews })
   if (!iframeResult) {
     return state
