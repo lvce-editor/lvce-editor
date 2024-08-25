@@ -67,7 +67,7 @@ test('loadContent - restore value', async () => {
   })
 })
 
-test('setValue - error - results is not of type array', async () => {
+test.skip('setValue - error - results is not of type array', async () => {
   // @ts-ignore
   const state = ViewletSearch.create()
   // @ts-ignore

@@ -9,7 +9,7 @@ import * as Location from '../Location/Location.js'
 
 export const create = async ({ type }) => {
   Assert.string(type)
-  const host = Location.host
+  const host = Location.getHost()
   const wsUrl = GetWebSocketUrl.getWebSocketUrl(type, host)
   const webSocket = ReconnectingWebSocket.create(wsUrl)
   const firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
