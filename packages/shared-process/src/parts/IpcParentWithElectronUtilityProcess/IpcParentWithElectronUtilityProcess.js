@@ -54,7 +54,6 @@ export const wrap = (port) => {
         case 'message':
           // @ts-ignore
           this.wrappedListener = (event) => {
-            console.log('ev', event)
             const syntheticEvent = {
               data: getActualData(event),
               target: this,
