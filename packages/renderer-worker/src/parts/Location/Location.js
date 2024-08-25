@@ -19,3 +19,7 @@ export const hydrate = () => {
 export const getOrigin = () => {
   return location.origin
 }
+
+export const getHost = () => {
+  return location.host
+}
