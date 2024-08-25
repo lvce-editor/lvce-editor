@@ -4,12 +4,16 @@ import * as HandleIncomingIpcMessagePort from '../HandleIncomingIpcMessagePort/H
 import * as HandleIncomingIpcWebSocket from '../HandleIncomingIpcWebSocket/HandleIncomingIpcWebSocket.js'
 import * as HandleIpcModule from '../HandleIpcModule/HandleIpcModule.js'
 import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
+import * as IsSocket from '../IsSocket/IsSocket.js'
 
 const getIpcAndResponse = (module, handle, message) => {
   if (IsMessagePortMain.isMessagePortMain(handle)) {
     return HandleIncomingIpcMessagePort.handleIncomingIpcMessagePort(module, handle, message)
   }
-  return HandleIncomingIpcWebSocket.handleIncomingIpcWebSocket(module, handle, message)
+  if (IsSocket.isSocket(handle)) {
+    return HandleIncomingIpcWebSocket.handleIncomingIpcWebSocket(module, handle, message)
+  }
+  throw new Error(`Unexpected ipc handle`)
 }
 
 export const handleIncomingIpc = async (ipcId, handle, message) => {

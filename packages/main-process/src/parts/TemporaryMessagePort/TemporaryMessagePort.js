@@ -22,7 +22,7 @@ export const createPortTuple = async (id1, id2) => {
   Assert.number(id1)
   Assert.number(id2)
   const { port1, port2 } = GetPortTuple.getPortTuple()
-  await SharedProcess.invokeAndTransfer([port1, port2], 'TemporaryMessagePort.handlePorts', id1, id2)
+  await SharedProcess.invokeAndTransfer('TemporaryMessagePort.handlePorts', port1, port2, id1, id2)
 }
 
 export const sendTo = async (port, name, ipcId) => {
@@ -32,7 +32,7 @@ export const sendTo = async (port, name, ipcId) => {
   const utilityProcess = UtilityProcessState.getByName(formattedName)
   const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   HandleIpc.handleIpc(utilityProcessIpc)
-  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port], 'HandleElectronMessagePort.handleElectronMessagePort', ipcId)
+  await JsonRpc.invokeAndTransfer(utilityProcessIpc, 'HandleElectronMessagePort.handleElectronMessagePort', port, ipcId)
   HandleIpc.unhandleIpc(utilityProcessIpc)
 }
 
