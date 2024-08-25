@@ -5,10 +5,12 @@ import { IpcError } from '../IpcError/IpcError.js'
 import * as Json from '../Json/Json.js'
 import * as ReconnectingWebSocket from '../ReconnectingWebSocket/ReconnectingWebSocket.js'
 import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
+import * as Location from '../Location/Location.js'
 
 export const create = async ({ type }) => {
   Assert.string(type)
-  const wsUrl = GetWebSocketUrl.getWebSocketUrl(type)
+  const host = Location.host
+  const wsUrl = GetWebSocketUrl.getWebSocketUrl(type, host)
   const webSocket = ReconnectingWebSocket.create(wsUrl)
   const firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
   if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {

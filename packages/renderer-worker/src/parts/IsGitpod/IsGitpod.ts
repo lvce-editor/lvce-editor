@@ -1,1 +1,3 @@
-export const isGitpod = location.host.endsWith('.gitpod.io')
+import * as Location from '../Location/Location.js'
+
+export const isGitpod = Location.host.endsWith('.gitpod.io')

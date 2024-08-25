@@ -5,6 +5,7 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
+import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -44,7 +45,7 @@ export const loadContent = async (state) => {
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
-  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root)
+  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod)
   console.log({ webViews })
   if (!iframeResult) {
     return state
