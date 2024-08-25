@@ -13,7 +13,6 @@ const getIpcAndResponse = (module, handle, message) => {
   if (IsSocket.isSocket(handle)) {
     return HandleIncomingIpcWebSocket.handleIncomingIpcWebSocket(module, handle, message)
   }
-  console.log({ module, handle, message })
   throw new Error(`Unexpected ipc handle`)
 }
 
