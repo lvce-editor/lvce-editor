@@ -3,7 +3,6 @@ import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent
 import { IpcError } from '../IpcError/IpcError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
-import * as GetTransferrables from '../GetTransferrables/GetTransferrables.ts'
 
 export const create = async ({ url, name }) => {
   const worker = new Worker(url, {
