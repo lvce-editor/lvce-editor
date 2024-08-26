@@ -1,7 +1,7 @@
 import * as CreateUrl from '../CreateUrl/CreateUrl.ts'
-import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import { VError } from '../VError/VError.js'
 
 const getWebViewPath = (webViews, webViewId) => {
   for (const webView of webViews) {
@@ -11,29 +11,48 @@ const getWebViewPath = (webViews, webViewId) => {
   }
   return ''
 }
-export const getIframeSrc = (webViews, webViewId, webViewPort, root) => {
+
+const getWebViewUri = (webViews, webViewId) => {
   const webViewPath = getWebViewPath(webViews, webViewId)
   if (!webViewPath) {
-    return undefined
+    return ''
   }
-  let iframeSrc = webViewPath
-  let webViewRoot = webViewPath
-  if (Platform.platform === PlatformType.Remote) {
-    const relativePath = new URL(webViewPath).pathname.replace('/index.html', '')
-    webViewRoot = root + relativePath
-    if (IsGitpod.isGitpod) {
-      iframeSrc = CreateUrl.createUrl(location.protocol, location.host.replace('3000', webViewPort))
-    } else {
-      iframeSrc = `http://localhost:${webViewPort}`
+  if (webViewPath.startsWith('/')) {
+    // TODO make it work on windows also
+    return `file://${webViewPath}`
+  }
+  return webViewPath
+}
+
+export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
+  try {
+    const webViewUri = getWebViewUri(webViews, webViewId)
+    if (!webViewUri) {
+      return undefined
     }
-  }
-  if (IsGitpod.isGitpod) {
-    iframeSrc = iframeSrc
-  }
-  const frameAncestors = CreateUrl.createUrl(location.protocol, location.host)
-  return {
-    frameAncestors,
-    iframeSrc,
-    webViewRoot,
+    console.log({ webViewUri })
+    let iframeSrc = webViewUri
+    let webViewRoot = webViewUri
+    if (Platform.platform === PlatformType.Remote) {
+      const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
+      console.log({ relativePath })
+      if (webViewUri.startsWith('file://')) {
+        // ignore
+        webViewRoot = webViewUri.slice('file://'.length).replace('/index.html', '')
+      } else {
+        webViewRoot = root + relativePath
+      }
+      if (isGitpod) {
+        iframeSrc = CreateUrl.createUrl(locationProtocol, locationHost.replace('3000', webViewPort))
+      } else {
+        iframeSrc = `http://localhost:${webViewPort}`
+      }
+    }
+    return {
+      iframeSrc,
+      webViewRoot,
+    }
+  } catch (error) {
+    throw new VError(error, `Failed to construct webview iframe src`)
   }
 }

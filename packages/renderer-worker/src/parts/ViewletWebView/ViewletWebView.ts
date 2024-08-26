@@ -2,9 +2,11 @@ import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHo
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
+import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -22,24 +24,34 @@ export const create = (id, uri) => {
   }
 }
 
+const getWebViewId = (uri) => {
+  if (uri.startsWith('webview://')) {
+    const webViewId = uri.slice('webview://'.length)
+    return webViewId
+  }
+  if (uri.endsWith('.heapsnapshot')) {
+    return 'builtin.heap-snapshot-viewer'
+  }
+  return ''
+}
+
 export const loadContent = async (state) => {
   const { uri } = state
-  const webViewId = uri.slice('webview://'.length)
-  console.time('webviews')
   const webViews = await GetWebViews.getWebViews()
-  console.timeEnd('webviews')
+  const webViewId = getWebViewId(uri)
   // TODO make port configurable
   const webViewPort = 3002
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
-  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root)
+  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
   if (!iframeResult) {
     return state
   }
 
-  const { frameAncestors, iframeSrc, webViewRoot } = iframeResult
+  const { iframeSrc, webViewRoot } = iframeResult
+  const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(location.protocol, location.host)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
@@ -50,7 +62,7 @@ export const loadContent = async (state) => {
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2)
+  ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
   let origin = ''
   if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
