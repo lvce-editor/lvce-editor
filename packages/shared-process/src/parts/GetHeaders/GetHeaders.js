@@ -1,4 +1,6 @@
 import { basename, extname } from 'path'
+import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
+import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
 import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
@@ -61,6 +63,8 @@ export const getHeaders = (absolutePath, pathName) => {
   const mime = GetMimeType.getMimeType(extension)
   const headers = {
     [HttpHeader.ContentType]: mime,
+    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+    [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
   }
   const extraHeaders = getExtraHeaders(pathName, extension)
   return {
