@@ -1,1 +1,1 @@
-export const value = 'cross-origin'
+export const value = 'same-origin'
