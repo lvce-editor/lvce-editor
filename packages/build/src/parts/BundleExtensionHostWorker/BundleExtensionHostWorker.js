@@ -14,7 +14,7 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
   })
   for (const file of ['JsonRpc']) {
     await Replace.replace({
-      path: `${cachePath}/src/parts/${file}/${file}.js`,
+      path: `${cachePath}/src/parts/${file}/${file}.ts`,
       occurrence: `../../../../../static/`,
       replacement: `../../../static/`,
     })
