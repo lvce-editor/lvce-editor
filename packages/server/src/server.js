@@ -64,6 +64,11 @@ const ContentSecurityPolicy = {
     .join(' '),
 }
 
+const CrossOriginResourcePolicy = {
+  key: 'Cross-Origin-Resource-Policy',
+  value: 'same-origin',
+}
+
 const ContentSecurityPolicyRendererWorker = {
   key: 'Content-Security-Policy',
   value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
@@ -204,6 +209,7 @@ const serveStatic = (root, skip = '') =>
       'Content-Type': contentType,
       Etag: etag,
       'Cache-Control': cachingHeader,
+      [CrossOriginResourcePolicy.key]: CrossOriginResourcePolicy.value,
     }
     if (contentType === 'text/html') {
       headers[ContentSecurityPolicy.key] = ContentSecurityPolicy.value
