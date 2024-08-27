@@ -9,6 +9,7 @@ export const launchPreviewProcess = async () => {
     method,
     path: PreviewProcessPath.previewProcessPath,
     argv: [],
+    execArgv: ['--trace-warnings'],
     stdio: 'inherit',
     name: 'Preview Process',
   })
