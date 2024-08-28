@@ -1,9 +1,13 @@
 import * as PreviewProcess from '../PreviewProcess/PreviewProcess.js'
 
-export const start = async (port) => {
-  await PreviewProcess.invoke('WebViewServer.start', port)
+export const create = async (previewId) => {
+  await PreviewProcess.invoke('WebViewServer.create', previewId)
 }
 
-export const setHandler = async (frameAncestors, webViewRoot) => {
-  await PreviewProcess.invoke('WebViewServer.setHandler', frameAncestors, webViewRoot)
+export const start = async (previewId, port) => {
+  await PreviewProcess.invoke('WebViewServer.start', previewId, port)
+}
+
+export const setHandler = async (previewId, frameAncestors, webViewRoot) => {
+  await PreviewProcess.invoke('WebViewServer.setHandler', previewId, frameAncestors, webViewRoot)
 }
