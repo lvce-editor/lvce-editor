@@ -280,6 +280,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.FileWatcher
     case 'Transferrable.transfer':
       return ModuleId.Transferrable
+    case 'WebViewServer.create':
     case 'WebViewServer.start':
     case 'WebViewServer.setHandler':
       return ModuleId.WebViewServer
