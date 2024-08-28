@@ -21,6 +21,7 @@ export const create = (id, uri) => {
     sandbox: [],
     portId: 0,
     origin: '',
+    previewServerId: 1,
   }
 }
 
@@ -36,7 +37,7 @@ const getWebViewId = (uri) => {
 }
 
 export const loadContent = async (state) => {
-  const { uri } = state
+  const { uri, previewServerId } = state
   const webViews = await GetWebViews.getWebViews()
   const webViewId = getWebViewId(uri)
   // TODO make port configurable
@@ -70,8 +71,9 @@ export const loadContent = async (state) => {
     // TODO pass csp configuration to server
     // TODO pass coop / coep configuration to server
 
-    await WebViewServer.start(webViewPort) // TODO move this up
-    await WebViewServer.setHandler(frameAncestors, webViewRoot)
+    await WebViewServer.create(previewServerId) // TODO move this up
+    await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
+    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot)
     // TODO maybe allow same origin, so that iframe origin is not null
     origin = '*'
   } else {
