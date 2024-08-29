@@ -5,10 +5,14 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 
+// TODO clean up this code
 export const getElectronFileResponseAbsolutePath = (pathName) => {
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
     return Path.join(Root.root, 'static', 'index.html')
+  }
+  if (pathName.includes('media')) {
+    console.log({ pathName })
   }
   if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)

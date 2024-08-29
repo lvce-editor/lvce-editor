@@ -13,7 +13,7 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Logger from '../Logger/Logger.js'
 
 // TODO maybe handle app responses and webview responses separately
-export const getElectronFileResponse = async (url, request) => {
+export const getElectronWebViewFileResponse = async (url, request) => {
   try {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
