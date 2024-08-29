@@ -1,4 +1,4 @@
-import { stat } from 'fs/promises'
+import { stat } from 'node:fs/promises'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.js'
 import * as GetElectronFileResponseContent from '../GetElectronFileResponseContent/GetElectronFileResponseContent.js'
 import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponseRelativePath/GetElectronFileResponseRelativePath.js'
@@ -12,13 +12,20 @@ import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Logger from '../Logger/Logger.js'
 
+// TODO maybe handle app responses and webview responses separately
+// maybe send webview requests directly to preview process
 export const getElectronFileResponse = async (url, request) => {
   try {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
-    const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
+    let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag
+    // TODO when is there no request?
     if (request) {
-      const stats = await stat(absolutePath)
+      let stats = await stat(absolutePath)
+      if (stats.isDirectory()) {
+        absolutePath += '/index.html'
+        stats = await stat(absolutePath)
+      }
       etag = GetEtag.getEtag(stats)
       if (request.headers[HttpHeader.IfNotMatch] === etag) {
         const headers = GetHeaders.getHeaders(absolutePath, pathName)
