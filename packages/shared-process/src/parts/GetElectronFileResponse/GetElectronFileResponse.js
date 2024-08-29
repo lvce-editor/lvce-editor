@@ -25,14 +25,12 @@ export const getElectronFileResponse = async (url, request) => {
         absolutePath += '/index.html'
         stats = await stat(absolutePath)
       }
-      // console.log(stats.isDirectory())
       etag = GetEtag.getEtag(stats)
       if (request.headers[HttpHeader.IfNotMatch] === etag) {
         const headers = GetHeaders.getHeaders(absolutePath, pathName)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
     }
-    // console.log({ absolutePath })
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
     const headers = GetHeaders.getHeaders(absolutePath, pathName)
     headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
