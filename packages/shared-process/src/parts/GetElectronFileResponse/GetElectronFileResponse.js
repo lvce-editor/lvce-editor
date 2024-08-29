@@ -17,9 +17,6 @@ export const getElectronFileResponse = async (url, request) => {
   try {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
-    if (absolutePath.includes('media')) {
-      console.log({ absolutePath, url, pathName, request })
-    }
     let etag
     // TODO when is there no request?
     if (request) {
