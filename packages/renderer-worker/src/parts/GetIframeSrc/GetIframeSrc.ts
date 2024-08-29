@@ -32,6 +32,11 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     }
     let iframeSrc = webViewUri
     let webViewRoot = webViewUri
+    if (Platform.platform === PlatformType.Electron) {
+      const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
+      console.log({ relativePath })
+      // TODO
+    }
     if (Platform.platform === PlatformType.Remote) {
       const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
       if (webViewUri.startsWith('file://')) {
