@@ -14,7 +14,7 @@ const getFrameSrc = () => {
     return [`frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`]
   }
   if (IsElectron.isElectron) {
-    return [`frame-src 'none'`]
+    return [`frame-src lvce-webview:`]
   }
   return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
 }
