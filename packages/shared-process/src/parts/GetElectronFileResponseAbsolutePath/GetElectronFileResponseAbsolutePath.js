@@ -32,5 +32,9 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
     const processExplorerThemeCss = join(tmpdir(), 'process-explorer-theme.css')
     return processExplorerThemeCss
   }
+  // TODO move this to preview process
+  if (pathName.startsWith('/home')) {
+    return pathName
+  }
   return Path.join(Root.root, 'static', pathName)
 }

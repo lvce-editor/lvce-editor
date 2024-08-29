@@ -19,6 +19,9 @@ export const getElectronFileResponse = async (url, request) => {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag
+    if (url.includes('media')) {
+      console.log({ url, absolutePath, pathName })
+    }
     // TODO when is there no request?
     if (request) {
       let stats = await stat(absolutePath)
@@ -34,6 +37,7 @@ export const getElectronFileResponse = async (url, request) => {
     }
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
     const headers = GetHeaders.getHeaders(absolutePath, pathName)
+
     headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     if (etag) {
       headers[HttpHeader.Etag] = etag
@@ -46,6 +50,7 @@ export const getElectronFileResponse = async (url, request) => {
       },
     }
   } catch (error) {
+    console.log('catch', error)
     if (IsEnoentError.isEnoentError(error)) {
       return GetNotFoundResponse.getNotFoundResponse()
     }
