@@ -11,9 +11,6 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
   if (pathName === `/` || pathName.startsWith(`/?`)) {
     return Path.join(Root.root, 'static', 'index.html')
   }
-  if (pathName.includes('media')) {
-    console.log({ pathName })
-  }
   if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)
   }
