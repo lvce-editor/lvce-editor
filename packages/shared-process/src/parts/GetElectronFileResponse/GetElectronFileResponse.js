@@ -7,6 +7,7 @@ import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
 import * as GetNotModifiedResponse from '../GetNotModifiedResponse/GetNotModifiedResponse.js'
 import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.js'
+import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Logger from '../Logger/Logger.js'
@@ -19,16 +20,16 @@ export const getElectronFileResponse = async (url, request) => {
     if (request) {
       const stats = await stat(absolutePath)
       etag = GetEtag.getEtag(stats)
-      if (request.headers['if-none-match'] === etag) {
+      if (request.headers[HttpHeader.IfNotMatch] === etag) {
         const headers = GetHeaders.getHeaders(absolutePath, pathName)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
     }
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
     const headers = GetHeaders.getHeaders(absolutePath, pathName)
-    headers['Cache-Control'] = 'public, max-age=0, must-revalidate'
+    headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     if (etag) {
-      headers['Etag'] = etag
+      headers[HttpHeader.Etag] = etag
     }
     return {
       body: content,
