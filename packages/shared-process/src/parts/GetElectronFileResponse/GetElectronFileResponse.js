@@ -47,7 +47,6 @@ export const getElectronFileResponse = async (url, request) => {
       },
     }
   } catch (error) {
-    console.log('catch', error)
     if (IsEnoentError.isEnoentError(error)) {
       return GetNotFoundResponse.getNotFoundResponse()
     }
