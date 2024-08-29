@@ -6,6 +6,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Protocol from '../Protocol/Protocol.js'
 import * as Scheme from '../Scheme/Scheme.js'
 
+// TODO maybe create a separate session for webviews
 export const createElectronSession = () => {
   const sessionId = Platform.getSessionId()
   const session = Electron.session.fromPartition(sessionId, {
