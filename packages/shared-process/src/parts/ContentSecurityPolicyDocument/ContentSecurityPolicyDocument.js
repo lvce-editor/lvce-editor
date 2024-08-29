@@ -9,16 +9,31 @@ const getGitpodPreviewUrl = (port) => {
   return url
 }
 
+const getFrameSrc = () => {
+  if (IsGitpod.isGitpod) {
+    return [`frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`]
+  }
+  if (IsElectron.isElectron) {
+    return [`frame-src lvce-webview:`]
+  }
+  return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
+}
+
+const getManifestSrc = () => {
+  if (IsElectron.isElectron) {
+    return []
+  }
+  return [`manifest-src 'self'`]
+}
+
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
-  `img-src 'self' https: data:`,
+  `img-src 'self' https: data:`, // TODO maybe disallow https and data images
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
-  `frame-ancestors 'none' `,
-  IsGitpod.isGitpod
-    ? `frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`
-    : `frame-src 'self' http://localhost:3001 http://localhost:3002`,
-  ...(IsElectron.isElectron ? [] : [`manifest-src 'self'`]),
+  `frame-ancestors 'none'`,
+  ...getFrameSrc(),
+  ...getManifestSrc(),
 ])
