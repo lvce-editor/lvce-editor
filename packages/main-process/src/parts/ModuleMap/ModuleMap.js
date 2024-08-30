@@ -90,5 +90,6 @@ export const getModuleId = (commandId) => {
     case 'ElectronSession':
       return ModuleId.ElectronSession
     default:
+      throw new CommandNotFoundError(commandId)
   }
 }
