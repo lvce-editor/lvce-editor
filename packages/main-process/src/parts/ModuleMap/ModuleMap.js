@@ -87,6 +87,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleElectronMessagePort
     case 'GetWindowId':
       return ModuleId.GetWindowId
+    case 'ElectronSession':
+      return ModuleId.ElectronSession
     default:
       throw new CommandNotFoundError(commandId)
   }

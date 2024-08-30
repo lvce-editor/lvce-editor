@@ -8,6 +8,7 @@ const isAllowedPermission = (permission) => {
     case ElectronPermissionType.FullScreen:
     case ElectronPermissionType.WindowPlacement:
     case ElectronPermissionType.Media:
+    case ElectronPermissionType.OpenExternal:
       return true
     default:
       return false

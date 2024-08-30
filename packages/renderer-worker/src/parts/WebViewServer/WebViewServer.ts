@@ -1,5 +1,9 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
+export const registerProtocol = async () => {
+  await SharedProcess.invoke('WebViewServer.registerProtocol')
+}
+
 export const create = async (previewServerId: number) => {
   await SharedProcess.invoke('WebViewServer.create', previewServerId)
 }

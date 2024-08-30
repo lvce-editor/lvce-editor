@@ -4,7 +4,6 @@ import * as HandleRequest from '../HandleRequest/HandleRequest.js'
 import * as IsSessionCacheEnabled from '../IsSessionCacheEnabled/IsSessionCacheEnabled.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Protocol from '../Protocol/Protocol.js'
-import * as Scheme from '../Scheme/Scheme.js'
 
 // TODO maybe create a separate session for webviews
 export const createElectronSession = () => {
@@ -15,6 +14,5 @@ export const createElectronSession = () => {
   session.setPermissionRequestHandler(HandlePermission.handlePermissionRequest)
   session.setPermissionCheckHandler(HandlePermission.handlePermissionCheck)
   Protocol.handle(session.protocol, Platform.scheme, HandleRequest.handleRequest)
-  Protocol.handle(session.protocol, Scheme.WebView, HandleRequest.handleRequest)
   return session
 }

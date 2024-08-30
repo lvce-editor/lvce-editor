@@ -38,6 +38,9 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
 
   ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
   let origin = ''
+  if (Platform.platform === PlatformType.Electron) {
+    await WebViewServer.registerProtocol()
+  }
   if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed

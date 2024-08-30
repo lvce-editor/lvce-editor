@@ -69,6 +69,8 @@ export const load = async (moduleId) => {
       return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
     case ModuleId.GetWindowId:
       return import('../GetWindowId/GetWindowId.ipc.js')
+    case ModuleId.ElectronSession:
+      return import('../ElectronSession/ElectronSession.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

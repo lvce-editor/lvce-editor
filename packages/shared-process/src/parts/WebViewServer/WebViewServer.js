@@ -1,4 +1,12 @@
 import * as PreviewProcess from '../PreviewProcess/PreviewProcess.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+
+export const registerProtocol = async () => {
+  // TODO only do this once
+  // TODO send messageport to proview process
+  // TODO send other messageport to parent process
+  await ParentIpc.invoke('ElectronSession.registerWebviewProtocol')
+}
 
 export const create = async (previewId) => {
   await PreviewProcess.invoke('WebViewServer.create', previewId)
