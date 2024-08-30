@@ -35,3 +35,4 @@ export const ElectronWebContentsView = 36
 export const ElectronWebContentsViewFunctions = 37
 export const CreateMessagePort = 38
 export const HandleElectronMessagePort = 39
+export const ElectronSession = 40
