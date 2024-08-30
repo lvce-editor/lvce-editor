@@ -1,6 +1,7 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.js'
+import * as Platform from '../Platform/Platform.js'
 
 const getGitpodPreviewUrl = (port) => {
   const workspaceId = process.env.GITPOD_WORKSPACE_ID
@@ -26,6 +27,14 @@ const getManifestSrc = () => {
   return [`manifest-src 'self'`]
 }
 
+const getFrameAncestors = () => {
+  if (IsElectron.isElectron) {
+    // TODO only support this for webviews, not for the app
+    return [`frame-ancestors ${Platform.scheme}:`]
+  }
+  return [`frame-ancestors 'none'`]
+}
+
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
@@ -33,7 +42,7 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
-  `frame-ancestors 'none'`,
+  ...getFrameAncestors(),
   ...getFrameSrc(),
   ...getManifestSrc(),
 ])
