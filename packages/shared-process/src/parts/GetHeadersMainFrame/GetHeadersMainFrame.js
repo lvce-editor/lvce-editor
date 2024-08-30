@@ -9,6 +9,6 @@ export const getHeadersMainFrame = () => {
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
-    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+    [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',
   }
 }
