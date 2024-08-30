@@ -47,8 +47,9 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     await WebViewServer.create(previewServerId) // TODO move this up
     await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
     await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot)
-    // TODO maybe allow same origin, so that iframe origin is not null
-    origin = '*'
+    // TODO make this work in gitpod also
+
+    origin = `http://localhost:${webViewPort}`
   } else {
     origin = '*'
   }
