@@ -34,7 +34,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     let webViewRoot = webViewUri
     if (Platform.platform === PlatformType.Electron) {
       const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
-      iframeSrc = `lvce-webview://-${relativePath}`
+      iframeSrc = `lvce-webview://-${relativePath}/`
       // TODO
     } else if (Platform.platform === PlatformType.Remote) {
       const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
