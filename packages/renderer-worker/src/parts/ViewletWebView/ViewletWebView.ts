@@ -32,7 +32,7 @@ export const loadContent = async (state) => {
   if (!webViewResult) {
     return state
   }
-  const { iframeSrc, sandbox, portId } = webViewResult
+  const { iframeSrc, sandbox, portId, origin } = webViewResult
   return {
     ...state,
     iframeSrc,
