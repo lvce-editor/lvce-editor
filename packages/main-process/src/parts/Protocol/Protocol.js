@@ -1,6 +1,5 @@
-import * as Platform from '../Platform/Platform.js'
 import * as IsProtocolHandleApiSupported from '../IsProtocolHandleApiSupported/IsProtocolHandleApiSupported.js'
-import * as Scheme from '../Scheme/Scheme.js'
+import * as PrivilegedSchemes from '../PrivilegedSchemes/PrivilegedSchemes.js'
 
 /**
  *
@@ -23,26 +22,5 @@ export const handle = (protocol, name, handleRequest) => {
  * @returns
  */
 export const enable = (protocol) => {
-  protocol.registerSchemesAsPrivileged([
-    {
-      scheme: Platform.scheme,
-      privileges: {
-        standard: true,
-        secure: true,
-        supportFetchAPI: true,
-        stream: true,
-        codeCache: true,
-      },
-    },
-    {
-      scheme: Scheme.WebView,
-      privileges: {
-        standard: true,
-        secure: true,
-        supportFetchAPI: true,
-        stream: true,
-        codeCache: true,
-      },
-    },
-  ])
+  protocol.registerSchemesAsPrivileged(PrivilegedSchemes.privilegedSchems)
 }
