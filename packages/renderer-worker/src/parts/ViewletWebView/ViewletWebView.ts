@@ -1,4 +1,5 @@
 import * as WebView from '../WebView/WebView.ts'
+import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 
 export const create = (id, uri) => {
   return {
@@ -26,8 +27,7 @@ const getWebViewId = (uri) => {
 export const loadContent = async (state) => {
   const { uri, previewServerId } = state
   const webViewId = getWebViewId(uri)
-  // TODO make port configurable
-  const webViewPort = 3002
+  const webViewPort = GetWebViewPort.getWebViewPort()
   const webViewResult = await WebView.create(webViewPort, webViewId, previewServerId, uri)
   if (!webViewResult) {
     return state
