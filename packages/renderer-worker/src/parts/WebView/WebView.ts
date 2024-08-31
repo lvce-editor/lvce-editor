@@ -40,8 +40,8 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
   let origin = ''
   if (Platform.platform === PlatformType.Electron) {
     await WebViewServer.registerProtocol()
-  }
-  if (Platform.platform === PlatformType.Remote) {
+    await WebViewServer.create(previewServerId) // TODO move this up
+  } else if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed
     // TODO pass csp configuration to server
