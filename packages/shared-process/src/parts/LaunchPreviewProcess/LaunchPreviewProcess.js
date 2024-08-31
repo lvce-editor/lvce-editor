@@ -13,6 +13,7 @@ const getMethod = (isElectron) => {
 
 export const launchPreviewProcess = async () => {
   const method = getMethod(IsElectron.isElectron)
+  console.log(PreviewProcessPath.previewProcessPath)
   const previewProcess = await IpcParent.create({
     method,
     path: PreviewProcessPath.previewProcessPath,
