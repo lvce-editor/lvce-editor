@@ -26,13 +26,25 @@ export const registerWebviewProtocol = async (port) => {
     return
   }
   state.hasWebViewProtocol = true
-  const ipc = await IpcParent.create({
-    method: IpcParentType.ElectronMessagePort,
-    messagePort: port,
+  // const ipc = await IpcParent.create({
+  //   method: IpcParentType.ElectronMessagePort,
+  //   messagePort: port,
+  // })
+  port.on('message', (x) => {
+    console.log({
+      message: x,
+    })
   })
   const session = get()
   // TODO avoid closure
-  const handleRequest = async () => {
+  const handleRequest = async (request) => {
+    const { method, url } = request
+    port.postMessage({
+      jsonrpc: '2.0',
+      method: 'WebViewProtocol.getResponse',
+      params: [method, url],
+    })
+    // console.log({ a, b })
     return new Response('test', {
       headers: {
         'Cross-Origin-Resource-Policy': 'cross-origin',

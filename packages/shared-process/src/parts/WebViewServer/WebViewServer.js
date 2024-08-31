@@ -10,10 +10,7 @@ export const registerProtocol = async () => {
   const { port1, port2 } = await GetPortTuple.getPortTuple()
   console.timeEnd('get-ports')
   console.time('register-protocol')
-  port1.on('message', (x) => {
-    console.log(x)
-  })
-  await ParentIpc.invokeAndTransfer('ElectronSession.registerWebviewProtocol', {})
+  await ParentIpc.invokeAndTransfer('ElectronSession.registerWebviewProtocol', port1)
   console.timeEnd('register-protocol')
   console.time('handle-port')
   await PreviewProcess.invokeAndTransfer('HandleElectronMessagePort.handleElectronMessagePort', port2)
