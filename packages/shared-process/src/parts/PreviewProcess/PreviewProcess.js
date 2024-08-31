@@ -19,3 +19,8 @@ export const invoke = async (method, ...params) => {
   const ipc = await getOrCreate()
   return JsonRpc.invoke(ipc, method, ...params)
 }
+
+export const invokeAndTransfer = async (method, ...params) => {
+  const ipc = await getOrCreate()
+  return JsonRpc.invokeAndTransfer(ipc, method, ...params)
+}

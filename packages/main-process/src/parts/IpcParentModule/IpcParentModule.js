@@ -9,6 +9,8 @@ export const getModule = (method) => {
       return IpcParentWithNodeForkedProcess
     case IpcParentType.ElectronUtilityProcess:
       return import('../IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js')
+    // case IpcParentType.ElectronMessagePort:
+    //   return IpcParentWithElectronMessagePort
     default:
       throw new Error(`unexpected ipc type ${method}`)
   }
