@@ -31,19 +31,20 @@ export const registerWebviewProtocol = async (port) => {
   //   messagePort: port,
   // })
   port.on('message', (x) => {
-    console.log({
-      message: x,
-    })
+    console.log(x)
   })
+  port.start()
   const session = get()
   // TODO avoid closure
   const handleRequest = async (request) => {
     const { method, url } = request
     port.postMessage({
       jsonrpc: '2.0',
+      id: 1,
       method: 'WebViewProtocol.getResponse',
       params: [method, url],
     })
+    console.log('post message')
     // console.log({ a, b })
     return new Response('test', {
       headers: {

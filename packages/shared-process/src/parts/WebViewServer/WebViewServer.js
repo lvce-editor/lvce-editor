@@ -15,7 +15,6 @@ export const registerProtocol = async () => {
   console.time('handle-port')
   await PreviewProcess.invokeAndTransfer('HandleElectronMessagePort.handleElectronMessagePort', port2)
   console.timeEnd('handle-port')
-  port1.start()
 }
 
 export const create = async (previewId) => {
