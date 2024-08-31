@@ -9,7 +9,6 @@ export const registerProtocol = async () => {
 }
 
 export const create = async (previewId) => {
-  console.log('create webview server')
   await PreviewProcess.invoke('WebViewServer.create', previewId)
 }
 
