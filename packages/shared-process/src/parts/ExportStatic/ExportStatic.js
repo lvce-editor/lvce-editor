@@ -147,6 +147,17 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     return languages
   }
 
+  const getWebViews = (extension) => {
+    const webViews = []
+    for (const webView of extension.webViews || []) {
+      webViews.push({
+        ...webView,
+        path: `${pathPrefix}/${commitHash}/extensions/${webView.path}`,
+      })
+    }
+    return webViews
+  }
+
   /**
    * @param {string} dirent
    */
@@ -158,6 +169,9 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   const manifests = await Promise.all(manifestPaths.map(readExtensionManifest))
   const languages = manifests.flatMap(getLanguages)
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'languages.json'), languages)
+
+  const webViews = manifests.flatMap(getWebViews)
+  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webViews.json'), webViews)
 
   for (const languageBasicsDirent of languageBasicsDirents) {
     await FileSystem.copy(
