@@ -114,6 +114,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `export const platform = ${platformCode}`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/Scheme/Scheme.ts`,
+      occurrence: `export const WebView = 'lvce-oss-webview'`,
+      replacement: `export const WebView = '${product.applicationName}-webview'`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: '/packages/extension-host-worker/src/extensionHostWorkerMain.ts',
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,

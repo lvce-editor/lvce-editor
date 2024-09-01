@@ -10,6 +10,7 @@ import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Scheme from '../Scheme/Scheme.ts'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
@@ -42,7 +43,7 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
   if (Platform.platform === PlatformType.Electron) {
     await WebViewServer.registerProtocol()
     await WebViewServer.create(previewServerId) // TODO move this up
-    origin = 'lvce-webview://-/'
+    origin = `${Scheme.WebView}://-/`
   } else if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed

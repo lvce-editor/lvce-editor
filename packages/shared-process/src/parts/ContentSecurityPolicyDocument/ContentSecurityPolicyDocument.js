@@ -2,6 +2,7 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Scheme from '../Scheme/Scheme.js'
 
 const getGitpodPreviewUrl = (port) => {
   const workspaceId = process.env.GITPOD_WORKSPACE_ID
@@ -15,7 +16,7 @@ const getFrameSrc = () => {
     return [`frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`]
   }
   if (IsElectron.isElectron) {
-    return [`frame-src lvce-webview:`]
+    return [`frame-src ${Scheme.webView}:`]
   }
   return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
 }
