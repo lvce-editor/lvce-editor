@@ -16,7 +16,7 @@ const getFrameSrc = () => {
     return [`frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`]
   }
   if (IsElectron.isElectron) {
-    return [`frame-src ${Scheme.webView}:`]
+    return [`frame-src ${Scheme.WebView}:`]
   }
   return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
 }

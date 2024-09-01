@@ -5,7 +5,7 @@ const { scheme } = Platform
 const prefix = `${scheme}://-`
 const prefixLength = prefix.length
 
-const webViewPrefix = `${Scheme.webView}://-`
+const webViewPrefix = `${Scheme.WebView}://-`
 const webViewPrefixLength = webViewPrefix.length
 
 export const getElectronFileResponseRelativePath = (requestUrl) => {
