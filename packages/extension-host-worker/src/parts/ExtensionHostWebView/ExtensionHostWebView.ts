@@ -19,6 +19,25 @@ export const createWebView = async (providerId, port, uri) => {
   if (firstMessage.data !== 'ready') {
     // TODO handle error
   }
+
+  // TODO use ipc module
+  const handlePortMessage = async (event) => {
+    const { data, target } = event
+    const { method, params, id } = data
+    if (provider && provider.commands && provider.commands[method]) {
+      const fn = provider.commands[method]
+      const result = await fn(...params)
+      if (id) {
+        target.postMessage({
+          jsonrpc: '2.0',
+          id,
+          result,
+        })
+      }
+    }
+  }
+
+  port.onmessage = handlePortMessage
   const rpc = {
     invoke(method, ...params) {
       // TODO return promise with result
