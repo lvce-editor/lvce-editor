@@ -2,6 +2,7 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.js'
+import * as Scheme from '../Scheme/Scheme.js'
 
 const getFrameSrc = () => {
   // TODO make ports configurable
@@ -9,7 +10,7 @@ const getFrameSrc = () => {
     return [`frame-src 'self' ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}`]
   }
   if (IsElectron.isElectron) {
-    return [`frame-src lvce-webview:`]
+    return [`frame-src ${Scheme.WebView}:`]
   }
   return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
 }

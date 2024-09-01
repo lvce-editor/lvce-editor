@@ -63,6 +63,11 @@ export const bundleSharedProcess = async ({
     replacement: `productNameLong = '${product.nameLong}'`,
   })
   await Replace.replace({
+    path: `${cachePath}/src/parts/Scheme/Scheme.js`,
+    occurrence: `export const WebView = 'lvce-oss-webview'`,
+    replacement: `export const WebView = '${product.applicationName}-webview'`,
+  })
+  await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `commit = 'unknown commit'`,
     replacement: `commit = '${commitHash}'`,

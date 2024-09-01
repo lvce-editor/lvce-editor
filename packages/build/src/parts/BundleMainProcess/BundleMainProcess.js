@@ -36,6 +36,11 @@ export const bundleMainProcess = async ({
     replacement: `export const applicationName = '${product.applicationName}'`,
   })
   await Replace.replace({
+    path: `${cachePath}/src/parts/Scheme/Scheme.js`,
+    occurrence: `export const WebView = 'lvce-oss-webview'`,
+    replacement: `export const WebView = '${product.applicationName}-webview'`,
+  })
+  await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `export const isLinux = platform === 'linux'`,
     replacement: `export const isLinux = ${Platform.isLinux()}`,

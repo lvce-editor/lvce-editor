@@ -1,1 +1,1 @@
-export const webView = 'lvce-webview'
+export const WebView = 'lvce-oss-webview'

@@ -1,6 +1,7 @@
 import * as CreateUrl from '../CreateUrl/CreateUrl.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Scheme from '../Scheme/Scheme.ts'
 import { VError } from '../VError/VError.js'
 
 const getWebViewPath = (webViews, webViewId) => {
@@ -34,7 +35,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     let webViewRoot = webViewUri
     if (Platform.platform === PlatformType.Electron) {
       const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
-      iframeSrc = `lvce-webview://-${relativePath}/`
+      iframeSrc = `${Scheme.WebView}://-${relativePath}/`
       // TODO
     } else if (Platform.platform === PlatformType.Remote) {
       const relativePath = new URL(webViewUri).pathname.replace('/index.html', '')
