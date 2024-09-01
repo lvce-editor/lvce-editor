@@ -1,11 +1,9 @@
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as Command from '../Command/Command.js'
 
 export const getWebViewsWeb = async () => {
-  if (Platform.platform !== PlatformType.Web) {
-    return []
-  }
-  const webViews = await SharedProcess.invoke('ExtensionHost.getWebViews')
-  return webViews
+  const url = `${AssetDir.assetDir}/config/webViews.json`
+  // TODO move this to shared-process-web / network-process-web
+  // TODO handle error ?
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
