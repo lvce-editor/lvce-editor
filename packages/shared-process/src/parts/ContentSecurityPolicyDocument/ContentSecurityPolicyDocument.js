@@ -1,19 +1,13 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
+import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Scheme from '../Scheme/Scheme.js'
 
-const getGitpodPreviewUrl = (port) => {
-  const workspaceId = process.env.GITPOD_WORKSPACE_ID
-  const cluster = process.env.GITPOD_WORKSPACE_CLUSTER_HOST
-  const url = `https://${port}-${workspaceId}.${cluster}`
-  return url
-}
-
 const getFrameSrc = () => {
+  // TODO make ports configurable
   if (IsGitpod.isGitpod) {
-    return [`frame-src 'self' ${getGitpodPreviewUrl(3001)} ${getGitpodPreviewUrl(3002)}`]
+    return [`frame-src 'self' ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}`]
   }
   if (IsElectron.isElectron) {
     return [`frame-src ${Scheme.WebView}:`]
@@ -29,10 +23,6 @@ const getManifestSrc = () => {
 }
 
 const getFrameAncestors = () => {
-  if (IsElectron.isElectron) {
-    // TODO only support this for webviews, not for the app
-    return [`frame-ancestors ${Platform.scheme}:`]
-  }
   return [`frame-ancestors 'none'`]
 }
 
