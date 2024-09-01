@@ -1,13 +1,20 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GetWebViewsNode from '../GetWebViewsNode/GetWebViewsNode.ts'
+import * as GetWebViewsWeb from '../GetWebViewsWeb/GetWebViewsWeb.ts'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as WebViews from '../WebViews/WebViews.ts'
 
-const getWebViewsNode = async () => {
-  const webViews = await SharedProcess.invoke('ExtensionHost.getWebViews')
-  return webViews
+const getWebViewsDefault = async () => {
+  switch (Platform.platform) {
+    case PlatformType.Web:
+      return GetWebViewsWeb.getWebViewsWeb()
+    default:
+      return GetWebViewsNode.getWebViewsNode()
+  }
 }
 
 export const getWebViews = async () => {
-  const nodeWebViews = await getWebViewsNode()
+  const nodeWebViews = await getWebViewsDefault()
   const registeredWebViews = WebViews.get()
   const allWebViews = [...nodeWebViews, ...registeredWebViews]
   return allWebViews
