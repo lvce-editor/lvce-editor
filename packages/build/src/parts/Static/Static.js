@@ -207,6 +207,30 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   })
 }
 
+const bundleWebViewFiles = async ({ commitHash, pathPrefix }) => {
+  const extensionPath = Path.absolute('extensions')
+  const extensionNames = await readdir(extensionPath)
+  const extensionPaths = extensionNames.map(getAbsolutePath)
+  const existingExtensionPaths = extensionPaths.filter(exists)
+  const extensions = await Promise.all(existingExtensionPaths.map(JsonFile.readJson))
+
+  const getWebViews = (extension) => {
+    const getWebView = (webView) => {
+      return {
+        ...webView,
+        path: `${pathPrefix}/${commitHash}/extensions/${extension.id}/${webView.path}`,
+      }
+    }
+    const webViews = extension.webViews || []
+    return webViews.map(getWebView)
+  }
+  const webViews = extensions.flatMap(getWebViews)
+  await JsonFile.writeJson({
+    to: `packages/build/.tmp/dist/${commitHash}/config/webViews.json`,
+    value: webViews,
+  })
+}
+
 const applyJsOverrides = async ({ pathPrefix, commitHash }) => {}
 
 const addRobotsTxt = async () => {
@@ -540,6 +564,10 @@ export const build = async ({ product }) => {
   Console.time('bundleLanguageJsonFiles')
   await bundleLanguageJsonFiles({ commitHash, pathPrefix })
   Console.timeEnd('bundleLanguageJsonFiles')
+
+  Console.time('bundleWebViewFiles')
+  await bundleWebViewFiles({ commitHash, pathPrefix })
+  Console.timeEnd('bundleWebViewFiles')
 
   Console.time('addRobotsTxt')
   await addRobotsTxt()
