@@ -1,7 +1,7 @@
 import * as GetWebViewsNode from '../GetWebViewsNode/GetWebViewsNode.ts'
 import * as GetWebViewsWeb from '../GetWebViewsWeb/GetWebViewsWeb.ts'
-import * as Platform from '../Platform/Platform.ts'
-import * as PlatformType from '../PlatformType/PlatformType.ts'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as WebViews from '../WebViews/WebViews.ts'
 
 const getWebViewsDefault = async () => {
