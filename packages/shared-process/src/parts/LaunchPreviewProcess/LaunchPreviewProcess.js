@@ -2,6 +2,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as PreviewProcessPath from '../PreviewProcessPath/PreviewProcessPath.js'
 
 const getMethod = (isElectron) => {
@@ -12,10 +13,13 @@ const getMethod = (isElectron) => {
 }
 
 export const launchPreviewProcess = async () => {
+  const preferences = await Preferences.getUserPreferences()
+  const customPreviewProcessPath = preferences['develop.previewProcessPath']
+  const previewProcessPath = customPreviewProcessPath || PreviewProcessPath.previewProcessPath
   const method = getMethod(IsElectron.isElectron)
   const previewProcess = await IpcParent.create({
     method,
-    path: PreviewProcessPath.previewProcessPath,
+    path: previewProcessPath,
     argv: [],
     stdio: 'inherit',
     name: 'Preview Process',
