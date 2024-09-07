@@ -13,6 +13,8 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as Promises from '../Promises/Promises.js'
 import { VError } from '../VError/VError.js'
 
+export const getEvents = GetSessionEvents.getSessionEvents
+
 export const handleMessage = async (source, timestamp, message) => {
   try {
     const sessionId = GetSessionId.getSessionId()
