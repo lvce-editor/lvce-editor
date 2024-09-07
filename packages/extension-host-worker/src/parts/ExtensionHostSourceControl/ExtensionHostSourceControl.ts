@@ -104,3 +104,7 @@ export const getEnabledProviderIds = async (scheme, root) => {
   }
   return enabledIds
 }
+
+export const reset = () => {
+  state.providers = Object.create(null)
+}
