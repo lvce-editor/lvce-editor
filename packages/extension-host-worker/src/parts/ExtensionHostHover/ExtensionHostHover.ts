@@ -10,4 +10,4 @@ const { registerHoverProvider, executeHoverProvider, reset } = Registry.create({
   },
 })
 
-export { executeHoverProvider, registerHoverProvider, reset }
+export { executeHoverProvider, registerHoverProvider,  }

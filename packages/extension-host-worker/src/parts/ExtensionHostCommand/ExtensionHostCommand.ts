@@ -1,6 +1,6 @@
 import { VError } from '../VError/VError.ts'
 
-export const state = {
+const state = {
   commands: Object.create(null),
 }
 
@@ -52,6 +52,6 @@ export const executeCommand = async (id, ...args) => {
   }
 }
 
-export const reset = () => {
+const reset = () => {
   state.commands = Object.create(null)
 }

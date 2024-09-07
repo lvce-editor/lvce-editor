@@ -12,4 +12,4 @@ const { registerSelectionProvider, executeSelectionProvider, reset } = Registry.
   },
 })
 
-export { executeSelectionProvider, registerSelectionProvider, reset }
+export { executeSelectionProvider, registerSelectionProvider,  }

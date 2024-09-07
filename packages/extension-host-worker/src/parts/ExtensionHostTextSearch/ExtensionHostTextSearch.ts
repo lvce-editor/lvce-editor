@@ -1,6 +1,6 @@
 import { VError } from '../VError/VError.ts'
 
-export const state = {
+const state = {
   textSearchProviders: Object.create(null),
 }
 
@@ -31,6 +31,6 @@ export const executeTextSearchProvider = async (scheme, query) => {
   }
 }
 
-export const reset = () => {
+const reset = () => {
   state.textSearchProviders = Object.create(null)
 }

@@ -8,4 +8,4 @@ const { registerBraceCompletionProvider, executeBraceCompletionProvider, reset }
   },
 })
 
-export { registerBraceCompletionProvider, executeBraceCompletionProvider, reset }
+export { registerBraceCompletionProvider, executeBraceCompletionProvider,  }

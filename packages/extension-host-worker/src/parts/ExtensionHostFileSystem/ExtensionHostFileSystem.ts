@@ -1,7 +1,7 @@
 import { VError } from '../VError/VError.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
-export const state = {
+const state = {
   fileSystemProviderMap: Object.create(null),
 }
 
@@ -50,7 +50,7 @@ export const readFileExternal = async (path) => {
   return content
 }
 
-export const remove = async (protocol, path) => {
+const remove = async (protocol, path) => {
   try {
     const provider = getFileSystemProvider(protocol)
     return await provider.remove(path)
@@ -59,7 +59,7 @@ export const remove = async (protocol, path) => {
   }
 }
 
-export const rename = async (protocol, oldUri, newUri) => {
+const rename = async (protocol, oldUri, newUri) => {
   try {
     const provider = getFileSystemProvider(protocol)
     return await provider.rename(oldUri, newUri)

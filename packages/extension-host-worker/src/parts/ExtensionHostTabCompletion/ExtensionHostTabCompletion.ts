@@ -9,4 +9,4 @@ const { registerTabCompletionProvider, executeTabCompletionProvider, reset } = R
   },
 })
 
-export { registerTabCompletionProvider, executeTabCompletionProvider, reset }
+export { registerTabCompletionProvider, executeTabCompletionProvider,  }
