@@ -1,15 +1,19 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as GetSessionEvents from '../GetSessionEvents/GetSessionEvents.js'
 import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 import * as Json from '../Json/Json.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as SessionReplayStorage from '../SessionReplayStorage/SessionReplayStorage.js'
-// @ts-ignore
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
+import * as Timeout from '../Timeout/Timeout.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as Promises from '../Promises/Promises.js'
 import { VError } from '../VError/VError.js'
+
+export const getEvents = GetSessionEvents.getSessionEvents
 
 export const handleMessage = async (source, timestamp, message) => {
   try {
@@ -53,44 +57,42 @@ export const replayCurrentSession = async () => {
 
 export const getSessionContent = async () => {
   const sessionId = GetSessionId.getSessionId()
-  const events = await getEvents(sessionId)
+  const events = await GetSessionEvents.getSessionEvents(sessionId)
   return Json.stringify(events)
 }
 
 const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 
 export const replaySession = async (sessionId) => {
-  const events = await getEvents(sessionId)
+  const events = await GetSessionEvents.getSessionEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
+  HandleIpc.unhandleIpc(originalIpc)
   const originalSend = originalIpc.send.bind(originalIpc)
-  const originalOnMessage = originalIpc.onmessage.bind(originalIpc)
+  const originalAddEventListsner = originalIpc.addEventListener.bind(originalIpc)
   const wrappedSend = () => {}
-  const wrappedOnMessage = async (data) => {
-    if (typeof data === 'string') {
-      return
-    }
-    if ('result' in data) {
-      callbacks[data.id].resolve(data.result)
-    } else if ('error' in data) {
-      callbacks[data.id].reject(data.error)
+  const wrappedOnMessage = async (event) => {
+    const { data } = event
+    if ('result' in data || 'error' in data) {
+      callbacks[data.id](data)
+      delete callbacks[data.id]
     } else if ('method' in data) {
       switch (data.method) {
         case 'TitleBar.handleTitleBarButtonClickClose':
-          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.onmessage = originalAddEventListsner
           RendererProcess.state.ipc.send = originalSend
           await Command.execute('ElectronWindow.close')
           RendererProcess.state.ipc.onmessage = wrappedOnMessage
           RendererProcess.state.ipc.send = wrappedSend
           break
         case 'TitleBar.handleTitleBarButtonClickMinimize':
-          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.onmessage = originalAddEventListsner
           RendererProcess.state.ipc.send = originalSend
           await Command.execute('ElectronWindow.minimize')
           RendererProcess.state.ipc.onmessage = wrappedOnMessage
           RendererProcess.state.ipc.send = wrappedSend
           break
         case 'TitleBar.handleTitleBarButtonClickToggleMaximize':
-          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.onmessage = originalAddEventListsner
           RendererProcess.state.ipc.send = originalSend
           await Command.execute('ElectronWindow.maximize')
           RendererProcess.state.ipc.onmessage = wrappedOnMessage
@@ -104,22 +106,20 @@ export const replaySession = async (sessionId) => {
     }
   }
   RendererProcess.state.ipc.send = wrappedSend
-  RendererProcess.state.ipc.onmessage = wrappedOnMessage
+  RendererProcess.state.ipc.addEventListener('message', wrappedOnMessage)
   const callbacks = Object.create(null)
   const invoke = (event) => {
-    return new Promise((resolve, reject) => {
-      callbacks[event.id] = { resolve, reject }
-      originalSend(event)
-    })
+    const { resolve, promise } = Promises.withResolvers()
+    callbacks[event.id] = resolve
+    originalSend(event)
+    return promise
   }
   let now = 0
   for (const event of events) {
     if (event.source === 'to-renderer-process' && !DONT_REPLAY.has(event.method)) {
       // console.log(event.timestamp)
       const timeDifference = event.timestamp - now
-      await new Promise((resolve, reject) => {
-        setTimeout(resolve, timeDifference)
-      })
+      await Timeout.sleep(timeDifference)
       await invoke(event)
       now = event.timestamp
     }
@@ -130,19 +130,10 @@ export const replaySession = async (sessionId) => {
   // console.log({ events })
 }
 
-export const getEvents = async (sessionId) => {
-  try {
-    const events = await SessionReplayStorage.getValuesByIndexName('session', 'sessionId', sessionId)
-    return events
-  } catch (error) {
-    throw new VError(error, 'failed to get session replay events')
-  }
-}
-
 export const downloadSession = async () => {
   try {
     const sessionId = GetSessionId.getSessionId()
-    const events = await getEvents(sessionId)
+    const events = await GetSessionEvents.getSessionEvents(sessionId)
     const fileName = `${sessionId}.json`
     await Command.execute(/* Download.downloadJson */ 'Download.downloadJson', /* json */ events, /* fileName */ fileName)
   } catch (error) {
@@ -175,6 +166,7 @@ const wrapIpc = (ipc, name, getData) => {
       ipc.onmessage = listener
     },
   }
+  // TODO use addeventlistener
   const originalOnMessage = wrappedIpc.onmessage
   wrappedIpc.onmessage = async (event) => {
     const message = getData(event)

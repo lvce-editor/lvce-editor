@@ -1,6 +1,7 @@
+import * as Promises from '../Promises/Promises.js'
+
 export const sleep = (duration) => {
-  const promiseCallback = (resolve, reject) => {
-    setTimeout(resolve, duration)
-  }
-  return new Promise(promiseCallback)
+  const { resolve, promise } = Promises.withResolvers()
+  setTimeout(resolve, duration)
+  return promise
 }
