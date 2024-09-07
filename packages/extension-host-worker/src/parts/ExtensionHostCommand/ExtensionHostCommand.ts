@@ -52,6 +52,6 @@ export const executeCommand = async (id, ...args) => {
   }
 }
 
-const reset = () => {
+export const reset = () => {
   state.commands = Object.create(null)
 }

@@ -70,7 +70,7 @@ export const pause = async (protocol) => {
   }
 }
 
-const step = async (protocol) => {
+export const step = async (protocol) => {
   try {
     const provider = getDebugProvider(protocol)
     return await provider.step()

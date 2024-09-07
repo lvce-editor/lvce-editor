@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
 import * as ErrorType from '../src/parts/ErrorType/ErrorType.ts'
 import * as RestoreJsonRpcError from '../src/parts/RestoreJsonRpcError/RestoreJsonRpcError.ts'
 

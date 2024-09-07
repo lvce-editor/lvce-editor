@@ -24,7 +24,7 @@ const handleError = async (error) => {
   }
 }
 
-const warn = (...args) => {
+export const warn = (...args) => {
   const stringified = JSON.stringify(args)
   // @ts-ignore
   if (state.seenWarnings.includes(stringified)) {
