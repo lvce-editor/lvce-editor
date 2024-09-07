@@ -1,26 +1,7 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcId from '../IpcId/IpcId.js'
+import * as IpcTransferState from '../IpcTransferState/IpcTransferState.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-
-const state = {
-  pendingCount: Object.create(null),
-}
-
-const addState = (ipcId) => {
-  state.pendingCount[ipcId] ||= 0
-  state.pendingCount[ipcId]++
-}
-
-const removeState = (ipcId) => {
-  state.pendingCount[ipcId]--
-  if (state.pendingCount[ipcId] === 0) {
-    delete state.pendingCount[ipcId]
-  }
-}
-
-const hasState = (ipcId) => {
-  return ipcId in state.pendingCount
-}
 
 const supportsPartialIpcHandling = (ipcId) => {
   switch (ipcId) {
@@ -41,13 +22,13 @@ const supportsPartialIpcHandling = (ipcId) => {
 // when it is out of scope
 
 export const sendIncomingIpc = async (target, response, ipcId) => {
-  if (!hasState(ipcId) && supportsPartialIpcHandling(ipcId)) {
+  if (!IpcTransferState.has(ipcId) && supportsPartialIpcHandling(ipcId)) {
     HandleIpc.handleIpc(target)
   }
-  addState(ipcId)
+  IpcTransferState.add(ipcId)
   await JsonRpc.invokeAndTransfer(target, response.method, ...response.params)
-  removeState(ipcId)
-  if (!hasState(ipcId) && supportsPartialIpcHandling(ipcId)) {
+  IpcTransferState.remove(ipcId)
+  if (!IpcTransferState.has(ipcId) && supportsPartialIpcHandling(ipcId)) {
     HandleIpc.unhandleIpc(target)
   }
 }
