@@ -8,8 +8,7 @@ export const upgradeWebSocket = (handle, message) => {
   return {
     type: 'send',
     method: 'HandleWebSocket.handleWebSocket',
-    params: [message],
-    transfer: handle,
+    params: [handle, message],
   }
 }
 
