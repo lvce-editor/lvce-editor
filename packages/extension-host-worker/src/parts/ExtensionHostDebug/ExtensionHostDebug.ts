@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 import { VError } from '../VError/VError.ts'
 
-export const state = {
+const state = {
   debugProviderMap: Object.create(null),
 }
 

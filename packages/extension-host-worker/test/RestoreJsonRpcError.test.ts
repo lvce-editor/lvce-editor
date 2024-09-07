@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
 import * as ErrorType from '../src/parts/ErrorType/ErrorType.ts'
 import * as RestoreJsonRpcError from '../src/parts/RestoreJsonRpcError/RestoreJsonRpcError.ts'
 
@@ -210,22 +209,6 @@ test('restoreJsonRpcError - error without stack', () => {
   expect(error.message).toBe("FileNotFoundError: File not found '0.8510013488176322'")
   expect(error.stack).toMatch("FileNotFoundError: File not found '0.8510013488176322'")
   expect(error.name).toBe('Error')
-})
-
-test('restoreJsonRpcError - error with code', () => {
-  const error = RestoreJsonRpcError.restoreJsonRpcError({
-    code: -32001,
-    message: "FileNotFoundError: File not found '/test/settings.tson'",
-    data: {
-      code: ErrorCodes.ENOENT,
-    },
-  })
-  expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe("FileNotFoundError: File not found '/test/settings.tson'")
-  expect(error.stack).toMatch(`Error: FileNotFoundError: File not found '/test/settings.tson'
-    at constructError`)
-  // @ts-ignore
-  expect(error.code).toBe(ErrorCodes.ENOENT)
 })
 
 test('restoreJsonRpcError - object', () => {

@@ -2,7 +2,7 @@
 
 import { AssertionError } from '../AssertionError/AssertionError.ts'
 
-export const getType = (value) => {
+const getType = (value) => {
   switch (typeof value) {
     case 'number':
       return 'number'

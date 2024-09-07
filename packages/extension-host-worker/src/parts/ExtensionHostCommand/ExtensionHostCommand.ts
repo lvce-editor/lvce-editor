@@ -1,6 +1,6 @@
 import { VError } from '../VError/VError.ts'
 
-export const state = {
+const state = {
   commands: Object.create(null),
 }
 

@@ -1,6 +1,6 @@
 import * as PrettyError from '../PrettyError/PrettyError.ts'
 
-export const state = {
+const state = {
   /**
    * @type {string[]}
    */
@@ -14,7 +14,7 @@ export const logError = async (error) => {
   return prettyError
 }
 
-export const handleError = async (error) => {
+const handleError = async (error) => {
   try {
     await logError(error)
   } catch (otherError) {

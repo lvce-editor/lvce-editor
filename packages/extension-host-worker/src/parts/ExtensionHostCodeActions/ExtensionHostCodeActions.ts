@@ -12,7 +12,7 @@ const { registerCodeActionProvider, executeCodeActionProvider } = Registry.creat
   },
 })
 
-export { registerCodeActionProvider, executeCodeActionProvider }
+export { registerCodeActionProvider,  }
 
 const isOrganizeImports = (action) => {
   return action.kind === 'source.organizeImports'
