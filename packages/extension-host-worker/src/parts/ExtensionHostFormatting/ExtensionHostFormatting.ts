@@ -24,4 +24,4 @@ const { registerFormattingProvider, executeFormattingProvider, reset } = Registr
   },
 })
 
-export { registerFormattingProvider, executeFormattingProvider,  }
+export { registerFormattingProvider, executeFormattingProvider, reset }
