@@ -20,4 +20,4 @@ const { registerDefinitionProvider, executeDefinitionProvider, reset } = Registr
   },
 })
 
-export { registerDefinitionProvider, executeDefinitionProvider,  }
+export { registerDefinitionProvider, executeDefinitionProvider, reset }
