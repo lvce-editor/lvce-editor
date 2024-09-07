@@ -11,4 +11,4 @@ const { registerImplementationProvider, executeImplementationProvider, reset } =
   },
 })
 
-export { registerImplementationProvider, executeImplementationProvider,  }
+export { registerImplementationProvider, executeImplementationProvider, reset }
