@@ -1,13 +1,12 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as GetSessionEvents from '../GetSessionEvents/GetSessionEvents.js'
 import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 import * as Json from '../Json/Json.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as SessionReplayStorage from '../SessionReplayStorage/SessionReplayStorage.js'
-// @ts-ignore
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 import { VError } from '../VError/VError.js'
 
@@ -53,14 +52,14 @@ export const replayCurrentSession = async () => {
 
 export const getSessionContent = async () => {
   const sessionId = GetSessionId.getSessionId()
-  const events = await getEvents(sessionId)
+  const events = await GetSessionEvents.getSessionEvents(sessionId)
   return Json.stringify(events)
 }
 
 const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 
 export const replaySession = async (sessionId) => {
-  const events = await getEvents(sessionId)
+  const events = await GetSessionEvents.getSessionEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
   const originalSend = originalIpc.send.bind(originalIpc)
   const originalOnMessage = originalIpc.onmessage.bind(originalIpc)
@@ -130,19 +129,10 @@ export const replaySession = async (sessionId) => {
   // console.log({ events })
 }
 
-export const getEvents = async (sessionId) => {
-  try {
-    const events = await SessionReplayStorage.getValuesByIndexName('session', 'sessionId', sessionId)
-    return events
-  } catch (error) {
-    throw new VError(error, 'failed to get session replay events')
-  }
-}
-
 export const downloadSession = async () => {
   try {
     const sessionId = GetSessionId.getSessionId()
-    const events = await getEvents(sessionId)
+    const events = await GetSessionEvents.getSessionEvents(sessionId)
     const fileName = `${sessionId}.json`
     await Command.execute(/* Download.downloadJson */ 'Download.downloadJson', /* json */ events, /* fileName */ fileName)
   } catch (error) {
