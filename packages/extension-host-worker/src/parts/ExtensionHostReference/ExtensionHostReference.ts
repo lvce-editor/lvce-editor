@@ -24,4 +24,4 @@ const { registerReferenceProvider, executeReferenceProvider, executefileReferenc
   ],
 })
 
-export { registerReferenceProvider, executeReferenceProvider, executefileReferenceProvider,  }
+export { registerReferenceProvider, executeReferenceProvider, executefileReferenceProvider, reset }
