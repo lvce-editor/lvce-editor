@@ -20,7 +20,6 @@ const isProduction = false
 const { argv, env } = process
 
 const PORT = env.PORT ? parseInt(env.PORT) : 3000
-const SANDBOX_PORT = env.SANDBOX_PORT ? parseInt(env.SANDBOX_PORT) : 3001
 
 let argv2 = argv[2]
 
@@ -584,15 +583,11 @@ const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   const server = createServer(app)
-  const sandboxServer = createServer(app)
   server.on('listening', handleAppReady)
   server.on('upgrade', handleUpgrade)
-  sandboxServer.on('upgrade', handleUpgrade)
   server.on('error', handleServerError)
-  sandboxServer.on('error', handleServerError)
   const host = isPublic ? undefined : 'localhost'
   server.listen(PORT, host)
-  sandboxServer.listen(SANDBOX_PORT, host)
 }
 
 main()
