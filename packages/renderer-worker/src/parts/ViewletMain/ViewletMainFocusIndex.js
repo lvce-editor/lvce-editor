@@ -31,10 +31,10 @@ export const focusIndex = async (state, index) => {
   const y = group.y + tabHeight
   const width = group.width
   const contentHeight = group.height - tabHeight
-  const id = ViewletMap.getModuleId(editor.uri)
+  const id = await ViewletMap.getModuleId(editor.uri)
 
   const oldEditor = editors[oldActiveIndex]
-  const oldId = ViewletMap.getModuleId(oldEditor.uri)
+  const oldId = await ViewletMap.getModuleId(oldEditor.uri)
   // @ts-ignore
   const oldInstance = ViewletStates.getInstance(oldId)
 

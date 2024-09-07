@@ -8,6 +8,8 @@ const getWebViewsDefault = async () => {
   switch (Platform.platform) {
     case PlatformType.Web:
       return GetWebViewsWeb.getWebViewsWeb()
+    case PlatformType.Test:
+      return []
     default:
       return GetWebViewsNode.getWebViewsNode()
   }

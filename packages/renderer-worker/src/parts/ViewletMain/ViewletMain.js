@@ -339,7 +339,7 @@ export const contentLoaded = async (state) => {
     const editorY = y + tabHeight
     const editorWidth = width
     const editorHeight = height - tabHeight
-    const id = ViewletMap.getModuleId(editor.uri)
+    const id = await ViewletMap.getModuleId(editor.uri)
     const tabLabel = PathDisplay.getLabel(editor.uri)
     const tabTitle = PathDisplay.getTitle(editor.uri)
     editor.label = tabLabel
