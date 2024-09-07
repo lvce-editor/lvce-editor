@@ -20,4 +20,4 @@ const { registerRenameProvider, executeRenameProvider, executeprepareRenameProvi
   ],
 })
 
-export { registerRenameProvider, executeRenameProvider, executeprepareRenameProvider,  }
+export { registerRenameProvider, executeRenameProvider, executeprepareRenameProvider, reset }
