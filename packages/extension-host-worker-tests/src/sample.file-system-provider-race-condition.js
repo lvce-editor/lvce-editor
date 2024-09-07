@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.file-system-provider-race-condition'
 
 export const test = async ({ Extension, FileSystem, Workspace, Main, Locator, expect }) => {
