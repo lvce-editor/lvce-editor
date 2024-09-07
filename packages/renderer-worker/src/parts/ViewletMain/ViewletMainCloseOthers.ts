@@ -29,7 +29,7 @@ export const closeOthers = async (state: MainState) => {
     const disposeCommands = Viewlet.disposeFunctional(activeEditor.uid)
     commands.push(...disposeCommands)
     const instanceUid = Id.create()
-    const moduleId = ViewletMap.getModuleId(activeEditor.uri)
+    const moduleId = await ViewletMap.getModuleId(activeEditor.uri)
     // @ts-ignore
     const x = state.x
     // @ts-ignore

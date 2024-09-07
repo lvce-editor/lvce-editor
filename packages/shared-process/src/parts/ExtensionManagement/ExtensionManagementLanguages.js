@@ -54,6 +54,7 @@ const getWebViewsFromExtensions = (extensions) => {
           id: webView.id,
           path,
           remotePath,
+          selector: webView.selector,
         })
       }
     }

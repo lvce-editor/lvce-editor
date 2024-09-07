@@ -1,5 +1,6 @@
 import * as WebView from '../WebView/WebView.ts'
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
+import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
 export const create = (id, uri) => {
   return {
@@ -13,20 +14,25 @@ export const create = (id, uri) => {
   }
 }
 
-const getWebViewId = (uri) => {
+const getWebViewId = async (uri) => {
   if (uri.startsWith('webview://')) {
     const webViewId = uri.slice('webview://'.length)
     return webViewId
   }
-  if (uri.endsWith('.heapsnapshot')) {
-    return 'builtin.heap-snapshot-viewer'
+  const webViews = await GetWebViews.getWebViews()
+  for (const webView of webViews) {
+    for (const selector of webView.selectors || []) {
+      if (uri.endsWith(selector)) {
+        return webView.id
+      }
+    }
   }
   return ''
 }
 
 export const loadContent = async (state) => {
   const { uri, previewServerId } = state
-  const webViewId = getWebViewId(uri)
+  const webViewId = await getWebViewId(uri)
   const webViewPort = GetWebViewPort.getWebViewPort()
   const webViewResult = await WebView.create(webViewPort, webViewId, previewServerId, uri)
   if (!webViewResult) {

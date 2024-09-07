@@ -34,7 +34,7 @@ export const closeTabsRight = async (state: MainState): Promise<MainStateResult>
     const width = state.width
     const contentHeight = state.height - state.tabHeight
     const uri = newActiveEditor.uri
-    const moduleId = ViewletMap.getModuleId(uri)
+    const moduleId = await ViewletMap.getModuleId(uri)
     const uid = newActiveEditor.uid
     const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
     // @ts-ignore

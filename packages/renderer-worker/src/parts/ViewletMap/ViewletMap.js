@@ -1,5 +1,6 @@
 import * as Path from '../Path/Path.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
 const mapExtToEditorType = {
   '.png': ViewletModuleId.EditorImage,
@@ -21,12 +22,7 @@ const mapExtToEditorType = {
   '.opus': ViewletModuleId.Audio,
 }
 
-export const getModuleId = (uri) => {
-  const fileExtension = Path.fileExtension(uri)
-  const type = mapExtToEditorType[fileExtension]
-  if (type) {
-    return type
-  }
+export const getModuleId = async (uri) => {
   if (uri === 'app://keybindings') {
     return ViewletModuleId.KeyBindings
   }
@@ -57,10 +53,23 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('webview://')) {
     return ViewletModuleId.WebView
   }
-  if (uri.endsWith('.heapsnapshot')) {
-    // TODO allow dynamic registration of extensions
-    // for custom editors / viewers
-    return ViewletModuleId.WebView
+  if (uri.endsWith('.css') || uri.endsWith('.json') || uri.endsWith('.js') || uri.endsWith('.ts')) {
+    return ViewletModuleId.EditorText
+  }
+
+  // TODO only request webviews once
+  const webViews = await GetWebViews.getWebViews()
+  for (const webView of webViews) {
+    for (const selector of webView.selectors || []) {
+      if (uri.endsWith(selector)) {
+        return ViewletModuleId.WebView
+      }
+    }
+  }
+  const fileExtension = Path.fileExtension(uri)
+  const type = mapExtToEditorType[fileExtension]
+  if (type) {
+    return type
   }
   return ViewletModuleId.EditorText
 }
