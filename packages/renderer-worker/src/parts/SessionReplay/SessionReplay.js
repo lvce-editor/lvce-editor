@@ -7,7 +7,10 @@ import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SessionReplayStorage from '../SessionReplayStorage/SessionReplayStorage.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
+import * as Timeout from '../Timeout/Timeout.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as Promises from '../Promises/Promises.js'
 import { VError } from '../VError/VError.js'
 
 export const handleMessage = async (source, timestamp, message) => {
@@ -61,35 +64,34 @@ const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 export const replaySession = async (sessionId) => {
   const events = await GetSessionEvents.getSessionEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
+  HandleIpc.unhandleIpc(originalIpc)
+  console.log({ originalIpc })
   const originalSend = originalIpc.send.bind(originalIpc)
-  const originalOnMessage = originalIpc.onmessage.bind(originalIpc)
+  const originalAddEventListsner = originalIpc.addEventListener.bind(originalIpc)
   const wrappedSend = () => {}
-  const wrappedOnMessage = async (data) => {
-    if (typeof data === 'string') {
-      return
-    }
-    if ('result' in data) {
-      callbacks[data.id].resolve(data.result)
-    } else if ('error' in data) {
-      callbacks[data.id].reject(data.error)
+  const wrappedOnMessage = async (event) => {
+    const { data } = event
+    if ('result' in data || 'error' in data) {
+      callbacks[data.id](data)
+      delete callbacks[data.id]
     } else if ('method' in data) {
       switch (data.method) {
         case 'TitleBar.handleTitleBarButtonClickClose':
-          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.onmessage = originalAddEventListsner
           RendererProcess.state.ipc.send = originalSend
           await Command.execute('ElectronWindow.close')
           RendererProcess.state.ipc.onmessage = wrappedOnMessage
           RendererProcess.state.ipc.send = wrappedSend
           break
         case 'TitleBar.handleTitleBarButtonClickMinimize':
-          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.onmessage = originalAddEventListsner
           RendererProcess.state.ipc.send = originalSend
           await Command.execute('ElectronWindow.minimize')
           RendererProcess.state.ipc.onmessage = wrappedOnMessage
           RendererProcess.state.ipc.send = wrappedSend
           break
         case 'TitleBar.handleTitleBarButtonClickToggleMaximize':
-          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.onmessage = originalAddEventListsner
           RendererProcess.state.ipc.send = originalSend
           await Command.execute('ElectronWindow.maximize')
           RendererProcess.state.ipc.onmessage = wrappedOnMessage
@@ -103,22 +105,20 @@ export const replaySession = async (sessionId) => {
     }
   }
   RendererProcess.state.ipc.send = wrappedSend
-  RendererProcess.state.ipc.onmessage = wrappedOnMessage
+  RendererProcess.state.ipc.addEventListener('message', wrappedOnMessage)
   const callbacks = Object.create(null)
   const invoke = (event) => {
-    return new Promise((resolve, reject) => {
-      callbacks[event.id] = { resolve, reject }
-      originalSend(event)
-    })
+    const { resolve, promise } = Promises.withResolvers()
+    callbacks[event.id] = resolve
+    originalSend(event)
+    return promise
   }
   let now = 0
   for (const event of events) {
     if (event.source === 'to-renderer-process' && !DONT_REPLAY.has(event.method)) {
       // console.log(event.timestamp)
       const timeDifference = event.timestamp - now
-      await new Promise((resolve, reject) => {
-        setTimeout(resolve, timeDifference)
-      })
+      await Timeout.sleep(timeDifference)
       await invoke(event)
       now = event.timestamp
     }
@@ -165,6 +165,7 @@ const wrapIpc = (ipc, name, getData) => {
       ipc.onmessage = listener
     },
   }
+  // TODO use addeventlistener
   const originalOnMessage = wrappedIpc.onmessage
   wrappedIpc.onmessage = async (event) => {
     const message = getData(event)
