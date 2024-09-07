@@ -9,6 +9,7 @@ const handleClose = () => {
 }
 
 export const handleElectronMessagePort = async (messagePort, ipcId) => {
+  console.log({ messagePort, ipcId })
   Assert.object(messagePort)
   const ipc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,

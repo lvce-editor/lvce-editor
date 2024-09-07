@@ -1,13 +1,13 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as PrettyError from '../PrettyError/PrettyError.js'
-import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 
-const preparePrettyError = PrettyError.prepare
+const preparePrettyError = (error) => {
+  return error
+}
 
 const logError = (error, prettyError) => {
-  PrintPrettyError.printPrettyError(prettyError, `[extension-host-helper-process] `)
+  // this is handled by shared process
 }
 
 const requiresSocket = () => {
