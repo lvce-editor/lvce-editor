@@ -67,7 +67,6 @@ export const replaySession = async (sessionId) => {
   const events = await GetSessionEvents.getSessionEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
   HandleIpc.unhandleIpc(originalIpc)
-  console.log({ originalIpc })
   const originalSend = originalIpc.send.bind(originalIpc)
   const originalAddEventListsner = originalIpc.addEventListener.bind(originalIpc)
   const wrappedSend = () => {}
