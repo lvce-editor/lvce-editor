@@ -31,6 +31,6 @@ export const executeTextSearchProvider = async (scheme, query) => {
   }
 }
 
-const reset = () => {
+export const reset = () => {
   state.textSearchProviders = Object.create(null)
 }

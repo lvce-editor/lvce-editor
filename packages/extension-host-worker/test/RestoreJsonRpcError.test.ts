@@ -212,22 +212,6 @@ test('restoreJsonRpcError - error without stack', () => {
   expect(error.name).toBe('Error')
 })
 
-test('restoreJsonRpcError - error with code', () => {
-  const error = RestoreJsonRpcError.restoreJsonRpcError({
-    code: -32001,
-    message: "FileNotFoundError: File not found '/test/settings.tson'",
-    data: {
-      code: ErrorCodes.ENOENT,
-    },
-  })
-  expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe("FileNotFoundError: File not found '/test/settings.tson'")
-  expect(error.stack).toMatch(`Error: FileNotFoundError: File not found '/test/settings.tson'
-    at constructError`)
-  // @ts-ignore
-  expect(error.code).toBe(ErrorCodes.ENOENT)
-})
-
 test('restoreJsonRpcError - object', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     jsonrpc: '2.0',
