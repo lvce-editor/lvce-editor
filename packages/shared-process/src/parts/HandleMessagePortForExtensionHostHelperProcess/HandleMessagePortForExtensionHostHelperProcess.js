@@ -16,7 +16,7 @@ export const handleMessagePortForExtensionHostHelperProcess = async (rendererWor
     method: IpcParentType.ElectronUtilityProcess,
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort', IpcId.ExtensionHostWorker)
+  await JsonRpc.invokeAndTransfer(ipc, 'HandleElectronMessagePort.handleElectronMessagePort', port, IpcId.ExtensionHostWorker)
   // const cleanup = () => {
   //   ipc.dispose()
   //   rendererWorkerIpc.off('close', cleanup)
