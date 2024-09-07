@@ -44,7 +44,6 @@ test('create', async () => {
   })
   expect(Rpc.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(Rpc.invokeAndTransfer).toHaveBeenCalledWith(
-    [{ isPort: true }],
     'SendMessagePortToElectron.sendMessagePortToElectron',
     {
       isPort: true,
