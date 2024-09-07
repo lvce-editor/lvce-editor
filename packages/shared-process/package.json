@@ -29,7 +29,7 @@
     "@lvce-editor/jsonc-parser": "^1.4.0",
     "@lvce-editor/pretty-error": "^1.6.0",
     "@lvce-editor/verror": "^1.4.0",
-    "debug": "^4.3.6",
+    "debug": "^4.3.7",
     "is-object": "^1.0.2",
     "xdg-basedir": "^5.1.0"
   },
