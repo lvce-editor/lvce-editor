@@ -60,12 +60,14 @@ export const getModuleId = async (uri) => {
   // TODO only request webviews once
   const webViews = await GetWebViews.getWebViews()
   for (const webView of webViews) {
-    for (const selector of webView.selectors || []) {
+    for (const selector of webView.selector || []) {
       if (uri.endsWith(selector)) {
         return ViewletModuleId.WebView
       }
     }
   }
+  console.log({ webViews, uri })
+  console.log('no webview')
   const fileExtension = Path.fileExtension(uri)
   const type = mapExtToEditorType[fileExtension]
   if (type) {

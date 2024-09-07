@@ -21,7 +21,7 @@ const getWebViewId = async (uri) => {
   }
   const webViews = await GetWebViews.getWebViews()
   for (const webView of webViews) {
-    for (const selector of webView.selectors || []) {
+    for (const selector of webView.selector || []) {
       if (uri.endsWith(selector)) {
         return webView.id
       }
