@@ -15,6 +15,6 @@ export const launchExtensionHostWorker = async () => {
     url: ExtensionHostWorkerUrl.extensionHostWorkerUrl,
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke('Workspace.setWorkspacePath', Workspace.state.workspacePath)
+  await JsonRpc.invoke(ipc, 'Workspace.setWorkspacePath', Workspace.state.workspacePath)
   return ipc
 }
