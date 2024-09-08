@@ -17,9 +17,6 @@ import * as Logger from '../Logger/Logger.js'
 export const getElectronFileResponse = async (url, request) => {
   try {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
-    if (pathName < 20) {
-      console.log({ pathName })
-    }
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag
     // TODO when is there no request?
