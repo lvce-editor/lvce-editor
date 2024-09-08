@@ -495,21 +495,22 @@ const getHandleMessage = (request) => {
   }
 }
 
-const sendHandle = (request, socket, method, ...params) => {
-  if (request.url.length < 20) {
-    console.log('send', request.url)
+const handleRequestError = (error) => {
+  if (error && error.code === 'ECONNRESET') {
+    // ignore
+    return
   }
-  request.on('error', (error) => {
-    if (error && error.code === 'ECONNRESET') {
-      // ignore
-      return
-    }
-    console.info('[info]: request upgrade error', error)
-  })
-  socket.on('error', () => {
-    // @ts-ignore
-    console.info('[info] request socket upgrade error', error)
-  })
+  console.info('[info]: request upgrade error', error)
+}
+
+const handleSocketError = (error) => {
+  // @ts-ignore
+  console.info('[info] request socket upgrade error', error)
+}
+
+const sendHandle = (request, socket, method, ...params) => {
+  request.on('error', handleRequestError)
+  socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
     case /* off */ 0:
       state.onSharedProcessReady.push(() => {
