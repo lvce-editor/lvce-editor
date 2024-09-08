@@ -21,9 +21,9 @@ const getPlatform = () => {
   if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
     return PlatformType.Electron
   }
-  // if (typeof name !== 'undefined' && name.endsWith('(Web)')) {
-  //   return PlatformType.Web
-  // }
+  if (typeof name !== 'undefined' && name.endsWith('(Web)')) {
+    return PlatformType.Web
+  }
   return PlatformType.Remote
 }
 
