@@ -1,11 +1,12 @@
 import * as GetFileHandle from '../GetFileHandle/GetFileHandle.js'
 
 export const getBlobSrcFromFile = async (uri) => {
-  const handle = await GetFileHandle.getFileHandle(uri)
+  const filePath = uri.slice('html://'.length)
+  const handle = await GetFileHandle.getFileHandle(filePath)
   if (!handle) {
     throw new Error(`file not found`)
   }
-  console.log({ handle })
-  // TODO create object url from file
-  return undefined
+  const file = await handle.getFile()
+  const blobUrl = URL.createObjectURL(file)
+  return blobUrl
 }
