@@ -17,7 +17,11 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
   }
-  if (url === '/') {
+  if (url.length < 20) {
+    console.log({ url })
+  }
+  // TODO not in production
+  if (url === '/' || url === '/?web') {
     content = await AddCustomRendererProcessPath.addCustomRendererProcessPath(content)
   }
   if (typeof content === 'string') {
