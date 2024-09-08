@@ -85,8 +85,8 @@ const clean = async (root) => {
 /**
  * @param {string} root
  */
-const copyStaticFiles = async (root, commitHash) => {
-  await FileSystem.copy(Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static'), Path.join(root, 'dist'))
+const copyStaticFiles = async (root, serverStaticPath) => {
+  await FileSystem.copy(serverStaticPath, Path.join(root, 'dist'))
 }
 
 const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }) => {
@@ -102,7 +102,7 @@ const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }) =
   )
 }
 
-const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
+const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }) => {
   await applyOverridesRendererProcess({ root, commitHash, pathPrefix })
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
@@ -130,7 +130,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
   )
 
-  const extensionDirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions'))
+  const extensionDirents = await FileSystem.readDir(Path.join(serverStaticPath, commitHash, 'extensions'))
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)
   const themeDirents = extensionDirents.filter(isTheme)
@@ -162,7 +162,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
    * @param {string} dirent
    */
   const getManifestPath = (dirent) => {
-    return Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', dirent, 'extension.json')
+    return Path.join(serverStaticPath, commitHash, 'extensions', dirent, 'extension.json')
   }
 
   const manifestPaths = languageBasicsDirents.map(getManifestPath)
@@ -175,7 +175,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
 
   for (const languageBasicsDirent of languageBasicsDirents) {
     await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', languageBasicsDirent),
+      Path.join(serverStaticPath, commitHash, 'extensions', languageBasicsDirent),
       Path.join(root, 'dist', commitHash, 'extensions', languageBasicsDirent),
     )
   }
@@ -183,7 +183,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   for (const themeDirent of themeDirents) {
     const themeId = getThemeName(themeDirent)
     await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', themeDirent, 'color-theme.json'),
+      Path.join(serverStaticPath, commitHash, 'extensions', themeDirent, 'color-theme.json'),
       Path.join(root, 'dist', commitHash, 'themes', `${themeId}.json`),
     )
   }
@@ -194,7 +194,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   for (const iconThemeDirent of iconThemeDirents) {
     const iconThemeId = iconThemeDirent.slice('builtin.'.length)
     await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', iconThemeDirent, 'icon-theme.json'),
+      Path.join(serverStaticPath, commitHash, 'extensions', iconThemeDirent, 'icon-theme.json'),
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`),
     )
   }
@@ -439,16 +439,31 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   await FileSystem.writeFile(`${root}/dist/tests/index.html`, testOverviewHtml)
 }
 
+const resolveServerStaticPath = (root) => {
+  const guessOne = Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static')
+  if (existsSync(guessOne)) {
+    return guessOne
+  }
+  const guessTwo = Path.join(root, 'packages', 'build', 'node_modules', '@lvce-editor', 'server', 'static')
+  if (existsSync(guessTwo)) {
+    return guessTwo
+  }
+  throw new Error(`server static path not found`)
+}
+
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string, useSimpleWebExtensionFile?:boolean }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
-export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, useSimpleWebExtensionFile }) => {
+export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, useSimpleWebExtensionFile, serverStaticPath }) => {
   if (!existsSync(root)) {
     throw new Error(`root path does not exist: ${root}`)
   }
   if (!existsSync(extensionPath)) {
     throw new Error(`extension path does not exist: ${extensionPath}`)
+  }
+  if (!serverStaticPath) {
+    serverStaticPath = resolveServerStaticPath(root)
   }
   if (pathPrefix === 'auto') {
     const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
@@ -456,7 +471,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
     const [author, name] = id.split('.')
     pathPrefix = `/${name}`
   }
-  const dirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static'))
+  const dirents = await FileSystem.readDir(serverStaticPath)
   const commitHash = dirents.find(isCommitHash) || ''
 
   console.time('clean')
@@ -464,7 +479,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
   console.timeEnd('clean')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles(root, commitHash)
+  await copyStaticFiles(root, serverStaticPath)
   console.timeEnd('copyStaticFiles')
 
   console.time('applyOverrides')
@@ -472,6 +487,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
     root,
     commitHash,
     pathPrefix,
+    serverStaticPath,
   })
   console.timeEnd('applyOverrides')
 
