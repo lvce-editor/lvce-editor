@@ -5,5 +5,7 @@ export const getBlobSrcFromFile = async (uri) => {
   if (!handle) {
     throw new Error(`file not found`)
   }
+  console.log({ handle })
   // TODO create object url from file
+  return undefined
 }
