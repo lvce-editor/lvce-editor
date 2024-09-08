@@ -100,7 +100,7 @@ const getDirectoryHandle = async (uri) => {
   return getDirectoryHandle(dirname)
 }
 
-const getFileHandle = async (uri) => {
+export const getFileHandle = async (uri) => {
   const handle = await PersistentFileHandle.getHandle(uri)
   if (handle) {
     return handle
