@@ -15,4 +15,5 @@
 .WebViewIframe {
   flex: 1;
   contain: strict;
+  border: none;
 }
