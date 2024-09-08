@@ -1,6 +1,8 @@
+import * as CanUseBlobFromFileLoading from '../CanUseBlobFromFileLoading/CanUseBlobFromFileLoading.js'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetBlobSrcFromFile from '../GetBlobSrcFromFile/GetBlobSrcFromFile.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 import * as Protocol from '../Protocol/Protocol.js'
@@ -19,6 +21,9 @@ const canUseRemoteLoading = (uri) => {
 }
 
 export const getSrc = (uri) => {
+  if (CanUseBlobFromFileLoading.canUseBlobFromFileLoading(uri)) {
+    return GetBlobSrcFromFile.getBlobSrcFromFile(uri)
+  }
   if (canUseRemoteLoading(uri)) {
     return GetRemoteSrc.getRemoteSrc(uri)
   }
