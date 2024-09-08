@@ -264,6 +264,7 @@ const serve404 = () =>
 const createApp = () => {
   const handlerMap = Object.create(null)
   const callback = (req, res) => {
+    // TODO avoid closure
     req.on('error', (error) => {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ECONNRESET) {
@@ -272,10 +273,10 @@ const createApp = () => {
       console.info('[info: request error]', error)
     })
     // @ts-ignore
-    const pathMatch = req.url.match(/^(\/[^\/]*)/)
-    // @ts-ignore
-    const path = pathMatch[1]
-    const handlers = handlerMap[path] || handlerMap['*']
+    const pathName = getPathName(req)
+    const lastSlashIndex = pathName.indexOf('/', 1)
+    const prefix = lastSlashIndex === -1 ? pathName : pathName.slice(0, lastSlashIndex)
+    const handlers = handlerMap[prefix] || handlerMap['*']
     let i = 0
     const next = () => {
       const fn = i < handlers.length ? handlers[i++] : serve404()
@@ -495,6 +496,9 @@ const getHandleMessage = (request) => {
 }
 
 const sendHandle = (request, socket, method, ...params) => {
+  if (request.url.length < 20) {
+    console.log('send', request.url)
+  }
   request.on('error', (error) => {
     if (error && error.code === 'ECONNRESET') {
       // ignore

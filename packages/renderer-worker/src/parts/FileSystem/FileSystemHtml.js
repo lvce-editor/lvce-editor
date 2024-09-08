@@ -6,7 +6,7 @@ import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
 import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
-import * as Path from '../Path/Path.js'
+import * as GetFileHandle from '../GetFileHandle/GetFileHandle.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
 
@@ -88,36 +88,9 @@ export const readDirWithFileTypes = async (uri) => {
   }
 }
 
-const getDirectoryHandle = async (uri) => {
-  const handle = await PersistentFileHandle.getHandle(uri)
-  if (handle) {
-    return handle
-  }
-  const dirname = Path.dirname(pathSeparator, uri)
-  if (uri === dirname) {
-    return undefined
-  }
-  return getDirectoryHandle(dirname)
-}
-
-export const getFileHandle = async (uri) => {
-  const handle = await PersistentFileHandle.getHandle(uri)
-  if (handle) {
-    return handle
-  }
-  const dirname = Path.dirname(pathSeparator, uri)
-  const parentHandle = await getDirectoryHandle(dirname)
-  if (!parentHandle) {
-    return undefined
-  }
-  const baseName = Path.getBaseName(pathSeparator, uri)
-  const fileHandle = await FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName)
-  return fileHandle
-}
-
 export const readFile = async (uri) => {
   try {
-    const handle = await getFileHandle(uri)
+    const handle = await GetFileHandle.getFileHandle(uri)
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
@@ -134,7 +107,7 @@ export const readFile = async (uri) => {
 
 export const writeFile = async (uri, content) => {
   try {
-    const handle = await getFileHandle(uri)
+    const handle = await GetFileHandle.getFileHandle(uri)
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
