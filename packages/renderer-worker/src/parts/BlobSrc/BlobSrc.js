@@ -19,9 +19,9 @@ const canUseRemoteLoading = (uri) => {
 }
 
 export const getSrc = (uri) => {
-  if (canUseRemoteLoading(uri)) {
-    return GetRemoteSrc.getRemoteSrc(uri)
-  }
+  // if (canUseRemoteLoading(uri)) {
+  //   return GetRemoteSrc.getRemoteSrc(uri)
+  // }
   return getSrcWithBlobUrl(uri)
 }
 
