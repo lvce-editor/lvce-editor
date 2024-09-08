@@ -66,8 +66,6 @@ export const getModuleId = async (uri) => {
       }
     }
   }
-  console.log({ webViews, uri })
-  console.log('no webview')
   const fileExtension = Path.fileExtension(uri)
   const type = mapExtToEditorType[fileExtension]
   if (type) {
