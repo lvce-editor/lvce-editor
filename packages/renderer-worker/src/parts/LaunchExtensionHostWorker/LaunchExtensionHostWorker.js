@@ -6,6 +6,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const launchExtensionHostWorker = async () => {
   const name = Platform.platform === PlatformType.Electron ? 'Extension Host (Electron)' : 'Extension Host'
@@ -16,5 +17,8 @@ export const launchExtensionHostWorker = async () => {
   })
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'Workspace.setWorkspacePath', Workspace.state.workspacePath)
+  GlobalEventBus.addListener('workspace.change', async () => {
+    await JsonRpc.invoke(ipc, 'Workspace.setWorkspacePath', Workspace.state.workspacePath)
+  })
   return ipc
 }
