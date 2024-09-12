@@ -12,6 +12,7 @@ export const create = (id, uri) => {
     portId: 0,
     origin: '',
     previewServerId: 1,
+    csp: '',
   }
 }
 
@@ -39,7 +40,7 @@ export const loadContent = async (state) => {
   if (!webViewResult) {
     return state
   }
-  const { iframeSrc, sandbox, portId, origin, srcDoc } = webViewResult
+  const { iframeSrc, sandbox, portId, origin, srcDoc, csp } = webViewResult
   return {
     ...state,
     iframeSrc,
@@ -47,5 +48,6 @@ export const loadContent = async (state) => {
     portId,
     origin,
     srcDoc,
+    csp,
   }
 }

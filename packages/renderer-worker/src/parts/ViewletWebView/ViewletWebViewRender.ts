@@ -6,7 +6,7 @@ export const hasFunctionalRootRender = true
 
 const renderWebView = {
   isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc && oldState.srcDoc === newState.srcDoc
+    return oldState.iframeSrc === newState.iframeSrc && oldState.srcDoc === newState.srcDoc && oldState.csp === newState.csp
   },
   apply(oldState, newState) {
     const dom = GetWebViewVirtualDom.getWebViewVirtualDom()
@@ -16,11 +16,16 @@ const renderWebView = {
 
 const renderIframe = {
   isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc && oldState.sandbox === newState.sandbox && oldState.srcDoc === newState.srcDoc
+    return (
+      oldState.iframeSrc === newState.iframeSrc &&
+      oldState.sandbox === newState.sandbox &&
+      oldState.srcDoc === newState.srcDoc &&
+      oldState.csp === newState.csp
+    )
   },
   apply(oldState, newState) {
     // TODO support CSP also in web
-    return ['setIframe', newState.iframeSrc, newState.sandbox, newState.srcDoc]
+    return ['setIframe', newState.iframeSrc, newState.sandbox, newState.srcDoc, newState.csp]
   },
 }
 
