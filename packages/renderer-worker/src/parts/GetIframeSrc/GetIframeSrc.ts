@@ -65,7 +65,7 @@ const createSrcDoc = (webView, webViewPort) => {
     if (element.type === 'title') {
       middle.push(`<title>${element.value}</title>`)
     } else if (element.type === 'script') {
-      middle.push(`<script type="module" src="${AssetDir.assetDir}/preview-injected.js">`)
+      middle.push(`<script type="module" src="http://localhost:3002${AssetDir.assetDir}/preview-injected.js">`)
       middle.push(`<script type="module" src="${baseUrl}/${element.path}"></script>`)
     } else if (element.type === 'css') {
       middle.push(`<link rel="stylesheet" href="${baseUrl}/${element.path}" />`)
@@ -96,12 +96,10 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
         webViewRoot: '',
       }
     }
-    console.log({ webView })
     const webViewUri = getWebViewUri(webViews, webViewId)
     if (!webViewUri) {
       return undefined
     }
-    console.log({ webViewUri })
     let iframeSrc = webViewUri
     let webViewRoot = webViewUri
     if (Platform.platform === PlatformType.Electron) {
