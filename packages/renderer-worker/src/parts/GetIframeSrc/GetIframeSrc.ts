@@ -4,13 +4,21 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import { VError } from '../VError/VError.js'
 
-const getWebViewPath = (webViews, webViewId) => {
+const getWebView = (webViews, webViewId) => {
   for (const webView of webViews) {
     if (webView.id === webViewId) {
-      return webView.path
+      return webView
     }
   }
-  return ''
+  return undefined
+}
+
+const getWebViewPath = (webViews, webViewId) => {
+  const webView = getWebView(webViews, webViewId)
+  if (!webView) {
+    return ''
+  }
+  return webView.path
 }
 
 const getWebViewUri = (webViews, webViewId) => {
@@ -27,10 +35,16 @@ const getWebViewUri = (webViews, webViewId) => {
 
 export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
+    const webView = getWebView(webViews, webViewId)
+    if (!webView) {
+      return undefined
+    }
+    console.log({ webView })
     const webViewUri = getWebViewUri(webViews, webViewId)
     if (!webViewUri) {
       return undefined
     }
+    console.log({ webViewUri })
     let iframeSrc = webViewUri
     let webViewRoot = webViewUri
     if (Platform.platform === PlatformType.Electron) {

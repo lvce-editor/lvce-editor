@@ -43,7 +43,6 @@ export const getLanguages = async () => {
 }
 
 const getWebViewsFromExtensions = (extensions) => {
-  // console.log({ extensions })
   const webViews = []
   for (const extension of extensions) {
     if (extension && extension.webViews) {
@@ -51,10 +50,9 @@ const getWebViewsFromExtensions = (extensions) => {
         const path = join(extension.path, webView.path)
         const remotePath = GetRemoteUrl.getRemoteUrl(path)
         webViews.push({
-          id: webView.id,
+          ...webView,
           path,
           remotePath,
-          selector: webView.selector,
         })
       }
     }
