@@ -6,7 +6,7 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 
 export const getHeadersMainFrame = () => {
   return {
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
+    // [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
