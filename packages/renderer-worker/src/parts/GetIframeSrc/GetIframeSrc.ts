@@ -1,4 +1,5 @@
-import * as CreateUrl from '../CreateUrl/CreateUrl.ts'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as CreateLocalHostUrl from '../CreateLocalHostUrl/CreateLocalHostUrl.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Scheme from '../Scheme/Scheme.ts'
@@ -33,16 +34,41 @@ const getWebViewUri = (webViews, webViewId) => {
   return webViewPath
 }
 
-const createSrcDoc = (webView) => {
+const getDefaultBaseUrl = (webView) => {
+  const { remotePath } = webView
+  if (remotePath.endsWith('/index.html')) {
+    return remotePath.slice(0, -'/index.html'.length)
+  }
+  return remotePath
+}
+
+const getBaseUrl = (webView, webViewPort) => {
+  const defaultBaseUrl = getDefaultBaseUrl(webView)
+  if (Platform.platform === PlatformType.Web) {
+    return defaultBaseUrl
+  }
+  if (Platform.platform === PlatformType.Remote) {
+    return `http://localhost:${webViewPort}/${defaultBaseUrl}`
+  }
+  if (Platform.platform === PlatformType.Electron) {
+    // TODO
+    return defaultBaseUrl
+  }
+  throw new Error(`unsupported platform`)
+}
+
+const createSrcDoc = (webView, webViewPort) => {
   const { elements } = webView
+  const baseUrl = getBaseUrl(webView, webViewPort)
   const middle: string[] = []
   for (const element of elements) {
     if (element.type === 'title') {
       middle.push(`<title>${element.value}</title>`)
     } else if (element.type === 'script') {
-      middle.push(`<script type="module" src="${element.path}"></script>`)
+      middle.push(`<script type="module" src="${AssetDir.assetDir}/preview-injected.js">`)
+      middle.push(`<script type="module" src="${baseUrl}/${element.path}"></script>`)
     } else if (element.type === 'css') {
-      middle.push(`<link rel="stylesheet" href="${element.path}" />`)
+      middle.push(`<link rel="stylesheet" href="${baseUrl}/${element.path}" />`)
     }
   }
   const middleHtml = middle.join('\n    ')
@@ -62,7 +88,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     if (!webView) {
       return undefined
     }
-    const srcDoc = createSrcDoc(webView)
+    const srcDoc = createSrcDoc(webView, webViewPort)
     if (srcDoc) {
       return {
         srcDoc,
@@ -90,11 +116,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
       } else {
         webViewRoot = root + relativePath
       }
-      if (isGitpod) {
-        iframeSrc = CreateUrl.createUrl(locationProtocol, locationHost.replace('3000', webViewPort))
-      } else {
-        iframeSrc = `http://localhost:${webViewPort}`
-      }
+      iframeSrc = CreateLocalHostUrl.createLocalHostUrl(locationProtocol, locationHost, isGitpod, webViewPort)
     }
     return {
       srcDoc: '',
