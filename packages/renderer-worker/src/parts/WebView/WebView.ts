@@ -25,7 +25,7 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     return undefined
   }
 
-  const { iframeSrc, webViewRoot } = iframeResult
+  const { iframeSrc, webViewRoot, srcDoc } = iframeResult
   const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(location.protocol, location.host)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
@@ -61,6 +61,7 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
   return {
+    srcDoc,
     iframeSrc,
     sandbox,
     portId,

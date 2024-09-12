@@ -33,11 +33,24 @@ const getWebViewUri = (webViews, webViewId) => {
   return webViewPath
 }
 
+const createSrcDoc = (webView) => {
+  const { elements } = webView
+  return `<h1>hello world</h1>`
+}
+
 export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
     const webView = getWebView(webViews, webViewId)
     if (!webView) {
       return undefined
+    }
+    const srcDoc = createSrcDoc(webView)
+    if (srcDoc) {
+      return {
+        srcDoc,
+        iframeSrc: '',
+        webViewRoot: '',
+      }
     }
     console.log({ webView })
     const webViewUri = getWebViewUri(webViews, webViewId)
@@ -66,6 +79,7 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
       }
     }
     return {
+      srcDoc: '',
       iframeSrc,
       webViewRoot,
     }
