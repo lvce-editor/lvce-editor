@@ -12,7 +12,7 @@ const getFrameSrc = () => {
   if (IsElectron.isElectron) {
     return [`frame-src ${Scheme.WebView}:`]
   }
-  return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
+  return [`frame-src 'self' blob: http://localhost:3001 http://localhost:3002`]
 }
 
 const getManifestSrc = () => {

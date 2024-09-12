@@ -57,7 +57,7 @@ const getBaseUrl = (webView, webViewPort) => {
   throw new Error(`unsupported platform`)
 }
 
-const createSrcDoc = (webView, webViewPort) => {
+const createSrcHtml = (webView, webViewPort) => {
   const { elements } = webView
   const baseUrl = getBaseUrl(webView, webViewPort)
   const middle: string[] = []
@@ -91,11 +91,16 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     if (!webView) {
       return undefined
     }
-    const srcDoc = createSrcDoc(webView, webViewPort)
-    if (srcDoc) {
+    const srcHtml = createSrcHtml(webView, webViewPort)
+    if (srcHtml) {
+      const blob = new Blob([srcHtml], {
+        type: 'text/html',
+      })
+      const url = URL.createObjectURL(blob)
+      // TODO revoke object url and dispose blob when webview is disposed
       return {
-        srcDoc,
-        iframeSrc: '',
+        srcDoc: '',
+        iframeSrc: url,
         webViewRoot: '',
       }
     }
