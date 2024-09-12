@@ -35,7 +35,25 @@ const getWebViewUri = (webViews, webViewId) => {
 
 const createSrcDoc = (webView) => {
   const { elements } = webView
-  return `<h1>hello world</h1>`
+  const middle: string[] = []
+  for (const element of elements) {
+    if (element.type === 'title') {
+      middle.push(`<title>${element.value}</title>`)
+    } else if (element.type === 'script') {
+      middle.push(`<script type="module" src="${element.path}"></script>`)
+    } else if (element.type === 'css') {
+      middle.push(`<link rel="stylesheet" href="${element.path}" />`)
+    }
+  }
+  const middleHtml = middle.join('\n    ')
+  let html = `<!DOCTYPE html>
+<html>
+  <head>
+    ${middleHtml}
+  </head>
+</html>
+`
+  return html
 }
 
 export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
