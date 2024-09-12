@@ -61,6 +61,9 @@ const createSrcDoc = (webView, webViewPort) => {
   const { elements } = webView
   const baseUrl = getBaseUrl(webView, webViewPort)
   const middle: string[] = []
+  const csp = `default-src 'none'; script-src 'self'; style-src 'self';`
+  middle.push('<meta charset="utf-8">')
+  middle.push(`<meta http-equiv="Content-Security-Policy" content="${csp}">`)
   for (const element of elements) {
     if (element.type === 'title') {
       middle.push(`<title>${element.value}</title>`)

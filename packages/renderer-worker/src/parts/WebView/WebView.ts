@@ -60,8 +60,9 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     origin = '*'
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
-  const localHost = `http://localhost:3002`
-  const csp = `default-src 'none'; script-src ${localHost}; style-src ${localHost}; img-src ${localHost}`
+  // const localHost = `http://localhost:3002`
+  // const csp = `default-src 'none'; script-src ${localHost}; style-src ${localHost}; img-src ${localHost}`
+  const csp = ''
   return {
     srcDoc,
     iframeSrc,
