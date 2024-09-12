@@ -1,6 +1,7 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as CreateLocalHostUrl from '../CreateLocalHostUrl/CreateLocalHostUrl.ts'
 import * as Platform from '../Platform/Platform.js'
+import * as Base64 from '../Base64/Base64.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import { VError } from '../VError/VError.js'
@@ -85,7 +86,7 @@ const createSrcHtml = (webView, webViewPort) => {
   return html
 }
 
-export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
+export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
     const webView = getWebView(webViews, webViewId)
     if (!webView) {
@@ -93,14 +94,12 @@ export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, l
     }
     const srcHtml = createSrcHtml(webView, webViewPort)
     if (srcHtml) {
-      const blob = new Blob([srcHtml], {
-        type: 'text/html',
-      })
-      const url = URL.createObjectURL(blob)
-      // TODO revoke object url and dispose blob when webview is disposed
+      const base64 = await Base64.encode(srcHtml)
+      const dataUrl = `data:text/html;base64,${base64}`
+      console.log({ dataUrl })
       return {
         srcDoc: '',
-        iframeSrc: url,
+        iframeSrc: dataUrl,
         webViewRoot: '',
       }
     }
