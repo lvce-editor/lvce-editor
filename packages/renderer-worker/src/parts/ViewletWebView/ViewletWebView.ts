@@ -1,8 +1,9 @@
 import * as WebView from '../WebView/WebView.ts'
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
+import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
-export const create = (id, uri) => {
+export const create = (id: number, uri: string): ViewletWebViewState => {
   return {
     id,
     uri,
@@ -32,7 +33,7 @@ const getWebViewId = async (uri) => {
   return ''
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWebViewState> => {
   const { uri, previewServerId } = state
   const webViewId = await getWebViewId(uri)
   const webViewPort = GetWebViewPort.getWebViewPort()
