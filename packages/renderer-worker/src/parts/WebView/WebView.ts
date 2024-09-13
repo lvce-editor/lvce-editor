@@ -10,6 +10,7 @@ import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
@@ -60,9 +61,7 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     origin = '*'
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
-  // const localHost = `http://localhost:3002`
-  // const csp = `default-src 'none'; script-src ${localHost}; style-src ${localHost}; img-src ${localHost}`
-  const csp = `default-src *; script-src *; style-src *; script-src-elem *; style-src-elem *`
+  const csp = GetWebViewCsp.getWebViewCsp() // TODO only in web
   return {
     srcDoc,
     iframeSrc,
