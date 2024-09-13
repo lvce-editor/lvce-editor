@@ -9,7 +9,7 @@ export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGit
   try {
     const webView = GetWebView.getWebView(webViews, webViewId)
     if (Platform.platform === PlatformType.Web) {
-      return GetIframeSrcWeb.getIframeSrc(webView, webViewPort)
+      return GetIframeSrcWeb.getIframeSrc(webView)
     }
     return GetIframeSrcRemote.getIframeSrcRemote(webViews, webViewPort, webViewId, locationProtocol, locationHost, isGitpod, root)
   } catch (error) {
