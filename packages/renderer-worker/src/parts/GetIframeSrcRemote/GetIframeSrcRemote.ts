@@ -32,7 +32,7 @@ const getWebViewUri = (webViews, webViewId) => {
   return webViewPath
 }
 
-export const getIframeSrcRemote = async (webViews, webView, webViewPort, webViewId, locationProtocol, locationHost, isGitpod, root) => {
+export const getIframeSrcRemote = async (webViews, webViewPort, webViewId, locationProtocol, locationHost, isGitpod, root) => {
   const webViewUri = getWebViewUri(webViews, webViewId)
   if (!webViewUri) {
     return undefined

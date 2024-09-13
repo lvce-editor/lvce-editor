@@ -19,7 +19,7 @@ export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGit
     if (Platform.platform === PlatformType.Web) {
       return GetIframeSrcWeb.getIframeSrc(webView, webViewPort)
     }
-    return GetIframeSrcRemote.getIframeSrcRemote(webViews, webView)
+    return GetIframeSrcRemote.getIframeSrcRemote(webViews, webViewPort, webViewId, locationProtocol, locationHost, isGitpod, root)
   } catch (error) {
     throw new VError(error, `Failed to construct webview iframe src`)
   }
