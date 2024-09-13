@@ -1,11 +1,20 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 
 const getDefaultBaseUrl = (webView: any) => {
-  const { remotePath } = webView
-  if (remotePath.endsWith('/index.html')) {
-    return remotePath.slice(0, -'/index.html'.length)
+  const { remotePath, path } = webView
+  if (remotePath) {
+    if (remotePath.endsWith('/index.html')) {
+      return remotePath.slice(0, -'/index.html'.length)
+    }
+    return remotePath
   }
-  return remotePath
+  if (path) {
+    if (path.endsWith('/index.html')) {
+      return path.slice(0, -'/index.html'.length)
+    }
+    return path
+  }
+  return ''
 }
 
 const getBaseUrl = (webView: any) => {
