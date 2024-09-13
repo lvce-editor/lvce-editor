@@ -33,7 +33,7 @@ export const getWebViewHtml = (webView: any): string => {
     if (element.type === 'title') {
       middle.push(`<title>${element.value}</title>`)
     } else if (element.type === 'script') {
-      middle.push(`<script type="module" src="${AssetDir.assetDir}/preview-injected.js">`)
+      middle.push(`<script type="module" src="${AssetDir.assetDir}/preview-injected.js"></script>`)
       middle.push(`<script type="module" src="${baseUrl}/${element.path}"></script>`)
     } else if (element.type === 'css') {
       middle.push(`<link rel="stylesheet" href="${baseUrl}/${element.path}" />`)
