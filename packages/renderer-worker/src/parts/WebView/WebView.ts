@@ -20,12 +20,12 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const webViews = await GetWebViews.getWebViews()
-  const iframeResult = await GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
+  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
   if (!iframeResult) {
     return undefined
   }
 
-  const { iframeSrc, webViewRoot, srcDoc } = iframeResult
+  const { iframeSrc, webViewRoot } = iframeResult
   const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(location.protocol, location.host)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
@@ -60,15 +60,10 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     origin = '*'
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
-  // const localHost = `http://localhost:3002`
-  // const csp = `default-src 'none'; script-src ${localHost}; style-src ${localHost}; img-src ${localHost}`
-  const csp = `default-src *; script-src *; style-src *; script-src-elem *; style-src-elem *`
   return {
-    srcDoc,
     iframeSrc,
     sandbox,
     portId,
     origin,
-    csp,
   }
 }
