@@ -8,7 +8,7 @@ export const create = async (previewServerId: number) => {
   await SharedProcess.invoke('WebViewServer.create', previewServerId)
 }
 
-export const start = async (previewServerId: number, webViewPort: number) => {
+export const start = async (previewServerId: number, webViewPort: string) => {
   await SharedProcess.invoke('WebViewServer.start', previewServerId, webViewPort)
 }
 
