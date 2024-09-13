@@ -288,7 +288,7 @@ const copyColorThemes = async ({ commitHash }) => {
   })
 }
 
-const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
+const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) => {
   const allExtension = await readdir(Path.absolute('extensions'))
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
@@ -332,6 +332,50 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
       replacement: 'true',
     })
   }
+}
+
+const isOther = (extension) => {
+  if (extension.startsWith('builtin.language-basics')) {
+    return false
+  }
+  if (extension.startsWith('builtin.language-features')) {
+    return false
+  }
+  return true
+}
+
+const copyWebOtherExtensions = async ({ commitHash, pathPrefix }) => {
+  const allExtension = await readdir(Path.absolute('extensions'))
+  const otherExtensions = allExtension.filter(isOther)
+  const webExtensions = []
+  for (const extension of otherExtensions) {
+    let manifest
+    try {
+      manifest = await JsonFile.readJson(Path.absolute(`extensions/${extension}/extension.json`))
+    } catch (error) {
+      if (IsEnoentError.isEnoentError(error)) {
+        continue
+      }
+      throw error
+    }
+    if (!manifest.browser) {
+      continue
+    }
+    await Copy.copy({
+      from: `extensions/${extension}`,
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/${extension}`,
+    })
+    webExtensions.push({
+      ...manifest,
+      path: `${pathPrefix}/${commitHash}/extensions/${extension}`,
+      isWeb: true,
+    })
+  }
+  const existingWebExtensions = await JsonFile.readJson(`packages/build/.tmp/dist/${commitHash}/config/webExtensions.json`)
+  await JsonFile.writeJson({
+    to: `packages/build/.tmp/dist/${commitHash}/config/webExtensions.json`,
+    value: [...existingWebExtensions, ...webExtensions],
+  })
 }
 
 const copyIconThemes = async ({ commitHash }) => {
@@ -558,9 +602,13 @@ export const build = async ({ product }) => {
   await copyColorThemes({ commitHash })
   Console.timeEnd('copyColorThemes')
 
-  Console.time('copyWebExtensions')
-  await copyWebExtensions({ commitHash, pathPrefix })
-  Console.timeEnd('copyWebExtensions')
+  Console.time('copyWebLangugageFeaturesExtensions')
+  await copyWebLangugageFeaturesExtensions({ commitHash, pathPrefix })
+  Console.timeEnd('copyWebLangugageFeaturesExtensions')
+
+  Console.time('copyWebOtherExtensions')
+  await copyWebOtherExtensions({ commitHash, pathPrefix })
+  Console.timeEnd('copyWebOtherExtensions')
 
   if (!ignoreIconTheme) {
     Console.time('copyIconThemes')
