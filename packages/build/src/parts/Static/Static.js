@@ -24,6 +24,7 @@ import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import * as StaticContentSecurityPolicy from '../StaticContentSecurityPolicy/StaticContentSecurityPolicy.js'
 import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -113,6 +114,12 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copyFile({
     from: 'static/index.html',
     to: `packages/build/.tmp/dist/index.html`,
+  })
+  await Replace.replace({
+    path: `packages/build/.tmp/dist/index.html`,
+    occurrence: '</title>',
+    replacement: `</title>
+    <meta http-equiv="Content-Security-Policy" content="${StaticContentSecurityPolicy.staticContentSecurityPolicy}">`,
   })
   if (pathPrefix) {
     await Replace.replace({
