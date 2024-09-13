@@ -114,6 +114,12 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     from: 'static/index.html',
     to: `packages/build/.tmp/dist/index.html`,
   })
+  await Replace.replace({
+    path: `packages/build/.tmp/dist/index.html`,
+    occurrence: '</title>',
+    replacement: `</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; ">`,
+  })
   if (pathPrefix) {
     await Replace.replace({
       path: `packages/build/.tmp/dist/index.html`,
