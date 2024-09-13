@@ -1,6 +1,6 @@
-import * as WebView from '../WebView/WebView.ts'
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
+import * as WebView from '../WebView/WebView.ts'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string): ViewletWebViewState => {
