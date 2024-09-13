@@ -1,26 +1,16 @@
-import * as Base64 from '../Base64/Base64.js'
-import * as CreateLocalHostUrl from '../CreateLocalHostUrl/CreateLocalHostUrl.ts'
-import * as GetWebViewHtml from '../GetWebViewHtml/GetWebViewHtml.ts'
+import * as CreateUrl from '../CreateUrl/CreateUrl.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import { VError } from '../VError/VError.js'
 
-const getWebView = (webViews, webViewId) => {
+const getWebViewPath = (webViews, webViewId) => {
   for (const webView of webViews) {
     if (webView.id === webViewId) {
-      return webView
+      return webView.path
     }
   }
-  return undefined
-}
-
-const getWebViewPath = (webViews, webViewId) => {
-  const webView = getWebView(webViews, webViewId)
-  if (!webView) {
-    return ''
-  }
-  return webView.path
+  return ''
 }
 
 const getWebViewUri = (webViews, webViewId) => {
@@ -35,46 +25,8 @@ const getWebViewUri = (webViews, webViewId) => {
   return webViewPath
 }
 
-const getDefaultBaseUrl = (webView) => {
-  const { remotePath } = webView
-  if (remotePath.endsWith('/index.html')) {
-    return remotePath.slice(0, -'/index.html'.length)
-  }
-  return remotePath
-}
-
-const getBaseUrl = (webView, webViewPort) => {
-  const defaultBaseUrl = getDefaultBaseUrl(webView)
-  if (Platform.platform === PlatformType.Web) {
-    return defaultBaseUrl
-  }
-  if (Platform.platform === PlatformType.Remote) {
-    return `http://localhost:${webViewPort}/${defaultBaseUrl}`
-  }
-  if (Platform.platform === PlatformType.Electron) {
-    // TODO
-    return defaultBaseUrl
-  }
-  throw new Error(`unsupported platform`)
-}
-
-export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
+export const getIframeSrc = (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
-    const webView = getWebView(webViews, webViewId)
-    if (!webView) {
-      return undefined
-    }
-    const srcHtml = GetWebViewHtml.getWebViewHtml(webView, webViewPort)
-    if (srcHtml) {
-      const base64 = await Base64.encode(srcHtml)
-      const dataUrl = `data:text/html;base64,${base64}`
-      console.log({ dataUrl })
-      return {
-        srcDoc: '',
-        iframeSrc: dataUrl,
-        webViewRoot: '',
-      }
-    }
     const webViewUri = getWebViewUri(webViews, webViewId)
     if (!webViewUri) {
       return undefined
@@ -93,10 +45,13 @@ export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGit
       } else {
         webViewRoot = root + relativePath
       }
-      iframeSrc = CreateLocalHostUrl.createLocalHostUrl(locationProtocol, locationHost, isGitpod, webViewPort)
+      if (isGitpod) {
+        iframeSrc = CreateUrl.createUrl(locationProtocol, locationHost.replace('3000', webViewPort))
+      } else {
+        iframeSrc = `http://localhost:${webViewPort}`
+      }
     }
     return {
-      srcDoc: '',
       iframeSrc,
       webViewRoot,
     }
