@@ -15,7 +15,7 @@ import * as Scheme from '../Scheme/Scheme.ts'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
-export const create = async (webViewPort: number, webViewId: string, previewServerId: number, uri: string) => {
+export const create = async (webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
