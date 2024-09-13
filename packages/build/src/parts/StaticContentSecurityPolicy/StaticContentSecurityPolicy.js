@@ -4,6 +4,7 @@ export const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSe
   `default-src 'none'`,
   `font-src 'self'`,
   `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
+  `manifest-src 'self'`,
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
