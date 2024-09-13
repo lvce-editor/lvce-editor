@@ -1,7 +1,7 @@
-import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as CreateLocalHostUrl from '../CreateLocalHostUrl/CreateLocalHostUrl.ts'
-import * as Platform from '../Platform/Platform.js'
 import * as Base64 from '../Base64/Base64.js'
+import * as CreateLocalHostUrl from '../CreateLocalHostUrl/CreateLocalHostUrl.ts'
+import * as GetWebViewHtml from '../GetWebViewHtml/GetWebViewHtml.ts'
+import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import { VError } from '../VError/VError.js'
@@ -58,41 +58,13 @@ const getBaseUrl = (webView, webViewPort) => {
   throw new Error(`unsupported platform`)
 }
 
-const createSrcHtml = (webView, webViewPort) => {
-  const { elements } = webView
-  const baseUrl = getBaseUrl(webView, webViewPort)
-  const middle: string[] = []
-  const csp = `default-src 'none'; script-src http://localhost:3002; style-src http://localhost:3002;`
-  middle.push('<meta charset="utf-8">')
-  middle.push(`<meta http-equiv="Content-Security-Policy" content="${csp}">`)
-  for (const element of elements) {
-    if (element.type === 'title') {
-      middle.push(`<title>${element.value}</title>`)
-    } else if (element.type === 'script') {
-      middle.push(`<script type="module" src="http://localhost:3002${AssetDir.assetDir}/preview-injected.js">`)
-      middle.push(`<script type="module" src="${baseUrl}/${element.path}"></script>`)
-    } else if (element.type === 'css') {
-      middle.push(`<link rel="stylesheet" href="${baseUrl}/${element.path}" />`)
-    }
-  }
-  const middleHtml = middle.join('\n    ')
-  let html = `<!DOCTYPE html>
-<html>
-  <head>
-    ${middleHtml}
-  </head>
-</html>
-`
-  return html
-}
-
 export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
     const webView = getWebView(webViews, webViewId)
     if (!webView) {
       return undefined
     }
-    const srcHtml = createSrcHtml(webView, webViewPort)
+    const srcHtml = GetWebViewHtml.getWebViewHtml(webView, webViewPort)
     if (srcHtml) {
       const base64 = await Base64.encode(srcHtml)
       const dataUrl = `data:text/html;base64,${base64}`
