@@ -35,14 +35,6 @@ const getWebViewUri = (webViews, webViewId) => {
   return webViewPath
 }
 
-const getDefaultBaseUrl = (webView) => {
-  const { remotePath } = webView
-  if (remotePath.endsWith('/index.html')) {
-    return remotePath.slice(0, -'/index.html'.length)
-  }
-  return remotePath
-}
-
 export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
     const webView = getWebView(webViews, webViewId)
