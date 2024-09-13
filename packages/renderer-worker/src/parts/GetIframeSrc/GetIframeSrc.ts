@@ -43,21 +43,6 @@ const getDefaultBaseUrl = (webView) => {
   return remotePath
 }
 
-const getBaseUrl = (webView, webViewPort) => {
-  const defaultBaseUrl = getDefaultBaseUrl(webView)
-  if (Platform.platform === PlatformType.Web) {
-    return defaultBaseUrl
-  }
-  if (Platform.platform === PlatformType.Remote) {
-    return `http://localhost:${webViewPort}/${defaultBaseUrl}`
-  }
-  if (Platform.platform === PlatformType.Electron) {
-    // TODO
-    return defaultBaseUrl
-  }
-  throw new Error(`unsupported platform`)
-}
-
 export const getIframeSrc = async (webViews, webViewId, webViewPort, root, isGitpod, locationProtocol, locationHost) => {
   try {
     const webView = getWebView(webViews, webViewId)
