@@ -19,6 +19,7 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
+import * as StaticContentSecurityPolicy from '../StaticContentSecurityPolicy/StaticContentSecurityPolicy.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
@@ -118,7 +119,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     path: `packages/build/.tmp/dist/index.html`,
     occurrence: '</title>',
     replacement: `</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; ">`,
+    <meta http-equiv="Content-Security-Policy" content="${StaticContentSecurityPolicy.staticContentSecurityPolicy}">`,
   })
   if (pathPrefix) {
     await Replace.replace({
