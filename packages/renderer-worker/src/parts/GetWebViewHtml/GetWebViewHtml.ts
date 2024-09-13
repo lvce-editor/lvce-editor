@@ -1,6 +1,4 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getDefaultBaseUrl = (webView: any) => {
   const { remotePath } = webView
@@ -10,24 +8,14 @@ const getDefaultBaseUrl = (webView: any) => {
   return remotePath
 }
 
-const getBaseUrl = (webView: any, webViewPort: number) => {
+const getBaseUrl = (webView: any) => {
   const defaultBaseUrl = getDefaultBaseUrl(webView)
-  if (Platform.platform === PlatformType.Web) {
-    return defaultBaseUrl
-  }
-  if (Platform.platform === PlatformType.Remote) {
-    return `http://localhost:${webViewPort}/${defaultBaseUrl}`
-  }
-  if (Platform.platform === PlatformType.Electron) {
-    // TODO
-    return defaultBaseUrl
-  }
-  throw new Error(`unsupported platform`)
+  return defaultBaseUrl
 }
 
-export const getWebViewHtml = (webView: any, webViewPort: number): string => {
+export const getWebViewHtml = (webView: any): string => {
   const { elements } = webView
-  const baseUrl = getBaseUrl(webView, webViewPort)
+  const baseUrl = getBaseUrl(webView)
   const middle: string[] = []
   const csp = `default-src 'none'; script-src http://localhost:3002; style-src http://localhost:3002;`
   middle.push('<meta charset="utf-8">')
@@ -36,7 +24,7 @@ export const getWebViewHtml = (webView: any, webViewPort: number): string => {
     if (element.type === 'title') {
       middle.push(`<title>${element.value}</title>`)
     } else if (element.type === 'script') {
-      middle.push(`<script type="module" src="http://localhost:3002${AssetDir.assetDir}/preview-injected.js">`)
+      middle.push(`<script type="module" src="${AssetDir.assetDir}/preview-injected.js">`)
       middle.push(`<script type="module" src="${baseUrl}/${element.path}"></script>`)
     } else if (element.type === 'css') {
       middle.push(`<link rel="stylesheet" href="${baseUrl}/${element.path}" />`)

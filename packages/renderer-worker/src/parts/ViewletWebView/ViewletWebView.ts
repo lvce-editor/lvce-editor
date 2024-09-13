@@ -1,6 +1,6 @@
-import * as WebView from '../WebView/WebView.ts'
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
+import * as WebView from '../WebView/WebView.ts'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string): ViewletWebViewState => {
@@ -8,6 +8,7 @@ export const create = (id: number, uri: string): ViewletWebViewState => {
     id,
     uri,
     iframeSrc: '',
+    srcDoc: '',
     sandbox: [],
     portId: 0,
     origin: '',
@@ -40,12 +41,14 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
   if (!webViewResult) {
     return state
   }
-  const { iframeSrc, sandbox, portId, origin } = webViewResult
+  const { iframeSrc, sandbox, portId, origin, srcDoc, csp } = webViewResult
   return {
     ...state,
     iframeSrc,
     sandbox,
     portId,
     origin,
+    srcDoc,
+    csp,
   }
 }

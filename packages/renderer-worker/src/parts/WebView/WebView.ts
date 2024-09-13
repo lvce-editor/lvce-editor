@@ -10,22 +10,23 @@ import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
-export const create = async (webViewPort: number, webViewId: string, previewServerId: number, uri: string) => {
+export const create = async (webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const webViews = await GetWebViews.getWebViews()
-  const iframeResult = GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
+  const iframeResult = await GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
   if (!iframeResult) {
     return undefined
   }
 
-  const { iframeSrc, webViewRoot } = iframeResult
+  const { iframeSrc, webViewRoot, srcDoc } = iframeResult
   const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(location.protocol, location.host)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
@@ -60,10 +61,13 @@ export const create = async (webViewPort: number, webViewId: string, previewServ
     origin = '*'
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
+  const csp = GetWebViewCsp.getWebViewCsp() // TODO only in web
   return {
+    srcDoc,
     iframeSrc,
     sandbox,
     portId,
     origin,
+    csp,
   }
 }
