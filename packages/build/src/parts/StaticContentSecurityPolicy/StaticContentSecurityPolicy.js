@@ -8,4 +8,5 @@ export const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSe
   `media-src 'self'`,
   `script-src 'self'`,
   `style-src 'self'`,
+  `frame-src 'self'`,
 ])
