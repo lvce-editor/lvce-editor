@@ -153,6 +153,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
       webViews.push({
         ...webView,
         path: `${pathPrefix}/${commitHash}/extensions/${webView.path}`,
+        remotePath: `${pathPrefix}/${commitHash}/extensions/${extension.id}`,
       })
     }
     return webViews
