@@ -21,7 +21,16 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const webViews = await GetWebViews.getWebViews()
-  const iframeResult = await GetIframeSrc.getIframeSrc(webViews, webViewId, webViewPort, root, IsGitpod.isGitpod, location.protocol, location.host)
+  const iframeResult = await GetIframeSrc.getIframeSrc(
+    webViews,
+    webViewId,
+    webViewPort,
+    root,
+    IsGitpod.isGitpod,
+    location.protocol,
+    location.host,
+    location.origin,
+  )
   if (!iframeResult) {
     return undefined
   }
