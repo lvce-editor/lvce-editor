@@ -4,10 +4,10 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
 import * as IpcState from '../IpcState/IpcState.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
-import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
 
 export const launchEditorWorker = async () => {
   const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('developer.editorWorkerPath', EditorWorkerUrl.editorWorkerUrl)
