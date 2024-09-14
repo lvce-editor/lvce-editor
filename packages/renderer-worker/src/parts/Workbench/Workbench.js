@@ -66,7 +66,6 @@ export const startup = async () => {
     // TODO aquire port from other renderer worker
   }
 
-  console.log({ initData })
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
 
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
