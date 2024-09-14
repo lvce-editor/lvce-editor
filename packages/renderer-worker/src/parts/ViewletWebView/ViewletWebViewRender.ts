@@ -21,7 +21,8 @@ const renderIframe = {
       oldState.iframeSrc === newState.iframeSrc &&
       oldState.sandbox === newState.sandbox &&
       oldState.srcDoc === newState.srcDoc &&
-      oldState.csp === newState.csp
+      oldState.csp === newState.csp &&
+      oldState.credentialless === newState.credentialless
     )
   },
   apply(oldState: ViewletWebViewState, newState: ViewletWebViewState) {

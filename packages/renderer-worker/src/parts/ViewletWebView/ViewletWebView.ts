@@ -14,6 +14,7 @@ export const create = (id: number, uri: string): ViewletWebViewState => {
     origin: '',
     previewServerId: 1,
     csp: '',
+    credentialless: true,
   }
 }
 
