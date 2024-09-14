@@ -94,6 +94,10 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/icons',
     to: `packages/build/.tmp/server/server/static/${commitHash}/icons`,
   })
+  await Copy.copy({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
+    to: `packages/build/.tmp/dist/${commitHash}/js/preview-injected.js`,
+  })
   await Remove.remove(`packages/build/.tmp/server/server/static/images`)
   await Remove.remove(`packages/build/.tmp/server/server/static/${commitHash}/sounds`)
   await Remove.remove(`packages/build/.tmp/server/server/static/${commitHash}/lib-css/modern-normalize.css`)
