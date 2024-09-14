@@ -31,7 +31,6 @@ export const launchSyntaxHighlightingWorker = async () => {
     url: configuredWorkerUrl,
     id,
   })
-  console.log('after syn')
   if (IpcState.getConfig()) {
     // TODO should renderer process send port to renderer worker or vice versa?
     const port = Transferrable.acquire(id)
