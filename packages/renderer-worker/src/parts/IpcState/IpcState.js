@@ -3,7 +3,6 @@ const state = {
 }
 
 export const setConfig = (shouldLaunchMultipleWorkers) => {
-  console.log({ shouldLaunchMultipleWorkers })
   state.shouldLaunchMultipleWorkers = shouldLaunchMultipleWorkers
 }
 
