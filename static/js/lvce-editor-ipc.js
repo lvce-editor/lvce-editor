@@ -120,6 +120,18 @@ const joinLines = (lines) => {
 const splitLines = (lines) => {
   return lines.split(NewLine$1);
 };
+const isModuleNotFoundMessage = (line) => {
+  return line.includes("[ERR_MODULE_NOT_FOUND]");
+};
+const getModuleNotFoundError = (stderr) => {
+  const lines = splitLines(stderr);
+  const messageIndex = lines.findIndex(isModuleNotFoundMessage);
+  const message = lines[messageIndex];
+  return {
+    message,
+    code: ERR_MODULE_NOT_FOUND
+  };
+};
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/;
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/;
 const RE_MESSAGE_CODE_BLOCK_START = /^Error: The module '.*'$/;
@@ -167,18 +179,6 @@ const isModuleNotFoundError = (stderr) => {
     return false;
   }
   return stderr.includes("ERR_MODULE_NOT_FOUND");
-};
-const isModuleNotFoundMessage = (line) => {
-  return line.includes("ERR_MODULE_NOT_FOUND");
-};
-const getModuleNotFoundError = (stderr) => {
-  const lines = splitLines(stderr);
-  const messageIndex = lines.findIndex(isModuleNotFoundMessage);
-  const message = lines[messageIndex];
-  return {
-    message,
-    code: ERR_MODULE_NOT_FOUND
-  };
 };
 const isNormalStackLine = (line) => {
   return RE_AT.test(line) && !RE_AT_PROMISE_INDEX.test(line);
@@ -327,6 +327,11 @@ const listen$3 = async () => {
   }
   const type = firstMessage.params[0];
   if (type === "message-port") {
+    parentIpc.send({
+      jsonrpc: "2.0",
+      id: firstMessage.id,
+      result: null
+    });
     parentIpc.dispose();
     const port = firstMessage.params[1];
     return port;
