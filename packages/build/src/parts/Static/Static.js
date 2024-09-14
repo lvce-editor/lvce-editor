@@ -482,7 +482,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   })
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
-    to: `packages/build/.tmp/dist/${commitHash}/js/previewInjectedCode.js`,
+    to: `packages/build/.tmp/dist/${commitHash}/js/preview-injected.js`,
   })
 }
 
