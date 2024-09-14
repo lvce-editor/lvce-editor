@@ -10,6 +10,7 @@ import * as InitData from '../InitData/InitData.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
+import * as IpcState from '../IpcState/IpcState.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
@@ -64,6 +65,9 @@ export const startup = async () => {
   if (initData.Location.href.startsWith('http://localhost:3001/tests/')) {
     // TODO aquire port from other renderer worker
   }
+
+  console.log({ initData })
+  IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
 
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
 
