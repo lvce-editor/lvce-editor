@@ -221,11 +221,17 @@ const bundleWebViewFiles = async ({ commitHash, pathPrefix }) => {
   const existingExtensionPaths = extensionPaths.filter(exists)
   const extensions = await Promise.all(existingExtensionPaths.map(JsonFile.readJson))
 
+  // TODO this might not be needed, only load the webExtensions.json file
+  // which include information about all
+  // - color themes
+  // - languages
+  // - webviews
+  // - extension activation events
   const getWebViews = (extension) => {
     const getWebView = (webView) => {
       return {
         ...webView,
-        path: `${pathPrefix}/${commitHash}/extensions/${extension.id}/${webView.path}`,
+        remotePath: `${pathPrefix}/${commitHash}/extensions/${extension.id}`,
       }
     }
     const webViews = extension.webViews || []
