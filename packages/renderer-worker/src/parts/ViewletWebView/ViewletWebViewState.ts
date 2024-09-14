@@ -8,4 +8,5 @@ export interface ViewletWebViewState {
   readonly previewServerId: number
   readonly csp: string
   readonly srcDoc: string // TODO remove
+  readonly credentialless: boolean
 }
