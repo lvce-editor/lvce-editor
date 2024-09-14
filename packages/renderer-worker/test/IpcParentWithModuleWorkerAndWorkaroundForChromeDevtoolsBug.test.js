@@ -46,5 +46,6 @@ test('create', async () => {
     raw: true,
     url: 'https://example.com/worker.js',
     port: new MessagePort(),
+    id: 0,
   })
 })
