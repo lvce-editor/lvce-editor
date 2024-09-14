@@ -15,7 +15,7 @@ const getExternal = (babelExternal, initialExternal) => {
 /**
  *
  * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean, typescript?:boolean
- * allowCyclicDependencies?:boolean, external?:string[] }} param0
+ * allowCyclicDependencies?:boolean, external?:string[], sourceMap?:boolean }} param0
  */
 export const bundleJs = async ({
   cwd,
@@ -28,6 +28,7 @@ export const bundleJs = async ({
   babelExternal = false,
   external = [],
   typescript = from.endsWith('.ts'),
+  sourceMap = true,
 }) => {
   try {
     const allExternal = getExternal(babelExternal, external)
@@ -104,7 +105,7 @@ export const bundleJs = async ({
      */
     const outputOptions = {
       paths: {},
-      sourcemap: true,
+      sourcemap: sourceMap,
       format: outputFormat,
       name: 'rendererProcess',
       extend: false,

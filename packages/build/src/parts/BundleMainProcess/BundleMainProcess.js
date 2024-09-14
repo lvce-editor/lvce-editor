@@ -97,12 +97,16 @@ export const bundleMainProcess = async ({
       from: `./src/mainProcessMain.js`,
       platform: 'node',
       external: ['electron'],
+      // @ts-ignore
+      sourceMap: false,
     })
+    await Remove.remove(join(cachePath, 'src'))
     await Remove.remove(join(cachePath, 'node_modules'))
+  } else {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `export const root = join(__dirname, '../../..')`,
+      replacement: `export const root = join(__dirname, '../../../../..')`,
+    })
   }
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Root/Root.js`,
-    occurrence: `export const root = join(__dirname, '../../..')`,
-    replacement: `export const root = join(__dirname, '../../../../..')`,
-  })
 }
