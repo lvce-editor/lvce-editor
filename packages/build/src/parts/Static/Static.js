@@ -480,6 +480,10 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     from: syntaxHighlightingWorkerCachePath,
     to: `packages/build/.tmp/dist/${commitHash}/packages/syntax-highlighting-worker`,
   })
+  await Copy.copy({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
+    to: `packages/build/.tmp/dist/${commitHash}/js/previewInjectedCode.js`,
+  })
 }
 
 const generateTestOverviewHtml = (dirents) => {
