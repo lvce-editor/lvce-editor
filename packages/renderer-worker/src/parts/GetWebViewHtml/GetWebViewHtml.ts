@@ -26,9 +26,7 @@ export const getWebViewHtml = (webView: any): string => {
   const { elements } = webView
   const baseUrl = getBaseUrl(webView)
   const middle: string[] = []
-  const csp = `default-src 'none'; script-src http://localhost:3002; style-src http://localhost:3002;`
   middle.push('<meta charset="utf-8">')
-  middle.push(`<meta http-equiv="Content-Security-Policy" content="${csp}">`)
   for (const element of elements) {
     if (element.type === 'title') {
       middle.push(`<title>${element.value}</title>`)
