@@ -29,7 +29,7 @@
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/@@NAME@@]
 
 # electron missing dependencies
-@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 11 others
+@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 9 others
 
 # ripgrep - how to resolve this error?
 @@NAME@@: statically-linked-binary usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep/bin/rg
