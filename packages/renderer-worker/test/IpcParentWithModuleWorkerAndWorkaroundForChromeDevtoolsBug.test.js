@@ -36,6 +36,7 @@ test('create', async () => {
     url: 'https://example.com/worker.js',
     name: 'test worker',
     port: undefined,
+    id: 0,
   })
   expect(ipc).toBeInstanceOf(MessagePort)
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
@@ -45,5 +46,6 @@ test('create', async () => {
     raw: true,
     url: 'https://example.com/worker.js',
     port: new MessagePort(),
+    id: 0,
   })
 })

@@ -3,7 +3,9 @@ import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/R
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetTransferrables from '../GetTransferrables/GetTransferrables.ts'
 
-export const create = async ({ url, name, port }) => {
+export const create = async ({ url, name, port, id }) => {
+  // TODO no need to create port if worker
+  // has been prelaunched in renderer process
   const { port1, port2 } = GetPortTuple.getPortTuple(port)
   await RendererProcess.invokeAndTransfer('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
@@ -11,6 +13,7 @@ export const create = async ({ url, name, port }) => {
     name,
     raw: true,
     port: port2,
+    id,
   })
   return port1
 }
