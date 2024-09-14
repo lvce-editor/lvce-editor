@@ -97,7 +97,10 @@ export const bundleMainProcess = async ({
       from: `./src/mainProcessMain.js`,
       platform: 'node',
       external: ['electron'],
+      // @ts-ignore
+      sourceMap: false,
     })
+    await Remove.remove(join(cachePath, 'src'))
     await Remove.remove(join(cachePath, 'node_modules'))
   }
   await Replace.replace({
