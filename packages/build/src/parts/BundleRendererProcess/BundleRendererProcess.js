@@ -31,6 +31,11 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       occurrence: `const assetDir = getAssetDir();`,
       replacement: `const assetDir = '${assetDir}';`,
     })
+    await Replace.replace({
+      path: `${cachePath}/dist/rendererProcessMain.js`,
+      occurrence: `const syntaxHighlightingWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js\`;`,
+      replacement: `const syntaxHighlightingWorkerUrl = \`\${assetDir}/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js\`;`,
+    })
     const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
