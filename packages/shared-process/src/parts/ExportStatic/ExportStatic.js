@@ -1,8 +1,20 @@
 import { existsSync } from 'node:fs'
 import { isAbsolute, join } from 'node:path'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+
+const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
+  `default-src 'none'`,
+  `font-src 'self'`,
+  `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
+  `manifest-src 'self'`,
+  `media-src 'self'`,
+  `script-src 'self'`,
+  `style-src 'self'`,
+  `frame-src 'self' blob:`,
+])
 
 const readExtensionManifest = async (path) => {
   const json = await JsonFile.readJson(path)
@@ -199,18 +211,26 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`),
     )
   }
-  await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
+  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
+  await replace(indexHtmlPath, `/${commitHash}`, `${pathPrefix}/${commitHash}`)
+
+  await replace(
+    indexHtmlPath,
+    '</title>',
+    `</title>
+    <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
+  )
 
   if (pathPrefix) {
     await replace(
-      Path.join(root, 'dist', 'index.html'),
+      indexHtmlPath,
       '</title>',
       `</title>
     <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
     )
   } else {
     await replace(
-      Path.join(root, 'dist', 'index.html'),
+      indexHtmlPath,
       '</title>',
       `</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`,
