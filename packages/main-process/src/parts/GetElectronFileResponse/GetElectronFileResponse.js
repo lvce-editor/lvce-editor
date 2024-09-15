@@ -9,7 +9,8 @@ import * as GetElectronFileResponsePath from '../GetElectronFileResponsePath/Get
  */
 export const getElectronFileResponse = async (url, request) => {
   const path = GetElectronFileResponsePath.getElectronFileResponsePath(url)
-  console.log({ path })
+  const el = await net.fetch(path)
+  console.log({ el })
   const { body, init } = await SharedProcess.invoke('GetElectronFileResponse.getElectronFileResponse', url, request)
   const response = new Response(body, init)
   return response

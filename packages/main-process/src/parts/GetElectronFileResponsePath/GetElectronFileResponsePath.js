@@ -1,7 +1,8 @@
 import * as GetFileUrl from '../GetFileUrl/GetFileUrl.js'
 import * as Platform from '../Platform/Platform.js'
+import * as HasStaticPrefix from '../HasStaticPrefix/HasStaticPrefix.js'
 
-const prefix = `${Platform.scheme}://`
+const prefix = `${Platform.scheme}://-/`
 const prefixLength = prefix.length
 
 /**
@@ -12,6 +13,12 @@ const prefixLength = prefix.length
 export const getElectronFileResponsePath = (url) => {
   if (url.startsWith(prefix)) {
     const filePath = url.slice(prefixLength)
+    if (filePath.length === 0) {
+      return GetFileUrl.getFileUrl('static/index.html')
+    }
+    if (HasStaticPrefix.hasStaticPrefix(filePath)) {
+      return GetFileUrl.getFileUrl(`static/${filePath}`)
+    }
     const fileUrl = GetFileUrl.getFileUrl(filePath)
     return fileUrl
   }
