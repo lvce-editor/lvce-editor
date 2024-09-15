@@ -214,7 +214,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
 
   await replace({
-    path: join(root, 'dist', `index.html`),
+    path: Path.join(root, 'dist', `index.html`),
     occurrence: '</title>',
     replacement: `</title>
     <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
