@@ -6,7 +6,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
  * @param {string} url
  * @param {any} request
  */
-export const getElectronFileResponse = async (url, request) => {
+export const getElectronFileResponseProduction = async (url, request) => {
   const x = await net.fetch(
     'file:///home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/GetElectronFileResponse/GetElectronFileResponse.js',
   )
