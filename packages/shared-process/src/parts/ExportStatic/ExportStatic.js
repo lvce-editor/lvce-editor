@@ -211,25 +211,26 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`),
     )
   }
-  await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
+  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
+  await replace(indexHtmlPath, `/${commitHash}`, `${pathPrefix}/${commitHash}`)
 
-  await replace({
-    path: Path.join(root, 'dist', `index.html`),
-    occurrence: '</title>',
-    replacement: `</title>
+  await replace(
+    indexHtmlPath,
+    '</title>',
+    `</title>
     <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
-  })
+  )
 
   if (pathPrefix) {
     await replace(
-      Path.join(root, 'dist', 'index.html'),
+      indexHtmlPath,
       '</title>',
       `</title>
     <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
     )
   } else {
     await replace(
-      Path.join(root, 'dist', 'index.html'),
+      indexHtmlPath,
       '</title>',
       `</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`,
