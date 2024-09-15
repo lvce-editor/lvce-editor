@@ -31,6 +31,21 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       occurrence: `const assetDir = getAssetDir();`,
       replacement: `const assetDir = '${assetDir}';`,
     })
+    await Replace.replace({
+      path: `${cachePath}/dist/rendererProcessMain.js`,
+      occurrence: `const syntaxHighlightingWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js\`;`,
+      replacement: `const syntaxHighlightingWorkerUrl = \`\${assetDir}/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js\`;`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/dist/rendererProcessMain.js`,
+      occurrence: `const editorWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js\`;`,
+      replacement: `const editorWorkerUrl = \`\${assetDir}/packages/editor-worker/dist/editorWorkerMain.js\`;`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/dist/rendererProcessMain.js`,
+      occurrence: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.ts`;',
+      replacement: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`;',
+    })
     const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
