@@ -9,12 +9,13 @@ const prefixLength = prefix.length
 /**
  *
  * @param {string} url
+ * @returns {string}
  */
-export const getElectronFileResponsePath = async (url) => {
+export const getElectronFileResponsePath = (url) => {
   if (url.startsWith(prefix)) {
     const filePath = url.slice(prefixLength)
     const fileUrl = pathToFileURL(join(Root.root, filePath)).toString()
     return fileUrl
   }
-  return undefined
+  return ''
 }
