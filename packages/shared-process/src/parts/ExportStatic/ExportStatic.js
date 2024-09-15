@@ -1,8 +1,20 @@
 import { existsSync } from 'node:fs'
 import { isAbsolute, join } from 'node:path'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+
+const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
+  `default-src 'none'`,
+  `font-src 'self'`,
+  `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
+  `manifest-src 'self'`,
+  `media-src 'self'`,
+  `script-src 'self'`,
+  `style-src 'self'`,
+  `frame-src 'self' blob:`,
+])
 
 const readExtensionManifest = async (path) => {
   const json = await JsonFile.readJson(path)
@@ -200,6 +212,13 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
     )
   }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
+
+  await replace({
+    path: join(root, 'dist', `index.html`),
+    occurrence: '</title>',
+    replacement: `</title>
+    <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
+  })
 
   if (pathPrefix) {
     await replace(
