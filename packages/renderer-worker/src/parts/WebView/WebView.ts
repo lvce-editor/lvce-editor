@@ -2,16 +2,18 @@ import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHo
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
+import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
+import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as Scheme from '../Scheme/Scheme.ts'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
@@ -21,22 +23,27 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const webViews = await GetWebViews.getWebViews()
+  const locationProtocol = Location.getProtocol()
+  const locationHost = Location.getHost()
+  const locationOrigin = Location.getOrigin()
   const iframeResult = await GetIframeSrc.getIframeSrc(
     webViews,
     webViewId,
     webViewPort,
     root,
     IsGitpod.isGitpod,
-    location.protocol,
-    location.host,
-    location.origin,
+    locationProtocol,
+    locationHost,
+    locationOrigin,
   )
   if (!iframeResult) {
     return undefined
   }
 
+  const webView = GetWebView.getWebView(webViews, webViewId)
+
   const { iframeSrc, webViewRoot, srcDoc } = iframeResult
-  const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(location.protocol, location.host)
+  const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(locationProtocol, locationHost)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
@@ -48,6 +55,8 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   // 4. create webview in extension host worker and load content
 
   ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
+  const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
+
   // TODO don't hardcode protocol
   let origin = ''
   if (Platform.platform === PlatformType.Electron) {
@@ -62,21 +71,21 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
 
     await WebViewServer.create(previewServerId) // TODO move this up
     await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
-    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot)
+    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp)
     // TODO make this work in gitpod also
 
     origin = `http://localhost:${webViewPort}`
   } else {
-    origin = '*'
+    origin = '*' // TODO
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
-  const csp = GetWebViewCsp.getWebViewCsp() // TODO only in web
+  const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
   return {
     srcDoc,
     iframeSrc,
     sandbox,
     portId,
     origin,
-    csp,
+    csp: iframeCsp,
   }
 }

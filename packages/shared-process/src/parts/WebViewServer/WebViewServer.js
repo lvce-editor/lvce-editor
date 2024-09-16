@@ -2,6 +2,7 @@ import * as PreviewProcess from '../PreviewProcess/PreviewProcess.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
+// TODO send port directly to from preview process to renderer worker?
 export const registerProtocol = async () => {
   // TODO only do this once
   // TODO send messageport to proview process
@@ -25,6 +26,6 @@ export const start = async (previewId, port) => {
   await PreviewProcess.invoke('WebViewServer.start', previewId, port)
 }
 
-export const setHandler = async (previewId, frameAncestors, webViewRoot) => {
-  await PreviewProcess.invoke('WebViewServer.setHandler', previewId, frameAncestors, webViewRoot)
+export const setHandler = async (previewId, frameAncestors, webViewRoot, contentSecurityPolicy) => {
+  await PreviewProcess.invoke('WebViewServer.setHandler', previewId, frameAncestors, webViewRoot, contentSecurityPolicy)
 }

@@ -23,3 +23,7 @@ export const getOrigin = () => {
 export const getHost = () => {
   return location.host
 }
+
+export const getProtocol = () => {
+  return location.protocol
+}
