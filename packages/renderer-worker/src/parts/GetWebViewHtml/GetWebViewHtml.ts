@@ -1,6 +1,9 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 
 export const getWebViewHtml = (baseUrl: string, locationOrigin: string, elements: any[]): string => {
+  if (!elements) {
+    return ''
+  }
   const middle: string[] = []
   middle.push('<meta charset="utf-8">')
   for (const element of elements) {

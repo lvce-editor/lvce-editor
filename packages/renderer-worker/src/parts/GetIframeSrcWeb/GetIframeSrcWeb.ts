@@ -11,6 +11,7 @@ export const getIframeSrc = async (webView: any, locationOrigin: string) => {
       srcDoc: '',
       iframeSrc: blobUrl,
       webViewRoot: '',
+      iframeContent: '',
     }
   }
   return undefined

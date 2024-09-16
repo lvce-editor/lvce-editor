@@ -26,6 +26,6 @@ export const start = async (previewId, port) => {
   await PreviewProcess.invoke('WebViewServer.start', previewId, port)
 }
 
-export const setHandler = async (previewId, frameAncestors, webViewRoot, contentSecurityPolicy) => {
-  await PreviewProcess.invoke('WebViewServer.setHandler', previewId, frameAncestors, webViewRoot, contentSecurityPolicy)
+export const setHandler = async (previewId, frameAncestors, webViewRoot, contentSecurityPolicy, iframeContent) => {
+  await PreviewProcess.invoke('WebViewServer.setHandler', previewId, frameAncestors, webViewRoot, contentSecurityPolicy, iframeContent)
 }
