@@ -12,6 +12,6 @@ export const start = async (previewServerId: number, webViewPort: string) => {
   await SharedProcess.invoke('WebViewServer.start', previewServerId, webViewPort)
 }
 
-export const setHandler = async (previewServerId: number, frameAncestors: string, webViewRoot: string) => {
-  await SharedProcess.invoke('WebViewServer.setHandler', previewServerId, frameAncestors, webViewRoot)
+export const setHandler = async (previewServerId: number, frameAncestors: string, webViewRoot: string, contentSecurityPolicy: string) => {
+  await SharedProcess.invoke('WebViewServer.setHandler', previewServerId, frameAncestors, webViewRoot, contentSecurityPolicy)
 }
