@@ -1,4 +1,5 @@
 import * as CreateLocalHostUrl from '../CreateLocalHostUrl/CreateLocalHostUrl.ts'
+import * as GetWebViewHtml from '../GetWebViewHtml/GetWebViewHtml.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Scheme from '../Scheme/Scheme.ts'
@@ -33,6 +34,7 @@ const getWebViewUri = (webViews, webViewId) => {
 }
 
 export const getIframeSrcRemote = async (webViews, webViewPort, webViewId, locationProtocol, locationHost, isGitpod, root) => {
+  const webView = getWebView(webViews, webViewId)
   const webViewUri = getWebViewUri(webViews, webViewId)
   if (!webViewUri) {
     return undefined
@@ -53,9 +55,11 @@ export const getIframeSrcRemote = async (webViews, webViewPort, webViewId, locat
     }
     iframeSrc = CreateLocalHostUrl.createLocalHostUrl(locationProtocol, locationHost, isGitpod, webViewPort)
   }
+  const iframeContent = GetWebViewHtml.getWebViewHtml('', '', webView.elements)
   return {
     srcDoc: '',
     iframeSrc,
     webViewRoot,
+    iframeContent,
   }
 }

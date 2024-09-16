@@ -42,7 +42,7 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
 
   const webView = GetWebView.getWebView(webViews, webViewId)
 
-  const { iframeSrc, webViewRoot, srcDoc } = iframeResult
+  const { iframeSrc, webViewRoot, srcDoc, iframeContent } = iframeResult
   const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(locationProtocol, locationHost)
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
@@ -71,7 +71,7 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
 
     await WebViewServer.create(previewServerId) // TODO move this up
     await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
-    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp)
+    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp, iframeContent)
     // TODO make this work in gitpod also
 
     origin = `http://localhost:${webViewPort}`
