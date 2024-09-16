@@ -79,12 +79,13 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
     origin = '*' // TODO
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
+  const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
   return {
     srcDoc,
     iframeSrc,
     sandbox,
     portId,
     origin,
-    csp,
+    csp: iframeCsp,
   }
 }
