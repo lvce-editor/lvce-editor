@@ -61,7 +61,13 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
+  console.time('create')
   await RendererProcess.invoke('WebView.create', uid, iframeSrc, sandbox, srcDoc, csp, credentialless)
+  console.timeEnd('create')
+  console.time('load')
+  await RendererProcess.invoke('WebView.load', uid)
+  console.timeEnd('load')
+
   await Transferrable.transferToRendererProcess(portId, port1)
   ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
 
