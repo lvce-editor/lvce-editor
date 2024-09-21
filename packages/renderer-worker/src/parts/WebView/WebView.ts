@@ -18,6 +18,19 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
+const getOrigin = (webViewPort: any): string => {
+  // TODO don't hardcode protocol
+  let origin = ''
+  if (Platform.platform === PlatformType.Electron) {
+    origin = `${Scheme.WebView}://-/`
+  } else if (Platform.platform === PlatformType.Remote) {
+    origin = `http://localhost:${webViewPort}`
+  } else {
+    origin = '*' // TODO
+  }
+  return origin
+}
+
 export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
@@ -65,17 +78,16 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   console.timeEnd('create')
   console.time('load')
   await RendererProcess.invoke('WebView.load', id)
+  const origin = getOrigin(webViewPort)
+  await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
   console.timeEnd('load')
 
-  await Transferrable.transferToRendererProcess(portId, port1)
   ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
 
   // TODO don't hardcode protocol
-  let origin = ''
   if (Platform.platform === PlatformType.Electron) {
     await WebViewServer.registerProtocol()
     await WebViewServer.create(previewServerId) // TODO move this up
-    origin = `${Scheme.WebView}://-/`
   } else if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed
@@ -86,10 +98,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
     await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
     await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp, iframeContent)
     // TODO make this work in gitpod also
-
-    origin = `http://localhost:${webViewPort}`
   } else {
-    origin = '*' // TODO
   }
 
   return {
