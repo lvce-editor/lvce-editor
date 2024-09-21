@@ -16,6 +16,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
+import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
 
 export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
@@ -73,22 +74,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
 
   ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
 
-  // TODO don't hardcode protocol
-  if (Platform.platform === PlatformType.Electron) {
-    await WebViewServer.registerProtocol()
-    await WebViewServer.create(previewServerId) // TODO move this up
-  } else if (Platform.platform === PlatformType.Remote) {
-    // TODO apply something similar for electron
-    // TODO pass webview root, so that only these resources can be accessed
-    // TODO pass csp configuration to server
-    // TODO pass coop / coep configuration to server
-
-    await WebViewServer.create(previewServerId) // TODO move this up
-    await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
-    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp, iframeContent)
-    // TODO make this work in gitpod also
-  } else {
-  }
+  await WebViewProtocol.register(previewServerId, webViewPort, frameAncestors, webViewRoot, csp, iframeContent)
 
   return {
     srcDoc,
