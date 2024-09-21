@@ -2,17 +2,17 @@ import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHo
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
+import * as GetWebViewOrigin from '../GetWebViewOrigin/GetWebViewOrigin.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
-import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
@@ -58,11 +58,10 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
 
   // TODO don't hardcode protocol
-  let origin = ''
+  const origin = GetWebViewOrigin.getWebViewOrigin(webViewPort)
   if (Platform.platform === PlatformType.Electron) {
     await WebViewServer.registerProtocol()
     await WebViewServer.create(previewServerId) // TODO move this up
-    origin = `${Scheme.WebView}://-/`
   } else if (Platform.platform === PlatformType.Remote) {
     // TODO apply something similar for electron
     // TODO pass webview root, so that only these resources can be accessed
@@ -73,10 +72,7 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
     await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
     await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp, iframeContent)
     // TODO make this work in gitpod also
-
-    origin = `http://localhost:${webViewPort}`
   } else {
-    origin = '*' // TODO
   }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
   const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
