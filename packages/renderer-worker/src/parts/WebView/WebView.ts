@@ -71,6 +71,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
   console.timeEnd('setPort')
 
+  // TODO split up into create and load
   await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
 
   console.time('register-protocol')
