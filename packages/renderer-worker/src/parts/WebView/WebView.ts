@@ -5,6 +5,7 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
+import * as GetWebViewOrigin from '../GetWebViewOrigin/GetWebViewOrigin.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
@@ -16,19 +17,6 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
-
-const getOrigin = (webViewPort: any): string => {
-  // TODO don't hardcode protocol
-  let origin = ''
-  if (Platform.platform === PlatformType.Electron) {
-    origin = `${Scheme.WebView}://-/`
-  } else if (Platform.platform === PlatformType.Remote) {
-    origin = `http://localhost:${webViewPort}`
-  } else {
-    origin = '*' // TODO
-  }
-  return origin
-}
 
 export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
@@ -78,7 +66,8 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   console.time('load')
   await RendererProcess.invoke('WebView.load', id)
   console.timeEnd('load')
-  const origin = getOrigin(webViewPort)
+  const origin = GetWebViewOrigin.getWebViewOrigin(webViewPort)
+
   console.time('setPort')
   await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
   console.timeEnd('setPort')
