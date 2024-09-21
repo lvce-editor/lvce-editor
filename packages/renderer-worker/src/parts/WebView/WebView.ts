@@ -2,6 +2,7 @@ import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHo
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
@@ -10,8 +11,8 @@ import * as Id from '../Id/Id.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
-import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
@@ -44,18 +45,25 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
 
   const { iframeSrc, webViewRoot, srcDoc, iframeContent } = iframeResult
   const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(locationProtocol, locationHost)
-  await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
-  const { port1, port2 } = GetPortTuple.getPortTuple()
-  const portId = Id.create()
-  await Transferrable.transferToRendererProcess(portId, port1)
+
   // TODO figure out order for events, e.g.
   // 1. activate extension, create webview and ports in parallel
   // 2. wait for webview to load (?)
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
+  const uid = 1
   const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
+  const sandbox = GetWebViewSandBox.getIframeSandbox()
+  const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
+  const credentialless = true
+
+  await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  const portId = Id.create()
+  await RendererProcess.invoke('WebView.create', uid, iframeSrc, sandbox, srcDoc, csp, credentialless)
+  await Transferrable.transferToRendererProcess(portId, port1)
+  ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
 
   // TODO don't hardcode protocol
   let origin = ''
@@ -78,8 +86,7 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   } else {
     origin = '*' // TODO
   }
-  const sandbox = GetWebViewSandBox.getIframeSandbox()
-  const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
+
   return {
     srcDoc,
     iframeSrc,
