@@ -14,7 +14,6 @@ import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
