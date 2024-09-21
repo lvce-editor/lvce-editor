@@ -4,7 +4,13 @@
   "webViews": [
     {
       "id": "xyz",
-      "path": "index.html"
+      "selector": [".xyz"],
+      "elements": [
+        {
+          "type": "script",
+          "path": "media/index.js"
+        }
+      ]
     }
   ]
 }
