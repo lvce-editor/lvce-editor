@@ -18,7 +18,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
-export const create = async (webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
+export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
@@ -52,7 +52,6 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  const uid = 1
   const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
   const sandbox = GetWebViewSandBox.getIframeSandbox()
   const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
@@ -62,10 +61,10 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
   console.time('create')
-  await RendererProcess.invoke('WebView.create', uid, iframeSrc, sandbox, srcDoc, csp, credentialless)
+  await RendererProcess.invoke('WebView.create', id, iframeSrc, sandbox, srcDoc, csp, credentialless)
   console.timeEnd('create')
   console.time('load')
-  await RendererProcess.invoke('WebView.load', uid)
+  await RendererProcess.invoke('WebView.load', id)
   console.timeEnd('load')
 
   await Transferrable.transferToRendererProcess(portId, port1)

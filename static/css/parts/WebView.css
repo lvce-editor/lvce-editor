@@ -16,4 +16,7 @@
   flex: 1;
   contain: strict;
   border: none;
+  position: absolute;
+  background: white;
+  z-index: 1;
 }
