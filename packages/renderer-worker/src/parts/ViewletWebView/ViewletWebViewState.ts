@@ -9,4 +9,8 @@ export interface ViewletWebViewState {
   readonly csp: string
   readonly srcDoc: string // TODO remove
   readonly credentialless: boolean
+  readonly x: number
+  readonly y: number
+  readonly width: number
+  readonly height: number
 }

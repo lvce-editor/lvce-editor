@@ -3,7 +3,7 @@ import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as WebView from '../WebView/WebView.ts'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
-export const create = (id: number, uri: string): ViewletWebViewState => {
+export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
   return {
     id,
     uri,
@@ -15,6 +15,10 @@ export const create = (id: number, uri: string): ViewletWebViewState => {
     previewServerId: 1,
     csp: '',
     credentialless: true,
+    x,
+    y,
+    width,
+    height,
   }
 }
 
@@ -35,10 +39,10 @@ const getWebViewId = async (uri) => {
 }
 
 export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWebViewState> => {
-  const { uri, previewServerId } = state
+  const { uri, previewServerId, id } = state
   const webViewId = await getWebViewId(uri)
   const webViewPort = GetWebViewPort.getWebViewPort()
-  const webViewResult = await WebView.create(webViewPort, webViewId, previewServerId, uri)
+  const webViewResult = await WebView.create(id, webViewPort, webViewId, previewServerId, uri)
   if (!webViewResult) {
     return state
   }
@@ -51,5 +55,14 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
     origin,
     srcDoc,
     csp,
+  }
+}
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  return {
+    ...state,
+    ...dimensions,
   }
 }

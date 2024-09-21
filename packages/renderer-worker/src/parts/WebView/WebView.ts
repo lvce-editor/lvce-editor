@@ -13,11 +13,11 @@ import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Transferrable from '../Transferrable/Transferrable.js'
-import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
+import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
 
-export const create = async (webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
+export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
@@ -44,38 +44,40 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
 
   const { iframeSrc, webViewRoot, srcDoc, iframeContent } = iframeResult
   const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(locationProtocol, locationHost)
-  await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
-  const { port1, port2 } = GetPortTuple.getPortTuple()
-  const portId = Id.create()
-  await Transferrable.transferToRendererProcess(portId, port1)
+
   // TODO figure out order for events, e.g.
   // 1. activate extension, create webview and ports in parallel
   // 2. wait for webview to load (?)
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
   const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
-
-  // TODO don't hardcode protocol
-  const origin = GetWebViewOrigin.getWebViewOrigin(webViewPort)
-  if (Platform.platform === PlatformType.Electron) {
-    await WebViewServer.registerProtocol()
-    await WebViewServer.create(previewServerId) // TODO move this up
-  } else if (Platform.platform === PlatformType.Remote) {
-    // TODO apply something similar for electron
-    // TODO pass webview root, so that only these resources can be accessed
-    // TODO pass csp configuration to server
-    // TODO pass coop / coep configuration to server
-
-    await WebViewServer.create(previewServerId) // TODO move this up
-    await WebViewServer.start(previewServerId, webViewPort) // TODO move this up
-    await WebViewServer.setHandler(previewServerId, frameAncestors, webViewRoot, csp, iframeContent)
-    // TODO make this work in gitpod also
-  } else {
-  }
   const sandbox = GetWebViewSandBox.getIframeSandbox()
   const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
+  const credentialless = true
+
+  await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  const portId = Id.create()
+  console.time('create')
+  await RendererProcess.invoke('WebView.create', id, iframeSrc, sandbox, srcDoc, csp, credentialless)
+  console.timeEnd('create')
+  console.time('load')
+  await RendererProcess.invoke('WebView.load', id)
+  console.timeEnd('load')
+  const origin = GetWebViewOrigin.getWebViewOrigin(webViewPort)
+
+  console.time('setPort')
+  await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
+  console.timeEnd('setPort')
+
+  // TODO split up into create and load
+  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
+
+  console.time('register-protocol')
+  await WebViewProtocol.register(previewServerId, webViewPort, frameAncestors, webViewRoot, csp, iframeContent)
+  console.timeEnd('register-protocol')
+
   return {
     srcDoc,
     iframeSrc,
