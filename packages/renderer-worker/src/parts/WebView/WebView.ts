@@ -15,7 +15,6 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
 const getOrigin = (webViewPort: any): string => {
