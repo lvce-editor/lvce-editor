@@ -26,7 +26,7 @@ export const create = async (webViewPort: string, webViewId: string, previewServ
   const locationProtocol = Location.getProtocol()
   const locationHost = Location.getHost()
   const locationOrigin = Location.getOrigin()
-  const iframeResult = await GetIframeSrc.getIframeSrc(
+  const iframeResult =  GetIframeSrc.getIframeSrc(
     webViews,
     webViewId,
     webViewPort,
