@@ -57,3 +57,12 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
     csp,
   }
 }
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  return {
+    ...state,
+    ...dimensions,
+  }
+}
