@@ -1,5 +1,3 @@
-export const skip = true
-
 export const name = 'sample.command-provider-error-command-registered-multiple-times'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
