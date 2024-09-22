@@ -20,6 +20,7 @@ export const state = {
 
 const actuallyActivateExtension = async (extension) => {
   if (!(extension.id in state.activatedExtensions)) {
+    console.log('act', extension)
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
       extension.id,
       extension.isWeb,
@@ -29,6 +30,8 @@ const actuallyActivateExtension = async (extension) => {
       Origin.origin,
     )
     state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath)
+  } else {
+    console.log('cont act', extension)
   }
   return state.activatedExtensions[extension.id]
 }
@@ -58,6 +61,7 @@ const actuallyActivateByEvent = async (event) => {
 // TODO add tests for this
 export const activateByEvent = async (event) => {
   Assert.string(event)
+  console.log('activate', event)
   if (event === 'none') {
     const all = await Promise.all(Object.values(state.cachedActivationEvents))
     const flatAll = all.flat(1)
