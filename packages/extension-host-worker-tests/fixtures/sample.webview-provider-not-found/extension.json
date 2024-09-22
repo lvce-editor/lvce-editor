@@ -1,0 +1,16 @@
+{
+  "browser": "main.js",
+  "activation": ["onWebview:xyz"],
+  "webViews": [
+    {
+      "id": "xyz",
+      "selector": [".xyz"],
+      "elements": [
+        {
+          "type": "script",
+          "path": "media/index.js"
+        }
+      ]
+    }
+  ]
+}
