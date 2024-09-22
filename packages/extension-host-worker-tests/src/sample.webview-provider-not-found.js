@@ -1,6 +1,6 @@
 export const name = 'sample.webview-provider-not-found'
 
-export const skip = true
+export const skip = false
 
 export const test = async ({ Extension, Main, FileSystem, ...rest }) => {
   // arrange
@@ -14,7 +14,4 @@ export const test = async ({ Extension, Main, FileSystem, ...rest }) => {
 
   // assert
   await Main.shouldHaveError('Error: webview provider xyz not found')
-  const errorMessage = Locator('Viewlet Error')
-  // TODO open sample webview
-  // TODO verify that expected content is displayed
 }
