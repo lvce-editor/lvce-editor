@@ -1,12 +1,9 @@
 const webViewProvider = {
   id: 'xyz',
-  getHtmlPath() {
-    return new URL('./index.html', import.meta.url).toString()
-  },
+  create(webView, uri) {},
 }
 
 export const activate = () => {
-  console.log('activate')
   // @ts-ignore
   vscode.registerWebViewProvider(webViewProvider)
 }
