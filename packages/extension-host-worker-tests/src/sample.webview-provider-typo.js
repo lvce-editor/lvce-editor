@@ -1,6 +1,6 @@
 export const name = 'sample.webview-provider-typo'
 
-export const test = async ({ Extension, Main, FileSystem }) => {
+export const test = async ({ Extension, Main, FileSystem, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   const tmpDir = await FileSystem.getTmpDir()
@@ -11,5 +11,7 @@ export const test = async ({ Extension, Main, FileSystem }) => {
 
   // assert
   // TODO improve error message
-  await Main.shouldHaveError('Error: webview provider xyz not found')
+  const error = Locator('.Error')
+  await expect(error).toBeVisible()
+  await expect(error).toHaveText('Error: webview provider xyz not found')
 }
