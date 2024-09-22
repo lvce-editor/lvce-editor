@@ -2,16 +2,17 @@ export const name = 'sample.webview-provider-not-found'
 
 export const skip = false
 
-export const test = async ({ Extension, Main, FileSystem, ...rest }) => {
+export const test = async ({ Extension, Main, FileSystem, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, `a`)
 
-  console.log({ rest })
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
 
   // assert
-  await Main.shouldHaveError('Error: webview provider xyz not found')
+  const error = Locator('.Error')
+  await expect(error).toBeVisible()
+  await expect(error).toHaveText('Error: webview provider xyz not found')
 }
