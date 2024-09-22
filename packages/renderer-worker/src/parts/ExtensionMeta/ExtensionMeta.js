@@ -95,7 +95,9 @@ const matchesActivationEvent = (extension, event) => {
     if (item.startsWith('onWebview:')) {
       console.warn(`[renderer-worker] Invalid extension activation event in ${extension.path}: should be onWebView:`)
     }
-    return item === event
+    if (item === event) {
+      return true
+    }
   }
   return false
 }
