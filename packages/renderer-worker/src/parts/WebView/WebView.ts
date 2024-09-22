@@ -26,7 +26,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   const locationProtocol = Location.getProtocol()
   const locationHost = Location.getHost()
   const locationOrigin = Location.getOrigin()
-  const iframeResult =  GetIframeSrc.getIframeSrc(
+  const iframeResult = GetIframeSrc.getIframeSrc(
     webViews,
     webViewId,
     webViewPort,
@@ -71,12 +71,14 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
   console.timeEnd('setPort')
 
-  // TODO split up into create and load
-  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
-
   console.time('register-protocol')
   await WebViewProtocol.register(previewServerId, webViewPort, frameAncestors, webViewRoot, csp, iframeContent)
   console.timeEnd('register-protocol')
+
+  // TODO split up into create and load
+  console.time('extension-create-webview')
+  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
+  console.timeEnd('extension-create-webview')
 
   return {
     srcDoc,
