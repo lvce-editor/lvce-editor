@@ -5,7 +5,6 @@ const webViewProviders = Object.create(null)
 export const createWebView = async (providerId, port, uri) => {
   const provider = webViewProviders[providerId]
   if (!provider) {
-    console.log({ webViewProviders })
     throw new Error(`webview provider ${providerId} not found`)
   }
 

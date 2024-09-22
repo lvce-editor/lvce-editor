@@ -11,7 +11,6 @@ export const add = (webView: any) => {
 }
 
 export const addMany = (webViews: any[]) => {
-  console.log({ webViews })
   state.webViews = [...state.webViews, ...webViews]
 }
 
