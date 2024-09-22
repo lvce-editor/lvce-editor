@@ -83,27 +83,11 @@ export const organizeExtensions = (extensions) => {
   }
 }
 
-const matchesActivationEvent = (extension, event) => {
-  if (!extension) {
-    return false
-  }
-  if (!extension.activation) {
-    return false
-  }
-  // TODO handle error when extension.activation is not of type array (null or number or ...)
-  for (const item of extension.activation) {
-    if (item.startsWith('onWebview:')) {
-      console.warn(`[renderer-worker] Invalid extension activation event in ${extension.path}: should be onWebView:`)
-    }
-    return item === event
-  }
-  return false
-}
-
 export const filterByMatchingEvent = (extensions, event) => {
   const extensionsToActivate = []
   for (const extension of extensions) {
-    if (matchesActivationEvent(extension, event)) {
+    // TODO handle error when extension.activation is not of type array (null or number or ...)
+    if (extension.activation && extension.activation.includes(event)) {
       extensionsToActivate.push(extension)
     }
   }
