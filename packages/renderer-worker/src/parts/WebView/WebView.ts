@@ -59,6 +59,11 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   await ExtensionHostManagement.activateByEvent(`onWebView:${webViewId}`)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   const portId = Id.create()
+
+  console.time('register-protocol')
+  await WebViewProtocol.register(previewServerId, webViewPort, frameAncestors, webViewRoot, csp, iframeContent)
+  console.timeEnd('register-protocol')
+
   console.time('create')
   await RendererProcess.invoke('WebView.create', id, iframeSrc, sandbox, srcDoc, csp, credentialless)
   console.timeEnd('create')
@@ -70,10 +75,6 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   console.time('setPort')
   await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
   console.timeEnd('setPort')
-
-  console.time('register-protocol')
-  await WebViewProtocol.register(previewServerId, webViewPort, frameAncestors, webViewRoot, csp, iframeContent)
-  console.timeEnd('register-protocol')
 
   // TODO split up into create and load
   console.time('extension-create-webview')
