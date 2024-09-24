@@ -6,8 +6,10 @@ import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript
 
 export const getElectronFileResponseContent = async (request, absolutePath, url) => {
   if (ShouldTranspileTypescript.shouldTranspileTypescript(request, url)) {
+    console.log('transpile', url)
     const content = await readFile(absolutePath)
-    const newContent = await TranspileTypeScript.transpileTypeScript(content.toString())
+    const useCache = true
+    const newContent = await TranspileTypeScript.transpileTypeScript(content.toString(), useCache)
     const newContentString = newContent.outputText
     const newContentBuffer = Buffer.from(newContentString)
     return newContentBuffer
