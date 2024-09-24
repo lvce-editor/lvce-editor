@@ -513,7 +513,6 @@ export const updateEditingValue = (state, value) => {
 }
 
 export const handleFocus = (state) => {
-  console.log('handle focus')
   Focus.setFocus(FocusKey.Explorer)
   return state
 }
