@@ -1,17 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import type { EditorGroup } from '../EditorGroup/EditorGroup.ts'
-import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.js'
-import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
-import * as PathDisplay from '../PathDisplay/PathDisplay.js'
-import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
 const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, width: number, height: number): readonly EditorGroup[] => {
   if (groups.length === 0) {
