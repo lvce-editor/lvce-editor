@@ -44,7 +44,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
       y: lastGroup.y,
       width: lastGroup.width / 2,
       height: lastGroup.height,
-      editors: [],
+      editors: lastGroup.editors,
       tabsUid: 0,
       activeIndex: -1,
     },
