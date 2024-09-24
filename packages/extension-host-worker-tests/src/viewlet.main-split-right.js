@@ -1,6 +1,6 @@
 export const name = 'viewlet.main-split-right'
 
-export const test = async ({ Extension, QuickPick, Locator, expect, FileSystem, Workspace, Main }) => {
+export const test = async ({ QuickPick, FileSystem, Workspace, Main }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
