@@ -29,6 +29,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
   if (!lastGroup) {
     throw new Error('missing last group')
   }
+  const lastEditor = lastGroup.editors.at(-1)
   return [
     ...groups.slice(0, -1),
     {
@@ -44,7 +45,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
       y: lastGroup.y,
       width: lastGroup.width / 2,
       height: lastGroup.height,
-      editors: [],
+      editors: [lastEditor],
       tabsUid: 0,
       activeIndex: -1,
     },
