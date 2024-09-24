@@ -4,10 +4,12 @@ import * as Platform from '../Platform/Platform.js'
 import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldTranspileTypescript.js'
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.js'
 
+const useCache = false // TODO enable this
+
 export const getElectronFileResponseContent = async (request, absolutePath, url) => {
   if (ShouldTranspileTypescript.shouldTranspileTypescript(request, url)) {
     const content = await readFile(absolutePath)
-    const newContent = await TranspileTypeScript.transpileTypeScript(content.toString())
+    const newContent = await TranspileTypeScript.transpileTypeScript(content.toString(), useCache)
     const newContentString = newContent.outputText
     const newContentBuffer = Buffer.from(newContentString)
     return newContentBuffer
