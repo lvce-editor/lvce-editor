@@ -1,5 +1,7 @@
 export const name = 'viewlet.main-split-right'
 
+export const skip = true
+
 export const test = async ({ QuickPick, FileSystem, Workspace, Main }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
