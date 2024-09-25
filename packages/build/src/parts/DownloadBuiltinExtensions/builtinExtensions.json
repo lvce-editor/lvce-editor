@@ -27,7 +27,7 @@
   {
     "name": "builtin.rest-client",
     "repository": "github.com/lvce-editor/rest-client",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   {
     "name": "builtin.language-basics-coffeescript",
