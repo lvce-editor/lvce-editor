@@ -24,7 +24,7 @@ export const activate = async (extension, absolutePath) => {
     Assert.string(extension.browser)
     Assert.string(absolutePath)
     const module = await ImportScript.importScript(absolutePath)
-    HandleRpcInfos.handleRpcInfos(extension.rpc)
+    HandleRpcInfos.handleRpcInfos(extension)
     const token = CancelToken.create()
     try {
       await Promise.race([module.activate(extension), rejectAfterTimeout(activationTimeout, token)])
