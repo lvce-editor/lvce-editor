@@ -9,7 +9,7 @@ import * as RpcParentType from '../RpcParentType/RpcParentType.ts'
 export const createRpcWithId = async ({ id, execute }: { id: string; execute: any }) => {
   Assert.string(id)
   const info = ExtensionHostRpcState.get(id)
-  if (!id) {
+  if (!info) {
     throw new Error(`rpc with id ${id} not found`)
   }
   const ipc = await IpcParent.create({

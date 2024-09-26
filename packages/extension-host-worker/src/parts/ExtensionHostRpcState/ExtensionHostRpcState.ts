@@ -11,3 +11,7 @@ export const remove = (id: string) => {
 export const get = (id: string) => {
   return rpcs[id]
 }
+
+export const getAll = () => {
+  return rpcs
+}
