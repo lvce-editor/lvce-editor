@@ -21,6 +21,8 @@ export const getMimeType = (fileExtension) => {
       return MimeType.ApplicationJson
     case '.mp3':
       return MimeType.AudioMpeg
+    case '.webm':
+      return MimeType.VideoWebm
     default:
       console.warn(`unsupported file extension: ${fileExtension}`)
       return ''
