@@ -7,7 +7,7 @@ const getPlatform = () => {
     return PLATFORM
   }
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return 'test'
+    return PlatformType.Test
   }
   // TODO find a better way to pass runtime environment
   if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
