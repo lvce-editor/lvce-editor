@@ -33,6 +33,7 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.ts'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.ts'
+import * as ExtensionHostUrl from '../ExtensionHostUrl/ExtensionHostUrl.ts'
 import { FormattingError } from '../FormattingError/FormattingError.ts'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.ts'
 import { VError } from '../VError/VError.ts'
@@ -151,6 +152,9 @@ export const api = {
   // Type Definition
   registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
   executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+
+  // Url
+  getRemoteUrl: ExtensionHostUrl.getRemoteUrl,
 
   // Webview
   registerWebViewProvider: ExtensionHostWebView.registerWebViewProvider,
