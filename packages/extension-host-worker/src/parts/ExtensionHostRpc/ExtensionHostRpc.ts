@@ -15,7 +15,8 @@ const defaultExecute = () => {
 export const createRpc = async ({ id, url, name, execute = defaultExecute, contentSecurityPolicy }) => {
   try {
     if (id) {
-      const rpc = await CreateRpcWithId.createRpcWithId(id)
+      Assert.string(id)
+      const rpc = await CreateRpcWithId.createRpcWithId({ id, execute })
       return rpc
     }
 
