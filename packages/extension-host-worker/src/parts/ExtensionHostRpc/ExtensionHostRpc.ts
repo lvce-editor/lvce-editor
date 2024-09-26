@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as CreateRpcWithId from '../CreateRpcWithId/CreateRpcWithId.ts'
 import * as ExtensionHostSubWorkerUrl from '../ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts'
 import * as ExtensionHostWorkerContentSecurityPolicy from '../ExtensionHostWorkerContentSecurityPolicy/ExtensionHostWorkerContentSecurityPolicy.ts'
 import * as IpcParent from '../IpcParent/IpcParent.ts'
@@ -11,8 +12,15 @@ const defaultExecute = () => {
   throw new Error('not implemented')
 }
 
-export const createRpc = async ({ url, name, execute = defaultExecute, contentSecurityPolicy }) => {
+export const createRpc = async ({ id, url, name, execute = defaultExecute, contentSecurityPolicy }) => {
   try {
+    if (id) {
+      Assert.string(id)
+      const rpc = await CreateRpcWithId.createRpcWithId({ id, execute })
+      return rpc
+    }
+
+    // deprecated
     Assert.string(url)
     Assert.string(name)
     Assert.fn(execute)

@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as CancelToken from '../CancelToken/CancelToken.ts'
 import * as GetExtensionId from '../GetExtensionId/GetExtensionId.ts'
+import * as HandleRpcInfos from '../HandleRpcInfos/HandleRpcInfos.ts'
 import * as ImportScript from '../ImportScript/ImportScript.ts'
 import * as IsImportError from '../IsImportError/IsImportError.ts'
 import * as Timeout from '../Timeout/Timeout.ts'
@@ -23,6 +24,7 @@ export const activate = async (extension, absolutePath) => {
     Assert.string(extension.browser)
     Assert.string(absolutePath)
     const module = await ImportScript.importScript(absolutePath)
+    HandleRpcInfos.handleRpcInfos(extension)
     const token = CancelToken.create()
     try {
       await Promise.race([module.activate(extension), rejectAfterTimeout(activationTimeout, token)])
