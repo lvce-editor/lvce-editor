@@ -22,7 +22,7 @@ export const getMimeType = (fileExtension) => {
     case '.mp3':
       return MimeType.AudioMpeg
     default:
-      console.warn(`unsupported file extension: ${fileExtension}`)
+      console.warn(`[shared-process] unsupported file extension: ${fileExtension}`)
       return ''
   }
 }
