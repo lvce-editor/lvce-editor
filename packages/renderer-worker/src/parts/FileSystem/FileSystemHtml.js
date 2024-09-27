@@ -131,4 +131,13 @@ export const getBlobSrc = async (uri) => {
   return blobUrl
 }
 
+export const getBlob = async (uri) => {
+  const handle = await GetFileHandle.getFileHandle(uri)
+  if (!handle) {
+    throw new Error(`file not found`)
+  }
+  const file = await handle.getFile()
+  return file
+}
+
 export const canBeRestored = true
