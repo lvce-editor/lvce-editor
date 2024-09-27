@@ -5,6 +5,7 @@ import { beforeAll, expect, test } from '@jest/globals'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.ipc.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting DOMMatrixReadonly
@@ -85,6 +86,18 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletEditorImage, oldState, newState, ViewletModuleId.EditorImage)
 }
 
+beforeAll(() => {
+  FileSystemState.registerAll({
+    test() {
+      return {
+        getBlobUrl() {
+          return ''
+        },
+      }
+    },
+  })
+})
+
 test('create', () => {
   const state = ViewletEditorImage.create()
   expect(state).toBeDefined()
@@ -93,17 +106,17 @@ test('create', () => {
 test('loadContent', async () => {
   const state = {
     ...ViewletEditorImage.create(),
-    uri: '/test/image.png',
+    uri: 'test:///test/image.png',
   }
   expect(await ViewletEditorImage.loadContent(state)).toMatchObject({
-    src: '/remote/test/image.png',
+    src: '',
   })
 })
 
 test('dispose', async () => {
   const state = {
     ...ViewletEditorImage.create(),
-    uri: '/test/image.png',
+    uri: 'test:///test/image.png',
   }
   expect(await ViewletEditorImage.dispose(state)).toMatchObject({
     disposed: true,
@@ -114,7 +127,7 @@ test('render', () => {
   const oldState = ViewletEditorImage.create()
   const newState = {
     ...oldState,
-    src: '/test/image.png',
+    src: 'test:///test/image.png',
   }
   expect(render(oldState, newState)).toEqual([
     [
@@ -131,7 +144,7 @@ test('render', () => {
           childCount: 0,
           className: 'ImageElement',
           draggable: false,
-          src: '/test/image.png',
+          src: 'test:///test/image.png',
           type: 17,
         },
       ],

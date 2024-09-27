@@ -107,6 +107,13 @@ export const readDirWithFileTypes = (uri) => {
   return dirents
 }
 
+export const getBlobUrl = (uri) => {
+  const content = readFile(uri)
+  const blob = new Blob([content])
+  const url = URL.createObjectURL(blob)
+  return url
+}
+
 export const chmod = (path, permissions) => {
   throw new Error('[memfs] chmod not implemented')
 }

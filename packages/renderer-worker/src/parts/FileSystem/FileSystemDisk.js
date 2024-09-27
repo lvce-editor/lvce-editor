@@ -1,9 +1,9 @@
-import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 export const name = 'Disk'
 
@@ -43,7 +43,10 @@ export const readDirWithFileTypes = (path) => {
 }
 
 export const getBlobUrl = (path) => {
-  return GetRemoteSrc.getRemoteSrc(`/${path}`)
+  if (!path.startsWith('/')) {
+    path = `/${path}`
+  }
+  return GetRemoteSrc.getRemoteSrc(path)
 }
 
 export const getPathSeparator = () => {
