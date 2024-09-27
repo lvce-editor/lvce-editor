@@ -115,6 +115,11 @@
     "version": "1.11.0"
   },
   {
+    "name": "builtin.video-preview",
+    "repository": "github.com/lvce-editor/video-preview",
+    "version": "1.0.0"
+  },
+  {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
     "version": "0.5.0"
