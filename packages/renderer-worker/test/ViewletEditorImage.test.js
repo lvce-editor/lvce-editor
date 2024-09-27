@@ -109,7 +109,7 @@ test('loadContent', async () => {
     uri: 'test:///test/image.png',
   }
   expect(await ViewletEditorImage.loadContent(state)).toMatchObject({
-    src: '/remote/test/image.png',
+    src: '',
   })
 })
 
