@@ -121,4 +121,14 @@ export const getPathSeparator = () => {
   return pathSeparator
 }
 
+export const getBlobSrc = async (uri) => {
+  const handle = await GetFileHandle.getFileHandle(uri)
+  if (!handle) {
+    throw new Error(`file not found`)
+  }
+  const file = await handle.getFile()
+  const blobUrl = URL.createObjectURL(file)
+  return blobUrl
+}
+
 export const canBeRestored = true
