@@ -108,7 +108,10 @@ export const readDirWithFileTypes = (uri) => {
 }
 
 export const getBlobUrl = (uri) => {
-  throw new Error('not implemented')
+  const content = readFile(uri)
+  const blob = new Blob([content])
+  const url = URL.createObjectURL(blob)
+  return url
 }
 
 export const chmod = (path, permissions) => {
