@@ -70,7 +70,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
 
   // TODO split up into create and load
-  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri)
+  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri, id)
 
   return {
     srcDoc,

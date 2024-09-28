@@ -1,9 +1,18 @@
 import type { GetRemoteUrlOptions } from '../ExtensionHostRemoteUrlOptions/ExtensionHostRemoteUrlOptions.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
+import * as ExtensionHostWebViewState from '../ExtensionHostWebViewState/ExtensionHostWebViewState.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
+  if (options.webViewId) {
+    // console.log({ id: options.webViewId })
+    const webView = ExtensionHostWebViewState.getWebView(options.webViewId)
+    if (!webView) {
+      throw new Error(`webview ${options.webViewId} not found`)
+    }
+    console.log({ webView })
+  }
   // TODO if webViewId is provided,
   // 1. read file as blob
   // 2. send blob to webview
