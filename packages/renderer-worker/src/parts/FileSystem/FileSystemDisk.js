@@ -49,6 +49,12 @@ export const getBlobUrl = (path) => {
   return GetRemoteSrc.getRemoteSrc(path)
 }
 
+export const getBlob = async (path) => {
+  const content = await readFile(path)
+  const blob = new Blob([content])
+  return blob
+}
+
 export const getPathSeparator = () => {
   if (Platform.platform === PlatformType.Web) {
     return PathSeparatorType.Slash

@@ -97,3 +97,4 @@ export const SendMessagePortToExtensionHostWorker = 125
 export const ExtensionHostManagement = 126
 export const SendMessagePortToSyntaxHighlightingWorker = 127
 export const Transferrable = 128
+export const WebView = 129
