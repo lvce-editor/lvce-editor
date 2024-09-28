@@ -10,7 +10,7 @@ const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityP
   `font-src 'self'`,
   `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
   `manifest-src 'self'`,
-  `media-src 'self'`,
+  `media-src 'self' blob:`,
   `script-src 'self'`,
   `style-src 'self'`,
   `frame-src 'self' blob:`,
