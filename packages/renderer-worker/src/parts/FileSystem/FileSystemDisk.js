@@ -55,6 +55,13 @@ export const getBlob = async (path) => {
   return blob
 }
 
+export const getPathSeparator = () => {
+  if (Platform.platform === PlatformType.Web) {
+    return PathSeparatorType.Slash
+  }
+  return SharedProcess.invoke(SharedProcessCommandType.FileSystemGetPathSeparator)
+}
+
 export const getRealPath = (path) => {
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemGetRealPath, /* path */ path)
 }
