@@ -1,5 +1,6 @@
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as WebView from '../WebView/WebView.ts'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
@@ -65,4 +66,9 @@ export const resize = (state, dimensions) => {
     ...state,
     ...dimensions,
   }
+}
+
+export const dispose = async (state) => {
+  await RendererProcess.invoke('WebView.dispose', state.uid)
+  return state
 }
