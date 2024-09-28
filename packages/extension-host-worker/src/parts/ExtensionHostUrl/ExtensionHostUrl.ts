@@ -1,7 +1,8 @@
 import type { GetRemoteUrlOptions } from '../ExtensionHostRemoteUrlOptions/ExtensionHostRemoteUrlOptions.ts'
+import * as ExtensionHostWebViewState from '../ExtensionHostWebViewState/ExtensionHostWebViewState.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
-import * as ExtensionHostWebViewState from '../ExtensionHostWebViewState/ExtensionHostWebViewState.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
@@ -11,6 +12,14 @@ export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {
     if (!webView) {
       throw new Error(`webview ${options.webViewId} not found`)
     }
+    const { uid, origin } = webView
+    const { port1, port2 } = GetPortTuple.getPortTuple()
+    const promise = new Promise((resolve) => {
+      port2.addEventListener('message', resolve)
+    })
+    await Rpc.invokeAndTransfer('WebView.setPort', uid, port1, origin)
+    const event = await promise
+    console.log({ event })
     console.log({ webView })
   }
   // TODO if webViewId is provided,

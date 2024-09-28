@@ -214,6 +214,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostManagement
     case 'Transferrable':
       return ModuleId.Transferrable
+    case 'WebView':
+      return ModuleId.WebView
     default:
       throw new Error(`module ${prefix} not found`)
   }

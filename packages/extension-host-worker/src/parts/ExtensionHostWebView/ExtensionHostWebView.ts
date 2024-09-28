@@ -1,7 +1,7 @@
 import * as ExtensionHostWebViewState from '../ExtensionHostWebViewState/ExtensionHostWebViewState.ts'
 
 // TODO pass uuid to allow having multiple webviews open at the same time
-export const createWebView = async (providerId: string, port: MessagePort, uri: string, uid: number) => {
+export const createWebView = async (providerId: string, port: MessagePort, uri: string, uid: number, origin: string) => {
   const provider = ExtensionHostWebViewState.getProvider(providerId)
   if (!provider) {
     throw new Error(`webview provider ${providerId} not found`)
@@ -38,6 +38,7 @@ export const createWebView = async (providerId: string, port: MessagePort, uri: 
   port.onmessage = handlePortMessage
   const rpc = {
     uid,
+    origin,
     invoke(method, ...params) {
       // TODO return promise with result
       port.postMessage({
