@@ -1,18 +1,7 @@
+import type { GetRemoteUrlOptions } from '../ExtensionHostRemoteUrlOptions/ExtensionHostRemoteUrlOptions.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
-
-// TODO names this method
-// - getRemoteUrl
-// - getBlobUrl
-// - getObjectUrl
-// - FileSystem.readAsBlob
-
-// TODO when returning an objectUrl in web, provide a way to dispose the object url
-
-interface GetRemoteUrlOptions {
-  readonly webViewId?: string
-}
 
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}) => {
   // TODO if webViewId is provided,
