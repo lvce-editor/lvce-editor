@@ -65,6 +65,13 @@ export const getBlobUrl = async (uri) => {
   return fileSystem.getBlobUrl(path)
 }
 
+export const getBlob = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  return fileSystem.getBlob(path)
+}
+
 export const copy = async (sourceUri, targetUri) => {
   Assert.string(sourceUri)
   Assert.string(targetUri)

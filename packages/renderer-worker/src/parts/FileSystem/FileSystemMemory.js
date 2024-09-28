@@ -114,6 +114,12 @@ export const getBlobUrl = (uri) => {
   return url
 }
 
+export const getBlob = (uri) => {
+  const content = readFile(uri)
+  const blob = new Blob([content])
+  return blob
+}
+
 export const chmod = (path, permissions) => {
   throw new Error('[memfs] chmod not implemented')
 }
