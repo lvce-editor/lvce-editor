@@ -3,26 +3,22 @@ import * as GetRemoteUrlForWebView from '../GetRemoteUrlForWebView/GetRemoteUrlF
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
-
-// TODO enable this
-const remoteUrlForWebViewSupported = true
+import * as GetProtocol from '../GetProtocol/GetProtocol.ts'
 
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
-  if (options.webViewId && remoteUrlForWebViewSupported) {
+  const protocol = GetProtocol.getProtocol(uri)
+  if (Platform.platform === PlatformType.Remote && !protocol) {
+    return `/remote/${uri}`
+  }
+  if (Platform.platform === PlatformType.Electron && !protocol) {
+    return `/remote/${uri}`
+  }
+  if (options.webViewId) {
     return GetRemoteUrlForWebView.getRemoteUrl(uri, options)
   }
-
   if (uri.startsWith('html://')) {
     const url = await Rpc.invoke('Blob.getSrc', uri)
     return url
   }
-  if (Platform.platform === PlatformType.Remote) {
-    // TODO support custom file system protocols
-    return `/remote/${uri}`
-  }
-  if (Platform.platform === PlatformType.Electron) {
-    // TODO
-    return `/remote/${uri}`
-  }
-  throw new Error(`unsupported platform`)
+  throw new Error(`unsupported platform for remote url`)
 }
