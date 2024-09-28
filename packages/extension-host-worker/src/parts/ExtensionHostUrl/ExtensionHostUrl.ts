@@ -15,9 +15,10 @@ export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {
     const { uid, origin } = webView
     const { port1, port2 } = GetPortTuple.getPortTuple()
     const promise = new Promise((resolve) => {
-      port2.addEventListener('message', resolve)
+      port2.onmessage = resolve
     })
-    await Rpc.invokeAndTransfer('WebView.setPort', uid, port1, origin)
+    const portType = 'test'
+    await Rpc.invokeAndTransfer('WebView.setPort', uid, port1, origin, portType)
     const event = await promise
     console.log({ event })
     console.log({ webView })
