@@ -66,7 +66,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
 
   await WebViewProtocol.register(previewServerId, webViewPort, frameAncestors, webViewRoot, csp, iframeContent)
 
-  await RendererProcess.invoke('WebView.create', id, iframeSrc, sandbox, srcDoc, csp, credentialless)
+  await RendererProcess.invoke('WebView.create', id, iframeSrc, sandbox, csp, credentialless)
 
   await RendererProcess.invoke('WebView.load', id)
   const origin = GetWebViewOrigin.getWebViewOrigin(webViewPort)
