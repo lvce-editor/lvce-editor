@@ -1,9 +1,9 @@
 import type { GetRemoteUrlOptions } from '../ExtensionHostRemoteUrlOptions/ExtensionHostRemoteUrlOptions.ts'
+import * as GetProtocol from '../GetProtocol/GetProtocol.ts'
 import * as GetRemoteUrlForWebView from '../GetRemoteUrlForWebView/GetRemoteUrlForWebView.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
-import * as GetProtocol from '../GetProtocol/GetProtocol.ts'
 
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
   const protocol = GetProtocol.getProtocol(uri)
