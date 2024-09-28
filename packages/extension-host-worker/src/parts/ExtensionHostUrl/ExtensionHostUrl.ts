@@ -3,7 +3,7 @@ import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
-export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}) => {
+export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
   // TODO if webViewId is provided,
   // 1. read file as blob
   // 2. send blob to webview
