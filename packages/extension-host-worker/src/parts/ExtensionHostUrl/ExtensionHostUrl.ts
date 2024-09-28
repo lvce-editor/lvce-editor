@@ -5,7 +5,7 @@ import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
 // TODO enable this
-const remoteUrlForWebViewSupported = false
+const remoteUrlForWebViewSupported = true
 
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
   if (options.webViewId && remoteUrlForWebViewSupported) {

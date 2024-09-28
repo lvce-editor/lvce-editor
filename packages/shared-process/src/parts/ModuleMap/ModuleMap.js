@@ -140,6 +140,7 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.mkdir':
     case 'FileSystem.readDirWithFileTypes':
     case 'FileSystem.readFile':
+    case 'FileSystem.readFileAsBuffer':
     case 'FileSystem.remove':
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
