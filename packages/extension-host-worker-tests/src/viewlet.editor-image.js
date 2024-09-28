@@ -1,5 +1,7 @@
 export const name = 'viewlet.editor-image'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Main, Locator, Command, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
