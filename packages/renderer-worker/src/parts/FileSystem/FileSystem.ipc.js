@@ -2,9 +2,9 @@ import * as FileSystem from './FileSystem.js'
 
 export const name = 'FileSystem'
 
-// prettier-ignore
 export const Commands = {
   chmod: FileSystem.chmod,
+  getBlob: FileSystem.getBlob,
   getPathSeparator: FileSystem.getPathSeparator,
   mkdir: FileSystem.mkdir,
   readDirWithFileTypes: FileSystem.readDirWithFileTypes,
