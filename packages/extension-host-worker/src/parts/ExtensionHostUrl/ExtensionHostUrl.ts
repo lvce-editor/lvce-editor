@@ -1,16 +1,16 @@
+import type { GetRemoteUrlOptions } from '../ExtensionHostRemoteUrlOptions/ExtensionHostRemoteUrlOptions.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformType from '../PlatformType/PlatformType.ts'
 import * as Rpc from '../Rpc/Rpc.ts'
 
-// TODO names this method
-// - getRemoteUrl
-// - getBlobUrl
-// - getObjectUrl
-// - FileSystem.readAsBlob
+export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
+  // TODO if webViewId is provided,
+  // 1. read file as blob
+  // 2. send blob to webview
+  // 3. create objecturl in webview
+  // 4. send back objecturl to extension host worker
+  // 5. provide objectUrl to extension
 
-// TODO when returning an objectUrl in web, provide a way to dispose the object url
-
-export const getRemoteUrl = async (uri: string) => {
   if (uri.startsWith('html://')) {
     const url = await Rpc.invoke('Blob.getSrc', uri)
     return url
