@@ -27,6 +27,7 @@ export const Commands = {
   mkdir: FileSystem.mkdir,
   readDirWithFileTypes: FileSystem.readDirWithFileTypes,
   readFile: FileSystem.readFile,
+  readFileAsBuffer: FileSystem.readFileAsBuffer,
   remove: FileSystem.remove,
   rename: FileSystem.rename,
   stat: FileSystem.stat,

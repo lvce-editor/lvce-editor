@@ -50,8 +50,9 @@ export const getBlobUrl = (path) => {
 }
 
 export const getBlob = async (path) => {
-  const content = await readFile(path)
-  const blob = new Blob([content])
+  const content = await SharedProcess.invoke('FileSystem.readFileAsBuffer', path)
+  const array = new Uint8Array(content.data)
+  const blob = new Blob([array], {})
   return blob
 }
 

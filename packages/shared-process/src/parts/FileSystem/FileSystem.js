@@ -54,6 +54,19 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
   }
 }
 
+export const readFileAsBuffer = async (path) => {
+  try {
+    Assert.string(path)
+    const content = await fs.readFile(path)
+    return content
+  } catch (error) {
+    if (IsEnoentError.isEnoentError(error)) {
+      throw new FileNotFoundError(path)
+    }
+    throw new VError(error, `Failed to read file "${path}"`)
+  }
+}
+
 /**
  *
  * @param {string} path

@@ -1,9 +1,9 @@
 import type { GetRemoteUrlOptions } from '../ExtensionHostRemoteUrlOptions/ExtensionHostRemoteUrlOptions.ts'
 import * as ExtensionHostWebViewState from '../ExtensionHostWebViewState/ExtensionHostWebViewState.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
-import * as Rpc from '../Rpc/Rpc.ts'
 import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
+import * as Rpc from '../Rpc/Rpc.ts'
 
 // TODO if webViewId is provided,
 // 1. read file as blob
