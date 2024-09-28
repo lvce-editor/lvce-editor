@@ -5,6 +5,13 @@ import * as Rpc from '../Rpc/Rpc.ts'
 import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
+// TODO if webViewId is provided,
+// 1. read file as blob
+// 2. send blob to webview
+// 3. create objecturl in webview
+// 4. send back objecturl to extension host worker
+// 5. provide objectUrl to extension
+
 export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {}): Promise<string> => {
   const webView = ExtensionHostWebViewState.getWebView(options.webViewId)
   if (!webView) {
@@ -16,10 +23,8 @@ export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {
     port2.onmessage = resolve
   })
   const portType = 'test'
-  console.time('send port')
   await Rpc.invokeAndTransfer('WebView.setPort', uid, port1, origin, portType)
   const event = await promise
-  console.timeEnd('send port')
   // @ts-ignore
   if (event.data !== 'ready') {
     throw new Error('unexpected first message')
