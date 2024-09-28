@@ -17,6 +17,10 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
 
+export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
+  await RendererProcess.invokeAndTransfer('WebView.setPort', uid, port, origin, portType)
+}
+
 export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
@@ -67,10 +71,12 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   await RendererProcess.invoke('WebView.load', id)
   const origin = GetWebViewOrigin.getWebViewOrigin(webViewPort)
 
-  await RendererProcess.invokeAndTransfer('WebView.setPort', id, port1, origin)
+  const portType = ''
+  // @ts-ignore
+  await setPort(id, port1, origin, portType)
 
   // TODO split up into create and load
-  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri, id)
+  await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri, id, origin)
 
   return {
     srcDoc,
