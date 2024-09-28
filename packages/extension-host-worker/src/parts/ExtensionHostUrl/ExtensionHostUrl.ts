@@ -20,8 +20,10 @@ export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {
     const portType = 'test'
     await Rpc.invokeAndTransfer('WebView.setPort', uid, port1, origin, portType)
     const event = await promise
-    console.log({ event })
-    console.log({ webView })
+    // @ts-ignore
+    if (event.data !== 'ready') {
+      throw new Error('unexpected first message')
+    }
   }
   // TODO if webViewId is provided,
   // 1. read file as blob
