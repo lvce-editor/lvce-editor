@@ -45,7 +45,8 @@ export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {
 
   // TODO maybe don't send a message port only to get object url?
   // TODO dispose ipc to avoid memory leak
-  const blob = new Blob(['abc'], {})
+  const blob = await Rpc.invoke('FileSystem.getBlob', uri)
+  console.log({ blob })
   const objectUrl = await JsonRpc.invoke(ipc, 'createObjectUrl', blob)
   console.log({ objectUrl })
   return objectUrl
