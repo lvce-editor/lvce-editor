@@ -191,6 +191,8 @@ export const load = (moduleId) => {
       return import('../SendMessagePortToSyntaxHighlightingworker/SendMessagePortToSyntaxHighlightingWorker.ipc.js')
     case ModuleId.Transferrable:
       return import('../Transferrable/Transferrable.ipc.js')
+    case ModuleId.WebView:
+      return import('../WebView/WebView.ipc.ts')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
