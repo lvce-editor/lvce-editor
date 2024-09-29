@@ -37,6 +37,8 @@ export const createWebView = async (providerId: string, port: MessagePort, uri: 
 
   port.onmessage = handlePortMessage
   const rpc = {
+    uri,
+    provider,
     uid,
     origin,
     invoke(method, ...params) {
@@ -50,7 +52,11 @@ export const createWebView = async (providerId: string, port: MessagePort, uri: 
   }
   // TODO allow creating multiple webviews per provider
   ExtensionHostWebViewState.setWebView(providerId, rpc)
-  provider.create(rpc, uri)
+}
+
+export const load = async (providerId) => {
+  const rpc = ExtensionHostWebViewState.getWebView(providerId)
+  await rpc.provider.create(rpc, rpc.uri)
 }
 
 export const disposeWebView = (id) => {

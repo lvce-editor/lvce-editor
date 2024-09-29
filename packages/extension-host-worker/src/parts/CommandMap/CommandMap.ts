@@ -23,8 +23,8 @@ import * as ExtensionHostStatusBar from '../ExtensionHostStatusBar/ExtensionHost
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.ts'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.ts'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.ts'
-import * as ExtensionHostWebView from '../ExtensionHostWebView/ExtensionHostWebView.ts'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.ts'
+import * as ExtensionHostWebView from '../ExtensionHostWebView/ExtensionHostWebView.ts'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.ts'
 import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.ts'
 
@@ -134,6 +134,8 @@ export const getFn = (method) => {
       return ExtensionHostWebView.createWebView
     case 'ExtensionHostWebView.dispose':
       return ExtensionHostWebView.disposeWebView
+    case 'ExtensionHostWebView.load':
+      return ExtensionHostWebView.load
     default:
       throw new CommandNotFoundError(method)
   }

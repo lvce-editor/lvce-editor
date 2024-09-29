@@ -78,6 +78,8 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   // TODO split up into create and load
   await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri, id, origin)
 
+  await ExtensionHostWorker.invoke('ExtensionHostWebView.load', webViewId)
+
   return {
     srcDoc,
     iframeSrc,
