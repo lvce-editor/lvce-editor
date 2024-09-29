@@ -16,10 +16,7 @@ export const getRemoteUrlForWebView = async (uri: string, options: GetRemoteUrlO
   if (!webView) {
     throw new Error(`webview ${options.webViewId} not found`)
   }
-  const ipc = await CreateWebViewIpc.createWebViewIpc(webView)
-  // TODO maybe don't send a message port only to get object url?
-  // TODO dispose ipc to avoid memory leak
-  const blob = await Rpc.invoke('FileSystem.getBlob', uri)
+  const [ipc, blob] = await Promise.all([CreateWebViewIpc.createWebViewIpc(webView), Rpc.invoke('FileSystem.getBlob', uri)])
   const objectUrl = await JsonRpc.invoke(ipc, 'createObjectUrl', blob)
   return objectUrl
 }
