@@ -41,5 +41,6 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     from: `./src/extensionHostWorkerMain.ts`,
     platform: 'webworker',
     allowCyclicDependencies: false,
+    sourceMap: false,
   })
 }
