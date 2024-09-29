@@ -14,7 +14,7 @@ export const getRemoteUrl = async (uri: string, options: GetRemoteUrlOptions = {
     return `/remote/${uri}`
   }
   if (options.webViewId) {
-    return GetRemoteUrlForWebView.getRemoteUrl(uri, options)
+    return GetRemoteUrlForWebView.getRemoteUrlForWebView(uri, options)
   }
   if (uri.startsWith('html://')) {
     const url = await Rpc.invoke('Blob.getSrc', uri)
