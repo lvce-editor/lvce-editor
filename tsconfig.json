@@ -8,7 +8,6 @@
     { "path": "./packages/extension-host-helper-process" },
     { "path": "./packages/extension-host-sub-worker" },
     { "path": "./packages/extension-host-worker-tests" },
-    { "path": "./packages/extension-host-worker" },
     { "path": "./packages/main-process" },
     { "path": "./packages/renderer-worker" },
     { "path": "./packages/search-worker" },
