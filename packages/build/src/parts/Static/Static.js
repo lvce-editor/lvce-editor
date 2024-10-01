@@ -97,7 +97,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   })
   await Copy.copyFile({
     from: 'static/manifest.json',
-    to: `packages/build/.tmp/dist/manifest.json`,
+    to: `packages/build/.tmp/dist/${commitHash}/manifest.json`,
   })
   await Replace.replace({
     path: `packages/build/.tmp/dist/manifest.json`,
@@ -125,7 +125,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     await Replace.replace({
       path: `packages/build/.tmp/dist/index.html`,
       occurrence: '/manifest.json',
-      replacement: `${pathPrefix}/manifest.json`,
+      replacement: `${pathPrefix}/${commitHash}/manifest.json`,
     })
     await Replace.replace({
       path: `packages/build/.tmp/dist/index.html`,
