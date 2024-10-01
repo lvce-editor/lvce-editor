@@ -49,7 +49,7 @@ export const getRendererWorkerCachePath = async (extraContents) => {
 
 const getExtensionHostWorkerCacheHash = async (extraContents) => {
   const hash = await Hash.computeFolderHash(
-    'packages/extension-host-worker/src',
+    'packages/build/src',
     [
       'packages/build/src/parts/BundleElectronApp/BundleElectronApp.js',
       'packages/build/src/parts/BuildServer/BuildServer.js',
