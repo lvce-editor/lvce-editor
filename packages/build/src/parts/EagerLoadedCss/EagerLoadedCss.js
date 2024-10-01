@@ -48,6 +48,7 @@ export const eagerLoadedCss = [
   'ViewletTitleBarIcon.css',
   'ViewletTitleBarMenuBar.css',
   'ViewletTitleBarTitle.css',
+  'WebView.css',
   'Welcome.css',
   'Widgets.css',
 ]
