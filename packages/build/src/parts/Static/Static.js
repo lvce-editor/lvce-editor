@@ -27,6 +27,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as StaticContentSecurityPolicy from '../StaticContentSecurityPolicy/StaticContentSecurityPolicy.js'
 import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import { join } from 'node:path'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await BundleRendererProcess.bundleRendererProcess({
@@ -212,6 +213,24 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
     to: `packages/build/.tmp/dist/${commitHash}/config/languages.json`,
     value: languages,
   })
+}
+
+const getAllExtensionsJson = async () => {
+  const extensionPath = Path.absolute('extensions')
+  const extensions = await readdir(extensionPath)
+  const allContent = []
+  for (const extension of extensions) {
+    const absolutePath = join(extensionPath, extension, 'extension.json')
+    const content = await JsonFile.readJson(absolutePath)
+    allContent.push(content)
+  }
+  return allContent
+}
+
+const bundleExtensionsJson = async ({ commitHash, pathPrefix }) => {
+  const allContent = await getAllExtensionsJson()
+  const outPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/config/extensions.json`)
+  await JsonFile.writeJson({ to: outPath, value: allContent })
 }
 
 const bundleWebViewFiles = async ({ commitHash, pathPrefix }) => {
@@ -629,6 +648,10 @@ export const build = async ({ product }) => {
   Console.time('bundleLanguageJsonFiles')
   await bundleLanguageJsonFiles({ commitHash, pathPrefix })
   Console.timeEnd('bundleLanguageJsonFiles')
+
+  Console.time('bundleExtensionsJson')
+  await bundleExtensionsJson({ commitHash, pathPrefix })
+  Console.timeEnd('bundleExtensionsJson')
 
   Console.time('bundleWebViewFiles')
   await bundleWebViewFiles({ commitHash, pathPrefix })
