@@ -10,7 +10,7 @@ export const bundleSearchWorkerCached = async ({ commitHash, platform, assetDir 
     Logger.info('[build step skipped] bundleSearchWorker')
   } else {
     console.time('bundleSearchWorker')
-    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/extension-host-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/search-worker'))
     const BundleSearchWorker = await import('../BundleSearchWorker/BundleSearchWorker.js')
     await BundleSearchWorker.bundleSearchWorker({
       cachePath,

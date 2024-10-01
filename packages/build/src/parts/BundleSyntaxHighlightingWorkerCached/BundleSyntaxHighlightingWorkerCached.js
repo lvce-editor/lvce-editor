@@ -10,7 +10,7 @@ export const bundleSyntaxHighlightingWorkerCached = async ({ commitHash, platfor
     Logger.info('[build step skipped] bundleSyntaxHighlightingWorker')
   } else {
     console.time('bundleSyntaxHighlightingWorker')
-    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/extension-host-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/syntax-highlighting-worker'))
     const BundleSyntaxHighlightingWorker = await import('../BundleSyntaxHighlightingWorker/BundleSyntaxHighlightingWorker.js')
     await BundleSyntaxHighlightingWorker.bundleSyntaxHighlightingWorker({
       cachePath,
