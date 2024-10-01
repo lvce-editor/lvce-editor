@@ -1,5 +1,0 @@
-export const Array = 'array'
-export const Boolean = 'boolean'
-export const Number = 'number'
-export const Object = 'object'
-export const String = 'string'

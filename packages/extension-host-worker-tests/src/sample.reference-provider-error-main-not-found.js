@@ -6,7 +6,7 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
-`
+`,
   )
 
   await Workspace.setPath(tmpDir)
@@ -25,6 +25,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // const origin = location.origin
   const mainUrl = new URL('../fixtures/sample.reference-provider-error-main-not-found/not-found.js', import.meta.url).toString()
   await expect(sideBarContent).toHaveText(
-    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: Failed to import ${mainUrl}: Not found (404)`
+    `VError: Failed to activate extension sample.reference-provider-error-main-not-found: Failed to import ${mainUrl}: Not found (404)`,
   )
 }

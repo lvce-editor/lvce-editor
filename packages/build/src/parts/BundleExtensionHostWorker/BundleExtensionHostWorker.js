@@ -1,46 +1,20 @@
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
 export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platform, assetDir }) => {
-  await Copy.copy({
-    from: 'packages/extension-host-worker/src',
-    to: Path.join(cachePath, 'src'),
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js',
+    to: Path.join(cachePath, 'dist', 'extensionHostWorkerMain.js'),
   })
-  await Copy.copy({
-    from: 'static/js',
-    to: Path.join(cachePath, 'static', 'js'),
-  })
-  for (const file of ['JsonRpc']) {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/${file}/${file}.ts`,
-      occurrence: `../../../../../static/`,
-      replacement: `../../../static/`,
-    })
-  }
-  for (const file of ['IpcChildModule']) {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/${file}/${file}.ts`,
-      occurrence: `/static/`,
-      replacement: `../../../static/`,
-    })
-  }
   await Replace.replace({
-    path: `${cachePath}/src/parts/AssetDir/AssetDir.ts`,
+    path: `${cachePath}/dist/extensionHostWorkerMain.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${assetDir}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.ts`,
+    path: `${cachePath}/dist/extensionHostWorkerMain.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
     replacement: `'${assetDir}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
-  })
-  await BundleJs.bundleJs({
-    cwd: cachePath,
-    from: `./src/extensionHostWorkerMain.ts`,
-    platform: 'webworker',
-    allowCyclicDependencies: false,
-    sourceMap: false,
   })
 }

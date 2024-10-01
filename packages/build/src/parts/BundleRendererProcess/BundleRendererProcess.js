@@ -43,7 +43,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     })
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.ts`;',
+      occurrence: `const extensionHostWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js\`;`,
       replacement: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`;',
     })
     const platformCode = getPlatformCode(platform)
