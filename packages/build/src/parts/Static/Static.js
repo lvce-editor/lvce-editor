@@ -229,7 +229,7 @@ const getAllExtensionsJson = async () => {
 
 const bundleExtensionsJson = async ({ commitHash, pathPrefix }) => {
   const allContent = await getAllExtensionsJson()
-  const outPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/extensions.json`)
+  const outPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/config/extensions.json`)
   await JsonFile.writeJson({ to: outPath, value: allContent })
 }
 
