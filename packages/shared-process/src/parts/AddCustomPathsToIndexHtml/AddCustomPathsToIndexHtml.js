@@ -2,18 +2,30 @@ import { pathToFileURL } from 'node:url'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
-export const addCustomRendererProcessPath = async (content) => {
+export const addCustomPathsToIndexHtml = async (content) => {
   if (Platform.isProduction) {
     return content
   }
+  let newContent = content
   const preferences = await Preferences.getUserPreferences()
   if (preferences['develop.rendererProcessPath']) {
-    return content
+    newContent = newContent
       .toString()
       .replace(
         '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
         '/remote' + pathToFileURL(preferences['develop.rendererProcessPath']).toString().slice(7),
       )
+  }
+  if (preferences['develop.extensionHostWorkerPath']) {
+    const actualUrl = '/remote' + pathToFileURL(preferences['develop.extensionHostWorkerPath']).toString().slice(7)
+    const config = JSON.stringify({
+      extensionHostWorkerUrl: actualUrl,
+    })
+    newContent = newContent.toString().replace(
+      '</title>',
+      `</title>
+      <script type="application.json" id="Config">${config}</script>`,
+    )
   }
   return content
 }
