@@ -286,6 +286,8 @@ export const getModuleId = (commandId) => {
     case 'WebViewServer.setHandler':
     case 'WebViewServer.registerProtocol':
       return ModuleId.WebViewServer
+    case 'GetExtensions.getExtensions':
+      return ModuleId.GetExtensions
     default:
       throw new CommandNotFoundError(commandId)
   }
