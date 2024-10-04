@@ -27,5 +27,5 @@ export const addCustomPathsToIndexHtml = async (content) => {
       <script type="application.json" id="Config">${config}</script>`,
     )
   }
-  return content
+  return newContent
 }
