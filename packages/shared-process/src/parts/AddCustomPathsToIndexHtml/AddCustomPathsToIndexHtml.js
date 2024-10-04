@@ -8,6 +8,7 @@ export const addCustomPathsToIndexHtml = async (content) => {
   }
   let newContent = content
   const preferences = await Preferences.getUserPreferences()
+  console.log({ preferences })
   if (preferences['develop.rendererProcessPath']) {
     newContent = newContent
       .toString()
@@ -17,6 +18,7 @@ export const addCustomPathsToIndexHtml = async (content) => {
       )
   }
   if (preferences['develop.extensionHostWorkerPath']) {
+    console.log('REPLCE 2')
     const actualUrl = '/remote' + pathToFileURL(preferences['develop.extensionHostWorkerPath']).toString().slice(7)
     const config = JSON.stringify({
       extensionHostWorkerUrl: actualUrl,
@@ -27,5 +29,5 @@ export const addCustomPathsToIndexHtml = async (content) => {
       <script type="application.json" id="Config">${config}</script>`,
     )
   }
-  return content
+  return newContent
 }
