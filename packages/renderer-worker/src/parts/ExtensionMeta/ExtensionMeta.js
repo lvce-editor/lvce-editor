@@ -151,6 +151,7 @@ const getSharedProcessExtensions = () => {
 }
 
 export const getExtensions = async () => {
+  console.trace('getext')
   if (Platform.platform === PlatformType.Web) {
     const webExtensions = await GetWebExtensions.getWebExtensions()
     return webExtensions
