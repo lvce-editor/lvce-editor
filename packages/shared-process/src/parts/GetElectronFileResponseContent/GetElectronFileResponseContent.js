@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import * as AddCustomRendererProcessPath from '../AddCustomRendererProcessPath/AddCustomRendererProcessPath.js'
+import * as AddCustomPathsToIndexHtml from '../AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldTranspileTypescript.js'
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.js'
@@ -20,7 +20,7 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
   }
   if (url === '/') {
-    content = await AddCustomRendererProcessPath.addCustomRendererProcessPath(content)
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
   }
   if (typeof content === 'string') {
     content = Buffer.from(content)
