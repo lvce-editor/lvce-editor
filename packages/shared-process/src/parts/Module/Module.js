@@ -132,6 +132,8 @@ export const load = (moduleId) => {
       return import('../FileWatcher/FileWatcher.ipc.js')
     case ModuleId.WebViewServer:
       return import('../WebViewServer/WebViewServer.ipc.js')
+    case ModuleId.GetExtensions:
+      return import('../GetExtensions/GetExtensions.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
