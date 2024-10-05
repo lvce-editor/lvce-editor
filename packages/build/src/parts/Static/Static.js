@@ -9,6 +9,7 @@ import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererP
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -498,6 +499,15 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
   await Copy.copy({
     from: syntaxHighlightingWorkerCachePath,
     to: `packages/build/.tmp/dist/${commitHash}/packages/syntax-highlighting-worker`,
+  })
+  const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: iframeWorkerCachePath,
+    to: `packages/build/.tmp/dist/${commitHash}/packages/iframe-worker`,
   })
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
