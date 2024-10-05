@@ -4,13 +4,12 @@ import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
-import * as GetWebViewFrameAncestors from '../GetWebViewFrameAncestors/GetWebViewFrameAncestors.ts'
 import * as GetWebViewOrigin from '../GetWebViewOrigin/GetWebViewOrigin.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
+import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
-import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -27,9 +26,9 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const webViews = await GetWebViews.getWebViews()
-  const locationProtocol = Location.getProtocol()
-  const locationHost = Location.getHost()
-  const locationOrigin = Location.getOrigin()
+  const locationProtocol = await IframeWorker.invoke('Location.getProtocol')
+  const locationHost = await IframeWorker.invoke('Location.getHost')
+  const locationOrigin = await IframeWorker.invoke('Location.getOrigin')
   const iframeResult = GetIframeSrc.getIframeSrc(
     webViews,
     webViewId,
@@ -47,7 +46,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   const webView = GetWebView.getWebView(webViews, webViewId)
 
   const { iframeSrc, webViewRoot, srcDoc, iframeContent } = iframeResult
-  const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(locationProtocol, locationHost)
+  const frameAncestors = await IframeWorker.invoke('WebView.getFrameAncestors', locationProtocol, locationHost)
 
   // TODO figure out order for events, e.g.
   // 1. activate extension, create webview and ports in parallel
