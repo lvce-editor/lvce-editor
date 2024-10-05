@@ -33,6 +33,7 @@ import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleIn
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as GetExtensions from '../GetExtensions/GetExtensions.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async () => {
@@ -73,6 +74,9 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadPreferences)
+
+  // TODO reuse same extensions json for future requests
+  await GetExtensions.getExtensions()
 
   // TODO only load this if session replay is enabled in preferences
   if (Preferences.get('sessionReplay.enabled')) {
