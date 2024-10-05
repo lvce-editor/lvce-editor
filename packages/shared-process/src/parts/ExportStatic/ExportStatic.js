@@ -137,6 +137,11 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
     `${pathPrefix}/${commitHash}`,
   )
   await replace(
+    Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
+    `const platform = Remote`,
+    `const platform = Web`,
+  )
+  await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
     `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
     `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
