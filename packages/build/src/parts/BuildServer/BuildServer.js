@@ -10,6 +10,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -829,6 +830,20 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     ignore: ['static'],
   })
   console.timeEnd('copyTestWorkerFiles')
+
+  const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copyIframeWorkerFiles')
+  await Copy.copy({
+    from: iframeWorkerCachePath,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/iframe-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyIframeWorkerFiles')
+
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     commitHash,
     platform: 'remote',
@@ -840,7 +855,8 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     to: `packages/build/.tmp/server/server/static/${commitHash}/packages/syntax-highlighting-worker`,
     ignore: ['static'],
   })
-  console.timeEnd('copyTestWorkerFiles')
+  console.timeEnd('copySyntaxHighlightingWorkerFiles')
+
   const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
     commitHash,
     platform: 'remote',
