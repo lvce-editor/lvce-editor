@@ -1,10 +1,9 @@
 import * as GetBlobUrl from '../GetBlobUrl/GetBlobUrl.ts'
-import * as GetWebViewBaseUrl from '../GetWebViewBaseUrl/GetWebViewBaseUrl.ts'
-import * as GetWebViewHtml from '../GetWebViewHtml/GetWebViewHtml.ts'
+import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
 
-export const getIframeSrc = (webView: any, locationOrigin: string) => {
-  const baseUrl = GetWebViewBaseUrl.getWebViewBaseUrl(webView)
-  const srcHtml = GetWebViewHtml.getWebViewHtml(baseUrl, locationOrigin, webView.elements)
+export const getIframeSrc = async (webView: any, locationOrigin: string) => {
+  const baseUrl = await IframeWorker.invoke('WebView.getBaseUrl', webView)
+  const srcHtml = await IframeWorker.invoke('WebView.getHtml', baseUrl, locationOrigin, webView.elements)
   if (srcHtml) {
     const blobUrl = GetBlobUrl.getBlobUrl(srcHtml, 'text/html')
     return {
