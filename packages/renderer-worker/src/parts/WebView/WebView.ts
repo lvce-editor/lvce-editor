@@ -48,7 +48,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   const webView = GetWebView.getWebView(webViews, webViewId)
 
   const { iframeSrc, webViewRoot, srcDoc, iframeContent } = iframeResult
-  const frameAncestors = GetWebViewFrameAncestors.getWebViewFrameAncestors(locationProtocol, locationHost)
+  const frameAncestors = await IframeWorker.invoke('WebView.getFrameAncestors', locationProtocol, locationHost)
 
   // TODO figure out order for events, e.g.
   // 1. activate extension, create webview and ports in parallel
