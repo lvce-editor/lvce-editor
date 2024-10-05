@@ -14,6 +14,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
@@ -501,6 +502,20 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copySearchWorkerFiles')
+
+  const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyIframeWorkerFiles')
+  await Copy.copy({
+    from: iframeWorkerCachePath,
+    to: `${resourcesPath}/app/packages/iframe-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyIframeWorkerFiles')
 
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     commitHash,
