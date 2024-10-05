@@ -16,6 +16,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
+import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
   await RendererProcess.invokeAndTransfer('WebView.setPort', uid, port, origin, portType)
@@ -27,9 +28,9 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
     root = await SharedProcess.invoke('Platform.getRoot')
   }
   const webViews = await GetWebViews.getWebViews()
-  const locationProtocol = Location.getProtocol()
-  const locationHost = Location.getHost()
-  const locationOrigin = Location.getOrigin()
+  const locationProtocol = await IframeWorker.invoke('Location.getProtocol')
+  const locationHost = await IframeWorker.invoke('Location.getHost')
+  const locationOrigin = await IframeWorker.invoke('Location.getOrigin')
   const iframeResult = GetIframeSrc.getIframeSrc(
     webViews,
     webViewId,
