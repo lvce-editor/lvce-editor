@@ -21,7 +21,7 @@ export const bundleIframeWorker = async ({ cachePath, commitHash, platform, asse
   })
   const platformCode = getPlatformCode(platform)
   await Replace.replace({
-    path: `${cachePath}/dist/extensionHostWorkerMain.js`,
+    path: `${cachePath}/dist/iframeWorkerMain.js`,
     occurrence: `const platform = getPlatform()`,
     replacement: `const platform = ${platformCode}`,
   })
