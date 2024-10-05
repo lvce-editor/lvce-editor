@@ -2,6 +2,19 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
+const getPlatformCode = (platform) => {
+  switch (platform) {
+    case 'electron':
+      return `Electron`
+    case 'remote':
+      return `Remote`
+    case 'web':
+      return 'Web'
+    default:
+      throw new Error(`unsupported platform ${platform}`)
+  }
+}
+
 export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platform, assetDir }) => {
   await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js',
@@ -11,6 +24,12 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     path: `${cachePath}/dist/extensionHostWorkerMain.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${assetDir}'`,
+  })
+  const platformCode = getPlatformCode(platform)
+  await Replace.replace({
+    path: `${cachePath}/dist/extensionHostWorkerMain.js`,
+    occurrence: `const platform = getPlatform()`,
+    replacement: `const platform = ${platformCode}`,
   })
   await Replace.replace({
     path: `${cachePath}/dist/extensionHostWorkerMain.js`,
