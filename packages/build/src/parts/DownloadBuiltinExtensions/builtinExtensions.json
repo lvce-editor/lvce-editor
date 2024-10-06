@@ -117,7 +117,7 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   {
     "name": "builtin.language-basics-java",
