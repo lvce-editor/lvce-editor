@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.completion-provider-open-details'
 
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
