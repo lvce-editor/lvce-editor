@@ -5,6 +5,7 @@ import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
 import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
+import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
 import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
@@ -47,6 +48,8 @@ const getExtraHeaders = (pathName, fileExtension) => {
         case 'searchWorkerMain.js':
         case 'searchWorkerMain.ts':
           return GetHeadersSearchWorker.getHeadersSearchWorker()
+        case 'iframeWorkerMain.js':
+          return GetHeadersIframeWorker.getHeadersIframeWorker()
         default:
           if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
             return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
