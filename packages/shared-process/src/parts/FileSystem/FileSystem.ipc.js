@@ -28,6 +28,7 @@ export const Commands = {
   readDirWithFileTypes: FileSystem.readDirWithFileTypes,
   readFile: FileSystem.readFile,
   readFileAsBuffer: FileSystem.readFileAsBuffer,
+  readJson: FileSystem.readJson,
   remove: FileSystem.remove,
   rename: FileSystem.rename,
   stat: FileSystem.stat,
