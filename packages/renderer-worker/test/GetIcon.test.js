@@ -14,14 +14,17 @@ jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
 const Languages = await import('../src/parts/Languages/Languages.js')
 
 test('getIcon - match by lowerCase file name', () => {
-  IconThemeState.state.iconTheme = {
-    iconDefinitions: {
-      f_license: '/test/file_license.svg',
+  IconThemeState.setTheme({
+    extensionPath: '',
+    json: {
+      iconDefinitions: {
+        f_license: '/test/file_license.svg',
+      },
+      fileNames: {
+        license: 'f_license',
+      },
     },
-    fileNames: {
-      license: 'f_license',
-    },
-  }
+  })
   expect(
     GetIcon.getIcon({
       type: DirentType.File,

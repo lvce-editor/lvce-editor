@@ -9,7 +9,7 @@ import * as Logger from '../Logger/Logger.js'
 
 export const getFileNameIcon = (file) => {
   Assert.string(file)
-  const { iconTheme } = IconThemeState.state
+  const iconTheme = IconThemeState.getIconTheme()
   const fileNameLower = file.toLowerCase()
   if (!iconTheme) {
     return ''
@@ -51,7 +51,7 @@ export const getFileIcon = (file) => {
 }
 
 export const getFolderNameIcon = (folderName) => {
-  const iconTheme = IconThemeState.state.iconTheme
+  const iconTheme = IconThemeState.getIconTheme()
   // @ts-ignore
   if (!iconTheme || !iconTheme.folderNames || !iconTheme.iconDefinitions) {
     return ''
@@ -70,7 +70,7 @@ export const getFolderIcon = (folder) => {
 }
 
 const getFolderIconExpanded = (folder) => {
-  const iconTheme = IconThemeState.state.iconTheme
+  const iconTheme = IconThemeState.getIconTheme()
   if (!iconTheme) {
     return ''
   }
@@ -100,7 +100,7 @@ export const getIcon = (dirent) => {
     case DirentType.CharacterDevice:
     case DirentType.BlockDevice:
     case DirentType.Socket:
-      return GetAbsoluteIconPath.getAbsoluteIconPath(IconThemeState.state.iconTheme, DefaultIcon.File)
+      return GetAbsoluteIconPath.getAbsoluteIconPath(IconThemeState.getIconTheme(), DefaultIcon.File)
     default:
       Logger.warn(`unsupported type ${dirent.type}`)
       return DefaultIcon.None

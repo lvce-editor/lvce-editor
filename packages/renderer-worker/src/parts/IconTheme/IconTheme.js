@@ -11,9 +11,8 @@ export const setIconTheme = async (iconThemeId) => {
     if (!iconTheme) {
       return
     }
-    IconThemeState.state.iconTheme = iconTheme.json
-    IconThemeState.state.extensionPath = iconTheme.extensionPath
-    await HandleIconThemeChange.handleIconThemeChange()
+    IconThemeState.setTheme(iconTheme)
+       await HandleIconThemeChange.handleIconThemeChange()
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore
