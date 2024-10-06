@@ -25,4 +25,9 @@ export const bundleIframeWorker = async ({ cachePath, commitHash, platform, asse
     occurrence: `const platform = getPlatform()`,
     replacement: `const platform = ${platformCode}`,
   })
+  await Replace.replace({
+    path: `${cachePath}/dist/iframeWorkerMain.js`,
+    occurrence: `const assetDir = getAssetDir()`,
+    replacement: `const assetDir = "${assetDir}"`,
+  })
 }
