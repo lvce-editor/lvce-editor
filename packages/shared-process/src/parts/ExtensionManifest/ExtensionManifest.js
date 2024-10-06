@@ -1,4 +1,5 @@
 import isObject from 'is-object'
+import { pathToFileURL } from 'node:url'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as InferExtensionId from '../InferExtensionId/InferExtensionId.js'
@@ -16,9 +17,11 @@ export const get = async (path) => {
       // TODO should include stack of extension json file here
       throw new VError('Invalid manifest file: Not an JSON object.')
     }
+    const uri = pathToFileURL(path).toString()
     return {
       ...json,
       path,
+      uri,
       status: ExtensionManifestStatus.Resolved,
     }
   } catch (error) {
@@ -32,9 +35,12 @@ export const get = async (path) => {
           // TODO should include stack of extension json file here
           throw new VError('Invalid manifest file: Not an JSON object.')
         }
+        const extensionPath = Path.join(path, 'packages', 'extension')
+        const uri = pathToFileURL(extensionPath).toString()
         return {
           ...json,
-          path: Path.join(path, 'packages', 'extension'),
+          path: extensionPath,
+          uri,
           status: ExtensionManifestStatus.Resolved,
         }
       } catch {}
