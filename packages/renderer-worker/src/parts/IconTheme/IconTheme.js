@@ -9,6 +9,9 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const setIconTheme = async (iconThemeId) => {
   try {
     const iconTheme = await GetIconThemeJson.getIconThemeJson(iconThemeId)
+    if (!iconTheme) {
+      return
+    }
     IconThemeState.state.iconTheme = iconTheme.json
     IconThemeState.state.extensionPath = iconTheme.extensionPath
     const instances = ViewletStates.getAllInstances()
