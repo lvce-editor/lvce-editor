@@ -5,6 +5,9 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetExtensions from '../GetExtensions/GetExtensions.js'
+import * as FindMatchingIconThemeExtension from '../FindMatchingIconThemeExtension/FindMatchingIconThemeExtension.ts'
 
 const getIconThemeUrl = (iconThemeId) => {
   return `${AssetDir.assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
@@ -32,5 +35,13 @@ export const getIconThemeJson = async (iconThemeId) => {
       }
     }
   }
+  const extensions = await GetExtensions.getExtensions()
+  const iconTheme = FindMatchingIconThemeExtension.findMatchingIconThemeExtension(extensions, iconThemeId)
+  if (!iconTheme) {
+    return undefined
+  }
+  const iconThemePath = `${iconTheme.extensionPath}/${iconTheme.path}`
+  const iconThemeContent = await FileSystem.readFile(iconThemePath)
+  console.log({ iconThemeContent })
   return SharedProcess.invoke(SharedProcessCommandType.ExtensionHostGetIconThemeJson, /* iconThemeId */ iconThemeId)
 }
