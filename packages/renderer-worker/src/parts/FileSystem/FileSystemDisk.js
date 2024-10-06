@@ -15,6 +15,10 @@ export const readFile = (path, encoding) => {
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadFile, /* path */ path, /* encoding */ encoding)
 }
 
+export const readJson = (path) => {
+  return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadJson, /* path */ path)
+}
+
 export const remove = (path) => {
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemRemove, /* path */ path)
 }

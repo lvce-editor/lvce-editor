@@ -10,6 +10,13 @@ export const readFile = async (uri, encoding = EncodingType.Utf8) => {
   return fileSystem.readFile(path, encoding)
 }
 
+export const readJson = async (uri, encoding) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  return fileSystem.readJson(path, encoding)
+}
+
 export const remove = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = GetProtocol.getPath(protocol, uri)

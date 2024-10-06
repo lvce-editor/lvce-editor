@@ -9,8 +9,10 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const setIconTheme = async (iconThemeId) => {
   try {
     const iconTheme = await GetIconThemeJson.getIconThemeJson(iconThemeId)
+    if (!iconTheme) {
+      return
+    }
     IconThemeState.setTheme(iconTheme)
-
     const instances = ViewletStates.getAllInstances()
     // TODO have one recalculate style and one paint
     // @ts-ignore
