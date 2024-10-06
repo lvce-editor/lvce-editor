@@ -38,11 +38,6 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     })
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: `const editorWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js\`;`,
-      replacement: `const editorWorkerUrl = \`\${assetDir}/packages/editor-worker/dist/editorWorkerMain.js\`;`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererProcessMain.js`,
       occurrence: `const extensionHostWorkerUrl = getConfiguredExtensionHostWorkerUrl() || \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js\`;`,
       replacement: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`;',
     })
