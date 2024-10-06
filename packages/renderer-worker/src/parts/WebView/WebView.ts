@@ -3,7 +3,6 @@ import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker
 import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetWebView from '../GetWebView/GetWebView.ts'
-import * as GetWebViewCsp from '../GetWebViewCsp/GetWebViewCsp.ts'
 import * as GetWebViewOrigin from '../GetWebViewOrigin/GetWebViewOrigin.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
@@ -54,7 +53,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
+  const csp = await IframeWorker.invoke('WebView.getWebViewCsp', webView)
   const sandbox = GetWebViewSandBox.getIframeSandbox(webView)
   const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
   const credentialless = true
