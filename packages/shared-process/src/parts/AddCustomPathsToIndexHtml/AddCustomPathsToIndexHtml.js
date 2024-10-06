@@ -3,7 +3,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
 const getRemoteUrl = (path) => {
-  '/remote' + pathToFileURL(path).toString().slice(7)
+  return '/remote' + pathToFileURL(path).toString().slice(7)
 }
 
 export const addCustomPathsToIndexHtml = async (content) => {
