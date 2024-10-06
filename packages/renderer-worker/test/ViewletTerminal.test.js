@@ -24,18 +24,6 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
-jest.unstable_mockModule('../../../static/js/termterm.js', () => {
-  return {
-    createOffscreenTerminal() {
-      return {
-        write() {},
-        dispose() {},
-        resize() {},
-      }
-    },
-  }
-})
-
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
