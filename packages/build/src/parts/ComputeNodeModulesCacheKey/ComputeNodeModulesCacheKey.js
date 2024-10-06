@@ -16,7 +16,6 @@ const locations = [
   'packages/search-worker/package-lock.json',
   'packages/server/package-lock.json',
   'packages/shared-process/package-lock.json',
-  'packages/terminal-worker/package-lock.json',
   'packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
   'packages/build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
   'packages/build/src/parts/Hash/Hash.js',
