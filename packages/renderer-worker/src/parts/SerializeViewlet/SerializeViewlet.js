@@ -10,7 +10,8 @@ export const serializeInstances = (instances) => {
   for (const value of Object.values(instances)) {
     const serializedInstance = serializeInstance(value)
     if (serializedInstance) {
-      serialized[value.moduleId] = serializedInstance
+      const storageKey = value.factory.StorageKey || value.moduleId
+      serialized[storageKey] = serializedInstance
     }
   }
   return serialized

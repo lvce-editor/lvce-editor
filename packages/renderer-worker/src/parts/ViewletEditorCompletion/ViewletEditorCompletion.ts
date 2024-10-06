@@ -13,6 +13,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, x, y, width, height) => {
+  console.log('create completion')
   Focus.setAdditionalFocus(FocusKey.EditorCompletion)
   return {
     uid: id,

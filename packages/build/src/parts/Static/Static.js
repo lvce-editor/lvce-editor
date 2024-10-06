@@ -66,10 +66,10 @@ const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
 }
 
 const copyTestWorkerFiles = async ({ commitHash }) => {
-  await Copy.copy({
-    from: 'packages/terminal-worker/src',
-    to: `packages/build/.tmp/dist/${commitHash}/packages/terminal-worker/src`,
-  })
+  // await Copy.copy({
+  //   from: 'packages/terminal-worker/src',
+  //   to: `packages/build/.tmp/dist/${commitHash}/packages/terminal-worker/src`,
+  // })
 }
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {

@@ -142,6 +142,7 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.readFile':
     case 'FileSystem.readFileAsBuffer':
     case 'FileSystem.remove':
+    case 'FileSystem.readJson':
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem

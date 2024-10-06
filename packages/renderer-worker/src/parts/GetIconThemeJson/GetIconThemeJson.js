@@ -1,18 +1,16 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FindMatchingIconThemeExtension from '../FindMatchingIconThemeExtension/FindMatchingIconThemeExtension.ts'
+import * as GetExtensions from '../GetExtensions/GetExtensions.js'
+import * as GetIconThemeUrl from '../GetIconThemeUrl/GetIconThemeUrl.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-
-const getIconThemeUrl = (iconThemeId) => {
-  return `${AssetDir.assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
-}
 
 export const getIconThemeJson = async (iconThemeId) => {
   if (Platform.platform === PlatformType.Web) {
-    const url = getIconThemeUrl(iconThemeId)
+    const url = GetIconThemeUrl.getIconThemeUrl(iconThemeId)
     const json = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
     return {
       json,
@@ -32,5 +30,15 @@ export const getIconThemeJson = async (iconThemeId) => {
       }
     }
   }
-  return SharedProcess.invoke(SharedProcessCommandType.ExtensionHostGetIconThemeJson, /* iconThemeId */ iconThemeId)
+  const extensions = await GetExtensions.getExtensions()
+  const iconTheme = FindMatchingIconThemeExtension.findMatchingIconThemeExtension(extensions, iconThemeId)
+  if (!iconTheme) {
+    return undefined
+  }
+  const iconThemePath = `${iconTheme.extensionPath}/${iconTheme.path}`
+  const iconThemeJson = await FileSystem.readJson(iconThemePath)
+  return {
+    extensionPath: iconTheme.extensionPath,
+    json: iconThemeJson,
+  }
 }

@@ -35,6 +35,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorCompletions,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.Space,
+      command: 'EditorCompletion.toggleDetails',
+      when: WhenExpression.FocusEditorCompletions,
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyCode.RightArrow,
       command: 'Editor.cursorWordRight',
       when: WhenExpression.FocusEditorText,

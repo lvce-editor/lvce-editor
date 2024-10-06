@@ -7,7 +7,7 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     return ''
   }
   const result = iconTheme.iconDefinitions[icon]
-  const extensionPath = IconThemeState.state.extensionPath || ''
+  const extensionPath = IconThemeState.getExtensionPath()
   if (result) {
     if (extensionPath.startsWith('http://') || extensionPath.startsWith('https://')) {
       return `${extensionPath}${result}`
