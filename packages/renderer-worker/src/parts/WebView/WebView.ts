@@ -54,7 +54,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   // 3. setup extension host worker rpc
   // 4. create webview in extension host worker and load content
 
-  const csp = GetWebViewCsp.getWebViewCsp(webView) // TODO only in web
+  const csp = await IframeWorker.invoke('WebView.getWebViewCsp', webView)
   const sandbox = GetWebViewSandBox.getIframeSandbox(webView)
   const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
   const credentialless = true
