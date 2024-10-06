@@ -41,7 +41,9 @@ export const getIconThemeJson = async (iconThemeId) => {
     return undefined
   }
   const iconThemePath = `${iconTheme.extensionPath}/${iconTheme.path}`
-  const iconThemeContent = await FileSystem.readJson(iconThemePath)
-  console.log({ iconThemeContent })
-  return SharedProcess.invoke(SharedProcessCommandType.ExtensionHostGetIconThemeJson, /* iconThemeId */ iconThemeId)
+  const iconThemeJson = await FileSystem.readJson(iconThemePath)
+  return {
+    extensionPath: iconTheme.extensionPath,
+    json: iconThemeJson,
+  }
 }
