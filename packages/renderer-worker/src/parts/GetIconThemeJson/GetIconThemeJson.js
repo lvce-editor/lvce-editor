@@ -1,13 +1,11 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FindMatchingIconThemeExtension from '../FindMatchingIconThemeExtension/FindMatchingIconThemeExtension.ts'
+import * as GetExtensions from '../GetExtensions/GetExtensions.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as GetExtensions from '../GetExtensions/GetExtensions.js'
-import * as FindMatchingIconThemeExtension from '../FindMatchingIconThemeExtension/FindMatchingIconThemeExtension.ts'
 
 const getIconThemeUrl = (iconThemeId) => {
   return `${AssetDir.assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
