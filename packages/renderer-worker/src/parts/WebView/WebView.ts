@@ -29,7 +29,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   const locationProtocol = await IframeWorker.invoke('Location.getProtocol')
   const locationHost = await IframeWorker.invoke('Location.getHost')
   const locationOrigin = await IframeWorker.invoke('Location.getOrigin')
-  const iframeResult = GetIframeSrc.getIframeSrc(
+  const iframeResult = await GetIframeSrc.getIframeSrc(
     webViews,
     webViewId,
     webViewPort,
