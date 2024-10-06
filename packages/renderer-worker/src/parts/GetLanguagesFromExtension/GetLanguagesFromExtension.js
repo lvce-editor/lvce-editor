@@ -1,3 +1,7 @@
+const getRemoteUrl = (extensionPath, tokenizePath) => {
+  return `${extensionPath}/${tokenizePath}`
+}
+
 export const getLanguagesFromExtension = (extension) => {
   // TODO what if extension is null? should not crash process, handle error gracefully
   // TODO what if extension languages is not of type array?
@@ -22,7 +26,7 @@ export const getLanguagesFromExtension = (extension) => {
       return {
         ...language,
         extensionPath,
-        tokenize: `${extensionPath}/${language.tokenize}`,
+        tokenize: getRemoteUrl(extensionPath, language.tokenize),
       }
     }
     return language
