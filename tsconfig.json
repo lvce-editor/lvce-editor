@@ -12,7 +12,6 @@
     { "path": "./packages/renderer-worker" },
     { "path": "./packages/search-worker" },
     { "path": "./packages/server" },
-    { "path": "./packages/shared-process" },
-    { "path": "./packages/terminal-worker" }
+    { "path": "./packages/shared-process" }
   ]
 }
