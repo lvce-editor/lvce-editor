@@ -4,16 +4,13 @@ import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FindMatchingIconThemeExtension from '../FindMatchingIconThemeExtension/FindMatchingIconThemeExtension.ts'
 import * as GetExtensions from '../GetExtensions/GetExtensions.js'
+import * as GetIconThemeUrl from '../GetIconThemeUrl/GetIconThemeUrl.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
-const getIconThemeUrl = (iconThemeId) => {
-  return `${AssetDir.assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
-}
-
 export const getIconThemeJson = async (iconThemeId) => {
   if (Platform.platform === PlatformType.Web) {
-    const url = getIconThemeUrl(iconThemeId)
+    const url = GetIconThemeUrl.getIconThemeUrl(iconThemeId)
     const json = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
     return {
       json,

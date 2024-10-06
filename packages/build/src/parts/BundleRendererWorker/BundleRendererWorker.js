@@ -204,7 +204,7 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     }
     if (platform === 'web') {
       await Replace.replace({
-        path: `${cachePath}/src/parts/GetIconThemeJson/GetIconThemeJson.js`,
+        path: `${cachePath}/src/parts/GetIconThemeUrl/GetIconThemeUrl.ts`,
         occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
         replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
       })
