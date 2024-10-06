@@ -9,7 +9,6 @@ import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as GetLanguages from '../GetLanguages/GetLanguages.js'
 
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
@@ -52,8 +51,7 @@ export const hydrate = async () => {
   LanguagesState.setHydrating(true)
   // TODO handle error
   // TODO main parts should have nothing todo with shared process -> only sub components
-  const languages = await GetLanguages.getLanguages()
-  console.log({ languages })
+  const languages = await ExtensionHostLanguages.getLanguages()
   // TODO avoid side effect here, but how?
   await addLanguages(languages)
   const useJsx = Preferences.get('languages.jsFilesAsJsx')
