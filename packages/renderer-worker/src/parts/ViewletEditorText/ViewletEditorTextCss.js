@@ -9,6 +9,7 @@ export const Css = [
   '/css/parts/Symbol.css',
   '/css/parts/ViewletEditor.css',
   '/css/parts/ViewletEditorCompletion.css',
+  '/css/parts/ViewletEditorCompletionDetail.css',
   '/css/parts/ViewletList.css',
 ]
 
