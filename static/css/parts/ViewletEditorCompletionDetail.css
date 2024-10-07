@@ -3,6 +3,7 @@
   z-index: 1;
   background: var(--CompletionListBackground, #282e2f);
   padding: 5px;
+  pointer-events: all;
 }
 
 .CompletionDetailCloseButton {
@@ -11,5 +12,4 @@
   right: 0;
   width: 20px;
   height: 20px;
-  background: orange;
 }

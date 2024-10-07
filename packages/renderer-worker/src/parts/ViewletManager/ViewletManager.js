@@ -207,7 +207,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
           command.splice(1, 0, uid)
         } else if (command[0] === 'Viewlet.setDom') {
           command.splice(1, 0, uid)
-        } else if (command[0] !== 'Viewlet.send' && command[0] !== 'Viewlet.ariaAnnounce') {
+        } else if (command[0] !== 'Viewlet.send' && command[0] !== 'Viewlet.ariaAnnounce' && command[0] !== 'Viewlet.createFunctionalRoot') {
           command.unshift('Viewlet.send', uid)
         }
         commands.push(command)
