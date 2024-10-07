@@ -17,7 +17,6 @@ const renderAll = {
       ) {
         return command
       }
-      console.log({ command })
       return ['Viewlet.send', newState.uid, ...command]
     })
     console.log({ adjustedCommands })
