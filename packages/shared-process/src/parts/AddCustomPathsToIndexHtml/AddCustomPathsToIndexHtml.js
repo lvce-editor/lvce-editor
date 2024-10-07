@@ -25,7 +25,7 @@ export const addCustomPathsToIndexHtml = async (content) => {
     config.extensionHostWorkerUrl = getRemoteUrl(preferences['develop.extensionHostWorkerPath'])
   }
   if (preferences['develop.editorWorkerPath']) {
-    config.extensionHostWorkerUrl = getRemoteUrl(preferences['develop.editorWorkerPath'])
+    config.editorWorkerUrl = getRemoteUrl(preferences['develop.editorWorkerPath'])
   }
   const stringifiedConfig = JSON.stringify(config, null, 2)
   newContent = newContent.toString().replace(
