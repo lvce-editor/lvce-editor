@@ -2,4 +2,5 @@
   position: absolute;
   z-index: 1;
   background: var(--CompletionListBackground, #282e2f);
+  padding: 20px;
 }
