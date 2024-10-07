@@ -1,0 +1,15 @@
+.EditorCompletionDetails {
+  position: absolute;
+  z-index: 1;
+  background: var(--CompletionListBackground, #282e2f);
+  padding: 5px;
+}
+
+.CompletionDetailCloseButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: orange;
+}

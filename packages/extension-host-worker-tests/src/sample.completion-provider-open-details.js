@@ -1,4 +1,4 @@
-export const skip = true
+// export const skip = true
 
 export const name = 'sample.completion-provider-open-details'
 
@@ -22,6 +22,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // act
   await Editor.openCompletionDetails()
   // assert
-  const completionDetails = Locator('.CompletionDetails')
+  const completionDetails = Locator('.EditorCompletionDetails')
   await expect(completionDetails).toBeVisible()
 }
