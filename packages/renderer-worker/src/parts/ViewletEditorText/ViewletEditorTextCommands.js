@@ -163,6 +163,9 @@ const ids = [
   'EditorCompletion.handleScrollBarCaptureLost',
   'EditorCompletion.handleClickAt',
   'EditorCompletion.scrollDown',
+  'EditorCompletion.openDetails',
+  'EditorCompletion.closeDetails',
+  'EditorCompletion.toggleDetails',
 ]
 
 export const Commands = {
