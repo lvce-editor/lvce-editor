@@ -75,6 +75,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
+      command: 'Editor.openColorPicker',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
       key: KeyCode.Tab,
       command: 'Editor.handleTab',
       when: WhenExpression.FocusEditorText,
