@@ -1,11 +1,8 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
 import * as EditorPosition from './EditorCommandPosition.js'
@@ -89,21 +86,6 @@ const handleCursorChange = (anyEditor, cursorChange) => {
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
 export const openCompletion = async (editor, openingReason = 1) => {
-  if (editor.completionUid !== 0) {
-    return editor
-  }
-  const completionUid = Id.create()
-  editor.completionUid = completionUid
-  const widgetId = Id.create()
-  const viewlet = ViewletManager.create(ViewletModule.load, ViewletModuleId.EditorCompletion, widgetId, 'builtin://', 0, 0, 0, 0)
-  viewlet.show = false
-  viewlet.uid = completionUid
-  // @ts-ignore
-  const commands = await ViewletManager.load(viewlet)
-  if (editor.completionUid !== completionUid) {
-    return editor
-  }
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return editor
 
   // if (state.isOpened) {
