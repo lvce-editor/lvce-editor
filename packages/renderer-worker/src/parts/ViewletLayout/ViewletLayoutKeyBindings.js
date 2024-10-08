@@ -226,10 +226,5 @@ export const getKeyBindings = () => {
       command: 'Run And Debug.handleEvaluate',
       when: WhenExpression.FocusDebugInput,
     },
-    {
-      key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
-      command: 'Viewlet.openWidget',
-      args: ['ColorPicker'],
-    },
   ]
 }
