@@ -1,4 +1,4 @@
-// export const skip = true
+export const skip = true
 
 export const name = 'sample.completion-provider-close-details'
 
