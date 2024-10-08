@@ -4,6 +4,8 @@
   background: var(--CompletionListBackground, #282e2f);
   padding: 5px;
   pointer-events: all;
+  border: 1px solid;
+  border-color: var(--CompletionListBorder, #95a29d);
 }
 
 .CompletionDetailCloseButton {
