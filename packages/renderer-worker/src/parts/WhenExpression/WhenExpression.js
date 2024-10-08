@@ -39,3 +39,4 @@ export const FocusSimpleBrowser = 37
 export const FocusSourceActions = 38
 export const FocusKeyBindingsTable = 39
 export const FocusConfirm = 40
+export const FocusColorPicker = 41

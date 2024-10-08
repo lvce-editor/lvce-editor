@@ -3,6 +3,8 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const About = WhenExpression.FocusAbout
 export const ActivityBar = WhenExpression.FocusActivityBar
+export const ColorPicker = WhenExpression.FocusColorPicker
+export const Confirm = WhenExpression.FocusConfirm
 export const DebugInput = WhenExpression.FocusDebugInput
 export const EditorCompletion = WhenExpression.FocusEditorCompletions
 export const EditorImage = WhenExpression.FocusEditorImage
@@ -21,4 +23,3 @@ export const SourceControlInput = WhenExpression.FocusSourceControlInput
 export const Terminal = WhenExpression.FocusTerminal
 export const TitleBarMenuBar = WhenExpression.FocusTitleBarMenuBar
 export const ViewletList = WhenExpression.FocusViewletList
-export const Confirm = WhenExpression.FocusConfirm
