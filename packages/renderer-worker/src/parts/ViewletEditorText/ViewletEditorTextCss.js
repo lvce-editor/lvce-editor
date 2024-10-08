@@ -7,6 +7,7 @@ export const Css = [
   '/css/parts/ScrollBar.css',
   '/css/parts/ScrollBarThumb.css',
   '/css/parts/Symbol.css',
+  '/css/parts/ViewletColorPicker.css',
   '/css/parts/ViewletEditor.css',
   '/css/parts/ViewletEditorCompletion.css',
   '/css/parts/ViewletEditorCompletionDetail.css',

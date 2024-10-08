@@ -109,6 +109,7 @@ const ids = [
   'moveSelection',
   'moveSelectionPx',
   'openCompletion',
+  'openColorPicker',
   'openFind',
   'organizeImports',
   'paste',
