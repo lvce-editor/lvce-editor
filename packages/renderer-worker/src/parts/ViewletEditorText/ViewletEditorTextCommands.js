@@ -147,6 +147,8 @@ const ids = [
   'type',
   'undo',
   'unIndent',
+  'ColorPicker.handleSliderPointerDown',
+  'ColorPicker.handleSliderPointerMove',
   'EditorCompletion.selectIndex',
   'EditorCompletion.selectCurrent',
   'EditorCompletion.dispose',
