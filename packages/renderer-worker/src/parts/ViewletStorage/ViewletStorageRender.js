@@ -18,10 +18,12 @@ const renderStorage = {
   apply(oldState, newState) {
     const rows = getRows(newState.localStorage)
     const dom = GetStorageViewVirtualDom.getStorageViewDom(rows)
-    return ['setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalRootRender = true
 
 export const render = [renderStorage]

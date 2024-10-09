@@ -25,6 +25,11 @@ export const getStorageViewDom = (rows) => {
   const dom = []
   dom.push(
     {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Storage',
+      childCount: 2,
+    },
+    {
       type: VirtualDomElements.H1,
       childCount: 1,
     },
