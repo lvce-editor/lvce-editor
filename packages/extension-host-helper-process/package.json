@@ -65,7 +65,7 @@
     "@lvce-editor/json-rpc": "^4.1.0",
     "@lvce-editor/verror": "^1.4.0",
     "execa": "^9.4.0",
-    "got": "^14.4.2",
+    "got": "^14.4.3",
     "minimist": "^1.2.8"
   }
 }
