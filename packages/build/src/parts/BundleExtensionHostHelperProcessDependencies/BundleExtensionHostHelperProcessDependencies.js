@@ -4,6 +4,10 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 
+/**
+ *
+ * @param {*} param0
+ */
 export const bundleExtensionHostHelperProcessDependencies = async ({ to, exclude = [] }) => {
   const extensionHostPath = Path.absolute('packages/extension-host-helper-process')
   const packageJson = await JsonFile.readJson('packages/extension-host-helper-process/package.json')
