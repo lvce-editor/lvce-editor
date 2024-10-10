@@ -247,9 +247,17 @@ const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
   } else {
     // TODO rename editorText to editor
     if (moduleName === 'EditorText') {
-      Command.register(`Editor.${key}`, wrappedCommand)
+      if (key.includes('.')) {
+        Command.register(key, wrappedCommand)
+      } else {
+        Command.register(`Editor.${key}`, wrappedCommand)
+      }
     } else {
-      Command.register(`${moduleName}.${key}`, wrappedCommand)
+      if (key.includes('.')) {
+        Command.register(key, wrappedCommand)
+      } else {
+        Command.register(`${moduleName}.${key}`, wrappedCommand)
+      }
     }
   }
 }

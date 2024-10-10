@@ -40,8 +40,6 @@ export const ExtensionDetail = 'ExtensionDetail'
 
 export const Extensions = 'Extensions'
 
-export const FindWidget = 'FindWidget'
-
 export const Iframe = 'Iframe'
 
 export const Implementations = 'Implementations'

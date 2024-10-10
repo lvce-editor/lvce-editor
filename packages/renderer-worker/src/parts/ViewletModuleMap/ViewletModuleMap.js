@@ -24,7 +24,6 @@ export const map = {
   [ViewletModuleId.Explorer]: () => import('../ViewletExplorer/ViewletExplorer.ipc.js'),
   [ViewletModuleId.ExtensionDetail]: () => import('../ViewletExtensionDetail/ViewletExtensionDetail.ipc.ts'),
   [ViewletModuleId.Extensions]: () => import('../ViewletExtensions/ViewletExtensions.ipc.js'),
-  [ViewletModuleId.FindWidget]: () => import('../ViewletFindWidget/ViewletFindWidget.ipc.ts'),
   [ViewletModuleId.Implementations]: () => import('../ViewletImplementations/ViewletImplementations.ipc.js'),
   [ViewletModuleId.InlineDiffEditor]: () => import('../ViewletInlineDiffEditor/ViewletInlineDiffEditor.ipc.js'),
   [ViewletModuleId.KeyBindings]: () => import('../ViewletKeyBindings/ViewletKeyBindings.ipc.js'),

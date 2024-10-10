@@ -170,6 +170,18 @@ const ids = [
   'EditorCompletion.openDetails',
   'EditorCompletion.closeDetails',
   'EditorCompletion.toggleDetails',
+  'FindWidget.focusNext',
+  'FindWidget.focusPrevious',
+  'FindWidget.handleInput',
+  'FindWidget.handleFocus',
+  'FindWidget.handleBlur',
+  'FindWidget.close',
+  'FindWidget.toggleReplace',
+  'FindWidget.toggleUseRegularExpression',
+  'FindWidget.toggleMatchWholeWord',
+  'FindWidget.toggleMatchCase',
+  'FindWidget.replaceAll',
+  'FindWidget.handleReplaceInput',
 ]
 
 export const Commands = {

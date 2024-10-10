@@ -14,7 +14,7 @@ const initializeModule = (module) => {
   if (module.Commands) {
     for (const [key, value] of Object.entries(module.Commands)) {
       if (module.name) {
-        const actualKey = `${module.name}.${key}`
+        const actualKey = key.includes('.') ? key : `${module.name}.${key}`
         register(actualKey, value)
       } else {
         register(key, value)
@@ -44,6 +44,9 @@ const getOrLoadModule = (moduleId) => {
 const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
 
 export const register = (commandId, listener) => {
+  if (commandId.split('.').length >= 3) {
+    debugger
+  }
   state.commands[commandId] = listener
 }
 
