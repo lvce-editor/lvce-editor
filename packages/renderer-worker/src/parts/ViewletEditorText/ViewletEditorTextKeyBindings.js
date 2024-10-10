@@ -95,6 +95,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyF,
+      command: 'Editor.openFind2',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyCode.BracketRight,
       command: 'Editor.indentMore',
       when: WhenExpression.FocusEditorText,

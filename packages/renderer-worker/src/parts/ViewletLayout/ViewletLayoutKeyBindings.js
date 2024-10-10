@@ -191,10 +191,6 @@ export const getKeyBindings = () => {
       key: KeyModifier.Shift | KeyCode.DownArrow,
       command: 'Editor.selectDown',
     },
-    {
-      key: KeyModifier.CtrlCmd | KeyCode.KeyF,
-      command: 'Editor.openFind',
-    },
 
     {
       key: KeyModifier.CtrlCmd | KeyCode.Equal,

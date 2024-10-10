@@ -111,6 +111,7 @@ const ids = [
   'openCompletion',
   'openColorPicker',
   'openFind',
+  'openFind2',
   'organizeImports',
   'paste',
   'pasteText',
