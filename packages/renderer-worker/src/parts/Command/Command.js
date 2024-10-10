@@ -44,6 +44,9 @@ const getOrLoadModule = (moduleId) => {
 const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
 
 export const register = (commandId, listener) => {
+  if (commandId.split('.').length >= 3) {
+    debugger
+  }
   state.commands[commandId] = listener
 }
 

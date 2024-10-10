@@ -253,7 +253,11 @@ const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
         Command.register(`Editor.${key}`, wrappedCommand)
       }
     } else {
-      Command.register(`${moduleName}.${key}`, wrappedCommand)
+      if (key.includes('.')) {
+        Command.register(key, wrappedCommand)
+      } else {
+        Command.register(`${moduleName}.${key}`, wrappedCommand)
+      }
     }
   }
 }
