@@ -14,7 +14,7 @@ const initializeModule = (module) => {
   if (module.Commands) {
     for (const [key, value] of Object.entries(module.Commands)) {
       if (module.name) {
-        const actualKey = `${module.name}.${key}`
+        const actualKey = key.includes('.') ? key : `${module.name}.${key}`
         register(actualKey, value)
       } else {
         register(key, value)
