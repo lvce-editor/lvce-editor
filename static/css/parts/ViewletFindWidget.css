@@ -19,7 +19,13 @@
   display: flex;
   contain: strict;
   flex: 1;
-  height: 100%;
+  align-items: center;
+}
+
+.FindWidgetReplace {
+  display: flex;
+  contain: strict;
+  flex: 1;
   align-items: center;
 }
 
