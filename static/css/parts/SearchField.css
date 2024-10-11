@@ -3,6 +3,7 @@
   display: flex;
   height: 26px;
   gap: 4px;
+  flex: 1;
 }
 
 .SearchField {
