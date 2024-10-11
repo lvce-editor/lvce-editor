@@ -10,6 +10,8 @@ export const Css = [
   '/css/parts/ScrollBar.css',
   '/css/parts/ScrollBarThumb.css',
   '/css/parts/SearchField.css',
+  '/css/parts/SearchHeader.css',
+  '/css/parts/SearchMessage.css',
   '/css/parts/SearchToggleButton.css',
   '/css/parts/Symbol.css',
   '/css/parts/ViewletColorPicker.css',
