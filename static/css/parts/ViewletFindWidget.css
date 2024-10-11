@@ -6,6 +6,7 @@
   padding: 0 4px;
   position: absolute;
   --MaskIconSize: 16px;
+  pointer-events: all;
 }
 
 .FindWidgetRight {
