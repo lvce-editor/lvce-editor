@@ -15,6 +15,7 @@ import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSea
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
+import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
@@ -516,6 +517,20 @@ export const build = async ({
     ignore: ['static'],
   })
   console.timeEnd('copyIframeWorkerFiles')
+
+  const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyFileSearchWorkerFiles')
+  await Copy.copy({
+    from: fileSearchWorkerCachePath,
+    to: `${resourcesPath}/app/packages/file-search-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyFileSearchWorkerFiles')
 
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     commitHash,

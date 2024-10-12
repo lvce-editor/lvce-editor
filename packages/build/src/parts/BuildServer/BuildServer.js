@@ -8,6 +8,7 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
+import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
@@ -843,6 +844,19 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     ignore: ['static'],
   })
   console.timeEnd('copyIframeWorkerFiles')
+
+  const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copyFileSearchWorkerFiles')
+  await Copy.copy({
+    from: fileSearchWorkerCachePath,
+    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/file-search-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyFileSearchWorkerFiles')
 
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     commitHash,
