@@ -216,6 +216,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Transferrable
     case 'WebView':
       return ModuleId.WebView
+    case 'SearchProcess':
+      return ModuleId.SearchProcess
     default:
       throw new Error(`module ${prefix} not found`)
   }
