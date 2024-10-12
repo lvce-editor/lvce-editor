@@ -191,23 +191,23 @@ export const focusReplaceValue = (state: SearchState): SearchState => {
 }
 
 export const focusMatchCase = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusMatchCase }
+  return { ...state, focus: WhenExpression.FocusSearchMatchCase }
 }
 
 export const focusPreserveCase = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusPreserveCase }
+  return { ...state, focus: WhenExpression.FocusSearchPreserveCase }
 }
 
 export const focusMatchWholeWord = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusWholeWord }
+  return { ...state, focus: WhenExpression.FocusSearchWholeWord }
 }
 
 export const focusRegex = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusRegex }
+  return { ...state, focus: WhenExpression.FocusSearchRegex }
 }
 
 export const focusReplaceAll = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusReplaceAll }
+  return { ...state, focus: WhenExpression.FocusSearchReplaceAll }
 }
 
 export const handleFocusIn = (state: SearchState, key: any) => {
