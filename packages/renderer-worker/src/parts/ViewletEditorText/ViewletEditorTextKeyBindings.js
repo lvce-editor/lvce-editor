@@ -31,8 +31,38 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyCode.Tab,
-      command: 'FindWidget.focusReplaceButton',
+      command: 'FindWidget.focusPreviousMatchButton',
       when: WhenExpression.FocusFindWidgetReplace,
+    },
+    {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusNextMatchButton',
+      when: WhenExpression.FocusFindWidgetPreviousMatchButton,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusReplace',
+      when: WhenExpression.FocusFindWidgetPreviousMatchButton,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusPreviousMatchButton',
+      when: WhenExpression.FocusFindWidgetNextMatchButton,
+    },
+    {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusCloseButton',
+      when: WhenExpression.FocusFindWidgetNextMatchButton,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusNextMatchButton',
+      when: WhenExpression.FocusFindWidgetCloseButton,
+    },
+    {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusReplaceButton',
+      when: WhenExpression.FocusFindWidgetCloseButton,
     },
     {
       key: KeyModifier.Shift | KeyCode.Tab,
@@ -42,6 +72,11 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Tab,
       command: 'FindWidget.focusReplaceAllButton',
+      when: WhenExpression.FocusFindWidgetReplaceButton,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusCloseButton',
       when: WhenExpression.FocusFindWidgetReplaceButton,
     },
     {
