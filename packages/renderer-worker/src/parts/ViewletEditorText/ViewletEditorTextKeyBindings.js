@@ -41,6 +41,11 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusReplace',
+      when: WhenExpression.FocusFindWidgetPreviousMatchButton,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
       command: 'FindWidget.focusPreviousMatchButton',
       when: WhenExpression.FocusFindWidgetNextMatchButton,
     },
