@@ -30,9 +30,24 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusFindWidget,
     },
     {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusReplaceButton',
+      when: WhenExpression.FocusFindWidgetReplace,
+    },
+    {
       key: KeyModifier.Shift | KeyCode.Tab,
       command: 'FindWidget.focusFind',
       when: WhenExpression.FocusFindWidgetReplace,
+    },
+    {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusReplaceAllButton',
+      when: WhenExpression.FocusFindWidgetReplaceButton,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusReplaceButton',
+      when: WhenExpression.FocusFindWidgetReplaceAllButton,
     },
     {
       key: KeyCode.DownArrow,

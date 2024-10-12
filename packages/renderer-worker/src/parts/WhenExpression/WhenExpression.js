@@ -44,3 +44,5 @@ export const FocusFindWidgetToggleReplace = 42
 export const FocusFindWidgetReplace = 43
 export const FocusFindWidgetRegex = 44
 export const FocusFindWidgetMatchCase = 45
+export const FocusFindWidgetReplaceButton = 46
+export const FocusFindWidgetReplaceAllButton = 47
