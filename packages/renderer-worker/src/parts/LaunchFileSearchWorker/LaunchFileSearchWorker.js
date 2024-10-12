@@ -6,7 +6,7 @@ import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
 const getConfiguredWorkerUrl = () => {
-  let configuredWorkerUrl = Preferences.get('developer.fileSearchWorkerPath') || ''
+  let configuredWorkerUrl = Preferences.get('develop.fileSearchWorkerPath') || ''
   if (configuredWorkerUrl) {
     configuredWorkerUrl = '/remote' + configuredWorkerUrl
   }
