@@ -31,7 +31,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.Shift | KeyCode.Tab,
-      command: 'FindWidget.focus',
+      command: 'FindWidget.focusFind',
       when: WhenExpression.FocusFindWidgetReplace,
     },
     {
