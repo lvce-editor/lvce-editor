@@ -200,6 +200,11 @@
   mask-image: url(/icons/split-horizontal.svg);
 }
 
+.MaskIconReplace,
+.IconReplace {
+  mask-image: url(/icons/replace.svg);
+}
+
 .MaskIconReplaceAll,
 .IconReplaceAll {
   mask-image: url(/icons/replace-all.svg);
