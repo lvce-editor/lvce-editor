@@ -117,6 +117,8 @@ const ids = [
   'FindWidget.handleFocusNext',
   'FindWidget.handleFocusClose',
   'FindWidget.handleFocusReplaceAll',
+  'FindWidget.focusReplaceButton',
+  'FindWidget.focusReplaceAllButton',
   'format',
   'getWordAt',
   'getWordBefore',
