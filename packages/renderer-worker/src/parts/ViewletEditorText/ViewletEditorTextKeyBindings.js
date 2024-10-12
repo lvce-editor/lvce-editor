@@ -46,7 +46,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyCode.Tab,
-      command: 'FindWidget.focusClose',
+      command: 'FindWidget.focusCloseButton',
       when: WhenExpression.FocusFindWidgetNextMatchButton,
     },
     {
