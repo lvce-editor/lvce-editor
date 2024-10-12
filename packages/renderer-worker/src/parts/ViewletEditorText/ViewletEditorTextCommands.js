@@ -93,6 +93,7 @@ const ids = [
   'EditorCompletion.toggleDetails',
   'findAllReferences',
   'FindWidget.close',
+  'FindWidget.focusCloseButton',
   'FindWidget.focusFind',
   'FindWidget.focusNext',
   'FindWidget.focusNextMatchButton',
