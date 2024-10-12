@@ -57,17 +57,17 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.Shift | KeyCode.Tab,
       command: 'Search.focusMatchCasePrevious',
-      when: WhenExpression.FocusMatchCase,
+      when: WhenExpression.FocusSearchMatchCase,
     },
     {
       key: KeyCode.Tab,
       command: 'Search.focusRegexNext',
-      when: WhenExpression.FocusRegex,
+      when: WhenExpression.FocusSearchRegex,
     },
     {
       key: KeyModifier.Shift | KeyCode.Tab,
       command: 'Search.focusPreserveCasePrevious',
-      when: WhenExpression.FocusPreserveCase,
+      when: WhenExpression.FocusSearchPreserveCase,
     },
     {
       key: KeyCode.Enter,

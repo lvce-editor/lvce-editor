@@ -20,6 +20,21 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusFindWidget,
     },
     {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focusToggleReplace',
+      when: WhenExpression.FocusFindWidget,
+    },
+    {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusReplace',
+      when: WhenExpression.FocusFindWidget,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'FindWidget.focus',
+      when: WhenExpression.FocusFindWidgetReplace,
+    },
+    {
       key: KeyCode.DownArrow,
       command: 'EditorCompletion.focusNext',
       when: WhenExpression.FocusEditorCompletions,

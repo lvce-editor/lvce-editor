@@ -7,15 +7,15 @@ export const getSearchFocusKey = (key) => {
     case 'search-replace-value':
       return WhenExpression.FocusSearchReplaceInput
     case 'Match Case':
-      return WhenExpression.FocusMatchCase
+      return WhenExpression.FocusSearchMatchCase
     case 'Match Whole Word':
-      return WhenExpression.FocusWholeWord
+      return WhenExpression.FocusSearchWholeWord
     case 'Use Regular Expression':
-      return WhenExpression.FocusRegex
+      return WhenExpression.FocusSearchRegex
     case 'Replace All':
-      return WhenExpression.FocusReplaceAll
+      return WhenExpression.FocusSearchReplaceAll
     case 'Preserve Case':
-      return WhenExpression.FocusPreserveCase
+      return WhenExpression.FocusSearchPreserveCase
     default:
       return WhenExpression.Empty
   }
