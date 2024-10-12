@@ -149,6 +149,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/FileSearchWorkerUrl/FileSearchWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/file-search-worker/dist/fileSearchWorkerMain.js`,
+      replacement: `/packages/file-search-worker/dist/fileSearchWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/DiffWorkerUrl/DiffWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/diff-worker/dist/diffWorkerMain.js',
       replacement: `/packages/diff-worker/dist/diffWorkerMain.js`,
