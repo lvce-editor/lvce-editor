@@ -1,5 +1,5 @@
 .SearchFieldContainer {
-  contain: strict;
+  contain: content;
   display: flex;
   height: 26px;
   gap: 4px;
