@@ -19,7 +19,7 @@ const getModule = (protocol) => {
     case FileSystemProtocol.Fetch:
       return import('../SearchFileWithFetch/SearchFileWithFetch.js')
     case FileSystemProtocol.Html:
-      return import('../SearchFileWithHtml/SearchFIleWithHtml.js')
+      return import('../SearchFileWithHtml/SearchFileWithHtml.js')
     default:
       return import('../SearchFileWithRipGrep/SearchFileWithRipGrep.js')
   }
