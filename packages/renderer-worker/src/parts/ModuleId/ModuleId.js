@@ -98,3 +98,4 @@ export const ExtensionHostManagement = 126
 export const SendMessagePortToSyntaxHighlightingWorker = 127
 export const Transferrable = 128
 export const WebView = 129
+export const SearchProcess = 130

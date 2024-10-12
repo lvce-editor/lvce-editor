@@ -193,6 +193,8 @@ export const load = (moduleId) => {
       return import('../Transferrable/Transferrable.ipc.js')
     case ModuleId.WebView:
       return import('../WebView/WebView.ipc.ts')
+    case ModuleId.SearchProcess:
+      return import('../SearchProcess/SearchProcess.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
