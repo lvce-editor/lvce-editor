@@ -55,6 +55,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusFindWidgetCloseButton,
     },
     {
+      key: KeyCode.Tab,
+      command: 'FindWidget.focusReplaceButton',
+      when: WhenExpression.FocusFindWidgetCloseButton,
+    },
+    {
       key: KeyModifier.Shift | KeyCode.Tab,
       command: 'FindWidget.focusFind',
       when: WhenExpression.FocusFindWidgetReplace,
