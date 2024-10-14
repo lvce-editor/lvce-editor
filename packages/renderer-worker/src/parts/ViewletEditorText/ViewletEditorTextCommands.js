@@ -187,6 +187,7 @@ const ids = [
   'setLanguageId',
   'setSelections',
   'showHover',
+  'showHover2',
   'showSourceActions',
   'sortLinesAscending',
   'tabCompletion',
