@@ -316,7 +316,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyH,
-      command: 'Editor.showHover',
+      command: 'Editor.showHover2',
       when: WhenExpression.FocusEditorText,
     },
     {

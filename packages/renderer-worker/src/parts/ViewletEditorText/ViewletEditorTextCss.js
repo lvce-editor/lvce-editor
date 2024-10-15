@@ -18,6 +18,7 @@ export const Css = [
   '/css/parts/ViewletEditor.css',
   '/css/parts/ViewletEditorCompletion.css',
   '/css/parts/ViewletEditorCompletionDetail.css',
+  '/css/parts/ViewletEditorHover.css',
   '/css/parts/ViewletFindWidget.css',
   '/css/parts/ViewletList.css',
 ]
