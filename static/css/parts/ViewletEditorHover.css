@@ -18,8 +18,10 @@
   position: absolute;
   user-select: text;
   overflow: auto;
+  pointer-events: all;
 }
 
+/* TODO use javascript scrollbar */
 .EditorHover::-webkit-scrollbar {
   height: 14px;
 }
@@ -51,6 +53,7 @@
   padding: 4px 8px;
 }
 
+/* TODO don't use pseudo selectors */
 .HoverDisplayString:not(:first-child) {
   border-top: 1px solid rgba(149, 162, 157, 0.5);
 }
