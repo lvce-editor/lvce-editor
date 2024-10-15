@@ -88,7 +88,7 @@
     "@lvce-editor/editor-worker": "^3.19.0",
     "@lvce-editor/extension-host-worker": "^1.4.2",
     "@lvce-editor/renderer-process": "^10.11.0",
-    "@lvce-editor/test-worker": "^1.8.0",
+    "@lvce-editor/test-worker": "^1.9.0",
     "@lvce-editor/iframe-worker": "^1.3.0",
     "@lvce-editor/syntax-highlighting-worker": "^1.6.0"
   },
