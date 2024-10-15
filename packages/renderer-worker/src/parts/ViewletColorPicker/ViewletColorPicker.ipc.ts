@@ -1,5 +1,0 @@
-export * from './ViewletColorPicker.ts'
-export * from './ViewletColorPickerCommands.ts'
-export * from './ViewletColorPickerCss.ts'
-export * from './ViewletColorPickerName.ts'
-export * from './ViewletColorPickerRender.ts'
