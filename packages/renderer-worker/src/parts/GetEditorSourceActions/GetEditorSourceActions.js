@@ -2,10 +2,13 @@ import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as GetExtensions from '../GetExtensions/GetExtensions.js'
 
 const getCodeActionsFromExtension = (extension) => {
-  // TODO
   if (!extension) {
     return []
   }
+  if (!extension.codeActions) {
+    return []
+  }
+  // TODO verify that elements are valid
   return extension.codeActions
 }
 
