@@ -46,7 +46,7 @@ export const getMenuEntries = () => {
       id: MenuEntryId.SourceControl,
       label: EditorStrings.sourceAction(),
       flags: MenuItemFlags.None,
-      command: 'Editor.showSourceActions',
+      command: 'Editor.showSourceActions2',
     },
     MenuEntrySeparator.menuEntrySeparator,
     {
