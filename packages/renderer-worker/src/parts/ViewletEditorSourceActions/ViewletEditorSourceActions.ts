@@ -5,6 +5,7 @@ import * as GetEditorSourceActions from '../GetEditorSourceActions/GetEditorSour
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (id, uri, x, y, width, height) => {
+  console.log('create')
   return {
     uid: id,
     id,
