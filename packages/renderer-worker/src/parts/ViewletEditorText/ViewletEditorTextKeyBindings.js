@@ -6,7 +6,7 @@ export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.Escape,
-      command: 'EditorSourceActions.close',
+      command: 'Editor.closeSourceAction',
       when: WhenExpression.FocusSourceActions,
     },
     {
