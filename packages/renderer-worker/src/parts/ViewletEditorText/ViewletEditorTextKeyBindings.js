@@ -190,6 +190,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.Period,
+      command: 'Editor.showSourceActions2',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
       key: KeyCode.Tab,
       command: 'Editor.handleTab',
       when: WhenExpression.FocusEditorText,
