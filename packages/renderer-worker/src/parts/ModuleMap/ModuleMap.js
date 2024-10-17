@@ -218,6 +218,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.WebView
     case 'SearchProcess':
       return ModuleId.SearchProcess
+    case 'GetEditorSourceActions':
+      return ModuleId.GetEditorSourceActions
     default:
       throw new Error(`module ${prefix} not found`)
   }
