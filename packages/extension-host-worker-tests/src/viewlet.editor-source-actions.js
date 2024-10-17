@@ -9,6 +9,7 @@ export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expec
 `,
   )
   await Workspace.setPath(tmpDir)
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await Main.openUri(`${tmpDir}/file.txt`)
 
   // act

@@ -1,0 +1,15 @@
+{
+  "browser": "main.js",
+  "codeActions": [
+    {
+      "kind": "source.organizeImports",
+      "name": "Organize Imports",
+      "command": "Editor.organizeImports"
+    },
+    {
+      "kind": "source.sortImports",
+      "name": "Sort Imports",
+      "command": "Editor.sortImports"
+    }
+  ]
+}
