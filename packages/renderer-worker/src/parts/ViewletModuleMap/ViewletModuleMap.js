@@ -15,7 +15,6 @@ export const map = {
   [ViewletModuleId.E2eTests]: () => import('../ViewletE2eTests/ViewletE2eTests.ipc.ts'),
   [ViewletModuleId.EditorImage]: () => import('../ViewletEditorImage/ViewletEditorImage.ipc.js'),
   [ViewletModuleId.EditorPlainText]: () => import('../ViewletEditorPlainText/ViewletEditorPlainText.ipc.js'),
-  [ViewletModuleId.EditorSourceActions]: () => import('../ViewletEditorSourceActions/ViewletEditorSourceActions.ipc.ts'),
   [ViewletModuleId.EditorText]: () => import('../ViewletEditorText/ViewletEditorText.ipc.js'),
   [ViewletModuleId.EditorWidgetError]: () => import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js'),
   [ViewletModuleId.EmptyEditor]: () => import('../ViewletEmptyEditor/ViewletEmptyEditor.ipc.js'),

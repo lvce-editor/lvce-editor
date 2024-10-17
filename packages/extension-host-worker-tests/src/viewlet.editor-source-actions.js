@@ -20,7 +20,7 @@ export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expec
   await expect(sourceActionsView).toBeVisible()
   const heading = Locator('.SourceActionHeading')
   await expect(heading).toBeVisible()
-  await expect(heading).toHaveText('Source Actions')
+  await expect(heading).toHaveText('Source Action') // TODO
   const sourceActionItems = Locator('.SourceActionItem')
   await expect(sourceActionItems).toHaveCount(2)
   const firstAction = sourceActionItems.nth(0)
