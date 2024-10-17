@@ -70,6 +70,8 @@ const ids = [
   'deleteWordLeft',
   'deleteWordPartLeft',
   'deleteWordPartRight',
+  'closeSourceActions',
+  'closeSourceAction',
   'deleteWordRight',
   'EditorCompletion.closeDetails',
   'EditorCompletion.dispose',
