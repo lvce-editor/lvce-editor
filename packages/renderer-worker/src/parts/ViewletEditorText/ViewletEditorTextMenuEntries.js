@@ -89,7 +89,7 @@ export const getQuickPickMenuEntries = () => {
       label: EditorStrings.moveLineUp(),
     },
     {
-      id: 'Editor.showSourceActions',
+      id: 'Editor.showSourceActions2',
       label: EditorStrings.sourceAction(),
     },
   ]
