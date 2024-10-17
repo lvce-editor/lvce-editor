@@ -1,6 +1,6 @@
 export const name = 'viewlet.editor-source-actions'
 
-export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, Extension }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
