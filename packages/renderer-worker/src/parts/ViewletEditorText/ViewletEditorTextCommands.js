@@ -189,6 +189,7 @@ const ids = [
   'showHover',
   'showHover2',
   'showSourceActions',
+  'showSourceActions2',
   'sortLinesAscending',
   'tabCompletion',
   'toggleBlockComment',
