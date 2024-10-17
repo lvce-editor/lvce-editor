@@ -8,6 +8,7 @@
   color: var(--ListForeground, white);
   border-radius: 2px;
   z-index: 22;
+  pointer-events: all;
 }
 
 .SourceActionHeading {
