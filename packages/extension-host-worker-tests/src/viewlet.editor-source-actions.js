@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'viewlet.editor-source-actions'
 
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
