@@ -210,6 +210,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyCode.Escape,
+      command: 'Editor.closeFind',
+      when: WhenExpression.FocusFindWidget,
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyCode.KeyF,
       command: 'Editor.openFind2',
       when: WhenExpression.FocusEditorText,

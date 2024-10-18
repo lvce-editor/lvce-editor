@@ -73,6 +73,7 @@ const ids = [
   'closeSourceActions',
   'closeSourceAction',
   'deleteWordRight',
+  'closeFind',
   'EditorCompletion.closeDetails',
   'EditorCompletion.dispose',
   'EditorCompletion.focusFirst',
