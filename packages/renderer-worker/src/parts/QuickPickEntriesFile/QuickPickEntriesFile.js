@@ -6,7 +6,8 @@ import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickSt
 import * as Workspace from '../Workspace/Workspace.js'
 
 const searchFile = async (path, value) => {
-  const files = await SearchFile.searchFile(/* path */ path, /* searchTerm */ value)
+  const prepare = true
+  const files = await SearchFile.searchFile(/* path */ path, /* searchTerm */ value, prepare)
   return files
 }
 
@@ -60,15 +61,24 @@ export const getFilterValue = (value) => {
 }
 
 export const getPickFilterValue = (pick) => {
+  if (typeof pick === 'object') {
+    pick = pick.pick
+  }
   return pick
 }
 
 export const getPickLabel = (pick) => {
+  if (typeof pick === 'object') {
+    pick = pick.pick
+  }
   const baseName = Workspace.pathBaseName(pick)
   return baseName
 }
 
 export const getPickDescription = (pick) => {
+  if (typeof pick === 'object') {
+    pick = pick.pick
+  }
   const dirName = Workspace.pathDirName(pick)
   return dirName
 }
@@ -78,6 +88,9 @@ export const getPickIcon = () => {
 }
 
 export const getPickFileIcon = (pick) => {
+  if (typeof pick === 'object') {
+    pick = pick.pick
+  }
   const baseName = Workspace.pathBaseName(pick)
   return IconTheme.getFileIcon({ name: baseName })
 }

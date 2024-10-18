@@ -25,8 +25,8 @@ const getModule = (protocol) => {
   }
 }
 
-export const searchFile = async (path, value) => {
+export const searchFile = async (path, value, prepare) => {
   const protocol = GetProtocol.getProtocol(path)
   const module = await getModule(protocol)
-  return module.searchFile(path, value)
+  return module.searchFile(path, value, prepare)
 }
