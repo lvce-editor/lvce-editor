@@ -11,6 +11,9 @@ const addEmptyMatch = (pick) => {
 }
 
 const filterPicks = (state, picks, exclude, value, provider) => {
+  if (provider && provider.isPrepared && provider.isPrepared()) {
+    return picks
+  }
   if (value === Character.EmptyString) {
     return picks.map(addEmptyMatch)
   }
