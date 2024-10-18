@@ -74,7 +74,7 @@ test('getPicks', async () => {
   })
   expect(await QuickPickEntriesFile.getPicks('/test/file.txt')).toEqual(['/test/file-1.txt', '/test/file-2.txt', '/test/file-3.txt'])
   expect(SearchFile.searchFile).toHaveBeenCalledTimes(1)
-  expect(SearchFile.searchFile).toHaveBeenCalledWith('/test', '/test/file.txt')
+  expect(SearchFile.searchFile).toHaveBeenCalledWith('/test', '/test/file.txt', true)
 })
 
 test('getPicks - empty', async () => {

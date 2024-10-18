@@ -155,3 +155,13 @@ export const getPickFileIcon = (pick) => {
   }
   return ''
 }
+
+export const isPrepared = () => {
+  const { provider } = state
+  // @ts-ignore
+  if (provider.isPrepared) {
+    // @ts-ignore
+    return provider.isPrepared()
+  }
+  return false
+}
