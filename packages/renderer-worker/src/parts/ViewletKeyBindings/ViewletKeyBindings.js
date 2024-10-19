@@ -14,6 +14,8 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
+// TODO make this an extension that can create virtual dom in a webworker
+
 export const create = (id, uri, x, y, width, height) => {
   return {
     parsedKeyBindings: [],
