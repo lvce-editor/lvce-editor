@@ -1,4 +1,5 @@
 import * as ViewletKeyBindings from './ViewletKeyBindings.js'
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 
 export const Commands = {
   handleClick: ViewletKeyBindings.handleClick,
@@ -13,4 +14,19 @@ export const Commands = {
   focusFirst: ViewletKeyBindings.focusFirst,
   focusLast: ViewletKeyBindings.focusLast,
   handleContextMenu: ViewletKeyBindings.handleContextMenu,
+}
+
+const wrapCommand = (fn) => {
+  const wrapped = async (state, ...args) => {
+    const newState = await fn(state, ...args)
+    // TODO ask worker
+    const result = await KeyBindingsViewWorker.invoke('KeyBindings.render', state, newState)
+    newState.commands = result
+    return newState
+  }
+  return wrapped
+}
+
+for (const [key, value] of Object.entries(Commands)) {
+  Commands[key] = wrapCommand(value)
 }
