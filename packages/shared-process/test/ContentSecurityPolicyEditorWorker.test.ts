@@ -10,5 +10,5 @@ test('contentSecurityPolicyEditorWorker - should allow fonts', () => {
 })
 
 test('contentSecurityPolicyEditorWorker - should have a sandbox', () => {
-  expect(ContentSecurityPolicyEditorWorker.value).toContain(`sandbox allow-scripts allow-same-origin`)
+  expect(ContentSecurityPolicyEditorWorker.value).toContain(`sandbox allow-same-origin`)
 })
