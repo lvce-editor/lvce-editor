@@ -1,18 +1,8 @@
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
+import { join } from 'node:path'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
-import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
-import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
-import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
-import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
-import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
-import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
-import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
@@ -30,7 +20,6 @@ import * as Replace from '../Replace/Replace.js'
 import * as StaticContentSecurityPolicy from '../StaticContentSecurityPolicy/StaticContentSecurityPolicy.js'
 import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import { join } from 'node:path'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await BundleRendererProcess.bundleRendererProcess({
@@ -419,6 +408,7 @@ const copyIconThemes = async ({ commitHash }) => {
 }
 
 const bundleJs = async ({ commitHash, platform, assetDir, version, date, product }) => {
+  const toRoot = `packages/build/.tmp/dist/${commitHash}`
   await BundleWorkers.bundleWorkers({
     commitHash,
     platform,
@@ -426,6 +416,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     product,
     version,
     date,
+    toRoot,
   })
 }
 
