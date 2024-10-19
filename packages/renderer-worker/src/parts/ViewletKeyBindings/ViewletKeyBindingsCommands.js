@@ -22,6 +22,7 @@ const wrapCommand = (fn) => {
     // TODO ask worker
     const result = await KeyBindingsViewWorker.invoke('KeyBindings.render', state, newState)
     newState.commands = result
+    return newState
   }
   return wrapped
 }
