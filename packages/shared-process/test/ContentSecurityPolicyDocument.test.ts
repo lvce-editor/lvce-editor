@@ -28,3 +28,7 @@ test('contentSecurityPolicyDocument - should allow images (local, https and data
 test('contentSecurityPolicyDocument - should disallow frame ancestors', () => {
   expect(ContentSecurityPolicyDocument.value).toContain(`frame-ancestors 'none'`)
 })
+
+test.skip('contentSecurityPolicyDocument - should have a sandbox', () => {
+  expect(ContentSecurityPolicyDocument.value).toContain(`sandbox allow-scripts allow-same-origin`)
+})

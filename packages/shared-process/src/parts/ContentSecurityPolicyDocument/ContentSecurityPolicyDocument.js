@@ -29,6 +29,15 @@ const getFrameAncestors = () => {
   return [`frame-ancestors 'none'`]
 }
 
+const getSandbox = () => {
+  // disabled because chrome devtools shows a warning
+  // for some reason when sandbox is enabled
+  if (Math) {
+    return []
+  }
+  return [`sandbox allow-scripts allow-same-origin`]
+}
+
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
@@ -39,4 +48,5 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   ...getFrameAncestors(),
   ...getFrameSrc(),
   ...getManifestSrc(),
+  ...getSandbox(),
 ])
