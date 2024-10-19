@@ -4,6 +4,7 @@ import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmb
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
+import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/BundleTextSearchWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
@@ -127,6 +128,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: iframeWorkerCachePath,
     to: `${toRoot}/packages/iframe-worker`,
   })
+
   const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
     assetDir,
     commitHash,
@@ -135,6 +137,16 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: fileSearchWorkerCachePath,
     to: `${toRoot}/packages/file-search-worker`,
+  })
+
+  const textSearchWorkerCachePath = await BundleTextSearchWorkerCached.bundleTextSearchWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: textSearchWorkerCachePath,
+    to: `${toRoot}/packages/text-search-worker`,
   })
 
   const embedsWorkerCachePath = await BundleEmbedsWorkerCached.bundleEmbedsWorkerCached({
