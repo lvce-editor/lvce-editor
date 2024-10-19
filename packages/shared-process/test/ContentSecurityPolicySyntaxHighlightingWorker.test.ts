@@ -8,3 +8,7 @@ test('contentSecurityPolicySyntaxHighlightingWorker - should have a strict defau
 test('contentSecurityPolicySyntaxHighlightingWorker - should allow scripts', () => {
   expect(ContentSecurityPolicySyntaxHighlightingWorker.value).toContain(`script-src 'self'`)
 })
+
+test('contentSecurityPolicySyntaxHighlightingWorker - should have a sandbox', () => {
+  expect(ContentSecurityPolicySyntaxHighlightingWorker.value).toContain(`sandbox allow-scripts allow-same-origin`)
+})
