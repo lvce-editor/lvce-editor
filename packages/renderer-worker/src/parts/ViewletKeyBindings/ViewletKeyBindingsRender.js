@@ -14,7 +14,7 @@ const renderKeyBindings = {
     }
     const adjustedCommands = commands.map((command) => {
       if (command[0] === 'Viewlet.setDom2') {
-        return ['Viewlet.setDom2', newState.uid, ...command]
+        return ['Viewlet.setDom2', newState.uid, ...command.slice(1)]
       }
       if (
         command[0] === 'Viewlet.create' ||
