@@ -30,6 +30,11 @@ const getFrameAncestors = () => {
 }
 
 const getSandbox = () => {
+  // disabled because chrome devtools shows a warning
+  // for some reason when sandbox is enabled
+  if (Math) {
+    return []
+  }
   return [`sandbox allow-scripts allow-same-origin`]
 }
 
