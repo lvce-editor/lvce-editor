@@ -84,7 +84,7 @@
   },
   "dependencies": {
     "@lvce-editor/diff-worker": "^1.4.0",
-    "@lvce-editor/file-search-worker": "^1.9.0",
+    "@lvce-editor/file-search-worker": "^1.10.0",
     "@lvce-editor/editor-worker": "^3.24.0",
     "@lvce-editor/extension-host-worker": "^1.4.2",
     "@lvce-editor/renderer-process": "^10.14.0",
