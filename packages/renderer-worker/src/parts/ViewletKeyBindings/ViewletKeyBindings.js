@@ -5,11 +5,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as Focus from '../Focus/Focus.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -68,10 +67,10 @@ export const loadContent = async (state, savedState) => {
   const { height, rowHeight, width, contentPadding, searchHeaderHeight, tableHeaderHeight } = state
   Assert.number(width)
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const parsedKeyBindings = ParseKeyBindings.parseKeyBindings(keyBindings)
+  const parsedKeyBindings = await KeyBindingsViewWorker.invoke('ParseKeyBindings.parseKeyBindings', keyBindings)
   const maxVisibleItems = getMaxVisibleItems(height, searchHeaderHeight, tableHeaderHeight, rowHeight)
   const savedValue = getSavedValue(savedState)
-  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, savedValue)
+  const filteredKeyBindings = await KeyBindingsViewWorker.invoke('FilterKeyBindings.filterKeyBindings', parsedKeyBindings, savedValue)
   const listHeight = height - searchHeaderHeight - tableHeaderHeight
   const contentHeight = 2121
   const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(listHeight, contentHeight, 10)
@@ -96,9 +95,9 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const handleInput = (state, value) => {
+export const handleInput = async (state, value) => {
   const { parsedKeyBindings, maxVisibleItems } = state
-  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, value)
+  const filteredKeyBindings = await KeyBindingsViewWorker.invoke('FilterKeyBindings.filterKeyBindings', parsedKeyBindings, value)
   const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   return {
     ...state,
