@@ -94,6 +94,6 @@
     "@lvce-editor/syntax-highlighting-worker": "^1.6.0",
     "@lvce-editor/terminal-worker": "^1.0.0",
     "@lvce-editor/test-worker": "^1.10.0",
-    "@lvce-editor/text-search-worker": "^1.1.0"
+    "@lvce-editor/text-search-worker": "^1.2.0"
   }
 }
