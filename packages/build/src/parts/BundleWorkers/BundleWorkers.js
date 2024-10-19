@@ -1,10 +1,10 @@
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
+import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
@@ -12,7 +12,6 @@ import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlighti
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
-import * as Path from '../Path/Path.js'
 
 export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
@@ -47,12 +46,21 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: extensionHostWorkerCachePath,
     to: `${toRoot}/packages/extension-host-worker`,
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`${toRoot}/packages/extension-host-sub-worker`),
-    from: 'src/extensionHostSubWorkerMain.js',
-    platform: 'webworker',
-    codeSplitting: false,
+
+  const extensionHostSubWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
   })
+
+  console.time('copyExtensionHostSubWorkerFiles')
+  await Copy.copy({
+    from: extensionHostSubWorkerCachePath,
+    to: `${toRoot}/packages/extension-host-sub-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostSubWorkerFiles')
+
   const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
     assetDir,
     platform,
