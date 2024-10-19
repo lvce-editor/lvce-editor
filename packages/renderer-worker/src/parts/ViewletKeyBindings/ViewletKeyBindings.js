@@ -80,7 +80,7 @@ export const loadContent = async (state, savedState) => {
   const columnWidth1 = contentWidth / 3
   const columnWidth2 = contentWidth / 3
   const columnWidth3 = contentWidth / 3
-  return {
+  const newState = {
     ...state,
     parsedKeyBindings,
     filteredKeyBindings,
@@ -93,6 +93,9 @@ export const loadContent = async (state, savedState) => {
     columnWidth2,
     columnWidth3,
   }
+  const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleInput = async (state, value) => {
