@@ -13,7 +13,6 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
-import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
@@ -391,18 +390,175 @@ export const build = async ({
   await copyCss({ resourcesPath })
   console.timeEnd('copyCss')
 
-  const assetDir = `../../../../..`
-  const toRoot = `${resourcesPath}/app`
-
-  await BundleWorkers.bundleWorkers({
-    platform: 'electron',
-    assetDir,
+  const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
     commitHash,
+    platform: 'electron',
+    assetDir: ``,
+  })
+
+  console.time('copyRendererProcessFiles')
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `${resourcesPath}/app/packages/renderer-process`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyRendererProcessFiles')
+
+  const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: ``,
     version,
     date,
-    toRoot,
     product,
   })
+
+  console.time('copyRendererWorkerFiles')
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `${resourcesPath}/app/packages/renderer-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyRendererWorkerFiles')
+  const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyExtensionHostWorkerFiles')
+  await Copy.copy({
+    from: extensionHostWorkerCachePath,
+    to: `${resourcesPath}/app/packages/extension-host-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostWorkerFiles')
+
+  const extensionHostSubWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyExtensionHostSubWorkerFiles')
+  await Copy.copy({
+    from: extensionHostSubWorkerCachePath,
+    to: `${resourcesPath}/app/packages/extension-host-sub-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostSubWorkerFiles')
+
+  const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyEditorWorkerFiles')
+  await Copy.copy({
+    from: editorWorkerCachePath,
+    to: `${resourcesPath}/app/packages/editor-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyEditorWorkerFiles')
+
+  const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyTerminalWorkerFiles')
+  await Copy.copy({
+    from: terminalWorkerCachePath,
+    to: `${resourcesPath}/app/packages/terminal-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyTerminalWorkerFiles')
+
+  const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyDiffWorkerFiles')
+  await Copy.copy({
+    from: diffWorkerCachePath,
+    to: `${resourcesPath}/app/packages/diff-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyDiffWorkerFiles')
+
+  const searchWorkerCachePath = await BundleSearchWorkerCached.bundleSearchWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copySearchWorkerFiles')
+  await Copy.copy({
+    from: searchWorkerCachePath,
+    to: `${resourcesPath}/app/packages/search-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copySearchWorkerFiles')
+
+  const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyIframeWorkerFiles')
+  await Copy.copy({
+    from: iframeWorkerCachePath,
+    to: `${resourcesPath}/app/packages/iframe-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyIframeWorkerFiles')
+
+  const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyFileSearchWorkerFiles')
+  await Copy.copy({
+    from: fileSearchWorkerCachePath,
+    to: `${resourcesPath}/app/packages/file-search-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyFileSearchWorkerFiles')
+
+  const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copySyntaxHighlightingWorkerFiles')
+  await Copy.copy({
+    from: syntaxHighlightingWorkerCachePath,
+    to: `${resourcesPath}/app/packages/syntax-highlighting-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copySyntaxHighlightingWorkerFiles')
+
+  const embedsWorkerCachePath = await BundleEmbedsWorkerCached.bundleEmbedsWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyEmbedsWorkerFiles')
+  await Copy.copy({
+    from: embedsWorkerCachePath,
+    to: `${resourcesPath}/app/packages/embeds-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyEmbedsWorkerFiles')
 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })
