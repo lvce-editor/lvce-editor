@@ -10,5 +10,5 @@ test('contentSecurityPolicySyntaxHighlightingWorker - should allow scripts', () 
 })
 
 test('contentSecurityPolicySyntaxHighlightingWorker - should have a sandbox', () => {
-  expect(ContentSecurityPolicySyntaxHighlightingWorker.value).toContain(`sandbox allow-scripts allow-same-origin`)
+  expect(ContentSecurityPolicySyntaxHighlightingWorker.value).toContain(`sandbox allow-same-origin`)
 })
