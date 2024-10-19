@@ -197,6 +197,8 @@ export const load = (moduleId) => {
       return import('../WebView/WebView.ipc.ts')
     case ModuleId.SearchProcess:
       return import('../SearchProcess/SearchProcess.ipc.js')
+    case ModuleId.ExtensionHostTextSearch:
+      return import('../ExtensionHost/ExtensionHostTextSearch.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

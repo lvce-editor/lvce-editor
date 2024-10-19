@@ -220,6 +220,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.SearchProcess
     case 'GetEditorSourceActions':
       return ModuleId.GetEditorSourceActions
+    case 'ExtensionHostTextSearch':
+      return ModuleId.ExtensionHostTextSearch
     default:
       throw new Error(`module ${prefix} not found`)
   }
