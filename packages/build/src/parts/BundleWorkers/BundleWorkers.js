@@ -8,6 +8,7 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
@@ -114,8 +115,18 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: fileSearchWorkerCachePath,
     to: `${toRoot}/packages/file-search-worker`,
   })
-  await Copy.copy({
-    from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
-    to: `${toRoot}/js/preview-injected.js`,
+
+  const embedsWorkerCachePath = await BundleEmbedsWorkerCached.bundleEmbedsWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
   })
+
+  console.time('copyEmbedsWorkerFiles')
+  await Copy.copy({
+    from: embedsWorkerCachePath,
+    to: `${toRoot}/packages/embeds-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyEmbedsWorkerFiles')
 }
