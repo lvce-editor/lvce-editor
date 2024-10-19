@@ -100,3 +100,4 @@ export const Transferrable = 128
 export const WebView = 129
 export const SearchProcess = 130
 export const GetEditorSourceActions = 131
+export const ExtensionHostTextSearch = 132
