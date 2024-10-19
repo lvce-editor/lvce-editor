@@ -20,7 +20,7 @@ test('create', () => {
   expect(ViewletKeyBindings.create()).toBeDefined()
 })
 
-test.skip('loadContent', async () => {
+test('loadContent', async () => {
   // @ts-ignore
   KeyBindingsInitial.getKeyBindings.mockImplementation(() => {
     return [
@@ -46,7 +46,7 @@ test.skip('loadContent', async () => {
   })
 })
 
-test.skip('handleInput - filter key bindings', async () => {
+test('handleInput - filter key bindings', async () => {
   const state = {
     ...ViewletKeyBindings.create(),
     parsedKeyBindings: [
