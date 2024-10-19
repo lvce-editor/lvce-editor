@@ -93,6 +93,6 @@
     "@lvce-editor/syntax-highlighting-worker": "^1.6.0",
     "@lvce-editor/terminal-worker": "^1.0.0",
     "@lvce-editor/extension-search-view": "^1.0.0",
-    "@lvce-editor/keybindings-view": "^1.1.0"
+    "@lvce-editor/keybindings-view": "^1.2.0"
   }
 }
