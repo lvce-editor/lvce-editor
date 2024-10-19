@@ -1,14 +1,15 @@
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
+import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
@@ -88,6 +89,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
   })
+
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     assetDir,
     commitHash,
@@ -97,6 +99,17 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: syntaxHighlightingWorkerCachePath,
     to: `${toRoot}/packages/syntax-highlighting-worker`,
   })
+
+  const keyBindingsViewWorkerCachePath = await BundleKeyBindingsViewWorkerCached.bundleKeyBindingsViewWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: keyBindingsViewWorkerCachePath,
+    to: `${toRoot}/packages/keybindings-view-worker`,
+  })
+
   const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
     assetDir,
     commitHash,
