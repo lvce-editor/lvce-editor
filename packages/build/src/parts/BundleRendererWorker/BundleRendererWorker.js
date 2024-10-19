@@ -139,6 +139,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/KeyBindingsViewWorkerUrl/KeyBindingsViewWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/keybindings-view/dist/keyBindingsViewWorkerMain.js`,
+      replacement: '/packages/keybindings-view-worker/dist/keyBindingsViewWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/EmbedsWorkerUrl/EmbedsWorkerUrl.js`,
       occurrence: '/packages/embeds-worker/src/embedsWorkerMain.ts',
       replacement: `/packages/embeds-worker/dist/embedsWorkerMain.js`,
