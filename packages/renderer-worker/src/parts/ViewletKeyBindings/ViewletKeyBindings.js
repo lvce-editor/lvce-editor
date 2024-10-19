@@ -5,16 +5,14 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as Focus from '../Focus/Focus.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
