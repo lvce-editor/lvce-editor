@@ -29,6 +29,10 @@ const getFrameAncestors = () => {
   return [`frame-ancestors 'none'`]
 }
 
+const getSandbox = () => {
+  return [`sandbox allow-scripts allow-same-origin`]
+}
+
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
@@ -39,4 +43,5 @@ export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   ...getFrameAncestors(),
   ...getFrameSrc(),
   ...getManifestSrc(),
+  ...getSandbox(),
 ])
