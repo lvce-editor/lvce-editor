@@ -12,7 +12,7 @@ import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWor
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 
-export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product }) => {
+export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
     commitHash,
     platform,
@@ -20,7 +20,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: rendererProcessCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process`,
+    to: `${toRoot}/packages/renderer-process`,
     ignore: ['static'],
   })
   const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
@@ -33,7 +33,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: rendererWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-worker`,
+    to: `${toRoot}/packages/renderer-worker`,
     ignore: ['static'],
   })
   const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
@@ -43,10 +43,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: extensionHostWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker`,
+    to: `${toRoot}/packages/extension-host-worker`,
   })
   await BundleJs.bundleJs({
-    cwd: Path.absolute(`packages/build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
+    cwd: Path.absolute(`${toRoot}/packages/extension-host-sub-worker`),
     from: 'src/extensionHostSubWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
@@ -58,7 +58,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: terminalWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/terminal-worker`,
+    to: `${toRoot}/packages/terminal-worker`,
   })
   const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
     assetDir,
@@ -67,7 +67,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: editorWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/editor-worker`,
+    to: `${toRoot}/packages/editor-worker`,
   })
   const testWorkerCachePath = await BundleTestWorkerCached.bundleTestWorkerCached({
     assetDir,
@@ -76,7 +76,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: testWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/test-worker`,
+    to: `${toRoot}/packages/test-worker`,
   })
   const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
     assetDir,
@@ -85,7 +85,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: diffWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/diff-worker`,
+    to: `${toRoot}/packages/diff-worker`,
   })
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
     assetDir,
@@ -94,7 +94,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: syntaxHighlightingWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/syntax-highlighting-worker`,
+    to: `${toRoot}/packages/syntax-highlighting-worker`,
   })
   const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
     assetDir,
@@ -103,7 +103,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: iframeWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/iframe-worker`,
+    to: `${toRoot}/packages/iframe-worker`,
   })
   const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
     assetDir,
@@ -112,10 +112,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: fileSearchWorkerCachePath,
-    to: `packages/build/.tmp/dist/${commitHash}/packages/file-search-worker`,
+    to: `${toRoot}/packages/file-search-worker`,
   })
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
-    to: `packages/build/.tmp/dist/${commitHash}/js/preview-injected.js`,
+    to: `${toRoot}/js/preview-injected.js`,
   })
 }

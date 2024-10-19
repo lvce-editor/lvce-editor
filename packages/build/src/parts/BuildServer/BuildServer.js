@@ -10,6 +10,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleSearchWorkerCached from '../BundleSearchWorkerCached/BundleSearchWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
+import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
@@ -762,166 +763,18 @@ const setVersionsAndDependencies = async ({ version }) => {
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
-  const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
+  const assetDir = `/${commitHash}`
+  const platform = 'remote'
+  const toRoot = `packages/build/.tmp/server/server/static/${commitHash}`
+  await BundleWorkers.bundleWorkers({
+    platform,
+    assetDir,
     commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-
-  console.time('copyRendererProcessFiles')
-  await Copy.copy({
-    from: rendererProcessCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/renderer-process`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyRendererProcessFiles')
-
-  const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
     version,
     date,
     product,
+    toRoot,
   })
-
-  console.time('copyRendererWorkerFiles')
-  await Copy.copy({
-    from: rendererWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyRendererWorkerFiles')
-
-  const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyExtensionHostWorkerFiles')
-  await Copy.copy({
-    from: extensionHostWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/extension-host-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyExtensionHostWorkerFiles')
-
-  const extensionHostSubWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyExtensionHostSubWorkerFiles')
-  await Copy.copy({
-    from: extensionHostSubWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/extension-host-sub-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyExtensionHostSubWorkerFiles')
-
-  const testWorkerCachePath = await BundleTestWorkerCached.bundleTestWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyTestWorkerFiles')
-  await Copy.copy({
-    from: testWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/test-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyTestWorkerFiles')
-
-  const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyIframeWorkerFiles')
-  await Copy.copy({
-    from: iframeWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/iframe-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyIframeWorkerFiles')
-
-  const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyFileSearchWorkerFiles')
-  await Copy.copy({
-    from: fileSearchWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/file-search-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyFileSearchWorkerFiles')
-
-  const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copySyntaxHighlightingWorkerFiles')
-  await Copy.copy({
-    from: syntaxHighlightingWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/syntax-highlighting-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copySyntaxHighlightingWorkerFiles')
-
-  const terminalWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyTerminalWorkerFiles')
-  await Copy.copy({
-    from: terminalWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/terminal-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyTerminalWorkerFiles')
-
-  const searchWorkerCachePath = await BundleSearchWorkerCached.bundleSearchWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copySearchWorkerFiles')
-  await Copy.copy({
-    from: searchWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/search-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copySearchWorkerFiles')
-
-  const editorWorkerCachePath = await BundleEditorWorkerCached.bundleEditorWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyEditorWorkerFiles')
-  await Copy.copy({
-    from: editorWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/editor-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyEditorWorkerFiles')
-
-  const diffWorkerCachePath = await BundleDiffWorkerCached.bundleDiffWorkerCached({
-    commitHash,
-    platform: 'remote',
-    assetDir: `/${commitHash}`,
-  })
-  console.time('copyDiffWorkerFiles')
-  await Copy.copy({
-    from: diffWorkerCachePath,
-    to: `packages/build/.tmp/server/server/static/${commitHash}/packages/diff-worker`,
-    ignore: ['static'],
-  })
-  console.timeEnd('copyDiffWorkerFiles')
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
