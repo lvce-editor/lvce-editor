@@ -6,5 +6,5 @@ test('contentSecurityPolicyFileSearchWorker - should have a strict default polic
 })
 
 test('contentSecurityPolicyFileSearchWorker - should have a sandbox', () => {
-  expect(ContentSecurityPolicySyntaxHighlightingWorker.value).toContain(`sandbox allow-scripts allow-same-origin`)
+  expect(ContentSecurityPolicySyntaxHighlightingWorker.value).toContain(`sandbox allow-same-origin`)
 })
