@@ -95,7 +95,6 @@ export const loadContent = async (state, savedState) => {
   }
   const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render', state, newState)
   newState.commands = commands
-  console.log({ commands })
   return newState
 }
 
