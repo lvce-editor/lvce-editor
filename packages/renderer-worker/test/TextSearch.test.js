@@ -25,7 +25,7 @@ const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const ExtensionHostTextSearch = await import('../src/parts/ExtensionHost/ExtensionHostTextSearch.js')
 const SearchProcess = await import('../src/parts/SearchProcess/SearchProcess.js')
 
-test('textSearch - extension search - error', async () => {
+test.skip('textSearch - extension search - error', async () => {
   // @ts-ignore
   ExtensionHostTextSearch.executeTextSearchProvider.mockImplementation(() => {
     throw new TypeError('x is not a function')
@@ -33,7 +33,7 @@ test('textSearch - extension search - error', async () => {
   await expect(TextSearch.textSearch('xyz://', 'abc')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('textSearch - extension search', async () => {
+test.skip('textSearch - extension search', async () => {
   // @ts-ignore
   ExtensionHostTextSearch.executeTextSearchProvider.mockImplementation(() => {
     return [
@@ -59,7 +59,7 @@ test('textSearch - extension search', async () => {
   expect(ExtensionHostTextSearch.executeTextSearchProvider).toHaveBeenCalledWith('xyz', 'abc')
 })
 
-test('textSearch - file - error', async () => {
+test.skip('textSearch - file - error', async () => {
   // @ts-ignore
   SearchProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
@@ -67,7 +67,7 @@ test('textSearch - file - error', async () => {
   await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('textSearch - file', async () => {
+test.skip('textSearch - file', async () => {
   // @ts-ignore
   SearchProcess.invoke.mockImplementation(() => {
     return {

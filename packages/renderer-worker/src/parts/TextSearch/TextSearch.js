@@ -1,13 +1,11 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-import * as TextSearchProvider from '../TextSearchProvider/TextSearchProvider.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 
 export const textSearch = async (root, query, options) => {
   Assert.string(root)
   Assert.string(query)
-  const scheme = GetProtocol.getProtocol(root)
-  const provider = await TextSearchProvider.getProvider(scheme)
-  const results = await provider.textSearch(scheme, root, query, options)
+  const results = await TextSearchWorker.invoke('TextSearch.textSearch', root, query, options, AssetDir.assetDir)
   return results
 }
 
