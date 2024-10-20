@@ -200,6 +200,7 @@ const ids = [
   'showHover2',
   'showSourceActions',
   'showSourceActions2',
+  'sortImports',
   'sortLinesAscending',
   'tabCompletion',
   'toggleBlockComment',
