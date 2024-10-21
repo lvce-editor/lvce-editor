@@ -95,6 +95,6 @@
     "@lvce-editor/terminal-worker": "^1.0.0",
     "@lvce-editor/test-worker": "^1.13.0",
     "@lvce-editor/text-search-worker": "^1.2.0",
-    "@lvce-editor/about-view": "^1.1.0"
+    "@lvce-editor/about-view": "^1.3.0"
   }
 }
