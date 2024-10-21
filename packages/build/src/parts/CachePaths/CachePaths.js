@@ -84,12 +84,6 @@ export const getKeyBindingsViewWorkerCachePath = async (extraContents) => {
   return cachePath
 }
 
-export const getAboutViewWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
-  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/about-view-worker'), hash)
-  return cachePath
-}
-
 export const getSearchWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/search-worker'), hash)
