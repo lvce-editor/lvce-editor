@@ -6,7 +6,7 @@ export const hasFunctionalRootRender = true
 
 export const renderDialog = {
   isEqual(oldState: AboutState, newState: AboutState) {
-    return newState.commands.length > 0
+    return false
   },
   apply(oldState: AboutState, newState: AboutState) {
     const commands = newState.commands
