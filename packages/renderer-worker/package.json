@@ -93,7 +93,7 @@
     "@lvce-editor/renderer-process": "^10.16.0",
     "@lvce-editor/syntax-highlighting-worker": "^1.6.0",
     "@lvce-editor/terminal-worker": "^1.0.0",
-    "@lvce-editor/test-worker": "^1.11.0",
+    "@lvce-editor/test-worker": "^1.13.0",
     "@lvce-editor/text-search-worker": "^1.2.0"
   }
 }
