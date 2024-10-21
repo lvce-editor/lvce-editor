@@ -1,13 +1,12 @@
 import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
+import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
-import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDetailStringWeb.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Product from '../Product/Product.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 import type { AboutState } from './ViewletAboutTypes.ts'
 
 export const create = (): AboutState => {
