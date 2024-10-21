@@ -7,6 +7,7 @@ import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Product from '../Product/Product.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 import type { AboutState } from './ViewletAboutTypes.ts'
 
 export const create = (): AboutState => {
@@ -18,7 +19,8 @@ export const create = (): AboutState => {
 }
 
 export const loadContent = async (state: AboutState): Promise<AboutState> => {
-  const lines = GetAboutDetailStringWeb.getDetailStringWeb()
+  const lines = await AboutViewWorker.invoke('About.getDetailStringWeb')
+  console.log({ lines })
   return {
     ...state,
     productName: Product.productNameLong,
