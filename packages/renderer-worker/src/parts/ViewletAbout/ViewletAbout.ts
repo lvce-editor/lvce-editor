@@ -1,8 +1,8 @@
 import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
+import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
-import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDetailStringWeb.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Product from '../Product/Product.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -14,17 +14,21 @@ export const create = (): AboutState => {
     productName: '',
     lines: [],
     focusId: AboutFocusId.None,
+    commands: [],
   }
 }
 
 export const loadContent = async (state: AboutState): Promise<AboutState> => {
-  const lines = GetAboutDetailStringWeb.getDetailStringWeb()
-  return {
+  const lines = await AboutViewWorker.invoke('About.getDetailStringWeb')
+  const newState = {
     ...state,
     productName: Product.productNameLong,
     lines,
     focusId: AboutFocusId.Ok,
   }
+  const commands = await AboutViewWorker.invoke('About.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleClickOk = async (state: AboutState): Promise<AboutState> => {
@@ -49,40 +53,16 @@ export const handleFocusIn = (state: AboutState): AboutState => {
   return state
 }
 
-const getNextFocus = (focusId: number) => {
-  switch (focusId) {
-    case AboutFocusId.Ok:
-      return AboutFocusId.Copy
-    case AboutFocusId.Copy:
-      return AboutFocusId.Ok
-    default:
-      return AboutFocusId.None
-  }
+export const focusNext = async (state: AboutState): Promise<AboutState> => {
+  const newState = await AboutViewWorker.invoke('About.focusNext', state)
+  const commands = await AboutViewWorker.invoke('About.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const focusNext = (state: AboutState): AboutState => {
-  const { focusId } = state
-  return {
-    ...state,
-    focusId: getNextFocus(focusId),
-  }
-}
-
-const getPreviousFocus = (focusId: number) => {
-  switch (focusId) {
-    case AboutFocusId.Ok:
-      return AboutFocusId.Copy
-    case AboutFocusId.Copy:
-      return AboutFocusId.Ok
-    default:
-      return AboutFocusId.None
-  }
-}
-
-export const focusPrevious = (state: AboutState): AboutState => {
-  const { focusId } = state
-  return {
-    ...state,
-    focusId: getPreviousFocus(focusId),
-  }
+export const focusPrevious = async (state: AboutState): Promise<AboutState> => {
+  const newState = await AboutViewWorker.invoke('About.focusPrevious', state)
+  const commands = await AboutViewWorker.invoke('About.render', state, newState)
+  newState.commands = commands
+  return newState
 }
