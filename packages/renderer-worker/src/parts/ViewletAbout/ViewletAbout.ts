@@ -14,18 +14,21 @@ export const create = (): AboutState => {
     productName: '',
     lines: [],
     focusId: AboutFocusId.None,
+    commands: [],
   }
 }
 
 export const loadContent = async (state: AboutState): Promise<AboutState> => {
   const lines = await AboutViewWorker.invoke('About.getDetailStringWeb')
-  console.log({ lines })
-  return {
+  const newState = {
     ...state,
     productName: Product.productNameLong,
     lines,
     focusId: AboutFocusId.Ok,
   }
+  const commands = await AboutViewWorker.invoke('About.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleClickOk = async (state: AboutState): Promise<AboutState> => {
@@ -50,10 +53,16 @@ export const handleFocusIn = (state: AboutState): AboutState => {
   return state
 }
 
-export const focusNext = (state: AboutState): Promise<AboutState> => {
-  return AboutViewWorker.invoke('About.focusNext', state)
+export const focusNext = async (state: AboutState): Promise<AboutState> => {
+  const newState = await AboutViewWorker.invoke('About.focusNext', state)
+  const commands = await AboutViewWorker.invoke('About.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const focusPrevious = (state: AboutState): Promise<AboutState> => {
-  return AboutViewWorker.invoke('About.focusPrevious', state)
+export const focusPrevious = async (state: AboutState): Promise<AboutState> => {
+  const newState = await AboutViewWorker.invoke('About.focusPrevious', state)
+  const commands = await AboutViewWorker.invoke('About.render', state, newState)
+  newState.commands = commands
+  return newState
 }
