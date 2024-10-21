@@ -50,40 +50,10 @@ export const handleFocusIn = (state: AboutState): AboutState => {
   return state
 }
 
-const getNextFocus = (focusId: number) => {
-  switch (focusId) {
-    case AboutFocusId.Ok:
-      return AboutFocusId.Copy
-    case AboutFocusId.Copy:
-      return AboutFocusId.Ok
-    default:
-      return AboutFocusId.None
-  }
+export const focusNext = (state: AboutState): Promise<AboutState> => {
+  return AboutViewWorker.invoke('About.focusNext', state)
 }
 
-export const focusNext = (state: AboutState): AboutState => {
-  const { focusId } = state
-  return {
-    ...state,
-    focusId: getNextFocus(focusId),
-  }
-}
-
-const getPreviousFocus = (focusId: number) => {
-  switch (focusId) {
-    case AboutFocusId.Ok:
-      return AboutFocusId.Copy
-    case AboutFocusId.Copy:
-      return AboutFocusId.Ok
-    default:
-      return AboutFocusId.None
-  }
-}
-
-export const focusPrevious = (state: AboutState): AboutState => {
-  const { focusId } = state
-  return {
-    ...state,
-    focusId: getPreviousFocus(focusId),
-  }
+export const focusPrevious = (state: AboutState): Promise<AboutState> => {
+  return AboutViewWorker.invoke('About.focusPrevious', state)
 }
