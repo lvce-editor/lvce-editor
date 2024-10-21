@@ -1,10 +1,10 @@
+import * as BundleAboutViewWorkerCached from '../BundleAboutViewWorkerCached/BundleAboutViewWorkerCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
-import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/BundleTextSearchWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
@@ -12,6 +12,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
+import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/BundleTextSearchWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
 
 export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
@@ -117,6 +118,19 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: keyBindingsViewWorkerCachePath,
     to: `${toRoot}/packages/keybindings-view-worker`,
+  })
+
+  const aboutViewWorkerCachePath = await BundleAboutViewWorkerCached.bundleAboutViewWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+    date,
+    product,
+    version,
+  })
+  await Copy.copy({
+    from: aboutViewWorkerCachePath,
+    to: `${toRoot}/packages/about-view-worker`,
   })
 
   const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
