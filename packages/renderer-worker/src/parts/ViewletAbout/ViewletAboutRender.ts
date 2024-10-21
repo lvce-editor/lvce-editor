@@ -1,4 +1,5 @@
 import type { AboutState } from './ViewletAboutTypes.ts'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 
 export const hasFunctionalRender = true
 
@@ -8,13 +9,7 @@ export const renderDialog = {
   isEqual(oldState: AboutState, newState: AboutState) {
     return false
   },
-  apply(oldState: AboutState, newState: AboutState) {
-    const commands = newState.commands
-    // @ts-ignore
-    newState.commands = []
-    console.log({ commands })
-    return commands
-  },
+  apply: AdjustCommands.apply,
   multiple: true,
 }
 
