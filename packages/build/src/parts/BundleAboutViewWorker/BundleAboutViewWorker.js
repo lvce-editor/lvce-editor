@@ -9,7 +9,7 @@ export const bundleAboutViewWorker = async ({ cachePath, commitHash, platform, a
   })
   await Replace.replace({
     path: Path.join(cachePath, 'dist', 'aboutWorkerMain.js'),
-    occurrence: `const commit = ''`,
+    occurrence: `const commit = 'unknown commit'`,
     replacement: `const commit = '${commitHash}'`,
   })
   await Replace.replace({
