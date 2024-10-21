@@ -4,7 +4,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
-export const bundleAboutViewWorkerCached = async ({ commitHash, platform, assetDir }) => {
+export const bundleAboutViewWorkerCached = async ({ commitHash, platform, assetDir, date, product, version }) => {
   const cachePath = await CachePaths.getAboutViewWorkerCachePath([platform])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleAboutViewWorker')
@@ -17,6 +17,9 @@ export const bundleAboutViewWorkerCached = async ({ commitHash, platform, assetD
       commitHash,
       platform,
       assetDir,
+      date,
+      product,
+      version,
     })
     console.timeEnd('bundleAboutViewWorker')
   }
