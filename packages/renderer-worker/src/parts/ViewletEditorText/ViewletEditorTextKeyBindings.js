@@ -65,6 +65,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusFindWidgetReplace,
     },
     {
+      key: KeyModifier.Alt | KeyModifier.CtrlCmd | KeyCode.Enter,
+      command: 'FindWidget.replaceAll',
+      when: WhenExpression.FocusFindWidgetReplace,
+    },
+    {
       key: KeyCode.Tab,
       command: 'FindWidget.focusNextMatchButton',
       when: WhenExpression.FocusFindWidgetPreviousMatchButton,
