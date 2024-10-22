@@ -102,6 +102,7 @@ const ids = [
   'EditorSourceActions.selectCurrent',
   'findAllReferences',
   'FindWidget.close',
+  'FindWidget.replaceAll',
   'FindWidget.focusCloseButton',
   'FindWidget.focusFind',
   'FindWidget.focusNext',
