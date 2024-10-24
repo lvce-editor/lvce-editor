@@ -101,3 +101,4 @@ export const WebView = 129
 export const SearchProcess = 130
 export const GetEditorSourceActions = 131
 export const ExtensionHostTextSearch = 132
+export const ExtensionStateStorage = 133

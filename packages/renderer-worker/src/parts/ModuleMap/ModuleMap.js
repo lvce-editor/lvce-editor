@@ -222,6 +222,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.GetEditorSourceActions
     case 'ExtensionHostTextSearch':
       return ModuleId.ExtensionHostTextSearch
+    case 'ExtensionStateStorage':
+      return ModuleId.ExtensionStateStorage
     default:
       throw new Error(`module ${prefix} not found`)
   }
