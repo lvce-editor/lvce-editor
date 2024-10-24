@@ -199,6 +199,8 @@ export const load = (moduleId) => {
       return import('../SearchProcess/SearchProcess.ipc.js')
     case ModuleId.ExtensionHostTextSearch:
       return import('../ExtensionHost/ExtensionHostTextSearch.ipc.js')
+    case ModuleId.ExtensionStateStorage:
+      return import('../ExtensionStateStorage/ExtensionStateStorage.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
