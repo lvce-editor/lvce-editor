@@ -1,13 +1,14 @@
 import * as GetStateToSave from '../GetStateToSave/GetStateToSave.js'
 import * as InstanceStorage from '../InstanceStorage/InstanceStorage.js'
 import * as SessionStorage from '../SessionStorage/SessionStorage.js'
+import * as VisibilityState from '../VisibilityState/VisibilityState.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const handleVisibilityChange = async (visibilityState) => {
   if (Workspace.isTest()) {
     return
   }
-  if (visibilityState === 'hidden') {
+  if (visibilityState === VisibilityState.Hidden) {
     const stateToSave = GetStateToSave.getStateToSave()
     await Promise.all([
       InstanceStorage.setJson('workspace', stateToSave.workspace),
