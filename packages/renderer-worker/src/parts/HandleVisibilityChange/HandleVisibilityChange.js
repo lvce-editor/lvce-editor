@@ -1,30 +1,9 @@
-import * as GetStateToSave from '../GetStateToSave/GetStateToSave.js'
 import * as InstanceStorage from '../InstanceStorage/InstanceStorage.js'
-import * as SessionStorage from '../SessionStorage/SessionStorage.js'
+import * as SaveBuiltinState from '../SaveBuiltinState/SaveBuiltinState.js'
+import * as SaveExtensionState from '../SaveExtensionState/SaveExtensionState.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 import * as VisibilityState from '../VisibilityState/VisibilityState.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
-const getExtensionStateToSave = async () => {
-  const items = {
-    x: 1,
-  }
-  return items
-}
-
-const saveExtensionState = async () => {
-  const state = await getExtensionStateToSave()
-  await InstanceStorage.setJson('ExtensionState', state)
-}
-
-const saveBuiltinState = async () => {
-  const stateToSave = GetStateToSave.getStateToSave()
-  await Promise.all([
-    InstanceStorage.setJson('workspace', stateToSave.workspace),
-    InstanceStorage.setJsonObjects(stateToSave.instances),
-    SessionStorage.setJson('workspace', stateToSave.workspace),
-  ])
-}
 
 export const handleVisibilityChange = async (visibilityState) => {
   if (Workspace.isTest()) {
@@ -32,9 +11,9 @@ export const handleVisibilityChange = async (visibilityState) => {
   }
   if (visibilityState === VisibilityState.Hidden) {
     const builtinSaveStart = Timestamp.now()
-    await saveBuiltinState()
+    await SaveBuiltinState.saveBuiltinState()
     const builtinSaveEnd = Timestamp.now()
-    await saveExtensionState()
+    await SaveExtensionState.saveExtensionState()
     const extensionSaveEnd = Timestamp.now()
     await InstanceStorage.setJson('Timings', {
       builtinSaveTime: builtinSaveEnd - builtinSaveStart,
