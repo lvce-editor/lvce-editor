@@ -13,7 +13,6 @@ export const map = {
   [ViewletModuleId.DiffEditor]: () => import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js'),
   [ViewletModuleId.E2eTest]: () => import('../ViewletE2eTest/ViewletE2eTest.ipc.ts'),
   [ViewletModuleId.E2eTests]: () => import('../ViewletE2eTests/ViewletE2eTests.ipc.ts'),
-  [ViewletModuleId.EditorImage]: () => import('../ViewletEditorImage/ViewletEditorImage.ipc.js'),
   [ViewletModuleId.EditorPlainText]: () => import('../ViewletEditorPlainText/ViewletEditorPlainText.ipc.js'),
   [ViewletModuleId.EditorText]: () => import('../ViewletEditorText/ViewletEditorText.ipc.js'),
   [ViewletModuleId.EditorWidgetError]: () => import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js'),

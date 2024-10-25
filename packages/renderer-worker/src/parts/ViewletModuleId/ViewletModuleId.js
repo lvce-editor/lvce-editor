@@ -20,8 +20,6 @@ export const DiffEditor = 'DiffEditor'
 
 export const InlineDiffEditor = 'InlineDiffEditor'
 
-export const EditorImage = 'EditorImage'
-
 export const EditorPlainText = 'EditorPlainText'
 
 export const EditorText = 'Editor'
