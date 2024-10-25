@@ -1,13 +1,7 @@
 import * as InstanceStorage from '../InstanceStorage/InstanceStorage.js'
-
-const getExtensionStateToSave = async () => {
-  const items = {
-    x: 1,
-  }
-  return items
-}
+import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 
 export const saveExtensionState = async () => {
-  const state = await getExtensionStateToSave()
+  const state = await ExtensionHostState.saveState()
   await InstanceStorage.setJson('ExtensionState', state)
 }
