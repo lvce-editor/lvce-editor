@@ -83,7 +83,7 @@ beforeAll(() => {
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletEditorImage, oldState, newState, ViewletModuleId.EditorImage)
+  return ViewletManager.render(ViewletEditorImage, oldState, newState, ViewletModuleId.None)
 }
 
 beforeAll(() => {
@@ -132,7 +132,7 @@ test('render', () => {
   expect(render(oldState, newState)).toEqual([
     [
       'Viewlet.send',
-      'EditorImage',
+      '',
       'setDom',
       [
         {

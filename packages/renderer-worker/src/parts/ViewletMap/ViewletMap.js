@@ -2,16 +2,18 @@ import * as Path from '../Path/Path.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
+// TODO move this all to extensions
+
 const mapExtToEditorType = {
-  '.png': ViewletModuleId.EditorImage,
-  '.DirIcon': ViewletModuleId.EditorImage,
-  '.svg': ViewletModuleId.EditorImage,
-  '.avif': ViewletModuleId.EditorImage,
-  '.gif': ViewletModuleId.EditorImage,
-  '.ico': ViewletModuleId.EditorImage,
-  '.webp': ViewletModuleId.EditorImage,
-  '.jpg': ViewletModuleId.EditorImage,
-  '.jpeg': ViewletModuleId.EditorImage,
+  // '.png': ViewletModuleId.EditorImage,
+  // '.DirIcon': ViewletModuleId.EditorImage,
+  // '.svg': ViewletModuleId.EditorImage,
+  // '.avif': ViewletModuleId.EditorImage,
+  // '.gif': ViewletModuleId.EditorImage,
+  // '.ico': ViewletModuleId.EditorImage,
+  // '.webp': ViewletModuleId.EditorImage,
+  // '.jpg': ViewletModuleId.EditorImage,
+  // '.jpeg': ViewletModuleId.EditorImage,
   // @ts-ignore
   '.pdf': ViewletModuleId.Pdf,
   '.mp3': ViewletModuleId.Audio,
