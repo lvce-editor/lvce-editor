@@ -13,6 +13,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GetSavedWebViewState from '../GetSavedWebViewState/GetSavedWebViewState.js'
 import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
@@ -44,6 +45,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
 
   const webView = GetWebView.getWebView(webViews, webViewId)
 
+  // TODO move all of this to iframe worker
   const { iframeSrc, webViewRoot, srcDoc, iframeContent } = iframeResult
   const frameAncestors = await IframeWorker.invoke('WebView.getFrameAncestors', locationProtocol, locationHost)
 
@@ -73,10 +75,10 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   // @ts-ignore
   await setPort(id, port1, origin, portType)
 
-  // TODO split up into create and load
   await ExtensionHostWorker.invokeAndTransfer('ExtensionHostWebView.create', webViewId, port2, uri, id, origin)
 
-  await ExtensionHostWorker.invoke('ExtensionHostWebView.load', webViewId)
+  const savedState = await GetSavedWebViewState.getSavedWebViewState(webViewId)
+  await ExtensionHostWorker.invoke('ExtensionHostWebView.load', webViewId, savedState)
 
   return {
     srcDoc,
