@@ -125,6 +125,11 @@
     "version": "1.5.0"
   },
   {
+    "name": "builtin.media-preview",
+    "repository": "github.com/lvce-editor/media-preview",
+    "version": "1.5.0"
+  },
+  {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
     "version": "0.5.0"
@@ -277,12 +282,12 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.2.0"
+    "version": "1.4.0"
   },
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "0.31.0"
+    "version": "0.32.0"
   },
   {
     "name": "builtin.prettier",
