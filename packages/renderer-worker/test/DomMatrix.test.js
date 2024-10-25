@@ -106,8 +106,8 @@ test('zoomInto - bottom right - should move focus to top left', () => {
 
 test('toString', () => {
   const domMatrix = DomMatrix.create([1, 0, 0, 1, 0, 0])
-  const domMatruxString = DomMatrix.toString(domMatrix)
-  expect(domMatruxString).toBe('matrix(1, 0, 0, 1, 0, 0)')
+  const domMatrixString = DomMatrix.toString(domMatrix)
+  expect(domMatrixString).toBe('matrix(1, 0, 0, 1, 0, 0)')
 })
 
 test('move - right', () => {
