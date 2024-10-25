@@ -69,7 +69,13 @@ export const getBlobUrl = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getBlobUrl(path)
+  if (fileSystem.getBlobSrc) {
+    return fileSystem.getBlobSrc(path)
+  }
+  if (fileSystem.getBlobUrl) {
+    return fileSystem.getBlobUrl(path)
+  }
+  throw new Error(`Filesystem doesn't support the getBlobUrl function`)
 }
 
 export const getBlob = async (uri) => {
