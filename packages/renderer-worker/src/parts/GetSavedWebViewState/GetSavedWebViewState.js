@@ -13,6 +13,5 @@ export const getSavedWebViewState = async (id) => {
       return item.value.state
     }
   }
-  console.log({ states, id })
   return undefined
 }
