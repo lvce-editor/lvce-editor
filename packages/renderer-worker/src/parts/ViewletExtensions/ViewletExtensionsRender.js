@@ -2,7 +2,7 @@ import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 
 export const hasFunctionalRender = true
 
-export const hasFunctionalRootRender = true
+// export const hasFunctionalRootRender = true
 
 export const renderDialog = {
   isEqual(oldState, newState) {
