@@ -39,6 +39,7 @@ export const resolveRoot = async () => {
         uri: toUri(last),
         workspaceId: GetWorkspaceId.getWorkspaceId(last),
         homeDir: PlatformPaths.getHomeDir(),
+        homeDirUri: toUri(PlatformPaths.getHomeDir()),
         pathSeparator: Platform.getPathSeparator(),
         source: 'shared-process-default',
       }
@@ -54,6 +55,7 @@ export const resolveRoot = async () => {
       uri: toUri(path),
       workspaceId: GetWorkspaceId.getWorkspaceId(path),
       homeDir: PlatformPaths.getHomeDir(),
+      homeDirUri: toUri(PlatformPaths.getHomeDir()),
       pathSeparator: Platform.getPathSeparator(),
       source: WorkspaceSource.SharedProcessEnv,
     }
@@ -67,6 +69,7 @@ export const resolveRoot = async () => {
     uri: toUri(absolutePath),
     workspaceId,
     homeDir: PlatformPaths.getHomeDir(),
+    homeDirUri: toUri(PlatformPaths.getHomeDir()),
     pathSeparator: Platform.getPathSeparator(),
     source: WorkspaceSource.SharedProcessDefault,
   }
