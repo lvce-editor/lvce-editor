@@ -134,6 +134,8 @@ export const load = (moduleId) => {
       return import('../WebViewServer/WebViewServer.ipc.js')
     case ModuleId.GetExtensions:
       return import('../GetExtensions/GetExtensions.ipc.js')
+    case ModuleId.FileSystemDisk:
+      return import('../FileSystemDisk/FileSystemDisk.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

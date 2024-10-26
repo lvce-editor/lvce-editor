@@ -70,3 +70,4 @@ export const FileWatcher = 75
 export const WebViewServer = 76
 export const Transferrable = 77
 export const GetExtensions = 78
+export const FileSystemDisk = 79

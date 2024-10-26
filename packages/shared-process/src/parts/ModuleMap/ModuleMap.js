@@ -289,6 +289,17 @@ export const getModuleId = (commandId) => {
       return ModuleId.WebViewServer
     case 'GetExtensions.getExtensions':
       return ModuleId.GetExtensions
+    case 'FileSystemDisk.chmod':
+    case 'FileSystemDisk.copy':
+    case 'FileSystemDisk.getPathSeparator':
+    case 'FileSystemDisk.mkdir':
+    case 'FileSystemDisk.readDirWithFileTypes':
+    case 'FileSystemDisk.readFile':
+    case 'FileSystemDisk.remove':
+    case 'FileSystemDisk.rename':
+    case 'FileSystemDisk.stat':
+    case 'FileSystemDisk.writeFile':
+      return ModuleId.FileSystemDisk
     default:
       throw new CommandNotFoundError(commandId)
   }
