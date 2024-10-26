@@ -22,7 +22,7 @@ test('readFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.readFile':
+      case 'FileSystemDisk.readFile':
         return 'sample text'
       default:
         throw new Error('unexpected message')
@@ -31,14 +31,14 @@ test('readFile', async () => {
   // TODO passing protocol here seems unnecessary, but it is useful for extension host which has several protocols
   expect(await FileSystemDisk.readFile('/tmp/some-file.txt', EncodingType.Utf8)).toEqual('sample text')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.readFile', '/tmp/some-file.txt', EncodingType.Utf8)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.readFile', '/tmp/some-file.txt', EncodingType.Utf8)
 })
 
 test('readFile - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.readFile':
+      case 'FileSystemDisk.readFile':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
@@ -51,7 +51,7 @@ test('removeFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.remove':
+      case 'FileSystemDisk.remove':
         return null
       default:
         throw new Error('unexpected message')
@@ -59,14 +59,14 @@ test('removeFile', async () => {
   })
   await FileSystemDisk.remove('/tmp/some-file.txt')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.remove', '/tmp/some-file.txt')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.remove', '/tmp/some-file.txt')
 })
 
 test('removeFile - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.remove':
+      case 'FileSystemDisk.remove':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
@@ -80,7 +80,7 @@ test('copy', async () => {
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {})
   await FileSystemDisk.copy('/test/a', '/test/b')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.copy', '/test/a', '/test/b')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.copy', '/test/a', '/test/b')
 })
 
 test('copy - error', async () => {
@@ -95,7 +95,7 @@ test('rename', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.rename':
+      case 'FileSystemDisk.rename':
         return null
       default:
         throw new Error('unexpected message')
@@ -103,14 +103,14 @@ test('rename', async () => {
   })
   await FileSystemDisk.rename('/tmp/some-file.txt', '/tmp/renamed.txt')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.rename', '/tmp/some-file.txt', '/tmp/renamed.txt')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.rename', '/tmp/some-file.txt', '/tmp/renamed.txt')
 })
 
 test('rename - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.rename':
+      case 'FileSystemDisk.rename':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
@@ -123,7 +123,7 @@ test('mkdir', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.mkdir':
+      case 'FileSystemDisk.mkdir':
         return null
       default:
         throw new Error('unexpected message')
@@ -131,14 +131,14 @@ test('mkdir', async () => {
   })
   await FileSystemDisk.mkdir('/tmp/some-dir')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.mkdir', '/tmp/some-dir')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.mkdir', '/tmp/some-dir')
 })
 
 test('mkdir - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.mkdir':
+      case 'FileSystemDisk.mkdir':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
@@ -151,7 +151,7 @@ test('writeFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.writeFile':
+      case 'FileSystemDisk.writeFile':
         return null
       default:
         throw new Error('unexpected message')
@@ -159,14 +159,14 @@ test('writeFile', async () => {
   })
   await FileSystemDisk.writeFile('/tmp/some-file.txt', 'sample text', EncodingType.Utf8)
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.writeFile', '/tmp/some-file.txt', 'sample text', EncodingType.Utf8)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.writeFile', '/tmp/some-file.txt', 'sample text', EncodingType.Utf8)
 })
 
 test('writeFile - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.writeFile':
+      case 'FileSystemDisk.writeFile':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
@@ -179,7 +179,7 @@ test('readDirWithFileTypes', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
+      case 'FileSystemDisk.readDirWithFileTypes':
         return [
           {
             name: 'file 1',
@@ -213,14 +213,14 @@ test('readDirWithFileTypes', async () => {
     },
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.readDirWithFileTypes', '/tmp/some-dir')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.readDirWithFileTypes', '/tmp/some-dir')
 })
 
 test('readDirWithFileTypes - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
+      case 'FileSystemDisk.readDirWithFileTypes':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
@@ -230,16 +230,16 @@ test('readDirWithFileTypes - error', async () => {
 })
 
 test.skip('watch', async () => {
-  // await FileSystem.watch('/tmp/some-dir')
+  // await FileSystemDisk.watch('/tmp/some-dir')
   // writeFile
-  // FileSystem.unwatchAll()
+  // FileSystemDisk.unwatchAll()
 })
 
 test('getRealPath', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.getRealPath':
+      case 'FileSystemDisk.getRealPath':
         return '/test/real-path.txt'
       default:
         throw new Error('unexpected message')
@@ -252,7 +252,7 @@ test('getRealPath - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
-      case 'FileSystem.mkdir':
+      case 'FileSystemDisk.mkdir':
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')

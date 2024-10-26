@@ -87,7 +87,7 @@ export const hydrate = async ({ href }) => {
   state.workspaceUri = resolvedRoot.uri
   state.source = resolvedRoot.source
 
-  if (state.workspaceUri.startsWith('/')) {
+  if (state.workspaceUri && state.workspaceUri.startsWith('/')) {
     state.workspaceUri = `file://${state.workspaceUri}`
   }
   await onWorkspaceChange()
