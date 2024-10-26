@@ -3,6 +3,8 @@ import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
+// TODO move all of this to an extension
+
 export const canBeRestored = true
 
 export const name = 'Fetch'
@@ -62,4 +64,10 @@ export const readDirWithFileTypes = async (uri) => {
 
 export const chmod = (path, permissions) => {
   throw new Error('[memfs] chmod not implemented')
+}
+
+export const getBlob = async (uri) => {
+  const content = await readFile(uri)
+  const blob = new Blob([content])
+  return blob
 }
