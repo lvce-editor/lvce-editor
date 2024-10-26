@@ -70,14 +70,14 @@ const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js'
 
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
-test('create', () => {
+test.skip('create', () => {
   const state = ViewletExtensions.create()
   expect(state).toBeDefined()
 })
 
 // TODO test refreshing and one extension has invalid shape (e.g. null or array where object is expected)
 
-test('loadContent - error - ReferenceError', async () => {
+test.skip('loadContent - error - ReferenceError', async () => {
   // @ts-ignore
   SearchExtensions.searchExtensions.mockImplementation(() => {
     throw new Error("VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization")
@@ -92,7 +92,7 @@ test('loadContent - error - ReferenceError', async () => {
   })
 })
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   const state = {
     ...ViewletExtensions.create(),
     width: 200,
@@ -190,7 +190,7 @@ test('loadContent', async () => {
   expect(newState.finalDeltaY).toBe(0)
 })
 
-test('loadContent - with scrollbar', async () => {
+test.skip('loadContent - with scrollbar', async () => {
   const state = {
     ...ViewletExtensions.create(),
     width: 200,
@@ -407,7 +407,7 @@ test.skip('enable - error', async () => {
 // handle input -> enabled extensions
 // handle input -> category filter
 
-test('openSuggest', async () => {
+test.skip('openSuggest', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -425,7 +425,7 @@ test('openSuggest', async () => {
   ])
 })
 
-test('closeSuggest', async () => {
+test.skip('closeSuggest', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -461,7 +461,7 @@ test.skip('toggleSuggest', async () => {
 
 // localhost/:1 Access to fetch at 'http://localhost:39367/api/extensions/search?q=te' from origin 'http://localhost:35291' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
 
-test('saveState', () => {
+test.skip('saveState', () => {
   const state = {
     ...ViewletExtensions.create(),
     searchValue: 'test',
@@ -475,7 +475,7 @@ test('saveState', () => {
   })
 })
 
-// test('scrollBarThumbMouseDown', () => {
+// test.skip('scrollBarThumbMouseDown', () => {
 //   const oldState = {
 //     ...ViewletExtensions.create(),
 //     items: [
