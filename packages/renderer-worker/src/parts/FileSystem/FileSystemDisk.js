@@ -7,31 +7,47 @@ import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedPro
 
 export const name = 'Disk'
 
+const toUri = (item) => {
+  if (item.startsWith('file://')) {
+    return item
+  }
+  return `file://${item}`
+}
+
 export const copy = (source, target) => {
+  source = toUri(source)
+  target = toUri(target)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemCopy, /* source */ source, /* target */ target)
 }
 
 export const readFile = (path, encoding) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadFile, /* path */ path, /* encoding */ encoding)
 }
 
 export const readJson = (path) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadJson, /* path */ path)
 }
 
 export const remove = (path) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemRemove, /* path */ path)
 }
 
 export const rename = (oldUri, newUri) => {
+  oldUri = toUri(oldUri)
+  newUri = toUri(newUri)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemRename, /* oldPath */ oldUri, /* newPath */ newUri)
 }
 
 export const mkdir = (path) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemMkdir, /* path */ path)
 }
 
 export const writeFile = async (path, content, encoding) => {
+  path = toUri(path)
   await SharedProcess.invoke(
     /* FileSystem.writeFile */ SharedProcessCommandType.FileSystemWriteFile,
     /* path */ path,
@@ -43,6 +59,7 @@ export const writeFile = async (path, content, encoding) => {
 export const ensureFile = async () => {}
 
 export const readDirWithFileTypes = (path) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadDirWithFileTypes, /* path */ path)
 }
 
@@ -72,10 +89,12 @@ export const getRealPath = (path) => {
 }
 
 export const stat = (path) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemStat, /* path */ path)
 }
 
 export const chmod = (path, permissions) => {
+  path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemChmod, /* path */ path, /* permissions */ permissions)
 }
 
