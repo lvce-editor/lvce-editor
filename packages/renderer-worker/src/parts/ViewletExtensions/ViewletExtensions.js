@@ -7,6 +7,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 import * as ViewletExtensionsHandleInput from './ViewletExtensionsHandleInput.js'
 
 const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
@@ -57,7 +58,11 @@ export const loadContent = async (state, savedState) => {
   // TODO just get local extensions on demand (not when query string is already different)
   const allExtensions = await ExtensionManagement.getAllExtensions()
   const size = GetViewletSize.getViewletSize(width)
-  return ViewletExtensionsHandleInput.handleInput({ ...state, allExtensions, size }, searchValue)
+  const newState = await ViewletExtensionsHandleInput.handleInput({ ...state, allExtensions, size }, searchValue)
+  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render', state, newState)
+
+  newState.commands = commands
+  return newState
   // TODO get installed extensions from extension host
   // TODO just get local extensions on demand (not when query string is already different)
 }
