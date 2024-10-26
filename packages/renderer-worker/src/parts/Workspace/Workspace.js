@@ -1,26 +1,13 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
-import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Location from '../Location/Location.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as Preferences from '../Preferences/Preferences.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
-
-export const state = {
-  workspacePath: '',
-  homeDir: '',
-  pathSeparator: '',
-  workspaceUri: '',
-  source: '',
-  href: '',
-  isTest: false,
-}
+import { state } from '../WorkspaceState/WorkspaceState.js'
 
 /**
  * @param {string|undefined} path
@@ -48,87 +35,8 @@ export const close = () => {
   return setPath('')
 }
 
-const getResolvedRootFromSharedProcess = async () => {
-  const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot)
-  return resolvedRoot
-}
-
-const isValid = (resolvedRoot) => {
-  return (
-    resolvedRoot &&
-    typeof resolvedRoot.path === 'string' &&
-    typeof resolvedRoot.uri === 'string' &&
-    typeof resolvedRoot.homeDir === 'string' &&
-    typeof resolvedRoot.pathSeparator === 'string'
-  )
-}
-
-const getResolveRootFromSessionStorage = async () => {
-  const resolvedRoot = await Command.execute(/* SessionStorage.getJson */ 'SessionStorage.getJson', /* key */ 'workspace')
-  if (!isValid(resolvedRoot)) {
-    return undefined
-  }
-  return resolvedRoot
-}
-
 export const isTest = () => {
   return state.isTest
-}
-
-const getResolvedRootFromRendererProcess = async (href) => {
-  const url = new URL(href)
-  if (href.includes('tests/')) {
-    state.isTest = true
-    return {
-      path: href,
-      homeDir: '',
-      pathSeparator: PathSeparatorType.Slash,
-      source: 'test',
-    }
-  }
-  if (url.pathname.startsWith('/github')) {
-    const path = `github://${url.pathname.slice('/github'.length + 1)}`
-    return {
-      path,
-      homeDir: '',
-      pathSeparator: PathSeparatorType.Slash,
-      source: 'renderer-process',
-    }
-  }
-
-  if (Platform.platform === PlatformType.Web) {
-    const defaultWorkspace = Preferences.get('workspace.defaultWorkspace')
-    const resolvedRoot = {
-      path: defaultWorkspace,
-      homeDir: '',
-      pathSeparator: PathSeparatorType.Slash,
-      source: 'renderer-process',
-    }
-    return resolvedRoot
-  }
-  const resolvedRootFromSessionStorage = await getResolveRootFromSessionStorage()
-  if (resolvedRootFromSessionStorage) {
-    return resolvedRootFromSessionStorage
-  }
-
-  return undefined
-}
-
-const getResolvedRootRemote = async (href) => {
-  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href)
-  if (resolvedRootFromRendererProcess) {
-    return resolvedRootFromRendererProcess
-  }
-  return getResolvedRootFromSharedProcess()
-}
-
-const getResolvedRoot = async (href) => {
-  switch (Platform.platform) {
-    case PlatformType.Web:
-      return getResolvedRootFromRendererProcess(href)
-    default:
-      return getResolvedRootRemote(href)
-  }
 }
 
 const getTitle = (workspacePath) => {
@@ -157,7 +65,7 @@ export const hydrate = async ({ href }) => {
   if (state.workspacePath) {
     return
   }
-  const resolvedRoot = await getResolvedRoot(href)
+  const resolvedRoot = await GetResolvedRoot.getResolvedRoot(href)
   if (state.isTest) {
     return
   }
@@ -225,3 +133,5 @@ export const getAbsolutePath = (relativePath) => {
   }
   return `${state.workspacePath}/${relativePath}` // TODO support windows paths
 }
+
+export { state }
