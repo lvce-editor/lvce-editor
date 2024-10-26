@@ -9,6 +9,7 @@ export const Commands = {
   mkdir: FileSystemDisk.mkdir,
   readDirWithFileTypes: FileSystemDisk.readDirWithFileTypes,
   readFile: FileSystemDisk.readFile,
+  readJson: FileSystemDisk.readJson,
   remove: FileSystemDisk.remove,
   rename: FileSystemDisk.rename,
   stat: FileSystemDisk.stat,

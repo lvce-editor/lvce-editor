@@ -298,6 +298,7 @@ export const getModuleId = (commandId) => {
     case 'FileSystemDisk.remove':
     case 'FileSystemDisk.rename':
     case 'FileSystemDisk.stat':
+    case 'FileSystemDisk.readJson':
     case 'FileSystemDisk.writeFile':
       return ModuleId.FileSystemDisk
     default:

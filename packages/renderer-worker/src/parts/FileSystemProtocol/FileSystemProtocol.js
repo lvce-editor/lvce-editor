@@ -12,4 +12,4 @@ export const ExtensionHost = 'extension-host'
 
 export const Fetch = 'fetch'
 
-export const Disk = ''
+export const Disk = 'file'

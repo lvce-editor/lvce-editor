@@ -236,3 +236,19 @@ export const cp = async (fromUri, toUri) => {
     throw new VError(error, `Failed to copy folder from ${fromUri} to ${toUri}`)
   }
 }
+
+export const readJson = async (uri) => {
+  try {
+    Assert.string(uri)
+    assertUri(uri)
+    const path = fileURLToPath(uri)
+    const content = await fs.readFile(path, 'utf8')
+    const parsed = JSON.parse(content)
+    return parsed
+  } catch (error) {
+    if (IsEnoentError.isEnoentError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, `Failed to read file as json "${uri}"`)
+  }
+}
