@@ -1,4 +1,4 @@
-import * as FileSearchWorkerUrl from '../FileSearchWorkerUrl/FileSearchWorkerUrl.js'
+import * as ExtensionSearchViewWorkerUrl from '../ExtensionSearchViewWorkerUrl/ExtensionSearchViewWorkerUrl.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
@@ -10,9 +10,9 @@ const getConfiguredWorkerUrl = () => {
   if (configuredWorkerUrl) {
     configuredWorkerUrl = '/remote' + configuredWorkerUrl
   }
-  configuredWorkerUrl = configuredWorkerUrl || FileSearchWorkerUrl.fileSearchWorkerUrl
+  configuredWorkerUrl = configuredWorkerUrl || ExtensionSearchViewWorkerUrl.extensionSearchViewWorkerUrl
   if (IsProduction.isProduction) {
-    configuredWorkerUrl = FileSearchWorkerUrl.fileSearchWorkerUrl
+    configuredWorkerUrl = ExtensionSearchViewWorkerUrl.extensionSearchViewWorkerUrl
   }
   return configuredWorkerUrl
 }
