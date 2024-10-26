@@ -5,7 +5,6 @@ import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 // TODO move this all to extensions
 
 const mapExtToEditorType = {
-  '.pdf': ViewletModuleId.Pdf,
   '.mp3': ViewletModuleId.Audio,
   '.mp4': ViewletModuleId.Video,
   '.mkv': ViewletModuleId.Video,
