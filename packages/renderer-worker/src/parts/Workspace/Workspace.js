@@ -133,3 +133,5 @@ export const getAbsolutePath = (relativePath) => {
   }
   return `${state.workspacePath}/${relativePath}` // TODO support windows paths
 }
+
+export { state }
