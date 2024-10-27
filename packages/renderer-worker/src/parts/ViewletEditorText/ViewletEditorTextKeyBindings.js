@@ -331,7 +331,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyCode.F2,
-      command: 'EditorRename.open',
+      command: 'Editor.openRename',
       when: WhenExpression.FocusEditorText,
     },
     {
