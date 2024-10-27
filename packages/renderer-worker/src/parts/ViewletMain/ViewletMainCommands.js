@@ -1,5 +1,5 @@
 import * as ViewletMain from './ViewletMain.js'
-import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
+import * as ViewletMainOpenUri from './ViewletMainOpenUri.ts'
 
 export const Commands = {
   focus: ViewletMain.focus,
