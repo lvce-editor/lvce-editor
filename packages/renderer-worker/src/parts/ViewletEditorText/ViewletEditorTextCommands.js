@@ -178,6 +178,7 @@ const ids = [
   'save',
   'save',
   'selectAll',
+  'openRename',
   'selectAllLeft',
   'selectAllOccurrences',
   'selectAllRight',
