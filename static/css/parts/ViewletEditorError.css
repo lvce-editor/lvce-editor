@@ -1,0 +1,13 @@
+.EditorTextError {
+  color: red;
+}
+
+.EditorTextIcon {
+  width: 48px;
+  height: 48px;
+  contain: strict;
+}
+
+.EditorTextIconError {
+  color: red;
+}

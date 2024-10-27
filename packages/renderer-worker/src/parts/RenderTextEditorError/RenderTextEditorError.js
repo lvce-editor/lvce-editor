@@ -10,7 +10,17 @@ export const renderTextEditorError = (error) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Viewlet Error',
+      className: 'Viewlet TextEditorError',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: `EditorTextIcon EditorTextIconError MaskIcon MaskIconError`,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'TextEditorError',
       childCount: 1,
     },
     text(errorString),

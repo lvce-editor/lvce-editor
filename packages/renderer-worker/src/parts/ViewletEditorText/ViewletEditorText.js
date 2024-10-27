@@ -255,3 +255,5 @@ export const focus = (state) => {
     focused: true,
   }
 }
+
+export const customErrorRenderer = ViewletModuleId.EditorTextError
