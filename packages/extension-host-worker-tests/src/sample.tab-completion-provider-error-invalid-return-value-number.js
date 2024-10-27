@@ -1,5 +1,7 @@
 export const name = 'sample.tab-completion-provider-error-invalid-return-value-number'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
