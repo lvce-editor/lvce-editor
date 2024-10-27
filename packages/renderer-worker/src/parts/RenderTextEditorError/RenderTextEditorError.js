@@ -21,7 +21,7 @@ export const renderTextEditorError = (error) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'TextEditorError',
+      className: 'TextEditorErrorMessage',
       childCount: 1,
     },
     text(errorString),
