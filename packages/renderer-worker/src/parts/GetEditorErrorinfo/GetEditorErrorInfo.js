@@ -5,7 +5,6 @@ const isFileNotFoundError = (error) => {
 }
 
 export const getEditorErrorInfo = (error) => {
-  console.log({ error })
   if (isFileNotFoundError(error)) {
     return {
       type: 'error',
