@@ -9,7 +9,7 @@ test('error - not found', async () => {
   const info = GetEditorErrorInfo.getEditorErrorInfo(error)
   expect(info).toEqual({
     type: 'error',
-    message: 'file not found',
+    message: 'The editor could not be opened because the file was not found',
     actions: [
       {
         name: 'Create File',
