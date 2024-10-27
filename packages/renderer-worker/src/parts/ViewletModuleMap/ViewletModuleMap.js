@@ -49,4 +49,5 @@ export const map = {
   [ViewletModuleId.TitleBarTitle]: () => import('../ViewletTitleBarTitle/ViewletTitleBarTitle.ipc.js'),
   [ViewletModuleId.Video]: () => import('../ViewletVideo/ViewletVideo.ipc.ts'),
   [ViewletModuleId.WebView]: () => import('../ViewletWebView/ViewletWebView.ipc.ts'),
+  [ViewletModuleId.EditorTextError]: () => import('../ViewletTextEditorError/ViewletTextEditorError.ipc.js'),
 }
