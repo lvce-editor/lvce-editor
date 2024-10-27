@@ -9,7 +9,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import { openUri } from './ViewletMainOpenUri.js'
+import { openUri } from './ViewletMainOpenUri.ts'
 
 const handleDropFilePathNoSplit = async (state, filePath) => {
   const { newState, commands } = await openUri(state, filePath)

@@ -26,7 +26,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { closeEditor } from './ViewletMainCloseEditor.ts'
-import { openUri } from './ViewletMainOpenUri.js'
+import { openUri } from './ViewletMainOpenUri.ts'
 
 // @ts-ignore
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
