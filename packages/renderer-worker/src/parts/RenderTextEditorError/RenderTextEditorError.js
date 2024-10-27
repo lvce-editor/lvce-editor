@@ -23,7 +23,7 @@ export const renderTextEditorError = (error) => {
     text(errorString),
     {
       type: VirtualDomElements.Div,
-      className: 'Button',
+      className: 'Button ButtonPrimary',
       childCount: 1,
     },
     text(createFile),

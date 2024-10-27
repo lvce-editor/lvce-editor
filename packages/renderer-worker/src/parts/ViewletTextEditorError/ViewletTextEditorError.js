@@ -2,6 +2,8 @@ import * as RenderTextEditorError from '../RenderTextEditorError/RenderTextEdito
 
 export const name = 'TextEditorError'
 
+export const Css = ['']
+
 export const create = () => {
   return {
     id: 0,
