@@ -8,17 +8,6 @@ beforeEach(() => {
   Workspace.state.workspacePath = ''
 })
 
-jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostRename.js', () => {
-  return {
-    executePrepareRenameProvider: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-    executeRenameProvider: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
     invoke: jest.fn(() => {
