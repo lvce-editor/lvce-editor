@@ -6,9 +6,9 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
+import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
@@ -22,11 +22,6 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
-
-const getContent = async (uri) => {
-  const content = await FileSystem.readFile(uri)
-  return content ?? 'content could not be loaded'
-}
 
 // TODO how to connect this function with tokenizer?
 export const handleTokenizeChange = () => {
@@ -105,7 +100,7 @@ export const loadContent = async (state, savedState, context) => {
   const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
-  const content = await getContent(uri)
+  const content = await GetTextEditorContent.getTextEditorContent(uri)
   const languageId = getLanguageId(state)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
@@ -255,3 +250,5 @@ export const focus = (state) => {
     focused: true,
   }
 }
+
+export const customErrorRenderer = ViewletModuleId.EditorTextError
