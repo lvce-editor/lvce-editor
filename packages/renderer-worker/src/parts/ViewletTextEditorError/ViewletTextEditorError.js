@@ -1,3 +1,5 @@
+import * as RenderTextEditorError from '../RenderTextEditorError/RenderTextEditorError.js'
+
 export const name = 'TextEditorError'
 
 export const create = () => {
@@ -12,9 +14,10 @@ export const loadContent = (state) => {
   return state
 }
 
-export const render = () => {
-  // TODO
-  // 1. render icon
-  // 2. render error message
-  // 3. render error actions
+export const render = (error) => {
+  return RenderTextEditorError.renderTextEditorError(error)
+}
+
+export const handleClickCreate = (state) => {
+  return state
 }
