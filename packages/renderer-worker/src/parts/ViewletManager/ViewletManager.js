@@ -568,7 +568,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       if (viewlet.setBounds !== false) {
         commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
       }
-      console.log('in error code', module)
       if (module.customErrorRenderer) {
         const errorModule = await loadModule(viewlet.getModule, module.customErrorRenderer)
         const dom = await errorModule.render(error)
@@ -576,7 +575,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         commands.push([kCreate, module.customErrorRenderer, viewletUid])
         commands.push(['Viewlet.setDom2', viewletUid, dom])
         commands.push([kAppend, parentUid, viewletUid])
-        console.log({ dom })
         // TODO
         // const errorCommands=
       } else {
