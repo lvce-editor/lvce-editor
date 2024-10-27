@@ -149,6 +149,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/about-view-worker/dist/aboutWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/ExtensionSearchViewWorkerUrl/ExtensionSearchViewWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/extension-search-view/dist/extensionSearchViewWorkerMain.js`,
+      replacement: '/packages/extension-search-view-worker/dist/extensionSearchViewWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/EmbedsWorkerUrl/EmbedsWorkerUrl.js`,
       occurrence: '/packages/embeds-worker/src/embedsWorkerMain.ts',
       replacement: `/packages/embeds-worker/dist/embedsWorkerMain.js`,
