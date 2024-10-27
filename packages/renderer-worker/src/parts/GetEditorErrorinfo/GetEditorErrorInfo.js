@@ -8,7 +8,7 @@ export const getEditorErrorInfo = (error) => {
   if (isFileNotFoundError(error)) {
     return {
       type: 'error',
-      message: 'file not found',
+      message: 'The editor could not be opened because the file was not found',
       actions: [
         {
           name: 'Create File',
