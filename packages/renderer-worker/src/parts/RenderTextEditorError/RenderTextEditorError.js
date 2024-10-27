@@ -1,8 +1,8 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const renderTextEditorError = (error) => {
-  const errorString = `${error}`
+export const renderTextEditorError = (info) => {
+  const errorString = info.message
   const createFile = `Create File`
   return [
     {

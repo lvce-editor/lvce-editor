@@ -10,5 +10,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, expect, SideB
   await Main.openUri(`${tmpDir}/not-found.txt`)
 
   // assert
-  // TODO check that not-found message is displayed
+  const errorMessage = Locator('.TextEditorErrorMessage')
+  await expect(errorMessage).toBeVisible()
+  await expect(errorMessage).toHaveText('The editor could not be opened because the file was not found')
 }
