@@ -1,4 +1,5 @@
 import * as RenderTextEditorError from '../RenderTextEditorError/RenderTextEditorError.js'
+import * as GetEditorErrorinfo from '../GetEditorErrorinfo/GetEditorErrorInfo.js'
 
 export const name = 'TextEditorError'
 
@@ -15,7 +16,8 @@ export const loadContent = (state) => {
 }
 
 export const render = (error) => {
-  return RenderTextEditorError.renderTextEditorError(error)
+  const info = GetEditorErrorinfo.getEditorErrorInfo(error)
+  return RenderTextEditorError.renderTextEditorError(info)
 }
 
 export const handleClickCreate = (state) => {

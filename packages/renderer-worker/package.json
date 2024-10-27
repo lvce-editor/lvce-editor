@@ -88,7 +88,7 @@
     "@lvce-editor/extension-host-worker": "^1.9.0",
     "@lvce-editor/extension-search-view": "^1.2.0",
     "@lvce-editor/extension-detail-view": "^1.0.0",
-    "@lvce-editor/file-search-worker": "^1.10.0",
+    "@lvce-editor/file-search-worker": "^1.11.0",
     "@lvce-editor/iframe-worker": "^1.4.0",
     "@lvce-editor/keybindings-view": "^1.2.0",
     "@lvce-editor/renderer-process": "^10.18.0",
