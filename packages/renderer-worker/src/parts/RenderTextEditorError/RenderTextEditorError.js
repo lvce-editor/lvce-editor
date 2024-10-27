@@ -7,11 +7,12 @@ export const renderTextEditorError = (error) => {
   // 2. render error message
   // 3. render error actions
   const errorString = `${error}`
+  const createFile = `Create File`
   return [
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet TextEditorError',
-      childCount: 2,
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Div,
@@ -24,5 +25,11 @@ export const renderTextEditorError = (error) => {
       childCount: 1,
     },
     text(errorString),
+    {
+      type: VirtualDomElements.Div,
+      className: 'Button',
+      childCount: 1,
+    },
+    text(createFile),
   ]
 }
