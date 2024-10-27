@@ -22,6 +22,7 @@ export const Css = [
   '/css/parts/ViewletEditorSourceActions.css',
   '/css/parts/ViewletFindWidget.css',
   '/css/parts/ViewletList.css',
+  '/css/parts/ViewletEditorError.css',
 ]
 
 export const getDynamicCss = (preferences) => {

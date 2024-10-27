@@ -1,0 +1,26 @@
+:root {
+  --IconErrorForeground: rgb(182, 78, 78);
+}
+
+.TextEditorError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  color: rgb(156, 162, 160);
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.EditorTextIcon {
+  width: 48px;
+  height: 48px;
+  contain: strict;
+  --MaskIconSize: 48px;
+}
+
+.EditorTextIconError {
+  color: var(--IconErrorForeground);
+}
