@@ -91,7 +91,7 @@
     "@lvce-editor/file-search-worker": "^1.11.0",
     "@lvce-editor/iframe-worker": "^1.4.0",
     "@lvce-editor/keybindings-view": "^1.2.0",
-    "@lvce-editor/renderer-process": "^10.21.0",
+    "@lvce-editor/renderer-process": "^10.22.0",
     "@lvce-editor/syntax-highlighting-worker": "^1.6.0",
     "@lvce-editor/terminal-worker": "^1.0.0",
     "@lvce-editor/test-worker": "^1.14.0",

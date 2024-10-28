@@ -1,14 +1,12 @@
 .EditorSourceActions {
-  width: 200px;
-  height: 200px;
   background: var(--HoverWidgetBackground, #282e2f);
   border: 1px solid;
   border-color: var(--EditorWidgetBorder, #454545);
-  bottom: 0;
   color: var(--ListForeground, white);
   border-radius: 2px;
   z-index: 22;
   pointer-events: all;
+  position: absolute;
 }
 
 .SourceActionHeading {
