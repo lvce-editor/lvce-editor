@@ -22,7 +22,5 @@ export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expec
   await expect(renameWidget).toBeVisible()
   const renameInput = Locator('.RenameInputBox')
   await expect(renameInput).toBeVisible()
-
-  // TODO
-  // await expect(renameInput).toBeFocused()
+  await expect(renameInput).toBeFocused()
 }
