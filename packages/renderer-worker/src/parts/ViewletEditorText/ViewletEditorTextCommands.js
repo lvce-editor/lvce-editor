@@ -70,6 +70,7 @@ const ids = [
   'deleteCharacterRight',
   'deleteHorizontalRight',
   'deleteLeft',
+  'closeRename',
   'deleteRight',
   'deleteWordLeft',
   'deleteWordPartLeft',
