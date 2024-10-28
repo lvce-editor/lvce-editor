@@ -15,7 +15,6 @@ export const Dialog = 13
 export const Download = 14
 export const EditorDiagnostics = 15
 export const EditorError = 16
-export const EditorRename = 17
 export const ErrorHandling = 18
 export const ExtensionHostCode = 19
 export const ExtensionMeta = 20
