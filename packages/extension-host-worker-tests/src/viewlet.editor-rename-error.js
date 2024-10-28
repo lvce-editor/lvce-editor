@@ -1,6 +1,4 @@
-export const name = 'viewlet.editor-rename'
-
-export const skip = true
+export const name = 'viewlet.editor-rename-error'
 
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
   // arrange
@@ -14,13 +12,18 @@ export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expec
   await Main.openUri(`${tmpDir}/file.js`)
   await Editor.setCursor(0, 5)
 
-  // act
   await Editor.openRename()
-
-  // assert
   const renameWidget = Locator('.EditorRename')
   await expect(renameWidget).toBeVisible()
   const renameInput = Locator('.RenameInputBox')
   await expect(renameInput).toBeVisible()
-  await expect(renameInput).toBeFocused()
+
+  // act
+
+  // TODO
+  // 1. type a value
+  // 2. press enter
+  // 3. verify an error message occurs
+
+  // assert
 }

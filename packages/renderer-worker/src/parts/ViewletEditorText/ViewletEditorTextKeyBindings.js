@@ -335,6 +335,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyCode.Escape,
+      command: 'Editor.closeRename',
+      when: WhenExpression.FocusEditorRename,
+    },
+    {
       key: KeyCode.Home,
       command: 'Editor.cursorHome',
       when: WhenExpression.FocusEditorText,
