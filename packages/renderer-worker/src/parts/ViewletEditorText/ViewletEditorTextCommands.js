@@ -97,6 +97,7 @@ const ids = [
   'EditorCompletion.selectIndex',
   'EditorCompletion.toggleDetails',
   'EditorRename.handleBlur',
+  'EditorRename.accept',
   'EditorSourceActions.close',
   'EditorSourceActions.focusFirst',
   'EditorSourceActions.focusLast',
