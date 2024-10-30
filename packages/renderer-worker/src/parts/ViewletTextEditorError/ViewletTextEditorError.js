@@ -1,5 +1,5 @@
-import * as RenderTextEditorError from '../RenderTextEditorError/RenderTextEditorError.js'
-import * as GetEditorErrorinfo from '../GetEditorErrorinfo/GetEditorErrorInfo.js'
+import * as RenderTextEditorError from '../RenderTextEditorError/RenderTextEditorError.ts'
+import * as GetEditorErrorinfo from '../GetEditorErrorinfo/GetEditorErrorInfo.ts'
 
 export const name = 'TextEditorError'
 
