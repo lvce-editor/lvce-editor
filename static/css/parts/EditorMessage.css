@@ -1,0 +1,13 @@
+:root {
+  --InfoMessageBorder: dodgerblue;
+}
+
+.EditorMessage {
+  position: absolute;
+  contain: content;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--InfoMessageBorder);
+  pointer-events: all;
+  padding: 5px;
+}
