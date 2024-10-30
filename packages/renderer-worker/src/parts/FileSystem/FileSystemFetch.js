@@ -1,6 +1,4 @@
-import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as Command from '../Command/Command.js'
-import * as DirentType from '../DirentType/DirentType.js'
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 // TODO move all of this to an extension
@@ -14,17 +12,15 @@ export const state = {
 }
 
 export const readFile = async (uri) => {
-  const fetchUri = `${AssetDir.assetDir}${uri}`
-  const text = await Command.execute('Ajax.getText', fetchUri)
-  return text
+  return FileSearchWorker.invoke('FileSystemFetch.readFile', uri)
 }
 
 export const writeFile = (uri, content) => {
-  throw new Error('not implemented')
+  return FileSearchWorker.invoke('FileSystemFetch.writeFile', uri)
 }
 
 export const mkdir = (uri) => {
-  throw new Error('not implemented')
+  return FileSearchWorker.invoke('FileSystemFetch.mkdir', uri)
 }
 
 export const getPathSeparator = () => {
@@ -32,42 +28,17 @@ export const getPathSeparator = () => {
 }
 
 export const remove = (uri) => {
-  throw new Error('not implemented')
+  return FileSearchWorker.invoke('FileSystemFetch.remove', uri)
 }
 
 export const readDirWithFileTypes = async (uri) => {
-  const fetchUri = `${AssetDir.assetDir}/config/fileMap.json`
-  const fileList = await Command.execute('Ajax.getJson', fetchUri)
-  const dirents = []
-  for (const fileUri of fileList) {
-    if (fileUri.startsWith(uri)) {
-      const rest = fileUri.slice(uri.length + 1)
-      if (rest.includes(PathSeparatorType.Slash)) {
-        const name = rest.slice(0, rest.indexOf(PathSeparatorType.Slash))
-        if (dirents.some((dirent) => dirent.name === name)) {
-          continue
-        }
-        dirents.push({
-          type: DirentType.Directory,
-          name,
-        })
-      } else {
-        dirents.push({
-          type: DirentType.File,
-          name: rest,
-        })
-      }
-    }
-  }
-  return dirents
+  return FileSearchWorker.invoke('FileSystemFetch.readDirWithFileTypes', uri)
 }
 
 export const chmod = (path, permissions) => {
-  throw new Error('[memfs] chmod not implemented')
+  return FileSearchWorker.invoke('FileSystemFetch.chmod', path, permissions)
 }
 
 export const getBlob = async (uri) => {
-  const content = await readFile(uri)
-  const blob = new Blob([content])
-  return blob
+  return FileSearchWorker.invoke('FileSystemFetch.getBlob', uri)
 }
