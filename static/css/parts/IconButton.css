@@ -1,3 +1,7 @@
+:root {
+  --IconButtonDisabledForeground: rgba(204, 204, 204, 0.5);
+}
+
 .IconButton {
   width: 22px;
   height: 22px;
@@ -19,4 +23,8 @@
 .IconButton:focus-visible {
   outline: 1px solid #3d5252;
   outline-offset: -1px;
+}
+
+.IconButtonDisabled {
+  color: var(--IconButtonDisabledForeground);
 }
