@@ -7,7 +7,17 @@
   contain: content;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--InfoMessageBorder);
   pointer-events: all;
+  align-items: start;
+}
+
+.EditorMessageText {
   padding: 5px;
+  border: 1px solid var(--InfoMessageBorder);
+}
+
+.EditorMessageTriangle {
+  border: 8px solid transparent;
+  border-top-color: var(--InfoMessageBorder);
+  margin-left: 10px;
 }
