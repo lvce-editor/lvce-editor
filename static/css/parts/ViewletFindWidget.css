@@ -1,3 +1,7 @@
+:root {
+  --ErrorForeground: #f48771;
+}
+
 .FindWidget {
   /* TODO create separate variable for this */
   background: var(--ActivityBarBackground);
@@ -47,4 +51,8 @@
   align-items: center;
   margin-left: 3px;
   font-size: 13px;
+}
+
+.FindWidgetMatchCountNoResults {
+  color: var(--ErrorForeground);
 }
