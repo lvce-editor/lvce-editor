@@ -53,6 +53,6 @@
   font-size: 13px;
 }
 
-.FindWidgetMatchCountNoResults {
+.FindWidgetMatchCountEmpty {
   color: var(--ErrorForeground);
 }
