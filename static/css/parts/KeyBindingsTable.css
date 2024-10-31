@@ -1,6 +1,7 @@
 .KeyBindingsTableWrapper {
-  padding: 0 15px;
   position: relative;
+  padding-left: 27px;
+  padding-right: 15px;
 }
 
 .KeyBindingsTable {
