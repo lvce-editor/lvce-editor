@@ -499,7 +499,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
   if (!existsSync(root)) {
     throw new Error(`root path does not exist: ${root}`)
   }
-  if (!existsSync(extensionPath)) {
+  if (extensionPath && !existsSync(extensionPath)) {
     throw new Error(`extension path does not exist: ${extensionPath}`)
   }
   if (!serverStaticPath) {
@@ -531,15 +531,17 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
   })
   console.timeEnd('applyOverrides')
 
-  console.time('addExtension')
-  await addExtension({
-    extensionPath,
-    commitHash,
-    pathPrefix,
-    root,
-    useSimpleWebExtensionFile,
-  })
-  console.timeEnd('addExtension')
+  if (extensionPath) {
+    console.time('addExtension')
+    await addExtension({
+      extensionPath,
+      commitHash,
+      pathPrefix,
+      root,
+      useSimpleWebExtensionFile,
+    })
+    console.timeEnd('addExtension')
+  }
 
   if (testPath) {
     console.time('addTestFiles')
