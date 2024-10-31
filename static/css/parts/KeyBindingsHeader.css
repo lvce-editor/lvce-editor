@@ -3,7 +3,8 @@
   contain: strict;
   display: flex;
   place-items: center;
-  padding: 0 15px;
+  padding-left: 27px;
+  padding-right: 15px;
 }
 
 .KeyBindingsSearchWrapper {
