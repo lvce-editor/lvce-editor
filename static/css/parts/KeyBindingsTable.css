@@ -22,17 +22,18 @@
   contain: strict;
 }
 
-.KeyBindingsTableRow:where(:hover) {
-  color: #e0e0e0;
-  background: rgba(64, 92, 80, 0.2);
-}
-
+/* TODO avoid complex css */
 .KeyBindingsTableRow:where(:not(:hover, .KeyBindingsTableRowSelected)) .KeyBindingsEditButton {
   display: none;
 }
 
 .KeyBindingsTableRowOdd {
   background: rgba(156, 162, 160, 0.04);
+}
+
+.KeyBindingsTableRow:where(:hover) {
+  color: #e0e0e0;
+  background: rgba(64, 92, 80, 0.2);
 }
 
 .KeyBindingsTableRowSelected {
