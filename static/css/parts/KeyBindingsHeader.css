@@ -25,3 +25,11 @@
   font-size: 14px;
   contain: strict;
 }
+
+/* clears the 'X' from Chrome */
+.KeyBindingsSearchInputBox::-webkit-search-decoration,
+.KeyBindingsSearchInputBox::-webkit-search-cancel-button,
+.KeyBindingsSearchInputBox::-webkit-search-results-button,
+.KeyBindingsSearchInputBox::-webkit-search-results-decoration {
+  display: none;
+}
