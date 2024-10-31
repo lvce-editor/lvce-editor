@@ -49,6 +49,9 @@ export const getPicks = async (searchValue) => {
 }
 
 export const selectPick = async (pick) => {
+  if (typeof pick === 'object') {
+    pick = pick.pick
+  }
   const workspace = Workspace.state.workspacePath
   const absolutePath = `${workspace}/${pick}`
   await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ absolutePath)
