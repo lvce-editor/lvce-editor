@@ -2,12 +2,14 @@
   position: relative;
   padding-left: 27px;
   padding-right: 15px;
+  contain: strict;
+  flex: 1;
 }
 
 .KeyBindingsTable {
   width: 100%;
   table-layout: fixed;
-  contain: content;
+  contain: content; /* TODO strict? */
   border-collapse: collapse;
 }
 
@@ -15,7 +17,7 @@
   white-space: pre;
   overflow-y: auto;
   user-select: none;
-  contain: content;
+  contain: content; /* TODO strict? */
 }
 
 .KeyBindingsTableRow {
