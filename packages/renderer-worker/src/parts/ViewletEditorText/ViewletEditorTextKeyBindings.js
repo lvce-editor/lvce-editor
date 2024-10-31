@@ -40,11 +40,6 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusFindWidget,
     },
     {
-      key: KeyCode.Escape,
-      command: 'FindWidget.close',
-      when: WhenExpression.FocusFindWidget,
-    },
-    {
       key: KeyModifier.Shift | KeyCode.F4,
       command: 'FindWidget.focusPrevious',
       when: WhenExpression.FocusFindWidget,
