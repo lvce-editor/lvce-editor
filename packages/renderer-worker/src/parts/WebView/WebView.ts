@@ -2,10 +2,10 @@ import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHo
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetIframeSrc from '../GetIframeSrc/GetIframeSrc.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as GetSavedWebViewState from '../GetSavedWebViewState/GetSavedWebViewState.js'
 import * as GetWebView from '../GetWebView/GetWebView.ts'
 import * as GetWebViewOrigin from '../GetWebViewOrigin/GetWebViewOrigin.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
-import * as GetWebViewSandBox from '../GetWebViewSandBox/GetWebViewSandBox.ts'
 import * as Id from '../Id/Id.js'
 import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
@@ -13,7 +13,6 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as GetSavedWebViewState from '../GetSavedWebViewState/GetSavedWebViewState.js'
 import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
@@ -56,7 +55,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   // 4. create webview in extension host worker and load content
 
   const csp = await IframeWorker.invoke('WebView.getWebViewCsp', webView)
-  const sandbox = GetWebViewSandBox.getIframeSandbox(webView)
+  const sandbox = await IframeWorker.invoke('WebView.getSandbox', webView)
   const iframeCsp = Platform.platform === PlatformType.Web ? csp : ''
   const credentialless = true
 
