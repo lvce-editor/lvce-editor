@@ -5,7 +5,7 @@ beforeEach(() => {
 })
 
 afterEach(async () => {
-  ;(await import('../src/parts/ElectronSession/ElectronSession.js')).state.session = undefined
+  ;(await import('../src/parts/ElectronSessionState/ElectronSessionState.js')).set(undefined)
 })
 
 test.skip('get', async () => {
@@ -32,9 +32,10 @@ test.skip('get', async () => {
     }
   })
   const Session = await import('../src/parts/ElectronSession/ElectronSession.js')
-  expect(Session.state.session).toBeUndefined()
+  const ElectronSessionState = await import('../src/parts/ElectronSessionState/ElectronSessionState.js')
+  expect(ElectronSessionState.get()).toBeUndefined()
   expect(Session.get()).toBe(fakeSession)
-  expect(Session.state.session).toBeDefined()
+  expect(ElectronSessionState.get()).toBeDefined()
   expect(Session.get()).toBe(fakeSession)
 })
 
