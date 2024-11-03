@@ -210,8 +210,11 @@ export const focusReplaceAll = (state: SearchState): SearchState => {
   return { ...state, focus: WhenExpression.FocusSearchReplaceAll }
 }
 
-export const handleFocusIn = (state: SearchState, key: any) => {
+export const handleFocusIn = async (state: SearchState, key: any): Promise<SearchState> => {
   const focusKey = GetSearchFocusKey.getSearchFocusKey(key)
+  if (state.focus === focusKey) {
+    return state
+  }
   Focus.setFocus(focusKey)
   return {
     ...state,
