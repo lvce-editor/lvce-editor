@@ -10,7 +10,7 @@ export const exportStatic = async ({ extensionPath = process.cwd(), testPath = '
     throw new Error(`root argument is required`)
   }
   const fn = await import('./src/parts/ExportStatic/ExportStatic.js')
-  if (extensionPath !== root && !isAbsolute(extensionPath)) {
+  if (extensionPath && extensionPath !== root && !isAbsolute(extensionPath)) {
     extensionPath = join(root, extensionPath)
   }
   const pathPrefix = process.env.PATH_PREFIX || ''
