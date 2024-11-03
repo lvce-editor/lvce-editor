@@ -232,7 +232,12 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Escape,
       command: 'Editor.closeCodeGenerator',
-      when: WhenExpression.FocusEditorText,
+      when: WhenExpression.FocusEditorCodeGenerator,
+    },
+    {
+      key: KeyCode.Enter,
+      command: 'EditorCodeGenerator.accept',
+      when: WhenExpression.FocusEditorCodeGenerator,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.BracketRight,
