@@ -3,6 +3,7 @@ import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterS
 import * as CssVariable from '../CssVariable/CssVariable.js'
 
 export const Css = [
+  '/css/parts/EditorMessage.css',
   '/css/parts/IconButton.css',
   '/css/parts/InputBox.css',
   '/css/parts/MaskIcon.css',
@@ -16,15 +17,15 @@ export const Css = [
   '/css/parts/Symbol.css',
   '/css/parts/ViewletColorPicker.css',
   '/css/parts/ViewletEditor.css',
+  '/css/parts/ViewletEditorCodeGenerator.css',
   '/css/parts/ViewletEditorCompletion.css',
   '/css/parts/ViewletEditorCompletionDetail.css',
+  '/css/parts/ViewletEditorError.css',
   '/css/parts/ViewletEditorHover.css',
-  '/css/parts/ViewletEditorSourceActions.css',
   '/css/parts/ViewletEditorRename.css',
+  '/css/parts/ViewletEditorSourceActions.css',
   '/css/parts/ViewletFindWidget.css',
   '/css/parts/ViewletList.css',
-  '/css/parts/ViewletEditorError.css',
-  '/css/parts/EditorMessage.css',
 ]
 
 export const getDynamicCss = (preferences) => {
