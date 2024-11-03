@@ -50,3 +50,4 @@ export const FocusFindWidgetCloseButton = 48
 export const FocusFindWidgetNextMatchButton = 49
 export const FocusFindWidgetPreviousMatchButton = 50
 export const FocusEditorHover = 51
+export const FocusEditorCodeGenerator = 52

@@ -225,6 +225,16 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyK,
+      command: 'Editor.openCodeGenerator',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
+      key: KeyCode.Escape,
+      command: 'Editor.closeCodeGenerator',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyCode.BracketRight,
       command: 'Editor.indentMore',
       when: WhenExpression.FocusEditorText,
