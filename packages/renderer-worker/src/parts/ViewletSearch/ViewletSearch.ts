@@ -5,6 +5,7 @@ import * as InputSource from '../InputSource/InputSource.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -144,70 +145,56 @@ export const submit = (state: SearchState): Promise<SearchState> => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value: state.value, inputSource: InputSource.User })
 }
 
-export const focusSearchValue = (state: SearchState): SearchState => {
-  return {
-    ...state,
-    focus: WhenExpression.FocusSearchInput,
-  }
+export const focusSearchValue = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusSearchValue', state)
 }
 
-export const focusSearchValueNext = (state: SearchState): SearchState => {
-  const { replaceExpanded } = state
-  if (replaceExpanded) {
-    return focusReplaceValue(state)
-  }
-  return focusMatchCase(state)
+export const focusSearchValueNext = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusSearchValueNext', state)
 }
 
-export const focusMatchCasePrevious = (state: SearchState): SearchState => {
-  const { replaceExpanded } = state
-  if (replaceExpanded) {
-    return focusReplaceValue(state)
-  }
-  return focusSearchValue(state)
+export const focusMatchCasePrevious = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusMatchCasePrevious', state)
 }
 
-export const focusReplaceValuePrevious = (state: SearchState): SearchState => {
-  return focusSearchValue(state)
+export const focusReplaceValuePrevious = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusReplaceValuePrevious', state)
 }
 
-export const focusReplaceValueNext = (state: SearchState): SearchState => {
-  return focusMatchCase(state)
+export const focusReplaceValueNext = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusReplaceValueNext', state)
 }
 
-export const focusRegexNext = (state: SearchState): SearchState => {
-  return focusPreserveCase(state)
+export const focusRegexNext = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusRegexNext', state)
 }
 
-export const focusPreserveCasePrevious = (state: SearchState): SearchState => {
-  return focusRegex(state)
+export const focusPreserveCasePrevious = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusPreserveCasePrevious', state)
 }
 
-export const focusReplaceValue = (state: SearchState): SearchState => {
-  return {
-    ...state,
-    focus: WhenExpression.FocusSearchReplaceInput,
-  }
+export const focusReplaceValue = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusReplaceValue', state)
 }
 
-export const focusMatchCase = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusSearchMatchCase }
+export const focusMatchCase = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusMatchCase', state)
 }
 
-export const focusPreserveCase = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusSearchPreserveCase }
+export const focusPreserveCase = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusPreserveCase', state)
 }
 
-export const focusMatchWholeWord = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusSearchWholeWord }
+export const focusMatchWholeWord = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusMatchWholeWord', state)
 }
 
-export const focusRegex = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusSearchRegex }
+export const focusRegex = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusRegex', state)
 }
 
-export const focusReplaceAll = (state: SearchState): SearchState => {
-  return { ...state, focus: WhenExpression.FocusSearchReplaceAll }
+export const focusReplaceAll = (state: SearchState): Promise<SearchState> => {
+  return TextSearchWorker.invoke('TextSearch.focusReplaceAll', state)
 }
 
 export const handleFocusIn = (state: SearchState, key: any) => {
