@@ -52,7 +52,8 @@
       "**/extensions/**",
       "**/renderer-worker/**",
       "**/renderer-process/**",
-      "**/extension-host-worker/**"
+      "**/extension-host-worker/**",
+      "**/.tmp/**"
     ],
     "exec": "node packages/server/bin/server.js"
   },
