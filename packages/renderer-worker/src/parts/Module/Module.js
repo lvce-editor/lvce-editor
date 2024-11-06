@@ -76,8 +76,6 @@ export const load = (moduleId) => {
       return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FileSystem:
       return import('../FileSystem/FileSystem.ipc.js')
-    case ModuleId.Format:
-      return import('../Format/Format.ipc.js')
     case ModuleId.IconTheme:
       return import('../IconTheme/IconTheme.ipc.js')
     case ModuleId.ImagePreview:
