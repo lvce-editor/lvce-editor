@@ -183,6 +183,7 @@ const ids = [
   'paste',
   'pasteText',
   'replaceRange',
+  'rerender',
   'save',
   'save',
   'selectAll',
