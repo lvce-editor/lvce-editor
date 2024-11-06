@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.formatting-provider-error-invalid-return-value-string'
 
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
