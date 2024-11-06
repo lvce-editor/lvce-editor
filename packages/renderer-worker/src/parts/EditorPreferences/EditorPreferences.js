@@ -9,17 +9,22 @@ const kLinks = 'editor.links'
 const kTabSize = 'editor.tabSize'
 const kLineNumbers = 'editor.lineNumbers'
 const kFormatOnSave = 'editor.formatOnSave'
+const kDiagnostics = 'editor.diagnostics'
+const kQuickSuggestions = 'editor.quickSuggestions'
+const kAutoClosingQuotes = 'editor.autoClosingQuotes'
+const kAutoClosingBrackets = 'editor.autoclosingBrackets'
+const kHover = 'editor.hover'
 
 export const isAutoClosingBracketsEnabled = () => {
-  return Boolean(Preferences.get('editor.autoClosingBrackets'))
+  return Boolean(Preferences.get(kAutoClosingBrackets))
 }
 
 export const isAutoClosingQuotesEnabled = () => {
-  return Boolean(Preferences.get('editor.autoClosingQuotes'))
+  return Boolean(Preferences.get(kAutoClosingQuotes))
 }
 
 export const isQuickSuggestionsEnabled = () => {
-  return Boolean(Preferences.get('editor.quickSuggestions'))
+  return Boolean(Preferences.get(kQuickSuggestions))
 }
 
 export const isAutoClosingTagsEnabled = () => {
@@ -35,7 +40,7 @@ export const getFontSize = () => {
 }
 
 export const getHoverEnabled = () => {
-  return Preferences.get('editor.hover') ?? false
+  return Preferences.get(kHover) ?? false
 }
 
 export const getFontFamily = () => {
@@ -67,4 +72,8 @@ export const getCompletionTriggerCharacters = () => {
 
 export const getFormatOnSave = () => {
   return Preferences.get(kFormatOnSave) ?? false
+}
+
+export const diagnosticsEnabled = () => {
+  return Preferences.get(kDiagnostics) ?? false
 }

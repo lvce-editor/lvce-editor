@@ -100,6 +100,7 @@ export const loadContent = async (state, savedState, context) => {
   const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
+  const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
   const content = await GetTextEditorContent.getTextEditorContent(uri)
   const languageId = getLanguageId(state)
   const tokenizer = Tokenizer.getTokenizer(languageId)
@@ -143,6 +144,7 @@ export const loadContent = async (state, savedState, context) => {
     fontFamily,
     fontWeight,
     uri,
+    diagnosticsEnabled,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
