@@ -3,10 +3,8 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
-import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
@@ -191,14 +189,14 @@ const updateDiagnostics = async (state) => {
   if (!Preferences.get('editor.diagnostics')) {
     return
   }
-  try {
-    const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(state)
-    const decorations = GetDiagnosticDecorations.getDiagnosticDecorations(state, diagnostics || [])
-    await Command.execute('Editor.setDecorations', decorations, diagnostics)
-  } catch (error) {
-    console.log({ error })
-    // ignore
-  }
+  // try {
+  //   const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(state)
+  //   // const decorations = GetDiagnosticDecorations.getDiagnosticDecorations(state, diagnostics || [])
+  //   await Command.execute('Editor.setDecorations', decorations, diagnostics)
+  // } catch (error) {
+  //   console.log({ error })
+  //   // ignore
+  // }
 }
 
 export const handleEditorChange = async (editor, changes) => {
