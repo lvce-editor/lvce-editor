@@ -148,9 +148,13 @@ export const loadContent = async (state, savedState, context) => {
   })
   // TODO send render commands directly from editor worker
   // to renderer process
-  const commands = await EditorWorker.invoke('Editor.render', id)
+  return rerender(newState2)
+}
+
+export const rerender = async (state) => {
+  const commands = await EditorWorker.invoke('Editor.render', state.id)
   return {
-    ...newState2,
+    ...state,
     commands,
   }
 }
