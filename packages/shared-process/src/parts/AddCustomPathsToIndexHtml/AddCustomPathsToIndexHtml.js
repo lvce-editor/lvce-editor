@@ -1,31 +1,18 @@
-import { pathToFileURL } from 'node:url'
+import * as GetCustomPathsConfig from '../GetCustomPathsConfig/GetCustomPathsConfig.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
-
-const getRemoteUrl = (path) => {
-  return '/remote' + pathToFileURL(path).toString().slice(7)
-}
 
 export const addCustomPathsToIndexHtml = async (content) => {
   if (Platform.isProduction) {
     return content
   }
-  let newContent = content
   const preferences = await Preferences.getUserPreferences()
-  if (preferences['develop.rendererProcessPath']) {
+  const config = GetCustomPathsConfig.getCustomPathsConfig(preferences)
+  let newContent = content
+  if (config.rendererProcessPath) {
     newContent = newContent
       .toString()
-      .replace(
-        '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
-        getRemoteUrl(preferences['develop.rendererProcessPath']),
-      )
-  }
-  const config = Object.create(null)
-  if (preferences['develop.extensionHostWorkerPath']) {
-    config.extensionHostWorkerUrl = getRemoteUrl(preferences['develop.extensionHostWorkerPath'])
-  }
-  if (preferences['develop.editorWorkerPath']) {
-    config.editorWorkerUrl = getRemoteUrl(preferences['develop.editorWorkerPath'])
+      .replace('/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js', config.rendererProcessPath)
   }
   const stringifiedConfig = JSON.stringify(config, null, 2)
   newContent = newContent.toString().replace(
