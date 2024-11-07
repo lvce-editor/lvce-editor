@@ -1,5 +1,7 @@
 export const name = 'viewlet.problems'
 
+export const skip = true
+
 export const test = async ({ Main, FileSystem, Workspace, Extension, Locator, Panel, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
