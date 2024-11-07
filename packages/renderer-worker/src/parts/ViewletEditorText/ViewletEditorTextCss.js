@@ -1,6 +1,7 @@
+import * as CssPxVariable from '../CssPxVariable/CssPxVariable.js'
+import * as CssVariable from '../CssVariable/CssVariable.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
-import * as CssVariable from '../CssVariable/CssVariable.js'
 
 export const Css = [
   '/css/parts/EditorMessage.css',
@@ -32,7 +33,7 @@ export const getDynamicCss = (preferences) => {
   const styles = []
   const fontSize = preferences['editor.fontSize']
   if (fontSize) {
-    styles.push(CssVariable.create('EditorFontSize', fontSize, 'px'))
+    styles.push(CssPxVariable.create('EditorFontSize', fontSize))
   }
   const fontWeight = preferences['editor.fontWeight'] ?? 400
   if (fontWeight) {
@@ -44,14 +45,14 @@ export const getDynamicCss = (preferences) => {
   }
   const lineHeight = preferences['editor.lineHeight']
   if (lineHeight) {
-    styles.push(CssVariable.create('EditorLineHeight', lineHeight, 'px'))
+    styles.push(CssPxVariable.create('EditorLineHeight', lineHeight))
   }
   const letterSpacing = preferences['editor.letterSpacing']
   if (typeof letterSpacing === 'number') {
     if (SupportsLetterSpacing.supportsLetterSpacing()) {
-      styles.push(CssVariable.create('EditorLetterSpacing', letterSpacing, 'px'))
+      styles.push(CssPxVariable.create('EditorLetterSpacing', letterSpacing))
     } else {
-      styles.push(CssVariable.create('EditorLetterSpacing', 0, 'px'))
+      styles.push(CssPxVariable.create('EditorLetterSpacing', 0))
     }
   }
   const fontLigatures = preferences['editor.fontLigatures']
