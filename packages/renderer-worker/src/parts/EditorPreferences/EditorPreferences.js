@@ -13,6 +13,7 @@ const kDiagnostics = 'editor.diagnostics'
 const kQuickSuggestions = 'editor.quickSuggestions'
 const kAutoClosingQuotes = 'editor.autoClosingQuotes'
 const kAutoClosingBrackets = 'editor.autoclosingBrackets'
+const kFontWeight = 'editor.fontWeight'
 const kHover = 'editor.hover'
 
 export const isAutoClosingBracketsEnabled = () => {
@@ -76,4 +77,8 @@ export const getFormatOnSave = () => {
 
 export const diagnosticsEnabled = () => {
   return Preferences.get(kDiagnostics) ?? false
+}
+
+export const getFontWeight = () => {
+  return Preferences.get(kFontWeight) ?? 400
 }
