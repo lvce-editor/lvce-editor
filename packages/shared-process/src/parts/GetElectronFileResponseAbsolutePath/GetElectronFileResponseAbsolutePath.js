@@ -1,6 +1,7 @@
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import * as IndexHtmlPath from '../IndexHtmlPath/IndexHtmlPath.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
@@ -9,7 +10,7 @@ import * as Root from '../Root/Root.js'
 export const getElectronFileResponseAbsolutePath = (pathName) => {
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
-    return Path.join(Root.root, 'static', 'index.html')
+    return IndexHtmlPath.indexHtmlPath
   }
   if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)
