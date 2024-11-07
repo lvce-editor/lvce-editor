@@ -15,7 +15,7 @@
   tab-size: var(--EditorTabSize);
   font-display: block;
   cursor: text;
-  font-weight: 400;
+  font-weight: var(--EditorFontWeight);
   position: absolute;
   display: flex;
 }

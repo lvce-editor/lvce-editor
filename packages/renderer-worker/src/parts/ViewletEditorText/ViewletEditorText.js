@@ -114,7 +114,7 @@ export const loadContent = async (state, savedState, context) => {
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const fontWeight = 400
+  const fontWeight = EditorPreferences.getFontWeight()
   await EditorWorker.invoke('Editor.create', {
     id,
     content,

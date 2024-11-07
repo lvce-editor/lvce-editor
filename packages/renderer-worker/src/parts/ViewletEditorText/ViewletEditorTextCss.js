@@ -34,6 +34,10 @@ export const getDynamicCss = (preferences) => {
   if (fontSize) {
     styles.push(CssVariable.create('EditorFontSize', fontSize, 'px'))
   }
+  const fontWeight = preferences['editor.fontWeight'] ?? 400
+  if (fontWeight) {
+    styles.push(CssVariable.create('EditorFontWeight', fontWeight))
+  }
   const fontFamily = preferences['editor.fontFamily']
   if (fontFamily) {
     styles.push(CssVariable.create('EditorFontFamily', fontFamily))
