@@ -17,19 +17,13 @@ export const get = () => {
 
 export const registerWebviewProtocol = async (port) => {
   Assert.object(port)
-  // TODO move this if/else to shared-process
-  if (ElectronSessionState.hasWebViewProtocol()) {
-    return
-  }
-  ElectronSessionState.setWebViewProtocol(true)
-  // TODO avoid race condition
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronMessagePort,
     messagePort: port,
   })
   HandleIpc.handleIpc(ipc)
   port.start()
-  WebViewRequestHandler.setIpc(ipc)
   const session = get()
-  Protocol.handle(session.protocol, Scheme.WebView, WebViewRequestHandler.handleRequest)
+  const handleRequest = WebViewRequestHandler.create(ipc)
+  Protocol.handle(session.protocol, Scheme.WebView, handleRequest)
 }
