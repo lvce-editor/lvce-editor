@@ -1,16 +1,21 @@
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id: any, uri: string, x: number, y: number, width: number, height: number): SearchState => {
   return {
     uid: id,
+    x,
+    y,
+    width,
+    height,
     commands: [],
   }
 }
 
 export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
   await TextSearchWorker.invoke('TextSearch.create', state.uid)
-  await TextSearchWorker.invoke('TextSearch.loadContent', state.uid)
+  await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, state.x, state.y, state.width, state.height, Workspace.state.workspacePath)
   const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
   return {
     ...state,
