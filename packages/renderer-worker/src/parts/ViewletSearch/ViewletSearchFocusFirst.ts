@@ -1,7 +1,10 @@
-import * as ListIndex from '../ListIndex/ListIndex.js'
-import * as ViewletSearchFocusIndex from './ViewletSearchFocusIndex.ts'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 
-export const focusFirst = (state) => {
-  const firstIndex = ListIndex.first()
-  return ViewletSearchFocusIndex.focusIndex(state, firstIndex)
+export const focusFirst = async (state) => {
+  await TextSearchWorker.invoke('TextSearch.focusFirst', state.uid)
+  const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }

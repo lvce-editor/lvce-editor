@@ -19,6 +19,13 @@ export const handleClick = (state, index, isClose) => {
 }
 
 export const handleClickAt = (state, eventX, eventY) => {
+  await TextSearchWorker.invoke('TextSearch.handleClickAt', state.uid, eventX, eventY)
+  const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
+  async
   const { y, itemHeight, x, width, replaceExpanded } = state
   const top = replaceExpanded ? 94.19 : 57 // TODO search store boxes height integer
   const relativeY = eventY - y - top

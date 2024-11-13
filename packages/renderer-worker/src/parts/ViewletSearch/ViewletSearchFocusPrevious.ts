@@ -1,8 +1,10 @@
-import * as ListIndex from '../ListIndex/ListIndex.js'
-import * as ViewletSearchFocusIndex from './ViewletSearchFocusIndex.ts'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 
-export const focusPrevious = (state) => {
-  const { items, listFocusedIndex } = state
-  const previousIndex = ListIndex.previousNoCycle(items, listFocusedIndex)
-  return ViewletSearchFocusIndex.focusIndex(state, previousIndex)
+export const focusPrevious = async (state) => {
+  await TextSearchWorker.invoke('TextSearch.focusPrevious', state.uid)
+  const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
