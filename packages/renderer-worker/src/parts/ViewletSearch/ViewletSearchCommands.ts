@@ -52,3 +52,5 @@ export const Commands = {
   toggleReplace: WrapTextSearchCommand.wrapTextSearchCommand('toggleReplace'),
   toggleUseRegularExpression: WrapTextSearchCommand.wrapTextSearchCommand('toggleUseRegularExpression'),
 }
+
+export const saveState = WrapTextSearchCommand.wrapTextSearchCommand('saveState')
