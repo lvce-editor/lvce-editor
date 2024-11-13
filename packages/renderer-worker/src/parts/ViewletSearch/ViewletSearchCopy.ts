@@ -1,12 +1,10 @@
-import * as Command from '../Command/Command.js'
-import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 
 export const copy = async (state) => {
-  const { items, listFocusedIndex } = state
-  if (listFocusedIndex === -1) {
-    return state
+  await TextSearchWorker.invoke('TextSearch.copy', state.uid)
+  const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
+  return {
+    ...state,
+    commands,
   }
-  const item = items[listFocusedIndex]
-  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, item.text)
-  return state
 }
