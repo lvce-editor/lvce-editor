@@ -7,4 +7,6 @@ export const Commands = {
   // TODO hydrate should be an alias for reload/load
   hydrate: IconTheme.hydrate,
   setIconTheme: IconTheme.setIconTheme,
+  getFileIcon: IconTheme.getFileIcon,
+  getIcon: IconTheme.getIcon,
 }
