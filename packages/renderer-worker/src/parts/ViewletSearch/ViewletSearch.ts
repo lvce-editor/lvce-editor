@@ -1,6 +1,7 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
-import type { SearchState } from './ViewletSearchTypes.ts'
 import * as Workspace from '../Workspace/Workspace.js'
+import type { SearchState } from './ViewletSearchTypes.ts'
 
 export const create = (id: any, uri: string, x: number, y: number, width: number, height: number): SearchState => {
   return {
@@ -14,7 +15,16 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
 }
 
 export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
-  await TextSearchWorker.invoke('TextSearch.create', state.uid, state.x, state.y, state.width, state.height, Workspace.state.workspacePath)
+  await TextSearchWorker.invoke(
+    'TextSearch.create',
+    state.uid,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    Workspace.state.workspacePath,
+    AssetDir.assetDir,
+  )
   await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
   const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
   return {
