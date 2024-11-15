@@ -158,6 +158,11 @@ export const bundleSharedProcess = async ({
       replacement: `isBuiltServer = true`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/IsBuiltServer/IsBuiltServer.js`,
+      occurrence: `isBuiltServer = false`,
+      replacement: `isBuiltServer = true`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/EmbedsProcessPath/EmbedsProcessPath.js`,
       occurrence: `'src'`,
       replacement: `'dist'`,
