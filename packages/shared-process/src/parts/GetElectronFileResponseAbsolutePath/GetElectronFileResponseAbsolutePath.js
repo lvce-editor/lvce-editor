@@ -10,7 +10,8 @@ import * as StaticPath from '../StaticPath/StaticPath.js'
 export const getElectronFileResponseAbsolutePath = (pathName) => {
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
-    return Path.join(StaticPath.staticPath, 'index.html')
+    const staticPath = StaticPath.getStaticPath()
+    return Path.join(staticPath, 'index.html')
   }
   if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)
@@ -37,5 +38,6 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
   if (pathName.startsWith('/home')) {
     return pathName
   }
-  return Path.join(StaticPath.staticPath, pathName)
+  const staticPath = StaticPath.getStaticPath()
+  return Path.join(staticPath, pathName)
 }

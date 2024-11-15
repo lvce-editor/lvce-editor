@@ -1,4 +1,6 @@
 import { join } from 'node:path'
 import * as Root from '../Root/Root.js'
 
-export const staticPath = join(Root.root, 'static')
+export const getStaticPath = () => {
+  return join(Root.root, 'static')
+}
