@@ -1,16 +1,16 @@
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import * as IndexHtmlPath from '../IndexHtmlPath/IndexHtmlPath.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
+import * as StaticPath from '../StaticPath/StaticPath.js'
 
 // TODO clean up this code
 export const getElectronFileResponseAbsolutePath = (pathName) => {
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
-    return IndexHtmlPath.indexHtmlPath
+    return Path.join(StaticPath.staticPath, 'index.html')
   }
   if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)
@@ -37,5 +37,5 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
   if (pathName.startsWith('/home')) {
     return pathName
   }
-  return Path.join(Root.root, 'static', pathName)
+  return Path.join(StaticPath.staticPath, pathName)
 }
