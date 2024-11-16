@@ -5,6 +5,7 @@ import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponse
 import * as GetEtag from '../GetEtag/GetEtag.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
+import * as GetContentResponse from '../GetContentResponse/GetContentResponse.js'
 import * as GetNotModifiedResponse from '../GetNotModifiedResponse/GetNotModifiedResponse.js'
 import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
@@ -39,13 +40,7 @@ export const getElectronFileResponse = async (url, request) => {
     if (etag) {
       headers[HttpHeader.Etag] = etag
     }
-    return {
-      body: content,
-      init: {
-        status: HttpStatusCode.Ok,
-        headers,
-      },
-    }
+    return GetContentResponse.getContentResponse(content, headers)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
       return GetNotFoundResponse.getNotFoundResponse()
