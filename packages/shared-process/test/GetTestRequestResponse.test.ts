@@ -22,6 +22,12 @@ jest.unstable_mockModule('../src/parts/GetPathName/GetPathName.js', () => ({
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
+  error: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
 const GetTestRequestResponse = await import('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js')
 const GetTestPath = await import('../src/parts/GetTestPath/GetTestPath.js')
 const CreateTestOverview = await import('../src/parts/CreateTestOverview/CreateTestOverview.js')
@@ -45,6 +51,22 @@ test('getTestRequestResponse', async () => {
         'Content-Security-Policy': "default-src 'none'",
       },
       status: 300,
+    },
+  })
+})
+
+test('getTestRequestResponse - error in createTestOverview', async () => {
+  const request = {
+    url: '/tests/',
+  }
+  const indexHtmlPath = '/test/index.html'
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests/')
+  jest.spyOn(CreateTestOverview, 'createTestOverview').mockRejectedValue(new TypeError('x is not a function'))
+  jest.spyOn(GetTestPath, 'getTestPath').mockReturnValue('/test')
+  expect(await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)).toEqual({
+    body: 'Internal server error',
+    init: {
+      status: 500,
     },
   })
 })
