@@ -18,7 +18,7 @@ export const addCustomPathsToIndexHtml = async (content) => {
   newContent = newContent.toString().replace(
     '</title>',
     `</title>
-    <script type="application.json" id="Config">${stringifiedConfig}</script>`,
+    <script type="application/json" id="Config">${stringifiedConfig}</script>`,
   )
   return newContent
 }
