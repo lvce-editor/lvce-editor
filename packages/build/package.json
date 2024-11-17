@@ -43,9 +43,9 @@
     "minimist": "^1.2.8",
     "p-map": "^7.0.2",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^4.25.0",
+    "rollup": "^4.27.2",
     "tar-fs": "^3.0.6",
-    "verdaccio": "^6.0.1"
+    "verdaccio": "^6.0.2"
   },
   "xo": {
     "rules": {
