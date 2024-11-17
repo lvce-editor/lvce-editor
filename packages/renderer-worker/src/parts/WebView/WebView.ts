@@ -92,3 +92,18 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
     csp: iframeCsp,
   }
 }
+
+export const compat = {
+  sharedProcessInvoke(...args) {
+    return SharedProcess.invoke(...args)
+  },
+  rendererProcessInvoke(...args) {
+    return RendererProcess.invoke(...args)
+  },
+  extensionHostWorkerInvokeAndTransfer(...args) {
+    return ExtensionHostWorker.invokeAndTransfer(...args)
+  },
+  extensionHostWorkerInvoke(...args) {
+    return ExtensionHostWorker.invoke(...args)
+  },
+}
