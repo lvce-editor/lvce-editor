@@ -32,9 +32,7 @@ export const getBlobUrl = (uri) => {
 }
 
 export const getBlob = async (uri) => {
-  const content = await readFile(uri)
-  const blob = new Blob([content])
-  return blob
+  return FileSearchWorker.invoke('FileSystemMemory.getBlob', uri)
 }
 
 export const chmod = (path, permissions) => {
