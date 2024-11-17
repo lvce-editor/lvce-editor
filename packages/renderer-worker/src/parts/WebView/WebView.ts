@@ -1,3 +1,4 @@
+import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
@@ -38,5 +39,8 @@ export const compat = {
   },
   getWebViews() {
     return GetWebViews.getWebViews()
+  },
+  getSavedState() {
+    return ExtensionHostState.getSavedState()
   },
 }
