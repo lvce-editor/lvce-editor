@@ -7,7 +7,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as IframeWorkerUrl from '../IframeWorkerUrl/IframeWorkerUrl.js'
 
 const getConfiguredWorkerUrl = () => {
-  let configuredWorkerUrl = Preferences.get('developer.iframeWorkerPath') || ''
+  let configuredWorkerUrl = Preferences.get('develop.iframeWorkerPath') || ''
   if (configuredWorkerUrl) {
     configuredWorkerUrl = '/remote' + configuredWorkerUrl
   }

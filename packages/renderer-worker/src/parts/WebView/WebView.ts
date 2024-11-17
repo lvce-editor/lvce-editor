@@ -26,10 +26,16 @@ export const compat = {
   rendererProcessInvoke(...args) {
     return RendererProcess.invoke(...args)
   },
+  rendererProcessInvokeAndTransfer(...args) {
+    return RendererProcess.invokeAndTransfer(...args)
+  },
   extensionHostWorkerInvokeAndTransfer(...args) {
     return ExtensionHostWorker.invokeAndTransfer(...args)
   },
   extensionHostWorkerInvoke(...args) {
     return ExtensionHostWorker.invoke(...args)
+  },
+  getWebViews() {
+    return GetWebViews.getWebViews()
   },
 }
