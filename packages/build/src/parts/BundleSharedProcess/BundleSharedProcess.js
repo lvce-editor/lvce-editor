@@ -158,6 +158,11 @@ export const bundleSharedProcess = async ({
       replacement: `isBuiltServer = true`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/IsElectron/IsElectron.js`,
+      occurrence: `const isElectron = Boolean(Env.getElectronRunAsNode()) || 'electron' in process.versions`,
+      replacement: `const isElectron = false`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/EmbedsProcessPath/EmbedsProcessPath.js`,
       occurrence: `'src'`,
       replacement: `'dist'`,
