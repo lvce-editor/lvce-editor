@@ -20,6 +20,10 @@ export const setPort = async (uid: number, port: MessagePort, origin: string, po
 }
 
 export const create = async (id: number, webViewPort: string, webViewId: string, previewServerId: number, uri: string) => {
+  // TODO most or all of this should happen in iframe worker.
+  // iframe worker should have access to renderer process to create iframes
+  // and to extension host worker to call extension webview provider
+
   let root = ''
   if (Platform.platform === PlatformType.Remote) {
     root = await SharedProcess.invoke('Platform.getRoot')
