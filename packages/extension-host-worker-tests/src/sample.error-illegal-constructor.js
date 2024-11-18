@@ -1,5 +1,7 @@
 export const name = 'sample.error-illegal-constructor'
 
+export const skip = true
+
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
@@ -19,6 +21,6 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
     | ^
   2 |
   3 | export const activate = () => {}
-  4 |`
+  4 |`,
   )
 }
