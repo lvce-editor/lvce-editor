@@ -5,10 +5,11 @@ export const serializeInstance = (instance) => {
   return undefined
 }
 
-export const serializeInstances = (instances) => {
+export const serializeInstances = async (instances) => {
   const serialized = Object.create(null)
+  // TODO make it parallel
   for (const value of Object.values(instances)) {
-    const serializedInstance = serializeInstance(value)
+    const serializedInstance = await serializeInstance(value)
     if (serializedInstance) {
       const storageKey = value.factory.StorageKey || value.moduleId
       serialized[storageKey] = serializedInstance
