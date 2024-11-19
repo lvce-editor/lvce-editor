@@ -33,12 +33,6 @@ export const loadContent = async (state: SearchState, savedState: any): Promise<
   }
 }
 
-export const handleIconThemeChange = (state: SearchState): SearchState => {
-  return {
-    ...state,
-  }
-}
-
 export const dispose = async (state: SearchState) => {
   return {
     ...state,
