@@ -16,6 +16,7 @@ const commands = [
   'focusNextPage',
   'focusPreserveCasePrevious',
   'focusPrevious',
+  'togglePreserveCase',
   'focusPreviousPage',
   'focusRegex',
   'focusRegexNext',
