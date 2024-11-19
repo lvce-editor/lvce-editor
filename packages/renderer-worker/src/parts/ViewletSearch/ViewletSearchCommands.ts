@@ -1,5 +1,5 @@
-import * as WrapTextSearchCommand from './WrapTextSearchCommand.ts'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as WrapTextSearchCommand from './WrapTextSearchCommand.ts'
 
 // TODO maybe ask text search worker for the commands it provides
 const commands = [
@@ -32,6 +32,7 @@ const commands = [
   'handleContextMenuMouseAt',
   'handleFocusIn',
   'handleInput',
+  'handleIconThemeChange',
   'handleListBlur',
   'handleListFocus',
   'handleReplaceInput',
