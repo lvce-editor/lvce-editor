@@ -1,4 +1,5 @@
 import * as WrapTextSearchCommand from './WrapTextSearchCommand.ts'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 
 export const Commands = {
   clearSearchResults: WrapTextSearchCommand.wrapTextSearchCommand('clearSearchResults'),
@@ -53,4 +54,6 @@ export const Commands = {
   toggleUseRegularExpression: WrapTextSearchCommand.wrapTextSearchCommand('toggleUseRegularExpression'),
 }
 
-export const saveState = WrapTextSearchCommand.wrapTextSearchCommand('saveState')
+export const saveState = (state) => {
+  return TextSearchWorker.invoke(`TextSearch.saveState`, state.uid)
+}
