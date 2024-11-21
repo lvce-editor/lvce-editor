@@ -40,3 +40,9 @@
   cursor: pointer;
   align-self: flex-start;
 }
+
+.SearchHeaderDetailsExpanded {
+  padding: 10px;
+  contain: content;
+  padding-left: 20px;
+}
