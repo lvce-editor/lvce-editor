@@ -28,6 +28,11 @@
   align-items: end;
 }
 
+.SearchHeaderDetailsExpanded {
+  display: flex;
+  flex-direction: column;
+}
+
 .ToggleDetails {
   width: 20px;
   height: 20px;
