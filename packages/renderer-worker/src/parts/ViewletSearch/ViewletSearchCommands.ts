@@ -16,7 +16,6 @@ const commands = [
   'focusNextPage',
   'focusPreserveCasePrevious',
   'focusPrevious',
-  'togglePreserveCase',
   'focusPreviousPage',
   'focusRegex',
   'focusRegexNext',
@@ -32,8 +31,9 @@ const commands = [
   'handleContextMenuKeyboard',
   'handleContextMenuMouseAt',
   'handleFocusIn',
-  'handleInput',
   'handleIconThemeChange',
+  'handleIconThemeChange',
+  'handleInput',
   'handleListBlur',
   'handleListFocus',
   'handleReplaceInput',
@@ -53,9 +53,10 @@ const commands = [
   'submit',
   'toggleMatchCase',
   'toggleMatchWholeWord',
+  'togglePreserveCase',
   'toggleReplace',
+  'toggleSearchDetails',
   'toggleUseRegularExpression',
-  'handleIconThemeChange',
 ]
 
 export const Commands = {}
