@@ -20,4 +20,17 @@
 .SearchHeaderDetails {
   display: flex;
   flex-direction: column;
+  position: relative;
+  contain: content;
+  width: 100%;
+  height: 10px;
+}
+
+.ToggleDetails {
+  width: 10px;
+  height: 10px;
+  background: orange;
+  position: absolute;
+  top: 0;
+  right: 20px;
 }
