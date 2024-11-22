@@ -45,4 +45,10 @@
   padding: 10px;
   contain: content;
   padding-left: 20px;
+  padding-top: 0;
+}
+
+/* TODO avoid nesting */
+.SearchHeaderDetailsExpanded .ToggleDetails {
+  align-self: flex-end;
 }
