@@ -62,3 +62,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.SearchHeaderDetailsExpandedTop {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
