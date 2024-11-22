@@ -236,8 +236,8 @@
   mask-image: url(/icons/link-external.svg);
 }
 
-.MaskIconLinkExclude,
-.IconLinkExclude {
+.MaskIconExclude,
+.IconExclude {
   mask-image: url(/icons/exclude.svg);
 }
 
