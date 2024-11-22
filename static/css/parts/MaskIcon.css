@@ -186,10 +186,16 @@
   mask-image: url(/icons/ellipsis.svg);
 }
 
+.MaskIconBook,
+.IconBook {
+  mask-image: url(/icons/book.svg);
+}
+
 .MaskIconAdd,
 .IconAdd {
   mask-image: url(/icons/add.svg);
 }
+
 .MaskIconTrash,
 .IconTrash {
   mask-image: url(/icons/trash.svg);
