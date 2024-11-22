@@ -52,3 +52,13 @@
 .SearchHeaderDetailsExpanded .ToggleDetails {
   align-self: flex-end;
 }
+
+.SearchHeaderDetailsHeading {
+  font-size: 11px;
+  font-weight: 400;
+  margin: 0;
+  overflow: hidden;
+  padding: 4px 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
