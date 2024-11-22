@@ -33,6 +33,8 @@ const commands = [
   'handleFocusIn',
   'handleIconThemeChange',
   'handleIconThemeChange',
+  'handleIncludeInput',
+  'handleExcludeInput',
   'handleInput',
   'handleListBlur',
   'handleListFocus',
