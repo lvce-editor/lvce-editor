@@ -2,7 +2,7 @@ import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
-export const getKeyBindings = () => {
+export const getKeyBindings = async () => {
   return [
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Alt | KeyCode.Enter,
