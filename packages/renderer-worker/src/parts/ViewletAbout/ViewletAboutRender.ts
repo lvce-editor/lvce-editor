@@ -1,6 +1,5 @@
 import type { AboutState } from './ViewletAboutTypes.ts'
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
-import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -15,8 +14,3 @@ export const renderDialog = {
 }
 
 export const render = [renderDialog]
-
-export const renderEventListeners = async () => {
-  const listeners = await AboutViewWorker.invoke('About.renderEventListeners')
-  return listeners
-}
