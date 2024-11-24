@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
@@ -18,6 +19,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
     previewServerId,
     uri,
     platform: Platform.platform,
+    assetDir: AssetDir.assetDir,
   })
 }
 
