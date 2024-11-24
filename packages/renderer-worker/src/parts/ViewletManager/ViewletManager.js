@@ -408,8 +408,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     const args = viewlet.args || []
     let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
     if (module.renderEventListeners) {
+      // TODO reuse event listeners between components
       const eventListeners = await module.renderEventListeners()
-      await RendererProcess.invoke('Viewlet.registerEventListeners', viewlet.id, eventListeners)
+      await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
     }
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
