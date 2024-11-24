@@ -17,7 +17,7 @@ const getIconDom = (icon) => {
 }
 
 export const getTabDom = (tab, isActive, fixedWidth) => {
-  const { icon, tabWidth, uri, flags } = tab
+  const { icon, tabWidth, uri, flags, uid } = tab
   let tabClassName = ClassNames.MainTab
   if (isActive) {
     tabClassName += ' ' + ClassNames.MainTabSelected
@@ -35,6 +35,7 @@ export const getTabDom = (tab, isActive, fixedWidth) => {
     ariaSelected: isActive,
     title: uri,
     childCount: 2,
+    'data-uid': uid,
   }
   const dom = []
 

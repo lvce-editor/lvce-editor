@@ -84,4 +84,23 @@ const renderTabsActiveIndex = {
   multiple: true,
 }
 
+// const renderDragInfo = {
+//   isEqual(oldState, newState) {
+//     return oldState.groups === newState.groups
+//   },
+//   apply(oldState, newState) {
+//     const dragInfo = Object.create(null)
+//     for (const group of newState.groups) {
+//       // TODO
+//     }
+//     // TODO send drag infos to renderer process
+//     const unFocusIndex = oldState.activeIndex < newState.editors.length ? oldState.activeIndex : -1
+//     if (newState.activeIndex === -1) {
+//       return []
+//     }
+//     return [['Viewlet.send', newState.tabsUid, 'setFocusedIndex', unFocusIndex, newState.activeIndex]]
+//   },
+//   multiple: true,
+// }
+
 export const render = [renderDragOverlay, renderGroupTabs, renderTabsActiveIndex]
