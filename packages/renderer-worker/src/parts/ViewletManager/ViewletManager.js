@@ -407,6 +407,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     const args = viewlet.args || []
     let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
+    if (module.renderEventListeners) {
+      const eventListeners = await module.renderEventListeners()
+      await RendererProcess.invoke('Viewlet.registerEventListeners', viewlet.id, eventListeners)
+    }
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
     }
