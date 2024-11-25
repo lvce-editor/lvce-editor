@@ -602,19 +602,6 @@ export const handleFocusChange = (state, isFocused) => {
   return state
 }
 
-const getDropInfos = (groups, dropId) => {
-  const parsedDropId = parseInt(dropId)
-  let fromDrop = undefined
-  for (const group of groups) {
-    for (const editor of group.editors) {
-      if (editor.uid === parsedDropId) {
-        console.log('dropped', editor)
-        fromDrop = editor
-      }
-    }
-  }
-}
-
 const getNewEditors = (groups, fromEditor, toEditor) => {
   const newGroups = []
   for (const group of groups) {
