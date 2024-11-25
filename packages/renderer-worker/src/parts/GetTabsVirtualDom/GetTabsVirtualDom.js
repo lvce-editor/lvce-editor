@@ -1,12 +1,5 @@
 import * as GetTabDom from '../GetTabDom/GetTabDom.js'
-
-const getTotalTabWidth = (tabs) => {
-  let total = 0
-  for (const tab of tabs) {
-    total += tab.tabWidth
-  }
-  return total
-}
+import * as GetTotalTabWidth from '../GetTotalTabWidth/GetTotalTabWidth.js'
 
 const getFixedWidth = (width, tabsLength, hasOverflow) => {
   if (!hasOverflow) {
@@ -17,7 +10,7 @@ const getFixedWidth = (width, tabsLength, hasOverflow) => {
 
 export const getTabsDom = (tabs, width, activeIndex, deltaX) => {
   const tabsDom = []
-  const totalTabWidth = getTotalTabWidth(tabs)
+  const totalTabWidth = GetTotalTabWidth.getTotalTabWidth(tabs)
   const hasOverflow = totalTabWidth > width
   const fixedWidth = getFixedWidth(width, tabs.length, hasOverflow)
   for (let i = 0; i < tabs.length; i++) {
