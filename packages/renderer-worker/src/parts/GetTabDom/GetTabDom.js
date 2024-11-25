@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DragData from '../DragData/DragData.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -35,8 +36,12 @@ export const getTabDom = (tab, isActive, fixedWidth) => {
     ariaSelected: isActive,
     title: uri,
     childCount: 2,
-    'data-uid': uid,
+    'data-dragUid': uid,
   }
+  DragData.set(uid, {
+    type: 'file',
+    uri,
+  })
   const dom = []
 
   dom.push(

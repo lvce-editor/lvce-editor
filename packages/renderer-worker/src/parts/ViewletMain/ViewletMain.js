@@ -601,3 +601,61 @@ export const handleFocusChange = (state, isFocused) => {
   }
   return state
 }
+
+const getNewEditors = (groups, fromEditor, toEditor) => {
+  const newGroups = []
+  for (const group of groups) {
+    const newEditors = []
+    for (const editor of group.editors) {
+      if (editor === toEditor) {
+        newEditors.push(fromEditor, toEditor)
+      } else if (editor === fromEditor) {
+        // ignore
+      } else {
+        newEditors.push(editor)
+      }
+    }
+    newGroups.push({
+      ...group,
+      editors: newEditors,
+    })
+  }
+  return newGroups
+}
+
+export const handleTabDrop = (state, dropId, eventX, eventY) => {
+  console.log({ state, dropId, eventX, eventY })
+  const parsedDropId = parseInt(dropId)
+  let toEditor = undefined
+  let fromEditor = undefined
+  let x = 0
+  outer1: for (const group of state.groups) {
+    for (const editor of group.editors) {
+      x += editor.tabWidth
+      if (x >= eventX) {
+        toEditor = editor
+        break outer1
+      }
+    }
+  }
+  outer2: for (const group of state.groups) {
+    for (const editor of group.editors) {
+      if (editor.uid === parsedDropId) {
+        console.log('dropped', editor)
+        fromEditor = editor
+        break outer2
+      }
+    }
+  }
+
+  const newGroups = getNewEditors(state.groups, fromEditor, toEditor)
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
+  console.log({ newState, state })
+  return {
+    newState,
+    commands: [],
+  }
+}
