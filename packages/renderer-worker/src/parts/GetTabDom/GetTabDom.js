@@ -17,8 +17,8 @@ const getIconDom = (icon) => {
   return GetFileIconVirtualDom.getFileIconVirtualDom(icon)
 }
 
-export const getTabDom = (tab, isActive, fixedWidth) => {
-  const { icon, tabWidth, uri, flags, uid } = tab
+export const getTabDom = (tab) => {
+  const { icon, tabWidth, uri, flags, uid, isActive, fixedWidth } = tab
   let tabClassName = ClassNames.MainTab
   if (isActive) {
     tabClassName += ' ' + ClassNames.MainTabSelected
