@@ -271,7 +271,7 @@ export const networkProcessPath = ResolveBin.resolveBin('@lvce-editor/network-pr
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 
-export const ptyHostPath = Path.join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'pty-host', 'src', 'ptyHostMain.js')
+export const ptyHostPath = Path.join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'pty-host', 'dist', 'ptyHostMain.js')
 `,
       replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
 
