@@ -39,7 +39,7 @@
     "@lvce-editor/preload": "^1.4.0",
     "@lvce-editor/preview-process": "^3.11.0",
     "@lvce-editor/process-explorer": "^2.2.0",
-    "@lvce-editor/pty-host": "^2.1.0",
+    "@lvce-editor/pty-host": "^3.0.0",
     "@lvce-editor/search-process": "^3.2.0",
     "@lvce-editor/typescript-compile-process": "^1.6.0",
     "open": "^10.1.0",
