@@ -6,9 +6,9 @@ const getIndices = (eventX, eventY, tabs) => {
     const newWidth = width + tabWidth
     if (newWidth >= eventX) {
       if (width + halfTabWidth >= eventX) {
-        return i
+        return width
       }
-      return width
+      return newWidth
     }
     width = newWidth
   }
