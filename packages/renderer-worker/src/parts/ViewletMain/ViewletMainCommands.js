@@ -16,6 +16,7 @@ export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
   handleTabDrop: ViewletMain.handleTabDrop,
+  handleTabsDragOver: ViewletMain.handleTabsDragOver,
 }
 
 export const CommandsWithSideEffectsLazy = {

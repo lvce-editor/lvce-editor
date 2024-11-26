@@ -104,3 +104,12 @@
   mask-position: 50% 50%;
   pointer-events: none;
 }
+
+.TabDragHighlight {
+  width: 2px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  contain: strict;
+  background: dodgerblue;
+}
