@@ -58,7 +58,8 @@ const renderGroupTabs = {
       if (editors.length > 0) {
         commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
         commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
-        const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex, newState.tabsDeltax)
+        const visibleTabs = GetVisibleTabs.getVisibleTabs(editors, newState.width, activeIndex, 0)
+        const tabsDom = GetTabsVirtualDom.getTabsDom(visibleTabs)
         commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
         commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
         commands.push(['Viewlet.append', newState.uid, tabsUid])
