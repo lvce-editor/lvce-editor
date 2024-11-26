@@ -12,6 +12,7 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as GetTabHighlightInfo from '../GetTabHighlightInfo/GetTabHighlightInfo.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -624,7 +625,6 @@ const getNewEditors = (groups, fromEditor, toEditor) => {
 }
 
 export const handleTabDrop = (state, dropId, eventX, eventY) => {
-  console.log({ state, dropId, eventX, eventY })
   const parsedDropId = parseInt(dropId)
   let toEditor = undefined
   let fromEditor = undefined
@@ -641,7 +641,6 @@ export const handleTabDrop = (state, dropId, eventX, eventY) => {
   outer2: for (const group of state.groups) {
     for (const editor of group.editors) {
       if (editor.uid === parsedDropId) {
-        console.log('dropped', editor)
         fromEditor = editor
         break outer2
       }
@@ -653,7 +652,28 @@ export const handleTabDrop = (state, dropId, eventX, eventY) => {
     ...state,
     groups: newGroups,
   }
-  console.log({ newState, state })
+  return {
+    newState,
+    commands: [],
+  }
+}
+
+export const handleTabsDragOver = (state, eventX, eventY) => {
+  const tabs = state.groups[0].editors
+  const { highlight, highlightLeft, highlightHeight } = GetTabHighlightInfo.getTabHighlightInfo(eventX, eventY, tabs)
+  const newGroups = [
+    {
+      ...state.groups[0],
+      highlight,
+      highlightLeft,
+      highlightHeight,
+    },
+    ...state.groups.slice(1),
+  ]
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
   return {
     newState,
     commands: [],

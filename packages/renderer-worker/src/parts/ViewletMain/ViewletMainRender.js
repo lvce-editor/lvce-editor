@@ -52,6 +52,9 @@ const renderGroupTabs = {
       if (tabsDeltaX !== oldGroup.tabsDeltaX) {
         commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
       }
+      if (oldGroup.highlight !== newGroup.highlight || oldGroup.highlightLeft !== newGroup.highlightLeft) {
+        commands.push(['Viewlet.send', tabsUid, 'setHighlight', newGroup.highlightLeft])
+      }
     }
     for (const insertedGroup of insertedGroups) {
       const { tabsUid, editors, x, y, width, activeIndex, tabsDeltaX } = insertedGroup
