@@ -17,7 +17,7 @@ const getConfiguredWorkerUrl = () => {
   return configuredWorkerUrl
 }
 
-export const launchKeyBindingsViewWorker = async () => {
+export const launchAboutViewWorker = async () => {
   const name = 'About View Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
