@@ -101,3 +101,5 @@ export const SearchProcess = 130
 export const GetEditorSourceActions = 131
 export const ExtensionHostTextSearch = 132
 export const ExtensionStateStorage = 133
+export const GetWindowId = 134
+export const ElectronDialog = 135

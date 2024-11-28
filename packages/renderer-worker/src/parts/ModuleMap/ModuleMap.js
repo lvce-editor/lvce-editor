@@ -222,6 +222,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostTextSearch
     case 'ExtensionStateStorage':
       return ModuleId.ExtensionStateStorage
+    case 'GetWindowId':
+      return ModuleId.GetWindowId
+    case 'ElectronDialog':
+      return ModuleId.ElectronDialog
     default:
       throw new Error(`module ${prefix} not found`)
   }

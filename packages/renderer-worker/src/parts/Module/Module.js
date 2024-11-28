@@ -197,6 +197,10 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostTextSearch.ipc.js')
     case ModuleId.ExtensionStateStorage:
       return import('../ExtensionStateStorage/ExtensionStateStorage.js')
+    case ModuleId.GetWindowId:
+      return import('../GetWindowId/GetWindowId.ipc.js')
+    case ModuleId.ElectronDialog:
+      return import('../ElectronDialog/ElectronDialog.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
