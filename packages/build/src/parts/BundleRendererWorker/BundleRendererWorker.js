@@ -6,6 +6,7 @@ import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclara
 import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Remove from '../Remove/Remove.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getNewCssDeclarationFile = (content, filteredCss) => {
@@ -262,6 +263,7 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
         replacement: `const platform = Remote;`,
       })
     }
+    await Remove.remove(`${cachePath}/src`)
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer worker`)
   }
