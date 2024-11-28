@@ -1,5 +1,0 @@
-export const UpdateProp = 'updateProp'
-export const Insert = 'insert'
-export const Remove = 'remove'
-export const RemoveProp = 'removeProp'
-export const Replace = 'replace'
