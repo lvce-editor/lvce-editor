@@ -10,6 +10,7 @@ import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWork
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/BundleExplorerWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearchViewWorkerCached/BundleExtensionSearchViewWorkerCached.js'
@@ -99,6 +100,16 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
+  })
+
+  const explorerWorkerCachePath = await BundleExplorerWorkerCached.bundleExplorerWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: explorerWorkerCachePath,
+    to: `${toRoot}/packages/explorer-worker`,
   })
 
   const syntaxHighlightingWorkerCachePath = await BundleSyntaxHighlightingWorkerCached.bundleSyntaxHighlightingWorkerCached({
