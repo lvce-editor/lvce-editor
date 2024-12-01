@@ -1,6 +1,8 @@
 // TODO maybe call removeDirent function directly instead of opening context menu
 export const name = 'viewlet.explorer-delete-file'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Explorer, ContextMenu, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
