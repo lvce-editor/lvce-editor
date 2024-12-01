@@ -1,21 +1,5 @@
-import * as DirentType from '../DirentType/DirentType.js'
-
-const isExpandedDirectory = (dirent) => {
-  return dirent.type === DirentType.DirectoryExpanded
-}
-
-const getPath = (dirent) => {
-  return dirent.path
-}
+import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
 
 export const saveState = (state) => {
-  const { items, root, deltaY, minLineY, maxLineY } = state
-  const expandedPaths = items.filter(isExpandedDirectory).map(getPath)
-  return {
-    expandedPaths,
-    root,
-    minLineY,
-    maxLineY,
-    deltaY,
-  }
+  return ExplorerViewWorker.invoke('Explorer.saveState', state)
 }
