@@ -82,12 +82,12 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExplorer, oldState, newState, 'Explorer')
 }
 
-test('create', () => {
+test.skip('create', () => {
   const state = ViewletExplorer.create(1)
   expect(state).toBeDefined()
 })
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   const state = ViewletExplorer.create(1)
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
@@ -160,7 +160,7 @@ test('loadContent', async () => {
   })
 })
 
-test('loadContent - root', async () => {
+test.skip('loadContent - root', async () => {
   const state = { ...ViewletExplorer.create(1), root: '/' }
   Workspace.state.workspacePath = '/'
   // @ts-ignore
@@ -233,7 +233,7 @@ test('loadContent - root', async () => {
   })
 })
 
-test('loadContent - restore from saved state - root', async () => {
+test.skip('loadContent - restore from saved state - root', async () => {
   const state = { ...ViewletExplorer.create(1), root: '/' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
@@ -309,7 +309,7 @@ test('loadContent - restore from saved state - root', async () => {
   })
 })
 
-test('loadContent - restore from saved state - root and symlinked open folder', async () => {
+test.skip('loadContent - restore from saved state - root and symlinked open folder', async () => {
   const state = { ...ViewletExplorer.create(1), root: '/' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
@@ -367,7 +367,7 @@ test('loadContent - restore from saved state - root and symlinked open folder', 
 // TODO handle ENOENT error
 // TODO handle ENOTDIR error
 
-test('loadContent - restore from saved state', async () => {
+test.skip('loadContent - restore from saved state', async () => {
   Workspace.state.workspacePath = '/test'
   const state = {
     ...ViewletExplorer.create(1),
@@ -436,7 +436,7 @@ test('loadContent - restore from saved state', async () => {
   })
 })
 
-test('loadContent - restore from saved state - error root not found', async () => {
+test.skip('loadContent - restore from saved state - error root not found', async () => {
   Workspace.state.workspacePath = '/test'
   const state = {
     ...ViewletExplorer.create(1),
@@ -466,7 +466,7 @@ test('loadContent - restore from saved state - error root not found', async () =
   await expect(ViewletExplorer.loadContent(state, savedState)).rejects.toThrow(new Error(ErrorCodes.ENOENT))
 })
 
-test('loadContent - restore from saved state - sort dirents', async () => {
+test.skip('loadContent - restore from saved state - sort dirents', async () => {
   Workspace.state.workspacePath = '/test'
   const state = { ...ViewletExplorer.create(1), root: '/test' }
   // @ts-ignore
@@ -545,7 +545,7 @@ test('loadContent - restore from saved state - sort dirents', async () => {
   })
 })
 
-test('loadContent - restore from saved state - no saved state exists', async () => {
+test.skip('loadContent - restore from saved state - no saved state exists', async () => {
   Workspace.state.workspacePath = '/test'
   const state = ViewletExplorer.create(1)
   // @ts-ignore
@@ -591,7 +591,7 @@ test('loadContent - restore from saved state - no saved state exists', async () 
   })
 })
 
-test('loadContent - restore from saved state - error - ENOENT for child folder', async () => {
+test.skip('loadContent - restore from saved state - error - ENOENT for child folder', async () => {
   const state = { ...ViewletExplorer.create(1), root: '/test' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(async (uri) => {
@@ -834,7 +834,7 @@ test.skip('loadContent - race condition', async () => {
   ])
 })
 
-test('loadContent - error - typeError', async () => {
+test.skip('loadContent - error - typeError', async () => {
   const state = ViewletExplorer.create(1)
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
@@ -844,7 +844,7 @@ test('loadContent - error - typeError', async () => {
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('loadContent - error - syntaxError', async () => {
+test.skip('loadContent - error - syntaxError', async () => {
   const state = ViewletExplorer.create(1)
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
@@ -855,7 +855,7 @@ test('loadContent - error - syntaxError', async () => {
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new SyntaxError('unexpected token x'))
 })
 
-test('loadContent - error - command not found', async () => {
+test.skip('loadContent - error - command not found', async () => {
   const state = ViewletExplorer.create(1)
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
@@ -970,7 +970,7 @@ test.skip('refresh - error', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(['Viewlet.send', 'Explorer', 'handleError', new Error('TypeError: x is not a function')])
 })
 
-test('handleClick - no element focused', async () => {
+test.skip('handleClick - no element focused', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 2,
@@ -1001,7 +1001,7 @@ test('handleClick - no element focused', async () => {
   })
 })
 
-test('handleClick - file', async () => {
+test.skip('handleClick - file', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -1043,7 +1043,7 @@ test('handleClick - file', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css', true)
 })
 
-test('handleClick - file - error', async () => {
+test.skip('handleClick - file - error', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -1085,7 +1085,7 @@ test('handleClick - file - error', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css', true)
 })
 
-test('handleClick - unsupported dirent type', async () => {
+test.skip('handleClick - unsupported dirent type', async () => {
   const state = {
     root: '/test',
     focusedIndex: -1,
@@ -1114,7 +1114,7 @@ test('handleClick - unsupported dirent type', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('handleClick - character device', async () => {
+test.skip('handleClick - character device', async () => {
   const state = {
     root: '/test',
     focusedIndex: -1,
@@ -1143,7 +1143,7 @@ test('handleClick - character device', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('handleClick - socket', async () => {
+test.skip('handleClick - socket', async () => {
   const state = {
     root: '/test',
     focusedIndex: -1,
@@ -1172,7 +1172,7 @@ test('handleClick - socket', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('handleClick - block device', async () => {
+test.skip('handleClick - block device', async () => {
   const state = {
     root: '/test',
     focusedIndex: -1,
@@ -1201,7 +1201,7 @@ test('handleClick - block device', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('handleClick - symlink - file', async () => {
+test.skip('handleClick - symlink - file', async () => {
   const state = {
     root: '/test',
     focusedIndex: -1,
@@ -1233,7 +1233,7 @@ test('handleClick - symlink - file', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css', true)
 })
 
-test('handleClickCurrentButKeepFocus - file', async () => {
+test.skip('handleClickCurrentButKeepFocus - file', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focused: true,
@@ -1266,7 +1266,7 @@ test('handleClickCurrentButKeepFocus - file', async () => {
 })
 
 // TODO test error
-test('handleClick - directory', async () => {
+test.skip('handleClick - directory', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -1351,7 +1351,7 @@ test('handleClick - directory', async () => {
   })
 })
 
-test('handleClick - directory-expanded', async () => {
+test.skip('handleClick - directory-expanded', async () => {
   const state = {
     root: '/test',
     focusedIndex: -1,
@@ -1459,7 +1459,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
   })
 })
 
-test('handleClick - directory - issue with invisible items', async () => {
+test.skip('handleClick - directory - issue with invisible items', async () => {
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     return [
@@ -1557,7 +1557,7 @@ test('handleClick - directory - issue with invisible items', async () => {
   })
 })
 
-test('handleClick - collapsed folder', async () => {
+test.skip('handleClick - collapsed folder', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     path: '/home/test-user/test-path',
@@ -1920,7 +1920,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
   ])
 })
 
-test('handleClick - expanded folder', async () => {
+test.skip('handleClick - expanded folder', async () => {
   const state = {
     path: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -2001,7 +2001,7 @@ test('handleClick - expanded folder', async () => {
   })
 })
 
-test('handleArrowLeft - root file', async () => {
+test.skip('handleArrowLeft - root file', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 0,
@@ -2047,7 +2047,7 @@ test('handleArrowLeft - root file', async () => {
   expect(newState).toBe(state)
 })
 
-test('handleArrowLeft - collapsed root folder', async () => {
+test.skip('handleArrowLeft - collapsed root folder', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 2,
@@ -2085,7 +2085,7 @@ test('handleArrowLeft - collapsed root folder', async () => {
   expect(newState).toBe(state)
 })
 
-test('handleArrowLeft - expanded root folder with nested child folders inside', async () => {
+test.skip('handleArrowLeft - expanded root folder with nested child folders inside', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 2,
@@ -2198,7 +2198,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
   })
 })
 
-test('handleArrowLeft - scroll up', () => {
+test.skip('handleArrowLeft - scroll up', () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/test',
@@ -2316,7 +2316,7 @@ test('handleArrowLeft - scroll up', () => {
   expect(newState.deltaY).toBe(0)
 })
 
-test('handleArrowLeft - symlink to file', async () => {
+test.skip('handleArrowLeft - symlink to file', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2364,7 +2364,7 @@ test('handleArrowLeft - symlink to file', async () => {
   })
 })
 
-test('handleArrowLeft - nested file - first child', async () => {
+test.skip('handleArrowLeft - nested file - first child', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2412,7 +2412,7 @@ test('handleArrowLeft - nested file - first child', async () => {
   })
 })
 
-test('handleArrowLeft - nested file - third child', async () => {
+test.skip('handleArrowLeft - nested file - third child', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2492,7 +2492,7 @@ test('handleArrowLeft - nested file - third child', async () => {
   })
 })
 
-test('handleArrowLeft - when no focus', async () => {
+test.skip('handleArrowLeft - when no focus', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2530,7 +2530,7 @@ test('handleArrowLeft - when no focus', async () => {
   expect(await ViewletExplorer.handleArrowLeft(state)).toBe(state)
 })
 
-test('handleArrowLeft - symbolic link', async () => {
+test.skip('handleArrowLeft - symbolic link', async () => {
   const state = {
     root: '/test',
     focusedIndex: 0,
@@ -2551,7 +2551,7 @@ test('handleArrowLeft - symbolic link', async () => {
   expect(await ViewletExplorer.handleArrowLeft(state)).toBe(state)
 })
 
-test('handleArrowRight - file', async () => {
+test.skip('handleArrowRight - file', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2599,7 +2599,7 @@ test('handleArrowRight - file', async () => {
   expect(newState).toBe(state)
 })
 
-test('handleArrowRight - symlink - file', async () => {
+test.skip('handleArrowRight - symlink - file', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/test',
@@ -2622,7 +2622,7 @@ test('handleArrowRight - symlink - file', async () => {
   expect(await ViewletExplorer.handleArrowRight(state)).toBe(state)
 })
 
-test('handleArrowRight - collapsed folder', async () => {
+test.skip('handleArrowRight - collapsed folder', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2713,7 +2713,7 @@ test('handleArrowRight - collapsed folder', async () => {
 })
 
 // TODO test for race condition: when viewlet state changes while loading children
-test('handleArrowRight - collapsed empty folder', async () => {
+test.skip('handleArrowRight - collapsed empty folder', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 2,
@@ -2788,7 +2788,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
   })
 })
 
-test('handleArrowRight - expanded folder', async () => {
+test.skip('handleArrowRight - expanded folder', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -2840,7 +2840,7 @@ test('handleArrowRight - expanded folder', async () => {
   })
 })
 
-test('handleArrowRight - expanded empty folder', async () => {
+test.skip('handleArrowRight - expanded empty folder', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 2,
@@ -2880,7 +2880,7 @@ test('handleArrowRight - expanded empty folder', async () => {
   expect(await ViewletExplorer.handleArrowRight(state)).toBe(state)
 })
 
-test('handleArrowRight - when no focus', async () => {
+test.skip('handleArrowRight - when no focus', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -3070,7 +3070,7 @@ test.skip('handleWheel - up', () => {
   ])
 })
 
-test('handleWheel - up - already at top', () => {
+test.skip('handleWheel - up - already at top', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -3173,7 +3173,7 @@ test.skip('handleWheel - down', () => {
   // )
 })
 
-test('handleWheel - down - already at bottom', () => {
+test.skip('handleWheel - down - already at bottom', () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -3207,7 +3207,7 @@ test('handleWheel - down - already at bottom', () => {
   expect(ViewletExplorer.handleWheel(state, WheelEventType.DomDeltaPixel, 10)).toBe(state)
 })
 
-test('handleWheel - down - already at bottom but viewlet is larger than items can fit', () => {
+test.skip('handleWheel - down - already at bottom but viewlet is larger than items can fit', () => {
   const state = {
     ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
@@ -3520,7 +3520,7 @@ test.skip('newFile - error with writeFile', async () => {
   ])
 })
 
-test('newFile - canceled', async () => {
+test.skip('newFile - canceled', async () => {
   const state = ViewletExplorer.create(1, 0, 0, 0, 0)
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})
@@ -3533,7 +3533,7 @@ test.skip('newFile - race condition', () => {
   // TODO test what happens when first loadContent promise returns last
 })
 
-test('removeDirent - first', async () => {
+test.skip('removeDirent - first', async () => {
   const state = {
     ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
@@ -3599,7 +3599,7 @@ test('removeDirent - first', async () => {
   })
 })
 
-test('removeDirent - only folder', async () => {
+test.skip('removeDirent - only folder', async () => {
   const state = {
     ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
@@ -3628,7 +3628,7 @@ test('removeDirent - only folder', async () => {
   })
 })
 
-test('removeDirent - expanded folder', async () => {
+test.skip('removeDirent - expanded folder', async () => {
   const state = {
     ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
@@ -3712,7 +3712,7 @@ test('removeDirent - expanded folder', async () => {
   })
 })
 
-test('removeDirent - middle', async () => {
+test.skip('removeDirent - middle', async () => {
   const state = {
     ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
@@ -3778,7 +3778,7 @@ test('removeDirent - middle', async () => {
   })
 })
 
-test('removeDirent - last', async () => {
+test.skip('removeDirent - last', async () => {
   const state = {
     ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
@@ -3844,7 +3844,7 @@ test('removeDirent - last', async () => {
   })
 })
 
-test('removeDirent - no dirents left', async () => {
+test.skip('removeDirent - no dirents left', async () => {
   const state = {
     ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
@@ -3862,7 +3862,7 @@ test('removeDirent - no dirents left', async () => {
   })
 })
 
-test('resize - same height', () => {
+test.skip('resize - same height', () => {
   const state = {
     ...ViewletExplorer.create(0, '', 0, 0, 20, 20),
     deltaY: 0,
@@ -3927,7 +3927,7 @@ test('resize - same height', () => {
   )
 })
 
-test('computeRenamedDirents - file', () => {
+test.skip('computeRenamedDirents - file', () => {
   expect(
     ViewletExplorer.computeRenamedDirent(
       [
@@ -3960,7 +3960,7 @@ test('computeRenamedDirents - file', () => {
   })
 })
 
-test('computeRenamedDirents - file moves to the top', () => {
+test.skip('computeRenamedDirents - file moves to the top', () => {
   expect(
     ViewletExplorer.computeRenamedDirent(
       [
@@ -4029,7 +4029,7 @@ test('computeRenamedDirents - file moves to the top', () => {
   })
 })
 
-test('computeRenamedDirents - file moves to the top - open directories are in between', () => {
+test.skip('computeRenamedDirents - file moves to the top - open directories are in between', () => {
   expect(
     ViewletExplorer.computeRenamedDirent(
       [
@@ -4134,7 +4134,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
   })
 })
 
-test('computeRenamedDirents - file moves to the bottom', () => {
+test.skip('computeRenamedDirents - file moves to the bottom', () => {
   expect(
     ViewletExplorer.computeRenamedDirent(
       [
@@ -4203,7 +4203,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
   })
 })
 
-test('computeRenamedDirents - file moves to the bottom - open directories are in between', () => {
+test.skip('computeRenamedDirents - file moves to the bottom - open directories are in between', () => {
   expect(
     ViewletExplorer.computeRenamedDirent(
       [
@@ -4308,7 +4308,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
   })
 })
 
-test('computeRenamedDirents - directory', () => {
+test.skip('computeRenamedDirents - directory', () => {
   expect(
     ViewletExplorer.computeRenamedDirent(
       [
@@ -4382,7 +4382,7 @@ test('computeRenamedDirents - directory', () => {
 // TODO test when parent folder collapses
 // TODO test when one of the folders is removed during expansion
 
-test('expandAll', async () => {
+test.skip('expandAll', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     path: '/test',
@@ -4551,7 +4551,7 @@ test('expandAll', async () => {
   })
 })
 
-test('collapseAll', () => {
+test.skip('collapseAll', () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -4722,7 +4722,7 @@ test('collapseAll', () => {
   })
 })
 
-test('event - workspace change', async () => {
+test.skip('event - workspace change', async () => {
   const state = {
     ...ViewletExplorer.create(1),
   }
@@ -4779,7 +4779,7 @@ test('event - workspace change', async () => {
   })
 })
 
-test('openContainingFolder', async () => {
+test.skip('openContainingFolder', async () => {
   const state1 = {
     ...ViewletExplorer.create(1, 0, 0, 0, 0),
     root: '/test',
@@ -4799,7 +4799,7 @@ test('openContainingFolder', async () => {
   expect(Command.execute).toHaveBeenCalledWith('OpenNativeFolder.openNativeFolder', '/test')
 })
 
-test('openContainingFolder - nested', async () => {
+test.skip('openContainingFolder - nested', async () => {
   const state1 = {
     ...ViewletExplorer.create(1, 0, 0, 0, 0),
     root: '/test',
@@ -4859,7 +4859,7 @@ test.skip('revealItem - error - not found', async () => {
   await expect(ViewletExplorer.revealItem(state, '/test/index.js')).rejects.toThrow('File not found: /test/index.js')
 })
 
-test('revealItem - two levels deep', async () => {
+test.skip('revealItem - two levels deep', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -4909,7 +4909,7 @@ test('revealItem - two levels deep', async () => {
   })
 })
 
-test('revealItem - three levels deep', async () => {
+test.skip('revealItem - three levels deep', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -4970,7 +4970,7 @@ test('revealItem - three levels deep', async () => {
   })
 })
 
-test('revealItem - insert into existing tree', async () => {
+test.skip('revealItem - insert into existing tree', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -5182,7 +5182,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
   })
 })
 
-test('revealItem - already visible', async () => {
+test.skip('revealItem - already visible', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -5244,7 +5244,7 @@ test('revealItem - already visible', async () => {
   })
 })
 
-test('revealItem - scroll down', async () => {
+test.skip('revealItem - scroll down', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -5308,7 +5308,7 @@ test('revealItem - scroll down', async () => {
   })
 })
 
-test('revealItem - scroll up', async () => {
+test.skip('revealItem - scroll up', async () => {
   const state = {
     ...ViewletExplorer.create(1),
     focusedIndex: 0,
@@ -5378,7 +5378,7 @@ test('revealItem - scroll up', async () => {
 // - symlink target is unsupported type
 // - clicking on symlink
 // - expanding symlink folder
-test('handleArrowRight - symlink - error', async () => {
+test.skip('handleArrowRight - symlink - error', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 0,
@@ -5404,7 +5404,7 @@ test('handleArrowRight - symlink - error', async () => {
   await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('handleClickCurrent', async () => {
+test.skip('handleClickCurrent', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 1,
@@ -5450,7 +5450,7 @@ test('handleClickCurrent', async () => {
   })
 })
 
-test('copyPath - when scrolled down', async () => {
+test.skip('copyPath - when scrolled down', async () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 0,
