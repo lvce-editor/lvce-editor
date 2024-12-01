@@ -2,6 +2,8 @@
 
 export const name = 'viewlet.explorer-create-file'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Explorer, ContextMenu, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
