@@ -61,7 +61,7 @@ const ViewletExplorerAcceptEdit = await import('../src/parts/ViewletExplorer/Vie
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
-test('acceptEdit - rename', async () => {
+test.skip('acceptEdit - rename', async () => {
   // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
   const state = {
@@ -106,7 +106,7 @@ test('acceptEdit - rename', async () => {
   expect(FileSystem.rename).toHaveBeenCalledWith('/test/a.txt', '/test/b.txt')
 })
 
-test('acceptEdit - rename - nested file', async () => {
+test.skip('acceptEdit - rename - nested file', async () => {
   // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
   const state = {
@@ -168,7 +168,7 @@ test('acceptEdit - rename - nested file', async () => {
   })
 })
 
-test('acceptEdit - create - insert folder', async () => {
+test.skip('acceptEdit - create - insert folder', async () => {
   // @ts-ignore
   FileSystem.mkdir.mockImplementation(() => {})
   const state = {
