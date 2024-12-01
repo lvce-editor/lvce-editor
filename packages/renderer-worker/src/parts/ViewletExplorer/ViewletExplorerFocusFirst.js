@@ -1,9 +1,5 @@
-import { focusIndex } from './ViewletExplorerFocusIndex.js'
+import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
 
 export const focusFirst = (state) => {
-  const { focusedIndex, items } = state
-  if (items.length === 0 || focusedIndex === 0) {
-    return state
-  }
-  return focusIndex(state, 0)
+  return ExplorerViewWorker.invoke('Explorer.focusFirst', state)
 }
