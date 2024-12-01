@@ -1,4 +1,5 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as Platform from '../Platform/Platform.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
@@ -15,6 +16,9 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
 }
 
 export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
+  const itemHeight = 22
+  const value = ''
+  const replacement = ''
   await TextSearchWorker.invoke(
     'TextSearch.create',
     state.uid,
@@ -24,6 +28,10 @@ export const loadContent = async (state: SearchState, savedState: any): Promise<
     state.height,
     Workspace.state.workspacePath,
     AssetDir.assetDir,
+    itemHeight,
+    value,
+    replacement,
+    Platform.platform,
   )
   await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
   const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
