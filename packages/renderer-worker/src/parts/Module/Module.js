@@ -201,6 +201,8 @@ export const load = (moduleId) => {
       return import('../GetWindowId/GetWindowId.ipc.js')
     case ModuleId.ElectronDialog:
       return import('../ElectronDialog/ElectronDialog.ipc.js')
+    case ModuleId.Process:
+      return import('../Process/Process.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
