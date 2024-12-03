@@ -31,6 +31,7 @@ const computeResults = async (budget) => {
 
   for (const group in budget) {
     for (const key of Object.keys(actual[group])) {
+      // @ts-ignore
       if (PrettyBytes.parse(actual[group][key]) > PrettyBytes.parse(budget[group][key])) {
         errors.push({
           fileName: key,
