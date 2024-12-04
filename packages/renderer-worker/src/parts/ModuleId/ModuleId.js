@@ -104,3 +104,4 @@ export const ExtensionStateStorage = 133
 export const GetWindowId = 134
 export const ElectronDialog = 135
 export const Process = 136
+export const ExtensionManagement = 137

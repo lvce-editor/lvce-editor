@@ -228,6 +228,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronDialog
     case 'Process':
       return ModuleId.Process
+    case 'ExtensionManagement':
+      return ModuleId.ExtensionManagement
     default:
       throw new Error(`module ${prefix} not found`)
   }
