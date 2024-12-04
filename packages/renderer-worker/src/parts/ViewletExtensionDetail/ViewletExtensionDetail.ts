@@ -1,12 +1,7 @@
-import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
-import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
-import * as GetExtensionReadme from '../GetExtensionReadme/GetExtensionReadme.js'
-import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
+import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/ExtensionDetailViewWorker.js'
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Icon from '../Icon/Icon.js'
-import * as MarkDown from '../Markdown/Markdown.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
 export const create = (id: any, uri: string, x: number, y: number, width: number, height: number) => {
@@ -21,16 +16,6 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
   }
 }
 
-const getBaseUrl = (extensionPath) => {
-  switch (Platform.platform) {
-    case PlatformType.Remote:
-    case PlatformType.Electron:
-      return GetRemoteSrc.getRemoteSrc(extensionPath + '/')
-    default:
-      return extensionPath
-  }
-}
-
 // first heading is usually extension name, since it is alreay present
 // at the top, remove this heading
 // const removeFirstHeading = (readme) => {
@@ -41,27 +26,11 @@ const getBaseUrl = (extensionPath) => {
 // TODO when there are multiple extension with the same id,
 // probably need to pass extension location from extensions viewlet
 export const loadContent = async (state) => {
-  const { uri, width } = state
-  const id = uri.slice('extension-detail://'.length)
-  const extension = await ExtensionManagement.getExtension(id)
-  const readmeContent = await GetExtensionReadme.loadReadmeContent(extension.path)
-  const baseUrl = getBaseUrl(extension.path)
-  const readmeHtml = await MarkDown.toHtml(readmeContent, {
-    baseUrl,
-  })
-  const sanitizedReadmeHtml = readmeHtml
-  const normalizedReadmeHtml = sanitizedReadmeHtml
-  const iconSrc = ExtensionDisplay.getIcon(extension)
-  const description = ExtensionDisplay.getDescription(extension)
-  const name = ExtensionDisplay.getName(extension)
-  const size = GetViewletSize.getViewletSize(width)
+  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, Platform.platform)
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState)
   return {
-    ...state,
-    sanitizedReadmeHtml: normalizedReadmeHtml,
-    iconSrc,
-    name,
-    description,
-    size,
+    ...newState,
+    dom,
   }
 }
 
