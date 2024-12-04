@@ -125,6 +125,12 @@ export const getExtensionSearchViewWorkerCachePath = async (extraContents) => {
   return cachePath
 }
 
+export const getExtensionDetailViewWorkerCachePath = async (extraContents) => {
+  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/extension-detail-view-worker'), hash)
+  return cachePath
+}
+
 export const getEmbedsWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/embeds-worker'), hash)
