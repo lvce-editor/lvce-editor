@@ -11,6 +11,7 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/BundleExplorerWorkerCached.js'
+import * as BundleExtensionDetailViewWorkerCached from '../BundleExtensionDetailViewWorkerCached/BundleExtensionDetailViewWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearchViewWorkerCached/BundleExtensionSearchViewWorkerCached.js'
@@ -163,6 +164,16 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: extensionSearchViewWorkerCachePath,
     to: `${toRoot}/packages/extension-search-view-worker`,
+  })
+
+  const extensionDetailViewWorkerCachePath = await BundleExtensionDetailViewWorkerCached.bundleExtensionDetailViewWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: extensionDetailViewWorkerCachePath,
+    to: `${toRoot}/packages/extension-detail-view-worker`,
   })
 
   const fileSearchWorkerCachePath = await BundleFileSearchWorkerCached.bundleFileSearchWorkerCached({
