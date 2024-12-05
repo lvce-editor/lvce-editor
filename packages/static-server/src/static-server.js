@@ -1,4 +1,4 @@
-import { ServerResponse } from 'http'
+import { ServerResponse } from 'node:http'
 
 const handleMessageFromParent = (message, socket) => {
   if (!socket) {
