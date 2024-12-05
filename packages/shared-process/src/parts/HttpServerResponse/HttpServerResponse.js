@@ -11,7 +11,10 @@ export const send = (request, socket, result) => {
   response.statusCode = result.init.status
   SetHeaders.setHeaders(response, {
     ...result.init.headers,
-    Connection: 'close',
+    // Connection: 'close',
   })
   response.end(result.body)
+  console.log('did send', request.url)
+
+  response.socket?.end()
 }

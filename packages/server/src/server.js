@@ -230,6 +230,7 @@ const serveStatic = (root, skip = '') =>
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
+      console.log('here 1')
       await pipeline(createReadStream(filePath), res)
     } catch (error) {
       // @ts-ignore
@@ -264,6 +265,7 @@ const serve404 = () =>
 const createApp = () => {
   const handlerMap = Object.create(null)
   const callback = (req, res) => {
+    console.log('got req', req.url)
     // TODO avoid closure
     req.on('error', (error) => {
       // @ts-ignore
@@ -509,6 +511,7 @@ const handleSocketError = (error) => {
 }
 
 const sendHandle = (request, socket, method, ...params) => {
+  console.log('send', request.url)
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
@@ -523,7 +526,7 @@ const sendHandle = (request, socket, method, ...params) => {
           },
           socket,
           {
-            keepOpen: false,
+            keepOpen: true,
           },
         )
       })
@@ -544,7 +547,7 @@ const sendHandle = (request, socket, method, ...params) => {
         },
         socket,
         {
-          keepOpen: false,
+          keepOpen: true,
         },
       )
       break
@@ -592,7 +595,7 @@ const main = () => {
   server.on('upgrade', handleUpgrade)
   server.on('error', handleServerError)
   const host = isPublic ? undefined : 'localhost'
-  server.listen(PORT, host)
+  server.listen(PORT, host, 0)
 }
 
 main()
