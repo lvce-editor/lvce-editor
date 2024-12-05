@@ -23,8 +23,12 @@ const handleMessageFromParent = async (message, socket) => {
   const response = new ServerResponse(request)
   response.assignSocket(socket)
   response.statusCode = 200
-  response.setHeader('Connection', 'close')
+  // response.setHeader('Connection', 'close')
   await pipeline(stream, response)
+  response.detachSocket(socket)
+  socket.end()
+  console.log({ socket })
+  // socket.close()
 }
 
 const main = () => {
