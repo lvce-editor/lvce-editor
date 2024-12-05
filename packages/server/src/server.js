@@ -513,7 +513,6 @@ const sendHandle = (request, socket, method, ...params) => {
     console.warn('no socket for', request.url)
     return
   }
-  console.log('send', request.url)
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
