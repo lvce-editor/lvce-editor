@@ -25,11 +25,6 @@ const handleMessageFromParent = async (message, socket) => {
   response.statusCode = 200
   response.setHeader('Connection', 'close')
   await pipeline(stream, response)
-  console.log('did send')
-
-  // response.detachSocket(socket)
-  // console.log({ request })
-  // console.log('got message', message)
 }
 
 const main = () => {
