@@ -27,7 +27,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
 // probably need to pass extension location from extensions viewlet
 export const loadContent = async (state) => {
   const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, Platform.platform)
-  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState)
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml)
   return {
     ...newState,
     dom,
