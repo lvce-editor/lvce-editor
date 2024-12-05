@@ -15,7 +15,6 @@ const logError = (error, prettyError) => {
 }
 
 export const handleMessage = (event) => {
-  console.log('got m', event.data.method)
   return JsonRpc.handleJsonRpcMessage(
     event.target,
     event.data,
