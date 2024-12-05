@@ -7,6 +7,7 @@ import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const targetWebSocket = async (handle, message) => {
   handle.on('error', HandleSocketError.handleSocketError)
+  console.log('got ws')
   const ipc = await IpcChild.listen({
     method: IpcChildType.WebSocket,
     request: message,
