@@ -13,8 +13,8 @@ export const send = (request, socket, result) => {
     ...result.init.headers,
     // Connection: 'close',
   })
-  response.end(result.body)
+  response.end(result.body, () => {
+    response.socket?.end()
+  })
   console.log('did send', request.url)
-
-  response.socket?.end()
 }

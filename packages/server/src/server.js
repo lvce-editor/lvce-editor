@@ -511,6 +511,10 @@ const handleSocketError = (error) => {
 }
 
 const sendHandle = (request, socket, method, ...params) => {
+  if (!socket) {
+    console.warn('no socket for', request.url)
+    return
+  }
   console.log('send', request.url)
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
