@@ -351,6 +351,8 @@ const getLanguagesJson = async () => {
 }
 
 const sendFile = async (path, res) => {
+  const type = getContentType(path)
+  res.setHeader('Content-Type', type)
   try {
     await pipeline(createReadStream(path), res)
   } catch (error) {
@@ -596,7 +598,7 @@ const main = () => {
   server.on('upgrade', handleUpgrade)
   server.on('error', handleServerError)
   const host = isPublic ? undefined : 'localhost'
-  server.listen(PORT, host, 0)
+  server.listen(PORT, host)
 }
 
 main()
