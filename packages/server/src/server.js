@@ -265,7 +265,6 @@ const serve404 = () =>
 const createApp = () => {
   const handlerMap = Object.create(null)
   const callback = (req, res) => {
-    console.log('got req', req.url)
     // TODO avoid closure
     req.on('error', (error) => {
       // @ts-ignore
