@@ -8,14 +8,10 @@ export const handleWebSocket = async (handle, message) => {
   try {
     Assert.object(handle)
     Assert.object(message)
-    console.log('got ws paused')
     const { url } = message
     const type = GetTypeFromUrl.getTypeFromUrl(url)
-    // handle.pause()
     const module = HandleWebSocketModule.load(type)
     module.handleWebSocket(message, handle, type)
-    console.log('could contiune now')
-    // handle.resume()
   } catch (error) {
     DestroyWebSocket.destroySocket(handle)
     throw new VError(error, `Failed to connect to websocket`)
