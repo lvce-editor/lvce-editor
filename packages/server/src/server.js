@@ -230,7 +230,6 @@ const serveStatic = (root, skip = '') =>
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
-      console.log('here 1')
       await pipeline(createReadStream(filePath), res)
     } catch (error) {
       // @ts-ignore
