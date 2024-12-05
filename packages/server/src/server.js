@@ -311,6 +311,11 @@ const serveTests = async (req, res, next) => {
  * @param {ServerResponse} res
  */
 const servePackages = async (req, res, next) => {
+  if (!res.socket) {
+    console.log('res has no socket 1')
+    console.log(res)
+    return
+  }
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
@@ -395,11 +400,31 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
+  if (!res.socket) {
+    console.log('res has no socket 2')
+    console.log(res)
+    return
+  }
+  // console.log({ req, res })
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
 const serveCss = (req, res) => {
-  sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
+  const socket = res.socket
+
+  res.socket.on('connection', (x) => {
+    console.log('socket got connection')
+  })
+  // res.detachSocket(socket)
+
+  // const newRes = new ServerResponse(req, {})
+  // newRes.assignSocket(socket)
+  // newRes.end('ok')
+  // newRes.detachSocket(socket)
+
+  // res.assignSocket(socket)
+
+  // sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
 }
 
 app.use('/remote', handleRemote)
@@ -407,7 +432,7 @@ app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
-app.use('/css', serveCss)
+app.use('/css', serveCss, serve404())
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
@@ -595,6 +620,10 @@ const handleSocketError = (error) => {
 }
 
 const sendHandle = (request, socket, method, ...params) => {
+  if (!socket) {
+    console.trace('something is wrong')
+    return
+  }
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
