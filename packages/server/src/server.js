@@ -517,6 +517,10 @@ const sendHandle = (request, socket, method, ...params) => {
   }
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
+  let keepOpenHere = true
+  if (method === 'HandleWebSocket.handleWebSocket') {
+    keepOpenHere = false
+  }
   switch (state.sharedProcessState) {
     case /* off */ 0:
       state.onSharedProcessReady.push(() => {
@@ -529,7 +533,7 @@ const sendHandle = (request, socket, method, ...params) => {
           },
           socket,
           {
-            keepOpen: true,
+            keepOpen: keepOpenHere,
           },
         )
       })
@@ -550,7 +554,7 @@ const sendHandle = (request, socket, method, ...params) => {
         },
         socket,
         {
-          keepOpen: true,
+          keepOpen: keepOpenHere,
         },
       )
       break
