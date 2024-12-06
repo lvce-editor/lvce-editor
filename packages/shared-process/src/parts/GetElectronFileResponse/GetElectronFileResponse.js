@@ -1,12 +1,11 @@
-import { stat } from 'node:fs/promises'
 import * as GetContentResponse from '../GetContentResponse/GetContentResponse.js'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.js'
 import * as GetElectronFileResponseContent from '../GetElectronFileResponseContent/GetElectronFileResponseContent.js'
 import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponseRelativePath/GetElectronFileResponseRelativePath.js'
-import * as GetEtag from '../GetEtag/GetEtag.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
 import * as GetNotModifiedResponse from '../GetNotModifiedResponse/GetNotModifiedResponse.js'
+import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
 import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
@@ -21,12 +20,7 @@ export const getElectronFileResponse = async (url, request) => {
     let etag
     // TODO when is there no request?
     if (request) {
-      let stats = await stat(absolutePath)
-      if (stats.isDirectory()) {
-        absolutePath += '/index.html'
-        stats = await stat(absolutePath)
-      }
-      etag = GetEtag.getEtag(stats)
+      etag = await GetPathEtag.getPathEtag(absolutePath)
       if (request.headers[HttpHeader.IfNotMatch] === etag) {
         const headers = GetHeaders.getHeaders(absolutePath, pathName)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
