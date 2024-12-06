@@ -16,6 +16,8 @@ const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'share
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
+const staticServerExperimentalPermissions = true
+
 const isProduction = false
 
 const { argv, env } = process
@@ -485,12 +487,16 @@ const handleSharedProcessDisconnect = () => {
 
 const launchStaticProcess = () => {
   state.staticProcessState = /* launching */ 1
+  let execArgv = []
+  if (staticServerExperimentalPermissions) {
+    execArgv = ['--experimental-permission', '--allow-fs-read']
+  }
   const staticProcess = fork(staticServerPath, [], {
     stdio: 'inherit',
     env: {
       ...process.env,
     },
-    execArgv: [],
+    execArgv,
   })
   const handleFirstMessage = (message) => {
     state.staticProcessState = /* on */ 2
