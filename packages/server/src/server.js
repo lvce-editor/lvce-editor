@@ -401,11 +401,7 @@ const handleRemote = (req, res) => {
 }
 
 const serveCss = (req, res) => {
-  const socket = res.socket
-
-  // TODO send to static server
-
-  // sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
+  sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
 }
 
 app.use('/remote', handleRemote)
