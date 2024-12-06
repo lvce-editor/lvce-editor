@@ -1,9 +1,3 @@
-const handleMessageFromParent = (message) => {
-  console.log('got message', message)
-}
+import * as Main from './parts/Main/Main.js'
 
-const main = () => {
-  process.on('message', handleMessageFromParent)
-}
-
-main()
+Main.main()
