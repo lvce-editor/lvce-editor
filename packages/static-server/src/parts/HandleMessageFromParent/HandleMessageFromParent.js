@@ -1,12 +1,8 @@
 import { createReadStream } from 'node:fs'
 import { ServerResponse } from 'node:http'
-import { dirname, join, resolve } from 'node:path'
+import { join } from 'node:path'
 import { pipeline } from 'node:stream/promises'
-import { fileURLToPath } from 'node:url'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = resolve(__dirname, '../../../')
-const STATIC = resolve(__dirname, '../../../static')
+import { STATIC } from '../Static/Static.js'
 
 export const handleMessageFromParent = async (message, socket) => {
   if (!socket) {
