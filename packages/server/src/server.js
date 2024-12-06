@@ -13,7 +13,6 @@ const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
-const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const isProduction = false
@@ -302,7 +301,7 @@ const serveTests = async (req, res, next) => {
   // TODO figure out if shared process can
   // find out where the static folder is located
   const indexHtmlPath = join(ROOT, 'static', 'index.html')
-  sendHandleSharedProcess(req, res.socket, 'HandleRequestTest.handleRequestTest', indexHtmlPath)
+  sendHandle(req, res.socket, 'HandleRequestTest.handleRequestTest', indexHtmlPath)
 }
 
 /**
@@ -311,7 +310,7 @@ const serveTests = async (req, res, next) => {
  * @param {ServerResponse} res
  */
 const servePackages = async (req, res, next) => {
-  sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
 const getAbsolutePath = (extensionName) => {
@@ -397,11 +396,7 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
-  sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
-}
-
-const serveCss = (req, res) => {
-  sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
+  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
 app.use('/remote', handleRemote)
@@ -409,10 +404,6 @@ app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
-
-// serve static files using static server
-app.use('/css', serveCss, serve404())
-
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
@@ -428,20 +419,6 @@ const state = {
    * @type{0|1|2}
    */
   sharedProcessState: /* off */ 0,
-
-  /**
-   * @type{0|1|2}
-   */
-  staticProcessState: /* off */ 0,
-  /**
-   * @type {ChildProcess|undefined}
-   */
-  staticProcess: undefined,
-
-  /**
-   * @type {(()=>void)[]}
-   */
-  onStaticProcessReady: [],
 }
 
 const handleMessage = (message) => {
@@ -481,72 +458,6 @@ const handleExit = (code) => {
 
 const handleSharedProcessDisconnect = () => {
   console.info('[server] shared process disconnected')
-}
-
-const launchStaticProcess = () => {
-  state.staticProcessState = /* launching */ 1
-  const staticProcess = fork(staticServerPath, [], {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-    },
-    execArgv: [],
-  })
-  const handleFirstMessage = (message) => {
-    state.staticProcessState = /* on */ 2
-    for (const listener of state.onStaticProcessReady) {
-      listener()
-    }
-    state.onStaticProcessReady = []
-  }
-  staticProcess.once('message', handleFirstMessage)
-  staticProcess.on('exit', handleExit)
-  state.staticProcess = staticProcess
-}
-
-const sendHandleStatic = (request, socket, method, ...params) => {
-  request.on('error', handleRequestError)
-  socket.on('error', handleSocketError)
-  switch (state.staticProcessState) {
-    case /* off */ 0:
-      state.onStaticProcessReady.push(() => {
-        // @ts-ignore
-        state.staticProcess.send(
-          {
-            jsonrpc: '2.0',
-            method,
-            params: [getHandleMessage(request), ...params],
-          },
-          socket,
-          {
-            keepOpen: false,
-          },
-        )
-      })
-      launchStaticProcess()
-      break
-    case /* launching */ 1:
-      state.onStaticProcessReady.push(() => {
-        handleUpgrade(request, socket)
-      })
-      break
-    case /* on */ 2:
-      // @ts-ignore
-      state.staticProcess.send(
-        {
-          jsonrpc: '2.0',
-          method,
-          params: [getHandleMessage(request), ...params],
-        },
-        socket,
-        {
-          keepOpen: false,
-        },
-      )
-      break
-    default:
-      break
-  }
 }
 
 const launchSharedProcess = () => {
@@ -599,7 +510,7 @@ const handleSocketError = (error) => {
   console.info('[info] request socket upgrade error', error)
 }
 
-const sendHandleSharedProcess = (request, socket, method, ...params) => {
+const sendHandle = (request, socket, method, ...params) => {
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
@@ -650,7 +561,7 @@ const sendHandleSharedProcess = (request, socket, method, ...params) => {
  * @param {import('net').Socket} socket
  */
 const handleUpgrade = (request, socket) => {
-  sendHandleSharedProcess(request, socket, 'HandleWebSocket.handleWebSocket')
+  sendHandle(request, socket, 'HandleWebSocket.handleWebSocket')
 }
 
 const handleServerError = (error) => {
