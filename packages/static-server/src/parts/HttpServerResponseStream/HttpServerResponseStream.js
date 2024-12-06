@@ -1,9 +1,16 @@
 import { createReadStream } from 'node:fs'
+import { readFile } from 'node:fs/promises'
 import { ServerResponse } from 'node:http'
 import { pipeline } from 'node:stream/promises'
 import * as Assert from '../Assert/Assert.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
-import { readFile } from 'node:fs/promises'
+
+const supportsStream = (filePath) => {
+  if (filePath.endsWith('.ttf')) {
+    return false
+  }
+  return true
+}
 
 export const send = async (request, socket, filePath) => {
   const response = new ServerResponse(request)
@@ -14,7 +21,7 @@ export const send = async (request, socket, filePath) => {
     response.assignSocket(socket)
     const headers = GetHeaders.getHeaders(filePath)
     response.writeHead(200, headers)
-    if (filePath.endsWith('.ttf')) {
+    if (!supportsStream(filePath)) {
       const content = await readFile(filePath)
       response.end(content)
       return
