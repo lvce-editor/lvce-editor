@@ -1,7 +1,4 @@
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+import { root } from '../Root/Root.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = resolve(__dirname, '../../../')
-
-export const STATIC = resolve(__dirname, '../../../../../static')
+export const STATIC = join(root, 'static')
