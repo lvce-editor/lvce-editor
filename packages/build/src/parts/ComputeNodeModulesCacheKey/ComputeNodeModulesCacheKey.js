@@ -14,6 +14,7 @@ const locations = [
   'packages/main-process/package-lock.json',
   'packages/renderer-worker/package-lock.json',
   'packages/server/package-lock.json',
+  'packages/static-server/package-lock.json',
   'packages/shared-process/package-lock.json',
   'packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
   'packages/build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
