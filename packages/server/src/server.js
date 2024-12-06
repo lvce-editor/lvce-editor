@@ -403,17 +403,7 @@ const handleRemote = (req, res) => {
 const serveCss = (req, res) => {
   const socket = res.socket
 
-  res.socket.on('connection', (x) => {
-    console.log('socket got connection')
-  })
-  // res.detachSocket(socket)
-
-  // const newRes = new ServerResponse(req, {})
-  // newRes.assignSocket(socket)
-  // newRes.end('ok')
-  // newRes.detachSocket(socket)
-
-  // res.assignSocket(socket)
+  // TODO send to static server
 
   // sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
 }
@@ -423,7 +413,10 @@ app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
+
+// serve static files using static server
 app.use('/css', serveCss, serve404())
+
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
