@@ -414,6 +414,11 @@ app.use('/', servePackages, serve404())
 
 // serve static files using static server
 app.use('/css', serveCss, serve404())
+app.use('/fonts', serveCss, serve404())
+app.use('/themes', serveCss, serve404())
+app.use('/sounds', serveCss, serve404())
+app.use('/favicon.ico', serveCss, serve404())
+app.use('/manifest.json', serveCss, serve404())
 
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
