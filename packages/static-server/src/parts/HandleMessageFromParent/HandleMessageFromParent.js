@@ -23,6 +23,5 @@ export const handleMessageFromParent = async (message, socket) => {
   await pipeline(stream, response)
   response.detachSocket(socket)
   socket.end()
-  console.log({ socket })
   // socket.close()
 }
