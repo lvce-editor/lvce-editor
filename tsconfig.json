@@ -11,7 +11,7 @@
     { "path": "./packages/main-process" },
     { "path": "./packages/renderer-worker" },
     { "path": "./packages/server" },
-    { "path": "./packages/static-server" },
-    { "path": "./packages/shared-process" }
+    { "path": "./packages/shared-process" },
+    { "path": "./packages/static-server" }
   ]
 }
