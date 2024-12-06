@@ -604,10 +604,6 @@ const handleSocketError = (error) => {
 }
 
 const sendHandle = (request, socket, method, ...params) => {
-  if (!socket) {
-    console.trace('something is wrong')
-    return
-  }
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
