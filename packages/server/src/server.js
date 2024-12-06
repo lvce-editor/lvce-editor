@@ -402,22 +402,22 @@ const handleRemote = (req, res) => {
   sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
-const serveCss = (req, res) => {
+const serveWithStaticServer = (req, res) => {
   sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
 }
 
 // serve static files using static server
-app.use('/config', serveCss)
-app.use('/css', serveCss)
-app.use('/fonts', serveCss)
-app.use('/icons', serveCss)
-app.use('/images', serveCss)
-app.use('/js', serveCss)
-app.use('/lib-css', serveCss)
-app.use('/sounds', serveCss)
-app.use('/themes', serveCss)
-app.use('/favicon.ico', serveCss)
-app.use('/manifest.json', serveCss)
+app.use('/config', serveWithStaticServer)
+app.use('/css', serveWithStaticServer)
+app.use('/fonts', serveWithStaticServer)
+app.use('/icons', serveWithStaticServer)
+app.use('/images', serveWithStaticServer)
+app.use('/js', serveWithStaticServer)
+app.use('/lib-css', serveWithStaticServer)
+app.use('/sounds', serveWithStaticServer)
+app.use('/themes', serveWithStaticServer)
+app.use('/favicon.ico', serveWithStaticServer)
+app.use('/manifest.json', serveWithStaticServer)
 
 // serve other files in shared process
 app.use('/remote', handleRemote)
