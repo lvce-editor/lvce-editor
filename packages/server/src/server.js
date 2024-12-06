@@ -311,11 +311,6 @@ const serveTests = async (req, res, next) => {
  * @param {ServerResponse} res
  */
 const servePackages = async (req, res, next) => {
-  if (!res.socket) {
-    console.log('res has no socket 1')
-    console.log(res)
-    return
-  }
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
@@ -402,12 +397,6 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
-  if (!res.socket) {
-    console.log('res has no socket 2')
-    console.log(res)
-    return
-  }
-  // console.log({ req, res })
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
