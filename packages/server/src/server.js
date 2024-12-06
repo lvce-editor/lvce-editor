@@ -489,7 +489,7 @@ const launchStaticProcess = () => {
   state.staticProcessState = /* launching */ 1
   let execArgv = []
   if (staticServerExperimentalPermissions) {
-    execArgv = ['--experimental-permission', '--allow-fs-read']
+    execArgv = ['--experimental-permission', '--allow-fs-read=*']
   }
   const staticProcess = fork(staticServerPath, [], {
     stdio: 'inherit',
