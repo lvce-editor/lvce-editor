@@ -357,6 +357,8 @@ const getLanguagesJson = async () => {
 }
 
 const sendFile = async (path, res) => {
+  const type = getContentType(path)
+  res.setHeader('Content-Type', type)
   try {
     await pipeline(createReadStream(path), res)
   } catch (error) {
