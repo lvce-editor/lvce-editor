@@ -16,7 +16,7 @@ const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'share
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
-const staticServerExperimentalPermissions = true
+const staticServerExperimentalPermissions = false
 
 const isProduction = false
 
@@ -406,20 +406,27 @@ const serveCss = (req, res) => {
   sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
 }
 
+// serve static files using static server
+app.use('/config', serveCss)
+app.use('/css', serveCss)
+app.use('/fonts', serveCss)
+app.use('/icons', serveCss)
+app.use('/images', serveCss)
+app.use('/js', serveCss)
+app.use('/lib-css', serveCss)
+app.use('/sounds', serveCss)
+app.use('/themes', serveCss)
+app.use('/favicon.ico', serveCss)
+app.use('/manifest.json', serveCss)
+
+// serve other files in shared process
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
 
-// serve static files using static server
-app.use('/css', serveCss)
-app.use('/fonts', serveCss)
-app.use('/themes', serveCss)
-app.use('/sounds', serveCss)
-app.use('/favicon.ico', serveCss)
-app.use('/manifest.json', serveCss)
-
+// TODO deprecate this part, serve files statically or in shared process
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
