@@ -422,7 +422,7 @@ app.use('/manifest.json', serveCss)
 // serve other files in shared process
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
-app.use('/config', serveConfig, serve404())
+// app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
 
