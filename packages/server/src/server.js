@@ -238,6 +238,7 @@ const serveStatic = (root, skip = '') =>
       }
       await pipeline(createReadStream(filePath), res)
       if (filePath.endsWith('.ttf')) {
+        console.log(res._handle)
         console.log('did send ttf')
       }
     } catch (error) {
@@ -415,7 +416,7 @@ const serveWithStaticServer = (req, res) => {
 // serve static files using static server
 app.use('/config', serveWithStaticServer)
 app.use('/css', serveWithStaticServer)
-// app.use('/fonts', serveWithStaticServer)
+app.use('/fonts', serveWithStaticServer)
 app.use('/icons', serveWithStaticServer)
 app.use('/images', serveWithStaticServer)
 app.use('/js', serveWithStaticServer)
