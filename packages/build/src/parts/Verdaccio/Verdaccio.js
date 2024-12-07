@@ -25,11 +25,13 @@ export const start = async () => {
       '**': {
         access: `$all`,
         publish: `$all`,
+        unpublish: `$all`,
         proxy: `npmjs`,
       },
       '@*/*': {
         access: `$all`,
         publish: `$all`,
+        unpublish: `$all`,
         proxy: `npmjs`,
       },
     },
@@ -43,6 +45,9 @@ export const start = async () => {
       type: 'stdout',
       format: 'pretty',
       level: 'http',
+    },
+    server: {
+      keepAliveTimeout: 60,
     },
   })
   const { resolve, promise } = Promises.withResolvers()
