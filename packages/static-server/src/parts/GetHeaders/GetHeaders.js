@@ -1,4 +1,5 @@
 import { extname } from 'path'
+import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
@@ -11,7 +12,8 @@ export const getHeaders = (absolutePath) => {
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
-    Connection: 'close',
+    [HttpHeader.CacheControl]: CachingHeaders.NoCache,
+    [HttpHeader.Connection]: 'close',
   }
   return {
     ...headers,
