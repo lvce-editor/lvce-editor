@@ -14,11 +14,7 @@ export const send = async (request, socket, filePath) => {
     const headers = GetHeaders.getHeaders(filePath)
     response.writeHead(200, headers)
     const stream = createReadStream(filePath)
-    if (filePath.endsWith('.ttf')) {
-    }
     await PipelineResponse.pipelineResponse(response, stream)
-    if (filePath.endsWith('.ttf')) {
-    }
   } catch (error) {
     console.error(`[response error] ${request.url} ${error}`)
     response.statusCode = 500
