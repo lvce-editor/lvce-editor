@@ -233,7 +233,13 @@ const serveStatic = (root, skip = '') =>
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
+      if (filePath.endsWith('.ttf')) {
+        console.log('send tff')
+      }
       await pipeline(createReadStream(filePath), res)
+      if (filePath.endsWith('.ttf')) {
+        console.log('did send ttf')
+      }
     } catch (error) {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ERR_STREAM_PREMATURE_CLOSE) {
@@ -409,7 +415,7 @@ const serveWithStaticServer = (req, res) => {
 // serve static files using static server
 app.use('/config', serveWithStaticServer)
 app.use('/css', serveWithStaticServer)
-app.use('/fonts', serveWithStaticServer)
+// app.use('/fonts', serveWithStaticServer)
 app.use('/icons', serveWithStaticServer)
 app.use('/images', serveWithStaticServer)
 app.use('/js', serveWithStaticServer)
