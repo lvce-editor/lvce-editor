@@ -5,5 +5,11 @@ export const handleRequest = async (socket, request, indexHtmlPath) => {
   Assert.object(socket)
   Assert.object(request)
   Assert.string(indexHtmlPath)
-  HttpServerResponse.send(request, socket, 'okay')
+  HttpServerResponse.send(request, socket, {
+    body: 'okay',
+    init: {
+      status: 200,
+      headers: {},
+    },
+  })
 }
