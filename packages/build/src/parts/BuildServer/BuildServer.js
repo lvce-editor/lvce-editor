@@ -61,9 +61,8 @@ import { ChildProcess, fork } from 'node:child_process'`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const __dirname = dirname(fileURLToPath(import.meta.url))`,
-    replacement: `const __dirname = dirname(fileURLToPath(import.meta.url))
-const staticServerPath = dirname(fileURLToPath(import.meta.resolve('@lvce-editor/static-server')))
+    occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')`,
+    replacement: `const staticServerPath = dirname(fileURLToPath(import.meta.resolve('@lvce-editor/static-server')))
 const staticPath = join(staticServerPath, 'static')`,
   })
   await Replace.replace({
