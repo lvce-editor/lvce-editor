@@ -431,38 +431,13 @@ app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
   /**
-   * @type {(()=>void)[]}
+   * @type {Promise<ChildProcess>|undefined}
    */
-  onSharedProcessReady: [],
+  sharedProcessPromise: undefined,
   /**
-   * @type{ChildProcess|undefined}
+   * @type {Promise<ChildProcess>|undefined}
    */
-  sharedProcess: undefined,
-  /**
-   * @type{0|1|2}
-   */
-  sharedProcessState: /* off */ 0,
-
-  /**
-   * @type{0|1|2}
-   */
-  staticProcessState: /* off */ 0,
-  /**
-   * @type {ChildProcess|undefined}
-   */
-  staticProcess: undefined,
-
-  /**
-   * @type {(()=>void)[]}
-   */
-  onStaticProcessReady: [],
-}
-
-const handleMessage = (message) => {
-  if (!process.send) {
-    return
-  }
-  process.send(message)
+  staticProcessPromise: undefined,
 }
 
 const handleMessageFromParent = (message) => {
@@ -497,78 +472,11 @@ const handleSharedProcessDisconnect = () => {
   console.info('[server] shared process disconnected')
 }
 
-const launchStaticProcess = () => {
-  state.staticProcessState = /* launching */ 1
-  let execArgv = []
-  if (staticServerExperimentalPermissions) {
-    execArgv = ['--experimental-permission', '--allow-fs-read=*']
-  }
-  const staticProcess = fork(staticServerPath, [], {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-    },
-    execArgv,
-  })
-  const handleFirstMessage = (message) => {
-    state.staticProcessState = /* on */ 2
-    for (const listener of state.onStaticProcessReady) {
-      listener()
-    }
-    state.onStaticProcessReady = []
-  }
-  staticProcess.once('message', handleFirstMessage)
-  staticProcess.on('exit', handleExit)
-  state.staticProcess = staticProcess
-}
-
-const sendHandleStatic = (request, socket, method, ...params) => {
-  request.on('error', handleRequestError)
-  socket.on('error', handleSocketError)
-  switch (state.staticProcessState) {
-    case /* off */ 0:
-      state.onStaticProcessReady.push(() => {
-        // @ts-ignore
-        state.staticProcess.send(
-          {
-            jsonrpc: '2.0',
-            method,
-            params: [getHandleMessage(request), ...params],
-          },
-          socket,
-          {
-            keepOpen: false,
-          },
-        )
-      })
-      launchStaticProcess()
-      break
-    case /* launching */ 1:
-      state.onStaticProcessReady.push(() => {
-        handleUpgrade(request, socket)
-      })
-      break
-    case /* on */ 2:
-      // @ts-ignore
-      state.staticProcess.send(
-        {
-          jsonrpc: '2.0',
-          method,
-          params: [getHandleMessage(request), ...params],
-        },
-        socket,
-        {
-          keepOpen: false,
-        },
-      )
-      break
-    default:
-      break
-  }
-}
-
-const launchSharedProcess = () => {
-  state.sharedProcessState = /* launching */ 1
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchSharedProcess = async () => {
   const sharedProcess = fork(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced], {
     stdio: 'inherit',
     env: {
@@ -576,18 +484,23 @@ const launchSharedProcess = () => {
     },
     execArgv: [],
   })
-  const handleFirstMessage = (message) => {
-    state.sharedProcessState = /* on */ 2
-    for (const listener of state.onSharedProcessReady) {
-      listener()
-    }
-    state.onSharedProcessReady = []
-    sharedProcess.on('message', handleMessage)
-  }
-  sharedProcess.once('message', handleFirstMessage)
   sharedProcess.on('exit', handleExit)
   sharedProcess.on('disconnect', handleSharedProcessDisconnect)
-  state.sharedProcess = sharedProcess
+  const { resolve, promise } = Promise.withResolvers()
+  sharedProcess.once('message', resolve)
+  await promise
+  return sharedProcess
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const getOrCreateSharedProcess = () => {
+  if (!state.sharedProcessPromise) {
+    state.sharedProcessPromise = launchSharedProcess()
+  }
+  return state.sharedProcessPromise
 }
 
 // TODO handle all possible errors from shared process
@@ -617,49 +530,21 @@ const handleSocketError = (error) => {
   console.info('[info] request socket upgrade error', error)
 }
 
-const sendHandleSharedProcess = (request, socket, method, ...params) => {
+const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
-  switch (state.sharedProcessState) {
-    case /* off */ 0:
-      state.onSharedProcessReady.push(() => {
-        // @ts-ignore
-        state.sharedProcess.send(
-          {
-            jsonrpc: '2.0',
-            method,
-            params: [getHandleMessage(request), ...params],
-          },
-          socket,
-          {
-            keepOpen: false,
-          },
-        )
-      })
-      launchSharedProcess()
-      break
-    case /* launching */ 1:
-      state.onSharedProcessReady.push(() => {
-        handleUpgrade(request, socket)
-      })
-      break
-    case /* on */ 2:
-      // @ts-ignore
-      state.sharedProcess.send(
-        {
-          jsonrpc: '2.0',
-          method,
-          params: [getHandleMessage(request), ...params],
-        },
-        socket,
-        {
-          keepOpen: false,
-        },
-      )
-      break
-    default:
-      break
-  }
+  const sharedProcess = await getOrCreateSharedProcess()
+  sharedProcess.send(
+    {
+      jsonrpc: '2.0',
+      method,
+      params: [getHandleMessage(request), ...params],
+    },
+    socket,
+    {
+      keepOpen: false,
+    },
+  )
 }
 
 /**
