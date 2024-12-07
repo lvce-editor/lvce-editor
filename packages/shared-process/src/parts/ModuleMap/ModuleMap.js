@@ -301,6 +301,8 @@ export const getModuleId = (commandId) => {
     case 'FileSystemDisk.readJson':
     case 'FileSystemDisk.writeFile':
       return ModuleId.FileSystemDisk
+    case 'HandleRequest.handleRequest':
+      return ModuleId.HandleRequest
     default:
       throw new CommandNotFoundError(commandId)
   }

@@ -136,6 +136,8 @@ export const load = (moduleId) => {
       return import('../GetExtensions/GetExtensions.ipc.js')
     case ModuleId.FileSystemDisk:
       return import('../FileSystemDisk/FileSystemDisk.ipc.js')
+    case ModuleId.HandleRequest:
+      return import('../HandleRequest/HandleRequest.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
