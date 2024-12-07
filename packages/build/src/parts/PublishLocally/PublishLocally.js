@@ -8,6 +8,7 @@ import * as Path from '../Path/Path.js'
 import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
+import * as Root from '../Root/Root.js'
 import * as Verdaccio from '../Verdaccio/Verdaccio.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -45,10 +46,10 @@ const isFolder = (dirent) => {
 }
 
 const publishPackages = async () => {
-  // await Exec.exec('node', ['packages/build/bin/build.js', '--target=server'], {
-  //   cwd: Root.root,
-  //   stdio: 'inherit',
-  // })
+  await Exec.exec('node', ['packages/build/bin/build.js', '--target=server'], {
+    cwd: Root.root,
+    stdio: 'inherit',
+  })
   await addNpmrcFile()
   const packages = await ReadDir.readDirWithFileTypes('packages/build/.tmp/server')
   await Promise.all(packages.filter(isFolder).map(getName).map(publishPackage))
