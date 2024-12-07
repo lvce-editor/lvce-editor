@@ -233,14 +233,7 @@ const serveStatic = (root, skip = '') =>
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
-      if (filePath.endsWith('.ttf')) {
-        console.log('send tff')
-      }
       await pipeline(createReadStream(filePath), res)
-      if (filePath.endsWith('.ttf')) {
-        console.log(res._handle)
-        console.log('did send ttf')
-      }
     } catch (error) {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ERR_STREAM_PREMATURE_CLOSE) {
