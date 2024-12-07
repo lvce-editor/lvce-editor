@@ -492,6 +492,18 @@ const resolveServerStaticPath = (root) => {
   if (existsSync(guessThree)) {
     return guessThree
   }
+  const guessFour = Path.join(root, 'packages', 'build', 'node_modules', '@lvce-editor', 'static-server', 'static')
+  if (existsSync(guessFour)) {
+    return guessFour
+  }
+  const guessFive = Path.join(root, 'node_modules', '@lvce-editor', 'static-server', 'static')
+  if (existsSync(guessFive)) {
+    return guessFive
+  }
+  const guessSix = Path.join(root, 'packages', 'server', 'node_modules', '@lvce-editor', 'static-server', 'static')
+  if (existsSync(guessSix)) {
+    return guessSix
+  }
   throw new Error(`server static path not found`)
 }
 
