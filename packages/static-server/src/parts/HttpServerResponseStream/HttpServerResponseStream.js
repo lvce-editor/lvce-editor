@@ -1,17 +1,9 @@
 import { createReadStream } from 'node:fs'
-import { readFile } from 'node:fs/promises'
 import { ServerResponse } from 'node:http'
-import { pipeline, finished } from 'node:stream/promises'
+import { pipeline } from 'node:stream/promises'
 import * as Assert from '../Assert/Assert.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
-import * as PipelineResponse from '../PipelineResponse/PipelineResponse.js'
-
-const supportsStream = (filePath) => {
-  // if (filePath.endsWith('.ttf')) {
-  //   return false
-  // }
-  return true
-}
+import * as SetHeaders from '../SetHeaders/SetHeaders.js'
 
 export const send = async (request, socket, filePath) => {
   const response = new ServerResponse(request)
@@ -20,10 +12,12 @@ export const send = async (request, socket, filePath) => {
     Assert.object(socket)
     Assert.string(filePath)
     response.assignSocket(socket)
+    // TODO etag caching
+    response.statusCode = 200
     const headers = GetHeaders.getHeaders(filePath)
-    response.writeHead(200, headers)
+    SetHeaders.setHeaders(response, headers)
     const stream = createReadStream(filePath)
-    await PipelineResponse.pipelineResponse(response, stream)
+    await pipeline(stream, response)
   } catch (error) {
     console.error(`[response error] ${request.url} ${error}`)
     response.statusCode = 500
