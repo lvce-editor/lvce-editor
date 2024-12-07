@@ -13,9 +13,8 @@ const ROOT = resolve(__dirname, '../../../')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
-const builtinExtensionsPath = join(ROOT, 'extensions')
-
 const STATIC = resolve(__dirname, '../../../static')
+const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const isProduction = false
 
