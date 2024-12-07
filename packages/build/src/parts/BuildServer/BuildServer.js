@@ -62,21 +62,12 @@ const staticPath = join(staticServerPath, '..', '..', 'static')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const STATIC = resolve(__dirname, '../static')`,
-    replacement: `const STATIC = staticPath`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 `,
     replacement: ``,
   })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const isImmutable = argv.includes('--immutable')`,
-    replacement: `const isImmutable = true`,
-  })
+
   const content = `This project incorporates components from the projects listed below, that may have licenses
 differing from this project:
 
