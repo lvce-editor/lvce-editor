@@ -301,7 +301,7 @@ const serveTests = async (req, res, next) => {
   // TODO figure out if shared process can
   // find out where the static folder is located
   const indexHtmlPath = join(ROOT, 'static', 'index.html')
-  sendHandle(req, res.socket, 'HandleRequestTest.handleRequestTest', indexHtmlPath)
+  sendHandleSharedProcess(req, res.socket, 'HandleRequestTest.handleRequestTest', indexHtmlPath)
 }
 
 /**
@@ -310,7 +310,7 @@ const serveTests = async (req, res, next) => {
  * @param {ServerResponse} res
  */
 const servePackages = async (req, res, next) => {
-  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+  sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
 const getAbsolutePath = (extensionName) => {
@@ -396,7 +396,7 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
-  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+  sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
 app.use('/remote', handleRemote)
@@ -510,7 +510,7 @@ const handleSocketError = (error) => {
   console.info('[info] request socket upgrade error', error)
 }
 
-const sendHandle = (request, socket, method, ...params) => {
+const sendHandleSharedProcess = (request, socket, method, ...params) => {
   request.on('error', handleRequestError)
   socket.on('error', handleSocketError)
   switch (state.sharedProcessState) {
@@ -561,7 +561,7 @@ const sendHandle = (request, socket, method, ...params) => {
  * @param {import('net').Socket} socket
  */
 const handleUpgrade = (request, socket) => {
-  sendHandle(request, socket, 'HandleWebSocket.handleWebSocket')
+  sendHandleSharedProcess(request, socket, 'HandleWebSocket.handleWebSocket')
 }
 
 const handleServerError = (error) => {
