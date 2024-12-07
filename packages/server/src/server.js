@@ -13,6 +13,7 @@ const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
+const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const isProduction = false
@@ -399,6 +400,10 @@ const handleRemote = (req, res) => {
   sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
+const serveWithStaticServer = (req, res) => {
+  sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
+}
+
 // serve other files in shared process
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
@@ -491,6 +496,25 @@ const getOrCreateSharedProcess = () => {
   return state.sharedProcessPromise
 }
 
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchStaticServerProcess = async () => {
+  return launchProcess(staticServerPath, [])
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const getOrCreateStaticServerPathProcess = () => {
+  if (!state.staticProcessPromise) {
+    state.staticProcessPromise = launchStaticServerProcess()
+  }
+  return state.staticProcessPromise
+}
+
 // TODO handle all possible errors from shared process
 
 const getHandleMessage = (request) => {
@@ -523,6 +547,23 @@ const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   socket.on('error', handleSocketError)
   const sharedProcess = await getOrCreateSharedProcess()
   sharedProcess.send(
+    {
+      jsonrpc: '2.0',
+      method,
+      params: [getHandleMessage(request), ...params],
+    },
+    socket,
+    {
+      keepOpen: false,
+    },
+  )
+}
+
+const sendHandleStaticServerProcess = async (request, socket, method, ...params) => {
+  request.on('error', handleRequestError)
+  socket.on('error', handleSocketError)
+  const staticServerProcess = await getOrCreateStaticServerPathProcess()
+  staticServerProcess.send(
     {
       jsonrpc: '2.0',
       method,
