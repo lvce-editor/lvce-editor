@@ -97,8 +97,7 @@ const handleRequest = (req, res) => {
   if (isStatic(req.url)) {
     return sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
   }
-  const indexHtmlPath = join(STATIC, 'index.html')
-  return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest', indexHtmlPath)
+  return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest')
 }
 
 const state = {
