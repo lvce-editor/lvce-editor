@@ -1,19 +1,10 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as BundleOptions from '../BundleOptions/BundleOptions.js'
-import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
-import * as CommitHash from '../CommitHash/CommitHash.js'
-import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
-import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
-import * as Version from '../Version/Version.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
@@ -101,7 +92,7 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-const copyStaticServerFiles = async ({ commitHash }) => {
+const copyStaticServerFiles = async () => {
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
@@ -111,10 +102,6 @@ const copyStaticServerFiles = async ({ commitHash }) => {
     from: 'LICENSE',
     to: 'packages/build/.tmp/server/static-server/LICENSE',
   })
-}
-
-const sortObject = (object) => {
-  return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
@@ -167,7 +154,7 @@ const copyExtensions = async ({ commitHash }) => {
 
 export const buildStaticServer = async ({ product, commitHash, version, date }) => {
   console.time('copyStaticServerFiles')
-  await copyStaticServerFiles({ commitHash })
+  await copyStaticServerFiles()
   console.timeEnd('copyStaticServerFiles')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
