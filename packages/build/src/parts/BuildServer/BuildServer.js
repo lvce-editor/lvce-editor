@@ -1,18 +1,13 @@
-import { readdir } from 'fs/promises'
-import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BuildStaticServer from '../BuildStaticServer/BuildStaticServer.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
-import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
-import * as BuildStaticServer from '../BuildStaticServer/BuildStaticServer.js'
 import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -672,10 +667,6 @@ const copyJestEnvironment = async ({ commitHash }) => {
     occurrence: 'COMMIT_HASH',
     replacement: commitHash,
   })
-}
-
-const shouldBeCopied = (extensionName) => {
-  return extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
 }
 
 export const build = async ({ product }) => {
