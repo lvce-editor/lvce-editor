@@ -10,10 +10,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
-const STATIC = resolve(__dirname, '../../../static')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
+const STATIC = resolve(__dirname, '../../../static')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const staticServerExperimentalPermissions = false
