@@ -20,9 +20,9 @@ const getHeadersDocument = (mime, etag) => {
   }
 }
 
-const getHeadersRendererWorker = (mime, etag) => {
+const getHeadersRendererWorker = (mime, etag, defaultCachingHeader) => {
   return {
-    [HttpHeader.CacheControl]: CachingHeaders.NoCache,
+    [HttpHeader.CacheControl]: defaultCachingHeader,
     [HttpHeader.Connection]: 'close',
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicyRendererWorker,
     [HttpHeader.ContentType]: mime,
@@ -32,9 +32,9 @@ const getHeadersRendererWorker = (mime, etag) => {
   }
 }
 
-const getHeadersExtensionHostWorker = (mime, etag) => {
+const getHeadersExtensionHostWorker = (mime, etag, defaultCachingHeader) => {
   return {
-    [HttpHeader.CacheControl]: CachingHeaders.NoCache,
+    [HttpHeader.CacheControl]: defaultCachingHeader,
     [HttpHeader.Connection]: 'close',
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicyExtensionHostWorker,
     [HttpHeader.ContentType]: mime,
@@ -44,9 +44,9 @@ const getHeadersExtensionHostWorker = (mime, etag) => {
   }
 }
 
-const getHeadersTerminalWorker = (mime, etag) => {
+const getHeadersTerminalWorker = (mime, etag, defaultCachingHeader) => {
   return {
-    [HttpHeader.CacheControl]: CachingHeaders.NoCache,
+    [HttpHeader.CacheControl]: defaultCachingHeader,
     [HttpHeader.Connection]: 'close',
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicyTerminalWorker,
     [HttpHeader.ContentType]: mime,
@@ -56,9 +56,9 @@ const getHeadersTerminalWorker = (mime, etag) => {
   }
 }
 
-const getHeadersDefault = (mime, etag) => {
+const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
   return {
-    [HttpHeader.CacheControl]: CachingHeaders.NoCache, // TODO enable caching in production
+    [HttpHeader.CacheControl]: defaultCachingHeader,
     [HttpHeader.Connection]: 'close',
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
@@ -66,20 +66,21 @@ const getHeadersDefault = (mime, etag) => {
   }
 }
 
-export const getHeaders = (absolutePath, etag) => {
+export const getHeaders = (absolutePath, etag, isImmutable) => {
   const extension = Path.extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
+  const defaultCachingHeader = isImmutable ? CachingHeaders.OneYear : CachingHeaders.NoCache
   if (absolutePath.endsWith('/index.html')) {
     return getHeadersDocument(mime, etag)
   }
   if (absolutePath.endsWith('rendererWorkerMain.js')) {
-    return getHeadersRendererWorker(mime, etag)
+    return getHeadersRendererWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('extensionHostWorkerMain.js')) {
-    return getHeadersExtensionHostWorker(mime, etag)
+    return getHeadersExtensionHostWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('terminalWorkerMain.js')) {
-    return getHeadersTerminalWorker(mime, etag)
+    return getHeadersTerminalWorker(mime, etag, defaultCachingHeader)
   }
-  return getHeadersDefault(mime, etag)
+  return getHeadersDefault(mime, etag, defaultCachingHeader)
 }

@@ -4,7 +4,7 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
-export const getResponseInfo = async (request) => {
+export const getResponseInfo = async (request, isImmutable) => {
   const pathname = request.url
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
   const etag = await GetPathEtag.getPathEtag(absolutePath)
@@ -18,7 +18,7 @@ export const getResponseInfo = async (request) => {
       },
     }
   }
-  const headers = GetHeaders.getHeaders(absolutePath, etag)
+  const headers = GetHeaders.getHeaders(absolutePath, etag, isImmutable)
   return {
     absolutePath,
     status: HttpStatusCode.Ok,
