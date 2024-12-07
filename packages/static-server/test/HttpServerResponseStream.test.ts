@@ -1,10 +1,10 @@
 import { expect, test } from '@jest/globals'
-import { Writable } from 'node:stream'
-import * as HttpServerResponseStream from '../src/parts/HttpServerResponseStream/HttpServerResponseStream.js'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { Writable } from 'node:stream'
+import * as HttpServerResponseStream from '../src/parts/HttpServerResponseStream/HttpServerResponseStream.js'
 
 test('send', async () => {
   const tmpFile = join(tmpdir(), randomUUID() + '-file.txt')
@@ -17,7 +17,11 @@ test('send', async () => {
       callback()
     },
   })
-  await HttpServerResponseStream.send(request, socket, tmpFile)
+  const status = 200
+  const headers = {
+    Connection: 'close',
+  }
+  await HttpServerResponseStream.send(request, socket, status, headers, tmpFile)
   expect(output).toContain(`HTTP/1.1 200 OK`)
   expect(output).toContain('Connection: close')
 })
