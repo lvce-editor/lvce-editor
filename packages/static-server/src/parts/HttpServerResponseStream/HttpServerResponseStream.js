@@ -1,26 +1,24 @@
 import { createReadStream } from 'node:fs'
-import { ServerResponse } from 'node:http'
-import { pipeline } from 'node:stream/promises'
 import * as Assert from '../Assert/Assert.js'
+import { CompatServerResponse } from '../CompatServerResponse/CompatServerResponse.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
-import * as SetHeaders from '../SetHeaders/SetHeaders.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as PipelineResponse from '../PipelineResponse/PipelineResponse.js'
 
 export const send = async (request, socket, filePath) => {
-  const response = new ServerResponse(request)
+  const response = new CompatServerResponse(request, socket)
   try {
     Assert.object(request)
     Assert.object(socket)
     Assert.string(filePath)
     response.assignSocket(socket)
-    // TODO etag caching
-    response.statusCode = 200
     const headers = GetHeaders.getHeaders(filePath)
-    SetHeaders.setHeaders(response, headers)
+    response.writeHead(HttpStatusCode.Ok, headers)
     const stream = createReadStream(filePath)
-    await pipeline(stream, response)
+    await PipelineResponse.pipelineResponse(response, stream)
   } catch (error) {
     console.error(`[response error] ${request.url} ${error}`)
-    response.statusCode = 500
+    response.statusCode = HttpStatusCode.ServerError
     response.end('server error')
   }
 }
