@@ -13,6 +13,7 @@ const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
+const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const isProduction = false
@@ -399,30 +400,29 @@ const handleRemote = (req, res) => {
   sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
+const serveWithStaticServer = (req, res) => {
+  sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
+}
+
+// serve other files in shared process
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
+
+// TODO deprecate this part, serve files statically or in shared process
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
   /**
-   * @type {(()=>void)[]}
-   */
-  onSharedProcessReady: [],
-  /**
-   * @type{ChildProcess|undefined}
-   */
-  sharedProcess: undefined,
-  /**
-   * @type{0|1|2}
-   */
-  sharedProcessState: /* off */ 0,
-  /**
    * @type {Promise<ChildProcess>|undefined}
    */
   sharedProcessPromise: undefined,
+  /**
+   * @type {Promise<ChildProcess>|undefined}
+   */
+  staticProcessPromise: undefined,
 }
 
 const handleMessageFromParent = (message) => {
@@ -457,20 +457,32 @@ const handleSharedProcessDisconnect = () => {
   console.info('[server] shared process disconnected')
 }
 
-const launchSharedProcess = async () => {
-  const sharedProcess = fork(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced], {
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchProcess = async (processPath, execArgv) => {
+  const childProcess = fork(processPath, execArgv, {
     stdio: 'inherit',
     env: {
       ...process.env,
     },
     execArgv: [],
   })
-  sharedProcess.on('exit', handleExit)
-  sharedProcess.on('disconnect', handleSharedProcessDisconnect)
+  childProcess.on('exit', handleExit)
+  childProcess.on('disconnect', handleSharedProcessDisconnect)
   const { resolve, promise } = Promise.withResolvers()
-  sharedProcess.once('message', resolve)
+  childProcess.once('message', resolve)
   await promise
-  return sharedProcess
+  return childProcess
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchSharedProcess = async () => {
+  return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
 }
 
 /**
@@ -482,6 +494,25 @@ const getOrCreateSharedProcess = () => {
     state.sharedProcessPromise = launchSharedProcess()
   }
   return state.sharedProcessPromise
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchStaticServerProcess = async () => {
+  return launchProcess(staticServerPath, [])
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const getOrCreateStaticServerPathProcess = () => {
+  if (!state.staticProcessPromise) {
+    state.staticProcessPromise = launchStaticServerProcess()
+  }
+  return state.staticProcessPromise
 }
 
 // TODO handle all possible errors from shared process
@@ -516,6 +547,23 @@ const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   socket.on('error', handleSocketError)
   const sharedProcess = await getOrCreateSharedProcess()
   sharedProcess.send(
+    {
+      jsonrpc: '2.0',
+      method,
+      params: [getHandleMessage(request), ...params],
+    },
+    socket,
+    {
+      keepOpen: false,
+    },
+  )
+}
+
+const sendHandleStaticServerProcess = async (request, socket, method, ...params) => {
+  request.on('error', handleRequestError)
+  socket.on('error', handleSocketError)
+  const staticServerProcess = await getOrCreateStaticServerPathProcess()
+  staticServerProcess.send(
     {
       jsonrpc: '2.0',
       method,
