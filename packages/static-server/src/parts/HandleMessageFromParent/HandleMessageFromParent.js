@@ -1,6 +1,4 @@
-import { join } from 'node:path'
-import * as HttpServerResponseStream from '../HttpServerResponseStream/HttpServerResponseStream.js'
-import { STATIC } from '../Static/Static.js'
+import * as HandleRequest from '../HandleRequest/HandleRequest.js'
 
 export const handleMessageFromParent = async (message, socket) => {
   if (!socket) {
@@ -9,7 +7,5 @@ export const handleMessageFromParent = async (message, socket) => {
     return
   }
   const request = message.params[0]
-  const pathname = request.url
-  const filePath = join(STATIC, pathname)
-  await HttpServerResponseStream.send(request, socket, filePath)
+  await HandleRequest.handleRequest(request, socket)
 }
