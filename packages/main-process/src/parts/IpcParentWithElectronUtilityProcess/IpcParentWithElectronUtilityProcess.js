@@ -14,7 +14,6 @@ export const effects = ({ rawIpc, name }) => {
   const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
   UtilityProcessState.add(pid, rawIpc, formattedName)
   const cleanup = () => {
-    console.log('ipc', rawIpc)
     UtilityProcessState.remove(pid)
     rawIpc.off('exit', handleExit)
   }
