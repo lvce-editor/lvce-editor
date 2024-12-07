@@ -57,9 +57,6 @@ const ErrorCodes = {
 }
 
 const isStatic = (url) => {
-  if (url === '/') {
-    return true
-  }
   if (url.startsWith('/config')) {
     return true
   }
@@ -100,7 +97,8 @@ const handleRequest = (req, res) => {
   if (isStatic(req.url)) {
     return sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
   }
-  return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest')
+  const indexHtmlPath = join(STATIC, 'index.html')
+  return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest', indexHtmlPath)
 }
 
 const state = {
