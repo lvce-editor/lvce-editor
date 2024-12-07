@@ -34,10 +34,11 @@ export const send = async (request, socket, filePath) => {
       })
       stream.on('end', () => {
         console.log('stream end')
+        response.end()
       })
       stream.on('data', (x) => {
-        console.log(x)
-        console.log('stream data')
+        console.log('write chunk')
+        response.write(x)
       })
       response.on('finish', () => {
         console.log('response finish')
@@ -45,15 +46,17 @@ export const send = async (request, socket, filePath) => {
       response.on('close', () => {
         console.log('response closed')
       })
+      // stream.pipe(response)
+      // await new Promise((r) => {
+      //   setTimeout(r, 1000)
+      // })
+      return
       // await finished(stream)
       // console.log('did finish')
     }
     await pipeline(stream, response, { end: false })
     response.end()
     if (filePath.endsWith('.ttf')) {
-      await new Promise((r) => {
-        setTimeout(r, 2000)
-      })
       console.log('after font stream')
     }
   } catch (error) {
