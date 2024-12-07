@@ -403,7 +403,7 @@ const handleRemote = (req, res) => {
 }
 
 const serveWithStaticServer = (req, res) => {
-  sendHandleStatic(req, res.socket, 'HandleRequest.handleRequest')
+  sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
 }
 
 // serve static files using static server
@@ -511,6 +511,25 @@ const getOrCreateSharedProcess = () => {
   return state.sharedProcessPromise
 }
 
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchStaticServerProcess = async () => {
+  return launchProcess(staticServerPath, [])
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const getOrCreateStaticServerPathProcess = () => {
+  if (!state.staticProcessPromise) {
+    state.staticProcessPromise = launchStaticServerProcess()
+  }
+  return state.staticProcessPromise
+}
+
 // TODO handle all possible errors from shared process
 
 const getHandleMessage = (request) => {
@@ -543,6 +562,23 @@ const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   socket.on('error', handleSocketError)
   const sharedProcess = await getOrCreateSharedProcess()
   sharedProcess.send(
+    {
+      jsonrpc: '2.0',
+      method,
+      params: [getHandleMessage(request), ...params],
+    },
+    socket,
+    {
+      keepOpen: false,
+    },
+  )
+}
+
+const sendHandleStaticServerProcess = async (request, socket, method, ...params) => {
+  request.on('error', handleRequestError)
+  socket.on('error', handleSocketError)
+  const staticServerProcess = await getOrCreateStaticServerPathProcess()
+  staticServerProcess.send(
     {
       jsonrpc: '2.0',
       method,
