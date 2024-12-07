@@ -24,11 +24,9 @@ export const send = async (request, socket, filePath) => {
     response.writeHead(200, headers)
     const stream = createReadStream(filePath)
     if (filePath.endsWith('.ttf')) {
-      console.log('before')
     }
     await PipelineResponse.pipelineResponse(response, stream)
     if (filePath.endsWith('.ttf')) {
-      console.log('after')
     }
   } catch (error) {
     console.error(`[response error] ${request.url} ${error}`)
