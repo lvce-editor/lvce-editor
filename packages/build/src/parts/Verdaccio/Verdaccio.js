@@ -4,6 +4,8 @@ import * as Path from '../Path/Path.js'
 import * as Promises from '../Promises/Promises.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
+import { dirname, join } from 'node:path'
+import { mkdir } from 'node:fs/promises'
 
 export const start = async () => {
   const cachePath = Path.absolute('packages/build/.tmp/verdaccio-cache')
@@ -11,12 +13,20 @@ export const start = async () => {
   await Remove.remove(lvceEditorPath)
   await Remove.remove(Path.join(cachePath, 'jest-environment-lvce-editor'))
   await Mkdir.mkdir(cachePath)
+  const passwordPath = join(Root.root, 'packages', 'build', '.tmp', 'verdaccio-auth', 'htpasswd')
+  await mkdir(dirname(passwordPath), { recursive: true })
+
   // @ts-ignore
   const app = await runServer({
     self_path: Root.root,
     storage: cachePath,
     port: 4873, // default
     max_body_size: `1000mb`,
+    auth: {
+      htpasswd: {
+        file: passwordPath,
+      },
+    },
     web: {
       enable: true,
       title: `lvce editor`,
