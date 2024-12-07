@@ -46,10 +46,10 @@ const isFolder = (dirent) => {
 }
 
 const publishPackages = async () => {
-  await Exec.exec('node', ['packages/build/bin/build.js', '--target=server'], {
-    cwd: Root.root,
-    stdio: 'inherit',
-  })
+  // await Exec.exec('node', ['packages/build/bin/build.js', '--target=server'], {
+  //   cwd: Root.root,
+  //   stdio: 'inherit',
+  // })
   await addNpmrcFile()
   const packages = await ReadDir.readDirWithFileTypes('packages/build/.tmp/server')
   await Promise.all(packages.filter(isFolder).map(getName).map(publishPackage))
@@ -82,15 +82,15 @@ const main = async () => {
   await startVerdaccio()
   console.timeEnd('startVerdaccio')
 
-  console.time('publishPackages')
-  await publishPackages()
-  console.timeEnd('publishPackages')
+  // console.time('publishPackages')
+  // await publishPackages()
+  // console.timeEnd('publishPackages')
 
-  console.time('installPackagesLocally')
-  await installPackagesLocally()
-  console.timeEnd('installPackagesLocally')
+  // console.time('installPackagesLocally')
+  // await installPackagesLocally()
+  // console.timeEnd('installPackagesLocally')
 
-  Logger.info('published packages successfully')
+  // Logger.info('published packages successfully')
 
   if (!Process.argv.includes('--wait')) {
     Process.exit(ExitCode.Success)
