@@ -399,30 +399,25 @@ const handleRemote = (req, res) => {
   sendHandleSharedProcess(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
+// serve other files in shared process
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
+
+// TODO deprecate this part, serve files statically or in shared process
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {
   /**
-   * @type {(()=>void)[]}
-   */
-  onSharedProcessReady: [],
-  /**
-   * @type{ChildProcess|undefined}
-   */
-  sharedProcess: undefined,
-  /**
-   * @type{0|1|2}
-   */
-  sharedProcessState: /* off */ 0,
-  /**
    * @type {Promise<ChildProcess>|undefined}
    */
   sharedProcessPromise: undefined,
+  /**
+   * @type {Promise<ChildProcess>|undefined}
+   */
+  staticProcessPromise: undefined,
 }
 
 const handleMessageFromParent = (message) => {
@@ -457,20 +452,32 @@ const handleSharedProcessDisconnect = () => {
   console.info('[server] shared process disconnected')
 }
 
-const launchSharedProcess = async () => {
-  const sharedProcess = fork(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced], {
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchProcess = async (processPath, execArgv) => {
+  const childProcess = fork(processPath, execArgv, {
     stdio: 'inherit',
     env: {
       ...process.env,
     },
     execArgv: [],
   })
-  sharedProcess.on('exit', handleExit)
-  sharedProcess.on('disconnect', handleSharedProcessDisconnect)
+  childProcess.on('exit', handleExit)
+  childProcess.on('disconnect', handleSharedProcessDisconnect)
   const { resolve, promise } = Promise.withResolvers()
-  sharedProcess.once('message', resolve)
+  childProcess.once('message', resolve)
   await promise
-  return sharedProcess
+  return childProcess
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchSharedProcess = async () => {
+  return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
 }
 
 /**
