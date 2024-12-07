@@ -16,8 +16,6 @@ const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'share
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const builtinExtensionsPath = join(ROOT, 'extensions')
 
-const staticServerExperimentalPermissions = false
-
 const isProduction = false
 
 const { argv, env } = process
@@ -406,23 +404,10 @@ const serveWithStaticServer = (req, res) => {
   sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
 }
 
-// serve static files using static server
-app.use('/config', serveWithStaticServer)
-app.use('/css', serveWithStaticServer)
-app.use('/fonts', serveWithStaticServer)
-app.use('/icons', serveWithStaticServer)
-app.use('/images', serveWithStaticServer)
-app.use('/js', serveWithStaticServer)
-app.use('/lib-css', serveWithStaticServer)
-app.use('/sounds', serveWithStaticServer)
-app.use('/themes', serveWithStaticServer)
-app.use('/favicon.ico', serveWithStaticServer)
-app.use('/manifest.json', serveWithStaticServer)
-
 // serve other files in shared process
 app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
-// app.use('/config', serveConfig, serve404())
+app.use('/config', serveConfig, serve404())
 app.use('/packages', servePackages, serve404())
 app.use('/', servePackages, serve404())
 
