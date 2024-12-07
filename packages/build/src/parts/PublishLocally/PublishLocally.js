@@ -8,7 +8,6 @@ import * as Path from '../Path/Path.js'
 import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Root from '../Root/Root.js'
 import * as Verdaccio from '../Verdaccio/Verdaccio.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -82,15 +81,15 @@ const main = async () => {
   await startVerdaccio()
   console.timeEnd('startVerdaccio')
 
-  // console.time('publishPackages')
-  // await publishPackages()
-  // console.timeEnd('publishPackages')
+  console.time('publishPackages')
+  await publishPackages()
+  console.timeEnd('publishPackages')
 
-  // console.time('installPackagesLocally')
-  // await installPackagesLocally()
-  // console.timeEnd('installPackagesLocally')
+  console.time('installPackagesLocally')
+  await installPackagesLocally()
+  console.timeEnd('installPackagesLocally')
 
-  // Logger.info('published packages successfully')
+  Logger.info('published packages successfully')
 
   if (!Process.argv.includes('--wait')) {
     Process.exit(ExitCode.Success)
