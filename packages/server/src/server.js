@@ -476,20 +476,28 @@ const handleSharedProcessDisconnect = () => {
  *
  * @returns {Promise<ChildProcess>}
  */
-const launchSharedProcess = async () => {
-  const sharedProcess = fork(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced], {
+const launchProcess = async (processPath, execArgv) => {
+  const childProcess = fork(processPath, execArgv, {
     stdio: 'inherit',
     env: {
       ...process.env,
     },
     execArgv: [],
   })
-  sharedProcess.on('exit', handleExit)
-  sharedProcess.on('disconnect', handleSharedProcessDisconnect)
+  childProcess.on('exit', handleExit)
+  childProcess.on('disconnect', handleSharedProcessDisconnect)
   const { resolve, promise } = Promise.withResolvers()
-  sharedProcess.once('message', resolve)
+  childProcess.once('message', resolve)
   await promise
-  return sharedProcess
+  return childProcess
+}
+
+/**
+ *
+ * @returns {Promise<ChildProcess>}
+ */
+const launchSharedProcess = async () => {
+  return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
 }
 
 /**
