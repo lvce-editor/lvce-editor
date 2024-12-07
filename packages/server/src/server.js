@@ -1,12 +1,9 @@
 // based on https://github.com/microsoft/vscode/tree/1.64.2/src/vs/server/node/webClientServer.ts (License MIT)
 
 import { ChildProcess, fork } from 'node:child_process'
-import { createReadStream } from 'node:fs'
-import { readFile, readdir, stat } from 'node:fs/promises'
-import { IncomingMessage, ServerResponse, createServer } from 'node:http'
-import { dirname, extname, join, resolve } from 'node:path'
-import { pipeline } from 'node:stream/promises'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { createServer } from 'node:http'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
@@ -15,8 +12,6 @@ const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'share
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
 const STATIC = resolve(__dirname, '../../../static')
 const builtinExtensionsPath = join(ROOT, 'extensions')
-
-const staticServerExperimentalPermissions = false
 
 const isProduction = false
 
