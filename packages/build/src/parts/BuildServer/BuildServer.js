@@ -46,7 +46,7 @@ const copyServerFiles = async ({ commitHash }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const builtinExtensionsPath = join(ROOT, 'extensions')`,
-    replacement: `const builtinExtensionsPath = join(ROOT, 'static', '${commitHash}', 'extensions')`,
+    replacement: `const builtinExtensionsPath = join(STATIC, '${commitHash}', 'extensions')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
