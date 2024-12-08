@@ -6,6 +6,7 @@ import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPol
 import * as ContentSecurityPolicyFileSearchWorker from '../ContentSecurityPolicyFileSearchWorker/ContentSecurityPolicyFileSearchWorker.js'
 import * as ContentSecurityPolicyIframeWorker from '../ContentSecurityPolicyIframeWorker/ContentSecurityPolicyIframeWorker.js'
 import * as ContentSecurityPolicyRendererWorker from '../ContentSecurityPolicyRendererWorker/ContentSecurityPolicyRendererWorker.js'
+import * as ContentSecurityPolicySearchViewWorker from '../ContentSecurityPolicySearchViewWorker/ContentSecurityPolicySearchViewWorker.js'
 import * as ContentSecurityPolicySyntaxHighlightingWorker from '../ContentSecurityPolicySyntaxHighlightingWorker/ContentSecurityPolicySyntaxHighlightingWorker.js'
 import * as ContentSecurityPolicyTerminalWorker from '../ContentSecurityPolicyTerminalWorker/ContentSecurityPolicyTerminalWorker.js'
 import * as ContentSecurityPolicyTestWorker from '../ContentSecurityPolicyTestWorker/ContentSecurityPolicyTestWorker.js'
@@ -82,6 +83,10 @@ const getHeadersIframeWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyIframeWorker.value)
 }
 
+const getHeadersSearchViewWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySearchViewWorker.value)
+}
+
 const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
   return {
     [HttpHeader.CacheControl]: defaultCachingHeader,
@@ -128,6 +133,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('syntaxHighlightingWorkerMain.js')) {
     return getHeadersSyntaxHighlightingWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('searchViewWorkerMain.js')) {
+    return getHeadersSearchViewWorker(mime, etag, defaultCachingHeader)
   }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
