@@ -37,7 +37,6 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   let disposeCommands
   // @ts-ignore
   if (previousEditor && previousEditor.uri === uri && previousEditor.opener === context.opener) {
-    console.log('is same')
     return {
       newState: state,
       commands: [],
@@ -49,8 +48,6 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
       // @ts-ignore
       if (editor.opener === context.opener) {
         return ViewletMainFocusIndex.focusIndex(state, i)
-      } else {
-        console.log('open new')
       }
     }
   }
