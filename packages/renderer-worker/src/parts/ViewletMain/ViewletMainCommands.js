@@ -10,6 +10,7 @@ export const Commands = {
   openBackgroundTab: ViewletMain.openBackgroundTab,
   save: ViewletMain.save,
   handleClickClose: ViewletMain.handleClickClose,
+  reopenEditorWith: ViewletMain.reopenEditorWith,
 }
 
 export const CommandsWithSideEffects = {
