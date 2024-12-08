@@ -69,6 +69,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     icon,
     tabWidth,
     flags: TabFlags.Preview,
+    moduleId,
   }
   const newEditors = [...activeGroup.editors, newEditor]
   const newActiveIndex = newEditors.length - 1
