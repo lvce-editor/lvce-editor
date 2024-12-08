@@ -680,11 +680,29 @@ export const handleTabsDragOver = (state, eventX, eventY) => {
   }
 }
 
-export const reopenEditorWith = (state) => {
+const getWebViews = (uri) => {
+  return [
+    {
+      id: 'editor',
+      label: 'Editor',
+    },
+  ]
+}
+
+export const reopenEditorWith = async (state) => {
   // TODO
   // 1. get current editor type
+  const { groups } = state
+  const group = groups[0]
+  const { editors } = group
+  const editor = editors[0]
   // 2. get webviews that exist for editor type
+  const webViews = await getWebViews(editor.uri)
   // 3. open quickpick, asking to select an editor type
+  const { resolve, promise } = Promise.withResolvers()
+  await Command.execute('QuickPick.showCustom', webViews, resolve)
+  const choice = await promise
+  console.log({ choice })
   // 4. display selected editor type (webview or text editor)
   console.log('open editor with')
   return state
