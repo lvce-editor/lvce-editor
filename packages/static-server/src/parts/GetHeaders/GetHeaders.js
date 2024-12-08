@@ -120,5 +120,11 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('textSearchWorkerMain.js')) {
     return getHeadersTextSearchWorker(mime, etag, defaultCachingHeader)
   }
+  if (absolutePath.endsWith('aboutWorkerMain.js')) {
+    return getHeadersAboutWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('testWorkerMain.js')) {
+    return getHeadersTestWorker(mime, etag, defaultCachingHeader)
+  }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
