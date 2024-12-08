@@ -4,6 +4,8 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
 const renderTitleBarButtons = {
   isEqual(oldState, newState) {
     return oldState.buttons === newState.buttons
