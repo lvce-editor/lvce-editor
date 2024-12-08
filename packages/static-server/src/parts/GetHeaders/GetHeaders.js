@@ -111,5 +111,14 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return getHeadersEditorWorker(mime, etag, defaultCachingHeader)
   }
+  if (absolutePath.endsWith('iframeWorkerMain.js')) {
+    return getHeadersIframeWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('fileSearchWorkerMain.js')) {
+    return getHeadersFileSearchWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('textSearchWorkerMain.js')) {
+    return getHeadersTextSearchWorker(mime, etag, defaultCachingHeader)
+  }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
