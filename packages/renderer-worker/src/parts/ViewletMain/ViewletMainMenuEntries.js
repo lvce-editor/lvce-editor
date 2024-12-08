@@ -16,5 +16,9 @@ export const getQuickPickMenuEntries = () => {
       id: 'Main.splitUp',
       label: 'Main: Split Up',
     },
+    {
+      id: 'Main.reopenEditorWith',
+      label: 'Main: Reopen Editor With',
+    },
   ]
 }
