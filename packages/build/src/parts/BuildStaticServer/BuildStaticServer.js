@@ -103,7 +103,7 @@ const copyStaticServerFiles = async () => {
     to: 'packages/build/.tmp/server/static-server/LICENSE',
   })
   await Replace.replace({
-    path: 'build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.js',
+    path: 'packages/build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.js',
     occurrence: 'isImmutable = false',
     replacement: 'isImmutable = true',
   })
