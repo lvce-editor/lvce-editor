@@ -1,15 +1,13 @@
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as IsBuiltServer from '../IsBuiltServer/IsBuiltServer.js'
 import * as Root from '../Root/Root.js'
-import { fileURLToPath } from 'node:url'
 
 export const getStaticPath = () => {
   if (IsBuiltServer.isBuiltServer) {
     // TODO maybe move static files to separate package
-    const serverIndexUri = import.meta.resolve('@lvce-editor/server')
-    const serverIndexPath = fileURLToPath(serverIndexUri)
-    const serverPath = dirname(serverIndexPath)
-    const staticPath = join(serverPath, 'static')
+    const staticServerUri = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))
+    const staticPath = join(staticServerUri, '..', '..', 'static')
     return staticPath
   }
   return join(Root.root, 'static')

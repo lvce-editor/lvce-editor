@@ -30,58 +30,74 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const STATIC = resolve(__dirname, '../../../static')`,
-    replacement: `const STATIC = resolve(__dirname, '../static')`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const isProduction = false`,
-    replacement: `const isProduction = true`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const ROOT = resolve(__dirname, '../../../')`,
     replacement: `const ROOT = resolve(__dirname, '../')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const builtinExtensionsPath = join(ROOT, 'extensions')`,
-    replacement: `const builtinExtensionsPath = join(STATIC, '${commitHash}', 'extensions')`,
+    occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
+    replacement: `const { sharedProcessPath } = await import('@lvce-editor/shared-process')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `app.use('/', servePackages, serve404())`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `import { ChildProcess, fork } from 'node:child_process'`,
-    replacement: `import { sharedProcessPath } from '@lvce-editor/shared-process'
-import { ChildProcess, fork } from 'node:child_process'`,
+    occurrence: `const isStatic = (url) => {
+  if (url.startsWith('/config')) {
+    return true
+  }
+  if (url.startsWith('/css')) {
+    return true
+  }
+  if (url.startsWith('/fonts')) {
+    return true
+  }
+  if (url.startsWith('/icons')) {
+    return true
+  }
+  if (url.startsWith('/images')) {
+    return true
+  }
+  if (url.startsWith('/js')) {
+    return true
+  }
+  if (url.startsWith('/lib-css')) {
+    return true
+  }
+  if (url.startsWith('/sounds')) {
+    return true
+  }
+  if (url.startsWith('/themes')) {
+    return true
+  }
+  if (url.startsWith('/favicon.ico')) {
+    return true
+  }
+  if (url.startsWith('/manifest.ico')) {
+    return true
+  }
+  return false
+}`,
+    replacement: `const isStatic = (url) => {
+  if(url === '/'){
+    return true
+  }
+  if (url.startsWith('/${commitHash}')) {
+    return true
+  }
+  if (url.startsWith('/favicon.ico')) {
+    return true
+  }
+  if (url.startsWith('/manifest.ico')) {
+    return true
+  }
+  return false
+}`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')`,
-    replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))
-const staticPath = join(staticServerPath, '..', '..', 'static')`,
+    replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`,
   })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const STATIC = resolve(__dirname, '../static')`,
-    replacement: `const STATIC = staticPath`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `
-const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
-`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const isImmutable = argv.includes('--immutable')`,
-    replacement: `const isImmutable = true`,
-  })
+
   const content = `This project incorporates components from the projects listed below, that may have licenses
 differing from this project:
 

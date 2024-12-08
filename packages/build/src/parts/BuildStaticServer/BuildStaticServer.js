@@ -92,7 +92,7 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-const copyStaticServerFiles = async () => {
+const copyStaticServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
@@ -101,6 +101,16 @@ const copyStaticServerFiles = async () => {
   await Copy.copyFile({
     from: 'LICENSE',
     to: 'packages/build/.tmp/server/static-server/LICENSE',
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.js',
+    occurrence: 'isImmutable = false',
+    replacement: 'isImmutable = true',
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/Root/Root.js',
+    occurrence: `export const root = resolve(__dirname, '../../../../../')`,
+    replacement: `export const root = resolve(__dirname, '../../../')`,
   })
 }
 
@@ -154,7 +164,7 @@ const copyExtensions = async ({ commitHash }) => {
 
 export const buildStaticServer = async ({ product, commitHash, version, date }) => {
   console.time('copyStaticServerFiles')
-  await copyStaticServerFiles()
+  await copyStaticServerFiles({ commitHash })
   console.timeEnd('copyStaticServerFiles')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
