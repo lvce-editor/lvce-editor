@@ -10,10 +10,7 @@ const ROOT = resolve(__dirname, '../../../')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
-const STATIC = resolve(__dirname, '../../../static')
 const builtinExtensionsPath = join(ROOT, 'extensions')
-
-const isProduction = false
 
 const { argv, env } = process
 
@@ -35,8 +32,6 @@ process.env.BUILTIN_EXTENSIONS_PATH = builtinExtensionsPath
 if (!argv2) {
   argv2 = resolve(__dirname, '../../../playground')
 }
-
-const isImmutable = argv.includes('--immutable')
 
 const isPublic = argv.includes('--public')
 
