@@ -8,6 +8,15 @@ export const getResponseInfo = async (request, isImmutable) => {
   const pathname = request.url
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
   const etag = await GetPathEtag.getPathEtag(absolutePath)
+  if (!etag) {
+    return {
+      absolutePath: '',
+      status: HttpStatusCode.NotFound,
+      headers: {
+        [HttpHeader.Connection]: 'close',
+      },
+    }
+  }
   if (request.headers[HttpHeader.IfNotMatch] === etag) {
     return {
       absolutePath,

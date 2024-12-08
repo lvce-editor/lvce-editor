@@ -5,6 +5,10 @@ import * as PipelineResponse from '../PipelineResponse/PipelineResponse.js'
 
 export const send = async (request, socket, status, headers, filePath) => {
   const response = new CompatServerResponse(request, socket, status, headers)
+  if (status === 404) {
+    response.end()
+    return
+  }
   try {
     const stream = createReadStream(filePath)
     await PipelineResponse.pipelineResponse(response, stream)
