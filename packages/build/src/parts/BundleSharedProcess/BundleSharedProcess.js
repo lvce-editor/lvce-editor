@@ -125,6 +125,19 @@ export const getBuiltinExtensionsPath = () => {
 }
 `,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Static/Static.js`,
+      occurrence: `import { join } from 'node:path'
+import { root } from '../Root/Root.js'
+
+export const STATIC = join(root, 'static')
+`,
+      replacement: `import { fileURLToPath } from 'url'
+
+const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))
+
+export const STATIC = join(staticServerPath, '..', '..', 'static')`,
+    })
   }
   if (target === 'electron-deb' || target === 'electron-builder-deb') {
     await Replace.replace({
