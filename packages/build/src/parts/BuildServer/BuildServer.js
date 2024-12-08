@@ -40,6 +40,60 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
+    occurrence: `const isStatic = (url) => {
+  if (url.startsWith('/config')) {
+    return true
+  }
+  if (url.startsWith('/css')) {
+    return true
+  }
+  if (url.startsWith('/fonts')) {
+    return true
+  }
+  if (url.startsWith('/icons')) {
+    return true
+  }
+  if (url.startsWith('/images')) {
+    return true
+  }
+  if (url.startsWith('/js')) {
+    return true
+  }
+  if (url.startsWith('/lib-css')) {
+    return true
+  }
+  if (url.startsWith('/sounds')) {
+    return true
+  }
+  if (url.startsWith('/themes')) {
+    return true
+  }
+  if (url.startsWith('/favicon.ico')) {
+    return true
+  }
+  if (url.startsWith('/manifest.ico')) {
+    return true
+  }
+  return false
+}`,
+    replacement: `const isStatic = (url) => {
+  if(url === '/'){
+    return true
+  }
+  if (url.startsWith('/${commitHash}')) {
+    return true
+  }
+  if (url.startsWith('/favicon.ico')) {
+    return true
+  }
+  if (url.startsWith('/manifest.ico')) {
+    return true
+  }
+  return false
+}`,
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')`,
     replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`,
   })
