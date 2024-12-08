@@ -92,7 +92,7 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-const copyStaticServerFiles = async () => {
+const copyStaticServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
@@ -106,6 +106,11 @@ const copyStaticServerFiles = async () => {
     path: 'packages/build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.js',
     occurrence: 'isImmutable = false',
     replacement: 'isImmutable = true',
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
+    occurrence: 'Path.join(STATIC, pathName)',
+    replacement: `Path.join(STATIC, '${commitHash}', pathName)`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/Root/Root.js',
@@ -164,7 +169,7 @@ const copyExtensions = async ({ commitHash }) => {
 
 export const buildStaticServer = async ({ product, commitHash, version, date }) => {
   console.time('copyStaticServerFiles')
-  await copyStaticServerFiles()
+  await copyStaticServerFiles({ commitHash })
   console.timeEnd('copyStaticServerFiles')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
