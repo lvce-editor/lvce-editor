@@ -30,16 +30,6 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const STATIC = resolve(__dirname, '../../../static')`,
-    replacement: `const STATIC = resolve(__dirname, '../static')`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const isProduction = false`,
-    replacement: `const isProduction = true`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const ROOT = resolve(__dirname, '../../../')`,
     replacement: `const ROOT = resolve(__dirname, '../')`,
   })
