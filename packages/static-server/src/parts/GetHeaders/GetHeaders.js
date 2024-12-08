@@ -4,10 +4,12 @@ import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument
 import * as ContentSecurityPolicyEditorWorker from '../ContentSecurityPolicyEditorWorker/ContentSecurityPolicyEditorWorker.js'
 import * as ContentSecurityPolicyExplorerWorker from '../ContentSecurityPolicyExplorerWorker/ContentSecurityPolicyExplorerWorker.js'
 import * as ContentSecurityPolicyExtensionDetailViewWorker from '../ContentSecurityPolicyExtensionDetailViewWorker/ContentSecurityPolicyExtensionDetailViewWorker.js'
+import * as ContentSecurityPolicyExtensionHostSubWorker from '../ContentSecurityPolicyExtensionHostSubWorker/ContentSecurityPolicyExtensionHostSubWorker.js'
 import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPolicyExtensionHostWorker/ContentSecurityPolicyExtensionHostWorker.js'
 import * as ContentSecurityPolicyExtensionSearchViewWorker from '../ContentSecurityPolicyExtensionSearchViewWorker/ContentSecurityPolicyExtensionSearchViewWorker.js'
 import * as ContentSecurityPolicyFileSearchWorker from '../ContentSecurityPolicyFileSearchWorker/ContentSecurityPolicyFileSearchWorker.js'
 import * as ContentSecurityPolicyIframeWorker from '../ContentSecurityPolicyIframeWorker/ContentSecurityPolicyIframeWorker.js'
+import * as ContentSecurityPolicyKeyBindingsWorker from '../ContentSecurityPolicyKeyBindingsWorker/ContentSecurityPolicyKeyBindingsWorker.js'
 import * as ContentSecurityPolicyRendererWorker from '../ContentSecurityPolicyRendererWorker/ContentSecurityPolicyRendererWorker.js'
 import * as ContentSecurityPolicySearchViewWorker from '../ContentSecurityPolicySearchViewWorker/ContentSecurityPolicySearchViewWorker.js'
 import * as ContentSecurityPolicySyntaxHighlightingWorker from '../ContentSecurityPolicySyntaxHighlightingWorker/ContentSecurityPolicySyntaxHighlightingWorker.js'
@@ -102,6 +104,14 @@ const getHeadersSearchViewWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySearchViewWorker.value)
 }
 
+const getHeadersExtensionHostSubWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionHostSubWorker.value)
+}
+
+const getHeadersKeyBindingsViewWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyKeyBindingsWorker.value)
+}
+
 const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
   return {
     [HttpHeader.CacheControl]: defaultCachingHeader,
@@ -160,6 +170,12 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('searchViewWorkerMain.js')) {
     return getHeadersSearchViewWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('extensionHostSubWorkerMain.js')) {
+    return getHeadersExtensionHostSubWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('keyBindingsViewWorkerMain.js')) {
+    return getHeadersKeyBindingsViewWorker(mime, etag, defaultCachingHeader)
   }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
