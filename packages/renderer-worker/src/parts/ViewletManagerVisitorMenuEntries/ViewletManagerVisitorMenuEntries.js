@@ -1,7 +1,8 @@
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 
-export const loadModule = (id, module) => {
+export const loadModule = async (id, module) => {
   if (module.getQuickPickMenuEntries) {
-    MenuEntriesState.add(module.getQuickPickMenuEntries())
+    const entries = await module.getQuickPickMenuEntries()
+    MenuEntriesState.add(entries)
   }
 }
