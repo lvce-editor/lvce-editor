@@ -13,7 +13,7 @@ const mapExtToEditorType = {
   '.opus': ViewletModuleId.Audio,
 }
 
-export const getModuleId = async (uri) => {
+export const getModuleId = async (uri, opener) => {
   if (uri === 'app://keybindings') {
     return ViewletModuleId.KeyBindings
   }
@@ -51,8 +51,17 @@ export const getModuleId = async (uri) => {
   // TODO only request webviews once
   const webViews = await GetWebViews.getWebViews()
   for (const webView of webViews) {
+    if (webView && webView.id === opener) {
+      // TODO can return webview directly here?
+      return ViewletModuleId.WebView
+    }
     for (const selector of webView.selector || []) {
       if (uri.endsWith(selector)) {
+        // TODO configure webviews so that some open by default (video, image)
+        // while other webviews only open when needed (markdown, html preview)
+        if (selector === '.md') {
+          continue
+        }
         return ViewletModuleId.WebView
       }
     }
