@@ -326,7 +326,9 @@ const maybeRegisterMenuEntries = (module) => {
 
 const actuallyLoadModule = async (getModule, id) => {
   const module = await getModule(id)
-  await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id)
+  if (!module.hasFunctionalEvents) {
+    await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id, /* hasFunctionalEvents */ module.hasFunctionalEvents)
+  }
   await ViewletManagerVisitor.loadModule(id, module)
   maybeRegisterWrappedCommands(id, module)
   maybeRegisterEvents(module)
@@ -480,7 +482,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     })
     const commands = []
     if (module.hasFunctionalRootRender) {
-      commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid])
+      commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid, module.hasFunctionalEvents])
     } else {
       commands.push([kCreate, viewlet.id, viewletUid])
     }
