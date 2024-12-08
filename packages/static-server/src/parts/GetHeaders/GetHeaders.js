@@ -2,6 +2,7 @@ import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as ContentSecurityPolicyAboutWorker from '../ContentSecurityPolicyAboutWorker/ContentSecurityPolicyAboutWorker.js'
 import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as ContentSecurityPolicyEditorWorker from '../ContentSecurityPolicyEditorWorker/ContentSecurityPolicyEditorWorker.js'
+import * as ContentSecurityPolicyExplorerWorker from '../ContentSecurityPolicyExplorerWorker/ContentSecurityPolicyExplorerWorker.js'
 import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPolicyExtensionHostWorker/ContentSecurityPolicyExtensionHostWorker.js'
 import * as ContentSecurityPolicyExtensionSearchViewWorker from '../ContentSecurityPolicyExtensionSearchViewWorker/ContentSecurityPolicyExtensionSearchViewWorker.js'
 import * as ContentSecurityPolicyFileSearchWorker from '../ContentSecurityPolicyFileSearchWorker/ContentSecurityPolicyFileSearchWorker.js'
@@ -62,6 +63,10 @@ const getHeadersTerminalWorker = (mime, etag, defaultCachingHeader) => {
 
 const getHeadersEditorWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyEditorWorker.value)
+}
+
+const getHeadersExplorerWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExplorerWorker.value)
 }
 
 const getHeadersTestWorker = (mime, etag, defaultCachingHeader) => {
@@ -135,6 +140,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('aboutWorkerMain.js')) {
     return getHeadersAboutWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('explorerViewWorkerMain.js')) {
+    return getHeadersExplorerWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('testWorkerMain.js')) {
     return getHeadersTestWorker(mime, etag, defaultCachingHeader)
