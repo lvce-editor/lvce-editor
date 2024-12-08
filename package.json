@@ -58,6 +58,6 @@
     "exec": "node packages/server/bin/server.js"
   },
   "dependencies": {
-    "execa": "^9.5.1"
+    "execa": "^9.5.2"
   }
 }
