@@ -3,6 +3,7 @@ import * as ContentSecurityPolicyAboutWorker from '../ContentSecurityPolicyAbout
 import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as ContentSecurityPolicyEditorWorker from '../ContentSecurityPolicyEditorWorker/ContentSecurityPolicyEditorWorker.js'
 import * as ContentSecurityPolicyExplorerWorker from '../ContentSecurityPolicyExplorerWorker/ContentSecurityPolicyExplorerWorker.js'
+import * as ContentSecurityPolicyExtensionDetailViewWorker from '../ContentSecurityPolicyExtensionDetailViewWorker/ContentSecurityPolicyExtensionDetailViewWorker.js'
 import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPolicyExtensionHostWorker/ContentSecurityPolicyExtensionHostWorker.js'
 import * as ContentSecurityPolicyExtensionSearchViewWorker from '../ContentSecurityPolicyExtensionSearchViewWorker/ContentSecurityPolicyExtensionSearchViewWorker.js'
 import * as ContentSecurityPolicyFileSearchWorker from '../ContentSecurityPolicyFileSearchWorker/ContentSecurityPolicyFileSearchWorker.js'
@@ -55,6 +56,10 @@ const getHeadersExtensionHostWorker = (mime, etag, defaultCachingHeader) => {
 
 const getHeadersExtensionSearchViewWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionSearchViewWorker.value)
+}
+
+const getHeadersExtensionDetailViewWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionDetailViewWorker.value)
 }
 
 const getHeadersTerminalWorker = (mime, etag, defaultCachingHeader) => {
@@ -128,6 +133,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('extensionSearchViewWorkerMain.js')) {
     return getHeadersExtensionSearchViewWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('extensionDetailViewWorkerMain.js')) {
+    return getHeadersExtensionDetailViewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('iframeWorkerMain.js')) {
     return getHeadersIframeWorker(mime, etag, defaultCachingHeader)
