@@ -8,9 +8,6 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 
-const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
-const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
-
 const { argv, env } = process
 
 const PORT = env.PORT ? parseInt(env.PORT) : 3000
@@ -156,6 +153,7 @@ const launchProcess = async (processPath, execArgv) => {
  * @returns {Promise<ChildProcess>}
  */
 const launchSharedProcess = async () => {
+  const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
   return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
 }
 
@@ -175,6 +173,7 @@ const getOrCreateSharedProcess = () => {
  * @returns {Promise<ChildProcess>}
  */
 const launchStaticServerProcess = async () => {
+  const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
   return launchProcess(staticServerPath, [])
 }
 
