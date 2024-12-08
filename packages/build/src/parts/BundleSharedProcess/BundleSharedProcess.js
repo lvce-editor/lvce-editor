@@ -106,6 +106,26 @@ export const bundleSharedProcess = async ({
       replacement: `export const isAppImage = true`,
     })
   }
+  if (target === 'server') {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/BuiltinExtensionsPath/BuiltinExtensionsPath.js`,
+      occurrence: `import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+
+export const getBuiltinExtensionsPath = () => {
+  return PlatformPaths.getBuiltinExtensionsPath()
+}
+`,
+      replacement: `import { join } from 'path'
+import { fileURLToPath } from 'url'
+
+export const getBuiltinExtensionsPath = () => {
+  const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))
+  const builtinExtensionsPath = join(staticServerPath, '..', '..', 'static', '${commitHash}', 'extensions')
+  return builtinExtensionsPath
+}
+`,
+    })
+  }
   if (target === 'electron-deb' || target === 'electron-builder-deb') {
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,

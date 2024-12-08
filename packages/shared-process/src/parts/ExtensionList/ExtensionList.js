@@ -3,6 +3,7 @@ import * as ExtensionManifestInputType from '../ExtensionManifestInputType/Exten
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
 import { VError } from '../VError/VError.js'
 
 const getManifestVersion = (json) => {
@@ -59,7 +60,7 @@ export const list = async () => {
       },
       {
         type: ExtensionManifestInputType.Folder,
-        path: PlatformPaths.getBuiltinExtensionsPath(),
+        path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
       },
     ])
     const infos = getManifestInfos(manifests)
