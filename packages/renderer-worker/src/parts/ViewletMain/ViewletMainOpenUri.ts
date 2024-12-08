@@ -18,6 +18,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const y = state.y + tabHeight
   const width = state.width
   const contentHeight = state.height - tabHeight
+  // @ts-ignore
   const moduleId = await ViewletMap.getModuleId(uri, context.opener)
   let activeGroup = groups[activeGroupIndex]
   activeGroup ||= {
