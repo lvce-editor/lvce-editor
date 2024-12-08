@@ -679,3 +679,13 @@ export const handleTabsDragOver = (state, eventX, eventY) => {
     commands: [],
   }
 }
+
+export const reopenEditorWith = (state) => {
+  // TODO
+  // 1. get current editor type
+  // 2. get webviews that exist for editor type
+  // 3. open quickpick, asking to select an editor type
+  // 4. display selected editor type (webview or text editor)
+  console.log('open editor with')
+  return state
+}
