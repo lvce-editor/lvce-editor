@@ -10,7 +10,6 @@ const ROOT = resolve(__dirname, '../../../')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
-const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const { argv, env } = process
 
@@ -18,6 +17,7 @@ const PORT = env.PORT ? parseInt(env.PORT) : 3000
 
 let argv2 = argv[2]
 
+// TODO pass argv to shared process instead of using environment variables / global variables
 const argvSliced = argv.slice(2)
 for (const arg of argvSliced) {
   if (arg.startsWith('--only-extension=')) {
@@ -26,8 +26,6 @@ for (const arg of argvSliced) {
     process.env['TEST_PATH'] = arg.slice('--test-path='.length)
   }
 }
-
-process.env.BUILTIN_EXTENSIONS_PATH = builtinExtensionsPath
 
 if (!argv2) {
   argv2 = resolve(__dirname, '../../../playground')
