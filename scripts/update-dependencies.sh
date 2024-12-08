@@ -37,6 +37,7 @@ cd packages/main-process                            && updateDependencies && cd 
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
+cd packages/static-server                           && updateDependencies && cd ../.. &&
 
 
 echo "Great Success!"
