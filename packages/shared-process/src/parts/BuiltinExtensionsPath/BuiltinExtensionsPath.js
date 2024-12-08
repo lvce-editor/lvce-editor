@@ -1,8 +1,5 @@
-import { join } from 'path'
-import { fileURLToPath } from 'url'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 export const getBuiltinExtensionsPath = () => {
-  const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))
-  const builtinExtensionsPath = join(staticServerPath, '..', '..', 'static', 'commitHash', 'extensions')
-  return builtinExtensionsPath
+  return PlatformPaths.getBuiltinExtensionsPath()
 }
