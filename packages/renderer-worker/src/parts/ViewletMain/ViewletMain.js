@@ -5,14 +5,15 @@ import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as DeserializeEditorGroups from '../DeserializeEditorGroups/DeserializeEditorGroups.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
+import * as GetTabHighlightInfo from '../GetTabHighlightInfo/GetTabHighlightInfo.js'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
+import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as GetTabHighlightInfo from '../GetTabHighlightInfo/GetTabHighlightInfo.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -680,12 +681,42 @@ export const handleTabsDragOver = (state, eventX, eventY) => {
   }
 }
 
-const getWebViews = (uri) => {
+const getExtension = (uri) => {
+  const dotIndex = uri.lastIndexOf('.')
+  if (dotIndex === -1) {
+    return ''
+  }
+  return uri.slice(dotIndex)
+}
+
+const getMatchingWebViews = (webViews, uri) => {
+  const extension = getExtension(uri)
+  const matching = []
+  for (const webView of webViews) {
+    if (webView && webView.selector && Array.isArray(webView.selector) && webView.selector.includes(extension)) {
+      matching.push(webView)
+    }
+  }
+  return matching
+}
+
+const toQuickPickEntry = (webView) => {
+  return {
+    id: webView.id,
+    label: webView.name || webView.id,
+  }
+}
+
+const getWebViews = async (uri) => {
+  const extensionWebViews = await GetWebViews.getWebViews()
+  const matching = getMatchingWebViews(extensionWebViews, uri)
+  const quickPickEntries = matching.map(toQuickPickEntry)
   return [
     {
       id: 'editor',
       label: 'Editor',
     },
+    ...quickPickEntries,
   ]
 }
 
@@ -702,8 +733,8 @@ export const reopenEditorWith = async (state) => {
   const { resolve, promise } = Promise.withResolvers()
   await Command.execute('QuickPick.showCustom', webViews, resolve)
   const choice = await promise
-  console.log({ choice })
-  // 4. display selected editor type (webview or text editor)
-  console.log('open editor with')
+  await Command.execute('Main.openUri', editor.uri, /* focus */ true, {
+    opener: choice.id,
+  })
   return state
 }

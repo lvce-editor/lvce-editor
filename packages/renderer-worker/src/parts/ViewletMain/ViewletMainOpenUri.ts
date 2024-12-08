@@ -18,7 +18,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const y = state.y + tabHeight
   const width = state.width
   const contentHeight = state.height - tabHeight
-  const moduleId = await ViewletMap.getModuleId(uri)
+  const moduleId = await ViewletMap.getModuleId(uri, context.opener)
   let activeGroup = groups[activeGroupIndex]
   activeGroup ||= {
     uid: Id.create(),
@@ -35,7 +35,9 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
 
   const previousEditor = editors[activeIndex]
   let disposeCommands
-  if (previousEditor && previousEditor.uri === uri) {
+  // @ts-ignore
+  if (previousEditor && previousEditor.uri === uri && previousEditor.opener === context.opener) {
+    console.log('is same')
     return {
       newState: state,
       commands: [],
@@ -44,7 +46,12 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   for (let i = 0; i < editors.length; i++) {
     const editor = editors[i]
     if (editor.uri === uri) {
-      return ViewletMainFocusIndex.focusIndex(state, i)
+      // @ts-ignore
+      if (editor.opener === context.opener) {
+        return ViewletMainFocusIndex.focusIndex(state, i)
+      } else {
+        console.log('open new')
+      }
     }
   }
   // TODO editor needs to be disposed when closing
