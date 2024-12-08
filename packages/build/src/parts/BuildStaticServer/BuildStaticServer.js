@@ -107,6 +107,11 @@ const copyStaticServerFiles = async () => {
     occurrence: 'isImmutable = false',
     replacement: 'isImmutable = true',
   })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/Root/Root.js',
+    occurrence: `export const root = resolve(__dirname, '../../../../../')`,
+    replacement: `export const root = resolve(__dirname, '../../../')`,
+  })
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
