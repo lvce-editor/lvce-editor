@@ -102,6 +102,11 @@ const copyStaticServerFiles = async () => {
     from: 'LICENSE',
     to: 'packages/build/.tmp/server/static-server/LICENSE',
   })
+  await Replace.replace({
+    path: 'build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.js',
+    occurrence: 'isImmutable = false',
+    replacement: 'isImmutable = true',
+  })
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
