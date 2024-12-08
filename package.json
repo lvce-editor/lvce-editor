@@ -56,8 +56,5 @@
       "**/.tmp/**"
     ],
     "exec": "node packages/server/bin/server.js"
-  },
-  "dependencies": {
-    "execa": "^9.5.2"
   }
 }
