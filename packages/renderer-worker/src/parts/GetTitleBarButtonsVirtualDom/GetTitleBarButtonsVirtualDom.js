@@ -1,20 +1,6 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
-
-const createTitleBarButton = (button) => {
-  const { id, icon, label } = button
-  const dom = [
-    {
-      type: VirtualDomElements.Button,
-      className: `TitleBarButton TitleBarButton${id}`,
-      ariaLabel: label,
-      childCount: 1,
-    },
-    GetIconVirtualDom.getIconVirtualDom(icon, VirtualDomElements.I),
-  ]
-  return dom
-}
+import * as GetTitleBarButtonVirtualDom from '../GetTitleBarButtonVirtualDom/GetTitleBarButtonVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getTitleBarButtonsVirtualDom = (buttons) => {
   const dom = [
@@ -24,7 +10,7 @@ export const getTitleBarButtonsVirtualDom = (buttons) => {
       childCount: buttons.length,
       onClick: DomEventListenerFunctions.HandleTitleBarButtonsClick,
     },
-    ...buttons.flatMap(createTitleBarButton),
+    ...buttons.flatMap(GetTitleBarButtonVirtualDom.createTitleBarButton),
   ]
   return dom
 }
