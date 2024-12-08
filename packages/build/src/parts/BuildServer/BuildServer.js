@@ -35,15 +35,13 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `import { ChildProcess, fork } from 'node:child_process'`,
-    replacement: `import { sharedProcessPath } from '@lvce-editor/shared-process'
-import { ChildProcess, fork } from 'node:child_process'`,
+    occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
+    replacement: `const { sharedProcessPath } = await import('@lvce-editor/shared-process')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')`,
-    replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))
-const staticPath = join(staticServerPath, '..', '..', 'static')`,
+    replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
