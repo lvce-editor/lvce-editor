@@ -6,5 +6,8 @@ export const getAbsolutePath = (pathName) => {
   if (pathName === '/') {
     return join(STATIC, 'index.html')
   }
+  if (pathName === '/favicon.ico') {
+    return join(STATIC, 'favicon.ico')
+  }
   return Path.join(STATIC, pathName)
 }
