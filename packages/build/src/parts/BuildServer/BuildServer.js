@@ -43,13 +43,6 @@ const copyServerFiles = async ({ commitHash }) => {
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')`,
     replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`,
   })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `
-const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
-`,
-    replacement: ``,
-  })
 
   const content = `This project incorporates components from the projects listed below, that may have licenses
 differing from this project:
