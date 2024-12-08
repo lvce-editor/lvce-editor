@@ -108,11 +108,6 @@ const copyStaticServerFiles = async ({ commitHash }) => {
     replacement: 'isImmutable = true',
   })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
-    occurrence: 'Path.join(STATIC, pathName)',
-    replacement: `Path.join(STATIC, '${commitHash}', pathName)`,
-  })
-  await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/Root/Root.js',
     occurrence: `export const root = resolve(__dirname, '../../../../../')`,
     replacement: `export const root = resolve(__dirname, '../../../')`,
