@@ -11,7 +11,7 @@ export const handleRequest = async (socket, request) => {
   if (request.url === '/tests' || request.url === '/tests/') {
     const staticPath = StaticPath.getStaticPath()
     const indexHtmlPath = join(staticPath, 'index.html')
-    return HandleRequestTest.handleRequestTest(socket, request)
+    return HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
   }
   const fileResponse = await GetElectronFileResponse.getElectronFileResponse(request.url, request)
   HttpServerResponse.send(request, socket, fileResponse)
