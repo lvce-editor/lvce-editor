@@ -2,10 +2,13 @@ import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as ContentSecurityPolicyAboutWorker from '../ContentSecurityPolicyAboutWorker/ContentSecurityPolicyAboutWorker.js'
 import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as ContentSecurityPolicyEditorWorker from '../ContentSecurityPolicyEditorWorker/ContentSecurityPolicyEditorWorker.js'
+import * as ContentSecurityPolicyExplorerWorker from '../ContentSecurityPolicyExplorerWorker/ContentSecurityPolicyExplorerWorker.js'
 import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPolicyExtensionHostWorker/ContentSecurityPolicyExtensionHostWorker.js'
+import * as ContentSecurityPolicyExtensionSearchViewWorker from '../ContentSecurityPolicyExtensionSearchViewWorker/ContentSecurityPolicyExtensionSearchViewWorker.js'
 import * as ContentSecurityPolicyFileSearchWorker from '../ContentSecurityPolicyFileSearchWorker/ContentSecurityPolicyFileSearchWorker.js'
 import * as ContentSecurityPolicyIframeWorker from '../ContentSecurityPolicyIframeWorker/ContentSecurityPolicyIframeWorker.js'
 import * as ContentSecurityPolicyRendererWorker from '../ContentSecurityPolicyRendererWorker/ContentSecurityPolicyRendererWorker.js'
+import * as ContentSecurityPolicySearchViewWorker from '../ContentSecurityPolicySearchViewWorker/ContentSecurityPolicySearchViewWorker.js'
 import * as ContentSecurityPolicySyntaxHighlightingWorker from '../ContentSecurityPolicySyntaxHighlightingWorker/ContentSecurityPolicySyntaxHighlightingWorker.js'
 import * as ContentSecurityPolicyTerminalWorker from '../ContentSecurityPolicyTerminalWorker/ContentSecurityPolicyTerminalWorker.js'
 import * as ContentSecurityPolicyTestWorker from '../ContentSecurityPolicyTestWorker/ContentSecurityPolicyTestWorker.js'
@@ -50,12 +53,20 @@ const getHeadersExtensionHostWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionHostWorker.value)
 }
 
+const getHeadersExtensionSearchViewWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionSearchViewWorker.value)
+}
+
 const getHeadersTerminalWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTerminalWorker.value)
 }
 
 const getHeadersEditorWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyEditorWorker.value)
+}
+
+const getHeadersExplorerWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExplorerWorker.value)
 }
 
 const getHeadersTestWorker = (mime, etag, defaultCachingHeader) => {
@@ -80,6 +91,10 @@ const getHeadersSyntaxHighlightingWorker = (mime, etag, defaultCachingHeader) =>
 
 const getHeadersIframeWorker = (mime, etag, defaultCachingHeader) => {
   return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyIframeWorker.value)
+}
+
+const getHeadersSearchViewWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySearchViewWorker.value)
 }
 
 const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
@@ -111,6 +126,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return getHeadersEditorWorker(mime, etag, defaultCachingHeader)
   }
+  if (absolutePath.endsWith('extensionSearchViewWorkerMain.js')) {
+    return getHeadersExtensionSearchViewWorker(mime, etag, defaultCachingHeader)
+  }
   if (absolutePath.endsWith('iframeWorkerMain.js')) {
     return getHeadersIframeWorker(mime, etag, defaultCachingHeader)
   }
@@ -123,11 +141,17 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('aboutWorkerMain.js')) {
     return getHeadersAboutWorker(mime, etag, defaultCachingHeader)
   }
+  if (absolutePath.endsWith('explorerViewWorkerMain.js')) {
+    return getHeadersExplorerWorker(mime, etag, defaultCachingHeader)
+  }
   if (absolutePath.endsWith('testWorkerMain.js')) {
     return getHeadersTestWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('syntaxHighlightingWorkerMain.js')) {
     return getHeadersSyntaxHighlightingWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('searchViewWorkerMain.js')) {
+    return getHeadersSearchViewWorker(mime, etag, defaultCachingHeader)
   }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
