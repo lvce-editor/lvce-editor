@@ -3,6 +3,7 @@ import * as Debug from '../Debug/Debug.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as Path from '../Path/Path.js'
+import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
@@ -35,10 +36,10 @@ export const getBuiltinExtensions = () => {
     [
       {
         type: ExtensionManifestInputType.Folder,
-        path: PlatformPaths.getBuiltinExtensionsPath(),
+        path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
       },
     ],
-    PlatformPaths.getBuiltinExtensionsPath(),
+    BuiltinExtensionsPath.getBuiltinExtensionsPath(),
   )
 }
 
@@ -50,7 +51,7 @@ export const getInstalledExtensions = () => {
         path: PlatformPaths.getExtensionsPath(),
       },
     ],
-    PlatformPaths.getBuiltinExtensionsPath(),
+    BuiltinExtensionsPath.getBuiltinExtensionsPath(),
   )
 }
 
@@ -71,10 +72,10 @@ export const getExtensions = () => {
       },
       {
         type: ExtensionManifestInputType.Folder,
-        path: PlatformPaths.getBuiltinExtensionsPath(),
+        path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
       },
     ],
-    PlatformPaths.getBuiltinExtensionsPath(),
+    BuiltinExtensionsPath.getBuiltinExtensionsPath(),
   )
 }
 
@@ -86,7 +87,7 @@ export const getDisabledExtensions = () => {
         path: PlatformPaths.getDisabledExtensionsPath(),
       },
     ],
-    PlatformPaths.getBuiltinExtensionsPath(),
+    BuiltinExtensionsPath.getBuiltinExtensionsPath(),
   )
 }
 
