@@ -126,5 +126,8 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('testWorkerMain.js')) {
     return getHeadersTestWorker(mime, etag, defaultCachingHeader)
   }
+  if (absolutePath.endsWith('syntaxHighlightingWorkerMain.js')) {
+    return getHeadersSyntaxHighlightingWorker(mime, etag, defaultCachingHeader)
+  }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
