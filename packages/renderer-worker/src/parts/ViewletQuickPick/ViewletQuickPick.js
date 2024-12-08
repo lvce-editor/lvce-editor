@@ -83,7 +83,8 @@ export const loadContent = async (state) => {
   // @ts-ignore
   const label = provider.getLabel()
   const minLineY = 0
-  const maxLineY = Math.min(minLineY + state.maxVisibleItems, newPicks.length - 1)
+  const maxLineY = Math.min(minLineY + state.maxVisibleItems, newPicks.length)
+
   return {
     ...state,
     picks: newPicks,
