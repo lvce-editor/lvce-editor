@@ -1,5 +1,9 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
-import * as ContentSecurityPolicy from '../ContentSecurityPolicy/ContentSecurityPolicy.js'
+import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
+import * as ContentSecurityPolicyEditorWorker from '../ContentSecurityPolicyEditorWorker/ContentSecurityPolicyEditorWorker.js'
+import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPolicyExtensionHostWorker/ContentSecurityPolicyExtensionHostWorker.js'
+import * as ContentSecurityPolicyRendererWorker from '../ContentSecurityPolicyRendererWorker/ContentSecurityPolicyRendererWorker.js'
+import * as ContentSecurityPolicyTerminalWorker from '../ContentSecurityPolicyTerminalWorker/ContentSecurityPolicyTerminalWorker.js'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
@@ -11,7 +15,7 @@ const getHeadersDocument = (mime, etag) => {
   return {
     [HttpHeader.CacheControl]: CachingHeaders.NoCache,
     [HttpHeader.Connection]: 'close',
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicy,
+    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
@@ -20,40 +24,32 @@ const getHeadersDocument = (mime, etag) => {
   }
 }
 
-const getHeadersRendererWorker = (mime, etag, defaultCachingHeader) => {
+const getHeadersWorker = (mime, etag, defaultCachingHeader, csp) => {
   return {
     [HttpHeader.CacheControl]: defaultCachingHeader,
     [HttpHeader.Connection]: 'close',
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicyRendererWorker,
+    [HttpHeader.ContentSecurityPolicy]: csp,
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
     [HttpHeader.Etag]: etag,
   }
+}
+
+const getHeadersRendererWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyRendererWorker.value)
 }
 
 const getHeadersExtensionHostWorker = (mime, etag, defaultCachingHeader) => {
-  return {
-    [HttpHeader.CacheControl]: defaultCachingHeader,
-    [HttpHeader.Connection]: 'close',
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicyExtensionHostWorker,
-    [HttpHeader.ContentType]: mime,
-    [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
-    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
-    [HttpHeader.Etag]: etag,
-  }
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionHostWorker.value)
 }
 
 const getHeadersTerminalWorker = (mime, etag, defaultCachingHeader) => {
-  return {
-    [HttpHeader.CacheControl]: defaultCachingHeader,
-    [HttpHeader.Connection]: 'close',
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicy.ContentSecurityPolicyTerminalWorker,
-    [HttpHeader.ContentType]: mime,
-    [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
-    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
-    [HttpHeader.Etag]: etag,
-  }
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTerminalWorker.value)
+}
+
+const getHeadersEditorWorker = (mime, etag, defaultCachingHeader) => {
+  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyEditorWorker.value)
 }
 
 const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
@@ -81,6 +77,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('terminalWorkerMain.js')) {
     return getHeadersTerminalWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('editorWorkerMain.js')) {
+    return getHeadersEditorWorker(mime, etag, defaultCachingHeader)
   }
   return getHeadersDefault(mime, etag, defaultCachingHeader)
 }
