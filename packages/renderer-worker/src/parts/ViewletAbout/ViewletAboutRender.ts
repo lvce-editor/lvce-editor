@@ -6,8 +6,7 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-// TODO
-// export const hasFunctionalEvents = true
+export const hasFunctionalEvents = true
 
 export const renderDialog = {
   isEqual(oldState: AboutState, newState: AboutState) {
