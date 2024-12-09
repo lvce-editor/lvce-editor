@@ -8,7 +8,7 @@ import * as StaticPath from '../StaticPath/StaticPath.js'
 export const handleRequest = async (socket, request) => {
   Assert.object(socket)
   Assert.object(request)
-  if (request.url === '/tests' || request.url === '/tests/') {
+  if (request.url.startsWith('/tests')) {
     const staticPath = StaticPath.getStaticPath()
     const indexHtmlPath = join(staticPath, 'index.html')
     return HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
