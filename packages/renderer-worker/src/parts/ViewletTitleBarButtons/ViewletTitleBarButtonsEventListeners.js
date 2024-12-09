@@ -10,7 +10,7 @@ export const renderEventListeners = () => {
     },
     {
       name: 'handleClickToggleMaximize',
-      params: ['handleClickCopy'],
+      params: ['handleClickToggleMaximize'],
     },
   ]
 }
