@@ -35,6 +35,72 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as GetExtensions from '../GetExtensions/GetExtensions.js'
 
+const actions = [
+  async () => {
+    Performance.mark(PerformanceMarkerType.WillLoadMain)
+    await Command.execute('Layout.loadMainIfVisible')
+    Performance.mark(PerformanceMarkerType.DidLoadMain)
+  },
+  async () => {
+    LifeCycle.mark(LifeCyclePhase.Six)
+
+    LifeCycle.mark(LifeCyclePhase.Seven)
+
+    Performance.mark(PerformanceMarkerType.WillLoadSideBar)
+    await Command.execute('Layout.loadSideBarIfVisible')
+    Performance.mark(PerformanceMarkerType.DidLoadSideBar)
+  },
+  async () => {
+    LifeCycle.mark(LifeCyclePhase.Eight)
+
+    Performance.mark(PerformanceMarkerType.WillLoadPanel)
+    await Command.execute('Layout.loadPanelIfVisible')
+    Performance.mark(PerformanceMarkerType.DidLoadPanel)
+  },
+
+  async () => {
+    LifeCycle.mark(LifeCyclePhase.Nine)
+
+    Performance.mark(PerformanceMarkerType.WillLoadActivityBar)
+    await Command.execute('Layout.loadActivityBarIfVisible')
+    Performance.mark(PerformanceMarkerType.DidLoadActivityBar)
+  },
+  async () => {
+    LifeCycle.mark(LifeCyclePhase.Ten)
+
+    Performance.mark(PerformanceMarkerType.WillLoadStatusBar)
+    await Command.execute('Layout.loadStatusBarIfVisible')
+    Performance.mark(PerformanceMarkerType.DidLoadStatusBar)
+  },
+
+  async () => {
+    await Command.execute('Layout.loadPreviewIfVisible')
+  },
+  async () => {
+    LifeCycle.mark(LifeCyclePhase.Eleven)
+
+    Performance.mark(PerformanceMarkerType.WillLoadIconTheme)
+    // TODO check preferences if icon theme is enabled
+    await IconTheme.hydrate()
+    Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
+  },
+  async () => {
+    LifeCycle.mark(LifeCyclePhase.Twelve)
+
+    LifeCycle.mark(LifeCyclePhase.Thirteen)
+
+    LifeCycle.mark(LifeCyclePhase.Fourteen)
+
+    if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
+      await Command.execute('ElectronApplicationMenu.hydrate')
+    } else {
+      Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
+      await Command.execute('Layout.loadTitleBarIfVisible')
+      Performance.mark(PerformanceMarkerType.DidLoadTitleBar)
+    }
+  },
+]
+
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async () => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
@@ -135,58 +201,7 @@ export const startup = async () => {
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  Performance.mark(PerformanceMarkerType.WillLoadMain)
-  await Command.execute('Layout.loadMainIfVisible')
-  Performance.mark(PerformanceMarkerType.DidLoadMain)
-
-  LifeCycle.mark(LifeCyclePhase.Six)
-
-  LifeCycle.mark(LifeCyclePhase.Seven)
-
-  Performance.mark(PerformanceMarkerType.WillLoadSideBar)
-  await Command.execute('Layout.loadSideBarIfVisible')
-  Performance.mark(PerformanceMarkerType.DidLoadSideBar)
-
-  LifeCycle.mark(LifeCyclePhase.Eight)
-
-  Performance.mark(PerformanceMarkerType.WillLoadPanel)
-  await Command.execute('Layout.loadPanelIfVisible')
-  Performance.mark(PerformanceMarkerType.DidLoadPanel)
-
-  LifeCycle.mark(LifeCyclePhase.Nine)
-
-  Performance.mark(PerformanceMarkerType.WillLoadActivityBar)
-  await Command.execute('Layout.loadActivityBarIfVisible')
-  Performance.mark(PerformanceMarkerType.DidLoadActivityBar)
-
-  LifeCycle.mark(LifeCyclePhase.Ten)
-
-  Performance.mark(PerformanceMarkerType.WillLoadStatusBar)
-  await Command.execute('Layout.loadStatusBarIfVisible')
-  Performance.mark(PerformanceMarkerType.DidLoadStatusBar)
-
-  await Command.execute('Layout.loadPreviewIfVisible')
-
-  LifeCycle.mark(LifeCyclePhase.Eleven)
-
-  Performance.mark(PerformanceMarkerType.WillLoadIconTheme)
-  // TODO check preferences if icon theme is enabled
-  await IconTheme.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
-
-  LifeCycle.mark(LifeCyclePhase.Twelve)
-
-  LifeCycle.mark(LifeCyclePhase.Thirteen)
-
-  LifeCycle.mark(LifeCyclePhase.Fourteen)
-
-  if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
-    await Command.execute('ElectronApplicationMenu.hydrate')
-  } else {
-    Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
-    await Command.execute('Layout.loadTitleBarIfVisible')
-    Performance.mark(PerformanceMarkerType.DidLoadTitleBar)
-  }
+  await Promise.all(actions.map((action) => action()))
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
