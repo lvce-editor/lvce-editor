@@ -72,7 +72,7 @@ const isStatic = (url) => {
   if (url.startsWith('/favicon.ico')) {
     return true
   }
-  if (url.startsWith('/manifest.ico')) {
+  if (url.startsWith('/manifest.json')) {
     return true
   }
   return false
