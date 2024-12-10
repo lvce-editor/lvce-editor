@@ -23,8 +23,10 @@ export const getMimeType = (fileExtension) => {
       return MimeType.AudioMpeg
     case '.webm':
       return MimeType.VideoWebm
+    case '.ico':
+      return MimeType.ImageXIcon
     default:
-      console.warn(`[shared-process] unsupported file extension: ${fileExtension}`)
+      console.warn(`[static-server] unsupported file extension: ${fileExtension}`)
       return ''
   }
 }
