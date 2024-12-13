@@ -122,6 +122,8 @@ export const startup = async () => {
 
   const initData = await InitData.getInitData()
 
+  IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
+
   if (initData.Location.href.includes('?replayId')) {
     const url = new URL(initData.Location.href)
     const replayId = url.searchParams.get('replayId')
@@ -132,8 +134,6 @@ export const startup = async () => {
   if (initData.Location.href.startsWith('http://localhost:3001/tests/')) {
     // TODO aquire port from other renderer worker
   }
-
-  IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
 
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
 
