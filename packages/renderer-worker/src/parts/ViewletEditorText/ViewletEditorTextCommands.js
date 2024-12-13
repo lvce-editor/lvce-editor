@@ -1,33 +1,5 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-
-const wrapEditorCommand = (id) => {
-  return async (...args) => {
-    if (args.length === 0) {
-      throw new Error('missing arg')
-    }
-    const editor = args[0]
-    const restArgs = args.slice(1)
-    const fullId = id.includes('.') ? id : `Editor.${id}`
-    // @ts-ignore
-    const result = await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-    if (result && result.commands) {
-      return {
-        ...editor,
-        commands: result.commands,
-      }
-    }
-    return result
-  }
-}
-
-const wrapEditorCommands = (ids) => {
-  let all = {}
-  for (const id of ids) {
-    all = { ...all, [id]: wrapEditorCommand(id) }
-  }
-  return all
-}
+import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 
 const ids = [
   'addCursorAbove',
@@ -223,7 +195,7 @@ const ids = [
 
 export const Commands = {
   // TODO command to set cursor position
-  ...wrapEditorCommands(ids),
+  ...WrapEditorCommands.wrapEditorCommands(ids),
 
   // TODO
   async showOverlayMessage(state, editor, ...args) {
@@ -235,7 +207,7 @@ export const Commands = {
 export const CommandsWithSideEffectsLazy = {
   typeWithAutoClosing: () => {
     return {
-      typeWithAutoClosing: wrapEditorCommand('typeWithAutoClosing'),
+      typeWithAutoClosing: WrapEditorCommands.wrapEditorCommand('typeWithAutoClosing'),
     }
   },
 }
