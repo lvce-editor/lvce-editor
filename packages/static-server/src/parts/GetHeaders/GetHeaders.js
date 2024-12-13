@@ -1,116 +1,82 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
+import * as Connection from '../Connection/Connection.js'
 import * as ContentSecurityPolicyAboutWorker from '../ContentSecurityPolicyAboutWorker/ContentSecurityPolicyAboutWorker.js'
-import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as ContentSecurityPolicyEditorWorker from '../ContentSecurityPolicyEditorWorker/ContentSecurityPolicyEditorWorker.js'
 import * as ContentSecurityPolicyExplorerWorker from '../ContentSecurityPolicyExplorerWorker/ContentSecurityPolicyExplorerWorker.js'
 import * as ContentSecurityPolicyExtensionDetailViewWorker from '../ContentSecurityPolicyExtensionDetailViewWorker/ContentSecurityPolicyExtensionDetailViewWorker.js'
 import * as ContentSecurityPolicyExtensionHostSubWorker from '../ContentSecurityPolicyExtensionHostSubWorker/ContentSecurityPolicyExtensionHostSubWorker.js'
-import * as ContentSecurityPolicyExtensionHostWorker from '../ContentSecurityPolicyExtensionHostWorker/ContentSecurityPolicyExtensionHostWorker.js'
 import * as ContentSecurityPolicyExtensionSearchViewWorker from '../ContentSecurityPolicyExtensionSearchViewWorker/ContentSecurityPolicyExtensionSearchViewWorker.js'
 import * as ContentSecurityPolicyFileSearchWorker from '../ContentSecurityPolicyFileSearchWorker/ContentSecurityPolicyFileSearchWorker.js'
 import * as ContentSecurityPolicyIframeWorker from '../ContentSecurityPolicyIframeWorker/ContentSecurityPolicyIframeWorker.js'
 import * as ContentSecurityPolicyKeyBindingsWorker from '../ContentSecurityPolicyKeyBindingsWorker/ContentSecurityPolicyKeyBindingsWorker.js'
-import * as ContentSecurityPolicyRendererWorker from '../ContentSecurityPolicyRendererWorker/ContentSecurityPolicyRendererWorker.js'
 import * as ContentSecurityPolicySearchViewWorker from '../ContentSecurityPolicySearchViewWorker/ContentSecurityPolicySearchViewWorker.js'
 import * as ContentSecurityPolicySyntaxHighlightingWorker from '../ContentSecurityPolicySyntaxHighlightingWorker/ContentSecurityPolicySyntaxHighlightingWorker.js'
 import * as ContentSecurityPolicyTerminalWorker from '../ContentSecurityPolicyTerminalWorker/ContentSecurityPolicyTerminalWorker.js'
 import * as ContentSecurityPolicyTestWorker from '../ContentSecurityPolicyTestWorker/ContentSecurityPolicyTestWorker.js'
 import * as ContentSecurityPolicyTextSearchWorker from '../ContentSecurityPolicyTextSearchWorker/ContentSecurityPolicyTextSearchWorker.js'
-import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
-import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
+import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
+import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
+import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
+import * as GetHeadersWorker from '../GetHeadersWorker/GetHeadersWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
-import * as Connection from '../Connection/Connection.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as Path from '../Path/Path.js'
 
-const getHeadersDocument = (mime, etag) => {
-  return {
-    [HttpHeader.CacheControl]: CachingHeaders.NoCache,
-    [HttpHeader.Connection]: Connection.Close,
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
-    [HttpHeader.ContentType]: mime,
-    [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
-    [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
-    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
-    [HttpHeader.Etag]: etag,
-  }
-}
-
-const getHeadersWorker = (mime, etag, defaultCachingHeader, csp) => {
-  return {
-    [HttpHeader.CacheControl]: defaultCachingHeader,
-    [HttpHeader.Connection]: Connection.Close,
-    [HttpHeader.ContentSecurityPolicy]: csp,
-    [HttpHeader.ContentType]: mime,
-    [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
-    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
-    [HttpHeader.Etag]: etag,
-  }
-}
-
-const getHeadersRendererWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyRendererWorker.value)
-}
-
-const getHeadersExtensionHostWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionHostWorker.value)
-}
-
 const getHeadersExtensionSearchViewWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionSearchViewWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionSearchViewWorker.value)
 }
 
 const getHeadersExtensionDetailViewWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionDetailViewWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionDetailViewWorker.value)
 }
 
 const getHeadersTerminalWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTerminalWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTerminalWorker.value)
 }
 
 const getHeadersEditorWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyEditorWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyEditorWorker.value)
 }
 
 const getHeadersExplorerWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExplorerWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExplorerWorker.value)
 }
 
 const getHeadersTestWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTestWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTestWorker.value)
 }
 
 const getHeadersAboutWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyAboutWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyAboutWorker.value)
 }
 
 const getHeadersFileSearchWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyFileSearchWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyFileSearchWorker.value)
 }
 
 const getHeadersTextSearchWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTextSearchWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyTextSearchWorker.value)
 }
 
 const getHeadersSyntaxHighlightingWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySyntaxHighlightingWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySyntaxHighlightingWorker.value)
 }
 
 const getHeadersIframeWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyIframeWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyIframeWorker.value)
 }
 
 const getHeadersSearchViewWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySearchViewWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicySearchViewWorker.value)
 }
 
 const getHeadersExtensionHostSubWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionHostSubWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyExtensionHostSubWorker.value)
 }
 
 const getHeadersKeyBindingsViewWorker = (mime, etag, defaultCachingHeader) => {
-  return getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyKeyBindingsWorker.value)
+  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyKeyBindingsWorker.value)
 }
 
 const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
@@ -128,13 +94,13 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   const mime = GetMimeType.getMimeType(extension)
   const defaultCachingHeader = isImmutable ? CachingHeaders.OneYear : CachingHeaders.NoCache
   if (absolutePath.endsWith('/index.html')) {
-    return getHeadersDocument(mime, etag)
+    return GetHeadersDocument.getHeadersDocument(mime, etag)
   }
   if (absolutePath.endsWith('rendererWorkerMain.js')) {
-    return getHeadersRendererWorker(mime, etag, defaultCachingHeader)
+    return GetHeadersRendererWorker.getHeadersRendererWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('extensionHostWorkerMain.js')) {
-    return getHeadersExtensionHostWorker(mime, etag, defaultCachingHeader)
+    return GetHeadersExtensionHostWorker.getHeadersExtensionHostWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('terminalWorkerMain.js')) {
     return getHeadersTerminalWorker(mime, etag, defaultCachingHeader)
