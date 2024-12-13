@@ -4,6 +4,7 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as Connection from '../Connection/Connection.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 
 export const getResponseInfo = async (request, isImmutable) => {
   const pathname = request.url
@@ -18,7 +19,7 @@ export const getResponseInfo = async (request, isImmutable) => {
       },
     }
   }
-  if (request.headers[HttpHeader.IfNotMatch] === etag) {
+  if (MatchesEtag.matchesEtag(request, etag)) {
     return {
       absolutePath,
       status: HttpStatusCode.NotModifed,
