@@ -10,6 +10,10 @@ export const send = async (request, socket, status, headers, filePath) => {
     response.end()
     return
   }
+  if (status === 304) {
+    response.end()
+    return
+  }
   try {
     const stream = createReadStream(filePath)
     await PipelineResponse.pipelineResponse(response, stream)
