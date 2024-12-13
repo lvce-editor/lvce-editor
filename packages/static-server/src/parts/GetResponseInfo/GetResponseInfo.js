@@ -1,33 +1,20 @@
 import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
-import * as HttpHeader from '../HttpHeader/HttpHeader.js'
-import * as Connection from '../Connection/Connection.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
+import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
+import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 
 export const getResponseInfo = async (request, isImmutable) => {
   const pathname = request.url
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
   const etag = await GetPathEtag.getPathEtag(absolutePath)
   if (!etag) {
-    return {
-      absolutePath: '',
-      status: HttpStatusCode.NotFound,
-      headers: {
-        [HttpHeader.Connection]: Connection.Close,
-      },
-    }
+    return NotFoundResponse.notFoundResponse
   }
   if (MatchesEtag.matchesEtag(request, etag)) {
-    return {
-      absolutePath,
-      status: HttpStatusCode.NotModifed,
-      headers: {
-        [HttpHeader.Connection]: Connection.Close,
-        [HttpHeader.Etag]: etag,
-      },
-    }
+    return NotModifiedResponse.notModifiedResponse
   }
   const headers = GetHeaders.getHeaders(absolutePath, etag, isImmutable)
   return {
