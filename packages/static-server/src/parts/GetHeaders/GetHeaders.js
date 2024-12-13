@@ -20,13 +20,14 @@ import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOr
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
+import * as Connection from '../Connection/Connection.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as Path from '../Path/Path.js'
 
 const getHeadersDocument = (mime, etag) => {
   return {
     [HttpHeader.CacheControl]: CachingHeaders.NoCache,
-    [HttpHeader.Connection]: 'close',
+    [HttpHeader.Connection]: Connection.Close,
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
@@ -39,7 +40,7 @@ const getHeadersDocument = (mime, etag) => {
 const getHeadersWorker = (mime, etag, defaultCachingHeader, csp) => {
   return {
     [HttpHeader.CacheControl]: defaultCachingHeader,
-    [HttpHeader.Connection]: 'close',
+    [HttpHeader.Connection]: Connection.Close,
     [HttpHeader.ContentSecurityPolicy]: csp,
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
@@ -115,7 +116,7 @@ const getHeadersKeyBindingsViewWorker = (mime, etag, defaultCachingHeader) => {
 const getHeadersDefault = (mime, etag, defaultCachingHeader) => {
   return {
     [HttpHeader.CacheControl]: defaultCachingHeader,
-    [HttpHeader.Connection]: 'close',
+    [HttpHeader.Connection]: Connection.Close,
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
     [HttpHeader.Etag]: etag,
