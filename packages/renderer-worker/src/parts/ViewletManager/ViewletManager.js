@@ -269,9 +269,13 @@ const registerWrappedCommands = (object, id, wrapFn) => {
   }
 }
 
-const maybeRegisterWrappedCommands = (id, module) => {
+const maybeRegisterWrappedCommands = async (id, module) => {
   if (module.Commands) {
     registerWrappedCommands(module.Commands, id, wrapViewletCommand)
+  }
+  if (module.getCommands) {
+    const commands = await module.getCommands()
+    registerWrappedCommands(commands, id, wrapViewletCommand)
   }
   if (module.CommandsWithSideEffects) {
     registerWrappedCommands(module.CommandsWithSideEffects, id, wrapViewletCommandWithSideEffect)
@@ -330,7 +334,7 @@ const actuallyLoadModule = async (getModule, id) => {
     await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id, /* hasFunctionalEvents */ module.hasFunctionalEvents)
   }
   await ViewletManagerVisitor.loadModule(id, module)
-  maybeRegisterWrappedCommands(id, module)
+  await maybeRegisterWrappedCommands(id, module)
   maybeRegisterEvents(module)
   maybeRegisterMenuEntries(module)
   return module
