@@ -13,7 +13,7 @@ export const getResponseInfoProduction = (request) => {
       absolutePath: '',
       status: HttpStatusCode.NotFound,
       headers: {
-        [HttpHeader.Connection]: Connection.close,
+        [HttpHeader.Connection]: Connection.Close,
       },
     }
   }
@@ -22,7 +22,7 @@ export const getResponseInfoProduction = (request) => {
       absolutePath: '',
       status: HttpStatusCode.NotModifed,
       headers: {
-        [HttpHeader.Connection]: Connection.close,
+        [HttpHeader.Connection]: Connection.Close,
         [HttpHeader.Etag]: result.etag,
       },
     }
