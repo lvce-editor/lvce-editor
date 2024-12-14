@@ -12,6 +12,7 @@ export const replace = async ({ path, occurrence, replacement }) => {
   try {
     const content = await ReadFile.readFile(path)
     if (!content.includes(occurrence)) {
+      console.log({ content })
       throw new Error(`occurrence not found ${occurrence}`)
     }
     const newContent = content.replaceAll(occurrence, replacement)
