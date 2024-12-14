@@ -24,7 +24,7 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   const extension = Path.extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const defaultCachingHeader = isImmutable ? CachingHeaders.OneYear : CachingHeaders.NoCache
-  if (absolutePath.endsWith('/index.html')) {
+  if (absolutePath.endsWith('index.html')) {
     return GetHeadersDocument.getHeadersDocument(mime, etag)
   }
   if (absolutePath.endsWith('rendererWorkerMain.js')) {

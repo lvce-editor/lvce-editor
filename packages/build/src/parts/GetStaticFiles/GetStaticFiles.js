@@ -46,7 +46,7 @@ const generateFilesCode = (indexes, uris) => {
   return lines.join('\n')
 }
 
-export const getStaticFiles = async () => {
+export const getStaticFiles = async ({ etag }) => {
   const staticFolder = Path.absolute(`packages/build/.tmp/server/static-server/static`)
   const dirents = await readdir(staticFolder, { recursive: true, withFileTypes: true })
   const files = dirents.filter((dirent) => dirent.isFile())
@@ -57,11 +57,9 @@ export const getStaticFiles = async () => {
   const getHeadersPath = join(root, 'packages', 'static-server', 'src', 'parts', 'GetHeaders', 'GetHeaders.js')
   const getHeadersUri = pathToFileURL(getHeadersPath).toString()
   const getHeadersModule = await import(getHeadersUri)
-  const etag = 'abc'
   const isImmutable = 1
   const headers = filePaths.map((file) => getHeadersModule.getHeaders(file, etag, isImmutable))
   const uniqueHeaders = getUniqueHeaders(headers)
-  // console.log(uniqueHeaders)
   const headersCode = generateHeadersCode(uniqueHeaders.ours, uniqueHeaders.indexes, uris)
   const headersCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js`)
   await WriteFile.writeFile({ to: headersCodePath, content: headersCode })
@@ -72,6 +70,3 @@ export const getStaticFiles = async () => {
     content: filesCode,
   })
 }
-
-getStaticFiles()
-console.log()
