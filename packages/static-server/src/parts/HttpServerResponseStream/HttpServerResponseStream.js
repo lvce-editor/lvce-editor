@@ -1,6 +1,5 @@
 import { createReadStream } from 'node:fs'
 import { CompatServerResponse } from '../CompatServerResponse/CompatServerResponse.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsStreamPrematureCloseError.js'
 import * as PipelineResponse from '../PipelineResponse/PipelineResponse.js'
@@ -8,7 +7,7 @@ import * as PipelineResponse from '../PipelineResponse/PipelineResponse.js'
 export const send = async (request, socket, status, headers, filePath) => {
   const response = new CompatServerResponse(request, socket, status, headers)
   if (status === HttpStatusCode.NotFound) {
-    response.end()
+    response.end('Not Found')
     return
   }
   if (status === HttpStatusCode.NotModifed) {
