@@ -183,6 +183,16 @@ export const getResponseInfo = (request, isImmutable) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+    occurrence: `"default-src 'none'; font-src 'self'; img-src 'self'`,
+    replacement: `\`default-src 'none'; font-src 'self'; img-src 'self'`,
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+    occurrence: `manifest-src 'self';"`,
+    replacement: `manifest-src 'self';\``,
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
     occurrence: `export const headers =`,
     replacement: `import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.js'
