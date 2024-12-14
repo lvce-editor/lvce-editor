@@ -14,8 +14,8 @@ const getUniqueHeaders = (headers) => {
     if (stringified in seen) {
       indexes.push(seen[stringified])
     } else {
-      ours.push(header)
       seen[stringified] = ours.length
+      ours.push(header)
       indexes.push(seen[stringified])
     }
   }
