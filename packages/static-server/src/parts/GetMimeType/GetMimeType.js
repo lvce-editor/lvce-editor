@@ -25,6 +25,20 @@ export const getMimeType = (fileExtension) => {
       return MimeType.VideoWebm
     case '.ico':
       return MimeType.ImageXIcon
+    case '.txt':
+    case '.cpp':
+    case '.csv':
+    case '.dart':
+    case '.env':
+    case '.ex':
+    case '.py':
+    case '.md':
+    case '.java':
+    case '.jl':
+    case '.kt':
+    case '.pl':
+    case '':
+      return MimeType.TextPlain
     default:
       console.warn(`[static-server] unsupported file extension: ${fileExtension}`)
       return ''
