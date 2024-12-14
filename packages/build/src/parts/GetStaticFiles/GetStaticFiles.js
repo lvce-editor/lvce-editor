@@ -72,6 +72,3 @@ export const getStaticFiles = async () => {
     content: filesCode,
   })
 }
-
-getStaticFiles()
-console.log()

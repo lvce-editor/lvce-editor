@@ -5,6 +5,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
@@ -112,6 +113,64 @@ const copyStaticServerFiles = async ({ commitHash }) => {
     occurrence: `export const root = resolve(__dirname, '../../../../../')`,
     replacement: `export const root = resolve(__dirname, '../../../')`,
   })
+  await GetStaticFiles.getStaticFiles()
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.js',
+    occurrence: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
+import * as GetHeaders from '../GetHeaders/GetHeaders.js'
+import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
+import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
+import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
+
+export const getResponseInfo = async (request, isImmutable) => {
+  const pathname = request.url
+  const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
+  const etag = await GetPathEtag.getPathEtag(absolutePath)
+  if (!etag) {
+    return NotFoundResponse.notFoundResponse
+  }
+  if (MatchesEtag.matchesEtag(request, etag)) {
+    return NotModifiedResponse.notModifiedResponse
+  }
+  const headers = GetHeaders.getHeaders(absolutePath, etag, isImmutable)
+  return {
+    absolutePath,
+    status: HttpStatusCode.Ok,
+    headers,
+  }
+}
+`,
+    replacement: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
+import * as Headers from '../Headers/Headers.js'
+import * as Files from '../Files/Files.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
+import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
+import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
+
+const etag = 'W/${commitHash}'
+
+export const getResponseInfo = (request, isImmutable) => {
+  const pathname = request.url
+  if(!Object.hasOwn(Files.files, pathname)){
+    return NotFoundResponse.notFoundResponse
+  }
+  const index = Files.files[pathname]
+  const headers = Headers.headers[index]
+  const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
+  if (MatchesEtag.matchesEtag(request, etag)) {
+    return NotModifiedResponse.notModifiedResponse
+  }
+  return {
+    absolutePath,
+    status: HttpStatusCode.Ok,
+    headers,
+  }
+}
+`,
+  })
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
@@ -163,17 +222,9 @@ const copyExtensions = async ({ commitHash }) => {
 }
 
 export const buildStaticServer = async ({ product, commitHash, version, date }) => {
-  console.time('copyStaticServerFiles')
-  await copyStaticServerFiles({ commitHash })
-  console.timeEnd('copyStaticServerFiles')
-
   console.time('bundleRendererWorkerAndRendererProcessJs')
   await bundleRendererWorkerAndRendererProcessJs({ commitHash, version, date, product })
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
-
-  console.time('copyStaticFiles')
-  await copyStaticFiles({ commitHash })
-  console.timeEnd('copyStaticFiles')
 
   console.time('copyExtensions')
   await copyExtensions({ commitHash })
@@ -182,4 +233,12 @@ export const buildStaticServer = async ({ product, commitHash, version, date }) 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ commitHash })
   console.timeEnd('copyPlaygroundFiles')
+
+  console.time('copyStaticFiles')
+  await copyStaticFiles({ commitHash })
+  console.timeEnd('copyStaticFiles')
+
+  console.time('copyStaticServerFiles')
+  await copyStaticServerFiles({ commitHash })
+  console.timeEnd('copyStaticServerFiles')
 }
