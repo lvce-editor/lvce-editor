@@ -40,6 +40,7 @@ const generateFilesCode = (indexes, uris) => {
     const uri = uris[i]
     map[uri] = index
   }
+  map['/'] = map['/index.html']
   const lines = []
   lines.push(`export const files = ` + JSON.stringify(map, null, 2))
   lines.push('')
