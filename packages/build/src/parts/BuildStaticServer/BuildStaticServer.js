@@ -94,6 +94,7 @@ const getObjectDependencies = (obj) => {
 }
 
 const copyStaticServerFiles = async ({ commitHash }) => {
+  const etag = `W/${commitHash}`
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
@@ -113,7 +114,7 @@ const copyStaticServerFiles = async ({ commitHash }) => {
     occurrence: `export const root = resolve(__dirname, '../../../../../')`,
     replacement: `export const root = resolve(__dirname, '../../../')`,
   })
-  await GetStaticFiles.getStaticFiles()
+  await GetStaticFiles.getStaticFiles({ etag })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.js',
     occurrence: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
@@ -150,7 +151,7 @@ import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 
-const etag = 'W/${commitHash}'
+const etag = '${etag}'
 
 export const getResponseInfo = (request, isImmutable) => {
   const pathname = request.url
