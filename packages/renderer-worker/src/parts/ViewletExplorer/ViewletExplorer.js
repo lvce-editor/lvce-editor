@@ -13,8 +13,6 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as OpenFolder from '../OpenFolder/OpenFolder.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
-import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
