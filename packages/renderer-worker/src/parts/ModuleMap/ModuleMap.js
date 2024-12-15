@@ -41,8 +41,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Chrome
     case 'ClipBoard':
       return ModuleId.ClipBoard
-    case 'ColorPicker':
-      return ModuleId.ColorPicker
     case 'ColorTheme':
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson':
