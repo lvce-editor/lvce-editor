@@ -6,7 +6,6 @@ import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
