@@ -55,15 +55,15 @@ export const updateIcons = (state) => {
 }
 
 export const handleLanguagesChanged = (state) => {
-  return updateIcons(state)
+  return ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
 }
 
 export const handleWorkspaceChange = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleWorkspaceChange')
+  return ExplorerViewWorker.invoke('Explorer.handleWorkspaceChange', state)
 }
 
 export const handleIconThemeChange = (state) => {
-  return updateIcons(state)
+  return ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
 }
 
 // TODO rename dirents to items, then can use virtual list component directly
