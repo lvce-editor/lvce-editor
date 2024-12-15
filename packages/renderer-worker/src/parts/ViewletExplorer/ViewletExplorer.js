@@ -51,16 +51,8 @@ export const loadContent = async (state, savedState) => {
   return newState
 }
 
-const updateIcon = (dirent) => {
-  return { ...dirent, icon: IconTheme.getIcon(dirent) }
-}
-
 export const updateIcons = (state) => {
-  const newDirents = state.items.map(updateIcon)
-  return {
-    ...state,
-    items: newDirents,
-  }
+  return ExplorerViewWorker.invoke('Explorer.updateIcons', state)
 }
 
 export const handleLanguagesChanged = (state) => {
