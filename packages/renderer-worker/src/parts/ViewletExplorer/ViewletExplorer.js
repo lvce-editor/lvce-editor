@@ -58,16 +58,6 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
   }
 }
 
-// @ts-ignore
-const isExpandedDirectory = (dirent) => {
-  return dirent.type === DirentType.DirectoryExpanded
-}
-
-// @ts-ignore
-const getPath = (dirent) => {
-  return dirent.path
-}
-
 export const loadContent = async (state, savedState) => {
   const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
   return newState
