@@ -234,20 +234,11 @@ export const cancelEdit = (state) => {
 }
 
 export const copyRelativePath = async (state) => {
-  const dirent = getFocusedDirent(state)
-  const relativePath = dirent.path.slice(1)
-  // TODO handle error
-  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ relativePath)
-  return state
+  return ExplorerViewWorker.invoke('Explorer.copyRelativePath', state)
 }
 
 export const copyPath = async (state) => {
-  const dirent = getFocusedDirent(state)
-  // TODO windows paths
-  // TODO handle error
-  const path = dirent.path
-  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ path)
-  return state
+  return ExplorerViewWorker.invoke('Explorer.copyPath', state)
 }
 
 export const openContainingFolder = async (state) => {
