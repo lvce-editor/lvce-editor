@@ -606,52 +606,11 @@ const handleArrowRightDirectoryExpanded = (state, dirent) => {
 }
 
 export const handleArrowRight = async (state) => {
-  const { items, focusedIndex } = state
-  if (focusedIndex === -1) {
-    return state
-  }
-  const dirent = items[focusedIndex]
-  switch (dirent.type) {
-    case DirentType.File:
-    case DirentType.SymLinkFile:
-      return state
-    case DirentType.Directory:
-    case DirentType.SymLinkFolder:
-      return handleClickDirectory(state, dirent, focusedIndex)
-    case DirentType.DirectoryExpanded:
-      return handleArrowRightDirectoryExpanded(state, dirent)
-    case DirentType.Symlink:
-      return handleClickSymLink(state, dirent, focusedIndex)
-    default:
-      throw new Error(`unsupported file type ${dirent.type}`)
-  }
-}
-
-const focusParentFolder = (state) => {
-  const parentStartIndex = getParentStartIndex(state.items, state.focusedIndex)
-  if (parentStartIndex === -1) {
-    return state
-  }
-  return focusIndex(state, parentStartIndex)
+  return ExplorerViewWorker.invoke('Explorer.handleArrowRight', state)
 }
 
 export const handleArrowLeft = (state) => {
-  const { items, focusedIndex } = state
-  if (focusedIndex === -1) {
-    return state
-  }
-  const dirent = items[focusedIndex]
-  switch (dirent.type) {
-    case DirentType.Directory:
-    case DirentType.File:
-    case DirentType.SymLinkFile:
-      return focusParentFolder(state)
-    case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, focusedIndex)
-    default:
-      // TODO handle expanding directory and cancel file system call to read child dirents
-      return state
-  }
+  return ExplorerViewWorker.invoke('Explorer.handleArrowLeft', state)
 }
 
 export const handleUpload = async (state, dirents) => {
@@ -746,74 +705,19 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const { items, focusedIndex, pathSeparator, minLineY, height, itemHeight } = state
-  if (focusedIndex === -1) {
-    return state
-  }
-  const dirent = items[focusedIndex]
-  const depth = dirent.depth
-  const newDirents = [...items]
-  // TODO fetch child dirents in parallel
-  for (const dirent of newDirents) {
-    if (dirent.depth === depth && dirent.type === DirentType.Directory) {
-      // TODO expand
-      // TODO avoid mutating state here
-      dirent.type = DirentType.DirectoryExpanding
-      // TODO handle error
-      // TODO race condition
-      const childDirents = await getChildDirents(pathSeparator, dirent)
-      const newIndex = newDirents.indexOf(dirent)
-      if (newIndex === -1) {
-        continue
-      }
-      newDirents.splice(newIndex + 1, 0, ...childDirents)
-      // TODO avoid mutating state here
-      dirent.type = DirentType.DirectoryExpanded
-      // await expand(state, dirent.index)
-    }
-  }
-  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
-  return {
-    ...state,
-    items: newDirents,
-    maxLineY,
-  }
+  return ExplorerViewWorker.invoke('Explorer.expandAll', state)
 }
 
 const isTopLevel = (dirent) => {
   return dirent.depth === 1
 }
 
-const toCollapsedDirent = (dirent) => {
-  if (dirent.type === DirentType.DirectoryExpanded) {
-    return {
-      ...dirent,
-      type: DirentType.Directory,
-    }
-  }
-  return dirent
-}
-
 export const collapseAll = (state) => {
-  const { items } = state
-  const newDirents = items.filter(isTopLevel).map(toCollapsedDirent)
-  return {
-    ...state,
-    items: newDirents,
-  }
+  return ExplorerViewWorker.invoke('Explorer.collapseAll', state)
 }
 
 export const handleBlur = (state) => {
-  // TODO when blur event occurs because of context menu, focused index should stay the same
-  // but focus outline should be removed
-  const { editingType } = state
-  if (editingType !== ExplorerEditingType.None) {
-    return state
-  }
-  return {
-    ...state,
-    focused: false,
-  }
+  return ExplorerViewWorker.invoke('Explorer.handleBlur', state)
 }
 
 const getIndex = (dirents, uri) => {
