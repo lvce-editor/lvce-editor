@@ -96,15 +96,7 @@ export const removeDirent = async (state) => {
 }
 
 export const renameDirent = (state) => {
-  const { focusedIndex, items } = state
-  const item = items[focusedIndex]
-  Focus.setFocus(FocusKey.ExplorerEditBox)
-  return {
-    ...state,
-    editingIndex: focusedIndex,
-    editingType: ExplorerEditingType.Rename,
-    editingValue: item.name,
-  }
+  return ExplorerViewWorker.invoke('Explorer.renameDirent', state)
 }
 
 export const cancelEdit = (state) => {
