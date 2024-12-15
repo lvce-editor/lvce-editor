@@ -11,7 +11,6 @@ import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as OpenFolder from '../OpenFolder/OpenFolder.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
@@ -141,12 +140,7 @@ export const newFile = (state) => {
 }
 
 export const updateEditingValue = (state, value) => {
-  const editingIcon = IconTheme.getFileIcon({ name: value })
-  return {
-    ...state,
-    editingValue: value,
-    editingIcon,
-  }
+  return ExplorerViewWorker.invoke('Explorer.updateEditingValue', state, value)
 }
 
 export const handleFocus = (state) => {
@@ -380,17 +374,7 @@ export const handleMouseLeave = async (state) => {
 }
 
 export const handleCopy = async (state) => {
-  // TODO handle multiple files
-  // TODO if not file is selected, what happens?
-  const dirent = getFocusedDirent(state)
-  if (!dirent) {
-    console.info('[ViewletExplorer/handleCopy] no dirent selected')
-    return
-  }
-  const absolutePath = dirent.path
-  // TODO handle copy error gracefully
-  const files = [absolutePath]
-  await Command.execute(/* ClipBoard.writeNativeFiles */ 243, /* type */ 'copy', /* files */ files)
+  return ExplorerViewWorker.invoke('Explorer.handleCopy', state)
 }
 
 export const hasFunctionalResize = true
@@ -422,6 +406,5 @@ export const revealItem = async (state, uri) => {
 }
 
 export const handleClickOpenFolder = async (state) => {
-  await OpenFolder.openFolder()
-  return state
+  return ExplorerViewWorker.invoke('Explorer.handleClickOpenFolder', state)
 }
