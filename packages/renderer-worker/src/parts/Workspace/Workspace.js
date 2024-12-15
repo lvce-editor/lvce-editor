@@ -31,6 +31,14 @@ export const setUri = async (uri) => {
   await onWorkspaceChange()
 }
 
+export const getPath = () => {
+  return state.workspacePath
+}
+
+export const getUri = () => {
+  return state.workspaceUri
+}
+
 export const close = () => {
   return setPath('')
 }
