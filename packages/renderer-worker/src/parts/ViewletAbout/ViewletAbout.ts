@@ -1,12 +1,7 @@
 import * as AboutFocusId from '../AboutFocusId/AboutFocusId.js'
 import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
-import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
-import * as Product from '../Product/Product.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import type { AboutState } from './ViewletAboutTypes.ts'
 
 export const create = (): AboutState => {
@@ -19,32 +14,24 @@ export const create = (): AboutState => {
 }
 
 export const loadContent = async (state: AboutState): Promise<AboutState> => {
-  const lines = await AboutViewWorker.invoke('About.getDetailStringWeb')
-  const newState = {
-    ...state,
-    productName: Product.productNameLong,
-    lines,
-    focusId: AboutFocusId.Ok,
-  }
+  const newState = await AboutViewWorker.invoke('About.loadContent', state)
   const commands = await AboutViewWorker.invoke('About.render', state, newState)
   newState.commands = commands
   return newState
 }
 
 export const handleClickOk = async (state: AboutState): Promise<AboutState> => {
-  await Viewlet.closeWidget(ViewletModuleId.About)
+  await AboutViewWorker.invoke('About.handleClickOk')
   return state
 }
 
 export const handleClickCopy = async (state: AboutState): Promise<AboutState> => {
-  const { lines } = state
-  const message = JoinLines.joinLines(lines)
-  await Command.execute('ClipBoard.writeText', message)
+  await AboutViewWorker.invoke('About.handleClickCopy')
   return state
 }
 
 export const handleClickClose = async (state: AboutState): Promise<AboutState> => {
-  await Viewlet.closeWidget(ViewletModuleId.About)
+  await AboutViewWorker.invoke('About.handleClickClose')
   return state
 }
 
