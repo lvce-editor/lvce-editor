@@ -135,28 +135,9 @@ export const openContainingFolder = async (state) => {
   return ExplorerViewWorker.invoke('Explorer.openContainingFolder', state)
 }
 
-const newDirent = async (state, editingType) => {
-  Focus.setFocus(FocusKey.ExplorerEditBox)
-  // TODO do it like vscode, select position between folders and files
-  const { focusedIndex, items } = state
-  if (focusedIndex >= 0) {
-    const dirent = items[focusedIndex]
-    if (dirent.type === DirentType.Directory) {
-      // TODO handle error
-      await handleClickDirectory(state, dirent, focusIndex)
-    }
-  }
-  return {
-    ...state,
-    editingIndex: focusedIndex,
-    editingType,
-    editingValue: '',
-  }
-}
-
 // TODO much shared logic with newFolder
 export const newFile = (state) => {
-  return newDirent(state, ExplorerEditingType.CreateFile)
+  return ExplorerViewWorker.invoke('Explorer.newFile', state)
 }
 
 export const updateEditingValue = (state, value) => {
@@ -179,7 +160,7 @@ export const refresh = (state) => {
 }
 
 export const newFolder = (state) => {
-  return newDirent(state, ExplorerEditingType.CreateFolder)
+  return ExplorerViewWorker.invoke('Explorer.newFolder', state)
 }
 
 const handleClickFile = async (state, dirent, index, keepFocus = false) => {
