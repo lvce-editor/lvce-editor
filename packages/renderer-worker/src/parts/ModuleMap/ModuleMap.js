@@ -29,8 +29,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Debug
     case 'AutoUpdater':
       return ModuleId.AutoUpdater
-    case 'Base64':
-      return ModuleId.Base64
     case 'Blob':
       return ModuleId.Blob
     case 'BulkReplacement':
@@ -43,8 +41,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Chrome
     case 'ClipBoard':
       return ModuleId.ClipBoard
-    case 'ColorPicker':
-      return ModuleId.ColorPicker
     case 'ColorTheme':
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson':

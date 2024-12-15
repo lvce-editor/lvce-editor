@@ -10,8 +10,6 @@ export const load = (moduleId) => {
       return import('../Audio/Audio.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
-    case ModuleId.Base64:
-      return import('../Base64/Base64.ipc.js')
     case ModuleId.GetEditorSourceActions:
       return import('../GetEditorSourceActions/GetEditorSourceActions.ipc.js')
     case ModuleId.Blob:
@@ -26,8 +24,6 @@ export const load = (moduleId) => {
       return import('../Chrome/Chrome.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
-    case ModuleId.ColorPicker:
-      return import('../ColorPicker/ColorPicker.ipc.js')
     case ModuleId.ColorTheme:
       return import('../ColorTheme/ColorTheme.ipc.js')
     case ModuleId.ColorThemeFromJson:
