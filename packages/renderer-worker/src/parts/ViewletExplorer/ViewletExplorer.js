@@ -222,15 +222,7 @@ export const computeRenamedDirent = (dirents, index, newName) => {
 }
 
 export const cancelEdit = (state) => {
-  const { editingIndex } = state
-  return {
-    ...state,
-    focusedIndex: editingIndex,
-    focused: true,
-    editingIndex: -1,
-    editingValue: '',
-    editingType: ExplorerEditingType.None,
-  }
+  return ExplorerViewWorker.invoke('Explorer.cancelEdit')
 }
 
 export const copyRelativePath = async (state) => {
