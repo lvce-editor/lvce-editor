@@ -1,21 +1,13 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
-import * as DirentType from '../DirentType/DirentType.js'
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
-import * as GetExplorerMaxLineY from '../GetExplorerMaxLineY/GetExplorerMaxLineY.js'
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
-import * as Workspace from '../Workspace/Workspace.js'
-import { focusIndex } from './ViewletExplorerFocusIndex.js'
-import { getChildDirents, getIndexFromPosition, getParentEndIndex } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
