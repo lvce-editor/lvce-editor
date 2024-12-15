@@ -29,8 +29,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Debug
     case 'AutoUpdater':
       return ModuleId.AutoUpdater
-    case 'Base64':
-      return ModuleId.Base64
     case 'Blob':
       return ModuleId.Blob
     case 'BulkReplacement':

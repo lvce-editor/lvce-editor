@@ -1,7 +1,6 @@
 // TODO rename to widgetFind and group together with other widgets (contextMenu, hover, tooltip)
 export const Ajax = 1
 export const Audio = 2
-export const Base64 = 3
 export const Blob = 4
 export const CacheStorage = 5
 export const Callback = 6

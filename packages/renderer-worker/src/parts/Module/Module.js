@@ -10,8 +10,6 @@ export const load = (moduleId) => {
       return import('../Audio/Audio.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
-    case ModuleId.Base64:
-      return import('../Base64/Base64.ipc.js')
     case ModuleId.GetEditorSourceActions:
       return import('../GetEditorSourceActions/GetEditorSourceActions.ipc.js')
     case ModuleId.Blob:
