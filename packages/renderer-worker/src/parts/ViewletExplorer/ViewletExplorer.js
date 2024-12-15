@@ -470,17 +470,6 @@ const handleClickSymLink = async (state, dirent, index) => {
   }
 }
 
-const handleArrowRightDirectoryExpanded = (state, dirent) => {
-  const { items, focusedIndex } = state
-  if (focusedIndex === items.length - 1) {
-    return state
-  }
-  const nextDirent = items[focusedIndex + 1]
-  if (nextDirent.depth === dirent.depth + 1) {
-    return focusIndex(state, focusedIndex + 1)
-  }
-}
-
 export const handleArrowRight = async (state) => {
   return ExplorerViewWorker.invoke('Explorer.handleArrowRight', state)
 }
