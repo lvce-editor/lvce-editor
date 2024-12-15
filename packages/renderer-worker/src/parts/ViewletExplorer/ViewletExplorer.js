@@ -68,52 +68,6 @@ const getPath = (dirent) => {
   return dirent.path
 }
 
-const getSavedChildDirents = (map, path, depth, excluded, pathSeparator) => {
-  const children = map[path]
-  if (!children) {
-    return []
-  }
-  const dirents = []
-  SortExplorerItems.sortExplorerItems(children)
-  const visible = []
-  const displayRoot = path.endsWith(pathSeparator) ? path : path + pathSeparator
-  for (const child of children) {
-    if (excluded.includes(child.name)) {
-      continue
-    }
-    visible.push(child)
-  }
-  const visibleLength = visible.length
-  for (let i = 0; i < visibleLength; i++) {
-    const child = visible[i]
-    const { name, type } = child
-    const childPath = displayRoot + name
-    if ((child.type === DirentType.Directory || child.type === DirentType.SymLinkFolder) && childPath in map) {
-      dirents.push({
-        depth,
-        posInSet: i + 1,
-        setSize: visibleLength,
-        icon: IconTheme.getFolderIcon({ name }),
-        name,
-        path: childPath,
-        type: DirentType.DirectoryExpanded,
-      })
-      dirents.push(...getSavedChildDirents(map, childPath, depth + 1, excluded, pathSeparator))
-    } else {
-      dirents.push({
-        depth,
-        posInSet: i + 1,
-        setSize: visibleLength,
-        icon: IconTheme.getIcon({ type, name }),
-        name,
-        path: childPath,
-        type,
-      })
-    }
-  }
-  return dirents
-}
-
 export const loadContent = async (state, savedState) => {
   const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
   return newState
