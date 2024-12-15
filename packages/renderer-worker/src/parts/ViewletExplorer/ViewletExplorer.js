@@ -250,22 +250,8 @@ export const copyPath = async (state) => {
   return state
 }
 
-const getContaingingFolder = (root, dirents, focusedIndex, pathSeparator) => {
-  if (focusedIndex < 0) {
-    return root
-  }
-  const dirent = dirents[focusedIndex]
-  const direntPath = dirent.path
-  const direntParentPath = direntPath.slice(0, -(dirent.name.length + 1))
-  const path = `${direntParentPath}`
-  return path
-}
-
 export const openContainingFolder = async (state) => {
-  const { focusedIndex, root, items, pathSeparator } = state
-  const path = getContaingingFolder(root, items, focusedIndex, pathSeparator)
-  await Command.execute('OpenNativeFolder.openNativeFolder', /* path */ path)
-  return state
+  return ExplorerViewWorker.invoke('Explorer.openContainingFolder', state)
 }
 
 const newDirent = async (state, editingType) => {
