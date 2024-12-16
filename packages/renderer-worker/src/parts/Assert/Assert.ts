@@ -59,13 +59,6 @@ export const string = (value) => {
   }
 }
 
-export const null_ = (value) => {
-  const type = getType(value)
-  if (type !== 'null') {
-    throw new AssertionError('expected value to be of type null')
-  }
-}
-
 export const boolean = (value) => {
   const type = getType(value)
   if (type !== 'boolean') {
@@ -77,18 +70,5 @@ export const fn = (value) => {
   const type = getType(value)
   if (type !== 'function') {
     throw new AssertionError('expected value to be of type function')
-  }
-}
-
-export const uint32array = (value) => {
-  const type = getType(value)
-  if (type !== 'uint32array') {
-    throw new AssertionError('expected value to be of type uint32array')
-  }
-}
-
-export const greaterZero = (value) => {
-  if (value <= 0) {
-    throw new Error('value must be greater than zero')
   }
 }
