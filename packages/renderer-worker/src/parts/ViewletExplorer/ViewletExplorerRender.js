@@ -27,6 +27,7 @@ const renderItems = {
       newState.editingIndex,
       newState.editingType,
       newState.editingValue,
+      newState.icons,
     )
     const isWide = newState.width > 450
     const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents, newState.focusedIndex, newState.root, isWide)
