@@ -85,7 +85,7 @@
   "dependencies": {
     "@lvce-editor/diff-worker": "^1.4.0",
     "@lvce-editor/editor-worker": "^5.12.0",
-    "@lvce-editor/extension-host-worker": "^1.14.0",
+    "@lvce-editor/extension-host-worker": "^1.15.0",
     "@lvce-editor/extension-search-view": "^1.4.0",
     "@lvce-editor/extension-detail-view": "^2.2.0",
     "@lvce-editor/file-search-worker": "^3.2.0",
@@ -97,7 +97,7 @@
     "@lvce-editor/test-worker": "^2.1.0",
     "@lvce-editor/text-search-worker": "^3.19.0",
     "@lvce-editor/about-view": "^4.2.0",
-    "@lvce-editor/explorer-view": "^1.8.0",
+    "@lvce-editor/explorer-view": "^1.9.0",
     "@lvce-editor/title-bar-worker": "^1.0.0"
   }
 }
