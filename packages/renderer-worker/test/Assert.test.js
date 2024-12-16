@@ -17,10 +17,6 @@ test('string', () => {
   expect(() => Assert.string(1)).toThrow(new Error('expected value to be of type string'))
 })
 
-test('null_', () => {
-  expect(() => Assert.null_(1)).toThrow(new Error('expected value to be of type null'))
-})
-
 test('boolean', () => {
   expect(() => Assert.boolean(1)).toThrow(new Error('expected value to be of type boolean'))
 })
