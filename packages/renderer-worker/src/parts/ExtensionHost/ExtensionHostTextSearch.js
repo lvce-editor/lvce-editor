@@ -1,4 +1,5 @@
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 const combineResults = (results) => {
@@ -15,4 +16,12 @@ export const executeTextSearchProvider = async (scheme, query) => {
     combineResults,
   })
   return result
+}
+
+export const textSearchHtml = (...args) => {
+  return ExtensionHostWorker.invoke('TextSearchHtml.textSearch', ...args)
+}
+
+export const textSearchFetch = (...args) => {
+  return ExtensionHostWorker.invoke('TextSearchFetch.textSearch', ...args)
 }

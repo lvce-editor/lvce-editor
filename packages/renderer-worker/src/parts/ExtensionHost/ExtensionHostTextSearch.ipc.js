@@ -4,4 +4,6 @@ export const name = 'ExtensionHostTextSearch'
 
 export const Commands = {
   executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
+  textSearchFetch: ExtensionHostTextSearch.textSearchFetch,
+  textSearchHtml: ExtensionHostTextSearch.textSearchHtml,
 }
