@@ -8,7 +8,7 @@ export const hasFunctionalRootRender = true
 const renderItems = {
   isEqual(oldState, newState) {
     return (
-      oldState.items === newState.items &&
+      JSON.stringify(oldState.items) === JSON.stringify(newState.items) &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY &&
       oldState.focusedIndex === newState.focusedIndex &&
