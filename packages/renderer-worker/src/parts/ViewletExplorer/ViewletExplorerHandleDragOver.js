@@ -1,5 +1,8 @@
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
 
-export const handleDragOver = (state, x, y) => {
-  return ExplorerViewWorker.invoke('Explorer.handleDragOver', state, x, y)
+export const handleDragOver = async (state, x, y) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleDragOver', state, x, y)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }

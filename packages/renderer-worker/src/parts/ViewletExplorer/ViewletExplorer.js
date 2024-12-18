@@ -47,28 +47,45 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 
 export const loadContent = async (state, savedState) => {
   const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
   return newState
 }
 
-export const updateIcons = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.updateIcons', state)
+export const updateIcons = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.updateIcons', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const handleLanguagesChanged = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
+export const handleLanguagesChanged = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleWorkspaceChange = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleWorkspaceChange', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleWorkspaceChange', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const handleIconThemeChange = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
+export const handleIconThemeChange = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 // TODO rename dirents to items, then can use virtual list component directly
-export const setDeltaY = (state, deltaY) => {
-  return ExplorerViewWorker.invoke('Explorer.setDeltaY', state, deltaY)
+export const setDeltaY = async (state, deltaY) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.setDeltaY', state, deltaY)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleWheel = (state, deltaMode, deltaY) => {
@@ -83,36 +100,60 @@ export const getFocusedDirent = (state) => {
 
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.removeDirent', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.removeDirent', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const renameDirent = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.renameDirent', state)
+export const renameDirent = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.renameDirent', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const cancelEdit = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.cancelEdit')
+export const cancelEdit = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.cancelEdit')
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const copyRelativePath = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.copyRelativePath', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.copyRelativePath', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const copyPath = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.copyPath', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.copyPath', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const openContainingFolder = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.openContainingFolder', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.openContainingFolder', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 // TODO much shared logic with newFolder
-export const newFile = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.newFile', state)
+export const newFile = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.newFile', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const updateEditingValue = (state, value) => {
-  return ExplorerViewWorker.invoke('Explorer.updateEditingValue', state, value)
+export const updateEditingValue = async (state, value) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.updateEditingValue', state, value)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleFocus = (state) => {
@@ -125,16 +166,25 @@ export const refresh = (state) => {
   return state
 }
 
-export const newFolder = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.newFolder', state)
+export const newFolder = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.newFolder', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const handleClick = (state, index, keepFocus = false) => {
-  return ExplorerViewWorker.invoke('Explorer.handleClick', state, index, keepFocus)
+export const handleClick = async (state, index, keepFocus = false) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleClick', state, index, keepFocus)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const handleClickAt = (state, button, x, y) => {
-  return ExplorerViewWorker.invoke('Explorer.handleClickAt', state, button, x, y)
+export const handleClickAt = async (state, button, x, y) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleClickAt', state, button, x, y)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleClickCurrent = (state) => {
@@ -151,15 +201,24 @@ export const scrollDown = () => {}
 // export const handleBlur=()=>{}
 
 export const handleArrowRight = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleArrowRight', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleArrowRight', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const handleArrowLeft = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleArrowLeft', state)
+export const handleArrowLeft = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleArrowLeft', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleUpload = async (state, dirents) => {
-  return ExplorerViewWorker.invoke('Explorer.handleUpload', state, dirents)
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleUpload', state, dirents)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 const cancelRequest = (state) => {}
@@ -228,21 +287,36 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.expandAll', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.expandAll', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const collapseAll = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.collapseAll', state)
+export const collapseAll = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.collapseAll', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
-export const handleBlur = (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleBlur', state)
+export const handleBlur = async (state) => {
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleBlur', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const revealItem = async (state, uri) => {
-  return ExplorerViewWorker.invoke('Explorer.revealItem', state, uri)
+  const newState = await ExplorerViewWorker.invoke('Explorer.revealItem', state, uri)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
 
 export const handleClickOpenFolder = async (state) => {
-  return ExplorerViewWorker.invoke('Explorer.handleClickOpenFolder', state)
+  const newState = await ExplorerViewWorker.invoke('Explorer.handleClickOpenFolder', state)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
 }
