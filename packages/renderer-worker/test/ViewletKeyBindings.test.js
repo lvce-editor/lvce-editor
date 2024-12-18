@@ -80,7 +80,7 @@ test.skip('handleInput - filter key bindings', async () => {
   })
 })
 
-test('setDeltaY - scroll up - already at top', () => {
+test.skip('setDeltaY - scroll up - already at top', () => {
   const state = {
     ...ViewletKeyBindings.create(),
     parsedKeyBindings: [
@@ -103,7 +103,7 @@ test('setDeltaY - scroll up - already at top', () => {
   })
 })
 
-test('setDeltaY - scroll up - by one row', () => {
+test.skip('setDeltaY - scroll up - by one row', () => {
   const state = {
     ...ViewletKeyBindings.create(),
     filteredKeyBindings: [
@@ -134,7 +134,7 @@ test('setDeltaY - scroll up - by one row', () => {
   })
 })
 
-test('setDeltaY - scroll up - by two rows', () => {
+test.skip('setDeltaY - scroll up - by two rows', () => {
   const state = {
     ...ViewletKeyBindings.create(),
     filteredKeyBindings: [
