@@ -101,35 +101,11 @@ export const loadContent = async (state, savedState) => {
 }
 
 export const handleInput = async (state, value) => {
-  const { parsedKeyBindings, maxVisibleItems } = state
-  const filteredKeyBindings = await KeyBindingsViewWorker.invoke('FilterKeyBindings.filterKeyBindings', parsedKeyBindings, value)
-  const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
-  return {
-    ...state,
-    value,
-    filteredKeyBindings,
-    maxLineY,
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.handleInput', state, value)
 }
 
 export const setDeltaY = (state, deltaY) => {
-  const { maxVisibleItems, rowHeight, filteredKeyBindings } = state
-  const tableHeight = maxVisibleItems * rowHeight
-  const minDeltaY = 0
-  const maxDeltaY = Math.max(filteredKeyBindings.length * rowHeight - tableHeight, 0)
-  if (deltaY < minDeltaY) {
-    deltaY = minDeltaY
-  } else if (deltaY > maxDeltaY) {
-    deltaY = Math.max(maxDeltaY)
-  }
-  const minLineY = Math.floor(deltaY / rowHeight)
-  const maxLineY = minLineY + Math.round(tableHeight / rowHeight)
-  return {
-    ...state,
-    deltaY,
-    minLineY,
-    maxLineY,
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.setDeltaY', state, deltaY)
 }
 
 export const handleWheel = (state, deltaMode, deltaY) => {
@@ -200,40 +176,15 @@ export const handleResizerClick = (state, id, x) => {
 }
 
 export const handleResizerMove = (state, eventX) => {
-  // @ts-ignore
-  const { resizerDownId, contentPadding, width, columnWidth1, columnWidth2, columnWidth3, x } = state
-  const contentWidth = width - contentPadding
-  if (resizerDownId === 1) {
-    const newColumnWidth1 = eventX - contentPadding - x
-    const newColumnWidth3 = contentWidth - newColumnWidth1 - columnWidth2
-    return {
-      ...state,
-      columnWidth1: newColumnWidth1,
-      columnWidth3: newColumnWidth3,
-    }
-  }
-  const newColumnWidth3 = contentWidth - (eventX - contentPadding - x)
-  const newColumnWidth2 = contentWidth - newColumnWidth3 - columnWidth1
-  return {
-    ...state,
-    columnWidth2: newColumnWidth2,
-    columnWidth3: newColumnWidth3,
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.handleResizerMove', state, eventX)
 }
 
 export const focusFirst = (state) => {
-  return {
-    ...state,
-    selectedIndex: 0,
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.focusFirst', state)
 }
 
 export const focusLast = (state) => {
-  const { filteredKeyBindings } = state
-  return {
-    ...state,
-    selectedIndex: filteredKeyBindings.length - 1,
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.focusLast', state)
 }
 
 export const handleContextMenu = async (state, button, x, y) => {
@@ -242,17 +193,9 @@ export const handleContextMenu = async (state, button, x, y) => {
 }
 
 export const focusNext = (state) => {
-  const { selectedIndex, filteredKeyBindings } = state
-  return {
-    ...state,
-    selectedIndex: Math.min(selectedIndex + 1, filteredKeyBindings.length - 1),
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.focusNext', state)
 }
 
 export const focusPrevious = (state) => {
-  const { selectedIndex } = state
-  return {
-    ...state,
-    selectedIndex: Math.max(selectedIndex - 1, 0),
-  }
+  return KeyBindingsViewWorker.invoke('KeyBindings.focusPrevious', state)
 }
