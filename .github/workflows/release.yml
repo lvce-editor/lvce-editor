@@ -37,7 +37,7 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        os: [windows-2022, macos-14, ubuntu-24.04]
+        os: [windows-2025, macos-14, ubuntu-24.04]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 80
     steps:
@@ -95,7 +95,7 @@ jobs:
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v4
         id: electron-builder-cache-windows
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
@@ -226,12 +226,12 @@ jobs:
           asset_name: ${{ env.ASSET_DMG_ARM64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, x64)
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=x64
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, x64)
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-x64.exe"
@@ -239,7 +239,7 @@ jobs:
           echo "ASSET_WINDOWS_EXE_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe, x64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -248,12 +248,12 @@ jobs:
           asset_name: ${{ env.ASSET_WINDOWS_EXE_X64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, arm64)
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=arm64
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, arm64)
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-arm64.exe"
@@ -261,7 +261,7 @@ jobs:
           echo "ASSET_WINDOWS_EXE_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe, arm64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2025'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
