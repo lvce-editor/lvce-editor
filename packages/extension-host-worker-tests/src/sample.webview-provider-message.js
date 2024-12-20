@@ -1,6 +1,6 @@
 export const name = 'sample.webview-provider-message'
 
-export const test = async ({ Extension, Main, FileSystem, WebView }) => {
+export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   const tmpDir = await FileSystem.getTmpDir()
@@ -11,11 +11,6 @@ export const test = async ({ Extension, Main, FileSystem, WebView }) => {
 
   // assert
   const webView = await WebView.fromId('xyz')
-  console.log({ webview: webView })
-  const heading = webView.locator('h1')
-  // TODO allow using normal expect function for webview also
-  await webView.expect(heading).toBeVisible()
-  await webView.expect(heading).toHaveText('Hello world')
-  // TODO open sample webview
-  // TODO verify that expected content is displayed
+  const body = webView.locator('body')
+  await expect(body).toHaveText('124')
 }
