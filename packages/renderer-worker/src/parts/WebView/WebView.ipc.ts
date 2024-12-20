@@ -8,7 +8,8 @@ export const Commands = {
   compatRendererProcessInvoke: WebView.compat.rendererProcessInvoke,
   compatRendererProcessInvokeAndTransfer: WebView.compat.rendererProcessInvokeAndTransfer,
   compatSharedProcessInvoke: WebView.compat.sharedProcessInvoke,
+  getSavedState: WebView.compat.getSavedState,
+  getWebViewInfo: WebView.getWebViewInfo,
   getWebViews: WebView.compat.getWebViews,
   setPort: WebView.setPort,
-  getSavedState: WebView.compat.getSavedState,
 }
