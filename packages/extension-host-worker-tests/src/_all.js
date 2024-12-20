@@ -129,7 +129,7 @@ const runTests = async () => {
   }
   const browser = await chromium.launch({
     headless,
-    args: ['--enable-experimental-web-platform-features'], // enable isVisible Api in Chrome 103
+    args: [],
   })
   const context = await browser.newContext({
     recordVideo: recordVideos
