@@ -8,7 +8,6 @@
       "selector": [".xyz"],
       "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'", "media-src 'self' blob:"],
       "allow": ["fullscreen"],
-      "path": "media/index.html",
       "elements": [
         {
           "type": "title",
