@@ -23,6 +23,10 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
   })
 }
 
+export const getWebViewInfo = (providerId: string) => {
+  return ExtensionHostWorker.invoke('ExtensionHostWebView.getWebViewInfo', providerId)
+}
+
 export const compat = {
   sharedProcessInvoke(...args) {
     return SharedProcess.invoke(...args)
