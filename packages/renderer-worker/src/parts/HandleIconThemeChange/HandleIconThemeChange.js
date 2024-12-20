@@ -10,7 +10,7 @@ export const handleIconThemeChange = async () => {
     if (factory.handleIconThemeChange) {
       const newState = factory.handleIconThemeChange(state)
       await Viewlet.setState(factory.name, newState)
-    } else if (factory.Commands.handleIconThemeChange) {
+    } else if (factory.Commands && factory.Commands.handleIconThemeChange) {
       const newState = await factory.Commands.handleIconThemeChange(state)
       await Viewlet.setState(factory.name, newState)
     }
