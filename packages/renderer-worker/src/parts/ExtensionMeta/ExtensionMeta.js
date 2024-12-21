@@ -52,7 +52,11 @@ export const addWebExtension = async (path) => {
   }
   if (manifest.webViews) {
     for (const webView of manifest.webViews) {
-      webView.path = manifest.path + Character.Slash + webView.path
+      if (webView.path) {
+        webView.path = manifest.path + Character.Slash + webView.path
+      } else {
+        webView.path = manifest.path
+      }
     }
     WebViews.addMany(manifest.webViews)
   }
