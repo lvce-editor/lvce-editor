@@ -5,6 +5,7 @@
     {
       "id": "xyz",
       "selector": [".xyz"],
+      "path": "index.html",
       "elements": [
         {
           "type": "script",
