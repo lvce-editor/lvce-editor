@@ -6,7 +6,10 @@ export const getWebViewsFromExtensions = (extensions) => {
   for (const extension of extensions) {
     if (extension && extension.webViews) {
       for (const webView of extension.webViews) {
-        const path = join(extension.path, webView.path)
+        let path = extension.path
+        if (webView.path) {
+          path = join(extension.path, webView.path)
+        }
         const remotePath = GetRemoteUrl.getRemoteUrl(path)
         webViews.push({
           ...webView,
