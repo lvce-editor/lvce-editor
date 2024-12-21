@@ -1,6 +1,7 @@
 // TODO rename file to languageConfiguration.js
 import { join } from 'node:path'
 import * as GetRemoteUrl from '../GetRemoteUrl/GetRemoteUrl.js'
+import * as GetWebViewsFromEXtensions from '../GetWebViewsFromExtensions/GetWebViewsFromExtensions.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import { VError } from '../VError/VError.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
@@ -42,27 +43,9 @@ export const getLanguages = async () => {
   return languages
 }
 
-const getWebViewsFromExtensions = (extensions) => {
-  const webViews = []
-  for (const extension of extensions) {
-    if (extension && extension.webViews) {
-      for (const webView of extension.webViews) {
-        const path = join(extension.path, webView.path)
-        const remotePath = GetRemoteUrl.getRemoteUrl(path)
-        webViews.push({
-          ...webView,
-          path,
-          remotePath,
-        })
-      }
-    }
-  }
-  return webViews
-}
-
 export const getWebViews = async () => {
   const extensions = await ExtensionManagement.getExtensions()
-  const webViews = getWebViewsFromExtensions(extensions)
+  const webViews = GetWebViewsFromEXtensions.getWebViewsFromExtensions(extensions)
   return webViews
 }
 
