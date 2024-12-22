@@ -1,4 +1,4 @@
-import * as GetRealUri from '../GetRealUri/GetRealUri.ts'
+import * as GetRealUri from '../GetRealUri/GetRealUri.js'
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
