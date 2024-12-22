@@ -5,6 +5,7 @@ import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
@@ -20,6 +21,7 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
     uri,
     platform: Platform.platform,
     assetDir: AssetDir.assetDir,
+    webViewScheme: Scheme.WebView,
   })
 }
 
