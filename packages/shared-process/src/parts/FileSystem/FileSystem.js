@@ -11,6 +11,7 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
 import { VError } from '../VError/VError.js'
+import { fileURLToPath } from 'node:url'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -318,3 +319,12 @@ export const cp = async (from, to) => {
 
 // TODO ui should show useful error message when file cannot be saved
 // and for permission denied error it should use that npm module that allows root
+
+export const getRealUri = (pathOrUri) => {
+  try {
+    const uri = fileURLToPath(pathOrUri).toString()
+    return uri
+  } catch {
+    return pathOrUri
+  }
+}
