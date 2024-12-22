@@ -137,6 +137,7 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.createFolder':
     case 'FileSystem.ensureFile':
     case 'FileSystem.getPathSeparator':
+    case 'FileSystem.getRealUri':
     case 'FileSystem.mkdir':
     case 'FileSystem.readDirWithFileTypes':
     case 'FileSystem.readFile':
