@@ -1,3 +1,4 @@
+import * as GetRealUri from '../GetRealUri/GetRealUri.js'
 import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -42,8 +43,10 @@ const getWebViewId = async (uri) => {
 export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWebViewState> => {
   const { uri, previewServerId, id } = state
   const webViewId = await getWebViewId(uri)
+  // TODO always use real uri, which simplifies path handling for windows
+  const realUri = await GetRealUri.getRealUri(uri)
   const webViewPort = GetWebViewPort.getWebViewPort()
-  const webViewResult = await WebView.create(id, webViewPort, webViewId, previewServerId, uri)
+  const webViewResult = await WebView.create(id, webViewPort, webViewId, previewServerId, realUri)
   if (!webViewResult) {
     return state
   }

@@ -117,12 +117,12 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.11.0"
+    "version": "1.12.0"
   },
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.7.0"
+    "version": "1.8.0"
   },
   {
     "name": "builtin.media-preview",
