@@ -15,7 +15,6 @@ export const setHandler = async (previewId, frameAncestors, webViewRoot, content
   await PreviewProcess.invoke('WebViewServer.setHandler', previewId, frameAncestors, webViewRoot, contentSecurityPolicy, iframeContent)
 }
 
-export const setInfo = async (previewId, webViewId, webViewRoot) => {
-  // TODO send to preview process
-  await PreviewProcess.invoke('WebViewServer.setInfo', previewId, webViewId, webViewRoot)
+export const setInfo = async (...args) => {
+  await PreviewProcess.invoke('WebViewServer.setInfo', ...args)
 }
