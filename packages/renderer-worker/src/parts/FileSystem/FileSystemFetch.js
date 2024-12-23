@@ -39,6 +39,6 @@ export const chmod = (path, permissions) => {
   return FileSearchWorker.invoke('FileSystemFetch.chmod', path, permissions)
 }
 
-export const getBlob = async (uri) => {
-  return FileSearchWorker.invoke('FileSystemFetch.getBlob', uri)
+export const getBlob = async (uri, type) => {
+  return FileSearchWorker.invoke('FileSystemFetch.getBlob', uri, type)
 }
