@@ -1,7 +1,0 @@
-ytd-rich-item-renderer:has(ytd-ad-slot-renderer) {
-  display: none;
-}
-
-#masthead-ad {
-  display: none;
-}

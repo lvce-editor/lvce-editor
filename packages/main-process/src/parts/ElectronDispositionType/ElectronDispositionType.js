@@ -1,6 +1,0 @@
-export const BackgroundTab = 'background-tab'
-export const Default = 'default'
-export const ForegroundTab = 'foreground-tab'
-export const NewWindow = 'new-window'
-export const Other = 'other'
-export const SaveToDisk = 'save-to-disk'
