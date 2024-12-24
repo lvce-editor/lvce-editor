@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
+import cors from 'cors'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
@@ -79,6 +80,7 @@ export const withResolvers = () => {
 const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
   if (ci) {
     const app = express()
+    app.use(cors({}))
     app.use(
       express.static(CI_DIST_PATH, {
         immutable: true,

@@ -16,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.49.1",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "express": "^4.21.2"
   },
@@ -58,5 +59,8 @@
     "ignores": [
       "distmin"
     ]
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
   }
 }
