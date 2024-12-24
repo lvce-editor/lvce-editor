@@ -78,11 +78,11 @@ export const getBlobUrl = async (uri) => {
   throw new Error(`Filesystem doesn't support the getBlobUrl function`)
 }
 
-export const getBlob = async (uri) => {
+export const getBlob = async (uri, type) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getBlob(path)
+  return fileSystem.getBlob(path, type)
 }
 
 export const copy = async (sourceUri, targetUri) => {
