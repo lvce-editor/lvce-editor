@@ -119,7 +119,7 @@ const runTests = async () => {
   const argv = process.argv
   const headless = argv.includes('--headless')
   const ci = argv.includes('--ci')
-  const serve = argv.includes('--ci')
+  const serve = argv.includes('--serve')
   const server = await launchServer({
     configDir,
     cacheDir,
