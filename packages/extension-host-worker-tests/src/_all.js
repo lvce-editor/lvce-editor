@@ -99,12 +99,17 @@ const runTests = async () => {
   const argv = process.argv
   const headless = argv.includes('--headless')
   const ci = argv.includes('--ci')
+  const serve = argv.includes('--serve')
   const server = await launchServer({
     configDir,
     cacheDir,
     ci,
     dataDir,
   })
+  if (serve) {
+    console.info('[server] listening on http://localhost:3000')
+    return
+  }
   const recordVideos = argv.includes('--record-videos')
   if (recordVideos) {
     await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })

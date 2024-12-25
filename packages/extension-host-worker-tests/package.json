@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "serve": "node src/_all.js --ci --serve",
     "e2e": "node src/_all.js",
     "e2e:ci": "node src/_all.js --ci",
     "e2e:headless": "node src/_all.js --headless",
