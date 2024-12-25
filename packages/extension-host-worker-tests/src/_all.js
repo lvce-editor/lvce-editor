@@ -56,26 +56,6 @@ const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-export const withResolvers = () => {
-  /**
-   * @type {any}
-   */
-  let _resolve
-  /**
-   * @type {any}
-   */
-  let _reject
-  const promise = new Promise((resolve, reject) => {
-    _resolve = resolve
-    _reject = reject
-  })
-  return {
-    resolve: _resolve,
-    reject: _reject,
-    promise,
-  }
-}
-
 const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
   if (ci) {
     const app = express()
@@ -85,8 +65,8 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
         maxAge: 86400,
       }),
     )
-    const { resolve, promise } = withResolvers()
-    const server = app.listen(3000, 'localhost', resolve)
+    const { resolve, promise } = Promise.withResolvers()
+    const server = app.listen(3000, 'localhost', () => resolve(undefined))
     await promise
     return {
       dispose() {
