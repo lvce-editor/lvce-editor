@@ -30,6 +30,16 @@ const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   } else {
     newPackageJson.main = 'index.js'
   }
+  for (const [key, value] of Object.entries(oldPackageJson.optionalDependencies)) {
+    if (key.startsWith('@lvce-editor') && value.startsWith('^')) {
+      newPackageJson.optionalDependencies[key] = value.slice(1)
+    }
+  }
+  for (const [key, value] of Object.entries(newPackageJson.dependencies)) {
+    if (key.startsWith('@lvce-editor') && value.startsWith('^')) {
+      newPackageJson.dependencies[key] = value.slice(1)
+    }
+  }
   return newPackageJson
 }
 
