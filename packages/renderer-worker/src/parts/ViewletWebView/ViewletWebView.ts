@@ -1,6 +1,8 @@
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetRealUri from '../GetRealUri/GetRealUri.js'
+import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
@@ -26,7 +28,12 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
   const { uri, id } = state
   // TODO always use real uri, which simplifies path handling for windows
   const realUri = await GetRealUri.getRealUri(uri)
-  await ExtensionHostWorker.invoke('WebView.create3', id, realUri)
+  await ExtensionHostWorker.invoke('WebView.create3', {
+    id,
+    uri: realUri,
+    platform: Platform.platform,
+    isGitpod: IsGitpod.isGitpod,
+  })
   return {
     ...state,
   }
