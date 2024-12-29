@@ -26,7 +26,7 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
   const { uri, id } = state
   // TODO always use real uri, which simplifies path handling for windows
   const realUri = await GetRealUri.getRealUri(uri)
-  await ExtensionHostWorker.invoke('WebView.create2', id, realUri)
+  await ExtensionHostWorker.invoke('WebView.create3', id, realUri)
   return {
     ...state,
   }
