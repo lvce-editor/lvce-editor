@@ -50,7 +50,6 @@ export const addWebExtension = async (path) => {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)
   }
-  console.log({ manifest })
   if (manifest.webViews) {
     for (const webView of manifest.webViews) {
       if (webView.path) {
