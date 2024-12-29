@@ -1,6 +1,6 @@
 import * as GetRealUri from '../GetRealUri/GetRealUri.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as WebView from '../WebView/WebView.js'
+import * as WebView from '../WebView/WebView.ts'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
