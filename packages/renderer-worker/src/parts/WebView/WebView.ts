@@ -3,6 +3,7 @@ import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
+import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
@@ -27,6 +28,17 @@ export const create = async (id: number, webViewPort: string, webViewId: string,
 
 export const getWebViewInfo = (providerId: string) => {
   return ExtensionHostWorker.invoke('ExtensionHostWebView.getWebViewInfo', providerId)
+}
+
+export const create3 = async (uri: string, id: number): Promise<void> => {
+  await ExtensionHostWorker.invoke('WebView.create3', {
+    id,
+    uri,
+    platform: Platform.platform,
+    isGitpod: IsGitpod.isGitpod,
+    assetDir: AssetDir.assetDir,
+    webViewScheme: Scheme.WebView,
+  })
 }
 
 export const compat = {
