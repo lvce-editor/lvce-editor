@@ -3,11 +3,11 @@ import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IframeWorker from '../IframeWorker/IframeWorker.ts'
+import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
   await RendererProcess.invokeAndTransfer('WebView.setPort', uid, port, origin, portType)
