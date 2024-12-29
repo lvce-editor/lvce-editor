@@ -8,4 +8,5 @@ export const Commands = {
   setHandler: WebViewServer.setHandler,
   registerProtocol: WebViewServer.registerProtocol,
   setInfo: WebViewServer.setInfo,
+  setInfo2: WebViewServer.setInfo2,
 }
