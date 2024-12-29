@@ -38,6 +38,7 @@ export const create3 = async (uri: string, id: number): Promise<void> => {
     isGitpod: IsGitpod.isGitpod,
     assetDir: AssetDir.assetDir,
     webViewScheme: Scheme.WebView,
+    useNewWebViewHandler: true,
   })
 }
 
