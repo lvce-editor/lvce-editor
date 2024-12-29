@@ -15,7 +15,7 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
     previewServerId: 1,
     csp: '',
     credentialless: true,
-    x,
+    x: x - 1,
     y,
     width,
     height,
@@ -29,6 +29,7 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
   await WebView.create3(realUri, id)
   return {
     ...state,
+    x: state.x + 1,
   }
 }
 
