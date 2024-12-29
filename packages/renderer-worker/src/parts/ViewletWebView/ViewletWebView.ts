@@ -1,8 +1,6 @@
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetRealUri from '../GetRealUri/GetRealUri.js'
-import * as GetWebViewPort from '../GetWebViewPort/GetWebViewPort.ts'
-import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as WebView from '../WebView/WebView.ts'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
@@ -24,41 +22,13 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
   }
 }
 
-const getWebViewId = async (uri) => {
-  if (uri.startsWith('webview://')) {
-    const webViewId = uri.slice('webview://'.length)
-    return webViewId
-  }
-  const webViews = await GetWebViews.getWebViews()
-  for (const webView of webViews) {
-    for (const selector of webView.selector || []) {
-      if (uri.endsWith(selector)) {
-        return webView.id
-      }
-    }
-  }
-  return ''
-}
-
 export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWebViewState> => {
-  const { uri, previewServerId, id } = state
-  const webViewId = await getWebViewId(uri)
+  const { uri, id } = state
   // TODO always use real uri, which simplifies path handling for windows
   const realUri = await GetRealUri.getRealUri(uri)
-  const webViewPort = GetWebViewPort.getWebViewPort()
-  const webViewResult = await WebView.create(id, webViewPort, webViewId, previewServerId, realUri)
-  if (!webViewResult) {
-    return state
-  }
-  const { iframeSrc, sandbox, portId, origin, srcDoc, csp } = webViewResult
+  await ExtensionHostWorker.invoke('WebView.create2', id, realUri)
   return {
     ...state,
-    iframeSrc,
-    sandbox,
-    portId,
-    origin,
-    srcDoc,
-    csp,
   }
 }
 
