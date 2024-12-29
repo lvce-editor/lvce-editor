@@ -1,7 +1,11 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
+import * as IsGitpod from '../IsGitpod/IsGitpod.js'
+import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Scheme from '../Scheme/Scheme.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
@@ -10,6 +14,17 @@ export const setPort = async (uid: number, port: MessagePort, origin: string, po
 
 export const getWebViewInfo = (providerId: string) => {
   return ExtensionHostWorker.invoke('ExtensionHostWebView.getWebViewInfo', providerId)
+}
+
+export const create3 = async (uri: string, id: number): Promise<void> => {
+  await ExtensionHostWorker.invoke('WebView.create3', {
+    id,
+    uri,
+    platform: Platform.platform,
+    isGitpod: IsGitpod.isGitpod,
+    assetDir: AssetDir.assetDir,
+    webViewScheme: Scheme.WebView,
+  })
 }
 
 export const compat = {
