@@ -1,8 +1,9 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetRealUri from '../GetRealUri/GetRealUri.js'
+import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
@@ -33,6 +34,7 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
     uri: realUri,
     platform: Platform.platform,
     isGitpod: IsGitpod.isGitpod,
+    assetDir: AssetDir.assetDir,
   })
   return {
     ...state,
