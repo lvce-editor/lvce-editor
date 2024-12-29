@@ -3,8 +3,8 @@ import * as RegisterWebViewProtocol from '../RegisterWebViewProtocol/RegisterWeb
 
 export const registerProtocol = RegisterWebViewProtocol.registerWebViewProtocol
 
-export const create = async (previewId) => {
-  await PreviewProcess.invoke('WebViewServer.create', previewId)
+export const create = async (...args) => {
+  await PreviewProcess.invoke('WebViewServer.create', ...args)
 }
 
 export const start = async (previewId, port) => {
