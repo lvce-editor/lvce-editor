@@ -9,8 +9,8 @@ import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as WebViews from '../WebViews/WebViews.ts'
 import { VError } from '../VError/VError.js'
+import * as WebViews from '../WebViews/WebViews.ts'
 
 const getId = (path) => {
   const slashIndex = path.lastIndexOf(Character.Slash)
@@ -50,12 +50,15 @@ export const addWebExtension = async (path) => {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)
   }
+  console.log({ manifest })
   if (manifest.webViews) {
     for (const webView of manifest.webViews) {
       if (webView.path) {
         webView.path = manifest.path + Character.Slash + webView.path
+        webView.uri = webView.path
       } else {
         webView.path = manifest.path
+        webView.uri = webView.path
       }
     }
     WebViews.addMany(manifest.webViews)
