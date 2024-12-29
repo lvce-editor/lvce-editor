@@ -41,6 +41,14 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
     }
   } catch (error) {
     Logger.error(error)
+    if (error.code === 'ENOENT') {
+      return {
+        body: 'Not Found',
+        init: {
+          status: HttpStatusCode.NotFound,
+        },
+      }
+    }
     return {
       body: 'Internal server error',
       init: {

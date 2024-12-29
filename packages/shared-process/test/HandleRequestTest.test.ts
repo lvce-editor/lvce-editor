@@ -30,8 +30,29 @@ test('handleRequestTest', async () => {
       status: 200,
     },
   })
-  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => { })
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
   await HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
   expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
   expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
+})
+
+test.skip('handleRequestTest - file not found', async () => {
+  const request = {}
+  const indexHtmlPath = '/tests/nonexistent.html'
+  const socket = {}
+  const error = new Error('ENOENT: no such file or directory')
+  // @ts-expect-error
+  error.code = 'ENOENT'
+  jest.spyOn(GetTestRequestResponse, 'getTestRequestResponse').mockRejectedValue(error)
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
+
+  await HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
+
+  expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
+  expect(HttpServerResponse.send).toHaveBeenCalledWith(request, socket, {
+    body: 'Not Found',
+    init: {
+      status: 404,
+    },
+  })
 })
