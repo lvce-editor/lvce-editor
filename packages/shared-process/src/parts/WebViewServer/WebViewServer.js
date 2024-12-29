@@ -18,3 +18,7 @@ export const setHandler = async (previewId, frameAncestors, webViewRoot, content
 export const setInfo = async (...args) => {
   await PreviewProcess.invoke('WebViewServer.setInfo', ...args)
 }
+
+export const setInfo2 = async (...args) => {
+  await PreviewProcess.invoke('WebViewServer.setInfo2', ...args)
+}
