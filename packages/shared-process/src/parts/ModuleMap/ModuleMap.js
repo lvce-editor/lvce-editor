@@ -288,6 +288,7 @@ export const getModuleId = (commandId) => {
     case 'WebViewServer.setHandler':
     case 'WebViewServer.registerProtocol':
     case 'WebViewServer.setInfo':
+    case 'WebViewServer.setInfo2':
       return ModuleId.WebViewServer
     case 'GetExtensions.getExtensions':
       return ModuleId.GetExtensions
