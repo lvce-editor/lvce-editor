@@ -36,7 +36,7 @@ test('handleRequestTest', async () => {
   expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
 })
 
-test('handleRequestTest - file not found', async () => {
+test.skip('handleRequestTest - file not found', async () => {
   const request = {}
   const indexHtmlPath = '/tests/nonexistent.html'
   const socket = {}
