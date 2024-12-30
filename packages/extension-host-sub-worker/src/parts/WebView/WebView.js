@@ -1,10 +1,10 @@
 import * as CommandState from '../CommandState/CommandState.js'
 
-const ports = Object.create(null)
+const rpcs = Object.create(null)
 
 export const create = async (options) => {
   const fn = CommandState.getCommand('WebView.create')
-  const port = ports[options.id]
+  const port = rpcs[options.id]
   await fn({
     ...options,
     port,
@@ -12,5 +12,5 @@ export const create = async (options) => {
 }
 
 export const setPort = (id, port) => {
-  ports[id] = port
+  rpcs[id] = port
 }
