@@ -1,10 +1,10 @@
-import * as ExtensionHostSubWorkerUrl from '../ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.js'
+import * as GetExtensionHostSubWorkerUrl from '../GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js'
 import * as IpcParentModule from '../IpcParentModule/IpcParentModule.js'
 
 export const create = async ({ method, ...options }) => {
   // TODO
   if (options && options.url && options.url.endsWith('extensionHostSubWorkerMain.js')) {
-    options.url = ExtensionHostSubWorkerUrl.extensionHostSubWorkerUrl
+    options.url = GetExtensionHostSubWorkerUrl.getExtensionHostSubWorkerUrl()
   }
   const module = await IpcParentModule.getModule(method)
   // @ts-ignore
