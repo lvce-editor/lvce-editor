@@ -32,7 +32,7 @@ const firstErrorLine = (error) => {
 
 // @ts-ignore
 export const handleUncaughtExceptionMonitor = (error, origin) => {
-  Logger.info(`[main process] uncaught exception: ${firstErrorLine(error)}`)
+  Logger.info(`[main process] Uncaught exception: ${firstErrorLine(error)}`)
   const prettyError = PrettyError.prepare(error)
   // @ts-ignore
   Logger.error(prettyError.codeFrame)
