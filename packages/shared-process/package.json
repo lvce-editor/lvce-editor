@@ -35,7 +35,7 @@
   },
   "optionalDependencies": {
     "@lvce-editor/embeds-process": "^1.6.0",
-    "@lvce-editor/network-process": "^2.1.0",
+    "@lvce-editor/network-process": "^2.2.0",
     "@lvce-editor/preload": "^1.4.0",
     "@lvce-editor/preview-process": "^7.16.0",
     "@lvce-editor/process-explorer": "^2.3.0",
