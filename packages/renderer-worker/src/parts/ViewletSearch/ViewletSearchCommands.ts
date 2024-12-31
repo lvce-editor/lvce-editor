@@ -34,6 +34,7 @@ const commands = [
   'handleContextMenuMouseAt',
   'handleExcludeInput',
   'handleFocusIn',
+  'handleHeaderClick',
   'handleIconThemeChange',
   'handleIconThemeChange',
   'handleIncludeInput',
