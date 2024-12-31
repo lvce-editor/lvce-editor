@@ -1,4 +1,4 @@
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 // TODO move all of this to an extension
@@ -12,15 +12,15 @@ export const state = {
 }
 
 export const readFile = async (uri) => {
-  return FileSearchWorker.invoke('FileSystemFetch.readFile', uri)
+  return ExtensionHostWorker.invoke('FileSystemFetch.readFile', uri)
 }
 
 export const writeFile = (uri, content) => {
-  return FileSearchWorker.invoke('FileSystemFetch.writeFile', uri)
+  return ExtensionHostWorker.invoke('FileSystemFetch.writeFile', uri)
 }
 
 export const mkdir = (uri) => {
-  return FileSearchWorker.invoke('FileSystemFetch.mkdir', uri)
+  return ExtensionHostWorker.invoke('FileSystemFetch.mkdir', uri)
 }
 
 export const getPathSeparator = () => {
@@ -28,17 +28,17 @@ export const getPathSeparator = () => {
 }
 
 export const remove = (uri) => {
-  return FileSearchWorker.invoke('FileSystemFetch.remove', uri)
+  return ExtensionHostWorker.invoke('FileSystemFetch.remove', uri)
 }
 
 export const readDirWithFileTypes = async (uri) => {
-  return FileSearchWorker.invoke('FileSystemFetch.readDirWithFileTypes', uri)
+  return ExtensionHostWorker.invoke('FileSystemFetch.readDirWithFileTypes', uri)
 }
 
 export const chmod = (path, permissions) => {
-  return FileSearchWorker.invoke('FileSystemFetch.chmod', path, permissions)
+  return ExtensionHostWorker.invoke('FileSystemFetch.chmod', path, permissions)
 }
 
 export const getBlob = async (uri, type) => {
-  return FileSearchWorker.invoke('FileSystemFetch.getBlob', uri, type)
+  return ExtensionHostWorker.invoke('FileSystemFetch.getBlob', uri, type)
 }
