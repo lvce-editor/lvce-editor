@@ -1,18 +1,18 @@
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const name = 'Memory'
 
 export const readFile = (uri) => {
-  return FileSearchWorker.invoke('FileSystemMemory.readFile', uri)
+  return ExtensionHostWorker.invoke('FileSystemMemory.readFile', uri)
 }
 
 export const writeFile = (uri, content) => {
-  return FileSearchWorker.invoke('FileSystemMemory.writeFile', uri, content)
+  return ExtensionHostWorker.invoke('FileSystemMemory.writeFile', uri, content)
 }
 
 export const mkdir = (uri) => {
-  return FileSearchWorker.invoke('FileSystemMemory.mkdir', uri)
+  return ExtensionHostWorker.invoke('FileSystemMemory.mkdir', uri)
 }
 
 export const getPathSeparator = () => {
@@ -20,25 +20,25 @@ export const getPathSeparator = () => {
 }
 
 export const remove = (uri) => {
-  return FileSearchWorker.invoke('FileSystemMemory.remove', uri)
+  return ExtensionHostWorker.invoke('FileSystemMemory.remove', uri)
 }
 
 export const readDirWithFileTypes = (uri) => {
-  return FileSearchWorker.invoke('FileSystemMemory.readDirWithFileTypes', uri)
+  return ExtensionHostWorker.invoke('FileSystemMemory.readDirWithFileTypes', uri)
 }
 
 export const getBlobUrl = (uri) => {
-  return FileSearchWorker.invoke('FileSystemMemory.getBlobUrl', uri)
+  return ExtensionHostWorker.invoke('FileSystemMemory.getBlobUrl', uri)
 }
 
 export const getBlob = async (uri) => {
-  return FileSearchWorker.invoke('FileSystemMemory.getBlob', uri)
+  return ExtensionHostWorker.invoke('FileSystemMemory.getBlob', uri)
 }
 
 export const chmod = (path, permissions) => {
-  return FileSearchWorker.invoke('FileSystemMemory.chmod', path, permissions)
+  return ExtensionHostWorker.invoke('FileSystemMemory.chmod', path, permissions)
 }
 
 export const getFiles = () => {
-  return FileSearchWorker.invoke('FileSystemMemory.getFiles')
+  return ExtensionHostWorker.invoke('FileSystemMemory.getFiles')
 }
