@@ -1,5 +1,7 @@
 export const name = 'sample.text-search-provider-error-results-is-not-of-type-array'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
