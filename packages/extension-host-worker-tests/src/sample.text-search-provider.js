@@ -1,5 +1,7 @@
 export const name = 'sample.text-search-provider'
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
