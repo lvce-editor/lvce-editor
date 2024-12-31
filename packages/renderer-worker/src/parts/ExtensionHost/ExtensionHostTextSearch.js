@@ -25,3 +25,7 @@ export const textSearchHtml = (...args) => {
 export const textSearchFetch = (...args) => {
   return ExtensionHostWorker.invoke('TextSearchFetch.textSearch', ...args)
 }
+
+export const textSearchMemory = (...args) => {
+  return ExtensionHostWorker.invoke('TextSearchMemory.textSearch', ...args)
+}
