@@ -1,3 +1,7 @@
+:root {
+  --InputValidationErrorBorder: red;
+}
+
 .SearchFieldContainer {
   contain: content;
   display: flex;
@@ -50,4 +54,8 @@
 
 .SearchButtonReplaceAll {
   position: relative;
+}
+
+.SearchFieldError {
+  border-color: var(--InputValidationErrorBorder);
 }
