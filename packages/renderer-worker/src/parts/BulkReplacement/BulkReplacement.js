@@ -1,6 +1,6 @@
-import * as LegacyBulkReplacement from '../LegacyBulkReplacement/LegacyBulkReplacement.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as BulkReplacementContent from '../BulkReplacementContent/BulkReplacementContent.ts'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as LegacyBulkReplacement from '../LegacyBulkReplacement/LegacyBulkReplacement.js'
 
 const applyFileReplacement = async (edit) => {
   console.log({ edit })
