@@ -1,3 +1,8 @@
+:root {
+  --ErrorBackground: #5a1d1d;
+  --ErrorForeground: rgb(156, 162, 160);
+}
+
 .Search {
   display: flex;
   flex-direction: column;
@@ -31,4 +36,15 @@
 
 .Badge {
   display: var(--SearchBadgeDisplay);
+}
+
+.SearchInputError {
+  position: absolute;
+  top: 35px;
+  left: 20px;
+  background: var(--ErrorBackground);
+  color: var(--ErrorForeground);
+  padding-inline: 10px;
+  flex: 1;
+  display: flex;
 }
