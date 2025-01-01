@@ -3,7 +3,6 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as LegacyBulkReplacement from '../LegacyBulkReplacement/LegacyBulkReplacement.js'
 
 const applyFileReplacement = async (edit) => {
-  console.log({ edit })
   const { uri, changes } = edit
   const oldContent = await FileSystem.readFile(uri)
   const newContent = BulkReplacementContent.getNewContent(oldContent, changes)
