@@ -9,12 +9,10 @@ export const getNewContent = (oldContent: string, changes: readonly TextEdit[]):
   let newLineIndex = -1
   let copiedContentIndex = 0
   let newContent = ''
-  let previousNewLineIndex = -1
   for (let i = 0; i < changes.length; i++) {
     // TODO support multiline changes
     const { text, startColumnIndex, startRowIndex, endColumnIndex } = changes[i]
     while (rowIndex < startRowIndex) {
-      previousNewLineIndex = newLineIndex
       newLineIndex = GetNewLineIndex.getNewLineIndex(oldContent, newLineIndex + 1)
       rowIndex++
     }
