@@ -5,4 +5,5 @@
 .TreeItems {
   contain: strict;
   height: 100%;
+  position: relative;
 }
