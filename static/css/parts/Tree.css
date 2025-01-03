@@ -1,0 +1,8 @@
+.Tree {
+  position: relative;
+}
+
+.TreeItems {
+  contain: strict;
+  height: 100%;
+}
