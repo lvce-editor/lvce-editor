@@ -32,6 +32,7 @@ export const eagerLoadedCss = [
   'Symbol.css',
   'Tree.css',
   'TreeItem.css',
+  'TreeItems.css',
   'Viewlet.css',
   'ViewletActivityBar.css',
   'ViewletColorPicker.css',

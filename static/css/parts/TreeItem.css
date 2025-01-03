@@ -8,6 +8,7 @@
   width: 100%;
   align-items: center;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .TreeItem:where(:hover) {
