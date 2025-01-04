@@ -17,6 +17,6 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   await expect(codeFrame).toHaveText(
     `> 1 | []0
     |   ^
-  2 |`
+  2 |`,
   )
 }

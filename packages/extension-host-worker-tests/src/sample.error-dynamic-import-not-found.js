@@ -20,6 +20,6 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
     `> 1 | const add = await import('./add.js')
   2 |
   3 | export const activate = () => {
-  4 |   add(1, 2)`
+  4 |   add(1, 2)`,
   )
 }

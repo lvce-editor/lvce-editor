@@ -23,6 +23,6 @@ export const test = async ({ Extension, QuickPick, Locator, expect, Platform }) 
     | ^
   2 |
   3 | export const activate = () => {}
-  4 |`
+  4 |`,
   )
 }

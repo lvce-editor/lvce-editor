@@ -12,7 +12,7 @@ export const setIconTheme = async (iconThemeId) => {
       return
     }
     IconThemeState.setTheme(iconTheme)
-       await HandleIconThemeChange.handleIconThemeChange()
+    await HandleIconThemeChange.handleIconThemeChange()
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore

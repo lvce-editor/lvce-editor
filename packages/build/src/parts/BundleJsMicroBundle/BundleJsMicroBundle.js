@@ -1,13 +1,7 @@
 // @ts-ignore
 import microbundle from 'microbundle'
 
-export const bundleJs = async ({
-  cwd,
-  from,
-  platform,
-  minify = false,
-  codeSplitting = false,
-}) => {
+export const bundleJs = async ({ cwd, from, platform, minify = false, codeSplitting = false }) => {
   console.log({ cwd, from })
   const result = await microbundle({
     cwd,

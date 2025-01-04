@@ -14,7 +14,7 @@ export const walkDependencies = (object, fn) => {
           path: object.path.slice(0, -object.name.length) + hiddenDependency,
           name: hiddenDependency,
         },
-        fn
+        fn,
       )
     }
     return

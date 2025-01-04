@@ -22,6 +22,6 @@ export const getKeyBindings = async () => {
   const ids = Object.keys(ViewletModuleId)
   const modules = await Promise.all(ids.map(maybeLoad))
   const keyBindingsPromises = await Promise.all(modules.map(getViewletKeyBindings))
-  const keybindings= keyBindingsPromises.flat(1)
+  const keybindings = keyBindingsPromises.flat(1)
   return keybindings
 }

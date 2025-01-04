@@ -5,7 +5,6 @@ import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as TitleBarMenuBarStrings from '../TitleBarMenuBarStrings/TitleBarMenuBarStrings.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
-
 const MAX_MENU_RECENT_ENTRIES = 10
 
 const toMenuItem = (folder) => {

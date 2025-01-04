@@ -13,7 +13,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-activate-dynamic-import-not-found: Module not found "./add.js"`
+    `Error: Failed to activate extension sample.error-activate-dynamic-import-not-found: Module not found "./add.js"`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
@@ -21,6 +21,6 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 > 2 |   const add = await import('./add.js')
   3 |   add(1, 2)
   4 | }
-  5 |`
+  5 |`,
   )
 }

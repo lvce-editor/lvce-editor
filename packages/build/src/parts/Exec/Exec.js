@@ -1,2 +1,1 @@
-
-export {execa as exec} from 'execa'
+export { execa as exec } from 'execa'
