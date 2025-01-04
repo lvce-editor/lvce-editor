@@ -8,6 +8,7 @@ export const Commands = {
   hydrate: IconTheme.hydrate,
   setIconTheme: IconTheme.setIconTheme,
   getFileIcon: IconTheme.getFileIcon,
+  getFileIcons: IconTheme.getFileIcons,
   getFolderIcon: IconTheme.getFolderIcon,
   getIcon: IconTheme.getIcon,
 }
