@@ -15,7 +15,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
     `> 1 | export * from './add.js'
-  2 |`
+  2 |`,
   )
   // TODO stack could be improved
 }

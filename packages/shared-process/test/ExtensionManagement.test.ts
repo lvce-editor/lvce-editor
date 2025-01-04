@@ -168,7 +168,7 @@ test.skip('getExtensions', async () => {
 })
 
 test('getExtensions - invalid extension.json', async () => {
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const tmpDir1 = await getTmpDir()
   const manifestPath = join(tmpDir1, 'test-extension', 'extension.json')
   await mkdir(dirname(manifestPath))

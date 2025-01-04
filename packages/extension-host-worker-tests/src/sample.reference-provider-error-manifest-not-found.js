@@ -6,7 +6,7 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor }) =
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
-`
+`,
   )
 
   await Workspace.setPath(tmpDir)

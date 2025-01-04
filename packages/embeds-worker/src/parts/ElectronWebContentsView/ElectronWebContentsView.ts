@@ -15,20 +15,15 @@ export const resizeWebContentsView = (id, x, y, width, height) => {
   return EmbedsProcess.invoke('ElectronWebContentsView.resizeBrowserView', id, x, y, width, height)
 }
 
-
 export const setIframeSrcFallback = async (id, error) => {
   const { code, message } = error
   await EmbedsProcess.invoke('ElectronWebContentsView.setIframeSrcFallback', id, code, message)
-
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
   try {
-
     await EmbedsProcess.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
-
   } catch (error) {
-
     console.log({ error })
     // TODO send error back to embeds worker,
     // embeds worker decides how to handle error
@@ -38,8 +33,7 @@ export const setIframeSrc = async (id, iframeSrc) => {
       return
     }
     // @ts-ignore
-    if (error && error.code === LoadErrorCode.ERR_FAILED
-    ) {
+    if (error && error.code === LoadErrorCode.ERR_FAILED) {
       console.info(`[embeds worker] navigation to ${iframeSrc} canceled`)
       // ElectronWebContentsViewState.removeCanceled(webContents.id)
       return
@@ -49,7 +43,6 @@ export const setIframeSrc = async (id, iframeSrc) => {
     } catch (error) {
       console.warn(`Failed to set iframe src`, error)
     }
-
   }
 }
 
@@ -104,9 +97,9 @@ export const getStats = (id, fallthroughKeybindings) => {
 
 const forwardEvent =
   (key) =>
-    (id, ...args) => {
-      Rpc.send(key, ...args)
-    }
+  (id, ...args) => {
+    Rpc.send(key, ...args)
+  }
 
 export const handleDidNavigate = forwardEvent('ElectronBrowserView.handleDidNavigate')
 

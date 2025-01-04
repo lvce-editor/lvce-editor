@@ -90,8 +90,7 @@ const RE_SQUARE_OPEN = /^\[/
 const RE_SQUARE_CLOSE = /^\]/
 const RE_LINE_COMMENT = /^\/\/.*/
 const RE_ANYTHING = /^.+/s
-const RE_NUMERIC =
-  /^((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b/
+const RE_NUMERIC = /^((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b/
 const RE_TEXT = /^[^\s\{\}\[\]]+/
 const RE_ESCAPED_QUOTE = /^\\"/
 const RE_BACK_SLASH = /^\\/

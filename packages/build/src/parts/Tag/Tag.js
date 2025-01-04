@@ -1,18 +1,11 @@
 import * as Exec from '../Exec/Exec.js'
 
 const getGitTagFromGitFallback = async () => {
-  const { stdout, stderr, exitCode } = await Exec.exec(
-    'git',
-    ['describe', '--tags'],
-    {
-      reject: false,
-    }
-  )
+  const { stdout, stderr, exitCode } = await Exec.exec('git', ['describe', '--tags'], {
+    reject: false,
+  })
   if (exitCode) {
-    if (
-      exitCode === 128 &&
-      stderr.startsWith('fatal: no tag exactly matches')
-    ) {
+    if (exitCode === 128 && stderr.startsWith('fatal: no tag exactly matches')) {
       return '0.0.0-dev'
     }
     return '0.0.0-dev'
@@ -24,18 +17,11 @@ const getGitTagFromGitFallback = async () => {
 }
 
 const getGitTagFromGit = async () => {
-  const { stdout, stderr, exitCode } = await Exec.exec(
-    'git',
-    ['describe', '--exact-match', '--tags'],
-    {
-      reject: false,
-    }
-  )
+  const { stdout, stderr, exitCode } = await Exec.exec('git', ['describe', '--exact-match', '--tags'], {
+    reject: false,
+  })
   if (exitCode) {
-    if (
-      exitCode === 128 &&
-      stderr.startsWith('fatal: no tag exactly matches')
-    ) {
+    if (exitCode === 128 && stderr.startsWith('fatal: no tag exactly matches')) {
       return getGitTagFromGitFallback()
     }
     return '0.0.0-dev'

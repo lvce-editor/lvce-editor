@@ -12,14 +12,14 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-dependency-module-not-found-complex: Module not found "./parts/math.js"`
+    `Error: Failed to activate extension sample.error-dependency-module-not-found-complex: Module not found "./parts/math.js"`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
     `> 1 | import { math } from './parts/math.js'
   2 |
   3 | export const subtract = (a, b) => {
-  4 |   return a - b`
+  4 |   return a - b`,
   )
   // TODO stack could be improved
 }

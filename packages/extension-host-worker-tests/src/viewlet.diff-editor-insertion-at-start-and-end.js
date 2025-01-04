@@ -9,7 +9,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => 
     `a
 b
 c
-d`
+d`,
   )
   await Workspace.setPath(tmpDir)
 

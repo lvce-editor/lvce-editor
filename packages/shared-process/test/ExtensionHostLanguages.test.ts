@@ -103,7 +103,7 @@ test('getLanguages - language without tokenize property', async () => {
 
 test('getLanguages - error - property tokenize is of type array', async () => {
   const tmpDir = await getTmpDir()
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => { })
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [

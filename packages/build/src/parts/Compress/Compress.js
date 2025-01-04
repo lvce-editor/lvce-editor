@@ -115,7 +115,7 @@ export const createMTree = async (cwd, dirents) => {
           LANG: 'C',
         },
         cwd,
-      }
+      },
     )
   } catch (error) {
     // @ts-ignore
