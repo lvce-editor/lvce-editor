@@ -50,6 +50,14 @@ export const getFileIcon = (file) => {
   return getFileNameIcon(file.name)
 }
 
+export const getFileIcons = (fileNames) => {
+  const icons = []
+  for (const fileName of fileNames) {
+    icons.push(getFileIcon(fileName))
+  }
+  return icons
+}
+
 export const getFolderNameIcon = (folderName) => {
   const iconTheme = IconThemeState.getIconTheme()
   // @ts-ignore
