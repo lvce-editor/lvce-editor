@@ -1,5 +1,6 @@
 :root {
   --InputValidationErrorBorder: red;
+  --DisabledForeground: rgba(204, 204, 204, 0.5);
 }
 
 .SearchFieldContainer {
@@ -50,6 +51,15 @@
 
 .SearchFieldButtonChecked {
   border-color: #a03f9b;
+}
+
+.SearchFieldButtonDisabled {
+  color: var(--DisabledForeground);
+  cursor: default;
+}
+
+.SearchFieldButtonDisabled:where(:hover) {
+  background: transparent;
 }
 
 .SearchButtonReplaceAll {
