@@ -9,7 +9,6 @@ export const getColorThemeCssFromJson = async (colorThemeId, colorThemeJson) => 
 const getColorThemeCssNew = async (colorThemeId) => {
   const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId)
   const colorThemeCss = await getColorThemeCssFromJson(colorThemeId, colorThemeJson)
-  console.log({ colorThemeCss })
   return colorThemeCss
 }
 

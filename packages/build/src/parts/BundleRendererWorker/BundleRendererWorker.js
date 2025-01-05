@@ -244,11 +244,6 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
         occurrence: `await LaunchSharedProcess.launchSharedProcess()`,
         replacement: ``,
       })
-      await Replace.replace({
-        path: `${cachePath}/src/parts/GetColorThemeJsonWeb/GetColorThemeJsonWeb.js`,
-        occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-        replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
-      })
     }
     await Replace.replace({
       path: `${cachePath}/src/parts/TestWorkerUrl/TestWorkerUrl.js`,
