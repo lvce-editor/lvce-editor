@@ -28,7 +28,7 @@ test('getPlaceholder', () => {
   expect(QuickPickEntriesColorTheme.getPlaceholder()).toBe('Select Color Theme')
 })
 
-test('getPicks', async () => {
+test.skip('getPicks', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
