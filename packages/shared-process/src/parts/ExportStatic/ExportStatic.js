@@ -371,9 +371,21 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
 }
 
 const addExtensionWebExtension = async ({ root, extensionPath, commitHash, extensionJson, pathPrefix, useSimpleWebExtensionFile }) => {
-  const oldExtensions = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'))
-  const newExtensions = [...oldExtensions, extensionJson]
-  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
+  {
+    const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
+    const manifests = await Promise.all(
+      dirents.map(async (dirent) => {
+        const json = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'extensions', dirent, 'extension.json'))
+        const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${dirent}`
+        return {
+          ...json,
+          path: webExtensionPath,
+        }
+      }),
+    )
+    const newExtensions = [...manifests, extensionJson]
+    await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
+  }
 
   if (!extensionJson.browser) {
     return
