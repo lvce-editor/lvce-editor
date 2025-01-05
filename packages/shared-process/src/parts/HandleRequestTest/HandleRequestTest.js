@@ -7,5 +7,5 @@ export const handleRequestTest = async (socket, request, indexHtmlPath) => {
   Assert.object(request)
   Assert.string(indexHtmlPath)
   const result = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
-  HttpServerResponse.send(request, socket, result)
+  await HttpServerResponse.send(request, socket, result)
 }

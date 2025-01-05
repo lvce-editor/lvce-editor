@@ -30,7 +30,7 @@ test('handleRequestTest', async () => {
       status: 200,
     },
   })
-  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(async () => {})
   await HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
   expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
   expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
@@ -44,7 +44,7 @@ test.skip('handleRequestTest - file not found', async () => {
   // @ts-expect-error
   error.code = 'ENOENT'
   jest.spyOn(GetTestRequestResponse, 'getTestRequestResponse').mockRejectedValue(error)
-  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(async () => {})
 
   await HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
 
