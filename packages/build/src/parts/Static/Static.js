@@ -203,20 +203,23 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   })
 }
 
-const getAllExtensionsJson = async () => {
+const getAllExtensionsJson = async ({ pathPrefix, commitHash }) => {
   const extensionPath = Path.absolute('extensions')
   const extensions = await readdir(extensionPath)
   const allContent = []
   for (const extension of extensions) {
     const absolutePath = join(extensionPath, extension, 'extension.json')
     const content = await JsonFile.readJson(absolutePath)
-    allContent.push(content)
+    allContent.push({
+      ...content,
+      path: `${pathPrefix}/${commitHash}/extensions/${extension}`,
+    })
   }
   return allContent
 }
 
 const bundleExtensionsJson = async ({ commitHash, pathPrefix }) => {
-  const allContent = await getAllExtensionsJson()
+  const allContent = await getAllExtensionsJson({ pathPrefix, commitHash })
   const outPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/config/extensions.json`)
   await JsonFile.writeJson({ to: outPath, value: allContent })
 }
