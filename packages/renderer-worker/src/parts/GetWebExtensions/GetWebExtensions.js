@@ -23,6 +23,11 @@ const isWebExtension = (extension) => {
 }
 
 const getWebExtensionsDefault = async () => {
+  try {
+    await SharedProcess.invoke('ExtensionManagement.getExtensionsEtag')
+  } catch (error) {
+    console.warn(`Failed to request extensions etag: ${error}`)
+  }
   const staticWebExtensions = await getStaticWebExtensions()
   const sharedProcessExtensions = await getSharedProcessExtensions()
   const sharedProcessWebExtensions = sharedProcessExtensions.filter(isWebExtension)
