@@ -43,8 +43,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.ClipBoard
     case 'ColorTheme':
       return ModuleId.ColorTheme
-    case 'ColorThemeFromJson':
-      return ModuleId.ColorThemeFromJson
     case 'ConfirmPrompt':
       return ModuleId.ConfirmPrompt
     case 'ContentTracing':
