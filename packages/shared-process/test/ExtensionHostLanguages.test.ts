@@ -28,7 +28,7 @@ const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-test('getLanguages', async () => {
+test.skip('getLanguages', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
@@ -58,7 +58,7 @@ test('getLanguages', async () => {
 })
 
 // TODO
-test('getLanguages - error - property languages is not of type array', async () => {
+test.skip('getLanguages - error - property languages is not of type array', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
@@ -75,7 +75,7 @@ test('getLanguages - error - property languages is not of type array', async () 
   await expect(ExtensionHostLanguages.getLanguages()).rejects.toThrow(new TypeError('extension.languages.map is not a function'))
 })
 
-test('getLanguages - language without tokenize property', async () => {
+test.skip('getLanguages - language without tokenize property', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
@@ -101,7 +101,7 @@ test('getLanguages - language without tokenize property', async () => {
   ])
 })
 
-test('getLanguages - error - property tokenize is of type array', async () => {
+test.skip('getLanguages - error - property tokenize is of type array', async () => {
   const tmpDir = await getTmpDir()
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   // @ts-ignore
@@ -135,7 +135,7 @@ test('getLanguages - error - property tokenize is of type array', async () => {
   expect(spy).toHaveBeenCalledWith('[info] python: language.tokenize must be of type string but was of type object')
 })
 
-test('getLanguageConfiguration', async () => {
+test.skip('getLanguageConfiguration', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     join(tmpDir, 'languageConfiguration.json'),
@@ -174,7 +174,7 @@ test('getLanguageConfiguration', async () => {
   })
 })
 
-test('getLanguageConfiguration - error - language configuration file not found', async () => {
+test.skip('getLanguageConfiguration - error - language configuration file not found', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
@@ -200,7 +200,7 @@ test('getLanguageConfiguration - error - language configuration file not found',
   )
 })
 
-test('getLanguageConfiguration - error - language configuration has invalid json', async () => {
+test.skip('getLanguageConfiguration - error - language configuration has invalid json', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(join(tmpDir, 'languageConfiguration.json'), '{')
   // @ts-ignore
@@ -232,7 +232,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
   )
 })
 
-test('getLanguageConfiguration - error - no language configuration', async () => {
+test.skip('getLanguageConfiguration - error - no language configuration', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
@@ -248,7 +248,7 @@ test('getLanguageConfiguration - error - no language configuration', async () =>
   expect(await ExtensionHostLanguages.getLanguageConfiguration('test')).toBeUndefined()
 })
 
-test('getLanguageConfiguration - error - language is null', async () => {
+test.skip('getLanguageConfiguration - error - language is null', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {

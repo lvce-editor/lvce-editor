@@ -38,9 +38,7 @@ const getLanguagesFromExtensions = (extensions) => {
 }
 
 export const getLanguages = async () => {
-  const extensions = await ExtensionManagement.getExtensions()
-  const languages = getLanguagesFromExtensions(extensions)
-  return languages
+  throw new Error('deprecated')
 }
 
 export const getWebViews = async () => {
