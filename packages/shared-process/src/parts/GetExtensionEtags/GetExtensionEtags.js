@@ -52,5 +52,6 @@ const get = (input) => {
 
 export const getExtensionEtags = async (inputs) => {
   const stats = await Promise.all(inputs.map(get))
-  return stats
+  const flatStats = stats.flat(1)
+  return flatStats
 }
