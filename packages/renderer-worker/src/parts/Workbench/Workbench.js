@@ -1,16 +1,16 @@
 import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
+import * as IpcState from '../IpcState/IpcState.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
-import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
-import * as IpcState from '../IpcState/IpcState.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
@@ -33,7 +33,6 @@ import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleIn
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as GetExtensions from '../GetExtensions/GetExtensions.js'
 
 const actions = [
   async () => {
@@ -140,9 +139,6 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadPreferences)
-
-  // TODO reuse same extensions json for future requests
-  await GetExtensions.getExtensions()
 
   // TODO only load this if session replay is enabled in preferences
   if (Preferences.get('sessionReplay.enabled')) {
