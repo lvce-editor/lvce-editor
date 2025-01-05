@@ -236,8 +236,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
 
   await replace(
     indexHtmlPath,
-    '</title>',
-    `</title>
+    '#282e2f" />',
+    `#282e2f" />
     <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
   )
 
