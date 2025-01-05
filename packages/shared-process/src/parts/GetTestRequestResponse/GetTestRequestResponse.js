@@ -10,6 +10,7 @@ import * as GetContentResponse from '../GetContentResponse/GetContentResponse.js
 import * as GetMultipleChoiceResponse from '../GetMultipleChoiceResponse/GetMultipleChoiceResponse.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
+import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as Logger from '../Logger/Logger.js'
@@ -39,6 +40,7 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
       }
       return GetMultipleChoiceResponse.getMultipleChoiceResponse(body, headers)
     }
+    return GetNotFoundResponse.getNotFoundResponse()
   } catch (error) {
     Logger.error(error)
     if (error.code === 'ENOENT') {
