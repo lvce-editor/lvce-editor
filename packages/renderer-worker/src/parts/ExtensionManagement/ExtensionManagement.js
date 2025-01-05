@@ -50,3 +50,8 @@ export const getWorkingExtensions = async () => {
   // @ts-ignore
   const fullFilledExtensions = allExtensions.filter(isFulfilled).map(getValue)
 }
+
+export const getExtensionsEtag = async () => {
+  const etag = await SharedProcess.invoke('ExtensionManagement.getExtensionsEtag')
+  return etag
+}
