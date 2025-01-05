@@ -127,11 +127,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
     `${pathPrefix}/${commitHash}`,
   )
   await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-    `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
-  )
-  await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
     `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
     `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
