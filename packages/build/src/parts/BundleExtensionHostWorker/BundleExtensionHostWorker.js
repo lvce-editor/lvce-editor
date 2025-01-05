@@ -44,8 +44,8 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
   if (platform === 'web') {
     await Replace.replace({
       path: `${cachePath}/dist/extensionHostWorkerMain.js`,
-      occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-      replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
+      occurrence: `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
+      replacement: `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
     })
   }
 }
