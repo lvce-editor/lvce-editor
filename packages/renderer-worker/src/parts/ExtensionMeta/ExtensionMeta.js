@@ -1,43 +1,14 @@
 import * as Character from '../Character/Character.js'
-import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
-import * as GetWebExtensions from '../GetWebExtensions/GetWebExtensions.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import { VError } from '../VError/VError.js'
 import * as WebViews from '../WebViews/WebViews.ts'
 
-const getId = (path) => {
-  const slashIndex = path.lastIndexOf(Character.Slash)
-  return path.slice(slashIndex + 1)
-}
-
-const getWebManifestPath = (path) => {
-  const manifestPath = `${path}/extension.json`
-  return manifestPath
-}
-
-const getWebExtensionManifest = async (path, manifestPath) => {
-  try {
-    const manifest = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ manifestPath)
-    return {
-      ...manifest,
-      path,
-    }
-  } catch (error) {
-    const id = getId(path)
-    throw new VError(error, `Failed to load extension manifest for ${id}`)
-  }
-}
-
 export const addWebExtension = async (path) => {
-  const manifestPath = getWebManifestPath(path)
-  const manifest = await getWebExtensionManifest(path, manifestPath)
+  const manifest = await ExtensionHostWorker.invoke('Extensions.addWebExtension', path)
   // TODO avoid side effect here
   if (manifest.languages) {
     for (const language of manifest.languages) {
@@ -152,22 +123,8 @@ export const handleRejectedExtensions = async (extensions) => {
   }
 }
 
-const getSharedProcessExtensions = () => {
-  return SharedProcess.invoke(/* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions')
-}
-
 export const getExtensions = async () => {
-  if (Platform.platform === PlatformType.Web) {
-    const webExtensions = await GetWebExtensions.getWebExtensions()
-    return webExtensions
-  }
-  if (Platform.platform === PlatformType.Remote) {
-    const webExtensions = await GetWebExtensions.getWebExtensions()
-    const sharedProcessExtensions = await getSharedProcessExtensions()
-    return [...sharedProcessExtensions, ...webExtensions]
-  }
-  const extensions = await getSharedProcessExtensions()
-  return extensions
+  return ExtensionHostWorker.invoke('Extensions.getExtensions')
 }
 
 export const addNodeExtension = async (path) => {
