@@ -235,19 +235,9 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     }
     if (platform === 'web') {
       await Replace.replace({
-        path: `${cachePath}/src/parts/GetIconThemeUrl/GetIconThemeUrl.ts`,
-        occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
-        replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
-      })
-      await Replace.replace({
         path: `${cachePath}/src/parts/Workbench/Workbench.js`,
         occurrence: `await LaunchSharedProcess.launchSharedProcess()`,
         replacement: ``,
-      })
-      await Replace.replace({
-        path: `${cachePath}/src/parts/GetColorThemeJsonWeb/GetColorThemeJsonWeb.js`,
-        occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-        replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
       })
     }
     await Replace.replace({

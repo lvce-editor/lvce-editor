@@ -5,6 +5,8 @@ import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js
 import * as Path from '../Path/Path.js'
 import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+import * as GetExtensionEtags from '../GetExtensionEtags/GetExtensionEtags.js'
+import * as GetEtagFromStats from '../GetEtagFromStats/GetEtagFromStats.js'
 import { VError } from '../VError/VError.js'
 
 export const enable = async (id) => {
@@ -77,6 +79,29 @@ export const getExtensions = () => {
     ],
     BuiltinExtensionsPath.getBuiltinExtensionsPath(),
   )
+}
+
+export const getExtensionsEtag = async () => {
+  const stats = await GetExtensionEtags.getExtensionEtags([
+    {
+      type: ExtensionManifestInputType.OnlyExtension,
+      path: PlatformPaths.getOnlyExtensionPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: PlatformPaths.getLinkedExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: PlatformPaths.getExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
+    },
+  ])
+  const etag = GetEtagFromStats.getEtagFromStats(stats)
+  return etag
 }
 
 export const getDisabledExtensions = () => {

@@ -130,6 +130,7 @@ export const getModuleId = (commandId) => {
     case 'ExtensionManagement.getExtensions':
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
+    case 'ExtensionManagement.getExtensionsEtag':
       return ModuleId.ExtensionManagement
     case 'FileSystem.chmod':
     case 'FileSystem.copy':

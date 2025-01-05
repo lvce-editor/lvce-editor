@@ -1,8 +1,5 @@
-import * as GetExtensions from '../GetExtensions/GetExtensions.js'
-import * as GetLanguagesFromExtension from '../GetLanguagesFromExtension/GetLanguagesFromExtension.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 
 export const getLanguages = async () => {
-  const extensions = await GetExtensions.getExtensions()
-  const languages = extensions.flatMap(GetLanguagesFromExtension.getLanguagesFromExtension)
-  return languages
+  return ExtensionHostWorker.invoke('Languages.getLanguages')
 }

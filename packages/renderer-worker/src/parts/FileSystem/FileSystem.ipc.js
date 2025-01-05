@@ -11,4 +11,5 @@ export const Commands = {
   readFile: FileSystem.readFile,
   remove: FileSystem.remove,
   writeFile: FileSystem.writeFile,
+  readJson: FileSystem.readJson,
 }
