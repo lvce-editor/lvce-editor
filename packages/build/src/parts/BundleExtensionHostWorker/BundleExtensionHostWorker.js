@@ -41,4 +41,11 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
     replacement: `'${assetDir}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   })
+  if (platform === 'web') {
+    await Replace.replace({
+      path: `${cachePath}/dist/extensionHostWorkerMain.js`,
+      occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
+      replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
+    })
+  }
 }
