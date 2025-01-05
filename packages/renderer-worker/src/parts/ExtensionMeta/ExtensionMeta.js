@@ -1,14 +1,11 @@
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
-import * as GetWebExtensions from '../GetWebExtensions/GetWebExtensions.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as WebViews from '../WebViews/WebViews.ts'
 
@@ -152,22 +149,8 @@ export const handleRejectedExtensions = async (extensions) => {
   }
 }
 
-const getSharedProcessExtensions = () => {
-  return SharedProcess.invoke(/* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions')
-}
-
 export const getExtensions = async () => {
-  if (Platform.platform === PlatformType.Web) {
-    const webExtensions = await GetWebExtensions.getWebExtensions()
-    return webExtensions
-  }
-  if (Platform.platform === PlatformType.Remote) {
-    const webExtensions = await GetWebExtensions.getWebExtensions()
-    const sharedProcessExtensions = await getSharedProcessExtensions()
-    return [...sharedProcessExtensions, ...webExtensions]
-  }
-  const extensions = await getSharedProcessExtensions()
-  return extensions
+  return ExtensionHostWorker.invoke('Extensions.getExtensions')
 }
 
 export const addNodeExtension = async (path) => {
