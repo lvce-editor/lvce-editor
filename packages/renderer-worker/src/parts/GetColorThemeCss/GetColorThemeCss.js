@@ -1,20 +1,15 @@
-import * as Command from '../Command/Command.js'
-import * as GetColorThemeJson from '../GetColorThemeJson/GetColorThemeJson.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as GetColorThemeCssCached from '../GetColorThemeCssCached/GetColorThemeCssCached.js'
+import * as GetColorThemeJson from '../GetColorThemeJson/GetColorThemeJson.js'
 
 export const getColorThemeCssFromJson = async (colorThemeId, colorThemeJson) => {
-  const colorThemeCss = await Command.execute(
-    /* ColorThemeFromJson.createColorThemeFromJson */ 'ColorThemeFromJson.createColorThemeFromJson',
-    /* colorThemeId */ colorThemeId,
-    /* colorThemeJson */ colorThemeJson,
-  )
-  return colorThemeCss
-  // TODO generate color theme from jsonc
+  return ExtensionHostWorker.invoke('ColorTheme.getColorThemeCssFromJson', colorThemeId, colorThemeJson)
 }
 
 const getColorThemeCssNew = async (colorThemeId) => {
   const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId)
   const colorThemeCss = await getColorThemeCssFromJson(colorThemeId, colorThemeJson)
+  console.log({ colorThemeCss })
   return colorThemeCss
 }
 
