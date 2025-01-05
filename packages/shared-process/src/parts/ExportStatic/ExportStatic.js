@@ -371,6 +371,10 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
 }
 
 const addExtensionWebExtension = async ({ root, extensionPath, commitHash, extensionJson, pathPrefix, useSimpleWebExtensionFile }) => {
+  const oldExtensions = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'))
+  const newExtensions = [...oldExtensions, extensionJson]
+  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
+
   if (!extensionJson.browser) {
     return
   }
