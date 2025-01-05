@@ -6,7 +6,6 @@ export const CacheStorage = 5
 export const Callback = 6
 export const ClipBoard = 7
 export const ColorTheme = 9
-export const ColorThemeFromJson = 10
 export const ContextMenu = 11
 export const Developer = 12
 export const Dialog = 13

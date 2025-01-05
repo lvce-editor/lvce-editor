@@ -26,8 +26,6 @@ export const load = (moduleId) => {
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.ColorTheme:
       return import('../ColorTheme/ColorTheme.ipc.js')
-    case ModuleId.ColorThemeFromJson:
-      return import('../ColorThemeFromJson/ColorThemeFromJson.ipc.js')
     case ModuleId.ConfirmPrompt:
       return import('../ConfirmPrompt/ConfirmPrompt.ipc.js')
     case ModuleId.ContentTracing:
