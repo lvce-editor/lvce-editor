@@ -579,7 +579,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       if (viewlet.setBounds !== false) {
         commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
       }
-      if (module.customErrorRenderer) {
+      if (module && module.customErrorRenderer) {
         const errorModule = await loadModule(viewlet.getModule, module.customErrorRenderer)
         const dom = await errorModule.render(error)
         await RendererProcess.invoke(kLoadModule, module.customErrorRenderer)
