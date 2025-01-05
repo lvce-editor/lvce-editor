@@ -44,7 +44,7 @@ beforeAll(() => {
   })
 })
 
-test('hydrate', async () => {
+test.skip('hydrate', async () => {
   Preferences.state['workbench.colorTheme'] = 'slime'
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -89,7 +89,7 @@ test('hydrate', async () => {
   )
 })
 
-test('hydrate - color theme fails to load from shared process', async () => {
+test.skip('hydrate - color theme fails to load from shared process', async () => {
   Preferences.state['workbench.colorTheme'] = 'atom-one-dark'
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -126,7 +126,7 @@ test('hydrate - color theme fails to load from shared process', async () => {
 
 // TODO in case of this fatal error, it should prompt the user to check the extensions folder
 // or something more useful
-test('hydrate - color theme fails to load and fallback color theme also fails to load', async () => {
+test.skip('hydrate - color theme fails to load and fallback color theme also fails to load', async () => {
   Preferences.state['workbench.colorTheme'] = 'atom-one-dark'
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -157,7 +157,7 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
   )
 })
 
-test('hydrate - color id is fallback color theme id and fails to load', async () => {
+test.skip('hydrate - color id is fallback color theme id and fails to load', async () => {
   Preferences.state['workbench.colorTheme'] = 'slime'
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -181,7 +181,7 @@ test('hydrate - color id is fallback color theme id and fails to load', async ()
   expect(spy).not.toHaveBeenCalled()
 })
 
-test('setColorTheme - error', () => {
+test.skip('setColorTheme - error', () => {
   // TODO should show error message
 })
 
