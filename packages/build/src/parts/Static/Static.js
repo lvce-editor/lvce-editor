@@ -303,6 +303,26 @@ const copyColorThemes = async ({ commitHash }) => {
 
 const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) => {
   const allExtension = await readdir(Path.absolute('extensions'))
+  const extensionsArray = []
+  for (const extension of allExtension) {
+    try {
+      const manifest = await JsonFile.readJson(Path.absolute(`extensions/${extension}/extension.json`))
+      extensionsArray.push({
+        ...manifest,
+        path: `${pathPrefix}/${commitHash}/extensions/${extension}`,
+      })
+    } catch (error) {
+      if (IsEnoentError.isEnoentError(error)) {
+        continue
+      }
+      throw error
+    }
+  }
+  await JsonFile.writeJson({
+    to: `packages/build/.tmp/dist/${commitHash}/config/extensions.json`,
+    value: extensionsArray,
+  })
+
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
   for (const languageFeature of languageFeatures) {
@@ -328,6 +348,7 @@ const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) =>
       isWeb: true,
     })
   }
+  // TODO remove this, all extensions are web extensions
   await JsonFile.writeJson({
     to: `packages/build/.tmp/dist/${commitHash}/config/webExtensions.json`,
     value: webExtensions,
