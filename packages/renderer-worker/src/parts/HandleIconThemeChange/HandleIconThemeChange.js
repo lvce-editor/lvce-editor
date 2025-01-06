@@ -8,7 +8,7 @@ export const handleIconThemeChange = async () => {
   for (const [key, value] of Object.entries(instances)) {
     const { factory, state } = value
     if (factory.handleIconThemeChange) {
-      const newState = factory.handleIconThemeChange(state)
+      const newState = await factory.handleIconThemeChange(state)
       await Viewlet.setState(factory.name, newState)
     } else if (factory.Commands && factory.Commands.handleIconThemeChange) {
       const newState = await factory.Commands.handleIconThemeChange(state)
