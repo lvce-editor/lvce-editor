@@ -1,6 +1,7 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
-export const getExtensionAbsolutePath = (id, isWeb, isBuiltin, path, relativePath, origin) => {
+export const getExtensionAbsolutePath = (id, isWeb, isBuiltin, path, relativePath, origin, platform) => {
   if (path.startsWith('http')) {
     if (path.endsWith('/')) {
       return new URL(relativePath, path).toString()
@@ -11,6 +12,9 @@ export const getExtensionAbsolutePath = (id, isWeb, isBuiltin, path, relativePat
     path = '/' + path
   }
   if (isWeb) {
+    return path + '/' + relativePath
+  }
+  if (platform === PlatformType.Web) {
     return path + '/' + relativePath
   }
   if (isBuiltin) {
