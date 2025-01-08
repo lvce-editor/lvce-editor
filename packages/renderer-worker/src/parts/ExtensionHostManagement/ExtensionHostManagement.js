@@ -5,6 +5,7 @@ import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as Origin from '../Origin/Origin.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const state = {
   /**
@@ -27,6 +28,7 @@ const actuallyActivateExtension = async (extension) => {
       extension.path,
       extension.browser,
       Origin.origin,
+      Platform.platform,
     )
     state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath)
   }
