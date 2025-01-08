@@ -95,7 +95,7 @@
     "@lvce-editor/renderer-process": "^10.44.0",
     "@lvce-editor/syntax-highlighting-worker": "^1.8.0",
     "@lvce-editor/terminal-worker": "^1.0.0",
-    "@lvce-editor/test-worker": "^3.7.0",
+    "@lvce-editor/test-worker": "^3.8.0",
     "@lvce-editor/text-search-worker": "^3.34.0",
     "@lvce-editor/about-view": "^4.3.0",
     "@lvce-editor/explorer-view": "^1.13.0",
