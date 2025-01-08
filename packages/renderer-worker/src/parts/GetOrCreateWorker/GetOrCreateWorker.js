@@ -25,5 +25,8 @@ export const getOrCreateWorker = (fn) => {
       const ipc = await promise
       ipc.dispose()
     },
+    async restart() {
+      console.log('TODO restart')
+    },
   }
 }

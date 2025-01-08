@@ -320,3 +320,11 @@ export const handleClickOpenFolder = async (state) => {
   newState.commands = commands
   return newState
 }
+
+export const hotReload = async (state) => {
+  const savedState = {}
+  const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  newState.commands = commands
+  return newState
+}
