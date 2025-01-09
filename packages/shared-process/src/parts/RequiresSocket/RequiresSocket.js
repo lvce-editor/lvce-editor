@@ -8,6 +8,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'ExtensionHost.start',
   'ExtensionHost.send',
   'ExtensionHost.watchColorTheme',
+  'ExtensionHost.watchForHotReload',
   'Terminal.create',
   'IncrementalTextSearch.start',
   'ElectronApplicationMenu.setItems',

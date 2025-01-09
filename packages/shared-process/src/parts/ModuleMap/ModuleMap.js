@@ -131,6 +131,7 @@ export const getModuleId = (commandId) => {
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
     case 'ExtensionManagement.getExtensionsEtag':
+    case 'ExtensionHost.watchForHotReload':
       return ModuleId.ExtensionManagement
     case 'FileSystem.chmod':
     case 'FileSystem.copy':
