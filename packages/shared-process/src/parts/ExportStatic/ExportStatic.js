@@ -370,22 +370,24 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
   }
 }
 
+const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensions }) => {
+  const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
+  const manifests = await Promise.all(
+    dirents.map(async (dirent) => {
+      const json = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'extensions', dirent, 'extension.json'))
+      const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${dirent}`
+      return {
+        ...json,
+        path: webExtensionPath,
+      }
+    }),
+  )
+  const newExtensions = [...manifests, ...extraExtensions]
+  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
+}
+
 const addExtensionWebExtension = async ({ root, extensionPath, commitHash, extensionJson, pathPrefix, useSimpleWebExtensionFile }) => {
-  {
-    const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
-    const manifests = await Promise.all(
-      dirents.map(async (dirent) => {
-        const json = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'extensions', dirent, 'extension.json'))
-        const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${dirent}`
-        return {
-          ...json,
-          path: webExtensionPath,
-        }
-      }),
-    )
-    const newExtensions = [...manifests, extensionJson]
-    await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
-  }
+  await updateExtensionsJson({ root, commitHash, pathPrefix, extraExtensions: [extensionJson] })
 
   if (!extensionJson.browser) {
     return
@@ -432,6 +434,7 @@ const addExtension = async ({ root, extensionPath, commitHash, pathPrefix, useSi
     extensionJson,
     pathPrefix,
   })
+
   await addExtensionWebExtension({
     root,
     extensionPath,
@@ -562,6 +565,8 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
     serverStaticPath,
   })
   console.timeEnd('applyOverrides')
+
+  await updateExtensionsJson({ root, commitHash, pathPrefix, extraExtensions: [] })
 
   if (extensionPath) {
     console.time('addExtension')
