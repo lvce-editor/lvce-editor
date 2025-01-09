@@ -32,6 +32,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleInternal.js'
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as WatchFilesForHotReload from '../WatchFilesForHotReload/WatchFilesForHotReload.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const actions = [
@@ -227,6 +228,7 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
   await DevelopFileWatcher.hydrate()
+  await WatchFilesForHotReload.watchFilesForHotReload()
 
   Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
   Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
