@@ -326,8 +326,12 @@ export const hotReload = async (state) => {
   // there could still be pending promises when the worker is disposed
   const savedState = await ExplorerViewWorker.invoke('Explorer.saveState', state)
   await ExplorerViewWorker.restart()
+  const oldState = {
+    ...state,
+    items: [],
+  }
   const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', oldState, newState)
   newState.commands = commands
   return newState
 }
