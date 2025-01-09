@@ -25,10 +25,11 @@ export const getOrCreateWorker = (fn) => {
       const ipc = await promise
       ipc.dispose()
     },
-    async restart() {
+    async restart(terminateCommand) {
       const promise = workers.get(fn)
       workers.delete(fn)
       const ipc = await promise
+      ipc.send({ jsonrpc: '2.0', method: terminateCommand, params: [] })
       ipc.dispose()
       await getOrCreate(fn)
     },

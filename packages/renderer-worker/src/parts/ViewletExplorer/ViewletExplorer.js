@@ -325,7 +325,7 @@ export const hotReload = async (state) => {
   // possible TODO race condition during hot reload
   // there could still be pending promises when the worker is disposed
   const savedState = await ExplorerViewWorker.invoke('Explorer.saveState', state)
-  await ExplorerViewWorker.restart()
+  await ExplorerViewWorker.restart('Explorer.terminate')
   const oldState = {
     ...state,
     items: [],
