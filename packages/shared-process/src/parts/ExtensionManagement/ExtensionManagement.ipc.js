@@ -2,6 +2,7 @@ import * as ExtensionHostIconTheme from '../ExtensionManagement/ExtensionManagem
 import * as ExtensionManagement from './ExtensionManagement.js'
 import * as ExtensionHostColorTheme from './ExtensionManagementColorTheme.js'
 import * as ExtensionHostLanguages from './ExtensionManagementLanguages.js'
+import * as WatchForHotReload from '../WatchForHotReload/WatchForHotReload.js'
 
 // prettier-ignore
 export const Commands = {
@@ -18,4 +19,5 @@ export const Commands = {
   'ExtensionManagement.getExtensions': ExtensionManagement.getExtensions,
   'ExtensionManagement.uninstall': ExtensionManagement.uninstall,
   'ExtensionManagement.getExtensionsEtag': ExtensionManagement.getExtensionsEtag,
+  'ExtensionHost.watchForHotReload': WatchForHotReload.watchForHotReload,
 }
