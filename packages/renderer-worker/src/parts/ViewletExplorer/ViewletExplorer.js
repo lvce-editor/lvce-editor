@@ -322,7 +322,10 @@ export const handleClickOpenFolder = async (state) => {
 }
 
 export const hotReload = async (state) => {
-  const savedState = {}
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await ExplorerViewWorker.invoke('Explorer.saveState', state)
+  await ExplorerViewWorker.restart()
   const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
   const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
   newState.commands = commands
