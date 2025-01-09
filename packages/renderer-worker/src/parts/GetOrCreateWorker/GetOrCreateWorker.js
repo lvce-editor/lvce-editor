@@ -25,5 +25,12 @@ export const getOrCreateWorker = (fn) => {
       const ipc = await promise
       ipc.dispose()
     },
+    async restart() {
+      const promise = workers.get(fn)
+      workers.delete(fn)
+      const ipc = await promise
+      ipc.dispose()
+      await getOrCreate(fn)
+    },
   }
 }

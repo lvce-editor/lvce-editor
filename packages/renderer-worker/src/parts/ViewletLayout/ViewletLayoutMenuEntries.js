@@ -308,6 +308,10 @@ export const getQuickPickMenuEntries = () => {
       label: 'Explorer: Expand All',
     },
     {
+      id: 'Explorer.hotReload',
+      label: 'Explorer: Hot Reload',
+    },
+    {
       id: 'Explorer.expandRecursively',
       label: 'Explorer: Expand Recursively',
     },
