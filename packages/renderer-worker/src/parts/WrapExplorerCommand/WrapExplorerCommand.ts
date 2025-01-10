@@ -8,7 +8,7 @@ export const wrapExplorerCommand = (key: string) => {
     }
     const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
     return {
-      ...state,
+      ...newState,
       commands,
     }
   }
