@@ -15,7 +15,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
   }
 }
 
-export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
+const doCreate = async (state: any): Promise<void> => {
   const itemHeight = 22
   const value = ''
   const replacement = ''
@@ -33,6 +33,10 @@ export const loadContent = async (state: SearchState, savedState: any): Promise<
     replacement,
     Platform.platform,
   )
+}
+
+export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
+  await doCreate(state)
   await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
   const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
   return {
@@ -57,11 +61,14 @@ export const hotReload = async (state) => {
   // there could still be pending promises when the worker is disposed
   const savedState = await TextSearchWorker.invoke('TextSearch.saveState', state.uid)
   await TextSearchWorker.restart('TextSearch.terminate')
-  const newState = await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
+  await doCreate(state)
+  await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
   const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
-  newState.commands = commands
-  newState.isHotReloading = false
-  return newState
+  state.commands = commands
+  state.isHotReloading = false
+  return {
+    ...state,
+  }
 }
 
 // TODO implement virtual list, only send visible items to renderer process
