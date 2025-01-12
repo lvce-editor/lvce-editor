@@ -11,6 +11,13 @@ const getWatchConfig = () => {
       command: 'Explorer.hotReload',
     })
   }
+  const textSearchWorkerPath = Preferences.get('develop.textSearchWorkerPath')
+  if (textSearchWorkerPath) {
+    watchConfig.push({
+      path: textSearchWorkerPath,
+      command: 'Search.hotReload',
+    })
+  }
   return watchConfig
 }
 
