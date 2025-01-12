@@ -47,6 +47,23 @@ export const dispose = async (state: SearchState) => {
   }
 }
 
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await TextSearchWorker.invoke('TextSearch.saveState', state.uid)
+  await TextSearchWorker.restart('TextSearch.terminate')
+  const newState = await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
+  const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid)
+  newState.commands = commands
+  newState.isHotReloading = false
+  return newState
+}
+
 // TODO implement virtual list, only send visible items to renderer process
 
 // TODO maybe rename to result.items and result.stats
