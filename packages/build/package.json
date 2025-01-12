@@ -29,7 +29,7 @@
     "electron-builder": "^25.1.8",
     "execa": "^9.5.2",
     "extract-zip": "^2.0.1",
-    "glob": "^11.0.0",
+    "glob": "^11.0.1",
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
@@ -44,7 +44,7 @@
     "p-map": "^7.0.3",
     "pretty-bytes": "^6.1.1",
     "rollup": "^4.29.1",
-    "tar-fs": "^3.0.6",
+    "tar-fs": "^3.0.7",
     "verdaccio": "6.0.5"
   },
   "xo": {
