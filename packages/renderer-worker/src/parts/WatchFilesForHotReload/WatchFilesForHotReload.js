@@ -1,25 +1,13 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Preferences from '../Preferences/Preferences.js'
+import * as GetWatchConfig from '../GetWatchConfig/GetWatchConfig.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-
-const getWatchConfig = () => {
-  const watchConfig = []
-  const explorerPath = Preferences.get('develop.explorerWorkerPath')
-  if (explorerPath) {
-    watchConfig.push({
-      path: explorerPath,
-      command: 'Explorer.hotReload',
-    })
-  }
-  return watchConfig
-}
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const watchFilesForHotReload = async (platform) => {
   try {
     if (platform === PlatformType.Web) {
       return
     }
-    const config = getWatchConfig()
+    const config = GetWatchConfig.getWatchConfig()
     if (config.length === 0) {
       return
     }
