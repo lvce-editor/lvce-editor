@@ -382,6 +382,9 @@ const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensi
       }
     }),
   )
+  for (const extension of extraExtensions) {
+    extension.path = `${pathPrefix}/${commitHash}/extensions/${extension.id}`
+  }
   const newExtensions = [...manifests, ...extraExtensions]
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
 }
