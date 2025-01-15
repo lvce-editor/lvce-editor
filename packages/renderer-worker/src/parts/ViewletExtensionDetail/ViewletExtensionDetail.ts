@@ -34,6 +34,22 @@ export const loadContent = async (state) => {
   }
 }
 
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  await ExtensionDetailViewWorker.restart('Explorer.terminate')
+  const newState = await ExtensionDetailViewWorker.invoke('Explorer.loadContent', state, {})
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml)
+  newState.isHotReloading = false
+  newState.dom = dom
+  return newState
+}
+
 export const handleIconError = (state) => {
   const { iconSrc } = state
   if (iconSrc === Icon.ExtensionDefaultIcon) {
