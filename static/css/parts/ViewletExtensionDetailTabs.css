@@ -1,5 +1,9 @@
 :root {
   --ExtensionDetailTabsBorder: rgba(128, 128, 128, 0.35);
+  --ExtensionDetailTabSelectedBorder: white;
+  --ExtensionDetailTabSelectedForeground: white;
+  --ExtensionDetailTabForeground: var(--WorkbenchForeground);
+  --ExtensionDetailTabHoverForeground: white;
 }
 
 /* TODO move into separate files */
@@ -17,8 +21,16 @@
   cursor: pointer;
   text-transform: uppercase;
   font-size: 11px;
+  background: transparent;
+  border: none;
+  color: var(--ExtensionDetailTabForeground);
+}
+
+.ExtensionDetailTab:where(:hover) {
+  color: var(--ExtensionDetailTabHoverForeground);
 }
 
 .ExtensionDetailTabSelected {
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--ExtensionDetailTabSelectedBorder);
+  color: var(--ExtensionDetailTabSelectedForeground);
 }
