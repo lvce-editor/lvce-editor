@@ -64,7 +64,7 @@ export const handleIconError = (state) => {
 
 export const handleTabsClick = async (state, name) => {
   const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.handleTabsClick', state, name)
-  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml)
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml, newState.selectedTab)
 
   return {
     ...newState,
