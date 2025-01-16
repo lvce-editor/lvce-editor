@@ -4,6 +4,7 @@ import * as ViewletExtensionDetail from './ViewletExtensionDetail.ts'
 export const Commands = {
   handleIconError: ViewletExtensionDetail.handleIconError,
   hotReload: ViewletExtensionDetail.hotReload,
+  handleTabsClick: ViewletExtensionDetail.handleTabsClick,
 }
 
 // prettier-ignore
