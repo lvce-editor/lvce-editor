@@ -13,6 +13,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     width,
     height,
     size: ViewletSize.None,
+    selectedTab: '',
   }
 }
 
@@ -27,7 +28,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
 // probably need to pass extension location from extensions viewlet
 export const loadContent = async (state) => {
   const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, Platform.platform)
-  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml)
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml, newState.selectedTab)
   return {
     ...newState,
     dom,
@@ -44,7 +45,7 @@ export const hotReload = async (state) => {
   // there could still be pending promises when the worker is disposed
   await ExtensionDetailViewWorker.restart('Explorer.terminate')
   const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, {})
-  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml)
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml, newState.selectedTab)
   newState.isHotReloading = false
   newState.dom = dom
   return newState
