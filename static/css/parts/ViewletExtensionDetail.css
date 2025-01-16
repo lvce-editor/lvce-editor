@@ -70,10 +70,25 @@
   flex-shrink: 0;
 }
 
+/* TODO avoid nesting */
 .ExtensionDetail .Markdown {
   padding: 0 20px;
 }
 
 .Large.ExtensionDetail .Markdown {
   padding: 0 40px;
+}
+
+/* TODO move into separate files */
+.ExtensionDetailTabs {
+  display: flex;
+  gap: 10px;
+  contain: content;
+}
+
+.ExtensionDetailTab {
+  padding: 3px;
+  contain: content;
+  user-select: none;
+  cursor: pointer;
 }

@@ -16,5 +16,12 @@ export const getWatchConfig = () => {
       command: 'Search.hotReload',
     })
   }
+  const extensionDetail = Preferences.get('develop.extensionDetailViewWorkerPath')
+  if (extensionDetail) {
+    watchConfig.push({
+      path: extensionDetail,
+      command: 'ExtensionDetail.hotReload',
+    })
+  }
   return watchConfig
 }
