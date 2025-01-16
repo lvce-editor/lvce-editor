@@ -61,6 +61,16 @@ export const handleIconError = (state) => {
   }
 }
 
+export const handleTabsClick = async (state, name) => {
+  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.handleTabsClick', state, name)
+  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml)
+
+  return {
+    ...newState,
+    dom,
+  }
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
