@@ -37,14 +37,14 @@
     "@lvce-editor/verror": "^1.6.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.24.2",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "got": "^14.4.5",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^7.0.3",
     "pretty-bytes": "^6.1.1",
     "rollup": "^4.29.1",
-    "tar-fs": "^3.0.7",
+    "tar-fs": "^3.0.8",
     "verdaccio": "6.0.5"
   },
   "xo": {
