@@ -4,6 +4,7 @@ import * as Command from '../Command/Command.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
+import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as Focus from '../Focus/Focus.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
@@ -203,12 +204,7 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
-    const testPath = await PlatformPaths.getTestPath()
-    const href = initData.Location.href
-    const fileName = href.slice(href.lastIndexOf('/') + 1)
-    const jsfileName = fileName.replace(/\.html$/, '.js')
-    const jsPath = `${testPath}/src/${jsfileName}`
-    await Command.execute('Test.execute', jsPath)
+    await ExecuteCurrentTest.executeCurrentTest(initData)
     return
   }
   Performance.mark(PerformanceMarkerType.WillLoadSaveState)
