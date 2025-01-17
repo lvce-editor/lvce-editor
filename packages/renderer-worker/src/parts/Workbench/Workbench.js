@@ -2,6 +2,7 @@ import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
+import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
@@ -18,7 +19,6 @@ import * as Module from '../Module/Module.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
@@ -203,12 +203,7 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
-    const testPath = await PlatformPaths.getTestPath()
-    const href = initData.Location.href
-    const fileName = href.slice(href.lastIndexOf('/') + 1)
-    const jsfileName = fileName.replace(/\.html$/, '.js')
-    const jsPath = `${testPath}/src/${jsfileName}`
-    await Command.execute('Test.execute', jsPath)
+    await ExecuteCurrentTest.executeCurrentTest(initData)
     return
   }
   Performance.mark(PerformanceMarkerType.WillLoadSaveState)
