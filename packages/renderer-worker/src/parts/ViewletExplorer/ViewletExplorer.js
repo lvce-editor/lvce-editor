@@ -46,7 +46,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  await ExplorerViewWorker.invoke('Explorer.create', state.uid)
+  await ExplorerViewWorker.invoke('Explorer.create', state.uid, state.uri, state.x, state.y, state.width, state.height, null, state.parentUid)
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
   return {
