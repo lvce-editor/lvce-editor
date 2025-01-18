@@ -78,3 +78,10 @@
 .Large.ExtensionDetail .Markdown {
   padding: 0 40px;
 }
+
+/* TODO move into separate file */
+.ExtensionDetailPanel {
+  display: flex;
+  contain: strict;
+  flex: 1;
+}
