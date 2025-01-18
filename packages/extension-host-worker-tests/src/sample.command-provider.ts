@@ -2,7 +2,7 @@ export const name = 'sample.command-provider'
 
 export const skip = true
 
-export const test = async () => {
+export const test = async ({ Extension, QuickPick }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
