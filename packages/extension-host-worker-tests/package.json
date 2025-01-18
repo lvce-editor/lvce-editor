@@ -20,7 +20,8 @@
     "@playwright/test": "^1.49.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "@lvce-editor/test-with-playwright": "^2.7.0"
   },
   "xo": {
     "rules": {
