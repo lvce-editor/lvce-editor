@@ -64,7 +64,7 @@ test.skip('loadContent', async () => {
     ...ViewletExtensionDetail.create(),
     uri: 'extension-detail://test-extension',
   }
-  expect(await ViewletExtensionDetail.loadContent(state)).toMatchObject({
+  expect(await ViewletExtensionDetail.loadContent(state, {})).toMatchObject({
     sanitizedReadmeHtml: '<h1 id="test-extension">Test Extension</h1>',
     iconSrc: '/icons/extensionDefaultIcon.png',
     name: 'Test Extension',
@@ -92,7 +92,7 @@ test.skip('loadContent - error - readme not found', async () => {
     ...ViewletExtensionDetail.create(),
     uri: 'extension-detail://test-extension',
   }
-  expect(await ViewletExtensionDetail.loadContent(state)).toMatchObject({
+  expect(await ViewletExtensionDetail.loadContent(state, {})).toMatchObject({
     sanitizedReadmeHtml: '<h1 id="test-extension">Test Extension</h1>',
     iconSrc: '/icons/extensionDefaultIcon.png',
     name: 'Test Extension',
