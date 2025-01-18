@@ -6,6 +6,7 @@ import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
+import * as TranspileFiles from '../TranspileFiles/TranspileFiles.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const main = async () => {
@@ -58,9 +59,10 @@ const main = async () => {
     })
     await Copy.copyFile({
       from: `packages/extension-host-worker-tests/src/${dirent}`,
-      to: `packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/src/${name}.js`,
+      to: `packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/src/${dirent}`,
     })
   }
+  await TranspileFiles.transpileFiles(Path.absolute(`packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/src`))
   await Copy.copy({
     from: `packages/extension-host-worker-tests/fixtures`,
     to: `packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
