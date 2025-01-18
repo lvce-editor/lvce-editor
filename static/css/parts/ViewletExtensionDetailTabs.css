@@ -12,6 +12,9 @@
   gap: 10px;
   contain: content;
   border-bottom: 1px solid var(--ExtensionDetailTabsBorder);
+  padding-left: 20px;
+  contain: strict;
+  height: 36px;
 }
 
 .ExtensionDetailTab {
