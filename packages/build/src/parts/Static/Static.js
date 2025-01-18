@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
@@ -479,12 +479,39 @@ const getTestFiles = (testFilesRaw) => {
   return testFilesRaw.map(getName).filter(isTestFile)
 }
 
+const transpileFile = (typescript, content) => {
+  const result = typescript.transpileModule(content, {
+    compilerOptions: {
+      target: 'esnext',
+    },
+  })
+  return result.outputText
+}
+
+const transpileFiles = async (folder) => {
+  const typescript = await import('typescript')
+  const dirents = await readdir(folder)
+  for (const dirent of dirents) {
+    if (dirent.endsWith('.ts')) {
+      const content = await readFile(join(folder, dirent), 'utf-8')
+      const js = transpileFile(typescript, content)
+      await writeFile(join(folder, dirent.slice(-2) + 'ts'), js)
+    }
+  }
+  for (const dirent of dirents) {
+    if (dirent.endsWith('.ts')) {
+      await rm(join(folder, dirent))
+    }
+  }
+}
+
 const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/src',
     to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`,
     ignore: ['videos'],
   })
+  await transpileFiles(Path.absolute(`packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`))
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/fixtures',
     to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
