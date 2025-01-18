@@ -1,3 +1,7 @@
+:root {
+  --FeatureBackground: rgba(59, 71, 66, 0.5);
+}
+
 .Features {
   contain: strict;
   flex: 1;
@@ -7,4 +11,17 @@
 .FeaturesList {
   width: 200px;
   contain: strict;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Feature {
+  height: 22px;
+  contain: strict;
+  background: var(--FeatureBackground);
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
 }
