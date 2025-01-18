@@ -1,9 +1,4 @@
-import * as ViewletExplorer from './ViewletExplorer.js'
-
-export const Events = {
-  'languages.changed': ViewletExplorer.handleLanguagesChanged,
-  'workspace.change': ViewletExplorer.handleWorkspaceChange,
-}
+export const Events = {}
 
 export * from './ViewletExplorer.js'
 export * from './ViewletExplorerCommands.js'
