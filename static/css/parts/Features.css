@@ -1,0 +1,10 @@
+.Features {
+  contain: strict;
+  flex: 1;
+  display: flex;
+}
+
+.FeaturesList {
+  width: 200px;
+  contain: strict;
+}
