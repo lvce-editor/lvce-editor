@@ -9,6 +9,13 @@
   contain: content;
 }
 
+.AdditionalDetailsEntry {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  contain: content;
+  border-bottom: 1px solid hsla(0, 0%, 50%, 0.22);
+}
+
 .MoreInfoEntry {
   display: flex;
   contain: content;
