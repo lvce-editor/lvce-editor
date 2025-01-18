@@ -26,8 +26,8 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
 
 // TODO when there are multiple extension with the same id,
 // probably need to pass extension location from extensions viewlet
-export const loadContent = async (state) => {
-  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, Platform.platform)
+export const loadContent = async (state, savedState) => {
+  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, Platform.platform, savedState)
   const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom', newState, newState.sanitizedReadmeHtml, newState.selectedTab)
   return {
     ...newState,
@@ -69,6 +69,15 @@ export const selectTab = async (state, name) => {
   return {
     ...newState,
     dom,
+  }
+}
+
+export const saveState = async (state) => {
+  try {
+    const savedState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.saveState', state)
+    return savedState
+  } catch {
+    return {}
   }
 }
 
