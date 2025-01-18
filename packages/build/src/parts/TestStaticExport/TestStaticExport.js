@@ -57,7 +57,7 @@ const main = async () => {
       to: `packages/build/.tmp/export-test/dist/tests/${name}.html`,
     })
     await Copy.copyFile({
-      from: `packages/extension-host-worker-tests/src/${name}.js`,
+      from: `packages/extension-host-worker-tests/src/${dirent}`,
       to: `packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/src/${name}.js`,
     })
   }
