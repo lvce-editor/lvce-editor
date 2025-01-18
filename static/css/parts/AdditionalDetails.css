@@ -1,0 +1,23 @@
+.Aside {
+  min-width: 175px;
+  contain: strict;
+}
+
+.AdditionalDetailsTitle {
+  font-size: 120%;
+  padding-bottom: 15px;
+  contain: content;
+}
+
+.AdditionalDetailsEntry {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  contain: content;
+  border-bottom: 1px solid hsla(0, 0%, 50%, 0.22);
+}
+
+.MoreInfoEntry {
+  display: flex;
+  contain: content;
+  gap: 10px;
+}
