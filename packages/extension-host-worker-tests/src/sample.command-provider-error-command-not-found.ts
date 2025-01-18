@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'sample.command-provider-error-command-not-found'
 
-export const test = async ({ Extension, QuickPick, Locator, expect }: Test) => {
+export const test: Test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
