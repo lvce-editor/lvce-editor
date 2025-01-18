@@ -46,46 +46,59 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.create', state.uid, state.uri, state.x, state.y, state.width, state.height, null, state.parentUid)
+  await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const updateIcons = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.updateIcons', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.updateIcons', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleLanguagesChanged = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleWorkspaceChange = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleWorkspaceChange', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleWorkspaceChange', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleIconThemeChange = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleIconThemeChange', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 // TODO rename dirents to items, then can use virtual list component directly
 export const setDeltaY = async (state, deltaY) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.setDeltaY', state, deltaY)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.setDeltaY', state.uid, deltaY)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleWheel = (state, deltaMode, deltaY) => {
@@ -100,60 +113,76 @@ export const getFocusedDirent = (state) => {
 
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.removeDirent', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.removeDirent', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const renameDirent = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.renameDirent', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.renameDirent', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const cancelEdit = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.cancelEdit')
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.cancelEdit', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const copyRelativePath = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.copyRelativePath', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.copyRelativePath', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const copyPath = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.copyPath', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.copyPath', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const openContainingFolder = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.openContainingFolder', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.openContainingFolder', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 // TODO much shared logic with newFolder
 export const newFile = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.newFile', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.newFile', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const updateEditingValue = async (state, value) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.updateEditingValue', state, value)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.updateEditingValue', state.uid, value)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleFocus = (state) => {
@@ -167,24 +196,30 @@ export const refresh = (state) => {
 }
 
 export const newFolder = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.newFolder', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.newFolder', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleClick = async (state, index, keepFocus = false) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleClick', state, index, keepFocus)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleClick', state.uid, index, keepFocus)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleClickAt = async (state, button, x, y) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleClickAt', state, button, x, y)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleClickAt', state.uid, button, x, y)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleClickCurrent = (state) => {
@@ -201,24 +236,30 @@ export const scrollDown = () => {}
 // export const handleBlur=()=>{}
 
 export const handleArrowRight = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleArrowRight', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleArrowRight', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleArrowLeft = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleArrowLeft', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleArrowLeft', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleUpload = async (state, dirents) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleUpload', state, dirents)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleUpload', state, dirents.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 const cancelRequest = (state) => {}
@@ -287,38 +328,48 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.expandAll', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.expandAll', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const collapseAll = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.collapseAll', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.collapseAll', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleBlur = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleBlur', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleBlur', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const revealItem = async (state, uri) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.revealItem', state, uri)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.revealItem', state, uri.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const handleClickOpenFolder = async (state) => {
-  const newState = await ExplorerViewWorker.invoke('Explorer.handleClickOpenFolder', state)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state, newState)
-  newState.commands = commands
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.handleClickOpenFolder', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const hotReload = async (state) => {
@@ -335,9 +386,11 @@ export const hotReload = async (state) => {
     ...state,
     items: [],
   }
-  const newState = await ExplorerViewWorker.invoke('Explorer.loadContent', state, savedState)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', oldState, newState)
-  newState.commands = commands
-  newState.isHotReloading = false
-  return newState
+  await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render', oldState.uid)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
+  }
 }
