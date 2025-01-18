@@ -4,6 +4,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
 
 const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
@@ -487,9 +488,38 @@ const getTestFiles = (testFilesRaw) => {
   return testFilesRaw.map(getName).filter(isTestFile)
 }
 
+const transpileFile = (typescript, content) => {
+  const result = typescript.transpileModule(content, {
+    compilerOptions: {
+      target: 'esnext',
+    },
+  })
+  return result.outputText
+}
+
+const transpileFiles = async (folder) => {
+  const typescript = await import('typescript')
+  const dirents = await readdir(folder)
+  for (const dirent of dirents) {
+    if (dirent.endsWith('.ts')) {
+      const content = await readFile(join(folder, dirent), 'utf-8')
+      const js = transpileFile(typescript, content)
+      await writeFile(join(folder, dirent.slice(0, -2) + 'js'), js)
+    }
+  }
+  for (const dirent of dirents) {
+    if (dirent.endsWith('.ts')) {
+      await rm(join(folder, dirent))
+    }
+  }
+}
+
 const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
   await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
+  const distDirentsPath = `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`
+  await transpileFiles(distDirentsPath)
+
   const testFilesRaw = await FileSystem.readDir(`${testRoot}/src`)
   const testFiles = getTestFiles(testFilesRaw)
   await FileSystem.mkdir(`${root}/dist/${commitHash}/tests`)
