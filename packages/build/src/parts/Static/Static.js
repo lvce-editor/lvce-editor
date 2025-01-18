@@ -495,7 +495,7 @@ const transpileFiles = async (folder) => {
     if (dirent.endsWith('.ts')) {
       const content = await readFile(join(folder, dirent), 'utf-8')
       const js = transpileFile(typescript, content)
-      await writeFile(join(folder, dirent.slice(-2) + 'js'), js)
+      await writeFile(join(folder, dirent.slice(0, -2) + 'js'), js)
     }
   }
   for (const dirent of dirents) {
