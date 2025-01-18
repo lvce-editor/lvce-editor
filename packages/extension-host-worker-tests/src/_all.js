@@ -19,6 +19,9 @@ const isTestFile = (dirent) => {
 }
 
 const getRelativePath = (testFile) => {
+  if (testFile.endsWith('.ts')) {
+    return join(root, 'tests', testFile.replace('.ts', '.html')).slice(root.length)
+  }
   return join(root, 'tests', testFile.replace('.js', '.html')).slice(root.length)
 }
 
