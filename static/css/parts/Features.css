@@ -17,6 +17,7 @@
   flex-direction: column;
 }
 
+/* TODO rename to featurelistitem */
 .Feature {
   height: 22px;
   contain: strict;
@@ -25,8 +26,11 @@
   padding-right: 10px;
   display: flex;
   align-items: center;
+  border: none;
+  color: var(--WorkbenchForeground);
 }
 
+/* TODO rename to featurelistItemSelected */
 .FeatureSelected {
   background: var(--FeatureSelectedBackground);
 }
