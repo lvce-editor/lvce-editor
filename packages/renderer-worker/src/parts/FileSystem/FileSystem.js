@@ -121,7 +121,7 @@ export const getFolderSize = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.stat(path)
+  return fileSystem.getFolderSize(path)
 }
 
 export const chmod = async (uri, permissions) => {

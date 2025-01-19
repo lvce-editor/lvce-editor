@@ -303,6 +303,7 @@ export const getModuleId = (commandId) => {
     case 'FileSystemDisk.remove':
     case 'FileSystemDisk.rename':
     case 'FileSystemDisk.stat':
+    case 'FileSystemDisk.getFolderSize':
     case 'FileSystemDisk.readJson':
     case 'FileSystemDisk.writeFile':
       return ModuleId.FileSystemDisk
