@@ -49,7 +49,7 @@ export const hotReload = async (state) => {
   state.isHotReloading = true
   // possible TODO race condition during hot reload
   // there could still be pending promises when the worker is disposed
-  await ExtensionDetailViewWorker.restart('Explorer.terminate')
+  await ExtensionDetailViewWorker.restart('ExtensionDetail.terminate')
   const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state, {})
   const dom = await ExtensionDetailViewWorker.invoke(
     'ExtensionDetail.getVirtualDom',
