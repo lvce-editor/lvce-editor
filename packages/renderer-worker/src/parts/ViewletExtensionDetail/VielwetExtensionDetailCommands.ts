@@ -6,6 +6,7 @@ export const Commands = {
   hotReload: ViewletExtensionDetail.hotReload,
   handleTabsClick: ViewletExtensionDetail.handleTabsClick,
   selectTab: ViewletExtensionDetail.selectTab,
+  handleFeaturesClick: ViewletExtensionDetail.handleFeaturesClick,
 }
 
 // prettier-ignore
