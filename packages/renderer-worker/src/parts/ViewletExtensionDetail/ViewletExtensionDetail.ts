@@ -90,6 +90,22 @@ export const selectTab = async (state, name) => {
   }
 }
 
+export const handleFeaturesClick = async (state, name) => {
+  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.handleFeaturesClick', state, name)
+  const dom = await ExtensionDetailViewWorker.invoke(
+    'ExtensionDetail.getVirtualDom',
+    newState,
+    newState.sanitizedReadmeHtml,
+    newState.selectedTab,
+    newState,
+  )
+
+  return {
+    ...newState,
+    dom,
+  }
+}
+
 export const saveState = async (state) => {
   try {
     const savedState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.saveState', state)
