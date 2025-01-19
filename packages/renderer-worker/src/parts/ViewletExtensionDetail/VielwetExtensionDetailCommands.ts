@@ -7,6 +7,7 @@ export const Commands = {
   handleTabsClick: ViewletExtensionDetail.handleTabsClick,
   selectTab: ViewletExtensionDetail.selectTab,
   handleFeaturesClick: ViewletExtensionDetail.handleFeaturesClick,
+  handleClickSize: ViewletExtensionDetail.handleClickSize,
 }
 
 // prettier-ignore
