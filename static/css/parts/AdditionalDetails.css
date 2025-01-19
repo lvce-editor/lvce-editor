@@ -10,6 +10,21 @@
   scrollbar-width: thin;
 }
 
+.AdditionalDetails {
+  contain: strict;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.AdditionalDetails:focus {
+  outline-color: var(--FocusBorder);
+  outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
 .AdditionalDetailsTitle {
   font-size: 120%;
   padding-bottom: 15px;
