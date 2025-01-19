@@ -19,6 +19,12 @@
   border-bottom: 1px solid hsla(0, 0%, 50%, 0.22);
 }
 
+.MoreInfo {
+  display: flex;
+  flex-direction: column;
+  contain: content;
+}
+
 .MoreInfoEntry {
   display: flex;
   contain: content;
