@@ -10,6 +10,11 @@
   line-height: 1.5;
   word-wrap: break-word;
   contain: content;
+  overflow: hidden;
+}
+
+.Markdown pre {
+  overflow: auto;
 }
 
 .Markdown details,
