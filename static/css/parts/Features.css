@@ -15,6 +15,7 @@
   padding-left: 24px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 /* TODO rename to featurelistitem */
@@ -28,6 +29,9 @@
   align-items: center;
   border: none;
   color: var(--WorkbenchForeground);
+  flex-shrink: 0;
+  text-overflow: ellipsis;
+  white-space: pre;
 }
 
 /* TODO rename to featurelistItemSelected */
