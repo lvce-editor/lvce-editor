@@ -10,6 +10,7 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Trash from '../Trash/Trash.js'
 import { VError } from '../VError/VError.js'
 import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 
 const assertUri = (uri) => {
   if (!uri.startsWith('file://')) {
@@ -251,4 +252,23 @@ export const readJson = async (uri) => {
     }
     throw new VError(error, `Failed to read file as json "${uri}"`)
   }
+}
+
+const getFolderSizeInternal = async (path) => {
+  let total = 0
+  const stats = await fs.stat(path)
+  total += stats.size
+  if (stats.isDirectory()) {
+    const dirents = await fs.readdir(path)
+    for (const dirent of dirents) {
+      total += await getFolderSizeInternal(join(path, dirent))
+    }
+  }
+  return total
+}
+
+export const getFolderSize = async (uri) => {
+  const path = fileURLToPath(uri)
+  const total = await getFolderSizeInternal(path)
+  return total
 }

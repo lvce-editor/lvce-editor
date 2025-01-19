@@ -329,16 +329,3 @@ export const getRealUri = (pathOrUri) => {
     return pathOrUri
   }
 }
-
-export const getFolderSize = async (uri) => {
-  let total = 0
-  const stats = await fs.stat(uri)
-  total += stats.size
-  if (stats.isDirectory()) {
-    const dirents = await fs.readdir(uri)
-    for (const dirent of dirents) {
-      total += await getFolderSize(join(uri, dirent))
-    }
-  }
-  return total
-}

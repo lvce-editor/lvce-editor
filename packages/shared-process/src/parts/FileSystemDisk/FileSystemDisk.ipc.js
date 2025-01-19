@@ -14,4 +14,5 @@ export const Commands = {
   rename: FileSystemDisk.rename,
   stat: FileSystemDisk.stat,
   writeFile: FileSystemDisk.writeFile,
+  getFolderSize: FileSystemDisk.getFolderSize,
 }
