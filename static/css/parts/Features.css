@@ -1,5 +1,6 @@
 :root {
-  --FeatureBackground: rgba(59, 71, 66, 0.5);
+  --FeatureBackground: transparent;
+  --FeatureSelectedBackground: rgba(59, 71, 66, 0.5);
 }
 
 .Features {
@@ -24,4 +25,8 @@
   padding-right: 10px;
   display: flex;
   align-items: center;
+}
+
+.FeatureSelected {
+  background: var(--FeatureSelectedBackground);
 }
