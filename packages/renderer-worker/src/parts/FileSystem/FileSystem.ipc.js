@@ -12,4 +12,5 @@ export const Commands = {
   remove: FileSystem.remove,
   writeFile: FileSystem.writeFile,
   readJson: FileSystem.readJson,
+  getFolderSize: FileSystem.getFolderSize,
 }

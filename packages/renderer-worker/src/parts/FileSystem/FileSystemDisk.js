@@ -95,6 +95,11 @@ export const stat = (path) => {
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemStat, /* path */ path)
 }
 
+export const getFolderSize = (path) => {
+  path = toUri(path)
+  return SharedProcess.invoke('FileSystem.getFolderSize', /* path */ path)
+}
+
 export const chmod = (path, permissions) => {
   path = toUri(path)
   return SharedProcess.invoke(SharedProcessCommandType.FileSystemChmod, /* path */ path, /* permissions */ permissions)
