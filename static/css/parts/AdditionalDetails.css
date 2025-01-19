@@ -30,3 +30,8 @@
   contain: content;
   gap: 10px;
 }
+
+.Link {
+  color: dodgerblue;
+  cursor: pointer;
+}
