@@ -1,3 +1,7 @@
+:root {
+  --MoreInfoOddBackground: hsla(0, 0%, 51%, 0.06);
+}
+
 .Aside {
   min-width: 175px;
   contain: strict;
@@ -29,6 +33,10 @@
   display: flex;
   contain: content;
   gap: 10px;
+}
+
+.MoreInfoEntryOdd {
+  background: var(--MoreInfoOddBackground);
 }
 
 .Link {
