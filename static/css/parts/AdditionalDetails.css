@@ -30,6 +30,7 @@
 }
 
 .MoreInfoEntry {
+  padding: 2px 4px;
   display: flex;
   contain: content;
   gap: 10px;
