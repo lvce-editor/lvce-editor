@@ -30,3 +30,15 @@
 .FeatureSelected {
   background: var(--FeatureSelectedBackground);
 }
+
+.FeatureContent {
+  display: flex;
+  padding-left: 20px;
+  flex: 1;
+  contain: strict;
+}
+
+.FeatureTheme {
+  contain: content;
+  flex: 1;
+}
