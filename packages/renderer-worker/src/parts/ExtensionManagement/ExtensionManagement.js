@@ -3,6 +3,7 @@ import * as InstallExtension from '../InstallExtension/InstallExtension.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 
 export const install = (id) => {
   return InstallExtension.install(id)
@@ -35,6 +36,10 @@ export const getExtension = async (id) => {
     }
   }
   return undefined
+}
+
+export const getExtension2 = async (id) => {
+  return ExtensionHostWorker.invoke('Extensions.getExtension', id)
 }
 
 const isFulfilled = (result) => {
