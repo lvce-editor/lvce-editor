@@ -4,7 +4,7 @@ export const name = 'sample.command-provider-error-command-not-found'
 
 export const test: Test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
-  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
+  await Extension.addWebExtension(import.meta.resolve(`../fixtures/${name}`))
 
   // act
   await QuickPick.open()
