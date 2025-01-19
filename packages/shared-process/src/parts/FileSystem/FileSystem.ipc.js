@@ -34,5 +34,4 @@ export const Commands = {
   stat: FileSystem.stat,
   writeFile: FileSystem.writeFile,
   getRealUri: FileSystem.getRealUri,
-  getFolderSize: FileSystem.getFolderSize,
 }
