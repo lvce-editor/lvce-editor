@@ -29,6 +29,9 @@
   display: flex;
   contain: content;
   gap: 10px;
+  /* TODO avoid grid display */
+  display: grid;
+  grid-template-columns: 40% 60%;
 }
 
 .Link {
