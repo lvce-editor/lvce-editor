@@ -12,6 +12,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
 import { VError } from '../VError/VError.js'
 import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -327,4 +328,17 @@ export const getRealUri = (pathOrUri) => {
   } catch {
     return pathOrUri
   }
+}
+
+export const getFolderSize = async (uri) => {
+  let total = 0
+  const stats = await fs.stat(uri)
+  total += stats.size
+  if (stats.isDirectory()) {
+    const dirents = await fs.readdir(uri)
+    for (const dirent of dirents) {
+      total += await getFolderSize(join(uri, dirent))
+    }
+  }
+  return total
 }
