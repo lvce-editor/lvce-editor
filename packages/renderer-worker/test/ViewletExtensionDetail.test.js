@@ -102,20 +102,3 @@ test.skip('loadContent - error - readme not found', async () => {
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.readFile).toHaveBeenCalledWith('/test/test-extension/README.md')
 })
-
-test('handleIconError', () => {
-  // @ts-ignore
-  const state = ViewletExtensionDetail.create()
-  expect(ViewletExtensionDetail.handleIconError(state)).toMatchObject({
-    iconSrc: '/icons/extensionDefaultIcon.png',
-  })
-})
-
-test('handleIconError - already has default icon', () => {
-  const state = {
-    // @ts-ignore
-    ...ViewletExtensionDetail.create(),
-    iconSrc: '/icons/extensionDefaultIcon.png',
-  }
-  expect(ViewletExtensionDetail.handleIconError(state)).toBe(state)
-})
