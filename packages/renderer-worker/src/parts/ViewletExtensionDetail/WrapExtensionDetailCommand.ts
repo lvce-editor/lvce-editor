@@ -11,7 +11,7 @@ export const wrapExtensionDetailCommand = (key) => {
       newState,
     )
     return {
-      ...state,
+      ...newState,
       dom,
     }
   }
