@@ -40,14 +40,6 @@
   background: var(--FeatureSelectedBackground);
 }
 
-.FeatureContent {
-  display: flex;
-  padding-left: 20px;
-  flex: 1;
-  contain: strict;
-  flex-direction: column;
-}
-
 .DefinitionListItemHeading {
   font-size: 12px;
   white-space: pre;
