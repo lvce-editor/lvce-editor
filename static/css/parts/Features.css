@@ -45,11 +45,7 @@
   padding-left: 20px;
   flex: 1;
   contain: strict;
-}
-
-.FeatureTheme {
-  contain: content;
-  flex: 1;
+  flex-direction: column;
 }
 
 .DefinitionListItemHeading {
