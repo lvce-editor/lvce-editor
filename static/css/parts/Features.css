@@ -46,11 +46,6 @@
   contain: strict;
 }
 
-.FeatureTheme {
-  contain: content;
-  flex: 1;
-}
-
 .DefinitionListItemHeading {
   font-size: 12px;
   white-space: pre;
