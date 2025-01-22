@@ -1,16 +1,13 @@
 import * as ViewletExtensionDetail from './ViewletExtensionDetail.ts'
+import * as WrapExtensionDetailCommand from './WrapExtensionDetailCommand.ts'
 
 // prettier-ignore
 export const Commands = {
-  handleIconError: ViewletExtensionDetail.handleIconError,
+  handleClickSize: WrapExtensionDetailCommand.wrapExtensionDetailCommand('handleClickSize'),
+  handleFeaturesClick: WrapExtensionDetailCommand.wrapExtensionDetailCommand('handleFeaturesClick'),
+  handleIconError: WrapExtensionDetailCommand.wrapExtensionDetailCommand('handleIconError'),
+  handleReadmeContextMenu: WrapExtensionDetailCommand.wrapExtensionDetailCommand('handleReadmeContextMenu'),
+  handleTabsClick: WrapExtensionDetailCommand.wrapExtensionDetailCommand('handleTabsClick'),
   hotReload: ViewletExtensionDetail.hotReload,
-  handleTabsClick: ViewletExtensionDetail.handleTabsClick,
-  selectTab: ViewletExtensionDetail.selectTab,
-  handleFeaturesClick: ViewletExtensionDetail.handleFeaturesClick,
-  handleClickSize: ViewletExtensionDetail.handleClickSize,
-}
-
-// prettier-ignore
-export const LazyCommands = {
-  handleReadmeContextMenu: () => import('./ViewletExtensionDetailHandleReadmeContextMenu.ts'),
+  selectTab:  WrapExtensionDetailCommand.wrapExtensionDetailCommand('selectTab'),
 }

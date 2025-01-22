@@ -1,6 +1,5 @@
 import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/ExtensionDetailViewWorker.js'
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
-import * as Icon from '../Icon/Icon.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
@@ -63,65 +62,6 @@ export const hotReload = async (state) => {
   return newState
 }
 
-export const handleIconError = (state) => {
-  const { iconSrc } = state
-  if (iconSrc === Icon.ExtensionDefaultIcon) {
-    return state
-  }
-  return {
-    ...state,
-    iconSrc: Icon.ExtensionDefaultIcon,
-  }
-}
-
-export const selectTab = async (state, name) => {
-  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.handleTabsClick', state, name)
-  const dom = await ExtensionDetailViewWorker.invoke(
-    'ExtensionDetail.getVirtualDom',
-    newState,
-    newState.sanitizedReadmeHtml,
-    newState.selectedTab,
-    newState,
-  )
-
-  return {
-    ...newState,
-    dom,
-  }
-}
-
-export const handleFeaturesClick = async (state, name) => {
-  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.handleFeaturesClick', state, name)
-  const dom = await ExtensionDetailViewWorker.invoke(
-    'ExtensionDetail.getVirtualDom',
-    newState,
-    newState.sanitizedReadmeHtml,
-    newState.selectedTab,
-    newState,
-  )
-
-  return {
-    ...newState,
-    dom,
-  }
-}
-
-export const handleClickSize = async (state) => {
-  const newState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.handleClickSize', state)
-  const dom = await ExtensionDetailViewWorker.invoke(
-    'ExtensionDetail.getVirtualDom',
-    newState,
-    newState.sanitizedReadmeHtml,
-    newState.selectedTab,
-    newState,
-  )
-
-  return {
-    ...newState,
-    dom,
-  }
-}
-
 export const saveState = async (state) => {
   try {
     const savedState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.saveState', state)
@@ -129,10 +69,6 @@ export const saveState = async (state) => {
   } catch {
     return {}
   }
-}
-
-export const handleTabsClick = (state, name) => {
-  return selectTab(state, name)
 }
 
 export const hasFunctionalResize = true
