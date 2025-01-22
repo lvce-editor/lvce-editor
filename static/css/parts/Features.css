@@ -44,6 +44,7 @@
   padding-left: 20px;
   flex: 1;
   contain: strict;
+  flex-direction: column;
 }
 
 .DefinitionListItemHeading {
