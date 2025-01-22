@@ -1,12 +1,13 @@
 .ExtensionDetailHeader {
-  height: 174px;
-  width: 100%;
   contain: strict;
   display: flex;
-  gap: 1rem;
   flex-shrink: 0;
-  padding: 20px 20px;
+  flex: 1;
+  gap: 1rem;
+  height: 174px;
   padding-bottom: 14px;
+  padding: 20px 20px;
+  width: 100%;
 }
 
 .Large .ExtensionDetailHeader {
