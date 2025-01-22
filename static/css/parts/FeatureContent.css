@@ -1,0 +1,20 @@
+.FeatureContent {
+  display: flex;
+  padding-left: 20px;
+  flex: 1;
+  contain: strict;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.FeatureContent::-webkit-scrollbar {
+  height: 14px;
+}
+
+.FeatureContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.FeatureContent::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
+}
