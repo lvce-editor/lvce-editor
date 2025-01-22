@@ -50,3 +50,7 @@
   contain: content;
   flex: 1;
 }
+
+.DefinitionListItemHeading {
+  font-size: 12px;
+}
