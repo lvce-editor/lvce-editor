@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-export const resize = (state, dimensions) => {
+export const resize = async (state, dimensions) => {
   const { groups, tabHeight } = state
   const x = dimensions.x
   const contentY = dimensions.y + tabHeight
@@ -20,7 +20,7 @@ export const resize = (state, dimensions) => {
     if (editor) {
       const editorUid = editor.uid
       Assert.number(editorUid)
-      const resizeCommands = Viewlet.resize(editorUid, childDimensions)
+      const resizeCommands = await Viewlet.resize(editorUid, childDimensions)
       commands.push(...resizeCommands)
       commands.push(['Viewlet.setBounds', editorUid, dimensions.x, tabHeight, dimensions.width, contentHeight])
     }

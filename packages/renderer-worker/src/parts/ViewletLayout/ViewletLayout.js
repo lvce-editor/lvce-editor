@@ -321,7 +321,7 @@ const show = async (state, module, currentViewletId) => {
   if (commands) {
     commands.push(['Viewlet.append', uid, childUid])
   }
-  const resizeCommands = getResizeCommands(points, newPoints)
+  const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {
     newState: {
@@ -343,7 +343,7 @@ const hide = async (state, module) => {
   // TODO also resize other viewlets if necessary
   const instanceState = ViewletStates.getState(moduleId)
   const commands = Viewlet.disposeFunctional(instanceState.uid)
-  const resizeCommands = getResizeCommands(points, newPoints)
+  const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {
     newState: {
@@ -649,7 +649,7 @@ const isEqual = (oldPoints, newPoints, kTop, kLeft, kWidth, kHeight) => {
   )
 }
 
-const getResizeCommands = (oldPoints, newPoints) => {
+const getResizeCommands = async (oldPoints, newPoints) => {
   const modules = [
     LayoutModules.Main,
     LayoutModules.ActivityBar,
@@ -676,7 +676,7 @@ const getResizeCommands = (oldPoints, newPoints) => {
       Assert.number(newLeft)
       Assert.number(newWidth)
       Assert.number(newHeight)
-      const resizeCommands = Viewlet.resize(instanceUid, {
+      const resizeCommands = await Viewlet.resize(instanceUid, {
         x: newLeft,
         y: newTop,
         width: newWidth,
@@ -763,7 +763,7 @@ export const handleSashPointerMove = async (state, x, y) => {
   const newPoints = getNewStatePointerMove(sashId, points, x, y)
   getPoints(newPoints, newPoints)
   // TODO resize commands, resize viewlets recursively
-  const allCommands = getResizeCommands(points, newPoints)
+  const allCommands = await getResizeCommands(points, newPoints)
   const newState = {
     ...state,
     points: newPoints,
@@ -790,14 +790,14 @@ export const handleSashPointerMove = async (state, x, y) => {
   }
 }
 
-export const handleResize = (state, windowWidth, windowHeight) => {
+export const handleResize = async (state, windowWidth, windowHeight) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   newPoints[LayoutKeys.WindowHeight] = windowHeight
   getPoints(newPoints, newPoints)
   // TODO duplicate code with handleSashPointerMove
-  const commands = getResizeCommands(points, newPoints)
+  const commands = await getResizeCommands(points, newPoints)
   return {
     newState: {
       ...state,
@@ -831,13 +831,13 @@ export const handleBlur = (state) => {
   return handleFocusChange(state, false)
 }
 
-const handleSashDoubleClickPanel = (state) => {
+const handleSashDoubleClickPanel = async (state) => {
   const { points } = state
   if (points[LayoutKeys.PanelVisible]) {
     const newPoints = new Uint16Array(points)
     newPoints[LayoutKeys.PanelHeight] = 200
     getPoints(newPoints, newPoints)
-    const commands = getResizeCommands(points, newPoints)
+    const commands = await getResizeCommands(points, newPoints)
     return {
       newState: {
         ...state,
@@ -853,13 +853,13 @@ const handleSashDoubleClickPanel = (state) => {
 }
 
 // TODO return commands and newState
-const handleSashDoubleClickSideBar = (state) => {
+const handleSashDoubleClickSideBar = async (state) => {
   const { points } = state
   if (points[LayoutKeys.SideBarVisible]) {
     const newPoints = new Uint16Array(points)
     newPoints[LayoutKeys.SideBarWidth] = 240
     getPoints(newPoints, newPoints)
-    const commands = getResizeCommands(points, newPoints)
+    const commands = await getResizeCommands(points, newPoints)
     return {
       newState: {
         ...state,
@@ -874,12 +874,12 @@ const handleSashDoubleClickSideBar = (state) => {
   }
 }
 
-export const moveSideBar = (state, position) => {
+export const moveSideBar = async (state, position) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   getPoints(newPoints, newPoints, position)
   // TODO update preferences
-  const resizeCommands = getResizeCommands(points, newPoints)
+  const resizeCommands = await getResizeCommands(points, newPoints)
   return {
     newState: {
       ...state,

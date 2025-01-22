@@ -244,7 +244,7 @@ export const hideFunctional = (id) => {
  */
 export const replace = () => {}
 
-export const resize = (id, dimensions) => {
+export const resize = async (id, dimensions) => {
   Assert.number(id)
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
@@ -256,7 +256,7 @@ export const resize = (id, dimensions) => {
   let newState
   let commands
   if (instance.factory.hasFunctionalResize) {
-    newState = instance.factory.resize(oldState, dimensions)
+    newState = await instance.factory.resize(oldState, dimensions)
     if ('newState' in newState) {
       throw new Error(`functional resize not supported in ${instance.factory.name}`)
     }
