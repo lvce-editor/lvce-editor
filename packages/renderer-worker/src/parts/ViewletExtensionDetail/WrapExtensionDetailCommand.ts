@@ -2,7 +2,7 @@ import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/Extensi
 
 export const wrapExtensionDetailCommand = (key) => {
   const fn = async (state, ...args) => {
-    const newState = await ExtensionDetailViewWorker.invoke(`ExtensionDetail.${key}`, state.uid, ...args)
+    const newState = await ExtensionDetailViewWorker.invoke(`ExtensionDetail.${key}`, state, ...args)
     const dom = await ExtensionDetailViewWorker.invoke(
       'ExtensionDetail.getVirtualDom',
       newState,
