@@ -42,3 +42,7 @@
   contain: strict;
   flex: 1;
 }
+
+.TableHeading {
+  text-align: left;
+}
