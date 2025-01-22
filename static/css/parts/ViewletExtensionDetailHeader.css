@@ -41,3 +41,10 @@
   contain: strict;
   flex-shrink: 0;
 }
+
+.ExtensionDetailHeaderActions {
+  display: flex;
+  contain: content;
+  gap: 10px;
+  margin-top: 10px;
+}

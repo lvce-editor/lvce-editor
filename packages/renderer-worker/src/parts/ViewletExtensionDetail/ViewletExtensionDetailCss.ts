@@ -5,4 +5,5 @@ export const Css = [
   '/css/parts/ViewletExtensionDetail.css',
   '/css/parts/ViewletExtensionDetailHeader.css',
   '/css/parts/ViewletExtensionDetailTabs.css',
+  '/css/parts/Button.css',
 ]
