@@ -77,7 +77,7 @@ export const splitRight = async (state) => {
   if (editor) {
     const editorUid = editor.uid
     Assert.number(editorUid)
-    const resizeCommands = Viewlet.resize(editorUid, dimensions)
+    const resizeCommands = await Viewlet.resize(editorUid, dimensions)
     commands.push(...resizeCommands)
     commands.push(['Viewlet.setBounds', editorUid, dimensions.x, tabHeight, dimensions.width, contentHeight])
   }

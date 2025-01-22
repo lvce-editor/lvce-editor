@@ -7,7 +7,7 @@ const getTitleBarMenuBarWidth = (width, menuBarX, titleBarButtonsWidth) => {
   return remainingWidth
 }
 
-export const resize = (state, dimensions) => {
+export const resize = async (state, dimensions) => {
   const titleBarMenuBarState = ViewletStates.getState(ViewletModuleId.TitleBarMenuBar)
   const commands = []
   const { titleBarIconWidth, titleBarButtonsWidth } = state
@@ -16,12 +16,12 @@ export const resize = (state, dimensions) => {
   const menuBarWidth = getTitleBarMenuBarWidth(dimensions.width, menuBarX, titleBarButtonsWidth)
   const menuBarHeight = dimensions.height
   commands.push(
-    ...Viewlet.resize(titleBarMenuBarState.uid, {
+    ...(await Viewlet.resize(titleBarMenuBarState.uid, {
       x: menuBarX,
       y: menuBarY,
       width: menuBarWidth,
       height: menuBarHeight,
-    }),
+    })),
   )
   return {
     newState: state,
