@@ -9,6 +9,7 @@
   padding-bottom: 14px;
 }
 
+/* TODO avoid css nesting */
 .Large .ExtensionDetailHeader {
   padding: 20px 40px 14px 40px;
 }
