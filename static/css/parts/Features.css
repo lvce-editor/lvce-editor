@@ -53,4 +53,6 @@
 
 .DefinitionListItemHeading {
   font-size: 12px;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
 }
