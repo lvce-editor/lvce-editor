@@ -266,7 +266,7 @@ export const resize = async (id, dimensions) => {
     }
     commands = ViewletManager.render(instance.factory, instance.state, newState)
   } else {
-    const result = instance.factory.resize(oldState, dimensions)
+    const result = await instance.factory.resize(oldState, dimensions)
     newState = result.newState
     commands = result.commands
   }
