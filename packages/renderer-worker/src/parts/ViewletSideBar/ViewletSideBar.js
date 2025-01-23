@@ -173,7 +173,7 @@ export const close = (state) => {
   // RendererProcess.send([/* sideBarHide */ 5552, /* id */ id])
 }
 
-export const resize = (state, dimensions) => {
+export const resize = async (state, dimensions) => {
   const { titleAreaHeight } = state
   const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
   const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
@@ -188,7 +188,7 @@ export const resize = (state, dimensions) => {
     }
   }
   const currentViewletUid = currentViewletInstance.state.uid
-  const commands = Viewlet.resize(currentViewletUid, childDimensions)
+  const commands = await Viewlet.resize(currentViewletUid, childDimensions)
   return {
     newState,
     commands,

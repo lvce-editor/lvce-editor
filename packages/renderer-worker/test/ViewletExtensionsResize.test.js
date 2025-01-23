@@ -2,12 +2,12 @@ import { expect, test } from '@jest/globals'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsResize from '../src/parts/ViewletExtensions/ViewletExtensionsResize.js'
 
-test('resize', () => {
+test('resize', async () => {
   const state = {
     ...ViewletExtensions.create(),
     itemHeight: 62,
   }
-  const newState = ViewletExtensionsResize.resize(state, {
+  const newState = await ViewletExtensionsResize.resize(state, {
     x: 200,
     y: 200,
     width: 200,

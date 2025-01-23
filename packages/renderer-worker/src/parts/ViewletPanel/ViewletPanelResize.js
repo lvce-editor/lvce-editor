@@ -1,7 +1,7 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const resize = (state, dimensions) => {
+export const resize = async (state, dimensions) => {
   const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
   const newState = {
     ...state,
@@ -14,7 +14,7 @@ export const resize = (state, dimensions) => {
     }
   }
   const currentViewletUid = currentViewletInstance.state.uid
-  const commands = Viewlet.resize(currentViewletUid, dimensions)
+  const commands = await Viewlet.resize(currentViewletUid, dimensions)
   return {
     newState,
     commands,
