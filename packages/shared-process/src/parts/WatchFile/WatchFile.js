@@ -9,6 +9,6 @@ export const watchFile = async (path, callback) => {
     }
     return watcher
   } catch (error) {
-    console.error(new VError(error, `Failed to watch file`))
+    console.error(`[shared-process] ${new VError(error, `Failed to watch file`)}`)
   }
 }
