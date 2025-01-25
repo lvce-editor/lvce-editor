@@ -290,6 +290,7 @@ const maybeRegisterWrappedCommands = async (id, module) => {
 
 const maybeRegisterEvents = (module) => {
   if (module.Commands && module.Commands.handleWorkspaceChange) {
+    const value = module.Commands.handleWorkspaceChange
     const handleUpdate = async (...params) => {
       const instance = ViewletStates.getInstance(module.name)
       if (!instance) {
