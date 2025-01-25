@@ -11,6 +11,7 @@ export const Commands = {
   save: ViewletMain.save,
   handleClickClose: ViewletMain.handleClickClose,
   reopenEditorWith: ViewletMain.reopenEditorWith,
+  openKeyBindings: ViewletMain.openKeyBindings,
 }
 
 export const CommandsWithSideEffects = {

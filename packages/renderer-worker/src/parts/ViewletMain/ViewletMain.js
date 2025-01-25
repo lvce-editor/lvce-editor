@@ -738,3 +738,8 @@ export const reopenEditorWith = async (state) => {
   })
   return state
 }
+
+export const openKeyBindings = async (state) => {
+  const keyBindingsUri = 'app://keybindings'
+  return openUri(state, keyBindingsUri)
+}
