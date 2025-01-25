@@ -6,6 +6,10 @@ import * as HttpServerResponse from '../HttpServerResponse/HttpServerResponse.js
 import * as StaticPath from '../StaticPath/StaticPath.js'
 
 export const handleRequest = async (socket, request) => {
+  if (!request) {
+    // socket might have been closed during transfer
+    return
+  }
   Assert.object(socket)
   Assert.object(request)
   if (request.url.startsWith('/tests')) {
