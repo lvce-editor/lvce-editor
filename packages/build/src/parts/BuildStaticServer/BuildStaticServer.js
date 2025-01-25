@@ -200,7 +200,7 @@ import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 
 const frameSrc = IsGitpod.isGitpod ? \`frame-src 'self' \${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} \${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}\` : \`frame-src 'self' http://localhost:3001 http://localhost:3002\`
 
-const frameAncestors = IsGitpod.isGitpod ? 'frame-ancestors: *.gitpod.io': \`frame-ancestors 'none'\`
+const frameAncestors = IsGitpod.isGitpod ? 'frame-ancestors *.gitpod.io': \`frame-ancestors 'none'\`
 
 export const headers =`,
   })
