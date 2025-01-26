@@ -60,7 +60,7 @@ export const hotReload = async (state) => {
   state.isHotReloading = true
   // possible TODO race condition during hot reload
   // there could still be pending promises when the worker is disposed
-  const savedState = await KeyBindingsViewWorker.invoke('KeyBindings.saveState', state)
+  const savedState = await KeyBindingsViewWorker.invoke('KeyBindings.saveState', state.uid)
   await KeyBindingsViewWorker.restart('KeyBindings.terminate')
   const oldState = {
     ...state,
