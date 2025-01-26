@@ -66,6 +66,7 @@ export const hotReload = async (state) => {
     ...state,
     items: [],
   }
+  await KeyBindingsViewWorker.invoke('KeyBindings.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
   await KeyBindingsViewWorker.invoke('KeyBindings.loadContent', state.uid, savedState)
   const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render2', oldState.uid)
   return {
