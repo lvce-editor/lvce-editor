@@ -39,7 +39,7 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const saveState = (state) => {
-  return KeyBindingsViewWorker.invoke('KeyBindings.saveState', state)
+  return KeyBindingsViewWorker.invoke('KeyBindings.saveState', state.uid)
 }
 
 export const loadContent = async (state, savedState) => {
