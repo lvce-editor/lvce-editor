@@ -23,5 +23,12 @@ export const getWatchConfig = () => {
       command: 'ExtensionDetail.hotReload',
     })
   }
+  const keyBindings = Preferences.get('develop.keyBindingsViewWorkerPath')
+  if (keyBindings) {
+    watchConfig.push({
+      path: extensionDetail,
+      command: 'KeyBindings.hotReload',
+    })
+  }
   return watchConfig
 }
