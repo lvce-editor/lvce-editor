@@ -1,5 +1,4 @@
-/* deprecated in favor of Table.css */
-.KeyBindingsTableWrapper {
+.TableWrapper {
   position: relative;
   padding-left: 27px;
   padding-right: 15px;
@@ -7,44 +6,45 @@
   flex: 1;
 }
 
-.KeyBindingsTable {
+.Table {
   width: 100%;
   table-layout: fixed;
   contain: content; /* TODO strict? */
   border-collapse: collapse;
 }
 
-.KeyBindingsTableBody {
+.TableBody {
   white-space: pre;
   overflow-y: auto;
   user-select: none;
   contain: content; /* TODO strict? */
 }
 
-.KeyBindingsTableRow {
+.TableRow {
   height: 24px;
   contain: strict;
 }
 
 /* TODO avoid complex css */
-.KeyBindingsTableRow:where(:not(:hover, .KeyBindingsTableRowSelected)) .KeyBindingsEditButton {
+/* TODO move this to keybindings css */
+.TableRow:where(:not(:hover, .TableRowSelected)) .EditButton {
   display: none;
 }
 
-.KeyBindingsTableRowOdd {
+.TableRowOdd {
   background: rgba(156, 162, 160, 0.04);
 }
 
-.KeyBindingsTableRow:where(:hover) {
+.TableRow:where(:hover) {
   color: #e0e0e0;
   background: rgba(64, 92, 80, 0.2);
 }
 
-.KeyBindingsTableRowSelected {
+.TableRowSelected {
   background: #515f59;
 }
 
-.KeyBindingsTableCell {
+.TableCell {
   overflow: hidden;
   text-overflow: ellipsis;
   contain: strict;
