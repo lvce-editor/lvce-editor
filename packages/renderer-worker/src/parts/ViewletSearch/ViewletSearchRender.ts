@@ -1,3 +1,4 @@
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
 
 export const hasFunctionalRender = true
@@ -17,3 +18,8 @@ const renderItems = {
 }
 
 export const render = [renderItems]
+
+export const renderEventListeners = async () => {
+  const listeners = await TextSearchWorker.invoke('TextSearch.renderEventListeners')
+  return listeners
+}
