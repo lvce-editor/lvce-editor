@@ -1,4 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -13,3 +14,8 @@ const renderKeyBindings = {
 }
 
 export const render = [renderKeyBindings]
+
+export const renderEventListeners = async () => {
+  const listeners = await KeyBindingsViewWorker.invoke('KeyBindings.renderEventListeners')
+  return listeners
+}
