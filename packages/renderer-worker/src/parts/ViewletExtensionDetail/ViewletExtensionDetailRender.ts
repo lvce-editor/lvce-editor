@@ -1,4 +1,5 @@
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/ExtensionDetailViewWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -24,3 +25,8 @@ const renderSize = {
 }
 
 export const render = [renderDom, renderSize]
+
+export const renderEventListeners = async () => {
+  const listeners = await ExtensionDetailViewWorker.invoke('ExtensionDetail.renderEventListeners')
+  return listeners
+}
