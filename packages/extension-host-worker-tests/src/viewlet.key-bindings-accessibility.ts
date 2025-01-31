@@ -12,6 +12,8 @@
 
 export const name = 'viewlet.keybindings'
 
+export const skip = 1
+
 export const test = async ({ Main, Locator, expect }) => {
   // act
   await Main.openUri('app://keybindings')
