@@ -12,6 +12,7 @@ const commands = [
   'handleInput',
   'handleResizerClick',
   'handleResizerMove',
+  'handleSearchActionClick',
   'handleWheel',
 ]
 
