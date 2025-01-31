@@ -357,6 +357,12 @@
   mask-image: url(/icons/list-tree.svg);
 }
 
-.MaskIconRecordKey {
+/* TODO decide */
+.MaskIconRecordKey,
+.MaskIconRecordKeys {
   mask-image: url(/icons/record-keys.svg);
+}
+
+.MaskIconSortPrecedence {
+  mask-image: url(/icons/sort-precedence.svg);
 }
