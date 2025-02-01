@@ -1,0 +1,14 @@
+:root {
+  --InputBadgeBackground: purple;
+  --InputBadgeForeground: white;
+}
+
+.InputBadge {
+  display: flex;
+  contain: content;
+  flex-shrink: 0;
+  background: var(--InputBadgeBackground);
+  color: var(--InputBadgeForeground);
+  padding-left: 4px;
+  padding-right: 4px;
+}
