@@ -14,6 +14,10 @@ const commands = [
   'handleResizerMove',
   'handleSearchActionClick',
   'handleWheel',
+  'startRecordingKeys',
+  'stopRecordingKeys',
+  'toggleRecordingKeys',
+  'clearInput',
 ]
 
 export const Commands = {}
