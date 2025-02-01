@@ -1,4 +1,5 @@
 export const Css = [
+  '/css/parts/InputBadge.css',
   '/css/parts/InputBox.css',
   '/css/parts/Key.css',
   '/css/parts/KeyBindingsHeader.css',
