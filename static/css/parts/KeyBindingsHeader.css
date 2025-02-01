@@ -29,6 +29,12 @@
   color: var(--InputBoxForeground);
 }
 
+.KeyBindingsSearchActions {
+  display: flex;
+  contain: content;
+  gap: 10px;
+}
+
 /* clears the 'X' from Chrome */
 .KeyBindingsSearchInputBox::-webkit-search-decoration,
 .KeyBindingsSearchInputBox::-webkit-search-cancel-button,
