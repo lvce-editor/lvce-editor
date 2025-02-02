@@ -1,30 +1,16 @@
 import * as WrapKeyBindingCommand from '../WrapKeyBindingCommand/WrapKeyBindingCommand.ts'
 import * as ViewletKeyBindings from './ViewletKeyBindings.js'
-
-const commands = [
-  'clearInput',
-  'focusFirst',
-  'focusLast',
-  'focusNext',
-  'focusPrevious',
-  'handleClick',
-  'handleContextMenu',
-  'handleDoubleClick',
-  'handleInput',
-  'handleKeyDown',
-  'handleResizerClick',
-  'handleResizerMove',
-  'handleSearchActionClick',
-  'handleWheel',
-  'startRecordingKeys',
-  'stopRecordingKeys',
-  'toggleRecordingKeys',
-]
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 
 export const Commands = {}
 
-for (const command of commands) {
-  Commands[command] = WrapKeyBindingCommand.wrapKeyBindingCommand(command)
-}
+export const getCommands = async () => {
+  const commands = await KeyBindingsViewWorker.invoke('KeyBindings.getCommandIds')
+  for (const command of commands) {
+    Commands[command] = WrapKeyBindingCommand.wrapKeyBindingCommand(command)
+  }
 
-Commands['hotReload'] = ViewletKeyBindings.hotReload
+  Commands['hotReload'] = ViewletKeyBindings.hotReload
+  // TODO query command ids from keybindings worker
+  return Commands
+}
