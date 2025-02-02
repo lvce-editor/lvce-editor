@@ -97,7 +97,7 @@
     "@lvce-editor/terminal-worker": "^1.0.0",
     "@lvce-editor/test-worker": "^3.17.0",
     "@lvce-editor/text-search-worker": "^3.41.0",
-    "@lvce-editor/about-view": "^4.6.0",
+    "@lvce-editor/about-view": "^4.7.0",
     "@lvce-editor/explorer-view": "^1.20.0",
     "@lvce-editor/title-bar-worker": "^1.0.0"
   }
