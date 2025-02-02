@@ -33,6 +33,7 @@
   display: flex;
   contain: content;
   gap: 10px;
+  padding-right: 10px;
 }
 
 /* clears the 'X' from Chrome */
