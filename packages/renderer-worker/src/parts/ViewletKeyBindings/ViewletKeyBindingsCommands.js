@@ -2,6 +2,7 @@ import * as WrapKeyBindingCommand from '../WrapKeyBindingCommand/WrapKeyBindingC
 import * as ViewletKeyBindings from './ViewletKeyBindings.js'
 
 const commands = [
+  'clearInput',
   'focusFirst',
   'focusLast',
   'focusNext',
@@ -10,6 +11,7 @@ const commands = [
   'handleContextMenu',
   'handleDoubleClick',
   'handleInput',
+  'handleKeyDown',
   'handleResizerClick',
   'handleResizerMove',
   'handleSearchActionClick',
@@ -17,7 +19,6 @@ const commands = [
   'startRecordingKeys',
   'stopRecordingKeys',
   'toggleRecordingKeys',
-  'clearInput',
 ]
 
 export const Commands = {}
