@@ -11,6 +11,5 @@ export const getCommands = async () => {
   }
 
   Commands['hotReload'] = ViewletKeyBindings.hotReload
-  // TODO query command ids from keybindings worker
   return Commands
 }
