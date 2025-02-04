@@ -141,6 +141,13 @@ export const getRepository = () => {
   return `lvce-editor/lvce-editor`
 }
 
+/**
+ * @deprecated use getRootUri instead
+ */
 export const getRoot = () => {
   return Root.root
+}
+
+export const getRootUri = () => {
+  return pathToFileURL(Root.root).toString()
 }
