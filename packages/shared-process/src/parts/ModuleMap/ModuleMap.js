@@ -193,6 +193,7 @@ export const getModuleId = (commandId) => {
     case 'Platform.getCacheDir':
     case 'Platform.getCommit':
     case 'Platform.getRoot':
+    case 'Platform.getRootUri':
     case 'Platform.getConfigDir':
     case 'Platform.getDataDir':
     case 'Platform.getDate':
