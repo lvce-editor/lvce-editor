@@ -4,4 +4,5 @@ export const name = 'FileWatcher'
 
 export const Commands = {
   watch: FileWatcher.watch,
+  handleChange: FileWatcher.handleChange,
 }
