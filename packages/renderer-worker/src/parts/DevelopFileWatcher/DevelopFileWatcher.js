@@ -17,8 +17,8 @@ export const hydrate = async () => {
   if (!enabled) {
     return
   }
-  const root = await SharedProcess.invoke('Platform.getRoot')
-  const watchPaths = getWatchPaths(root)
+  const rootUri = await SharedProcess.invoke('Platform.getRootUri')
+  const watchPaths = getWatchPaths(rootUri)
   const watcher = await FileWatcher.watch({
     roots: watchPaths,
     exclude: ['node_modules', 'dist', '.tmp'],
