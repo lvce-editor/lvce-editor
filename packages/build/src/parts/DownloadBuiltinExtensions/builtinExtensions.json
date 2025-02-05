@@ -122,7 +122,7 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.11.0"
+    "version": "1.13.0"
   },
   {
     "name": "builtin.media-preview",
