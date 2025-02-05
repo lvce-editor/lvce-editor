@@ -137,8 +137,9 @@
 .DialogMessage {
   display: flex;
   gap: 10px;
-  contain: content;
+  contain: strict;
   user-select: text;
+  flex: 1;
 }
 
 .DialogButtonsRow {
