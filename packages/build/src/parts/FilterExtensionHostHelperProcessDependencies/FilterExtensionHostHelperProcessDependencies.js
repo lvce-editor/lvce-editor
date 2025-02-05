@@ -12,6 +12,9 @@ export const filterDependencies = (rawDependencies, exclude = []) => {
     if (dependency.name.includes('@types')) {
       return false
     }
+    if (dependency.name === 'type-fest') {
+      return false
+    }
     if (exclude.includes(dependency.name)) {
       return false
     }
