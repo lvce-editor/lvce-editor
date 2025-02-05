@@ -1,10 +1,12 @@
-import * as ViewletAbout from './ViewletAbout.ts'
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
+import * as WrapAboutCommand from '../WrapAboutCommand/WrapAboutCommand.ts'
 
-export const Commands = {
-  handleClickClose: ViewletAbout.handleClickClose,
-  handleClickCopy: ViewletAbout.handleClickCopy,
-  handleClickOk: ViewletAbout.handleClickOk,
-  handleFocusIn: ViewletAbout.handleFocusIn,
-  focusNext: ViewletAbout.focusNext,
-  focusPrevious: ViewletAbout.focusPrevious,
+export const Commands = {}
+
+export const getCommands = async () => {
+  const commands = await KeyBindingsViewWorker.invoke('About.getCommandIds')
+  for (const command of commands) {
+    Commands[command] = WrapAboutCommand.wrapAboutCommand(command)
+  }
+  return Commands
 }
