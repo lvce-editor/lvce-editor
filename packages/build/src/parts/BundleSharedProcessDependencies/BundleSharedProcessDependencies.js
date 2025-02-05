@@ -64,6 +64,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
+  await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts.map')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.cts')
   await RemoveNodePtyFiles.removeNodePtyFiles(to, platform)
   await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
