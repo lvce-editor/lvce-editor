@@ -10,7 +10,7 @@ const renderIcon = {
   },
   apply(oldState, newState) {
     const dom = GetTitleBarIconVirtualDom.getTitleBarIconVirtualDom(newState.iconSrc)
-    return ['Viewlet.setDom', dom]
+    return ['Viewlet.setDom2', dom]
   },
 }
 
