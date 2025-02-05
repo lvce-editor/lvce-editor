@@ -40,6 +40,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/uuid/dist/bin`)
   await Remove.remove(`${to}/node_modules/uuid/dist/bin`)
   await Remove.remove(`${to}/node_modules/rimraf/bin.js`)
+  await Remove.remove(`${to}/node_modules/pump/SECURITY.md`)
   await Remove.remove(`${to}/node_modules/which/bin.js`)
   await Remove.remove(`${to}/node_modules/tmp-promise/.circleci`)
   await Remove.remove(`${to}/node_modules/tmp-promise/example-usage.js`)
