@@ -46,8 +46,7 @@
   opacity: 0.7;
 }
 
-/* TODO avoid css nesting */
-.Problems .Label {
+.ProblemsLabel {
   flex: initial;
   display: flex;
 }
