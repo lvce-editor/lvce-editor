@@ -94,7 +94,7 @@ const getObjectDependencies = (obj) => {
 }
 
 const copyStaticServerFiles = async ({ commitHash }) => {
-  const etag = `W/${commitHash}`
+  const etag = `W/"${commitHash}"`
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
