@@ -51,7 +51,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/inherits/inherits_browser.js`)
   await Remove.remove(`${to}/node_modules/supports-color/browser.js`)
   await Remove.remove(`${to}/node_modules/eventemitter3/umd`)
-  await Remove.remove(`${to}/node_modules/@sindresorhus/is/dist/types.js`)
+  await Remove.remove(`${to}/node_modules/@sindresorhus/is/distribution/types.js`)
   await Remove.remove(`${to}/node_modules/b4a/browser.js`)
   await Remove.remove(`${to}/node_modules/tail/.nyc_output`)
   await Remove.remove(`${to}/node_modules/which/bin`)
@@ -62,6 +62,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts.map')
+  await Remove.removeMatching(`${to}/node_modules`, '**/*.d.cts')
   await RemoveNodePtyFiles.removeNodePtyFiles(to, platform)
   await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
 }
