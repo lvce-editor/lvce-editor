@@ -201,6 +201,7 @@ const copyStaticFiles = async ({ resourcesPath }) => {
     to: `${resourcesPath}/app/static`,
     ignore: ['css'],
   })
+  await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
     occurrence: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
