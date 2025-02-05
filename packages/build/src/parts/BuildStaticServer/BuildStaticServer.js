@@ -214,6 +214,11 @@ const bundleStaticServer = async ({ commitHash }) => {
     platform: 'node',
     sourceMap: false,
   })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/dist/static-server.js',
+    occurrence: `const root = resolve(__dirname, '../../../')`,
+    replacement: `const root = resolve(__dirname, '..')`,
+  })
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
