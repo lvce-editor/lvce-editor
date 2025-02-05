@@ -5,6 +5,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
@@ -206,6 +207,15 @@ export const headers =`,
   })
 }
 
+const bundleStaticServer = async ({ commitHash }) => {
+  await BundleJs.bundleJs({
+    cwd: Path.absolute('packages/build/.tmp/server/static-server'),
+    from: `./src/static-server.js`,
+    platform: 'node',
+    sourceMap: false,
+  })
+}
+
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
   const assetDir = `/${commitHash}`
   const platform = 'remote'
@@ -274,4 +284,8 @@ export const buildStaticServer = async ({ product, commitHash, version, date }) 
   console.time('copyStaticServerFiles')
   await copyStaticServerFiles({ commitHash })
   console.timeEnd('copyStaticServerFiles')
+
+  console.time('bundleStaticServer')
+  await bundleStaticServer({ commitHash })
+  console.timeEnd('bundleStaticServer')
 }
