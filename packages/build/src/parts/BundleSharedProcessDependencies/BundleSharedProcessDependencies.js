@@ -31,6 +31,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   })
   if (platform !== 'win32') {
     await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree`)
+    await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
   }
   await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/node-addon-api`)
@@ -56,6 +57,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/tail/.nyc_output`)
   await Remove.remove(`${to}/node_modules/which/bin`)
   await Remove.remove(`${to}/node_modules/symlink-dir/dist/cli.js`)
+  await Remove.remove(`${to}/node_modules/symlink-dir/dist/cli.js.map`)
   await Remove.remove(`${to}/node_modules/extract-zip/cli.js`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ipc/dist/browser.js`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
