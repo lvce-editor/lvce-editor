@@ -27,12 +27,11 @@
 .ExtensionDetail::-webkit-scrollbar-thumb:hover {
 }
 
-/* TODO avoid nesting */
-.ExtensionDetail .Markdown {
+.ExtensionDetailMarkdown {
   padding: 0 20px;
 }
 
-.Large.ExtensionDetail .Markdown {
+.ExtensionDetailMarkdownLarge {
   padding: 0 40px;
 }
 
@@ -41,8 +40,4 @@
   display: flex;
   contain: strict;
   flex: 1;
-}
-
-.TableHeading {
-  text-align: left;
 }
