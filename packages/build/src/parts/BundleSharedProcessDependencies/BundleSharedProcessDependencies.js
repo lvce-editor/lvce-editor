@@ -31,6 +31,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   })
   if (platform !== 'win32') {
     await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree`)
+    await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
   }
   await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/node-addon-api`)
