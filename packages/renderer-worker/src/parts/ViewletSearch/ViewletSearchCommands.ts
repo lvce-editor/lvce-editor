@@ -1,5 +1,5 @@
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
-import * as WrapKeyBindingCommand from '../WrapKeyBindingCommand/WrapKeyBindingCommand.ts'
+import * as WrapTextSearchCommand from './WrapTextSearchCommand.ts'
 import * as ViewletSearch from './ViewletSearch.ts'
 
 export const Commands = {}
@@ -7,7 +7,7 @@ export const Commands = {}
 export const getCommands = async () => {
   const commands = await TextSearchWorker.invoke('TextSearch.getCommandIds')
   for (const command of commands) {
-    Commands[command] = WrapKeyBindingCommand.wrapKeyBindingCommand(command)
+    Commands[command] = WrapTextSearchCommand.wrapTextSearchCommand(command)
   }
 
   Commands['hotReload'] = ViewletSearch.hotReload
