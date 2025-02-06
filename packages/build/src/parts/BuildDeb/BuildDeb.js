@@ -40,12 +40,12 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform })
     `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )
   await Replace.replace({
-    path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/src/parts/RipGrepPath/RipGrepPath.js`,
+    path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
     occurrence: `import { rgPath } from '@lvce-editor/ripgrep'`,
     replacement: ``,
   })
   await Replace.replace({
-    path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/src/parts/RipGrepPath/RipGrepPath.js`,
+    path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
     occurrence: `const ripGrepPath = getRipGrepPath() || rgPath`,
     replacement: `export const ripGrepPath = 'rg'`,
   })
