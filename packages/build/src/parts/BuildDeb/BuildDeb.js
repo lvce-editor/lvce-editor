@@ -41,8 +41,13 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform })
   )
   await Replace.replace({
     path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/src/parts/RipGrepPath/RipGrepPath.js`,
-    occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
-    replacement: `export const rgPath = 'rg'`,
+    occurrence: `import { rgPath } from '@lvce-editor/ripgrep'`,
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/src/parts/RipGrepPath/RipGrepPath.js`,
+    occurrence: `const ripGrepPath = getRipGrepPath() || rgPath`,
+    replacement: `export const ripGrepPath = 'rg'`,
   })
 }
 
