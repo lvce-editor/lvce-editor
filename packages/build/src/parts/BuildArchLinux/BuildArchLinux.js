@@ -35,10 +35,16 @@ const copyElectronResult = async ({ product, version }) => {
     `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )
   await Replace.replace({
-    path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
-    occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
-    replacement: `export const rgPath = 'rg'`,
+    path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
+    occurrence: `import { rgPath } from '@lvce-editor/ripgrep'`,
+    replacement: ``,
   })
+  await Replace.replace({
+    path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
+    occurrence: `const ripGrepPath = getRipGrepPath() || rgPath`,
+    replacement: `export const ripGrepPath = 'rg'`,
+  })
+
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
   await Replace.replace({
     path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
