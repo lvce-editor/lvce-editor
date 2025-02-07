@@ -224,8 +224,8 @@ export const searchProcessPath = Path.join(
   'node_modules',
   '@lvce-editor',
   'search-process',
-  'src',
-  'searchProcessMain.js',
+  'dist',
+  'index.js',
 )
 `,
       replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
