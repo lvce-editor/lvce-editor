@@ -15,6 +15,7 @@ import * as BundleExtensionDetailViewWorkerCached from '../BundleExtensionDetail
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearchViewWorkerCached/BundleExtensionSearchViewWorkerCached.js'
+import * as BundleMarkdownWorkerCached from '../BundleMarkdownWorkerCached/BundleMarkdownWorkerCached.js'
 import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/BundleTextSearchWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
 
@@ -144,6 +145,19 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: aboutViewWorkerCachePath,
     to: `${toRoot}/packages/about-view-worker`,
+  })
+
+  const markdownWorkerCachePath = await BundleMarkdownWorkerCached.bundleMarkdownWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+    date,
+    product,
+    version,
+  })
+  await Copy.copy({
+    from: markdownWorkerCachePath,
+    to: `${toRoot}/packages/markdown-worker`,
   })
 
   const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
