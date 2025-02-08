@@ -42,7 +42,7 @@ const copyElectronResult = async ({ product, version }) => {
   await Replace.replace({
     path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
     occurrence: `const ripGrepPath = getRipGrepPath() || rgPath`,
-    replacement: `export const ripGrepPath = 'rg'`,
+    replacement: `const ripGrepPath = 'rg'`,
   })
 
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
