@@ -161,10 +161,13 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: `${toRoot}/packages/markdown-worker`,
   })
 
-  const titleBarWorkerCachePath = await BundleTerminalWorkerCached.bundleTerminalWorkerCached({
+  const titleBarWorkerCachePath = await BundleTitleBarWorkerCached.bundleTitleBarWorkerCached({
     assetDir,
     commitHash,
     platform,
+    date,
+    product,
+    version,
   })
   await Copy.copy({
     from: titleBarWorkerCachePath,
