@@ -1,7 +1,7 @@
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 
 export const getVirtualDom = (html) => {
-  return MarkdownWorker.invoke('Markdown.getVirtualDom', html)
+  return MarkdownWorker.invoke('Markdown.getMarkDownVirtualDom', html)
 }
 
 export const renderMarkdown = (markdown, options) => {
