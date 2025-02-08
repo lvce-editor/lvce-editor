@@ -224,6 +224,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Process
     case 'ExtensionManagement':
       return ModuleId.ExtensionManagement
+    case 'Markdown':
+      return ModuleId.Markdown
     default:
       throw new Error(`module ${prefix} not found`)
   }

@@ -199,6 +199,8 @@ export const load = (moduleId) => {
       return import('../Process/Process.ipc.js')
     case ModuleId.ExtensionManagement:
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
+    case ModuleId.Markdown:
+      return import('../Markdown/Markdown.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
