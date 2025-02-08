@@ -1,80 +1,22 @@
-import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
-import * as GetTitleBarMenuBarVirtualDom from '../GetTitleBarMenuBarVirtualDom/GetTitleBarMenuBarVirtualDom.js'
-import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
-import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-
 export const hasFunctionalRender = true
-
 export const hasFunctionalRootRender = true
 
-const renderTitleBarEntries = {
+const renderItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.titleBarEntries === newState.titleBarEntries &&
-      oldState.width === newState.width &&
-      oldState.focusedIndex === newState.focusedIndex &&
-      oldState.isMenuOpen === newState.isMenuOpen
-    )
+    return newState.commands.length === 0
   },
   apply(oldState, newState) {
-    const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(
-      newState.titleBarEntries,
-      newState.width,
-      newState.focusedIndex,
-      newState.isMenuOpen,
-    )
-    const dom = GetTitleBarMenuBarVirtualDom.getTitleBarMenuBarVirtualDom(visibleEntries)
-    return ['Viewlet.setDom2', dom]
+    const commands = newState.commands
+    // @ts-ignore
+    newState.commands = []
+    return commands
   },
+  multiple: true,
 }
 
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex && oldState.isMenuOpen === newState.isMenuOpen
-  },
-  apply(oldState, newState) {
-    return [
-      /* method */ RenderMethod.SetFocusedIndex,
-      /* oldFocusedIndex */ oldState.focusedIndex,
-      /* newfocusedIndex */ newState.focusedIndex,
-      /* oldIsMenuOpen */ oldState.isMenuOpen,
-      /* newIsMenuOpen */ newState.isMenuOpen,
-    ]
-  },
-}
+export const render = [renderItems]
 
-const renderMenus = {
-  isEqual(oldState, newState) {
-    return oldState.menus === newState.menus
-  },
-  apply(oldState, newState) {
-    const oldMenus = oldState.menus
-    const newMenus = newState.menus
-    const oldLength = oldMenus.length
-    const newLength = newMenus.length
-    const commonLength = Math.min(oldLength, newLength)
-    const changes = []
-    for (let i = 0; i < commonLength; i++) {
-      const oldMenu = oldMenus[i]
-      const newMenu = newMenus[i]
-      if (oldMenu !== newMenu) {
-        const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex, newMenu.expanded, newMenu.level)
-        const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
-        changes.push([/* method */ 'updateMenu', newMenu, /* newLength */ newLength, dom])
-      }
-    }
-    const difference = newLength - oldLength
-    if (difference > 0) {
-      const newMenu = newMenus.at(-1)
-      const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex, newMenu.expanded, newMenu.level)
-      const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
-      changes.push(['addMenu', newMenu, dom])
-    } else if (difference < 0) {
-      changes.push(['closeMenus', newLength])
-    }
-    return [/* method */ RenderMethod.SetMenus, /* changes */ changes, newState.uid]
-  },
-}
-
-export const render = [renderTitleBarEntries, renderFocusedIndex, renderMenus]
+// export const renderEventListeners = async () => {
+//   const listeners = await TextSearchWorker.invoke('TextSearch.renderEventListeners')
+//   return listeners
+// }
