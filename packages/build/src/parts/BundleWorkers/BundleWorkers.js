@@ -8,6 +8,7 @@ import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/B
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleTitleBarWorkerCached from '../BundleTitleBarWorkerCached/BundleTitleBarWorkerCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/BundleExplorerWorkerCached.js'
@@ -158,6 +159,19 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: markdownWorkerCachePath,
     to: `${toRoot}/packages/markdown-worker`,
+  })
+
+  const titleBarWorkerCachePath = await BundleTitleBarWorkerCached.bundleTitleBarWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+    date,
+    product,
+    version,
+  })
+  await Copy.copy({
+    from: titleBarWorkerCachePath,
+    to: `${toRoot}/packages/title-bar-worker`,
   })
 
   const iframeWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
