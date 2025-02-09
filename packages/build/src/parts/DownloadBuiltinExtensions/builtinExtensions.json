@@ -287,7 +287,7 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "0.32.0"
+    "version": "1.1.0"
   },
   {
     "name": "builtin.prettier",
