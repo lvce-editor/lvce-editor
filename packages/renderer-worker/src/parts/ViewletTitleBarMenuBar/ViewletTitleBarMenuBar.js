@@ -27,7 +27,6 @@ export const loadContent = async (state) => {
   await TitleBarWorker.invoke('TitleBarMenuBar.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
   await TitleBarWorker.invoke('TitleBarMenuBar.loadContent', state.uid, titleBarEntries)
   const commands = await TitleBarWorker.invoke('TitleBarMenuBar.render', state.uid)
-  console.log({ commands })
   return {
     ...state,
     commands,
