@@ -7,6 +7,7 @@ export const eagerLoadedCss = [
   'Badge.css',
   'Button.css',
   'Chevron.css',
+  'CompletionItem.css',
   'ContextMenu.css',
   'Drag.css',
   'EditorTabs.css',

@@ -4,6 +4,7 @@ import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 
 export const Css = [
+  '/css/parts/CompletionItem.css',
   '/css/parts/EditorMessage.css',
   '/css/parts/IconButton.css',
   '/css/parts/InputBox.css',
