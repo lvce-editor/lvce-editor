@@ -90,6 +90,12 @@ export const getAboutViewWorkerCachePath = async (extraContents) => {
   return cachePath
 }
 
+export const getTitleBarWorkerCachePath = async (extraContents) => {
+  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/title-bar-worker'), hash)
+  return cachePath
+}
+
 export const getMarkdownWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/markdown-worker'), hash)
