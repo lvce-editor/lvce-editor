@@ -1,0 +1,32 @@
+.CompletionItem {
+  height: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  contain: strict;
+  gap: 5px;
+  padding-left: 1px;
+  position: absolute;
+  cursor: pointer;
+}
+
+/* TODO reuse same highlight css for quickpick */
+.CompletionItemHighlight {
+  color: var(--CompletionHighlightForeground, #e1b974);
+  font-weight: 700;
+  contain: content;
+}
+
+.CompletionItem:where(:hover) {
+  background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
+}
+
+.CompletionItemFocused {
+  background: var(--CompletionListItemActiveBackground, #405c50);
+  color: var(--CompletionListItemActiveForeground);
+}
+
+.CompletionItemDeprecated {
+  text-decoration: line-through;
+}
