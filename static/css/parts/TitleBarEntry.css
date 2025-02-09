@@ -1,0 +1,27 @@
+.TitleBarTopLevelEntry {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  contain: content;
+}
+
+.TitleBarTopLevelEntryLabel {
+  height: 22px;
+  border-radius: 5px;
+  background: var(--TitleBarItemHoverForeground, rgba(90, 93, 94, 0.31));
+  pointer-events: none;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  /* contain: content; */
+}
+
+.TitleBarEntryActive {
+  padding: 0;
+}
+
+/* TODO maybe have extra focus outline border */
+/*
+:focus {
+  border: 2px solid green;
+} */
