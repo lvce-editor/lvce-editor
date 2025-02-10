@@ -2,7 +2,7 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
-  `connect-src 'self'`,
+  `connect-src *`, // TODO make this dependend on extension.json csp settings
   `script-src 'self'`,
   `font-src 'self'`,
 ])
