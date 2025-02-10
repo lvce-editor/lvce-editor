@@ -4,6 +4,7 @@ import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -26,6 +27,10 @@ export const create3 = async (uri: string, id: number): Promise<void> => {
     webViewScheme: Scheme.WebView,
     useNewWebViewHandler: true,
   })
+}
+
+export const getSecret = (key: string) => {
+  return Preferences.get(key)
 }
 
 export const compat = {
