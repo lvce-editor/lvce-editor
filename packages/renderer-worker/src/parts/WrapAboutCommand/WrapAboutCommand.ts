@@ -8,7 +8,7 @@ export const wrapAboutCommand = (key: string) => {
       return state
     }
     return {
-      ...state,
+      ...newState,
       commands,
     }
   }
