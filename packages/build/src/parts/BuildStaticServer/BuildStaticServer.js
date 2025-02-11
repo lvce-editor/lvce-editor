@@ -224,6 +224,7 @@ const bundleStaticServer = async ({ commitHash }) => {
     occurrence: `"main": "src/static-server.js"`,
     replacement: `"main": "dist/static-server.js"`,
   })
+  await Remove.remove('packages/build/.tmp/server/static-server/src')
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
