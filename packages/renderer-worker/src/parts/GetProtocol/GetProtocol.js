@@ -4,6 +4,9 @@ import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js
 const RE_PROTOCOL = /^([a-z\-]+):\/\//
 
 export const getProtocol = (uri) => {
+  if (!uri) {
+    return FileSystemProtocol.Disk
+  }
   const protocolMatch = uri.match(RE_PROTOCOL)
   if (protocolMatch) {
     return protocolMatch[1]
