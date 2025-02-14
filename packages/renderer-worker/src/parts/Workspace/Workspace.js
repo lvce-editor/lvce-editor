@@ -48,6 +48,9 @@ export const isTest = () => {
 }
 
 const getTitle = (workspacePath) => {
+  if (!workspacePath) {
+    return ''
+  }
   const pathSeparator = state.pathSeparator
   return workspacePath.slice(workspacePath.lastIndexOf(pathSeparator) + 1)
 }
