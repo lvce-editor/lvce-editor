@@ -17,6 +17,9 @@ export const getProtocol = (uri) => {
 const PROTOCOL_POST_FIX_LENGTH = 3
 
 export const getPath = (protocol, uri) => {
+  if (!uri) {
+    return ''
+  }
   if (protocol === FileSystemProtocol.Disk && !uri.startsWith('file://')) {
     return uri
   }

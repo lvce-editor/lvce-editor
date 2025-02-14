@@ -48,11 +48,17 @@ export const isTest = () => {
 }
 
 const getTitle = (workspacePath) => {
+  if (!workspacePath) {
+    return ''
+  }
   const pathSeparator = state.pathSeparator
   return workspacePath.slice(workspacePath.lastIndexOf(pathSeparator) + 1)
 }
 
 const getPathName = (workspacePath) => {
+  if (!workspacePath) {
+    return ''
+  }
   if (workspacePath.startsWith('github://')) {
     return '/github/' + workspacePath.slice('github://'.length)
   }
