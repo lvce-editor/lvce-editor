@@ -56,6 +56,9 @@ const getTitle = (workspacePath) => {
 }
 
 const getPathName = (workspacePath) => {
+  if (!workspacePath) {
+    return ''
+  }
   if (workspacePath.startsWith('github://')) {
     return '/github/' + workspacePath.slice('github://'.length)
   }
