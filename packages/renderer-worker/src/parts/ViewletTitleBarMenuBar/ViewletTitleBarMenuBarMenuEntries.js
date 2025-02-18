@@ -1,4 +1,5 @@
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const menus = []
 
@@ -9,7 +10,7 @@ export const getMenus = async () => {
     modules.push({
       id,
       async getMenuEntries() {
-        const entries = await TitleBarWorker.invoke('TitleBar.getMenuEntries', id)
+        const entries = await TitleBarWorker.invoke('TitleBar.getMenuEntries', id, Platform.platform)
         return entries
       },
     })
