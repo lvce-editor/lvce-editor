@@ -1,5 +1,5 @@
-import { rename, rm } from 'node:fs/promises'
-import { join } from 'node:path'
+import { mkdir, rename, rm } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 import * as Download from '../Download/Download.js'
 import * as Extract from '../Extract/Extract.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -25,6 +25,7 @@ export const install = async ({ url }) => {
     }
     const outDir = join(extensionsPath, id)
     await rm(outDir, { recursive: true, force: true })
+    await mkdir(dirname(outDir), { recursive: true })
     await rename(tmpDir, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install "${url}"`)
