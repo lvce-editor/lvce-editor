@@ -237,7 +237,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.5.0"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.language-basics-svelte",
