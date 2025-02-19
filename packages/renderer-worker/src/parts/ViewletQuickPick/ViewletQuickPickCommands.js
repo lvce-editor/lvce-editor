@@ -1,22 +1,17 @@
-import * as ViewletQuickPick from './ViewletQuickPick.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as WrapQuickPickCommand from '../WrapQuickPickCommand/WrapQuickPickCommand.ts'
 
-// prettier-ignore
-export const Commands = {
-  handleBlur: ViewletQuickPick.handleBlur,
-  handleClickAt: ViewletQuickPick.handleClickAt,
-  handleWheel: ViewletQuickPick.handleWheel,
-  selectCurrentIndex: ViewletQuickPick.selectCurrentIndex,
-  selectIndex: ViewletQuickPick.selectIndex,
-  selectItem: ViewletQuickPick.selectItem,
+export const Commands = {}
+
+export const getCommands = async () => {
+  const commands = await TextSearchWorker.invoke('QuickPick.getCommandIds')
+  for (const command of commands) {
+    Commands[command] = WrapQuickPickCommand.wrapQuickPickCommand(command)
+  }
+
+  return Commands
 }
 
-// prettier-ignore
-export const LazyCommands = {
-  focusFirst: () => import('./ViewletQuickPickFocusFirst.js'),
-  focusIndex: () => import('./ViewletQuickPickFocusIndex.js'),
-  focusLast: () => import('./ViewletQuickPickFocusLast.js'),
-  focusNext: () => import('./ViewletQuickPickFocusNext.js'),
-  focusPrevious: () => import('./ViewletQuickPickFocusPrevious.js'),
-  handleInput: () => import('./ViewletQuickPickHandleInput.js'),
-  handleBeforeInput: () => import('./ViewletQuickPickHandleBeforeInput.js'),
+export const saveState = (state) => {
+  return {}
 }
