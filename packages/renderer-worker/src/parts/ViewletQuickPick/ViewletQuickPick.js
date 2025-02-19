@@ -49,6 +49,7 @@ export const create = (id, uri, x, y, width, height, args) => {
     inputSource: InputSource.User,
     args,
     focused: false,
+    commands: [],
   }
 }
 
