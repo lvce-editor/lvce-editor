@@ -1,5 +1,4 @@
 export const hasFunctionalRender = true
-export const hasFunctionalRootRender = true
 
 const renderItems = {
   isEqual(oldState, newState) {
