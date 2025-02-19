@@ -6,7 +6,9 @@ import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Platform from '../Platform/Platform.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as ViewletQuickPickGetFilteredItems from './ViewletQuickPickGetFilteredItems.js'
 
 // TODO send open signal to renderer process before items are ready
@@ -68,22 +70,20 @@ const getDefaultValue = (uri) => {
 
 export const loadContent = async (state) => {
   const { uri, args } = state
-  const value = getDefaultValue(uri)
-  const provider = await QuickPickEntries.load(uri)
-  // @ts-ignore
-  if (provider.setArgs) {
-    // @ts-ignore
-    provider.setArgs(args)
-  }
-  const newPicks = await provider.getPicks(value)
-  Assert.array(newPicks)
-  // @ts-ignore
-  const filterValue = provider.getFilterValue(value)
-  const items = ViewletQuickPickGetFilteredItems.getFilteredItems(state, newPicks, filterValue, provider)
-  // @ts-ignore
-  const label = provider.getLabel()
-  const minLineY = 0
-  const maxLineY = Math.min(minLineY + state.maxVisibleItems, newPicks.length)
+  const listItemHeight = 20
+
+  await FileSearchWorker.invoke(
+    'QuickPick.create2',
+    state.uid,
+    uri,
+    listItemHeight,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    Platform.platform,
+    args,
+  )
 
   return {
     ...state,
