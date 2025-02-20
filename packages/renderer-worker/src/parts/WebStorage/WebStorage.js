@@ -1,6 +1,6 @@
 import * as Json from '../Json/Json.js'
-import * as MapObject from '../MapObject/MapObject.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SerializeObjects from '../SerializeObjects/SerializeObjects.js'
 
 export const clear = async (storageType) => {
   await RendererProcess.invoke(/* WebStorage.clear */ 'WebStorage.clear', /* StorageType */ storageType)
@@ -37,6 +37,6 @@ export const setJson = async (storageType, key, value) => {
 }
 
 export const setJsonObjects = async (storageType, objects) => {
-  const serializedObjects = MapObject.mapObject(objects, Json.stringifyCompact)
+  const serializedObjects = SerializeObjects.serializeObjects(objects)
   await RendererProcess.invoke('WebStorage.setJsonObjects', storageType, serializedObjects)
 }
