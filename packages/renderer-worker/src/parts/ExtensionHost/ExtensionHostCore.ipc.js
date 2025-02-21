@@ -1,5 +1,5 @@
-import * as ExtensionHostCore from './ExtensionHostCore.js'
 import * as ExtensionHostCommands from './ExtensionHostCommands.js'
+import * as ExtensionHostCore from './ExtensionHostCore.js'
 
 export const name = 'ExtensionHost'
 
@@ -7,4 +7,5 @@ export const name = 'ExtensionHost'
 export const Commands = {
   loadWebExtension: ExtensionHostCore.loadWebExtension,
   getCommands: ExtensionHostCommands.getCommands,
+  executeCommand: ExtensionHostCommands.executeCommand,
 }
