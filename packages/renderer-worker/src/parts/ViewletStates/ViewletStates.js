@@ -86,6 +86,9 @@ export const setRenderedState = (key, newState) => {
   }
   Assert.object(newState)
   const instance = getInstance(key)
+  if (!instance) {
+    return
+  }
   instance.renderedState = newState
   instance.state = newState
 }
