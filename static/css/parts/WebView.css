@@ -2,7 +2,7 @@
   contain: strict;
   position: absolute;
   display: flex;
-  background: white;
+  background: var(--MainBackground);
 }
 
 /* TODO this wrapper element might not be needed */
@@ -12,11 +12,14 @@
   contain: strict;
 }
 
+/* TODO make iframe background configurable through extensions.json
+   For example, markdown preview might want a white background
+*/
 .WebViewIframe {
   flex: 1;
   contain: strict;
   border: none;
   position: absolute;
-  background: white;
+  background: var(--MainBackground);
   z-index: 1;
 }
