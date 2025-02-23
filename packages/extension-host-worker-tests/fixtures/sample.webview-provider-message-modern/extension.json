@@ -1,0 +1,23 @@
+{
+  "browser": "main.js",
+  "activation": ["onWebView:xyz"],
+  "webViews": [
+    {
+      "id": "xyz",
+      "rpc": true,
+      "selector": [".xyz"],
+      "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'", "media-src 'self' blob:"],
+      "allow": ["fullscreen"],
+      "elements": [
+        {
+          "type": "title",
+          "value": "Xyz Preview"
+        },
+        {
+          "type": "script",
+          "path": "media/index.js"
+        }
+      ]
+    }
+  ]
+}
