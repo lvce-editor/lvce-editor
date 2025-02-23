@@ -10,6 +10,7 @@ export const Commands = {
   compatSharedProcessInvoke: WebView.compat.sharedProcessInvoke,
   getSavedState: WebView.compat.getSavedState,
   getWebViewInfo: WebView.getWebViewInfo,
+  getWebViewInfo2: WebView.getWebViewInfo2,
   getWebViews: WebView.compat.getWebViews,
   setPort: WebView.setPort,
   getSecret: WebView.getSecret,

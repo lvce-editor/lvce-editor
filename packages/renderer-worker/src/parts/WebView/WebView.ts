@@ -13,8 +13,15 @@ export const setPort = async (uid: number, port: MessagePort, origin: string, po
   await RendererProcess.invokeAndTransfer('WebView.setPort', uid, port, origin, portType)
 }
 
+/**
+ * @deprecated
+ */
 export const getWebViewInfo = (providerId: string) => {
   return ExtensionHostWorker.invoke('ExtensionHostWebView.getWebViewInfo', providerId)
+}
+
+export const getWebViewInfo2 = (providerId: string) => {
+  return ExtensionHostWorker.invoke('ExtensionHostWebView.getWebViewInfo2', providerId)
 }
 
 export const create3 = async (uri: string, id: number): Promise<void> => {
