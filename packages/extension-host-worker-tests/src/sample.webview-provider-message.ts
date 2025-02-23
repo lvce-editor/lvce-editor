@@ -1,7 +1,5 @@
 export const name = 'sample.webview-provider-message'
 
-export const skip = 1
-
 export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
@@ -15,6 +13,5 @@ export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => 
   const webView = await WebView.fromId('xyz')
   const body = webView.locator('body')
 
-  // TODO
   await expect(body).toHaveText('124')
 }
