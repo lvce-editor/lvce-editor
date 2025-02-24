@@ -29,7 +29,7 @@
     "lerna": "^8.2.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.5.2",
-    "ts-jest": "^29.2.5",
+    "ts-jest": "^29.2.6",
     "typescript": "^5.7.3"
   },
   "prettier": {
