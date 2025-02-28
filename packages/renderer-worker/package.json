@@ -86,7 +86,7 @@
     "@lvce-editor/about-view": "^4.12.0",
     "@lvce-editor/diff-worker": "^1.5.0",
     "@lvce-editor/editor-worker": "^5.17.0",
-    "@lvce-editor/explorer-view": "^1.22.0",
+    "@lvce-editor/explorer-view": "^1.23.0",
     "@lvce-editor/extension-detail-view": "^3.16.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^4.11.0",
