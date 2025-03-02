@@ -89,7 +89,7 @@
     "@lvce-editor/explorer-view": "^1.25.0",
     "@lvce-editor/extension-detail-view": "^3.16.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
-    "@lvce-editor/extension-host-worker": "^4.11.0",
+    "@lvce-editor/extension-host-worker": "^4.12.0",
     "@lvce-editor/extension-search-view": "^2.0.0",
     "@lvce-editor/file-search-worker": "^3.16.0",
     "@lvce-editor/iframe-worker": "^5.24.0",
