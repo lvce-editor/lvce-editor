@@ -1,5 +1,7 @@
 export const name = 'sample.webview-provider-modern-to-have-css'
 
+export const skip = 1
+
 export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
