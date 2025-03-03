@@ -1,5 +1,6 @@
 {
   "activation": ["onWebView:xyz"],
+  "browser": "main.js",
   "rpc": [
     {
       "id": "test.xyz",
