@@ -1,4 +1,4 @@
-export const name = 'sample.webview-provider-message'
+export const name = 'sample.webview-provider-modern-to-have-css'
 
 export const skip = 1
 
@@ -14,6 +14,5 @@ export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => 
   // assert
   const webView = await WebView.fromId('xyz')
   const body = webView.locator('body')
-
-  await expect(body).toHaveText('124')
+  await expect(body).toHaveCSS('color', 'green')
 }
