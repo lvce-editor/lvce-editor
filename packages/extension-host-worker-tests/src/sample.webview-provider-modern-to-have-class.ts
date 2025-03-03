@@ -1,4 +1,4 @@
-export const name = 'sample.webview-provider-message-modern'
+export const name = 'sample.webview-provider-modern-to-have-class'
 
 export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => {
   // arrange
@@ -12,6 +12,5 @@ export const test = async ({ Extension, Main, FileSystem, WebView, expect }) => 
   // assert
   const webView = await WebView.fromId('xyz')
   const body = webView.locator('body')
-
-  await expect(body).toHaveText('124')
+  await expect(body).toHaveClass('abc')
 }
