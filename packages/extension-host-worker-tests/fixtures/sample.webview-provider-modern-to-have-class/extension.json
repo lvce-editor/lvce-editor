@@ -1,0 +1,32 @@
+{
+  "activation": ["onWebView:xyz"],
+  "browser": "main.js",
+  "rpc": [
+    {
+      "id": "test.xyz",
+      "type": "web-worker-2",
+      "name": "Test Xyz Worker",
+      "url": "./worker.js",
+      "contentSecurityPolicy": ["default-src 'none'"]
+    }
+  ],
+  "webViews": [
+    {
+      "id": "xyz",
+      "rpc": "test.xyz",
+      "selector": [".xyz"],
+      "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'", "media-src 'self' blob:"],
+      "allow": ["fullscreen"],
+      "elements": [
+        {
+          "type": "title",
+          "value": "Xyz Preview"
+        },
+        {
+          "type": "script",
+          "path": "media/index.js"
+        }
+      ]
+    }
+  ]
+}
