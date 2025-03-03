@@ -1,5 +1,8 @@
-const create = () => {
+const create = async ({ port }) => {
   // TODO
+  const count = await port.invoke('getCount')
+  const newCount = count + 1
+  await port.invoke('setCount', newCount)
 }
 
 const commands = {
