@@ -1,5 +1,4 @@
 {
-  "browser": "main.js",
   "activation": ["onWebView:xyz"],
   "rpc": [
     {
