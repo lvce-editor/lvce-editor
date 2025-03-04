@@ -2,7 +2,10 @@ import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
 
 export const hasFunctionalRender = true
+
 export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
 
 const renderItems = {
   isEqual(oldState: SearchState, newState: SearchState) {
