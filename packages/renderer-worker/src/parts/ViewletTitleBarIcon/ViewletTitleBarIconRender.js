@@ -4,6 +4,8 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
 const renderIcon = {
   isEqual(oldState, newState) {
     return oldState.iconSrc === newState.iconSrc
