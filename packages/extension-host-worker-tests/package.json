@@ -17,7 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@lvce-editor/test-with-playwright": "^2.11.0",
-    "@playwright/test": "^1.50.1",
+    "@playwright/test": "^1.51.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "express": "^4.21.2"
