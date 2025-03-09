@@ -10,6 +10,7 @@ export const map = {
   [ViewletModuleId.DebugConsole]: () => import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js'),
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),
   [ViewletModuleId.Dialog]: () => import('../ViewletDialog/ViewletDialog.ipc.js'),
+  [ViewletModuleId.IframeInspectorWorker]: () => import('../ViewletIframeInspector/ViewletIframeInspector.ipc.ts'),
   [ViewletModuleId.DiffEditor]: () => import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js'),
   [ViewletModuleId.E2eTest]: () => import('../ViewletE2eTest/ViewletE2eTest.ipc.ts'),
   [ViewletModuleId.E2eTests]: () => import('../ViewletE2eTests/ViewletE2eTests.ipc.ts'),
