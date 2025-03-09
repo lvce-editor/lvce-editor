@@ -143,16 +143,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
     `const platform = Web`,
   )
   await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'iframe-worker', 'dist', 'iframeWorkerMain.js'),
-    `const platform = Remote`,
-    `const platform = Web`,
-  )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'iframe-worker', 'dist', 'iframeWorkerMain.js'),
-    `/${commitHash}`,
-    `${pathPrefix}/${commitHash}`,
-  )
-  await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'file-search-worker', 'dist', 'fileSearchWorkerMain.js'),
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`,
