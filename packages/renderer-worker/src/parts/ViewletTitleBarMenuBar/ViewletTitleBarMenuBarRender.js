@@ -1,5 +1,10 @@
+import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+
 export const hasFunctionalRender = true
+
 export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
 
 const renderItems = {
   isEqual(oldState, newState) {
@@ -16,7 +21,7 @@ const renderItems = {
 
 export const render = [renderItems]
 
-// export const renderEventListeners = async () => {
-//   const listeners = await TextSearchWorker.invoke('TextSearch.renderEventListeners')
-//   return listeners
-// }
+export const renderEventListeners = async () => {
+  const listeners = await TitleBarWorker.invoke('TitleBar.renderEventListeners')
+  return listeners
+}
