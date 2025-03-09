@@ -5,6 +5,8 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
 const renderKeyBindings = {
   isEqual(oldState, newState) {
     return newState.commands && newState.commands.length === 0
