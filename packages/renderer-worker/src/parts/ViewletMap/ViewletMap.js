@@ -26,6 +26,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('storage-overview://')) {
     return ViewletModuleId.Storage
   }
+  if (uri.startsWith('iframe-inspector://')) {
+    return ViewletModuleId.IframeInspector
+  }
   if (uri.startsWith('diff://')) {
     return ViewletModuleId.DiffEditor
   }
