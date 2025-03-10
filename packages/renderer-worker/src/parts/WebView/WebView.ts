@@ -40,6 +40,14 @@ export const getSecret = (key: string) => {
   return Preferences.get(key)
 }
 
+export const registerInterceptor = async (id: number, port: MessagePort): Promise<void> => {
+  await ExtensionHostWorker.invoke('WebView.registerInterceptor', id, port)
+}
+
+export const unregisterInterceptor = async (id: number): Promise<void> => {
+  await ExtensionHostWorker.invoke('WebView.unregisterInterceptor', id)
+}
+
 export const compat = {
   sharedProcessInvoke(...args) {
     return SharedProcess.invoke(...args)
