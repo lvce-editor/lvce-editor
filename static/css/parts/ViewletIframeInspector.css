@@ -1,0 +1,5 @@
+.IframeInspector {
+  display: flex;
+  z-index: 1;
+  flex-direction: column;
+}
