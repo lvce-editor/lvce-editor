@@ -151,6 +151,9 @@ export const canBeRestored = async (uri) => {
   if (protocol === 'simple-browser') {
     return true
   }
+  if (protocol === 'iframe-inspector') {
+    return true
+  }
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   return fileSystem.canBeRestored
 }
