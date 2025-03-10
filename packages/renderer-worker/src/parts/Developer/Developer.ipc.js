@@ -9,6 +9,7 @@ export const name = 'Developer'
 export const Commands = {
   // TODO certain commands are only available in electron -> treeshake them out
   allocateMemoryInSharedProcess: Developer.allocateMemoryInSharedProcess,
+  openIframeInspector: Developer.openIframeInspector,
   clearCache: Developer.clearCache,
   crashMainProcess: Crash.crashMainProcess,
   crashSharedProcess: Crash.crashSharedProcess,
