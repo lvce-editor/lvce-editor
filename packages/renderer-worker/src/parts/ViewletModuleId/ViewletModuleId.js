@@ -14,6 +14,8 @@ export const DebugConsole = 'Debug Console'
 
 export const DefineKeyBinding = 'DefineKeyBinding'
 
+export const IframeInspector = 'IframeInspector'
+
 export const Dialog = 'Dialog'
 
 export const DiffEditor = 'DiffEditor'
