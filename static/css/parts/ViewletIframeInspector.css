@@ -1,0 +1,13 @@
+.IframeInspector {
+  display: flex;
+  z-index: 1;
+  flex-direction: column;
+  position: absolute;
+}
+
+.IframeInspectorMessage {
+  display: flex;
+  contain: content;
+  background: white;
+  color: black;
+}

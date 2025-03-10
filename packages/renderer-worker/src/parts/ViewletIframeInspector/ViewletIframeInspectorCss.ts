@@ -1,1 +1,1 @@
-export const Css = []
+export const Css = ['/css/parts/ViewletIframeInspector.css']
