@@ -5,6 +5,10 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Side Bar',
     },
     {
+      id: 'Developer.openIframeInspector',
+      label: 'Developer: Open Iframe Inspector',
+    },
+    {
       id: 'Layout.togglePanel',
       label: 'Layout: Toggle Panel',
     },
