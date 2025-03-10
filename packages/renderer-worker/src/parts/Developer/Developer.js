@@ -241,3 +241,7 @@ export const openBrowserViewOverview = async () => {
 export const openScreenCastView = async () => {
   await OpenUri.openUri('screen-cast://')
 }
+
+export const openIframeInspector = async () => {
+  await OpenUri.openUri('iframe-inspector://')
+}
