@@ -41,7 +41,7 @@ export const getSecret = (key: string) => {
 }
 
 export const registerInterceptor = async (id: number, port: MessagePort): Promise<void> => {
-  await ExtensionHostWorker.invoke('WebView.registerInterceptor', id, port)
+  await ExtensionHostWorker.invokeAndTransfer('WebView.registerInterceptor', id, port)
 }
 
 export const unregisterInterceptor = async (id: number): Promise<void> => {
