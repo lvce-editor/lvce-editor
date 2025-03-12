@@ -5,9 +5,16 @@
   position: absolute;
 }
 
-.IframeInspectorMessage {
+.IframeInspectorHeader {
   display: flex;
+  justify-content: space-around;
+}
+
+.IframeInspectorMessage {
+  display: grid;
   contain: content;
-  background: white;
-  color: black;
+  color: var(--WorkbenchForeground);
+  grid-template-columns: 1fr 1fr;
+  height: 24px;
+  contain: strict;
 }
