@@ -5,9 +5,22 @@
   position: absolute;
 }
 
-.IframeInspectorMessage {
+.IframeInspectorHeader {
   display: flex;
+  justify-content: space-around;
   contain: content;
-  background: white;
-  color: black;
+}
+
+.IframeInspectorMessage {
+  display: grid;
+  color: var(--WorkbenchForeground);
+  grid-template-columns: 1fr 1fr;
+  height: 24px;
+  contain: strict;
+}
+
+.InspectorMessageData {
+  contain: strict;
+  margin: 0;
+  padding-right: 20px;
 }
