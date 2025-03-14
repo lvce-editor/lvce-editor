@@ -8,7 +8,7 @@ export const hasFunctionalRootRender = true
 
 export const hasFunctionalEvents = true
 
-export const renderDialog = {
+export const renderContent = {
   isEqual(oldState: IframeInspectorState, newState: IframeInspectorState) {
     return false
   },
@@ -16,7 +16,7 @@ export const renderDialog = {
   multiple: true,
 }
 
-export const render = [renderDialog]
+export const render = [renderContent]
 
 export const renderEventListeners = async () => {
   const listeners = await IframeInspectorWorker.invoke('IframeInspector.renderEventListeners')
