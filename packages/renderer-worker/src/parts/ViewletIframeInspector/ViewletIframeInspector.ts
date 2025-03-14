@@ -1,10 +1,10 @@
 import type { IframeInspectorState } from './ViewletIframeInspectorTypes.ts'
 import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspectorWorker.js'
 
-export const create = (): IframeInspectorState => {
+export const create = (id: number): IframeInspectorState => {
   return {
-    id: 1,
-    uid: 1,
+    id,
+    uid: id,
     commands: [],
   }
 }
