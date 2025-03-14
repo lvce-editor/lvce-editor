@@ -52,6 +52,14 @@
   align-items: center;
 }
 
+.IframeInspectorResizer {
+  height: 2px;
+  background: orange;
+  width: 100%;
+  contain: size;
+  cursor: ns-resize;
+}
+
 .IframeInspectorSelectedContentPre {
   contain: strict;
   width: 100%;
