@@ -9,6 +9,14 @@
   display: flex;
   justify-content: space-around;
   contain: content;
+  height: 20px;
+  contain: strict;
+}
+
+.IframeInspectorMessages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .IframeInspectorMessage {
@@ -28,4 +36,13 @@
 .InspectorMessageLength {
   text-align: right;
   padding-right: 10px;
+}
+
+.IframeInspectorSelectedContent {
+  height: 220px;
+  contain: strict;
+  display: flex;
+  flex-grow: 0;
+  justify-content: center;
+  align-items: center;
 }

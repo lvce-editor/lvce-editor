@@ -3,8 +3,8 @@ import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspector
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): IframeInspectorState => {
   return {
-    id: 1,
-    uid: 1,
+    id,
+    uid: id,
     commands: [],
     x,
     y,
@@ -17,7 +17,6 @@ export const loadContent = async (state: IframeInspectorState): Promise<IframeIn
   await IframeInspectorWorker.invoke('IframeInspector.create', state.id, state.x, state.y, state.width, state.height)
   await IframeInspectorWorker.invoke('IframeInspector.loadContent', state.id)
   const commands = await IframeInspectorWorker.invoke('IframeInspector.render', state.id)
-  console.log({ commands })
   return {
     ...state,
     commands,
