@@ -9,6 +9,8 @@
   display: flex;
   justify-content: space-around;
   contain: content;
+  height: 20px;
+  contain: strict;
 }
 
 .IframeInspectorMessage {
