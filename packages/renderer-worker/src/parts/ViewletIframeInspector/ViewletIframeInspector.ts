@@ -4,6 +4,7 @@ import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspector
 export const create = (): IframeInspectorState => {
   return {
     id: 1,
+    uid: 1,
     commands: [],
   }
 }
