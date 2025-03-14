@@ -27,6 +27,11 @@
   contain: strict;
 }
 
+.IframeInspectorMessageSelected {
+  color: var(--ListActiveSelectionForeground);
+  background: var(--ListActiveSelectionBackground);
+}
+
 .InspectorMessageData {
   contain: strict;
   margin: 0;
