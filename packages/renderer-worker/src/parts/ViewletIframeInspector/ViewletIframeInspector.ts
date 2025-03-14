@@ -13,7 +13,6 @@ export const loadContent = async (state: IframeInspectorState): Promise<IframeIn
   await IframeInspectorWorker.invoke('IframeInspector.create', state.id)
   await IframeInspectorWorker.invoke('IframeInspector.loadContent', state.id)
   const commands = await IframeInspectorWorker.invoke('IframeInspector.render', state.id)
-  console.log({ commands })
   return {
     ...state,
     commands,
