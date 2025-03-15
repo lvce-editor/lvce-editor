@@ -26,6 +26,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('storage-overview://')) {
     return ViewletModuleId.Storage
   }
+  if (uri.startsWith('iframe-inspector://')) {
+    return ViewletModuleId.IframeInspector
+  }
   if (uri.startsWith('diff://')) {
     return ViewletModuleId.DiffEditor
   }
@@ -43,6 +46,9 @@ export const getModuleId = async (uri, opener) => {
   }
   if (uri.startsWith('webview://')) {
     return ViewletModuleId.WebView
+  }
+  if (uri.startsWith('iframe-inspector://')) {
+    return ViewletModuleId.IframeInspector
   }
   if (uri.endsWith('.css') || uri.endsWith('.json') || uri.endsWith('.js') || uri.endsWith('.ts')) {
     return ViewletModuleId.EditorText
