@@ -256,11 +256,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Window: Make Screenshot',
     },
     {
-      id: 'main.EloseEditor',
+      id: 'Main.CloseEditor',
       label: 'Main: Close Editor',
     },
     {
-      id: 'main.EloseAllEditors',
+      id: 'Main.CloseAllEditors',
       label: 'Main: Close all Editors',
     },
     {
