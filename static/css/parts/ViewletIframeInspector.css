@@ -1,8 +1,13 @@
+:root {
+  --IframeInspectorColor: #e1e2de;
+}
+
 .IframeInspector {
   display: flex;
   z-index: 1;
   flex-direction: column;
   position: absolute;
+  color: var(--IframeInspectorColor);
 }
 
 .IframeInspectorHeader {
