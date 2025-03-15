@@ -127,7 +127,7 @@ export const getFileSearchWorkerCachePath = async (extraContents) => {
 
 export const getIframeInspectorWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
-  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/iframe-inspector-worker'), hash)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/iframe-inspector'), hash)
   return cachePath
 }
 
