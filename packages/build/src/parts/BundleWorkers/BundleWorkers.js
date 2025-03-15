@@ -105,7 +105,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
   })
-  const iframeInspectorWorkerCachePath = await BundleIframeWorkerCached.bundleIframeWorkerCached({
+  const iframeInspectorWorkerCachePath = await BundleIframeInspectorWorkerCached.bundleIframeInspectorWorkerCached({
     assetDir,
     commitHash,
     platform,

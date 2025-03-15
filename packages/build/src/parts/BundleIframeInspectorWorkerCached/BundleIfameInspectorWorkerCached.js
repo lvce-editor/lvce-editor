@@ -4,7 +4,7 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Logger from '../Logger/Logger.js'
 
-export const bundleIfreameInspectorWorkerCached = async ({ commitHash, platform, assetDir }) => {
+export const bundleIframeInspectorWorkerCached = async ({ commitHash, platform, assetDir }) => {
   const cachePath = await CachePaths.getIframeInspectorWorkerCachePath([platform])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleIframeInspector')
