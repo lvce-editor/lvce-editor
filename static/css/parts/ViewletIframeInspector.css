@@ -1,5 +1,6 @@
 :root {
   --IframeInspectorColor: #e1e2de;
+  --KeyForeground: white;
 }
 
 .IframeInspector {
@@ -75,4 +76,29 @@
   padding-right: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.IframeInspectorSelectedContentList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex: 1;
+  height: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  contain: strict;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  margin: 0;
+  flex-direction: column;
+}
+
+.IframeInspectorSelectedContentItem {
+}
+
+.IframeInspectorSelectedContentKey {
+  color: var(--KeyForeground);
 }
