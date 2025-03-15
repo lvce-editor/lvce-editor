@@ -97,6 +97,8 @@
 }
 
 .IframeInspectorSelectedContentItem {
+  height: 20px;
+  contain: strict;
 }
 
 .IframeInspectorSelectedContentKey {
