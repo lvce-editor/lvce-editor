@@ -59,7 +59,7 @@
 
 .IframeInspectorResizer {
   height: 2px;
-  background: orange;
+  background: var(--SashHoverBorder, #3d5252);
   width: 100%;
   contain: size;
   cursor: ns-resize;
