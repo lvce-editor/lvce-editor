@@ -35,13 +35,13 @@
   },
   "optionalDependencies": {
     "@lvce-editor/embeds-process": "^2.0.0",
+    "@lvce-editor/file-watcher-process": "^1.5.0",
     "@lvce-editor/network-process": "^2.2.0",
     "@lvce-editor/preload": "^1.4.0",
     "@lvce-editor/preview-process": "^9.0.0",
     "@lvce-editor/process-explorer": "^2.4.0",
     "@lvce-editor/pty-host": "^3.1.0",
     "@lvce-editor/search-process": "^5.3.0",
-    "@lvce-editor/file-watcher-process": "^1.5.0",
     "@lvce-editor/typescript-compile-process": "^2.3.0",
     "open": "^10.1.0",
     "tail": "^2.2.6",
@@ -49,6 +49,7 @@
     "trash": "^9.0.0"
   },
   "devDependencies": {
+    "@lvce-editor/main-process": "^1.2.0",
     "@types/debug": "^4.1.12",
     "@types/is-object": "^1.0.5",
     "@types/tail": "^2.2.3",
