@@ -5,8 +5,6 @@
   "main": "src/mainProcessMain.js",
   "type": "module",
   "scripts": {
-    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
     "type-check": "tsc"
   },
   "keywords": [],
@@ -20,12 +18,8 @@
   "engines": {
     "node": ">=18"
   },
-  "devDependencies": {
-    "@electron/rebuild": "^3.7.1",
-    "@types/debug": "^4.1.12",
-    "electron": "35.0.0"
-  },
   "dependencies": {
+    "@lvce-editor/main-process": "^1.4.0",
     "@lvce-editor/assert": "^1.3.0",
     "@lvce-editor/ipc": "^13.7.0",
     "@lvce-editor/json-rpc": "^5.4.0",
@@ -34,70 +28,5 @@
     "debug": "^4.4.0",
     "electron-unhandled": "^5.0.0",
     "minimist": "^1.2.8"
-  },
-  "jest": {
-    "injectGlobals": false,
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ],
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "transform": {
-      "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "useESM": true
-        }
-      ]
-    }
-  },
-  "xo": {
-    "rules": {
-      "unicorn/filename-case": "off",
-      "indent": "off",
-      "semi": "off",
-      "no-unused-vars": "off",
-      "unicorn/numeric-separators-style": "off",
-      "no-extra-semi": "off",
-      "arrow-body-style": "off",
-      "padded-blocks": "off",
-      "capitalized-comments": "off",
-      "padding-line-between-statements": "off",
-      "arrow-parens": "off",
-      "no-warning-comments": "off",
-      "array-bracket-spacing": "off",
-      "comma-spacing": "off",
-      "unicorn/no-array-callback-reference": "off",
-      "comma-dangle": "off",
-      "operator-linebreak": "off",
-      "no-case-declarations": "off",
-      "no-undef": "off",
-      "object-curly-spacing": "off",
-      "object-shorthand": "off",
-      "complexity": "off",
-      "no-labels": "off",
-      "no-multi-assign": "off",
-      "max-params": "off",
-      "no-bitwise": "off",
-      "unicorn/prefer-math-trunc": "off",
-      "no-await-in-loop": "off",
-      "unicorn/prefer-add-event-listener": "off",
-      "no-unused-expressions": "off",
-      "node/prefer-global/process": "off",
-      "unicorn/prefer-module": "off",
-      "quotes": "off",
-      "n/prefer-global/process": "off",
-      "no-mixed-operators": "off",
-      "radix": "off",
-      "unicorn/prefer-query-selector": "off",
-      "unicorn/switch-case-braces": "off",
-      "unicorn/prevent-abbreviations": "off",
-      "unicorn/prefer-top-level-await": "off",
-      "import/no-extraneous-dependencies": "off"
-    },
-    "ignores": [
-      "distmin"
-    ]
   }
 }
