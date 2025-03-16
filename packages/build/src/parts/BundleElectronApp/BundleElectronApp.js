@@ -15,6 +15,7 @@ import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
@@ -269,6 +270,7 @@ export const build = async ({
   const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
+  const isLinux = Platform.isLinux()
   const optimizeLanguageBasics = true
   const resourcesPath = isMacos
     ? `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
@@ -336,6 +338,7 @@ export const build = async ({
     bundleSharedProcess,
     isArchLinux,
     isAppImage,
+    isLinux,
   })
 
   console.time('copyMainProcessFiles')

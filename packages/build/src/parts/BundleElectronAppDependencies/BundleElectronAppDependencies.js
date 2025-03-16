@@ -41,7 +41,6 @@ export const bundleElectronAppDependencies = async ({
   cachePath,
   arch,
   electronVersion,
-  // @ts-ignore
   product,
   supportsAutoUpdate,
   bundleMainProcess,

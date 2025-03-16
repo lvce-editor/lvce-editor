@@ -1,10 +1,6 @@
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Replace from '../Replace/Replace.js'
-import * as Remove from '../Remove/Remove.js'
-import { join } from 'path'
 
 export const bundleMainProcess = async ({
   cachePath,
@@ -15,98 +11,57 @@ export const bundleMainProcess = async ({
   bundleSharedProcess,
   isArchLinux,
   isAppImage,
+  isLinux,
 }) => {
   await Copy.copy({
-    from: 'packages/main-process/src',
-    to: Path.join(cachePath, 'src'),
+    from: 'packages/main-process/node_modules/@lvce-editor/main-process/dist',
+    to: Path.join(cachePath, 'dist'),
   })
 
   await Copy.copy({
-    from: `packages/main-process/pages`,
+    from: `packages/main-process/node_modules/@lvce-editor/main-process/pages`,
     to: `${cachePath}/pages`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const isProduction = false`,
-    replacement: `export const isProduction = true`,
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const isProduction = false`,
+    replacement: `const isProduction = true`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const applicationName = 'lvce-oss'`,
-    replacement: `export const applicationName = '${product.applicationName}'`,
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const applicationName = 'lvce-oss'`,
+    replacement: `const applicationName = '${product.applicationName}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Scheme/Scheme.js`,
-    occurrence: `export const WebView = 'lvce-oss-webview'`,
-    replacement: `export const WebView = '${product.applicationName}-webview'`,
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const WebView = 'lvce-oss-webview'`,
+    replacement: `const WebView = '${product.applicationName}-webview'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const isLinux = platform === 'linux'`,
-    replacement: `export const isLinux = ${Platform.isLinux()}`,
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const isLinux = platform === 'linux'`,
+    replacement: `const isLinux = ${isLinux}`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const scheme = 'lvce-oss'`,
-    replacement: `export const scheme = '${product.applicationName}'`,
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const scheme = 'lvce-oss'`,
+    replacement: `const scheme = '${product.applicationName}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const commit = 'unknown commit'`,
-    replacement: `export const commit = '${commitHash}'`,
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const root = process.env.LVCE_ROOT || join(__dirname, '../../../../..')`,
+    replacement: `const root = join(__dirname, '../../..')`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Root/Root.js`,
-    occurrence: `export const root = join(__dirname, '../../../../..')`,
-    replacement: `export const root = join(__dirname, '../../..')`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const version = '0.0.0-dev'`,
-    replacement: `export const version = '${version}'`,
-  })
-  if (isArchLinux) {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: `export const isArchLinux = false`,
-      replacement: `export const isArchLinux = true`,
-    })
+    path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const getSharedProcessPath = () => {
+  if (process.env.LVCE_SHARED_PROCESS_PATH) {
+    return process.env.LVCE_SHARED_PROCESS_PATH;
   }
-  if (isAppImage) {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: `export const isAppImage = false`,
-      replacement: `export const isAppImage = true`,
-    })
-  }
-  if (bundleSharedProcess) {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: `join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
-      replacement: `join(Root.root, 'packages', 'shared-process', 'dist', 'sharedProcessMain.js')`,
-    })
-  }
-  if (bundleMainProcess) {
-    await Copy.copy({
-      from: 'packages/main-process/node_modules',
-      to: Path.join(cachePath, 'node_modules'),
-      ignore: ['electron', '@electron', 'rxjs', '@types', 'node-gyp', 'cacache', '.bin'],
-    })
-    await BundleJs.bundleJs({
-      cwd: cachePath,
-      from: `./src/mainProcessMain.js`,
-      platform: 'node',
-      external: ['electron'],
-      // @ts-ignore
-      sourceMap: false,
-    })
-    await Remove.remove(join(cachePath, 'src'))
-    await Remove.remove(join(cachePath, 'node_modules'))
-  } else {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Root/Root.js`,
-      occurrence: `export const root = join(__dirname, '../../..')`,
-      replacement: `export const root = join(__dirname, '../../../../..')`,
-    })
-  }
+  return join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts');
+}`,
+    replacement: `const getSharedProcessPath = () => {
+  return join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js');
+}`,
+  })
 }
