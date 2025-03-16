@@ -1,3 +1,1 @@
-import * as Main from './parts/Main/Main.js'
-
-Main.main()
+import '@lvce-editor/main-process'
