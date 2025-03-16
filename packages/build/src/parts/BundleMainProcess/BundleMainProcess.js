@@ -15,6 +15,7 @@ export const bundleMainProcess = async ({
   bundleSharedProcess,
   isArchLinux,
   isAppImage,
+  isLinux,
 }) => {
   await Copy.copy({
     from: 'packages/main-process/src',
@@ -43,7 +44,7 @@ export const bundleMainProcess = async ({
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `export const isLinux = platform === 'linux'`,
-    replacement: `export const isLinux = ${Platform.isLinux()}`,
+    replacement: `export const isLinux = ${isLinux}`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
