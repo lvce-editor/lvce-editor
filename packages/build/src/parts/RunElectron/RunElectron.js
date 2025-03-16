@@ -9,7 +9,7 @@ if (process.platform === 'darwin') {
   electronPath = join(root, 'packages/shared-process/node_modules/electron/dist/electron')
 }
 
-const mainProcessPath = join(root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'main-process')
+const mainProcessPath = join(root, 'packages', 'main-process', 'node_modules', '@lvce-editor', 'main-process')
 const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 
 const env = {
