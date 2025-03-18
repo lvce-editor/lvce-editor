@@ -11,6 +11,9 @@ export const apply = (oldState, newState) => {
     if (command[0] === 'Viewlet.focusElementByName') {
       return ['Viewlet.focusElementByName', newState.uid, ...command.slice(1)]
     }
+    if (command[0] === 'Viewlet.focusSelector') {
+      return ['Viewlet.focusSelector', newState.uid, ...command.slice(1)]
+    }
     if (
       command[0] === 'Viewlet.create' ||
       command[0] === 'Viewlet.send' ||
