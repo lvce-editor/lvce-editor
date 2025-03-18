@@ -104,3 +104,23 @@
 .IframeInspectorSelectedContentKey {
   color: var(--KeyForeground);
 }
+
+.FilterSection {
+  padding: 8px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.FilterInput {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--vscode-input-border);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.FilterInput:focus {
+  outline: none;
+  border-color: var(--vscode-focusBorder);
+}
