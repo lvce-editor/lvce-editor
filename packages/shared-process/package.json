@@ -49,7 +49,7 @@
     "trash": "^9.0.0"
   },
   "devDependencies": {
-    "@lvce-editor/main-process": "^1.2.0",
+    "@lvce-editor/main-process": "^1.4.0",
     "@types/debug": "^4.1.12",
     "@types/is-object": "^1.0.5",
     "@types/tail": "^2.2.3",
