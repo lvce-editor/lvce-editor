@@ -108,6 +108,8 @@
 .FilterSection {
   padding: 8px;
   border-bottom: 1px solid var(--vscode-panel-border);
+  height: 50px;
+  contain: strict;
 }
 
 .FilterInput {
