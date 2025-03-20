@@ -19,6 +19,11 @@
   contain: strict;
 }
 
+.IframeInspectorGrid {
+  outline: none;
+  contain: content;
+}
+
 .IframeInspectorMessages {
   flex: 1;
   display: flex;
@@ -103,4 +108,26 @@
 
 .IframeInspectorSelectedContentKey {
   color: var(--KeyForeground);
+}
+
+.FilterSection {
+  padding: 8px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  height: 50px;
+  contain: strict;
+}
+
+.FilterInput {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--vscode-input-border);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.FilterInput:focus {
+  outline: none;
+  border-color: var(--vscode-focusBorder);
 }

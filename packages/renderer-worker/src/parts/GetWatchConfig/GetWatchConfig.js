@@ -23,6 +23,13 @@ export const getWatchConfig = () => {
       command: 'ExtensionDetail.hotReload',
     })
   }
+  const iframeInspector = Preferences.get('develop.iframeInspectorWorkerPath')
+  if (iframeInspector) {
+    watchConfig.push({
+      path: iframeInspector,
+      command: 'IframeInspector.hotReload',
+    })
+  }
   const keyBindings = Preferences.get('develop.keyBindingsViewWorkerPath')
   if (keyBindings) {
     watchConfig.push({

@@ -19,14 +19,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^1.4.0",
-    "@lvce-editor/assert": "^1.3.0",
-    "@lvce-editor/ipc": "^13.7.0",
-    "@lvce-editor/json-rpc": "^5.4.0",
-    "@lvce-editor/pretty-error": "^1.6.0",
-    "@lvce-editor/verror": "^1.6.0",
-    "debug": "^4.4.0",
-    "electron-unhandled": "^5.0.0",
-    "minimist": "^1.2.8"
+    "@lvce-editor/main-process": "^1.4.0"
   }
 }

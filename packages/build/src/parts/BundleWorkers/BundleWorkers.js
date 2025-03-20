@@ -112,7 +112,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   await Copy.copy({
     from: iframeInspectorWorkerCachePath,
-    to: `${toRoot}/packages/iframe-inspector-worker`,
+    to: `${toRoot}/packages/iframe-inspector`,
   })
 
   const explorerWorkerCachePath = await BundleExplorerWorkerCached.bundleExplorerWorkerCached({

@@ -1,5 +1,5 @@
-import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
+import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspectorWorker.js'
 
 export const getKeyBindings = () => {
-  return AboutViewWorker.invoke('About.getKeyBindings')
+  return IframeInspectorWorker.invoke('IframeInspector.getKeyBindings')
 }
