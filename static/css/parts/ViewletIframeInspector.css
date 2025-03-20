@@ -19,6 +19,11 @@
   contain: strict;
 }
 
+.IframeInspectorGrid {
+  outline: none;
+  contain: content;
+}
+
 .IframeInspectorMessages {
   flex: 1;
   display: flex;
