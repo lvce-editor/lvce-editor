@@ -131,3 +131,10 @@
   outline: none;
   border-color: var(--vscode-focusBorder);
 }
+
+.IframeInspectorNoMessagesFound {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 0;
+  padding-bottom: 10px;
+}
