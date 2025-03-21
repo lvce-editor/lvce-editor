@@ -126,6 +126,7 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
     to: `${resourcesPath}/app/extensions`,
     dereference: true,
   })
+
   await Remove.remove(`${resourcesPath}/app/extensions/builtin.language-features-html/typescript`)
   await Replace.replace({
     path: `${resourcesPath}/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
@@ -239,6 +240,10 @@ const copyCss = async ({ resourcesPath }) => {
   await BundleCss.bundleCss({
     outDir: `${resourcesPath}/app/static/css`,
   })
+}
+
+const removeUnusedCode = async ({ resourcesPath }) => {
+  await Remove.remove(Path.absolute(`${resourcesPath}/app/packages/test-worker`))
 }
 
 export const build = async ({
@@ -408,6 +413,10 @@ export const build = async ({
     version,
   })
   console.timeEnd('addRootPackageJson')
+
+  await removeUnusedCode({
+    resourcesPath,
+  })
 
   await WriteFile.writeFile({
     to: dependencyCachePathFinished,
