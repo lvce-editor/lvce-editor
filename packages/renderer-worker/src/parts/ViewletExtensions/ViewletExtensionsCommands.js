@@ -1,6 +1,6 @@
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
+import * as WrapExtensionSearchCommand from '../WrapExtensionSearchCommand/WrapExtensionSearchCommand.ts'
 import * as ViewletExtensions from './ViewletExtensions.js'
-import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 
 // prettier-ignore
 export const Commands = {
@@ -23,25 +23,15 @@ export const LazyCommands = {
   ...VirtualList.LazyCommands
 }
 
-const wrapCommand = (fn) => {
-  const wrapped = async (state, ...args) => {
-    const newState = await fn(state, ...args)
-    const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render', state, newState)
-    newState.commands = commands
-    return newState
-  }
-  return wrapped
-}
-
 for (const [key, value] of Object.entries(Commands)) {
-  Commands[key] = wrapCommand(value)
+  Commands[key] = WrapExtensionSearchCommand.wrapExtensionSearchCommand(value)
 }
 for (const [key, value] of Object.entries(LazyCommands)) {
   LazyCommands[key] = async () => {
     const module = await value()
     const fn = module[key]
     return {
-      [key]: wrapCommand(fn),
+      [key]: WrapExtensionSearchCommand.wrapExtensionSearchCommand(fn),
     }
   }
 }
