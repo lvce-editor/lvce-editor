@@ -6,6 +6,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
@@ -44,6 +45,7 @@ export const create = (id, uri, x, y, width, height) => {
     allExtensions: [],
     placeholder: '',
     platform: Platform.platform,
+    assetDir: AssetDir.assetDir,
   }
 }
 
