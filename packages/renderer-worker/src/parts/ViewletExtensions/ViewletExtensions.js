@@ -2,6 +2,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionListItemHeight from '../ExtensionListItemHeight/ExtensionListItemHeight.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
+import * as Platform from '../Platform/Platform.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -42,6 +43,7 @@ export const create = (id, uri, x, y, width, height) => {
     }),
     allExtensions: [],
     placeholder: '',
+    platform: Platform.platform,
   }
 }
 
