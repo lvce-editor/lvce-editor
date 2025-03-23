@@ -90,7 +90,7 @@
     "@lvce-editor/extension-detail-view": "^3.16.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^4.13.0",
-    "@lvce-editor/extension-search-view": "^2.4.0",
+    "@lvce-editor/extension-search-view": "^2.5.0",
     "@lvce-editor/file-search-worker": "^3.18.0",
     "@lvce-editor/iframe-worker": "^5.30.0",
     "@lvce-editor/keybindings-view": "^3.16.0",
