@@ -1,18 +1,10 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as ExtensionListItemHeight from '../ExtensionListItemHeight/ExtensionListItemHeight.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
-import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
+import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 import * as Platform from '../Platform/Platform.js'
-import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as ViewletSize from '../ViewletSize/ViewletSize.js'
-import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
-import * as ViewletExtensionsHandleInput from './ViewletExtensionsHandleInput.js'
-
-const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
@@ -25,50 +17,37 @@ export const saveState = (state) => {
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    id,
     uid: id,
     searchValue: '',
-    suggestionState: /* Closed */ 0,
-    disposed: false,
     width,
     height,
-    handleOffset: 0,
     x,
     y,
-    message: '',
-    focused: false,
-    size: ViewletSize.None,
-    ...VirtualList.create({
-      itemHeight: ExtensionListItemHeight.ExtensionListItemHeight,
-      minimumSliderSize: MinimumSliderSize.minimumSliderSize,
-      headerHeight: 41,
-    }),
-    allExtensions: [],
-    placeholder: '',
     platform: Platform.platform,
     assetDir: AssetDir.assetDir,
   }
 }
 
-const getSavedValue = (savedState) => {
-  if (savedState && savedState.searchValue) {
-    return savedState.searchValue
-  }
-  return ''
-}
-
 export const loadContent = async (state, savedState) => {
-  const { width } = state
-  const searchValue = getSavedValue(savedState)
-  // TODO just get local extensions on demand (not when query string is already different)
-  const allExtensions = await ExtensionManagement.getAllExtensions()
-  const size = GetViewletSize.getViewletSize(width)
-  const newState = await ViewletExtensionsHandleInput.handleInput({ ...state, allExtensions, size }, searchValue)
-  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render', state, newState)
+  await ExtensionSearchViewWorker.invoke(
+    'SearchExtensions.create',
+    state.id,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    state.platform,
+    state.assetDir,
+  )
 
-  newState.commands = commands
-  return newState
-  // TODO get installed extensions from extension host
-  // TODO just get local extensions on demand (not when query string is already different)
+  await ExtensionSearchViewWorker.invoke('SearchExtensions.loadContent', state.id, savedState)
+  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render2', state.id)
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const dispose = () => {}
@@ -182,32 +161,15 @@ export const handleDisable = async (state, id) => {
 }
 
 export const openSuggest = async (state) => {
-  const filteredSuggestions = SUGGESTIONS
-  state.suggestionState = /* Open */ 1
-  await RendererProcess.invoke(
-    /* viewletSend */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Extensions,
-    /* method */ 'openSuggest',
-    /* suggestions */ filteredSuggestions,
-  )
+  // TODO
 }
 
 export const closeSuggest = async (state) => {
-  state.suggestionState = /* Closed */ 0
-  await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ ViewletModuleId.Extensions, /* method */ 'closeSuggest')
+  // TODO
 }
 
 export const toggleSuggest = async (state) => {
-  switch (state.suggestionState) {
-    case /* Closed */ 0:
-      await openSuggest(state)
-      break
-    case /* Open */ 1:
-      await closeSuggest(state)
-      break
-    default:
-      break
-  }
+  // TODO
 }
 
 export const handleBlur = (state) => {

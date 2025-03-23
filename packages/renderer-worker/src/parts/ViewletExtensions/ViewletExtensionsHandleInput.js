@@ -2,7 +2,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.js'
 import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as SearchExtensions from '../SearchExtensions/SearchExtensions.js'
+import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 import * as ViewletExtensionsStrings from './ViewletExtensionsStrings.js'
 
