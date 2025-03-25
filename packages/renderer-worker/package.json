@@ -90,7 +90,7 @@
     "@lvce-editor/extension-detail-view": "^3.16.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^4.13.0",
-    "@lvce-editor/extension-search-view": "^2.8.0",
+    "@lvce-editor/extension-search-view": "^2.9.0",
     "@lvce-editor/file-search-worker": "^3.18.0",
     "@lvce-editor/iframe-worker": "^5.30.0",
     "@lvce-editor/keybindings-view": "^3.16.0",
@@ -100,7 +100,7 @@
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^4.5.0",
     "@lvce-editor/text-search-worker": "^3.50.0",
-    "@lvce-editor/iframe-inspector": "^1.17.0",
+    "@lvce-editor/iframe-inspector": "^1.19.0",
     "@lvce-editor/title-bar-worker": "^1.9.0"
   }
 }

@@ -17,7 +17,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.26.0",
+    "@babel/preset-typescript": "^7.27.0",
     "@electron/get": "^4.0.0",
     "@electron/rebuild": "^3.7.1",
     "@rollup/plugin-babel": "^6.0.4",
@@ -45,7 +45,7 @@
     "pretty-bytes": "^6.1.1",
     "rollup": "^4.34.8",
     "tar-fs": "^3.0.8",
-    "verdaccio": "6.0.5"
+    "verdaccio": "6.1.0"
   },
   "xo": {
     "rules": {
