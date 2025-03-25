@@ -23,6 +23,13 @@ export const getWatchConfig = () => {
       command: 'ExtensionDetail.hotReload',
     })
   }
+  const extensionSearchViewWorkerPath = Preferences.get('develop.extensionSearchViewWorkerPath')
+  if (extensionDetail) {
+    watchConfig.push({
+      path: extensionSearchViewWorkerPath,
+      command: 'Extensions.hotReload',
+    })
+  }
   const iframeInspector = Preferences.get('develop.iframeInspectorWorkerPath')
   if (iframeInspector) {
     watchConfig.push({
