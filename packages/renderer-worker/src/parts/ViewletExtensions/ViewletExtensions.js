@@ -8,11 +8,9 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
-export const saveState = (state) => {
-  const { searchValue } = state
-  return {
-    searchValue,
-  }
+export const saveState = async (state) => {
+  const savedState = await ExtensionSearchViewWorker.invoke('SearchExtensions.saveState', state.id)
+  return savedState
 }
 
 export const create = (id, uri, x, y, width, height) => {
