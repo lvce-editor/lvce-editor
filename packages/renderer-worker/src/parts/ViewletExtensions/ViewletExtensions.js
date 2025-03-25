@@ -193,9 +193,19 @@ export const hotReload = async (state) => {
     ...state,
     items: [],
   }
-  await ExtensionSearchViewWorker.invoke('SearchExtensions.create', state.id, state.x, state.y, state.width, state.height)
+  await ExtensionSearchViewWorker.invoke(
+    'SearchExtensions.create',
+    state.id,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    state.platform,
+    state.assetDir,
+  )
   await ExtensionSearchViewWorker.invoke('SearchExtensions.loadContent', state.id, savedState)
-  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render', oldState.id)
+  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render2', oldState.id)
   return {
     ...oldState,
     commands,
