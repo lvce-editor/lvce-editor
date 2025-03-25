@@ -1,5 +1,6 @@
 import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 import * as WrapExtensionSearchCommand from '../WrapExtensionSearchCommand/WrapExtensionSearchCommand.ts'
+import * as ViewletExtensions from './ViewletExtensions.js'
 
 export const Commands = {}
 
@@ -8,5 +9,7 @@ export const getCommands = async () => {
   for (const command of commands) {
     Commands[command] = WrapExtensionSearchCommand.wrapExtensionSearchCommand(command)
   }
+  Commands['hotReload'] = ViewletExtensions.hotReload
+
   return Commands
 }

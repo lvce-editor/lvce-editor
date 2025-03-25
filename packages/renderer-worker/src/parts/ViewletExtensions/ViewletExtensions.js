@@ -178,3 +178,27 @@ export const handleBlur = (state) => {
     focused: false,
   }
 }
+
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await ExtensionSearchViewWorker.invoke('SearchExtensions.saveState', state.uid)
+  await ExtensionSearchViewWorker.restart('SearchExtensions.terminate')
+  const oldState = {
+    ...state,
+    items: [],
+  }
+  await ExtensionSearchViewWorker.invoke('SearchExtensions.create', state.id, state.x, state.y, state.width, state.height)
+  await ExtensionSearchViewWorker.invoke('SearchExtensions.loadContent', state.id, savedState)
+  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render', oldState.id)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
+  }
+}
