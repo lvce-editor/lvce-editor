@@ -43,7 +43,7 @@
     "minimist": "^1.2.8",
     "p-map": "^7.0.3",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^4.34.8",
+    "rollup": "^4.37.0",
     "tar-fs": "^3.0.8",
     "verdaccio": "6.1.0"
   },
