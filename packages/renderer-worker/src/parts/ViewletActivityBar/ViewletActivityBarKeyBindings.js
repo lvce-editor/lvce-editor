@@ -43,15 +43,5 @@ export const getKeyBindings = () => {
       command: 'ActivityBar.selectCurrent',
       when: WhenExpression.FocusActivityBar,
     },
-    {
-      key: KeyCode.Home,
-      command: 'ActivityBar.focusFirst',
-      when: WhenExpression.FocusActivityBar,
-    },
-    {
-      key: KeyCode.End,
-      command: 'ActivityBar.focusLast',
-      when: WhenExpression.FocusActivityBar,
-    },
   ]
 }
