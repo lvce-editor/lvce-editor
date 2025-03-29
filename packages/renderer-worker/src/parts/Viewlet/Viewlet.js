@@ -354,7 +354,11 @@ export const openWidget = async (moduleId, ...args) => {
   const focusByNameIndex = commands.findIndex((command) => command[0] === 'Viewlet.focusElementByName')
   const append = ['Viewlet.append', layout.uid, childUid]
   if (focusByNameIndex !== -1) {
+<<<<<<< HEAD
     commands.splice(focusByNameIndex - 1, 0, append)
+=======
+    commands.splice(focusByNameIndex, 0, append)
+>>>>>>> fix/render
   } else {
     commands.push(['Viewlet.append', layout.uid, childUid])
   }
