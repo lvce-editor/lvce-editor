@@ -56,7 +56,7 @@ export const create = (id, uri, x, y, width, height, args) => {
 export const loadContent = async (state) => {
   const { uri, args } = state
   const listItemHeight = 20
-
+  const renderAllItems = false
   await FileSearchWorker.invoke(
     'QuickPick.create2',
     state.uid,
@@ -68,6 +68,7 @@ export const loadContent = async (state) => {
     state.height,
     Platform.platform,
     args,
+    renderAllItems,
   )
   await FileSearchWorker.invoke('QuickPick.loadContent', state.uid)
   const commands = await FileSearchWorker.invoke('QuickPick.render', state.uid)
