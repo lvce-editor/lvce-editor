@@ -1,3 +1,5 @@
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+
 export const hasFunctionalRender = true
 
 const renderItems = {
@@ -16,6 +18,6 @@ const renderItems = {
 export const render = [renderItems]
 
 export const renderEventListeners = async () => {
-  // const listeners = await TextSearchWorker.invoke('TextSearch.renderEventListeners')
-  return []
+  const listeners = await FileSearchWorker.invoke('QuickPick.renderEventListeners')
+  return listeners
 }
