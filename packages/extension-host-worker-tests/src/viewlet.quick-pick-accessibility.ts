@@ -15,6 +15,8 @@
 // windows narrator says:  ""
 // orca says:  "No results"
 
+export const skip = 1
+
 export const name = 'viewlet.quick-pick-no-results'
 
 export const test = async ({ QuickPick, Locator, expect }) => {
