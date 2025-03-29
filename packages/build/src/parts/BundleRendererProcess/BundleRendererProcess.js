@@ -58,11 +58,6 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
         occurrence: `const isFirefox = getIsFirefox()`,
         replacement: `const isFirefox = false`,
       })
-      await Replace.replace({
-        path: `${cachePath}/dist/rendererProcessMain.js`,
-        occurrence: `const isMobile = getIsMobile()`,
-        replacement: `const isMobile = false`,
-      })
     }
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer process`)
