@@ -83,7 +83,7 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/about-view": "^4.16.0",
+    "@lvce-editor/about-view": "^4.17.0",
     "@lvce-editor/diff-worker": "^1.5.0",
     "@lvce-editor/editor-worker": "^5.17.0",
     "@lvce-editor/explorer-view": "^1.27.0",
