@@ -37,7 +37,8 @@ export const loadContent = async (state, savedState) => {
   )
 
   await ExtensionSearchViewWorker.invoke('SearchExtensions.loadContent', state.id, savedState)
-  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render2', state.id)
+  const diffResult = await ExtensionSearchViewWorker.invoke('SearchExtensions.diff2', state.id)
+  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render3', state.id, diffResult)
   return {
     ...state,
     commands,
@@ -74,7 +75,8 @@ export const hotReload = async (state) => {
     state.assetDir,
   )
   await ExtensionSearchViewWorker.invoke('SearchExtensions.loadContent', state.id, savedState)
-  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render2', oldState.id)
+  const diffResult = await ExtensionSearchViewWorker.invoke('SearchExtensions.diff2', state.id)
+  const commands = await ExtensionSearchViewWorker.invoke('SearchExtensions.render3', oldState.id, diffResult)
   return {
     ...oldState,
     commands,
