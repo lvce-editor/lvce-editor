@@ -77,12 +77,8 @@ export const hotReload = async (state) => {
 }
 
 export const saveState = async (state) => {
-  try {
-    const savedState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.saveState', state.uid)
-    return savedState
-  } catch {
-    return {}
-  }
+  const savedState = await ExtensionDetailViewWorker.invoke('ExtensionDetail.saveState', state.uid)
+  return savedState
 }
 
 export const hasFunctionalResize = true
