@@ -100,7 +100,7 @@
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^4.5.0",
     "@lvce-editor/text-search-worker": "^3.51.0",
-    "@lvce-editor/iframe-inspector": "^1.19.0",
+    "@lvce-editor/iframe-inspector": "^1.20.0",
     "@lvce-editor/title-bar-worker": "^1.9.0"
   }
 }
