@@ -13,7 +13,6 @@ export const loadContent = async (state: AboutState): Promise<AboutState> => {
   await AboutViewWorker.invoke('About.loadContent2', state.id)
   const diffResult = await AboutViewWorker.invoke('About.diff2', state.id)
   const commands = await AboutViewWorker.invoke('About.render2', state.id, diffResult)
-  console.log({ commands, diffResult })
   return {
     ...state,
     commands,
