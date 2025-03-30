@@ -1,8 +1,7 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/ExtensionDetailViewWorker.js'
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ViewletSize from '../ViewletSize/ViewletSize.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
 
 export const create = (id: any, uri: string, x: number, y: number, width: number, height: number) => {
   return {
@@ -12,8 +11,6 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     y,
     width,
     height,
-    size: ViewletSize.None,
-    selectedTab: '',
     uid: id,
   }
 }
@@ -39,11 +36,12 @@ export const loadContent = async (state, savedState) => {
     Platform.platform,
     AssetDir.assetDir,
   )
-  await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state.uid, Platform.platform, savedState)
-  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom2', state.uid)
+  await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent2', state.uid, savedState)
+  const diffResult = await ExtensionDetailViewWorker.invoke('ExtensionDetail.diff2', state.uid)
+  const commands = await ExtensionDetailViewWorker.invoke('ExtensionDetail.render2', state.uid, diffResult)
   return {
     ...state,
-    dom,
+    commands,
   }
 }
 
@@ -68,11 +66,12 @@ export const hotReload = async (state) => {
     AssetDir.assetDir,
   )
   await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state.uid, {})
-  const dom = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getVirtualDom2', state.uid)
+  const diffResult = ExtensionDetailViewWorker.invoke('ExtensionDetail.diff2', state.uid)
+  const commands = await ExtensionDetailViewWorker.invoke('ExtensionDetail.render2', state.uid, diffResult)
   state.isHotReloading = false
   return {
     ...state,
-    dom,
+    commands,
   }
 }
 
