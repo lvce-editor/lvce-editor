@@ -37,7 +37,7 @@
   margin: 0;
   padding: 0 5px;
   overflow: hidden;
-  contain: strict;
+  contain: content; /* TODO use contain strict */
   background: var(--QuickPickBackground);
 }
 

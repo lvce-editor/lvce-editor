@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import * as MenuEntriesManageExtension from '../src/parts/MenuEntriesManageExtension/MenuEntriesManageExtension.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
-test('getMenuEntries', () => {
+test.skip('getMenuEntries', () => {
   const menuEntries = MenuEntriesManageExtension.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: -1,

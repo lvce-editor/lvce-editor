@@ -16,7 +16,8 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
 export const loadContent = async (state: IframeInspectorState): Promise<IframeInspectorState> => {
   await IframeInspectorWorker.invoke('IframeInspector.create', state.id, state.x, state.y, state.width, state.height)
   await IframeInspectorWorker.invoke('IframeInspector.loadContent', state.id)
-  const commands = await IframeInspectorWorker.invoke('IframeInspector.render', state.id)
+  const diffResult = await IframeInspectorWorker.invoke('IframeInspector.diff2', state.id)
+  const commands = await IframeInspectorWorker.invoke('IframeInspector.render2', state.id, diffResult)
   return {
     ...state,
     commands,
@@ -39,7 +40,8 @@ export const hotReload = async (state) => {
   }
   await IframeInspectorWorker.invoke('IframeInspector.create', state.id, state.x, state.y, state.width, state.height)
   await IframeInspectorWorker.invoke('IframeInspector.loadContent', state.id, savedState)
-  const commands = await IframeInspectorWorker.invoke('IframeInspector.render', oldState.id)
+  const diffResult = await IframeInspectorWorker.invoke('IframeInspector.diff', oldState.id)
+  const commands = await IframeInspectorWorker.invoke('IframeInspector.render2', oldState.id, diffResult)
   return {
     ...oldState,
     commands,

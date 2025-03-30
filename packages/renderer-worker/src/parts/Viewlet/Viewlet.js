@@ -351,7 +351,13 @@ export const openWidget = async (moduleId, ...args) => {
     commands.unshift(['Viewlet.dispose', moduleId])
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
-  commands.push(['Viewlet.append', layout.uid, childUid])
+  const focusByNameIndex = commands.findIndex((command) => command[0] === 'Viewlet.focusElementByName')
+  const append = ['Viewlet.append', layout.uid, childUid]
+  if (focusByNameIndex !== -1) {
+    commands.splice(focusByNameIndex, 0, append)
+  } else {
+    commands.push(['Viewlet.append', layout.uid, childUid])
+  }
   // TODO ask view to render, rendering focus
   commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)

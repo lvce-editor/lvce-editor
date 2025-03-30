@@ -45,7 +45,8 @@ export const saveState = (state) => {
 export const loadContent = async (state, savedState) => {
   await KeyBindingsViewWorker.invoke('KeyBindings.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
   await KeyBindingsViewWorker.invoke('KeyBindings.loadContent', state.uid, savedState)
-  const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render2', state.uid)
+  const diffResult = await KeyBindingsViewWorker.invoke('KeyBindings.diff2', state.uid)
+  const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render3', state.uid, diffResult)
   return {
     ...state,
     commands,
@@ -68,7 +69,8 @@ export const hotReload = async (state) => {
   }
   await KeyBindingsViewWorker.invoke('KeyBindings.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
   await KeyBindingsViewWorker.invoke('KeyBindings.loadContent', state.uid, savedState)
-  const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render2', oldState.uid)
+  const diffResult = await KeyBindingsViewWorker.invoke('KeyBindings.diff2', state.uid)
+  const commands = await KeyBindingsViewWorker.invoke('KeyBindings.render3', oldState.uid, diffResult)
   return {
     ...oldState,
     commands,

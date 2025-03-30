@@ -1,21 +1,23 @@
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+
 export const hasFunctionalRender = true
 
-const renderItems = {
+export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
+
+export const renderItems = {
   isEqual(oldState, newState) {
-    return newState.commands.length === 0
+    return false
   },
-  apply(oldState, newState) {
-    const commands = newState.commands
-    // @ts-ignore
-    newState.commands = []
-    return commands
-  },
+  apply: AdjustCommands.apply,
   multiple: true,
 }
 
 export const render = [renderItems]
 
 export const renderEventListeners = async () => {
-  // const listeners = await TextSearchWorker.invoke('TextSearch.renderEventListeners')
-  return []
+  const listeners = await FileSearchWorker.invoke('QuickPick.renderEventListeners')
+  return listeners
 }
