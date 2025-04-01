@@ -83,14 +83,14 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/about-view": "^4.17.0",
+    "@lvce-editor/about-view": "^5.0.0",
     "@lvce-editor/diff-worker": "^1.5.0",
     "@lvce-editor/editor-worker": "^5.17.0",
     "@lvce-editor/explorer-view": "^1.27.0",
     "@lvce-editor/extension-detail-view": "^3.17.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^4.14.0",
-    "@lvce-editor/extension-search-view": "^2.12.0",
+    "@lvce-editor/extension-search-view": "^3.0.0",
     "@lvce-editor/file-search-worker": "^4.6.0",
     "@lvce-editor/iframe-worker": "^5.31.0",
     "@lvce-editor/keybindings-view": "^4.0.0",
@@ -101,6 +101,6 @@
     "@lvce-editor/test-worker": "^4.7.0",
     "@lvce-editor/text-search-worker": "^4.0.0",
     "@lvce-editor/iframe-inspector": "^1.21.0",
-    "@lvce-editor/title-bar-worker": "^1.9.0"
+    "@lvce-editor/title-bar-worker": "^1.10.0"
   }
 }
