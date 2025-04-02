@@ -4,6 +4,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Focus from '../Focus/Focus.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -352,22 +353,30 @@ export const openWidget = async (moduleId, ...args) => {
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
   const focusByNameIndex = commands.findIndex((command) => command[0] === 'Viewlet.focusElementByName')
+
   const append = ['Viewlet.append', layout.uid, childUid]
   if (focusByNameIndex !== -1) {
     commands.splice(focusByNameIndex, 0, append)
   } else {
     commands.push(['Viewlet.append', layout.uid, childUid])
   }
-  // TODO ask view to render, rendering focus
+
+  const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
+  let focusContext = 0
+  console.log({ commands: [...commands] })
+  if (setFocusContextIndex !== -1) {
+    const command = commands[setFocusContextIndex]
+    focusContext = command[1]
+    console.log({ focusContext })
+    commands.splice(setFocusContextIndex, 1)
+  }
   commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  // TODO commands should be like this
-  // viewlet.create quickpick
-  // quickpick.setItems
-  // quickpick.setFocusedIndex
-  // quickpick.setValue
-  // viewlet.show quickpick
-  //
+  // TODO send focus changes to renderer process together with other message
+  console.log('do set focus', focusContext)
+  if (focusContext) {
+    Focus.setFocus(focusContext)
+  }
 }
 
 export const closeWidget = async (id) => {
