@@ -71,7 +71,8 @@ export const loadContent = async (state) => {
     renderAllItems,
   )
   await FileSearchWorker.invoke('QuickPick.loadContent', state.uid)
-  const commands = await FileSearchWorker.invoke('QuickPick.render', state.uid)
+  const diffResult = await FileSearchWorker.invoke('QuickPick.diff2', state.uid)
+  const commands = await FileSearchWorker.invoke('QuickPick.render2', state.uid, diffResult)
 
   return {
     ...state,
