@@ -41,7 +41,7 @@
     "@lvce-editor/preview-process": "^9.1.0",
     "@lvce-editor/process-explorer": "^2.4.0",
     "@lvce-editor/pty-host": "^3.1.0",
-    "@lvce-editor/search-process": "^6.0.0",
+    "@lvce-editor/search-process": "^6.1.0",
     "@lvce-editor/typescript-compile-process": "^2.3.0",
     "open": "^10.1.0",
     "tail": "^2.2.6",
