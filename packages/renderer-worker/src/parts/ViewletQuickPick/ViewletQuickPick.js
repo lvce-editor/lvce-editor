@@ -5,6 +5,7 @@ import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as Platform from '../Platform/Platform.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -69,6 +70,7 @@ export const loadContent = async (state) => {
     Platform.platform,
     args,
     renderAllItems,
+    Workspace.state.workspacePath,
   )
   await FileSearchWorker.invoke('QuickPick.loadContent', state.uid)
   const diffResult = await FileSearchWorker.invoke('QuickPick.diff2', state.uid)
