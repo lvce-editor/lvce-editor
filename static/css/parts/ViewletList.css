@@ -8,3 +8,8 @@
   position: relative;
   height: 100%;
 }
+
+/* TODO have list contain strict if possible */
+.ContainContent {
+  contain: content;
+}
