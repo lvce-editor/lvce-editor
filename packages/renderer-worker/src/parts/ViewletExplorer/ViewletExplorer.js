@@ -45,11 +45,11 @@ export const loadContent = async (state, savedState) => {
   await ExplorerViewWorker.invoke('Explorer.create', state.uid, state.uri, state.x, state.y, state.width, state.height, null, state.parentUid)
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
-  const actionDom = ExplorerViewWorker.invoke('Explorer.renderActions2', state.uid)
+  const actionsDom = await ExplorerViewWorker.invoke('Explorer.renderActions2', state.uid)
   return {
     ...state,
     commands,
-    actionDom,
+    actionsDom,
   }
 }
 
