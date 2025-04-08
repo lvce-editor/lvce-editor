@@ -17,27 +17,10 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
   return {
     uid: id,
     parentUid,
-    root: '',
-    items: [],
-    focusedIndex: -1,
-    focused: false,
-    hoverIndex: -1,
     x,
     y,
     width,
     height,
-    deltaY: 0,
-    minLineY: 0,
-    maxLineY: 0,
-    pathSeparator: PathSeparatorType.Slash,
-    version: 0,
-    editingIndex: -1,
-    itemHeight: Height.ListItem,
-    dropTargets: [],
-    excluded: [],
-    editingValue: '',
-    editingType: ExplorerEditingType.None,
-    editingIcon: '',
   }
 }
 
@@ -53,20 +36,7 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-const cancelRequest = (state) => {}
-
-export const dispose = (state) => {
-  if (!state.pendingRequests) {
-    return
-  }
-  for (const request of state.pendingRequests) {
-    cancelRequest(request)
-  }
-  state.pendingRequests = []
-  // if (state.lastFocusedWidget === context) {
-  //   state.lastFocusedWidget = undefined
-  // }
-}
+export const dispose = (state) => {}
 
 export const hasFunctionalResize = true
 
