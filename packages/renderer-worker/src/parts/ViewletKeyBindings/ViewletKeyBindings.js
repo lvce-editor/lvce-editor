@@ -8,32 +8,10 @@ import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsView
 
 export const create = (id, uri, x, y, width, height) => {
   return {
-    parsedKeyBindings: [],
-    filteredKeyBindings: [],
-    minLineY: 0,
-    maxLineY: 0,
-    maxVisibleItems: 0,
-    rowHeight: 24,
     x,
     y,
     width,
     height,
-    value: '',
-    selectedIndex: -1,
-    focusedIndex: -1,
-    finalDeltaY: 0,
-    deltaY: 0,
-    uri,
-    columnWidth1: 0,
-    columnWidth2: 0,
-    columnWidth3: 0,
-    contentPadding: 30,
-    resizerDownId: 0,
-    defineKeyBindingsId: -1,
-    editIconSize: 22,
-    padding: 15,
-    searchHeaderHeight: 50,
-    tableHeaderHeight: 24,
     uid: id,
   }
 }
