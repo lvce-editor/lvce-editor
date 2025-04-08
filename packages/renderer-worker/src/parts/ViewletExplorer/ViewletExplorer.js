@@ -1,8 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
-import * as Height from '../Height/Height.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
