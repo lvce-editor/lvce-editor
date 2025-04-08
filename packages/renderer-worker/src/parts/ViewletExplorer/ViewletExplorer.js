@@ -44,7 +44,8 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 export const loadContent = async (state, savedState) => {
   await ExplorerViewWorker.invoke('Explorer.create', state.uid, state.uri, state.x, state.y, state.width, state.height, null, state.parentUid)
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', state.uid)
+  const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
   const actionsDom = await ExplorerViewWorker.invoke('Explorer.renderActions2', state.uid)
   return {
     ...state,
@@ -95,7 +96,8 @@ export const hotReload = async (state) => {
     items: [],
   }
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
-  const commands = await ExplorerViewWorker.invoke('Explorer.render', oldState.uid)
+  const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
+  const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
   return {
     ...oldState,
     commands,
