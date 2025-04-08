@@ -93,7 +93,7 @@
     "@lvce-editor/extension-search-view": "^3.2.0",
     "@lvce-editor/file-search-worker": "^5.11.0",
     "@lvce-editor/iframe-worker": "^5.31.0",
-    "@lvce-editor/keybindings-view": "^4.0.0",
+    "@lvce-editor/keybindings-view": "^4.1.0",
     "@lvce-editor/markdown-worker": "^1.4.0",
     "@lvce-editor/renderer-process": "^11.3.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.0.1",
