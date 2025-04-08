@@ -1,13 +1,9 @@
-import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
-import * as ViewletExplorerActions from './ViewletExplorerActions.ts'
-
 export const renderActions = {
   isEqual(oldState, newState) {
-    return oldState.root === newState.root
+    return JSON.stringify(oldState.actionsDom) === JSON.stringify(newState.actionsDom)
   },
   apply(oldState, newState) {
-    const actions = ViewletExplorerActions.getActions(newState.root)
-    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
+    const dom = newState.actionsDom
     return dom
   },
 }
