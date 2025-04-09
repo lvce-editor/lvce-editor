@@ -4,7 +4,7 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-export const hasFunctionalEvents = true
+export const hasFunctionalEvents = false // TODO
 
 const renderItems = {
   isEqual(oldState, newState) {
