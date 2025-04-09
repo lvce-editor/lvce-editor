@@ -17,6 +17,9 @@ export const apply = (oldState, newState) => {
     if (command[0] === 'Viewlet.setValueByName') {
       return ['Viewlet.setValueByName', newState.uid, ...command.slice(1)]
     }
+    if (command[0] === 'Viewlet.setFocusContext') {
+      return ['Viewlet.setFocusContext', newState.uid, ...command.slice(1)]
+    }
     if (
       command[0] === 'Viewlet.create' ||
       command[0] === 'Viewlet.send' ||
