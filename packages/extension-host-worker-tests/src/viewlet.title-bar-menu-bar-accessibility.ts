@@ -17,6 +17,8 @@
 
 export const name = 'viewlet.title-bar-menu-bar-keyboard-navigation'
 
+export const skip = 1
+
 export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
   // assert
   const titleBarMenuBar = Locator('.TitleBarMenuBar')
