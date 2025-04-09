@@ -363,17 +363,14 @@ export const openWidget = async (moduleId, ...args) => {
 
   const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
   let focusContext = 0
-  console.log({ commands: [...commands] })
   if (setFocusContextIndex !== -1) {
     const command = commands[setFocusContextIndex]
     focusContext = command[1]
-    console.log({ focusContext })
     commands.splice(setFocusContextIndex, 1)
   }
   commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO send focus changes to renderer process together with other message
-  console.log('do set focus', focusContext)
   if (focusContext) {
     Focus.setFocus(focusContext)
   }
