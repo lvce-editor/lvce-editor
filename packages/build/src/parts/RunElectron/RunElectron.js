@@ -4,9 +4,9 @@ import { spawn } from 'child_process'
 
 let electronPath = ''
 if (process.platform === 'darwin') {
-  electronPath = join(root, 'packages/shared-process/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron')
+  electronPath = join(root, 'packages/main-process/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron')
 } else {
-  electronPath = join(root, 'packages/shared-process/node_modules/electron/dist/electron')
+  electronPath = join(root, 'packages/main-process/node_modules/electron/dist/electron')
 }
 
 const mainProcessPath = join(root, 'packages', 'main-process', 'node_modules', '@lvce-editor', 'main-process')
