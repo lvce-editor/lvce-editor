@@ -64,8 +64,8 @@ export const hotReload = async (state) => {
   await TextSearchWorker.restart('TextSearch.terminate')
   await doCreate(state)
   await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
-  const diffResult = await TextSearchWorker.invoke('TextSearch.diff', state.uid)
-  const commands = await TextSearchWorker.invoke('TextSearch.render', state.uid, diffResult)
+  const diffResult = await TextSearchWorker.invoke('TextSearch.diff2', state.uid)
+  const commands = await TextSearchWorker.invoke('TextSearch.render2', state.uid, diffResult)
   state.commands = commands
   state.isHotReloading = false
   return {
