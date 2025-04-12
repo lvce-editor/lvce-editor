@@ -164,6 +164,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.WindowTitle
     case 'PointerCapture':
       return ModuleId.PointerCapture
+    case 'FileSystemHandle':
+      return ModuleId.FileSystemHandle
     case 'ExtensionHostQuickPick':
       return ModuleId.ExtensionHostQuickPick
     case 'ExtensionHostDialog':
