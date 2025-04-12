@@ -19,6 +19,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     y,
     width,
     height,
+    platform: Platform.platform,
   }
 }
 
@@ -33,7 +34,7 @@ export const loadContent = async (state, savedState) => {
     state.height,
     null,
     state.parentUid,
-    Platform.platform, // TODO instead of using global variables, pass platform from create function into state
+    state.platform,
   )
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
@@ -84,7 +85,7 @@ export const hotReload = async (state) => {
     state.height,
     null,
     state.parentUid,
-    Platform.platform, // TODO instead of using global variables, pass platform from create function into state
+    state.platform,
   )
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
