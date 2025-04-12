@@ -12,6 +12,8 @@ export const load = (moduleId) => {
       return import('../AutoUpdater/AutoUpdater.ipc.js')
     case ModuleId.GetEditorSourceActions:
       return import('../GetEditorSourceActions/GetEditorSourceActions.ipc.js')
+    case ModuleId.FileSystemHandle:
+      return import('../FileSystemHandle/FileSystemHandle.ipc.js')
     case ModuleId.Blob:
       return import('../Blob/Blob.ipc.js')
     case ModuleId.BulkReplacement:
