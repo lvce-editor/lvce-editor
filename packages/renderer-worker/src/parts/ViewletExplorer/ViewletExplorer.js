@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
+import * as Platform from '../Platform/Platform.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -22,7 +23,18 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  await ExplorerViewWorker.invoke('Explorer.create', state.uid, state.uri, state.x, state.y, state.width, state.height, null, state.parentUid)
+  await ExplorerViewWorker.invoke(
+    'Explorer.create',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    null,
+    state.parentUid,
+    Platform.platform, // TODO instead of using global variables, pass platform from create function into state
+  )
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
   const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
@@ -62,6 +74,18 @@ export const hotReload = async (state) => {
     ...state,
     items: [],
   }
+  await ExplorerViewWorker.invoke(
+    'Explorer.create',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    null,
+    state.parentUid,
+    Platform.platform, // TODO instead of using global variables, pass platform from create function into state
+  )
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
   const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
