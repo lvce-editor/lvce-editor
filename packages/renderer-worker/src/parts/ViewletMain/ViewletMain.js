@@ -549,6 +549,9 @@ export const handleDragLeave = (state, x, y) => {
 export const handleDragOver = (state, eventX, eventY) => {
   const { x, y, width, height, tabHeight, groups } = state
   const group = groups[0]
+  if (!group) {
+    return state
+  }
   const { editors } = group
   const deltaTop = editors.length > 0 ? tabHeight : 0
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + deltaTop, width, height - deltaTop, eventX, eventY)
