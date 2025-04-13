@@ -1,5 +1,5 @@
 :root {
-  --InputValidationErrorBorder: red;
+  --InputValidationErrorBorder: #be1100;
   --DisabledForeground: rgba(204, 204, 204, 0.5);
 }
 
