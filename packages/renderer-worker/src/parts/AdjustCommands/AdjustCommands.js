@@ -5,6 +5,9 @@ export const apply = (oldState, newState) => {
     return []
   }
   const adjustedCommands = commands.map((command) => {
+    if (command[1] === newState.uid) {
+      return command
+    }
     if (command[0] === 'Viewlet.setDom2') {
       return ['Viewlet.setDom2', newState.uid, ...command.slice(1)]
     }

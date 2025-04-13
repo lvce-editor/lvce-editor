@@ -1,5 +1,6 @@
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 
 export const hasFunctionalRender = true
 
@@ -11,12 +12,7 @@ const renderItems = {
   isEqual(oldState: SearchState, newState: SearchState) {
     return newState.commands.length === 0
   },
-  apply(oldState: SearchState, newState: SearchState) {
-    const commands = newState.commands
-    // @ts-ignore
-    newState.commands = []
-    return commands
-  },
+  apply: AdjustCommands.apply,
   multiple: true,
 }
 
