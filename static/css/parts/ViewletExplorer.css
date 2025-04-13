@@ -1,5 +1,6 @@
 :root {
   --DropTargetBackground: #062f4a;
+  --InputValidationErrorBorder: #be1100;
 }
 
 .Explorer {
@@ -12,4 +13,8 @@
 
 .DropTarget {
   background: var(--DropTargetBackground);
+}
+
+.InputValidationError {
+  border-color: var(--InputValidationErrorBorder);
 }
