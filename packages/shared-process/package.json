@@ -27,7 +27,7 @@
     "@lvce-editor/ipc": "^13.8.0",
     "@lvce-editor/json-rpc": "^5.4.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
-    "@lvce-editor/pretty-error": "^1.6.0",
+    "@lvce-editor/pretty-error": "^2.0.0",
     "@lvce-editor/verror": "^1.6.0",
     "debug": "^4.4.0",
     "is-object": "^1.0.2",
