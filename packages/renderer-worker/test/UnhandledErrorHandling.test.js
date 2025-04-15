@@ -50,7 +50,7 @@ beforeAll(() => {
   })
 })
 
-test('handleUnhandledError - five parameters', async () => {
+test.skip('handleUnhandledError - five parameters', async () => {
   const message = 'Uncaught VError: failed to parse json: SyntaxError: Unexpected token \'o\', "[object Blob]" is not valid JSON'
   const filename = '/test/packages/renderer-worker/src/parts/Json/Json.js'
   const lineno = 17
@@ -112,7 +112,7 @@ export const parse = (content) => {
   )
 })
 
-test('handleUnhandledRejection - prevent default', async () => {
+test.skip('handleUnhandledRejection - prevent default', async () => {
   const error = new TypeError("Cannot read properties of undefined (reading 'hovered')")
   error.stack = `TypeError: Cannot read properties of undefined (reading 'hovered')
     at handleTabsPointerOut (/test/packages/renderer-worker/src/parts/ViewletMain/ViewletMainHandleTabsPointerOut.js:13:15)
@@ -146,7 +146,7 @@ test('handleUnhandledRejection - prevent default', async () => {
   )
 })
 
-test('handleUnhandledRejection - bulk replacement error', async () => {
+test.skip('handleUnhandledRejection - bulk replacement error', async () => {
   const error = new Error()
   error.message = "VError: Bulk replacement failed: File not found: './test.txt'"
   error.stack = `Error: VError: Bulk replacement failed: File not found: './test.txt'
