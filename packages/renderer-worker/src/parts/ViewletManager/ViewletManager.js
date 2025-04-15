@@ -597,7 +597,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     viewlet.type = 4
     const prettyError = await PrettyError.prepare(error)
-    await PrettyError.print(prettyError)
+    PrettyError.print(prettyError)
     try {
       if (module && module.handleError) {
         await module.handleError(error)
