@@ -54,7 +54,7 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const ViewletMainCloseTabsRight = await import('../src/parts/ViewletMain/ViewletMainCloseTabsRight.ts')
 
-test.skip('closeTabsRight - 0 0 - first tab is focused and first tab is selected', async () => {
+test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -102,7 +102,7 @@ test.skip('closeTabsRight - 0 0 - first tab is focused and first tab is selected
   ])
 })
 
-test.skip('closeTabsRight - 0 1 - first tab is focused and second tab is selected', async () => {
+test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -150,7 +150,7 @@ test.skip('closeTabsRight - 0 1 - first tab is focused and second tab is selecte
   ])
 })
 
-test.skip('closeTabsRight - 0 2 - first tab is focused and third tab is selected', async () => {
+test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -198,7 +198,7 @@ test.skip('closeTabsRight - 0 2 - first tab is focused and third tab is selected
   ])
 })
 
-test.skip('closeTabsRight - 1 0 - second tab is focused and first tab is selected', async () => {
+test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -250,7 +250,7 @@ test.skip('closeTabsRight - 1 0 - second tab is focused and first tab is selecte
   ])
 })
 
-test.skip('closeTabsRight - 1 1 - second tab is focused and second tab is selected', async () => {
+test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -302,7 +302,7 @@ test.skip('closeTabsRight - 1 1 - second tab is focused and second tab is select
   ])
 })
 
-test.skip('closeTabsRight - 1 2 - second tab is focused and third tab is selected', async () => {
+test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -354,7 +354,7 @@ test.skip('closeTabsRight - 1 2 - second tab is focused and third tab is selecte
   ])
 })
 
-test.skip('closeTabsRight - 2 0 - third tab is focused and first tab is selected', async () => {
+test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -410,7 +410,7 @@ test.skip('closeTabsRight - 2 0 - third tab is focused and first tab is selected
   ])
 })
 
-test.skip('closeTabsRight - 2 1 - third tab is focused and second tab is selected', async () => {
+test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
@@ -466,7 +466,7 @@ test.skip('closeTabsRight - 2 1 - third tab is focused and second tab is selecte
   ])
 })
 
-test.skip('closeTabsRight - 2 2 - third tab is focused and third tab is selected', async () => {
+test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', async () => {
   const state: MainState = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
     activeGroupIndex: 0,
