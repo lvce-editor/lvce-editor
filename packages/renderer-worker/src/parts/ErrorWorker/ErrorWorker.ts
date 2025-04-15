@@ -1,9 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
-import * as LaunchEditorWorker from '../LaunchEditorWorker/LaunchEditorWorker.ts'
-import type { EditorWorkerApi } from '@lvce-editor/editor-worker/dist/api/api.d.ts'
+import * as LaunchErrorWorker from '../LaunchErrorWorker/LaunchErrorWorker.ts'
 
-const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(LaunchEditorWorker.launchEditorWorker)
+const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(LaunchErrorWorker.launchErrorWorker)
 
-const actualInvoke = invoke as EditorWorkerApi['invoke']
-
-export { actualInvoke as invoke, invokeAndTransfer }
+export { invoke, invokeAndTransfer }
