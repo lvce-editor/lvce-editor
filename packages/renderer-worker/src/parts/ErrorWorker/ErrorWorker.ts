@@ -1,8 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
-import * as LaunchEditorWorker from '../LaunchEditorWorker/LaunchEditorWorker.ts'
+import * as LaunchErrorWorker from '../LaunchErrorWorker/LaunchErrorWorker.ts'
 
-const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(LaunchEditorWorker.launchEditorWorker)
+const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(LaunchErrorWorker.launchErrorWorker)
 
-const actualInvoke = invoke
-
-export { actualInvoke as invoke, invokeAndTransfer }
+export { invoke, invokeAndTransfer }
