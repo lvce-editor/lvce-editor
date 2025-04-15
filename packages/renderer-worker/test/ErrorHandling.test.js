@@ -42,7 +42,7 @@ beforeAll(() => {
   })
 })
 
-test.skip('handleError - normal error', async () => {
+test('handleError - normal error', async () => {
   const mockError = new Error('oops')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -53,7 +53,7 @@ test.skip('handleError - normal error', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(/* Notification.create */ 'Notification.create', 'error', 'Error: oops')
 })
 
-test.skip('handleError - null', async () => {
+test('handleError - null', async () => {
   const mockError = null
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -64,7 +64,7 @@ test.skip('handleError - null', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(/* Notification.create */ 'Notification.create', 'error', 'Error: null')
 })
 
-test.skip('handleError - multiple causes', async () => {
+test('handleError - multiple causes', async () => {
   const mockError1 = new Error('SyntaxError: Unexpected token , in JSON at position 7743')
   // @ts-ignore
   const mockError2 = new Error('Failed to load url /keyBindings.json', {
@@ -96,7 +96,7 @@ test.skip('handleError - multiple causes', async () => {
   )
 })
 
-test.skip('handleError - with code frame, error stack includes message', async () => {
+test('handleError - with code frame, error stack includes message', async () => {
   const mockError = new Error()
   mockError.name = 'VError'
   mockError.message = 'Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"'
