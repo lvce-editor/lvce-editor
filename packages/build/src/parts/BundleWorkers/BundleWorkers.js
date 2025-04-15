@@ -15,7 +15,6 @@ import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/Bundl
 import * as BundleIframeInspectorWorkerCached from '../BundleIframeInspectorWorkerCached/BundleIfameInspectorWorkerCached.js'
 import * as BundleExtensionDetailViewWorkerCached from '../BundleExtensionDetailViewWorkerCached/BundleExtensionDetailViewWorkerCached.js'
 import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleErrorWorkerCached from '../BundleErrorWorkerCached/BundleErrorWorkerCached.js'
 import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearchViewWorkerCached/BundleExtensionSearchViewWorkerCached.js'
 import * as BundleMarkdownWorkerCached from '../BundleMarkdownWorkerCached/BundleMarkdownWorkerCached.js'
@@ -105,15 +104,6 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
-  })
-  const errorWorkerCachePath = await BundleErrorWorkerCached.bundleErrorWorkerCached({
-    assetDir,
-    commitHash,
-    platform,
-  })
-  await Copy.copy({
-    from: errorWorkerCachePath,
-    to: `${toRoot}/packages/error-worker`,
   })
   const iframeInspectorWorkerCachePath = await BundleIframeInspectorWorkerCached.bundleIframeInspectorWorkerCached({
     assetDir,
