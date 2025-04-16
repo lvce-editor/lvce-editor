@@ -13,7 +13,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Failed to activate extension sample.error-clone: DataCloneError: Failed to execute 'structuredClone' on 'WorkerGlobalScope': #<Promise> could not be cloned.`,
+    `Error: Failed to activate extension sample.error-clone: DataCloneError: Failed to execute 'structuredClone' on 'WorkerGlobalScope': #<Promise> could not be cloned.`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(

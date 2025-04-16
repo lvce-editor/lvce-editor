@@ -1,12 +1,10 @@
-import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
+import type { SearchState } from './ViewletSearchTypes.ts'
 
 export const renderActions = {
-  isEqual(oldState, newState) {
-    return oldState === newState
+  isEqual(oldState: SearchState, newState: SearchState) {
+    return oldState.actionsDom === newState.actionsDom
   },
-  apply(oldState, newState) {
-    const actions = []
-    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
-    return dom
+  apply(oldState: SearchState, newState: SearchState) {
+    return newState.actionsDom
   },
 }

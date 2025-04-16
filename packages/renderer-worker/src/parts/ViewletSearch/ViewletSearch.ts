@@ -12,6 +12,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     width,
     height,
     commands: [],
+    actionsDom: [],
   }
 }
 
@@ -40,9 +41,12 @@ export const loadContent = async (state: SearchState, savedState: any): Promise<
   await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
   const diffResult = await TextSearchWorker.invoke('TextSearch.diff2', state.uid)
   const commands = await TextSearchWorker.invoke('TextSearch.render2', state.uid, diffResult)
+  const actionsDom = await TextSearchWorker.invoke('TextSearch.renderActions', state.uid)
+
   return {
     ...state,
     commands,
+    actionsDom,
   }
 }
 

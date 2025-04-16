@@ -12,7 +12,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // assert
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(`Failed to activate extension sample.error-unexpected-token: BabelParseError: Missing semicolon.`)
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-unexpected-token: BabelParseError: Missing semicolon.`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
     `> 1 | []0

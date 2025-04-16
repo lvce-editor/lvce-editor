@@ -30,6 +30,9 @@ export const handleError = async (error, notify = true, prefix = '') => {
 export const showErrorDialog = async (error) => {
   try {
     const prettyError = await PrettyError.prepare(error)
+    if (prettyError && prettyError.type === 'Object') {
+      prettyError.type = 'Error'
+    }
     await Command.execute(/* Dialog.showMessage */ 'Dialog.showMessage', /* message */ prettyError)
   } catch {
     // ignore

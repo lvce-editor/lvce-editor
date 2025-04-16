@@ -5,4 +5,5 @@ export interface SearchState {
   readonly y: number
   readonly width: number
   readonly height: number
+  readonly actionsDom: readonly any[]
 }
