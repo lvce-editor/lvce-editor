@@ -12,6 +12,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     width,
     height,
     commands: [],
+    actionsDom: [],
   }
 }
 
