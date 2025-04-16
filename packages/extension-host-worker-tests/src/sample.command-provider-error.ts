@@ -18,5 +18,5 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // TODO less obstrusive error message, maybe notification
   // TODO should show stack trace
   // TODO should show babel code frame
-  await expect(dialogErrorMessage).toHaveText('Object: Failed to execute command: oops')
+  await expect(dialogErrorMessage).toHaveText('Failed to execute command: oops')
 }

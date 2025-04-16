@@ -13,7 +13,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Object: Failed to activate extension sample.error-cannot-read-properties-of-null-reading-value: TypeError: Cannot read properties of null (reading 'value')`,
+    `Failed to activate extension sample.error-cannot-read-properties-of-null-reading-value: TypeError: Cannot read properties of null (reading 'value')`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(

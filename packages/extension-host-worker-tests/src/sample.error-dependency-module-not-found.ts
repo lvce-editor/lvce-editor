@@ -11,9 +11,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(
-    `Object: Failed to activate extension sample.error-dependency-module-not-found: Module not found "./not-found.js"`,
-  )
+  await expect(errorMessage).toHaveText(`Failed to activate extension sample.error-dependency-module-not-found: Module not found "./not-found.js"`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
     `> 1 | import notFound from './not-found.js'

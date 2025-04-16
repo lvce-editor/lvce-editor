@@ -12,7 +12,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Object: Failed to activate extension sample.error-dependency-module-not-found-complex: Module not found "./parts/math.js"`,
+    `Failed to activate extension sample.error-dependency-module-not-found-complex: Module not found "./parts/math.js"`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(

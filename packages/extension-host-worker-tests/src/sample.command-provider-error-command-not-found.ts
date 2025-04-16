@@ -16,5 +16,5 @@ export const test: Test = async ({ Extension, QuickPick, Locator, expect }) => {
   await expect(dialogErrorMessage).toBeVisible()
   // TODO better error message
   // TODO less obstrusive error message, maybe notification
-  await expect(dialogErrorMessage).toHaveText('Object: Failed to execute command: command xyz.sampleCommand not found')
+  await expect(dialogErrorMessage).toHaveText('Failed to execute command: command xyz.sampleCommand not found')
 }
