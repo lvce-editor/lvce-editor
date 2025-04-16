@@ -16,7 +16,6 @@ export const logError = async (error, prefix = '') => {
 
 export const handleError = async (error, notify = true, prefix = '') => {
   try {
-    console.log({ error })
     const prettyError = await logError(error, prefix)
     if (notify) {
       await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
