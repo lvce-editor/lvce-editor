@@ -10,7 +10,7 @@ export const state = {
 
 export const logError = async (error, prefix = '') => {
   const prettyError = await PrettyError.prepare(error)
-  PrettyError.print(prettyError, prefix)
+  await PrettyError.print(prettyError, prefix)
   return prettyError
 }
 
