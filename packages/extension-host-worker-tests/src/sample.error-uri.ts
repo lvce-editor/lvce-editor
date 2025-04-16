@@ -13,9 +13,9 @@ export const test = async ({ Extension, QuickPick, Locator, expect, Platform }) 
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   if (Platform.isFirefox()) {
-    await expect(errorMessage).toHaveText(`Object: Failed to activate extension sample.error-uri: URIError: malformed URI sequence`)
+    await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-uri: URIError: malformed URI sequence`)
   } else {
-    await expect(errorMessage).toHaveText(`Object: Failed to activate extension sample.error-uri: URIError: URI malformed`)
+    await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-uri: URIError: URI malformed`)
   }
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(

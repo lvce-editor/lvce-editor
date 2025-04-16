@@ -13,7 +13,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const errorMessage = Locator('#DialogBodyErrorMessage')
   // TODO message should say SyntaxError instead of BabelParseError
   await expect(errorMessage).toHaveText(
-    `Object: Failed to activate extension sample.error-identifier-has-already-been-declared: BabelParseError: Identifier 'x' has already been declared.`,
+    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared: BabelParseError: Identifier 'x' has already been declared.`,
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(`  1 | let x = 1

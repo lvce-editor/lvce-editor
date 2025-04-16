@@ -17,6 +17,6 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // TODO should show stack trace
   // TODO should show babel code frame
   await expect(dialogErrorMessage).toHaveText(
-    'Object: Failed to activate extension sample.command-provider-error-command-registered-multiple-times: Failed to register command xyz.sampleCommand: command cannot be registered multiple times',
+    'Error: Failed to activate extension sample.command-provider-error-command-registered-multiple-times: Failed to register command xyz.sampleCommand: command cannot be registered multiple times',
   )
 }
