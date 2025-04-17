@@ -39,6 +39,10 @@ export const chmod = (path, permissions) => {
   return ExtensionHostWorker.invoke('FileSystemMemory.chmod', path, permissions)
 }
 
+export const rename = (oldPath, newPath) => {
+  return ExtensionHostWorker.invoke('FileSystemMemory.rename', oldPath, newPath)
+}
+
 export const getFiles = () => {
   return ExtensionHostWorker.invoke('FileSystemMemory.getFiles')
 }
