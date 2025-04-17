@@ -1,14 +1,12 @@
 import * as Ajax from '../Ajax/Ajax.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
+import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as GetSourceMapMatch from '../GetSourceMapMatch/GetSourceMapMatch.js'
 import * as IsActualSourceFile from '../IsActualSourceFile/IsActualSourceFile.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
-// @ts-ignore
-import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
-import * as IsFirefox from '../IsFirefox/IsFirefox.js'
 
 const getErrorMessage = (error) => {
   if (!error) {
@@ -162,36 +160,7 @@ export const prepare = async (error) => {
 }
 
 export const print = async (error, prefix = '') => {
-  if (IsFirefox.isFirefox) {
-    // Firefox does not support printing codeframe with error stack
-    if (error && error._error) {
-      Logger.error(`${prefix}${error._error}`)
-      return
-    }
-    Logger.error(`${prefix}${error}`)
-    return
-  }
-  if (error && error.type && error.message && error.codeFrame) {
-    Logger.error(`${prefix}${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
-    return
-  }
-  if (error && error.message && error.codeFrame) {
-    Logger.error(`${prefix}${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
-    return
-  }
-  if (error && error.type && error.message) {
-    Logger.error(`${prefix}${error.type}: ${error.message}\n${error.stack}`)
-    return
-  }
-  if (error && error.stack) {
-    Logger.error(`${prefix}${error.stack}`)
-    return
-  }
-  if (error === null) {
-    Logger.error(`${prefix}null`)
-    return
-  }
-  Logger.error(`${prefix}${error}`)
+  await ErrorWorker.invoke('Errors.print', error, prefix)
 }
 
 export const getMessage = (error) => {
