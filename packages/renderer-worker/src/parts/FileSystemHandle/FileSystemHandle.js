@@ -5,5 +5,5 @@ export const getFileHandles = (ids) => {
 }
 
 export const addFileHandle = (fileHandle) => {
-  return RendererProcess.invoke('FileHandles.addFileHandle', fileHandle)
+  return RendererProcess.invoke('FileSystemHandle.addFileHandle', fileHandle)
 }
