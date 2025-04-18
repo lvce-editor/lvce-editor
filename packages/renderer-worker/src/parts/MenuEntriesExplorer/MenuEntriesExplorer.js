@@ -6,5 +6,5 @@ export const id = MenuEntryId.Explorer
 
 export const getMenuEntries = () => {
   const explorerState = Viewlet.getState('Explorer')
-  return ExplorerViewWorker.invoke('Explorer.getMenuEntries', explorerState)
+  return ExplorerViewWorker.invoke('Explorer.getMenuEntries2', explorerState.uid)
 }
