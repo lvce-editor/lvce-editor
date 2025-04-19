@@ -4,6 +4,9 @@ export const wrapExplorerCommand = (key: string) => {
   const fn = async (state, ...args) => {
     await ExplorerViewWorker.invoke(`Explorer.${key}`, state.uid, ...args)
     const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
+    if (diffResult.length === 0) {
+      return state
+    }
     const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
     if (commands.length === 0) {
       return state
