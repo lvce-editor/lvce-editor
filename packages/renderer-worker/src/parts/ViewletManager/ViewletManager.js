@@ -65,10 +65,8 @@ const runFn = async (instance, id, key, fn, args) => {
     }
     // TODO send focus changes to renderer process together with other message
     if (focusContext) {
-      console.log({ focusContext })
       Focus.setFocus(focusContext)
     }
-    console.log({ commands })
     ViewletStates.setRenderedState(id, newState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   } else {
