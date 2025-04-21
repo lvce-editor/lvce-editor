@@ -154,6 +154,8 @@ export const load = (moduleId) => {
       return import('../SendMessagePortToElectron/SendMessagePortToElectron.ipc.js')
     case ModuleId.OffscreenCanvas:
       return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
+    case ModuleId.MouseActions:
+      return import('../MouseActions/MouseActions.ipc.ts')
     case ModuleId.Languages:
       return import('../Languages/Languages.ipc.js')
     case ModuleId.FileWatcher:
