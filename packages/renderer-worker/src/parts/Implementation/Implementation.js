@@ -8,6 +8,5 @@ export const getImplementations = async (editor) => {
   const columnIndex = editor.selections[1]
   const offset = await TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const implementations = await ExtensionHostImplementation.executeImplementationProvider(editor, offset)
-  console.log({ implementations })
   return implementations
 }

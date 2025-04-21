@@ -151,7 +151,6 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
   // const firstItem = grid[1]
   // // resize content
   // const resizeCommands = Viewlet.resize(firstItem.instanceUid, { x: 0, y: 0, width: width - overlayWidth, height })
-  // console.log({ resizeCommands })
   // allCommands.push(...resizeCommands)
   // allCommands.push(['Viewlet.setBounds', firstItem.instanceUid, originalX, originalY, originalWidth, originalHeight])
   // // resize tabs
@@ -181,13 +180,11 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
   // allCommands.push([/* Viewlet.create */ 'Viewlet.create', /* id */ sashModuleId, sashUid])
   // allCommands.push(['Viewlet.setBounds', sashUid, sashX, sashY, sashWidth, sashHeight])
   // allCommands.push(['Viewlet.append', ViewletModuleId.Main, sashUid])
-  // console.log({ allCommands })
   // await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   return state
 }
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
-  console.log({ filePath })
   Assert.object(state)
   Assert.number(eventX)
   Assert.number(eventY)

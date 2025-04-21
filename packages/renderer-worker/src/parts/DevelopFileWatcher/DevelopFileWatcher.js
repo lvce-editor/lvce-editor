@@ -28,7 +28,6 @@ export const hydrate = async () => {
     const { eventName, uri } = detail
     if (eventName === 'change' && uri.endsWith('.css')) {
       const cssLoadFile = uri.slice(rootUri.length)
-      console.log({ cssLoadFile })
       await Css.reload(cssLoadFile)
     } else if (eventName === 'change' && uri.endsWith('.js')) {
       await Reload.reload()

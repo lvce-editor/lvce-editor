@@ -213,7 +213,6 @@ export const focus = async (state) => {
   // )
   // currentViewlet.state = newState
   return state
-  // console.log({ currentViewletId })
 }
 
 export * from '../HandleClickAction/HandleClickAction.js'

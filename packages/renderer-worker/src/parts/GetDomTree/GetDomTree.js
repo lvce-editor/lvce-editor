@@ -16,7 +16,6 @@ export const getDomTree = (dom) => {
     }
     stack.unshift(element)
   }
-  console.log({ stack: stack[0].children })
   return {
     type: 'root',
     children: [stack[0]],

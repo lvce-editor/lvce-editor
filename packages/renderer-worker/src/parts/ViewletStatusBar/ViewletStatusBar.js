@@ -92,7 +92,6 @@ export const itemRightUpdate = (state, newItem) => {
 }
 
 export const handleClick = (state, name) => {
-  console.log({ name })
   // TODO
   // sendExtensionWorker([/* statusBarItemHandleClick */ 7657, /* name */ name])
   return state

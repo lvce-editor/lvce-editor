@@ -26,11 +26,9 @@ export const handleTouchEnd = (state, touches) => {
   // const touch = touches[0]
   // const newTouchOffsetY = touch.clientY
   // const diff = newTouchOffsetY - touchOffsetY
-  // console.log({ touchDifference })
   // let inertia = touchDifference
   // let i = 0
   // while (Math.abs(inertia) > 1.5) {
-  //   console.log({ inertia })
   //   inertia /= 1.03
   //   await new Promise((r) => setTimeout(r, 10))
   //   const newState = ViewletStates.getState('Extensions')

@@ -12,7 +12,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state) => {
   const browserViewMap = await SharedProcess.invoke('ElectronBrowserView.getAll')
-  console.log({ browserViewMap })
   return {
     ...state,
     browserViewMap,

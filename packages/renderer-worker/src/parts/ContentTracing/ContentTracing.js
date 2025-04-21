@@ -18,5 +18,4 @@ export const stop = async () => {
   }
   const path = await ElectronContentTracing.stopRecording()
   await OpenNativeFolder.openNativeFolder(path)
-  // console.log({ path })
 }
