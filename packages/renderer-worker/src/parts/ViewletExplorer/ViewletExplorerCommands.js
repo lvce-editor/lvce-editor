@@ -10,6 +10,6 @@ export const getCommands = async () => {
     Commands[command] = WrapExplorerCommand.wrapExplorerCommand(command)
   }
   Commands['hotReload'] = ViewletExplorer.hotReload
-
+  Commands['getMouseActions'] = ViewletExplorer.getMouseActions
   return Commands
 }
