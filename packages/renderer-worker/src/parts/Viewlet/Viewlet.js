@@ -444,6 +444,17 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if ('newState' in newState) {
     commands.push(...newState.commands)
   }
+  const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
+  let focusContext = 0
+  if (setFocusContextIndex !== -1) {
+    const command = commands[setFocusContextIndex]
+    focusContext = command[1]
+    commands.splice(setFocusContextIndex, 1)
+  }
+  // TODO send focus changes to renderer process together with other message
+  if (focusContext) {
+    Focus.setFocus(focusContext)
+  }
   ViewletStates.setRenderedState(uid, actualNewState)
   if (commands.length === 0) {
     return
