@@ -75,7 +75,6 @@ export const loadWebExtension = async (path) => {
 export const invoke = async (ipc, method, ...params) => {
   // for (const extensionHost of state.extensionHosts) {
   // }
-  // console.log({ args })
   // return SharedProcess.invoke(...args)
   // TODO use JSON rpc here or ipc.invoke
   throw new Error('not implemented')

@@ -60,7 +60,6 @@ export const loadContent = (state, savedState) => {
 }
 
 export const setBadgeCount = (state, id, count) => {
-  // console.log({ id, count })
   const { badgeCounts } = state
   return {
     ...state,

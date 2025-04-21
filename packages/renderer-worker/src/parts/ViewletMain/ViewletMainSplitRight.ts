@@ -65,7 +65,6 @@ export const splitRight = async (state) => {
     throw new Error('group not found')
   }
   const { activeIndex, editors, tabsUid } = lastGroup
-  console.log({ editors, activeIndex, tabsUid })
   const editor = editors[activeIndex]
   const dimensions = {
     x: lastGroup.x,
@@ -99,7 +98,6 @@ export const splitRight = async (state) => {
   instance.uid = instanceUid
   // @ts-ignore
   const instanceCommands = await ViewletManager.load(instance, true)
-  // console.log({ instanceCommands })
   const newGroup = newGroups.at(-1)
   if (!newGroup) {
     throw new Error('new group not found')

@@ -106,6 +106,5 @@ export const openInNewTab = async (state: E2eState): Promise<E2eState> => {
   const item = tests[index]
   const url = '/tests/' + item.replace('.js', '.html')
   await Open.openUrl(url)
-  console.log({ item, index })
   return state
 }

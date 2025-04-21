@@ -26,5 +26,4 @@ export const checkForUpdates = async () => {
     return
   }
   await module.installAndRestart(downloadPath)
-  console.log({ info })
 }

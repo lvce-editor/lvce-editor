@@ -281,7 +281,6 @@ export const readDirWithFileTypes = (path) => {
       }
     }
   }
-  console.log({ path, dirents })
   return dirents
 }
 

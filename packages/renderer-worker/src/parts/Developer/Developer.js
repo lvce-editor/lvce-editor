@@ -145,7 +145,6 @@ export const getMemoryUsageContent = async () => {
   })
 
   const isWorker = typeof WorkerGlobalScope !== 'undefined'
-  console.log({ isWorker, rendererWorkerMemoryUsage: userAgentSpecificMemory })
   const text = isWorker
     ? `## Shared Process
 
