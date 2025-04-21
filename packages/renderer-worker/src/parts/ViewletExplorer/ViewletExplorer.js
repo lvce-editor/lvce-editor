@@ -61,6 +61,10 @@ export const resize = (state, dimensions) => {
   }
 }
 
+export const getMouseActions = async () => {
+  return ExplorerViewWorker.invoke('Explorer.getMouseActions')
+}
+
 export const hotReload = async (state) => {
   if (state.isHotReloading) {
     return state

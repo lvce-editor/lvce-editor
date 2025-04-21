@@ -11,6 +11,7 @@ import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFu
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as MouseActions from '../MouseActions/MouseActions.ts'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -473,6 +474,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (module.getKeyBindings) {
       const keyBindings = await module.getKeyBindings()
       KeyBindingsState.addKeyBindings(viewlet.id, keyBindings)
+    }
+    if (module.Commands && module.Commands.getMouseActions) {
+      const mouseActions = await module.Commands.getMouseActions(viewletUid)
+      MouseActions.add(viewletUid, mouseActions)
     }
 
     if (module.getChildren) {
