@@ -11,6 +11,7 @@ export const eagerLoadedCss = [
   'ContextMenu.css',
   'Drag.css',
   'EditorTabs.css',
+  'ExplorerInputBox.css',
   'FileIcon.css',
   'Filter.css',
   'Focus.css',
