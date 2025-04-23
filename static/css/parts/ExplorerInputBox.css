@@ -1,0 +1,22 @@
+.ExplorerInputBox {
+  width: 100%;
+  margin: 0;
+  border: none;
+  outline: none;
+  flex: 1;
+  background: var(--InputBoxBackground);
+  border: 1px solid var(--InputBoxBorder, rgb(55, 65, 63));
+  padding: 0;
+  color: var(--InputBoxForeground);
+  font-size: 13px;
+  height: 24px;
+  contain: strict;
+}
+
+.ExplorerInputBox::placeholder {
+  color: var(--InputBoxPlaceholderForeground, rgba(255, 255, 255, 0.3));
+}
+
+.ExplorerInputBox:focus {
+  border-color: var(--FocusOutline, lightgray);
+}
