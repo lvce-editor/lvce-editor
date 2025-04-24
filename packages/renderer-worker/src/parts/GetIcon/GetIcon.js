@@ -114,3 +114,13 @@ export const getIcon = (dirent) => {
       return DefaultIcon.None
   }
 }
+
+export const getIcons = (iconRequests) => {
+  const Folder = 2
+  return iconRequests.map((request) => {
+    if (request.type === Folder) {
+      return getFolderIcon(request.uri)
+    }
+    return getFileIcon(request.uri)
+  })
+}
