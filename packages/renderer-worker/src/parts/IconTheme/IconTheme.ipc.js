@@ -11,4 +11,5 @@ export const Commands = {
   getFileIcons: IconTheme.getFileIcons,
   getFolderIcon: IconTheme.getFolderIcon,
   getIcon: IconTheme.getIcon,
+  getIcons: IconTheme.getIcons,
 }
