@@ -105,3 +105,4 @@ export const ExtensionManagement = 137
 export const Markdown = 138
 export const FileSystemHandle = 139
 export const MouseActions = 140
+export const Timeout = 141
