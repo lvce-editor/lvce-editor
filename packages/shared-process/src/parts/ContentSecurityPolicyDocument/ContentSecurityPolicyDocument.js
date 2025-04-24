@@ -24,7 +24,7 @@ const getManifestSrc = () => {
 
 const getFrameAncestors = () => {
   if (IsGitpod.isGitpod) {
-    return [`frame-ancestors: *.gitpod.io`]
+    return [`frame-ancestors *.gitpod.io`]
   }
   return [`frame-ancestors 'none'`]
 }
