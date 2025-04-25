@@ -15,4 +15,6 @@ export const Commands = {
   remove: FileSystem.remove,
   rename: FileSystem.rename,
   writeFile: FileSystem.writeFile,
+  stat: FileSystem.stat,
+  getRealPath: FileSystem.getRealPath,
 }
