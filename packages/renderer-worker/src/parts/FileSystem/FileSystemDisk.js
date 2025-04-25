@@ -1,9 +1,8 @@
+import * as FileSystemProcess from '../FileSystemProcess/FileSystemProcess.js'
 import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 export const name = 'Disk'
 
@@ -17,50 +16,45 @@ const toUri = (item) => {
 export const copy = (source, target) => {
   source = toUri(source)
   target = toUri(target)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemCopy, /* source */ source, /* target */ target)
+  return FileSystemProcess.invoke('FileSystem.copy', /* source */ source, /* target */ target)
 }
 
 export const readFile = (path, encoding) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadFile, /* path */ path, /* encoding */ encoding)
+  return FileSystemProcess.invoke('FileSystem.readFile', /* path */ path, /* encoding */ encoding)
 }
 
 export const readJson = (path) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadJson, /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.readJson', /* path */ path)
 }
 
 export const remove = (path) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemRemove, /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.remove', /* path */ path)
 }
 
 export const rename = (oldUri, newUri) => {
   oldUri = toUri(oldUri)
   newUri = toUri(newUri)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemRename, /* oldPath */ oldUri, /* newPath */ newUri)
+  return FileSystemProcess.invoke('FileSystem.rename', /* oldPath */ oldUri, /* newPath */ newUri)
 }
 
 export const mkdir = (path) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemMkdir, /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.mkdir', /* path */ path)
 }
 
 export const writeFile = async (path, content, encoding) => {
   path = toUri(path)
-  await SharedProcess.invoke(
-    /* FileSystem.writeFile */ SharedProcessCommandType.FileSystemWriteFile,
-    /* path */ path,
-    /* content */ content,
-    /* encoding */ encoding,
-  )
+  await FileSystemProcess.invoke(/* FileSystem.writeFile */ 'FileSystem.writeFile', /* path */ path, /* content */ content, /* encoding */ encoding)
 }
 
 export const ensureFile = async () => {}
 
 export const readDirWithFileTypes = (path) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemReadDirWithFileTypes, /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.readDirWithFileTypes', /* path */ path)
 }
 
 export const getBlobUrl = (path) => {
@@ -71,7 +65,7 @@ export const getBlobUrl = (path) => {
 }
 
 export const getBlob = async (path, type) => {
-  const content = await SharedProcess.invoke('FileSystem.readFileAsBuffer', path)
+  const content = await FileSystemProcess.invoke('FileSystem.readFileAsBuffer', path)
   const array = new Uint8Array(content.data)
   const blob = new Blob([array], {
     type,
@@ -83,26 +77,26 @@ export const getPathSeparator = () => {
   if (Platform.platform === PlatformType.Web) {
     return PathSeparatorType.Slash
   }
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemGetPathSeparator)
+  return FileSystemProcess.invoke('FileSystem.getPathSeparator')
 }
 
 export const getRealPath = (path) => {
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemGetRealPath, /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.getRealPath', /* path */ path)
 }
 
 export const stat = (path) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemStat, /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.stat', /* path */ path)
 }
 
 export const getFolderSize = (path) => {
   path = toUri(path)
-  return SharedProcess.invoke('FileSystemDisk.getFolderSize', /* path */ path)
+  return FileSystemProcess.invoke('FileSystem.getFolderSize', /* path */ path)
 }
 
 export const chmod = (path, permissions) => {
   path = toUri(path)
-  return SharedProcess.invoke(SharedProcessCommandType.FileSystemChmod, /* path */ path, /* permissions */ permissions)
+  return FileSystemProcess.invoke('FileSystem.chmod', /* path */ path, /* permissions */ permissions)
 }
 
 export const canBeRestored = true
