@@ -9,5 +9,8 @@ export const registerAll = (input) => {
 }
 
 export const load = (moduleId) => {
+  if (!map[moduleId]) {
+    return {}
+  }
   return map[moduleId]()
 }
