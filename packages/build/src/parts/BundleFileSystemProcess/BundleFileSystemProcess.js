@@ -1,8 +1,8 @@
 import { join } from 'path'
 import * as Replace from '../Replace/Replace.js'
 
-export const bundleFileSystemProcess = async ({ projectPath }) => {
-  const fileSystemProcessPath = join(projectPath, 'node_modules', '@lvce-editor', 'file-system-process', 'dist', 'index.js')
+export const bundleFileSystemProcess = async ({ to }) => {
+  const fileSystemProcessPath = join(to, 'node_modules', '@lvce-editor', 'file-system-process', 'dist', 'index.js')
   await Replace.replace({
     path: fileSystemProcessPath,
     occurrence: `import _trash from 'trash'`,

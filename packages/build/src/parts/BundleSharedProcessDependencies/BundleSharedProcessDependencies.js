@@ -73,5 +73,5 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.cts')
   await RemoveNodePtyFiles.removeNodePtyFiles(to, platform)
   await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
-  await BundleFileSystemProcess.bundleFileSystemProcess({ projectPath })
+  await BundleFileSystemProcess.bundleFileSystemProcess({ to })
 }
