@@ -34,6 +34,12 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     await Remove.remove(`${to}/node_modules/@vscode/node-addon-api`)
   }
   await Remove.remove(`${to}/node_modules/@lvce-editor/ipc/dist/browser.js`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/file-system-process/bin`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/file-watcher-process/bin`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/preview-process/bin`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/pty-host/bin`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/search-process/bin`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/typescript-compile-process/bin`)
   await Remove.remove(`${to}/node_modules/@sindresorhus/is/distribution/types.js`)
   await Remove.remove(`${to}/node_modules/b4a/browser.js`)
   await Remove.remove(`${to}/node_modules/bare-fs/binding.c`)
