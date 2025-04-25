@@ -2,12 +2,19 @@
 import * as FileSystemProcessIpc from '../FileSystemProcessIpc/FileSystemProcessIpc.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 
 let promise
 
+const create = async () => {
+  const ipc = await FileSystemProcessIpc.listen(IpcParentType.Node)
+  HandleIpc.handleIpc(ipc)
+  return ipc
+}
+
 const getOrCreateIpc = () => {
   if (!promise) {
-    promise = FileSystemProcessIpc.listen(IpcParentType.Node)
+    promise = create()
   }
   return promise
 }
