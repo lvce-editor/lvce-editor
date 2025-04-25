@@ -43,7 +43,6 @@
 @@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.gz (native package)
 
 # node modules
-@@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
@@ -73,6 +72,9 @@
 
 # extensions
 @@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
+
+# svg
+@@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/static/file-icons/file_type_docusaurus.svg]
 
 # other
 @@NAME@@: extended-description-is-empty
