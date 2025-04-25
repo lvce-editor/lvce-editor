@@ -10,7 +10,7 @@ export const bundleDiffWorkerCached = async ({ commitHash, platform, assetDir })
     Logger.info('[build step skipped] bundleDiffWorker')
   } else {
     console.time('bundleDiffWorker')
-    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/embeds-worker'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedSources/diff-worker'))
     const BundleDiffWorker = await import('../BundleDiffWorker/BundleDiffWorker.js')
     await BundleDiffWorker.bundleDiffWorker({
       cachePath,
