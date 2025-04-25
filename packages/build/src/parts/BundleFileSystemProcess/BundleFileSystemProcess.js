@@ -5,7 +5,7 @@ export const bundleFileSystemProcess = async ({ to }) => {
   const fileSystemProcessPath = join(to, 'node_modules', '@lvce-editor', 'file-system-process', 'dist', 'index.js')
   await Replace.replace({
     path: fileSystemProcessPath,
-    occurrence: `import _trash from 'trash';`,
+    occurrence: `import _trash from 'trash';\n`,
     replacement: '',
   })
   await Replace.replace({
