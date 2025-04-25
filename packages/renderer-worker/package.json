@@ -44,6 +44,7 @@
     "@lvce-editor/about-view": "^5.3.0",
     "@lvce-editor/diff-worker": "^1.5.0",
     "@lvce-editor/editor-worker": "^5.19.0",
+    "@lvce-editor/embeds-worker": "^2.1.0",
     "@lvce-editor/error-worker": "^1.2.0",
     "@lvce-editor/explorer-view": "^2.29.0",
     "@lvce-editor/extension-detail-view": "^3.21.0",
@@ -51,6 +52,7 @@
     "@lvce-editor/extension-host-worker": "^4.17.0",
     "@lvce-editor/extension-search-view": "^3.4.0",
     "@lvce-editor/file-search-worker": "^5.13.0",
+    "@lvce-editor/iframe-inspector": "^2.1.0",
     "@lvce-editor/iframe-worker": "^5.31.0",
     "@lvce-editor/keybindings-view": "^5.0.0",
     "@lvce-editor/markdown-worker": "^1.5.0",
@@ -59,7 +61,6 @@
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^4.14.0",
     "@lvce-editor/text-search-worker": "^4.7.0",
-    "@lvce-editor/iframe-inspector": "^2.1.0",
     "@lvce-editor/title-bar-worker": "^2.2.0"
   }
 }
