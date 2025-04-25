@@ -43,7 +43,7 @@
     "@lvce-editor/pty-host": "^3.2.0",
     "@lvce-editor/search-process": "^6.2.0",
     "@lvce-editor/typescript-compile-process": "^2.3.0",
-    "@lvce-editor/file-system-process": "^1.1.0",
+    "@lvce-editor/file-system-process": "^1.2.0",
     "open": "^10.1.1",
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
