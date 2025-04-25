@@ -9,3 +9,4 @@ export const TerminalProcess = 7
 export const Unknown = 0
 export const ProcessExplorerRenderer = 33
 export const ExtensionHostWorker = 218
+export const FileSystemProcess = 219

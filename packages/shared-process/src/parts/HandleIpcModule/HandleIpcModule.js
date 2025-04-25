@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as HandleIpcEmbedsProcess from '../HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
 import * as HandleIpcExtensionHostHelperProcess from '../HandleIpcExtensionHostHelperProcess/HandleIpcExtensionHostHelperProcess.js'
+import * as HandleIpcFileSystemProcess from '../HandleIpcFileSystemProcess/HandleIpcFileSystemProcess.js'
 import * as HandleIpcProcessExplorer from '../HandleIpcProcessExplorer/HandleIpcProcessExplorer.js'
 import * as HandleIpcSearchProcess from '../HandleIpcSearchProcess/HandleIpcSearchProcess.js'
 import * as HandleIpcSharedProcess from '../HandleIpcSharedProcess/HandleIpcSharedProcess.js'
@@ -22,6 +23,8 @@ export const getModule = (ipcId) => {
       return HandleIpcProcessExplorer
     case IpcId.SearchProcess:
       return HandleIpcSearchProcess
+    case IpcId.FileSystemProcess:
+      return HandleIpcFileSystemProcess
     default:
       throw new Error(`unexpected incoming ipc`)
   }
