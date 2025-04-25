@@ -8,6 +8,6 @@ export const fileSystemProcessPath = Path.join(
   'node_modules',
   '@lvce-editor',
   'file-system-process',
-  'src',
-  'fileSystemProcess.js',
+  'dist',
+  'index.js',
 )
