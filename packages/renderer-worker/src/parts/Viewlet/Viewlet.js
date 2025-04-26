@@ -2,15 +2,15 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Focus from '../Focus/Focus.js'
+import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
 export const focus = async (id) => {
@@ -361,19 +361,10 @@ export const openWidget = async (moduleId, ...args) => {
     commands.push(['Viewlet.append', layout.uid, childUid])
   }
 
-  const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
-  let focusContext = 0
-  if (setFocusContextIndex !== -1) {
-    const command = commands[setFocusContextIndex]
-    focusContext = command[1]
-    commands.splice(setFocusContextIndex, 1)
-  }
+  // TODO send focus changes to renderer process together with other message
+  UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  // TODO send focus changes to renderer process together with other message
-  if (focusContext) {
-    Focus.setFocus(focusContext)
-  }
 }
 
 export const closeWidget = async (id) => {
@@ -444,17 +435,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if ('newState' in newState) {
     commands.push(...newState.commands)
   }
-  const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
-  let focusContext = 0
-  if (setFocusContextIndex !== -1) {
-    const command = commands[setFocusContextIndex]
-    focusContext = command[1]
-    commands.splice(setFocusContextIndex, 1)
-  }
-  // TODO send focus changes to renderer process together with other message
-  if (focusContext) {
-    Focus.setFocus(focusContext)
-  }
+  UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   ViewletStates.setRenderedState(uid, actualNewState)
   if (commands.length === 0) {
     return
