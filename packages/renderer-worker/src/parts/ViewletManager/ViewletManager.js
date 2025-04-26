@@ -2,16 +2,16 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import { CancelationError } from '../Errors/CancelationError.js'
-import * as Focus from '../Focus/Focus.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
+import * as MouseActions from '../MouseActions/MouseActions.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
-import * as MouseActions from '../MouseActions/MouseActions.ts'
+import { updateDynamicFocusContext } from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -57,17 +57,7 @@ const runFn = async (instance, id, key, fn, args) => {
       return
     }
     const commands = render(instance.factory, oldState, newState, newState.uid || id)
-    const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
-    let focusContext = 0
-    if (setFocusContextIndex !== -1) {
-      const command = commands[setFocusContextIndex]
-      focusContext = command[2]
-      commands.splice(setFocusContextIndex, 1)
-    }
-    // TODO send focus changes to renderer process together with other message
-    if (focusContext) {
-      Focus.setFocus(focusContext)
-    }
+    updateDynamicFocusContext(commands)
     ViewletStates.setRenderedState(id, newState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   } else {
