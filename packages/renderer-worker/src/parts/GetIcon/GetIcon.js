@@ -119,8 +119,8 @@ export const getIcons = (iconRequests) => {
   const Folder = 2
   return iconRequests.map((request) => {
     if (request.type === Folder) {
-      return getFolderIcon(request.uri)
+      return getFolderIcon({ name: request.name })
     }
-    return getFileIcon(request.uri)
+    return getFileIcon({ name: request.name })
   })
 }
