@@ -1,5 +1,6 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
+import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
@@ -69,6 +70,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('testWorkerMain.js')) {
     return GetHeadersTestWorker.getHeadersTestWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('debugWorkerMain.js')) {
+    return GetHeadersDebugWorker.getHeadersDebugWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('syntaxHighlightingWorkerMain.js')) {
     return GetHeadersSyntaxHighlightingWorker.getHeadersSyntaxHighlightingWorker(mime, etag, defaultCachingHeader)
