@@ -15,3 +15,7 @@ export const showOverlay = (...args) => {
 export const performAction = (...args) => {
   return RendererProcess.invoke('TestFrameWork.performAction', ...args)
 }
+
+export const checkConditionError = (...args) => {
+  return RendererProcess.invoke('TestFrameWork.checkConditionError', ...args)
+}
