@@ -7,4 +7,5 @@ export const Commands = {
   checkSingleElementCondition: TestFrameWork.checkSingleElementCondition,
   showOverlay: TestFrameWork.showOverlay,
   performAction: TestFrameWork.performAction,
+  checkConditionError: TestFrameWork.checkConditionError,
 }
