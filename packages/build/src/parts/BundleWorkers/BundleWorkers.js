@@ -7,6 +7,7 @@ import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCa
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
+import * as BundleDebugWorkerCached from '../BundleDebugWorkerCached/BundleDebugWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleTitleBarWorkerCached from '../BundleTitleBarWorkerCached/BundleTitleBarWorkerCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
@@ -105,6 +106,15 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
+  })
+  const debugWorkerCachePath = await BundleDebugWorkerCached.bundleDebugWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: debugWorkerCachePath,
+    to: `${toRoot}/packages/debug-worker`,
   })
   const errorWorkerCachePath = await BundleErrorWorkerCached.bundleErrorWorkerCached({
     assetDir,
