@@ -2,7 +2,7 @@ import * as DebugWorker from '../DebugWorker/DebugWorker.js'
 
 export const wrapRunAndDebugCommand = (key: string) => {
   const fn = async (state, ...args) => {
-    await DebugWorker.invoke(`RunAnDebug.${key}`, state.uid, ...args)
+    await DebugWorker.invoke(`RunAndDebug.${key}`, state.uid, ...args)
     const diffResult = await DebugWorker.invoke('RunAndDebug.diff2', state.uid)
     if (diffResult.length === 0) {
       return state
