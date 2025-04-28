@@ -8,12 +8,14 @@ export const wrapRunAndDebugCommand = (key: string) => {
       return state
     }
     const commands = await DebugWorker.invoke('RunAndDebug.render2', state.uid, diffResult)
+    const actionsDom = await DebugWorker.invoke('RunAndDebug.renderActions', state.uid)
     if (commands.length === 0) {
       return state
     }
     return {
       ...state,
       commands,
+      actionsDom,
     }
   }
   return fn

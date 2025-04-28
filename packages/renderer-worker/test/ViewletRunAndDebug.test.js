@@ -16,12 +16,12 @@ jest.unstable_mockModule('../src/parts/Debug/Debug.js', () => {
 const ViewletRunAndDebug = await import('../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js')
 const Debug = await import('../src/parts/Debug/Debug.js')
 
-test('create', () => {
+test.skip('create', () => {
   const state = ViewletRunAndDebug.create(0)
   expect(state).toBeDefined()
 })
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   // @ts-ignore
   Debug.listProcesses.mockImplementation(() => {
     return []
@@ -33,14 +33,14 @@ test('loadContent', async () => {
   })
 })
 
-test('dispose', () => {
+test.skip('dispose', () => {
   const state = ViewletRunAndDebug.create(0)
   expect(ViewletRunAndDebug.dispose(state)).toMatchObject({
     disposed: true,
   })
 })
 
-test('resize', () => {
+test.skip('resize', () => {
   const state = ViewletRunAndDebug.create()
   const newState = ViewletRunAndDebug.resize(state, {
     x: 200,

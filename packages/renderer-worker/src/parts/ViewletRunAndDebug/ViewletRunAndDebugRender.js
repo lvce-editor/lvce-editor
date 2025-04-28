@@ -1,19 +1,23 @@
-import * as GetRunAndDebugVirtualDom2 from '../GetRunAndDebugVirtualDom2/GetRunAndDebugVirtualDom2.ts'
-import * as GetRunAndDebugVisibleRows from '../GetRunAndDebugVisibleRows/GetRunAndDebugVisibleRows.ts'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as DebugWorker from '../DebugWorker/DebugWorker.js'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderDebug = {
+export const hasFunctionalEvents = true
+
+const renderItems = {
   isEqual(oldState, newState) {
-    return false
+    return newState.commands.length === 0
   },
-  apply(oldState, newState) {
-    const rows = GetRunAndDebugVisibleRows.getRunAndDebugVisibleRows(newState)
-    const dom = GetRunAndDebugVirtualDom2.getRunAndDebugVirtualDom2(rows)
-    return ['Viewlet.setDom2', dom]
-  },
+  apply: AdjustCommands.apply,
+  multiple: true,
 }
 
-export const render = [renderDebug]
+export const render = [renderItems]
+
+export const renderEventListeners = async () => {
+  const listeners = await DebugWorker.invoke('RunAndDebug.renderEventListeners')
+  return listeners
+}
