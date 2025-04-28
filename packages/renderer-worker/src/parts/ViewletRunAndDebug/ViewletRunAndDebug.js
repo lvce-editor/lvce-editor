@@ -10,6 +10,7 @@ import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedM
 import * as InputName from '../InputName/InputName.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as ExceptionBreakPoints from '../ExceptionBreakPoints/ExceptionBreakPoints.js'
+import * as DebugWorker from '../DebugWorker/DebugWorker.js'
 import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -43,19 +44,66 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 }
 
 export const loadContent = async (state) => {
-  const debugId = Workspace.isTest() ? 'test-debug' : 'node-debug' // TODO
+  const isTest = Workspace.isTest()
+  const savedState = {}
+  await DebugWorker.invoke('RunAndDebug.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
+  await DebugWorker.invoke('RunAndDebug.loadContent', state.uid, isTest, savedState)
+  const diffResult = await DebugWorker.invoke('RunAndDebug.diff2', state.uid)
+  const commands = await DebugWorker.invoke('RunAndDebug.render2', state.uid, diffResult)
+  const actionsDom = await DebugWorker.invoke('RunAndDebug.renderActions', state.uid)
+  const debugId = isTest ? 'test-debug' : 'node-debug' // TODO
   return {
     ...state,
+    commands,
+    actionsDom,
     debugId,
     debugState: DebugState.Default,
     scopeExpanded: true,
     callStackExpanded: true,
+    isTest,
+  }
+}
+
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await DebugWorker.invoke('RunAndDebug.saveState', state.uid)
+  await DebugWorker.restart('RunAndDebug.terminate')
+  const oldState = {
+    ...state,
+    items: [],
+  }
+  await DebugWorker.invoke(
+    'RunAndDebug.create',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    null,
+    state.parentUid,
+    state.platform,
+  )
+  await DebugWorker.invoke('RunAndDebug.loadContent', state.uid, state.isTest, savedState)
+  const diffResult = await DebugWorker.invoke('RunAndDebug.diff2', state.uid)
+  const commands = await DebugWorker.invoke('RunAndDebug.render2', state.uid, diffResult)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
   }
 }
 
 export const contentLoaded = async (state) => {
-  const debugId = Workspace.isTest() ? 'test-debug' : 'node-debug' // TODO
-  await Debug.start(debugId)
+  // TODO
+  // const debugId = Workspace.isTest() ? 'test-debug' : 'node-debug' // TODO
+  // await Debug.start(debugId)
   return []
 }
 
