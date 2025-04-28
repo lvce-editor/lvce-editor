@@ -44,5 +44,12 @@ export const getWatchConfig = () => {
       command: 'KeyBindings.hotReload',
     })
   }
+  const debug = Preferences.get('develop.debugWorkerPath')
+  if (debug) {
+    watchConfig.push({
+      path: debug,
+      command: 'RunAndDebug.hotReload',
+    })
+  }
   return watchConfig
 }
