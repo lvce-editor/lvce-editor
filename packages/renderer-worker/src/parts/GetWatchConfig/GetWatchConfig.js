@@ -48,7 +48,7 @@ export const getWatchConfig = () => {
   if (debug) {
     watchConfig.push({
       path: debug,
-      command: 'RunAndDebug.hotReload',
+      command: 'Run And Debug.hotReload',
     })
   }
   return watchConfig
