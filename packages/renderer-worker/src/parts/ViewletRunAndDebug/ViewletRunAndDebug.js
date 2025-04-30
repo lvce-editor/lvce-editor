@@ -3,7 +3,6 @@ import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugWorker from '../DebugWorker/DebugWorker.js'
 import * as ExceptionBreakPoints from '../ExceptionBreakPoints/ExceptionBreakPoints.js'
-import * as InputName from '../InputName/InputName.js'
 import * as PauseOnExceptionState from '../PauseOnExceptionState/PauseOnExceptionState.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
