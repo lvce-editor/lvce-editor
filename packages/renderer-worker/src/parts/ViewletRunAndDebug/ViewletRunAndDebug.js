@@ -99,29 +99,6 @@ export const contentLoaded = async () => {
   return []
 }
 
-export const handleResumed = (state) => {
-  return {
-    ...state,
-    debugState: DebugState.Default,
-    scopeChain: [],
-    callStack: [],
-    pausedMessage: '',
-    pausedReason: DebugPausedReason.None,
-    callFrameId: '',
-  }
-}
-
-export const handleScriptParsed = (state, parsedScript) => {
-  const { parsedScripts } = state
-  return {
-    ...state,
-    parsedScripts: {
-      ...parsedScripts,
-      [parsedScript.id]: parsedScript,
-    },
-  }
-}
-
 // TODO maybe store scope chain elements as tree
 // TODO when collapsing, store collapsed elements by parent id in cache
 // TODO when expanding, retrieve items from cache by parent id first
@@ -142,92 +119,6 @@ export const handleEvaluate = async (state) => {
     ...state,
     debugInputValue: '',
     debugOutputValue: `${actualResult}`,
-  }
-}
-
-export const handleArrowLeft = (state) => {
-  const { focusedIndex } = state
-  if (focusedIndex === 2) {
-    return {
-      ...state,
-      scopeExpanded: false,
-    }
-  }
-  return state
-}
-
-export const handleArrowRight = (state) => {
-  const { focusedIndex } = state
-  if (focusedIndex === 2) {
-    return {
-      ...state,
-      scopeExpanded: true,
-    }
-  }
-  return state
-}
-
-export const handleArrowUp = (state) => {
-  return state
-}
-
-export const handleArrowDown = (state) => {
-  return state
-}
-
-export const focusPrevious = (state) => {
-  return state
-}
-
-export const focusNext = (state) => {
-  return state
-}
-
-export const setPauseOnExceptions = async (state, value) => {
-  const { debugId } = state
-  await Debug.setPauseOnExceptions(debugId, value)
-  return {
-    ...state,
-    exceptionBreakPoints: value,
-  }
-}
-
-export const handleClickPauseOnExceptions = (state) => {
-  const { exceptionBreakPoints } = state
-  switch (exceptionBreakPoints) {
-    case ExceptionBreakPoints.None:
-      return setPauseOnExceptions(state, ExceptionBreakPoints.All)
-    case ExceptionBreakPoints.Uncaught:
-      return setPauseOnExceptions(state, ExceptionBreakPoints.All)
-    case ExceptionBreakPoints.All:
-      return setPauseOnExceptions(state, ExceptionBreakPoints.None)
-    default:
-      return state
-  }
-}
-
-export const handleClickPauseOnUncaughtExceptions = (state) => {
-  const { exceptionBreakPoints } = state
-  switch (exceptionBreakPoints) {
-    case ExceptionBreakPoints.None:
-      return setPauseOnExceptions(state, ExceptionBreakPoints.Uncaught)
-    case ExceptionBreakPoints.Uncaught:
-      return setPauseOnExceptions(state, ExceptionBreakPoints.None)
-    case ExceptionBreakPoints.All:
-      return setPauseOnExceptions(state, ExceptionBreakPoints.None)
-    default:
-      return state
-  }
-}
-
-export const handleClickCheckBox = (state, name) => {
-  switch (name) {
-    case InputName.PauseOnExceptions:
-      return handleClickPauseOnExceptions(state)
-    case InputName.PauseOnUncaughtExceptions:
-      return handleClickPauseOnUncaughtExceptions(state)
-    default:
-      throw new Error('unknown input name')
   }
 }
 
