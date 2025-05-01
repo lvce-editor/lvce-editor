@@ -132,7 +132,6 @@ const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
       throw new TypeError(`${id}.${key} is not a function`)
     }
     const activeInstance = ViewletStates.getInstance(id)
-    console.log({ activeInstance })
     await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
   }
   NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
@@ -451,6 +450,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     const args = viewlet.args || []
     let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
+
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
       const eventListeners = await module.renderEventListeners()
@@ -536,6 +536,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       const additionalExtraCommands = await module.contentLoaded(newState)
       Assert.array(additionalExtraCommands)
       commands.push(...additionalExtraCommands)
+    }
+
+    if (module.Commands && module.Commands['loadContentLater']) {
+      const commands = await module.Commands['loadContentLater'](newState)
     }
 
     const instanceNow = ViewletStates.getInstance(viewletUid)
