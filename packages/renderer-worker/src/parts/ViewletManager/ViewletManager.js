@@ -451,6 +451,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     const args = viewlet.args || []
     let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
+
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
       const eventListeners = await module.renderEventListeners()
@@ -538,6 +539,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push(...additionalExtraCommands)
     }
 
+    if (module.Commands && module.Commands['loadContentLater']) {
+      const commands = await module.Commands['loadContentLater'](newState)
+    }
+
     const instanceNow = ViewletStates.getInstance(viewletUid)
     viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender) {
@@ -561,6 +566,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           Assert.number(parentUid)
           allCommands.push([kAppend, parentUid, viewletUid])
         }
+        console.log('return', module.name)
         return allCommands
       }
       commands.push(...extraCommands)
@@ -579,6 +585,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       if (module.contentLoadedEffects) {
         await module.contentLoadedEffects(newState)
       }
+      console.log('return')
       return allCommands
     }
 
