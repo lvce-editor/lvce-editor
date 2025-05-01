@@ -7,6 +7,7 @@ import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCa
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
+import * as BundleSourceControlWorkerCached from '../BundleSourceControlWorkerCached/BundleSourceControlWorkerCached.js'
 import * as BundleDebugWorkerCached from '../BundleDebugWorkerCached/BundleDebugWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleTitleBarWorkerCached from '../BundleTitleBarWorkerCached/BundleTitleBarWorkerCached.js'
@@ -106,6 +107,15 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
+  })
+  const sourceControlWorkerCachePath = await BundleSourceControlWorkerCached.bundleSourceControlWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: sourceControlWorkerCachePath,
+    to: `${toRoot}/packages/source-control-worker`,
   })
   const debugWorkerCachePath = await BundleDebugWorkerCached.bundleDebugWorkerCached({
     assetDir,
