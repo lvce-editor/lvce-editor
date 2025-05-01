@@ -140,6 +140,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/iframe-inspector/dist/iframeInspectorWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/SourceControlWorkerUrl/SourceControlWorkerUrl.js`,
+      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/source-control-worker/dist/sourceControlWorkerMain.js',
+      replacement: '/packages/source-control-worker/dist/sourceControlWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/KeyBindingsViewWorkerUrl/KeyBindingsViewWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/keybindings-view/dist/keyBindingsViewWorkerMain.js`,
       replacement: '/packages/keybindings-view-worker/dist/keyBindingsViewWorkerMain.js',
