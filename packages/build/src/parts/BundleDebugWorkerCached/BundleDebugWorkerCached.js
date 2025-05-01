@@ -5,7 +5,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Logger from '../Logger/Logger.js'
 
 export const bundleDebugWorkerCached = async ({ commitHash, platform, assetDir }) => {
-  const cachePath = await CachePaths.getIframeWorkerCachePath([platform])
+  const cachePath = await CachePaths.getDebugWorkerCachePath([platform])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleDebugWorker')
   } else {
