@@ -118,6 +118,11 @@ export const getIframeWorkerCachePath = async (extraContents) => {
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/iframe-worker'), hash)
   return cachePath
 }
+export const getSourceControlWorkerCachePath = async (extraContents) => {
+  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/source-control-worker'), hash)
+  return cachePath
+}
 
 export const getDebugWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
