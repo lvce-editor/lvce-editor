@@ -44,6 +44,13 @@ export const getWatchConfig = () => {
       command: 'KeyBindings.hotReload',
     })
   }
+  const sourceControl = Preferences.get('develop.sourceControlWorkerPath')
+  if (sourceControl) {
+    watchConfig.push({
+      path: sourceControl,
+      command: 'SourceControl.hotReload',
+    })
+  }
   const debug = Preferences.get('develop.debugWorkerPath')
   if (debug) {
     watchConfig.push({
