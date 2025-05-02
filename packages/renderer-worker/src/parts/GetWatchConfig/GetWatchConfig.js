@@ -48,7 +48,7 @@ export const getWatchConfig = () => {
   if (sourceControl) {
     watchConfig.push({
       path: sourceControl,
-      command: 'SourceControl.hotReload',
+      command: 'Source Control.hotReload',
     })
   }
   const debug = Preferences.get('develop.debugWorkerPath')
