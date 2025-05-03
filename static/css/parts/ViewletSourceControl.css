@@ -73,6 +73,7 @@
 
 .SourceControlButtons {
   display: var(--SourceControlButtonsDisplay);
+  contain: content;
 }
 
 .SourceControlItems .TreeItem:hover {
