@@ -65,3 +65,16 @@
 
 .SourceControlBadge {
 }
+
+/* TODO avoid nesting */
+.SourceControlItems {
+  --SourceControlButtonsDisplay: none;
+}
+
+.SourceControlButtons {
+  display: var(--SourceControlButtonsDisplay);
+}
+
+.SourceControlItems .TreeItem:hover {
+  --SourceControlButtonsDisplay: flex;
+}
