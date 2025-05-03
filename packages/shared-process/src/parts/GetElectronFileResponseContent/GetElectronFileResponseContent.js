@@ -18,6 +18,7 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
   if (!Platform.isProduction && url === `${Platform.scheme}://-/`) {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
   }
   if (url === '/') {
     content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
