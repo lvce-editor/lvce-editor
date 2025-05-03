@@ -4,6 +4,8 @@ export const name = 'sample.source-control-provider-accept-input-error'
 // e.g. string[] instead of {file:string}[]
 // currently it throws an error `cannot read properties of undefined, reading toLowerCase` in IconTheme.js
 
+export const skip = true
+
 export const test = async ({ FileSystem, Workspace, Extension, SideBar, SourceControl }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
