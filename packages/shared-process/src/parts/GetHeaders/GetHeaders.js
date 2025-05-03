@@ -2,10 +2,10 @@ import { basename, extname } from 'path'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
+import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
 import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
-import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
@@ -16,6 +16,7 @@ import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeader
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
 import * as GetHeadersSearchWorker from '../GetHeadersSearchWorker/GetHeadersSearchWorker.js'
+import * as GetHeadersSourceControlWorker from '../GetHeadersSourceControlWorker/GetHeadersSourceControlWorker.js'
 import * as GetHeadersSyntaxHighlightingWorker from '../GetHeadersSyntaxHighlightingWorker/GetHeadersSyntaxHighlightingWorker.js'
 import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeadersTerminalWorker.js'
 import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
@@ -74,6 +75,8 @@ const getExtraHeaders = (pathName, fileExtension) => {
           return GetHeadersTitleBarWorker.getHeadersTitleBarWorker()
         case 'debugWorkerMain.js':
           return GetHeadersDebugWorker.getHeadersDebugWorker()
+        case 'sourceControlWorkerMain.js':
+          return GetHeadersSourceControlWorker.getHeadersSourceControlWorker()
         default:
           if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
             return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
