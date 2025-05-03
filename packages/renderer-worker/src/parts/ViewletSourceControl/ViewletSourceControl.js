@@ -4,6 +4,8 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 import * as ViewletSourceControlLoadContent from './ViewletSourceControlLoadContent.js'
+import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -32,6 +34,28 @@ export const create = (id, uri, x, y, width, height) => {
       headerHeight: 60,
       minimumSliderSize: 20,
     }),
+  }
+}
+
+export const loadContent = async (state, savedState) => {
+  await SourceControlWorker.invoke(
+    'SourceControl.create2',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    Workspace.state.workspacePath, // TODO use workspace uri
+  )
+  await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
+  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  return {
+    ...state,
+    commands,
+    actionsDom,
   }
 }
 
@@ -103,4 +127,38 @@ export const handleMouseOut = (state, index) => {
     }
   }
   return state
+}
+
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await SourceControlWorker.invoke('SourceControl.saveState', state.uid)
+  await SourceControlWorker.restart('SourceControl.terminate')
+  const oldState = {
+    ...state,
+    items: [],
+  }
+  await SourceControlWorker.invoke(
+    'SourceControl.create2',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    Workspace.state.workspacePath, // TODO use workspace uri
+  )
+  await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
+  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  const commands = await SourceControlWorker.invoke('SourceControl.render2', oldState.uid, diffResult)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
+  }
 }
