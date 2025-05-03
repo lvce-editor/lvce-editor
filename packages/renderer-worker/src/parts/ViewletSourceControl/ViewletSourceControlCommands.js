@@ -1,18 +1,14 @@
-import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 import * as ViewletSourceControl from './ViewletSourceControl.js'
+import * as WrapSourceControlCommand from '../WrapSourceControlCommand/WrapSourceControlCommand.ts'
+import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 
-// prettier-ignore
-export const Commands = {
-  handleInput: ViewletSourceControl.handleInput,
-  handleMouseOver: ViewletSourceControl.handleMouseOver,
-  handleMouseOut: ViewletSourceControl.handleMouseOut,
-}
+export const Commands = {}
 
-export const LazyCommands = {
-  handleContextMenu: () => import('./ViewletSourceControlHandleContextMenu.js'),
-  handleClick: () => import('./ViewletSourceControlHandleClick.js'),
-  handleButtonClick: () => import('./ViewletSourceControlHandleButtonClick.js'),
-  acceptInput: () => import('./ViewletSourceControlAcceptInput.js'),
-  handleFocus: () => import('./ViewletSourceControlHandleFocus.js'),
-  ...VirtualList.LazyCommands,
+export const getCommands = async () => {
+  const commands = await SourceControlWorker.invoke('SourceControl.getCommandIds')
+  for (const command of commands) {
+    Commands[command] = WrapSourceControlCommand.wrapSourceControlCommand(command)
+  }
+  Commands['hotReload'] = ViewletSourceControl.hotReload
+  return Commands
 }

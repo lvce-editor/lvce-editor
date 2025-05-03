@@ -1,42 +1,23 @@
-import * as GetSourceControlVirtualDom from '../GetSourceControlVirtualDom/GetSourceControlVirtualDom.js'
-import * as GetVisibleSourceControlItems from '../GetVisibleSourceControlItems/GetVisibleSourceControlItems.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderValue = {
+export const hasFunctionalEvents = true
+
+const renderSourceControl = {
   isEqual(oldState, newState) {
-    return oldState.inputValue === newState.inputValue
+    return newState.commands && newState.commands.length === 0
   },
-  apply(oldState, newState) {
-    return [RenderMethod.SetInputValue, /* value */ newState.inputValue]
-  },
+  apply: AdjustCommands.apply,
+  multiple: true,
 }
 
-const renderChangedFiles = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY &&
-      oldState.deltaY === newState.deltaY &&
-      oldState.buttonIndex === newState.buttonIndex &&
-      oldState.buttons === newState.buttons
-    )
-  },
-  apply(oldState, newState) {
-    const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(
-      newState.items,
-      newState.minLineY,
-      newState.maxLineY,
-      newState.buttons,
-      newState.buttonIndex,
-    )
-    const dom = GetSourceControlVirtualDom.getSourceControlVirtualDom(visible, newState.splitButtonEnabled)
-    return ['Viewlet.setDom2', dom]
-  },
-}
+export const render = [renderSourceControl]
 
-export const render = [renderValue, renderChangedFiles]
+export const renderEventListeners = async () => {
+  const listeners = await SourceControlWorker.invoke('SourceControl.renderEventListeners')
+  return listeners
+}
