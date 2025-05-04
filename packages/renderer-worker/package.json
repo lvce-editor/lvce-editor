@@ -50,7 +50,7 @@
     "@lvce-editor/extension-detail-view": "^3.21.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^5.3.0",
-    "@lvce-editor/extension-search-view": "^3.5.0",
+    "@lvce-editor/extension-search-view": "^3.6.0",
     "@lvce-editor/source-control-worker": "^1.13.0",
     "@lvce-editor/file-search-worker": "^5.14.0",
     "@lvce-editor/iframe-inspector": "^2.1.0",
