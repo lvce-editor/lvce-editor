@@ -502,6 +502,9 @@ const transpileFiles = async (folder) => {
 const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
   await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
+  if (existsSync(`${testRoot}/fixtures`)) {
+    await FileSystem.copy(`${testRoot}/fixtures`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`)
+  }
   const distDirentsPath = `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`
   await transpileFiles(distDirentsPath)
 
