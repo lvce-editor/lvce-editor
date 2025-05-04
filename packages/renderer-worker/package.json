@@ -61,7 +61,7 @@
     "@lvce-editor/debug-worker": "^2.0.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.0.1",
     "@lvce-editor/terminal-worker": "^1.2.0",
-    "@lvce-editor/test-worker": "^4.17.0",
+    "@lvce-editor/test-worker": "^4.18.0",
     "@lvce-editor/text-search-worker": "^4.9.0",
     "@lvce-editor/title-bar-worker": "^2.2.0"
   }
