@@ -38,7 +38,7 @@
     "@lvce-editor/file-watcher-process": "^3.0.0",
     "@lvce-editor/network-process": "^4.0.0",
     "@lvce-editor/preload": "^1.5.0",
-    "@lvce-editor/preview-process": "^10.0.0",
+    "@lvce-editor/preview-process": "^11.0.0",
     "@lvce-editor/process-explorer": "^2.4.0",
     "@lvce-editor/pty-host": "^4.0.0",
     "@lvce-editor/search-process": "^7.0.0",
