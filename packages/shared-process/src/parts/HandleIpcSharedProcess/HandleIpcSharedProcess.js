@@ -7,12 +7,12 @@ import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const targetWebSocket = async (handle, message) => {
   handle.on('error', HandleSocketError.handleSocketError)
-  const ipc = await IpcChild.listen({
+  const rpc = await IpcChild.listen({
     method: IpcChildType.WebSocket,
     request: message,
     handle,
   })
-  return ipc
+  return rpc
 }
 
 export const upgradeWebSocket = () => {
@@ -23,19 +23,19 @@ export const upgradeWebSocket = () => {
 
 export const targetMessagePort = async (messagePort, message) => {
   Assert.object(messagePort)
-  const ipc = await IpcChild.listen({
+  const rpc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,
     messagePort,
   })
   if (message.ipcId === IpcId.MainProcess) {
     // update ipc with message port ipc that supports transferring objects
     // @ts-ignore
-    ParentIpc.state.ipc = ipc
+    ParentIpc.state.rpc = rpc
   }
   // TODO find better way to associate configuration with ipc
   // @ts-ignore
-  ipc.windowId = message.windowId
-  return ipc
+  rpc.windowId = message.windowId
+  return rpc
 }
 
 export const upgradeMessagePort = () => {

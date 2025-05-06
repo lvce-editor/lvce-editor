@@ -4,10 +4,12 @@ import * as PtyHostState from '../PtyHostState/PtyHostState.js'
 
 export const launchPtyHost = async (method) => {
   const ptyHostPath = PtyHostPath.ptyHostPath
+  console.log({ ptyHostPath })
   const ptyHost = await IpcParent.create({
     method,
     path: ptyHostPath,
     argv: [],
+    execArgv: ['--experimental-strip-types'],
     stdio: 'inherit',
     name: 'Terminal Process',
   })
