@@ -26,6 +26,12 @@ export const sendTo = async (name, port, ipcId) => {
   await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo', port, name, ipcId)
 }
 
+export const sendTo2 = async (name, port, ipcId) => {
+  Assert.string(name)
+  Assert.object(port)
+  await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo2', port, ipcId)
+}
+
 export const handlePorts = (port1, port2, id1, id2) => {
   Assert.number(id1)
   Assert.number(id2)
