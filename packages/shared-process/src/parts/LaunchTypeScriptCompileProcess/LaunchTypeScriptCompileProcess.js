@@ -3,6 +3,7 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as GetTypeScriptPath from '../GetTypeScriptPath/GetTypeScriptPath.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const launchTypeScriptCompileProcess = async () => {
@@ -14,6 +15,8 @@ export const launchTypeScriptCompileProcess = async () => {
     argv: [],
     stdio: 'inherit',
     name: 'TypeScript Compile Process',
+    ipcId: IpcId.SharedProcess,
+    targetRpcId: IpcId.TypescriptCompileProcess,
   })
   HandleIpc.handleIpc(typescriptCompileProcess)
   const typeScriptPath = GetTypeScriptPath.getTypeScriptUri()
