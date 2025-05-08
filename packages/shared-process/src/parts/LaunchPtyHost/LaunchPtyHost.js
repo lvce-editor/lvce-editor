@@ -1,3 +1,4 @@
+import * as IpcId from '../IpcId/IpcId.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
 import * as PtyHostState from '../PtyHostState/PtyHostState.js'
@@ -10,6 +11,8 @@ export const launchPtyHost = async (method) => {
     argv: [],
     stdio: 'inherit',
     name: 'Terminal Process',
+    ipcId: IpcId.SharedProcess,
+    targetRpcId: IpcId.TerminalProcess,
   })
   PtyHostState.state.ipc = ptyHost
   return ptyHost
