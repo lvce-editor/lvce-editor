@@ -31,7 +31,6 @@ export const sendTo2 = async (port, targetRpcId, sourceIpcId) => {
   try {
     Assert.object(port)
     Assert.number(targetRpcId)
-    Assert.number(sourceIpcId)
     await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo2', port, targetRpcId, sourceIpcId)
   } catch (error) {
     throw new VError(error, `Failed to send message port to electron utility process`)
