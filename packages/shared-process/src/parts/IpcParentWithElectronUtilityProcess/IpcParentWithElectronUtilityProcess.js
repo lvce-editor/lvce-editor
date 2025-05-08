@@ -1,17 +1,21 @@
-import * as CreateUtilityProcessRpc from '../CreateUtilityProcessRpc/CreateUtilityProcessRpc.js'
 import * as FixElectronParameters from '../FixElectronParameters/FixElectronParameters.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.js'
 
+const ElectronUtilityProcess = 3
+
 export const create = async (options) => {
   // TODO how to launch process without race condition?
   // when promise resolves, process might have already exited
-  await CreateUtilityProcessRpc.createUtilityProcessRpc(options)
+  await ParentIpc.invoke('IpcParent.create', {
+    ...options,
+    method: ElectronUtilityProcess,
+    noReturn: true,
+  })
   const { port1, port2 } = await GetPortTuple.getPortTuple()
   // TODO use uuid instead of name
-  console.log({ options })
-  await TemporaryMessagePort.sendTo2(port2, options.targetRpcId, options.ipcId)
+  await TemporaryMessagePort.sendTo(options.name, port2, options.ipcId)
   port1.start()
   return port1
 }
