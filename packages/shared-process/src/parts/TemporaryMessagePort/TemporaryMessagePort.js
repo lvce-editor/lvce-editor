@@ -1,3 +1,4 @@
+import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
@@ -27,10 +28,14 @@ export const sendTo = async (name, port, ipcId) => {
 }
 
 export const sendTo2 = async (port, targetRpcId, sourceIpcId) => {
-  Assert.object(port)
-  Assert.number(targetRpcId)
-  Assert.number(sourceIpcId)
-  await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo2', port, targetRpcId, sourceIpcId)
+  try {
+    Assert.object(port)
+    Assert.number(targetRpcId)
+    Assert.number(sourceIpcId)
+    await ParentIpc.invokeAndTransfer('TemporaryMessagePort.sendTo2', port, targetRpcId, sourceIpcId)
+  } catch (error) {
+    throw new VError(error, `Failed to send message port to electron utility process`)
+  }
 }
 
 export const handlePorts = (port1, port2, id1, id2) => {
