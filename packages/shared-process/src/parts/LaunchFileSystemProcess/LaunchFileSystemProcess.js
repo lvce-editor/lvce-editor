@@ -1,5 +1,6 @@
 import * as FileSystemProcessPath from '../FileSystemProcessPath/FileSystemProcessPath.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
@@ -25,6 +26,7 @@ export const launchFileSystemProcess = async () => {
     argv: [],
     stdio: 'inherit',
     name: 'File System Process',
+    targetRpcId: IpcId.FileSystemProcess,
   })
   HandleIpc.handleIpc(fileSystemProcess)
   return fileSystemProcess
