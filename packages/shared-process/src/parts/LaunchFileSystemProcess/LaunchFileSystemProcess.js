@@ -26,6 +26,7 @@ export const launchFileSystemProcess = async () => {
     argv: [],
     stdio: 'inherit',
     name: 'File System Process',
+    ipcId: IpcId.SharedProcess,
     targetRpcId: IpcId.FileSystemProcess,
   })
   HandleIpc.handleIpc(fileSystemProcess)
