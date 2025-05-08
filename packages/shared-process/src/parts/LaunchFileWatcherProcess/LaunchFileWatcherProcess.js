@@ -13,6 +13,7 @@ export const launchFileWatcherProcess = async () => {
     argv: [],
     stdio: 'inherit',
     name: 'File Watcher Process',
+    ipcId: IpcId.SharedProcess,
     targetRpcId: IpcId.FileWatcherProcess,
   })
   HandleIpc.handleIpc(ipc)
