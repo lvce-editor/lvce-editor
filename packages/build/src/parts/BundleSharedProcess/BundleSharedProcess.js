@@ -193,11 +193,6 @@ export const getBuiltinExtensionsPath = () => {
       replacement: `const isElectron = false`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/EmbedsProcessPath/EmbedsProcessPath.js`,
-      occurrence: `'src'`,
-      replacement: `'dist'`,
-    })
-    await Replace.replace({
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `export const getExtensionHostHelperProcessPath = async () => {
   return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
