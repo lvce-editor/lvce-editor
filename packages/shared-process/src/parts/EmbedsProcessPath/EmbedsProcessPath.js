@@ -8,6 +8,6 @@ export const embedsProcessPath = Path.join(
   'node_modules',
   '@lvce-editor',
   'embeds-process',
-  'src',
+  'dist',
   'embedsProcessMain.js',
 )
