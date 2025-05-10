@@ -14,7 +14,3 @@
 .DropTarget {
   background: var(--DropTargetBackground);
 }
-
-.InputValidationError {
-  border-color: var(--InputValidationErrorBorder);
-}

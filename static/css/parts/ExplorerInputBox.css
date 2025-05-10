@@ -9,7 +9,7 @@
   padding: 0;
   color: var(--InputBoxForeground);
   font-size: 13px;
-  height: 24px;
+  height: 22px;
   contain: strict;
 }
 
@@ -17,6 +17,10 @@
   color: var(--InputBoxPlaceholderForeground, rgba(255, 255, 255, 0.3));
 }
 
-.ExplorerInputBox:focus {
+.ExplorerInputBox:where(:focus) {
   border-color: var(--FocusOutline, lightgray);
+}
+
+.InputValidationError {
+  border-color: var(--InputValidationErrorBorder);
 }
