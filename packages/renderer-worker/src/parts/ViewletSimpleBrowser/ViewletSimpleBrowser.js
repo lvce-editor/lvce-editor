@@ -158,6 +158,19 @@ export const handleInput = async (state, value) => {
   }
 }
 
+export const setUrl = async (state, value) => {
+  const newState1 = await handleInput(state, value)
+  const { inputValue, browserViewId, shortcuts } = state
+  const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
+  // TODO await promises
+  await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  return {
+    ...newState1,
+    iframeSrc,
+    isLoading: true,
+  }
+}
+
 export const go = (state) => {
   const { inputValue, browserViewId, suggestionsEnabled, hasSuggestionsOverlay, shortcuts } = state
   const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)

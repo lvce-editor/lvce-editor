@@ -3,6 +3,7 @@ import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 // prettier-ignore
 export const Commands = {
   go: SimpleBrowser.go,
+  setUrl: SimpleBrowser.setUrl,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleInput: SimpleBrowser.handleInput,
