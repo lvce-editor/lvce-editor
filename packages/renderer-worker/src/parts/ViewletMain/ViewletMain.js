@@ -326,7 +326,7 @@ export const getChildren = (state) => {
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
-  const { groups, x, y, width, height, tabHeight } = state
+  const { groups, y, tabHeight } = state
   if (groups.length === 0) {
     return []
   }
@@ -337,10 +337,10 @@ export const contentLoaded = async (state) => {
       continue
     }
     const editor = Arrays.last(editors)
-    const editorX = x
-    const editorY = y + tabHeight
-    const editorWidth = width
-    const editorHeight = height - tabHeight
+    const editorX = group.x
+    const editorY = y + group.y + tabHeight
+    const editorWidth = group.width
+    const editorHeight = group.height - tabHeight
     const id = await ViewletMap.getModuleId(editor.uri)
     const tabLabel = PathDisplay.getLabel(editor.uri)
     const tabTitle = PathDisplay.getTitle(editor.uri)
