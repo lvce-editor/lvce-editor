@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-const resizeGroups = (groups, dimensions) => {
+const resizeGroups = (groups, dimensions, y) => {
   const newGroups = []
   const width = dimensions.width
   const groupWidth = width / groups.length
@@ -10,7 +10,7 @@ const resizeGroups = (groups, dimensions) => {
     newGroups.push({
       ...group,
       x: currentX,
-      y: group.y,
+      y: y + dimensions.y,
       width: groupWidth,
       height: group.height,
     })
@@ -20,13 +20,13 @@ const resizeGroups = (groups, dimensions) => {
 }
 
 export const resize = async (state, dimensions) => {
-  const { groups, tabHeight } = state
+  const { groups, tabHeight, y } = state
   const width = dimensions.width
   const contentHeight = dimensions.height - tabHeight
 
   const commands = []
   const groupWidth = width / groups.length
-  const newGroups = resizeGroups(groups, dimensions)
+  const newGroups = resizeGroups(groups, dimensions, y)
   for (const group of newGroups) {
     const { activeIndex, editors, tabsUid } = group
     const editor = editors[activeIndex] || editors[0]
