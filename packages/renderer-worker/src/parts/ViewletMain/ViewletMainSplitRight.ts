@@ -6,7 +6,14 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
-const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, width: number, height: number): readonly EditorGroup[] => {
+const getNewGroups = (
+  groups: readonly EditorGroup[],
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  newUid: number,
+): readonly EditorGroup[] => {
   if (groups.length === 0) {
     return [
       {
@@ -49,7 +56,12 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
       y: lastGroup.y,
       width: lastGroup.width / 2,
       height: lastGroup.height,
-      editors: [lastEditor],
+      editors: [
+        {
+          ...lastEditor,
+          uid: newUid,
+        },
+      ],
       tabsUid: 0,
       activeIndex: 0,
     },
@@ -58,7 +70,8 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
 
 export const splitRight = async (state) => {
   const { groups, x, y, width, height, tabHeight } = state
-  const newGroups = getNewGroups(groups, x, y, width, height)
+  const instanceUid = Id.create()
+  const newGroups = getNewGroups(groups, x, y, width, height, instanceUid)
   const commands: any[] = []
   const lastGroup = newGroups.at(-2)
   if (!lastGroup) {
@@ -76,6 +89,7 @@ export const splitRight = async (state) => {
     width: lastGroup.width,
     height: contentHeight,
   }
+
   if (editor) {
     const editorUid = editor.uid
     Assert.number(editorUid)
@@ -93,7 +107,6 @@ export const splitRight = async (state) => {
 
   const realEditor = lastGroup.editors.at(-1)
   const moduleId = await ViewletMap.getModuleId(realEditor.uri)
-  const instanceUid = Id.create()
   // TODO resize the editor in first group
   // TODO use half width for editor in second group
   const instance = ViewletManager.create(
