@@ -141,6 +141,7 @@ export const splitRight = async (state) => {
     newState: {
       ...state,
       groups: newGroups,
+      activeGroupIndex: newGroups.length - 1,
     },
     commands: allCommands,
   }
