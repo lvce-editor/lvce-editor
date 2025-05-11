@@ -63,7 +63,7 @@ const getNewGroups = (
         },
       ],
       tabsUid: 0,
-      activeIndex: -1,
+      activeIndex: 0,
     },
   ]
 }
