@@ -51,7 +51,7 @@ const getNewGroups = (groups: readonly EditorGroup[], x: number, y: number, widt
       height: lastGroup.height,
       editors: [lastEditor],
       tabsUid: 0,
-      activeIndex: -1,
+      activeIndex: 0,
     },
   ]
 }
