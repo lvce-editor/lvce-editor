@@ -1,3 +1,10 @@
+:root {
+  --ErrorBackground: #5a1d1d;
+  --ErrorForeground: rgb(156, 162, 160);
+  --InputValidationErrorBorder: #be1100;
+  --DisabledForeground: rgba(204, 204, 204, 0.5);
+}
+
 .ExplorerInputBox {
   width: 100%;
   margin: 0;
@@ -23,4 +30,16 @@
 
 .InputValidationError {
   border-color: var(--InputValidationErrorBorder);
+}
+
+.ExplorerErrorMessage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--ErrorBackground);
+  color: var(--ErrorForeground);
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid var(--InputValidationErrorBorder);
 }
