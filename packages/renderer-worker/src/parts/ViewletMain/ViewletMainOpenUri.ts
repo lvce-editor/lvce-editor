@@ -15,6 +15,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   Assert.string(uri)
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight } = state
   const x = state.x
+  const y = state.y + tabHeight
   const width = state.width
   const contentHeight = state.height - tabHeight
   // @ts-ignore
@@ -58,7 +59,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     disposeCommands = Viewlet.hideFunctional(previousUid)
   }
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, activeGroup.x, activeGroup.y, activeGroup.width, contentHeight)
+  const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, activeGroup.x, y, activeGroup.width, contentHeight)
   instance.uid = instanceUid
   // const oldActiveIndex = state.activeIndex
   const tabLabel = PathDisplay.getLabel(uri)
@@ -93,7 +94,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   }
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
-  commands.push(['Viewlet.setBounds', instanceUid, activeGroup.x, activeGroup.y + tabHeight, activeGroup.width, contentHeight])
+  commands.push(['Viewlet.setBounds', instanceUid, activeGroup.x, y, activeGroup.width, contentHeight])
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {
     tabsUid = Id.create()
