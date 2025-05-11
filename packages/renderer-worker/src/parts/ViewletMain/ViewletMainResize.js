@@ -1,31 +1,50 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
+const resizeGroups = (groups, dimensions, y) => {
+  const newGroups = []
+  const width = dimensions.width
+  const groupWidth = width / groups.length
+  let currentX = 0
+  for (const group of groups) {
+    newGroups.push({
+      ...group,
+      x: currentX,
+      y: y + dimensions.y,
+      width: groupWidth,
+      height: group.height,
+    })
+    currentX += groupWidth
+  }
+  return newGroups
+}
+
 export const resize = async (state, dimensions) => {
-  const { groups, tabHeight } = state
-  const x = dimensions.x
-  const contentY = dimensions.y + tabHeight
+  const { groups, tabHeight, y } = state
   const width = dimensions.width
   const contentHeight = dimensions.height - tabHeight
-  const childDimensions = {
-    x,
-    y: contentY,
-    width,
-    height: contentHeight,
-  }
+
   const commands = []
-  for (const group of groups) {
+  const groupWidth = width / groups.length
+  const newGroups = resizeGroups(groups, dimensions, y)
+  for (const group of newGroups) {
     const { activeIndex, editors, tabsUid } = group
-    const editor = editors[activeIndex]
+    const editor = editors[activeIndex] || editors[0]
     if (editor) {
       const editorUid = editor.uid
       Assert.number(editorUid)
+      const childDimensions = {
+        x: group.x,
+        y: group.y,
+        width: group.width,
+        height: contentHeight,
+      }
       const resizeCommands = await Viewlet.resize(editorUid, childDimensions)
       commands.push(...resizeCommands)
-      commands.push(['Viewlet.setBounds', editorUid, dimensions.x, tabHeight, dimensions.width, contentHeight])
+      commands.push(['Viewlet.setBounds', editorUid, group.x, tabHeight, groupWidth, contentHeight])
     }
     if (tabsUid !== -1) {
-      commands.push(['Viewlet.setBounds', tabsUid, dimensions.x, 0, dimensions.width, tabHeight])
+      commands.push(['Viewlet.setBounds', tabsUid, group.x, 0, groupWidth, tabHeight])
     }
   }
   return {
