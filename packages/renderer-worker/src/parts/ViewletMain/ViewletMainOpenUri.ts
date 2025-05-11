@@ -15,7 +15,6 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   Assert.string(uri)
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight } = state
   const x = state.x
-  const y = state.y + tabHeight
   const width = state.width
   const contentHeight = state.height - tabHeight
   // @ts-ignore
