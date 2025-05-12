@@ -1,17 +1,18 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
+import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.js'
 
-// prettier-ignore
 export const Commands = {
+  getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
-  setUrl: SimpleBrowser.setUrl,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleInput: SimpleBrowser.handleInput,
+  handleKeyBinding: SimpleBrowser.handleKeyBinding,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
-  handleKeyBinding: SimpleBrowser.handleKeyBinding,
-  getDomTree:ViewletSimpleBrowserGetDomTree.getDomTree
+  insertCss: ViewletSimpleBrowserInsertCss.insertCss,
+  setUrl: SimpleBrowser.setUrl,
 }
 
 export const LazyCommands = {
