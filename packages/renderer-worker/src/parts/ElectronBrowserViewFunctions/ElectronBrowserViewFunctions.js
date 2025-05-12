@@ -85,3 +85,7 @@ export const getDomTree = (id) => {
 export const insertCss = (id, css) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.insertCss', id, css)
 }
+
+export const insertJavaScript = (id, css) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.insertJavaScript', id, css)
+}

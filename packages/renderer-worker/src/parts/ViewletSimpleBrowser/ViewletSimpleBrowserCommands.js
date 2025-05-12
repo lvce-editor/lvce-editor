@@ -1,6 +1,7 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
 import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.js'
+import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserInsertJavaScript.js'
 
 export const Commands = {
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
@@ -12,6 +13,7 @@ export const Commands = {
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   insertCss: ViewletSimpleBrowserInsertCss.insertCss,
+  insertJavaScript: ViewletSimpleBrowserInsertJavaScript.insertJavaScript,
   setUrl: SimpleBrowser.setUrl,
 }
 
