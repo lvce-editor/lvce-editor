@@ -12,7 +12,7 @@
   {
     "name": "builtin.chat",
     "repository": "github.com/lvce-editor/chat",
-    "version": "1.18.0"
+    "version": "1.19.0"
   },
   {
     "name": "builtin.language-basics-bat",
