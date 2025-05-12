@@ -164,6 +164,7 @@ export const setUrl = async (state, value) => {
   const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
   // TODO await promises
   await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+
   return {
     ...newState1,
     iframeSrc,
