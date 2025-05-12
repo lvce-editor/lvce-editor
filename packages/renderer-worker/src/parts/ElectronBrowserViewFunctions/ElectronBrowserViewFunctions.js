@@ -1,3 +1,4 @@
+// deprecated, use webcontentsview instead
 import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
@@ -75,4 +76,7 @@ export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
 
 export const getStats = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.getStats', id)
+}
+export const getDomTree = (id) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.getDomTree', id)
 }

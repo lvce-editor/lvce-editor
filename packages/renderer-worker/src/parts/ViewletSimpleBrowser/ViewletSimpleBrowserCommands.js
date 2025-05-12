@@ -1,4 +1,5 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
+import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
 
 // prettier-ignore
 export const Commands = {
@@ -10,6 +11,7 @@ export const Commands = {
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   handleKeyBinding: SimpleBrowser.handleKeyBinding,
+  getDomTree:ViewletSimpleBrowserGetDomTree.getDomTree
 }
 
 export const LazyCommands = {
