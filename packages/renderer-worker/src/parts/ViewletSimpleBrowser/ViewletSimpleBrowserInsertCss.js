@@ -7,4 +7,4 @@ export const insertCss = async (state, css) => {
 }
 
 // TODO find a better way to mark commands as already wrapped
-getDomTree.returnValue = true
+insertCss.returnValue = true
