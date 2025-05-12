@@ -3,8 +3,8 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 export const getDomTree = async (state) => {
   const { browserViewId } = state
   const domTree = await ElectronBrowserViewFunctions.getDomTree(browserViewId)
-  return {
-    ...state,
-    domTree,
-  }
+  return domTree
 }
+
+// TODO find a better way to mark commands as already wrapped
+getDomTree.returnValue = true

@@ -91,6 +91,15 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
 const wrapViewletCommand = (id, key, fn) => {
   Assert.string(id)
   Assert.fn(fn)
+  if (fn.returnValue) {
+    const wrappedViewletCommand = async (...args) => {
+      // TODO get actual focused instance
+      const activeInstance = ViewletStates.getInstance(id)
+      const result = await fn(activeInstance.state, ...args)
+      return result
+    }
+    return wrappedViewletCommand
+  }
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
