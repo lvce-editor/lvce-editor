@@ -942,6 +942,21 @@ const getPlaceholderDom = () => {
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet Content',
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Main',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet SideBar',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet ActivityBar',
       childCount: 0,
     },
     {
