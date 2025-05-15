@@ -981,8 +981,23 @@ const getLayoutComponents = (points) => {
     },
     {
       name: 'Content',
+      width: points[LayoutKeys.MainWidth] + points[LayoutKeys.SideBarWidth] + points[LayoutKeys.ActivityBarWidth],
+      height: points[LayoutKeys.MainHeight],
+    },
+    {
+      name: 'Main',
       width: points[LayoutKeys.MainWidth],
       height: points[LayoutKeys.MainHeight],
+    },
+    {
+      name: 'SideBar',
+      width: points[LayoutKeys.SideBarWidth],
+      height: points[LayoutKeys.SideBarHeight],
+    },
+    {
+      name: 'ActivityBar',
+      width: points[LayoutKeys.ActivityBarWidth],
+      height: points[LayoutKeys.ActivityBarHeight],
     },
     {
       name: 'Panel',

@@ -37,6 +37,7 @@
   height: var(--ContentHeight);
   background: var(--MainBackground);
   flex: 1;
+  display: flex;
 }
 
 .TitleBar {
