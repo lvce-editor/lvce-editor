@@ -957,16 +957,48 @@ const getPlaceholderDom = () => {
   ]
 }
 
+const getLayoutComponents = (points) => {
+  const components = [
+    {
+      name: 'TitleBar',
+      width: points[LayoutKeys.TitleBarWidth],
+      height: points[LayoutKeys.TitleBarHeight],
+    },
+    {
+      name: 'Content',
+      width: 100,
+      height: 100,
+    },
+  ]
+  return components
+}
+
+const getLayoutComponentCss = (component) => {
+  const { name, width, height } = component
+  return [`--${name}Width: ${width}px;`, `--${name}Height: ${height}px;`]
+}
+
+const getLayoutCss = (components) => {
+  const rules = components.flatMap(getLayoutComponentCss)
+  const rulesString = rules.join('\n')
+  console.log({ rulesString })
+  const css = `:root {\n${rulesString}\n}`
+  return css
+}
+
 export const getInitialPlaceholderCommands = (state) => {
   const { points } = state
   const commands = []
   const uid = state.uid
 
   const dom = getPlaceholderDom()
-
+  const components = getLayoutComponents(points)
+  const css = getLayoutCss(components)
+  console.log({ css })
   commands.push(['Viewlet.createFunctionalRoot', uid, uid, true])
   commands.push(['Viewlet.setDom2', uid, dom])
   commands.push(['Viewlet.appendToBody', uid])
+  commands.push(['Css.addCssStyleSheet', uid, css])
   // const modules = [
   //   LayoutModules.TitleBar,
   //   LayoutModules.Main,
