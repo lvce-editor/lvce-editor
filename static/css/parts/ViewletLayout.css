@@ -10,25 +10,37 @@
 
 .ActivityBar {
   background: var(--ActivityBarBackground);
+  width: var(--ActivityBarWidth);
+  height: var(--ActivityBarHeight);
 }
 
 .SideBar {
   background: var(--SideBarBackground, rgb(30, 35, 36));
+  width: var(--SideBarWidth);
+  height: var(--SideBarHeight);
 }
 
 .Main {
   background: var(--MainBackground);
+  width: var(--MainWidth);
+  height: var(--MainHeight);
 }
 
 .StatusBar {
   background: var(--StatusBarBackground);
+  width: var(--StatusBarWidth);
+  height: var(--StatusBarHeight);
 }
 
 .TitleBar {
   background: rgb(40, 46, 47);
   background: var(--TitleBarBackground);
+  width: var(--TitleBarWidth);
+  height: var(--TitleBarHeight);
 }
 
 .Panel {
   background: var(--PanelBackground);
+  width: var(--PanelWidth);
+  height: var(--PanelHeight);
 }
