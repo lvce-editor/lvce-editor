@@ -969,6 +969,16 @@ const getLayoutComponents = (points) => {
       width: 100,
       height: 100,
     },
+    {
+      name: 'Panel',
+      width: points[LayoutKeys.PanelWidth],
+      height: points[LayoutKeys.PanelHeight],
+    },
+    {
+      name: 'StatusBar',
+      width: points[LayoutKeys.StatusBarWidth],
+      height: points[LayoutKeys.StatusBarHeight],
+    },
   ]
   return components
 }
