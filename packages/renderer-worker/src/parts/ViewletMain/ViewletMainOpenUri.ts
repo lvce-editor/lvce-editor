@@ -13,11 +13,8 @@ import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight } = state
-  const x = state.x
-  const y = state.y + tabHeight
-  const width = state.width
-  const contentHeight = state.height - tabHeight
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight, x, y, width, height } = state
+  const contentHeight = height - tabHeight
   // @ts-ignore
   const moduleId = await ViewletMap.getModuleId(uri, context.opener)
   let activeGroup = groups[activeGroupIndex]
@@ -30,7 +27,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     x,
     y: 0,
     width,
-    height: state.height,
+    height,
   }
   const { editors, activeIndex } = activeGroup
 

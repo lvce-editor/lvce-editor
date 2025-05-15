@@ -1,6 +1,6 @@
 .Main {
   background: var(--MainBackground);
-  position: absolute;
+  /* position: absolute; */
 }
 
 .DragOverlay {
