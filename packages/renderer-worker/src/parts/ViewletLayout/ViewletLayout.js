@@ -966,8 +966,8 @@ const getLayoutComponents = (points) => {
     },
     {
       name: 'Content',
-      width: 100,
-      height: 100,
+      width: points[LayoutKeys.MainWidth],
+      height: points[LayoutKeys.MainHeight],
     },
     {
       name: 'Panel',
