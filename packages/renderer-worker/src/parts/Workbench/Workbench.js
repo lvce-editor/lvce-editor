@@ -192,47 +192,47 @@ export const startup = async () => {
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
-  Performance.mark(PerformanceMarkerType.WillLoadLanguages)
-  await Languages.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadLanguages)
+  // Performance.mark(PerformanceMarkerType.WillLoadLanguages)
+  // await Languages.hydrate()
+  // Performance.mark(PerformanceMarkerType.DidLoadLanguages)
 
-  LifeCycle.mark(LifeCyclePhase.Five)
+  // LifeCycle.mark(LifeCyclePhase.Five)
 
-  await Promise.all(actions.map((action) => action()))
+  // await Promise.all(actions.map((action) => action()))
 
-  LifeCycle.mark(LifeCyclePhase.Fifteen)
+  // LifeCycle.mark(LifeCyclePhase.Fifteen)
 
-  if (Workspace.isTest()) {
-    await ExecuteCurrentTest.executeCurrentTest(initData)
-    return
-  }
-  Performance.mark(PerformanceMarkerType.WillLoadSaveState)
-  await SaveState.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadSaveState)
+  // if (Workspace.isTest()) {
+  //   await ExecuteCurrentTest.executeCurrentTest(initData)
+  //   return
+  // }
+  // Performance.mark(PerformanceMarkerType.WillLoadSaveState)
+  // await SaveState.hydrate()
+  // Performance.mark(PerformanceMarkerType.DidLoadSaveState)
 
-  LifeCycle.mark(LifeCyclePhase.Sixteen)
+  // LifeCycle.mark(LifeCyclePhase.Sixteen)
 
-  Performance.mark(PerformanceMarkerType.WillLoadRecentlyOpened)
-  await RecentlyOpened.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
+  // Performance.mark(PerformanceMarkerType.WillLoadRecentlyOpened)
+  // await RecentlyOpened.hydrate()
+  // Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
 
-  // TODO tree shake out service worker in electron build
+  // // TODO tree shake out service worker in electron build
 
-  Performance.mark(PerformanceMarkerType.WillLoadLocation)
-  await Location.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadLocation)
+  // Performance.mark(PerformanceMarkerType.WillLoadLocation)
+  // await Location.hydrate()
+  // Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  await DevelopFileWatcher.hydrate()
-  await WatchFilesForHotReload.watchFilesForHotReload()
+  // await DevelopFileWatcher.hydrate()
+  // await WatchFilesForHotReload.watchFilesForHotReload()
 
-  Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
-  Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
-  Performance.measure(PerformanceMarkerType.LoadSideBar, PerformanceMarkerType.WillLoadSideBar, PerformanceMarkerType.DidLoadSideBar)
-  Performance.measure(PerformanceMarkerType.ShowLayout, PerformanceMarkerType.WillShowLayout, PerformanceMarkerType.DidShowLayout)
-  Performance.measure(PerformanceMarkerType.LoadPanel, PerformanceMarkerType.WillLoadPanel, PerformanceMarkerType.DidLoadPanel)
-  Performance.measure(PerformanceMarkerType.LoadActivityBar, PerformanceMarkerType.WillLoadActivityBar, PerformanceMarkerType.DidLoadActivityBar)
-  Performance.measure(PerformanceMarkerType.LoadStatusBar, PerformanceMarkerType.WillLoadStatusBar, PerformanceMarkerType.DidLoadStatusBar)
-  Performance.measure(PerformanceMarkerType.LoadPreferences, PerformanceMarkerType.WillLoadPreferences, PerformanceMarkerType.DidLoadPreferences)
-  Performance.measure(PerformanceMarkerType.LoadColorTheme, PerformanceMarkerType.WillLoadColorTheme, PerformanceMarkerType.DidLoadColorTheme)
-  Performance.measure(PerformanceMarkerType.LoadIconTheme, PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
+  // Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
+  // Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
+  // Performance.measure(PerformanceMarkerType.LoadSideBar, PerformanceMarkerType.WillLoadSideBar, PerformanceMarkerType.DidLoadSideBar)
+  // Performance.measure(PerformanceMarkerType.ShowLayout, PerformanceMarkerType.WillShowLayout, PerformanceMarkerType.DidShowLayout)
+  // Performance.measure(PerformanceMarkerType.LoadPanel, PerformanceMarkerType.WillLoadPanel, PerformanceMarkerType.DidLoadPanel)
+  // Performance.measure(PerformanceMarkerType.LoadActivityBar, PerformanceMarkerType.WillLoadActivityBar, PerformanceMarkerType.DidLoadActivityBar)
+  // Performance.measure(PerformanceMarkerType.LoadStatusBar, PerformanceMarkerType.WillLoadStatusBar, PerformanceMarkerType.DidLoadStatusBar)
+  // Performance.measure(PerformanceMarkerType.LoadPreferences, PerformanceMarkerType.WillLoadPreferences, PerformanceMarkerType.DidLoadPreferences)
+  // Performance.measure(PerformanceMarkerType.LoadColorTheme, PerformanceMarkerType.WillLoadColorTheme, PerformanceMarkerType.DidLoadColorTheme)
+  // Performance.measure(PerformanceMarkerType.LoadIconTheme, PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
 }

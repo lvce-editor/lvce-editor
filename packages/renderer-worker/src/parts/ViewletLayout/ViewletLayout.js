@@ -6,6 +6,7 @@ import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.js'
 import * as Platform from '../Platform/Platform.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -244,6 +245,7 @@ const getSavedPoints = (savedState) => {
 const isNativeTitleBarStyle = () => {
   return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
+
 export const loadContent = (state, savedState) => {
   const { Layout } = savedState
   const { bounds } = Layout
@@ -508,6 +510,7 @@ const loadIfVisible = async (state, module) => {
         commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
+    console.log({ commands, name: module.moduleId })
     return {
       newState: state,
       commands,
@@ -922,23 +925,61 @@ export const isSideBarVisible = (state) => {
   return points[LayoutKeys.SideBarVisible]
 }
 
+const getPlaceholderDom = () => {
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Layout Workbench',
+      id: 'Workbench',
+      role: 'application',
+      childCount: 4,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet TitleBar',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Content',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Panel',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet StatusBar',
+      childCount: 0,
+    },
+  ]
+}
+
 export const getInitialPlaceholderCommands = (state) => {
   const { points } = state
   const commands = []
   const uid = state.uid
-  const modules = [
-    LayoutModules.TitleBar,
-    LayoutModules.Main,
-    LayoutModules.SideBar,
-    LayoutModules.ActivityBar,
-    LayoutModules.Panel,
-    LayoutModules.StatusBar,
-  ]
-  for (const module of modules) {
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    if (points[kVisible]) {
-      commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
-    }
-  }
+
+  const dom = getPlaceholderDom()
+
+  commands.push(['Viewlet.createFunctionalRoot', uid, uid, true])
+  commands.push(['Viewlet.setDom2', uid, dom])
+  commands.push(['Viewlet.appendToBody', uid])
+  // const modules = [
+  //   LayoutModules.TitleBar,
+  //   LayoutModules.Main,
+  //   LayoutModules.SideBar,
+  //   LayoutModules.ActivityBar,
+  //   LayoutModules.Panel,
+  //   LayoutModules.StatusBar,
+  // ]
+  // for (const module of modules) {
+  //   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+  //   if (points[kVisible]) {
+  //     commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
+  //   }
+  // }
   return commands
 }
