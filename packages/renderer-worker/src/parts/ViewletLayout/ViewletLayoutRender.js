@@ -126,6 +126,7 @@ const renderDom = {
   },
   apply(oldState, newState) {
     const dom = getLayoutDom(newState.moduleCommands)
+    console.log({ dom })
     return ['Viewlet.setDom2', dom]
   },
 }

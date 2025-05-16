@@ -212,7 +212,14 @@ export const create = (id) => {
     [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
-    moduleCommands: Object.create(null),
+    moduleCommands: {
+      Panel: [],
+      StatusBar: [],
+      TitleBar: [],
+      SideBar: [],
+      Main: [],
+      ActivityBar: [],
+    },
   }
 }
 
@@ -513,12 +520,15 @@ const loadIfVisible = async (state, module) => {
       }
     }
     console.log({ commands, name: module.moduleId })
+    const domCommand = commands.find((command) => command[0] === 'Viewlet.setDom2')
+    const dom = domCommand[2]
+
     const latest = ViewletStates.getState(ViewletModuleId.Layout)
     return {
       ...state,
       moduleCommands: {
         ...latest.moduleCommands,
-        [module.moduleId]: commands,
+        [module.moduleId]: dom,
       },
       // newState: state,
       // commands,

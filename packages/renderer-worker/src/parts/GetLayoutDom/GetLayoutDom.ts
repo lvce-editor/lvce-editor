@@ -3,6 +3,16 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 export const getLayoutDom = (moduleCommands) => {
   // const dom
   console.log({ moduleCommands })
+  const titleBarDom = moduleCommands.TitleBar
+  const titleBarDomChildCount = titleBarDom.length ? 1 : 0
+  const mainDom = moduleCommands.Main
+  const mainDomCount = mainDom.length ? 1 : 0
+  const sideBarDom = moduleCommands.SideBar
+  const sideBarDomCount = sideBarDom.length ? 1 : 0
+  const panelDom = moduleCommands.Panel
+  const panelDomCount = panelDom.length ? 1 : 0
+  const statusBarDom = moduleCommands.StatusBar
+  const statusBarDomCount = statusBarDom.length ? 1 : 0
   return [
     {
       type: VirtualDomElements.Div,
@@ -15,8 +25,9 @@ export const getLayoutDom = (moduleCommands) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet TitleBar',
       id: 'TitleBar',
-      childCount: 0,
+      childCount: titleBarDomChildCount,
     },
+    ...titleBarDom,
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet Content',
@@ -32,8 +43,9 @@ export const getLayoutDom = (moduleCommands) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet SideBar',
       id: 'SideBar',
-      childCount: 0,
+      childCount: sideBarDomCount,
     },
+    ...sideBarDom,
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet ActivityBar',
