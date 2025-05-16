@@ -4,6 +4,8 @@ export const getLayoutDom = (moduleCommands) => {
   // const dom
   console.log({ moduleCommands })
   const titleBarDom = moduleCommands.TitleBar
+  const activityBarDom = moduleCommands.ActivityBar
+  const activityBarChildCount = activityBarDom.length ? 1 : 0
   const titleBarDomChildCount = titleBarDom.length ? 1 : 0
   const mainDom = moduleCommands.Main
   const mainDomCount = mainDom.length ? 1 : 0
@@ -50,8 +52,9 @@ export const getLayoutDom = (moduleCommands) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet ActivityBar',
       id: 'ActivityBar',
-      childCount: 0,
+      childCount: activityBarChildCount,
     },
+    ...activityBarDom,
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet Panel',
