@@ -5,6 +5,7 @@
 
 .Explorer {
   outline: none;
+  flex: 1;
 }
 
 .ListItems {
