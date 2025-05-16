@@ -1,4 +1,6 @@
+import { getLayoutDom } from '../GetLayoutDom/GetLayoutDom.ts'
 import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 // @ts-ignore
 const kWindowWidth = 0
@@ -118,4 +120,14 @@ const renderSashes = {
   },
 }
 
-export const render = [renderSashes]
+const renderDom = {
+  isEqual(oldState, newState) {
+    return oldState.moduleCommands === newState.moduleCommands
+  },
+  apply(oldState, newState) {
+    const dom = getLayoutDom(newState.moduleCommands)
+    return ['Viewlet.setDom2', dom]
+  },
+}
+
+export const render = [renderSashes, renderDom]

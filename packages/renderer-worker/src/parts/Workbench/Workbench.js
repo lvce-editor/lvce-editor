@@ -192,13 +192,13 @@ export const startup = async () => {
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
-  // Performance.mark(PerformanceMarkerType.WillLoadLanguages)
-  // await Languages.hydrate()
-  // Performance.mark(PerformanceMarkerType.DidLoadLanguages)
+  Performance.mark(PerformanceMarkerType.WillLoadLanguages)
+  await Languages.hydrate()
+  Performance.mark(PerformanceMarkerType.DidLoadLanguages)
 
-  // LifeCycle.mark(LifeCyclePhase.Five)
+  LifeCycle.mark(LifeCyclePhase.Five)
 
-  // await Promise.all(actions.map((action) => action()))
+  await Promise.all(actions.map((action) => action()))
 
   // LifeCycle.mark(LifeCyclePhase.Fifteen)
 

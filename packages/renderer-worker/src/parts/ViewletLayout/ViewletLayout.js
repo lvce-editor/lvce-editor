@@ -19,6 +19,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import { getLayoutDom } from '../GetLayoutDom/GetLayoutDom.ts'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
@@ -211,6 +212,7 @@ export const create = (id) => {
     [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
+    moduleCommands: Object.create(null),
   }
 }
 
@@ -476,7 +478,7 @@ const getReferenceNodes = (sideBarLocation) => {
 
 const loadIfVisible = async (state, module) => {
   try {
-    const { points, sideBarLocation } = state
+    const { points, sideBarLocation, uid } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
     const visible = points[kVisible]
     const x = points[kLeft]
@@ -484,7 +486,6 @@ const loadIfVisible = async (state, module) => {
     const width = points[kWidth]
     const height = points[kHeight]
     let commands = []
-    const parentUid = state.uid
     if (visible) {
       const childUid = Id.create()
       commands = await ViewletManager.load(
@@ -507,13 +508,20 @@ const loadIfVisible = async (state, module) => {
       )
       if (commands) {
         const referenceNodes = getReferenceNodes(sideBarLocation)
-        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+        const id = module.moduleId
+        commands.push(['Viewlet.append', uid, childUid, referenceNodes])
       }
     }
     console.log({ commands, name: module.moduleId })
+    const latest = ViewletStates.getState(ViewletModuleId.Layout)
     return {
-      newState: state,
-      commands,
+      ...state,
+      moduleCommands: {
+        ...latest.moduleCommands,
+        [module.moduleId]: commands,
+      },
+      // newState: state,
+      // commands,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)
@@ -925,59 +933,6 @@ export const isSideBarVisible = (state) => {
   return points[LayoutKeys.SideBarVisible]
 }
 
-const getPlaceholderDom = () => {
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Layout Workbench',
-      id: 'Workbench',
-      role: 'application',
-      childCount: 4,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet TitleBar',
-      id: 'TitleBar',
-      childCount: 0,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Content',
-      childCount: 3,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Main',
-      id: 'Main',
-      childCount: 0,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet SideBar',
-      id: 'SideBar',
-      childCount: 0,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet ActivityBar',
-      id: 'ActivityBar',
-      childCount: 0,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Panel',
-      id: 'Panel',
-      childCount: 0,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet StatusBar',
-      id: 'StatusBar',
-      childCount: 0,
-    },
-  ]
-}
-
 const getLayoutComponents = (points) => {
   const components = [
     {
@@ -1033,11 +988,11 @@ const getLayoutCss = (components) => {
 }
 
 export const getInitialPlaceholderCommands = (state) => {
-  const { points } = state
+  const { points, moduleCommands } = state
   const commands = []
   const uid = state.uid
 
-  const dom = getPlaceholderDom()
+  const dom = getLayoutDom(moduleCommands)
   const components = getLayoutComponents(points)
   const css = getLayoutCss(components)
   console.log({ css })

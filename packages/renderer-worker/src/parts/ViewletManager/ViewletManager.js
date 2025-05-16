@@ -462,6 +462,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
+      // TODO make this more functional
       const eventListeners = await module.renderEventListeners()
       await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
     }

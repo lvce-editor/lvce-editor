@@ -1,7 +1,14 @@
 import * as ViewletLayout from './ViewletLayout.js'
 
-// prettier-ignore
-export const Commands = {}
+export const Commands = {
+  loadActivityBarIfVisible: ViewletLayout.loadActivityBarIfVisible,
+  loadMainIfVisible: ViewletLayout.loadMainIfVisible,
+  loadPreviewIfVisible: ViewletLayout.loadPreviewIfVisible,
+  loadPanelIfVisible: ViewletLayout.loadPanelIfVisible,
+  loadSideBarIfVisible: ViewletLayout.loadSideBarIfVisible,
+  loadStatusBarIfVisible: ViewletLayout.loadStatusBarIfVisible,
+  loadTitleBarIfVisible: ViewletLayout.loadTitleBarIfVisible,
+}
 
 export const CommandsWithSideEffects = {
   handleSashPointerDown: ViewletLayout.handleSashPointerDown,
@@ -15,13 +22,7 @@ export const CommandsWithSideEffects = {
   hideSideBar: ViewletLayout.hideSideBar,
   hideStatusBar: ViewletLayout.hideStatusBar,
   hideTitleBar: ViewletLayout.hideTitleBar,
-  loadActivityBarIfVisible: ViewletLayout.loadActivityBarIfVisible,
-  loadMainIfVisible: ViewletLayout.loadMainIfVisible,
-  loadPreviewIfVisible: ViewletLayout.loadPreviewIfVisible,
-  loadPanelIfVisible: ViewletLayout.loadPanelIfVisible,
-  loadSideBarIfVisible: ViewletLayout.loadSideBarIfVisible,
-  loadStatusBarIfVisible: ViewletLayout.loadStatusBarIfVisible,
-  loadTitleBarIfVisible: ViewletLayout.loadTitleBarIfVisible,
+
   showActivityBar: ViewletLayout.showActivityBar,
   showMain: ViewletLayout.showMain,
   showPanel: ViewletLayout.showPanel,
