@@ -937,6 +937,7 @@ const getPlaceholderDom = () => {
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet TitleBar',
+      id: 'TitleBar',
       childCount: 0,
     },
     {
@@ -947,26 +948,31 @@ const getPlaceholderDom = () => {
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet Main',
+      id: 'Main',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet SideBar',
+      id: 'SideBar',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet ActivityBar',
+      id: 'ActivityBar',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet Panel',
+      id: 'Panel',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet StatusBar',
+      id: 'StatusBar',
       childCount: 0,
     },
   ]
