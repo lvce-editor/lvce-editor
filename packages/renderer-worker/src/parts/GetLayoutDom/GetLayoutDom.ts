@@ -59,8 +59,9 @@ export const getLayoutDom = (moduleCommands) => {
       type: VirtualDomElements.Div,
       className: 'Viewlet Panel',
       id: 'Panel',
-      childCount: 0,
+      childCount: panelDomCount,
     },
+    ...panelDom,
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet StatusBar',

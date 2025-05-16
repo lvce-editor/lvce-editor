@@ -8,14 +8,6 @@ export const Commands = {
   loadSideBarIfVisible: ViewletLayout.loadSideBarIfVisible,
   loadStatusBarIfVisible: ViewletLayout.loadStatusBarIfVisible,
   loadTitleBarIfVisible: ViewletLayout.loadTitleBarIfVisible,
-}
-
-export const CommandsWithSideEffects = {
-  handleSashPointerDown: ViewletLayout.handleSashPointerDown,
-  handleSashPointerUp: ViewletLayout.handleSashPointerUp,
-  handleResize: ViewletLayout.handleResize,
-  handleSashDoubleClick: ViewletLayout.handleSashDoubleClick,
-  handleSashPointerMove: ViewletLayout.handleSashPointerMove,
   hideActivityBar: ViewletLayout.hideActivityBar,
   hideMain: ViewletLayout.hideMain,
   hidePanel: ViewletLayout.hidePanel,
@@ -38,6 +30,15 @@ export const CommandsWithSideEffects = {
   toggleSideBar: ViewletLayout.toggleSideBar,
   toggleStatusBar: ViewletLayout.toggleStatusBar,
   toggleTitleBar: ViewletLayout.toggleTitleBar,
+}
+
+export const CommandsWithSideEffects = {
+  handleSashPointerDown: ViewletLayout.handleSashPointerDown,
+  handleSashPointerUp: ViewletLayout.handleSashPointerUp,
+  handleResize: ViewletLayout.handleResize,
+  handleSashDoubleClick: ViewletLayout.handleSashDoubleClick,
+  handleSashPointerMove: ViewletLayout.handleSashPointerMove,
+
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
   toggleSideBarPosition: ViewletLayout.toggleSideBarPosition,

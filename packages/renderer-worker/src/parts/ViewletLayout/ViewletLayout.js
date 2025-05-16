@@ -299,7 +299,7 @@ export const loadContent = (state, savedState) => {
 
 const show = async (state, module, currentViewletId) => {
   const { points } = state
-  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, moduleCommands } = module
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 1
   getPoints(newPoints, newPoints)
@@ -334,18 +334,21 @@ const show = async (state, module, currentViewletId) => {
   }
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
+  const domCommand = commands.find((command) => command[0] === 'Viewlet.setDom2')
+  const dom = domCommand[2]
   return {
-    newState: {
-      ...state,
-      points: newPoints,
+    ...state,
+    points: newPoints,
+    moduleCommands: {
+      ...moduleCommands,
+      [moduleId]: dom,
     },
-    commands,
   }
 }
 
 const hide = async (state, module) => {
   const { points } = state
-  const { kVisible, moduleId } = module
+  const { kVisible, moduleId, moduleCommands } = module
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
@@ -357,11 +360,12 @@ const hide = async (state, module) => {
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {
-    newState: {
-      ...state,
-      points: newPoints,
+    ...state,
+    points: newPoints,
+    moduleCommands: {
+      ...moduleCommands,
+      [moduleId]: [],
     },
-    commands,
   }
 }
 
