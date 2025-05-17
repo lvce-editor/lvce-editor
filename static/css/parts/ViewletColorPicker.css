@@ -13,6 +13,7 @@
   background: var(--MainBackground);
   padding: 0 20px;
   pointer-events: all;
+  position: absolute;
 }
 
 .ColorPickerRectangle {
