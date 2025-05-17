@@ -1,3 +1,8 @@
+:root {
+  --ColorPickerColor: black;
+  --ColorPickerOffsetX: 0px;
+}
+
 .ColorPicker {
   /* TODO */
   width: calc(300px + 40px); /* extra space for scroll bar thumb */
@@ -56,4 +61,5 @@
   touch-action: none;
   background: var(--ColorPickerColor);
   contain: strict;
+  translate: var(--ColorPickerOffsetX) 0;
 }
