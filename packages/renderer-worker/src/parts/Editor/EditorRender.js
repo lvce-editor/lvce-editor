@@ -15,7 +15,8 @@ const renderAll = {
         command[0] === 'Viewlet.createFunctionalRoot' ||
         command[0] === 'Viewlet.registerEventListeners' ||
         command[0] === 'Viewlet.setDom2' ||
-        command[0] === 'Viewlet.focusSelector'
+        command[0] === 'Viewlet.focusSelector' ||
+        command[0] === 'Viewlet.setCss'
       ) {
         return command
       }
