@@ -16,6 +16,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight } = state
   const x = state.x
   const y = state.y + tabHeight
+  console.log({ y })
   const width = state.width
   const contentHeight = state.height - tabHeight
   // @ts-ignore
@@ -94,7 +95,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   }
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
-  commands.push(['Viewlet.setBounds', instanceUid, activeGroup.x, y, activeGroup.width, contentHeight])
+  commands.push(['Viewlet.setBounds', instanceUid, activeGroup.x, tabHeight, activeGroup.width, contentHeight])
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {
     tabsUid = Id.create()
