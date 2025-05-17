@@ -5,7 +5,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Logger from '../Logger/Logger.js'
 
 export const bundleColorPickerWorkerCached = async ({ commitHash, platform, assetDir }) => {
-  const cachePath = await CachePaths.getIframeWorkerCachePath([platform])
+  const cachePath = await CachePaths.getColorPickerWorkerCachePath([platform])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleColorPickerWorker')
   } else {
