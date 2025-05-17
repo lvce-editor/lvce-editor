@@ -11,6 +11,7 @@ import * as BundleSourceControlWorkerCached from '../BundleSourceControlWorkerCa
 import * as BundleDebugWorkerCached from '../BundleDebugWorkerCached/BundleDebugWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleTitleBarWorkerCached from '../BundleTitleBarWorkerCached/BundleTitleBarWorkerCached.js'
+import * as BundleColorPickerWorkerCached from '../BundleColorPickerWorkerCached/BundleColorPickerWorkerCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
 import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/BundleExplorerWorkerCached.js'
@@ -116,6 +117,15 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copy({
     from: sourceControlWorkerCachePath,
     to: `${toRoot}/packages/source-control-worker`,
+  })
+  const colorPickerWorkerCachePath = await BundleColorPickerWorkerCached.bundleColorPickerWorkerCached({
+    assetDir,
+    commitHash,
+    platform,
+  })
+  await Copy.copy({
+    from: colorPickerWorkerCachePath,
+    to: `${toRoot}/packages/color-picker-worker`,
   })
   const debugWorkerCachePath = await BundleDebugWorkerCached.bundleDebugWorkerCached({
     assetDir,
