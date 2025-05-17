@@ -7,7 +7,8 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import { closeEditor } from './ViewletMainCloseEditor.ts'
+import { closeGroupEditor } from './ViewletMainCloseGroupEditor.ts'
+import { focusGroupIndex } from './ViewletMainFocusGroupIndex.js'
 
 export const focusIndex = async (state, index) => {
   const { groups, tabHeight, uid, activeGroupIndex } = state
@@ -132,23 +133,32 @@ export const handleTabClick = (state, button, eventX, eventY) => {
   Assert.number(button)
   Assert.number(eventX)
   Assert.number(eventY)
-  const { groups, activeGroupIndex } = state
-  const group = groups[activeGroupIndex]
-  // @ts-ignore
-  const { editors, x, y } = group
-  const index = GetTabIndex.getTabIndex(editors, x, eventX)
-  if (index === -1) {
+  const { groups } = state
+  let actionGroupIndex = -1
+  let actionIndex = -1
+  for (const group of groups) {
+    const { editors, x, y } = group
+    const index = GetTabIndex.getTabIndex(editors, x, eventX)
+    if (index >= 0) {
+      actionGroupIndex = groups.indexOf(group)
+      actionIndex = index
+      break
+    }
+  }
+  if (actionGroupIndex === -1) {
     return state
   }
-  const isCloseButton = getIsCloseButton(editors, index, eventX, x)
+  const actionGroup = groups[actionGroupIndex]
+  const isCloseButton = getIsCloseButton(actionGroup.editors, actionIndex, eventX, actionGroup.x)
+
   if (isCloseButton) {
-    return closeEditor(state, index)
+    return closeGroupEditor(state, actionGroupIndex, actionIndex)
   }
   switch (button) {
     case MouseEventType.LeftClick:
-      return focusIndex(state, index)
+      return focusGroupIndex(state, actionGroupIndex, actionIndex)
     case MouseEventType.MiddleClick:
-      return closeEditor(state, index)
+      return closeGroupEditor(state, actionGroupIndex, actionIndex)
     default:
       return state
   }
