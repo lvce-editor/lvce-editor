@@ -113,9 +113,16 @@ export const getSyntaxHighlightingWorkerCachePath = async (extraContents) => {
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/syntax-highlighting-worker'), hash)
   return cachePath
 }
+
 export const getIframeWorkerCachePath = async (extraContents) => {
   const hash = await getExtensionHostWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/iframe-worker'), hash)
+  return cachePath
+}
+
+export const getRenameWorkerCachePath = async (extraContents) => {
+  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/rename-worker'), hash)
   return cachePath
 }
 
