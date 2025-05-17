@@ -18,7 +18,8 @@ const renderAll = {
         command[0] === 'Viewlet.focusSelector' ||
         command[0] === 'Viewlet.setCss' ||
         command[0] === 'Viewlet.appendToBody' ||
-        command[0] === 'Viewlet.setBounds'
+        command[0] === 'Viewlet.setBounds' ||
+        command[0] === 'Viewlet.registerEventListeners'
       ) {
         return command
       }
