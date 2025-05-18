@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as PreloadUrl from '../PreloadUrl/PreloadUrl.js'
 import * as GetProcessExplorerUrl from '../GetProcessExplorerUrl/GetProcessExplorerUrl.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 const getOptions = async (colorThemeJson) => {
   const backgroundColor = colorThemeJson.MainBackground

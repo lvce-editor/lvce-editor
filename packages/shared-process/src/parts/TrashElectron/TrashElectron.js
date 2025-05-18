@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const trash = async (path) => {
   if (!existsSync(path)) {

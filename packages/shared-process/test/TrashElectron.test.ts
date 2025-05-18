@@ -4,13 +4,13 @@ jest.unstable_mockModule('node:fs', () => ({
   existsSync: jest.fn(() => {}),
 }))
 
-jest.unstable_mockModule('../src/parts/ParentIpc/ParentIpc.js', () => ({
+jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
   invoke: jest.fn(() => {}),
 }))
 
 const fs = await import('node:fs')
 const TrashElectron = await import('../src/parts/TrashElectron/TrashElectron.js')
-const ParentIpc = await import('../src/parts/ParentIpc/ParentIpc.js')
+const ParentIpc = await import('../src/parts/MainProcess/MainProcess.js')
 
 test("trash - folder doesn't exist", async () => {
   // @ts-ignore

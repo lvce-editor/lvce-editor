@@ -3,7 +3,7 @@ import * as HandleSocketError from '../HandleSocketError/HandleSocketError.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcId from '../IpcId/IpcId.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const targetWebSocket = async (handle, message) => {
   handle.on('error', HandleSocketError.handleSocketError)

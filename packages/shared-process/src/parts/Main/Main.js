@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as HandleDisconnect from '../HandleDisconnect/HandleDisconnect.js'
 import * as HandleUncaughtExceptionMonitor from '../HandleUncaughtExceptionMonitor/HandleUncaughtExceptionMonitor.js'
 import * as Module from '../Module/Module.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 import * as ProcessListeners from '../ProcessListeners/ProcessListeners.js'
 import * as Signal from '../Signal/Signal.js'
 

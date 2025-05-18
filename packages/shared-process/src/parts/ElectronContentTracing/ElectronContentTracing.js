@@ -1,4 +1,4 @@
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const startRecording = (options) => {
   return ParentIpc.invoke('ElectronContentTracing.startRecording', options)
