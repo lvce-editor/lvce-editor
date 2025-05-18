@@ -1,30 +1,31 @@
 import * as BundleAboutViewWorkerCached from '../BundleAboutViewWorkerCached/BundleAboutViewWorkerCached.js'
+import * as BundleColorPickerWorkerCached from '../BundleColorPickerWorkerCached/BundleColorPickerWorkerCached.js'
+import * as BundleDebugWorkerCached from '../BundleDebugWorkerCached/BundleDebugWorkerCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
 import * as BundleEditorWorkerCached from '../BundleEditorWorkerCached/BundleEditorWorkerCached.js'
 import * as BundleEmbedsWorkerCached from '../BundleEmbedsWorkerCached/BundleEmbedsWorkerCached.js'
+import * as BundleErrorWorkerCached from '../BundleErrorWorkerCached/BundleErrorWorkerCached.js'
+import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/BundleExplorerWorkerCached.js'
+import * as BundleExtensionDetailViewWorkerCached from '../BundleExtensionDetailViewWorkerCached/BundleExtensionDetailViewWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearchViewWorkerCached/BundleExtensionSearchViewWorkerCached.js'
 import * as BundleFileSearchWorkerCached from '../BundleFileSearchWorkerCached/BundleFileSearchWorkerCached.js'
+import * as BundleIframeInspectorWorkerCached from '../BundleIframeInspectorWorkerCached/BundleIfameInspectorWorkerCached.js'
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
-import * as BundleRenameWorkerCached from '../BundleRenameWorkerCached/BundleRenameWorkerCached.js'
-import * as BundleSourceControlWorkerCached from '../BundleSourceControlWorkerCached/BundleSourceControlWorkerCached.js'
-import * as BundleDebugWorkerCached from '../BundleDebugWorkerCached/BundleDebugWorkerCached.js'
-import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
-import * as BundleTitleBarWorkerCached from '../BundleTitleBarWorkerCached/BundleTitleBarWorkerCached.js'
-import * as BundleColorPickerWorkerCached from '../BundleColorPickerWorkerCached/BundleColorPickerWorkerCached.js'
-import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
-import * as BundleExplorerWorkerCached from '../BundleExplorerWorkerCached/BundleExplorerWorkerCached.js'
-import * as BundleIframeInspectorWorkerCached from '../BundleIframeInspectorWorkerCached/BundleIfameInspectorWorkerCached.js'
-import * as BundleExtensionDetailViewWorkerCached from '../BundleExtensionDetailViewWorkerCached/BundleExtensionDetailViewWorkerCached.js'
-import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
-import * as BundleErrorWorkerCached from '../BundleErrorWorkerCached/BundleErrorWorkerCached.js'
-import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
-import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearchViewWorkerCached/BundleExtensionSearchViewWorkerCached.js'
 import * as BundleMarkdownWorkerCached from '../BundleMarkdownWorkerCached/BundleMarkdownWorkerCached.js'
+import * as BundleRenameWorkerCached from '../BundleRenameWorkerCached/BundleRenameWorkerCached.js'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleSourceControlWorkerCached from '../BundleSourceControlWorkerCached/BundleSourceControlWorkerCached.js'
+import * as BundleSyntaxHighlightingWorkerCached from '../BundleSyntaxHighlightingWorkerCached/BundleSyntaxHighlightingWorkerCached.js'
+import * as BundleTerminalWorkerCached from '../BundleTerminalWorkerCached/BundleTerminalWorkerCached.js'
+import * as BundleTestWorkerCached from '../BundleTestWorkerCached/BundleTestWorkerCached.js'
 import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/BundleTextSearchWorkerCached.js'
+import * as BundleTitleBarWorkerCached from '../BundleTitleBarWorkerCached/BundleTitleBarWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
+import * as Path from '../Path/Path.js'
 
 export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
@@ -110,6 +111,12 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
   })
+
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/find-widget-worker/dist/findWidgetWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/find-widget-worker`, 'dist', 'findWidgetWorkerMain.js'),
+  })
+
   const renameWorkerCachePath = await BundleRenameWorkerCached.bundleRenameWorkerCached({
     assetDir,
     commitHash,
