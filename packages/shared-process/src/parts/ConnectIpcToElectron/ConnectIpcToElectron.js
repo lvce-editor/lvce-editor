@@ -10,3 +10,11 @@ export const connectIpcToElectron = async (ipc, ipcId = IpcId.Unknown) => {
     ParentIpc.invokeAndTransfer('HandleElectronMessagePort.handleElectronMessagePort', port2, ipcId),
   ])
 }
+
+export const connectIpcToMainProcess2 = async (ipc, ipcId = IpcId.Unknown) => {
+  const { port1, port2 } = await GetPortTuple.getPortTuple()
+  await Promise.all([
+    JsonRpc.invokeAndTransfer(ipc, 'Initialize.initialize', port1),
+    ParentIpc.invokeAndTransfer('HandleElectronMessagePort.handleElectronMessagePort', port2, ipcId),
+  ])
+}
