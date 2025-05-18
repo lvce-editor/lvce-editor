@@ -1,7 +1,7 @@
 import * as DefaultUrl from '../DefaultUrl/DefaultUrl.js'
 import * as GetAppWindowOptions from '../GetAppWindowOptions/GetAppWindowOptions.js'
 import * as GetTitleBarItems from '../GetTitleBarItems/GetTitleBarItems.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Screen from '../Screen/Screen.js'
 

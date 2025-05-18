@@ -1,5 +1,5 @@
 import * as Debug from '../Debug/Debug.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const handleWindowAllClosed = async () => {

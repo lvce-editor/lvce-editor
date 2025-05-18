@@ -1,5 +1,5 @@
 import * as EncodingType from '../EncodingType/EncodingType.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const isEncryptionAvailable = () => {
   return ParentIpc.invoke('ElectronSafeStorage.isEncryptionAvailable')

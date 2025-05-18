@@ -1,4 +1,4 @@
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const showOpenDialog = (title, properties) => {
   return ParentIpc.invoke('ElectronDialog.showOpenDialog', title, properties)

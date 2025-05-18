@@ -1,7 +1,7 @@
 import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const state = {
   ports: Object.create(null),

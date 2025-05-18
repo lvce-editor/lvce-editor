@@ -1,7 +1,7 @@
 import * as CreateUtilityProcessRpc from '../CreateUtilityProcessRpc/CreateUtilityProcessRpc.js'
 import * as FixElectronParameters from '../FixElectronParameters/FixElectronParameters.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.js'
 
 export const create = async (options) => {

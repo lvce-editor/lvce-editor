@@ -1,5 +1,5 @@
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 import * as PreviewProcess from '../PreviewProcess/PreviewProcess.js'
 import * as WebViewProtocolState from '../WebViewProtocolState/WebViewProtocolState.js'
 

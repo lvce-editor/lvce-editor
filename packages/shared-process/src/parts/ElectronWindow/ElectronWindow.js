@@ -1,7 +1,7 @@
 import * as AppWindow from '../AppWindow/AppWindow.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const openNew = () => {
   return AppWindow.openNew()

@@ -1,4 +1,4 @@
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 export const showItemInFolder = (fullPath) => {
   return ParentIpc.invoke('ElectronShell.showItemInFolder', fullPath)
