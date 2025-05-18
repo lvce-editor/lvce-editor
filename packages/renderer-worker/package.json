@@ -56,6 +56,7 @@
     "@lvce-editor/file-search-worker": "^5.14.0",
     "@lvce-editor/iframe-inspector": "^2.2.0",
     "@lvce-editor/iframe-worker": "^5.33.0",
+    "@lvce-editor/find-widget-worker": "^1.0.0",
     "@lvce-editor/color-picker-worker": "^1.5.0",
     "@lvce-editor/rename-worker": "^1.2.0",
     "@lvce-editor/keybindings-view": "^5.1.0",
