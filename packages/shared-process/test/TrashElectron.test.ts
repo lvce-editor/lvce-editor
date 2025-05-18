@@ -4,7 +4,7 @@ jest.unstable_mockModule('node:fs', () => ({
   existsSync: jest.fn(() => {}),
 }))
 
-jest.unstable_mockModule('../src/parts/ParentIpc/ParentIpc.js', () => ({
+jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
   invoke: jest.fn(() => {}),
 }))
 
