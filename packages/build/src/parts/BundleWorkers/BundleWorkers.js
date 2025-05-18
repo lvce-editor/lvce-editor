@@ -25,6 +25,8 @@ import * as BundleExtensionSearchViewWorkerCached from '../BundleExtensionSearch
 import * as BundleMarkdownWorkerCached from '../BundleMarkdownWorkerCached/BundleMarkdownWorkerCached.js'
 import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/BundleTextSearchWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
+import * as Copy from '../Copy/Copy.js'
+import * as Path from '../Path/Path.js'
 
 export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
@@ -110,6 +112,12 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: diffWorkerCachePath,
     to: `${toRoot}/packages/diff-worker`,
   })
+
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/find-widget-worker/dist/findWidgetWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/find-widget-worker`, 'dist', 'findWidgetWorkerMain.js'),
+  })
+
   const renameWorkerCachePath = await BundleRenameWorkerCached.bundleRenameWorkerCached({
     assetDir,
     commitHash,
