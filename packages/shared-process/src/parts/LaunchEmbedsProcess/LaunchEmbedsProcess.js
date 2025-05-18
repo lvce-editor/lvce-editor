@@ -28,6 +28,6 @@ export const launchEmbedsProcess = async () => {
     targetRpcId: IpcId.EmbedsProcess,
   })
   HandleIpc.handleIpc(ipc)
-  await ConnectIpcToElectron.connectIpcToElectron(ipc, IpcId.EmbedsProcess)
+  await ConnectIpcToElectron.connectIpcToMainProcess2(ipc, IpcId.EmbedsProcess)
   return ipc
 }
