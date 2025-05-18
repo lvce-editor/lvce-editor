@@ -35,7 +35,7 @@
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
-    "@lvce-editor/embeds-process": "^4.0.0",
+    "@lvce-editor/embeds-process": "^4.1.0",
     "@lvce-editor/file-system-process": "^2.0.0",
     "@lvce-editor/file-watcher-process": "^3.1.0",
     "@lvce-editor/network-process": "^4.0.0",
