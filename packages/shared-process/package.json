@@ -28,7 +28,7 @@
     "@lvce-editor/json-rpc": "^5.4.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
     "@lvce-editor/pretty-error": "^2.0.0",
-    "@lvce-editor/rpc-registry": "^2.13.2",
+    "@lvce-editor/rpc-registry": "^2.14.0",
     "@lvce-editor/verror": "^1.6.0",
     "debug": "^4.4.1",
     "is-object": "^1.0.2",
@@ -56,7 +56,7 @@
     "@types/tail": "^2.2.3",
     "@types/tar-fs": "^2.0.4",
     "get-port": "^7.1.0",
-    "tar-fs": "^3.0.8",
+    "tar-fs": "^3.0.9",
     "wait-for-expect": "^3.0.2"
   },
   "xo": {
