@@ -28,6 +28,7 @@ export const apply = (oldState, newState) => {
       command[0] === 'Viewlet.send' ||
       command[0] === 'Viewlet.createFunctionalRoot' ||
       command[0] === 'Viewlet.setDom2' ||
+      command[0] === 'Viewlet.setSelectionByName' ||
       command[0] === 'Viewlet.setCss'
     ) {
       return command
