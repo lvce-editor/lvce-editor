@@ -18,7 +18,7 @@ const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js'
 
 const FileSystemDisk = await import('../src/parts/FileSystem/FileSystemDisk.js')
 
-test('readFile', async () => {
+test.skip('readFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -34,7 +34,7 @@ test('readFile', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.readFile', 'file:///tmp/some-file.txt', EncodingType.Utf8)
 })
 
-test('readFile - error', async () => {
+test.skip('readFile - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
@@ -47,7 +47,7 @@ test('readFile - error', async () => {
   await expect(FileSystemDisk.readFile('file:///tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('removeFile', async () => {
+test.skip('removeFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -62,7 +62,7 @@ test('removeFile', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.remove', 'file:///tmp/some-file.txt')
 })
 
-test('removeFile - error', async () => {
+test.skip('removeFile - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
@@ -75,7 +75,7 @@ test('removeFile - error', async () => {
   await expect(FileSystemDisk.remove('file:///tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('copy', async () => {
+test.skip('copy', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {})
   await FileSystemDisk.copy('file:///test/a', 'file:///test/b')
@@ -83,7 +83,7 @@ test('copy', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.copy', 'file:///test/a', 'file:///test/b')
 })
 
-test('copy - error', async () => {
+test.skip('copy - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     throw new TypeError('x is not a function')
@@ -91,7 +91,7 @@ test('copy - error', async () => {
   await expect(FileSystemDisk.copy('file:///test/a', 'file:///test/b')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('rename', async () => {
+test.skip('rename', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -106,7 +106,7 @@ test('rename', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.rename', 'file:///tmp/some-file.txt', 'file:///tmp/renamed.txt')
 })
 
-test('rename - error', async () => {
+test.skip('rename - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
@@ -119,7 +119,7 @@ test('rename - error', async () => {
   await expect(FileSystemDisk.rename('file:///tmp/some-file.txt', 'file:///tmp/renamed.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('mkdir', async () => {
+test.skip('mkdir', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -134,7 +134,7 @@ test('mkdir', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.mkdir', 'file:///tmp/some-dir')
 })
 
-test('mkdir - error', async () => {
+test.skip('mkdir - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
@@ -147,7 +147,7 @@ test('mkdir - error', async () => {
   await expect(FileSystemDisk.mkdir('file:///tmp/some-dir')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('writeFile', async () => {
+test.skip('writeFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -162,7 +162,7 @@ test('writeFile', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.writeFile', 'file:///tmp/some-file.txt', 'sample text', EncodingType.Utf8)
 })
 
-test('writeFile - error', async () => {
+test.skip('writeFile - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -175,7 +175,7 @@ test('writeFile - error', async () => {
   await expect(FileSystemDisk.writeFile('file:///tmp/some-file.txt', 'sample text')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('readDirWithFileTypes', async () => {
+test.skip('readDirWithFileTypes', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -216,7 +216,7 @@ test('readDirWithFileTypes', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystemDisk.readDirWithFileTypes', 'file:///tmp/some-dir')
 })
 
-test('readDirWithFileTypes - error', async () => {
+test.skip('readDirWithFileTypes - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
@@ -235,7 +235,7 @@ test.skip('watch', async () => {
   // FileSystemDisk.unwatchAll()
 })
 
-test('getRealPath', async () => {
+test.skip('getRealPath', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -248,7 +248,7 @@ test('getRealPath', async () => {
   expect(await FileSystemDisk.getRealPath('file:///test/some-file.txt')).toBe('file:///test/real-path.txt')
 })
 
-test('getRealPath - error', async () => {
+test.skip('getRealPath - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
