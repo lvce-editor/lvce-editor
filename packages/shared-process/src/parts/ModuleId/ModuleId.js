@@ -72,3 +72,4 @@ export const Transferrable = 77
 export const GetExtensions = 78
 export const FileSystemDisk = 79
 export const HandleRequest = 80
+export const HandleMessagePortForFileSystemProcess = 81
