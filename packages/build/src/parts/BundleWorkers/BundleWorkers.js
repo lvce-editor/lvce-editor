@@ -116,6 +116,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: 'packages/renderer-worker/node_modules/@lvce-editor/find-widget-worker/dist/findWidgetWorkerMain.js',
     to: Path.join(`${toRoot}/packages/find-widget-worker`, 'dist', 'findWidgetWorkerMain.js'),
   })
+  await Copy.copyFile({
+    from: 'packages/file-system-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'fileSystemWorkerMain.js'),
+  })
 
   const renameWorkerCachePath = await BundleRenameWorkerCached.bundleRenameWorkerCached({
     assetDir,
