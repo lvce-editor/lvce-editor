@@ -17,7 +17,7 @@ export const bundleFileSystemProcess = async ({ to }) => {
   })
   await Replace.replace({
     path: fileSystemProcessPath,
-    occurrence: `const getTrashFn = (isElectron) => {
+    occurrence: `const getTrashFn = isElectron => {
   if (isElectron) {
     return trash$2;
   }
