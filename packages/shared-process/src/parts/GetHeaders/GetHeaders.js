@@ -9,6 +9,7 @@ import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmb
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
+import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWorker/GetHeadersIframeInspectorWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
 import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
@@ -63,6 +64,8 @@ const getExtraHeaders = (pathName, fileExtension) => {
           return GetHeadersFileSearchWorker.getHeadersFileSearchWorker()
         case 'iframeInspectorWorkerMain.js':
           return GetHeadersIframeInspectorWorker.getHeadersIframeInspectorWorker()
+        case 'fileSystemWorkerMain.js':
+          return GetHeadersFileSystemWorker.getHeadersFileSystemWorker()
         case 'textSearchWorkerMain.js':
           return GetHeadersTextSearchWorker.getHeadersFileSearchWorker()
         case 'errorWorkerMain.js':
