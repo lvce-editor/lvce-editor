@@ -7,6 +7,7 @@ import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEdi
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeadersExplorerWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
+import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
@@ -59,6 +60,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('fileSearchWorkerMain.js')) {
     return GetHeadersFileSearchWorker.getHeadersFileSearchWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('fileSystemWorkerMain.js')) {
+    return GetHeadersFileSystemWorker.getHeadersFileSystemWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('textSearchWorkerMain.js')) {
     return GetHeadersTextSearchWorker.getHeadersTextSearchWorker(mime, etag, defaultCachingHeader)
