@@ -114,6 +114,8 @@ export const load = (moduleId) => {
       return import('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.ipc.js')
     case ModuleId.HandleMessagePortForEmbedsProcess:
       return import('../HandleMessagePortForEmbedsProcess/HandleMessagePortForEmbedsProcess.ipc.js')
+    case ModuleId.HandleMessagePortForFileSystemProcess:
+      return import('../HandleMessagePortForFileSystemProcess/HandleMessagePortForFileSystemProcess.ipc.js')
     case ModuleId.TemporaryMessagePort:
       return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.js')
     case ModuleId.GetElectronFileResponse:
