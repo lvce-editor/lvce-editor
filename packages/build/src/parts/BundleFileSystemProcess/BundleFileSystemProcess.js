@@ -17,13 +17,13 @@ export const bundleFileSystemProcess = async ({ to }) => {
   })
   await Replace.replace({
     path: fileSystemProcessPath,
-    occurrence: `const getFn = () => {
+    occurrence: `const getTrashFn = isElectron => {
   if (isElectron) {
     return trash$2;
   }
   return trash$1;
 };`,
-    replacement: `const getFn = () => {
+    replacement: `const getTrashFn = () => {
   return trash$2;
 };`,
   })
