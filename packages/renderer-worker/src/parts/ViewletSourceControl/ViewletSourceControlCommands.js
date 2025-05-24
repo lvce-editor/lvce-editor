@@ -10,5 +10,6 @@ export const getCommands = async () => {
     Commands[command] = WrapSourceControlCommand.wrapSourceControlCommand(command)
   }
   Commands['hotReload'] = ViewletSourceControl.hotReload
+  Commands['getInfo'] = ({ uid }) => SourceControlWorker.invoke('SourceControl.getInfo', uid)
   return Commands
 }
