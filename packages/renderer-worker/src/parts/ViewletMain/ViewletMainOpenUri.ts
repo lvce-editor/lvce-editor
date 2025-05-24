@@ -16,7 +16,6 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight } = state
   const x = state.x
   const y = state.y + tabHeight
-  console.log({ y })
   const width = state.width
   const contentHeight = state.height - tabHeight
   // @ts-ignore
