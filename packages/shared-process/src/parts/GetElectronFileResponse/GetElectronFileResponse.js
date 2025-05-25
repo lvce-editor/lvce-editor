@@ -22,12 +22,12 @@ export const getElectronFileResponse = async (url, request) => {
     if (request) {
       etag = await GetPathEtag.getPathEtag(absolutePath)
       if (request.headers[HttpHeader.IfNotMatch] === etag) {
-        const headers = GetHeaders.getHeaders(absolutePath, pathName)
+        const headers = await GetHeaders.getHeaders(absolutePath, pathName)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
     }
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
-    const headers = GetHeaders.getHeaders(absolutePath, pathName)
+    const headers = await GetHeaders.getHeaders(absolutePath, pathName)
 
     headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     if (etag) {

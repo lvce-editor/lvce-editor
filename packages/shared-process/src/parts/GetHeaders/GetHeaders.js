@@ -97,7 +97,7 @@ const getExtraHeaders = (pathName, fileExtension) => {
   }
 }
 
-export const getHeaders = (absolutePath, pathName) => {
+export const getHeaders = async (absolutePath, pathName) => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const headers = {
