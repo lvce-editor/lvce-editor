@@ -6,6 +6,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Replace from '../Replace/Replace.js'
 import * as ReplaceTs from '../ReplaceTs/ReplaceTs.js'
 
@@ -61,6 +62,19 @@ export const bundleSharedProcess = async ({
   await Copy.copy({
     from: 'packages/shared-process/package.json',
     to: `${cachePath}/package.json`,
+  })
+  await WriteFile.writeFile({
+    to: `${cachePath}/src/parts/GetExtraHeaders/GetExtraHeaders.js`,
+    content: `import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
+import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
+
+export const getExtraHeaders = (pathName, fileExtension) => {
+  if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
+    return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
+  }
+  return GetHeadersDefault.getHeadersDefault()
+}
+`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
