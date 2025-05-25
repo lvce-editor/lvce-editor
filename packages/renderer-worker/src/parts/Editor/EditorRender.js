@@ -16,6 +16,8 @@ const renderAll = {
         command[0] === 'Viewlet.registerEventListeners' ||
         command[0] === 'Viewlet.setDom2' ||
         command[0] === 'Viewlet.focusSelector' ||
+        command[0] === 'Viewlet.setValueByName' ||
+        command[0] === 'Viewlet.setSelectionByName' ||
         command[0] === 'Viewlet.setCss' ||
         command[0] === 'Viewlet.appendToBody' ||
         command[0] === 'Viewlet.setBounds' ||
