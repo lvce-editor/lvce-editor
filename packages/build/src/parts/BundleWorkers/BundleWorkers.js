@@ -15,7 +15,6 @@ import * as BundleIframeInspectorWorkerCached from '../BundleIframeInspectorWork
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleMarkdownWorkerCached from '../BundleMarkdownWorkerCached/BundleMarkdownWorkerCached.js'
-import * as BundleRenameWorkerCached from '../BundleRenameWorkerCached/BundleRenameWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSourceControlWorkerCached from '../BundleSourceControlWorkerCached/BundleSourceControlWorkerCached.js'
