@@ -1,6 +1,7 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
 import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/GetHeadersColorPickerWorker.js'
+import * as GetHeadersCompletionWorker from '../GetHeadersCompletionWorker/GetHeadersCompletionWorker.js'
 import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
@@ -102,6 +103,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('colorPickerWorkerMain.js')) {
     return GetHeadersColorPickerWorker.getHeadersColorPickerWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('completionWorkerMain.js')) {
+    return GetHeadersCompletionWorker.getHeadersCompletionWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
