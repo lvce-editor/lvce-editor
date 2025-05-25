@@ -9,6 +9,7 @@ import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmb
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
+import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/GetHeadersColorPickerWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWorker/GetHeadersIframeInspectorWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
@@ -80,6 +81,8 @@ const getExtraHeaders = (pathName, fileExtension) => {
           return GetHeadersDebugWorker.getHeadersDebugWorker()
         case 'sourceControlWorkerMain.js':
           return GetHeadersSourceControlWorker.getHeadersSourceControlWorker()
+        case 'colorPickerWorkerMain.js':
+          return GetHeadersColorPickerWorker.getHeadersColorPickerWorker()
         default:
           if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
             return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)

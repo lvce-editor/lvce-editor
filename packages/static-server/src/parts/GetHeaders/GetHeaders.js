@@ -1,5 +1,6 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
+import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/GetHeadersColorPickerWorker.js'
 import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
@@ -7,12 +8,11 @@ import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEdi
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeadersExplorerWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
-import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
-import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWorker/GetHeadersIframeInspectorWorker.js'
+import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
@@ -100,8 +100,8 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('titleBarWorkerMain.js')) {
     return GetHeadersTitleBarWorker.getHeadersTitleBarWorker(mime, etag, defaultCachingHeader)
   }
-  if (absolutePath.endsWith('iframeInspectorWorkerMain.js')) {
-    return GetHeadersIframeInspectorWorker.getHeadersIframeInspectorWorker(mime, etag, defaultCachingHeader)
+  if (absolutePath.endsWith('colorPickerWorkerMain.js')) {
+    return GetHeadersColorPickerWorker.getHeadersColorPickerWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
