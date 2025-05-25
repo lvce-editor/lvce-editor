@@ -1,21 +1,15 @@
 import * as FileWatcherProcessPath from '../FileWatcherProcessPath/FileWatcherProcessPath.js'
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as IpcId from '../IpcId/IpcId.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as LaunchProcess from '../LaunchProcess/LaunchProcess.js'
 
 export const launchFileWatcherProcess = async () => {
-  const method = IsElectron.isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
-  const ipc = await IpcParent.create({
-    method,
-    path: FileWatcherProcessPath.fileWatcherProcessPath,
-    argv: [],
-    stdio: 'inherit',
+  const ipc = await LaunchProcess.launchProcess({
     name: 'File Watcher Process',
-    ipcId: IpcId.SharedProcess,
+    settingName: '',
+    defaultPath: FileWatcherProcessPath.fileWatcherProcessPath,
+    isElectron: IsElectron.isElectron,
     targetRpcId: IpcId.FileWatcherProcess,
   })
-  HandleIpc.handleIpc(ipc)
   return ipc
 }

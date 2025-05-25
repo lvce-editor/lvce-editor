@@ -1,19 +1,17 @@
 import * as IpcId from '../IpcId/IpcId.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as LaunchProcess from '../LaunchProcess/LaunchProcess.js'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
 import * as PtyHostState from '../PtyHostState/PtyHostState.js'
 
 export const launchPtyHost = async (method) => {
-  const ptyHostPath = PtyHostPath.ptyHostPath
-  const ptyHost = await IpcParent.create({
-    method,
-    path: ptyHostPath,
-    argv: [],
-    stdio: 'inherit',
+  const ipc = await LaunchProcess.launchProcess({
+    defaultPath: PtyHostPath.ptyHostPath,
+    isElectron: IsElectron.isElectron,
     name: 'Terminal Process',
-    ipcId: IpcId.SharedProcess,
+    settingName: '',
     targetRpcId: IpcId.TerminalProcess,
   })
-  PtyHostState.state.ipc = ptyHost
-  return ptyHost
+  PtyHostState.state.ipc = ipc
+  return ipc
 }
