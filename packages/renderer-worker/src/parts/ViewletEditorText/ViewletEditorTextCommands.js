@@ -49,6 +49,7 @@ const ids = [
   'deleteWordPartLeft',
   'deleteWordPartRight',
   'deleteWordRight',
+  'executeWidgetCommand',
   'EditorCodeGenerator.accept',
   'EditorCompletion.closeDetails',
   'EditorCompletion.dispose',
