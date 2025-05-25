@@ -3,3 +3,9 @@
   pointer-events: all;
   position: absolute;
 }
+
+.RenameDetails {
+  font-size: 13px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
