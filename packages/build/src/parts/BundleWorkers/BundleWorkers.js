@@ -120,15 +120,13 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: 'packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js',
     to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'fileSystemWorkerMain.js'),
   })
-
-  const renameWorkerCachePath = await BundleRenameWorkerCached.bundleRenameWorkerCached({
-    assetDir,
-    commitHash,
-    platform,
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'completionWorkerMain.js'),
   })
-  await Copy.copy({
-    from: renameWorkerCachePath,
-    to: `${toRoot}/packages/rename-worker`,
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/rename-worker/dist/renameWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'renameWorkerMain.js'),
   })
   const sourceControlWorkerCachePath = await BundleSourceControlWorkerCached.bundleSourceControlWorkerCached({
     assetDir,
