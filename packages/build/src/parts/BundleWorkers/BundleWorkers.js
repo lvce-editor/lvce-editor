@@ -15,7 +15,6 @@ import * as BundleIframeInspectorWorkerCached from '../BundleIframeInspectorWork
 import * as BundleIframeWorkerCached from '../BundleIframeWorkerCached/BundleIframeWorkerCached.js'
 import * as BundleKeyBindingsViewWorkerCached from '../BundleKeyBindingsViewWorkerCached/BundleKeyBindingsViewWorkerCached.js'
 import * as BundleMarkdownWorkerCached from '../BundleMarkdownWorkerCached/BundleMarkdownWorkerCached.js'
-import * as BundleRenameWorkerCached from '../BundleRenameWorkerCached/BundleRenameWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSourceControlWorkerCached from '../BundleSourceControlWorkerCached/BundleSourceControlWorkerCached.js'
@@ -120,15 +119,13 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: 'packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js',
     to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'fileSystemWorkerMain.js'),
   })
-
-  const renameWorkerCachePath = await BundleRenameWorkerCached.bundleRenameWorkerCached({
-    assetDir,
-    commitHash,
-    platform,
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'completionWorkerMain.js'),
   })
-  await Copy.copy({
-    from: renameWorkerCachePath,
-    to: `${toRoot}/packages/rename-worker`,
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/rename-worker/dist/renameWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'renameWorkerMain.js'),
   })
   const sourceControlWorkerCachePath = await BundleSourceControlWorkerCached.bundleSourceControlWorkerCached({
     assetDir,
