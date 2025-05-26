@@ -9,6 +9,7 @@ import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEdi
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeadersExplorerWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
+import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
@@ -106,6 +107,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('completionWorkerMain.js')) {
     return GetHeadersCompletionWorker.getHeadersCompletionWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('renameWorkerMain.js')) {
+    return GetHeadersRenameWorker.getHeadersRenameWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
