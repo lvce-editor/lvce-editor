@@ -14,7 +14,7 @@ export const getHeaders = async (absolutePath, pathName, etag, url) => {
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
   }
-  const extraHeaders = await GetExtraHeaders.getExtraHeaders(pathName, extension)
+  const extraHeaders = await GetExtraHeaders.getExtraHeaders(absolutePath, pathName, etag)
   const dynamicCsp = ContentSecurityPolicyState.get(url)
   if (dynamicCsp) {
     headers[HttpHeader.ContentSecurityPolicy] = dynamicCsp
