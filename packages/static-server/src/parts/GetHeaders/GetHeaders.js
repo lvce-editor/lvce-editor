@@ -16,6 +16,7 @@ import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSear
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
+import * as GetHeadersSourceActionWorker from '../GetHeadersSourceActionWorker/GetHeadersSourceActionWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
@@ -80,6 +81,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('testWorkerMain.js')) {
     return GetHeadersTestWorker.getHeadersTestWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('sourceActionWorkerMain.js')) {
+    return GetHeadersSourceActionWorker.getHeadersSourceActionWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('debugWorkerMain.js')) {
     return GetHeadersDebugWorker.getHeadersDebugWorker(mime, etag, defaultCachingHeader)
