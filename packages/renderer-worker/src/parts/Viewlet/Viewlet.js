@@ -426,6 +426,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   const newState = await fn(oldState, ...args)
   const actualNewState = 'newState' in newState ? newState.newState : newState
   if (oldState === actualNewState) {
+    console.log('same state, return')
     return
   }
   if (!ViewletStates.hasInstance(uid)) {
@@ -440,6 +441,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if (commands.length === 0) {
     return
   }
+  console.log({ commands, fnName })
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }
 

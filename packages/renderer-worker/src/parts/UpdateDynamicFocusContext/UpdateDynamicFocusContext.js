@@ -1,15 +1,25 @@
 import * as Focus from '../Focus/Focus.js'
 
-export const updateDynamicFocusContext = (commands) => {
-  const setFocusContextIndex = commands.findIndex((command) => command[0] === 'Viewlet.setFocusContext')
-  let focusContext = 0
-  if (setFocusContextIndex !== -1) {
-    const command = commands[setFocusContextIndex]
-    focusContext = command[2]
-    commands.splice(setFocusContextIndex, 1)
+const updateDynamic = (commands, key, fn) => {
+  const keyIndex = commands.findIndex((command) => command[0] === key)
+  let args = []
+  if (keyIndex !== -1) {
+    const command = commands[keyIndex]
+    args = command.slice(2)
+    commands.splice(keyIndex, 1)
   }
   // TODO send focus changes to renderer process together with other message
-  if (focusContext) {
-    Focus.setFocus(focusContext)
+  if (args.length) {
+    fn(...args)
   }
+}
+
+export const updateDynamicFocusContext = (commands) => {
+  updateDynamic(commands, 'Viewlet.setFocusContext', Focus.setFocus)
+}
+
+export const updateDynamicKeyBindings = (commands) => {
+  updateDynamic(commands, 'Viewlet.setKeyBindings', (keyBindings) => {
+    // TODO
+  })
 }

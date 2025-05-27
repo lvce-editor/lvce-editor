@@ -15,6 +15,7 @@ export const setFocus = (focusKey) => {
   }
   FocusState.set(focusKey)
   Context.set(FocusState.get(), true)
+  console.log('set focus', focusKey)
   KeyBindingsState.update()
 }
 
