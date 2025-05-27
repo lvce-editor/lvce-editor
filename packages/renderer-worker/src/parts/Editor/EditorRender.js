@@ -22,6 +22,7 @@ const renderAll = {
         command[0] === 'Viewlet.appendToBody' ||
         command[0] === 'Viewlet.setBounds' ||
         command[0] === 'Viewlet.registerEventListeners' ||
+        command[0] === 'Viewlet.setFocusContext' ||
         command[0] === 'Viewlet.setUid'
       ) {
         return command
