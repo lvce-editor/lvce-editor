@@ -9,18 +9,19 @@ import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEdi
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeadersExplorerWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
-import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
+import * as GetHeadersFindWidgetWorker from '../GetHeadersFindWidgetWorker/GetHeadersFindWidgetWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
-import * as GetHeadersSourceActionWorker from '../GetHeadersSourceActionWorker/GetHeadersSourceActionWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
+import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
 import * as GetHeadersSearchViewWorker from '../GetHeadersSearchViewWorker/GetHeadersSearchViewWorker.js'
+import * as GetHeadersSourceActionWorker from '../GetHeadersSourceActionWorker/GetHeadersSourceActionWorker.js'
 import * as GetHeadersSourceControlWorker from '../GetHeadersSourceControlWorker/GetHeadersSourceControlWorker.js'
 import * as GetHeadersSyntaxHighlightingWorker from '../GetHeadersSyntaxHighlightingWorker/GetHeadersSyntaxHighlightingWorker.js'
 import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeadersTerminalWorker.js'
@@ -114,6 +115,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('renameWorkerMain.js')) {
     return GetHeadersRenameWorker.getHeadersRenameWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('findWidgetWorkerMain.js')) {
+    return GetHeadersFindWidgetWorker.getHeadersFindWidgetWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
