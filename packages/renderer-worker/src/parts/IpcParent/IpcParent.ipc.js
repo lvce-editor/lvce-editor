@@ -1,5 +1,6 @@
 import * as GetColorPickerWorkerUrl from '../GetColorPickerWorkerUrl/GetColorPickerWorkerUrl.js'
 import * as GetCompletionWorkerUrl from '../GetCompletionWorkerUrl/GetCompletionWorkerUrl.js'
+import * as GetFindWidgetWorkerUrl from '../GetFindWidgetWorkerUrl/GetFindWidgetWorkerUrl.js'
 import * as GetExtensionHostSubWorkerUrl from '../GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js'
 import * as GetRenameWorkerUrl from '../GetRenameWorkerUrl/GetRenameWorkerUrl.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -20,6 +21,9 @@ const wrappedCreate = (options) => {
   }
   if (options && options.url && options.url.endsWith('completionWorkerMain.js')) {
     options.url = GetCompletionWorkerUrl.getCompletionWorkerUrl()
+  }
+  if (options && options.url && options.url.endsWith('findWidgetWorkerUrl.js')) {
+    options.url = GetFindWidgetWorkerUrl.getFindWidgetWorkerUrl()
   }
   return IpcParent.create(options)
 }
