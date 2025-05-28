@@ -22,7 +22,7 @@ const wrappedCreate = (options) => {
   if (options && options.url && options.url.endsWith('completionWorkerMain.js')) {
     options.url = GetCompletionWorkerUrl.getCompletionWorkerUrl()
   }
-  if (options && options.url && options.url.endsWith('findWidgetWorkerUrl.js')) {
+  if (options && options.url && options.url.endsWith('findWidgetWorkerMain.js')) {
     options.url = GetFindWidgetWorkerUrl.getFindWidgetWorkerUrl()
   }
   return IpcParent.create(options)
