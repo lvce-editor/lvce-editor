@@ -160,6 +160,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/color-picker-worker/dist/colorPickerWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/FindWidgetWorkerUrl/FindWidgetWorkerUrl.js`,
+      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/find-widget-worker/dist/findWidgetWorkerMain.js',
+      replacement: '/packages/find-widget-worker/dist/findWidgetWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/CompletionWorkerUrl/CompletionWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
       replacement: '/packages/completion-worker/dist/completionWorkerMain.js',
