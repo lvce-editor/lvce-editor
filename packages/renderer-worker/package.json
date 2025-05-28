@@ -52,7 +52,7 @@
     "@lvce-editor/extension-host-worker": "^5.6.0",
     "@lvce-editor/extension-search-view": "^3.6.0",
     "@lvce-editor/source-control-worker": "^1.14.0",
-    "@lvce-editor/completion-worker": "^1.4.0",
+    "@lvce-editor/completion-worker": "^1.5.0",
     "@lvce-editor/simple-browser-view": "^1.0.0",
     "@lvce-editor/file-search-worker": "^5.14.0",
     "@lvce-editor/file-system-worker": "^1.3.0",
