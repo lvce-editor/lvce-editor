@@ -11,6 +11,7 @@ const ids = [
   'closeCompletion',
   'closeCompletion',
   'closeFind',
+  'closeFind2',
   'closeRename',
   'closeRename',
   'closeSourceAction',
