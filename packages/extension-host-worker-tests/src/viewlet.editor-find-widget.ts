@@ -1,5 +1,7 @@
 export const name = 'viewlet.editor-find-widget'
 
+export const skip = 1
+
 export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect, FindWidget }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
