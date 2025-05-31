@@ -72,6 +72,7 @@ const ids = [
   'EditorCompletion.selectCurrent',
   'EditorCompletion.selectIndex',
   'EditorCompletion.toggleDetails',
+  'EditorCompletion.close',
   'EditorRename.accept',
   'EditorRename.handleBlur',
   'EditorSourceActions.close',
