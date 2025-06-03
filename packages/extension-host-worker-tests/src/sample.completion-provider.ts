@@ -8,7 +8,8 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, ['   line   ', '   line   ', '   line   '].join('\n'))
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(new URL('../fixtures/sample.completion-provider', import.meta.url).toString())
+  const extensionUrl = new URL('../fixtures/sample.completion-provider', import.meta.url).toString()
+  await Extension.addWebExtension(extensionUrl)
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
