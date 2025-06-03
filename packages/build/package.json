@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.27.1",
-    "@electron/get": "^4.0.0",
+    "@electron/get": "^4.0.1",
     "@electron/rebuild": "^4.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.3",
