@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ErrorWorker from '../ErrorWorker/ErrorWorker.js'
+import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
