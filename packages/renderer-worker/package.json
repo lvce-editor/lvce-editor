@@ -45,11 +45,11 @@
     "@lvce-editor/diff-worker": "^1.5.0",
     "@lvce-editor/editor-worker": "^7.3.0",
     "@lvce-editor/embeds-worker": "^3.0.0",
-    "@lvce-editor/error-worker": "^1.5.0",
-    "@lvce-editor/explorer-view": "^2.45.0",
+    "@lvce-editor/error-worker": "^1.4.0",
+    "@lvce-editor/explorer-view": "^2.46.0",
     "@lvce-editor/extension-detail-view": "^3.22.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
-    "@lvce-editor/extension-host-worker": "^5.8.0",
+    "@lvce-editor/extension-host-worker": "^5.6.0",
     "@lvce-editor/extension-search-view": "^3.6.0",
     "@lvce-editor/source-control-worker": "^1.14.0",
     "@lvce-editor/completion-worker": "^1.13.0",
@@ -67,7 +67,7 @@
     "@lvce-editor/debug-worker": "^2.1.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.0.1",
     "@lvce-editor/terminal-worker": "^1.2.0",
-    "@lvce-editor/test-worker": "^4.21.0",
+    "@lvce-editor/test-worker": "^4.20.0",
     "@lvce-editor/text-search-worker": "^4.9.0",
     "@lvce-editor/title-bar-worker": "^2.3.0"
   }
