@@ -13,5 +13,5 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
 
   // assert
   const sideBarContent = Locator('#SideBar .Error')
-  await expect(sideBarContent).toHaveText('Error: Failed to execute debug provider: no debug provider "test-debug" found')
+  await expect(sideBarContent).toHaveText('VError: Failed to execute debug provider: no debug provider "test-debug" found')
 }

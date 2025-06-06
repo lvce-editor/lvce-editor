@@ -21,5 +21,5 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   await expect(sideBarContent).toBeVisible()
 
   // TODO should show part of stack trace maybe?
-  await expect(sideBarContent).toHaveText(`Error: Failed to execute reference provider: oops`)
+  await expect(sideBarContent).toHaveText(`VError: Failed to execute reference provider: oops`)
 }

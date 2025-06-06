@@ -16,5 +16,5 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, 
   // assert
   const viewletSearch = Locator('.Search')
   const message = viewletSearch.locator('[role="status"]')
-  await expect(message).toHaveText('Error: Failed to execute text search provider: oops')
+  await expect(message).toHaveText('VError: Failed to execute text search provider: oops')
 }

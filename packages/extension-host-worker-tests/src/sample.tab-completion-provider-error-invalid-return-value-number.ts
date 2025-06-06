@@ -23,6 +23,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
+    'VError: Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
   )
 }

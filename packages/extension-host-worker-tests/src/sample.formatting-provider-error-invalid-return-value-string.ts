@@ -20,6 +20,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // TODO error message should be shorted
   // TODO verify that correct error stack and codeFrame is printed in console
   await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is ""',
+    'VError: Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is ""',
   )
 }
