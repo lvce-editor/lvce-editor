@@ -20,5 +20,5 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText('Error: Failed to execute tab completion provider: oops')
+  await expect(overlayMessage).toHaveText('VError: Failed to execute tab completion provider: oops')
 }
