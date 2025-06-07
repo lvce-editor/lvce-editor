@@ -18,8 +18,8 @@
   "devDependencies": {
     "@lvce-editor/test-with-playwright": "^2.17.0",
     "@playwright/test": "^1.52.0",
-    "@types/cors": "^2.8.18",
-    "@types/express": "^5.0.2",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "express": "^5.1.0"
   },
   "xo": {
