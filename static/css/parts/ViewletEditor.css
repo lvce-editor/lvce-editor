@@ -1,3 +1,7 @@
+:root {
+  --EditorRowHighlightedBackground: rgba(228, 245, 39, 0.6);
+}
+
 /* TODO this should not be global */
 .Editor {
   width: 100%;
@@ -44,6 +48,10 @@
   height: var(--EditorLineHeight);
   line-height: var(--EditorLineHeight);
   contain: strict;
+}
+
+.EditorRowHighlighted {
+  background: var(--EditorRowHighlightedBackground);
 }
 
 .Editors {
