@@ -119,6 +119,8 @@ export const loadContent = async (state, savedState, context) => {
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const fontWeight = EditorPreferences.getFontWeight()
+  const lineToReveal = context?.rowIndex || 0
+  const columnToReveal = context?.columnIndex || 0
   await EditorWorker.invoke('Editor.create', {
     id,
     content,
@@ -147,6 +149,8 @@ export const loadContent = async (state, savedState, context) => {
     fontWeight,
     uri,
     diagnosticsEnabled,
+    lineToReveal,
+    columnToReveal,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
