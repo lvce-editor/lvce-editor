@@ -83,6 +83,7 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
+  console.log({ context })
   const { uri, id, x, y, width, height } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
@@ -100,7 +101,7 @@ export const loadContent = async (state, savedState, context) => {
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
   const content = await GetTextEditorContent.getTextEditorContent(uri)
-  const languageId = getLanguageId(state)
+  const languageId = context?.languageId || getLanguageId(state)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)
