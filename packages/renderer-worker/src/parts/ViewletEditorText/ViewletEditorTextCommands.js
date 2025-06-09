@@ -144,6 +144,7 @@ const ids = [
   'insertLineBreak',
   'moveLineDown',
   'moveLineUp',
+  'setDebugEnabled',
   'moveRectangleSelection',
   'moveRectangleSelectionPx',
   'moveSelection',
