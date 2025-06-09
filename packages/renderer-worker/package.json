@@ -49,7 +49,7 @@
     "@lvce-editor/explorer-view": "^2.49.0",
     "@lvce-editor/extension-detail-view": "^3.22.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
-    "@lvce-editor/extension-host-worker": "^5.8.0",
+    "@lvce-editor/extension-host-worker": "^5.9.0",
     "@lvce-editor/extension-search-view": "^3.6.0",
     "@lvce-editor/source-control-worker": "^1.14.0",
     "@lvce-editor/completion-worker": "^1.17.0",
