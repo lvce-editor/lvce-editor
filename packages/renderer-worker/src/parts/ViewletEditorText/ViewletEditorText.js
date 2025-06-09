@@ -74,6 +74,9 @@ const getLanguageId = (state) => {
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   if (languageId === 'unknown') {
+    if (state.languageId) {
+      return state.languageId
+    }
     console.log('try to get language from content', state)
     const firstLine = state.lines[0] || ''
     const languageIdFromContent = Languages.getLanguageIdByFirstLine(firstLine)
@@ -83,7 +86,6 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  console.log({ context })
   const { uri, id, x, y, width, height } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
@@ -107,6 +109,7 @@ export const loadContent = async (state, savedState, context) => {
   TokenizerMap.set(tokenizerId, tokenizer)
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
+  state.languageId = languageId
   let newState2 = Editor.setDeltaYFixedValue(state, savedDeltaY)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
