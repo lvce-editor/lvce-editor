@@ -135,6 +135,7 @@ const ids = [
   'handleScrollBarVerticalPointerDown',
   'handleSingleClick',
   'handleTab',
+  'updateDebugInfo',
   'handleTouchEnd',
   'handleTouchMove',
   'handleTouchStart',
