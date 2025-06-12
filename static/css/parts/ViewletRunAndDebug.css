@@ -85,3 +85,7 @@
 .DebugPropertyChevron {
   margin-right: 4px;
 }
+
+.InputLabel {
+  user-select: none;
+}
