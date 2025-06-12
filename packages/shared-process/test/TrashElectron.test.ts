@@ -1,31 +1,34 @@
-import { expect, jest, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
+
+const mockExists = jest.fn()
 
 jest.unstable_mockModule('node:fs', () => ({
-  existsSync: jest.fn(() => {}),
+  existsSync: mockExists,
 }))
 
+const mockInvoke = jest.fn()
+
 jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
-  invoke: jest.fn(() => {}),
+  invoke: mockInvoke,
 }))
 
 const fs = await import('node:fs')
 const TrashElectron = await import('../src/parts/TrashElectron/TrashElectron.js')
 const MainProcess = await import('../src/parts/MainProcess/MainProcess.js')
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 test("trash - folder doesn't exist", async () => {
-  // @ts-ignore
-  fs.existsSync.mockImplementation(() => {
-    return false
-  })
+  mockExists.mockReturnValueOnce(false)
   await TrashElectron.trash('/test/file.txt')
 })
 
 test.only('trash', async () => {
-  // @ts-ignore
-  fs.existsSync.mockImplementation(() => {
-    return true
-  })
+  mockExists.mockReturnValueOnce(true)
   await TrashElectron.trash('/test/file.txt')
+  console.log(MainProcess.invoke)
   expect(MainProcess.invoke).toHaveBeenCalledTimes(1)
   expect(MainProcess.invoke).toHaveBeenCalledWith('Trash.trash', '/test/file.txt')
 })
