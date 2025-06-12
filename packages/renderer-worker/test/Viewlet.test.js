@@ -66,6 +66,7 @@ test('openWidget - once', async () => {
   await Viewlet.openWidget('QuickPick', ['everything'])
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   expect(ViewletManager.load).toHaveBeenCalledWith({
+    // @ts-ignore
     focus: true,
     getModule: expect.anything(),
     id: 'QuickPick',
@@ -89,6 +90,7 @@ test('openWidget - should not open again when already open', async () => {
   await Viewlet.openWidget('QuickPick', ['file'])
   expect(ViewletManager.load).toHaveBeenCalledTimes(2)
   expect(ViewletManager.load).toHaveBeenNthCalledWith(1, {
+    // @ts-ignore
     focus: true,
     getModule: expect.anything(),
     id: 'QuickPick',
@@ -99,6 +101,7 @@ test('openWidget - should not open again when already open', async () => {
     args: [['everything']],
   })
   expect(ViewletManager.load).toHaveBeenNthCalledWith(2, {
+    // @ts-ignore
     focus: true,
     getModule: expect.anything(),
     id: 'QuickPick',

@@ -39,6 +39,7 @@ test('dispose', async () => {
     src: '/remote/test.mp3',
   }
   await ViewletAudio.dispose(state)
+  // @ts-ignore
   expect(BlobSrc.disposeSrc).toBeCalledTimes(1)
   expect(BlobSrc.disposeSrc).toHaveBeenCalledWith('/remote/test.mp3')
 })

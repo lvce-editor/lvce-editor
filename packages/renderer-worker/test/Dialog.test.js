@@ -51,6 +51,7 @@ test('showMessage - electron', async () => {
     options: [],
   })
   expect(ElectronDialog.showMessageBox).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(ElectronDialog.showMessageBox).toHaveBeenCalledWith('Error: Oops', [], ElectronMessageBoxType.Error)
 })
 

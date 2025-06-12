@@ -134,6 +134,7 @@ test.skip('setPath', async () => {
   })
   GlobalEventBus.addListener('workspace.change', listener)
   await Workspace.setPath('/test')
+  // @ts-ignore
   expect(listener).toBeCalledTimes(1)
   expect(listener).toHaveBeenCalledWith('/test')
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
