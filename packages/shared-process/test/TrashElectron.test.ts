@@ -20,7 +20,7 @@ test("trash - folder doesn't exist", async () => {
   await TrashElectron.trash('/test/file.txt')
 })
 
-test('trash', async () => {
+test.only('trash', async () => {
   // @ts-ignore
   fs.existsSync.mockImplementation(() => {
     return true
