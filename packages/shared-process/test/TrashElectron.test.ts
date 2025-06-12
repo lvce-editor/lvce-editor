@@ -12,7 +12,6 @@ jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
   invoke: mockInvoke,
 }))
 
-const fs = await import('node:fs')
 const TrashElectron = await import('../src/parts/TrashElectron/TrashElectron.js')
 const MainProcess = await import('../src/parts/MainProcess/MainProcess.js')
 
