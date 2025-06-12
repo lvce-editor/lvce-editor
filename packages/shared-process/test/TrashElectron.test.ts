@@ -10,7 +10,7 @@ jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
 
 const fs = await import('node:fs')
 const TrashElectron = await import('../src/parts/TrashElectron/TrashElectron.js')
-const ParentIpc = await import('../src/parts/MainProcess/MainProcess.js')
+const MainProcess = await import('../src/parts/MainProcess/MainProcess.js')
 
 test("trash - folder doesn't exist", async () => {
   // @ts-ignore
@@ -26,6 +26,6 @@ test.only('trash', async () => {
     return true
   })
   await TrashElectron.trash('/test/file.txt')
-  expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
-  expect(ParentIpc.invoke).toHaveBeenCalledWith('Trash.trash', '/test/file.txt')
+  expect(MainProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(MainProcess.invoke).toHaveBeenCalledWith('Trash.trash', '/test/file.txt')
 })
