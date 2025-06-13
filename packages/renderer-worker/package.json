@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/about-view": "^5.7.0",
+    "@lvce-editor/about-view": "^5.8.0",
     "@lvce-editor/color-picker-worker": "^1.7.0",
     "@lvce-editor/completion-worker": "^1.17.0",
     "@lvce-editor/debug-worker": "^2.1.0",
