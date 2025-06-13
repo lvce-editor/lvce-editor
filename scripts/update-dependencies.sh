@@ -18,7 +18,7 @@ fi
 
 function updateDependencies {
   echo "updating dependencies..."
-  OUTPUT=`ncu -u -x msw -x @types/node -x rollup -x electron-unhandled -x electron -x execa -x electron-builder`
+  OUTPUT=`ncu -u -x msw -x @types/node -x rollup -x electron-unhandled -x electron -x execa -x electron-builder -x jest -x jest-environment-jsdom`
   SUB='All dependencies match the latest package versions'
   if [[ "$OUTPUT" == *"$SUB"* ]]; then
     echo "$OUTPUT"
