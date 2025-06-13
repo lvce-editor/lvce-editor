@@ -27,14 +27,14 @@
     "@types/fs-extra": "^11.0.4",
     "@types/tar-fs": "^2.0.4",
     "electron-builder": "^25.1.8",
-    "execa": "^9.5.3",
+    "execa": "^9.6.0",
     "extract-zip": "^2.0.1",
-    "glob": "^11.0.2",
+    "glob": "^11.0.3",
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.3.0",
-    "@lvce-editor/verror": "^1.6.0",
+    "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.25.5",
     "fs-extra": "^11.3.0",
@@ -43,7 +43,7 @@
     "minimist": "^1.2.8",
     "p-map": "^7.0.3",
     "pretty-bytes": "^7.0.0",
-    "rollup": "^4.41.0",
+    "rollup": "^4.43.0",
     "tar-fs": "^3.0.9",
     "verdaccio": "6.1.2"
   },
