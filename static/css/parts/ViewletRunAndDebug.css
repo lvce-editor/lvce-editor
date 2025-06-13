@@ -89,3 +89,9 @@
 .InputLabel {
   user-select: none;
 }
+
+.CallStackDescription {
+  font-size: 10px;
+  margin-left: auto;
+  padding-right: 5px;
+}
