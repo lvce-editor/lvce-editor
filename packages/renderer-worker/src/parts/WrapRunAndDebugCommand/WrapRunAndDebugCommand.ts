@@ -1,4 +1,6 @@
 import * as DebugWorker from '../DebugWorker/DebugWorker.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const wrapRunAndDebugCommand = (key: string) => {
   const fn = async (state, ...args) => {
@@ -12,8 +14,9 @@ export const wrapRunAndDebugCommand = (key: string) => {
     if (commands.length === 0) {
       return state
     }
+    const latest = ViewletStates.getState(ViewletModuleId.RunAndDebug)
     return {
-      ...state,
+      ...latest,
       commands,
       actionsDom,
     }
