@@ -90,10 +90,15 @@
   user-select: none;
 }
 
+.CallStackLabel {
+  contain: content;
+}
+
 .CallStackDescription {
   font-size: 10px;
   margin-left: auto;
   padding-right: 5px;
+  contain: content;
 }
 
 .DebugRowCallStack {
