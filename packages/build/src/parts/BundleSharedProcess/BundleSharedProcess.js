@@ -379,6 +379,7 @@ export const ptyHostPath = ResolveBin.resolveBin('@lvce-editor/pty-host')
   const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess, target)
   const dirents = await readdir(`${cachePath}/src`, { recursive: true, withFileTypes: true })
   for (const dirent of dirents) {
+    // @ts-ignore
     const direntName = join(dirent.path, dirent.name)
     if (dirent.isDirectory()) {
       continue

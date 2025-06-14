@@ -21,7 +21,7 @@
     "@electron/get": "^4.0.1",
     "@electron/rebuild": "^4.0.1",
     "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-commonjs": "^28.0.5",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/bytes": "^3.1.5",
     "@types/fs-extra": "^11.0.4",

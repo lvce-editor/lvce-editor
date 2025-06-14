@@ -43,8 +43,8 @@
   "dependencies": {
     "@lvce-editor/about-view": "^5.8.0",
     "@lvce-editor/color-picker-worker": "^1.7.0",
-    "@lvce-editor/completion-worker": "^1.17.0",
-    "@lvce-editor/debug-worker": "^2.10.0",
+    "@lvce-editor/completion-worker": "^1.18.0",
+    "@lvce-editor/debug-worker": "^2.13.0",
     "@lvce-editor/diff-worker": "^1.5.0",
     "@lvce-editor/editor-worker": "^7.7.0",
     "@lvce-editor/embeds-worker": "^3.0.0",
