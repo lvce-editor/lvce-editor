@@ -80,6 +80,14 @@
 .DebugValueScopeName {
   font-weight: 700;
   font-size: 11px;
+  pointer-events: none; /* todo find a better way to ensure click is on whole element, maybe use x/y coordinates */
+}
+
+.Chevron,
+.CallStackArrow,
+.CallStackLabel,
+.CallStackDescription {
+  pointer-events: none;
 }
 
 .DebugPropertyChevron {
