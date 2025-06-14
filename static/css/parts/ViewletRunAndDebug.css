@@ -83,7 +83,10 @@
   pointer-events: none; /* todo find a better way to ensure click is on whole element, maybe use x/y coordinates */
 }
 
-.Chevron {
+.Chevron,
+.CallStackArrow,
+.CallStackLabel,
+.CallStackDescription {
   pointer-events: none;
 }
 
