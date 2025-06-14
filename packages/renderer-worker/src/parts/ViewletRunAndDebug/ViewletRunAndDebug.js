@@ -82,6 +82,7 @@ export const hotReload = async (state) => {
     state.platform,
   )
   await DebugWorker.invoke('RunAndDebug.loadContent', state.uid, state.isTest, savedState)
+  await DebugWorker.invoke('RunAndDebug.loadContentLater', state.uid)
   const diffResult = await DebugWorker.invoke('RunAndDebug.diff2', state.uid)
   const commands = await DebugWorker.invoke('RunAndDebug.render2', state.uid, diffResult)
   return {
