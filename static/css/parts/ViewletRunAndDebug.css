@@ -107,6 +107,7 @@
 
 .CallStackArrow {
   contain: strict;
-  width: 10px;
-  height: 10px;
+  width: 13px;
+  height: 13px;
+  margin-right: 5px;
 }
