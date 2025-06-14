@@ -99,3 +99,9 @@
 .DebugRowCallStack {
   cursor: default;
 }
+
+.CallStackArrow {
+  contain: strict;
+  width: 10px;
+  height: 10px;
+}
