@@ -95,3 +95,7 @@
   margin-left: auto;
   padding-right: 5px;
 }
+
+.DebugRowCallStack {
+  cursor: default;
+}
