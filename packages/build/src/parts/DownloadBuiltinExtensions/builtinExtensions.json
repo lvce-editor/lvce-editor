@@ -32,7 +32,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "1.0.1"
+    "version": "1.1.0"
   },
   {
     "name": "builtin.rest-client",
