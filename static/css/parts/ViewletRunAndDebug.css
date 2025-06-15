@@ -119,3 +119,14 @@
   height: 13px;
   margin-right: 5px;
 }
+
+.DebugSectionActions {
+  margin-left: auto;
+}
+
+.DebugSectionAction {
+  background: transparent;
+  border: 1px solid;
+  color: gray;
+  font-size: 14px;
+}
