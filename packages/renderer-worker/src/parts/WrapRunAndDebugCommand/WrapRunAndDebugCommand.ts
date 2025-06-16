@@ -22,6 +22,6 @@ export const wrapRunAndDebugCommand = (key: string) => {
       actionsDom,
     }
   }
-  NameAnonymousFunction.nameAnonymousFunction(`Debug/${key}`)
+  NameAnonymousFunction.nameAnonymousFunction(fn, `Debug/${key}`)
   return fn
 }
