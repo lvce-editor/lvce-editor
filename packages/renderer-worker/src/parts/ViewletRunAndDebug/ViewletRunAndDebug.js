@@ -34,9 +34,8 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, savedState) => {
   const isTest = Workspace.isTest()
-  const savedState = {}
   await DebugWorker.invoke('RunAndDebug.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
   await DebugWorker.invoke('RunAndDebug.loadContent', state.uid, isTest, savedState)
   const diffResult = await DebugWorker.invoke('RunAndDebug.diff2', state.uid)
