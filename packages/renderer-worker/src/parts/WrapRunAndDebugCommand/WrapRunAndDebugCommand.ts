@@ -1,6 +1,7 @@
 import * as DebugWorker from '../DebugWorker/DebugWorker.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 
 export const wrapRunAndDebugCommand = (key: string) => {
   const fn = async (state, ...args) => {
@@ -21,5 +22,6 @@ export const wrapRunAndDebugCommand = (key: string) => {
       actionsDom,
     }
   }
+  NameAnonymousFunction.nameAnonymousFunction(`Debug/${key}`)
   return fn
 }
