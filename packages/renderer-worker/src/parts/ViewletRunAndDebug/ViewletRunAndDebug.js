@@ -134,3 +134,8 @@ export const hasFunctionalResize = true
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
 }
+
+export const saveState = async (state) => {
+  const savedState = await DebugWorker.invoke('RunAndDebug.saveState', state.uid)
+  return savedState
+}
