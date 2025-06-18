@@ -61,6 +61,15 @@
   position: relative;
 }
 
+.DebugRow {
+  --WatchExpressionDeleteDisplay: none;
+}
+
+.DebugRow:where(:hover) {
+  --WatchExpressionDeleteDisplay: flex;
+  background: var(--ListHoverBackground);
+}
+
 .DebugRowFocused {
 }
 
@@ -141,12 +150,4 @@
   display: var(--WatchExpressionDeleteDisplay);
   align-items: center;
   justify-content: center;
-}
-
-.DebugRow {
-  --WatchExpressionDeleteDisplay: none;
-}
-
-.DebugRow:hover {
-  --WatchExpressionDeleteDisplay: flex;
 }
