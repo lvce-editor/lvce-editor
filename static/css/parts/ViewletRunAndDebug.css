@@ -58,6 +58,7 @@
   color: rgb(188, 190, 190);
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .DebugRowFocused {
@@ -129,4 +130,23 @@
   border: 1px solid;
   color: gray;
   font-size: 14px;
+}
+
+.DeleteWatchExpression {
+  position: absolute;
+  right: 5px;
+  contain: strict;
+  width: 20px;
+  height: 20px;
+  display: var(--WatchExpressionDeleteDisplay);
+  align-items: center;
+  justify-content: center;
+}
+
+.DebugRow {
+  --WatchExpressionDeleteDisplay: none;
+}
+
+.DebugRow:hover {
+  --WatchExpressionDeleteDisplay: flex;
 }
