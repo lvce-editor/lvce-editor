@@ -1,10 +1,10 @@
-import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as DebugWorker from '../DebugWorker/DebugWorker.js'
 
 export const menus = []
 
 export const getMenus = async () => {
   try {
-    const modules = await TitleBarWorker.invoke('RunAndDebug.getMenuEntries')
+    const modules = await DebugWorker.invoke('RunAndDebug.getMenuEntries')
     return modules
   } catch {
     return []
