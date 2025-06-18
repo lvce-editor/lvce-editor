@@ -9,7 +9,7 @@ export const getMenus = async () => {
       return {
         ...module,
         async getMenuEntries() {
-          module.entries
+          return module.entries
         },
       }
     })
