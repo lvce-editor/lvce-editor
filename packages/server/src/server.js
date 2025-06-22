@@ -80,7 +80,7 @@ const isStatic = (url) => {
 
 const handleRequest = (req, res) => {
   if (isStatic(req.url)) {
-    return sendHandleStaticServerProcess(req, res.socket, 'HandleRequest.handleRequest')
+    return sendHandleStaticServerProcess(req, res, 'StaticServer.getResponse')
   }
   return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest')
 }
@@ -128,6 +128,15 @@ const handleSharedProcessDisconnect = () => {
   console.info('[server] shared process disconnected')
 }
 
+const waitForProcessToBeReady = async (childProcess) => {
+  const { resolve, promise } = Promise.withResolvers()
+  childProcess.once('message', resolve)
+  const message = await promise
+  if (message !== 'ready') {
+    throw new Error('unexpected message')
+  }
+}
+
 /**
  *
  * @returns {Promise<ChildProcess>}
@@ -142,9 +151,7 @@ const launchProcess = async (processPath, execArgv) => {
   })
   childProcess.on('exit', handleExit)
   childProcess.on('disconnect', handleSharedProcessDisconnect)
-  const { resolve, promise } = Promise.withResolvers()
-  childProcess.once('message', resolve)
-  await promise
+  await waitForProcessToBeReady(childProcess)
   return childProcess
 }
 
@@ -174,7 +181,8 @@ const getOrCreateSharedProcess = () => {
  */
 const launchStaticServerProcess = async () => {
   const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
-  return launchProcess(staticServerPath, [])
+  const ipc = await launchProcess(staticServerPath, ['--ipc-type=node-forked-process'])
+  return ipc
 }
 
 /**
@@ -232,21 +240,47 @@ const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   )
 }
 
-const sendHandleStaticServerProcess = async (request, socket, method, ...params) => {
+let id = 1
+
+const createId = () => {
+  return ++id
+}
+
+const setHeaders = (response, headers) => {
+  for (const [key, value] of Object.entries(headers)) {
+    response.setHeader(key, value)
+  }
+}
+
+const sendHandleStaticServerProcess = async (request, res, method, ...params) => {
   request.on('error', handleRequestError)
-  socket.on('error', handleSocketError)
+  res.socket.on('error', handleSocketError)
   const staticServerProcess = await getOrCreateStaticServerPathProcess()
-  staticServerProcess.send(
-    {
-      jsonrpc: '2.0',
-      method,
-      params: [getHandleMessage(request), ...params],
-    },
-    socket,
-    {
-      keepOpen: false,
-    },
-  )
+  const { resolve, promise } = Promise.withResolvers()
+  const id = createId()
+  const handleMessage = (message) => {
+    if (message.id && message.id === id) {
+      resolve(message)
+      staticServerProcess.off('message', handleMessage)
+    }
+  }
+  staticServerProcess.on('message', handleMessage)
+  staticServerProcess.send({
+    jsonrpc: '2.0',
+    id,
+    method,
+    params: [getHandleMessage(request), ...params],
+  })
+  const response = await promise
+  const { result } = response
+  const { status, headers, body } = result
+  if (!status) {
+    throw new Error('invalid status')
+  }
+  res.statusCode = status
+  setHeaders(res, headers)
+  res.end(body)
+  // TODO use invoke
 }
 
 /**
