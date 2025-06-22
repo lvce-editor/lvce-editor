@@ -128,6 +128,15 @@ const handleSharedProcessDisconnect = () => {
   console.info('[server] shared process disconnected')
 }
 
+const waitForProcessToBeReady = async (childProcess) => {
+  const { resolve, promise } = Promise.withResolvers()
+  childProcess.once('message', resolve)
+  const message = await promise
+  if (message !== 'ready') {
+    throw new Error('unexpected message')
+  }
+}
+
 /**
  *
  * @returns {Promise<ChildProcess>}
@@ -142,9 +151,7 @@ const launchProcess = async (processPath, execArgv) => {
   })
   childProcess.on('exit', handleExit)
   childProcess.on('disconnect', handleSharedProcessDisconnect)
-  const { resolve, promise } = Promise.withResolvers()
-  childProcess.once('message', resolve)
-  await promise
+  await waitForProcessToBeReady(childProcess)
   return childProcess
 }
 
