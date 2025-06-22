@@ -7,6 +7,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
@@ -223,6 +224,12 @@ const bundleStaticServer = async ({ commitHash }) => {
     path: 'packages/build/.tmp/server/static-server/package.json',
     occurrence: `"main": "src/static-server.js"`,
     replacement: `"main": "dist/static-server.js"`,
+  })
+  const old = await JsonFile.readJson('packages/build/.tmp/server/static-server/package.json')
+  const { dependencies, ...rest } = old
+  await JsonFile.writeJson({
+    to: 'packages/build/.tmp/server/static-server/package.json',
+    value: rest,
   })
   await Remove.remove('packages/build/.tmp/server/static-server/src')
 }
