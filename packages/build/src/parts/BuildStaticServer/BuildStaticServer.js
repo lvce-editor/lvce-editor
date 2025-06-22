@@ -7,6 +7,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
@@ -99,7 +100,7 @@ const copyStaticServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
-    ignore: ['tsconfig.json', 'node_modules', 'package-lock.json', 'tsconfig.tsbuildinfo', 'test'],
+    ignore: ['tsconfig.json', 'package-lock.json', 'tsconfig.tsbuildinfo', 'test'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -205,6 +206,31 @@ const frameAncestors = IsGitpod.isGitpod ? 'frame-ancestors *.gitpod.io': \`fram
 
 export const headers =`,
   })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/IpcChildModule/IpcChildModule.js',
+    occurrence: `  switch (method) {
+    case IpcChildType.NodeForkedProcess:
+      return NodeForkedProcessRpcClient.create
+    case IpcChildType.NodeWorker:
+      return NodeWorkerRpcClient.create
+    case IpcChildType.ElectronUtilityProcess:
+      return ElectronUtilityProcessRpcClient.create
+    case IpcChildType.ElectronMessagePort:
+      return ElectronMessagePortRpcClient.create
+    case IpcChildType.WebSocket:
+      return NodeWebSocketRpcClient.create
+    default:
+      throw new Error('unexpected ipc type')
+  }`,
+    replacement: `  switch (method) {
+    case IpcChildType.NodeForkedProcess:
+      return NodeForkedProcessRpcClient.create
+    case IpcChildType.NodeWorker:
+      return NodeWorkerRpcClient.create
+    default:
+      throw new Error('unexpected ipc type')
+  }`,
+  })
 }
 
 const bundleStaticServer = async ({ commitHash }) => {
@@ -216,13 +242,19 @@ const bundleStaticServer = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/dist/static-server.js',
-    occurrence: `const root = resolve(__dirname, '../../../')`,
-    replacement: `const root = resolve(__dirname, '..')`,
+    occurrence: `const root = resolve$1(__dirname, '../../../')`,
+    replacement: `const root = resolve$1(__dirname, '..')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/package.json',
     occurrence: `"main": "src/static-server.js"`,
     replacement: `"main": "dist/static-server.js"`,
+  })
+  const old = await JsonFile.readJson('packages/build/.tmp/server/static-server/package.json')
+  const { dependencies, ...rest } = old
+  await JsonFile.writeJson({
+    to: 'packages/build/.tmp/server/static-server/package.json',
+    value: rest,
   })
   await Remove.remove('packages/build/.tmp/server/static-server/src')
 }
