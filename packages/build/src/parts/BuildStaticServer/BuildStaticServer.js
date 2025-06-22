@@ -206,6 +206,31 @@ const frameAncestors = IsGitpod.isGitpod ? 'frame-ancestors *.gitpod.io': \`fram
 
 export const headers =`,
   })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/IpcChildModule/IpcChildModule.js',
+    occurrence: `  switch (method) {
+  case IpcChildType.NodeForkedProcess:
+    return NodeForkedProcessRpcClient.create
+  case IpcChildType.NodeWorker:
+    return NodeWorkerRpcClient.create
+  case IpcChildType.ElectronUtilityProcess:
+    return ElectronUtilityProcessRpcClient.create
+  case IpcChildType.ElectronMessagePort:
+    return ElectronMessagePortRpcClient.create
+  case IpcChildType.WebSocket:
+    return NodeWebSocketRpcClient.create
+  default:
+    throw new Error('unexpected ipc type')
+}`,
+    replacement: `  switch (method) {
+  case IpcChildType.NodeForkedProcess:
+    return NodeForkedProcessRpcClient.create
+  case IpcChildType.NodeWorker:
+    return NodeWorkerRpcClient.create
+  default:
+    throw new Error('unexpected ipc type')
+}`,
+  })
 }
 
 const bundleStaticServer = async ({ commitHash }) => {
