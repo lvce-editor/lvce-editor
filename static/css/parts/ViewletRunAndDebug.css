@@ -2,6 +2,7 @@
   white-space: pre;
   color: var(--TitleBarForeground);
   overflow-y: auto;
+  outline: none;
 }
 
 .RunAndDebug::-webkit-scrollbar {
