@@ -1,5 +1,4 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
-import * as Connection from '../Connection/Connection.js'
 import * as ContentSecurityPolicyDocument from '../ContentSecurityPolicyDocument/ContentSecurityPolicyDocument.js'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
@@ -9,7 +8,6 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 export const getHeadersDocument = (mime, etag) => {
   return {
     [HttpHeader.CacheControl]: CachingHeaders.NoCache,
-    [HttpHeader.Connection]: Connection.Close,
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,

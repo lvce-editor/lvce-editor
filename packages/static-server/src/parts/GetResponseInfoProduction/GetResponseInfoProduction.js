@@ -3,7 +3,6 @@ import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
-import * as Connection from '../Connection/Connection.js'
 
 export const getResponseInfoProduction = (request) => {
   const pathName = request.url
@@ -12,9 +11,7 @@ export const getResponseInfoProduction = (request) => {
     return {
       absolutePath: '',
       status: HttpStatusCode.NotFound,
-      headers: {
-        [HttpHeader.Connection]: Connection.Close,
-      },
+      headers: {},
     }
   }
   if (MatchesEtag.matchesEtag(request, result.etag)) {
@@ -22,7 +19,6 @@ export const getResponseInfoProduction = (request) => {
       absolutePath: '',
       status: HttpStatusCode.NotModifed,
       headers: {
-        [HttpHeader.Connection]: Connection.Close,
         [HttpHeader.Etag]: result.etag,
       },
     }
