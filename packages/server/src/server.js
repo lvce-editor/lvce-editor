@@ -4,6 +4,7 @@ import { ChildProcess, fork } from 'node:child_process'
 import { createServer } from 'node:http'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { Worker } from 'node:worker_threads'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
@@ -139,20 +140,44 @@ const waitForProcessToBeReady = async (childProcess) => {
 
 /**
  *
- * @returns {Promise<ChildProcess>}
+ * @returns {Promise<any>}
  */
 const launchProcess = async (processPath, execArgv) => {
-  const childProcess = fork(processPath, execArgv, {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-    },
-    execArgv: [],
-  })
-  childProcess.on('exit', handleExit)
-  childProcess.on('disconnect', handleSharedProcessDisconnect)
-  await waitForProcessToBeReady(childProcess)
-  return childProcess
+  const isWorker = execArgv.includes('--ipc-type=node-worker')
+  if (isWorker) {
+    const childProcess = new Worker(processPath, {
+      argv: execArgv,
+      env: {
+        ...process.env,
+      },
+    })
+    childProcess.on('exit', handleExit)
+    childProcess.on('disconnect', handleSharedProcessDisconnect)
+    await waitForProcessToBeReady(childProcess)
+    return {
+      send(message) {
+        childProcess.postMessage(message)
+      },
+      on(event, listener) {
+        childProcess.on(event, listener)
+      },
+      off(event, listener) {
+        childProcess.off(event, listener)
+      },
+    }
+  } else {
+    const childProcess = fork(processPath, execArgv, {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+      },
+      execArgv: [],
+    })
+    childProcess.on('exit', handleExit)
+    childProcess.on('disconnect', handleSharedProcessDisconnect)
+    await waitForProcessToBeReady(childProcess)
+    return childProcess
+  }
 }
 
 /**
@@ -181,7 +206,7 @@ const getOrCreateSharedProcess = () => {
  */
 const launchStaticServerProcess = async () => {
   const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
-  const ipc = await launchProcess(staticServerPath, ['--ipc-type=node-forked-process'])
+  const ipc = await launchProcess(staticServerPath, ['--ipc-type=node-worker'])
   return ipc
 }
 
