@@ -14,7 +14,6 @@ export const lookupKeyBinding = (commandId) => {
 }
 
 export const handleKeyBinding = async (identifier) => {
-  console.log({ identifier })
   Assert.number(identifier)
   const keyBinding = KeyBindingsState.getKeyBinding(identifier)
   if (!keyBinding) {
