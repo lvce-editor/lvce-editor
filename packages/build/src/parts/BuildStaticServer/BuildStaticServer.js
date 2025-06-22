@@ -257,6 +257,7 @@ const bundleStaticServer = async ({ commitHash }) => {
     value: rest,
   })
   await Remove.remove('packages/build/.tmp/server/static-server/src')
+  await Remove.remove('packages/build/.tmp/server/static-server/node_modules')
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
