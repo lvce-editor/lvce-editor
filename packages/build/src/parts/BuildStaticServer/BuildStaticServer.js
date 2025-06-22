@@ -100,7 +100,7 @@ const copyStaticServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/static-server',
     to: 'packages/build/.tmp/server/static-server',
-    ignore: ['tsconfig.json', 'node_modules', 'package-lock.json', 'tsconfig.tsbuildinfo', 'test'],
+    ignore: ['tsconfig.json', 'package-lock.json', 'tsconfig.tsbuildinfo', 'test'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
