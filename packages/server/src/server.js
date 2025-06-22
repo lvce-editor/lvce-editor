@@ -256,6 +256,18 @@ const sendHandleStaticServerProcess = async (request, socket, method, ...params)
   )
 }
 
+let id = 1
+
+const createId = () => {
+  return ++id
+}
+
+const setHeaders = (response, headers) => {
+  for (const [key, value] of Object.entries(headers)) {
+    response.setHeader(key, value)
+  }
+}
+
 /**
  *
  * @param {import('http').IncomingMessage} request
