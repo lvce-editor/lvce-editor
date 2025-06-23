@@ -180,6 +180,30 @@ export const getResponseInfo = (request, isImmutable) => {
     replacement: `\${frameAncestors}`,
   })
   await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
+    occurrence: `export const getAbsolutePath = (pathName) => {
+  if (pathName === '/') {
+    return join(STATIC, 'index.html')
+  }
+  if (pathName === '/favicon.ico') {
+    return join(STATIC, 'favicon.ico')
+  }
+  if (pathName.startsWith('/packages')) {
+    return Path.join(root, pathName)
+  }
+  return Path.join(STATIC, pathName)
+}`,
+    replacement: `export const getAbsolutePath = (pathName) => {
+  if (pathName === '/') {
+    return join(STATIC, 'index.html')
+  }
+  if (pathName === '/favicon.ico') {
+    return join(STATIC, 'favicon.ico')
+  }
+  return Path.join(STATIC, pathName)
+}`,
+  })
+  await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
     occurrence: `frame-src 'self' http://localhost:3001 http://localhost:3002`,
     replacement: `\${frameSrc}`,
