@@ -243,14 +243,22 @@ const handleRequestError = (error) => {
   console.info('[info]: request upgrade error', error)
 }
 
-const handleSocketError = (error) => {
+const handleSocketUpgradeError = (error) => {
   // @ts-ignore
   console.info('[info] request socket upgrade error', error)
 }
 
+const handleSocketError = (error) => {
+  if (error && error.code === 'ECONNRESET') {
+    return
+  }
+  // @ts-ignore
+  console.info('[info] request socket error', error)
+}
+
 const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   request.on('error', handleRequestError)
-  socket.on('error', handleSocketError)
+  socket.on('error', handleSocketUpgradeError)
   const sharedProcess = await getOrCreateSharedProcess()
   sharedProcess.send(
     {
