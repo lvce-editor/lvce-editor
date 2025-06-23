@@ -158,3 +158,8 @@
   align-items: center;
   justify-content: center;
 }
+
+.WatchMessage {
+  padding-left: 5px;
+  padding-right: 5px;
+}
