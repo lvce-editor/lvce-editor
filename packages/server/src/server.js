@@ -76,6 +76,9 @@ const isStatic = (url) => {
   if (url.startsWith('/manifest.json')) {
     return true
   }
+  if (url.startsWith('/packages') && url.endsWith('.js')) {
+    return true
+  }
   return false
 }
 
