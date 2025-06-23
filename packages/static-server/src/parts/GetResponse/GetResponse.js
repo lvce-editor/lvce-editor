@@ -12,6 +12,13 @@ export const getResponse = async (message) => {
       body: '',
     }
   }
+  if (status === HttpStatusCode.NotFound) {
+    return {
+      headers,
+      status,
+      body: '',
+    }
+  }
   // TODO implment buffering
   try {
     const content = await readFile(absolutePath)
