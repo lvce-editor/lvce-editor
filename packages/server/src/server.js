@@ -210,6 +210,8 @@ const getOrCreateSharedProcess = () => {
 const launchStaticServerProcess = async () => {
   const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
   const ipc = await launchProcess(staticServerPath, ['--ipc-type=node-worker'])
+  ipc.on('message', handleMessage)
+
   return ipc
 }
 
@@ -288,19 +290,36 @@ const setHeaders = (response, headers) => {
   }
 }
 
+const callbacks = Object.create(null)
+
+const registerCallback = () => {
+  const id = createId()
+  const { resolve, promise } = Promise.withResolvers()
+  callbacks[id] = resolve
+  return {
+    id,
+    promise,
+  }
+}
+
+const handleMessage = (message) => {
+  const { id } = message
+  if (callbacks[id]) {
+    callbacks[id](message)
+    delete callbacks[id]
+  }
+}
+
+const hasErrorListener = new WeakSet()
+
 const sendHandleStaticServerProcess = async (request, res, method, ...params) => {
   request.on('error', handleRequestError)
-  res.socket.on('error', handleSocketError)
-  const staticServerProcess = await getOrCreateStaticServerPathProcess()
-  const { resolve, promise } = Promise.withResolvers()
-  const id = createId()
-  const handleMessage = (message) => {
-    if (message.id && message.id === id) {
-      resolve(message)
-      staticServerProcess.off('message', handleMessage)
-    }
+  if (!hasErrorListener.has(res.socket)) {
+    res.socket.on('error', handleSocketError)
+    hasErrorListener.add(res.socket)
   }
-  staticServerProcess.on('message', handleMessage)
+  const staticServerProcess = await getOrCreateStaticServerPathProcess()
+  const { id, promise } = registerCallback()
   staticServerProcess.send({
     jsonrpc: '2.0',
     id,
