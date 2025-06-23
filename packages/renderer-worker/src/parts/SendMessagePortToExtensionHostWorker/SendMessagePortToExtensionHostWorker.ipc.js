@@ -7,4 +7,5 @@ export const Commands = {
   sendMessagePortToSharedProcess: SendMessagePortToExtensionHostWorker.sendMessagePortToSharedProcess,
   sendMessagePortToErrorWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker,
   sendMessagePortToEditorWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker,
+  sendMessagePortToRendererProcess: SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess,
 }
