@@ -12,6 +12,13 @@ export const getResponse = async (message) => {
       body: '',
     }
   }
+  if (status === HttpStatusCode.NotFound) {
+    return {
+      headers,
+      status,
+      body: '',
+    }
+  }
   // TODO implment buffering
   try {
     const content = await readFile(absolutePath)
@@ -21,14 +28,6 @@ export const getResponse = async (message) => {
       body: content,
     }
   } catch (error) {
-    // @ts-ignore
-    if (error && error.code === 'ENOENT') {
-      return {
-        headers: {},
-        status: HttpStatusCode.NotFound,
-        body: 'Not Found',
-      }
-    }
     console.error(`[static server] response error at ${message.url} ${error}`)
     return {
       headers: {},
