@@ -7,7 +7,7 @@ export const launchNetworkProcess = async () => {
     defaultPath: NetworkProcessPath.networkProcessPath,
     isElectron: IsElectron.isElectron,
     name: 'Network Process',
-    settingName: '',
+    settingName: 'develop.networkProcessPath',
     targetRpcId: undefined,
   })
   return ipc
