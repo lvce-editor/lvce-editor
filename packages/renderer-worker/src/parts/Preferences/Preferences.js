@@ -54,6 +54,9 @@ export const hydrate = async () => {
 export const get = (key) => {
   return state[key]
 }
+export const getMany = (keys) => {
+  return keys.map(get)
+}
 
 export const getAll = () => {
   return state
