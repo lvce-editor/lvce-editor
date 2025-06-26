@@ -10,4 +10,5 @@ export const Commands = {
   openKeyBindingsJson: Preferences.openKeyBindingsJson,
   openSettingsJson: Preferences.openSettingsJson,
   get: Preferences.get,
+  getMany: Preferences.getMany,
 }
