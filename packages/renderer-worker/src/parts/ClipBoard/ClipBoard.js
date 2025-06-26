@@ -10,6 +10,10 @@ export const writeText = async (text) => {
   return await ClipBoardWorker.invoke('ClipBoard.writeText', text)
 }
 
+export const hotReload = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.hotReload')
+}
+
 export const writeNativeFiles = async (type, files) => {
   return await ClipBoardWorker.invoke('ClipBoard.writeNativeFiles', type, files)
 }

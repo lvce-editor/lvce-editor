@@ -58,5 +58,12 @@ export const getWatchConfig = () => {
       command: 'Run And Debug.hotReload',
     })
   }
+  const clipBoard = Preferences.get('develop.clipBoardWorkerPath')
+  if (clipBoard) {
+    watchConfig.push({
+      path: clipBoard,
+      command: 'ClipBoard.hotReload',
+    })
+  }
   return watchConfig
 }
