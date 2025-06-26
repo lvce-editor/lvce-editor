@@ -1,3 +1,4 @@
+import * as HandleWebSocketForClipBoardProcess from '../HandleWebSocketForClipBoardProcess/HandleWebSocketForClipBoardProcess.js'
 import * as HandleWebSocketForExtensionHostHelperProcess from '../HandleWebSocketForExtensionHostHelperProcess/HandleWebSocketForExtensionHostHelperProcess.js'
 import * as HandleWebSocketForFileSystemProcess from '../HandleWebSocketForFileSystemProcess/HandleWebSocketForFileSystemProcess.js'
 import * as HandleWebSocketForSearchProcess from '../HandleWebSocketForSearchProcess/HandleWebSocketForSearchProcess.js'
@@ -14,6 +15,8 @@ export const load = (protocol) => {
   switch (protocol) {
     case ProtocolType.SharedProcess:
       return HandleWebSocketForSharedProcess
+    case ProtocolType.ClipBoardProcess:
+      return HandleWebSocketForClipBoardProcess
     case ProtocolType.ExtensionHostHelperProcess:
       return HandleWebSocketForExtensionHostHelperProcess
     case ProtocolType.TerminalProcess:
