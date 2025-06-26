@@ -7,6 +7,8 @@ export const Css = [
   '/css/parts/InputBox.css',
   '/css/parts/Label.css',
   '/css/parts/MaskIcon.css',
+  '/css/parts/ScrollBar.css',
+  '/css/parts/ScrollBarThumb.css',
   '/css/parts/TreeItem.css',
   '/css/parts/ViewletExplorer.css',
   '/css/parts/ViewletList.css',
