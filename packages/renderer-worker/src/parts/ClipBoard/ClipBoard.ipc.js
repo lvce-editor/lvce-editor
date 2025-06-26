@@ -9,4 +9,5 @@ export const Commands = {
   writeImage: ClipBoard.writeImage,
   writeNativeFiles: ClipBoard.writeNativeFiles,
   writeText: ClipBoard.writeText,
+  hotReload: ClipBoard.hotReload,
 }
