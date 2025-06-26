@@ -34,3 +34,5 @@ export const sendMessagePortToRendererProcess = async (port, initialCommand, rpc
   Assert.string(initialCommand)
   await RendererProcess.invokeAndTransfer(initialCommand, port, rpcId)
 }
+
+// TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
