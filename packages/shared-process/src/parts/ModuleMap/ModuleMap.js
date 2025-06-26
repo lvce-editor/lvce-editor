@@ -263,8 +263,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleWindowAllClosed
     case 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess':
       return ModuleId.HandleMessagePortForTerminalProcess
+    case 'HandleMessagePortForClipBoardProcess.handleMessagePortForClipBoardProcess':
+      return ModuleId.HandleElectronMessagePort
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
-      return ModuleId.HandleMessagePortForFileSystemProcess
+      return ModuleId.HandleMessagePortForClipBoardProcess
     case 'TemporaryMessagePort.handlePorts':
       return ModuleId.TemporaryMessagePort
     case 'GetElectronFileResponse.getElectronFileResponse':
