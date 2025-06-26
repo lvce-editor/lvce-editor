@@ -12,3 +12,4 @@ export const ExtensionHostWorker = 218
 export const FileSystemProcess = 219
 export const FileWatcherProcess = 220
 export const TypescriptCompileProcess = 221
+export const ClipBoardProcess = 91222

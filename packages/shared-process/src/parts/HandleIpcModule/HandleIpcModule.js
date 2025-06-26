@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as HandleIpcClipBoardProcess from '../HandleIpcClipBoardProcess/HandleIpcClipBoardProcess.js'
 import * as HandleIpcEmbedsProcess from '../HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
 import * as HandleIpcExtensionHostHelperProcess from '../HandleIpcExtensionHostHelperProcess/HandleIpcExtensionHostHelperProcess.js'
 import * as HandleIpcFileSystemProcess from '../HandleIpcFileSystemProcess/HandleIpcFileSystemProcess.js'
@@ -25,6 +26,8 @@ export const getModule = (ipcId) => {
       return HandleIpcSearchProcess
     case IpcId.FileSystemProcess:
       return HandleIpcFileSystemProcess
+    case IpcId.ClipBoardProcess:
+      return HandleIpcClipBoardProcess
     default:
       throw new Error(`unexpected incoming ipc`)
   }

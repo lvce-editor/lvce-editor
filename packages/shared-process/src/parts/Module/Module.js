@@ -140,6 +140,8 @@ export const load = (moduleId) => {
       return import('../FileSystemDisk/FileSystemDisk.ipc.js')
     case ModuleId.HandleRequest:
       return import('../HandleRequest/HandleRequest.ipc.js')
+    case ModuleId.HandleMessagePortForClipBoardProcess:
+      return import('../HandleMessagePortForClipBoardProcess/HandleMessagePortForClipBoardProcess.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
