@@ -26,6 +26,12 @@ export const readFile = async (uri) => {
   return module.readFile()
 }
 
+export const readJson = async (uri) => {
+  const module = await getModule(uri)
+  // @ts-ignore
+  return module.readJson()
+}
+
 export const writeFile = async (uri, content) => {
   const module = await getModule(uri)
   return module.writeFile(content)
