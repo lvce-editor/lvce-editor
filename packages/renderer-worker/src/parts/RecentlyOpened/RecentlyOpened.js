@@ -9,7 +9,7 @@ export * from '../GetRecentlyOpened/GetRecentlyOpened.js'
 export * from '../SetRecentlyOpened/SetRecentlyOpened.js'
 
 const addWorkspacePathToRecentlyOpened = async () => {
-  const workspacePath = Workspace.getWorkspacePath()
+  const workspacePath = Workspace.getWorkspaceUri()
   if (!workspacePath) {
     return
   }
