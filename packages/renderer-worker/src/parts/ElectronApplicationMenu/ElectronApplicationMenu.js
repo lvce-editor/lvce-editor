@@ -5,7 +5,6 @@ import * as MenuEntriesFile from '../MenuEntriesFile/MenuEntriesFile.js'
 import * as MenuEntriesGo from '../MenuEntriesGo/MenuEntriesGo.js'
 import * as MenuEntriesHelp from '../MenuEntriesHelp/MenuEntriesHelp.js'
 import * as MenuEntriesRun from '../MenuEntriesRun/MenuEntriesRun.js'
-import * as MenuEntriesOpenRecent from '../MenuEntriesOpenRecent/MenuEntriesOpenRecent.js'
 import * as MenuEntriesSelection from '../MenuEntriesSelection/MenuEntriesSelection.js'
 import * as MenuEntriesTerminal from '../MenuEntriesTerminal/MenuEntriesTerminal.js'
 import * as MenuEntriesTitleBar from '../MenuEntriesTitleBar/MenuEntriesTitleBar.js'
@@ -24,7 +23,6 @@ const menuEntries = [
   MenuEntriesTerminal,
   MenuEntriesHelp,
   MenuEntriesTitleBar,
-  MenuEntriesOpenRecent,
 ]
 
 export const state = {
