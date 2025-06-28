@@ -10,4 +10,6 @@ export const Commands = {
   writeImage: ClipBoard.writeImage,
   writeNativeFiles: ClipBoard.writeNativeFiles,
   writeText: ClipBoard.writeText,
+  enableMemoryClipBoard: ClipBoard.enableMemoryClipBoard,
+  disableMemoryClipBoard: ClipBoard.disableMemoryClipBoard,
 }

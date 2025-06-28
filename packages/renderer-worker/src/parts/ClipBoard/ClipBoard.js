@@ -10,6 +10,14 @@ export const writeText = async (text) => {
   return await ClipBoardWorker.invoke('ClipBoard.writeText', text)
 }
 
+export const enableMemoryClipBoard = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.enableMemoryClipBoard')
+}
+
+export const disableMemoryClipBoard = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.disableMemoryClipBoard')
+}
+
 export const hotReload = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.hotReload')
 }
