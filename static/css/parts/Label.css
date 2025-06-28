@@ -17,3 +17,7 @@
 .StrikeThrough {
   text-decoration: line-through;
 }
+
+.LabelCut {
+  opacity: 0.5;
+}
