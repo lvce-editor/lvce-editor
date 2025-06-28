@@ -43,6 +43,10 @@ export const rename = (oldPath, newPath) => {
   return ExtensionHostWorker.invoke('FileSystemMemory.rename', oldPath, newPath)
 }
 
+export const copy = (oldPath, newPath) => {
+  return ExtensionHostWorker.invoke('FileSystemMemory.copy', oldPath, newPath)
+}
+
 export const getFiles = () => {
   return ExtensionHostWorker.invoke('FileSystemMemory.getFiles')
 }
