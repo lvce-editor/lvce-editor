@@ -1,13 +1,11 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IsValidRecentlyOpened from '../IsValidRecentlyOpened/IsValidRecentlyOpened.js'
-import * as Json from '../Json/Json.js'
 import * as Logger from '../Logger/Logger.js'
 import { VError } from '../VError/VError.js'
 
 export const getRecentlyOpened = async () => {
   try {
-    const content = await FileSystem.readFile('app://recently-opened.json')
-    const parsed = Json.parse(content)
+    const parsed = await FileSystem.readJson('app://recently-opened.json')
     if (!IsValidRecentlyOpened.isValid(parsed)) {
       return []
     }

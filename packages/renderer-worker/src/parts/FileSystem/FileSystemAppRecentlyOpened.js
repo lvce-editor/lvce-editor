@@ -8,3 +8,7 @@ export const writeFile = (content) => {
 export const readFile = () => {
   return FileSystemAppShared.readFileInternal(PlatformPaths.getRecentlyOpenedPath)
 }
+
+export const readJson = () => {
+  return FileSystemAppShared.readJsonInternal(PlatformPaths.getRecentlyOpenedPath)
+}
