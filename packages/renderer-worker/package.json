@@ -69,7 +69,7 @@
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^4.26.0",
-    "@lvce-editor/text-search-worker": "^4.13.0",
+    "@lvce-editor/text-search-worker": "^5.0.0",
     "@lvce-editor/title-bar-worker": "^2.3.0"
   },
   "devDependencies": {
