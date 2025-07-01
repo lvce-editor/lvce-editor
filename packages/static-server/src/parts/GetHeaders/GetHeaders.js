@@ -11,6 +11,7 @@ import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeader
 import * as GetHeadersClipBoardWorker from '../GetHeadersClipBoardWorker/GetHeadersClipBoardWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
+import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
@@ -96,8 +97,8 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('searchViewWorkerMain.js')) {
     return GetHeadersSearchViewWorker.getHeadersSearchViewWorker(mime, etag, defaultCachingHeader)
   }
-  if (absolutePath.endsWith('clipBoardWorkerMain.js')) {
-    return GetHeadersClipBoardWorker.getHeadersAboutWorker(mime, etag, defaultCachingHeader)
+  if (absolutePath.endsWith('referencesViewWorkerMain.js')) {
+    return GetHeadersReferencesViewWorker.getHeadersReferenceViewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('extensionHostSubWorkerMain.js')) {
     return GetHeadersExtensionHostSubWorker.getHeadersExtensionHostSubWorker(mime, etag, defaultCachingHeader)
