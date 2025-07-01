@@ -131,6 +131,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: 'packages/renderer-worker/node_modules/@lvce-editor/clipboard-worker/dist/clipBoardWorkerMain.js',
     to: Path.join(`${toRoot}/packages/clipboard-worker`, 'dist', 'clipBoardWorkerMain.js'),
   })
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/references-view/dist/referencesViewWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/references-view`, 'dist', 'referencesViewWorkerMain.js'),
+  })
   const sourceControlWorkerCachePath = await BundleSourceControlWorkerCached.bundleSourceControlWorkerCached({
     assetDir,
     commitHash,
