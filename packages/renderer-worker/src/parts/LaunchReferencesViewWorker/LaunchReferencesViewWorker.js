@@ -1,6 +1,7 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as ReferencesWorkerUrl from '../ReferencesWorkerUrl/ReferencesWorkerUrl.js'
@@ -25,6 +26,6 @@ export const launchReferencesWorker = async () => {
     url: getConfiguredWorkerUrl(),
   })
   HandleIpc.handleIpc(ipc)
-  // await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  await JsonRpc.invoke(ipc, 'References.initialize')
   return ipc
 }
