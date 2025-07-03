@@ -1,9 +1,7 @@
 import * as Command from '../Command/Command.js'
-import * as GetDisplayReferences from '../GetDisplayReferences/GetDisplayReferences.js'
-import * as GetReferencesFileCount from '../GetReferencesFileCount/GetReferencesFileCount.js'
-import * as GetReferencesMessage from '../GetReferencesMessage/GetReferencesMessage.js'
-import * as LocationType from '../LocationType/LocationType.js'
 import * as ListIndex from '../ListIndex/ListIndex.js'
+import * as LocationType from '../LocationType/LocationType.js'
+import * as ReferencesWorker from '../ReferencesWorker/ReferencesWorker.js'
 
 export const create = (id, uri, x, y, width, height, args) => {
   return {
@@ -18,16 +16,15 @@ export const create = (id, uri, x, y, width, height, args) => {
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
-export const loadContent = async (state, getReferences) => {
-  const references = await getReferences()
-  const displayReferences = GetDisplayReferences.getDisplayReferences(references)
-  const fileCount = GetReferencesFileCount.getFileCount(references)
-  const message = GetReferencesMessage.getMessage(references.length, fileCount)
+export const loadContent = async (state) => {
+  await ReferencesWorker.invoke('References.create', state.id, state.uri, state.x, state.y, state.width, state.height)
+  await ReferencesWorker.invoke('References.loadContent', state.id)
+  const diff = await ReferencesWorker.invoke('References.diff2', state.id)
+  const commands = await ReferencesWorker.invoke('References.render2', state.id, diff)
+  console.log({ commands })
   return {
     ...state,
-    references,
-    displayReferences,
-    message,
+    commands,
   }
 }
 
@@ -90,7 +87,6 @@ export const focusIndex = (state, index) => {
     focusedIndex: index,
   }
 }
-
 export const hotReload = (state) => {
   return {
     ...state,
