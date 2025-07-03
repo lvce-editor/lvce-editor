@@ -9,4 +9,5 @@ export const Commands = {
   focusPrevious: ViewletLocations.focusPrevious,
   selectCurrent: ViewletLocations.selectCurrent,
   selectIndex: ViewletLocations.selectIndex,
+  hotReload: ViewletLocations.hotReload,
 }
