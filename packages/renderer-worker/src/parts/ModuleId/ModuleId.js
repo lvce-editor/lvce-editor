@@ -106,3 +106,4 @@ export const Markdown = 138
 export const FileSystemHandle = 139
 export const MouseActions = 140
 export const Timeout = 141
+export const GetActiveEditor = 142

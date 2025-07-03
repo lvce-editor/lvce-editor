@@ -31,6 +31,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.AutoUpdater
     case 'Blob':
       return ModuleId.Blob
+    case 'GetActiveEditor':
+      return ModuleId.GetActiveEditor
     case 'BulkReplacement':
       return ModuleId.BulkReplacement
     case 'CacheStorage':
