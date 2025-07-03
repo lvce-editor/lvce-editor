@@ -10,6 +10,8 @@ export const load = (moduleId) => {
       return import('../Audio/Audio.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
+    case ModuleId.GetActiveEditor:
+      return import('../GetActiveEditor/GetActiveEditor.ipc.js')
     case ModuleId.GetEditorSourceActions:
       return import('../GetEditorSourceActions/GetEditorSourceActions.ipc.js')
     case ModuleId.FileSystemHandle:
