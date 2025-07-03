@@ -65,5 +65,12 @@ export const getWatchConfig = () => {
       command: 'ClipBoard.hotReload',
     })
   }
+  const references = Preferences.get('develop.referencesWorkerPath')
+  if (references) {
+    watchConfig.push({
+      path: references,
+      command: 'Locations.hotReload',
+    })
+  }
   return watchConfig
 }
