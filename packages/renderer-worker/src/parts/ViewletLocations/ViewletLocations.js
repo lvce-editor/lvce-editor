@@ -91,6 +91,12 @@ export const focusIndex = (state, index) => {
   }
 }
 
+export const hotReload = (state) => {
+  return {
+    ...state,
+  }
+}
+
 export const focusFirst = (state) => {
   const { displayReferences } = state
   if (displayReferences.length === 0) {
