@@ -21,7 +21,6 @@ export const loadContent = async (state) => {
   const editor = GetActiveEditor.getActiveEditor()
   const fn = state.args
     ? () => {
-        console.log('get file ref')
         // TODO find out language from somewhere else
         return getFileReferences(editor.uid, editor.languageId)
       }
