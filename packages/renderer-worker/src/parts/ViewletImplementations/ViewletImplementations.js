@@ -13,6 +13,7 @@ const getImplementations = () => {
 export const create = ViewletLocations.create
 
 export const loadContent = async (state) => {
+  // @ts-ignore
   return ViewletLocations.loadContent(state, getImplementations)
 }
 

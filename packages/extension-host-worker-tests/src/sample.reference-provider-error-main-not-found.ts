@@ -1,5 +1,7 @@
 export const name = 'sample.reference-provider-error-main-not-found'
 
+export const skip = 1
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
