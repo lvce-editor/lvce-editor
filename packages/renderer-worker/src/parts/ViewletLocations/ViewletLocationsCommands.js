@@ -1,6 +1,6 @@
 import * as ViewletLocations from './ViewletLocations.js'
 import * as ReferencesWorker from '../ReferencesWorker/ReferencesWorker.js'
-import { wrapReferencesCommand } from '../WrapRunAndDebugCommand/WrapRunAndDebugCommand.ts'
+import { wrapReferencesCommand } from '../WrapReferencesCommand/WrapReferencesCommand.ts'
 
 export const Commands = {}
 
