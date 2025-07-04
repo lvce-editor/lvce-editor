@@ -21,7 +21,6 @@ export const loadContent = async (state) => {
   await ReferencesWorker.invoke('References.loadContent', state.id)
   const diff = await ReferencesWorker.invoke('References.diff2', state.id)
   const commands = await ReferencesWorker.invoke('References.render2', state.id, diff)
-  console.log({ commands })
   return {
     ...state,
     commands,
