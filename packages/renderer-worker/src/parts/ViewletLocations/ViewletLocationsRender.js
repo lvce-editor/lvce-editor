@@ -1,4 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as ReferencesWorker from '../ReferencesWorker/ReferencesWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -15,3 +16,8 @@ const renderItems = {
 }
 
 export const render = [renderItems]
+
+export const renderEventListeners = async () => {
+  const listeners = await ReferencesWorker.invoke('References.renderEventListeners')
+  return listeners
+}
