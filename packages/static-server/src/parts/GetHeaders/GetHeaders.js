@@ -18,6 +18,7 @@ import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHe
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersFindWidgetWorker from '../GetHeadersFindWidgetWorker/GetHeadersFindWidgetWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
+import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWorker/GetHeadersIframeInspectorWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
 import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
@@ -63,6 +64,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('iframeWorkerMain.js')) {
     return GetHeadersIframeWorker.getHeadersIframeWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('iframeInspectorWorkerMain.js')) {
+    return GetHeadersIframeInspectorWorker.getHeadersIframeInspectorWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('fileSearchWorkerMain.js')) {
     return GetHeadersFileSearchWorker.getHeadersFileSearchWorker(mime, etag, defaultCachingHeader)
