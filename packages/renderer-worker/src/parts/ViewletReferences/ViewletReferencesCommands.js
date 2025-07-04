@@ -1,1 +1,1 @@
-export const Commands = {}
+export * from '../ViewletLocations/ViewletLocationsCommands.js'
