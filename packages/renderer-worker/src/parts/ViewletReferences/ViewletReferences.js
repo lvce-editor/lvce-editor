@@ -26,6 +26,8 @@ export const loadContent = async (state) => {
         return getFileReferences(editor.uid, editor.languageId)
       }
     : getReferences
+
+  // @ts-ignore
   return ViewletLocations.loadContent(state, fn)
 }
 
