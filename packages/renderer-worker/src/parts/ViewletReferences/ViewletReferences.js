@@ -7,9 +7,9 @@ export const saveState = ViewletLocations.saveState
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
-export const loadContent = async (state) => {
+export const loadContent = async (state, savedState) => {
   // @ts-ignore
-  return ViewletLocations.loadContent(state)
+  return ViewletLocations.loadContent(state, savedState)
 }
 
 // TODO side effect is not good here, find a way to call ViewletLocations
