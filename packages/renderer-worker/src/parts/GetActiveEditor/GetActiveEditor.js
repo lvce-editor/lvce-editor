@@ -6,6 +6,9 @@ export const getActiveEditor = () => {
 }
 
 export const getActiveEditorId = () => {
-  const editor = getActiveEditor()
-  return editor.id
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+  if (!instance) {
+    return -1
+  }
+  return instance.state.id
 }
