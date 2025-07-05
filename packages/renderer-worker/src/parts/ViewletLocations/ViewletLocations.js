@@ -125,3 +125,8 @@ export const selectCurrent = (state) => {
   }
   return selectIndex(state, state.focusedIndex)
 }
+
+export const saveState = async (state) => {
+  const savedState = await ReferencesWorker.invoke('References.saveState', state.uid)
+  return savedState
+}
