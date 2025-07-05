@@ -16,9 +16,9 @@ export const create = (id, uri, x, y, width, height, args) => {
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
-export const loadContent = async (state) => {
+export const loadContent = async (state, savedState) => {
   await ReferencesWorker.invoke('References.create', state.id, state.uri, state.x, state.y, state.width, state.height)
-  await ReferencesWorker.invoke('References.loadContent', state.id)
+  await ReferencesWorker.invoke('References.loadContent', state.id, savedState)
   const diff = await ReferencesWorker.invoke('References.diff2', state.id)
   const commands = await ReferencesWorker.invoke('References.render2', state.id, diff)
   return {
