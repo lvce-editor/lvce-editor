@@ -63,7 +63,7 @@
     "@lvce-editor/keybindings-view": "^5.2.0",
     "@lvce-editor/markdown-worker": "^1.6.0",
     "@lvce-editor/rename-worker": "^1.13.0",
-    "@lvce-editor/references-view": "^2.0.0",
+    "@lvce-editor/references-view": "^2.1.0",
     "@lvce-editor/renderer-process": "^13.15.0",
     "@lvce-editor/simple-browser-view": "^1.0.0",
     "@lvce-editor/source-control-worker": "^1.14.0",
