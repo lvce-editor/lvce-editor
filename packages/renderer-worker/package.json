@@ -50,7 +50,7 @@
     "@lvce-editor/embeds-worker": "^3.0.0",
     "@lvce-editor/clipboard-worker": "^1.9.0",
     "@lvce-editor/error-worker": "^1.7.0",
-    "@lvce-editor/explorer-view": "^2.63.0",
+    "@lvce-editor/explorer-view": "^3.0.0",
     "@lvce-editor/extension-detail-view": "^3.24.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^5.13.0",
