@@ -65,7 +65,7 @@ export const hotReload = async (state) => {
     Platform.platform,
     AssetDir.assetDir,
   )
-  await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent', state.uid, {})
+  await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent2', state.uid, {})
   const diffResult = ExtensionDetailViewWorker.invoke('ExtensionDetail.diff2', state.uid)
   const commands = await ExtensionDetailViewWorker.invoke('ExtensionDetail.render2', state.uid, diffResult)
   state.isHotReloading = false
