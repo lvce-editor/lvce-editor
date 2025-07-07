@@ -271,6 +271,7 @@ export const getModuleId = (commandId) => {
     case 'TemporaryMessagePort.sendTo2':
     case 'TemporaryMessagePort.getPortTuple2':
     case 'TemporaryMessagePort.getPortTuple3':
+    case 'TemporaryMessagePort.sendToElectron':
       return ModuleId.TemporaryMessagePort
     case 'GetElectronFileResponse.getElectronFileResponse':
       return ModuleId.GetElectronFileResponse
