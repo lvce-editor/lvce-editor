@@ -12,6 +12,7 @@ export const launchFileSystemProcess = async () => {
     isElectron: IsElectron.isElectron,
     settingName: 'develop.fileSystemProcessPath',
   })
-  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  // TODO call initialize function, but file system process should create connection to main process
+  // await JsonRpc.invoke(ipc, 'Initialize.initialize')
   return ipc
 }
