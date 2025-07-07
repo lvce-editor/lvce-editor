@@ -8,6 +8,7 @@ export const state = {
   ipc: undefined,
 }
 
+// TODO use createLazyRpc
 export const getOrCreate = async () => {
   if (!state.ipc) {
     state.ipc = LaunchFileSystemProcess.launchFileSystemProcess()
