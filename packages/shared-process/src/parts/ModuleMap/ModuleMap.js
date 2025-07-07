@@ -269,6 +269,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleMessagePortForFileSystemProcess
     case 'TemporaryMessagePort.handlePorts':
     case 'TemporaryMessagePort.sendTo2':
+    case 'TemporaryMessagePort.getPortTuple2':
+    case 'TemporaryMessagePort.getPortTuple3':
       return ModuleId.TemporaryMessagePort
     case 'GetElectronFileResponse.getElectronFileResponse':
       return ModuleId.GetElectronFileResponse
