@@ -27,6 +27,10 @@ export const getPortTuple3 = async (id1, id2, rpcId) => {
     throw new Error('ipc not found' + rpcId)
   }
   await JsonRpc.invokeAndTransfer(ipc, 'TemporaryMessagePort.handlePorts', port1, port2, id1, id2)
+  return {
+    port1: undefined,
+    port2: undefined,
+  }
 }
 
 export const getPortTuple = async () => {
