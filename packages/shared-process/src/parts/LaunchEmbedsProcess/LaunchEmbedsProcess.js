@@ -12,6 +12,7 @@ export const launchEmbedsProcess = async () => {
     isElectron: IsElectron.isElectron,
     settingName: 'develop.embedsProcessPath',
   })
+  // TODO embeds worker itself should connect to main process
   await ConnectIpcToElectron.connectIpcToMainProcess2(ipc, IpcId.EmbedsProcess)
   return ipc
 }
