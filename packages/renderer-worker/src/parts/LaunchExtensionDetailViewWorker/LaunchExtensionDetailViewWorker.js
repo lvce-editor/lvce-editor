@@ -4,6 +4,7 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const getConfiguredWorkerUrl = () => {
   let configuredWorkerUrl = Preferences.get('develop.extensionDetailViewWorkerPath') || ''
@@ -25,5 +26,6 @@ export const launchExtensionDetailViewWorker = async () => {
     url: getConfiguredWorkerUrl(),
   })
   HandleIpc.handleIpc(ipc)
+  await JsonRpc.invoke('ExtensionDetail.initialize')
   return ipc
 }
