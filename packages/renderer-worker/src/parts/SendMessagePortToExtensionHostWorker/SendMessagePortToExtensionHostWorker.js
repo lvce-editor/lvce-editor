@@ -4,6 +4,7 @@ import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -33,6 +34,12 @@ export const sendMessagePortToRendererProcess = async (port, initialCommand, rpc
   Assert.object(port)
   Assert.string(initialCommand)
   await RendererProcess.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToMarkdownWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await MarkdownWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module

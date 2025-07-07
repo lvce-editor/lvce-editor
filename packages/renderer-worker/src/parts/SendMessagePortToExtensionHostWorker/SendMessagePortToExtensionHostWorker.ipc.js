@@ -8,4 +8,5 @@ export const Commands = {
   sendMessagePortToErrorWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker,
   sendMessagePortToEditorWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker,
   sendMessagePortToRendererProcess: SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess,
+  sendMessagePortToMarkdownWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker,
 }
