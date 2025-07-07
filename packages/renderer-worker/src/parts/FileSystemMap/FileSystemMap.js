@@ -10,4 +10,6 @@ export const map = {
   [FileSystemProtocol.Disk]: () => import('../FileSystem/FileSystemDisk.js'),
   [FileSystemProtocol.Html]: () => import('../FileSystem/FileSystemHtml.js'),
   [FileSystemProtocol.Debug]: () => import('../FileSystem/FileSystemDebug.js'),
+  [FileSystemProtocol.Http]: () => import('../FileSystem/FileSystemFetch.js'),
+  [FileSystemProtocol.Https]: () => import('../FileSystem/FileSystemFetch.js'),
 }
