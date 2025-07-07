@@ -1,4 +1,5 @@
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 // TODO move all of this to an extension
@@ -12,6 +13,9 @@ export const state = {
 }
 
 export const readFile = async (uri) => {
+  if (uri.startsWith('http://') || uri.startsWith('https://')) {
+    return FileSystemWorker.invoke('FileSystemFetch.readFile', uri)
+  }
   return ExtensionHostWorker.invoke('FileSystemFetch.readFile', uri)
 }
 

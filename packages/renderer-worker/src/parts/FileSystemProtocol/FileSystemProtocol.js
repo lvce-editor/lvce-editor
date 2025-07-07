@@ -15,3 +15,7 @@ export const Fetch = 'fetch'
 export const Disk = 'file'
 
 export const Debug = 'debug'
+
+export const Http = 'http'
+
+export const Https = 'https'
