@@ -91,7 +91,7 @@ export const stat = (path) => {
 
 export const getFolderSize = (path) => {
   path = toUri(path)
-  return FileSystemWorker.invoke('FileSystemDisk.getFolderSize', /* path */ path)
+  return FileSystemWorker.invoke('FileSystem.getFolderSize', /* path */ path)
 }
 
 export const chmod = (path, permissions) => {
