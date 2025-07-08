@@ -26,6 +26,6 @@ export const launchExtensionDetailViewWorker = async () => {
     url: getConfiguredWorkerUrl(),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke('ExtensionDetail.initialize')
+  await JsonRpc.invoke(ipc, 'ExtensionDetail.initialize')
   return ipc
 }
