@@ -41,3 +41,9 @@
   contain: strict;
   flex: 1;
 }
+
+.Category {
+  background: transparent;
+  border: none;
+  color: inherit;
+}
