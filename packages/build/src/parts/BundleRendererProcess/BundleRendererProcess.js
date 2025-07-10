@@ -5,7 +5,7 @@ import * as Replace from '../Replace/Replace.js'
 const getPlatformCode = (platform) => {
   switch (platform) {
     case 'electron':
-      return `Electron$1`
+      return `Electron`
     case 'remote':
       return `Remote`
     case 'web':
