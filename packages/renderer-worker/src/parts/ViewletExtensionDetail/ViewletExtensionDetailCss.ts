@@ -1,5 +1,6 @@
 export const Css = [
   '/css/parts/AdditionalDetails.css',
+  '/css/parts/BrowserScrollBar.css',
   '/css/parts/Button.css',
   '/css/parts/FeatureContent.css',
   '/css/parts/Features.css',
