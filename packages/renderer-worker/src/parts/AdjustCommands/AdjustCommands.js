@@ -33,7 +33,8 @@ export const apply = (oldState, newState) => {
       command[0] === 'Viewlet.setDom2' ||
       command[0] === 'Viewlet.setSelectionByName' ||
       command[0] === 'Viewlet.setDragData' ||
-      command[0] === 'Viewlet.setCss'
+      command[0] === 'Viewlet.setCss' ||
+      command[0] === 'Viewlet.setProperty'
     ) {
       return command
     }
