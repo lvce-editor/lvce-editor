@@ -84,7 +84,7 @@ const isStatic = (url) => {
 
 const handleRequest = (req, res) => {
   if (isStatic(req.url)) {
-    return sendHandleStaticServerProcess(req, res, 'StaticServer.getResponse')
+    return handleResponseViaStaticServer(req, res, 'StaticServer.getResponse')
   }
   return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest')
 }
@@ -312,7 +312,7 @@ const handleMessage = (message) => {
 
 const hasErrorListener = new WeakSet()
 
-const sendHandleStaticServerProcess = async (request, res, method, ...params) => {
+const handleResponseViaStaticServer = async (request, res, method, ...params) => {
   request.on('error', handleRequestError)
   if (!hasErrorListener.has(res.socket)) {
     res.socket.on('error', handleSocketError)
