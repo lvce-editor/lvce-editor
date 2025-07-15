@@ -337,6 +337,8 @@ const handleResponseViaStaticServer = async (request, res, method, ...params) =>
   setHeaders(res, headers)
   if (hasBody) {
     res.end(body)
+  } else {
+    res.end()
   }
 }
 
