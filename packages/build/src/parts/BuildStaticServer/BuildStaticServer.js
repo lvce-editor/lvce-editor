@@ -123,11 +123,19 @@ const copyStaticServerFiles = async ({ commitHash }) => {
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 
 export const getResponseInfo = async (request, isImmutable) => {
+  if (!isSupportedMethod(request.method)) {
+    return {
+      absolutePath: '',
+      status: HttpStatusCode.MethodNotAllowed,
+      headers: {},
+    }
+  }
   const pathname = request.url
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
   const etag = await GetPathEtag.getPathEtag(absolutePath)
@@ -152,10 +160,18 @@ import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
+import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 
 const etag = '${etag}'
 
 export const getResponseInfo = (request, isImmutable) => {
+  if (!isSupportedMethod(request.method)) {
+    return {
+      absolutePath: '',
+      status: HttpStatusCode.MethodNotAllowed,
+      headers: {},
+    }
+  }
   const pathname = request.url
   if(!Object.hasOwn(Files.files, pathname)){
     return NotFoundResponse.notFoundResponse

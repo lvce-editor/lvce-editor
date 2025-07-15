@@ -6,11 +6,11 @@ import { readFile } from 'node:fs/promises'
 export const getResponse = async (request) => {
   const { absolutePath, status, headers } = await GetResponseInfo.getResponseInfo(request, IsImmutable.isImmutable)
   const hasBody = request.method !== 'HEAD'
-  if (status === HttpStatusCode.NotModifed) {
+  if (status === HttpStatusCode.MethodNotAllowed) {
     return {
       headers,
       status,
-      body: '',
+      body: 'Method not Allowed',
       hasBody,
     }
   }
@@ -18,8 +18,16 @@ export const getResponse = async (request) => {
     return {
       headers,
       status,
-      body: '',
+      body: 'Not Found',
       hasBody,
+    }
+  }
+  if (status === HttpStatusCode.NotModifed) {
+    return {
+      headers,
+      status,
+      body: '',
+      hasBody: false,
     }
   }
   // TODO implment buffering
