@@ -2,9 +2,17 @@ import * as Files from '../Files/Files.js'
 import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 
 export const getResponseInfoProduction = (request) => {
+  if (!isSupportedMethod(request.method)) {
+    return {
+      absolutePath: '',
+      status: HttpStatusCode.MethodNotAllowed,
+      headers: {},
+    }
+  }
   const pathName = request.url
   const result = Files.get(pathName)
   if (!result) {

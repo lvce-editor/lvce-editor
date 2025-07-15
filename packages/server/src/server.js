@@ -320,6 +320,7 @@ const sendHandleStaticServerProcess = async (request, res, method, ...params) =>
   }
   const staticServerProcess = await getOrCreateStaticServerPathProcess()
   const { id, promise } = registerCallback()
+  // TODO use rpc and invoke
   staticServerProcess.send({
     jsonrpc: '2.0',
     id,
@@ -328,14 +329,15 @@ const sendHandleStaticServerProcess = async (request, res, method, ...params) =>
   })
   const response = await promise
   const { result } = response
-  const { status, headers, body } = result
+  const { status, headers, body, hasBody } = result
   if (!status) {
     throw new Error('invalid status')
   }
   res.statusCode = status
   setHeaders(res, headers)
-  res.end(body)
-  // TODO use invoke
+  if (hasBody) {
+    res.end(body)
+  }
 }
 
 /**
