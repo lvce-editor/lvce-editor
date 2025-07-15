@@ -11,6 +11,7 @@ import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeader
 import * as GetHeadersClipBoardWorker from '../GetHeadersClipBoardWorker/GetHeadersClipBoardWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
+import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
 import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
@@ -115,6 +116,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('markdownWorkerMain.js')) {
     return GetHeadersMarkdownWorker.getHeadersMarkdownWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('problemsViewWorkerMain.js')) {
+    return GetHeadersProblemsWorker.getHeadersProblemsWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('titleBarWorkerMain.js')) {
     return GetHeadersTitleBarWorker.getHeadersTitleBarWorker(mime, etag, defaultCachingHeader)
