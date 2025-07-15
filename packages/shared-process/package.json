@@ -28,7 +28,7 @@
     "@lvce-editor/json-rpc": "^6.2.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
     "@lvce-editor/pretty-error": "^2.0.0",
-    "@lvce-editor/rpc-registry": "^2.51.0",
+    "@lvce-editor/rpc-registry": "^2.53.0",
     "@lvce-editor/verror": "^1.7.0",
     "debug": "^4.4.1",
     "is-object": "^1.0.2",
@@ -45,7 +45,7 @@
     "@lvce-editor/pty-host": "^4.2.0",
     "@lvce-editor/search-process": "^9.2.0",
     "@lvce-editor/typescript-compile-process": "^3.1.0",
-    "open": "^10.1.2",
+    "open": "^10.2.0",
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
     "trash": "^9.0.0"
