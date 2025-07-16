@@ -19,7 +19,7 @@ const getConfiguredWorkerUrl = () => {
 }
 
 export const launchProblemsWorker = async () => {
-  const name = 'problems Worker'
+  const name = 'Problems Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
