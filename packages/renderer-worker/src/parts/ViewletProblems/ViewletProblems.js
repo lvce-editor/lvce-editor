@@ -8,6 +8,7 @@ import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as InputSource from '../InputSource/InputSource.js'
+import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ProblemListItemType from '../ProblemListItemType/ProblemListItemType.js'
 import * as ProblemsViewMode from '../ProblemsViewMode/ProblemsViewMode.js'
@@ -63,6 +64,12 @@ const getSavedCollapsedUris = (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
+  await ProblemsWorker.invoke('Problems.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
+  await ProblemsWorker.invoke('Problems.loadContent', state.uid, savedState)
+  const diffResult = await ProblemsWorker.invoke('Problems.diff2', state.uid)
+  const commands = await ProblemsWorker.invoke('Problems.render2', state.uid, diffResult)
+  const actionsDom = await ProblemsWorker.invoke('Problems.renderActions', state.uid)
+
   const problems = await GetProblems.getProblems()
   const message = ViewletProblemsStrings.getMessage(problems.length)
   const viewMode = getSavedViewMode(savedState)
@@ -78,6 +85,8 @@ export const loadContent = async (state, savedState) => {
     filteredProblems: problems,
     listItems: [],
     collapsedUris,
+    commands,
+    actionsDom,
   }
 }
 
