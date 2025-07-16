@@ -1,4 +1,4 @@
-import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.js'
+import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
