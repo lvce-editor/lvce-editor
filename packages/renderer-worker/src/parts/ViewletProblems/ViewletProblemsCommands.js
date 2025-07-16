@@ -1,21 +1,14 @@
-import * as ViewletProblems from './ViewletProblems.js'
-import * as ViewletProblemsSetProblems from './ViewletProblemsSetProblems.js'
+import * as DebugWorker from '../DebugWorker/DebugWorker.js'
+import * as WrapProblemsCommand from '../WrapProblemsCommand/WrapProblemsCommand.ts'
 
-export const Commands = {
-  clearFilter: ViewletProblems.clearFilter,
-  collapseAll: ViewletProblems.collapseAll,
-  copyMessage: ViewletProblems.copyMessage,
-  focusIndex: ViewletProblems.focusIndex,
-  focusNext: ViewletProblems.focusNext,
-  focusPrevious: ViewletProblems.focusPrevious,
-  getBadgeCount: ViewletProblems.getBadgeCount,
-  handleClickAt: ViewletProblems.handleClickAt,
-  handleBlur: ViewletProblems.handleBlur,
-  handleContextMenu: ViewletProblems.handleContextMenu,
-  handleFilterInput: ViewletProblems.handleFilterInput,
-  handleArrowLeft: ViewletProblems.handleArrowLeft,
-  handleArrowRight: ViewletProblems.handleArrowRight,
-  setProblems: ViewletProblemsSetProblems.setProblems,
-  viewAsList: ViewletProblems.viewAsList,
-  viewAsTable: ViewletProblems.viewAsTable,
+export const Commands = {}
+
+export const getCommands = async () => {
+  const commands = await DebugWorker.invoke('Problems.getCommandIds')
+  for (const command of commands) {
+    Commands[command] = WrapProblemsCommand.wrapProblemsCommand(command)
+  }
+  // TODO
+  // Commands['hotReload'] = ViewletRunAndDebug.hotReload
+  return Commands
 }
