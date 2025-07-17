@@ -1,7 +1,0 @@
-export const Number = 'number'
-export const Symbol = 'symbol'
-export const Function = 'function'
-export const Object = 'object'
-export const Undefined = 'undefined'
-export const String = 'string'
-export const Boolean = 'boolean'
