@@ -1,4 +1,5 @@
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id, uri, x, y, width, height, args, parentUid) => {
   return {
@@ -12,7 +13,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  await ProblemsWorker.invoke('Problems.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
+  await ProblemsWorker.invoke('Problems.create', state.uid, state.uri, state.x, state.y, state.width, state.height, Workspace.getWorkspaceUri())
   await ProblemsWorker.invoke('Problems.loadContent', state.uid, savedState)
   const diffResult = await ProblemsWorker.invoke('Problems.diff2', state.uid)
   const commands = await ProblemsWorker.invoke('Problems.render2', state.uid, diffResult)
