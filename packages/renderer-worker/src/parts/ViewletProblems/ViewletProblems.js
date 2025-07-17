@@ -29,5 +29,3 @@ export const getBadgeCount = (state) => {
   // TODO
   return 0
 }
-
-export const hasFunctionalResize = true
