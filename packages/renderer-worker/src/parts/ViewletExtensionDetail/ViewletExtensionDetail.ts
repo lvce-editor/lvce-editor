@@ -1,6 +1,5 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/ExtensionDetailViewWorker.js'
-import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const create = (id: any, uri: string, x: number, y: number, width: number, height: number) => {
@@ -81,12 +80,3 @@ export const saveState = async (state) => {
 }
 
 export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  const size = GetViewletSize.getViewletSize(dimensions.width)
-  return {
-    ...state,
-    ...dimensions,
-    size,
-  }
-}
