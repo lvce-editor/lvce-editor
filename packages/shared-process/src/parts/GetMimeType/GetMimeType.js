@@ -23,6 +23,8 @@ export const getMimeType = (fileExtension) => {
       return MimeType.AudioMpeg
     case '.webm':
       return MimeType.VideoWebm
+    case '.md':
+      return MimeType.Markdown
     default:
       console.warn(`[shared-process] unsupported file extension: ${fileExtension}`)
       return ''
