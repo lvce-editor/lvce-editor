@@ -249,15 +249,17 @@ export const resize = async (id, dimensions) => {
   Assert.number(id)
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
-  if (!instance || !instance.factory || !instance.factory.resize) {
+  if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory.Commands.resize)) {
+    console.log(instance.factory.Commands)
     console.warn('cannot resize', id)
     return []
   }
+  const resizeFn = instance.factory.Commands.resize || instance.factory.resize
   const oldState = instance.state
   let newState
   let commands
   if (instance.factory.hasFunctionalResize) {
-    newState = await instance.factory.resize(oldState, dimensions)
+    newState = await resizeFn(oldState, dimensions)
     if ('newState' in newState) {
       throw new Error(`functional resize not supported in ${instance.factory.name}`)
     }
@@ -267,6 +269,7 @@ export const resize = async (id, dimensions) => {
     }
     commands = ViewletManager.render(instance.factory, instance.state, newState)
   } else {
+    // deprecated
     const result = await instance.factory.resize(oldState, dimensions)
     newState = result.newState
     commands = result.commands
