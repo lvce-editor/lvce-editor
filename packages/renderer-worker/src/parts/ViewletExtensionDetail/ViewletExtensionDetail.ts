@@ -81,12 +81,3 @@ export const saveState = async (state) => {
 }
 
 export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  const size = GetViewletSize.getViewletSize(dimensions.width)
-  return {
-    ...state,
-    ...dimensions,
-    size,
-  }
-}
