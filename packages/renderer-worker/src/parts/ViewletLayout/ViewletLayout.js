@@ -660,6 +660,7 @@ const getResizeCommands = async (oldPoints, newPoints) => {
     LayoutModules.Preview,
   ]
   const commands = []
+  // TODO resize all modules in parallel
   for (const module of modules) {
     const { kTop, kLeft, kWidth, kHeight, moduleId } = module
     const instance = ViewletStates.getInstance(moduleId)
