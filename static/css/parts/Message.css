@@ -1,0 +1,12 @@
+.Message {
+  padding-left: 20px;
+  line-height: 22px;
+  width: 100%;
+  height: 100%;
+  contain: strict;
+}
+
+.MessageAction {
+  text-decoration: underline;
+  margin-left: 4px;
+}
