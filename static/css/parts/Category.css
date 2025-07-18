@@ -1,0 +1,18 @@
+:root {
+  --CategoryHoverBackground: #2f6260;
+  --CategoryHoverForeground: white;
+  --CategoryBorderColor: rgba(136, 136, 136, 0.45);
+}
+
+.Category {
+  background: transparent;
+  border: none;
+  color: inherit;
+  border: 1px solid var(--CategoryBorderColor);
+  cursor: pointer;
+}
+
+.Category:hover {
+  background: var(--CategoryHoverBackground);
+  color: var(--CategoryHoverForeground);
+}

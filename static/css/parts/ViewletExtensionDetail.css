@@ -42,12 +42,6 @@
   flex: 1;
 }
 
-.Category {
-  background: transparent;
-  border: none;
-  color: inherit;
-}
-
 /* TODO use separate classname and avoid nesting */
 .ExtensionDetail .Markdown {
   overflow: auto;
