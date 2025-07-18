@@ -249,12 +249,11 @@ export const resize = async (id, dimensions) => {
   Assert.number(id)
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
-  if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory.Commands.resize)) {
-    console.log(instance.factory.Commands)
+  if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory?.Commands?.resize)) {
     console.warn('cannot resize', id)
     return []
   }
-  const resizeFn = instance.factory.Commands.resize || instance.factory.resize
+  const resizeFn = instance.factory?.Commands?.resize || instance.factory.resize
   const oldState = instance.state
   let newState
   let commands
