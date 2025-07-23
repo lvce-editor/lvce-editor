@@ -19,7 +19,7 @@ export const state = {
   activatedExtensions: Object.create(null),
 }
 
-const actuallyActivateExtension = async (extension) => {
+const actuallyActivateExtension = async (extension, event) => {
   if (!(extension.id in state.activatedExtensions)) {
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
       extension.id,
@@ -30,7 +30,7 @@ const actuallyActivateExtension = async (extension) => {
       Origin.origin,
       Platform.platform,
     )
-    state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath)
+    state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath, event)
   }
   return state.activatedExtensions[extension.id]
 }
@@ -48,7 +48,7 @@ const actuallyActivateByEvent = async (event) => {
   // what happens when some of them take very long to activate?
 
   for (const extension of extensionsToActivate) {
-    await actuallyActivateExtension(extension)
+    await actuallyActivateExtension(extension, event)
   }
   const additionalExtensions = ExtensionMetaState.state.webExtensions
   const additionalExtensionsToActivate = ExtensionMeta.filterByMatchingEvent(additionalExtensions, event)
