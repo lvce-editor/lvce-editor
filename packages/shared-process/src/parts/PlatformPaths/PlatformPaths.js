@@ -28,7 +28,7 @@ export const getBuiltinExtensionsPath = () => {
 }
 
 export const getDisabledExtensionsJsonPath = () => {
-  return Path.join(dataDir, 'disabled-extensions')
+  return Path.join(dataDir, 'extensions', 'disabled-extensions.json')
 }
 
 /**
