@@ -5,6 +5,10 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 
+export const handleExtensionStatusUpdate = async () => {
+  // TODO inform all viewlets
+}
+
 export const install = (id) => {
   return InstallExtension.install(id)
 }

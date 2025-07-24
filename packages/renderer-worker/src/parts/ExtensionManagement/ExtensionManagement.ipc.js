@@ -7,4 +7,5 @@ export const Commands = {
   getExtension: ExtensionManagement.getExtension2,
   getExtensions: ExtensionManagement.getAllExtensions,
   getExtensionsEtag: ExtensionManagement.getExtensionsEtag,
+  handleExtensionStatusUpdate: ExtensionManagement.handleExtensionStatusUpdate,
 }
