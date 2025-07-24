@@ -9,7 +9,7 @@
   "build": {
     "publish": [],
     "asar": false,
-    "includeSubNodeModules": true,
+    "files": ["**/*"],
     "electronVersion": "@@ELECTRON_VERSION@@",
     "nsis": {
       "warningsAsErrors": false,
