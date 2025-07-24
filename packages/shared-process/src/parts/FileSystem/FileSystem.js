@@ -238,22 +238,6 @@ export const rename = async (oldPath, newPath) => {
   }
 }
 
-// TODO have a separate process for file watching
-// export const watch = async (path, options) => {
-//   // let state = 'loading'
-//   const chokidar = await import('chokidar')
-//   const watcher = chokidar.watch(`${path}`, {
-//     ignoreInitial: true,
-//   })
-
-//   if (options.onAll) {
-//     watcher.on('all', options.onAll)
-//   }
-//   return watcher
-
-//   // const { default: chokidar } = await import('chokidar')
-// }
-
 export const getPathSeparator = () => {
   return Platform.getPathSeparator()
 }
