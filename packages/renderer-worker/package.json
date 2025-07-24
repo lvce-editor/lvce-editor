@@ -75,6 +75,6 @@
     "@lvce-editor/problems-view": "^1.11.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.1"
+    "@types/node": "^24.1.0"
   }
 }
