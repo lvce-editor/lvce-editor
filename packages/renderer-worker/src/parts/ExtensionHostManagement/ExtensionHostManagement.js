@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
