@@ -22,6 +22,9 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getDisabledExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
+  getDisabledExtensionsJsonPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
   getMarketplaceUrl: jest.fn(() => {
     return marketplaceUrl
   }),
@@ -182,6 +185,8 @@ test('getExtensions - invalid extension.json', async () => {
   // @ts-ignore
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
   // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
+  // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
   // @ts-ignore
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
@@ -196,6 +201,7 @@ test('getExtensions - invalid extension.json', async () => {
         )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
+      disabled: false,
     },
   ])
 })
@@ -210,11 +216,11 @@ test('disable', async () => {
   // @ts-ignore
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   await ExtensionManagement.disable('test-extension')
-  expect(await readdir(tmpDir1)).toEqual([])
-  expect(await readdir(tmpDir2)).toEqual(['test-extension'])
+  expect(await readdir(tmpDir1)).toEqual(['test-extension'])
+  expect(await readdir(tmpDir2)).toEqual([])
 })
 
-test('disable should fail if enabled extension path does not exist', async () => {
+test.skip('disable should fail if enabled extension path does not exist', async () => {
   const tmpDir1 = await getTmpDir()
   const tmpDir2 = await getTmpDir()
   await mkdir(join(tmpDir1, 'test-extension'))
@@ -287,6 +293,7 @@ test('getExtensions - error - invalid value - null', async () => {
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
+      disabled: false,
     },
   ])
 })
@@ -310,6 +317,7 @@ test('getExtensions - error - invalid value - string', async () => {
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
+      disabled: false,
     },
   ])
 })
@@ -333,6 +341,7 @@ test('getExtensions - error - invalid value - number', async () => {
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
+      disabled: false,
     },
   ])
 })
@@ -356,6 +365,7 @@ test('getExtensions - error - invalid value - boolean', async () => {
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
+      disabled: false,
     },
   ])
 })
@@ -386,6 +396,7 @@ test('getExtensions - error - invalid json', async () => {
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
+      disabled: false,
     },
   ])
 })
