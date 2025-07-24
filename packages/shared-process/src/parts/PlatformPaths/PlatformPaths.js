@@ -27,6 +27,13 @@ export const getBuiltinExtensionsPath = () => {
   return process.env.BUILTIN_EXTENSIONS_PATH || Path.join(Root.root, 'extensions')
 }
 
+export const getDisabledExtensionsJsonPath = () => {
+  return Path.join(dataDir, 'disabled-extensions')
+}
+
+/**
+ * @deprecated disabled extensions are now stored in a file disabled-extensions.json
+ */
 export const getDisabledExtensionsPath = () => {
   return Path.join(dataDir, 'disabled-extensions')
 }
