@@ -6,7 +6,7 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.js'
 export const launchFileWatcherProcess = async () => {
   const ipc = await LaunchProcess.launchProcess({
     name: 'File Watcher Process',
-    settingName: '',
+    settingName: 'develop.fileWatcherProcessPath',
     defaultPath: FileWatcherProcessPath.fileWatcherProcessPath,
     isElectron: IsElectron.isElectron,
     targetRpcId: IpcId.FileWatcherProcess,
