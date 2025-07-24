@@ -1,4 +1,5 @@
 import * as DeduplicateExtensions from '../DeduplicateExtensions/DeduplicateExtensions.js'
+import { getDisabledExtensionIds } from '../ExtensionManagement/ExtensionManagement.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifestsGetFromFolder from './ExtensionManifestsFromFolder.js'
 import * as ExtensionManifestsGetFromLinkedExtensionsFolder from './ExtensionManifestsFromLinkedExtensionsFolder.js'
@@ -22,9 +23,20 @@ const get = (input) => {
   return module.getExtensionManifests(input.path)
 }
 
+const addExtensionDisabledStatus = (uniqueExtensions, disabledExtensionIds) => {
+  return uniqueExtensions.map((extension) => {
+    return {
+      ...extension,
+      disabled: disabledExtensionIds.includes(extension.id),
+    }
+  })
+}
+
 export const getAll = async (inputs, builtinExtensionsPath) => {
   const manifests = await Promise.all(inputs.map(get))
+  const disabledIds = await getDisabledExtensionIds()
   const flatManifests = manifests.flat(1)
   const uniqueExtensions = DeduplicateExtensions.deduplicateExtensions(flatManifests, builtinExtensionsPath)
-  return uniqueExtensions
+  const filteredExtensions = addExtensionDisabledStatus(uniqueExtensions, disabledIds)
+  return filteredExtensions
 }

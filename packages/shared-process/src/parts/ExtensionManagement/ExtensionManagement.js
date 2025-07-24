@@ -1,12 +1,14 @@
-import { mkdir, rename } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { dirname } from 'node:path'
+import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
-import * as Path from '../Path/Path.js'
-import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
-import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
-import * as GetExtensionEtags from '../GetExtensionEtags/GetExtensionEtags.js'
 import * as GetEtagFromStats from '../GetEtagFromStats/GetEtagFromStats.js'
+import * as GetExtensionEtags from '../GetExtensionEtags/GetExtensionEtags.js'
+import * as Path from '../Path/Path.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 export const enable = async (id) => {
@@ -21,15 +23,49 @@ export const enable = async (id) => {
   }
 }
 
+const getNewDisabledExtensionContent = (disabledExtensions) => {
+  const content =
+    JSON.stringify(
+      {
+        disabledExtensions,
+      },
+      null,
+      2,
+    ) + '\n'
+  return content
+}
+
 export const disable = async (id) => {
   try {
     Debug.debug(`ExtensionManagement#disable ${id}`)
-    const disabledExtensionsPath = PlatformPaths.getDisabledExtensionsPath()
-    const extensionsPath = PlatformPaths.getExtensionsPath()
-    await mkdir(disabledExtensionsPath, { recursive: true })
-    await rename(Path.join(extensionsPath, id), Path.join(disabledExtensionsPath, id))
+    const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
+    const oldDisabledExtensionIds = await getDisabledExtensionIds()
+    if (oldDisabledExtensionIds.includes(id)) {
+      return
+    }
+    const newDisabledExtensionIds = [...oldDisabledExtensionIds, id]
+    const content = getNewDisabledExtensionContent(newDisabledExtensionIds)
+    await mkdir(dirname(disabledExtensionsJsonPath), { recursive: true })
+    await writeFile(disabledExtensionsJsonPath, content)
   } catch (error) {
     throw new VError(error, `Failed to disable extension ${id}`)
+  }
+}
+
+export const getDisabledExtensionIds = async () => {
+  try {
+    const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
+    if (!existsSync(disabledExtensionsJsonPath)) {
+      return []
+    }
+    const content = await readFile(disabledExtensionsJsonPath, 'utf8')
+    const parsed = JSON.parse(content)
+    if (!parsed || !parsed.disabledExtensions || !Array.isArray(parsed.disabledExtensions)) {
+      return []
+    }
+    return parsed.disabledExtensions.filter((extensionId) => typeof extensionId === 'string')
+  } catch {
+    return []
   }
 }
 
