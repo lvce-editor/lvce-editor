@@ -14,11 +14,15 @@ const mapExtToEditorType = {
 }
 
 export const getModuleId = async (uri, opener) => {
+  // TODO rename scheme to keybindings://
   if (uri === 'app://keybindings') {
     return ViewletModuleId.KeyBindings
   }
   if (uri.startsWith('extension-detail://')) {
     return ViewletModuleId.ExtensionDetail
+  }
+  if (uri.startsWith('settings://')) {
+    return ViewletModuleId.Settings
   }
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
