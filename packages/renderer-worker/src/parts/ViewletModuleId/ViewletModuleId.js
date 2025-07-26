@@ -117,3 +117,5 @@ export const E2eTest = 'E2eTest'
 export const WebView = 'WebView'
 
 export const EditorTextError = 'EditorTextError'
+
+export const Settings = 'Settings'
