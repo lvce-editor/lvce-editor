@@ -1,12 +1,12 @@
-import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
-import * as WrapProblemsCommand from '../WrapProblemsCommand/WrapProblemsCommand.ts'
+import * as SettingsWorker from '../SettingsWorker/SettingsWorker.ts'
+import * as WrapSettingsCommand from '../WrapSettingsCommand/WrapSettingsCommand.ts'
 
 export const Commands = {}
 
 export const getCommands = async () => {
-  const commands = await ProblemsWorker.invoke('Problems.getCommandIds')
+  const commands = await SettingsWorker.invoke('Settings.getCommandIds')
   for (const command of commands) {
-    Commands[command] = WrapProblemsCommand.wrapProblemsCommand(command)
+    Commands[command] = WrapSettingsCommand.wrapSettingsCommand(command)
   }
   // TODO
   // Commands['hotReload'] = ViewletRunAndDebug.hotReload
