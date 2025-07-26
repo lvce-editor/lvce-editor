@@ -16,6 +16,10 @@ export const openSettingsJson = async () => {
   await OpenUri.openUri('app://settings.json')
 }
 
+export const openSettingsUi = async () => {
+  await OpenUri.openUri('settings://')
+}
+
 export const openKeyBindingsJson = async () => {
   await OpenUri.openUri('app://keyBindings.json')
 }
