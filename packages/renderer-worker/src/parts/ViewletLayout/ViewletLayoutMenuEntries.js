@@ -132,6 +132,11 @@ export const getQuickPickMenuEntries = () => {
       aliases: ['Change Settings', 'Configure Settings', 'Preferences'],
     },
     {
+      id: 'Preferences.openSettingsUi',
+      label: 'Preferences: Open Settings Ui',
+      aliases: ['Change Settings Ui', 'Configure Settings Ui', 'Preferences'],
+    },
+    {
       id: 'Extensions.openExtensionsFolder',
       label: 'Extensions: Open Extensions Folder',
       deprecated: true,
