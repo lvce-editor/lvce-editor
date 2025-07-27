@@ -1,0 +1,6 @@
+.Settings {
+  position: absolute;
+  background: var(--MainBackground);
+  display: flex;
+  flex-direction: column;
+}
