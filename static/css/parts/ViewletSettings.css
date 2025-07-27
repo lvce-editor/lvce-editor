@@ -71,3 +71,8 @@
 .TabSelected {
   background: var(--SettingsTabSelectedBackground);
 }
+
+.SettingsItemCheckBox {
+  display: flex;
+  gap: 5px;
+}
