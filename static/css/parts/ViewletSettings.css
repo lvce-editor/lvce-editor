@@ -1,3 +1,8 @@
+:root {
+  --SettingsTabBackground: transparent;
+  --SettingsTabSelectedBackground: rgba(59, 71, 66, 0.5);
+}
+
 .Settings {
   position: absolute;
   background: var(--MainBackground);
@@ -19,8 +24,27 @@
 
 .SettingsSideBarHeading {
   margin: 0;
+  margin-bottom: 5px;
 }
 
 .SettingsContent {
   padding: 20px;
+}
+
+.SettingsTabs {
+  margin: 0;
+  padding-left: 0;
+}
+
+.Tab {
+  background: var(--SettingsTabBackground);
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding: 3px;
+  padding-left: 7px;
+}
+
+.TabSelected {
+  background: var(--SettingsTabSelectedBackground);
 }
