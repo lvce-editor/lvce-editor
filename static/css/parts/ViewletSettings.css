@@ -29,6 +29,11 @@
   margin-bottom: 5px;
 }
 
+.SettingsInputWrapper {
+  display: flex;
+  gap: 2px;
+}
+
 .SettingsContent {
   padding: 20px;
   flex: 1;
