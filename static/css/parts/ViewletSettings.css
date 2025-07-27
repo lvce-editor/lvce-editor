@@ -56,6 +56,12 @@
   flex-direction: column;
 }
 
+.Select {
+  background: var(--EditorBackground);
+  color: currentColor;
+  padding: 3px;
+}
+
 .Tab {
   background: var(--SettingsTabBackground);
   list-style: none;
