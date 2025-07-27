@@ -26,7 +26,27 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const getBadgeCount = (state) => {
-  // TODO
-  return 0
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await SettingsWorker.invoke('Settings.saveState', state.uid)
+  await SettingsWorker.restart('Settings.terminate')
+  const oldState = {
+    ...state,
+    items: [],
+  }
+  await SettingsWorker.invoke('Settings.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
+  await SettingsWorker.invoke('Settings.loadContent', state.uid, savedState)
+  const diffResult = await SettingsWorker.invoke('Settings.diff2', state.uid)
+  const commands = await SettingsWorker.invoke('Settings.render2', state.uid, diffResult)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
+  }
 }
