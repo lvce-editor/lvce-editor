@@ -16,6 +16,8 @@
 
 .SettingsMain {
   display: flex;
+  contain: strict;
+  flex: 1;
 }
 
 .SettingsSideBar {
@@ -32,6 +34,9 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
 }
 
 .SettingsTabs {
