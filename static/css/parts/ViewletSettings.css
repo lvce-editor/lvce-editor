@@ -4,3 +4,23 @@
   display: flex;
   flex-direction: column;
 }
+
+.SettingsHeader {
+  padding: 30px;
+}
+
+.SettingsMain {
+  display: flex;
+}
+
+.SettingsSideBar {
+  padding: 10px;
+}
+
+.SettingsSideBarHeading {
+  margin: 0;
+}
+
+.SettingsContent {
+  padding: 20px;
+}
