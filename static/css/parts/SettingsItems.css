@@ -1,0 +1,9 @@
+.SettingsItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.SettingsItem {
+  display: flex;
+  flex-direction: column;
+}
