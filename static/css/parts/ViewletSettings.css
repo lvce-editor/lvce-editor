@@ -37,6 +37,8 @@
 .SettingsTabs {
   margin: 0;
   padding-left: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .Tab {
@@ -46,6 +48,9 @@
   padding-left: 0;
   padding: 3px;
   padding-left: 7px;
+  border: none;
+  color: inherit;
+  text-align: left;
 }
 
 .TabSelected {
