@@ -1,6 +1,4 @@
 :root {
-  --SettingsTabBackground: transparent;
-  --SettingsTabSelectedBackground: rgba(59, 71, 66, 0.5);
 }
 
 .Settings {
@@ -18,11 +16,6 @@
   display: flex;
   contain: strict;
   flex: 1;
-}
-
-.SettingsSideBar {
-  padding: 10px;
-  min-width: 150px;
 }
 
 .SettingsSideBarHeading {
@@ -49,33 +42,10 @@
   margin: 0;
 }
 
-.SettingsTabs {
-  margin: 0;
-  padding-left: 0;
-  display: flex;
-  flex-direction: column;
-}
-
 .Select {
   background: var(--EditorBackground);
   color: currentColor;
   padding: 3px;
-}
-
-.Tab {
-  background: var(--SettingsTabBackground);
-  list-style: none;
-  margin-left: 0;
-  padding-left: 0;
-  padding: 3px;
-  padding-left: 7px;
-  border: none;
-  color: inherit;
-  text-align: left;
-}
-
-.TabSelected {
-  background: var(--SettingsTabSelectedBackground);
 }
 
 .SettingsItemCheckBox {
