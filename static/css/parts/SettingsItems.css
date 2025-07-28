@@ -1,3 +1,8 @@
+:root {
+  --SettingsInputMaxWidth: 420px;
+  --SettingsSelectMaxWidth: 320px;
+}
+
 .SettingsItems {
   display: flex;
   flex-direction: column;
@@ -6,4 +11,14 @@
 .SettingsItem {
   display: flex;
   flex-direction: column;
+}
+
+/* TODO avoid nesting */
+.SettingsItem .InputBox {
+  max-width: var(--SettingsInputMaxWidth);
+}
+
+/* TODO avoid nesting */
+.SettingsItem .Select {
+  max-width: var(--SettingsSelectMaxWidth);
 }
