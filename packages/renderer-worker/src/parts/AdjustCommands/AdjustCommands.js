@@ -34,7 +34,8 @@ export const apply = (oldState, newState) => {
       command[0] === 'Viewlet.setSelectionByName' ||
       command[0] === 'Viewlet.setDragData' ||
       command[0] === 'Viewlet.setCss' ||
-      command[0] === 'Viewlet.setProperty'
+      command[0] === 'Viewlet.setProperty' ||
+      command[0] === 'Viewlet.setInputValues'
     ) {
       return command
     }
