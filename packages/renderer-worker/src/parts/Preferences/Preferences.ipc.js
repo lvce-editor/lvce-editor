@@ -12,4 +12,5 @@ export const Commands = {
   openSettingsUi: Preferences.openSettingsUi,
   get: Preferences.get,
   getMany: Preferences.getMany,
+  getAll: Preferences.getAll,
 }
