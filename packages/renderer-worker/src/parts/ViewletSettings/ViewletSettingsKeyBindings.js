@@ -1,4 +1,5 @@
+import * as SettingsWorker from '../SettingsWorker/SettingsWorker.ts'
+
 export const getKeyBindings = () => {
-  // TODO query from worker
-  return []
+  return SettingsWorker.invoke('Settings.getKeyBindings')
 }
