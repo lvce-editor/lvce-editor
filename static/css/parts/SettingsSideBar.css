@@ -7,11 +7,7 @@
   padding-left: 24px;
   padding-top: 20px;
   min-width: 150px;
-}
-
-.SettingsSideBarHeading {
-  margin: 0;
-  margin-bottom: 5px;
+  contain: strict;
 }
 
 .SettingsTabs {
@@ -19,6 +15,7 @@
   padding-left: 0;
   display: flex;
   flex-direction: column;
+  contain: content;
 }
 
 .Tab {
@@ -31,6 +28,10 @@
   border: none;
   color: inherit;
   text-align: left;
+  height: 22px;
+  contain: strict;
+  display: flex;
+  align-items: center;
 }
 
 .TabSelected {
