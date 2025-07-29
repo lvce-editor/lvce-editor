@@ -9,6 +9,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
@@ -508,9 +509,10 @@ const loadIfVisible = async (state, module) => {
         commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
+    const orderedCommands = reorderCommands(commands)
     return {
       newState: state,
-      commands,
+      commands: orderedCommands,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)
