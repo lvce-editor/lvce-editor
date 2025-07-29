@@ -3,6 +3,12 @@
   --SettingsSelectMaxWidth: 320px;
 }
 
+.Select {
+  background: var(--EditorBackground);
+  color: currentColor;
+  padding: 3px;
+}
+
 .SettingsItems {
   display: flex;
   flex-direction: column;
@@ -11,6 +17,11 @@
 .SettingsItem {
   display: flex;
   flex-direction: column;
+}
+
+.SettingsItemCheckBox {
+  display: flex;
+  gap: 5px;
 }
 
 /* TODO avoid nesting */

@@ -8,24 +8,10 @@
   flex-direction: column;
 }
 
-.SettingsHeader {
-  padding: 30px;
-}
-
 .SettingsMain {
   display: flex;
   contain: strict;
   flex: 1;
-}
-
-.SettingsSideBarHeading {
-  margin: 0;
-  margin-bottom: 5px;
-}
-
-.SettingsInputWrapper {
-  display: flex;
-  gap: 2px;
 }
 
 .SettingsContent {
@@ -40,15 +26,4 @@
 
 .SettingsContentHeading {
   margin: 0;
-}
-
-.Select {
-  background: var(--EditorBackground);
-  color: currentColor;
-  padding: 3px;
-}
-
-.SettingsItemCheckBox {
-  display: flex;
-  gap: 5px;
 }

@@ -4,6 +4,7 @@ export const Css = [
   '/css/parts/InputBox.css',
   '/css/parts/Label.css',
   '/css/parts/SearchField.css',
+  '/css/parts/SettingsHeader.css',
   '/css/parts/SettingsItems.css',
   '/css/parts/SettingsSideBar.css',
   '/css/parts/ViewletSettings.css',

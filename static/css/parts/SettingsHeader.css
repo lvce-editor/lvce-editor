@@ -1,0 +1,13 @@
+:root {
+}
+
+.SettingsHeader {
+  padding-top: 14px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.SettingsInputWrapper {
+  display: flex;
+  gap: 2px;
+}

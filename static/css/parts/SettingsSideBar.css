@@ -4,7 +4,8 @@
 }
 
 .SettingsSideBar {
-  padding: 10px;
+  padding-left: 24px;
+  padding-top: 20px;
   min-width: 150px;
 }
 
