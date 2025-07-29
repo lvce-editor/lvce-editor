@@ -7,21 +7,25 @@
   background: var(--EditorBackground);
   color: currentColor;
   padding: 3px;
+  contain: content;
 }
 
 .SettingsItems {
   display: flex;
   flex-direction: column;
+  contain: content;
 }
 
 .SettingsItem {
   display: flex;
   flex-direction: column;
+  contain: content;
 }
 
 .SettingsItemCheckBox {
   display: flex;
   gap: 5px;
+  contain: content;
 }
 
 /* TODO avoid nesting */
@@ -39,6 +43,7 @@
   margin-bottom: 0;
   padding-top: 20px;
   padding-bottom: 5px;
+  contain: content;
 }
 
 /* TODO avoid nesting */
@@ -46,4 +51,5 @@
 .SettingsItem p {
   margin: 0;
   padding-bottom: 10px;
+  contain: content;
 }
