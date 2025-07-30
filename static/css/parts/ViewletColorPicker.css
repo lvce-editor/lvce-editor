@@ -4,9 +4,6 @@
 }
 
 .ColorPicker {
-  /* TODO */
-  width: calc(300px + 40px); /* extra space for scroll bar thumb */
-  height: 200px;
   contain: strict;
   display: flex;
   flex-direction: column;
@@ -47,14 +44,30 @@
   background: linear-gradient(to right, red 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
   border-radius: 5px;
   position: relative;
-  margin: 20px auto;
   contain: strict;
+}
+
+.ColorPickerBottom {
+  height: 50px;
+  contain: strict;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ColorPickerSliderWrapper {
+  height: 30px;
+  contain: strict;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .ColorPickerSliderThumb {
   position: absolute;
-  top: calc(-15px + 2px + 5px + 150px + 20px + 2px);
-  left: calc(-15px + 2px + 5px + 20px);
+  top: 15px;
+  left: 0;
+  bottom: 0;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -63,4 +76,5 @@
   background: var(--ColorPickerColor);
   contain: strict;
   translate: var(--ColorPickerOffsetX) 0;
+  pointer-events: none;
 }
