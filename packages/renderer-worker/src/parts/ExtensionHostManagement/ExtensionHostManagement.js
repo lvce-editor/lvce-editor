@@ -31,7 +31,7 @@ const doActivate = async (extension, event) => {
   )
   await ExtensionHostWorker.invoke('ExtensionHost.importExtension', extensionId, absolutePath, event)
 
-  await ExtensionHostWorker.invoke('ExtensionHost.activateExtension2', extensionId, extension)
+  await ExtensionHostWorker.invoke('ExtensionHost.activateExtension2', extensionId, extension, absolutePath)
 }
 
 const actuallyActivateExtension = async (extension, event) => {
