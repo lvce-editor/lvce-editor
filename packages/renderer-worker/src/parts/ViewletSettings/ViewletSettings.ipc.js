@@ -1,0 +1,10 @@
+export const name = 'Settings'
+
+export * from './ViewletSettings.js'
+export * from './ViewletSettingsCommands.js'
+export * from './ViewletSettingsCss.js'
+export * from './ViewletSettingsKeyBindings.js'
+export * from './ViewletSettingsMenuEntries.js'
+export * from './ViewletSettingsRender.js'
+export * from './ViewletSettingsResize.js'
+export * from './ViewletSettingsSaveState.js'

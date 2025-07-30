@@ -180,6 +180,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/find-widget-worker/dist/findWidgetWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/SettingsWorkerUrl/SettingsWorkerUrl.js`,
+      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js',
+      replacement: '/packages/settings-view/dist/settingsViewWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/CompletionWorkerUrl/CompletionWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
       replacement: '/packages/completion-worker/dist/completionWorkerMain.js',

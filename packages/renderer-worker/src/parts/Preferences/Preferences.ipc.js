@@ -9,6 +9,8 @@ export const Commands = {
   hydrate: Preferences.hydrate,
   openKeyBindingsJson: Preferences.openKeyBindingsJson,
   openSettingsJson: Preferences.openSettingsJson,
+  openSettingsUi: Preferences.openSettingsUi,
   get: Preferences.get,
   getMany: Preferences.getMany,
+  getAll: Preferences.getAll,
 }

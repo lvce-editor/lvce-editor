@@ -1,0 +1,39 @@
+:root {
+  --SettingsTabBackground: transparent;
+  --SettingsTabSelectedBackground: rgba(59, 71, 66, 0.5);
+}
+
+.SettingsSideBar {
+  padding-left: 24px;
+  padding-top: 20px;
+  min-width: 150px;
+  contain: strict;
+}
+
+.SettingsTabs {
+  margin: 0;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  contain: content;
+}
+
+.Tab {
+  background: var(--SettingsTabBackground);
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding: 3px;
+  padding-left: 7px;
+  border: none;
+  color: inherit;
+  text-align: left;
+  height: 22px;
+  contain: strict;
+  display: flex;
+  align-items: center;
+}
+
+.TabSelected {
+  background: var(--SettingsTabSelectedBackground);
+}

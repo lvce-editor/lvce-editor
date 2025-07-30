@@ -35,6 +35,7 @@ test('getAll', async () => {
     {
       path: '/test/built-in-extensions/extension-1',
       name: 'extension-1',
+      disabled: false,
     },
   ])
   expect(ExtensionManifestsFromFolder.getExtensionManifests).toHaveBeenCalledTimes(1)

@@ -1,0 +1,32 @@
+:root {
+}
+
+.Settings {
+  position: absolute;
+  background: var(--MainBackground);
+  display: flex;
+  flex-direction: column;
+  contain: strict;
+}
+
+.SettingsMain {
+  display: flex;
+  contain: strict;
+  flex: 1;
+}
+
+.SettingsContent {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
+  contain: strict;
+}
+
+.SettingsContentHeading {
+  margin: 0;
+  contain: content;
+}
