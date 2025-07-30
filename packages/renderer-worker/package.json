@@ -49,7 +49,7 @@
     "@lvce-editor/editor-worker": "^7.14.0",
     "@lvce-editor/embeds-worker": "^4.0.0",
     "@lvce-editor/clipboard-worker": "^1.10.0",
-    "@lvce-editor/error-worker": "^2.0.0",
+    "@lvce-editor/error-worker": "^2.1.0",
     "@lvce-editor/explorer-view": "^3.4.0",
     "@lvce-editor/settings-view": "^1.19.0",
     "@lvce-editor/extension-detail-view": "^3.56.0",
