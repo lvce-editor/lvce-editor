@@ -25,10 +25,10 @@
   "dependencies": {
     "@lvce-editor/assert": "^1.4.0",
     "@lvce-editor/ipc": "^14.3.0",
-    "@lvce-editor/json-rpc": "^6.2.0",
+    "@lvce-editor/json-rpc": "^7.0.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
     "@lvce-editor/pretty-error": "^2.0.0",
-    "@lvce-editor/rpc-registry": "^2.65.0",
+    "@lvce-editor/rpc-registry": "^2.67.0",
     "@lvce-editor/verror": "^1.7.0",
     "debug": "^4.4.1",
     "is-object": "^1.0.2",
@@ -57,7 +57,7 @@
     "@types/tar-fs": "^2.0.4",
     "get-port": "^7.1.0",
     "tar-fs": "^3.1.0",
-    "wait-for-expect": "^3.0.2"
+    "wait-for-expect": "^4.0.0"
   },
   "xo": {
     "rules": {
