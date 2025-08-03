@@ -9,7 +9,6 @@
   "build": {
     "publish": "never",
     "asar": false,
-    "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "linux": {
       "category": "Utility;TextEditor;Development;IDE;",
