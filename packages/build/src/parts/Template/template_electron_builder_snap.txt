@@ -13,11 +13,13 @@
     "electronVersion": "@@ELECTRON_VERSION@@",
     "linux": {
       "category": "Utility;TextEditor;Development;IDE;",
-       "desktop": {
-        "GenericName": "Text Editor",
-        "StartupNotify": "false",
-        "StartupWMClass": "@@NAME@@",
-        "Keywords": "@@SNAP_NAME@@;"
+      "desktop": {
+        "entry": {
+          "GenericName": "Text Editor",
+          "StartupNotify": "false",
+          "StartupWMClass": "@@NAME@@",
+          "Keywords": "@@NAME@@;"
+        }
       },
       "target": [
         {
