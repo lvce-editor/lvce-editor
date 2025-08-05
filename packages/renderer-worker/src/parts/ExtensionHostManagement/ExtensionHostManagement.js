@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
@@ -19,18 +18,25 @@ export const state = {
   activatedExtensions: Object.create(null),
 }
 
+const doActivate = async (extension, event) => {
+  const extensionId = extension.id
+  const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
+    extension.id,
+    extension.isWeb,
+    extension.builtin,
+    extension.path,
+    extension.browser,
+    Origin.origin,
+    Platform.platform,
+  )
+  await ExtensionHostWorker.invoke('ExtensionHost.importExtension', extensionId, absolutePath, event)
+
+  await ExtensionHostWorker.invoke('ExtensionHost.activateExtension2', extensionId, extension, absolutePath)
+}
+
 const actuallyActivateExtension = async (extension, event) => {
   if (!(extension.id in state.activatedExtensions)) {
-    const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
-      extension.id,
-      extension.isWeb,
-      extension.builtin,
-      extension.path,
-      extension.browser,
-      Origin.origin,
-      Platform.platform,
-    )
-    state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath, event)
+    state.activatedExtensions[extension.id] = doActivate(extension, event)
   }
   return state.activatedExtensions[extension.id]
 }
