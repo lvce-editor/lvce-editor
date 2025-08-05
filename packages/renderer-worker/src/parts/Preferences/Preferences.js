@@ -82,3 +82,5 @@ export const update = async (settings) => {
   await FileSystem.writeFile('app://settings.json', content)
   await GlobalEventBus.emitEvent('preferences.changed')
 }
+
+export { state } from '../PreferencesState/PreferencesState.js'
