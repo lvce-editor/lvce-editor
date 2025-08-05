@@ -3,10 +3,10 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
-import * as Preferences from '../Preferences/Preferences.js'
+import * as PreferencesState from '../PreferencesState/PreferencesState.js'
 
 const getConfiguredWorkerUrl = () => {
-  let configuredWorkerUrl = Preferences.get('develop.errorWorkerPath') || ''
+  let configuredWorkerUrl = PreferencesState.get('develop.errorWorkerPath') || ''
   if (configuredWorkerUrl) {
     configuredWorkerUrl = '/remote' + configuredWorkerUrl
   }
