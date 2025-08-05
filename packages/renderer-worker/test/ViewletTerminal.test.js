@@ -6,6 +6,7 @@ import { TextEncoder } from 'node:util'
 
 beforeAll(() => {
   // https://github.com/jsdom/jsdom/issues/2524#issuecomment-736672511
+  // @ts-ignore
   globalThis.TextEncoder = TextEncoder
 
   // @ts-ignore
