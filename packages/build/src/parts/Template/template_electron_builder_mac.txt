@@ -8,7 +8,6 @@
   "build": {
     "publish": [],
     "asar": false,
-    "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "mac": {
       "target": "dmg"
