@@ -52,7 +52,7 @@
     "@lvce-editor/error-worker": "^2.1.0",
     "@lvce-editor/explorer-view": "^3.4.0",
     "@lvce-editor/settings-view": "^1.20.0",
-    "@lvce-editor/extension-detail-view": "^3.56.0",
+    "@lvce-editor/extension-detail-view": "^3.57.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^5.17.0",
     "@lvce-editor/extension-search-view": "^4.0.0",
