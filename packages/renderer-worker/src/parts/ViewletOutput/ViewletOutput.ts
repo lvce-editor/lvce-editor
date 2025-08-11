@@ -1,5 +1,6 @@
 import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as OutputChannels from '../OutputChannels/OutputChannels.js'
+import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const create = (uid: any) => {
@@ -14,29 +15,14 @@ export const create = (uid: any) => {
 }
 
 export const loadContent = async (state) => {
-  const options = await OutputChannels.getOptions()
-  const selectedIndex = 0
-  // TODO duplicate send here
-  const id = 0
-  const file = options[selectedIndex].file
-  await OutputChannel.open(id, file)
+  await OutputViewWorker.invoke('Output.create', state.id)
+  await OutputViewWorker.invoke('Output.loadContent2', state.id)
+  const diffResult = await OutputViewWorker.invoke('Output.diff2', state.id)
+  const commands = await OutputViewWorker.invoke('Output.render2', state.id, diffResult)
   return {
     ...state,
-    options,
-    selectedIndex,
+    commands,
   }
-}
-
-export const contentLoaded = async (state) => {
-  return [
-    [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'Output',
-      /* method */ 'setOptions',
-      /* options */ state.options,
-      /* selectedOptionIndex */ state.selectedIndex,
-    ],
-  ]
 }
 
 export const setOutputChannel = async (state, option) => {
