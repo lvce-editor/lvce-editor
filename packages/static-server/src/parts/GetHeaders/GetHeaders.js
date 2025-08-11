@@ -32,6 +32,7 @@ import * as GetHeadersSyntaxHighlightingWorker from '../GetHeadersSyntaxHighligh
 import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeadersTerminalWorker.js'
 import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
 import * as GetHeadersTextSearchWorker from '../GetHeadersTextSearchWorker/GetHeadersTextSearchWorker.js'
+import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
 import * as GetHeadersTitleBarWorker from '../GetHeadersTitleBarWorker/GetHeadersTitleBarWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
 import * as Path from '../Path/Path.js'
@@ -51,6 +52,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('terminalWorkerMain.js')) {
     return GetHeadersTerminalWorker.getHeadersTerminalWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('outputViewWorkerMain.js')) {
+    return GetHeadersOutputViewWorker.getHeadersOutputViewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
