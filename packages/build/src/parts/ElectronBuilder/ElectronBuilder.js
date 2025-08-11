@@ -71,7 +71,7 @@ const runElectronBuilder = async ({ config }) => {
     const options = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`packages/build/.tmp/linux/snap/${debArch}/app`),
-      // publish: 'never',
+      publish: 'onTag', // TODO should be never
 
       // win: ['portable'],
     }
