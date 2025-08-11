@@ -26,8 +26,35 @@ export const loadContent = async (state) => {
 }
 
 export const hotReload = async (state, option) => {
-  // TODO
-  return {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  const savedState = await OutputViewWorker.invoke('Output.saveState', state.uid)
+  await OutputViewWorker.restart('Output.terminate')
+  const oldState = {
     ...state,
+    items: [],
+  }
+  await OutputViewWorker.invoke(
+    'Output.create',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    null,
+    state.parentUid,
+    state.platform,
+  )
+  await OutputViewWorker.invoke('Output.loadContent2', state.uid, savedState)
+  const diffResult = await OutputViewWorker.invoke('Output.diff2', state.uid)
+  const commands = await OutputViewWorker.invoke('Output.render2', state.uid, diffResult)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
   }
 }
