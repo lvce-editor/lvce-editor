@@ -37,7 +37,7 @@
     "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.25.8",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.1",
     "got": "^14.4.7",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
