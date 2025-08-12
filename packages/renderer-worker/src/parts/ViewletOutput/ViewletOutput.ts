@@ -16,9 +16,11 @@ export const loadContent = async (state) => {
   await OutputViewWorker.invoke('Output.loadContent2', state.id)
   const diffResult = await OutputViewWorker.invoke('Output.diff2', state.id)
   const commands = await OutputViewWorker.invoke('Output.render2', state.id, diffResult)
+  const actionsDom = await OutputViewWorker.invoke('Output.renderActions', state.uid)
   return {
     ...state,
     commands,
+    actionsDom,
   }
 }
 
@@ -49,9 +51,11 @@ export const hotReload = async (state, option) => {
   await OutputViewWorker.invoke('Output.loadContent2', state.uid, savedState)
   const diffResult = await OutputViewWorker.invoke('Output.diff2', state.uid)
   const commands = await OutputViewWorker.invoke('Output.render2', state.uid, diffResult)
+  const actionsDom = await OutputViewWorker.invoke('Output.renderActions', state.uid)
   return {
     ...oldState,
     commands,
+    actionsDom,
     isHotReloading: false,
   }
 }
