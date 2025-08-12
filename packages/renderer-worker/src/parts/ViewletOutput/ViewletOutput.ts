@@ -1,6 +1,4 @@
-import * as OutputChannel from '../OutputChannel/OutputChannel.js'
-import * as OutputChannels from '../OutputChannels/OutputChannels.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 
 export const create = (uid: any) => {
   return {
@@ -14,71 +12,46 @@ export const create = (uid: any) => {
 }
 
 export const loadContent = async (state) => {
-  const options = await OutputChannels.getOptions()
-  const selectedIndex = 0
-  // TODO duplicate send here
-  const id = 0
-  const file = options[selectedIndex].file
-  await OutputChannel.open(id, file)
+  await OutputViewWorker.invoke('Output.create', state.id, state.x, state.y, state.width, state.height)
+  await OutputViewWorker.invoke('Output.loadContent2', state.id)
+  const diffResult = await OutputViewWorker.invoke('Output.diff2', state.id)
+  const commands = await OutputViewWorker.invoke('Output.render2', state.id, diffResult)
   return {
     ...state,
-    options,
-    selectedIndex,
+    commands,
   }
 }
 
-export const contentLoaded = async (state) => {
-  return [
-    [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'Output',
-      /* method */ 'setOptions',
-      /* options */ state.options,
-      /* selectedOptionIndex */ state.selectedIndex,
-    ],
-  ]
-}
-
-export const setOutputChannel = async (state, option) => {
-  state.selectedOption = option
-  // TODO race condition
-  await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ 'Output', /* method */ 'clear')
-  // TODO race condition
-  // TODO should use invoke
-  await OutputChannel.open('Output', state.selectedOption)
-}
-
-export const handleData = async (state, data) => {
-  const { text } = state
-  const newText = text + data
-  return {
+export const hotReload = async (state, option) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  const savedState = await OutputViewWorker.invoke('Output.saveState', state.uid)
+  await OutputViewWorker.restart('Output.terminate')
+  const oldState = {
     ...state,
-    text: newText,
+    items: [],
+  }
+  await OutputViewWorker.invoke(
+    'Output.create',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    null,
+    state.parentUid,
+    state.platform,
+  )
+  await OutputViewWorker.invoke('Output.loadContent2', state.uid, savedState)
+  const diffResult = await OutputViewWorker.invoke('Output.diff2', state.uid)
+  const commands = await OutputViewWorker.invoke('Output.render2', state.uid, diffResult)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
   }
 }
-
-export const handleError = async (state, data) => {
-  const { text } = state
-  const newText = text + data
-  return {
-    ...state,
-    text: newText,
-  }
-}
-
-export const dispose = async (state) => {
-  state.disposed = true
-  // TODO close output channel in shared process
-  await OutputChannel.close('Output')
-}
-
-export const openFindWidget = async (state) => {
-  // TODO use command.execute instead
-  // TODO no lazy import here
-}
-
-export const closeFindWidget = async (state) => {}
-
-// export const handleError = (state, error) => {
-//   console.error(error)
-// }

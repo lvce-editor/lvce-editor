@@ -79,5 +79,12 @@ export const getWatchConfig = () => {
       command: 'Settings.hotReload',
     })
   }
+  const output = Preferences.get('develop.outputViewWorkerPath')
+  if (settings) {
+    watchConfig.push({
+      path: output,
+      command: 'Output.hotReload',
+    })
+  }
   return watchConfig
 }
