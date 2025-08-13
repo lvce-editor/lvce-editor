@@ -26,7 +26,7 @@ export const launchOutputViewWorker = async () => {
     url: getConfiguredWorkerUrl(),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  await JsonRpc.invoke(ipc, 'Output.initialize')
 
   return ipc
 }
