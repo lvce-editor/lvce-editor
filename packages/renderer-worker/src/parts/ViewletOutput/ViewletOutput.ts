@@ -2,6 +2,7 @@ import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 
 export const create = (uid: any) => {
   return {
+    id: uid,
     uid,
     selectedIndex: -1,
     // TODO get list of outputChannels from extension host
