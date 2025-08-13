@@ -60,3 +60,5 @@ export const hotReload = async (state, option) => {
     isHotReloading: false,
   }
 }
+
+export const hasFunctionalResize = true
