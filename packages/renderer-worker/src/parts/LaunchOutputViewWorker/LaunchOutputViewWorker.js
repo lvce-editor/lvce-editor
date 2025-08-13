@@ -1,8 +1,9 @@
-import * as OutputViewWorkerUrl from '../OutputViewWorkerUrl/OutputViewWorkerUrl.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as OutputViewWorkerUrl from '../OutputViewWorkerUrl/OutputViewWorkerUrl.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
 const getConfiguredWorkerUrl = () => {
@@ -25,5 +26,7 @@ export const launchOutputViewWorker = async () => {
     url: getConfiguredWorkerUrl(),
   })
   HandleIpc.handleIpc(ipc)
+  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+
   return ipc
 }
