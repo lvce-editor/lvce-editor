@@ -1,4 +1,5 @@
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const create = (uid: any) => {
   return {
@@ -9,11 +10,12 @@ export const create = (uid: any) => {
     options: [],
     disposed: false,
     text: '',
+    platform: Platform.platform,
   }
 }
 
 export const loadContent = async (state) => {
-  await OutputViewWorker.invoke('Output.create', state.id, state.x, state.y, state.width, state.height)
+  await OutputViewWorker.invoke('Output.create', state.id, state.x, state.y, state.width, state.height, state.platform)
   await OutputViewWorker.invoke('Output.loadContent2', state.id)
   const diffResult = await OutputViewWorker.invoke('Output.diff2', state.id)
   const commands = await OutputViewWorker.invoke('Output.render2', state.id, diffResult)
