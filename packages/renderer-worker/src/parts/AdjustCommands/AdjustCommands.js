@@ -5,7 +5,7 @@ export const apply = (oldState, newState) => {
     return []
   }
   const adjustedCommands = commands.map((command) => {
-    if (command[1] === newState.uid) {
+    if (command[1] === newState.uid || typeof command[1] === 'number') {
       return command
     }
     if (command[0] === 'Viewlet.setDom2') {
