@@ -1,9 +1,10 @@
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as Platform from '../Platform/Platform.js'
 
-export const create = (uid: any) => {
+export const create = (uid: any, uri, x, y, width, height, args, parentUid) => {
   return {
     id: uid,
+    parentUid,
     uid,
     selectedIndex: -1,
     // TODO get list of outputChannels from extension host
