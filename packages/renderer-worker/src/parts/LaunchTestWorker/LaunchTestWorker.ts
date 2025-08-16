@@ -2,6 +2,7 @@ import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfigured
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as TestWorker from '../TestWorker/TestWorker.js'
 import * as TestWorkerUrl from '../TestWorkerUrl/TestWorkerUrl.js'
 
 export const launchTestWorker = async () => {
@@ -12,5 +13,6 @@ export const launchTestWorker = async () => {
     name: 'Test Worker',
   })
   HandleIpc.handleIpc(ipc)
+  TestWorker.set(ipc)
   return ipc
 }
