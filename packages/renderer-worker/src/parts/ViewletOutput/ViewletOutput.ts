@@ -15,9 +15,9 @@ export const create = (uid: any, uri, x, y, width, height, args, parentUid) => {
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, savedState) => {
   await OutputViewWorker.invoke('Output.create', state.id, state.uri, state.x, state.y, state.width, state.height, state.platform, state.parentUid)
-  await OutputViewWorker.invoke('Output.loadContent2', state.id)
+  await OutputViewWorker.invoke('Output.loadContent2', state.id, savedState)
   const diffResult = await OutputViewWorker.invoke('Output.diff2', state.id)
   const commands = await OutputViewWorker.invoke('Output.render2', state.id, diffResult)
   const actionsDom = await OutputViewWorker.invoke('Output.renderActions', state.uid)
