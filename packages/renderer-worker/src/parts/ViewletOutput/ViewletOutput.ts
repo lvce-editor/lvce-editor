@@ -54,3 +54,7 @@ export const hotReload = async (state, option) => {
 }
 
 export const hasFunctionalResize = true
+
+export const saveState = (state) => {
+  return OutputViewWorker.invoke('Output.saveState', state.uid)
+}
