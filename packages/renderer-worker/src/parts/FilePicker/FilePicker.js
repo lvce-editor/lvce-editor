@@ -40,7 +40,7 @@ let _mockId = 0
 
 const doShowMockSaveFilePicker = async () => {
   const ipc = TestWorker.get()
-  const result = await JsonRpc.invoke(ipc)
+  const result = await JsonRpc.invoke(ipc, 'Test.executeMock', _mockId)
   return result
 }
 
