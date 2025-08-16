@@ -6,4 +6,5 @@ export const Commands = {
   showDirectoryPicker: FilePicker.showDirectoryPicker,
   showFilePicker: FilePicker.showFilePicker,
   showSaveFilePicker: FilePicker.showSaveFilePicker,
+  mockSaveFilePicker: FilePicker.mockSaveFilePicker,
 }

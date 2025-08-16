@@ -1,4 +1,6 @@
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as TestWorker from '../TestWorker/TestWorker.js'
 
 export const showDirectoryPicker = async (options) => {
   try {
@@ -19,7 +21,7 @@ export const showFilePicker = (options) => {
   return RendererProcess.invoke('FilePicker.showFilePicker', options)
 }
 
-export const showSaveFilePicker = async (options) => {
+const doShowSaveFilePicker = async (options) => {
   try {
     return await RendererProcess.invoke('FilePicker.showSaveFilePicker', options)
   } catch (error) {
@@ -32,4 +34,23 @@ export const showSaveFilePicker = async (options) => {
     }
     throw error
   }
+}
+
+let _mockId = 0
+
+const doShowMockSaveFilePicker = async () => {
+  const ipc = TestWorker.get()
+  const result = await JsonRpc.invoke(ipc)
+  return result
+}
+
+export const showSaveFilePicker = async (options) => {
+  if (_mockId) {
+    return doShowMockSaveFilePicker()
+  }
+  return doShowSaveFilePicker(options)
+}
+
+export const mockSaveFilePicker = async (mockId) => {
+  _mockId = mockId
 }
