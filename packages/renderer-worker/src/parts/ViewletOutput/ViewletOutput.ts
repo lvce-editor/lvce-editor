@@ -40,18 +40,7 @@ export const hotReload = async (state, option) => {
     ...state,
     items: [],
   }
-  await OutputViewWorker.invoke(
-    'Output.create',
-    state.uid,
-    state.uri,
-    state.x,
-    state.y,
-    state.width,
-    state.height,
-    null,
-    state.parentUid,
-    state.platform,
-  )
+  await OutputViewWorker.invoke('Output.create', state.uid, state.uri, state.x, state.y, state.width, state.height, state.parentUid, state.platform)
   await OutputViewWorker.invoke('Output.loadContent2', state.uid, savedState)
   const diffResult = await OutputViewWorker.invoke('Output.diff2', state.uid)
   const commands = await OutputViewWorker.invoke('Output.render2', state.uid, diffResult)
