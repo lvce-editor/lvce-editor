@@ -14,6 +14,8 @@ export const load = (moduleId) => {
       return import('../GetActiveEditor/GetActiveEditor.ipc.js')
     case ModuleId.GetEditorSourceActions:
       return import('../GetEditorSourceActions/GetEditorSourceActions.ipc.js')
+    case ModuleId.PlatformPaths:
+      return import('../PlatformPaths/PlatformPaths.ipc.js')
     case ModuleId.FileSystemHandle:
       return import('../FileSystemHandle/FileSystemHandle.ipc.js')
     case ModuleId.Blob:

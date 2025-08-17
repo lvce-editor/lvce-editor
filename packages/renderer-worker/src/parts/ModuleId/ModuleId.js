@@ -107,3 +107,4 @@ export const FileSystemHandle = 139
 export const MouseActions = 140
 export const Timeout = 141
 export const GetActiveEditor = 142
+export const PlatformPaths = 143

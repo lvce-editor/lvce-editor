@@ -31,6 +31,9 @@ export const getMarketPlaceUrl = () => {
 }
 
 export const getLogsDir = () => {
+  if (Platform.platform === PlatformType.Web) {
+    return 'memfs://output'
+  }
   return SharedProcess.invoke(/* Platform.getLogsDir */ 'Platform.getLogsDir')
 }
 

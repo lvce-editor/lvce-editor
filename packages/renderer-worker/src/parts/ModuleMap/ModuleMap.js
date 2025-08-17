@@ -129,6 +129,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.PersistentFileHandle
     case 'Preferences':
       return ModuleId.Preferences
+    case 'PlatformPaths':
+      return ModuleId.PlatformPaths
     case 'Prompt':
       return ModuleId.Prompt
     case 'QuickPick':
