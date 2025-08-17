@@ -46,3 +46,8 @@
 .ExtensionDetail .Markdown {
   overflow: auto;
 }
+
+.RuntimeStatusDefinitionList {
+  contain: content;
+  display: flex;
+}
