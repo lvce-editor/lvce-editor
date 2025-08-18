@@ -10,6 +10,7 @@ const ids = [
   'closeCodeGenerator',
   'closeCompletion',
   'closeCompletion',
+  'getSelections2',
   'closeFind',
   'closeFind2',
   'closeRename',
