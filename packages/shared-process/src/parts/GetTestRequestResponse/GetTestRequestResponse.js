@@ -23,6 +23,7 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
       const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
       const headers = {
         [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+        [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
         [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
         [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
       }
