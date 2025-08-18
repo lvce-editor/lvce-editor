@@ -8,6 +8,6 @@ export const networkProcessPath = Path.join(
   'node_modules',
   '@lvce-editor',
   'network-process',
-  'src',
+  'dist',
   'networkProcessMain.js',
 )
