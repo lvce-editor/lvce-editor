@@ -131,6 +131,13 @@ export const chmod = async (uri, permissions) => {
   return fileSystem.chmod(path, permissions)
 }
 
+export const exists = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  return fileSystem.exists(path)
+}
+
 export const canBeRestored = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   if (protocol === 'storage-overview') {
