@@ -24,6 +24,11 @@ export const readFile = (path, encoding) => {
   return FileSystemWorker.invoke('FileSystem.readFile', /* path */ path, /* encoding */ encoding)
 }
 
+export const exists = (path, encoding) => {
+  path = toUri(path)
+  return FileSystemWorker.invoke('FileSystem.exists', /* path */ path)
+}
+
 export const readJson = (path) => {
   path = toUri(path)
   return FileSystemWorker.invoke('FileSystem.readJson', /* path */ path)
