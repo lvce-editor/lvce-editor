@@ -16,8 +16,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@lvce-editor/test-with-playwright": "^3.1.0",
-    "@playwright/test": "^1.54.2",
+    "@lvce-editor/test-with-playwright": "^3.2.0",
+    "@playwright/test": "^1.55.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "express": "^5.1.0"
