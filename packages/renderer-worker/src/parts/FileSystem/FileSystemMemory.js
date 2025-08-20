@@ -7,6 +7,10 @@ export const readFile = (uri) => {
   return ExtensionHostWorker.invoke('FileSystemMemory.readFile', uri)
 }
 
+export const exists = (uri) => {
+  return ExtensionHostWorker.invoke('FileSystemMemory.exists', uri)
+}
+
 export const writeFile = (uri, content) => {
   return ExtensionHostWorker.invoke('FileSystemMemory.writeFile', uri, content)
 }
