@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.4.0",
-    "@lvce-editor/ipc": "^14.4.0",
+    "@lvce-editor/ipc": "^14.5.0",
     "@lvce-editor/json-rpc": "^7.0.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
     "@lvce-editor/pretty-error": "^2.0.0",
