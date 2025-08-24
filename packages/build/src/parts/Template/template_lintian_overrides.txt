@@ -64,11 +64,7 @@
 
 # binaries
 
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/preview-process/bin/previewProcess.js]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/process-explorer/bin/processExplorer.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/pty-host/bin/ptyHost.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/bin/searchProcess.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/typescript-compile-process/bin/typescriptCompileProcess.js]
 
 # extensions
 @@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
