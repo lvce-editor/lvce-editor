@@ -131,9 +131,8 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
   await Replace.replace({
     path: `${resourcesPath}/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
     occurrence: '../../../../typescript/lib/typescript-esm.js',
-    replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
+    replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
   })
-  await Remove.remove(`${resourcesPath}/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`)
   await Copy.copy({
     from: `${resourcesPath}/app/extensions/builtin.vscode-icons/icons`,
     to: `${resourcesPath}/app/static/file-icons`,
