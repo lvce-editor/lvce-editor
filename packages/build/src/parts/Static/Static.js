@@ -357,19 +357,6 @@ const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) =>
     to: `packages/build/.tmp/dist/${commitHash}/config/webExtensions.json`,
     value: webExtensions,
   })
-
-  if (existsSync(Path.absolute(`packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript`))) {
-    await Copy.copy({
-      from: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node/node_modules/typescript`,
-      to: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/typescript`,
-    })
-    await Remove.remove(`packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node`)
-    await Replace.replace({
-      path: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/src/parts/IsWeb/IsWeb.js`,
-      occurrence: 'false',
-      replacement: 'true',
-    })
-  }
 }
 
 const isOther = (extension) => {
