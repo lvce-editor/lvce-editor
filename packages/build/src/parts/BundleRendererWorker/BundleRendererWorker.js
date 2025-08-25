@@ -215,6 +215,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/markdown-worker/dist/markdownWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/SourceActionWorkerUrl/SourceActionWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/source-action-worker/dist/sourceActionWorkerMain.js`,
+      replacement: '/packages/source-action-worker/dist/sourceActionWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/TitleBarWorkerUrl/TitleBarWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/title-bar-worker/dist/titleBarWorkerMain.js`,
       replacement: '/packages/title-bar-worker/dist/titleBarWorkerMain.js',

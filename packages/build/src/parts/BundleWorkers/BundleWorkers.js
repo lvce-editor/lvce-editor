@@ -147,6 +147,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: 'packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js',
     to: Path.join(`${toRoot}/packages/settings-view`, 'dist', 'settingsViewWorkerMain.js'),
   })
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/source-action-worker/dist/sourceActionWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/source-action-worker`, 'dist', 'sourceActionWorkerMain.js'),
+  })
   const sourceControlWorkerCachePath = await BundleSourceControlWorkerCached.bundleSourceControlWorkerCached({
     assetDir,
     commitHash,
