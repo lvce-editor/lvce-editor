@@ -3,6 +3,7 @@ import * as GetCompletionWorkerUrl from '../GetCompletionWorkerUrl/GetCompletion
 import * as GetFindWidgetWorkerUrl from '../GetFindWidgetWorkerUrl/GetFindWidgetWorkerUrl.js'
 import * as GetExtensionHostSubWorkerUrl from '../GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js'
 import * as GetRenameWorkerUrl from '../GetRenameWorkerUrl/GetRenameWorkerUrl.js'
+import * as GetSourceActionWorkerUrl from '../GetSourceActionWorkerUrl/GetSourceActionWorkerUrl.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 
 export const name = 'IpcParent'
@@ -24,6 +25,9 @@ const wrappedCreate = (options) => {
   }
   if (options && options.url && options.url.endsWith('findWidgetWorkerMain.js')) {
     options.url = GetFindWidgetWorkerUrl.getFindWidgetWorkerUrl()
+  }
+  if (options && options.url && options.url.endsWith('sourceActionWorkerMain.js')) {
+    options.url = GetSourceActionWorkerUrl.getSourceActionWorkerUrl()
   }
   return IpcParent.create(options)
 }
