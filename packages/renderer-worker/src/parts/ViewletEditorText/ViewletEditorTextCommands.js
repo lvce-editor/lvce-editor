@@ -122,6 +122,7 @@ const ids = [
   'EditorSourceAction.handleWheel',
   'EditorSourceAction.selectCurrent',
   'EditorSourceAction.selectIndex',
+  'EditorSourceAction.selectItem',
   'EditorSourceAction.toggleDetails',
   'format',
   'getText',
