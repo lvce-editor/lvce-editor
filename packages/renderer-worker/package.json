@@ -51,7 +51,7 @@
     "@lvce-editor/clipboard-worker": "^1.10.0",
     "@lvce-editor/error-worker": "^2.1.0",
     "@lvce-editor/explorer-view": "^3.5.0",
-    "@lvce-editor/settings-view": "^1.20.0",
+    "@lvce-editor/source-action-worker": "^1.0.0",
     "@lvce-editor/extension-detail-view": "^3.57.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^5.25.0",
@@ -77,6 +77,6 @@
     "@lvce-editor/output-view": "^1.19.0"
   },
   "devDependencies": {
-    "@types/node": "^24.2.1"
+    "@types/node": "^24.3.0"
   }
 }
