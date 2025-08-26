@@ -13,6 +13,10 @@
   border-collapse: collapse;
 }
 
+.TableHeading {
+  text-align: left;
+}
+
 .TableBody {
   white-space: pre;
   overflow-y: auto;
@@ -49,4 +53,6 @@
   text-overflow: ellipsis;
   contain: strict;
   text-align: left;
+  white-space: nowrap;
+  padding-right: 8px;
 }
