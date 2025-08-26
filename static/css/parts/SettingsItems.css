@@ -11,10 +11,17 @@
   contain: content;
 }
 
+.SettingsItemWrapper {
+  display: flex;
+  contain: strict;
+  flex: 1;
+}
+
 .SettingsItems {
   display: flex;
   flex-direction: column;
   contain: content;
+  flex: 1;
 }
 
 .SettingsItem {
