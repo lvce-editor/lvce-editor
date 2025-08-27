@@ -14,6 +14,10 @@ export const enableMemoryClipBoard = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.enableMemoryClipBoard')
 }
 
+export const readMemoryText = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.readMemoryText')
+}
+
 export const disableMemoryClipBoard = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.disableMemoryClipBoard')
 }

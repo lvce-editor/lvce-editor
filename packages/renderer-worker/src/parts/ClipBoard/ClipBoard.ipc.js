@@ -12,4 +12,5 @@ export const Commands = {
   writeText: ClipBoard.writeText,
   enableMemoryClipBoard: ClipBoard.enableMemoryClipBoard,
   disableMemoryClipBoard: ClipBoard.disableMemoryClipBoard,
+  readMemoryText: ClipBoard.readMemoryText,
 }
