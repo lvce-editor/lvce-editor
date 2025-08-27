@@ -68,3 +68,11 @@
   background: var(--ModifiedBackground);
   contain: strict;
 }
+
+.SettingsItemHeading {
+  user-select: text;
+}
+
+.Settings .Label {
+  user-select: text;
+}
