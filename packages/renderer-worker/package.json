@@ -62,7 +62,7 @@
     "@lvce-editor/iframe-inspector": "^2.3.0",
     "@lvce-editor/iframe-worker": "^5.34.0",
     "@lvce-editor/settings-view": "^2.0.0",
-    "@lvce-editor/keybindings-view": "^5.8.0",
+    "@lvce-editor/keybindings-view": "^5.9.0",
     "@lvce-editor/markdown-worker": "^1.8.0",
     "@lvce-editor/rename-worker": "^1.18.0",
     "@lvce-editor/references-view": "^2.1.0",
