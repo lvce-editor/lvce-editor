@@ -9,6 +9,7 @@
   scrollbar-width: thin;
   display: flex;
   flex-direction: column;
+  width: var(--ExtensionDetailSideBarWidth);
 }
 
 .AdditionalDetails {
