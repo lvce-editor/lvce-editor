@@ -6,6 +6,8 @@
   position: absolute;
   background: var(--MainBackground);
   color: var(--WorkbenchForeground);
+  padding-left: var(--ExtensionDetailPaddingLeft);
+  padding-right: var(--ExtensionDetailPaddingRight);
 }
 
 .Large.ExtensionDetail {
