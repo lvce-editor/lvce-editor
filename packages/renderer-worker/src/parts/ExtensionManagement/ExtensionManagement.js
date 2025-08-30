@@ -18,11 +18,19 @@ export const uninstall = (id) => {
 }
 
 export const disable = async (id) => {
-  return SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
+  try {
+    return SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
+  } catch (error) {
+    return error
+  }
 }
 
 export const enable = async (id) => {
-  return SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
+  try {
+    return await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
+  } catch (error) {
+    return error
+  }
 }
 
 export const getAllExtensions = async () => {
