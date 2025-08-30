@@ -9,17 +9,29 @@ export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
 }
 
-export const install = (id) => {
-  return InstallExtension.install(id)
+const invalidateExtensionsCache = async () => {
+  try {
+    await ExtensionHostWorker.invoke('Extensions.invalidateExtensionsCache')
+  } catch {
+    // ignore
+  }
 }
 
-export const uninstall = (id) => {
-  return SharedProcess.invoke(/* ExtensionManagement.uninstall */ 'ExtensionManagement.uninstall', /* id */ id)
+export const install = async (id) => {
+  await InstallExtension.install(id)
+  invalidateExtensionsCache()
+}
+
+export const uninstall = async (id) => {
+  await SharedProcess.invoke(/* ExtensionManagement.uninstall */ 'ExtensionManagement.uninstall', /* id */ id)
+  invalidateExtensionsCache()
 }
 
 export const disable = async (id) => {
   try {
-    return SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
+    await SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
+    await invalidateExtensionsCache()
+    return undefined
   } catch (error) {
     return error
   }
@@ -27,7 +39,9 @@ export const disable = async (id) => {
 
 export const enable = async (id) => {
   try {
-    return await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
+    await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
+    await invalidateExtensionsCache()
+    return undefined
   } catch (error) {
     return error
   }
