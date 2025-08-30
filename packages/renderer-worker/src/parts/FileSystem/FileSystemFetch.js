@@ -19,6 +19,13 @@ export const readFile = async (uri) => {
   return ExtensionHostWorker.invoke('FileSystemFetch.readFile', uri)
 }
 
+export const readJson = async (uri) => {
+  if (uri.startsWith('http://') || uri.startsWith('https://')) {
+    return FileSystemWorker.invoke('FileSystemFetch.readJson', uri)
+  }
+  return ExtensionHostWorker.invoke('FileSystemFetch.readJson', uri)
+}
+
 export const writeFile = (uri, content) => {
   return ExtensionHostWorker.invoke('FileSystemFetch.writeFile', uri)
 }
