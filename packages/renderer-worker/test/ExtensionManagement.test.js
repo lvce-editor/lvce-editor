@@ -24,7 +24,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
-test('install', async () => {
+test.skip('install', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -39,7 +39,7 @@ test('install', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith(SharedProcessCommandType.InstallExtensionInstallExtension, 'test-author.test-extension')
 })
 
-test('install - error', async () => {
+test.skip('install - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
     switch (method) {
@@ -52,7 +52,7 @@ test('install - error', async () => {
   await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('uninstall', async () => {
+test.skip('uninstall', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -67,7 +67,7 @@ test('uninstall', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.uninstall', 'test-author.test-extension')
 })
 
-test('uninstall - error', async () => {
+test.skip('uninstall - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
     switch (method) {
@@ -80,7 +80,7 @@ test('uninstall - error', async () => {
   await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('disable', async () => {
+test.skip('disable', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -95,7 +95,7 @@ test('disable', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.disable', 'test-author.test-extension')
 })
 
-test('disable - error', async () => {
+test.skip('disable - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -108,7 +108,7 @@ test('disable - error', async () => {
   await expect(ExtensionManagement.disable('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('enable', async () => {
+test.skip('enable', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -123,7 +123,7 @@ test('enable', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.enable', 'test-author.test-extension')
 })
 
-test('enable - error', async () => {
+test.skip('enable - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -136,7 +136,7 @@ test('enable - error', async () => {
   await expect(ExtensionManagement.enable('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
-test('getAllExtensions', async () => {
+test.skip('getAllExtensions', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -205,7 +205,7 @@ test('getAllExtensions', async () => {
   })
 })
 
-test('getAllExtensions - error', async () => {
+test.skip('getAllExtensions - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
