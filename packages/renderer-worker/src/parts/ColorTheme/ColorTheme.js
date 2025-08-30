@@ -26,6 +26,9 @@ const applyColorTheme = async (colorThemeId) => {
     Assert.string(colorThemeId)
     state.colorTheme = colorThemeId
     const colorThemeCss = await GetColorThemeCss.getColorThemeCss(colorThemeId)
+    if (!colorThemeCss) {
+      return new Error(`Color theme is empty`)
+    }
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
     if (Platform.platform === PlatformType.Web) {
       const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeId) || ''
@@ -34,15 +37,20 @@ const applyColorTheme = async (colorThemeId) => {
     if (Platform.platform !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
       watch(colorThemeId)
     }
+    return undefined
   } catch (error) {
-    throw new VError(error, `Failed to apply color theme "${colorThemeId}"`)
+    return new VError(error, `Failed to apply color theme "${colorThemeId}"`)
   }
 }
 
 export const setColorTheme = async (colorThemeId) => {
-  await applyColorTheme(colorThemeId)
+  const error = await applyColorTheme(colorThemeId)
+  if (error) {
+    return error
+  }
   // TODO should preferences throw errors or should it call handleError directly?
   await Preferences.set('workbench.colorTheme', colorThemeId)
+  return undefined
 }
 
 export const watch = async (id) => {
