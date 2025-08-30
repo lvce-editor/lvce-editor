@@ -21,7 +21,7 @@ export const readFile = async (uri) => {
 
 export const readJson = async (uri) => {
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
-    return FileSystemWorker.invoke('FileSystemFetch.readJson', uri)
+    return FileSystemWorker.invoke('FileSystem.readJson', uri)
   }
   return ExtensionHostWorker.invoke('FileSystemFetch.readJson', uri)
 }
