@@ -20,6 +20,9 @@ export const readFile = async (uri) => {
 }
 
 export const readJson = async (uri) => {
+  if (uri.startsWith('localhost')) {
+    return FileSystemWorker.invoke('FileSystem.readJson', `http://${uri}`)
+  }
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystem.readJson', uri)
   }
