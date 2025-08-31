@@ -4,6 +4,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
@@ -29,7 +30,11 @@ export const uninstall = async (id) => {
 
 export const disable = async (id) => {
   try {
-    await SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
+    if (Workspace.isTest()) {
+      disabledIds = [...disabledIds, id]
+    } else {
+      await SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
+    }
     await invalidateExtensionsCache()
     return undefined
   } catch (error) {
@@ -39,7 +44,11 @@ export const disable = async (id) => {
 
 export const enable = async (id) => {
   try {
-    await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
+    if (Workspace.isTest()) {
+      disabledIds = disabledIds.filter((existing) => existing !== id)
+    } else {
+      await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
+    }
     await invalidateExtensionsCache()
     return undefined
   } catch (error) {
@@ -64,8 +73,18 @@ export const getExtension = async (id) => {
   return undefined
 }
 
+let disabledIds = []
+
 export const getExtension2 = async (id) => {
-  return ExtensionHostWorker.invoke('Extensions.getExtension', id)
+  const extension = await ExtensionHostWorker.invoke('Extensions.getExtension', id)
+  if (disabledIds.includes(id)) {
+    return {
+      ...extension,
+      disabled: true,
+    }
+  }
+  // console.log({ extension, disabledIds, platform: Platform.platform })
+  return extension
 }
 
 const isFulfilled = (result) => {
