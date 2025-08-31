@@ -60,7 +60,7 @@
     "@lvce-editor/file-system-worker": "^1.22.0",
     "@lvce-editor/find-widget-worker": "^1.11.0",
     "@lvce-editor/iframe-inspector": "^2.3.0",
-    "@lvce-editor/iframe-worker": "^5.34.0",
+    "@lvce-editor/iframe-worker": "^5.35.0",
     "@lvce-editor/settings-view": "^2.0.0",
     "@lvce-editor/keybindings-view": "^5.10.0",
     "@lvce-editor/markdown-worker": "^1.8.0",
