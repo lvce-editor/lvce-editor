@@ -11,6 +11,7 @@ export const create = (id, uri, x, y, width, height, args) => {
     focusedIndex: -1,
     id,
     args,
+    actionsDom: [],
   }
 }
 
@@ -22,6 +23,7 @@ export const loadContent = async (state, savedState) => {
   const diff = await ReferencesWorker.invoke('References.diff2', state.id)
   const commands = await ReferencesWorker.invoke('References.render2', state.id, diff)
   const actionsDom = await ReferencesWorker.invoke('References.renderActions', state.id)
+  console.log({ actionsDom })
   return {
     ...state,
     commands,
@@ -131,4 +133,15 @@ export const selectCurrent = (state) => {
 export const saveState = async (state) => {
   const savedState = await ReferencesWorker.invoke('References.saveState', state.uid)
   return savedState
+}
+
+export const renderActions = {
+  isEqual(oldState, newState) {
+    console.log('render actions', oldState.actionsDom, newState.actionsDom)
+    return JSON.stringify(oldState.actionsDom) === JSON.stringify(newState.actionsDom)
+  },
+  apply(oldState, newState) {
+    const dom = newState.actionsDom
+    return dom
+  },
 }
