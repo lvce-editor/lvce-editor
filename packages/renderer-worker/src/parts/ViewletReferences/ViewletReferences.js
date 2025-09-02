@@ -23,3 +23,5 @@ export const contentLoaded = (state) => {
 }
 
 export const dispose = ViewletLocations.dispose
+
+export const renderActions = ViewletLocations.renderActions
