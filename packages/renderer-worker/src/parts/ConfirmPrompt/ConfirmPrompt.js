@@ -19,7 +19,7 @@ export const prompt = async (
   { confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
 ) => {
   if (_mockId) {
-    return showMockConfirmPrompt()
+    return showMockConfirmPrompt(message, { confirmMessage, title, cancelMessage })
   }
   // TODO always ask shared process for prompts
   // when running in electron it uses native prompts
