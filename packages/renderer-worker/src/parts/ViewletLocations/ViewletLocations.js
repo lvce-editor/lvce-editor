@@ -23,7 +23,6 @@ export const loadContent = async (state, savedState) => {
   const diff = await ReferencesWorker.invoke('References.diff2', state.id)
   const commands = await ReferencesWorker.invoke('References.render2', state.id, diff)
   const actionsDom = await ReferencesWorker.invoke('References.renderActions', state.id)
-  console.log({ actionsDom })
   return {
     ...state,
     commands,
@@ -137,7 +136,6 @@ export const saveState = async (state) => {
 
 export const renderActions = {
   isEqual(oldState, newState) {
-    console.log('render actions', oldState.actionsDom, newState.actionsDom)
     return JSON.stringify(oldState.actionsDom) === JSON.stringify(newState.actionsDom)
   },
   apply(oldState, newState) {
