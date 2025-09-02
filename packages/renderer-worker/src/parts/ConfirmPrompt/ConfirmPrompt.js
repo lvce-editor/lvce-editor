@@ -8,9 +8,9 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 let _mockId = 0
 
-const showMockConfirmPrompt = async () => {
+const showMockConfirmPrompt = async (message, options) => {
   const ipc = TestWorker.get()
-  const result = await JsonRpc.invoke(ipc, 'Test.executeMock', _mockId)
+  const result = await JsonRpc.invoke(ipc, 'Test.executeMock', _mockId, message, options)
   return result
 }
 
