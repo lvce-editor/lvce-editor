@@ -21,10 +21,10 @@
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.4.0",
-    "@lvce-editor/rpc": "^4.15.0",
+    "@lvce-editor/rpc": "^4.18.0",
     "@lvce-editor/verror": "^1.7.0",
     "execa": "^9.6.0",
-    "got": "^14.4.7",
+    "got": "^14.4.8",
     "minimist": "^1.2.8"
   }
 }
