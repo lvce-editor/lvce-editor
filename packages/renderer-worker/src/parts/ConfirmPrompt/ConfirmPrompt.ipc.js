@@ -4,4 +4,5 @@ export const name = 'ConfirmPrompt'
 
 export const Commands = {
   prompt: ConfirmPrompt.prompt,
+  mock: ConfirmPrompt.mock,
 }
