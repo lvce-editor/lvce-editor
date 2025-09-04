@@ -107,7 +107,7 @@ const ids = [
   'FindWidget.handleReplaceFocus',
   'FindWidget.handleReplaceInput',
   'FindWidget.handleToggleReplaceFocus',
-  'FindWidget.replaceAll',
+  'FindWidget.replace',
   'FindWidget.replaceAll',
   'FindWidget.toggleMatchCase',
   'FindWidget.toggleMatchWholeWord',
