@@ -56,3 +56,10 @@
 .FindWidgetMatchCountEmpty {
   color: var(--ErrorForeground);
 }
+
+.Resizer {
+  width: 3px;
+  height: 100%;
+  background-color: gray;
+  cursor: ew-resize;
+}
