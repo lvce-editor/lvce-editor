@@ -58,8 +58,8 @@
 }
 
 .Resizer {
-  width: 3px;
+  width: 2px;
   height: 100%;
-  background-color: gray;
+  background-color: transparent;
   cursor: ew-resize;
 }
