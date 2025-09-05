@@ -1,5 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
 const ids = [
   'addCursorAbove',
@@ -221,6 +222,11 @@ export const Commands = {
   // TODO
   async showOverlayMessage(state, editor, ...args) {
     await RendererProcess.invoke(...args)
+    return state
+  },
+  async hotReload(state, editor, ...args) {
+    // @ts-ignore
+    await EditorWorker.invoke(`Editor.hotReload`)
     return state
   },
 }

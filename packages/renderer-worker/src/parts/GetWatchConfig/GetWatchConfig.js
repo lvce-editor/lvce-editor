@@ -80,10 +80,17 @@ export const getWatchConfig = () => {
     })
   }
   const output = Preferences.get('develop.outputViewWorkerPath')
-  if (settings) {
+  if (output) {
     watchConfig.push({
       path: output,
       command: 'Output.hotReload',
+    })
+  }
+  const find = Preferences.get('develop.findWidgetWorkerPath')
+  if (find) {
+    watchConfig.push({
+      path: find,
+      command: 'Editor.hotReload',
     })
   }
   return watchConfig
