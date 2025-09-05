@@ -39,6 +39,7 @@ const ids = [
   'cursorWordPartLeft',
   'cursorWordPartRight',
   'cursorWordRight',
+  'hotReload',
   'cut',
   'deleteAllLeft',
   'deleteAllRight',
