@@ -58,7 +58,7 @@
     "@lvce-editor/extension-search-view": "^4.0.0",
     "@lvce-editor/file-search-worker": "^5.18.0",
     "@lvce-editor/file-system-worker": "^1.25.0",
-    "@lvce-editor/find-widget-worker": "^1.21.0",
+    "@lvce-editor/find-widget-worker": "^1.22.0",
     "@lvce-editor/iframe-inspector": "^2.4.0",
     "@lvce-editor/iframe-worker": "^5.35.0",
     "@lvce-editor/settings-view": "^2.0.0",
