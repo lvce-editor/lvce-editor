@@ -89,6 +89,8 @@ const ids = [
   'EditorSourceActions.selectCurrent',
   'findAllReferences',
   'FindWidget.close',
+  'FindWidget.focusNextElement',
+  'FindWidget.focusPreviousElement',
   'FindWidget.focusCloseButton',
   'FindWidget.focusFind',
   'FindWidget.focusNext',
