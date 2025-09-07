@@ -21,6 +21,7 @@ import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWo
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
+import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
 import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
 import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
@@ -63,6 +64,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('menuWorkerMain.js')) {
+    return GetHeadersMenuWorker.getHeadersMenuWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('extensionSearchViewWorkerMain.js')) {
     return GetHeadersExtensionSearchViewWorker.getHeadersExtensionSearchViewWorker(mime, etag, defaultCachingHeader)
