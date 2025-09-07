@@ -79,3 +79,7 @@
 .SourceControlItems .TreeItem:hover {
   --SourceControlButtonsDisplay: flex;
 }
+
+.SourceControl .InputBox {
+  height: var(--SourceControlInputHeight);
+}
