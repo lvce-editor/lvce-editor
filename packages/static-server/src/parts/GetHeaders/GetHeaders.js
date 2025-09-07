@@ -16,6 +16,7 @@ import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSear
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
 import * as GetHeadersFindWidgetWorker from '../GetHeadersFindWidgetWorker/GetHeadersFindWidgetWorker.js'
+import * as GetHeadersIconThemeWorker from '../GetHeadersIconThemeWorker/GetHeadersIconThemeWorker.js'
 import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWorker/GetHeadersIframeInspectorWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
@@ -95,6 +96,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('clipBoardWorkerMain.js')) {
     return GetHeadersClipBoardWorker.getHeadersClipBoardWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('iconThemeWorkerMain.js')) {
+    return GetHeadersIconThemeWorker.getHeadersIconThemeWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('sourceControlWorkerMain.js')) {
     return GetHeadersSourceControlWorker.getHeadersSourceControlWorker(mime, etag, defaultCachingHeader)
