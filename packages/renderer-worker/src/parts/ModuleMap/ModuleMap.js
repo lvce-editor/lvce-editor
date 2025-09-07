@@ -236,6 +236,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionManagement
     case 'Markdown':
       return ModuleId.Markdown
+    case 'MeasureTextHeight':
+      return ModuleId.MeasureTextHeight
     default:
       throw new Error(`module ${prefix} not found`)
   }
