@@ -211,6 +211,8 @@ export const load = (moduleId) => {
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
     case ModuleId.Markdown:
       return import('../Markdown/Markdown.ipc.js')
+    case ModuleId.MeasureTextHeight:
+      return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
