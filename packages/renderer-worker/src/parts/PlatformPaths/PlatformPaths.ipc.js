@@ -4,4 +4,5 @@ export const name = 'PlatformPaths'
 
 export const Commands = {
   getLogsDir: PlatformPaths.getLogsDir,
+  getTmpDir: PlatformPaths.getTmpDir,
 }
