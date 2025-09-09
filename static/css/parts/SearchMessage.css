@@ -1,5 +1,9 @@
+:root {
+  --SearchMessageForeground: rgba(156, 162, 160, 0.65);
+}
+
 .ViewletSearchMessage {
-  color: rgba(156, 162, 160, 0.65);
+  color: var(--SearchMessageForeground);
   padding-bottom: 8px;
   padding-top: 5px;
   contain: content;
@@ -8,4 +12,11 @@
 
 .ViewletSearchMessageIndented {
   padding-left: 22px;
+}
+
+.SearchWarningMessage {
+  color: var(--SearchMessageForeground);
+  padding-left: 22px;
+  padding-right: 8px;
+  padding-bottom: 5px;
 }
