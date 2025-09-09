@@ -19,4 +19,5 @@
   padding-left: 22px;
   padding-right: 8px;
   padding-bottom: 5px;
+  contain: content;
 }
