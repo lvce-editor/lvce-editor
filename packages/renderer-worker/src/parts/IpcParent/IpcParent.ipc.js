@@ -1,7 +1,8 @@
 import * as GetColorPickerWorkerUrl from '../GetColorPickerWorkerUrl/GetColorPickerWorkerUrl.js'
 import * as GetCompletionWorkerUrl from '../GetCompletionWorkerUrl/GetCompletionWorkerUrl.js'
-import * as GetFindWidgetWorkerUrl from '../GetFindWidgetWorkerUrl/GetFindWidgetWorkerUrl.js'
 import * as GetExtensionHostSubWorkerUrl from '../GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js'
+import * as GetFindWidgetWorkerUrl from '../GetFindWidgetWorkerUrl/GetFindWidgetWorkerUrl.js'
+import * as GetHoverWorkerUrl from '../GetHoverWorkerUrl/GetHoverWorkerUrl.js'
 import * as GetRenameWorkerUrl from '../GetRenameWorkerUrl/GetRenameWorkerUrl.js'
 import * as GetSourceActionWorkerUrl from '../GetSourceActionWorkerUrl/GetSourceActionWorkerUrl.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -22,6 +23,9 @@ const wrappedCreate = (options) => {
   }
   if (options && options.url && options.url.endsWith('completionWorkerMain.js')) {
     options.url = GetCompletionWorkerUrl.getCompletionWorkerUrl()
+  }
+  if (options && options.url && options.url.endsWith('hoverWorkerMain.js')) {
+    options.url = GetHoverWorkerUrl.getHoverWorkerUrl()
   }
   if (options && options.url && options.url.endsWith('findWidgetWorkerMain.js')) {
     options.url = GetFindWidgetWorkerUrl.getFindWidgetWorkerUrl()
