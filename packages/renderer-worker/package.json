@@ -76,7 +76,7 @@
     "@lvce-editor/test-worker": "^5.11.0",
     "@lvce-editor/text-search-worker": "^5.7.0",
     "@lvce-editor/title-bar-worker": "^2.4.0",
-    "@lvce-editor/problems-view": "^1.12.0",
+    "@lvce-editor/problems-view": "^1.13.0",
     "@lvce-editor/output-view": "^1.19.0"
   },
   "devDependencies": {
