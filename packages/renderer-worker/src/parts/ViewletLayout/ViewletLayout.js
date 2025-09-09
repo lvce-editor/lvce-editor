@@ -293,8 +293,8 @@ const show = async (state, module, currentViewletId) => {
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 1
   getPoints(newPoints, newPoints)
-  const x = newPoints[kTop]
-  const y = newPoints[kLeft]
+  const x = newPoints[kLeft]
+  const y = newPoints[kTop]
   const width = newPoints[kWidth]
   const height = newPoints[kHeight]
   const uid = state.uid
