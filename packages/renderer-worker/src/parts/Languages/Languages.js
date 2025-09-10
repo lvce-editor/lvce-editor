@@ -9,6 +9,7 @@ import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
@@ -53,6 +54,8 @@ export const hydrate = async () => {
   // TODO main parts should have nothing todo with shared process -> only sub components
   const languages = await ExtensionHostLanguages.getLanguages()
   // TODO avoid side effect here, but how?
+  await IconThemeWorker.invoke('IconTheme.addLanguages', languages)
+  console.log({ languages })
   await addLanguages(languages)
   const useJsx = Preferences.get('languages.jsFilesAsJsx')
   if (useJsx) {
