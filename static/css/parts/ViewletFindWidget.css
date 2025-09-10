@@ -63,3 +63,7 @@
   background-color: transparent;
   cursor: ew-resize;
 }
+
+.FindWidget .MultilineInputBox {
+  height: var(--FindWidgetInputHeight);
+}
