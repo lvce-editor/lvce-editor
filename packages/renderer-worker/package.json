@@ -46,7 +46,7 @@
     "@lvce-editor/completion-worker": "^1.26.0",
     "@lvce-editor/debug-worker": "^3.30.0",
     "@lvce-editor/diff-worker": "^1.5.0",
-    "@lvce-editor/icon-theme-worker": "^1.0.0",
+    "@lvce-editor/icon-theme-worker": "^1.2.0",
     "@lvce-editor/editor-worker": "^8.5.0",
     "@lvce-editor/embeds-worker": "^4.0.0",
     "@lvce-editor/clipboard-worker": "^1.12.0",
