@@ -17,7 +17,7 @@ const getConfiguredWorkerUrl = () => {
   return configuredWorkerUrl
 }
 
-export const launchAboutViewWorker = async () => {
+export const launchIconThemeWorker = async () => {
   const name = 'Icon Theme Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,

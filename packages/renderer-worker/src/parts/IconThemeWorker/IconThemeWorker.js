@@ -1,6 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
-import * as LaunchAboutViewWorker from '../LaunchAboutViewWorker/LaunchAboutViewWorker.js'
+import { launchIconThemeWorker } from '../LaunchIconThemeWorker/LaunchIconThemeWorker.js'
 
-const { invoke } = GetOrCreateWorker.getOrCreateWorker(LaunchAboutViewWorker.launchAboutViewWorker)
+const { invoke } = GetOrCreateWorker.getOrCreateWorker(launchIconThemeWorker)
 
 export { invoke }
