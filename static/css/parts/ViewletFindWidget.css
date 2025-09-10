@@ -64,6 +64,17 @@
   cursor: ew-resize;
 }
 
-.FindWidget .MultilineInputBox {
+.FindWidget .SearchField {
   height: var(--FindWidgetInputHeight);
+}
+
+.FindWidget .MultilineInputBox {
+  height: 100%;
+}
+
+.FindWidgetActions {
+  display: flex;
+  contain: content;
+  height: 25px;
+  align-items: center;
 }
