@@ -24,7 +24,7 @@
   display: flex;
   contain: strict;
   flex: 1;
-  align-items: center;
+  padding-top: 3px;
 }
 
 .FindWidgetReplace {
@@ -42,15 +42,15 @@
 }
 
 .FindWidgetMatchCount {
-  width: 70px;
-  white-space: nowrap;
-  flex-shrink: 0;
-  contain: strict;
-  height: 100%;
-  display: flex;
   align-items: center;
-  margin-left: 3px;
+  contain: strict;
+  display: flex;
+  flex-shrink: 0;
   font-size: 13px;
+  height: 100%;
+  padding-left: 3px;
+  white-space: nowrap;
+  width: 70px; /* TODO make this configurable */
 }
 
 .FindWidgetMatchCountEmpty {
