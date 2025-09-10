@@ -1,5 +1,6 @@
 :root {
   --ErrorForeground: #f48771;
+  --FindWidgetBoxShadow: rgba(0, 0, 0, 0.36) 0px 0px 8px 2px;
 }
 
 .FindWidget {
@@ -11,6 +12,7 @@
   position: absolute;
   --MaskIconSize: 16px;
   pointer-events: all;
+  box-shadow: var(--FindWidgetBoxShadow);
 }
 
 .FindWidgetRight {
