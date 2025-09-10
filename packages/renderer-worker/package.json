@@ -52,7 +52,7 @@
     "@lvce-editor/clipboard-worker": "^1.12.0",
     "@lvce-editor/status-bar-worker": "^1.0.0",
     "@lvce-editor/error-worker": "^2.1.0",
-    "@lvce-editor/explorer-view": "^3.12.0",
+    "@lvce-editor/explorer-view": "^3.13.0",
     "@lvce-editor/source-action-worker": "^1.4.0",
     "@lvce-editor/extension-detail-view": "^3.63.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
