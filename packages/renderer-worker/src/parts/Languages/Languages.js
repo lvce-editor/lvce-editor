@@ -55,7 +55,6 @@ export const hydrate = async () => {
   const languages = await ExtensionHostLanguages.getLanguages()
   // TODO avoid side effect here, but how?
   await IconThemeWorker.invoke('IconTheme.addLanguages', languages)
-  console.log({ languages })
   await addLanguages(languages)
   const useJsx = Preferences.get('languages.jsFilesAsJsx')
   if (useJsx) {
