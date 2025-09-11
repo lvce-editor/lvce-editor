@@ -10,4 +10,5 @@ export const Commands = {
   sendMessagePortToMarkdownWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker,
   sendMessagePortToRendererProcess: SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess,
   sendMessagePortToSharedProcess: SendMessagePortToExtensionHostWorker.sendMessagePortToSharedProcess,
+  sendMessagePortToIconThemeWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToIconThemeWorker,
 }
