@@ -6,6 +6,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
+import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -47,6 +48,12 @@ export const sendMessagePortToFileSystemWorker = async (port, initialCommand, rp
   Assert.object(port)
   Assert.string(initialCommand)
   await FileSystemWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToIconThemeWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await IconThemeWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
