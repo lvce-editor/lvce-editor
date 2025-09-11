@@ -336,16 +336,16 @@ const copyExtensions = async ({ commitHash }) => {
       })
     }
   }
-  await Copy.copy({
-    from: `packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
-    to: `packages/build/.tmp/server/static-server/static/${commitHash}/file-icons`,
-  })
-  await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icons`)
-  await Replace.replace({
-    path: `packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
-    occurrence: '/icons',
-    replacement: '/file-icons',
-  })
+  // await Copy.copy({
+  //   from: `packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
+  //   to: `packages/build/.tmp/server/static-server/static/${commitHash}/file-icons`,
+  // })
+  // await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icons`)
+  // await Replace.replace({
+  //   path: `packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
+  //   occurrence: '/icons',
+  //   replacement: '/file-icons',
+  // })
 }
 
 export const buildStaticServer = async ({ product, commitHash, version, date }) => {
