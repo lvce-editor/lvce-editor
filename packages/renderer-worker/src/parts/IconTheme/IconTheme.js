@@ -1,7 +1,6 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
 import { getAllExtensions } from '../ExtensionManagement/ExtensionManagement.js'
 import * as HandleIconThemeChange from '../HandleIconThemeChange/HandleIconThemeChange.js'
-import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
