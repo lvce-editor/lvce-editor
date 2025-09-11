@@ -18,6 +18,11 @@ export const getLabel = (uri) => {
   return Workspace.pathBaseName(uri)
 }
 
+/**
+ *
+ * @param {string} uri
+ * @returns
+ */
 export const getFileIcon = (uri) => {
   if (uri === 'app://keybindings') {
     return `MaskIcon${Icon.RecordKey}`

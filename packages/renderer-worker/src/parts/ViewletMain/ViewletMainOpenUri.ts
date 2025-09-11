@@ -65,7 +65,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const tabLabel = PathDisplay.getLabel(uri)
   const tabWidth = MeasureTabWidth.measureTabWidth(tabLabel, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   const tabTitle = PathDisplay.getTitle(uri)
-  const icon = PathDisplay.getFileIcon(uri)
+  const icon = await PathDisplay.getFileIcon(uri)
   const newEditor = {
     uri,
     uid: instanceUid,
