@@ -3,6 +3,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ExplorerWorkerUrl from '../ExplorerWorkerUrl/ExplorerWorkerUrl.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const launchExplorerWorker = async () => {
   const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.explorerWorkerPath', ExplorerWorkerUrl.explorerWorkerUrl)
@@ -12,5 +13,6 @@ export const launchExplorerWorker = async () => {
     name: 'Explorer Worker',
   })
   HandleIpc.handleIpc(ipc)
+  await JsonRpc.invoke(ipc, 'Explorer.initialize')
   return ipc
 }
