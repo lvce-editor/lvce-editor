@@ -155,6 +155,12 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
       to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
     })
   }
+  if (!ignoreIconTheme) {
+    await Copy.copy({
+      from: 'extensions/builtin.vscode-icons',
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.vscode-icons`,
+    })
+  }
 }
 
 const isLanguageBasics = (name) => {
