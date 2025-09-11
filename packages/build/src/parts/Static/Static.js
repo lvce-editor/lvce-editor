@@ -139,12 +139,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     occurrence: '/css',
     replacement: `${pathPrefix}/${commitHash}/css`,
   })
-  if (!ignoreIconTheme) {
-    await Copy.copy({
-      from: 'extensions/builtin.vscode-icons/icons',
-      to: `packages/build/.tmp/dist/${commitHash}/file-icons`,
-    })
-  }
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/dist/${commitHash}/css`,
     assetDir: `${pathPrefix}/${commitHash}`,
@@ -159,6 +153,12 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     await Copy.copy({
       from: `extensions/${languageBasic}`,
       to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
+    })
+  }
+  if (!ignoreIconTheme) {
+    await Copy.copy({
+      from: 'extensions/builtin.vscode-icons',
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.vscode-icons`,
     })
   }
 }
