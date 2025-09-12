@@ -117,6 +117,7 @@ const ids = [
   'FindWidget.toggleMatchWholeWord',
   'FindWidget.toggleReplace',
   'FindWidget.toggleUseRegularExpression',
+  'FindWidget.togglePreserveCase',
   'EditorSourceAction.close',
   'EditorSourceAction.closeDetails',
   'EditorSourceAction.focusFirst',
