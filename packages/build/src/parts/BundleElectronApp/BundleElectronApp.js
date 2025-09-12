@@ -133,16 +133,16 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
     occurrence: '../../../../typescript/lib/typescript-esm.js',
     replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
   })
-  await Copy.copy({
-    from: `${resourcesPath}/app/extensions/builtin.vscode-icons/icons`,
-    to: `${resourcesPath}/app/static/file-icons`,
-  })
-  await Remove.remove(`${resourcesPath}/app/extensions/builtin.vscode-icons/icons`)
-  await Replace.replace({
-    path: `${resourcesPath}/app/extensions/builtin.vscode-icons/icon-theme.json`,
-    occurrence: '/icons',
-    replacement: '/file-icons',
-  })
+  // await Copy.copy({
+  //   from: `${resourcesPath}/app/extensions/builtin.vscode-icons/icons`,
+  //   to: `${resourcesPath}/app/static/file-icons`,
+  // })
+  // await Remove.remove(`${resourcesPath}/app/extensions/builtin.vscode-icons/icons`)
+  // await Replace.replace({
+  //   path: `${resourcesPath}/app/extensions/builtin.vscode-icons/icon-theme.json`,
+  //   occurrence: '/icons',
+  //   replacement: '/file-icons',
+  // })
   if (optimizeLanguageBasics) {
     const dirents = await ReadDir.readDir(`${resourcesPath}/app/extensions`)
     const allLanguages = []
