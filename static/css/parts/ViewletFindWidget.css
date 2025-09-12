@@ -20,6 +20,7 @@
   flex-direction: column;
   contain: strict;
   flex: 1;
+  gap: 3px;
 }
 
 .FindWidgetFind {
