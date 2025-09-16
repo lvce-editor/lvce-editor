@@ -9,10 +9,11 @@ export const create = (id: number): AboutState => {
 }
 
 export const loadContent = async (state: AboutState): Promise<AboutState> => {
-  await AboutViewWorker.invoke('About.create', state.id)
-  await AboutViewWorker.invoke('About.loadContent2', state.id)
-  const diffResult = await AboutViewWorker.invoke('About.diff2', state.id)
-  const commands = await AboutViewWorker.invoke('About.render2', state.id, diffResult)
+  const { id } = state
+  await AboutViewWorker.invoke('About.create', id)
+  await AboutViewWorker.invoke('About.loadContent2', id)
+  const diffResult = await AboutViewWorker.invoke('About.diff2', id)
+  const commands = await AboutViewWorker.invoke('About.render2', id, diffResult)
   return {
     ...state,
     commands,
