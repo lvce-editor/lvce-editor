@@ -24,7 +24,7 @@
     "@lvce-editor/rpc": "^4.19.0",
     "@lvce-editor/verror": "^1.7.0",
     "execa": "^9.6.0",
-    "got": "^14.4.8",
+    "got": "^14.4.9",
     "minimist": "^1.2.8"
   }
 }
