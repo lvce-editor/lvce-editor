@@ -13,7 +13,7 @@ export const state = {
 }
 
 export const readFile = async (uri) => {
-  if (uri.startsWith('localhost:')) {
+  if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
     return FileSystemWorker.invoke('FileSystem.readFile', `http://${uri}`)
   }
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
@@ -23,7 +23,7 @@ export const readFile = async (uri) => {
 }
 
 export const readJson = async (uri) => {
-  if (uri.startsWith('localhost:')) {
+  if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
     return FileSystemWorker.invoke('FileSystem.readJson', `http://${uri}`)
   }
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
