@@ -14,7 +14,7 @@ export const state = {
 
 export const readFile = async (uri) => {
   if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
-    return FileSystemWorker.invoke('FileSystem.readFile', `http://${uri}`)
+    return FileSystemWorker.invoke('FileSystem.readFile', `${location.protocol}//${uri}`)
   }
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystemFetch.readFile', uri)
@@ -24,7 +24,7 @@ export const readFile = async (uri) => {
 
 export const readJson = async (uri) => {
   if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
-    return FileSystemWorker.invoke('FileSystem.readJson', `http://${uri}`)
+    return FileSystemWorker.invoke('FileSystem.readJson', `${location.protocol}//${uri}`)
   }
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystem.readJson', uri)
