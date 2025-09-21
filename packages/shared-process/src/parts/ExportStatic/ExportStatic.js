@@ -501,22 +501,46 @@ const transpileFiles = async (folder) => {
 
 export const createFilemap = async (fixturesPath) => {
   const filemap = {}
-  
+
   const dirents = await readdir(fixturesPath, { withFileTypes: true, recursive: true })
-  
+
   for (const dirent of dirents) {
     if (dirent.isFile()) {
       // Calculate relative path by removing the fixturesPath prefix from parentPath
       const fullPath = join(dirent.parentPath, dirent.name)
-      const relativeFilePath = dirent.parentPath === fixturesPath 
-        ? dirent.name 
-        : join(relative(fixturesPath, dirent.parentPath), dirent.name)
+      let relativeFilePath
+      if (dirent.parentPath === fixturesPath) {
+        relativeFilePath = dirent.name
+      } else {
+        // Manually calculate relative path for cross-platform compatibility
+        // Remove the fixturesPath prefix from parentPath and normalize separators
+        const normalizedFixturesPath = fixturesPath.replace(/\\/g, '/')
+        const normalizedParentPath = dirent.parentPath.replace(/\\/g, '/')
+        const relativeDir = normalizedParentPath.replace(normalizedFixturesPath + '/', '')
+        relativeFilePath = join(relativeDir, dirent.name)
+      }
       const content = await FileSystem.readFile(fullPath)
       filemap[relativeFilePath] = content
     }
   }
-  
+
   return filemap
+}
+
+export const createFilemapsPerFixture = async (fixturesPath) => {
+  const dirents = await readdir(fixturesPath, { withFileTypes: true })
+
+  const fixtureDirectories = dirents.filter(dirent => dirent.isDirectory())
+
+  // Create filemaps in parallel
+  await Promise.all(fixtureDirectories.map(async (dirent) => {
+    const fixturePath = join(fixturesPath, dirent.name)
+    const filemap = await createFilemap(fixturePath)
+
+    // Create fileMap.json in the fixture directory
+    const fileMapPath = join(fixturePath, 'fileMap.json')
+    await FileSystem.writeFile(fileMapPath, JSON.stringify(filemap, null, 2))
+  }))
 }
 
 const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
@@ -525,9 +549,8 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   if (existsSync(`${testRoot}/fixtures`)) {
     await FileSystem.copy(`${testRoot}/fixtures`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`)
 
-    // Create filemap.json for fixtures
-    const filemap = await createFilemap(`${testRoot}/fixtures`)
-    await FileSystem.writeFile(`${root}/dist/${commitHash}/packages/extension-host-worker-tests/filemap.json`, JSON.stringify(filemap, null, 2))
+    // Create fileMap.json for each fixture directory
+    await createFilemapsPerFixture(`${root}/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`)
   }
   const distDirentsPath = `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`
   await transpileFiles(distDirentsPath)
