@@ -216,6 +216,7 @@ const ids = [
   'type',
   'undo',
   'unIndent',
+  'handleClickAtPosition',
 ]
 
 export const Commands = {
