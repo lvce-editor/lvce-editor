@@ -82,6 +82,7 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   if (commands.length === 0) {
     return
   }
+  updateDynamicFocusContext(commands)
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
 }
 
@@ -583,6 +584,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         return allCommands
       }
       commands.push(...extraCommands)
+      updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
       const allCommands = [
