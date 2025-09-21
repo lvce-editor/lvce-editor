@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { isAbsolute, join } from 'node:path'
+import { isAbsolute, join, relative } from 'node:path'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -499,11 +499,35 @@ const transpileFiles = async (folder) => {
   }
 }
 
+export const createFilemap = async (fixturesPath) => {
+  const filemap = {}
+  
+  const dirents = await readdir(fixturesPath, { withFileTypes: true, recursive: true })
+  
+  for (const dirent of dirents) {
+    if (dirent.isFile()) {
+      // Calculate relative path by removing the fixturesPath prefix from parentPath
+      const fullPath = join(dirent.parentPath, dirent.name)
+      const relativeFilePath = dirent.parentPath === fixturesPath 
+        ? dirent.name 
+        : join(relative(fixturesPath, dirent.parentPath), dirent.name)
+      const content = await FileSystem.readFile(fullPath)
+      filemap[relativeFilePath] = content
+    }
+  }
+  
+  return filemap
+}
+
 const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
   await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
   if (existsSync(`${testRoot}/fixtures`)) {
     await FileSystem.copy(`${testRoot}/fixtures`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`)
+
+    // Create filemap.json for fixtures
+    const filemap = await createFilemap(`${testRoot}/fixtures`)
+    await FileSystem.writeFile(`${root}/dist/${commitHash}/packages/extension-host-worker-tests/filemap.json`, JSON.stringify(filemap, null, 2))
   }
   const distDirentsPath = `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`
   await transpileFiles(distDirentsPath)
