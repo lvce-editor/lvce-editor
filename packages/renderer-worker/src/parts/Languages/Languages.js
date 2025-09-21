@@ -54,6 +54,7 @@ export const hydrate = async () => {
   // TODO main parts should have nothing todo with shared process -> only sub components
   const languages = await ExtensionHostLanguages.getLanguages()
   // TODO avoid side effect here, but how?
+  // possible icon theme worker can ask for languages to be loaded, that way the dependency is reversed
   await IconThemeWorker.invoke('IconTheme.addLanguages', languages)
   await addLanguages(languages)
   const useJsx = Preferences.get('languages.jsFilesAsJsx')
