@@ -556,6 +556,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (module.hasFunctionalRender) {
       const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid, parentUid)
       ViewletStates.setRenderedState(viewletUid, newState)
+      console.log({ renderCommands })
       commands.push(...renderCommands)
       if (viewlet.show === false) {
         const allCommands = [
@@ -574,6 +575,11 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           Assert.number(parentUid)
           allCommands.push([kAppend, parentUid, viewletUid])
         }
+
+        // TODO avoid side effect here
+        // instead, let component send commands to renderer process and renderer worker
+        // so that those commands are not mixed together
+        updateDynamicFocusContext(allCommands)
         return allCommands
       }
       commands.push(...extraCommands)
