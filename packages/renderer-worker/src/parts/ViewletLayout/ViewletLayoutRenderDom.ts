@@ -1,13 +1,17 @@
+const getDom = (id) => {
+  return []
+}
+
 const getContentCommands = (oldState, newState) => {
-  const commands = []
-  const contentAppendIds = []
+  const commands: any[] = []
+  const contentAppendIds: any[] = []
   if (newState.sideBarLocation === 'left') {
     if (oldState.activityBarVisible && !newState.activityBarVisible) {
       commands.push(['Viewlet.remove', newState.activityBarId])
     }
     if (!oldState.activityBarVisible && newState.activityBarVisible) {
       commands.push(['Viewlet.create', newState.activityBarId])
-      const dom = Viewlet.getDom(newState.activityBarId)
+      const dom = getDom(newState.activityBarId)
       commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
       contentAppendIds.push(newState.activityBarId)
     }
@@ -16,7 +20,7 @@ const getContentCommands = (oldState, newState) => {
     }
     if (!oldState.sideBarVisible && newState.sideBarVisible) {
       commands.push(['Viewlet.create', newState.sideBarId])
-      const dom = Viewlet.getDom(newState.sideBarId)
+      const dom = getDom(newState.sideBarId)
       commands.push(['Viewlet.setDom2', newState.sideBarId, dom])
       contentAppendIds.push(newState.sideBarId)
     }
@@ -26,7 +30,7 @@ const getContentCommands = (oldState, newState) => {
     if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
       // TODO split this up further into main and panel
       commands.push(['Viewlet.create', newState.mainContentsId])
-      const dom = Viewlet.getDom(newState.mainContentsId)
+      const dom = getDom(newState.mainContentsId)
       commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
     }
   }
@@ -57,19 +61,19 @@ export const renderDom = (oldState, newState) => {
   //     <div class="StatusBar" id="8"></div>
   //   </div>
   // )
-  const commands = []
+  const commands: any[] = []
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
     commands.push(['Viewlet.create', newState.workbenchId])
-    const dom = Viewlet.getDom(newState.workbenchId)
+    const dom = getDom(newState.workbenchId)
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
   }
-  const workbenchAppendIds = []
+  const workbenchAppendIds: any[] = []
   if (oldState.titleBarVisible && !newState.titleBarVisible) {
     commands.push(['Viewlet.remove', newState.titleBarId])
   }
   if (!oldState.titleBarVisible && newState.titleBarVisible) {
     commands.push(['Viewlet.create', newState.titleBarId])
-    const dom = Viewlet.getDom(newState.titleBarId)
+    const dom = getDom(newState.titleBarId)
     commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
     workbenchAppendIds.push(newState.titleBarId)
   }
@@ -81,7 +85,7 @@ export const renderDom = (oldState, newState) => {
   }
   if (!oldState.statusBarVisible && newState.statusBarVisible) {
     commands.push(['Viewlet.create', newState.statusBarId])
-    const dom = Viewlet.getDom(newState.statusBarId)
+    const dom = getDom(newState.statusBarId)
     commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
     workbenchAppendIds.push(newState.statusBarId)
   }
