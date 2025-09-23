@@ -1,5 +1,9 @@
 import * as Assert from '../Assert/Assert.ts'
 
+// TODO instances should be keyed by numeric id
+// to allow having multiple instances of the same
+// type. for example multiple editors
+
 export const state = {
   instances: Object.create(null),
   /**
@@ -15,6 +19,20 @@ export const set = (key, value) => {
   Assert.object(value.state)
   Assert.object(value.renderedState)
   state.instances[key] = value
+}
+
+export const getByUid = (uid) => {
+  console.log({
+    instances: {
+      ...state.instances,
+    },
+  })
+  for (const value of Object.values(state.instances)) {
+    if (value.renderedState.uid === uid) {
+      return value
+    }
+  }
+  return undefined
 }
 
 export const getInstance = (key) => {

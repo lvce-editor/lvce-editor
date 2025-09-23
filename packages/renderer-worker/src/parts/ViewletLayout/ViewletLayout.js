@@ -222,6 +222,7 @@ export const create = (id) => {
     contentsAreaId: Id.create(),
     statusBarId: Id.create(),
     workbenchId: Id.create(),
+    contentAreaId: Id.create(),
     sideBarSashVisible: false,
     panelSashVisible: false,
     mainContentsVisible: false,
@@ -529,9 +530,9 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+    console.log('did load', moduleId)
     return {
-      newState: state,
-      commands: orderedCommands,
+      ...state,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)

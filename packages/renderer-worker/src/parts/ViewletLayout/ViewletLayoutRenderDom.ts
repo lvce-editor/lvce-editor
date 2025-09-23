@@ -1,13 +1,17 @@
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getDom = (id) => {
-  if (!ViewletStates.hasState(id)) {
+  const instance = ViewletStates.getByUid(id)
+  if (!instance) {
+    console.log('not found', id)
     return []
   }
-  // @ts-ignore
-  const x = ViewletStates.getState(id)
+  console.log({ id, instance })
+  // const x = ViewletStates.getState(id)
+  // console.log({ x })
   // TODO ask viewlet registry to render component with that id
   return []
 }
@@ -131,7 +135,7 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
-  commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
+  commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
   workbenchAppendIds.push(newState.contentAreaId)
 }
 
@@ -151,7 +155,15 @@ const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) 
 const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) => {
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
     commands.push(['Viewlet.create', newState.workbenchId])
-    const dom = getDom(newState.workbenchId)
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        id: 'Workbench',
+        className: 'Viewlet Layout Workbench',
+        role: 'application',
+        childCount: 0,
+      },
+    ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
     commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
     commands.push(['Viewlet.appendToBody', newState.workbenchId])
