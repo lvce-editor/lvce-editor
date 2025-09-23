@@ -211,6 +211,21 @@ export const create = (id) => {
     [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
+    activityBarId: Id.create(),
+    sideBarSashId: Id.create(),
+    sideBarId: Id.create(),
+    panelSashId: Id.create(),
+    panelId: Id.create(),
+    mainId: Id.create(),
+    mainContentsId: Id.create(),
+    titleBarId: Id.create(),
+    contentsAreaId: Id.create(),
+    statusBarId: Id.create(),
+    workbenchId: Id.create(),
+    sideBarSashVisible: false,
+    panelSashVisible: false,
+    mainContentsVisible: false,
+    workbenchVisible: false,
   }
 }
 
@@ -284,6 +299,10 @@ export const loadContent = (state, savedState) => {
     ...state,
     points: newPoints,
     sideBarLocation,
+    sideBarSashVisible: true,
+    panelSashVisible: true,
+    mainContentsVisible: true,
+    workbenchVisible: true,
   }
 }
 
@@ -476,7 +495,7 @@ const getReferenceNodes = (sideBarLocation) => {
 const loadIfVisible = async (state, module) => {
   try {
     const { points, sideBarLocation } = state
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
     const visible = points[kVisible]
     const x = points[kLeft]
     const y = points[kTop]
@@ -485,7 +504,7 @@ const loadIfVisible = async (state, module) => {
     let commands = []
     const parentUid = state.uid
     if (visible) {
-      const childUid = Id.create()
+      const childUid = state[kId]
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,

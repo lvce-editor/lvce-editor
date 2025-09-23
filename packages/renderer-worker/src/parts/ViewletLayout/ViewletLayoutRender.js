@@ -1,4 +1,5 @@
 import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
+import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
 // @ts-ignore
 const kWindowWidth = 0
@@ -118,4 +119,16 @@ const renderSashes = {
   },
 }
 
-export const render = [renderSashes]
+const renderDom = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    // @ts-ignore
+    const commands = ViewletLayoutRenderDom.renderDom(oldState, newState)
+    return []
+  },
+  mulitple: true,
+}
+
+export const render = [renderSashes, renderDom]
