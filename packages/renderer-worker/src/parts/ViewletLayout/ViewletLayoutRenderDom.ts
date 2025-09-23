@@ -3,6 +3,7 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getDom = (id) => {
+  console.log({ id })
   if (!ViewletStates.hasState(id)) {
     return []
   }
