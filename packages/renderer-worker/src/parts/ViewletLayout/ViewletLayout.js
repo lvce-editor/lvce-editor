@@ -211,6 +211,17 @@ export const create = (id) => {
     [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
+    activityBarId: Id.create(),
+    sideBarSashId: Id.create(),
+    sideBarId: Id.create(),
+    panelSashId: Id.create(),
+    panelId: Id.create(),
+    mainId: Id.create(),
+    mainContentsId: Id.create(),
+    titleBarId: Id.create(),
+    contentsAreaId: Id.create(),
+    statusBarId: Id.create(),
+    workbenchId: Id.create(),
   }
 }
 
