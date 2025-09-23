@@ -1,4 +1,5 @@
 const getDom = (id) => {
+  // TODO ask viewlet registry to render component with that id
   return []
 }
 
@@ -117,4 +118,6 @@ export const renderDom = (oldState, newState) => {
   getContentCommands(oldState, newState, commands, workbenchAppendIds)
   getStatusBarCommands(oldState, newState, commands, workbenchAppendIds)
   getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds)
+
+  // TODO ensure focus commands are last
 }
