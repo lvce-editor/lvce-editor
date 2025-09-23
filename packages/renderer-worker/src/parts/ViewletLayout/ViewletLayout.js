@@ -505,7 +505,6 @@ const loadIfVisible = async (state, module) => {
     const parentUid = state.uid
     if (visible) {
       const childUid = state[kId]
-      console.log({ childUid })
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,

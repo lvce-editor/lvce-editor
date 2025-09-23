@@ -126,7 +126,6 @@ const renderDom = {
   apply(oldState, newState) {
     // @ts-ignore
     const commands = ViewletLayoutRenderDom.renderDom(oldState, newState)
-    console.log({ commands })
     return []
   },
   mulitple: true,
