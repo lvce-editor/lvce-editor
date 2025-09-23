@@ -1,0 +1,152 @@
+/* Flexbox-based layout system for Lvce Editor */
+
+.Workbench {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  contain: strict;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+/* Main container structure */
+.LayoutContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Title bar at the top */
+.TitleBar {
+  flex-shrink: 0;
+  background: var(--TitleBarBackground, rgb(40, 46, 47));
+  z-index: 1000;
+}
+
+/* Content area - main flex container */
+.ContentArea {
+  display: flex;
+  flex: 1;
+  min-height: 0; /* Important for flexbox children to shrink */
+  overflow: hidden;
+}
+
+/* Horizontal layout for main content, sidebar, activity bar, and preview */
+.ContentRow {
+  display: flex;
+  flex: 1;
+  min-width: 0; /* Important for flexbox children to shrink */
+}
+
+/* Main content area */
+.Main {
+  flex: 1;
+  min-width: 0; /* Allow shrinking */
+  background: var(--MainBackground);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar */
+.SideBar {
+  flex-shrink: 0;
+  background: var(--SideBarBackground, rgb(30, 35, 36));
+  min-width: 170px;
+  max-width: 50%;
+}
+
+/* Activity bar */
+.ActivityBar {
+  flex-shrink: 0;
+  width: 48px;
+  background: var(--ActivityBarBackground);
+}
+
+/* Browser preview */
+.Preview {
+  flex-shrink: 0;
+  min-width: 200px;
+  max-width: 50%;
+  background: var(--PreviewBackground, var(--MainBackground));
+}
+
+/* Panel at the bottom */
+.Panel {
+  flex-shrink: 0;
+  background: var(--PanelBackground);
+  min-height: 150px;
+  max-height: 50%;
+}
+
+/* Status bar at the very bottom */
+.StatusBar {
+  flex-shrink: 0;
+  height: 20px;
+  background: var(--StatusBarBackground);
+}
+
+/* Visibility classes */
+.TitleBar.hidden {
+  display: none;
+}
+
+.SideBar.hidden {
+  display: none;
+}
+
+.ActivityBar.hidden {
+  display: none;
+}
+
+.Preview.hidden {
+  display: none;
+}
+
+.Panel.hidden {
+  display: none;
+}
+
+.StatusBar.hidden {
+  display: none;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .ContentRow {
+    flex-direction: column;
+  }
+  
+  .SideBar {
+    max-width: 100%;
+    min-height: 200px;
+  }
+  
+  .Preview {
+    max-width: 100%;
+    min-height: 200px;
+  }
+}
+
+/* Sash styling for resizing */
+.Sash {
+  background: transparent;
+  position: relative;
+  z-index: 100;
+}
+
+.Sash:hover {
+  background: var(--SashHoverBackground, rgba(255, 255, 255, 0.1));
+}
+
+.SashVertical {
+  width: 4px;
+  cursor: col-resize;
+}
+
+.SashHorizontal {
+  height: 4px;
+  cursor: row-resize;
+}

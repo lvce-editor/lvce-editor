@@ -165,13 +165,13 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Four)
 
   Performance.mark(PerformanceMarkerType.WillShowLayout)
-  const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)
+  const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.LayoutFlexbox, 0, '', 0, 0, 0, 0)
   layout.uid = Id.create()
   const layoutState = await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
-      id: ViewletModuleId.Layout,
+      id: ViewletModuleId.LayoutFlexbox,
       type: 0,
       // @ts-ignore
       uri: '',
@@ -184,7 +184,7 @@ export const startup = async () => {
     { ...initData, ...layoutState },
   )
   commands.splice(1, 1)
-  const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const layoutModule = ViewletStates.getInstance(ViewletModuleId.LayoutFlexbox)
   const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
   commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', layout.uid])

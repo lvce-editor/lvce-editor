@@ -25,6 +25,7 @@ export const map = {
   [ViewletModuleId.InlineDiffEditor]: () => import('../ViewletInlineDiffEditor/ViewletInlineDiffEditor.ipc.js'),
   [ViewletModuleId.KeyBindings]: () => import('../ViewletKeyBindings/ViewletKeyBindings.ipc.js'),
   [ViewletModuleId.Layout]: () => import('../ViewletLayout/ViewletLayout.ipc.js'),
+  [ViewletModuleId.LayoutFlexbox]: () => import('../ViewletLayoutFlexbox/ViewletLayoutFlexbox.ipc.js'),
   [ViewletModuleId.Main]: () => import('../ViewletMain/ViewletMain.ipc.js'),
   [ViewletModuleId.MarkDownPreview]: () => import('../ViewletMarkDownPreview/ViewletMarkDownPreview.ipc.js'),
   [ViewletModuleId.Noop]: () => import('../ViewletNoop/ViewletNoop.ipc.js'),

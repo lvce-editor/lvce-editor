@@ -60,11 +60,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     const p5 = /* End of StatusBar */ windowHeight
 
     const p6 = /* Left */ 0
-    let p65 /* Start of Preview */ = 0
     let p7 = /* End of Main */ windowWidth - activityBarWidth
     let p8 = /* End of SideBar */ windowWidth
-    // @ts-ignore
-    const p9 = /* End of ActivityBar */ windowWidth
+    let p9 = /* End of ActivityBar */ windowWidth
+    let p10 = /* Start of Preview */ windowWidth
 
     if (titleBarVisible) {
       p2 = titleBarHeight
@@ -72,23 +71,21 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     if (statusBarVisible) {
       p4 = windowHeight - statusBarHeight
     }
-    if (previewVisible) {
-      p25 = Math.max(p4 - previewHeight, 300)
-    }
     p3 = p4
     if (panelVisible) {
       p3 -= newPanelHeight
     }
     if (activityBarVisible) {
-      p8 = windowWidth - activityBarWidth
+      p9 = windowWidth - activityBarWidth
     }
     if (sideBarVisible) {
-      p7 = p8 - newSideBarWidth
+      p8 = p9 - newSideBarWidth
     }
     if (previewVisible) {
-      p65 = Math.max(p7 - previewWidth, 300)
+      p10 = p9  // Start after activity bar
+      p25 = p2  // Start from title bar
     }
-    destination[LayoutKeys.ActivityBarLeft] = p8
+    destination[LayoutKeys.ActivityBarLeft] = p9
     destination[LayoutKeys.ActivityBarTop] = p2
     destination[LayoutKeys.ActivityBarWidth] = 48
     destination[LayoutKeys.ActivityBarHeight] = p4 - p2
@@ -96,13 +93,13 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
 
     destination[LayoutKeys.MainLeft] = p6
     destination[LayoutKeys.MainTop] = p2
-    destination[LayoutKeys.MainWidth] = p7 - p6
+    destination[LayoutKeys.MainWidth] = previewVisible ? p7 - p6 : (sideBarVisible ? p8 - p6 : p9 - p6)
     destination[LayoutKeys.MainHeight] = p3 - p2
     destination[LayoutKeys.MainVisible] = 1
 
     destination[LayoutKeys.PanelLeft] = p6
     destination[LayoutKeys.panelTop] = p3
-    destination[LayoutKeys.PanelWidth] = p8 - p6
+    destination[LayoutKeys.PanelWidth] = previewVisible ? p9 - p6 : windowWidth - p6
     destination[LayoutKeys.PanelHeight] = p4 - p3
     destination[LayoutKeys.PanelVisible] = panelVisible
 
@@ -124,10 +121,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
 
-    destination[LayoutKeys.PreviewLeft] = p65
+    destination[LayoutKeys.PreviewLeft] = p10
     destination[LayoutKeys.PreviewTop] = p25
-    destination[LayoutKeys.PreviewWidth] = newPreviewWidth
-    destination[LayoutKeys.PreviewHeight] = newPreviewHeight
+    destination[LayoutKeys.PreviewWidth] = windowWidth - p10  // Take remaining width to right edge
+    destination[LayoutKeys.PreviewHeight] = p3 - p2  // Take full height from title bar to panel
     destination[LayoutKeys.PreviewVisible] = previewVisible
   } else {
     const p1 = /* Top */ 0
@@ -140,8 +137,8 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     const p6 = /* Left */ 0
     let p7 = /* End of ActivityBar */ 0
     let p8 = /* End of SideBar */ 0
-    // @ts-ignore
-    const p9 = /* End of Main */ 0
+    let p9 = /* End of Main */ 0
+    let p10 = /* Start of Preview */ 0
 
     if (titleBarVisible) {
       p2 = titleBarHeight
@@ -159,6 +156,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     if (sideBarVisible) {
       p8 = p7 + sideBarWidth
     }
+    p9 = windowWidth
+    if (previewVisible) {
+      p10 = windowWidth / 2  // Start from middle of screen - preview always on right half
+    }
     destination[LayoutKeys.ActivityBarLeft] = p6
     destination[LayoutKeys.ActivityBarTop] = p2
     destination[LayoutKeys.ActivityBarWidth] = 48
@@ -167,13 +168,13 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
 
     destination[LayoutKeys.MainLeft] = p8
     destination[LayoutKeys.MainTop] = p2
-    destination[LayoutKeys.MainWidth] = windowWidth - p8
+    destination[LayoutKeys.MainWidth] = previewVisible ? p10 - p8 : windowWidth - p8
     destination[LayoutKeys.MainHeight] = p3 - p2
     destination[LayoutKeys.MainVisible] = 1
 
     destination[LayoutKeys.PanelLeft] = p6
     destination[LayoutKeys.panelTop] = p3
-    destination[LayoutKeys.PanelWidth] = p8 - p6
+    destination[LayoutKeys.PanelWidth] = previewVisible ? p10 - p6 : windowWidth - p6
     destination[LayoutKeys.PanelHeight] = p4 - p3
     destination[LayoutKeys.PanelVisible] = panelVisible
 
@@ -195,10 +196,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarHeight] = titleBarHeight
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
 
-    destination[LayoutKeys.PreviewLeft] = windowWidth / 2
-    destination[LayoutKeys.PreviewTop] = windowHeight / 2
-    destination[LayoutKeys.PreviewWidth] = windowWidth / 2
-    destination[LayoutKeys.PreviewHeight] = windowHeight / 3
+    destination[LayoutKeys.PreviewLeft] = p10
+    destination[LayoutKeys.PreviewTop] = p2  // Start from title bar
+    destination[LayoutKeys.PreviewWidth] = windowWidth - p10  // Take remaining width to right edge
+    destination[LayoutKeys.PreviewHeight] = p3 - p2  // Take full height from title bar to panel
     destination[LayoutKeys.PreviewVisible] = previewVisible
   }
 }
@@ -263,6 +264,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.SideBarWidth] ||= 240
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
+  newPoints[LayoutKeys.PreviewVisible] = 1
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200

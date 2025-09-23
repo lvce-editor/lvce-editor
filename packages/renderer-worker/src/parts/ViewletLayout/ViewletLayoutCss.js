@@ -1,6 +1,7 @@
 export const Css = [
   '/css/parts/Viewlet.css',
   '/css/parts/ViewletLayout.css',
+  '/css/parts/ViewletLayoutFlexbox.css',
   '/css/parts/ViewletSash.css',
 
   // TODO remove these

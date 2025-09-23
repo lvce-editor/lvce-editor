@@ -46,6 +46,8 @@ export const KeyBindings = 'KeyBindings'
 
 export const Layout = 'Layout'
 
+export const LayoutFlexbox = 'LayoutFlexbox'
+
 export const List = 'List'
 
 export const Locations = 'Locations'
