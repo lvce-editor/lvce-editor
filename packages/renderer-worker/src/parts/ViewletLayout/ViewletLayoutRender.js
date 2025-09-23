@@ -131,4 +131,4 @@ const renderDom = {
   multiple: true,
 }
 
-export const render = [renderDom]
+export const render = [renderDom, renderSashes]
