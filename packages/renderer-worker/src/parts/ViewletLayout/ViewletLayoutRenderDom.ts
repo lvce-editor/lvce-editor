@@ -38,6 +38,18 @@ const getMainCommands = (oldState, newState, commands, contentAppendIds) => {
   }
 }
 
+const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
+  if (oldState.titleBarVisible && !newState.titleBarVisible) {
+    commands.push(['Viewlet.remove', newState.titleBarId])
+  }
+  if (!oldState.titleBarVisible && newState.titleBarVisible) {
+    commands.push(['Viewlet.create', newState.titleBarId])
+    const dom = getDom(newState.titleBarId)
+    commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
+    workbenchAppendIds.push(newState.titleBarId)
+  }
+}
+
 const getContentCommands = (oldState, newState) => {
   const commands: any[] = []
   const contentAppendIds: any[] = []
@@ -80,15 +92,7 @@ export const renderDom = (oldState, newState) => {
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
   }
   const workbenchAppendIds: any[] = []
-  if (oldState.titleBarVisible && !newState.titleBarVisible) {
-    commands.push(['Viewlet.remove', newState.titleBarId])
-  }
-  if (!oldState.titleBarVisible && newState.titleBarVisible) {
-    commands.push(['Viewlet.create', newState.titleBarId])
-    const dom = getDom(newState.titleBarId)
-    commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
-    workbenchAppendIds.push(newState.titleBarId)
-  }
+  getTitleBarCommands(oldState, newState, commands, workbenchAppendIds)
   const contentCommands = getContentCommands(oldState, newState)
   commands.push(...contentCommands)
   workbenchAppendIds.push(newState.contentAreaId)
