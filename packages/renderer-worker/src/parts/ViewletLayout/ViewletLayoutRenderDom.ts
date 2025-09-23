@@ -6,13 +6,25 @@ const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
     console.log('not found', id)
-    return []
+    return [
+      {
+        type: VirtualDomElements.Div,
+        childCount: 0,
+        className: `Element-${id}`,
+      },
+    ]
   }
   console.log({ id, instance })
   // const x = ViewletStates.getState(id)
   // console.log({ x })
   // TODO ask viewlet registry to render component with that id
-  return []
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: `Element-${id}`,
+      childCount: 0,
+    },
+  ]
 }
 
 const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -102,7 +114,11 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
     commands.push(['Viewlet.createFunctionalRoot', `${newState.mainContentsId}`, newState.mainContentsId, true])
-    commands.push(['Viewlet.append', newState.mainContentsId, mainContentsAppendIds])
+
+    // TODO append them all at once
+    for (const item of mainContentsAppendIds) {
+      commands.push(['Viewlet.append', newState.mainContentsId, item])
+    }
   }
   contentAppendIds.push(newState.mainContentsId)
 }
@@ -134,7 +150,10 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
-  commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
+  // TODO append them all at once
+  for (const item of contentAppendIds) {
+    commands.push(['Viewlet.append', newState.contentAreaId, item])
+  }
   workbenchAppendIds.push(newState.contentAreaId)
 }
 
@@ -164,7 +183,10 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
       },
     ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-    commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
+    // TODO append them all at once
+    for (const item of workbenchAppendIds) {
+      commands.push(['Viewlet.append', newState.workbenchId, item])
+    }
     commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
 }
