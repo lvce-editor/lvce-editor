@@ -3,13 +3,11 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getDom = (id) => {
-  console.log({ id })
   if (!ViewletStates.hasState(id)) {
     return []
   }
-  console.log({ id })
+  // @ts-ignore
   const x = ViewletStates.getState(id)
-  console.log({ x })
   // TODO ask viewlet registry to render component with that id
   return []
 }
