@@ -109,6 +109,11 @@ const renderDom = (oldState, newState) => {
     </div>
   )
   const commands = []
+  if (!oldState.workbenchVisible && newState.workbenchVisible) {
+    commands.push(['Viewlet.create', newState.workbenchId])
+    const dom = Viewlet.getDom(newState.workbenchId)
+    commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
+  }
   const workbenchAppendIds = []
   if (oldState.titleBarVisible && !newState.titleBarVisible) {
     commands.push(['Viewlet.remove', newState.titleBarId])
@@ -132,6 +137,9 @@ const renderDom = (oldState, newState) => {
     workbenchAppendIds.push(newState.statusBarId)
   }
   commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
+  if (!oldState.workbenchVisible && newState.workbenchVisible) {
+    commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
+  }
 }
 
 const renderSashes = {
