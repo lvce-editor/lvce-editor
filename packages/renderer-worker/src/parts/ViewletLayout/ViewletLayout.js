@@ -503,7 +503,7 @@ const getReferenceNodes = (sideBarLocation) => {
 const loadIfVisible = async (state, module) => {
   try {
     const { points, sideBarLocation } = state
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
     const visible = points[kVisible]
     const x = points[kLeft]
     const y = points[kTop]
@@ -540,6 +540,7 @@ const loadIfVisible = async (state, module) => {
     console.log('did load', moduleId)
     return {
       ...state,
+      [kReady]: true,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)

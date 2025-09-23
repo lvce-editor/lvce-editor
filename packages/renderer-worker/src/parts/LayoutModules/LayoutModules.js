@@ -9,6 +9,7 @@ export const Main = {
   kWidth: LayoutKeys.MainWidth,
   kHeight: LayoutKeys.MainHeight,
   kId: 'mainId',
+  kReady: 'mainVisible',
 }
 
 export const ActivityBar = {
@@ -19,6 +20,7 @@ export const ActivityBar = {
   kWidth: LayoutKeys.ActivityBarWidth,
   kHeight: LayoutKeys.ActivityBarHeight,
   kId: 'activityBarId',
+  kReady: 'activityBarVisible',
 }
 
 export const SideBar = {
@@ -29,6 +31,7 @@ export const SideBar = {
   kWidth: LayoutKeys.SideBarWidth,
   kHeight: LayoutKeys.SideBarHeight,
   kId: 'sideBarId',
+  kReady: 'sideBarVisible',
 }
 
 export const TitleBar = {
@@ -39,6 +42,7 @@ export const TitleBar = {
   kWidth: LayoutKeys.TitleBarWidth,
   kHeight: LayoutKeys.TitleBarHeight,
   kId: 'titleBarId',
+  kReady: 'titleBarVisible',
 }
 
 export const StatusBar = {
@@ -49,6 +53,7 @@ export const StatusBar = {
   kWidth: LayoutKeys.StatusBarWidth,
   kHeight: LayoutKeys.StatusBarHeight,
   kId: 'statusBarId',
+  kReady: 'statusbarVisible',
 }
 
 export const Panel = {
@@ -59,6 +64,7 @@ export const Panel = {
   kWidth: LayoutKeys.PanelWidth,
   kHeight: LayoutKeys.PanelHeight,
   kId: 'panelId',
+  kReady: 'panelVisible',
 }
 
 export const Preview = {
@@ -69,4 +75,5 @@ export const Preview = {
   kWidth: LayoutKeys.PreviewWidth,
   kHeight: LayoutKeys.PreviewHeight,
   kId: 'previewId',
+  kReady: 'previewVisible',
 }
