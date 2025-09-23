@@ -196,6 +196,8 @@ const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) 
     commands.push(['Viewlet.createFunctionalRoot', `${newState.statusBarId}`, newState.statusBarId, true])
     const dom = getDom(newState.statusBarId)
     commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
+  }
+  if (newState.statusBarVisible) {
     workbenchAppendIds.push(newState.statusBarId)
   }
 }
