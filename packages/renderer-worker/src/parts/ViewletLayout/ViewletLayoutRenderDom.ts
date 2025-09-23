@@ -181,8 +181,8 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     ]
     commands.push(['Viewlet.setDom2', newState.contentAreaId, dom])
   }
+  commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
   if (newState.contentAreaVisible) {
-    commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
 }
