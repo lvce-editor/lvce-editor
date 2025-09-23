@@ -49,41 +49,9 @@ const kSashId = 'sashId'
 
 export const hasFunctionalRender = true
 
-const renderDom = (oldState, newState) => {
-  const dom = (
-    <div class="Workbench" id="1">
-      <div class="TitleBar" id="2"></div>
-      <div class="ContentArea" id="3">
-        <If condition={sideBarLocation === 'left'}>
-          <div class="MainContents" id="4">
-            <div class="Main" id="5"></div>
-          </div>
-          <div class="SideBar" id="6"></div>
-          <div class="ActivityBar" id="7"></div>
-        </If>
-        <If condition={sideBarLocation === 'right'}>
-          <div class="ActivityBar" id="7"></div>
-          <div class="SideBar" id="6"></div>
-          <div class="MainContents" id="4">
-            <div class="Main" id="5"></div>
-          </div>
-        </If>
-      </div>
-      <div class="StatusBar" id="8"></div>
-    </div>
-  )
+const getContentCommands = (oldState, newState) => {
   const commands = []
-  const workbenchAppendIds = []
   const contentAppendIds = []
-  if (oldState.titleBarVisible && !newState.titleBarVisible) {
-    commands.push(['Viewlet.remove', newState.titleBarId])
-  }
-  if (!oldState.titleBarVisible && newState.titleBarVisible) {
-    commands.push(['Viewlet.create', newState.titleBarId])
-    const dom = Viewlet.getDom(newState.titleBarId)
-    commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
-    workbenchAppendIds.push(newState.titleBarId)
-  }
   if (newState.sideBarLocation === 'left') {
     if (oldState.activityBarVisible && !newState.activityBarVisible) {
       commands.push(['Viewlet.remove', newState.activityBarId])
@@ -113,6 +81,57 @@ const renderDom = (oldState, newState) => {
       commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
     }
   }
+  commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
+  return commands
+}
+
+const renderDom = (oldState, newState) => {
+  const dom = (
+    <div class="Workbench" id="1">
+      <div class="TitleBar" id="2"></div>
+      <div class="ContentArea" id="3">
+        <If condition={sideBarLocation === 'left'}>
+          <div class="MainContents" id="4">
+            <div class="Main" id="5"></div>
+          </div>
+          <div class="SideBar" id="6"></div>
+          <div class="ActivityBar" id="7"></div>
+        </If>
+        <If condition={sideBarLocation === 'right'}>
+          <div class="ActivityBar" id="7"></div>
+          <div class="SideBar" id="6"></div>
+          <div class="MainContents" id="4">
+            <div class="Main" id="5"></div>
+          </div>
+        </If>
+      </div>
+      <div class="StatusBar" id="8"></div>
+    </div>
+  )
+  const commands = []
+  const workbenchAppendIds = []
+  if (oldState.titleBarVisible && !newState.titleBarVisible) {
+    commands.push(['Viewlet.remove', newState.titleBarId])
+  }
+  if (!oldState.titleBarVisible && newState.titleBarVisible) {
+    commands.push(['Viewlet.create', newState.titleBarId])
+    const dom = Viewlet.getDom(newState.titleBarId)
+    commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
+    workbenchAppendIds.push(newState.titleBarId)
+  }
+  const contentCommands = getContentCommands(oldState, newState)
+  commands.push(...contentCommands)
+  workbenchAppendIds.push(newState.contentAreaId)
+  if (oldState.statusBarVisible && !newState.statusBarVisible) {
+    commands.push(['Viewlet.remove', newState.statusBarId])
+  }
+  if (!oldState.statusBarVisible && newState.statusBarVisible) {
+    commands.push(['Viewlet.create', newState.statusBarId])
+    const dom = Viewlet.getDom(newState.statusBarId)
+    commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
+    workbenchAppendIds.push(newState.statusBarId)
+  }
+  commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
 }
 
 const renderSashes = {
