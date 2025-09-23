@@ -94,6 +94,7 @@ const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) =
 const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
   if (oldState.mainVisible && !newState.mainVisible) {
     commands.push(['Viewlet.remove', newState.mainId])
+    return
   }
   if (!oldState.mainVisible && newState.mainVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.mainId}`, newState.mainId, true])

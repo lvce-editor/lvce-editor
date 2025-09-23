@@ -303,6 +303,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   // TODO get side bar min width from preferences
   getPoints(newPoints, newPoints, sideBarLocation)
+  console.log({ state })
   return {
     ...state,
     points: newPoints,
