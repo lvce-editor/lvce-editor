@@ -168,6 +168,15 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
+  commands.push(['Viewlet.createFunctionalRoot', `${newState.contentAreaId}`, newState.contentAreaId, true])
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'ContentArea',
+      childCount: 0,
+    },
+  ]
+  commands.push(['Viewlet.setDom2', newState.contentAreaId, dom])
   // TODO append them all at once
   for (const item of contentAppendIds) {
     commands.push(['Viewlet.append', newState.contentAreaId, item])
