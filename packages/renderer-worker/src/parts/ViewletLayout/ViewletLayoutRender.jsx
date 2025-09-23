@@ -54,11 +54,20 @@ const renderDom = (oldState, newState) => {
     <div class="Workbench" id="1">
       <div class="TitleBar" id="2"></div>
       <div class="ContentArea" id="3">
-        <div class="MainContents" id="4">
-          <div class="Main" id="5"></div>
-        </div>
-        <div class="SideBar" id="6"></div>
-        <div class="ActivityBar" id="7"></div>
+        <If condition={sideBarLocation === 'left'}>
+          <div class="MainContents" id="4">
+            <div class="Main" id="5"></div>
+          </div>
+          <div class="SideBar" id="6"></div>
+          <div class="ActivityBar" id="7"></div>
+        </If>
+        <If condition={sideBarLocation === 'right'}>
+          <div class="ActivityBar" id="7"></div>
+          <div class="SideBar" id="6"></div>
+          <div class="MainContents" id="4">
+            <div class="Main" id="5"></div>
+          </div>
+        </If>
       </div>
       <div class="StatusBar" id="8"></div>
     </div>
