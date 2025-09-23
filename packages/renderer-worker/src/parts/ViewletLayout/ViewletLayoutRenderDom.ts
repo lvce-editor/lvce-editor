@@ -6,12 +6,8 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
-    console.log('not found', id)
     return []
   }
-  console.log({ id, instance })
-  // const x = ViewletStates.getState(id)
-  // console.log({ x })
   // TODO ask viewlet registry to render component with that id
   return []
 }
