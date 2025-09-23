@@ -19,6 +19,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import { LayoutState } from './LayoutState.ts'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
@@ -245,45 +246,49 @@ const getSavedPoints = (savedState) => {
 const isNativeTitleBarStyle = () => {
   return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
-export const loadContent = (state, savedState) => {
+export const loadContent = (state: LayoutState, savedState): LayoutState => {
   const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   const newPoints = getSavedPoints(savedState)
-  newPoints[LayoutKeys.ActivityBarVisible] = 1
-  newPoints[LayoutKeys.ActivityBarWidth] = 48
-  newPoints[LayoutKeys.MainVisible] = 1
-  newPoints[LayoutKeys.PanelHeight] ||= 160
-  newPoints[LayoutKeys.PanelMaxHeight] = 600
-  newPoints[LayoutKeys.PanelMinHeight] = 150
-  newPoints[LayoutKeys.SideBarMaxWidth] = 9999999
-  newPoints[LayoutKeys.SideBarMinWidth] = 170
-  newPoints[LayoutKeys.SideBarVisible] = 1
-  newPoints[LayoutKeys.SideBarWidth] ||= 240
-  newPoints[LayoutKeys.StatusBarHeight] = 20
-  newPoints[LayoutKeys.StatusBarVisible] = 1
-  newPoints[LayoutKeys.PreviewHeight] ||= 350
-  newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
-  newPoints[LayoutKeys.PreviewMaxHeight] = 1200
-  newPoints[LayoutKeys.PreviewWidth] ||= 600
-  newPoints[LayoutKeys.PreviewMinWidth] = 100
-  newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
-  if (isNativeTitleBarStyle()) {
-    newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 0
-  } else {
-    newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
-    newPoints[LayoutKeys.TitleBarVisible] = 1
+  const activityBarVisible = true
+  const activityBarWidth = 48
+  const mainVisible = true
+  const panelHeight = 160
+  const maxPanelHeight = 600
+  const minPanelHeight = 150
+  const sideBarMaxWidth = 9999999
+  const sideBarMinWidth = 170
+  const sideBarVisible = true
+  const sideBarWidth = 240
+  const statusBarHeight = 20
+  const statusBarVisible = true
+  let titleBarHeight = 0
+  let titleBarVisible = false
+  if (!isNativeTitleBarStyle()) {
+    titleBarHeight = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
+    titleBarVisible = true
   }
+
   newPoints[LayoutKeys.WindowHeight] = windowHeight
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   // TODO get side bar min width from preferences
-  getPoints(newPoints, newPoints, sideBarLocation)
   return {
     ...state,
-    points: newPoints,
     sideBarLocation,
+    activityBarVisible,
+    activityBarWidth,
+    mainVisible,
+    panelHeight,
+    maxPanelHeight,
+    minPanelHeight,
+    sideBarMaxWidth,
+    sideBarMinWidth,
+    sideBarVisible,
+    sideBarWidth,
+    statusBarHeight,
+    statusBarVisible,
   }
 }
 
@@ -473,11 +478,20 @@ const getReferenceNodes = (sideBarLocation) => {
   ]
 }
 
-const loadIfVisible = async (state, module) => {
+interface Module {
+  readonly kVisible: 'activityBarVisible' | 'mainVisible' | 'sideBarVisible'
+  readonly kTop: string
+  readonly kLeft: string
+  readonly kWidth: string
+  readonly kHeight: string
+  readonly moduleId: string
+}
+
+const loadIfVisible = async (state: LayoutState, module: Module) => {
   try {
     const { points, sideBarLocation } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    const visible = points[kVisible]
+    const visible = state[kVisible]
     const x = points[kLeft]
     const y = points[kTop]
     const width = points[kWidth]
@@ -510,6 +524,9 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+    // TODO at this point, query the state again and create a lightweight virtual dom like
+    // [{ id: titlebar }, { id: content-area }, { id: status-bar }]
+
     return {
       newState: state,
       commands: orderedCommands,
