@@ -495,7 +495,7 @@ const getReferenceNodes = (sideBarLocation) => {
 const loadIfVisible = async (state, module) => {
   try {
     const { points, sideBarLocation } = state
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
     const visible = points[kVisible]
     const x = points[kLeft]
     const y = points[kTop]
@@ -504,7 +504,7 @@ const loadIfVisible = async (state, module) => {
     let commands = []
     const parentUid = state.uid
     if (visible) {
-      const childUid = Id.create()
+      const childUid = state[kId]
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,

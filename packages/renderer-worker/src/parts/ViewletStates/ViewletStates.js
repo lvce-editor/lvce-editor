@@ -63,6 +63,11 @@ export const getValues = () => {
   return Object.values(state.instances)
 }
 
+export const hasState = (key) => {
+  const instance = getInstance(key)
+  return Boolean(instance)
+}
+
 export const getState = (key) => {
   const instance = getInstance(key)
   if (!instance) {

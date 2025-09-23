@@ -1,7 +1,14 @@
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getDom = (id) => {
+  if (!ViewletStates.hasState(id)) {
+    return []
+  }
+  console.log({ id })
+  const x = ViewletStates.getState(id)
+  console.log({ x })
   // TODO ask viewlet registry to render component with that id
   return []
 }
