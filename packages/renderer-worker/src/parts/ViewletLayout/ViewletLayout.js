@@ -222,9 +222,10 @@ export const create = (id) => {
     contentsAreaId: Id.create(),
     statusBarId: Id.create(),
     workbenchId: Id.create(),
-    sideBarSashVisible: true,
-    panelSashVisible: true,
-    mainContentsVisible: true,
+    sideBarSashVisible: false,
+    panelSashVisible: false,
+    mainContentsVisible: false,
+    workbenchVisible: false,
   }
 }
 
@@ -298,6 +299,10 @@ export const loadContent = (state, savedState) => {
     ...state,
     points: newPoints,
     sideBarLocation,
+    sideBarSashVisible: true,
+    panelSashVisible: true,
+    mainContentsVisible: true,
+    workbenchVisible: true,
   }
 }
 
