@@ -14,9 +14,6 @@ const getDom = (id) => {
       },
     ]
   }
-  console.log({ id, instance })
-  // const x = ViewletStates.getState(id)
-  // console.log({ x })
   // TODO ask viewlet registry to render component with that id
   return [
     {
