@@ -15,6 +15,18 @@ const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) 
   }
 }
 
+const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) => {
+  if (oldState.sideBarSashVisible && !newState.sideBarSashVisible) {
+    commands.push(['Viewlet.remove', newState.sideBarSashId])
+  }
+  if (!oldState.sideBarSashVisible && newState.sideBarSashVisible) {
+    commands.push(['Viewlet.create', newState.sideBarSashId])
+    const dom = getDom(newState.sideBarSashId)
+    commands.push(['Viewlet.setDom2', newState.sideBarSashId, dom])
+    contentAppendIds.push(newState.sideBarSashId)
+  }
+}
+
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
   if (oldState.sideBarVisible && !newState.sideBarVisible) {
     commands.push(['Viewlet.remove', newState.sideBarId])
@@ -37,6 +49,7 @@ const getMainCommands = (oldState, newState, commands, contentAppendIds) => {
     const dom = getDom(newState.mainContentsId)
     commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
   }
+  contentAppendIds.push(newState.mainContentsId)
 }
 
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
@@ -56,11 +69,13 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === 'left') {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getMainCommands(oldState, newState, commands, contentAppendIds)
   } else {
     getMainCommands(oldState, newState, commands, contentAppendIds)
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
   commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
