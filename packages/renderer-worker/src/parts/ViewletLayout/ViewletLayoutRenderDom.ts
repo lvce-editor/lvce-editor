@@ -50,8 +50,7 @@ const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) =
   }
 }
 
-const getContentCommands = (oldState, newState) => {
-  const commands: any[] = []
+const getContentCommands = (oldState, newState, commands, workbenchAppendIds) => {
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === 'left') {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
@@ -59,7 +58,29 @@ const getContentCommands = (oldState, newState) => {
     getMainCommands(oldState, newState, commands, contentAppendIds)
   }
   commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
-  return commands
+  workbenchAppendIds.push(newState.contentAreaId)
+}
+
+const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
+  if (oldState.statusBarVisible && !newState.statusBarVisible) {
+    commands.push(['Viewlet.remove', newState.statusBarId])
+  }
+  if (!oldState.statusBarVisible && newState.statusBarVisible) {
+    commands.push(['Viewlet.create', newState.statusBarId])
+    const dom = getDom(newState.statusBarId)
+    commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
+    workbenchAppendIds.push(newState.statusBarId)
+  }
+}
+
+const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) => {
+  if (!oldState.workbenchVisible && newState.workbenchVisible) {
+    commands.push(['Viewlet.create', newState.workbenchId])
+    const dom = getDom(newState.workbenchId)
+    commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
+    commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
+    commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
+  }
 }
 
 export const renderDom = (oldState, newState) => {
@@ -86,27 +107,9 @@ export const renderDom = (oldState, newState) => {
   //   </div>
   // )
   const commands: any[] = []
-  if (!oldState.workbenchVisible && newState.workbenchVisible) {
-    commands.push(['Viewlet.create', newState.workbenchId])
-    const dom = getDom(newState.workbenchId)
-    commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-  }
   const workbenchAppendIds: any[] = []
   getTitleBarCommands(oldState, newState, commands, workbenchAppendIds)
-  const contentCommands = getContentCommands(oldState, newState)
-  commands.push(...contentCommands)
-  workbenchAppendIds.push(newState.contentAreaId)
-  if (oldState.statusBarVisible && !newState.statusBarVisible) {
-    commands.push(['Viewlet.remove', newState.statusBarId])
-  }
-  if (!oldState.statusBarVisible && newState.statusBarVisible) {
-    commands.push(['Viewlet.create', newState.statusBarId])
-    const dom = getDom(newState.statusBarId)
-    commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
-    workbenchAppendIds.push(newState.statusBarId)
-  }
-  commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
-  if (!oldState.workbenchVisible && newState.workbenchVisible) {
-    commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
-  }
+  getContentCommands(oldState, newState, commands, workbenchAppendIds)
+  getStatusBarCommands(oldState, newState, commands, workbenchAppendIds)
+  getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds)
 }
