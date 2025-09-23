@@ -538,6 +538,7 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+    console.log('load', kReady)
     return {
       ...state,
       [kReady]: true,
