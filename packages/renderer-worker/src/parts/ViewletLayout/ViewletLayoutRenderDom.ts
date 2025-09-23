@@ -42,6 +42,19 @@ const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
   contentAppendIds.push(newState.sideBarId)
 }
 
+const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) => {
+  if (oldState.panelSashVisible && !newState.panelSashVisible) {
+    commands.push(['Viewlet.remove', newState.panelSashId])
+    return
+  }
+  if (!oldState.panelSashVisible && newState.panelSashVisible) {
+    commands.push(['Viewlet.create', newState.panelSashId])
+    const dom = getDom(newState.panelSashId)
+    commands.push(['Viewlet.setDom2', newState.panelSashId, dom])
+  }
+  contentAppendIds.push(newState.panelSashId)
+}
+
 const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) => {
   if (oldState.panelVisible && !newState.panelVisible) {
     commands.push(['Viewlet.remove', newState.panelId])
@@ -54,7 +67,17 @@ const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) =
   mainContentsAppendIds.push(newState.panelId)
 }
 
-const getMainCommands = () => {}
+const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
+  if (oldState.mainVisible && !newState.mainVisible) {
+    commands.push(['Viewlet.remove', newState.panelId])
+  }
+  if (!oldState.mainVisible && newState.mainVisible) {
+    commands.push(['Viewlet.create', newState.panelId])
+    const dom = getDom(newState.panelId)
+    commands.push(['Viewlet.setDom2', newState.panelId, dom])
+  }
+  mainContentsAppendIds.push(newState.mainId)
+}
 
 const getMainContentsCommands = (oldState, newState, commands, contentAppendIds) => {
   if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
@@ -66,6 +89,10 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     commands.push(['Viewlet.create', newState.mainContentsId])
     const dom = getDom(newState.mainContentsId)
     commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
+    const mainContentsAppendIds = []
+    getMainCommands(oldState, newState, commands, mainContentsAppendIds)
+    getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
+    getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
   }
   contentAppendIds.push(newState.mainContentsId)
 }
