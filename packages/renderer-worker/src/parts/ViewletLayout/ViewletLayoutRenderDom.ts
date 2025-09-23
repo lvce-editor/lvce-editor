@@ -145,7 +145,7 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
     const dom = getDom(newState.workbenchId)
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
     commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
-    commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
+    commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
 }
 
