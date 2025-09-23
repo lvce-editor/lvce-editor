@@ -56,6 +56,10 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getMainCommands(oldState, newState, commands, contentAppendIds)
+  } else {
+    getMainCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarCommands(oldState, newState, commands, contentAppendIds)
+    getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
   commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
   workbenchAppendIds.push(newState.contentAreaId)
