@@ -51,24 +51,29 @@ export const hasFunctionalRender = true
 
 const renderDom = (oldState, newState) => {
   const dom = (
-    <div class="Workbench">
-      <div class="TitleBar"></div>
-      <div class="ContentArea">
-        <div class="MainContents">
-          <div class="Main"></div>
+    <div class="Workbench" id="1">
+      <div class="TitleBar" id="2"></div>
+      <div class="ContentArea" id="3">
+        <div class="MainContents" id="4">
+          <div class="Main" id="5"></div>
         </div>
-        <div class="SideBar"></div>
-        <div class="ActivityBar"></div>
+        <div class="SideBar" id="6"></div>
+        <div class="ActivityBar" id="7"></div>
       </div>
-      <div class="StatusBar"></div>
+      <div class="StatusBar" id="8"></div>
     </div>
   )
   const commands = []
+  if (oldState.titleBarVisible && !newState.titleBarVisible) {
+    commands.push(['Viewlet.remove', newState.titleBarId])
+  }
   if (oldState.sideBarVisible && !newState.sideBarVisible) {
     commands.push(['Viewlet.remove', newState.sideBarId])
   }
   if (!oldState.sideBarVisible && newState.sideBarVisible) {
     commands.push(['Viewlet.create', newState.sideBarId])
+    const sideBarDom = Viewlet.getDom(newState.sideBarId)
+    commands.push(['Viewlet.setDom2', newState.sideBarId, sideBarDom])
   }
 }
 
