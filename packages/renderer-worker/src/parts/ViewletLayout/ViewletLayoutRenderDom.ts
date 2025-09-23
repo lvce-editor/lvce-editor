@@ -1,14 +1,16 @@
+import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
+
 const getDom = (id) => {
   // TODO ask viewlet registry to render component with that id
   return []
 }
 
 const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  if (oldState.activityBarVisible && !newState.activityBarVisible) {
+  if (oldState.points[LayoutKeys.ActivityBarVisible] && !newState.points[LayoutKeys.ActivityBarVisible]) {
     commands.push(['Viewlet.remove', newState.activityBarId])
     return
   }
-  if (!oldState.activityBarVisible && newState.activityBarVisible) {
+  if (!oldState.points[LayoutKeys.ActivityBarVisible] && newState.points[LayoutKeys.ActivityBarVisible]) {
     commands.push(['Viewlet.create', newState.activityBarId])
     const dom = getDom(newState.activityBarId)
     commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
