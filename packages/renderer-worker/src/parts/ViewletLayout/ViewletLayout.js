@@ -303,7 +303,6 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   // TODO get side bar min width from preferences
   getPoints(newPoints, newPoints, sideBarLocation)
-  console.log({ state })
   return {
     ...state,
     points: newPoints,
@@ -539,8 +538,11 @@ const loadIfVisible = async (state, module) => {
     }
     const orderedCommands = reorderCommands(commands)
     return {
-      ...state,
-      [kReady]: true,
+      newState: {
+        ...state,
+        [kReady]: true,
+      },
+      commands: orderedCommands,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)
