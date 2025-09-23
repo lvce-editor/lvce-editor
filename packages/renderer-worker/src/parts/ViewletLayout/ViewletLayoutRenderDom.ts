@@ -211,10 +211,9 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
       },
     ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-    // TODO append them all at once
-    for (const item of workbenchAppendIds) {
-      commands.push(['Viewlet.append', newState.workbenchId, item])
-    }
+    commands.push(['Viewlet.replaceChildren', newState.workbenchId, workbenchAppendIds])
+  }
+  if (newState.workbenchVisible) {
     commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
 }
