@@ -125,6 +125,14 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
     commands.push(['Viewlet.createFunctionalRoot', `${newState.mainContentsId}`, newState.mainContentsId, true])
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: 'MainContents',
+        childCount: 0,
+      },
+    ]
+    commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
 
     // TODO append them all at once
     for (const item of mainContentsAppendIds) {
@@ -211,10 +219,12 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
       },
     ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-    commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
   if (newState.workbenchVisible) {
     commands.push(['Viewlet.replaceChildren', newState.workbenchId, workbenchAppendIds])
+  }
+  if (!oldState.workbenchVisible && newState.workbenchVisible) {
+    commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
 }
 
