@@ -156,13 +156,13 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === SideBarLocationType.Left) {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getMainContentsCommands(oldState, newState, commands, contentAppendIds)
   } else {
     getMainContentsCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
   if (!oldState.contentAreaVisible && newState.contentAreaVisible) {
