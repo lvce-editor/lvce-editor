@@ -73,16 +73,36 @@ const renderDom = (oldState, newState) => {
     </div>
   )
   const commands = []
+  const workbenchAppendIds = []
+  const contentAppendIds = []
   if (oldState.titleBarVisible && !newState.titleBarVisible) {
     commands.push(['Viewlet.remove', newState.titleBarId])
   }
-  if (oldState.sideBarVisible && !newState.sideBarVisible) {
-    commands.push(['Viewlet.remove', newState.sideBarId])
+  if (!oldState.titleBarVisible && newState.titleBarVisible) {
+    commands.push(['Viewlet.create', newState.titleBarId])
+    const dom = Viewlet.getDom(newState.titleBarId)
+    commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
+    workbenchAppendIds.push(newState.titleBarId)
   }
-  if (!oldState.sideBarVisible && newState.sideBarVisible) {
-    commands.push(['Viewlet.create', newState.sideBarId])
-    const sideBarDom = Viewlet.getDom(newState.sideBarId)
-    commands.push(['Viewlet.setDom2', newState.sideBarId, sideBarDom])
+  if (newState.sideBarLocation === 'left') {
+    if (oldState.activityBarVisible && !newState.activityBarVisible) {
+      commands.push(['Viewlet.remove', newState.activityBarId])
+    }
+    if (!oldState.activityBarVisible && newState.activityBarVisible) {
+      commands.push(['Viewlet.create', newState.activityBarId])
+      const dom = Viewlet.getDom(newState.activityBarId)
+      commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
+      contentAppendIds.push(newState.activityBarId)
+    }
+    if (oldState.sideBarVisible && !newState.sideBarVisible) {
+      commands.push(['Viewlet.remove', newState.sideBarId])
+    }
+    if (!oldState.sideBarVisible && newState.sideBarVisible) {
+      commands.push(['Viewlet.create', newState.sideBarId])
+      const sideBarDom = Viewlet.getDom(newState.sideBarId)
+      commands.push(['Viewlet.setDom2', newState.sideBarId, sideBarDom])
+      contentAppendIds.push(newState.sideBarId)
+    }
   }
 }
 
