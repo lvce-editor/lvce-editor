@@ -541,6 +541,8 @@ const loadIfVisible = async (state, module) => {
     return {
       ...state,
       [kReady]: true,
+      workbenchVisible: true,
+      contentAreaVisible: true,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)
