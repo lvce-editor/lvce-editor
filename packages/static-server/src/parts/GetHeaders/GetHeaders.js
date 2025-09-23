@@ -7,6 +7,7 @@ import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebug
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
+import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
 import * as GetHeadersErrorWorker from '../GetHeadersErrorWorker/GetHeadersErrorWorker.js'
 import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeadersExplorerWorker.js'
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
@@ -83,6 +84,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('hoverWorkerMain.js')) {
     return GetHeadersHoverWorker.getHeadersHoverWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('embedsWorkerMain.js')) {
+    return GetHeadersEmbedsWorker.getHeadersEmbedsWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('iframeInspectorWorkerMain.js')) {
     return GetHeadersIframeInspectorWorker.getHeadersIframeInspectorWorker(mime, etag, defaultCachingHeader)
