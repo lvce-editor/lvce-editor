@@ -121,7 +121,6 @@ const renderSashes = {
 
 const renderDom = {
   isEqual(oldState, newState) {
-    console.log('diff dom')
     return false
   },
   apply(oldState, newState) {
