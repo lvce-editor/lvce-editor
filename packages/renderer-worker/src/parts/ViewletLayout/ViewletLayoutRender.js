@@ -121,16 +121,14 @@ const renderSashes = {
 
 const renderDom = {
   isEqual(oldState, newState) {
-    console.log('diff dom')
     return false
   },
   apply(oldState, newState) {
     // @ts-ignore
     const commands = ViewletLayoutRenderDom.renderDom(oldState, newState)
-    console.log({ commands })
     return []
   },
-  multiple: true,
+  mulitple: true,
 }
 
-export const render = [renderDom]
+export const render = [renderSashes, renderDom]
