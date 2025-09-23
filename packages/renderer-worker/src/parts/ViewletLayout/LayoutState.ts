@@ -19,4 +19,7 @@ export interface LayoutState {
   readonly uid: number
   readonly windowHeight: number
   readonly windowWidth: number
+  readonly maxPanelHeight: number
+  readonly minPanelHeight: number
+  readonly statusBarHeight: number
 }

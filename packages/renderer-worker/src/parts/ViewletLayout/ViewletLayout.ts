@@ -264,27 +264,31 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
   const sideBarWidth = 240
   const statusBarHeight = 20
   const statusBarVisible = true
-  newPoints[LayoutKeys.PreviewHeight] ||= 350
-  newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
-  newPoints[LayoutKeys.PreviewMaxHeight] = 1200
-  newPoints[LayoutKeys.PreviewWidth] ||= 600
-  newPoints[LayoutKeys.PreviewMinWidth] = 100
-  newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
-  if (isNativeTitleBarStyle()) {
-    newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 0
-  } else {
-    newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
-    newPoints[LayoutKeys.TitleBarVisible] = 1
+  let titleBarHeight = 0
+  let titleBarVisible = false
+  if (!isNativeTitleBarStyle()) {
+    titleBarHeight = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
+    titleBarVisible = true
   }
+
   newPoints[LayoutKeys.WindowHeight] = windowHeight
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   // TODO get side bar min width from preferences
-  getPoints(newPoints, newPoints, sideBarLocation)
   return {
     ...state,
-    points: newPoints,
     sideBarLocation,
+    activityBarVisible,
+    activityBarWidth,
+    mainVisible,
+    panelHeight,
+    maxPanelHeight,
+    minPanelHeight,
+    sideBarMaxWidth,
+    sideBarMinWidth,
+    sideBarVisible,
+    sideBarWidth,
+    statusBarHeight,
+    statusBarVisible,
   }
 }
 
