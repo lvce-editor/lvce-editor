@@ -99,9 +99,18 @@ const renderDom = (oldState, newState) => {
     }
     if (!oldState.sideBarVisible && newState.sideBarVisible) {
       commands.push(['Viewlet.create', newState.sideBarId])
-      const sideBarDom = Viewlet.getDom(newState.sideBarId)
-      commands.push(['Viewlet.setDom2', newState.sideBarId, sideBarDom])
+      const dom = Viewlet.getDom(newState.sideBarId)
+      commands.push(['Viewlet.setDom2', newState.sideBarId, dom])
       contentAppendIds.push(newState.sideBarId)
+    }
+    if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
+      commands.push(['Viewlet.remove', newState.mainContentsId])
+    }
+    if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
+      // TODO split this up further into main and panel
+      commands.push(['Viewlet.create', newState.mainContentsId])
+      const dom = Viewlet.getDom(newState.mainContentsId)
+      commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
     }
   }
 }
