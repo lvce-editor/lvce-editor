@@ -227,6 +227,13 @@ export const create = (id) => {
     panelSashVisible: false,
     mainContentsVisible: false,
     workbenchVisible: false,
+    activityBarVisible: false,
+    sideBarVisible: false,
+    panelVisible: false,
+    mainVisible: false,
+    titleBarVisible: false,
+    contentsAreaVisible: false,
+    statusBarVisible: false,
   }
 }
 
