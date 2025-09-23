@@ -222,6 +222,9 @@ export const create = (id) => {
     contentsAreaId: Id.create(),
     statusBarId: Id.create(),
     workbenchId: Id.create(),
+    sideBarSashVisible: true,
+    panelSashVisible: true,
+    mainContentsVisible: true,
   }
 }
 

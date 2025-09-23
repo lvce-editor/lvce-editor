@@ -1,4 +1,5 @@
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
+import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 
 const getDom = (id) => {
   // TODO ask viewlet registry to render component with that id
@@ -32,7 +33,7 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
 }
 
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  if (oldState.sideBarVisible && !newState.sideBarVisible) {
+  if (oldState.points[LayoutKeys.SideBarVisible] && !newState.points[LayoutKeys.SideBarVisible]) {
     commands.push(['Viewlet.remove', newState.sideBarId])
     return
   }
@@ -58,10 +59,10 @@ const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) =>
 }
 
 const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  if (oldState.panelVisible && !newState.panelVisible) {
+  if (oldState.points[LayoutKeys.PanelVisible] && !newState.points[LayoutKeys.PanelVisible]) {
     commands.push(['Viewlet.remove', newState.panelId])
   }
-  if (!oldState.panelVisible && newState.panelVisible) {
+  if (!oldState.points[LayoutKeys.PanelVisible] && newState.points[LayoutKeys.PanelVisible]) {
     commands.push(['Viewlet.create', newState.panelId])
     const dom = getDom(newState.panelId)
     commands.push(['Viewlet.setDom2', newState.panelId, dom])
@@ -70,10 +71,10 @@ const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) =
 }
 
 const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  if (oldState.mainVisible && !newState.mainVisible) {
+  if (oldState.points[LayoutKeys.MainVisible] && !newState.points[LayoutKeys.MainVisible]) {
     commands.push(['Viewlet.remove', newState.panelId])
   }
-  if (!oldState.mainVisible && newState.mainVisible) {
+  if (!oldState.points[LayoutKeys.MainVisible] && newState.points[LayoutKeys.MainVisible]) {
     commands.push(['Viewlet.create', newState.panelId])
     const dom = getDom(newState.panelId)
     commands.push(['Viewlet.setDom2', newState.panelId, dom])
@@ -98,11 +99,11 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
 }
 
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
-  if (oldState.titleBarVisible && !newState.titleBarVisible) {
+  if (oldState.points[LayoutKeys.TitleBarVisible] && !newState.points[LayoutKeys.TitleBarVisible]) {
     commands.push(['Viewlet.remove', newState.titleBarId])
     return
   }
-  if (!oldState.titleBarVisible && newState.titleBarVisible) {
+  if (!oldState.points[LayoutKeys.TitleBarVisible] && newState.points[LayoutKeys.TitleBarVisible]) {
     commands.push(['Viewlet.create', newState.titleBarId])
     const dom = getDom(newState.titleBarId)
     commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
@@ -113,7 +114,7 @@ const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) =
 const getContentCommands = (oldState, newState, commands, workbenchAppendIds) => {
   // TODO support secondary side bar / chat view
   const contentAppendIds: any[] = []
-  if (newState.sideBarLocation === 'left') {
+  if (newState.sideBarLocation === SideBarLocationType.Left) {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
