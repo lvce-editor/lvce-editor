@@ -51,6 +51,7 @@ const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) =
 }
 
 const getContentCommands = (oldState, newState, commands, workbenchAppendIds) => {
+  // TODO support secondary side bar / chat view
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === 'left') {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
