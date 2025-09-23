@@ -85,7 +85,6 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     return
   }
   if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
-    // TODO split this up further into main and panel
     commands.push(['Viewlet.create', newState.mainContentsId])
     const dom = getDom(newState.mainContentsId)
     commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
