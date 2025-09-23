@@ -22,4 +22,5 @@ export interface LayoutState {
   readonly maxPanelHeight: number
   readonly minPanelHeight: number
   readonly statusBarHeight: number
+  readonly points: Uint32Array
 }

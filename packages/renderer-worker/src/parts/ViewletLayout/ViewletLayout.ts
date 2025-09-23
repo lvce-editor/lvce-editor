@@ -478,11 +478,20 @@ const getReferenceNodes = (sideBarLocation) => {
   ]
 }
 
-const loadIfVisible = async (state, module) => {
+interface Module {
+  readonly kVisible: 'activityBarVisible' | 'mainVisible' | 'sideBarVisible'
+  readonly kTop: string
+  readonly kLeft: string
+  readonly kWidth: string
+  readonly kHeight: string
+  readonly moduleId: string
+}
+
+const loadIfVisible = async (state: LayoutState, module: Module) => {
   try {
     const { points, sideBarLocation } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    const visible = points[kVisible]
+    const visible = state[kVisible]
     const x = points[kLeft]
     const y = points[kTop]
     const width = points[kWidth]
@@ -515,6 +524,9 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+    // TODO at this point, query the state again and create a lightweight virtual dom like
+    // [{ id: titlebar }, { id: content-area }, { id: status-bar }]
+
     return {
       newState: state,
       commands: orderedCommands,
