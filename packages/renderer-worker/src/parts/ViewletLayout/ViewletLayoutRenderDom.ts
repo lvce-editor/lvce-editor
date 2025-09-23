@@ -36,6 +36,8 @@ const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) 
     commands.push(['Viewlet.createFunctionalRoot', `${newState.activityBarId}`, newState.activityBarId, true])
     const dom = getDom(newState.activityBarId)
     commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
+  }
+  if (newState.activityBarVisible) {
     contentAppendIds.push(newState.activityBarId)
   }
 }
@@ -50,7 +52,9 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
     const dom = getDom(newState.sideBarSashId)
     commands.push(['Viewlet.setDom2', newState.sideBarSashId, dom])
   }
-  contentAppendIds.push(newState.sideBarSashId)
+  if (newState.sideBarSashVisible) {
+    contentAppendIds.push(newState.sideBarSashId)
+  }
 }
 
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -63,7 +67,9 @@ const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
     const dom = getDom(newState.sideBarId)
     commands.push(['Viewlet.setDom2', newState.sideBarId, dom])
   }
-  contentAppendIds.push(newState.sideBarId)
+  if (newState.sideBarVisible) {
+    contentAppendIds.push(newState.sideBarId)
+  }
 }
 
 const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -76,19 +82,24 @@ const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) =>
     const dom = getDom(newState.panelSashId)
     commands.push(['Viewlet.setDom2', newState.panelSashId, dom])
   }
-  contentAppendIds.push(newState.panelSashId)
+  if (newState.panelSashVisible) {
+    contentAppendIds.push(newState.panelSashId)
+  }
 }
 
 const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) => {
   if (oldState.panelVisible && !newState.panelVisible) {
     commands.push(['Viewlet.remove', newState.panelId])
+    return
   }
   if (!oldState.panelVisible && newState.panelVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.panelId}`, newState.panelId, true])
     const dom = getDom(newState.panelId)
     commands.push(['Viewlet.setDom2', newState.panelId, dom])
   }
-  mainContentsAppendIds.push(newState.panelId)
+  if (newState.panelVisible) {
+    mainContentsAppendIds.push(newState.panelId)
+  }
 }
 
 const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
@@ -101,7 +112,9 @@ const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) =>
     const dom = getDom(newState.mainId)
     commands.push(['Viewlet.setDom2', newState.mainId, dom])
   }
-  mainContentsAppendIds.push(newState.mainId)
+  if (newState.mainVisible) {
+    mainContentsAppendIds.push(newState.mainId)
+  }
 }
 
 const getMainContentsCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -121,7 +134,9 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
       commands.push(['Viewlet.append', newState.mainContentsId, item])
     }
   }
-  contentAppendIds.push(newState.mainContentsId)
+  if (newState.mainContentsVisible) {
+    contentAppendIds.push(newState.mainContentsId)
+  }
 }
 
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
@@ -133,6 +148,8 @@ const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) =
     commands.push(['Viewlet.createFunctionalRoot', `${newState.titleBarId}`, newState.titleBarId, true])
     const dom = getDom(newState.titleBarId)
     commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
+  }
+  if (newState.titleBarVisible) {
     workbenchAppendIds.push(newState.titleBarId)
   }
 }
