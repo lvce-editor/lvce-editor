@@ -134,10 +134,7 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     ]
     commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
 
-    // TODO append them all at once
-    for (const item of mainContentsAppendIds) {
-      commands.push(['Viewlet.append', newState.mainContentsId, item])
-    }
+    commands.push(['Viewlet.replaceChildren', newState.mainContentsId, mainContentsAppendIds])
   }
   if (newState.mainContentsVisible) {
     contentAppendIds.push(newState.mainContentsId)
@@ -185,10 +182,7 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     commands.push(['Viewlet.setDom2', newState.contentAreaId, dom])
   }
   if (newState.contentAreaVisible) {
-    // TODO append them all at once
-    for (const item of contentAppendIds) {
-      commands.push(['Viewlet.append', newState.contentAreaId, item])
-    }
+    commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
 }
