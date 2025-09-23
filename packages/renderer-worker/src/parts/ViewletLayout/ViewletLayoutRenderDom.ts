@@ -5,7 +5,6 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
-    console.log('not found', id)
     return [
       {
         type: VirtualDomElements.Div,
