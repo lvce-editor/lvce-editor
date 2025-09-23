@@ -85,13 +85,12 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     return
   }
   if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
-    commands.push(['Viewlet.create', newState.mainContentsId])
-    const dom = getDom(newState.mainContentsId)
-    commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
     const mainContentsAppendIds = []
     getMainCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
+    commands.push(['Viewlet.create', newState.mainContentsId])
+    commands.push(['Viewlet.append', newState.mainContentsId, mainContentsAppendIds])
   }
   contentAppendIds.push(newState.mainContentsId)
 }
