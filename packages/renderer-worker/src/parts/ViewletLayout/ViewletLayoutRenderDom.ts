@@ -2,37 +2,49 @@ const getDom = (id) => {
   return []
 }
 
+const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
+  if (oldState.activityBarVisible && !newState.activityBarVisible) {
+    commands.push(['Viewlet.remove', newState.activityBarId])
+  }
+  if (!oldState.activityBarVisible && newState.activityBarVisible) {
+    commands.push(['Viewlet.create', newState.activityBarId])
+    const dom = getDom(newState.activityBarId)
+    commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
+    contentAppendIds.push(newState.activityBarId)
+  }
+}
+
+const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
+  if (oldState.sideBarVisible && !newState.sideBarVisible) {
+    commands.push(['Viewlet.remove', newState.sideBarId])
+  }
+  if (!oldState.sideBarVisible && newState.sideBarVisible) {
+    commands.push(['Viewlet.create', newState.sideBarId])
+    const dom = getDom(newState.sideBarId)
+    commands.push(['Viewlet.setDom2', newState.sideBarId, dom])
+    contentAppendIds.push(newState.sideBarId)
+  }
+}
+
+const getMainCommands = (oldState, newState, commands, contentAppendIds) => {
+  if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
+    commands.push(['Viewlet.remove', newState.mainContentsId])
+  }
+  if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
+    // TODO split this up further into main and panel
+    commands.push(['Viewlet.create', newState.mainContentsId])
+    const dom = getDom(newState.mainContentsId)
+    commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
+  }
+}
+
 const getContentCommands = (oldState, newState) => {
   const commands: any[] = []
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === 'left') {
-    if (oldState.activityBarVisible && !newState.activityBarVisible) {
-      commands.push(['Viewlet.remove', newState.activityBarId])
-    }
-    if (!oldState.activityBarVisible && newState.activityBarVisible) {
-      commands.push(['Viewlet.create', newState.activityBarId])
-      const dom = getDom(newState.activityBarId)
-      commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
-      contentAppendIds.push(newState.activityBarId)
-    }
-    if (oldState.sideBarVisible && !newState.sideBarVisible) {
-      commands.push(['Viewlet.remove', newState.sideBarId])
-    }
-    if (!oldState.sideBarVisible && newState.sideBarVisible) {
-      commands.push(['Viewlet.create', newState.sideBarId])
-      const dom = getDom(newState.sideBarId)
-      commands.push(['Viewlet.setDom2', newState.sideBarId, dom])
-      contentAppendIds.push(newState.sideBarId)
-    }
-    if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
-      commands.push(['Viewlet.remove', newState.mainContentsId])
-    }
-    if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
-      // TODO split this up further into main and panel
-      commands.push(['Viewlet.create', newState.mainContentsId])
-      const dom = getDom(newState.mainContentsId)
-      commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
-    }
+    getActivityBarCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarCommands(oldState, newState, commands, contentAppendIds)
+    getMainCommands(oldState, newState, commands, contentAppendIds)
   }
   commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
   return commands
