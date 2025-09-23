@@ -19,6 +19,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import { LayoutState } from './LayoutState.ts'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
@@ -245,24 +246,24 @@ const getSavedPoints = (savedState) => {
 const isNativeTitleBarStyle = () => {
   return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
-export const loadContent = (state, savedState) => {
+export const loadContent = (state: LayoutState, savedState): LayoutState => {
   const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   const newPoints = getSavedPoints(savedState)
-  newPoints[LayoutKeys.ActivityBarVisible] = 1
-  newPoints[LayoutKeys.ActivityBarWidth] = 48
-  newPoints[LayoutKeys.MainVisible] = 1
-  newPoints[LayoutKeys.PanelHeight] ||= 160
-  newPoints[LayoutKeys.PanelMaxHeight] = 600
-  newPoints[LayoutKeys.PanelMinHeight] = 150
-  newPoints[LayoutKeys.SideBarMaxWidth] = 9999999
-  newPoints[LayoutKeys.SideBarMinWidth] = 170
-  newPoints[LayoutKeys.SideBarVisible] = 1
-  newPoints[LayoutKeys.SideBarWidth] ||= 240
-  newPoints[LayoutKeys.StatusBarHeight] = 20
-  newPoints[LayoutKeys.StatusBarVisible] = 1
+  const activityBarVisible = true
+  const activityBarWidth = 48
+  const mainVisible = true
+  const panelHeight = 160
+  const maxPanelHeight = 600
+  const minPanelHeight = 150
+  const sideBarMaxWidth = 9999999
+  const sideBarMinWidth = 170
+  const sideBarVisible = true
+  const sideBarWidth = 240
+  const statusBarHeight = 20
+  const statusBarVisible = true
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200
