@@ -140,11 +140,11 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
 }
 
 const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
-  if (oldState.points[LayoutKeys.StatusBarVisible] && !newState.points[LayoutKeys.StatusBarVisible]) {
+  if (oldState.statusBarVisible && !newState.statusBarVisible) {
     commands.push(['Viewlet.remove', newState.statusBarId])
     return
   }
-  if (!oldState.points[LayoutKeys.StatusBarVisible] && newState.points[LayoutKeys.StatusBarVisible]) {
+  if (!oldState.statusBarVisible && newState.statusBarVisible) {
     commands.push(['Viewlet.create', newState.statusBarId])
     const dom = getDom(newState.statusBarId)
     commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
