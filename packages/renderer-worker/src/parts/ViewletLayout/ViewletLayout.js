@@ -217,23 +217,22 @@ export const create = (id) => {
     panelSashId: Id.create(),
     panelId: Id.create(),
     mainId: Id.create(),
-    mainContentsId: Id.create(),
-    titleBarId: Id.create(),
-    contentsAreaId: Id.create(),
-    statusBarId: Id.create(),
-    workbenchId: Id.create(),
     contentAreaId: Id.create(),
-    sideBarSashVisible: false,
-    panelSashVisible: false,
-    mainContentsVisible: false,
-    workbenchVisible: false,
+    mainContentsId: Id.create(),
+    statusBarId: Id.create(),
+    titleBarId: Id.create(),
+    workbenchId: Id.create(),
     activityBarVisible: false,
-    sideBarVisible: false,
-    panelVisible: false,
+    contentAreaVisible: false,
+    mainContentsVisible: false,
     mainVisible: false,
-    titleBarVisible: false,
-    contentsAreaVisible: false,
+    panelSashVisible: false,
+    panelVisible: false,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
     statusBarVisible: false,
+    titleBarVisible: false,
+    workbenchVisible: false,
   }
 }
 
@@ -303,6 +302,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   // TODO get side bar min width from preferences
   getPoints(newPoints, newPoints, sideBarLocation)
+  console.log({ state })
   return {
     ...state,
     points: newPoints,
@@ -527,6 +527,7 @@ const loadIfVisible = async (state, module) => {
           width,
           height,
           uid: childUid,
+          render: false,
         },
         false,
         true,
@@ -537,12 +538,14 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+    console.log('load', kReady)
+    const latestState = ViewletStates.getState(ViewletModuleId.Layout)
     return {
-      newState: {
-        ...state,
-        [kReady]: true,
-      },
-      commands: orderedCommands,
+      ...latestState,
+      [kReady]: true,
+      workbenchVisible: true,
+      contentAreaVisible: true,
+      mainContentsVisible: true,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)
@@ -553,24 +556,36 @@ export const loadMainIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Main)
 }
 
-export const loadSideBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.SideBar)
+export const loadSideBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.SideBar)
+  return {
+    ...updated,
+    sideBarSashVisible: true,
+  }
 }
 
 export const loadPanelIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Panel)
 }
 
-export const loadActivityBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.ActivityBar)
+export const loadActivityBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
+  return {
+    ...updated,
+    sideBarSashVisible: true,
+  }
 }
 
 export const loadStatusBarIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.StatusBar)
 }
 
-export const loadTitleBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.TitleBar)
+export const loadTitleBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.TitleBar)
+  return {
+    ...updated,
+    titleBarVisible: true,
+  }
 }
 
 export const loadPreviewIfVisible = (state) => {

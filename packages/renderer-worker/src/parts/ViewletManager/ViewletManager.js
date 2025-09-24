@@ -420,6 +420,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     console.log('viewlet must be empty')
     throw new Error('viewlet must be empty')
   }
+  const shouldRender = viewlet.render ?? true
   let state = ViewletState.Default
   // @ts-ignore
   const viewletUid = viewlet.uid || Id.create()
@@ -554,7 +555,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     const instanceNow = ViewletStates.getInstance(viewletUid)
     viewletState = instanceNow.renderedState
-    if (module.hasFunctionalRender) {
+    if (module.hasFunctionalRender && shouldRender) {
       const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid, parentUid)
       ViewletStates.setRenderedState(viewletUid, newState)
       commands.push(...renderCommands)
@@ -585,7 +586,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push(...extraCommands)
       updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
-    } else {
+    } else if (!module.hasFunctionalEvents && shouldRender) {
       const allCommands = [
         ...commands,
         ...extraCommands,
@@ -683,7 +684,10 @@ export const mutate = async (id, fn) => {
 }
 
 export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid = newState.parentUid) => {
-  return getRenderCommands(module, oldState, newState, uid, parentUid)
+  console.log('RENDER', module.name)
+  const commands = getRenderCommands(module, oldState, newState, uid, parentUid)
+  console.log({ commands })
+  return commands
 }
 
 export const renderActions = (module, oldState, newState, uid = newState.uid || module.name) => {
