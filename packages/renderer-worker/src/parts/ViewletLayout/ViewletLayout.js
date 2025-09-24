@@ -538,14 +538,16 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
-    console.log('load', kReady)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
     return {
-      ...latestState,
-      [kReady]: true,
-      workbenchVisible: true,
-      contentAreaVisible: true,
-      mainContentsVisible: true,
+      newState: {
+        ...latestState,
+        [kReady]: true,
+        workbenchVisible: true,
+        contentAreaVisible: true,
+        mainContentsVisible: true,
+      },
+      commands: orderedCommands,
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${module.moduleId}`)
