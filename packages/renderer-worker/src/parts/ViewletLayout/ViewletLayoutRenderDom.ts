@@ -1,4 +1,5 @@
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import { render } from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
@@ -14,6 +15,9 @@ const getDom = (id) => {
       },
     ]
   }
+  console.log({ instance })
+  const commands = render(instance.factory, instance.renderedState, instance.state, instance.state.uid)
+  console.log({ commands })
   // TODO ask viewlet registry to render component with that id
   return [
     {
