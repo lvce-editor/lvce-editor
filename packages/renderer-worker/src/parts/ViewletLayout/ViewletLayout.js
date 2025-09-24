@@ -562,7 +562,6 @@ export const loadSideBarIfVisible = async (state) => {
   const updated = await loadIfVisible(state, LayoutModules.SideBar)
   return {
     ...updated,
-    sideBarSashVisible: true,
   }
 }
 
@@ -574,7 +573,6 @@ export const loadActivityBarIfVisible = async (state) => {
   const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
   return {
     ...updated,
-    sideBarSashVisible: true,
   }
 }
 
@@ -586,7 +584,6 @@ export const loadTitleBarIfVisible = async (state) => {
   const updated = await loadIfVisible(state, LayoutModules.TitleBar)
   return {
     ...updated,
-    titleBarVisible: true,
   }
 }
 
