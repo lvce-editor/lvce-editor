@@ -20,3 +20,15 @@ body {
   user-select: none;
   color: var(--WorkbenchForeground);
 }
+
+.Workbench {
+  display: flex;
+  flex-direction: column;
+  contain: strict;
+}
+
+.ContentArea {
+  display: flex;
+  contain: strict;
+  flex: 1;
+}
