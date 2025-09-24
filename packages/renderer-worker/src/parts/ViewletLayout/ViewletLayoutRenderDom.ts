@@ -1,10 +1,12 @@
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import { render } from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
+    console.log('not found', id)
     return [
       {
         type: VirtualDomElements.Div,
@@ -13,6 +15,13 @@ const getDom = (id) => {
       },
     ]
   }
+  console.log({ instance })
+  const commands = render(instance.factory, instance.renderedState, instance.state, instance.state.uid)
+  const domCommand = commands.find((command) => command[0] === 'Viewlet.setDom2')
+  if (domCommand) {
+    return domCommand[2]
+  }
+  console.log({ commands })
   // TODO ask viewlet registry to render component with that id
   return [
     {
@@ -45,7 +54,13 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
   }
   if (!oldState.sideBarSashVisible && newState.sideBarSashVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.sideBarSashId}`, newState.sideBarSashId, true])
-    const dom = getDom(newState.sideBarSashId)
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: `Sash SashSideBar`,
+        childCount: 0,
+      },
+    ]
     commands.push(['Viewlet.setDom2', newState.sideBarSashId, dom])
   }
   if (newState.sideBarSashVisible) {
@@ -124,11 +139,16 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
     commands.push(['Viewlet.createFunctionalRoot', `${newState.mainContentsId}`, newState.mainContentsId, true])
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: 'MainContents',
+        childCount: 0,
+      },
+    ]
+    commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
 
-    // TODO append them all at once
-    for (const item of mainContentsAppendIds) {
-      commands.push(['Viewlet.append', newState.mainContentsId, item])
-    }
+    commands.push(['Viewlet.replaceChildren', newState.mainContentsId, mainContentsAppendIds])
   }
   if (newState.mainContentsVisible) {
     contentAppendIds.push(newState.mainContentsId)
@@ -155,29 +175,30 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === SideBarLocationType.Left) {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getMainContentsCommands(oldState, newState, commands, contentAppendIds)
   } else {
     getMainContentsCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
+    getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
-  commands.push(['Viewlet.createFunctionalRoot', `${newState.contentAreaId}`, newState.contentAreaId, true])
-  const dom = [
-    {
-      type: VirtualDomElements.Div,
-      className: 'ContentArea',
-      childCount: 0,
-    },
-  ]
-  commands.push(['Viewlet.setDom2', newState.contentAreaId, dom])
-  // TODO append them all at once
-  for (const item of contentAppendIds) {
-    commands.push(['Viewlet.append', newState.contentAreaId, item])
+  if (!oldState.contentAreaVisible && newState.contentAreaVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.contentAreaId}`, newState.contentAreaId, true])
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: 'ContentArea',
+        childCount: 0,
+      },
+    ]
+    commands.push(['Viewlet.setDom2', newState.contentAreaId, dom])
   }
-  workbenchAppendIds.push(newState.contentAreaId)
+  if (newState.contentAreaVisible) {
+    commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
+    workbenchAppendIds.push(newState.contentAreaId)
+  }
 }
 
 const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
@@ -189,6 +210,8 @@ const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) 
     commands.push(['Viewlet.createFunctionalRoot', `${newState.statusBarId}`, newState.statusBarId, true])
     const dom = getDom(newState.statusBarId)
     commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
+  }
+  if (newState.statusBarVisible) {
     workbenchAppendIds.push(newState.statusBarId)
   }
 }
@@ -200,16 +223,17 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
       {
         type: VirtualDomElements.Div,
         id: 'Workbench',
-        className: 'Viewlet Layout Workbench',
+        className: 'Viewlet Layout Workbench new',
         role: 'application',
         childCount: 0,
       },
     ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-    // TODO append them all at once
-    for (const item of workbenchAppendIds) {
-      commands.push(['Viewlet.append', newState.workbenchId, item])
-    }
+  }
+  if (newState.workbenchVisible) {
+    commands.push(['Viewlet.replaceChildren', newState.workbenchId, workbenchAppendIds])
+  }
+  if (!oldState.workbenchVisible && newState.workbenchVisible) {
     commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
 }

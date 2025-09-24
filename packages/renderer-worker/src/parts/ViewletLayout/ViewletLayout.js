@@ -217,23 +217,22 @@ export const create = (id) => {
     panelSashId: Id.create(),
     panelId: Id.create(),
     mainId: Id.create(),
-    mainContentsId: Id.create(),
-    titleBarId: Id.create(),
-    contentsAreaId: Id.create(),
-    statusBarId: Id.create(),
-    workbenchId: Id.create(),
     contentAreaId: Id.create(),
-    sideBarSashVisible: false,
-    panelSashVisible: false,
-    mainContentsVisible: false,
-    workbenchVisible: false,
+    mainContentsId: Id.create(),
+    statusBarId: Id.create(),
+    titleBarId: Id.create(),
+    workbenchId: Id.create(),
     activityBarVisible: false,
-    sideBarVisible: false,
-    panelVisible: false,
+    contentAreaVisible: false,
+    mainContentsVisible: false,
     mainVisible: false,
-    titleBarVisible: false,
-    contentsAreaVisible: false,
+    panelSashVisible: false,
+    panelVisible: false,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
     statusBarVisible: false,
+    titleBarVisible: false,
+    workbenchVisible: false,
   }
 }
 
@@ -527,6 +526,7 @@ const loadIfVisible = async (state, module) => {
           width,
           height,
           uid: childUid,
+          // render: false,
         },
         false,
         true,
@@ -537,10 +537,14 @@ const loadIfVisible = async (state, module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+    const latestState = ViewletStates.getState(ViewletModuleId.Layout)
     return {
       newState: {
-        ...state,
+        ...latestState,
         [kReady]: true,
+        workbenchVisible: true,
+        contentAreaVisible: true,
+        mainContentsVisible: true,
       },
       commands: orderedCommands,
     }
@@ -553,24 +557,33 @@ export const loadMainIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Main)
 }
 
-export const loadSideBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.SideBar)
+export const loadSideBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.SideBar)
+  return {
+    ...updated,
+  }
 }
 
 export const loadPanelIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Panel)
 }
 
-export const loadActivityBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.ActivityBar)
+export const loadActivityBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
+  return {
+    ...updated,
+  }
 }
 
 export const loadStatusBarIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.StatusBar)
 }
 
-export const loadTitleBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.TitleBar)
+export const loadTitleBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.TitleBar)
+  return {
+    ...updated,
+  }
 }
 
 export const loadPreviewIfVisible = (state) => {
