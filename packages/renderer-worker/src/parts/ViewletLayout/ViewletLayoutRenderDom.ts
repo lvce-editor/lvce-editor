@@ -17,6 +17,10 @@ const getDom = (id) => {
   }
   console.log({ instance })
   const commands = render(instance.factory, instance.renderedState, instance.state, instance.state.uid)
+  const domCommand = commands.find((command) => command[0] === 'Viewlet.setDom2')
+  if (domCommand) {
+    return domCommand[2]
+  }
   console.log({ commands })
   // TODO ask viewlet registry to render component with that id
   return [
