@@ -526,7 +526,7 @@ const loadIfVisible = async (state, module) => {
           width,
           height,
           uid: childUid,
-          render: false,
+          // render: false,
         },
         false,
         true,
