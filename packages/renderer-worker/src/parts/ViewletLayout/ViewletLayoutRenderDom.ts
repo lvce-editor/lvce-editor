@@ -46,7 +46,13 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
   }
   if (!oldState.sideBarSashVisible && newState.sideBarSashVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.sideBarSashId}`, newState.sideBarSashId, true])
-    const dom = getDom(newState.sideBarSashId)
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: `Sash SashSideBar`,
+        childCount: 0,
+      },
+    ]
     commands.push(['Viewlet.setDom2', newState.sideBarSashId, dom])
   }
   if (newState.sideBarSashVisible) {
