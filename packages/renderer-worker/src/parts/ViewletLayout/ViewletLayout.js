@@ -538,8 +538,9 @@ const loadIfVisible = async (state, module) => {
     }
     const orderedCommands = reorderCommands(commands)
     console.log('load', kReady)
+    const latestState = ViewletStates.getState(ViewletModuleId.Layout)
     return {
-      ...state,
+      ...latestState,
       [kReady]: true,
       workbenchVisible: true,
       contentAreaVisible: true,
