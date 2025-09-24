@@ -32,3 +32,8 @@ body {
   contain: strict;
   flex: 1;
 }
+
+.ActivityBar {
+  flex: 1;
+  width: 48px;
+}
