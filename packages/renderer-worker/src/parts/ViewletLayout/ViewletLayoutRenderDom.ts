@@ -1,4 +1,3 @@
-import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -6,21 +5,35 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
-    return []
+    return [
+      {
+        type: VirtualDomElements.Div,
+        childCount: 0,
+        className: `Element-${id}`,
+      },
+    ]
   }
   // TODO ask viewlet registry to render component with that id
-  return []
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: `Element-${id}`,
+      childCount: 0,
+    },
+  ]
 }
 
 const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  if (oldState.points[LayoutKeys.ActivityBarVisible] && !newState.points[LayoutKeys.ActivityBarVisible]) {
+  if (oldState.activityBarVisible && !newState.activityBarVisible) {
     commands.push(['Viewlet.remove', newState.activityBarId])
     return
   }
-  if (!oldState.points[LayoutKeys.ActivityBarVisible] && newState.points[LayoutKeys.ActivityBarVisible]) {
-    commands.push(['Viewlet.create', newState.activityBarId])
+  if (!oldState.activityBarVisible && newState.activityBarVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.activityBarId}`, newState.activityBarId, true])
     const dom = getDom(newState.activityBarId)
     commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
+  }
+  if (newState.activityBarVisible) {
     contentAppendIds.push(newState.activityBarId)
   }
 }
@@ -31,24 +44,28 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
     return
   }
   if (!oldState.sideBarSashVisible && newState.sideBarSashVisible) {
-    commands.push(['Viewlet.create', newState.sideBarSashId])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.sideBarSashId}`, newState.sideBarSashId, true])
     const dom = getDom(newState.sideBarSashId)
     commands.push(['Viewlet.setDom2', newState.sideBarSashId, dom])
   }
-  contentAppendIds.push(newState.sideBarSashId)
+  if (newState.sideBarSashVisible) {
+    contentAppendIds.push(newState.sideBarSashId)
+  }
 }
 
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  if (oldState.points[LayoutKeys.SideBarVisible] && !newState.points[LayoutKeys.SideBarVisible]) {
+  if (oldState.sideBarVisible && !newState.sideBarVisible) {
     commands.push(['Viewlet.remove', newState.sideBarId])
     return
   }
   if (!oldState.sideBarVisible && newState.sideBarVisible) {
-    commands.push(['Viewlet.create', newState.sideBarId])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.sideBarId}`, newState.sideBarId, true])
     const dom = getDom(newState.sideBarId)
     commands.push(['Viewlet.setDom2', newState.sideBarId, dom])
   }
-  contentAppendIds.push(newState.sideBarId)
+  if (newState.sideBarVisible) {
+    contentAppendIds.push(newState.sideBarId)
+  }
 }
 
 const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -57,35 +74,43 @@ const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) =>
     return
   }
   if (!oldState.panelSashVisible && newState.panelSashVisible) {
-    commands.push(['Viewlet.create', newState.panelSashId])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.panelSashId}`, newState.panelSashId, true])
     const dom = getDom(newState.panelSashId)
     commands.push(['Viewlet.setDom2', newState.panelSashId, dom])
   }
-  contentAppendIds.push(newState.panelSashId)
+  if (newState.panelSashVisible) {
+    contentAppendIds.push(newState.panelSashId)
+  }
 }
 
 const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  if (oldState.points[LayoutKeys.PanelVisible] && !newState.points[LayoutKeys.PanelVisible]) {
+  if (oldState.panelVisible && !newState.panelVisible) {
     commands.push(['Viewlet.remove', newState.panelId])
+    return
   }
-  if (!oldState.points[LayoutKeys.PanelVisible] && newState.points[LayoutKeys.PanelVisible]) {
-    commands.push(['Viewlet.create', newState.panelId])
+  if (!oldState.panelVisible && newState.panelVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.panelId}`, newState.panelId, true])
     const dom = getDom(newState.panelId)
     commands.push(['Viewlet.setDom2', newState.panelId, dom])
   }
-  mainContentsAppendIds.push(newState.panelId)
+  if (newState.panelVisible) {
+    mainContentsAppendIds.push(newState.panelId)
+  }
 }
 
 const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  if (oldState.points[LayoutKeys.MainVisible] && !newState.points[LayoutKeys.MainVisible]) {
-    commands.push(['Viewlet.remove', newState.panelId])
+  if (oldState.mainVisible && !newState.mainVisible) {
+    commands.push(['Viewlet.remove', newState.mainId])
+    return
   }
-  if (!oldState.points[LayoutKeys.MainVisible] && newState.points[LayoutKeys.MainVisible]) {
-    commands.push(['Viewlet.create', newState.panelId])
-    const dom = getDom(newState.panelId)
-    commands.push(['Viewlet.setDom2', newState.panelId, dom])
+  if (!oldState.mainVisible && newState.mainVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.mainId}`, newState.mainId, true])
+    const dom = getDom(newState.mainId)
+    commands.push(['Viewlet.setDom2', newState.mainId, dom])
   }
-  mainContentsAppendIds.push(newState.mainId)
+  if (newState.mainVisible) {
+    mainContentsAppendIds.push(newState.mainId)
+  }
 }
 
 const getMainContentsCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -98,21 +123,29 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
     getMainCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
     getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
-    commands.push(['Viewlet.create', newState.mainContentsId])
-    commands.push(['Viewlet.append', newState.mainContentsId, mainContentsAppendIds])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.mainContentsId}`, newState.mainContentsId, true])
+
+    // TODO append them all at once
+    for (const item of mainContentsAppendIds) {
+      commands.push(['Viewlet.append', newState.mainContentsId, item])
+    }
   }
-  contentAppendIds.push(newState.mainContentsId)
+  if (newState.mainContentsVisible) {
+    contentAppendIds.push(newState.mainContentsId)
+  }
 }
 
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
-  if (oldState.points[LayoutKeys.TitleBarVisible] && !newState.points[LayoutKeys.TitleBarVisible]) {
+  if (oldState.titleBarVisible && !newState.titleBarVisible) {
     commands.push(['Viewlet.remove', newState.titleBarId])
     return
   }
-  if (!oldState.points[LayoutKeys.TitleBarVisible] && newState.points[LayoutKeys.TitleBarVisible]) {
-    commands.push(['Viewlet.create', newState.titleBarId])
+  if (!oldState.titleBarVisible && newState.titleBarVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.titleBarId}`, newState.titleBarId, true])
     const dom = getDom(newState.titleBarId)
     commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
+  }
+  if (newState.titleBarVisible) {
     workbenchAppendIds.push(newState.titleBarId)
   }
 }
@@ -131,17 +164,29 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
-  commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
+  commands.push(['Viewlet.createFunctionalRoot', `${newState.contentAreaId}`, newState.contentAreaId, true])
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'ContentArea',
+      childCount: 0,
+    },
+  ]
+  commands.push(['Viewlet.setDom2', newState.contentAreaId, dom])
+  // TODO append them all at once
+  for (const item of contentAppendIds) {
+    commands.push(['Viewlet.append', newState.contentAreaId, item])
+  }
   workbenchAppendIds.push(newState.contentAreaId)
 }
 
 const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
-  if (oldState.points[LayoutKeys.StatusBarVisible] && !newState.points[LayoutKeys.StatusBarVisible]) {
+  if (oldState.statusBarVisible && !newState.statusBarVisible) {
     commands.push(['Viewlet.remove', newState.statusBarId])
     return
   }
-  if (!oldState.points[LayoutKeys.StatusBarVisible] && newState.points[LayoutKeys.StatusBarVisible]) {
-    commands.push(['Viewlet.create', newState.statusBarId])
+  if (!oldState.statusBarVisible && newState.statusBarVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.statusBarId}`, newState.statusBarId, true])
     const dom = getDom(newState.statusBarId)
     commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
     workbenchAppendIds.push(newState.statusBarId)
@@ -150,7 +195,7 @@ const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) 
 
 const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) => {
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
-    commands.push(['Viewlet.create', newState.workbenchId])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.workbenchId}`, newState.workbenchId, true])
     const dom = [
       {
         type: VirtualDomElements.Div,
@@ -161,7 +206,10 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
       },
     ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-    commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
+    // TODO append them all at once
+    for (const item of workbenchAppendIds) {
+      commands.push(['Viewlet.append', newState.workbenchId, item])
+    }
     commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
 }

@@ -222,10 +222,18 @@ export const create = (id) => {
     contentsAreaId: Id.create(),
     statusBarId: Id.create(),
     workbenchId: Id.create(),
+    contentAreaId: Id.create(),
     sideBarSashVisible: false,
     panelSashVisible: false,
     mainContentsVisible: false,
     workbenchVisible: false,
+    activityBarVisible: false,
+    sideBarVisible: false,
+    panelVisible: false,
+    mainVisible: false,
+    titleBarVisible: false,
+    contentsAreaVisible: false,
+    statusBarVisible: false,
   }
 }
 
@@ -495,7 +503,7 @@ const getReferenceNodes = (sideBarLocation) => {
 const loadIfVisible = async (state, module) => {
   try {
     const { points, sideBarLocation } = state
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
     const visible = points[kVisible]
     const x = points[kLeft]
     const y = points[kTop]
@@ -530,7 +538,10 @@ const loadIfVisible = async (state, module) => {
     }
     const orderedCommands = reorderCommands(commands)
     return {
-      newState: state,
+      newState: {
+        ...state,
+        [kReady]: true,
+      },
       commands: orderedCommands,
     }
   } catch (error) {

@@ -530,7 +530,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     // TODO race condition: viewlet state may have been updated again in the mean time
     state = ViewletState.RendererProcessViewletLoaded
 
-    console.log('set instances', viewletUid)
     ViewletStates.set(viewletUid, {
       state: newState,
       renderedState: viewletState,
