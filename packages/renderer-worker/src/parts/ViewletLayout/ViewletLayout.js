@@ -578,8 +578,12 @@ export const loadStatusBarIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.StatusBar)
 }
 
-export const loadTitleBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.TitleBar)
+export const loadTitleBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.TitleBar)
+  return {
+    ...updated,
+    titleBarVisible: true,
+  }
 }
 
 export const loadPreviewIfVisible = (state) => {
