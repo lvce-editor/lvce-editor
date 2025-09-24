@@ -554,16 +554,24 @@ export const loadMainIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Main)
 }
 
-export const loadSideBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.SideBar)
+export const loadSideBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.SideBar)
+  return {
+    ...updated,
+    sideBarSashVisible: true,
+  }
 }
 
 export const loadPanelIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Panel)
 }
 
-export const loadActivityBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.ActivityBar)
+export const loadActivityBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
+  return {
+    ...updated,
+    sideBarSashVisible: true,
+  }
 }
 
 export const loadStatusBarIfVisible = (state) => {
