@@ -16,6 +16,8 @@ const updateDynamic = (commands, key, fn) => {
 
 export const updateDynamicFocusContext = (commands) => {
   updateDynamic(commands, 'Viewlet.setFocusContext', Focus.setFocus)
+  updateDynamic(commands, 'Viewlet.setAdditionalFocus', Focus.setAdditionalFocus)
+  updateDynamic(commands, 'Viewlet.unsetAdditionalFocus', Focus.removeAdditionalFocus)
 }
 
 export const updateDynamicKeyBindings = (commands) => {
