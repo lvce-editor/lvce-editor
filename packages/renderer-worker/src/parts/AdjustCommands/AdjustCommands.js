@@ -26,6 +26,12 @@ export const apply = (oldState, newState) => {
     if (command[0] === 'Viewlet.setFocusContext') {
       return ['Viewlet.setFocusContext', newState.uid, ...command.slice(1)]
     }
+    if (command[0] === 'Viewlet.setAdditionalFocus') {
+      return ['Viewlet.setAdditionalFocus', newState.uid, ...command.slice(1)]
+    }
+    if (command[0] === 'Viewlet.unsetAdditionalFocus') {
+      return ['Viewlet.unsetAdditionalFocus', newState.uid, ...command.slice(1)]
+    }
     if (
       command[0] === 'Viewlet.create' ||
       command[0] === 'Viewlet.send' ||
