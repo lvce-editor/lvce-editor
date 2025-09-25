@@ -68,6 +68,7 @@ const ids = [
   'EditorCompletion.focusPrevious',
   'EditorCompletion.focusPreviousPage',
   'EditorCompletion.handleClickAt',
+  'EditorCompletion.handlePointerDown',
   'EditorCompletion.handleScrollBarCaptureLost',
   'EditorCompletion.handleScrollBarClick',
   'EditorCompletion.handleScrollBarMove',
