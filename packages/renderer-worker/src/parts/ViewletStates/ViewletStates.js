@@ -22,11 +22,6 @@ export const set = (key, value) => {
 }
 
 export const getByUid = (uid) => {
-  console.log({
-    instances: {
-      ...state.instances,
-    },
-  })
   for (const value of Object.values(state.instances)) {
     if (value.renderedState.uid === uid) {
       return value

@@ -6,7 +6,6 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
-    console.log('not found', id)
     return [
       {
         type: VirtualDomElements.Div,
@@ -15,13 +14,11 @@ const getDom = (id) => {
       },
     ]
   }
-  console.log({ instance })
   const commands = render(instance.factory, instance.renderedState, instance.state, instance.state.uid)
   const domCommand = commands.find((command) => command[0] === 'Viewlet.setDom2')
   if (domCommand) {
     return domCommand[2]
   }
-  console.log({ commands })
   // TODO ask viewlet registry to render component with that id
   return [
     {
