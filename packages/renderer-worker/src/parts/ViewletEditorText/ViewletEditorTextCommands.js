@@ -61,7 +61,6 @@ const ids = [
   'EditorCompletion.closeDetails',
   'EditorCompletion.dispose',
   'EditorCompletion.focusFirst',
-  'EditorCompletion.handleClickAt',
   'EditorCompletion.focusIndex',
   'EditorCompletion.focusLast',
   'EditorCompletion.focusNext',
