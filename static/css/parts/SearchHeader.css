@@ -39,6 +39,8 @@
   --MaskIconSize: 15px;
   cursor: pointer;
   align-self: flex-start;
+  background: transparent;
+  border: none;
 }
 
 .SearchHeaderDetailsExpanded {
