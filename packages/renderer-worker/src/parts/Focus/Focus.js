@@ -7,7 +7,7 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 /**
  * @param {number} focusKey
- * @param {number?} additionalFocusKey
+ * @param {number=} additionalFocusKey
  */
 export const setFocus = (focusKey, additionalFocusKey) => {
   console.log({ focusKey })
