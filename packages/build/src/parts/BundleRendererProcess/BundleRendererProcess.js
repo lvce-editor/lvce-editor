@@ -21,6 +21,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       from: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process',
       to: `${cachePath}`,
     })
+    // TODO renderer process should make it easier to adjust paths
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
       occurrence: '/packages/renderer-worker/src/rendererWorkerMain.ts',
