@@ -21,6 +21,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       from: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process',
       to: `${cachePath}`,
     })
+    // TODO renderer process should make it easier to adjust paths
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
       occurrence: '/packages/renderer-worker/src/rendererWorkerMain.ts',
@@ -38,12 +39,12 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     })
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: `const extensionHostWorkerUrl = getConfiguredExtensionHostWorkerUrl() || \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js\`;`,
+      occurrence: `const extensionHostWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js\`;`,
       replacement: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`;',
     })
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: `const editorWorkerUrl = getConfiguredEditorWorkerUrl() || \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js\`;`,
+      occurrence: `const editorWorkerUrl = \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js\`;`,
       replacement: 'const editorWorkerUrl = `${assetDir}/packages/editor-worker/dist/editorWorkerMain.js`;',
     })
     const platformCode = getPlatformCode(platform)
