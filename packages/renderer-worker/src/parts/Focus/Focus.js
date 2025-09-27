@@ -7,14 +7,20 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 /**
  * @param {number} focusKey
+ * @param {number=} additionalFocusKey
  */
-export const setFocus = (focusKey) => {
+export const setFocus = (focusKey, additionalFocusKey) => {
+  console.log({ focusKey })
   Assert.number(focusKey)
   if (FocusState.get()) {
     Context.remove(FocusState.get())
   }
   FocusState.set(focusKey)
   Context.set(FocusState.get(), true)
+  if (additionalFocusKey) {
+    Context.set(additionalFocusKey, true)
+  }
+
   KeyBindingsState.update()
 }
 

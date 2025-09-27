@@ -46,6 +46,7 @@ const getAvailableKeyBindings = (keyBindings) => {
 
 export const update = () => {
   const matchingKeyBindings = getMatchingKeyBindings(state.keyBindingSets)
+  console.log({ matchingKeyBindings })
   const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
   RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
   state.matchingKeyBindings = matchingKeyBindings
