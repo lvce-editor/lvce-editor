@@ -10,7 +10,6 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
  * @param {number=} additionalFocusKey
  */
 export const setFocus = (focusKey, additionalFocusKey) => {
-  console.log({ focusKey })
   Assert.number(focusKey)
   if (FocusState.get()) {
     Context.remove(FocusState.get())
