@@ -175,7 +175,7 @@ const selectIndexSubMenu = async (menu, item, index) => {
   await showSubMenu(menu.level, menu.focusedIndex)
 }
 
-const selectIndexDefault = (menu, item, index) => {}
+const selectIndexDefault = async (menu, item, index) => {}
 
 const selectIndexIgnore = async (menu, item, index) => {
   await ExecuteMenuItemCommand.executeMenuItemCommand(item)
@@ -202,7 +202,7 @@ export const selectIndex = async (level, index) => {
   menu.focusedIndex = index
   const item = menu.items[menu.focusedIndex]
   const fn = getSelectIndexFunction(item.flags)
-  fn(menu, item, index)
+  await fn(menu, item, index)
 }
 
 export const selectItem = (text) => {
