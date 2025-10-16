@@ -684,9 +684,7 @@ export const mutate = async (id, fn) => {
 }
 
 export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid = newState.parentUid) => {
-  console.log('RENDER', module.name)
   const commands = getRenderCommands(module, oldState, newState, uid, parentUid)
-  console.log({ commands })
   return commands
 }
 

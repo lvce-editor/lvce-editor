@@ -20,9 +20,9 @@
     "@babel/preset-typescript": "^7.27.1",
     "@electron/get": "^4.0.2",
     "@electron/rebuild": "^4.0.1",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^28.0.6",
-    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^28.0.7",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/bytes": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/tar-fs": "^2.0.4",
@@ -36,16 +36,16 @@
     "@lvce-editor/assert": "^1.4.0",
     "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
-    "esbuild": "^0.25.10",
+    "esbuild": "^0.25.11",
     "fs-extra": "^11.3.2",
-    "got": "^14.4.9",
+    "got": "^14.5.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^7.0.3",
     "pretty-bytes": "^7.1.0",
     "rollup": "^4.43.0",
     "tar-fs": "^3.1.1",
-    "verdaccio": "6.1.6"
+    "verdaccio": "6.2.0"
   },
   "xo": {
     "rules": {
