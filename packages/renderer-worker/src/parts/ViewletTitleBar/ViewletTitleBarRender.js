@@ -1,26 +1,14 @@
-import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
-import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
-export const hasFunctionalRootRender = true
-
-export const hasFunctionalEvents = true
-
-const renderItems = {
+const renderFocus = {
   isEqual(oldState, newState) {
-    console.log({
-      commands: newState.commands,
-    })
-    return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
+    return oldState.isFocused === newState.isFocused
   },
-  apply: AdjustCommands.apply,
-  multiple: true,
+  apply(oldState, newState) {
+    return [RenderMethod.SetFocused, newState.isFocused]
+  },
 }
 
-export const render = [renderItems]
-
-export const renderEventListeners = async () => {
-  const listeners = await TitleBarWorker.invoke('TitleBar.renderEventListeners')
-  return listeners
-}
+export const render = [renderFocus]
