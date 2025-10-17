@@ -1,4 +1,5 @@
 import * as Platform from '../Platform/Platform.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 
@@ -18,6 +19,7 @@ export const create = (id, uri, x, y, width, height) => {
     titleBarButtonsWidth: 46 * 3,
     titleBarTitleEnabled: true,
     platform: Platform.platform,
+    assetDir: AssetDir.assetDir,
   }
 }
 
@@ -33,6 +35,7 @@ export const loadContent = async (state) => {
     state.platform,
     state.controlsOverlayEnabled,
     state.titleBarStyleCustom,
+    state.assetDir,
   )
   await TitleBarWorker.invoke(`TitleBar.loadContent2`, state.uid)
   const diffResult = await TitleBarWorker.invoke(`TitleBar.diff3`, state.uid)
