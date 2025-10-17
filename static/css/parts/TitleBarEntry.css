@@ -5,6 +5,9 @@
   contain: content;
   -webkit-app-region: no-drag;
   app-region: no-drag;
+  background: transparent;
+  border: none;
+  color: inherit;
 }
 
 .TitleBarTopLevelEntryLabel {
