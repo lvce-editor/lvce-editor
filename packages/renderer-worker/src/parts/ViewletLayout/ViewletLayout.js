@@ -302,6 +302,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.WindowWidth] = windowWidth
   // TODO get side bar min width from preferences
   getPoints(newPoints, newPoints, sideBarLocation)
+  console.log({ state })
   return {
     ...state,
     points: newPoints,
@@ -526,6 +527,7 @@ const loadIfVisible = async (state, module) => {
           width,
           height,
           uid: childUid,
+          render: false,
           // render: false,
         },
         false,
@@ -561,6 +563,7 @@ export const loadSideBarIfVisible = async (state) => {
   const updated = await loadIfVisible(state, LayoutModules.SideBar)
   return {
     ...updated,
+    sideBarSashVisible: true,
   }
 }
 
@@ -572,6 +575,7 @@ export const loadActivityBarIfVisible = async (state) => {
   const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
   return {
     ...updated,
+    sideBarSashVisible: true,
   }
 }
 
@@ -583,6 +587,7 @@ export const loadTitleBarIfVisible = async (state) => {
   const updated = await loadIfVisible(state, LayoutModules.TitleBar)
   return {
     ...updated,
+    titleBarVisible: true,
   }
 }
 

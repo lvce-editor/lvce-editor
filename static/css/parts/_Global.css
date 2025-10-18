@@ -20,3 +20,24 @@ body {
   user-select: none;
   color: var(--WorkbenchForeground);
 }
+
+.Workbench {
+  display: flex;
+  flex-direction: column;
+  contain: strict;
+}
+
+.MainContents {
+  flex: 1;
+}
+
+.ContentArea {
+  display: flex;
+  contain: strict;
+  flex: 1;
+}
+
+.ActivityBar {
+  height: 100%;
+  width: 48px;
+}
