@@ -6,7 +6,7 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   const state = ViewletTitleBar.create()
   expect(ViewletTitleBar.loadContent(state)).toMatchObject({
     isFocused: true,

@@ -5,5 +5,6 @@ export const Commands = {
   focus: ViewletSideBar.focus,
   openViewlet: ViewletSideBar.openViewlet,
   show: ViewletSideBar.openViewlet,
+  open: ViewletSideBar.openViewlet,
   handleClickAction: ViewletSideBar.handleClickAction,
 }

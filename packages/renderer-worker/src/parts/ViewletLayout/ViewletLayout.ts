@@ -212,6 +212,28 @@ export const create = (id) => {
     [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
+    activityBarId: Id.create(),
+    sideBarSashId: Id.create(),
+    sideBarId: Id.create(),
+    panelSashId: Id.create(),
+    panelId: Id.create(),
+    mainId: Id.create(),
+    contentAreaId: Id.create(),
+    mainContentsId: Id.create(),
+    statusBarId: Id.create(),
+    titleBarId: Id.create(),
+    workbenchId: Id.create(),
+    activityBarVisible: false,
+    contentAreaVisible: false,
+    mainContentsVisible: false,
+    mainVisible: false,
+    panelSashVisible: false,
+    panelVisible: false,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    statusBarVisible: false,
+    titleBarVisible: false,
+    workbenchVisible: false,
   }
 }
 
@@ -277,6 +299,7 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
   return {
     ...state,
     sideBarLocation,
+<<<<<<< HEAD:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.ts
     activityBarVisible,
     activityBarWidth,
     mainVisible,
@@ -289,6 +312,12 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
     sideBarWidth,
     statusBarHeight,
     statusBarVisible,
+=======
+    sideBarSashVisible: true,
+    panelSashVisible: true,
+    mainContentsVisible: true,
+    workbenchVisible: true,
+>>>>>>> origin/main:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.js
   }
 }
 
@@ -490,8 +519,13 @@ interface Module {
 const loadIfVisible = async (state: LayoutState, module: Module) => {
   try {
     const { points, sideBarLocation } = state
+<<<<<<< HEAD:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.ts
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
     const visible = state[kVisible]
+=======
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
+    const visible = points[kVisible]
+>>>>>>> origin/main:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.js
     const x = points[kLeft]
     const y = points[kTop]
     const width = points[kWidth]
@@ -499,7 +533,7 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
     let commands = []
     const parentUid = state.uid
     if (visible) {
-      const childUid = Id.create()
+      const childUid = state[kId]
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
@@ -514,6 +548,7 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
           width,
           height,
           uid: childUid,
+          // render: false,
         },
         false,
         true,
@@ -524,11 +559,21 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
+<<<<<<< HEAD:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.ts
     // TODO at this point, query the state again and create a lightweight virtual dom like
     // [{ id: titlebar }, { id: content-area }, { id: status-bar }]
 
+=======
+    const latestState = ViewletStates.getState(ViewletModuleId.Layout)
+>>>>>>> origin/main:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.js
     return {
-      newState: state,
+      newState: {
+        ...latestState,
+        [kReady]: true,
+        workbenchVisible: true,
+        contentAreaVisible: true,
+        mainContentsVisible: true,
+      },
       commands: orderedCommands,
     }
   } catch (error) {
@@ -540,24 +585,33 @@ export const loadMainIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Main)
 }
 
-export const loadSideBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.SideBar)
+export const loadSideBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.SideBar)
+  return {
+    ...updated,
+  }
 }
 
 export const loadPanelIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.Panel)
 }
 
-export const loadActivityBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.ActivityBar)
+export const loadActivityBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
+  return {
+    ...updated,
+  }
 }
 
 export const loadStatusBarIfVisible = (state) => {
   return loadIfVisible(state, LayoutModules.StatusBar)
 }
 
-export const loadTitleBarIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.TitleBar)
+export const loadTitleBarIfVisible = async (state) => {
+  const updated = await loadIfVisible(state, LayoutModules.TitleBar)
+  return {
+    ...updated,
+  }
 }
 
 export const loadPreviewIfVisible = (state) => {

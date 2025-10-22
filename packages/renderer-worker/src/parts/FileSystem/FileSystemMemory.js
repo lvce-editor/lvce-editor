@@ -51,6 +51,10 @@ export const copy = (oldPath, newPath) => {
   return ExtensionHostWorker.invoke('FileSystemMemory.copy', oldPath, newPath)
 }
 
+export const stat = (uri) => {
+  return ExtensionHostWorker.invoke('FileSystemMemory.stat', uri)
+}
+
 export const getFiles = () => {
   return ExtensionHostWorker.invoke('FileSystemMemory.getFiles')
 }
