@@ -297,28 +297,18 @@ jobs:
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/extension-host-helper-process
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/jest-environment
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/static-server
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/shared-process
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/server
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
