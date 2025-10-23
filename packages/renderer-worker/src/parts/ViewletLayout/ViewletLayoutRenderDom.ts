@@ -162,11 +162,6 @@ const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) =
     commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
     return
   }
-  if (!oldState.titleBarVisible && newState.titleBarVisible) {
-    commands.push(['Viewlet.createFunctionalRoot', `${newState.titleBarId}`, newState.titleBarId, true])
-    const dom = getDom(newState.titleBarId)
-    commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
-  }
   if (newState.titleBarVisible) {
     workbenchAppendIds.push(newState.titleBarId)
   }
