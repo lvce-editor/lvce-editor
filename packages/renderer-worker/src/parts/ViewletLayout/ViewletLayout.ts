@@ -299,7 +299,6 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
   return {
     ...state,
     sideBarLocation,
-<<<<<<< HEAD:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.ts
     activityBarVisible,
     activityBarWidth,
     mainVisible,
@@ -312,12 +311,10 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
     sideBarWidth,
     statusBarHeight,
     statusBarVisible,
-=======
     sideBarSashVisible: true,
     panelSashVisible: true,
     mainContentsVisible: true,
     workbenchVisible: true,
->>>>>>> origin/main:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.js
   }
 }
 
@@ -519,13 +516,8 @@ interface Module {
 const loadIfVisible = async (state: LayoutState, module: Module) => {
   try {
     const { points, sideBarLocation } = state
-<<<<<<< HEAD:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.ts
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    const visible = state[kVisible]
-=======
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
     const visible = points[kVisible]
->>>>>>> origin/main:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.js
     const x = points[kLeft]
     const y = points[kTop]
     const width = points[kWidth]
@@ -559,13 +551,10 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
       }
     }
     const orderedCommands = reorderCommands(commands)
-<<<<<<< HEAD:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.ts
     // TODO at this point, query the state again and create a lightweight virtual dom like
     // [{ id: titlebar }, { id: content-area }, { id: status-bar }]
 
-=======
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
->>>>>>> origin/main:packages/renderer-worker/src/parts/ViewletLayout/ViewletLayout.js
     return {
       newState: {
         ...latestState,
