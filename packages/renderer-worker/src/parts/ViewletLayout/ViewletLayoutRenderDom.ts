@@ -247,15 +247,6 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
     commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
     commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
     commands.push(['Viewlet.createFunctionalRoot', `${newState.workbenchId}`, newState.workbenchId, true])
-    const dom = [
-      {
-        type: VirtualDomElements.Div,
-        id: 'Workbench',
-        className: 'Viewlet Layout Workbench new',
-        role: 'application',
-        childCount: 0,
-      },
-    ]
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
   }
   if (newState.workbenchVisible) {
