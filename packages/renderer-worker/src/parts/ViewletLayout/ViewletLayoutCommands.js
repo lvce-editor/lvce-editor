@@ -1,4 +1,4 @@
-import * as ViewletLayout from './ViewletLayout.js'
+import * as ViewletLayout from './ViewletLayout.ts'
 
 // prettier-ignore
 export const Commands = {}
