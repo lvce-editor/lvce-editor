@@ -134,16 +134,6 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
   const commands: any[] = []
   // TODO support secondary side bar / chat view
   const contentAppendIds: any[] = []
-  if (newState.sideBarLocation === 'left') {
-    getActivityBarCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarCommands(oldState, newState, commands, contentAppendIds)
-    getMainCommands(oldState, newState, commands, contentAppendIds)
-  } else {
-    getMainCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarCommands(oldState, newState, commands, contentAppendIds)
-    getActivityBarCommands(oldState, newState, commands, contentAppendIds)
-  }
-  commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
   workbenchAppendIds.push(newState.contentAreaId)
   if (newState.sideBarLocation === SideBarLocationType.Left) {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
@@ -229,6 +219,10 @@ export const renderDom = (oldState, newState) => {
     ...getWorkbenchCommands(oldState, newState, [], workbenchAppendIds),
   ]
 
+  console.log({
+    titleBar: getTitleBarCommands(oldState, newState, [], []),
+    content: getContentCommands(oldState, newState, [], []),
+  })
   console.log({ commands })
 
   // TODO ensure focus commands are last in the commands array
