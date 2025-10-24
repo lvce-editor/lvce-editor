@@ -308,10 +308,9 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
     minPanelHeight,
     sideBarMaxWidth,
     sideBarMinWidth,
-    sideBarVisible,
     sideBarWidth,
     statusBarHeight,
-    statusBarVisible,
+    statusBarVisible: true,
     sideBarSashVisible: true,
     panelSashVisible: true,
     mainContentsVisible: true,
@@ -319,6 +318,7 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
     panelVisible: true,
     titleBarVisible: true,
     contentAreaVisible: true,
+    sideBarVisible: true,
   }
 }
 
