@@ -170,23 +170,7 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
 }
 
 const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
-  if (oldState.statusBarVisible && !newState.statusBarVisible) {
-    commands.push(['Viewlet.remove', newState.statusBarId])
-  }
-  if (!oldState.statusBarVisible && newState.statusBarVisible) {
-    commands.push(['Viewlet.create', newState.statusBarId])
-    const dom = getDom(newState.statusBarId)
-    commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
-    return
-  }
-  if (!oldState.statusBarVisible && newState.statusBarVisible) {
-    commands.push(['Viewlet.createFunctionalRoot', `${newState.statusBarId}`, newState.statusBarId, true])
-    const dom = getDom(newState.statusBarId)
-    commands.push(['Viewlet.setDom2', newState.statusBarId, dom])
-  }
-  if (newState.statusBarVisible) {
-    workbenchAppendIds.push(newState.statusBarId)
-  }
+  return renderComponent('statusBarVisible', 'statusBarId', oldState, newState, commands, workbenchAppendIds)
 }
 
 const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) => {
