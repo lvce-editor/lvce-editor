@@ -171,13 +171,11 @@ const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) 
 const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds): readonly any[] => {
   const commands: any[] = []
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
-    commands.push(['Viewlet.createFunctionalRoot', newState.workbenchId])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.workbenchId}`, newState.workbenchId, true])
     const dom = getDom(newState.workbenchId)
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
     commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
     commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
-    commands.push(['Viewlet.createFunctionalRoot', `${newState.workbenchId}`, newState.workbenchId, true])
-    commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
   }
   if (newState.workbenchVisible) {
     commands.push(['Viewlet.replaceChildren', newState.workbenchId, workbenchAppendIds])
@@ -223,7 +221,7 @@ export const renderDom = (oldState, newState) => {
     titleBar: getTitleBarCommands(oldState, newState, [], []),
     content: getContentCommands(oldState, newState, [], []),
   })
-  console.log({ commands })
+  console.log({ commands, wid: newState.workbenchId })
 
   // TODO ensure focus commands are last in the commands array
   return commands
