@@ -29,7 +29,8 @@ const getDom = (id) => {
   ]
 }
 
-const renderComponent = (kVisible, kId, oldState, newState, commands, appendIds) => {
+const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds) => {
+  const commands: any[] = []
   if (oldState[kVisible] && !newState[kVisible]) {
     commands.push(['Viewlet.remove', newState[kId]])
   }
@@ -37,11 +38,12 @@ const renderComponent = (kVisible, kId, oldState, newState, commands, appendIds)
     commands.push(['Viewlet.create', newState[kId]])
     const dom = getDom(newState[kId])
     commands.push(['Viewlet.setDom2', newState[kId], dom])
-    return
+    return []
   }
   if (newState[kId]) {
     appendIds.push(newState[kId])
   }
+  return commands
 }
 
 const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
@@ -123,11 +125,12 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
   }
 }
 
-const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
+const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds): readonly any[] => {
   return renderComponent('titleBarVisible', 'titleBarId', oldState, newState, commands, workbenchAppendIds)
 }
 
-const getContentCommands = (oldState, newState, commands, workbenchAppendIds) => {
+const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): readonly any[] => {
+  const commands: any[] = []
   // TODO support secondary side bar / chat view
   const contentAppendIds: any[] = []
   if (newState.sideBarLocation === 'left') {
@@ -167,13 +170,15 @@ const getContentCommands = (oldState, newState, commands, workbenchAppendIds) =>
     commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
+  return commands
 }
 
 const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
   return renderComponent('statusBarVisible', 'statusBarId', oldState, newState, commands, workbenchAppendIds)
 }
 
-const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) => {
+const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds): readonly any[] => {
+  const commands: any[] = []
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
     commands.push(['Viewlet.create', newState.workbenchId])
     const dom = getDom(newState.workbenchId)
@@ -189,6 +194,7 @@ const getWorkbenchCommands = (oldState, newState, commands, workbenchAppendIds) 
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
     commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
+  return commands
 }
 
 export const renderDom = (oldState, newState) => {
@@ -216,10 +222,14 @@ export const renderDom = (oldState, newState) => {
   // )
   const commands: any[] = []
   const workbenchAppendIds: any[] = []
-  getTitleBarCommands(oldState, newState, commands, workbenchAppendIds)
-  getContentCommands(oldState, newState, commands, workbenchAppendIds)
-  getStatusBarCommands(oldState, newState, commands, workbenchAppendIds)
-  getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds)
+  const commmands = [
+    ...getTitleBarCommands(oldState, newState, commands, workbenchAppendIds),
+    ...getContentCommands(oldState, newState, commands, workbenchAppendIds),
+    ...getStatusBarCommands(oldState, newState, commands, workbenchAppendIds),
+    ...getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds),
+  ]
+
+  console.log({ commands })
 
   // TODO ensure focus commands are last in the commands array
   return commands
