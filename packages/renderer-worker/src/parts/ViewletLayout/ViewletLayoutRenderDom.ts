@@ -157,10 +157,9 @@ const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) =
     commands.push(['Viewlet.remove', newState.titleBarId])
   }
   if (!oldState.titleBarVisible && newState.titleBarVisible) {
-    commands.push(['Viewlet.create', newState.titleBarId])
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.activityBarId}`, newState.activityBarId, true])
     const dom = getDom(newState.titleBarId)
     commands.push(['Viewlet.setDom2', newState.titleBarId, dom])
-    return
   }
   if (newState.titleBarVisible) {
     workbenchAppendIds.push(newState.titleBarId)
