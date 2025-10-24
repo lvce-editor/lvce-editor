@@ -1,4 +1,4 @@
-export * from './ViewletLayout.js'
+export * from './ViewletLayout.ts'
 export * from './ViewletLayoutCommands.js'
 export * from './ViewletLayoutCss.js'
 export * from './ViewletLayoutKeyBindings.js'

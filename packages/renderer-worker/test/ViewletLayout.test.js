@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as ViewletLayout from '../src/parts/ViewletLayout/ViewletLayout.js'
+import * as ViewletLayout from '../src/parts/ViewletLayout/ViewletLayout.ts'
 
 const kSideBarVisible = 12
 const kSideBarTop = 13

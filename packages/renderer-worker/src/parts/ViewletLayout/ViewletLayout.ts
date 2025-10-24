@@ -397,6 +397,7 @@ const toggle = (state, module, moduleId) => {
 }
 
 export const showSideBar = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.SideBar)
 }
 
@@ -405,10 +406,12 @@ export const hideSideBar = (state) => {
 }
 
 export const toggleSideBar = (state) => {
+  // @ts-ignore
   return toggle(state, LayoutModules.SideBar)
 }
 
 export const showPanel = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.Panel)
 }
 
@@ -421,6 +424,7 @@ export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
 }
 
 export const showActivityBar = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.ActivityBar)
 }
 
@@ -429,10 +433,12 @@ export const hideActivityBar = (state) => {
 }
 
 export const toggleActivityBar = (state) => {
+  // @ts-ignore
   return toggle(state, LayoutModules.ActivityBar)
 }
 
 export const showStatusBar = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.StatusBar)
 }
 
@@ -441,10 +447,12 @@ export const hideStatusBar = (state) => {
 }
 
 export const toggleStatusBar = (state) => {
+  // @ts-ignore
   return toggle(state, LayoutModules.StatusBar)
 }
 
 export const showPreview = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.Preview)
 }
 
@@ -453,10 +461,12 @@ export const hidePreview = (state) => {
 }
 
 export const togglePreview = (state) => {
+  // @ts-ignore
   return toggle(state, LayoutModules.Preview)
 }
 
 export const showTitleBar = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.TitleBar)
 }
 
@@ -465,10 +475,12 @@ export const hideTitleBar = (state) => {
 }
 
 export const toggleTitleBar = (state) => {
+  // @ts-ignore
   return toggle(state, LayoutModules.TitleBar)
 }
 
 export const showMain = (state) => {
+  // @ts-ignore
   return show(state, LayoutModules.Main)
 }
 
@@ -477,6 +489,7 @@ export const hideMain = (state) => {
 }
 
 export const toggleMain = (state) => {
+  // @ts-ignore
   return toggle(state, LayoutModules.Main)
 }
 
@@ -548,6 +561,7 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
       )
       if (commands) {
         const referenceNodes = getReferenceNodes(sideBarLocation)
+        // @ts-ignore
         commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
@@ -746,7 +760,9 @@ const getResizeCommands = async (oldPoints, newPoints) => {
         width: newWidth,
         height: newHeight,
       })
+      // @ts-ignore
       commands.push(...resizeCommands)
+      // @ts-ignore
       commands.push(['Viewlet.setBounds', instanceUid, newLeft, newTop, newWidth, newHeight])
     }
   }
@@ -766,6 +782,7 @@ const getFocusChangeCommands = (isFocused) => {
   for (const module of modules) {
     const { moduleId } = module
     const focusChangeCommands = Viewlet.handleFocusChange(moduleId, isFocused)
+    // @ts-ignore
     commands.push(...focusChangeCommands)
   }
   return commands
@@ -840,10 +857,12 @@ export const handleSashPointerMove = async (state, x, y) => {
       if (newPoints[kVisible]) {
         showAsync(uid, newPoints, module) // TODO avoid side effect
         const commands = showPlaceholder(uid, newPoints, module)
+        // @ts-ignore
         allCommands.push(commands)
       } else {
         await SaveState.saveViewletState(moduleId)
         const commands = Viewlet.disposeFunctional(moduleId)
+        // @ts-ignore
         allCommands.push(...commands)
       }
     }
@@ -1001,6 +1020,7 @@ export const getInitialPlaceholderCommands = (state) => {
   for (const module of modules) {
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
     if (points[kVisible]) {
+      // @ts-ignore
       commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
     }
   }
