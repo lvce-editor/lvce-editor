@@ -322,7 +322,7 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
   }
 }
 
-const show = async (state, module, currentViewletId) => {
+const show = async (state, module) => {
   const { points } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const newPoints = new Uint16Array(points)
@@ -496,31 +496,6 @@ export const toggleMain = (state) => {
   return toggle(state, LayoutModules.Main)
 }
 
-const getReferenceNodes = (sideBarLocation) => {
-  if (sideBarLocation === SideBarLocationType.Left) {
-    return [
-      ViewletModuleId.TitleBar,
-      ViewletModuleId.ActivityBar,
-      'SashSideBar',
-      ViewletModuleId.SideBar,
-      ViewletModuleId.Main,
-      'SashPanel',
-      ViewletModuleId.Panel,
-      ViewletModuleId.StatusBar,
-    ]
-  }
-  return [
-    ViewletModuleId.TitleBar,
-    ViewletModuleId.Main,
-    ViewletModuleId.SideBar,
-    'SashSideBar',
-    ViewletModuleId.ActivityBar,
-    'SashPanel',
-    ViewletModuleId.Panel,
-    ViewletModuleId.StatusBar,
-  ]
-}
-
 interface Module {
   readonly kVisible: 'activityBarVisible' | 'mainVisible' | 'sideBarVisible'
   readonly kTop: string
@@ -532,7 +507,7 @@ interface Module {
 
 const loadIfVisible = async (state: LayoutState, module: Module) => {
   try {
-    const { points, sideBarLocation } = state
+    const { points } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
     const visible = points[kVisible]
     const x = points[kLeft]
@@ -540,7 +515,6 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
     const width = points[kWidth]
     const height = points[kHeight]
     let commands = []
-    const parentUid = state.uid
     if (visible) {
       const childUid = state[kId]
       commands = await ViewletManager.load(
@@ -563,9 +537,9 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
         true,
       )
       if (commands) {
-        const referenceNodes = getReferenceNodes(sideBarLocation)
+        // const referenceNodes = getReferenceNodes(sideBarLocation)
         // @ts-ignore
-        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+        // commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
     const orderedCommands = reorderCommands(commands)
@@ -637,7 +611,7 @@ export const handleSashPointerDown = (state, sashId) => {
   }
 }
 
-export const handleSashPointerUp = (state, sashId) => {
+export const handleSashPointerUp = (state) => {
   const newState = {
     ...state,
     [LayoutKeys.SashId]: '',
@@ -649,7 +623,7 @@ export const handleSashPointerUp = (state, sashId) => {
   }
 }
 
-const getNewStatePointerMoveSideBar = (points, x, y) => {
+const getNewStatePointerMoveSideBar = (points, x) => {
   const windowWidth = points[LayoutKeys.WindowWidth]
   const activityBarWidth = points[LayoutKeys.ActivityBarWidth]
   const sideBarMinWidth = points[LayoutKeys.SideBarMinWidth]
@@ -1011,21 +985,12 @@ export const isSideBarVisible = (state) => {
 export const getInitialPlaceholderCommands = (state) => {
   const { points } = state
   const commands = []
-  const uid = state.uid
-  const modules = [
-    LayoutModules.TitleBar,
-    LayoutModules.Main,
-    LayoutModules.SideBar,
-    LayoutModules.ActivityBar,
-    LayoutModules.Panel,
-    LayoutModules.StatusBar,
-  ]
-  for (const module of modules) {
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    if (points[kVisible]) {
-      // @ts-ignore
-      commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
-    }
-  }
+  // for (const module of modules) {
+  //   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+  //   if (points[kVisible]) {
+  //     // @ts-ignore
+  //     commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
+  //   }
+  // }
   return commands
 }
