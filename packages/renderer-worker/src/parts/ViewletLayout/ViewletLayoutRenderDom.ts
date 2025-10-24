@@ -51,10 +51,11 @@ const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) 
   return renderComponent('activityBarVisible', 'activityBarId', oldState, newState, commands, contentAppendIds)
 }
 
-const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) => {
+const getSideBarSashCommands = (oldState, newState, _commands, contentAppendIds) => {
+  const commands: any[] = []
   if (oldState.sideBarSashVisible && !newState.sideBarSashVisible) {
     commands.push(['Viewlet.remove', newState.sideBarSashId])
-    return
+    return commands
   }
   if (!oldState.sideBarSashVisible && newState.sideBarSashVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.sideBarSashId}`, newState.sideBarSashId, true])
@@ -70,6 +71,7 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
   if (newState.sideBarSashVisible) {
     contentAppendIds.push(newState.sideBarSashId)
   }
+  return commands
 }
 
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
