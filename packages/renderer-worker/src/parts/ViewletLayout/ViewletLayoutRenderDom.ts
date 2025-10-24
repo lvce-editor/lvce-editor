@@ -29,19 +29,23 @@ const getDom = (id) => {
   ]
 }
 
-const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  if (oldState.activityBarVisible && !newState.activityBarVisible) {
-    commands.push(['Viewlet.remove', newState.activityBarId])
+const renderComponent = (kVisible, kId, oldState, newState, commands, appendIds) => {
+  if (oldState[kVisible] && !newState[kVisible]) {
+    commands.push(['Viewlet.remove', newState[kId]])
   }
-  if (!oldState.activityBarVisible && newState.activityBarVisible) {
-    commands.push(['Viewlet.create', newState.activityBarId])
-    const dom = getDom(newState.activityBarId)
-    commands.push(['Viewlet.setDom2', newState.activityBarId, dom])
+  if (!oldState[kVisible] && newState[kVisible]) {
+    commands.push(['Viewlet.create', newState[kId]])
+    const dom = getDom(newState[kId])
+    commands.push(['Viewlet.setDom2', newState[kId], dom])
     return
   }
-  if (newState.activityBarVisible) {
-    contentAppendIds.push(newState.activityBarId)
+  if (newState[kId]) {
+    appendIds.push(newState[kId])
   }
+}
+
+const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
+  return renderComponent('activityBarVisible', 'activityBarId', oldState, newState, commands, contentAppendIds)
 }
 
 const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) => {
