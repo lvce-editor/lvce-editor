@@ -94,6 +94,7 @@ const wrapViewletCommand = (id, key, fn) => {
   Assert.fn(fn)
   if (fn.returnValue) {
     const wrappedViewletCommand = async (...args) => {
+      console.log('exec', fn.name)
       // TODO get actual focused instance
       const activeInstance = ViewletStates.getInstance(id)
       const result = await fn(activeInstance.state, ...args)
@@ -102,6 +103,7 @@ const wrapViewletCommand = (id, key, fn) => {
     return wrappedViewletCommand
   }
   const wrappedViewletCommand = async (...args) => {
+    console.log('exec', fn.name)
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     await runFn(activeInstance, id, key, fn, args)

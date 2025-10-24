@@ -3,7 +3,7 @@ import { render } from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const getDom = (id, className) => {
+const getDom = (id, className = '') => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
     return [
@@ -43,7 +43,6 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
   if (newState[kId]) {
     appendIds.push(newState[kId])
   }
-  console.log({ kId, commands })
   return commands
 }
 
@@ -90,7 +89,7 @@ const getPanelSashCommands = (oldState, newState, _commands, contentAppendIds): 
   }
   if (!oldState.panelSashVisible && newState.panelSashVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.panelSashId}`, newState.panelSashId, true])
-    const dom = getDom(newState.panelSashId)
+    const dom = getDom(newState.panelSashId, 'SashPanel')
     commands.push(['Viewlet.setDom2', newState.panelSashId, dom])
   }
   if (newState.panelSashVisible) {
@@ -173,7 +172,6 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
     commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
-  console.log({ content: commands })
   return commands
 }
 
@@ -232,7 +230,7 @@ export const renderDom = (oldState, newState) => {
     titleBar: getTitleBarCommands(oldState, newState, [], []),
     content: getContentCommands(oldState, newState, [], []),
   })
-  console.log({ commands, wid: newState.workbenchId, newState })
+  console.log({ commands })
 
   // TODO ensure focus commands are last in the commands array
   return commands
