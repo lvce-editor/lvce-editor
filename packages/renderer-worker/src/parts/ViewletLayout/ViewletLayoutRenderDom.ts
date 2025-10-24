@@ -65,21 +65,6 @@ const getSideBarSashCommands = (oldState, newState, commands, contentAppendIds) 
   }
 }
 
-const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  if (oldState.mainVisible && !newState.mainVisible) {
-    commands.push(['Viewlet.remove', newState.mainId])
-    return
-  }
-  if (!oldState.mainVisible && newState.mainVisible) {
-    commands.push(['Viewlet.createFunctionalRoot', `${newState.mainId}`, newState.mainId, true])
-    const dom = getDom(newState.mainId)
-    commands.push(['Viewlet.setDom2', newState.mainId, dom])
-  }
-  if (newState.mainVisible) {
-    mainContentsAppendIds.push(newState.mainId)
-  }
-}
-
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
   if (oldState.sideBarVisible && !newState.sideBarVisible) {
     commands.push(['Viewlet.remove', newState.sideBarId])
@@ -92,6 +77,21 @@ const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
   }
   if (newState.sideBarVisible) {
     contentAppendIds.push(newState.sideBarId)
+  }
+}
+
+const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
+  if (oldState.mainVisible && !newState.mainVisible) {
+    commands.push(['Viewlet.remove', newState.mainId])
+    return
+  }
+  if (!oldState.mainVisible && newState.mainVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.mainId}`, newState.mainId, true])
+    const dom = getDom(newState.mainId)
+    commands.push(['Viewlet.setDom2', newState.mainId, dom])
+  }
+  if (newState.mainVisible) {
+    mainContentsAppendIds.push(newState.mainId)
   }
 }
 
