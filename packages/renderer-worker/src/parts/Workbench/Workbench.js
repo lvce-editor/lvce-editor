@@ -183,6 +183,8 @@ export const startup = async () => {
     false,
     { ...initData, ...layoutState },
   )
+  const actualCommands = commands.slice(2)
+  console.log({ commands })
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
