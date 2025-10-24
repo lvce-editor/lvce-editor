@@ -220,13 +220,12 @@ export const renderDom = (oldState, newState) => {
   //     <div class="StatusBar" id="8"></div>
   //   </div>
   // )
-  const commands: any[] = []
   const workbenchAppendIds: any[] = []
-  const commmands = [
-    ...getTitleBarCommands(oldState, newState, commands, workbenchAppendIds),
-    ...getContentCommands(oldState, newState, commands, workbenchAppendIds),
-    ...getStatusBarCommands(oldState, newState, commands, workbenchAppendIds),
-    ...getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds),
+  const commands = [
+    ...getTitleBarCommands(oldState, newState, [], workbenchAppendIds),
+    ...getContentCommands(oldState, newState, [], workbenchAppendIds),
+    ...getStatusBarCommands(oldState, newState, [], workbenchAppendIds),
+    ...getWorkbenchCommands(oldState, newState, [], workbenchAppendIds),
   ]
 
   console.log({ commands })
