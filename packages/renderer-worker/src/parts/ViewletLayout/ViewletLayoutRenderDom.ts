@@ -35,7 +35,7 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
     commands.push(['Viewlet.remove', newState[kId]])
   }
   if (!oldState[kVisible] && newState[kVisible]) {
-    commands.push(['Viewlet.create', newState[kId]])
+    commands.push(['Viewlet.createFunctionalRoot', newState[kId]])
     const dom = getDom(newState[kId])
     commands.push(['Viewlet.setDom2', newState[kId], dom])
     return []
