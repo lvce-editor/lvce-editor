@@ -142,7 +142,7 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
     getSideBarCommands(oldState, newState, commands, contentAppendIds)
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
   }
-  commands.push(['Content.append', newState.contentAreaId, contentAppendIds])
+  commands.push(['Viewlet.append', newState.contentAreaId, contentAppendIds])
   workbenchAppendIds.push(newState.contentAreaId)
   if (newState.sideBarLocation === SideBarLocationType.Left) {
     getActivityBarCommands(oldState, newState, commands, contentAppendIds)
