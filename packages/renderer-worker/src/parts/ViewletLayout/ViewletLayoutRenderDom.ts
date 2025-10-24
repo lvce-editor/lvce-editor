@@ -78,14 +78,15 @@ const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
   return renderComponent('sideBarVisible', 'sideBarId', oldState, newState, commands, contentAppendIds)
 }
 
-const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
+const getMainCommands = (oldState, newState, commands, mainContentsAppendIds): readonly any[] => {
   return renderComponent('mainVisible', 'mainId', oldState, newState, commands, mainContentsAppendIds)
 }
 
-const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) => {
+const getPanelSashCommands = (oldState, newState, _commands, contentAppendIds): readonly any[] => {
+  const commands: any[] = []
   if (oldState.panelSashVisible && !newState.panelSashVisible) {
     commands.push(['Viewlet.remove', newState.panelSashId])
-    return
+    return commands
   }
   if (!oldState.panelSashVisible && newState.panelSashVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.panelSashId}`, newState.panelSashId, true])
@@ -95,22 +96,26 @@ const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) =>
   if (newState.panelSashVisible) {
     contentAppendIds.push(newState.panelSashId)
   }
+  return commands
 }
 
 const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) => {
   return renderComponent('panelVisible', 'panelId', oldState, newState, commands, mainContentsAppendIds)
 }
 
-const getMainContentsCommands = (oldState, newState, commands, contentAppendIds) => {
+const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds): readonly any[] => {
+  const commands: any[] = []
   if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
     commands.push(['Viewlet.remove', newState.mainContentsId])
-    return
+    return commands
   }
   if (!oldState.mainContentsVisible && newState.mainContentsVisible) {
     const mainContentsAppendIds = []
-    getMainCommands(oldState, newState, commands, mainContentsAppendIds)
-    getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds)
-    getPanelCommands(oldState, newState, commands, mainContentsAppendIds)
+    commands.push(
+      ...getMainCommands(oldState, newState, commands, mainContentsAppendIds),
+      ...getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds),
+      ...getPanelCommands(oldState, newState, commands, mainContentsAppendIds),
+    )
     commands.push(['Viewlet.createFunctionalRoot', `${newState.mainContentsId}`, newState.mainContentsId, true])
     const dom = [
       {
@@ -126,6 +131,7 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
   if (newState.mainContentsVisible) {
     contentAppendIds.push(newState.mainContentsId)
   }
+  return commands
 }
 
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds): readonly any[] => {
@@ -138,15 +144,19 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
   const contentAppendIds: any[] = []
   workbenchAppendIds.push(newState.contentAreaId)
   if (newState.sideBarLocation === SideBarLocationType.Left) {
-    getActivityBarCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
-    getMainContentsCommands(oldState, newState, commands, contentAppendIds)
+    commands.push(
+      ...getActivityBarCommands(oldState, newState, commands, contentAppendIds),
+      ...getSideBarCommands(oldState, newState, commands, contentAppendIds),
+      ...getSideBarSashCommands(oldState, newState, commands, contentAppendIds),
+      ...getMainContentsCommands(oldState, newState, commands, contentAppendIds),
+    )
   } else {
-    getMainContentsCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarSashCommands(oldState, newState, commands, contentAppendIds)
-    getSideBarCommands(oldState, newState, commands, contentAppendIds)
-    getActivityBarCommands(oldState, newState, commands, contentAppendIds)
+    commands.push(
+      ...getMainContentsCommands(oldState, newState, commands, contentAppendIds),
+      ...getSideBarSashCommands(oldState, newState, commands, contentAppendIds),
+      ...getSideBarCommands(oldState, newState, commands, contentAppendIds),
+      ...getActivityBarCommands(oldState, newState, commands, contentAppendIds),
+    )
   }
   if (!oldState.contentAreaVisible && newState.contentAreaVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.contentAreaId}`, newState.contentAreaId, true])
