@@ -180,7 +180,7 @@ const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds)
     commands.push(['Viewlet.replaceChildren', newState.workbenchId, workbenchAppendIds])
   }
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
-    commands.push(['Viewlet.append', 'document.body', newState.workbenchId])
+    commands.push(['Viewlet.appendToBody', newState.workbenchId])
   }
   return commands
 }
