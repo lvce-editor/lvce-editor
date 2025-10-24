@@ -171,7 +171,7 @@ const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) 
 const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds): readonly any[] => {
   const commands: any[] = []
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
-    commands.push(['Viewlet.create', newState.workbenchId])
+    commands.push(['Viewlet.createFunctionalRoot', newState.workbenchId])
     const dom = getDom(newState.workbenchId)
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
     commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
