@@ -184,7 +184,8 @@ export const startup = async () => {
     { ...initData, ...layoutState },
   )
   const actualCommands = commands.slice(2)
-  console.log({ commands })
+  await RendererProcess.invoke('Viewlet.executeCommands', actualCommands)
+
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
