@@ -213,17 +213,17 @@ export const create = (id) => {
     [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
-    activityBarId: Id.create(),
-    sideBarSashId: Id.create(),
-    sideBarId: Id.create(),
-    panelSashId: Id.create(),
-    panelId: Id.create(),
-    mainId: Id.create(),
-    contentAreaId: Id.create(),
-    mainContentsId: Id.create(),
-    statusBarId: Id.create(),
-    titleBarId: Id.create(),
-    workbenchId: Id.create(),
+    activityBarId: Id.create(), //3
+    sideBarSashId: Id.create(), //4
+    sideBarId: Id.create(), //5
+    panelSashId: Id.create(), //6
+    panelId: Id.create(), //7
+    mainId: Id.create(), //8
+    contentAreaId: Id.create(), // 9
+    mainContentsId: Id.create(), // 10
+    statusBarId: Id.create(), // 11
+    titleBarId: Id.create(), // 12
+    workbenchId: Id.create(), // 13
     activityBarVisible: false,
     contentAreaVisible: false,
     mainContentsVisible: false,
@@ -296,13 +296,14 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
 
   newPoints[LayoutKeys.WindowHeight] = windowHeight
   newPoints[LayoutKeys.WindowWidth] = windowWidth
+  console.log('did load content')
   // TODO get side bar min width from preferences
   return {
     ...state,
     sideBarLocation,
-    activityBarVisible,
+    activityBarVisible: true,
     activityBarWidth,
-    mainVisible,
+    mainVisible: true,
     panelHeight,
     maxPanelHeight,
     minPanelHeight,
@@ -556,8 +557,10 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
   }
 }
 
-export const loadMainIfVisible = (state) => {
-  return loadIfVisible(state, LayoutModules.Main)
+export const loadMainIfVisible = async (state) => {
+  const newState = await loadIfVisible(state, LayoutModules.Main)
+  console.log('did load main')
+  return newState
 }
 
 export const loadSideBarIfVisible = async (state) => {

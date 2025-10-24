@@ -35,10 +35,10 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
     commands.push(['Viewlet.remove', newState[kId]])
   }
   if (!oldState[kVisible] && newState[kVisible]) {
-    commands.push(['Viewlet.createFunctionalRoot', newState[kId]])
+    commands.push(['Viewlet.createFunctionalRoot', newState[kId]], true)
     const dom = getDom(newState[kId])
     commands.push(['Viewlet.setDom2', newState[kId], dom])
-    return []
+    return commands
   }
   if (newState[kId]) {
     appendIds.push(newState[kId])
@@ -172,6 +172,7 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
     commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
+  console.log({ content: commands })
   return commands
 }
 
@@ -218,6 +219,8 @@ export const renderDom = (oldState, newState) => {
   //     <div class="StatusBar" id="8"></div>
   //   </div>
   // )
+
+  console.log({ oldState, newState, eq: oldState === newState })
   const workbenchAppendIds: any[] = []
   const commands = [
     ...getTitleBarCommands(oldState, newState, [], workbenchAppendIds),
@@ -226,12 +229,7 @@ export const renderDom = (oldState, newState) => {
     ...getWorkbenchCommands(oldState, newState, [], workbenchAppendIds),
   ]
 
-  console.log({
-    titleBar: getTitleBarCommands(oldState, newState, [], []),
-    content: getContentCommands(oldState, newState, [], []),
-  })
   console.log({ commands })
-
   // TODO ensure focus commands are last in the commands array
   return commands
 }
