@@ -74,18 +74,7 @@ const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
 }
 
 const getMainCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  if (oldState.mainVisible && !newState.mainVisible) {
-    commands.push(['Viewlet.remove', newState.mainId])
-    return
-  }
-  if (!oldState.mainVisible && newState.mainVisible) {
-    commands.push(['Viewlet.createFunctionalRoot', `${newState.mainId}`, newState.mainId, true])
-    const dom = getDom(newState.mainId)
-    commands.push(['Viewlet.setDom2', newState.mainId, dom])
-  }
-  if (newState.mainVisible) {
-    mainContentsAppendIds.push(newState.mainId)
-  }
+  return renderComponent('mainVisible', 'mainId', oldState, newState, commands, mainContentsAppendIds)
 }
 
 const getPanelSashCommands = (oldState, newState, commands, contentAppendIds) => {
