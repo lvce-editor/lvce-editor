@@ -161,6 +161,7 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
     commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
+  console.log({ content: commands })
   return commands
 }
 
@@ -219,7 +220,7 @@ export const renderDom = (oldState, newState) => {
     titleBar: getTitleBarCommands(oldState, newState, [], []),
     content: getContentCommands(oldState, newState, [], []),
   })
-  console.log({ commands, wid: newState.workbenchId })
+  console.log({ commands, wid: newState.workbenchId, newState })
 
   // TODO ensure focus commands are last in the commands array
   return commands

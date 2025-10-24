@@ -318,6 +318,7 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
     workbenchVisible: true,
     panelVisible: true,
     titleBarVisible: true,
+    contentAreaVisible: true,
   }
 }
 
