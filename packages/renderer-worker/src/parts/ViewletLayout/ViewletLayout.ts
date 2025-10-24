@@ -360,10 +360,8 @@ const show = async (state, module) => {
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {
-    newState: {
-      ...state,
-      points: newPoints,
-    },
+    ...state,
+    points: newPoints,
     commands,
   }
 }
@@ -382,10 +380,8 @@ const hide = async (state, module) => {
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {
-    newState: {
-      ...state,
-      points: newPoints,
-    },
+    ...state,
+    points: newPoints,
     commands,
   }
 }
@@ -548,13 +544,11 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
 
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
     return {
-      newState: {
-        ...latestState,
-        [kReady]: true,
-        workbenchVisible: true,
-        contentAreaVisible: true,
-        mainContentsVisible: true,
-      },
+      ...latestState,
+      [kReady]: true,
+      workbenchVisible: true,
+      contentAreaVisible: true,
+      mainContentsVisible: true,
       commands: orderedCommands,
     }
   } catch (error) {
@@ -606,7 +600,7 @@ export const handleSashPointerDown = (state, sashId) => {
   }
   const commands = []
   return {
-    newState,
+    ...newState,
     commands,
   }
 }
@@ -618,7 +612,7 @@ export const handleSashPointerUp = (state) => {
   }
   const commands = []
   return {
-    newState,
+    ...newState,
     commands,
   }
 }
@@ -859,10 +853,8 @@ export const handleResize = async (state, windowWidth, windowHeight) => {
   // TODO duplicate code with handleSashPointerMove
   const commands = await getResizeCommands(points, newPoints)
   return {
-    newState: {
-      ...state,
-      points: newPoints,
-    },
+    ...state,
+    points: newPoints,
     commands,
   }
 }
@@ -870,10 +862,8 @@ export const handleResize = async (state, windowWidth, windowHeight) => {
 const handleFocusChange = (state, isFocused) => {
   const commands = getFocusChangeCommands(isFocused)
   return {
-    newState: {
-      ...state,
-      focused: isFocused,
-    },
+    ...state,
+    focused: isFocused,
     commands,
   }
 }
@@ -899,15 +889,13 @@ const handleSashDoubleClickPanel = async (state) => {
     getPoints(newPoints, newPoints)
     const commands = await getResizeCommands(points, newPoints)
     return {
-      newState: {
-        ...state,
-        points: newPoints,
-      },
+      ...state,
+      points: newPoints,
       commands,
     }
   }
   return {
-    newState: state,
+    ...state,
     commands: [],
   }
 }
