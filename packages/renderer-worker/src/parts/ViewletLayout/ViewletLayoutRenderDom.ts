@@ -43,6 +43,7 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
   if (newState[kId]) {
     appendIds.push(newState[kId])
   }
+  console.log({ kId, commands })
   return commands
 }
 
