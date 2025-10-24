@@ -3,14 +3,14 @@ import { render } from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const getDom = (id) => {
+const getDom = (id, className) => {
   const instance = ViewletStates.getByUid(id)
   if (!instance) {
     return [
       {
         type: VirtualDomElements.Div,
         childCount: 0,
-        className: `Element-${id}`,
+        className: className || `Element-${id}`,
       },
     ]
   }
@@ -185,7 +185,7 @@ const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds)
   const commands: any[] = []
   if (!oldState.workbenchVisible && newState.workbenchVisible) {
     commands.push(['Viewlet.createFunctionalRoot', `${newState.workbenchId}`, newState.workbenchId, true])
-    const dom = getDom(newState.workbenchId)
+    const dom = getDom(newState.workbenchId, 'Workbench')
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
   }
   if (newState.workbenchVisible) {
