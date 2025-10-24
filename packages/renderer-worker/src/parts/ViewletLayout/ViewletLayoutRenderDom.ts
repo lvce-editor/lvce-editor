@@ -174,7 +174,6 @@ const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds)
     commands.push(['Viewlet.createFunctionalRoot', `${newState.workbenchId}`, newState.workbenchId, true])
     const dom = getDom(newState.workbenchId)
     commands.push(['Viewlet.setDom2', newState.workbenchId, dom])
-    commands.push(['Viewlet.append', newState.workbenchId, workbenchAppendIds])
   }
   if (newState.workbenchVisible) {
     commands.push(['Viewlet.replaceChildren', newState.workbenchId, workbenchAppendIds])
