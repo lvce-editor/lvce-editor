@@ -36,6 +36,7 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
   const oldVisible = oldState[kVisible]
   const newVisible = newState[kVisible]
   const id = newState[kId]
+  const instance = ViewletStates.getByUid(id)
   if (oldVisible && !newVisible) {
     commands.push(['Viewlet.remove', id])
   }
@@ -44,14 +45,10 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
     const dom = getDom(newState[kId], className)
     commands.push(['Viewlet.setDom2', id, dom])
     return commands
+  } else if (newVisible && instance) {
+    const renderCommands = render(instance, instance.state, instance.renderedState)
+    commands.push(...renderCommands)
   }
-
-  const instance = ViewletStates.getByUid(id)
-
-  const renderCommands = render(instance, instance.state, instance.renderedState)
-  commands.push(...renderCommands)
-
-  console.log({ instance, id })
 
   // TODO if there is a real component visible, render it's dom
   // but not if it was already rendered
