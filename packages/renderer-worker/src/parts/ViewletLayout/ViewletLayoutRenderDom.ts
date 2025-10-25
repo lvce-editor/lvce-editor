@@ -177,7 +177,7 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
 }
 
 const getStatusBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
-  return renderComponent('statusBarVisible', 'statusBarId', oldState, newState, commands, workbenchAppendIds)
+  return renderComponent('statusBarVisible', 'statusBarId', oldState, newState, commands, workbenchAppendIds, 'StatusBar')
 }
 
 const getWorkbenchCommands = (oldState, newState, _commands, workbenchAppendIds): readonly any[] => {
