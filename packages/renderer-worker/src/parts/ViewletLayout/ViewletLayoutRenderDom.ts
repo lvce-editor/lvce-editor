@@ -29,14 +29,14 @@ const getDom = (id, className = '') => {
   ]
 }
 
-const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds) => {
+const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds, className = '') => {
   const commands: any[] = []
   if (oldState[kVisible] && !newState[kVisible]) {
     commands.push(['Viewlet.remove', newState[kId]])
   }
   if (!oldState[kVisible] && newState[kVisible]) {
     commands.push(['Viewlet.createFunctionalRoot', newState[kId], newState[kId], true])
-    const dom = getDom(newState[kId])
+    const dom = getDom(newState[kId], className)
     commands.push(['Viewlet.setDom2', newState[kId], dom])
     return commands
   }
@@ -134,7 +134,7 @@ const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds
 }
 
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds): readonly any[] => {
-  return renderComponent('titleBarVisible', 'titleBarId', oldState, newState, commands, workbenchAppendIds)
+  return renderComponent('titleBarVisible', 'titleBarId', oldState, newState, commands, workbenchAppendIds, 'TitleBar')
 }
 
 const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): readonly any[] => {
