@@ -6,35 +6,6 @@
   line-height: 1.4;
 }
 
-.TitleBar,
-.SideBar,
-.Main,
-.ActivityBar,
-.Panel,
-.StatusBar {
-  /*
-   * not sure why this works, but position fixed combined with backface
-   * visibility hidden gives great rendering performance,
-   * see also https://benfrain.com/improving-css-performance-fixed-position-elements/
-   *
-   *
-   * typing benchmark (before):
-   * 216ms scripting
-   * 62ms rendering
-   * 26ms painting
-   * 100ms system
-   *
-   * typing benchmark (after):
-   * 189ms scripting
-   * 117ms rendering
-   * 41ms painting
-   * 122ms system
-   */
-  position: fixed;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
 .ActivityBar {
   background: var(--ActivityBarBackground);
 }
