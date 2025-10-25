@@ -46,7 +46,9 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
     commands.push(['Viewlet.setDom2', id, dom])
     return commands
   } else if (newVisible && instance) {
-    const renderCommands = render(instance, instance.state, instance.renderedState)
+    console.log({ instance })
+    const renderCommands = render(instance.factory, instance.state, instance.renderedState)
+    console.log({ newVisible, instance, renderCommands })
     commands.push(...renderCommands)
   }
 
