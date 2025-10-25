@@ -238,7 +238,6 @@ export const renderDom = (oldState, newState) => {
   //   </div>
   // )
 
-  console.log({ oldState, newState, eq: oldState === newState })
   const workbenchAppendIds: any[] = []
   const commands = [
     ...getTitleBarCommands(oldState, newState, [], workbenchAppendIds),
