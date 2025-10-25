@@ -47,8 +47,10 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
   }
 
   const instance = ViewletStates.getByUid(id)
-  if (instance) {
-  }
+
+  const renderCommands = render(instance, instance.state, instance.renderedState)
+  commands.push(...renderCommands)
+
   console.log({ instance, id })
 
   // TODO if there is a real component visible, render it's dom
@@ -140,6 +142,7 @@ const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds
 
     commands.push(['Viewlet.replaceChildren', newState.mainContentsId, mainContentsAppendIds])
   } else if (newState.mainContentsVisible) {
+    debugger
     const mainContentsAppendIds = []
 
     commands.push(

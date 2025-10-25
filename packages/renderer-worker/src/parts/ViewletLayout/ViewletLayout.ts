@@ -500,18 +500,20 @@ interface Module {
   readonly kWidth: string
   readonly kHeight: string
   readonly moduleId: string
+  readonly kId: string
 }
 
 const loadIfVisible = async (state: LayoutState, module: Module) => {
   try {
     const { points } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
-    const visible = points[kVisible]
+    const visible = points[kVisible] || true
     const x = points[kLeft]
     const y = points[kTop]
     const width = points[kWidth]
     const height = points[kHeight]
     let commands = []
+    console.log({ visible, kVisible })
     if (visible) {
       const childUid = state[kId]
       commands = await ViewletManager.load(
