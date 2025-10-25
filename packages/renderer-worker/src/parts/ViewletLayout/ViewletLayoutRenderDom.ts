@@ -46,7 +46,6 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
     commands.push(['Viewlet.setDom2', id, dom])
     return commands
   } else if (newVisible && instance) {
-    console.log({ instance })
     const renderCommands = render(instance.factory, instance.state, instance.renderedState)
     console.log({ newVisible, instance, renderCommands })
     commands.push(...renderCommands)
@@ -252,7 +251,8 @@ export const renderDom = (oldState, newState) => {
     ...getWorkbenchCommands(oldState, newState, [], workbenchAppendIds),
   ]
 
-  console.log({ commands })
+  commands.push(...(newState.commands || []))
+  // console.log({ commands, nsCommands: newState.commands })
   // TODO ensure focus commands are last in the commands array
   return commands
 }
