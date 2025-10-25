@@ -252,7 +252,7 @@ export const renderDom = (oldState, newState) => {
   ]
 
   commands.push(...(newState.commands || []))
-  // console.log({ commands, nsCommands: newState.commands })
+  console.log({ commands })
   // TODO ensure focus commands are last in the commands array
   return commands
 }
