@@ -4,6 +4,8 @@
   contain: strict;
   font-size: 13px;
   line-height: 1.4;
+  display: flex;
+  flex-direction: column;
 }
 
 .ActivityBar {
