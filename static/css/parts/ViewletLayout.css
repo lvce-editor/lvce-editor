@@ -17,6 +17,12 @@
   flex-direction: column;
 }
 
+.ContentArea {
+  display: flex;
+  flex: 1;
+  contain: strict;
+}
+
 .ActivityBar {
   background: var(--ActivityBarBackground);
 }

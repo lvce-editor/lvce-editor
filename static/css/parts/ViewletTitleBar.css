@@ -3,6 +3,9 @@
   color: var(--TitleBarForeground, rgba(204, 204, 204, 0.6));
   -webkit-app-region: drag;
   app-region: drag;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 20px;
 }
 
 .TitleBarActive {
