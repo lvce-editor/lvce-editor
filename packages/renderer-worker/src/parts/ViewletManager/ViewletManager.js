@@ -97,17 +97,14 @@ const wrapViewletCommand = (id, key, fn) => {
       // TODO get actual focused instance
       const activeInstance = ViewletStates.getInstance(id)
       const result = await fn(activeInstance.state, ...args)
-      console.log('did exec', fn.name)
       return result
     }
     return wrappedViewletCommand
   }
   const wrappedViewletCommand = async (...args) => {
-    console.log('going to exec', fn.name)
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     await runFn(activeInstance, id, key, fn, args)
-    console.log('did exec', fn.name)
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, `${id}/${key}`)
   return wrappedViewletCommand
