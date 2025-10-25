@@ -5,8 +5,6 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 
 const getDom = (id, className = '') => {
   const instance = ViewletStates.getByUid(id)
-  console.log({ id, instance })
-
   if (!instance) {
     return [
       {
@@ -194,7 +192,6 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
     commands.push(['Viewlet.replaceChildren', newState.contentAreaId, contentAppendIds])
     workbenchAppendIds.push(newState.contentAreaId)
   }
-  console.log({ content: commands })
   return commands
 }
 
