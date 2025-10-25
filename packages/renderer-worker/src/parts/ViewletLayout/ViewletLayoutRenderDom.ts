@@ -142,7 +142,6 @@ const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds
 
     commands.push(['Viewlet.replaceChildren', newState.mainContentsId, mainContentsAppendIds])
   } else if (newState.mainContentsVisible) {
-    debugger
     const mainContentsAppendIds = []
 
     commands.push(
