@@ -74,11 +74,11 @@ const getSideBarSashCommands = (oldState, newState, _commands, contentAppendIds)
 }
 
 const getSideBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  return renderComponent('sideBarVisible', 'sideBarId', oldState, newState, commands, contentAppendIds)
+  return renderComponent('sideBarVisible', 'sideBarId', oldState, newState, commands, contentAppendIds, 'SideBar')
 }
 
 const getMainCommands = (oldState, newState, commands, mainContentsAppendIds): readonly any[] => {
-  return renderComponent('mainVisible', 'mainId', oldState, newState, commands, mainContentsAppendIds)
+  return renderComponent('mainVisible', 'mainId', oldState, newState, commands, mainContentsAppendIds, 'Main')
 }
 
 const getPanelSashCommands = (oldState, newState, _commands, contentAppendIds): readonly any[] => {
