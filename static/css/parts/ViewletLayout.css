@@ -8,6 +8,11 @@
   flex-direction: column;
 }
 
+.Column {
+  display: flex;
+  flex-direction: column;
+}
+
 .ActivityBar {
   background: var(--ActivityBarBackground);
 }

@@ -187,7 +187,7 @@ const getContentCommands = (oldState, newState, _commands, workbenchAppendIds): 
     const dom = [
       {
         type: VirtualDomElements.Div,
-        className: 'ContentArea',
+        className: 'ContentArea Column',
         childCount: 0,
       },
     ]
