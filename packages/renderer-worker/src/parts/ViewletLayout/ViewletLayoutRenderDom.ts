@@ -45,7 +45,6 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
     return commands
   } else if (newVisible && instance) {
     const renderCommands = render(instance.factory, instance.state, instance.renderedState)
-    console.log({ newVisible, instance, renderCommands })
     commands.push(...renderCommands)
   }
 
