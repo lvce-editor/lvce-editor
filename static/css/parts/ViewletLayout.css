@@ -8,6 +8,10 @@
   flex-direction: column;
 }
 
+.Row {
+  display: flex;
+}
+
 .Column {
   display: flex;
   flex-direction: column;

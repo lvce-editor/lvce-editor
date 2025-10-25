@@ -134,7 +134,7 @@ const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds
     const dom = [
       {
         type: VirtualDomElements.Div,
-        className: 'MainContents',
+        className: 'MainContents Row',
         childCount: 0,
       },
     ]
