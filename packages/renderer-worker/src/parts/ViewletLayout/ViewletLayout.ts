@@ -296,6 +296,8 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
 
   newPoints[LayoutKeys.WindowHeight] = windowHeight
   newPoints[LayoutKeys.WindowWidth] = windowWidth
+  newPoints[LayoutKeys.TitleBarHeight] = titleBarHeight
+  newPoints[LayoutKeys.TitleBarWidth] = windowWidth
   console.log('did load content')
   // TODO get side bar min width from preferences
   return {
@@ -320,6 +322,7 @@ export const loadContent = (state: LayoutState, savedState): LayoutState => {
     titleBarVisible: true,
     contentAreaVisible: true,
     sideBarVisible: true,
+    points: newPoints,
   }
 }
 
