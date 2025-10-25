@@ -5,6 +5,8 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 
 const getDom = (id, className = '') => {
   const instance = ViewletStates.getByUid(id)
+  console.log({ id, instance })
+
   if (!instance) {
     return [
       {
@@ -31,15 +33,26 @@ const getDom = (id, className = '') => {
 
 const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds, className = '') => {
   const commands: any[] = []
-  if (oldState[kVisible] && !newState[kVisible]) {
-    commands.push(['Viewlet.remove', newState[kId]])
+  const oldVisible = oldState[kVisible]
+  const newVisible = newState[kVisible]
+  const id = newState[kId]
+  if (oldVisible && !newVisible) {
+    commands.push(['Viewlet.remove', id])
   }
-  if (!oldState[kVisible] && newState[kVisible]) {
-    commands.push(['Viewlet.createFunctionalRoot', newState[kId], newState[kId], true])
+  if (!oldVisible && newVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', id, id, true])
     const dom = getDom(newState[kId], className)
-    commands.push(['Viewlet.setDom2', newState[kId], dom])
+    commands.push(['Viewlet.setDom2', id, dom])
     return commands
   }
+
+  const instance = ViewletStates.getByUid(id)
+  if (instance) {
+  }
+  console.log({ instance, id })
+
+  // TODO if there is a real component visible, render it's dom
+  // but not if it was already rendered
   if (newState[kId]) {
     appendIds.push(newState[kId])
   }
