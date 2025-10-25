@@ -513,7 +513,6 @@ const loadIfVisible = async (state: LayoutState, module: Module) => {
     const width = points[kWidth]
     const height = points[kHeight]
     let commands = []
-    console.log({ visible, kVisible })
     if (visible) {
       const childUid = state[kId]
       commands = await ViewletManager.load(
