@@ -112,7 +112,7 @@ const getPanelSashCommands = (oldState, newState, _commands, contentAppendIds): 
 }
 
 const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) => {
-  return renderComponent('panelVisible', 'panelId', oldState, newState, commands, mainContentsAppendIds)
+  return renderComponent('panelVisible', 'panelId', oldState, newState, commands, mainContentsAppendIds, 'Panel')
 }
 
 const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds): readonly any[] => {
@@ -138,6 +138,15 @@ const getMainContentsCommands = (oldState, newState, _commands, contentAppendIds
     ]
     commands.push(['Viewlet.setDom2', newState.mainContentsId, dom])
 
+    commands.push(['Viewlet.replaceChildren', newState.mainContentsId, mainContentsAppendIds])
+  } else if (newState.mainContentsVisible) {
+    const mainContentsAppendIds = []
+
+    commands.push(
+      ...getMainCommands(oldState, newState, commands, mainContentsAppendIds),
+      ...getPanelSashCommands(oldState, newState, commands, mainContentsAppendIds),
+      ...getPanelCommands(oldState, newState, commands, mainContentsAppendIds),
+    )
     commands.push(['Viewlet.replaceChildren', newState.mainContentsId, mainContentsAppendIds])
   }
   if (newState.mainContentsVisible) {
