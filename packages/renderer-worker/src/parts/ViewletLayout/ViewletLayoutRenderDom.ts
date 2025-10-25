@@ -47,7 +47,7 @@ const renderComponent = (kVisible, kId, oldState, newState, _commands, appendIds
 }
 
 const getActivityBarCommands = (oldState, newState, commands, contentAppendIds) => {
-  return renderComponent('activityBarVisible', 'activityBarId', oldState, newState, commands, contentAppendIds)
+  return renderComponent('activityBarVisible', 'activityBarId', oldState, newState, commands, contentAppendIds, 'ActivityBar')
 }
 
 const getSideBarSashCommands = (oldState, newState, _commands, contentAppendIds) => {
