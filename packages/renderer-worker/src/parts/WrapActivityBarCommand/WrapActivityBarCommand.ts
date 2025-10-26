@@ -1,6 +1,6 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 
-export const wraoActivityBarCommand = (key: string) => {
+export const wrapActivityBarCommand = (key: string) => {
   const fn = async (state, ...args) => {
     await ActivityBarWorker.invoke(`ActivityBar.${key}`, state.uid, ...args)
     const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
