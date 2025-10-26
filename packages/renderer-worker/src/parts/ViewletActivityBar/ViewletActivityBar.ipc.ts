@@ -1,5 +1,3 @@
-import * as ViewletActivityBar from './ViewletActivityBar.ts'
-
 export const Events = {}
 
 export * from './ViewletActivityBar.ts'
