@@ -1,24 +1,23 @@
-import * as GetActivityBarVirtualDom from '../GetActivityBarVirtualDom/GetActivityBarVirtualDom.js'
-import * as GetVisibleActivityBarItems from '../GetVisibleActivityBarItems/GetVisibleActivityBarItems.js'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
 const renderItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.filteredItems === newState.filteredItems &&
-      oldState.height === newState.height &&
-      oldState.selectedIndex === newState.selectedIndex &&
-      oldState.focusedIndex === newState.focusedIndex
-    )
+    return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
   },
-  apply(oldState, newState) {
-    const visibleItems = GetVisibleActivityBarItems.getVisibleActivityBarItems(newState)
-    const dom = GetActivityBarVirtualDom.getActivityBarVirtualDom(visibleItems)
-    return ['Viewlet.setDom2', dom]
-  },
+  apply: AdjustCommands.apply,
+  multiple: true,
 }
 
 export const render = [renderItems]
+
+export const renderEventListeners = async () => {
+  const listeners = await ActivityBarWorker.invoke('ActivityBar.renderEventListeners')
+  return listeners
+}
