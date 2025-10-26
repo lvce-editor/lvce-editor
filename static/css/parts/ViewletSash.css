@@ -1,5 +1,5 @@
 .Sash {
-  position: fixed;
+  /* position: fixed; */
   contain: strict;
   z-index: 1;
 }
