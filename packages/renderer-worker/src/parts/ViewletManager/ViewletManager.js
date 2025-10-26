@@ -416,6 +416,12 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
   if (viewlet.id === 'Terminal') {
     viewlet.setBounds = false
   }
+  if (viewlet.id === 'ActivityBar') {
+    viewlet.setBounds = false
+  }
+  if (viewlet.id === 'SideBar') {
+    viewlet.setBounds = false
+  }
   if (viewlet.type !== 0) {
     console.log('viewlet must be empty')
     throw new Error('viewlet must be empty')
