@@ -6,7 +6,7 @@
   display: flex;
   flex: 1;
   flex-direction: row;
-  max-width: 50%;
+  contain: strict;
 }
 
 .ContentArea {
