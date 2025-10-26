@@ -8,6 +8,11 @@
   flex-direction: row;
 }
 
+.ContentArea {
+  display: flex;
+  flex-direction: row !important;
+}
+
 .DragOverlay {
   position: absolute;
   background: rgba(83, 89, 93, 0.5);
