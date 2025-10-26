@@ -1,5 +1,6 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
+import * as GetHeadersActivityBarWorker from '../GetHeadersActivityBarWorker/GetHeadersActivityBarWorker.js'
 import * as GetHeadersClipBoardWorker from '../GetHeadersClipBoardWorker/GetHeadersClipBoardWorker.js'
 import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/GetHeadersColorPickerWorker.js'
 import * as GetHeadersCompletionWorker from '../GetHeadersCompletionWorker/GetHeadersCompletionWorker.js'
@@ -162,6 +163,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('findWidgetWorkerMain.js')) {
     return GetHeadersFindWidgetWorker.getHeadersFindWidgetWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('activityBarWorkerMain.js')) {
+    return GetHeadersActivityBarWorker.getHeadersActivityBarWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
