@@ -2,6 +2,10 @@
   background: var(--MainBackground);
 }
 
+.MainContents {
+  display: flex;
+  flex: 1;
+}
 .DragOverlay {
   position: absolute;
   background: rgba(83, 89, 93, 0.5);
