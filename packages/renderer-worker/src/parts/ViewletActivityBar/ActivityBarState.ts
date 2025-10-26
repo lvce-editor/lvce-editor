@@ -13,4 +13,5 @@ export interface ActivityBarState {
   readonly width: number
   readonly height: number
   readonly itemHeight: number
+  readonly commands: readonly any[]
 }
