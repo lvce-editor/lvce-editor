@@ -4,6 +4,7 @@
   flex-direction: column;
   width: 300px;
   height: 100%;
+  flex-shrink: 0;
 }
 
 .SideBarTitleArea {
