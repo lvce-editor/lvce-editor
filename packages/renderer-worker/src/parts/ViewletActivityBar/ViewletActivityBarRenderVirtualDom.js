@@ -20,5 +20,6 @@ export const render = [renderItems]
 
 export const renderEventListeners = async () => {
   const listeners = await ActivityBarWorker.invoke('ActivityBar.renderEventListeners')
+  console.log({ listeners })
   return listeners
 }
