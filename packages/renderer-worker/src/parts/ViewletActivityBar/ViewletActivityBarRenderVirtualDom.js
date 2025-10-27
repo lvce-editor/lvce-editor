@@ -9,6 +9,7 @@ export const hasFunctionalEvents = true
 
 const renderItems = {
   isEqual(oldState, newState) {
+    console.log({ commands: newState.commands })
     return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
   },
   apply: AdjustCommands.apply,
