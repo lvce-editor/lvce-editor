@@ -396,9 +396,19 @@ const toggle = (state, module, moduleId) => {
   return show(state, module, moduleId)
 }
 
-export const showSideBar = (state) => {
+export const showSideBar = async (state) => {
   // @ts-ignore
-  return show(state, LayoutModules.SideBar)
+  const { newState, commands } = await show(state, LayoutModules.SideBar)
+  const { activityBarId } = newState
+  const sideBar = ViewletStates.getState(ViewletModuleId.SideBar)
+  // TODO potential race conditions
+  await ActivityBarWorker.invoke('ActivityBar.handleSideBarViewletChange', activityBarId, sideBar.currentViewletId)
+  const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
+  const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
+  return {
+    newState,
+    commands: [...commands, ...activityBarCommands],
+  }
 }
 
 export const hideSideBar = async (state) => {
