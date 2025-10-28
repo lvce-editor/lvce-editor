@@ -140,6 +140,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/clipboard-worker`, 'dist', 'clipBoardWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/activity-bar-worker/dist/activityBarWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/activity-bar-worker`, 'dist', 'activityBarWorkerMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/hover-worker/dist/hoverWorkerMain.js',
     to: Path.join(`${toRoot}/packages/hover-worker`, 'dist', 'hoverWorkerMain.js'),
   })
