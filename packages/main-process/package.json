@@ -19,6 +19,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^2.22.0"
+    "@lvce-editor/main-process": "^2.23.0"
   }
 }
