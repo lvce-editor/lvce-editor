@@ -130,7 +130,7 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
     const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
     if (activityBar) {
       const oldState = activityBar.state
-      const newState = activityBar.factory.handleSideBarViewletChange(oldState, moduleId)
+      const newState = await activityBar.factory.Commands.handleSideBarViewletChange(oldState, moduleId)
       const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState, newState.uid)
       activityBar.state = newState
       commands.push(...extraCommands)

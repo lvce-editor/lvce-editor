@@ -1,10 +1,4 @@
-import * as ViewletActivityBar from './ViewletActivityBar.ts'
-
-export const Events = {
-  'SourceControl.changeBadgeCount': ViewletActivityBar.updateSourceControlCount,
-  'Layout.hideSideBar': ViewletActivityBar.handleSideBarHidden,
-  'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
-}
+export const Events = {}
 
 export * from './ViewletActivityBar.ts'
 export * from './ViewletActivityBarCommands.js'

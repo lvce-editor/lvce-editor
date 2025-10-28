@@ -1,8 +1,6 @@
 import * as ViewletLayout from './ViewletLayout.ts'
 
 // prettier-ignore
-// export const Commands = {}
-
 export const Commands = {
   handleSashPointerDown: ViewletLayout.handleSashPointerDown,
   handleSashPointerUp: ViewletLayout.handleSashPointerUp,

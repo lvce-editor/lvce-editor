@@ -12,29 +12,18 @@ jest.unstable_mockModule('../src/parts/ViewletModuleInternal/ViewletModuleIntern
   }
 })
 
-jest.unstable_mockModule('../src/parts/TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js', () => {
-  return {
-    tryToGetActualImportErrorMessage: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
 const ViewletModule = await import('../src/parts/ViewletModule/ViewletModule.js')
 const ViewletModuleInternal = await import('../src/parts/ViewletModuleInternal/ViewletModuleInternal.js')
-const TryToGetActualImportErrorMessage = await import('../src/parts/TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js')
 
 test('load - import error - dependency not found', async () => {
   // @ts-ignore
   ViewletModuleInternal.load.mockImplementation(() => {
     throw new TypeError('Failed to fetch dynamically imported module: test:///packages/renderer-worker/src/parts/ViewletMain/ViewletMain.ipc.js')
   })
-  // @ts-ignore
-  TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
-    throw new Error('DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"')
-  })
   await expect(ViewletModule.load(123)).rejects.toThrow(
-    new Error('DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"'),
+    new Error(
+      `Failed to load 123 module: TypeError: Failed to fetch dynamically imported module: test:///packages/renderer-worker/src/parts/ViewletMain/ViewletMain.ipc.js`,
+    ),
   )
 })
 
@@ -52,8 +41,7 @@ test('load - syntax error', async () => {
     throw new SyntaxError("Failed to import script: SyntaxError: Unexpected token '<<'")
   })
   // @ts-ignore
-  TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
-    return "Failed to import script: SyntaxError: Unexpected token '<<'\""
-  })
-  await expect(ViewletModule.load(123)).rejects.toThrow("Failed to load 123 module: Failed to import script: SyntaxError: Unexpected token '<<'\"")
+  await expect(ViewletModule.load(123)).rejects.toThrow(
+    "Failed to load 123 module: SyntaxError: Failed to import script: SyntaxError: Unexpected token '<<'",
+  )
 })

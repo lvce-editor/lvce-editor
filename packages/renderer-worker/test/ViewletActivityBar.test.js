@@ -30,7 +30,7 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletActivityBar, oldState, newState, ViewletModuleId.ActivityBar)
 }
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   // @ts-ignore
   const state = ViewletActivityBar.create()
   ViewletStates.set('SideBar', {

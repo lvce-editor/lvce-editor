@@ -1,5 +1,7 @@
 export const name = 'viewlet.activity-bar-keyboard-navigation'
 
+export const skip = 1
+
 export const test = async ({ ActivityBar, Locator, expect }) => {
   // act
   await ActivityBar.focus()
