@@ -8,7 +8,7 @@
     "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
     "test": "lerna run test",
     "dev": "nodemon",
-    "dev:electron": "node packages/build/src/parts/RunElectron/RunElectron.js",
+    "electron": "node packages/build/src/parts/RunElectron/RunElectron.js",
     "type-check": "lerna run type-check"
   },
   "keywords": [],
