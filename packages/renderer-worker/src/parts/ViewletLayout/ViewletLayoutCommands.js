@@ -2,7 +2,6 @@ import * as ViewletLayout from './ViewletLayout.ts'
 
 // prettier-ignore
 export const Commands = {
-  getSideBarInfo: ViewletLayout.getSideBarInfo,
 }
 
 export const CommandsWithSideEffects = {

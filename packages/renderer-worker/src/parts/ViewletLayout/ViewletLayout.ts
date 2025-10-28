@@ -916,8 +916,6 @@ export const showE2eTests = async (state) => {
   return state
 }
 
-export const getSideBarInfo = (state) => {}
-
 export const handleBlur = (state) => {
   return handleFocusChange(state, false)
 }
