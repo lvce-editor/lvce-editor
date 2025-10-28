@@ -36,6 +36,7 @@ export const create = (id, uri, x, y, width, height): ActivityBarState => {
     width,
     height,
     itemHeight: Height.ActivityBarItem,
+    commands: [],
   }
 }
 
