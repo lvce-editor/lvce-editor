@@ -59,6 +59,7 @@
 
 .TableCellInvalid {
   text-decoration: 1px solid red underline;
+  text-underline-offset: 3px;
 }
 
 .TableCellInvalid .Link,
