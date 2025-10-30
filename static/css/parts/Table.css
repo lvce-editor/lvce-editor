@@ -56,3 +56,12 @@
   white-space: nowrap;
   padding-right: 8px;
 }
+
+.TableCellInvalid {
+  text-decoration: 1px solid red underline;
+}
+
+.TableCellInvalid .Link,
+.TableCellInvalid .Link:hover {
+  text-decoration: inherit;
+}
