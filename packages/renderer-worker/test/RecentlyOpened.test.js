@@ -10,6 +10,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     readFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    readJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     writeFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -28,8 +31,8 @@ const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.
 
 test('addToRecentlyOpened - already in list', async () => {
   // @ts-ignore
-  FileSystem.readFile.mockImplementation(() => {
-    return JSON.stringify(['/test/folder-1', '/test/folder-2', '/test/folder-3'])
+  FileSystem.readJson.mockImplementation(() => {
+    return ['/test/folder-1', '/test/folder-2', '/test/folder-3']
   })
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})
@@ -47,8 +50,8 @@ test('addToRecentlyOpened - already in list', async () => {
 
 test('addToRecentlyOpened - already at front of list', async () => {
   // @ts-ignore
-  FileSystem.readFile.mockImplementation(() => {
-    return JSON.stringify(['/test/folder-3', '/test/folder-1', '/test/folder-2'])
+  FileSystem.readJson.mockImplementation(() => {
+    return ['/test/folder-3', '/test/folder-1', '/test/folder-2']
   })
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})
@@ -67,7 +70,7 @@ test('addToRecentlyOpened - already at front of list', async () => {
 
 test('addToRecentlyOpened - error - recently opened path is of type array', async () => {
   // @ts-ignore
-  FileSystem.readFile.mockImplementation(() => {
+  FileSystem.readJson.mockImplementation(() => {
     throw new Error('expected value to be of type string')
   })
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
