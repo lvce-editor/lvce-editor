@@ -3,6 +3,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -27,5 +28,10 @@ export const launchExtensionSearchViewWorker = async () => {
     url: getConfiguredWorkerUrl(),
   })
   HandleIpc.handleIpc(ipc)
+  try {
+    await JsonRpc.invoke(ipc, 'SearchExtensions.initialize')
+  } catch {
+    // ignore
+  }
   return ipc
 }
