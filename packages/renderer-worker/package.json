@@ -58,7 +58,7 @@
     "@lvce-editor/extension-detail-view": "^4.11.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^5.40.0",
-    "@lvce-editor/extension-search-view": "^4.4.0",
+    "@lvce-editor/extension-search-view": "^4.5.0",
     "@lvce-editor/file-search-worker": "^5.20.0",
     "@lvce-editor/file-system-worker": "^2.0.0",
     "@lvce-editor/find-widget-worker": "^2.6.0",
