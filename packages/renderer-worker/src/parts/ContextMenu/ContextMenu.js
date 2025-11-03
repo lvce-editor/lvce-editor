@@ -22,3 +22,13 @@ export const show = async (x, y, id, ...args) => {
   const module = await getModule()
   return module.show(x, y, id, ...args)
 }
+
+export const show2 = async (uid, menuId, x, y, ...args) => {
+  Assert.number(uid)
+  Assert.number(menuId)
+  Assert.number(x)
+  Assert.number(y)
+  const module = await getModule()
+  // @ts-ignore
+  return module.show2(uid, menuId, x, y, ...args)
+}

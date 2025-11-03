@@ -22,3 +22,9 @@ export const getMenuEntriesWithKeyBindings = async (id, ...args) => {
   const newMenuEntries = addKeyBindings(menuEntries)
   return newMenuEntries
 }
+
+export const getMenuEntriesWithKeyBindings2 = async (uid, menuId, ...args) => {
+  const menuEntries = await MenuEntries.getMenuEntries2(uid, menuId, ...args)
+  const newMenuEntries = addKeyBindings(menuEntries)
+  return newMenuEntries
+}
