@@ -40,7 +40,6 @@ jobs:
     needs: ['create-release']
     strategy:
       fail-fast: true
-      max-parallel: 1
       matrix:
         os: [windows-2025, macos-15, ubuntu-24.04]
     runs-on: ${{ matrix.os }}
@@ -294,6 +293,26 @@ jobs:
           asset_path: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_name: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_content_type: application/octet-stream
+      - uses: actions/upload-artifact@v4
+        if: matrix.os == 'ubuntu-24.04'
+        with:
+          name: tmp
+          path: ./build/.tmp
+
+  publish-release:
+    name: publish-release
+    needs: ['create-release', 'build-release']
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: tmp
+          path: ./build/.tmp
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/extension-host-helper-process
@@ -320,19 +339,9 @@ jobs:
           VERSION="${{ needs.create-release.outputs.rg_version }}"
           gh release edit $VERSION --draft=false
 
-      # - name: Build archive
-      #   shell: bash
-      #   run: |
-      #     staging="language-features-typescript-${{ needs.create-release.outputs.rg_version }}"
-      #     mv "extension.tar.br" "$staging.tar.br"
-      #     echo "ASSET=$staging.tar.br" >> $GITHUB_ENV
-
-      # - name: Upload release archive
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ needs.create-release.outputs.upload_url }}
-      #     asset_path: ${{ env.ASSET }}
-      #     asset_name: ${{ env.ASSET }}
-      #     asset_content_type: application/octet-stream
+      - name: Publish GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.create-release.outputs.rg_version }}"
+          gh release edit $VERSION --draft=false
