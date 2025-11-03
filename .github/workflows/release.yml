@@ -298,6 +298,7 @@ jobs:
         with:
           name: tmp
           path: ./build/.tmp
+          include-hidden-files: true
 
   publish-release:
     name: publish-release
