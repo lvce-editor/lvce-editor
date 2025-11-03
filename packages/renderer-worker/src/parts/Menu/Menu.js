@@ -117,7 +117,6 @@ export const show = async (x, y, id, mouseBlocking = false, ...args) => {
 }
 
 export const show2 = async (uid, menuId, x, y, mouseBlocking = false, ...args) => {
-  console.log({ args })
   const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings2(uid, menuId, ...args)
   const bounds = getMenuBounds(x, y, items)
   const menu = addMenuInternal({
