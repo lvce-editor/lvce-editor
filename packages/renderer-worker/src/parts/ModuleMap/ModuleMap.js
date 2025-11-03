@@ -29,6 +29,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Debug
     case 'AutoUpdater':
       return ModuleId.AutoUpdater
+    case 'Document':
+      return ModuleId.Document
     case 'Blob':
       return ModuleId.Blob
     case 'GetActiveEditor':
