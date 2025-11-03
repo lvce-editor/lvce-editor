@@ -13,10 +13,36 @@ const readFileWeb = async (path, defaultContent) => {
   return content ?? defaultContent
 }
 
+const readJsonWeb = async (path, defaultContent) => {
+  const content = await LocalStorage.getJson(path)
+  return content ?? defaultContent
+}
+
 const readFileNode = async (path, defaultContent) => {
   // TODO handle enoent and other errors gracefully
   try {
     const userSettingsContent = await FileSystem.readFile(path)
+    return userSettingsContent
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === ErrorCodes.ENOENT) {
+      try {
+        const dirname = Workspace.pathDirName(path)
+        await FileSystem.mkdir(dirname)
+        await FileSystem.writeFile(path, defaultContent)
+        return defaultContent
+      } catch (error) {
+        throw new VError(error, `Failed to write ${path} `)
+      }
+    }
+    throw new VError(error, `Failed to read ${path}`)
+  }
+}
+
+const readJsonNode = async (path, defaultContent) => {
+  // TODO handle enoent and other errors gracefully
+  try {
+    const userSettingsContent = await FileSystem.readJson(path)
     return userSettingsContent
   } catch (error) {
     // @ts-ignore
@@ -42,6 +68,16 @@ export const readFileInternal = async (getPath, defaultContent = '') => {
   }
   // TODO handle enoent and other errors gracefully
   return readFileNode(path, defaultContent)
+}
+
+export const readJsonInternal = async (getPath, defaultContent = '') => {
+  const path = await getPath()
+  Assert.string(path)
+  if (Platform.platform === PlatformType.Web) {
+    return readJsonWeb(path, defaultContent)
+  }
+  // TODO handle enoent and other errors gracefully
+  return readJsonNode(path, defaultContent)
 }
 
 const writeFileWeb = async (path, content) => {

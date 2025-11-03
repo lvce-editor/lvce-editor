@@ -116,6 +116,13 @@ export const getExtraHeaders = (pathName, fileExtension) => {
     occurrence: `export const isProduction = false`,
     replacement: `export const isProduction = true`,
   })
+  await WriteFile.writeFile({
+    to: `${cachePath}/src/parts/AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.js`,
+    content: `export const addCustomPathsToIndexHtml = async (content) => {
+    return content
+}
+`,
+  })
   if (isArchLinux) {
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,

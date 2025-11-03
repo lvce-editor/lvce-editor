@@ -16,10 +16,10 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@lvce-editor/test-with-playwright": "^10.0.0",
+    "@lvce-editor/test-with-playwright": "^10.3.0",
     "@playwright/test": "^1.56.1",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.4",
+    "@types/express": "^5.0.5",
     "express": "^5.1.0"
   },
   "xo": {

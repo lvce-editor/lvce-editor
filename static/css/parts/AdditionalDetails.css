@@ -71,3 +71,12 @@
 .Link:hover {
   text-decoration: underline;
 }
+
+.MoreInfoEntryKey {
+  contain: content;
+}
+
+.MoreInfoEntryValue {
+  contain: content;
+  margin: 0;
+}

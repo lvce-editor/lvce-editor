@@ -116,6 +116,33 @@ export const show = async (x, y, id, mouseBlocking = false, ...args) => {
   )
 }
 
+export const show2 = async (uid, menuId, x, y, mouseBlocking = false, ...args) => {
+  const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings2(uid, menuId, ...args)
+  const bounds = getMenuBounds(x, y, items)
+  const menu = addMenuInternal({
+    id: menuId,
+    items,
+    focusedIndex: -1,
+    level: state.menus.length,
+    x: bounds.x,
+    y: bounds.y,
+  })
+  const visible = GetVisibleMenuItems.getVisible(menu.items, -1, false, menu.level)
+  const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
+  await RendererProcess.invoke(
+    /* Menu.show */ 'Menu.showMenu',
+    /* x */ bounds.x,
+    /* y */ bounds.y,
+    /* width */ bounds.width,
+    /* height */ bounds.height,
+    /* items */ menu.items,
+    /* level */ menu.level,
+    /* parentIndex */ -1,
+    /* dom */ dom,
+    /* mouseBlocking */ mouseBlocking,
+  )
+}
+
 export const closeSubMenu = () => {
   // @ts-ignore
   const menu = state.menus.pop()

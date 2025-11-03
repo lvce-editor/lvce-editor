@@ -12,6 +12,8 @@ export const load = (moduleId) => {
       return import('../AutoUpdater/AutoUpdater.ipc.js')
     case ModuleId.GetActiveEditor:
       return import('../GetActiveEditor/GetActiveEditor.ipc.js')
+    case ModuleId.Document:
+      return import('../Document/Document.ipc.js')
     case ModuleId.GetEditorSourceActions:
       return import('../GetEditorSourceActions/GetEditorSourceActions.ipc.js')
     case ModuleId.PlatformPaths:

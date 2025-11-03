@@ -4,12 +4,14 @@ export const menus = []
 
 export const getMenus = async () => {
   try {
-    const modules = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getMenus')
-    const adjusted = modules.map((module) => {
+    const ids = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getMenuIds')
+    const adjusted = ids.map((id) => {
       return {
-        ...module,
-        async getMenuEntries() {
-          return module.entries
+        id,
+        async getMenuEntries(...args) {
+          // TODO pass menu id also
+          const entries = await ExtensionDetailViewWorker.invoke('ExtensionDetail.getMenuEntries2', ...args)
+          return entries
         },
       }
     })
