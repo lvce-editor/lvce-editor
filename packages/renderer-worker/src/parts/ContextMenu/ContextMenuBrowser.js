@@ -10,7 +10,6 @@ export const show = async (x, y, id, ...args) => {
 }
 
 export const show2 = async (uid, menuId, x, y, ...args) => {
-  console.log({ args })
   await Menu.hide()
   // TODO handle error
   // TODO race condition
