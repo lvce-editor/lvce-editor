@@ -4,14 +4,22 @@ import * as Command from '../Command/Command.js'
 import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetLatestVersion from '../GetLatestVersion/GetLatestVersion.js'
 
-export const checkForUpdates = async () => {
+const getShouldUpdate = async (updateSetting, version) => {
+  if (updateSetting && updateSetting !== 'none') {
+    return true
+  }
+  const message = AutoUpdaterStrings.promptMessage(version)
+  const shouldUpdate = await Command.execute('ConfirmPrompt.prompt', message)
+  return shouldUpdate
+}
+
+export const checkForUpdates = async (updateSetting) => {
   const info = await GetLatestVersion.getLatestVersion()
   if (!info || !info.version) {
     return
   }
   const type = await GetAutoUpdateType.getAutoUpdateType()
-  const message = AutoUpdaterStrings.promptMessage(info.version)
-  const shouldUpdate = await Command.execute('ConfirmPrompt.prompt', message)
+  const shouldUpdate = await getShouldUpdate(updateSetting, info.version)
   if (!shouldUpdate) {
     return
   }
