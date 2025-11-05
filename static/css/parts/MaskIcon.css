@@ -357,6 +357,10 @@
   mask-image: url(/icons/list-tree.svg);
 }
 
+.MaskIconProgress {
+  mask-image: url(/icons/progress.svg);
+}
+
 /* TODO decide */
 .MaskIconRecordKey,
 .MaskIconRecordKeys {
