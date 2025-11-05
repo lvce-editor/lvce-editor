@@ -7,4 +7,5 @@ export const Commands = {
   show: ViewletSideBar.openViewlet,
   open: ViewletSideBar.openViewlet,
   handleClickAction: ViewletSideBar.handleClickAction,
+  handleUpdateStateChange: ViewletSideBar.handleUpdateStateChange,
 }
