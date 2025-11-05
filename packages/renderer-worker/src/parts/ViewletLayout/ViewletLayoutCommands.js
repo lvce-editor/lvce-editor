@@ -44,5 +44,6 @@ export const CommandsWithSideEffects = {
   handleBlur: ViewletLayout.handleBlur,
   handleFocus: ViewletLayout.handleFocus,
   showE2eTests: ViewletLayout.showE2eTests,
+  getQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
   setUpdateState: ViewletLayout.setUpdateState,
 }
