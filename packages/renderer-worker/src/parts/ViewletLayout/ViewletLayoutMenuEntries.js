@@ -1,6 +1,10 @@
 export const getQuickPickMenuEntries = () => {
   return [
     {
+      id: 'AutoUpdater.checkForUpdates',
+      label: 'Updater: Check for Updates',
+    },
+    {
       id: 'Layout.toggleSideBar',
       label: 'Layout: Toggle Side Bar',
     },
