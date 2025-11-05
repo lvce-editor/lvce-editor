@@ -235,4 +235,14 @@ export const startup = async () => {
   Performance.measure(PerformanceMarkerType.LoadPreferences, PerformanceMarkerType.WillLoadPreferences, PerformanceMarkerType.DidLoadPreferences)
   Performance.measure(PerformanceMarkerType.LoadColorTheme, PerformanceMarkerType.WillLoadColorTheme, PerformanceMarkerType.DidLoadColorTheme)
   Performance.measure(PerformanceMarkerType.LoadIconTheme, PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
+
+  const autoUpdate = Preferences.get('application.updateMode')
+  const supportsAutoUpdate = Platform.platform === PlatformType.Electron // TODO also check if auto update is supported on this platform, e.g. windows
+  if (autoUpdate && autoUpdate !== 'none' && supportsAutoUpdate) {
+    try {
+      await Command.execute('AutoUpdater.checkForUpdates', autoUpdate)
+    } catch {
+      // ignore
+    }
+  }
 }
