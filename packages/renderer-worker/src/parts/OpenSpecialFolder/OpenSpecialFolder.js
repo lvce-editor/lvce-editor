@@ -25,5 +25,6 @@ export const openLogsFolder = async () => {
     return
   }
   const logsFolder = await PlatformPaths.getLogsDir()
+  await SharedProcess.invoke('FileSystem.mkdir', /* path */ logsFolder)
   await OpenNativeFolder.openNativeFolder(logsFolder)
 }

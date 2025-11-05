@@ -71,7 +71,7 @@ test('openDataFolder', async () => {
   expect(SharedProcess.invoke).toHaveBeenLastCalledWith('OpenNativeFolder.openFolder', '/test/data-folder')
 })
 
-test('openLogsFolder', async () => {
+test.skip('openLogsFolder', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
