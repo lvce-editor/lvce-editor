@@ -6,6 +6,7 @@ import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaul
 import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.js'
+import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -19,7 +20,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
@@ -1036,7 +1036,7 @@ export const getInitialPlaceholderCommands = (state) => {
   return commands
 }
 
-export const getQuickPickMenuEntries = () => {
+export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
 }
 
