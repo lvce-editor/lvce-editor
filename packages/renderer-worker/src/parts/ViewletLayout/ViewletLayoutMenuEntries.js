@@ -1,4 +1,5 @@
 export const getQuickPickMenuEntries = () => {
+  console.log('query menu entries')
   return [
     {
       id: 'Layout.toggleSideBar',
