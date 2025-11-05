@@ -2,6 +2,10 @@ export const getQuickPickMenuEntries = () => {
   console.log('query menu entries')
   return [
     {
+      id: 'AutoUpdater.checkForUpdates',
+      label: 'Updater: Check for Updates',
+    },
+    {
       id: 'Layout.toggleSideBar',
       label: 'Layout: Toggle Side Bar',
     },

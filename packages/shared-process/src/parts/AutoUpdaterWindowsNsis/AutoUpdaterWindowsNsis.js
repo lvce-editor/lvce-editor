@@ -12,13 +12,24 @@ import * as UpdateState from '../UpdateState/UpdateState.js'
 import * as UpdateStateType from '../UpdateStateType/UpdateStateType.js'
 import { VError } from '../VError/VError.js'
 
+const getArchPostFix = (arch) => {
+  switch (arch) {
+    case 'arm':
+    case 'arm64':
+      return '-arm64'
+    default:
+      return '-x64'
+  }
+}
+
 // TODO make it possible to cancel downloading updates
 export const downloadUpdate = async (version) => {
   try {
     Assert.string(version)
     const repository = Platform.getRepository()
     const setupName = Platform.getSetupName()
-    const fileName = `${setupName}-v${version}.exe`
+    const archPostFix = getArchPostFix(process.arch)
+    const fileName = `${setupName}-v${version}${archPostFix}.exe`
     const downLoadUrl = GetWindowsNsisDownloadUrl.getDownloadUrl(repository, version, fileName)
     const outFile = GetNsisDownloadPath.getNsisUpdateDownloadPath(version)
     Logger.info(`[shared-process] downloading nsis update: ${downLoadUrl} -> ${outFile}`)

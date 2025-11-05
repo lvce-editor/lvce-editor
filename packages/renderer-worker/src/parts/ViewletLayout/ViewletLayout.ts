@@ -235,6 +235,8 @@ export const create = (id) => {
     statusBarVisible: false,
     titleBarVisible: false,
     workbenchVisible: false,
+    updateState: 'none',
+    updateProgress: 0,
   }
 }
 
@@ -1036,4 +1038,35 @@ export const getInitialPlaceholderCommands = (state) => {
 
 export const getQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
+}
+
+export const setUpdateState = async (state, updateState) => {
+  if (state.updateState === updateState.state && state.updateProgress === updateState.progress) {
+    return state
+  }
+  const instances = ViewletStates.getAllInstances()
+  const allCommands = []
+  // @ts-ignore
+  for (const [key, value] of Object.entries(instances)) {
+    // @ts-ignore
+    if (value.factory.Commands && value.factory.Commands.handleUpdateStateChange) {
+      // @ts-ignore
+      const oldState = value.state
+      // @ts-ignore
+      const newState = await value.factory.Commands.handleUpdateStateChange(oldState)
+      if (oldState !== newState) {
+        // @ts-ignore
+        const commands = ViewletManager.render(value.factory, value.renderedState, newState)
+        // @ts-ignore
+        allCommands.push(...commands)
+      }
+    }
+  }
+  // TODO send all commands to renderer process, and update viewlet states
+  // TODO update all viewlets with this new update info
+  return {
+    ...state,
+    updateState: updateState.state,
+    updateProgress: updateState.progress,
+  }
 }

@@ -216,3 +216,7 @@ export const focus = async (state) => {
 }
 
 export * from '../HandleClickAction/HandleClickAction.js'
+
+export const handleUpdateStateChange = (state) => {
+  return state
+}

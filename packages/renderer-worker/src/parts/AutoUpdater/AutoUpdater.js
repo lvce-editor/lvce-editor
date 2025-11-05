@@ -27,6 +27,10 @@ export const checkForUpdates = async (updateSetting) => {
   if (!module) {
     return
   }
+  await Command.execute('Layout.setUpdateState', {
+    state: 'downloading',
+    progress: 0,
+  })
   const downloadPath = await module.downloadUpdate(info.version)
   const messageRestart = AutoUpdaterStrings.promptRestart()
   const shouldRestart = await Command.execute('ConfirmPrompt.prompt', messageRestart)
