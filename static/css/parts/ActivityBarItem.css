@@ -48,8 +48,21 @@
   color: var(--BadgeForeground);
   font-size: 9px;
   font-weight: 600;
+  display: flex;
+  padding: 2px;
 }
 
 .MarginTopAuto {
   margin-top: auto;
+}
+
+.ActivityBarBadgeIcon {
+  contain: content;
+}
+
+.BadgeContent {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  --MaskIconSize: 16px;
 }
