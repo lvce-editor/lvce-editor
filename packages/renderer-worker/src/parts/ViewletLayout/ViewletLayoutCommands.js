@@ -2,7 +2,6 @@ import * as ViewletLayout from './ViewletLayout.ts'
 
 // prettier-ignore
 export const Commands = {
-  getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
 }
 
 export const CommandsWithSideEffects = {
@@ -45,5 +44,6 @@ export const CommandsWithSideEffects = {
   handleBlur: ViewletLayout.handleBlur,
   handleFocus: ViewletLayout.handleFocus,
   showE2eTests: ViewletLayout.showE2eTests,
+  getQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
   setUpdateState: ViewletLayout.setUpdateState,
 }
