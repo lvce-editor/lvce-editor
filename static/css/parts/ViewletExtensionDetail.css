@@ -56,3 +56,16 @@
   contain: content;
   display: flex;
 }
+
+.Resource {
+  display: flex;
+  contain: content;
+  gap: 10px;
+}
+
+.ResourceIcon {
+  width: 20px;
+  height: 20px;
+  contain: strict;
+  /* background: orange; */
+}
