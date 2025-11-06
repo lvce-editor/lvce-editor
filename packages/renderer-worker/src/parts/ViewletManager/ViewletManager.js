@@ -405,6 +405,8 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
     uri,
   }
 }
+
+const dontSetBounds = ['TitleBar', 'StatusBar', 'ActivityBar', 'SideBar', 'Terminal']
 /**
  *
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
@@ -413,7 +415,7 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
   // console.time(`load/${viewlet.id}`)
   // TODO
-  if (viewlet.id === 'Terminal') {
+  if (dontSetBounds.includes(viewlet.id)) {
     viewlet.setBounds = false
   }
   if (viewlet.type !== 0) {

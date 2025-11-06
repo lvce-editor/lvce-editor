@@ -183,12 +183,9 @@ export const startup = async () => {
     false,
     { ...initData, ...layoutState },
   )
-  commands.splice(1, 1)
-  const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
-  const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
-  commands.push(...placeholderCommands)
-  commands.push(['Viewlet.appendToBody', layout.uid])
-  await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  const actualCommands = commands.slice(2)
+  await RendererProcess.invoke('Viewlet.executeCommands', actualCommands)
+
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 

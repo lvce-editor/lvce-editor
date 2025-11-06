@@ -2,7 +2,11 @@
   color: var(--SideBarForeground, white);
   display: flex;
   flex-direction: column;
-  position: absolute;
+  width: 300px;
+  height: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: 300px;
 }
 
 .SideBarTitleArea {
