@@ -48,6 +48,10 @@ const runFn = async (instance, id, key, fn, args) => {
   if (instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const newState = await fn(oldState, ...args)
+
+    if (key === 'getAllQuickPickMenuEntries') {
+      return newState
+    }
     if (!newState) {
       console.log({ fn })
     }
@@ -104,7 +108,8 @@ const wrapViewletCommand = (id, key, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
-    await runFn(activeInstance, id, key, fn, args)
+    const result = await runFn(activeInstance, id, key, fn, args)
+    return result
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, `${id}/${key}`)
   return wrappedViewletCommand
