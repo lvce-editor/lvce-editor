@@ -1053,7 +1053,7 @@ export const setUpdateState = async (state, updateState) => {
       // @ts-ignore
       const oldState = value.state
       // @ts-ignore
-      const newState = await value.factory.Commands.handleUpdateStateChange(oldState)
+      const newState = await value.factory.Commands.handleUpdateStateChange(oldState, updateState)
       if (oldState !== newState) {
         // @ts-ignore
         const commands = ViewletManager.render(value.factory, value.renderedState, newState)
