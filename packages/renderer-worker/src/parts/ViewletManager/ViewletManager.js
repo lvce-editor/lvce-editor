@@ -48,9 +48,6 @@ const runFn = async (instance, id, key, fn, args) => {
   if (instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const newState = await fn(oldState, ...args)
-    if (key === 'getAllQuickPickMenuEntries') {
-      return newState
-    }
     if (!newState) {
       console.log({ fn })
     }
