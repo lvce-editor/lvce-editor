@@ -56,3 +56,22 @@
   contain: content;
   display: flex;
 }
+
+.Resource {
+  display: flex;
+  contain: content;
+  gap: 5px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.Resource:hover {
+  text-decoration: underline;
+}
+
+.ResourceIcon {
+  width: 20px;
+  height: 20px;
+  contain: strict;
+  color: inherit;
+}
