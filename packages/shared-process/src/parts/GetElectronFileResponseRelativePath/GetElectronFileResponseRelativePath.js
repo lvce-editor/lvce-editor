@@ -1,4 +1,5 @@
 import * as Platform from '../Platform/Platform.js'
+import { removeQueryParameters } from '../RemoveQueryParameters/RemoveQueryParameters.js'
 import * as Scheme from '../Scheme/Scheme.js'
 
 const { scheme } = Platform
@@ -26,7 +27,7 @@ export const getElectronFileResponseRelativePath = (requestUrl) => {
   }
   if (requestUrl.startsWith('/')) {
     // TODO this should not be supported anymore and could probably be removed
-    return requestUrl
+    return removeQueryParameters(requestUrl)
   }
   console.log({ requestUrl })
   return ''
