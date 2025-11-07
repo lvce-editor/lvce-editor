@@ -1,7 +1,7 @@
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as OriginPrivateFileSystemStorage from '../OriginPrivateFileSystemStorage/OriginPrivateFileSystemStorage.js'
 
-const useOriginPrivateFileSystem = false
+const useOriginPrivateFileSystem = true
 
 export const getJson = async (viewletId) => {
   if (useOriginPrivateFileSystem) {
@@ -19,7 +19,8 @@ export const setJson = async (viewletId, value) => {
 
 export const setJsonObjects = async (value) => {
   if (useOriginPrivateFileSystem) {
-    return OriginPrivateFileSystemStorage.setJsonObjects(value)
+    console.log(value)
+    return
   }
   return LocalStorage.setJsonObjects(value)
 }
