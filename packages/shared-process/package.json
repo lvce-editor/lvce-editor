@@ -30,7 +30,6 @@
     "@lvce-editor/pretty-error": "^2.0.0",
     "@lvce-editor/rpc-registry": "^3.12.0",
     "@lvce-editor/verror": "^1.7.0",
-    "debug": "^4.4.3",
     "is-object": "^1.0.2",
     "xdg-basedir": "^5.1.0"
   },

@@ -2,7 +2,6 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
-import * as Debug from '../Debug/Debug.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as GetEtagFromStats from '../GetEtagFromStats/GetEtagFromStats.js'
@@ -13,7 +12,6 @@ import { VError } from '../VError/VError.js'
 
 export const enable = async (id) => {
   try {
-    Debug.debug(`ExtensionManagement#enable ${id}`)
     const extensionsPath = PlatformPaths.getExtensionsPath()
     const disabledExtensionsPath = PlatformPaths.getDisabledExtensionsPath()
     await mkdir(extensionsPath, { recursive: true })
@@ -37,7 +35,6 @@ const getNewDisabledExtensionContent = (disabledExtensions) => {
 
 export const disable = async (id) => {
   try {
-    Debug.debug(`ExtensionManagement#disable ${id}`)
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
     const oldDisabledExtensionIds = await getDisabledExtensionIds()
     if (oldDisabledExtensionIds.includes(id)) {

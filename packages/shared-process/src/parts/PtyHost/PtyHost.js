@@ -1,11 +1,9 @@
-import * as Debug from '../Debug/Debug.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as LaunchPtyHost from '../LaunchPtyHost/LaunchPtyHost.js'
 import * as PtyHostState from '../PtyHostState/PtyHostState.js'
 
 export const getOrCreate = (method = IpcParentType.NodeForkedProcess) => {
-  Debug.debug('creating pty host')
   if (!PtyHostState.state.ptyHostPromise) {
     PtyHostState.state.ptyHostPromise = LaunchPtyHost.launchPtyHost(method)
   }
