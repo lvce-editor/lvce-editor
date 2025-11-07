@@ -1,11 +1,22 @@
 import * as Id from '../Id/Id.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as TestWorker from '../TestWorker/TestWorker.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const map = Object.create(null)
 
-export const handleEvent = (id, event) => {
+export const handleEvent = async (id, event) => {
   const eventTarget = map[id]
   if (!eventTarget) {
+    const alternate = map2[id]
+    if (alternate) {
+      const ipc = TestWorker.get()
+      if (!ipc) {
+        return
+      }
+      await JsonRpc.invoke(ipc, alternate.callBackCommandId, event)
+      return
+    }
     console.warn(`target not found ${id}`)
     return
   }
