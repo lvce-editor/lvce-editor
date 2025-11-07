@@ -291,6 +291,7 @@ export const getModuleId = (commandId) => {
     case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':
       return ModuleId.HandleMessagePortForSearchProcess
     case 'FileWatcher.watch':
+    case 'FileWatcher.watchFile2':
     case 'FileWatcher.handleChange':
       return ModuleId.FileWatcher
     case 'Transferrable.transfer':
