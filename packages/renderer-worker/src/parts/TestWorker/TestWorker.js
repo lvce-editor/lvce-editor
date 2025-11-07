@@ -2,6 +2,10 @@ const state = {
   ipc: undefined,
 }
 
+/**
+ *
+ * @returns {any}
+ */
 export const get = () => {
   return state.ipc
 }
