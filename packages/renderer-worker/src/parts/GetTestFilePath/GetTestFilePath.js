@@ -16,14 +16,14 @@ const existsTest = async (url) => {
   return false
 }
 
-export const getTestFilePath = async (href) => {
+export const getTestFilePath = async (platform, href) => {
   const testPath = await PlatformPaths.getTestPath()
   const baseName = GetUrlBaseName.getUrlBaseName(href)
   const jsFileName = baseName + '.js'
   const tsFileName = baseName + '.ts'
   const jsPath = `${testPath}/src/${jsFileName}`
   const tsPath = `${testPath}/src/${tsFileName}`
-  if (Platform.platform === PlatformType.Web) {
+  if (platform === PlatformType.Web) {
     return jsPath
   }
   const existsTsPath = await existsTest(tsPath)
