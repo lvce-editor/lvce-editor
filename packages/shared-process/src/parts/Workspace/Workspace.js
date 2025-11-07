@@ -26,3 +26,7 @@ export const resolveUri = (uri) => {
     pathSeparator: Platform.getPathSeparator(),
   }
 }
+
+export const setData = (id, data) => {
+  console.log({ id, data })
+}

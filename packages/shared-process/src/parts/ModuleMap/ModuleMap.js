@@ -250,6 +250,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
+    case 'Workspace.setData':
       return ModuleId.Workspace
     case 'ElectronNet.getJson':
       return ModuleId.ElectronNet

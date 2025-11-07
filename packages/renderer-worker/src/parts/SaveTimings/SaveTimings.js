@@ -1,4 +1,4 @@
-import * as InstanceStorage from '../InstanceStorage/InstanceStorage.js'
+import * as InstanceStorage from '../LocalStorage/LocalStorage.js'
 
 export const saveTimings = async (builtinSaveStart, builtinSaveEnd, extensionSaveEnd) => {
   await InstanceStorage.setJson('Timings', {
