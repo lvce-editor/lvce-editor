@@ -32,6 +32,6 @@ export const watchFile = async (rpcId, callBackCommandId, uri) => {
     callBackCommandId,
   }
   // TODO use filesystem worker / file watcher worker
-  await SharedProcess.invoke('FileWatcher.watch2', id, uri)
+  await SharedProcess.invoke('FileWatcher.watchFile2', id, uri)
   return map[id]
 }
