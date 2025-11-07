@@ -100,7 +100,9 @@ export const getTestPath = () => {
     const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
     return testPath
   }
-  return '/packages/extension-host-worker-tests'
+  const absolutePath = join(Root.root, 'packages/extension-host-worker-tests')
+  const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
+  return testPath
 }
 
 export const getNodePath = () => {

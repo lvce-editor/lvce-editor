@@ -1,19 +1,13 @@
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetUrlBaseName from '../GetUrlBaseName/GetUrlBaseName.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
-// TODO determine with websocket request or some
-// data in html that shows whether this test is
-// a typescript or javascript file
 const existsTest = async (url) => {
-  const tsResponse = await fetch(url, {
-    method: 'HEAD',
-  })
-  if (tsResponse.ok) {
-    return true
-  }
-  return false
+  const uri = url.replace('/remote', 'file://')
+  const exists = await FileSystem.exists(uri)
+  return exists
 }
 
 export const getTestFilePath = async (href) => {
