@@ -1,5 +1,4 @@
 import * as GetUrlBaseName from '../GetUrlBaseName/GetUrlBaseName.js'
-import * as Platform from '../Platform/Platform.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
