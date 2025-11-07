@@ -203,7 +203,7 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
-    await ExecuteCurrentTest.executeCurrentTest(initData)
+    await ExecuteCurrentTest.executeCurrentTest(Platform.platform, initData)
     return
   }
   Performance.mark(PerformanceMarkerType.WillLoadSaveState)
