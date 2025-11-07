@@ -20,9 +20,23 @@ export const watch = async (ipc, id, { roots, exclude }) => {
   })
 }
 
+const disposeFileWatcher = async (internalId) => {
+  try {
+    await FileWatcherProcess.invoke('FileWatcher.dispose', internalId)
+  } catch {
+    // ignore
+  }
+}
+
 export const watchFile2 = async (ipc, id, uri) => {
   const internalId = Id.create()
+  const handleClose = async () => {
+    ipc.off('close', handleClose)
+    await disposeFileWatcher(internalId)
+  }
+  ipc.on('close', handleClose)
   internalIdMap[internalId] = { id, ipc }
+  // TODO promise never resolves, should resolve as soon as watcher has been set up
   await FileWatcherProcess.invoke('FileWatcher.watchFile2', internalId, uri)
 }
 
