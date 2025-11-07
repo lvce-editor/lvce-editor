@@ -1,3 +1,6 @@
+import { removeQueryParameters } from '../RemoveQueryParameters/RemoveQueryParameters.js'
+
 export const isTypeScriptPath = (uri) => {
-  return uri.endsWith('.ts')
+  const pathName = removeQueryParameters(uri)
+  return pathName.endsWith('.ts')
 }
