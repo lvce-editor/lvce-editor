@@ -20,6 +20,12 @@ export const watch = async (ipc, id, { roots, exclude }) => {
   })
 }
 
+export const watchFile2 = async (ipc, id, uri) => {
+  const internalId = Id.create()
+  internalIdMap[internalId] = { id, ipc }
+  await FileWatcherProcess.invoke('FileWatcher.watchFile2', internalId, uri)
+}
+
 export const handleChange = (event) => {
   const ref = internalIdMap[event.id]
   handleEvents(ref.id, ref.ipc, event)

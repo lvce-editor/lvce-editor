@@ -16,6 +16,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'ElectronBrowserView.createBrowserView',
   'ElectronWebContentsView.createWebContentsView',
   'FileWatcher.watch',
+  'FileWatcher.watchFile2',
 ])
 
 export const requiresSocket = (method) => {
