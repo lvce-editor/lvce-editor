@@ -165,6 +165,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/problems-view/dist/problemsViewWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/MenuWorkerUrl/MenuWorkerUrl.js`,
+      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/menu-worker/dist/menuWorkerMain.js',
+      replacement: '/packages/problems-view/dist/menuWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/FileSystemWorkerUrl/FileSystemWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js',
       replacement: '/packages/file-system-worker/dist/fileSystemWorkerMain.js',
