@@ -76,6 +76,7 @@ test.skip('handleMessagePortForExtensionHostHelperProcess - close', async () => 
       method: 'HandleElectronMessagePort.handleElectronMessagePort',
       params: [],
     },
+    // @ts-ignore
     [port],
   )
 })

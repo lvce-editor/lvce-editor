@@ -53,7 +53,7 @@ test('execute - command already registered', async () => {
   Command.register(-12, mockFn)
   await Command.execute(-12, 'abc')
   expect(mockFn).toHaveBeenCalledTimes(1)
-  expect(mockFn).toBeCalledWith('abc')
+  expect(mockFn).toHaveBeenCalledWith('abc')
 })
 
 test('execute - command already registered but throws error', async () => {
