@@ -50,7 +50,7 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   if (absolutePath.endsWith('index.html')) {
     return GetHeadersDocument.getHeadersDocument(mime, etag)
   }
-  if (absolutePath.endsWith('rendererWorkerMain.js')) {
+  if (absolutePath.endsWith('rendererWorkerMain.js') || absolutePath.endsWith('rendererWorkerMain.ts')) {
     return GetHeadersRendererWorker.getHeadersRendererWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('statusBarWorkerMain.js')) {
@@ -166,6 +166,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('activityBarWorkerMain.js')) {
     return GetHeadersActivityBarWorker.getHeadersActivityBarWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('workerMain.js')) {
+    console.log({ absolutePath, headers: GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader) })
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
