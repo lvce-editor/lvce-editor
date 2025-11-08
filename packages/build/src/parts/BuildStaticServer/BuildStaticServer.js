@@ -282,8 +282,8 @@ const bundleStaticServer = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/dist/static-server.js',
-    occurrence: `const root = resolve$1(__dirname, '../../../')`,
-    replacement: `const root = resolve$1(__dirname, '..')`,
+    occurrence: `const root = resolve$1(__dirname$1, '../../../')`,
+    replacement: `const root = resolve$1(__dirname$1, '..')`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/package.json',
