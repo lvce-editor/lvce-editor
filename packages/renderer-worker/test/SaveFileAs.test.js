@@ -71,6 +71,7 @@ test('saveFileAs', async () => {
   expect(Ajax.getResponse).toHaveBeenCalledTimes(1)
   expect(Ajax.getResponse).toHaveBeenCalledWith('https://example.com/image.png')
   expect(FileSystemFileHandle.writeResponse).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(FileSystemFileHandle.writeResponse).toHaveBeenCalledWith(new FileHandle(), new Response())
 })
 

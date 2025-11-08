@@ -91,6 +91,7 @@ test('selectPick - error - selected item has no id', async () => {
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
 
+  // @ts-ignore
   await expect(() => QuickPickEntriesCommand.selectPick({})).toThrowError(new TypeError("Cannot read properties of undefined (reading 'startsWith')"))
 })
 

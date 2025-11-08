@@ -231,6 +231,7 @@ test.skip('getTokensViewport - tokenize with embedded language', () => {
     ],
   })
   expect(testTokenizer.tokenizeLine).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(testTokenizer.tokenizeLine).toHaveBeenCalledWith('A', undefined)
 })
 
@@ -367,7 +368,9 @@ test.skip('getTokensViewport - tokenize with embedded language and empty lines',
     ],
   })
   expect(tokenizerB.tokenizeLine).toHaveBeenCalledTimes(2)
+  // @ts-ignore
   expect(tokenizerB.tokenizeLine).toHaveBeenNthCalledWith(1, 'B', {})
+  // @ts-ignore
   expect(tokenizerB.tokenizeLine).toHaveBeenNthCalledWith(2, 'B', {
     state: 1,
     tokens: [0, 1],
