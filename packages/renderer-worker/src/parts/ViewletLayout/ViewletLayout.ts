@@ -1042,7 +1042,10 @@ export const getAllQuickPickMenuEntries = () => {
 
 export const setUpdateState = async (state, updateState) => {
   if (state.updateState === updateState.state && state.updateProgress === updateState.progress) {
-    return state
+    return {
+      newState: state,
+      commands: [],
+    }
   }
   const instances = ViewletStates.getAllInstances()
   const allCommands = []
@@ -1065,8 +1068,11 @@ export const setUpdateState = async (state, updateState) => {
   // TODO send all commands to renderer process, and update viewlet states
   // TODO update all viewlets with this new update info
   return {
-    ...state,
-    updateState: updateState.state,
-    updateProgress: updateState.progress,
+    newState: {
+      ...state,
+      updateState: updateState.state,
+      updateProgress: updateState.progress,
+    },
+    commands: [],
   }
 }
