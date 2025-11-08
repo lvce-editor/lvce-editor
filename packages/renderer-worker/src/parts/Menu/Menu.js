@@ -4,6 +4,7 @@ import * as ExecuteMenuItemCommand from '../ExecuteMenuItemCommand/ExecuteMenuIt
 import * as GetMenuEntriesWithKeyBindings from '../GetMenuEntriesWithKeyBindings/GetMenuEntriesWithKeyBindings.js'
 import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
 import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
+import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
@@ -89,58 +90,18 @@ const getMenuBounds = (x, y, items) => {
   }
 }
 
-export const show = async (x, y, id, mouseBlocking = false, ...args) => {
-  const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings(id, ...args)
-  const bounds = getMenuBounds(x, y, items)
-  const menu = addMenuInternal({
-    id,
-    items,
-    focusedIndex: -1,
-    level: state.menus.length,
-    x: bounds.x,
-    y: bounds.y,
-  })
-  const visible = GetVisibleMenuItems.getVisible(menu.items, -1, false, menu.level)
-  const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
-  await RendererProcess.invoke(
-    /* Menu.show */ 'Menu.showMenu',
-    /* x */ bounds.x,
-    /* y */ bounds.y,
-    /* width */ bounds.width,
-    /* height */ bounds.height,
-    /* items */ menu.items,
-    /* level */ menu.level,
-    /* parentIndex */ -1,
-    /* dom */ dom,
-    /* mouseBlocking */ mouseBlocking,
-  )
+export const show = async (x, y, menuId, mouseBlocking = false, ...args) => {
+  const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings(menuId, ...args)
+  const { commands, menu } = await MenuWorker.invoke('Menu.getShowCommands', items, menuId, x, y, mouseBlocking)
+  addMenuInternal(menu)
+  await RendererProcess.invoke(...commands)
 }
 
 export const show2 = async (uid, menuId, x, y, mouseBlocking = false, ...args) => {
   const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings2(uid, menuId, ...args)
-  const bounds = getMenuBounds(x, y, items)
-  const menu = addMenuInternal({
-    id: menuId,
-    items,
-    focusedIndex: -1,
-    level: state.menus.length,
-    x: bounds.x,
-    y: bounds.y,
-  })
-  const visible = GetVisibleMenuItems.getVisible(menu.items, -1, false, menu.level)
-  const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
-  await RendererProcess.invoke(
-    /* Menu.show */ 'Menu.showMenu',
-    /* x */ bounds.x,
-    /* y */ bounds.y,
-    /* width */ bounds.width,
-    /* height */ bounds.height,
-    /* items */ menu.items,
-    /* level */ menu.level,
-    /* parentIndex */ -1,
-    /* dom */ dom,
-    /* mouseBlocking */ mouseBlocking,
-  )
+  const { commands, menu } = await MenuWorker.invoke('Menu.getShowCommands', items, menuId, x, y, mouseBlocking)
+  addMenuInternal(menu)
+  await RendererProcess.invoke(...commands)
 }
 
 export const closeSubMenu = () => {
@@ -251,11 +212,11 @@ export const selectCurrent = async (level) => {
 }
 
 export const hide = async (restoreFocus = true) => {
-  if (state.menus.length === 0) {
-    return
+  const { commands, newMenus } = await MenuWorker.invoke('Menu.getHideCommands', restoreFocus)
+  state.menus = newMenus
+  if (commands.length > 0) {
+    await RendererProcess.invoke(...commands)
   }
-  state.menus = []
-  await RendererProcess.invoke(/* Menu.hide */ 'Menu.hide', /* restoreFocus */ restoreFocus)
 }
 
 // TODO difference between focusing with mouse or keyboard
