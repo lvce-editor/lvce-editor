@@ -120,6 +120,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/file-system-worker`, 'dist', 'fileSystemWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/menu-worker/dist/menuWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/menu-worker`, 'dist', 'menuWorkerMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
     to: Path.join(`${toRoot}/packages/completion-worker`, 'dist', 'completionWorkerMain.js'),
   })
