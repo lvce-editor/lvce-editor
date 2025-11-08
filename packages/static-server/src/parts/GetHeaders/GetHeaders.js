@@ -40,6 +40,7 @@ import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeader
 import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
 import * as GetHeadersTextSearchWorker from '../GetHeadersTextSearchWorker/GetHeadersTextSearchWorker.js'
 import * as GetHeadersTitleBarWorker from '../GetHeadersTitleBarWorker/GetHeadersTitleBarWorker.js'
+import * as GetHeadersUpdateWorker from '../GetHeadersUpdateWorker/GetHeadersUpdateWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
 import * as Path from '../Path/Path.js'
 
@@ -70,6 +71,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('menuWorkerMain.js')) {
     return GetHeadersMenuWorker.getHeadersMenuWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('updateWorkerMain.js')) {
+    return GetHeadersUpdateWorker.getHeadersUpdateWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('extensionSearchViewWorkerMain.js')) {
     return GetHeadersExtensionSearchViewWorker.getHeadersExtensionSearchViewWorker(mime, etag, defaultCachingHeader)
