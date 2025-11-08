@@ -4,10 +4,10 @@ import * as ExecuteMenuItemCommand from '../ExecuteMenuItemCommand/ExecuteMenuIt
 import * as GetMenuEntriesWithKeyBindings from '../GetMenuEntriesWithKeyBindings/GetMenuEntriesWithKeyBindings.js'
 import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
 import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
-import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
