@@ -8,8 +8,6 @@ import * as Logger from '../Logger/Logger.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
   /**
@@ -64,30 +62,6 @@ export const addMenuInternal = (menu) => {
 export const addRootMenuInternal = (menu) => {
   state.menus = [menu]
   return menu
-}
-
-const getMenuBounds = (x, y, items) => {
-  const menuWidth = CONTEXT_MENU_WIDTH
-  const menuHeight = getMenuHeight(items)
-  const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
-  const windowWidth = layoutState.points[0]
-  const windowHeight = layoutState.points[1]
-  // TODO maybe only send labels and keybindings to ui (id not needed on ui)
-  // TODO what about separators?
-
-  if (x + menuWidth > windowWidth) {
-    x -= menuWidth
-  }
-  if (y + menuHeight > windowHeight) {
-    y -= menuHeight
-  }
-
-  return {
-    x,
-    y,
-    width: menuWidth,
-    height: menuHeight,
-  }
 }
 
 export const show = async (x, y, menuId, mouseBlocking = false, ...args) => {
@@ -148,11 +122,11 @@ export const showSubMenu = async (level, index) => {
   await showSubMenuAtEnter(level, index, -1, -1)
 }
 
-const selectIndexNone = async (menu, item, index) => {
+const selectIndexNone = async (menu, item) => {
   await Promise.all([hide(/* restoreFocus */ false), ExecuteMenuItemCommand.executeMenuItemCommand(item)])
 }
 
-const selectIndexRestoreFocus = async (menu, item, index) => {
+const selectIndexRestoreFocus = async (menu, item) => {
   await Promise.all([hide(/* restoreFocus */ true), ExecuteMenuItemCommand.executeMenuItemCommand(item)])
 }
 
@@ -163,9 +137,9 @@ const selectIndexSubMenu = async (menu, item, index) => {
   await showSubMenu(menu.level, menu.focusedIndex)
 }
 
-const selectIndexDefault = async (menu, item, index) => {}
+const selectIndexDefault = async () => {}
 
-const selectIndexIgnore = async (menu, item, index) => {
+const selectIndexIgnore = async (menu, item) => {
   await ExecuteMenuItemCommand.executeMenuItemCommand(item)
 }
 
