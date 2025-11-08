@@ -49,8 +49,8 @@ export const bundleMainProcess = async ({
   })
   await Replace.replace({
     path: `${cachePath}/dist/mainProcessMain.js`,
-    occurrence: `const root = process.env.LVCE_ROOT || join(__dirname, '../../../../..')`,
-    replacement: `const root = join(__dirname, '../../..')`,
+    occurrence: `const root = process.env.LVCE_ROOT || join(__dirname$1, '../../../../..')`,
+    replacement: `const root = join(__dirname$1, '../../..')`,
   })
   await Replace.replace({
     path: `${cachePath}/dist/mainProcessMain.js`,

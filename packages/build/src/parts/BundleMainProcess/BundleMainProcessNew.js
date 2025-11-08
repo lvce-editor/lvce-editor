@@ -49,7 +49,7 @@ export const bundleMainProcess = async ({
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Root/Root.js`,
-    occurrence: `const root = process.env.LVCE_ROOT || join$1(__dirname, '../../../../..')`,
+    occurrence: `const root = process.env.LVCE_ROOT || join$1(__dirname$1, '../../../../..')`,
     replacement: `const root = join(__dirname, '../../..')`,
   })
   // if (isArchLinux) {
