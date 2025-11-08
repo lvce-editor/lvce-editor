@@ -56,6 +56,7 @@ test.skip('contentLoaded', async () => {
   // @ts-ignore
   await ViewletStatusBar.contentLoaded(state)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect(RendererProcess.state.send).toBeCalledWith({})
 })
 

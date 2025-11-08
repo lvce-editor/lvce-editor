@@ -1,6 +1,9 @@
 import { expect, jest, test } from '@jest/globals'
+// @ts-ignore
 import { mkdtemp, writeFile } from 'node:fs/promises'
+// @ts-ignore
 import { tmpdir } from 'node:os'
+// @ts-ignore
 import { join } from 'node:path'
 import * as Tokenizer from '../src/parts/Tokenizer/Tokenizer.js'
 import * as TokenizerState from '../src/parts/TokenizerState/TokenizerState.js'
