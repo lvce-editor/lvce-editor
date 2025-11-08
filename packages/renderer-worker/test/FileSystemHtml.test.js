@@ -264,7 +264,7 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
     throw error
   })
   await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
-    new TypeError('failed to read directory: TypeError: x is not a function'),
+    new Error('failed to read directory: TypeError: x is not a function'),
   )
 })
 
@@ -303,7 +303,7 @@ test('readDirWithFileTypes - error - user activation required', async () => {
     throw error
   })
   await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
-    new TypeError('failed to read directory: User activation is required to request permissions.'),
+    new Error('failed to read directory: User activation is required to request permissions.'),
   )
 })
 
