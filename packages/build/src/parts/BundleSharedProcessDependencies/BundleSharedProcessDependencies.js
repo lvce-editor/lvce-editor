@@ -1,3 +1,4 @@
+import * as BundleFileSystemProcess from '../BundleFileSystemProcess/BundleFileSystemProcess.js'
 import * as CopyDependencies from '../CopyDependencies/CopyDependencies.js'
 import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependencies/FilterSharedProcessDependencies.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -6,8 +7,8 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveBarePrebuilds from '../RemoveBarePrebuilds/RemoveBarePrebuilds.js'
 import * as RemoveNodePtyFiles from '../RemoveNodePtyFiles/RemoveNodePtyFiles.js'
+import * as RemoveRipgrepFiles from '../RemoveRipgrepFiles/RemoveRipGrepFiles.js'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
-import * as BundleFileSystemProcess from '../BundleFileSystemProcess/BundleFileSystemProcess.js'
 
 export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [], platform = process.platform }) => {
   const projectPath = Path.absolute('packages/shared-process')
@@ -79,5 +80,6 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.cts')
   await RemoveNodePtyFiles.removeNodePtyFiles(to, platform)
   await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
+  await RemoveRipgrepFiles.removeRipGrepFiles(to, platform, arch)
   await BundleFileSystemProcess.bundleFileSystemProcess({ to })
 }
