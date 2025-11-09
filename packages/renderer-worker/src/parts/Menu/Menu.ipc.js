@@ -1,3 +1,4 @@
+import { getMenuEntries, getMenuEntries2 } from '../MenuEntries/MenuEntries.js'
 import * as Menu from './Menu.js'
 
 export const name = 'Menu'
@@ -14,4 +15,6 @@ export const Commands = {
   selectIndex: Menu.selectIndex,
   selectItem: Menu.selectItem,
   show: Menu.show,
+  getMenuEntries,
+  getMenuEntries2,
 }
