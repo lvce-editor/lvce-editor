@@ -46,6 +46,13 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   await fileSystem.writeFile(path, content, encoding)
 }
 
+export const writeBlob = async (uri, blob) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  await fileSystem.writeBlob(path, blob)
+}
+
 export const createFile = (uri) => {
   return writeFile(uri, '')
 }

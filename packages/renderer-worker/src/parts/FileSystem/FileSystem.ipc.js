@@ -18,4 +18,5 @@ export const Commands = {
   rename: FileSystem.rename,
   stat: FileSystem.stat,
   writeFile: FileSystem.writeFile,
+  writeBlob: FileSystem.writeBlob,
 }
