@@ -81,7 +81,7 @@
     "@lvce-editor/title-bar-worker": "^2.24.0",
     "@lvce-editor/problems-view": "^1.13.0",
     "@lvce-editor/output-view": "^1.19.0",
-    "@lvce-editor/update-worker": "^1.2.0"
+    "@lvce-editor/update-worker": "^1.3.0"
   },
   "devDependencies": {
     "@types/node": "^24.3.1"
