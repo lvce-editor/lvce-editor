@@ -55,6 +55,11 @@ export const writeFile = async (path, content, encoding) => {
   await FileSystemWorker.invoke(/* FileSystem.writeFile */ 'FileSystem.writeFile', /* path */ path, /* content */ content, /* encoding */ encoding)
 }
 
+export const writeBlob = async (path, blob) => {
+  path = toUri(path)
+  await FileSystemWorker.invoke('FileSystem.writeBlob', path, blob)
+}
+
 export const ensureFile = async () => {}
 
 export const readDirWithFileTypes = (path) => {
