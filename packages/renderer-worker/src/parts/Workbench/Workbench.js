@@ -222,8 +222,7 @@ export const startup = async () => {
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  await DevelopFileWatcher.hydrate()
-  await WatchFilesForHotReload.watchFilesForHotReload()
+  const watcherPromises = Promise.all([DevelopFileWatcher.hydrate(), WatchFilesForHotReload.watchFilesForHotReload()])
 
   Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
   Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
@@ -245,4 +244,6 @@ export const startup = async () => {
       // ignore
     }
   }
+
+  await watcherPromises
 }
