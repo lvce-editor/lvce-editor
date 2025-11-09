@@ -187,6 +187,7 @@ export const getModuleId = (commandId) => {
     case 'GetWindowId.getWindowId':
       return ModuleId.GetWindowId
     case 'Platform.getAppDir':
+    case 'Platform.getArch':
     case 'Platform.getApplicationName':
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
