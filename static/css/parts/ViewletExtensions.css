@@ -183,3 +183,10 @@
 .Extensions.Small .ExtensionListItemIcon {
   display: none;
 }
+
+.MultilineInputBox::-webkit-search-decoration,
+.MultilineInputBox::-webkit-search-cancel-button,
+.MultilineInputBox::-webkit-search-results-button,
+.MultilineInputBox::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
