@@ -16,7 +16,7 @@ const showMockConfirmPrompt = async (message, options) => {
 
 export const prompt = async (
   message,
-  { confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
+  { platform = Platform.platform, confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
 ) => {
   if (_mockId) {
     return showMockConfirmPrompt(message, { confirmMessage, title, cancelMessage })
@@ -24,7 +24,7 @@ export const prompt = async (
   // TODO always ask shared process for prompts
   // when running in electron it uses native prompts
   // when running in node or web it uses browser prompts
-  if (Platform.platform === PlatformType.Electron) {
+  if (platform === PlatformType.Electron) {
     return ConfirmPromptElectron.prompt(message, confirmMessage, title, cancelMessage)
   }
   return ConfirmPromptWeb.prompt(message, confirmMessage, title)
