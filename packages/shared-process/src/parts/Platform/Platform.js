@@ -84,3 +84,7 @@ export const productNameLong = 'Lvce Editor - OSS'
 export const getProductNameLong = () => {
   return productNameLong
 }
+
+export const getArch = () => {
+  return process.arch
+}
