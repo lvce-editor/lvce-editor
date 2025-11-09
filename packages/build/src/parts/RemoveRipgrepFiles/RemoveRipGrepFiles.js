@@ -7,7 +7,7 @@ export const removeRipGrepFiles = async (to, platform, arch) => {
   await Remove.remove(Path.absolute(`${to}/node_modules/@lvce-editor/ripgrep/src/postinstall.js`))
   await Remove.remove(Path.absolute(`${to}/node_modules/@lvce-editor/ripgrep/src/downloadRipGrep.js`))
   await Replace.replace({
-    path: `${to}/node_modules/@lvce-editor/ripgrep/src/downloadRipGrep.js`,
+    path: `${to}/node_modules/@lvce-editor/ripgrep/src/index.js`,
     occurrence: `export { downloadRipGrep } from './downloadRipGrep.js'`,
     replacement: '',
   })
