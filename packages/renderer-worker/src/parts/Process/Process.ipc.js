@@ -7,4 +7,5 @@ export const Commands = {
   getElectronVersion: Process.getElectronVersion,
   getChromeVersion: Process.getChromeVersion,
   getV8Version: Process.getV8Version,
+  getArch: Process.getArch,
 }
