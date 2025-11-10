@@ -50,6 +50,8 @@
   font-weight: 600;
   display: flex;
   padding: 2px;
+  justify-content: center;
+  align-items: center;
 }
 
 .MarginTopAuto {
