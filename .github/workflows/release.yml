@@ -315,31 +315,18 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
       - run: npm publish --access public
-        if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/extension-host-helper-process
       - run: npm publish --access public
-        if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/jest-environment
       - run: npm publish --access public
-        if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/static-server
       - run: npm publish --access public
-        if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/shared-process
       - run: npm publish --access public
-        if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/build/.tmp/server/server
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
-      - name: Publish GitHub release
-        if: matrix.os == 'ubuntu-24.04'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${{ needs.create-release.outputs.rg_version }}"
-          gh release edit $VERSION --draft=false
-
       - name: Publish GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
