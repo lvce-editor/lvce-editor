@@ -1073,6 +1073,6 @@ export const setUpdateState = async (state, updateState) => {
       updateState: updateState.state,
       updateProgress: updateState.progress,
     },
-    commands: [],
+    commands: allCommands,
   }
 }
