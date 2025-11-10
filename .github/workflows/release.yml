@@ -297,7 +297,7 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         with:
           name: tmp
-          path: ./build/.tmp
+          path: ./packages/build/.tmp
           include-hidden-files: true
 
   publish-release:
