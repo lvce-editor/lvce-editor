@@ -15,8 +15,8 @@ export const bundleAboutViewWorker = async ({ cachePath, commitHash, platform, a
   })
   await Replace.replace({
     path: aboutPath,
-    occurrence: `date = ''`,
-    replacement: `date = '${date}'`,
+    occurrence: `commitDate = ''`,
+    replacement: `commitDate = '${date}'`,
   })
   await Replace.replace({
     path: aboutPath,
