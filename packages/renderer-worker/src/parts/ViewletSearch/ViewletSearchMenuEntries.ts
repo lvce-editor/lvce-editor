@@ -4,12 +4,12 @@ export const menus = []
 
 export const getMenus = async () => {
   try {
-    const ids = await TextSearchWorker.invoke('Search.getMenuEntryIds')
+    const ids = await TextSearchWorker.invoke('TextSearch.getMenuEntryIds')
     const adjusted = ids.map((id) => {
       return {
         id,
         async getMenuEntries(...args) {
-          const entries = await TextSearchWorker.invoke('Search.getMenuEntries', ...args)
+          const entries = await TextSearchWorker.invoke('TextSearch.getMenuEntries', ...args)
           return entries
         },
       }
