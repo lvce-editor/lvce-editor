@@ -296,8 +296,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04'
         with:
-          name: tmp
-          path: ./packages/build/.tmp
+          name: server
+          path: ./packages/build/.tmp/server
           include-hidden-files: true
 
   publish-release:
@@ -308,8 +308,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: tmp
-          path: ./build/.tmp
+          name: server
+          path: packages/build/.tmp/server
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
