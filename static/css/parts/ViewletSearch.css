@@ -32,6 +32,9 @@
   height: 20px;
   contain: strict;
   display: var(--SearchRemoveDisplay);
+  background: transparent;
+  color: inherit;
+  border: none;
 }
 
 .Badge {
