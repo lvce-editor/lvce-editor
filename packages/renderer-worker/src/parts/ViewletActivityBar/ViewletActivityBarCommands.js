@@ -1,6 +1,6 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as WrapActivityBarCommand from '../WrapActivityBarCommand/WrapActivityBarCommand.ts'
-import * as ViewletActivityBar from '../ViewletActivityBar/ActivityBarState.ts'
+import * as ViewletActivityBar from '../ViewletActivityBar/ViewletActivityBar.ts'
 
 export const Commands = {}
 
