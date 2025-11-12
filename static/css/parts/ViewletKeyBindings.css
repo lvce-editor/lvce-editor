@@ -34,17 +34,17 @@
 }
 
 .TableColZero {
-  width: var(--TableColZeroWidth);
+  width: var(--TableColumnZeroWidth);
 }
 
 .TableColOne {
-  width: var(--TableColOneWidth);
+  width: var(--TableColumnOneWidth);
 }
 
 .TableColTwo {
-  width: var(--TableColTwoWidth);
+  width: var(--TableColumnTwoWidth);
 }
 
 .TableColThree {
-  width: var(--TableColThreeWidth);
+  width: var(--TableColumnThreeWidth);
 }
