@@ -32,3 +32,19 @@
   font-weight: 700;
   contain: content;
 }
+
+.TableColZero {
+  width: var(--TableColZeroWidth);
+}
+
+.TableColOne {
+  width: var(--TableColOneWidth);
+}
+
+.TableColTwo {
+  width: var(--TableColTwoWidth);
+}
+
+.TableColThree {
+  width: var(--TableColThreeWidth);
+}
