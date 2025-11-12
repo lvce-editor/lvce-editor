@@ -62,9 +62,9 @@ export const hotReload = async (state) => {
   await ActivityBarWorker.invoke('ActivityBar.loadContent', state.uid, savedState)
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
   const commands = await ActivityBarWorker.invoke('ActivityBar.render2', state.uid, diffResult)
-  state.commands = commands
   state.isHotReloading = false
   return {
     ...state,
+    commands,
   }
 }
