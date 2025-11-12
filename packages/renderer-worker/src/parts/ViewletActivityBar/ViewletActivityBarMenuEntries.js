@@ -1,5 +1,21 @@
-import * as MenuEntriesActivityBarAdditionalViews from '../MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js'
-import * as MenuEntriesSettings from '../MenuEntriesSettings/MenuEntriesSettings.js'
-import * as MenuEntriesActivityBar from '../MenuEntriesActivityBar/MenuEntriesActivityBar.js'
+import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 
-export const menus = [MenuEntriesSettings, MenuEntriesActivityBarAdditionalViews, MenuEntriesActivityBar]
+export const menus = []
+
+export const getMenus = async () => {
+  try {
+    const ids = await ActivityBarWorker.invoke('ActivityBar.getMenuEntryIds')
+    const adjusted = ids.map((id) => {
+      return {
+        id,
+        async getMenuEntries(...args) {
+          const entries = await ActivityBarWorker.invoke('ActivityBar.getMenuEntries', ...args)
+          return entries
+        },
+      }
+    })
+    return adjusted
+  } catch {
+    return []
+  }
+}
