@@ -65,6 +65,13 @@ export const getWatchConfig = () => {
       command: 'ClipBoard.hotReload',
     })
   }
+  const activityBar = Preferences.get('develop.activityBarWorkerPath')
+  if (activityBar) {
+    watchConfig.push({
+      path: activityBar,
+      command: 'ActivityBar.hotReload',
+    })
+  }
   const references = Preferences.get('develop.referencesWorkerPath')
   if (references) {
     watchConfig.push({

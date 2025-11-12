@@ -47,3 +47,24 @@ export const loadContent = async (state: ActivityBarState): Promise<ActivityBarS
     commands,
   }
 }
+
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await ActivityBarWorker.invoke('ActivityBar.saveState', state.uid)
+  await ActivityBarWorker.restart('ActivityBar.terminate')
+  await ActivityBarWorker.invoke('ActivityBar.create', state.uid, '', state.x, state.y, state.width, state.height, null)
+  await ActivityBarWorker.invoke('ActivityBar.loadContent', state.uid, savedState)
+  const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
+  const commands = await ActivityBarWorker.invoke('ActivityBar.render2', state.uid, diffResult)
+  state.commands = commands
+  state.isHotReloading = false
+  return {
+    ...state,
+  }
+}
