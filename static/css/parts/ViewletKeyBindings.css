@@ -56,3 +56,8 @@
 .ResizerTwo {
   left: var(--ResizerTwoLeft);
 }
+
+.KeyBinding .TableHead {
+  height: 30px;
+  contain: strict;
+}
