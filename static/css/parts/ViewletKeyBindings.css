@@ -48,3 +48,11 @@
 .TableColThree {
   width: var(--TableColumnThreeWidth);
 }
+
+.ResizerOne {
+  left: var(--ResizerOneLeft);
+}
+
+.ResizerTwo {
+  left: var(--ResizerTwoLeft);
+}
