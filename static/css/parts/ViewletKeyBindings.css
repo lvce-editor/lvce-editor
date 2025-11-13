@@ -62,3 +62,12 @@
   contain: strict;
   border-bottom: 1px solid gray;
 }
+
+.KeyBindings .ScrollBar {
+  top: var(--ScrollBarTop);
+}
+
+.KeyBindings .ScrollBarThumb {
+  height: var(--ScrollBarThumbHeight);
+  top: var(--ScrollBarThumbTop);
+}
