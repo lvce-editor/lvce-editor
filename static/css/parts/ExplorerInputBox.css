@@ -34,8 +34,8 @@
 
 .ExplorerErrorMessage {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: var(--ErrorMessageTop);
+  left: var(--ErrorMessageLeft);
   right: 0;
   background: var(--ErrorBackground);
   color: var(--ErrorForeground);
