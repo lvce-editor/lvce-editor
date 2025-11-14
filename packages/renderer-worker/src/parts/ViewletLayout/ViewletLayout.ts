@@ -235,16 +235,18 @@ export const create = (id) => {
     statusBarVisible: false,
     titleBarVisible: false,
     workbenchVisible: false,
+    sideBarView: '',
     updateState: 'none',
     updateProgress: 0,
   }
 }
 
 export const saveState = (state) => {
-  const { points } = state
+  const { points, sideBarView } = state
   const pointsArray = [...points]
   return {
     points: pointsArray,
+    sideBarView,
   }
 }
 
@@ -271,12 +273,21 @@ const getSavedPoints = (savedState) => {
 const isNativeTitleBarStyle = () => {
   return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
+
+const getSavedSideBarView = (savedState) => {
+  if (savedState && savedState.sideBarView && typeof savedState.sideBarView === 'string') {
+    return savedState.sideBarView
+  }
+  return ViewletModuleId.Explorer
+}
+
 export const loadContent = (state, savedState) => {
   const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   const newPoints = getSavedPoints(savedState)
+  const savedView = getSavedSideBarView(savedState)
   newPoints[LayoutKeys.ActivityBarVisible] = 1
   newPoints[LayoutKeys.ActivityBarWidth] = 48
   newPoints[LayoutKeys.MainVisible] = 1
@@ -314,6 +325,7 @@ export const loadContent = (state, savedState) => {
     panelSashVisible: true,
     mainContentsVisible: true,
     workbenchVisible: true,
+    sideBarView: savedView,
   }
 }
 
