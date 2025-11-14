@@ -250,6 +250,27 @@ export const searchProcessPath = ResolveBin.resolveBin('@lvce-editor/search-proc
 `,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/FileWatcherProcessPath/FileWatcherProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const fileWatcherProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'file-watcher-process',
+  'dist',
+  'index.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const fileWatcherProcessPath = ResolveBin.resolveBin('@lvce-editor/file-watcher-process')
+`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/PreviewProcessPath/PreviewProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
