@@ -23,30 +23,16 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-export const saveState = (state) => {
-  const { currentViewletId } = state
-  return {
-    currentViewletId,
-  }
-}
-
 export const saveChildState = (state) => {
   const { currentViewletId } = state
   return [currentViewletId]
 }
 
-const getSavedViewletId = (savedState) => {
-  if (savedState && savedState.currentViewletId) {
-    return savedState.currentViewletId
-  }
-  return ViewletModuleId.Explorer
-}
-
-export const loadContent = (state, savedState) => {
-  const savedViewletId = getSavedViewletId(savedState)
+export const loadContent = async (state, savedState) => {
+  const viewletId = await Command.execute('Layout.getSideBarView')
   return {
     ...state,
-    currentViewletId: savedViewletId,
+    currentViewletId: viewletId,
   }
 }
 
@@ -87,9 +73,21 @@ export const getChildren = (state) => {
   ]
 }
 
+export const handleSideBarViewletChange = async (state) => {
+  // TODO dispose current children
+  const viewletId = await Command.execute('Layout.getSideBarView')
+  return {
+    ...state,
+    currentViewletId: viewletId,
+  }
+}
+
 // TODO no default parameter -> monomorphism
 export const openViewlet = async (state, moduleId, focus = false, args) => {
   console.assert(typeof moduleId === 'string')
+
+  // TODO ask layout to set new sidebar viewlet
+
   // if (state.currentViewletId) {
   //   console.log('dispose current viewlet', state.currentViewletId)
   //   Viewlet.dispose(state.currentViewletId)

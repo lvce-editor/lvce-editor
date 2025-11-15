@@ -1052,6 +1052,10 @@ export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
 }
 
+export const getSideBarView = (state) => {
+  return ViewletModuleId.Explorer
+}
+
 export const setUpdateState = async (state, updateState) => {
   if (state.updateState === updateState.state && state.updateProgress === updateState.progress) {
     return {

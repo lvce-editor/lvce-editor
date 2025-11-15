@@ -3,6 +3,7 @@ import * as ViewletLayout from './ViewletLayout.ts'
 // prettier-ignore
 export const Commands = {
   getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
+  getSideBarView: ViewletLayout.getSideBarView,
 }
 
 export const CommandsWithSideEffects = {
