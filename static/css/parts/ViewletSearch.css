@@ -35,6 +35,7 @@
   background: transparent;
   color: inherit;
   border: none;
+  cursor: pointer;
 }
 
 .Badge {
