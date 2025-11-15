@@ -1,6 +1,7 @@
 :root {
   --ErrorBackground: #5a1d1d;
   --ErrorForeground: rgb(156, 162, 160);
+  --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
 }
 
 .Search {
@@ -28,6 +29,7 @@
 }
 
 .SearchRemove {
+  border-radius: 5px;
   width: 20px;
   height: 20px;
   contain: strict;
@@ -35,6 +37,10 @@
   background: transparent;
   color: inherit;
   border: none;
+}
+
+.SearchRemove:where(:hover) {
+  background: var(--ToolBarHoverBackground);
 }
 
 .Badge {
