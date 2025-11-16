@@ -129,6 +129,10 @@ export const getCacheDir = () => {
   return cacheDir
 }
 
+export const getCacheUri = () => {
+  return pathToFileURL(cacheDir).toString()
+}
+
 export const getConfigDir = () => {
   return configDir
 }
