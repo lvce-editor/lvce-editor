@@ -186,6 +186,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Performance
     case 'GetWindowId.getWindowId':
       return ModuleId.GetWindowId
+    case 'Exec.exec':
+      return ModuleId.Exec
     case 'Platform.getAppDir':
     case 'Platform.getArch':
     case 'Platform.getApplicationName':

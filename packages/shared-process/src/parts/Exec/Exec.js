@@ -1,10 +1,11 @@
+import { execFileSync } from 'node:child_process'
+
 /**
  *
  * @param {string} command
  * @param {string[]} args
- * @param {import('execa').Options} options
  * @returns
  */
-export const exec = async (command, args, options) => {
-  throw new Error('deprecated')
+export const exec = async (command, args) => {
+  execFileSync(command, args)
 }
