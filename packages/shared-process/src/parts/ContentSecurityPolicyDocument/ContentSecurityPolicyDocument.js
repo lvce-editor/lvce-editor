@@ -1,14 +1,8 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
-import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
-import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 import * as Scheme from '../Scheme/Scheme.js'
 
 const getFrameSrc = () => {
-  // TODO make ports configurable
-  if (IsGitpod.isGitpod) {
-    return [`frame-src 'self' ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}`]
-  }
   if (IsElectron.isElectron) {
     return [`frame-src ${Scheme.WebView}:`]
   }
@@ -23,9 +17,6 @@ const getManifestSrc = () => {
 }
 
 const getFrameAncestors = () => {
-  if (IsGitpod.isGitpod) {
-    return [`frame-ancestors *.gitpod.io`]
-  }
   return [`frame-ancestors 'none'`]
 }
 
