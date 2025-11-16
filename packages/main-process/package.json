@@ -16,7 +16,7 @@
     "directory": "packages/main-process"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "dependencies": {
     "@lvce-editor/main-process": "^2.26.0"
