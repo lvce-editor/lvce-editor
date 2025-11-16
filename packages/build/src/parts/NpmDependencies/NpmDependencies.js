@@ -24,8 +24,8 @@ const getNpmDependenciesRaw = async (root) => {
     const absoluteRoot = Path.absolute(root)
     const nodeVersion = process.versions.node
     const nodeVersionMajor = getNodeVersionMajor(nodeVersion)
-    if (nodeVersionMajor < 18) {
-      throw new VError(`NodeJs Version >=18 is required but current Node version is ${nodeVersion}`)
+    if (nodeVersionMajor < 22) {
+      throw new VError(`NodeJs Version >=22 is required but current Node version is ${nodeVersion}`)
     }
     const { stdout } = await Exec.exec('npm', ['list', '--omit=dev', '--parseable', '--all'], {
       cwd: absoluteRoot,

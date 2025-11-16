@@ -19,7 +19,7 @@
     "url": "https://github.com/lvce-editor/lvce-editor.git"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "devDependencies": {
     "@lerna/legacy-package-management": "^8.2.4",
