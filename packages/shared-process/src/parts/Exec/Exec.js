@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process'
+import * as childProcess from 'child_process'
 
 /**
  *
@@ -7,5 +7,5 @@ import { execFileSync } from 'node:child_process'
  * @returns
  */
 export const exec = async (command, args) => {
-  execFileSync(command, args)
+  childProcess.execFileSync(command, args)
 }
