@@ -14,6 +14,8 @@ export const load = (moduleId) => {
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.js')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.js')
+    case ModuleId.Exec:
+      return import('../Exec/Exec.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.Crash:
