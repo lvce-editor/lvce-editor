@@ -62,8 +62,6 @@ export const getStaticFiles = async ({ etag }) => {
   const uris = filePaths.map((filePath) => pathToFileURL(filePath).toString().slice(staticUriLength))
   const getHeadersPath = join(root, 'packages', 'static-server', 'src', 'parts', 'GetHeaders', 'GetHeaders.js')
   const getHeadersUri = pathToFileURL(getHeadersPath).toString()
-  // fix build in gitpod
-  process.env.GITPOD_WORKSPACE_ID = ''
   const getHeadersModule = await import(getHeadersUri)
   const isImmutable = 1
   const headers = filePaths.map((file) => getHeadersModule.getHeaders(file, etag, isImmutable))
