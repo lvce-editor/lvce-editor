@@ -1,12 +1,6 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
-import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
-import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 
 const getFrameSrc = () => {
-  // TODO make ports configurable
-  if (IsGitpod.isGitpod) {
-    return [`frame-src 'self' ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} ${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}`]
-  }
   return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
 }
 
@@ -15,9 +9,6 @@ const getManifestSrc = () => {
 }
 
 const getFrameAncestors = () => {
-  if (IsGitpod.isGitpod) {
-    return [`frame-ancestors *.gitpod.io`]
-  }
   return [`frame-ancestors 'none'`]
 }
 
