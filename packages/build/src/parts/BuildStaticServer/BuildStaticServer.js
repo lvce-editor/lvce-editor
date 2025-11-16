@@ -190,11 +190,11 @@ export const getResponseInfo = (request, isImmutable) => {
 }
 `,
   })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
-    occurrence: `frame-ancestors 'none'`,
-    replacement: `\${frameAncestors}`,
-  })
+  // await Replace.replace({
+  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //   occurrence: `frame-ancestors 'none'`,
+  //   replacement: `\${frameAncestors}`,
+  // })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
     occurrence: `export const getAbsolutePath = (pathName) => {
@@ -219,33 +219,33 @@ export const getResponseInfo = (request, isImmutable) => {
   return Path.join(STATIC, pathName)
 }`,
   })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
-    occurrence: `frame-src 'self' http://localhost:3001 http://localhost:3002`,
-    replacement: `\${frameSrc}`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
-    occurrence: `"default-src 'none'; font-src 'self'; img-src 'self'`,
-    replacement: `\`default-src 'none'; font-src 'self'; img-src 'self'`,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
-    occurrence: `manifest-src 'self';"`,
-    replacement: `manifest-src 'self';\``,
-  })
-  await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
-    occurrence: `export const headers =`,
-    replacement: `import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
-import * as IsGitpod from '../IsGitpod/IsGitpod.js'
+  // await Replace.replace({
+  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //   occurrence: `frame-src 'self' http://localhost:3001 http://localhost:3002`,
+  //   replacement: `\${frameSrc}`,
+  // })
+  // await Replace.replace({
+  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //   occurrence: `"default-src 'none'; font-src 'self'; img-src 'self'`,
+  //   replacement: `\`default-src 'none'; font-src 'self'; img-src 'self'`,
+  // })
+  //   await Replace.replace({
+  //     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //     occurrence: `manifest-src 'self';"`,
+  //     replacement: `manifest-src 'self';\``,
+  //   })
+  //   await Replace.replace({
+  //     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //     occurrence: `export const headers =`,
+  //     replacement: `import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
+  // import * as IsGitpod from '../IsGitpod/IsGitpod.js'
 
-const frameSrc = IsGitpod.isGitpod ? \`frame-src 'self' \${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} \${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}\` : \`frame-src 'self' http://localhost:3001 http://localhost:3002\`
+  // const frameSrc = IsGitpod.isGitpod ? \`frame-src 'self' \${GetGitpodPreviewUrl.getGitpodPreviewUrl(3001)} \${GetGitpodPreviewUrl.getGitpodPreviewUrl(3002)}\` : \`frame-src 'self' http://localhost:3001 http://localhost:3002\`
 
-const frameAncestors = IsGitpod.isGitpod ? 'frame-ancestors *.gitpod.io': \`frame-ancestors 'none'\`
+  // const frameAncestors = IsGitpod.isGitpod ? 'frame-ancestors *.gitpod.io': \`frame-ancestors 'none'\`
 
-export const headers =`,
-  })
+  // export const headers =`,
+  //   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/IpcChildModule/IpcChildModule.js',
     occurrence: `  switch (method) {
@@ -290,13 +290,31 @@ const bundleStaticServer = async ({ commitHash }) => {
     occurrence: `"main": "src/static-server.js"`,
     replacement: `"main": "dist/static-server.js"`,
   })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/dist/static-server.js',
+    occurrence: `\nconst files = {};\n`,
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/dist/static-server.js',
+    occurrence: `\nconst headers = [];\n`,
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/dist/static-server.js',
+    occurrence: `import { readFile } from 'node:fs/promises';`,
+    replacement: `import { readFile } from 'node:fs/promises';
+import config from '../config.json' with { type: 'json' };
+
+const { files, headers } = config;`,
+  })
   const old = await JsonFile.readJson('packages/build/.tmp/server/static-server/package.json')
   const { dependencies, ...rest } = old
   await JsonFile.writeJson({
     to: 'packages/build/.tmp/server/static-server/package.json',
     value: rest,
   })
-  await Remove.remove('packages/build/.tmp/server/static-server/src')
+  // await Remove.remove('packages/build/.tmp/server/static-server/src')
   await Remove.remove('packages/build/.tmp/server/static-server/node_modules')
 }
 
