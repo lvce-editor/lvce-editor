@@ -6,4 +6,5 @@ export const Commands = {
   getLogsDir: PlatformPaths.getLogsDir,
   getTmpDir: PlatformPaths.getTmpDir,
   getCachePath: PlatformPaths.getCachePath,
+  getCacheUri: PlatformPaths.getCacheUri,
 }

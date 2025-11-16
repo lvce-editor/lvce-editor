@@ -70,6 +70,10 @@ export const getCachePath = () => {
   return SharedProcess.invoke(/* Platform.getCacheDir */ 'Platform.getCacheDir')
 }
 
+export const getCacheUri = () => {
+  return SharedProcess.invoke(/* Platform.getCacheDir */ 'Platform.getCacheUri')
+}
+
 export const getExtensionHostWorkerUrl = () => {
   return `${AssetDir.assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.ts`
 }
