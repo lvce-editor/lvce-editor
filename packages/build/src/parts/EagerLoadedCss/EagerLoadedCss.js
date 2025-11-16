@@ -25,6 +25,7 @@ export const eagerLoadedCss = [
   'Mobile.css',
   'Notification.css',
   'ProblemsIcon.css',
+  'Progress.css',
   'ScrollBar.css',
   'ScrollBarThumb.css',
   'SearchField.css',
