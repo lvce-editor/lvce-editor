@@ -28,7 +28,7 @@ const getUniqueHeaders = (headers) => {
 
 const generateHeadersCode = (ours, indexes, uris) => {
   const lines = []
-  lines.push('export const headers = ' + JSON.stringify(ours, null, 2))
+  lines.push('export const headers = []')
   lines.push('')
   return lines.join('\n')
 }
@@ -46,9 +46,8 @@ const generateFilesCodeMap = (indexes, uris) => {
 }
 
 const generateFilesCode = (indexes, uris) => {
-  const map = generateFilesCodeMap(indexes, uris)
   const lines = []
-  lines.push(`export const files = ` + JSON.stringify(map, null, 2))
+  lines.push(`export const files = {}`)
   lines.push('')
   return lines.join('\n')
 }
