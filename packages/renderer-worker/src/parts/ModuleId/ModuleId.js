@@ -110,3 +110,4 @@ export const GetActiveEditor = 142
 export const PlatformPaths = 143
 export const MeasureTextHeight = 144
 export const Document = 145
+export const Exec = 146
