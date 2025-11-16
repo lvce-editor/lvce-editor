@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url'
 import * as Path from '../Path/Path.js'
 import { root } from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import { writeJson } from '../JsonFile/JsonFile.js'
 
 const getUniqueHeaders = (headers) => {
   const ours = []
@@ -32,7 +33,7 @@ const generateHeadersCode = (ours, indexes, uris) => {
   return lines.join('\n')
 }
 
-const generateFilesCode = (indexes, uris) => {
+const generateFilesCodeMap = (indexes, uris) => {
   const map = Object.create(null)
   const length = indexes.length
   for (let i = 0; i < length; i++) {
@@ -41,6 +42,11 @@ const generateFilesCode = (indexes, uris) => {
     map[uri] = index
   }
   map['/'] = map['/index.html']
+  return map
+}
+
+const generateFilesCode = (indexes, uris) => {
+  const map = generateFilesCodeMap(indexes, uris)
   const lines = []
   lines.push(`export const files = ` + JSON.stringify(map, null, 2))
   lines.push('')
@@ -71,5 +77,14 @@ export const getStaticFiles = async ({ etag }) => {
   await WriteFile.writeFile({
     to: filesCodePath,
     content: filesCode,
+  })
+  const configJsonPath = Path.absolute(`packages/build/.tmp/server/static-server/config.json`)
+  const map = generateFilesCodeMap(uniqueHeaders.indexes, uris)
+  await writeJson({
+    to: configJsonPath,
+    value: {
+      headers: uniqueHeaders.ours,
+      files: map,
+    },
   })
 }
