@@ -21,6 +21,8 @@ export const getModuleId = (commandId) => {
   switch (prefix) {
     case 'About':
       return ModuleId.About
+    case 'Exec':
+      return ModuleId.Exec
     case 'Ajax':
       return ModuleId.Ajax
     case 'Audio':

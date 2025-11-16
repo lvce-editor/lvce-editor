@@ -1,3 +1,5 @@
+import * as childProcess from 'child_process'
+
 /**
  *
  * @param {string} command
@@ -6,5 +8,5 @@
  * @returns
  */
 export const exec = async (command, args, options) => {
-  throw new Error('deprecated')
+  childProcess.execFileSync(command, args)
 }
