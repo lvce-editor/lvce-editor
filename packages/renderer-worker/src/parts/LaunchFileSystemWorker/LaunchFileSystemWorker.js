@@ -2,29 +2,16 @@ import * as FileSystemWorkerUrl from '../FileSystemWorkerUrl/FileSystemWorkerUrl
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IsProduction from '../IsProduction/IsProduction.js'
-import * as Preferences from '../Preferences/Preferences.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
-
-const getConfiguredWorkerUrl = () => {
-  let configuredWorkerUrl = Preferences.get('develop.fileSystemWorkerPath') || ''
-  if (configuredWorkerUrl) {
-    configuredWorkerUrl = '/remote' + configuredWorkerUrl
-  }
-  configuredWorkerUrl = configuredWorkerUrl || FileSystemWorkerUrl.fileSystemWorkerUrl
-  if (IsProduction.isProduction) {
-    configuredWorkerUrl = FileSystemWorkerUrl.fileSystemWorkerUrl
-  }
-  return configuredWorkerUrl
-}
+import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 
 export const launchFileSystemWorker = async () => {
   const name = 'File System Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
-    url: getConfiguredWorkerUrl(),
+    url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.fileSystemWorkerPath', FileSystemWorkerUrl.fileSystemWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'Initialize.initialize', Platform.platform)

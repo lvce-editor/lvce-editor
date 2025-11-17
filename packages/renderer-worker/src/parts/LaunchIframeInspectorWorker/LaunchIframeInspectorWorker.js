@@ -2,27 +2,14 @@ import * as IframeInspectorWorkerUrl from '../IframeInspectorWorkerUrl/IframeIns
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IsProduction from '../IsProduction/IsProduction.js'
-import * as Preferences from '../Preferences/Preferences.js'
-
-const getConfiguredWorkerUrl = () => {
-  let configuredWorkerUrl = Preferences.get('develop.iframeInspectorWorkerPath') || ''
-  if (configuredWorkerUrl) {
-    configuredWorkerUrl = '/remote' + configuredWorkerUrl
-  }
-  configuredWorkerUrl = configuredWorkerUrl || IframeInspectorWorkerUrl.iframeInspectorWorkerUrl
-  if (IsProduction.isProduction) {
-    configuredWorkerUrl = IframeInspectorWorkerUrl.iframeInspectorWorkerUrl
-  }
-  return configuredWorkerUrl
-}
+import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 
 export const launchIframeInspectorWorker = async () => {
   const name = 'Iframe Inspector Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
-    url: getConfiguredWorkerUrl(),
+    url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.iframeInspectorWorkerPath', IframeInspectorWorkerUrl.iframeInspectorWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
   return ipc

@@ -2,28 +2,18 @@ import * as ExtensionDetailViewWorkerUrl from '../ExtensionDetailViewWorkerUrl/E
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IsProduction from '../IsProduction/IsProduction.js'
-import * as Preferences from '../Preferences/Preferences.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-
-const getConfiguredWorkerUrl = () => {
-  let configuredWorkerUrl = Preferences.get('develop.extensionDetailViewWorkerPath') || ''
-  if (configuredWorkerUrl) {
-    configuredWorkerUrl = '/remote' + configuredWorkerUrl
-  }
-  configuredWorkerUrl = configuredWorkerUrl || ExtensionDetailViewWorkerUrl.extensionDetailViewWorkerUrl
-  if (IsProduction.isProduction) {
-    configuredWorkerUrl = ExtensionDetailViewWorkerUrl.extensionDetailViewWorkerUrl
-  }
-  return configuredWorkerUrl
-}
+import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 
 export const launchExtensionDetailViewWorker = async () => {
   const name = 'Extension Detail View Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
-    url: getConfiguredWorkerUrl(),
+    url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl(
+      'develop.extensionDetailViewWorkerPath',
+      ExtensionDetailViewWorkerUrl.extensionDetailViewWorkerUrl,
+    ),
   })
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'ExtensionDetail.initialize')
