@@ -10,6 +10,7 @@ export const Commands = {
   getBuiltinExtensionsPath: PlatformPaths.getBuiltinExtensionsPath,
   getCachedExtensionsPath: PlatformPaths.getCachedExtensionsPath,
   getCacheDir: PlatformPaths.getCacheDir,
+  getCacheUri: PlatformPaths.getCacheUri,
   getCommit: Platform.getCommit,
   getConfigDir: PlatformPaths.getConfigDir,
   getDataDir: PlatformPaths.getDataDir,
