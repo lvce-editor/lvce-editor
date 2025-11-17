@@ -1,11 +1,13 @@
 import * as childProcess from 'child_process'
+import { fileURLToPath } from 'url'
 
 /**
  *
- * @param {string} command
+ * @param {string} uri
  * @param {string[]} args
  * @returns
  */
-export const exec = async (command, args) => {
-  childProcess.execFileSync(command, args)
+export const exec = async (uri, args) => {
+  const path = fileURLToPath(uri)
+  childProcess.execFileSync(path, args)
 }
