@@ -38,6 +38,7 @@ import * as GetHeadersStatusBarWorker from '../GetHeadersStatusBarWorker/GetHead
 import * as GetHeadersSyntaxHighlightingWorker from '../GetHeadersSyntaxHighlightingWorker/GetHeadersSyntaxHighlightingWorker.js'
 import * as GetHeadersTerminalWorker from '../GetHeadersTerminalWorker/GetHeadersTerminalWorker.js'
 import * as GetHeadersTestWorker from '../GetHeadersTestWorker/GetHeadersTestWorker.js'
+import * as GetHeadersTextMeasurementWorker from '../GetHeadersTextMeasurementWorker/GetHeadersTextMeasurementWorker.js'
 import * as GetHeadersTextSearchWorker from '../GetHeadersTextSearchWorker/GetHeadersTextSearchWorker.js'
 import * as GetHeadersTitleBarWorker from '../GetHeadersTitleBarWorker/GetHeadersTitleBarWorker.js'
 import * as GetHeadersUpdateWorker from '../GetHeadersUpdateWorker/GetHeadersUpdateWorker.js'
@@ -74,6 +75,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('updateWorkerMain.js')) {
     return GetHeadersUpdateWorker.getHeadersUpdateWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('textMeasurementWorkerMain.js')) {
+    return GetHeadersTextMeasurementWorker.getHeadersTextMeasurementWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('extensionSearchViewWorkerMain.js')) {
     return GetHeadersExtensionSearchViewWorker.getHeadersExtensionSearchViewWorker(mime, etag, defaultCachingHeader)
