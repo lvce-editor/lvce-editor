@@ -152,6 +152,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/update-worker`, 'dist', 'updateWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/text-measurement-worker`, 'dist', 'textMeasurementWorkerMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/hover-worker/dist/hoverWorkerMain.js',
     to: Path.join(`${toRoot}/packages/hover-worker`, 'dist', 'hoverWorkerMain.js'),
   })
