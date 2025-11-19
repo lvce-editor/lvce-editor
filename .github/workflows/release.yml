@@ -50,7 +50,7 @@ jobs:
             { os: ubuntu-24.04, arch: arm64 },
             { os: ubuntu-24.04, arch: armhf },
           ]
-    runs-on: ${{ matrix.version.os }}
+    runs-on: ${{ matrix.versions.os }}
     timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
