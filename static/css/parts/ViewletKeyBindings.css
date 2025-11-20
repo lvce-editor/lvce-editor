@@ -76,3 +76,8 @@
   padding-left: 27px;
   padding-top: 5px;
 }
+
+.KeyBindingsSearchButtons {
+  padding-top: 0 !important;
+  padding-right: 0 !important;
+}
