@@ -11,6 +11,7 @@
   table-layout: fixed;
   contain: content; /* TODO strict? */
   border-collapse: collapse;
+  outline: none;
 }
 
 .TableHeading {
