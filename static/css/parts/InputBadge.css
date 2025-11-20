@@ -4,7 +4,6 @@
 }
 
 .InputBadge {
-  display: flex;
   contain: content;
   flex-shrink: 0;
   background: var(--InputBadgeBackground);
