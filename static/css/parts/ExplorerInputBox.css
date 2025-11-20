@@ -36,6 +36,7 @@
   position: absolute;
   top: var(--ErrorMessageTop);
   left: var(--ErrorMessageLeft);
+  width: var(--ErrorMessageWidth);
   right: 0;
   background: var(--ErrorBackground);
   color: var(--ErrorForeground);
