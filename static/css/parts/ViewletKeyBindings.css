@@ -71,3 +71,8 @@
   height: var(--ScrollBarThumbHeight);
   top: var(--ScrollBarThumbTop);
 }
+
+.NoMatchingKeyBindingsFoundMessage {
+  padding-left: 27px;
+  padding-top: 5px;
+}
