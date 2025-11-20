@@ -4,7 +4,7 @@
 }
 
 .InputBadge {
-  contain: content;
+  contain: strict;
   flex-shrink: 0;
   background: var(--InputBadgeBackground);
   color: var(--InputBadgeForeground);
@@ -15,4 +15,5 @@
   align-items: center;
   border-radius: 2px;
   font-size: 11px;
+  width: var(--InputBadgeWidth);
 }
