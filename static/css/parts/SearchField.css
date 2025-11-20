@@ -38,6 +38,7 @@
   height: 20px;
   cursor: pointer;
   padding: 1px;
+  border-radius: 3px;
 }
 
 .SearchFieldButton:focus-visible {
