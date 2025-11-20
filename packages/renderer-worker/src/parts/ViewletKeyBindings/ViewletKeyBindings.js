@@ -4,8 +4,6 @@
 
 import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 
-// TODO make this an extension that can create virtual dom in a webworker
-
 export const create = (id, uri, x, y, width, height) => {
   return {
     x,
