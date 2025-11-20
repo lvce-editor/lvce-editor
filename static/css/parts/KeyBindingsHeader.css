@@ -34,6 +34,7 @@
   contain: content;
   gap: 10px;
   padding-right: 10px;
+  align-items: center;
 }
 
 /* clears the 'X' from Chrome */
