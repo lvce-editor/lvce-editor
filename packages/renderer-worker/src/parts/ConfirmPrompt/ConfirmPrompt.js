@@ -14,6 +14,10 @@ const showMockConfirmPrompt = async (message, options) => {
   return result
 }
 
+export const mock = (mockId) => {
+  _mockId = mockId
+}
+
 export const prompt = async (
   message,
   { platform = Platform.platform, confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
@@ -30,6 +34,10 @@ export const prompt = async (
   return ConfirmPromptWeb.prompt(message, confirmMessage, title)
 }
 
-export const mock = (mockId) => {
-  _mockId = mockId
+export const showErrorMessage = ({ message, platform = Platform.platform, confirmMessage = ConfirmPromptStrings.ok(), title = '' }) => {
+  if (platform === PlatformType.Electron) {
+    return ConfirmPromptElectron.promptError(message, confirmMessage, title)
+  }
+  // TODO maybe have an alert or a custom dialog here instead
+  return ConfirmPromptWeb.prompt(message, confirmMessage, title)
 }
