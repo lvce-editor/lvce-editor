@@ -1,5 +1,4 @@
 import * as IsElectron from '../IsElectron/IsElectron.js'
-import { VError } from '../VError/VError.js'
 
 const getModule = () => {
   if (IsElectron.isElectron) {
@@ -9,10 +8,6 @@ const getModule = () => {
 }
 
 export const trash = async (path) => {
-  try {
-    const module = await getModule()
-    await module.trash(path)
-  } catch (error) {
-    throw new VError(error, 'Failed to move item to trash')
-  }
+  const module = await getModule()
+  await module.trash(path)
 }
