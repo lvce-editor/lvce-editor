@@ -53,6 +53,10 @@
 }
 
 .TableRowSelected {
+  background: var(--ListInactiveSelectionBackground);
+}
+
+.Table:focus .TableRowSelected {
   background: var(--TableRowSelectedBackground);
 }
 
