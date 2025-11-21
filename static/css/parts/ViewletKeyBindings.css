@@ -17,15 +17,6 @@
   line-height: 10px;
 }
 
-.Resizer {
-  cursor: ew-resize;
-  position: absolute;
-  width: 5px;
-  height: 100%;
-  /* background: red; */
-  top: 0;
-}
-
 /* TODO reuse same highlight css for completions and quickpick */
 .SearchHighlight {
   color: var(--CompletionHighlightForeground, #e1b974);
@@ -47,14 +38,6 @@
 
 .TableColThree {
   width: var(--TableColumnThreeWidth);
-}
-
-.ResizerOne {
-  left: var(--ResizerOneLeft);
-}
-
-.ResizerTwo {
-  left: var(--ResizerTwoLeft);
 }
 
 .KeyBindings .TableHead {

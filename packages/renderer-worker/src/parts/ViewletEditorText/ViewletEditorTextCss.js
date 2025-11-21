@@ -10,6 +10,7 @@ export const Css = [
   '/css/parts/InputBox.css',
   '/css/parts/MaskIcon.css',
   '/css/parts/MaskIcon.css',
+  '/css/parts/Resizer.css',
   '/css/parts/ScrollBar.css',
   '/css/parts/ScrollBarThumb.css',
   '/css/parts/SearchField.css',
