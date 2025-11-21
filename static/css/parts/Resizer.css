@@ -1,0 +1,23 @@
+.Resizer {
+  cursor: ew-resize;
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  /* background: red; */
+  top: 0;
+}
+
+.Resizer {
+  width: 2px;
+  height: 100%;
+  background-color: transparent;
+  cursor: ew-resize;
+}
+
+.ResizerOne {
+  left: var(--ResizerOneLeft);
+}
+
+.ResizerTwo {
+  left: var(--ResizerTwoLeft);
+}

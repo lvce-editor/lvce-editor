@@ -60,13 +60,6 @@
   color: var(--ErrorForeground);
 }
 
-.Resizer {
-  width: 2px;
-  height: 100%;
-  background-color: transparent;
-  cursor: ew-resize;
-}
-
 .FindWidget .SearchField {
   height: var(--FindWidgetInputHeight);
 }
