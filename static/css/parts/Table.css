@@ -63,10 +63,10 @@
 .TableCell {
   overflow: hidden;
   text-overflow: ellipsis;
-  /* contain: strict; */
   text-align: left;
   white-space: nowrap;
   padding-right: 8px;
+  padding-left: 10px;
 }
 
 .TableCellInvalid {
