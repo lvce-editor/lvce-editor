@@ -32,7 +32,7 @@
 
 /* TODO avoid complex css */
 /* TODO move this to keybindings css */
-.TableRow:where(:not(:hover, .TableRowSelected)) .EditButton {
+.TableRow:where(:not(:hover, .TableRowSelected)) .KeyBindingsEditButton {
   display: none;
 }
 
