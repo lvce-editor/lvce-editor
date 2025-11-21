@@ -1,10 +1,6 @@
-.Resizer {
-  cursor: ew-resize;
-  position: absolute;
-  width: 5px;
-  height: 100%;
-  /* background: red; */
-  top: 0;
+:root {
+  --SashSize: 4px;
+  --SashBackground: rgba(204, 204, 204, 0.13);
 }
 
 .Resizer {
@@ -12,6 +8,18 @@
   height: 100%;
   background-color: transparent;
   cursor: ew-resize;
+  position: absolute;
+  width: var(--SashSize);
+  height: 100%;
+  top: 0;
+  contain: strict;
+}
+
+.ResizerInner {
+  contain: strict;
+  height: 100%;
+  width: 1px;
+  background: var(--SashBackground);
 }
 
 .ResizerOne {
