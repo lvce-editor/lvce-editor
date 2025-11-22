@@ -1,3 +1,7 @@
+:root {
+  --TreeItemIgnoredBackground: #8c8c8c;
+}
+
 .TreeItem {
   color: var(--TreeItemForeground, rgb(188, 190, 190));
   display: flex;
@@ -20,4 +24,8 @@
 #TreeItemActive,
 .TreeItemActive {
   background: var(--TreeItemActiveBackground, rgba(59, 71, 66, 0.5));
+}
+
+.decoration-ignore .Label {
+  color: var(--TreeItemIgnoredBackground);
 }
