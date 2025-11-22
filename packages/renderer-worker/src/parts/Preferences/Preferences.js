@@ -3,14 +3,14 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import { isTest } from '../IsTest/IsTest.js'
 import * as Json from '../Json/Json.js'
+import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as PreferencesState from '../PreferencesState/PreferencesState.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as PreferencesState from '../PreferencesState/PreferencesState.js'
-import * as OpenUri from '../OpenUri/OpenUri.js'
 
 export const openSettingsJson = async () => {
   await OpenUri.openUri('app://settings.json')
@@ -80,7 +80,7 @@ export const set = async (key, value) => {
 export const update = async (settings) => {
   const newSettings = { ...PreferencesState.getAll(), ...settings }
   const content = Json.stringify(newSettings)
-  if (!Workspace.isTest()) {
+  if (!isTest()) {
     await FileSystem.writeFile('app://settings.json', content)
   }
   await GlobalEventBus.emitEvent('preferences.changed')

@@ -5,7 +5,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-import { state } from '../WorkspaceState/WorkspaceState.js'
+import { state } from '../IsTest/IsTest.js'
 
 const getResolvedRootFromSharedProcess = async () => {
   const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot)

@@ -43,9 +43,7 @@ export const close = () => {
   return setPath('')
 }
 
-export const isTest = () => {
-  return state.isTest
-}
+export { isTest } from '../IsTest/IsTest.js'
 
 const getTitle = (workspacePath) => {
   if (!workspacePath) {
