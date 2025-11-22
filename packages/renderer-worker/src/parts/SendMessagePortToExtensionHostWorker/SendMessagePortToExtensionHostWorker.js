@@ -6,6 +6,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
+import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
 
@@ -61,6 +62,12 @@ export const sendMessagePortToTextMeasurementWorker = async (port, initialComman
   Assert.object(port)
   Assert.string(initialCommand)
   await TextMeasurementWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToSourceControlWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await SourceControlWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
