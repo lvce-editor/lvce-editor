@@ -8,6 +8,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as PreferencesState from '../PreferencesState/PreferencesState.js'
 import * as OpenUri from '../OpenUri/OpenUri.js'
 
@@ -79,7 +80,9 @@ export const set = async (key, value) => {
 export const update = async (settings) => {
   const newSettings = { ...PreferencesState.getAll(), ...settings }
   const content = Json.stringify(newSettings)
-  await FileSystem.writeFile('app://settings.json', content)
+  if (!Workspace.isTest()) {
+    await FileSystem.writeFile('app://settings.json', content)
+  }
   await GlobalEventBus.emitEvent('preferences.changed')
 }
 
