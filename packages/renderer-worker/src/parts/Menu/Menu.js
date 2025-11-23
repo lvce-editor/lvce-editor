@@ -1,31 +1,22 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
-import * as GetMenuEntriesWithKeyBindings from '../GetMenuEntriesWithKeyBindings/GetMenuEntriesWithKeyBindings.js'
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 
 export const MENU_WIDTH = 150
 
 export const show = async (x, y, menuId, mouseBlocking = false, ...args) => {
-  const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings(menuId, ...args)
-  const { commands, menu } = await MenuWorker.invoke('Menu.getShowCommands', items, menuId, x, y, mouseBlocking)
-  await RendererProcess.invoke(...commands)
+  await MenuWorker.invoke('Menu.show', menuId, x, y, mouseBlocking)
 }
 
 export const show2 = async (uid, menuId, x, y, mouseBlocking = false, ...args) => {
-  const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings2(uid, menuId, ...args)
-  const { commands, menu } = await MenuWorker.invoke('Menu.getShowCommands', items, menuId, x, y, mouseBlocking)
-  await RendererProcess.invoke(...commands)
+  await MenuWorker.invoke('Menu.show2', menuId, x, y, mouseBlocking)
 }
 
 export const closeSubMenu = async () => {
-  const { commands, menu } = await MenuWorker.invoke('Menu.closeSubMenu')
-  // @ts-ignore
-  await RendererProcess.invoke(...commands)
+  await MenuWorker.invoke('Menu.closeSubMenu')
 }
 
 export const showSubMenu = async (level, index) => {
-  const { commands, menu } = await MenuWorker.invoke('Menu.showSubMenu')
-  await RendererProcess.invoke(...commands)
+  await MenuWorker.invoke('Menu.showSubMenu', level, index)
 }
 
 export const selectIndex = async (level, index) => {
