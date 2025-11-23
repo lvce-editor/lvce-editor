@@ -1,8 +1,6 @@
 // TODO lazyload menuEntries and use Command.execute (maybe)
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 
-export const MENU_WIDTH = 150
-
 export const show = async (x, y, menuId, mouseBlocking = false, ...args) => {
   await MenuWorker.invoke('Menu.show', menuId, x, y, mouseBlocking)
 }
