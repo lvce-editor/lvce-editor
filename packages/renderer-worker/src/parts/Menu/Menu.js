@@ -1,4 +1,3 @@
-// TODO lazyload menuEntries and use Command.execute (maybe)
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 
 export const show = async (x, y, menuId, mouseBlocking = false, ...args) => {
