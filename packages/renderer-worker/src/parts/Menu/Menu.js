@@ -2,11 +2,11 @@
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 
 export const show = async (x, y, menuId, mouseBlocking = false, ...args) => {
-  await MenuWorker.invoke('Menu.show', menuId, x, y, mouseBlocking)
+  await MenuWorker.invoke('Menu.show', menuId, x, y, mouseBlocking, ...args)
 }
 
 export const show2 = async (uid, menuId, x, y, mouseBlocking = false, ...args) => {
-  await MenuWorker.invoke('Menu.show2', menuId, x, y, mouseBlocking)
+  await MenuWorker.invoke('Menu.show2', uid, menuId, x, y, mouseBlocking, ...args)
 }
 
 export const closeSubMenu = async () => {
