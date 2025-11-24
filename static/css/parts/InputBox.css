@@ -21,7 +21,11 @@
 .InputBox::-webkit-search-decoration,
 .InputBox::-webkit-search-cancel-button,
 .InputBox::-webkit-search-results-button,
-.InputBox::-webkit-search-results-decoration {
+.InputBox::-webkit-search-results-decoration,
+.MultilineInputBox::-webkit-search-decoration,
+.MultilineInputBox::-webkit-search-cancel-button,
+.MultilineInputBox::-webkit-search-results-button,
+.MultilineInputBox::-webkit-search-results-decoration {
   display: none;
 }
 
