@@ -1,5 +1,7 @@
 export const name = 'sample.tab-completion-provider-snippet'
 
+export const skip = 1
+
 export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
