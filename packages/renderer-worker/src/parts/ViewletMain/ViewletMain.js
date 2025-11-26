@@ -582,7 +582,7 @@ export const handleClickClose = (state, button, index) => {
 }
 
 export const handleTabContextMenu = async (state, eventX, eventY) => {
-  const { groups, activeGroupIndex } = state
+  const { groups, activeGroupIndex, uid } = state
   const group = groups[activeGroupIndex]
   // @ts-ignore
   const { editors, x, y } = group
@@ -591,7 +591,9 @@ export const handleTabContextMenu = async (state, eventX, eventY) => {
     return state
   }
   group.focusedIndex = index
-  await ContextMenu.show(eventX, eventY, MenuEntryId.Tab)
+  await ContextMenu.show2(uid, MenuEntryId.Tab, eventX, eventY, {
+    menuId: MenuEntryId.Tab,
+  })
   return {
     ...state,
   }
