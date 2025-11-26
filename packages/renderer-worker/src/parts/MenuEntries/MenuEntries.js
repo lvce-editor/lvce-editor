@@ -1,4 +1,3 @@
-import * as MenuEntriesModule from '../MenuEntriesModule/MenuEntriesModule.js'
 import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -8,7 +7,7 @@ const getModule = (id) => {
   if (module) {
     return module
   }
-  return MenuEntriesModule.load(id)
+  throw new Error(`menu entries for ${id} not found`)
 }
 
 export const getMenuEntries = async (id, ...args) => {
