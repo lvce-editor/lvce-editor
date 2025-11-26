@@ -77,7 +77,7 @@
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^10.8.0",
-    "@lvce-editor/menu-worker": "^3.0.0",
+    "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/text-search-worker": "^5.31.0",
     "@lvce-editor/title-bar-worker": "^2.27.0",
     "@lvce-editor/problems-view": "^1.13.0",
