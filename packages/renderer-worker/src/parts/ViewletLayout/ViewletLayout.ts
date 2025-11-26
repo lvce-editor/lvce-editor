@@ -1090,6 +1090,7 @@ export const setUpdateState = async (state, updateState) => {
 }
 
 export const handleWorkspaceRefresh = async (state) => {
+  console.log('workspace refresh')
   const instances = ViewletStates.getAllInstances()
   const allCommands = []
   // @ts-ignore
@@ -1099,7 +1100,7 @@ export const handleWorkspaceRefresh = async (state) => {
       // @ts-ignore
       const oldState = value.state
       // @ts-ignore
-      const newState = await value.factory.Commands.handleWorkspaceRefresh(oldState, updateState)
+      const newState = await value.factory.Commands.handleWorkspaceRefresh(oldState)
       if (oldState !== newState) {
         // @ts-ignore
         const commands = ViewletManager.render(value.factory, value.renderedState, newState)
