@@ -445,6 +445,7 @@ export const save = async (state) => {
   }
   const editor = editors[activeIndex]
   await saveEditor(editor)
+  await Command.execute('Layout.handleWorkspaceRefresh')
   // TODO handle different types of editors / custom editors / webviews
   // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
   const newEditors = [
