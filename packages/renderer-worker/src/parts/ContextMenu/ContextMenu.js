@@ -16,11 +16,7 @@ const getModule = () => {
 }
 
 export const show = async (x, y, id, ...args) => {
-  Assert.number(x)
-  Assert.number(y)
-  Assert.number(id)
-  const module = await getModule()
-  return module.show(x, y, id, ...args)
+  throw new Error(`ContextMenu.show is deprecated. Use ContextMenu.show2 instead`)
 }
 
 export const show2 = async (uid, menuId, x, y, ...args) => {
