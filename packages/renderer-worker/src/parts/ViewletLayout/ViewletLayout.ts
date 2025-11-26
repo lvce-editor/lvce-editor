@@ -1088,3 +1088,31 @@ export const setUpdateState = async (state, updateState) => {
     commands: allCommands,
   }
 }
+
+export const handleWorkspaceRefresh = async (state) => {
+  console.log('workspace refresh')
+  const instances = ViewletStates.getAllInstances()
+  const allCommands = []
+  // @ts-ignore
+  for (const [key, value] of Object.entries(instances)) {
+    // @ts-ignore
+    if (value.factory.Commands && value.factory.Commands.handleWorkspaceRefresh) {
+      // @ts-ignore
+      const oldState = value.state
+      // @ts-ignore
+      const newState = await value.factory.Commands.handleWorkspaceRefresh(oldState)
+      if (oldState !== newState) {
+        // @ts-ignore
+        const commands = ViewletManager.render(value.factory, value.renderedState, newState)
+        // @ts-ignore
+        allCommands.push(...commands)
+      }
+    }
+  }
+  return {
+    newState: {
+      ...state,
+    },
+    commands: allCommands,
+  }
+}
