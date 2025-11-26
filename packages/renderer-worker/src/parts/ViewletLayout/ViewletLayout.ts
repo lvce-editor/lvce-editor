@@ -1089,7 +1089,7 @@ export const setUpdateState = async (state, updateState) => {
   }
 }
 
-export const handleWorkspaceRefresh = (state) => {
+export const handleWorkspaceRefresh = async (state) => {
   const instances = ViewletStates.getAllInstances()
   const allCommands = []
   // @ts-ignore
