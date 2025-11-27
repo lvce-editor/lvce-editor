@@ -7,6 +7,7 @@
   contain: strict;
   position: relative;
   height: 100%;
+  outline: none;
 }
 
 /* TODO have list contain strict if possible */

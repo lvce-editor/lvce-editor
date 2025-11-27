@@ -1,4 +1,5 @@
-.FocusOutline {
+/* hack to increase css specificity over listitems */
+.FocusOutline.FocusOutline {
   outline-color: var(--FocusOutline, lightgray);
   outline-offset: -1px;
   outline-style: solid;
