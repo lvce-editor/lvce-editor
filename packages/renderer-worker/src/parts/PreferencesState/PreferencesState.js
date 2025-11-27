@@ -1,6 +1,6 @@
 export const state = Object.create(null)
 
-export const setAll = async (preferences) => {
+export const setAll = (preferences) => {
   Object.assign(state, preferences)
 }
 
@@ -15,6 +15,6 @@ export const getAll = () => {
   return state
 }
 
-export const set = async (key, value) => {
+export const set = (key, value) => {
   state[key] = value
 }
