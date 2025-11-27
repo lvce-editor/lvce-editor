@@ -80,6 +80,7 @@ export const set = async (key, value) => {
 export const update = async (settings) => {
   const newSettings = { ...PreferencesState.getAll(), ...settings }
   const content = Json.stringify(newSettings)
+  PreferencesState.setAll(newSettings)
   if (!isTest()) {
     await FileSystem.writeFile('app://settings.json', content)
   }
