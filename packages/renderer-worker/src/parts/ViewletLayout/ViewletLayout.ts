@@ -1090,7 +1090,6 @@ export const setUpdateState = async (state, updateState) => {
 }
 
 export const handleWorkspaceRefresh = async (state) => {
-  console.log('workspace refresh')
   const instances = ViewletStates.getAllInstances()
   const allCommands = []
   // @ts-ignore
