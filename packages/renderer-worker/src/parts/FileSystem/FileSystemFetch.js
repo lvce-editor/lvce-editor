@@ -22,6 +22,15 @@ export const readFile = async (uri) => {
   return ExtensionHostWorker.invoke('FileSystemFetch.readFile', uri)
 }
 
+export const exists = async (uri) => {
+  try {
+    await readFile(uri)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const readJson = async (uri) => {
   if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
     return FileSystemWorker.invoke('FileSystem.readJson', `${location.protocol}//${uri}`)
