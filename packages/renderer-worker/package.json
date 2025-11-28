@@ -81,7 +81,7 @@
     "@lvce-editor/text-search-worker": "^5.32.0",
     "@lvce-editor/title-bar-worker": "^2.28.0",
     "@lvce-editor/problems-view": "^1.13.0",
-    "@lvce-editor/output-view": "^1.19.0",
+    "@lvce-editor/output-view": "^2.0.0",
     "@lvce-editor/update-worker": "^2.4.0"
   },
   "devDependencies": {
