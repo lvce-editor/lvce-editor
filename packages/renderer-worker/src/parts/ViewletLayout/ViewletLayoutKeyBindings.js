@@ -38,11 +38,7 @@ export const getKeyBindings = () => {
       command: 'ViewService.toggleView',
       args: ['Output'],
     },
-    {
-      key: KeyModifier.CtrlCmd | KeyCode.Enter,
-      command: 'Source Control.acceptInput',
-      when: WhenExpression.FocusSourceControlInput,
-    },
+
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyN,
       command: 'Explorer.newFile',
