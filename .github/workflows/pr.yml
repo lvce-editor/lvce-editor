@@ -89,9 +89,6 @@ jobs:
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: node packages/build/bin/build.js --target=electron-deb
-      - name: Build Electron App (snap)
-        if: matrix.os == 'ubuntu-24.04'
-        run: node packages/build/bin/build.js --target=electron-builder-snap
       - name: Build Electron App (Macos dmg, arm64)
         if: matrix.os == 'macos-15'
         run: node packages/build/bin/build.js --target=electron-builder-mac --arch=arm64
