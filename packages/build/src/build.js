@@ -23,8 +23,6 @@ const getBuildModule = (target) => {
       return import('./parts/Remote/Remote.js')
     case 'electron-deb':
       return import('./parts/BuildDeb/BuildDeb.js')
-    case 'electron-snap':
-      return import('./parts/BuildSnap/BuildSnap.js')
     case 'electron-rpm':
       return import('./parts/Rpm/Rpm.js')
     case 'static':
@@ -54,8 +52,6 @@ const getBuildModule = (target) => {
       return import('./parts/BuildArchLinux/BuildArchLinux.js')
     case 'electron-builder-app-image':
       return import('./parts/ElectronBuilderAppImage/ElectronBuilderAppImage.js')
-    case 'snap':
-      return import('./parts/BuildSnap/BuildSnap.js')
     default:
       Logger.info(`unknown target "${target}"`)
       Process.exit(ExitCode.Error)

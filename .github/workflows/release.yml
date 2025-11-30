@@ -177,26 +177,6 @@ jobs:
           asset_path: ${{ env.ASSET_DEB_ARMHF }}
           asset_name: ${{ env.ASSET_DEB_ARMHF }}
           asset_content_type: application/octet-stream
-      - name: Build Electron App (snap, x64)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-snap
-      - name: Rename Electron App (snap, x64)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        shell: bash
-        run: |
-          staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.snap"
-          mv "packages/build/.tmp/releases/lvce-editor.snap" "$staging"
-          echo "ASSET_SNAP_X64=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (snap, x64)
-        uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.ASSET_SNAP_X64 }}
-          asset_name: ${{ env.ASSET_SNAP_X64 }}
-          asset_content_type: application/octet-stream
       # - name: Build Electron App (Macos dmg, x64)
       #   if: matrix.versions.os == 'macos-15'
       #   run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
