@@ -22,6 +22,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: PlatformType.Web,
+    getPlatform: jest.fn(() => {
+      return PlatformType.Web
+    }),
     assetDir: '',
   }
 })

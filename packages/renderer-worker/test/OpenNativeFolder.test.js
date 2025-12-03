@@ -16,6 +16,9 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: PlatformType.Remote,
+    getPlatform: () => {
+      return PlatformType.Remote
+    },
   }
 })
 

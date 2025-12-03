@@ -13,58 +13,76 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const Command = await import('../src/parts/Command/Command.js')
-
 test('minimize - electron', async () => {
+  jest.resetModules()
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
+      getPlatform: () => {
+        return PlatformType.Electron
+      },
     }
   })
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
+  const CommandAfterReset = await import('../src/parts/Command/Command.js')
+  // @ts-ignore
+  CommandAfterReset.execute.mockImplementation(() => {})
   // @ts-ignore
   await Chrome.minimize()
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.minimize')
+  expect(CommandAfterReset.execute).toHaveBeenCalledTimes(1)
+  expect(CommandAfterReset.execute).toHaveBeenCalledWith('ElectronWindow.minimize')
 })
 
 test('maximize - electron', async () => {
+  jest.resetModules()
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
+      getPlatform: () => {
+        return PlatformType.Electron
+      },
     }
   })
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
+  const CommandAfterReset = await import('../src/parts/Command/Command.js')
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  CommandAfterReset.execute.mockImplementation(() => {})
   await Chrome.maximize()
-  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(CommandAfterReset.execute).toHaveBeenCalledTimes(1)
 })
 
 test('unmaximize - electron', async () => {
+  jest.resetModules()
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
+      getPlatform: () => {
+        return PlatformType.Electron
+      },
     }
   })
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
+  const CommandAfterReset = await import('../src/parts/Command/Command.js')
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  CommandAfterReset.execute.mockImplementation(() => {})
   await Chrome.unmaximize()
-  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(CommandAfterReset.execute).toHaveBeenCalledTimes(1)
 })
 
 test('close - electron', async () => {
+  jest.resetModules()
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
+      getPlatform: () => {
+        return PlatformType.Electron
+      },
     }
   })
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
+  const CommandAfterReset = await import('../src/parts/Command/Command.js')
   // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  CommandAfterReset.execute.mockImplementation(() => {})
   await Chrome.close()
-  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(CommandAfterReset.execute).toHaveBeenCalledTimes(1)
 })
