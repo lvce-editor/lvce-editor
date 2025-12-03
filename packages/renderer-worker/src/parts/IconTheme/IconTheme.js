@@ -9,9 +9,11 @@ import * as Workspace from '../Workspace/Workspace.js'
 
 export const setIconTheme = async (iconThemeId) => {
   try {
-    const useCache = true // TODO maybe add a setting for this
+    const useCache = Preferences.get('icon-theme.cache') ?? true
     const extensions = await ExtensionHostWorker.invoke('Extensions.getExtensions')
+    console.time('loadIconTheme')
     await IconThemeWorker.invoke('IconTheme.getIconThemeJson', extensions, iconThemeId, assetDir, Platform.getPlatform(), useCache)
+    console.timeEnd('loadIconTheme')
     await HandleIconThemeChange.handleIconThemeChange()
   } catch (error) {
     if (Workspace.isTest()) {
