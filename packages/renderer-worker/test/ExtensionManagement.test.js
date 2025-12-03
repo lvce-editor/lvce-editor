@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 import * as SharedProcessCommandType from '../src/parts/SharedProcessCommandType/SharedProcessCommandType.js'
 
 beforeEach(() => {
@@ -15,6 +16,9 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
+    getPlatform: jest.fn(() => {
+      return PlatformType.Remote
+    }),
     getMarketplaceUrl: jest.fn(() => {
       return 'test://example.com'
     }),
