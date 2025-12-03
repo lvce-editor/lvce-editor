@@ -101,8 +101,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.IconTheme
     case 'ImagePreview':
       return ModuleId.ImagePreview
-    case 'IncrementalTextSearch':
-      return ModuleId.IncrementalTextSearch
     case 'IndexedDb':
       return ModuleId.IndexedDb
     case 'IpcParent':

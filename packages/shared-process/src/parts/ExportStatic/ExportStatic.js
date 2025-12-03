@@ -530,17 +530,19 @@ export const createFilemap = async (fixturesPath) => {
 export const createFilemapsPerFixture = async (fixturesPath) => {
   const dirents = await readdir(fixturesPath, { withFileTypes: true })
 
-  const fixtureDirectories = dirents.filter(dirent => dirent.isDirectory())
+  const fixtureDirectories = dirents.filter((dirent) => dirent.isDirectory())
 
   // Create filemaps in parallel
-  await Promise.all(fixtureDirectories.map(async (dirent) => {
-    const fixturePath = join(fixturesPath, dirent.name)
-    const filemap = await createFilemap(fixturePath)
+  await Promise.all(
+    fixtureDirectories.map(async (dirent) => {
+      const fixturePath = join(fixturesPath, dirent.name)
+      const filemap = await createFilemap(fixturePath)
 
-    // Create fileMap.json in the fixture directory
-    const fileMapPath = join(fixturePath, 'fileMap.json')
-    await FileSystem.writeFile(fileMapPath, JSON.stringify(filemap, null, 2))
-  }))
+      // Create fileMap.json in the fixture directory
+      const fileMapPath = join(fixturePath, 'fileMap.json')
+      await FileSystem.writeFile(fileMapPath, JSON.stringify(filemap, null, 2))
+    }),
+  )
 }
 
 const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {

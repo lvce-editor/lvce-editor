@@ -21,7 +21,7 @@ export const openDataFolder = async () => {
 
 export const openLogsFolder = async () => {
   // TODO only in electron or in remote when it is the same machine
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return
   }
   const logsFolder = await PlatformPaths.getLogsDir()

@@ -9,7 +9,7 @@ const showAboutDefault = async () => {
 }
 
 const getFn = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return AboutElectron.showAboutElectron
     default:

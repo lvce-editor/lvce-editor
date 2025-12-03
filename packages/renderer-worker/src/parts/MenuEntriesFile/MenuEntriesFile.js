@@ -54,7 +54,7 @@ export const getMenuEntries = () => {
       command: 'Main.saveAll',
     },
   ]
-  if (Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Electron) {
     entries.push(MenuEntrySeparator.menuEntrySeparator, {
       id: 'exit',
       label: FileStrings.exit(),

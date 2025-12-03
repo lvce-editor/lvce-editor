@@ -26,6 +26,9 @@ test('showMessage - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
+      getPlatform: jest.fn(() => {
+        return PlatformType.Electron
+      }),
       assetDir: '',
     }
   })
@@ -59,6 +62,9 @@ test.skip('close - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Web,
+      getPlatform: jest.fn(() => {
+        return PlatformType.Web
+      }),
       assetDir: '',
     }
   })

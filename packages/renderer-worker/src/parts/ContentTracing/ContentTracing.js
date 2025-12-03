@@ -4,7 +4,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
 
 export const start = async () => {
-  if (Platform.platform !== PlatformType.Electron) {
+  if (Platform.getPlatform() !== PlatformType.Electron) {
     throw new Error('content tracing is only supported in electron')
   }
   await ElectronContentTracing.startRecording({
@@ -13,7 +13,7 @@ export const start = async () => {
 }
 
 export const stop = async () => {
-  if (Platform.platform !== PlatformType.Electron) {
+  if (Platform.getPlatform() !== PlatformType.Electron) {
     throw new Error('content tracing is only supported in electron')
   }
   const path = await ElectronContentTracing.stopRecording()

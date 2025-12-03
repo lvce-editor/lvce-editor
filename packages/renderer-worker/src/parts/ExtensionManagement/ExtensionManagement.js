@@ -57,7 +57,7 @@ export const enable = async (id) => {
 }
 
 export const getAllExtensions = async () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return []
   }
   return SharedProcess.invoke(/* ExtensionManagement.getAllExtensions */ 'ExtensionManagement.getAllExtensions')
@@ -83,7 +83,7 @@ export const getExtension2 = async (id) => {
       disabled: true,
     }
   }
-  // console.log({ extension, disabledIds, platform: Platform.platform })
+  // console.log({ extension, disabledIds, platform: Platform.getPlatform() })
   return extension
 }
 

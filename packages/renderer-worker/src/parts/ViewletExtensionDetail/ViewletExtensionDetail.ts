@@ -33,7 +33,7 @@ export const loadContent = async (state, savedState) => {
     state.y,
     state.width,
     state.height,
-    Platform.platform,
+    Platform.getPlatform(),
     AssetDir.assetDir,
   )
   const isTest = Workspace.isTest()
@@ -63,7 +63,7 @@ export const hotReload = async (state) => {
     state.y,
     state.width,
     state.height,
-    Platform.platform,
+    Platform.getPlatform(),
     AssetDir.assetDir,
   )
   await ExtensionDetailViewWorker.invoke('ExtensionDetail.loadContent2', state.uid, {})

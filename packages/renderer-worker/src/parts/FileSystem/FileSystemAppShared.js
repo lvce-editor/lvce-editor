@@ -63,7 +63,7 @@ const readJsonNode = async (path, defaultContent) => {
 export const readFileInternal = async (getPath, defaultContent = '') => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return readFileWeb(path, defaultContent)
   }
   // TODO handle enoent and other errors gracefully
@@ -73,7 +73,7 @@ export const readFileInternal = async (getPath, defaultContent = '') => {
 export const readJsonInternal = async (getPath, defaultContent = '') => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return readJsonWeb(path, defaultContent)
   }
   // TODO handle enoent and other errors gracefully
@@ -81,7 +81,7 @@ export const readJsonInternal = async (getPath, defaultContent = '') => {
 }
 
 const writeFileWeb = async (path, content) => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     await Command.execute(/* LocalStorage.setText */ 'LocalStorage.setText', /* key */ path, /* value */ content)
   }
 }
@@ -111,7 +111,7 @@ const writeFileNode = async (path, content) => {
 export const writeFileInternal = async (getPath, content) => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return writeFileWeb(path, content)
   }
   return writeFileNode(path, content)

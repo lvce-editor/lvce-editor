@@ -5,7 +5,7 @@ import * as SendMessagePortToElectron from '../SendMessagePortToElectron/SendMes
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 
 export const create = async (options) => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
     case PlatformType.Remote:
       const module = await import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')

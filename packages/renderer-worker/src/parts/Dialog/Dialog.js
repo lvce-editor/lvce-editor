@@ -27,7 +27,7 @@ const openFileElectron = async () => {
 }
 
 export const openFile = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return openFileWeb()
     case PlatformType.Remote:
@@ -70,7 +70,7 @@ export const showMessage = async (message, options) => {
     options,
   }
 
-  if (Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Electron) {
     // @ts-ignore
     const index = await ElectronDialog.showMessageBox(/* message */ message.message, /* buttons */ options, ElectronMessageBoxType.Error)
 

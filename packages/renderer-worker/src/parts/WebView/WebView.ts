@@ -28,7 +28,7 @@ export const create3 = async (uri: string, id: number): Promise<void> => {
   await ExtensionHostWorker.invoke('WebView.create3', {
     id,
     uri,
-    platform: Platform.platform,
+    platform: Platform.getPlatform(),
     isGitpod: IsGitpod.isGitpod,
     assetDir: AssetDir.assetDir,
     webViewScheme: Scheme.WebView,

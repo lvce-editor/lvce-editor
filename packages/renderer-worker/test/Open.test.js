@@ -8,6 +8,9 @@ beforeEach(() => {
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: PlatformType.Remote,
+    getPlatform: jest.fn(() => {
+      return PlatformType.Remote
+    }),
   }
 })
 
