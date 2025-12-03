@@ -18,16 +18,28 @@ export const getElectronFileResponse = async (url, request) => {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag
+    let stats
     // TODO when is there no request?
     if (request) {
-      etag = await GetPathEtag.getPathEtag(absolutePath)
+      const info = await GetPathEtag.getPathEtag(absolutePath)
+      etag = info.etag
+      stats = info.stats
+      let size = stats.size
+      if (absolutePath.endsWith('.html')) {
+        // TODO since dynamic data is injected to the stat size is not accurate
+        // which is why this workaround is needed
+        // but it's a bit inefficient
+        const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
+        size = content.byteLength
+      }
       if (request.headers[HttpHeader.IfNotMatch] === etag) {
-        const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url)
+        const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url, size)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
     }
     const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
-    const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url)
+    const size = content.byteLength
+    const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url, size)
 
     headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     return GetContentResponse.getContentResponse(content, headers)

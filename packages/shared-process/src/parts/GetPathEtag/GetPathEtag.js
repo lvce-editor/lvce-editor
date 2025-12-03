@@ -8,5 +8,5 @@ export const getPathEtag = async (absolutePath) => {
     stats = await stat(absolutePath)
   }
   const etag = GetEtag.getEtag(stats)
-  return etag
+  return { etag, stats }
 }
