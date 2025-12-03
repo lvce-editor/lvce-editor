@@ -11,9 +11,7 @@ export const setIconTheme = async (iconThemeId) => {
   try {
     const useCache = Preferences.get('icon-theme.cache') ?? true
     const extensions = await ExtensionHostWorker.invoke('Extensions.getExtensions')
-    console.time('loadIconTheme')
     await IconThemeWorker.invoke('IconTheme.getIconThemeJson', extensions, iconThemeId, assetDir, Platform.getPlatform(), useCache)
-    console.timeEnd('loadIconTheme')
     await HandleIconThemeChange.handleIconThemeChange()
   } catch (error) {
     if (Workspace.isTest()) {
