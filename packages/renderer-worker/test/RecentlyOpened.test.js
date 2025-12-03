@@ -5,25 +5,6 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/LocalStorage/LocalStorage.js', () => {
-  return {
-    getJson: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-    getText: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
-  return {
-    execute: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: PlatformType.Web,
@@ -31,14 +12,6 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
       return PlatformType.Web
     },
     assetDir: '',
-  }
-})
-
-jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
-  return {
-    getRecentlyOpenedPath: jest.fn(() => {
-      return 'app://recently-opened.json'
-    }),
   }
 })
 
@@ -53,24 +26,12 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/FileSystem/FileSystemAppShared.js', () => {
-  return {
-    readJsonInternal: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-    writeFileInternal: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const FileSystemAppShared = await import('../src/parts/FileSystem/FileSystemAppShared.js')
 const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.js')
 
 test('addToRecentlyOpened - already in list', async () => {
   // @ts-ignore
-  FileSystemAppShared.readJsonInternal.mockImplementation(() => {
+  FileSystem.readJson.mockImplementation(() => {
     return ['/test/folder-1', '/test/folder-2', '/test/folder-3']
   })
   // @ts-ignore
@@ -89,7 +50,7 @@ test('addToRecentlyOpened - already in list', async () => {
 
 test('addToRecentlyOpened - already at front of list', async () => {
   // @ts-ignore
-  FileSystemAppShared.readJsonInternal.mockImplementation(() => {
+  FileSystem.readJson.mockImplementation(() => {
     return ['/test/folder-3', '/test/folder-1', '/test/folder-2']
   })
   // @ts-ignore
@@ -120,7 +81,7 @@ test('addToRecentlyOpened - error - recently opened path is of type array', asyn
 
 test('addToRecentlyOpened - error - invalid json when reading recently opened', async () => {
   // @ts-ignore
-  FileSystemAppShared.readJsonInternal.mockImplementation(() => {
+  FileSystem.readJson.mockImplementation(() => {
     return []
   })
   // @ts-ignore
@@ -134,4 +95,3 @@ test('addToRecentlyOpened - error - invalid json when reading recently opened', 
 `,
   )
 })
-
