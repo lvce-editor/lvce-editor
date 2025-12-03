@@ -67,7 +67,7 @@ export const loadContent = async (state) => {
     state.y,
     state.width,
     state.height,
-    Platform.platform,
+    Platform.getPlatform(),
     args,
     renderAllItems,
     Workspace.state.workspacePath,

@@ -272,7 +272,7 @@ const getSavedPoints = (savedState) => {
 }
 
 const isNativeTitleBarStyle = () => {
-  return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
+  return Platform.getPlatform() === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
 
 const getSavedSideBarView = (savedState) => {

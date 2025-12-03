@@ -35,6 +35,9 @@ test('openFolder - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
+      getPlatform: jest.fn(() => {
+        return PlatformType.Electron
+      }),
       assetDir: '',
     }
   })

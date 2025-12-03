@@ -19,7 +19,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     y,
     width,
     height,
-    platform: Platform.platform,
+    platform: Platform.getPlatform(),
   }
 }
 

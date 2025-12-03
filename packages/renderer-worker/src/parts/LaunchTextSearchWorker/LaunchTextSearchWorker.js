@@ -15,7 +15,7 @@ export const launchTextSearchWorker = async () => {
   })
   HandleIpc.handleIpc(ipc)
   try {
-    await JsonRpc.invoke(ipc, 'TextSearch.initialize', Platform.platform)
+    await JsonRpc.invoke(ipc, 'TextSearch.initialize', Platform.getPlatform())
   } catch (error) {
     // ignore
   }

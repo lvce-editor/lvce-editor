@@ -14,6 +14,9 @@ jest.unstable_mockModule('../src/parts/ElectronContentTracing/ElectronContentTra
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: PlatformType.Electron,
+    getPlatform: () => {
+      return PlatformType.Electron
+    },
   }
 })
 jest.unstable_mockModule('../src/parts/OpenNativeFolder/OpenNativeFolder.js', () => {

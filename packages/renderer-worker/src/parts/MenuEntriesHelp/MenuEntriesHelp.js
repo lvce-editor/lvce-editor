@@ -11,7 +11,7 @@ export const id = MenuEntryId.Help
 export const getMenuEntries = async () => {
   const autoUpdateSupported = await IsAutoUpdateSupported.isAutoUpdateSupported()
   const entries = []
-  if (Platform.platform !== PlatformType.Web) {
+  if (Platform.getPlatform() !== PlatformType.Web) {
     entries.push(
       {
         id: 'toggleDeveloperTools',

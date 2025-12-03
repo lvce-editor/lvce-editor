@@ -18,7 +18,7 @@ const openUrlElectron = async (url) => {
 }
 
 export const openUrl = async (url) => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return openUrlElectron(url)
     default:

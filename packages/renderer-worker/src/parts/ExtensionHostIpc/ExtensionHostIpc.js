@@ -4,7 +4,7 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getName = () => {
-  if (Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Electron) {
     return 'Extension Host (Electron)'
   }
   return 'Extension Host'

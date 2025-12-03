@@ -22,7 +22,7 @@ const openNativeFolderElectron = async (absolutePath) => {
 }
 
 export const openNativeFolder = async (absolutePath) => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return openNativeFolderWeb(absolutePath)
     case PlatformType.Remote:

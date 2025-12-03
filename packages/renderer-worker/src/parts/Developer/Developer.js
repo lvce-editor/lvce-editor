@@ -19,7 +19,7 @@ import * as ToMarkdownTable from '../ToMarkdownTable/ToMarkdownTable.js'
 // TODO no export, this is internal only
 
 const getNodeTiming = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return undefined
   }
   return SharedProcess.invoke(/* command */ 'Performance.getNodeStartupTiming')
@@ -35,7 +35,7 @@ const getMeasureEntries = () => {
 }
 
 const getElectronEntries = async () => {
-  if (Platform.platform === PlatformType.Web || Platform.platform === PlatformType.Remote) {
+  if (Platform.getPlatform() === PlatformType.Web || Platform.getPlatform() === PlatformType.Remote) {
     return undefined
   }
   const result = await ElectronDeveloper.getPerformanceEntries()
@@ -50,12 +50,12 @@ export const getStartupPerformanceContent = async () => {
   //   LifeCycle.once(LifeCycle.PHASE_FIFTEEN, resolve)
   // )
   let nodeStartupTiming
-  if (Platform.platform !== PlatformType.Web) {
+  if (Platform.getPlatform() !== PlatformType.Web) {
     nodeStartupTiming = await getNodeTiming()
   }
   const measureEntries = getMeasureEntries()
   let electronEntries
-  if (Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Electron) {
     electronEntries = await getElectronEntries()
   }
   const text = FormatStartupPerformance.formatStartupPerformance({

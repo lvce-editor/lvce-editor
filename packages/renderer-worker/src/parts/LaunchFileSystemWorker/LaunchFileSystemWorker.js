@@ -14,6 +14,6 @@ export const launchFileSystemWorker = async () => {
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.fileSystemWorkerPath', FileSystemWorkerUrl.fileSystemWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Initialize.initialize', Platform.platform)
+  await JsonRpc.invoke(ipc, 'Initialize.initialize', Platform.getPlatform())
   return ipc
 }

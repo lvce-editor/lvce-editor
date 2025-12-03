@@ -5,24 +5,24 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    platform: PlatformType.Web,
+    getPlatform: () => {
+      return PlatformType.Web
+    },
+    assetDir: '',
+  }
+})
+
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
-    readFile: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
     readJson: jest.fn(() => {
       throw new Error('not implemented')
     }),
     writeFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
-  }
-})
-
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
-  return {
-    platform: PlatformType.Web,
-    assetDir: '',
   }
 })
 
@@ -81,8 +81,8 @@ test('addToRecentlyOpened - error - recently opened path is of type array', asyn
 
 test('addToRecentlyOpened - error - invalid json when reading recently opened', async () => {
   // @ts-ignore
-  FileSystem.readFile.mockImplementation(() => {
-    return JSON.stringify(['/test/folder-1', '/test/folder-2', '/test/folder-3']) + '##'
+  FileSystem.readJson.mockImplementation(() => {
+    return []
   })
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})

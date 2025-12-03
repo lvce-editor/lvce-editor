@@ -28,7 +28,7 @@ const actuallyActivateExtension = async (extension, event) => {
       extension.path,
       extension.browser,
       Origin.origin,
-      Platform.platform,
+      Platform.getPlatform(),
     )
     state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath, event)
   }

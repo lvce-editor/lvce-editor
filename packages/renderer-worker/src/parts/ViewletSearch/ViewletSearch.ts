@@ -32,7 +32,7 @@ const doCreate = async (state: any): Promise<void> => {
     itemHeight,
     value,
     replacement,
-    Platform.platform,
+    Platform.getPlatform(),
   )
 }
 
