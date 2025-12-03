@@ -11,5 +11,5 @@ export const get = () => {
 }
 
 export const set = (width, height) => {
-  ;(state.width = width), (state.height = height)
+  ;((state.width = width), (state.height = height))
 }
