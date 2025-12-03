@@ -18,7 +18,7 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     x,
     y,
-    platform: Platform.platform,
+    platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
   }
 }

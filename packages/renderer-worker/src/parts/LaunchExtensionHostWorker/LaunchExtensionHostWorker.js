@@ -13,7 +13,7 @@ import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const launchExtensionHostWorker = async () => {
-  const name = Platform.platform === PlatformType.Electron ? 'Extension Host (Electron)' : 'Extension Host'
+  const name = Platform.getPlatform() === PlatformType.Electron ? 'Extension Host (Electron)' : 'Extension Host'
   const id = Id.create()
   let ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,

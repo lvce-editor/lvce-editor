@@ -91,7 +91,7 @@ const actions = [
 
     LifeCycle.mark(LifeCyclePhase.Fourteen)
 
-    if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
+    if (Platform.getPlatform() === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
       await Command.execute('ElectronApplicationMenu.hydrate')
     } else {
       Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
@@ -114,7 +114,7 @@ export const startup = async () => {
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
-  if (Platform.platform !== PlatformType.Web) {
+  if (Platform.getPlatform() !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
   }
 
@@ -203,7 +203,7 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
-    await ExecuteCurrentTest.executeCurrentTest(Platform.platform, initData)
+    await ExecuteCurrentTest.executeCurrentTest(Platform.getPlatform(), initData)
     return
   }
   Performance.mark(PerformanceMarkerType.WillLoadSaveState)
@@ -236,7 +236,7 @@ export const startup = async () => {
   Performance.measure(PerformanceMarkerType.LoadIconTheme, PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
 
   const autoUpdate = Preferences.get('application.updateMode')
-  const supportsAutoUpdate = Platform.platform === PlatformType.Electron // TODO also check if auto update is supported on this platform, e.g. windows
+  const supportsAutoUpdate = Platform.getPlatform() === PlatformType.Electron // TODO also check if auto update is supported on this platform, e.g. windows
   if (autoUpdate && autoUpdate !== 'none' && supportsAutoUpdate) {
     try {
       await Command.execute('AutoUpdater.checkForUpdates', autoUpdate)

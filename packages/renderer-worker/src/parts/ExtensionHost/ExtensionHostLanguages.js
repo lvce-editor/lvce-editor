@@ -16,7 +16,7 @@ export const getLanguages = async () => {
 
 export const getLanguageConfiguration = async (languageId) => {
   Assert.string(languageId)
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return ExtensionHostLanguagesWeb.getLanguageConfiguration(languageId)
     default:

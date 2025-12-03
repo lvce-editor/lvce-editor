@@ -115,6 +115,33 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `export const platform = ${platformCode}`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const getPlatform = () => {
+  // @ts-ignore
+  if (typeof PLATFORM !== 'undefined') {
+    // @ts-ignore
+    return PLATFORM
+  }
+  // @ts-ignore
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+    return PlatformType.Test
+  }
+  // TODO find a better way to pass runtime environment
+  if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
+    return PlatformType.Electron
+  }
+  if (typeof name !== 'undefined' && name.endsWith('(Web)')) {
+    return PlatformType.Web
+  }
+  return PlatformType.Remote
+}
+`,
+      replacement: `export const getPlatform = () => {
+  return platform
+}
+`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/Scheme/Scheme.ts`,
       occurrence: `export const WebView = 'lvce-oss-webview'`,
       replacement: `export const WebView = '${product.applicationName}-webview'`,

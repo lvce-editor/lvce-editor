@@ -9,7 +9,7 @@ const hasContextMenuNativePreference = () => {
 }
 
 const getModule = () => {
-  if (Platform.platform === PlatformType.Electron && hasContextMenuNativePreference()) {
+  if (Platform.getPlatform() === PlatformType.Electron && hasContextMenuNativePreference()) {
     return import('./ContextMenuElectron.js')
   }
   return import('./ContextMenuBrowser.js')

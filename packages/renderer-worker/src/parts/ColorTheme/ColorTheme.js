@@ -30,11 +30,11 @@ const applyColorTheme = async (colorThemeId) => {
       return new Error(`Color theme is empty`)
     }
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
-    if (Platform.platform === PlatformType.Web) {
+    if (Platform.getPlatform() === PlatformType.Web) {
       const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeId) || ''
       await Meta.setThemeColor(themeColor)
     }
-    if (Platform.platform !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
+    if (Platform.getPlatform() !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
       watch(colorThemeId)
     }
     return undefined
