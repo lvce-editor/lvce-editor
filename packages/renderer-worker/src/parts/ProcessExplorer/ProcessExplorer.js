@@ -2,7 +2,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getModule = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return import('./ProcessExplorerElectron.js')
     case PlatformType.Remote:

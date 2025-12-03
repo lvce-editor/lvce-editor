@@ -31,7 +31,7 @@ const getWebExtensionsDefault = async () => {
 
 export const getWebExtensions = async () => {
   try {
-    switch (Platform.platform) {
+    switch (Platform.getPlatform()) {
       case PlatformType.Web:
         return getWebExtensionsWeb()
       default:

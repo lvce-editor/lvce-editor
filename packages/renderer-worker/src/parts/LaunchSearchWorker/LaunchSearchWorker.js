@@ -6,7 +6,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 
 export const launchSearchWorker = async () => {
-  const name = Platform.platform === PlatformType.Electron ? 'Search Worker (Electron)' : 'Search Worker'
+  const name = Platform.getPlatform() === PlatformType.Electron ? 'Search Worker (Electron)' : 'Search Worker'
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,

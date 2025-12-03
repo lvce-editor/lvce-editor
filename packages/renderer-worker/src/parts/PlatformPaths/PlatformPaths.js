@@ -31,7 +31,7 @@ export const getMarketPlaceUrl = () => {
 }
 
 export const getLogsDir = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return 'memfs://output'
   }
   return SharedProcess.invoke(/* Platform.getLogsDir */ 'Platform.getLogsDir')
@@ -42,21 +42,21 @@ export const getDownloadDir = () => {
 }
 
 export const getUserSettingsPath = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return 'settings'
   }
   return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserSettingsPath')
 }
 
 export const getUserKeyBindingsPath = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return 'settings'
   }
   return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserKeyBindingsPath')
 }
 
 export const getRecentlyOpenedPath = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return 'recently-opened'
   }
   return SharedProcess.invoke(/* Platform.getRecentlyOpenedPath */ 'Platform.getRecentlyOpenedPath')
@@ -96,7 +96,7 @@ const getTestPathWeb = () => {
 
 // @ts-ignore
 export const getTestPath = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
     case PlatformType.Remote:
       return getTestPathRemote()
@@ -106,14 +106,14 @@ export const getTestPath = () => {
 }
 
 export const getNodePath = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     throw new Error('not implemented in web')
   }
   return SharedProcess.invoke(/* Platform.getNodePath */ 'Platform.getNodePath')
 }
 
 export const getTmpDir = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     throw new Error('not implemented in web')
   }
   return SharedProcess.invoke(/* Platform.getTmpDir */ 'Platform.getTmpDir')

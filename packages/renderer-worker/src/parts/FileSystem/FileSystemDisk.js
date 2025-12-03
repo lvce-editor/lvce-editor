@@ -84,7 +84,7 @@ export const getBlob = async (path, type) => {
 }
 
 export const getPathSeparator = () => {
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     return PathSeparatorType.Slash
   }
   return FileSystemWorker.invoke('FileSystem.getPathSeparator')

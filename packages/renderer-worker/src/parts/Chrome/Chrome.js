@@ -3,7 +3,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Command from '../Command/Command.js'
 
 export const minimize = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.minimize')
     default:
@@ -12,7 +12,7 @@ export const minimize = () => {
 }
 
 export const maximize = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.maximize')
     default:
@@ -21,7 +21,7 @@ export const maximize = () => {
 }
 
 export const unmaximize = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.unmaximize')
     default:
@@ -30,7 +30,7 @@ export const unmaximize = () => {
 }
 
 export const close = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.close')
     default:
@@ -39,7 +39,7 @@ export const close = () => {
 }
 
 export const exit = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('Exit.exit')
     default:
@@ -48,7 +48,7 @@ export const exit = () => {
 }
 
 export const openNew = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.openNew')
     default:
@@ -57,7 +57,7 @@ export const openNew = () => {
 }
 
 export const zoomIn = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.zoomIn')
     default:
@@ -66,7 +66,7 @@ export const zoomIn = () => {
 }
 
 export const zoomOut = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.zoomOut')
     default:
@@ -75,7 +75,7 @@ export const zoomOut = () => {
 }
 
 export const zoomReset = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.zoomReset')
     default:

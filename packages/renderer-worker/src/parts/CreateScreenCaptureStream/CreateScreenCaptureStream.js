@@ -4,7 +4,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const createScreenCaptureStream = async (captureId) => {
-  if (Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Electron) {
     const sources = await DesktopCapturer.getSources({
       types: ['screen'],
     })

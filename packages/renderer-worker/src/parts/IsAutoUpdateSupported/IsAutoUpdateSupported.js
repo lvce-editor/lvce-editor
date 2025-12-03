@@ -3,7 +3,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const isAutoUpdateSupported = () => {
-  if (Platform.platform !== PlatformType.Electron) {
+  if (Platform.getPlatform() !== PlatformType.Electron) {
     return false
   }
   return SharedProcess.invoke('IsAutoUpdateSupported.isAutoUpdateSupported')

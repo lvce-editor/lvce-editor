@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as FileSytemErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -38,6 +39,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
+    getPlatform: jest.fn(() => {
+      return PlatformType.Remote
+    }),
     assetDir: '',
   }
 })

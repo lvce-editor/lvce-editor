@@ -66,7 +66,7 @@ const getPathName = (workspacePath) => {
 const onWorkspaceChange = async () => {
   const title = getTitle(state.workspacePath)
   await WindowTitle.set(title)
-  if (Platform.platform === PlatformType.Web || Platform.platform === PlatformType.Remote) {
+  if (Platform.getPlatform() === PlatformType.Web || Platform.getPlatform() === PlatformType.Remote) {
     const pathName = getPathName(state.workspacePath)
     await Location.setPathName(pathName)
   }

@@ -5,7 +5,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as WebViews from '../WebViews/WebViews.ts'
 
 const getWebViewsDefault = async () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return GetWebViewsWeb.getWebViewsWeb()
     case PlatformType.Test:

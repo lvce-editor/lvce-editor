@@ -7,7 +7,7 @@ const getAssetDir = () => {
     // @ts-ignore
     return ASSET_DIR
   }
-  if (Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Electron) {
     return ''
   }
   return ''

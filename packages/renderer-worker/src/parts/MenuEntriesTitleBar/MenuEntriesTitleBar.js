@@ -3,7 +3,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getModule = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return import('./MenuEntriesTitleBarWeb.js')
     default:

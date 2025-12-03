@@ -4,7 +4,7 @@ import * as ReloadElectron from '../ReloadElectron/ReloadElectron.js'
 import * as ReloadWeb from '../ReloadWeb/ReloadWeb.js'
 
 const getFn = () => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
     case PlatformType.Remote:
       return ReloadWeb.reloadWeb

@@ -14,6 +14,6 @@ export const launchClipBoardWorker = async () => {
     url: getConfiguredWorkerUrl('develop.clipBoardWorkerPath', ClipBoardWorkerUrl.clipBoardWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'ClipBoard.initialize', Platform.platform)
+  await JsonRpc.invoke(ipc, 'ClipBoard.initialize', Platform.getPlatform())
   return ipc
 }

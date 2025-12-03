@@ -10,7 +10,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const setIconTheme = async (iconThemeId) => {
   try {
     const extensions = await ExtensionHostWorker.invoke('Extensions.getExtensions')
-    await IconThemeWorker.invoke('IconTheme.getIconThemeJson', extensions, iconThemeId, assetDir, Platform.platform)
+    await IconThemeWorker.invoke('IconTheme.getIconThemeJson', extensions, iconThemeId, assetDir, Platform.getPlatform())
     await HandleIconThemeChange.handleIconThemeChange()
   } catch (error) {
     if (Workspace.isTest()) {

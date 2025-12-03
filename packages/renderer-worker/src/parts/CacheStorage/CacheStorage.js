@@ -19,7 +19,7 @@ const getResponse = async (key) => {
   if (typeof caches === 'undefined') {
     return undefined
   }
-  if (Platform.platform === PlatformType.Electron && key.startsWith(Character.Slash)) {
+  if (Platform.getPlatform() === PlatformType.Electron && key.startsWith(Character.Slash)) {
     // workaround for custom protocol not working with cache storage
     key = 'https://example.com' + key
   }
@@ -66,7 +66,7 @@ const setResponse = async (key, value, contentType) => {
   }
   // TODO cache the cache (maybe)
   if (
-    Platform.platform === PlatformType.Remote && // workaround for custom protocol not working with cache storage
+    Platform.getPlatform() === PlatformType.Remote && // workaround for custom protocol not working with cache storage
     key.startsWith(Character.Slash)
   ) {
     key = 'https://example.com' + key

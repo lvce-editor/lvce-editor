@@ -26,7 +26,7 @@ export const getIcon = (extension) => {
     }
     return Icon.ExtensionDefaultIcon
   }
-  if (Platform.platform === PlatformType.Remote || Platform.platform === PlatformType.Electron) {
+  if (Platform.getPlatform() === PlatformType.Remote || Platform.getPlatform() === PlatformType.Electron) {
     if (extension.builtin) {
       return `${AssetDir.assetDir}/extensions/${extension.id}/${extension.icon}`
     }

@@ -8,7 +8,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 /**
  * @returns {number}
  */
-const getPlatform = () => {
+export const getPlatform = () => {
   // @ts-ignore
   if (typeof PLATFORM !== 'undefined') {
     // @ts-ignore

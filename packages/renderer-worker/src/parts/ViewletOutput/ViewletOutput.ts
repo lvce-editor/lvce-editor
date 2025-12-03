@@ -11,7 +11,7 @@ export const create = (uid: any, uri, x, y, width, height, args, parentUid) => {
     options: [],
     disposed: false,
     text: '',
-    platform: Platform.platform,
+    platform: Platform.getPlatform(),
   }
 }
 

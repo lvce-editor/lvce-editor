@@ -51,7 +51,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
     }
   }
 
-  if (Platform.platform === PlatformType.Web) {
+  if (Platform.getPlatform() === PlatformType.Web) {
     const defaultWorkspace = Preferences.get('workspace.defaultWorkspace')
     const resolvedRoot = {
       path: defaultWorkspace,
@@ -78,7 +78,7 @@ const getResolvedRootRemote = async (href) => {
 }
 
 export const getResolvedRoot = async (href) => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return getResolvedRootFromRendererProcess(href)
     default:

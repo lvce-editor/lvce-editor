@@ -20,7 +20,7 @@ export const mock = (mockId) => {
 
 export const prompt = async (
   message,
-  { platform = Platform.platform, confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
+  { platform = Platform.getPlatform(), confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
 ) => {
   if (_mockId) {
     return showMockConfirmPrompt(message, { confirmMessage, title, cancelMessage })
@@ -34,7 +34,7 @@ export const prompt = async (
   return ConfirmPromptWeb.prompt(message, confirmMessage, title)
 }
 
-export const showErrorMessage = ({ message, platform = Platform.platform, confirmMessage = ConfirmPromptStrings.ok(), title = '' }) => {
+export const showErrorMessage = ({ message, platform = Platform.getPlatform(), confirmMessage = ConfirmPromptStrings.ok(), title = '' }) => {
   if (platform === PlatformType.Electron) {
     return ConfirmPromptElectron.promptError(message, confirmMessage, title)
   }

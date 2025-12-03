@@ -238,6 +238,7 @@ export const create = (id) => {
     sideBarView: '',
     updateState: 'none',
     updateProgress: 0,
+    commit: '',
   }
 }
 
@@ -271,7 +272,7 @@ const getSavedPoints = (savedState) => {
 }
 
 const isNativeTitleBarStyle = () => {
-  return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
+  return Platform.getPlatform() === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
 
 const getSavedSideBarView = (savedState) => {
@@ -1050,6 +1051,10 @@ export const getInitialPlaceholderCommands = (state) => {
 
 export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
+}
+
+export const getCommit = (state) => {
+  return state.commit
 }
 
 export const setUpdateState = async (state, updateState) => {

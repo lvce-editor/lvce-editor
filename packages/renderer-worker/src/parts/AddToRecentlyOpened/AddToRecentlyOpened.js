@@ -17,7 +17,7 @@ const addToRecentlyOpenedRemote = async (path) => {
 }
 
 export const addToRecentlyOpened = async (path) => {
-  switch (Platform.platform) {
+  switch (Platform.getPlatform()) {
     case PlatformType.Electron:
     case PlatformType.Remote:
       return addToRecentlyOpenedRemote(path)

@@ -18,7 +18,7 @@ export const create = (id, uri, x, y, width, height) => {
     titleBarButtonsEnabled: true,
     titleBarButtonsWidth: 46 * 3,
     titleBarTitleEnabled: true,
-    platform: Platform.platform,
+    platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
   }
 }
