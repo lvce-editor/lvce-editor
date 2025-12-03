@@ -6,11 +6,12 @@ import * as ContentSecurityPolicyState from '../ContentSecurityPolicyState/Conte
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 
-export const getHeaders = async (absolutePath, pathName, etag, url) => {
+export const getHeaders = async (absolutePath, pathName, etag, url, size) => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const headers = {
     [HttpHeader.ContentType]: mime,
+    [HttpHeader.ContentLength]: `${size}`,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
   }
