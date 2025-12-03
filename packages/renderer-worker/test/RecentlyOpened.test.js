@@ -42,6 +42,17 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
+  return {
+    readJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    writeFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystemAppShared.js', () => {
   return {
     readJsonInternal: jest.fn(() => {
@@ -53,8 +64,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystemAppShared.js', () =>
   }
 })
 
-const LocalStorage = await import('../src/parts/LocalStorage/LocalStorage.js')
-const Command = await import('../src/parts/Command/Command.js')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const FileSystemAppShared = await import('../src/parts/FileSystem/FileSystemAppShared.js')
 const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.js')
 
@@ -64,10 +74,10 @@ test('addToRecentlyOpened - already in list', async () => {
     return ['/test/folder-1', '/test/folder-2', '/test/folder-3']
   })
   // @ts-ignore
-  FileSystemAppShared.writeFileInternal.mockImplementation(() => {})
+  FileSystem.writeFile.mockImplementation(() => {})
   await RecentlyOpened.addToRecentlyOpened('/test/folder-3')
-  expect(FileSystemAppShared.writeFileInternal).toHaveBeenCalledWith(
-    expect.any(Function),
+  expect(FileSystem.writeFile).toHaveBeenCalledWith(
+    'app://recently-opened.json',
     `[
   "/test/folder-3",
   "/test/folder-1",
@@ -83,11 +93,11 @@ test('addToRecentlyOpened - already at front of list', async () => {
     return ['/test/folder-3', '/test/folder-1', '/test/folder-2']
   })
   // @ts-ignore
-  FileSystemAppShared.writeFileInternal.mockImplementation(() => {})
+  FileSystem.writeFile.mockImplementation(() => {})
   await RecentlyOpened.addToRecentlyOpened('/test/folder-3')
   // TODO not necessary to write again, because it is already at front of list
-  expect(FileSystemAppShared.writeFileInternal).toHaveBeenCalledWith(
-    expect.any(Function),
+  expect(FileSystem.writeFile).toHaveBeenCalledWith(
+    'app://recently-opened.json',
     `[
   "/test/folder-3",
   "/test/folder-1",
@@ -99,7 +109,7 @@ test('addToRecentlyOpened - already at front of list', async () => {
 
 test('addToRecentlyOpened - error - recently opened path is of type array', async () => {
   // @ts-ignore
-  FileSystemAppShared.readJsonInternal.mockImplementation(() => {
+  FileSystem.readJson.mockImplementation(() => {
     throw new Error('expected value to be of type string')
   })
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
@@ -114,10 +124,10 @@ test('addToRecentlyOpened - error - invalid json when reading recently opened', 
     return []
   })
   // @ts-ignore
-  FileSystemAppShared.writeFileInternal.mockImplementation(() => {})
+  FileSystem.writeFile.mockImplementation(() => {})
   await RecentlyOpened.addToRecentlyOpened('/test/folder-3')
-  expect(FileSystemAppShared.writeFileInternal).toHaveBeenCalledWith(
-    expect.any(Function),
+  expect(FileSystem.writeFile).toHaveBeenCalledWith(
+    'app://recently-opened.json',
     `[
   "/test/folder-3"
 ]
