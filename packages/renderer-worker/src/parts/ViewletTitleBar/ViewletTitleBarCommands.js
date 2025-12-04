@@ -1,5 +1,5 @@
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
-import { wrapTitleBarCommand } from '../ViewletTitleBarMenuBar/WrapTitleBarCommand.js'
+import { wrapTitleBarCommand } from './WrapTitleBarCommand.js'
 
 export const Commands = {}
 
