@@ -7,7 +7,7 @@ import * as MenuEntriesHelp from '../MenuEntriesHelp/MenuEntriesHelp.js'
 import * as MenuEntriesRun from '../MenuEntriesRun/MenuEntriesRun.js'
 import * as MenuEntriesSelection from '../MenuEntriesSelection/MenuEntriesSelection.js'
 import * as MenuEntriesTerminal from '../MenuEntriesTerminal/MenuEntriesTerminal.js'
-import * as MenuEntriesTitleBar from '../MenuEntriesTitleBar/MenuEntriesTitleBar.js'
+// import * as MenuEntriesTitleBar from '../MenuEntriesTitleBar/MenuEntriesTitleBar.js'
 import * as MenuEntriesView from '../MenuEntriesView/MenuEntriesView.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -22,7 +22,7 @@ const menuEntries = [
   MenuEntriesRun,
   MenuEntriesTerminal,
   MenuEntriesHelp,
-  MenuEntriesTitleBar,
+  // MenuEntriesTitleBar,
 ]
 
 export const state = {

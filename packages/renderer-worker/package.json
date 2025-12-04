@@ -61,7 +61,7 @@
     "@lvce-editor/extension-host-worker": "^6.4.0",
     "@lvce-editor/extension-search-view": "^5.0.0",
     "@lvce-editor/file-search-worker": "^6.3.0",
-    "@lvce-editor/file-system-worker": "^3.1.0",
+    "@lvce-editor/file-system-worker": "^4.0.0",
     "@lvce-editor/find-widget-worker": "^2.7.0",
     "@lvce-editor/hover-worker": "^2.0.0",
     "@lvce-editor/iframe-inspector": "^2.4.0",
@@ -79,7 +79,7 @@
     "@lvce-editor/test-worker": "^10.8.0",
     "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/text-search-worker": "^5.32.0",
-    "@lvce-editor/title-bar-worker": "^2.28.0",
+    "@lvce-editor/title-bar-worker": "^3.0.0",
     "@lvce-editor/problems-view": "^1.13.0",
     "@lvce-editor/output-view": "^2.0.0",
     "@lvce-editor/update-worker": "^2.5.0"
