@@ -3,10 +3,12 @@ import * as ViewletLayout from './ViewletLayout.ts'
 // prettier-ignore
 export const Commands = {
   getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
+  getActiveSideBarView: ViewletLayout.getActiveSideBarView,
   getCommit: ViewletLayout.getCommit,
 }
 
 export const CommandsWithSideEffects = {
+  handleBadgeCountChange: ViewletLayout.handleBadgeCountChange,
   handleBlur: ViewletLayout.handleBlur,
   handleFocus: ViewletLayout.handleFocus,
   handleResize: ViewletLayout.handleResize,
@@ -31,6 +33,7 @@ export const CommandsWithSideEffects = {
   loadTitleBarIfVisible: ViewletLayout.loadTitleBarIfVisible,
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
+  openSideBarViewlet: ViewletLayout.openSideBarView,
   setUpdateState: ViewletLayout.setUpdateState,
   showActivityBar: ViewletLayout.showActivityBar,
   showE2eTests: ViewletLayout.showE2eTests,

@@ -1053,6 +1053,33 @@ export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
 }
 
+const callGlobalEvent = async (state, eventName, ...args) => {
+  const instances = ViewletStates.getAllInstances()
+  const allCommands = []
+  // @ts-ignore
+  for (const [key, value] of Object.entries(instances)) {
+    // @ts-ignore
+    if (value.factory.Commands && value.factory.Commands[eventName]) {
+      // @ts-ignore
+      const oldState = value.state
+      // @ts-ignore
+      const newState = await value.factory.Commands[eventName](oldState, ...args)
+      if (oldState !== newState) {
+        // @ts-ignore
+        const commands = ViewletManager.render(value.factory, value.renderedState, newState)
+        // @ts-ignore
+        allCommands.push(...commands)
+      }
+    }
+  }
+  return {
+    newState: {
+      ...state,
+    },
+    commands: allCommands,
+  }
+}
+
 export const getCommit = (state) => {
   return state.commit
 }
@@ -1064,59 +1091,28 @@ export const setUpdateState = async (state, updateState) => {
       commands: [],
     }
   }
-  const instances = ViewletStates.getAllInstances()
-  const allCommands = []
-  // @ts-ignore
-  for (const [key, value] of Object.entries(instances)) {
-    // @ts-ignore
-    if (value.factory.Commands && value.factory.Commands.handleUpdateStateChange) {
-      // @ts-ignore
-      const oldState = value.state
-      // @ts-ignore
-      const newState = await value.factory.Commands.handleUpdateStateChange(oldState, updateState)
-      if (oldState !== newState) {
-        // @ts-ignore
-        const commands = ViewletManager.render(value.factory, value.renderedState, newState)
-        // @ts-ignore
-        allCommands.push(...commands)
-      }
-    }
-  }
-  // TODO send all commands to renderer process, and update viewlet states
-  // TODO update all viewlets with this new update info
-  return {
-    newState: {
-      ...state,
-      updateState: updateState.state,
-      updateProgress: updateState.progress,
-    },
-    commands: allCommands,
-  }
+  return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
 export const handleWorkspaceRefresh = async (state) => {
-  const instances = ViewletStates.getAllInstances()
-  const allCommands = []
-  // @ts-ignore
-  for (const [key, value] of Object.entries(instances)) {
-    // @ts-ignore
-    if (value.factory.Commands && value.factory.Commands.handleWorkspaceRefresh) {
-      // @ts-ignore
-      const oldState = value.state
-      // @ts-ignore
-      const newState = await value.factory.Commands.handleWorkspaceRefresh(oldState)
-      if (oldState !== newState) {
-        // @ts-ignore
-        const commands = ViewletManager.render(value.factory, value.renderedState, newState)
-        // @ts-ignore
-        allCommands.push(...commands)
-      }
-    }
-  }
+  return callGlobalEvent(state, 'handleWorkspaceRefresh')
+}
+
+export const handleBadgeCountChange = async (state, changes) => {
+  return callGlobalEvent(state, 'handleBadgeCountChange', changes)
+}
+
+export const getActiveSideBarView = (state: any) => {
+  return state.sideBarViewletId
+}
+
+export const openSideBarView = (state, moduleId, focus = false, args) => {
+  // TODO
+  // 1. create side bar if it doesn't exist
+  // 2. load sidebar content
+  // 3. update activity bar
   return {
-    newState: {
-      ...state,
-    },
-    commands: allCommands,
+    ...state,
+    commands: [],
   }
 }
