@@ -1053,7 +1053,7 @@ export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
 }
 
-const callGlobalEvent = (state, eventName, ...args) => {
+const callGlobalEvent = async (state, eventName, ...args) => {
   const instances = ViewletStates.getAllInstances()
   const allCommands = []
   // @ts-ignore
