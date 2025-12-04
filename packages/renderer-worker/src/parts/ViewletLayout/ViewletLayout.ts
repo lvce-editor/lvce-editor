@@ -1098,6 +1098,10 @@ export const handleWorkspaceRefresh = async (state) => {
   return callGlobalEvent(state, 'handleWorkspaceRefresh')
 }
 
+export const handleBadgeCountChange = async (state, changes) => {
+  return callGlobalEvent(state, 'handleBadgeCountChange', changes)
+}
+
 export const getActiveSideBarView = (state: any) => {
   return state.sideBarViewletId
 }
