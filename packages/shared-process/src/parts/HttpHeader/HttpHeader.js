@@ -1,5 +1,6 @@
 export const CacheControl = 'Cache-Control'
 export const ContentType = 'Content-Type'
+export const ContentLength = 'Content-Length'
 export const ContentSecurityPolicy = 'Content-Security-Policy'
 export const CrossOriginEmbedderPolicy = 'Cross-Origin-Embedder-Policy'
 export const CrossOriginOpenerPolicy = 'Cross-Origin-Opener-Policy'

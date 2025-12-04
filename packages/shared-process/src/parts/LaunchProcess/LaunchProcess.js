@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcId from '../IpcId/IpcId.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -11,7 +12,10 @@ const getConfiguredUrl = async (settingName, defaultPath) => {
   }
   const allPreferences = await Preferences.getAll()
   const processPath = allPreferences[settingName] || defaultPath
-  return processPath
+  if (existsSync(processPath)) {
+    return processPath
+  }
+  return defaultPath
 }
 
 export const launchProcess = async ({ settingName, defaultPath, targetRpcId, name, isElectron }) => {
