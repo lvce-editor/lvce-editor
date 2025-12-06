@@ -8,7 +8,7 @@ export const create = async ({ method }) => {
   const ipc = await IpcParent.create({
     method,
     path: extensionHostHelperProcessPath,
-    execArgv: ['--max-old-space-size=60', '--enable-source-maps'],
+    execArgv: [],
     name: `Extension Host Helper Process ${id}`,
   })
   return ipc
