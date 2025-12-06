@@ -49,7 +49,7 @@ const runFn = async (instance, id, key, fn, args) => {
     const oldState = instance.state
     const newState = await fn(oldState, ...args)
 
-    if (key === 'getAllQuickPickMenuEntries' || key === 'getBadgeCounts') {
+    if (key === 'getAllQuickPickMenuEntries' || key === 'getBadgeCounts' || key === 'getActiveSideBarView') {
       return newState
     }
     if (!newState) {
