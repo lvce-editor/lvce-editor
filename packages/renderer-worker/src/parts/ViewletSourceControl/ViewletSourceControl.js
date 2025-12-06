@@ -1,11 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
-import * as ViewletSourceControlLoadContent from './ViewletSourceControlLoadContent.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ViewletSourceControlLoadContent from './ViewletSourceControlLoadContent.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -29,11 +28,7 @@ export const create = (id, uri, x, y, width, height) => {
     buttons: [],
     providerId: '',
     splitButtonEnabled: false,
-    ...VirtualList.create({
-      itemHeight: 20,
-      headerHeight: 60,
-      minimumSliderSize: 20,
-    }),
+    badgeCount: 0,
   }
 }
 
@@ -52,10 +47,12 @@ export const loadContent = async (state, savedState) => {
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
   return {
     ...state,
     commands,
     actionsDom,
+    badgeCount,
   }
 }
 
