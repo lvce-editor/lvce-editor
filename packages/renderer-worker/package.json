@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lvce-editor/about-view": "^7.0.0",
-    "@lvce-editor/activity-bar-worker": "^2.2.0",
+    "@lvce-editor/activity-bar-worker": "^2.3.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^1.33.0",
     "@lvce-editor/debug-worker": "^4.0.0",
