@@ -1,7 +1,7 @@
 :root {
   --ExtensionDetailTabsBorder: rgba(128, 128, 128, 0.35);
-  --ExtensionDetailTabSelectedBorder: white;
-  --ExtensionDetailTabSelectedForeground: white;
+  /* --ExtensionDetailTabSelectedBorder: white; */
+  /* --ExtensionDetailTabSelectedForeground: white; */
   --ExtensionDetailTabForeground: var(--WorkbenchForeground);
   --ExtensionDetailTabHoverForeground: white;
 }
@@ -37,6 +37,6 @@
 }
 
 .ExtensionDetailTabSelected {
-  border-bottom: 1px solid var(--ExtensionDetailTabSelectedBorder);
-  color: var(--ExtensionDetailTabSelectedForeground);
+  border-bottom: 1px solid var(--ExtensionDetailTabSelectedBorder, white);
+  color: var(--ExtensionDetailTabSelectedForeground, white);
 }

@@ -1,6 +1,6 @@
 :root {
   --FeatureBackground: transparent;
-  --FeatureSelectedBackground: rgba(59, 71, 66, 0.5);
+  /* --FeatureSelectedBackground: rgba(59, 71, 66, 0.5); */
 }
 
 .Features {
@@ -37,7 +37,7 @@
 
 /* TODO rename to featurelistItemSelected */
 .FeatureSelected {
-  background: var(--FeatureSelectedBackground);
+  background: var(--FeatureSelectedBackground, rgba(59, 71, 66, 0.5));
 }
 
 .DefinitionListItemHeading {
