@@ -457,6 +457,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
 
     const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args, parentUid)
+
     let viewletState = initialViewletState
     viewletState.uid ||= viewletUid
     const oldVersion = viewletState.version === undefined ? undefined : ++viewletState.version
@@ -544,6 +545,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       factory: module,
       moduleId: viewlet.moduleId || viewlet.id || '',
     })
+    if (newState.badgeCount) {
+      await Command.execute('Layout.handleBadgeCountChange')
+    }
     const commands = []
     if (module.hasFunctionalRootRender) {
       commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid, module.hasFunctionalEvents])
