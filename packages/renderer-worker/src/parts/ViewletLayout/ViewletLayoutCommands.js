@@ -5,6 +5,7 @@ export const Commands = {
   getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
   getActiveSideBarView: ViewletLayout.getActiveSideBarView,
   getCommit: ViewletLayout.getCommit,
+  getBadgeCounts: ViewletLayout.getBadgeCounts,
 }
 
 export const CommandsWithSideEffects = {

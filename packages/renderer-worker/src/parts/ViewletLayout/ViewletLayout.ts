@@ -1116,3 +1116,13 @@ export const openSideBarView = (state, moduleId, focus = false, args) => {
     commands: [],
   }
 }
+
+export const getBadgeCounts = (state) => {
+  const states = ViewletStates.getAllInstances()
+  const badgeCounts = Object.create(null)
+  for (const value of Object.values(states)) {
+    // @ts-ignore
+    badgeCounts[value.moduleId] = value.renderedState.badgeCount || 0
+  }
+  return badgeCounts
+}
