@@ -1122,7 +1122,7 @@ export const getBadgeCounts = (state) => {
   const badgeCounts = Object.create(null)
   for (const value of Object.values(states)) {
     // @ts-ignore
-    badgeCounts[value.moduleId] = value.renderedState.badgeCount || 0
+    badgeCounts[value.moduleId] = value.state.badgeCount || 0
   }
   return badgeCounts
 }

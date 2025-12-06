@@ -47,6 +47,17 @@ export const loadContent = async (state, savedState) => {
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
+  // if (badgeCount > 0) {
+  //   const newState = {
+  //     ...state,
+  //     commands,
+  //     actionsDom,
+  //     badgeCount,
+  //   }
+  //   ViewletStates.setState(state.uid, newState)
+  //   ViewletStates.setRenderedState(state.uid, newState)
+  //   await Command.execute('Layout.handleBadgeCountChange')
+  // }
   return {
     ...state,
     commands,
