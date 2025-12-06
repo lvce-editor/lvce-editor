@@ -190,3 +190,7 @@
 .MultilineInputBox::-webkit-search-results-decoration {
   -webkit-appearance: none;
 }
+
+.NoExtensionsFoundMessage {
+  padding: 5px 9px 5px 20px;
+}
