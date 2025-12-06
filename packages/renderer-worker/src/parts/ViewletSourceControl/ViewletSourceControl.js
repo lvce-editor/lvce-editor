@@ -4,7 +4,6 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletSourceControlLoadContent from './ViewletSourceControlLoadContent.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -123,7 +122,7 @@ export const handleMouseOver = async (state, index) => {
 }
 
 export const handleWorkspaceChange = (state) => {
-  return ViewletSourceControlLoadContent.loadContent(state)
+  return loadContent(state)
 }
 
 export const handleMouseOut = (state, index) => {
