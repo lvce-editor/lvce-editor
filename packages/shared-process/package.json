@@ -23,7 +23,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@lvce-editor/assert": "^1.4.0",
+    "@lvce-editor/assert": "^1.5.1",
     "@lvce-editor/ipc": "^14.6.0",
     "@lvce-editor/json-rpc": "^7.0.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
