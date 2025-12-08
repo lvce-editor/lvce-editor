@@ -79,7 +79,7 @@
     "@lvce-editor/test-worker": "^10.8.0",
     "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/text-search-worker": "^5.33.0",
-    "@lvce-editor/title-bar-worker": "^3.1.0",
+    "@lvce-editor/title-bar-worker": "^3.2.0",
     "@lvce-editor/problems-view": "^1.13.0",
     "@lvce-editor/output-view": "^2.0.0",
     "@lvce-editor/update-worker": "^2.5.0"
