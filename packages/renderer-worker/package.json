@@ -54,7 +54,7 @@
     "@lvce-editor/status-bar-worker": "^1.0.0",
     "@lvce-editor/text-measurement-worker": "^1.9.0",
     "@lvce-editor/error-worker": "^2.4.0",
-    "@lvce-editor/explorer-view": "^5.9.0",
+    "@lvce-editor/explorer-view": "^5.10.0",
     "@lvce-editor/source-action-worker": "^1.4.0",
     "@lvce-editor/extension-detail-view": "^5.9.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
