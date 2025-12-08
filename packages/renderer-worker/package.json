@@ -51,7 +51,7 @@
     "@lvce-editor/editor-worker": "^14.1.0",
     "@lvce-editor/embeds-worker": "^4.0.0",
     "@lvce-editor/clipboard-worker": "^1.14.0",
-    "@lvce-editor/status-bar-worker": "^1.4.0",
+    "@lvce-editor/status-bar-worker": "^1.5.0",
     "@lvce-editor/text-measurement-worker": "^1.9.0",
     "@lvce-editor/error-worker": "^2.4.0",
     "@lvce-editor/explorer-view": "^5.10.0",
