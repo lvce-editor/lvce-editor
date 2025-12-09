@@ -187,6 +187,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/source-control-worker/dist/sourceControlWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/StatusBarWorkerUrl/StatusBarWorkerUrl.js`,
+      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/status-bar-worker/dist/statusBarWorkerMain.js',
+      replacement: '/packages/status-bar-worker/dist/statusBarWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/ProblemsWorkerUrl/ProblemsWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js',
       replacement: '/packages/problems-view/dist/problemsViewWorkerMain.js',
