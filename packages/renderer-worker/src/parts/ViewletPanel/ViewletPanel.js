@@ -151,6 +151,13 @@ export const selectIndex = async (state, index) => {
     selectedIndex: index,
   }
 }
+export const selectView = async (state, name) => {
+  const index = state.views.find((view) => view === name)
+  if (index === -1) {
+    return state
+  }
+  return selectIndex(state, index)
+}
 
 export const handleFilterInput = async (state, value) => {
   Assert.object(state)
