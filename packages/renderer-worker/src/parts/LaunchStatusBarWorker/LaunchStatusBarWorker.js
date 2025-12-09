@@ -13,6 +13,6 @@ export const launchStatusBarWorker = async () => {
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.statusBarWorkerPath', StatusBarWorkerUrl.statusBarWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  await JsonRpc.invoke(ipc, 'StatusBar.initialize')
   return ipc
 }
