@@ -1,7 +1,6 @@
 import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as Platform from '../Platform/Platform.js'
-import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO send open signal to renderer process before items are ready
@@ -30,7 +29,6 @@ export const create = (id, uri, x, y, width, height, args) => {
     recentPicks: [],
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
-    provider: QuickPickEveryThing, // TODO make this dynamic again
     warned: [],
     visiblePicks: [],
     maxVisibleItems: 10,
