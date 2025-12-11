@@ -11,6 +11,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Commit from '../Commit/Commit.js'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
@@ -238,7 +239,7 @@ export const create = (id) => {
     sideBarView: '',
     updateState: 'none',
     updateProgress: 0,
-    commit: '',
+    commit: Commit.commit,
   }
 }
 
