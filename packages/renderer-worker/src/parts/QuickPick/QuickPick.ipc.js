@@ -10,4 +10,5 @@ export const Commands = {
   showEverything: QuickPick.showEveryThing,
   showFile: QuickPick.showFile,
   showRecent: QuickPick.showRecent,
+  executeCallback: QuickPick.executeCallback,
 }
