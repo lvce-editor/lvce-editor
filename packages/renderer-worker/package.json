@@ -60,7 +60,11 @@
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^6.7.0",
     "@lvce-editor/extension-search-view": "^5.3.0",
+<<<<<<< HEAD
     "@lvce-editor/file-search-worker": "^6.8.0",
+=======
+    "@lvce-editor/file-search-worker": "^6.7.0",
+>>>>>>> origin/main
     "@lvce-editor/file-system-worker": "^4.1.0",
     "@lvce-editor/find-widget-worker": "^2.7.0",
     "@lvce-editor/hover-worker": "^2.0.0",

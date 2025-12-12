@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
+import { executeCallback2, registerCallback } from '../QuickPickEntriesCustom/QuickPickEntriesCustom.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Id from '../Id/Id.js'
 
 export const show = async (...args) => {
   // TODO show custom quickpick
@@ -28,18 +28,12 @@ export const showCommands = () => {
   return show('commands')
 }
 
-const callbackMap = Object.create(null)
-
 export const showCustom = async (picks) => {
-  const { resolve, promise } = Promise.withResolvers()
-  const callbackId = Id.create()
-  callbackMap[callbackId] = resolve
+  const { callbackId, promise } = registerCallback()
   await show('custom', picks, callbackId)
   return promise
 }
 
 export const executeCallback = (callbackId, ...args) => {
-  const fn = callbackMap[callbackId]
-  delete callbackMap[callbackId]
-  return fn(...args)
+  return executeCallback2(callbackId, ...args)
 }
