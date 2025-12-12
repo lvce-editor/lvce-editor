@@ -1,7 +1,6 @@
 import * as Command from '../Command/Command.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Id from '../Id/Id.js'
 import { executeCallback2, registerCallback } from '../QuickPickEntriesCustom/QuickPickEntriesCustom.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const show = async (...args) => {
   // TODO show custom quickpick
