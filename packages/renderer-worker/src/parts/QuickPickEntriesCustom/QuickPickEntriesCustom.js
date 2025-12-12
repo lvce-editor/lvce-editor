@@ -1,5 +1,6 @@
 import * as Icon from '../Icon/Icon.js'
 import * as IconType from '../IconType/IconType.js'
+import * as Id from '../Id/Id.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 
@@ -39,8 +40,7 @@ export const getPicks = async (searchValue) => {
 
 export const selectPick = async (pick) => {
   const { args } = state
-  const resolve = args[2]
-  resolve(pick)
+  await executeCallback2(args[2], pick)
   return {
     command: QuickPickReturnValue.Hide,
   }
@@ -77,4 +77,22 @@ const convertIcon = (icon) => {
 
 export const getPickIcon = (pick) => {
   return convertIcon(pick.icon)
+}
+
+const callbackMap = Object.create(null)
+
+export const registerCallback = () => {
+  const { resolve, promise } = Promise.withResolvers()
+  const callbackId = Id.create()
+  callbackMap[callbackId] = resolve
+  return {
+    callbackId,
+    promise,
+  }
+}
+
+export const executeCallback2 = (callbackId, ...args) => {
+  const fn = callbackMap[callbackId]
+  delete callbackMap[callbackId]
+  return fn(...args)
 }
