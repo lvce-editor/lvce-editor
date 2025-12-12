@@ -48,7 +48,7 @@
     "@lvce-editor/debug-worker": "^4.0.0",
     "@lvce-editor/diff-worker": "^1.6.0",
     "@lvce-editor/icon-theme-worker": "^2.2.0",
-    "@lvce-editor/editor-worker": "^14.2.0",
+    "@lvce-editor/editor-worker": "^14.3.0",
     "@lvce-editor/embeds-worker": "^4.0.0",
     "@lvce-editor/clipboard-worker": "^1.14.0",
     "@lvce-editor/status-bar-worker": "^1.10.0",
@@ -85,6 +85,6 @@
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1"
+    "@types/node": "^25.0.1"
   }
 }
