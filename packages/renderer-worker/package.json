@@ -50,7 +50,7 @@
     "@lvce-editor/icon-theme-worker": "^2.2.0",
     "@lvce-editor/editor-worker": "^14.3.0",
     "@lvce-editor/embeds-worker": "^4.0.0",
-    "@lvce-editor/clipboard-worker": "^1.14.0",
+    "@lvce-editor/clipboard-worker": "^1.15.0",
     "@lvce-editor/status-bar-worker": "^1.10.0",
     "@lvce-editor/text-measurement-worker": "^1.9.0",
     "@lvce-editor/error-worker": "^2.4.0",
