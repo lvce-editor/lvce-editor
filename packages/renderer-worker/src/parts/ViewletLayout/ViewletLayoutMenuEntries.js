@@ -317,6 +317,14 @@ export const getQuickPickMenuEntries = () => {
       label: 'Explorer: Collapse All',
     },
     {
+      id: 'Explorer.newFile',
+      label: 'Explorer: New File',
+    },
+    {
+      id: 'Explorer.newFolder',
+      label: 'Explorer: New Folder',
+    },
+    {
       id: 'Explorer.expandAll',
       label: 'Explorer: Expand All',
     },
