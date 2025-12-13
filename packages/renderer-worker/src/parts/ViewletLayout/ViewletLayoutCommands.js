@@ -10,6 +10,7 @@ export const Commands = {
 
 export const CommandsWithSideEffects = {
   handleBadgeCountChange: ViewletLayout.handleBadgeCountChange,
+  handleExtensionsChanged: ViewletLayout.handleExtensionsChanged,
   handleBlur: ViewletLayout.handleBlur,
   handleFocus: ViewletLayout.handleFocus,
   handleResize: ViewletLayout.handleResize,

@@ -167,6 +167,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/icon-theme-worker/dist/iconThemeWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/ExtensionManagementWorkerUrl/ExtensionManagementWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/extension-management-worker/dist/extensionManagementWorkerMain.js`,
+      replacement: `/packages/extension-management-worker/dist/extensionManagementWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/ActivityBarWorkerUrl/ActivityBarWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/activity-bar-worker/dist/activityBarWorkerMain.js`,
       replacement: `/packages/activity-bar-worker/dist/activityBarWorkerMain.js`,
