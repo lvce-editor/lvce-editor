@@ -23,11 +23,16 @@ const get = (input) => {
   return module.getExtensionManifests(input.path)
 }
 
+const isBuiltin = (extension) => {
+  return extension && extension.id && extension.id.startsWith('builtin.')
+}
+
 const addExtensionDisabledStatus = (uniqueExtensions, disabledExtensionIds) => {
   return uniqueExtensions.map((extension) => {
     return {
       ...extension,
       disabled: disabledExtensionIds.includes(extension.id),
+      isBuiltin: isBuiltin(extension),
     }
   })
 }
