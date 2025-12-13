@@ -5,6 +5,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Command from '../Command/Command.js'
 
 export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
@@ -13,6 +14,7 @@ export const handleExtensionStatusUpdate = async () => {
 export const invalidateExtensionsCache = async () => {
   try {
     await ExtensionHostWorker.invoke('Extensions.invalidateExtensionsCache')
+    await Command.execute('Layout.handleExtensionsChanged')
   } catch {
     // ignore
   }
