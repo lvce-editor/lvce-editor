@@ -10,7 +10,7 @@ export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
 }
 
-const invalidateExtensionsCache = async () => {
+export const invalidateExtensionsCache = async () => {
   try {
     await ExtensionHostWorker.invoke('Extensions.invalidateExtensionsCache')
   } catch {

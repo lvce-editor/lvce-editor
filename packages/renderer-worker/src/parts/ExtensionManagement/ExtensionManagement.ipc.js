@@ -11,4 +11,5 @@ export const Commands = {
   getExtensionsEtag: ExtensionManagement.getExtensionsEtag,
   handleExtensionStatusUpdate: ExtensionManagement.handleExtensionStatusUpdate,
   uninstall: ExtensionManagement.uninstall,
+  invalidateExtensionsCache: ExtensionManagement.invalidateExtensionsCache,
 }
