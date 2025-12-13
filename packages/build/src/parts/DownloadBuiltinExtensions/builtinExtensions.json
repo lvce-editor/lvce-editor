@@ -307,7 +307,7 @@
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.5.0"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.theme-cobalt2",
