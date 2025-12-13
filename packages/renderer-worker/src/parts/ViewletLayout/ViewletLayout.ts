@@ -1103,6 +1103,10 @@ export const handleBadgeCountChange = async (state, changes) => {
   return callGlobalEvent(state, 'handleBadgeCountChange', changes)
 }
 
+export const handleExtensionsChanged = async (state) => {
+  return callGlobalEvent(state, 'handleExtensionsChanged')
+}
+
 export const getActiveSideBarView = (state: any) => {
   return state.sideBarViewletId
 }
