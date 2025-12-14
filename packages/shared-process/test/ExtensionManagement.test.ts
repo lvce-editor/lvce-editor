@@ -1,7 +1,7 @@
 import { expect, jest, test, beforeAll, afterAll, afterEach } from '@jest/globals'
 import getPort from 'get-port'
 import { createWriteStream } from 'node:fs'
-import { access, mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -209,15 +209,43 @@ test('getExtensions - invalid extension.json', async () => {
 test('disable', async () => {
   const tmpDir1 = await getTmpDir()
   const tmpDir2 = await getTmpDir()
+  const tmpDir3 = await getTmpDir()
   await mkdir(join(tmpDir1, 'test-extension'))
   await writeFile(join(tmpDir1, 'test-extension', 'extension.json'), '{}')
   // @ts-ignore
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   await ExtensionManagement.disable('test-extension')
-  expect(await readdir(tmpDir1)).toEqual(['test-extension'])
-  expect(await readdir(tmpDir2)).toEqual([])
+  const content = await readFile(join(tmpDir3, 'disabled-extensions.json'), 'utf8')
+  const parsed = JSON.parse(content)
+  expect(parsed.disabledExtensions).toEqual(['test-extension'])
+})
+
+test('enable', async () => {
+  const tmpDir = await getTmpDir()
+  const disabledExtensionsJsonPath = join(tmpDir, 'disabled-extensions.json')
+  await writeFile(disabledExtensionsJsonPath, JSON.stringify({ disabledExtensions: ['test-extension-1', 'test-extension-2'] }, null, 2) + '\n')
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => disabledExtensionsJsonPath)
+  await ExtensionManagement.enable('test-extension-1')
+  const content = await readFile(disabledExtensionsJsonPath, 'utf8')
+  const parsed = JSON.parse(content)
+  expect(parsed.disabledExtensions).toEqual(['test-extension-2'])
+})
+
+test('enable - extension not in disabled list', async () => {
+  const tmpDir = await getTmpDir()
+  const disabledExtensionsJsonPath = join(tmpDir, 'disabled-extensions.json')
+  await writeFile(disabledExtensionsJsonPath, JSON.stringify({ disabledExtensions: ['test-extension-1'] }, null, 2) + '\n')
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => disabledExtensionsJsonPath)
+  await ExtensionManagement.enable('test-extension-2')
+  const content = await readFile(disabledExtensionsJsonPath, 'utf8')
+  const parsed = JSON.parse(content)
+  expect(parsed.disabledExtensions).toEqual(['test-extension-1'])
 })
 
 test.skip('disable should fail if enabled extension path does not exist', async () => {

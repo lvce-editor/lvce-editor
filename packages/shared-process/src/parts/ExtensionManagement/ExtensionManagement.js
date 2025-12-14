@@ -1,21 +1,25 @@
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as GetEtagFromStats from '../GetEtagFromStats/GetEtagFromStats.js'
 import * as GetExtensionEtags from '../GetExtensionEtags/GetExtensionEtags.js'
-import * as Path from '../Path/Path.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 export const enable = async (id) => {
   try {
-    const extensionsPath = PlatformPaths.getExtensionsPath()
-    const disabledExtensionsPath = PlatformPaths.getDisabledExtensionsPath()
-    await mkdir(extensionsPath, { recursive: true })
-    await rename(Path.join(disabledExtensionsPath, id), Path.join(extensionsPath, id))
+    const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
+    const oldDisabledExtensionIds = await getDisabledExtensionIds()
+    if (!oldDisabledExtensionIds.includes(id)) {
+      return
+    }
+    const newDisabledExtensionIds = oldDisabledExtensionIds.filter((extensionId) => extensionId !== id)
+    const content = getNewDisabledExtensionContent(newDisabledExtensionIds)
+    await mkdir(dirname(disabledExtensionsJsonPath), { recursive: true })
+    await writeFile(disabledExtensionsJsonPath, content)
   } catch (error) {
     throw new VError(error, `Failed to enable extension "${id}"`)
   }
