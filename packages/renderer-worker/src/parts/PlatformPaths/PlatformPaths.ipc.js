@@ -7,4 +7,5 @@ export const Commands = {
   getTmpDir: PlatformPaths.getTmpDir,
   getCachePath: PlatformPaths.getCachePath,
   getCacheUri: PlatformPaths.getCacheUri,
+  getDisabledExtensionsJsonPath: PlatformPaths.getDisabledExtensionsJsonPath,
 }
