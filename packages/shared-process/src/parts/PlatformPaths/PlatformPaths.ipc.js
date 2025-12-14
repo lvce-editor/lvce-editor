@@ -11,6 +11,7 @@ export const Commands = {
   getConfigDir: PlatformPaths.getConfigDir,
   getDataDir: PlatformPaths.getDataDir,
   getDisabledExtensionsPath: PlatformPaths.getDisabledExtensionsPath,
+  getDisabledExtensionsJsonPath: PlatformPaths.getDisabledExtensionsJsonPath,
   getDownloadDir: PlatformPaths.getDownloadDir,
   getExtensionsPath: PlatformPaths.getExtensionsPath,
   getHomeDir: PlatformPaths.getHomeDir,
