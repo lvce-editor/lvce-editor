@@ -3,6 +3,7 @@ import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfigured
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const launchExtensionManagementWorker = async () => {
   const name = 'Extension Management Worker'
@@ -15,5 +16,6 @@ export const launchExtensionManagementWorker = async () => {
     ),
   })
   HandleIpc.handleIpc(ipc)
+  await JsonRpc.invoke(ipc, 'Extensions.initialize')
   return ipc
 }
