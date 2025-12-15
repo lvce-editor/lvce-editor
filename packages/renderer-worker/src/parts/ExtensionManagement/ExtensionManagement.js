@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as InstallExtension from '../InstallExtension/InstallExtension.js'
@@ -6,6 +7,10 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
+
+export const handleExtensionStatusUpdate = async () => {
+  // TODO inform all viewlets
+}
 
 export const invalidateExtensionsCache = async () => {
   try {
@@ -74,7 +79,7 @@ export const getExtension = async (id) => {
 let disabledIds = []
 
 export const getExtension2 = async (id) => {
-  const extension = await ExtensionManagementWorker.invoke('Extensions.getExtension', id)
+  const extension = await ExtensionHostWorker.invoke('Extensions.getExtension', id)
   if (disabledIds.includes(id)) {
     return {
       ...extension,
