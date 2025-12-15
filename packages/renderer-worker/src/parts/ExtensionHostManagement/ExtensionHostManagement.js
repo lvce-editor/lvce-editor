@@ -32,6 +32,7 @@ const actuallyActivateExtension = async (extension, event) => {
     )
     state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke(
       ExtensionHostCommandType.ExtensionActivate2,
+      extension.id,
       extension,
       absolutePath,
       event,
