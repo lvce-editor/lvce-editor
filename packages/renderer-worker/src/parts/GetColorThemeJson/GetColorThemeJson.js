@@ -1,5 +1,5 @@
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 
 export const getColorThemeJson = (colorThemeId) => {
-  return ExtensionHostWorker.invoke('ColorTheme.getColorThemeJson', colorThemeId)
+  return ExtensionManagementWorker.invoke('Extensions.getColorThemeJson', colorThemeId)
 }

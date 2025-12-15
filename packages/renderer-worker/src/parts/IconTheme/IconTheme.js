@@ -1,5 +1,5 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as HandleIconThemeChange from '../HandleIconThemeChange/HandleIconThemeChange.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as Platform from '../Platform/Platform.js'
@@ -10,7 +10,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const setIconTheme = async (iconThemeId) => {
   try {
     const useCache = Preferences.get('icon-theme.cache') ?? true
-    const extensions = await ExtensionHostWorker.invoke('Extensions.getExtensions')
+    const extensions = await ExtensionManagementWorker.invoke('Extensions.getAllExtensions')
     await IconThemeWorker.invoke('IconTheme.getIconThemeJson', extensions, iconThemeId, assetDir, Platform.getPlatform(), useCache)
     await HandleIconThemeChange.handleIconThemeChange()
   } catch (error) {

@@ -3,6 +3,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as WebViews from '../WebViews/WebViews.ts'
@@ -124,7 +125,7 @@ export const handleRejectedExtensions = async (extensions) => {
 }
 
 export const getExtensions = async () => {
-  return ExtensionHostWorker.invoke('Extensions.getExtensions')
+  return ExtensionManagementWorker.invoke('Extensions.getAllExtensions')
 }
 
 export const addNodeExtension = async (path) => {

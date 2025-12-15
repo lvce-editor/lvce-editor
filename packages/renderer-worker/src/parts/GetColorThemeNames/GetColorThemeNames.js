@@ -1,5 +1,5 @@
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 
 export const getColorThemeNames = async () => {
-  return ExtensionHostWorker.invoke('ColorTheme.getColorThemeNames')
+  return ExtensionManagementWorker.invoke('Extensions.getColorThemeNames')
 }

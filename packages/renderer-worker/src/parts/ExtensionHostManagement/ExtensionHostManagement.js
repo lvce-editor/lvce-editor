@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
@@ -30,14 +30,19 @@ const actuallyActivateExtension = async (extension, event) => {
       Origin.origin,
       Platform.getPlatform(),
     )
-    state.activatedExtensions[extension.id] = ExtensionHostWorker.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath, event)
+    state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke(
+      ExtensionHostCommandType.ExtensionActivate2,
+      extension,
+      absolutePath,
+      event,
+    )
   }
   return state.activatedExtensions[extension.id]
 }
 
 const actuallyActivateByEvent = async (event) => {
   // TODO should not query extensions multiple times
-  const extensions = await ExtensionHostWorker.invoke('Extensions.getExtensions')
+  const extensions = await ExtensionManagementWorker.invoke('Extensions.getAllExtensions')
   const { resolved, rejected } = ExtensionMeta.organizeExtensions(extensions)
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
