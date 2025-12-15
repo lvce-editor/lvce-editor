@@ -63,7 +63,7 @@
     "@lvce-editor/hover-worker": "^2.0.0",
     "@lvce-editor/icon-theme-worker": "^2.2.0",
     "@lvce-editor/iframe-inspector": "^2.4.0",
-    "@lvce-editor/iframe-worker": "^5.36.0",
+    "@lvce-editor/iframe-worker": "^6.1.0",
     "@lvce-editor/keybindings-view": "^6.10.0",
     "@lvce-editor/markdown-worker": "^2.2.0",
     "@lvce-editor/menu-worker": "^3.1.0",
