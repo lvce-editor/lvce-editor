@@ -8,7 +8,8 @@ import * as ExtensionHostLanguagesWeb from './ExtensionHostLanguagesWeb.js'
 
 export const getLanguages = async () => {
   try {
-    return ExtensionManagementWorker.invoke('Extensions.getLanguages')
+    const platform = Platform.getPlatform()
+    return ExtensionManagementWorker.invoke('Extensions.getLanguages', platform)
   } catch (error) {
     throw new VError(error, 'Failed to load languages')
   }
