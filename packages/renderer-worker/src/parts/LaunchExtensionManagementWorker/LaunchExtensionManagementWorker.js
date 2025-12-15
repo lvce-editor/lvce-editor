@@ -4,6 +4,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const launchExtensionManagementWorker = async () => {
   const name = 'Extension Management Worker'
@@ -16,6 +17,6 @@ export const launchExtensionManagementWorker = async () => {
     ),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Extensions.initialize')
+  await JsonRpc.invoke(ipc, 'Extensions.initialize', Platform.getPlatform())
   return ipc
 }
