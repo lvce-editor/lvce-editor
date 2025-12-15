@@ -7,6 +7,7 @@ import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
@@ -75,6 +76,12 @@ export const sendMessagePortToExtensionManagementWorker = async (port, initialCo
   Assert.object(port)
   Assert.string(initialCommand)
   await ExtensionManagementWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToIframeWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await IframeWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
