@@ -1,16 +1,11 @@
-import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
-import * as InstallExtension from '../InstallExtension/InstallExtension.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
-
-export const handleExtensionStatusUpdate = async () => {
-  // TODO inform all viewlets
-}
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as InstallExtension from '../InstallExtension/InstallExtension.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const invalidateExtensionsCache = async () => {
   try {
