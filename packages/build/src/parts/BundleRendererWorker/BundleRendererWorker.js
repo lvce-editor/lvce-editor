@@ -272,6 +272,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: '/packages/about-view-worker/dist/aboutWorkerMain.js',
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/IframeWorkerUrl/IframeWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/iframe-worker/dist/iframeWorkerMain.js`,
+      replacement: '/packages/iframe-worker/dist/iframeWorkerMain.js',
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/TextMeasurementWorkerUrl/TextMeasurementWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js`,
       replacement: '/packages/text-measurement-worker/dist/textMeasurementWorkerMain.js',
