@@ -30,13 +30,7 @@ const actuallyActivateExtension = async (extension, event) => {
       Origin.origin,
       Platform.getPlatform(),
     )
-    state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke(
-      ExtensionHostCommandType.ExtensionActivate2,
-      extension.id,
-      extension,
-      absolutePath,
-      event,
-    )
+    state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke('Extensions.activate3', extension, absolutePath, event)
   }
   return state.activatedExtensions[extension.id]
 }
