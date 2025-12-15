@@ -3,7 +3,7 @@ import * as GetColorThemeCssCached from '../GetColorThemeCssCached/GetColorTheme
 import * as GetColorThemeJson from '../GetColorThemeJson/GetColorThemeJson.js'
 
 export const getColorThemeCssFromJson = async (colorThemeId, colorThemeJson) => {
-  return ExtensionManagementWorker.invoke('ColorTheme.getColorThemeCssFromJson', colorThemeId, colorThemeJson)
+  return ExtensionManagementWorker.invoke('Extensions.getColorThemeCssFromJson', colorThemeId, colorThemeJson)
 }
 
 const getColorThemeCssNew = async (colorThemeId) => {
