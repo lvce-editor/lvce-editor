@@ -56,17 +56,25 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
   }
 }
 
-export const readJson = async (path) => {
+const toPath = (uri) => {
+  if (uri.startsWith('file://')) {
+    return fileURLToPath(uri)
+  }
+  return uri
+}
+
+export const readJson = async (uri) => {
   try {
-    Assert.string(path)
+    Assert.string(uri)
+    const path = toPath(uri)
     const content = await fs.readFile(path, 'utf8')
     const parsed = JSON.parse(content)
     return parsed
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
-      throw new FileNotFoundError(path)
+      throw new FileNotFoundError(uri)
     }
-    throw new VError(error, `Failed to read file as json "${path}"`)
+    throw new VError(error, `Failed to read file as json "${uri}"`)
   }
 }
 
