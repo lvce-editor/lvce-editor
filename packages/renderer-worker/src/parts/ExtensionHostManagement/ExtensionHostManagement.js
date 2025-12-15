@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
@@ -20,6 +19,7 @@ export const state = {
 }
 
 const actuallyActivateExtension = async (extension, event) => {
+  const platform = Platform.getPlatform()
   if (!(extension.id in state.activatedExtensions)) {
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
       extension.id,
@@ -30,7 +30,7 @@ const actuallyActivateExtension = async (extension, event) => {
       Origin.origin,
       Platform.getPlatform(),
     )
-    state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke('Extensions.activate3', extension, absolutePath, event)
+    state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke('Extensions.activate3', extension, absolutePath, event, platform)
   }
   return state.activatedExtensions[extension.id]
 }
