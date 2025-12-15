@@ -25,11 +25,6 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     occurrence: `ASSET_DIR`,
     replacement: `'${assetDir}'`,
   })
-  await Replace.replace({
-    path: `${cachePath}/dist/extensionHostWorkerMain.js`,
-    occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/iframe-worker/dist/iframeWorkerMain.js`,
-    replacement: `/packages/iframe-worker/dist/iframeWorkerMain.js`,
-  })
   const platformCode = getPlatformCode(platform)
   await Replace.replace({
     path: `${cachePath}/dist/extensionHostWorkerMain.js`,
