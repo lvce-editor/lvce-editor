@@ -41,6 +41,6 @@
     "@lvce-editor/assert": "^1.5.1",
     "@lvce-editor/rpc": "^4.20.0",
     "@lvce-editor/verror": "^1.7.0",
-    "@lvce-editor/rpc-registry": "^5.8.0"
+    "@lvce-editor/rpc-registry": "^5.10.0"
   }
 }
