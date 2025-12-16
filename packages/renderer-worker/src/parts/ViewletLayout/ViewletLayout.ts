@@ -22,6 +22,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import { assetDir } from '../AssetDir/AssetDir.js'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
@@ -240,6 +241,8 @@ export const create = (id) => {
     updateState: 'none',
     updateProgress: 0,
     commit: Commit.commit,
+    platform: Platform.platform,
+    assetDir,
   }
 }
 
@@ -1083,6 +1086,14 @@ const callGlobalEvent = async (state, eventName, ...args) => {
 
 export const getCommit = (state) => {
   return state.commit
+}
+
+export const getPlatform = (state) => {
+  return state.platform
+}
+
+export const getAssetDir = (state) => {
+  return state.assetDir
 }
 
 export const setUpdateState = async (state, updateState) => {
