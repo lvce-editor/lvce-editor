@@ -1,6 +1,7 @@
 export * from './VielwetExtensionDetailCommands.ts'
 export * from './ViewletExtensionDetail.ts'
 export * from './ViewletExtensionDetailCss.ts'
+export * from './ViewletExtensionDetailKeyBindings.ts'
 export * from './ViewletExtensionDetailMenuEntries.ts'
 export * from './ViewletExtensionDetailName.ts'
 export * from './ViewletExtensionDetailRender.ts'
