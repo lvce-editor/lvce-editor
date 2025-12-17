@@ -42,10 +42,10 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
       occurrence: `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
       replacement: `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
     })
-    await Replace.replace({
-      path: `${cachePath}/dist/extensionHostWorkerMain.js`,
-      occurrence: `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
-      replacement: `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
-    })
+    // await Replace.replace({
+    //   path: `${cachePath}/dist/extensionHostWorkerMain.js`,
+    //   occurrence: `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
+    //   replacement: `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
+    // })
   }
 }
