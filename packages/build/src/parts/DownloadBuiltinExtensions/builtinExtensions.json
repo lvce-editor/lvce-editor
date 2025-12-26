@@ -257,7 +257,7 @@
   {
     "name": "builtin.language-basics-vue",
     "repository": "github.com/lvce-editor/language-basics-vue",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.language-basics-wgsl",
