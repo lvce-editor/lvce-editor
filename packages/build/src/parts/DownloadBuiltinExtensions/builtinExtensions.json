@@ -247,7 +247,7 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   {
     "name": "builtin.language-basics-typescript",
