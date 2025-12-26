@@ -142,7 +142,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   {
     "name": "builtin.language-basics-json",
