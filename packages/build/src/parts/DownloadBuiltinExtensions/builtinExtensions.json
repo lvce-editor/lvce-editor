@@ -107,7 +107,7 @@
   {
     "name": "builtin.language-basics-go",
     "repository": "github.com/lvce-editor/language-basics-go",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.language-basics-graphql",
