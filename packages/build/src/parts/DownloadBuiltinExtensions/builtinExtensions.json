@@ -117,7 +117,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   {
     "name": "builtin.heap-snapshot-viewer",
