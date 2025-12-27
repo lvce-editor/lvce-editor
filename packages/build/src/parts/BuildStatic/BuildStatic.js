@@ -155,6 +155,13 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
       to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
     })
   }
+  const themes = await getThemeNames()
+  for (const item of themes) {
+    await Copy.copy({
+      from: `extensions/${item}`,
+      to: `packages/build/.tmp/dist/${commitHash}/extensions/${item}`,
+    })
+  }
   if (!ignoreIconTheme) {
     await Copy.copy({
       from: 'extensions/builtin.vscode-icons',
@@ -172,6 +179,13 @@ const getLanguageBasicsNames = async () => {
   const extensions = await readdir(extensionPath)
   const languageBasics = extensions.filter(isLanguageBasics)
   return languageBasics
+}
+
+const getThemeNames = async () => {
+  const extensionPath = Path.absolute('extensions')
+  const extensions = await readdir(extensionPath)
+  const themes = extensions.filter(isTheme)
+  return themes
 }
 
 const getAbsolutePath = (extensionName) => {

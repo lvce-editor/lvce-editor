@@ -27,7 +27,7 @@ const getBuildModule = (target) => {
       return import('./parts/Rpm/Rpm.js')
     case 'static':
     case 'bundle/static':
-      return import('./parts/Static/Static.js')
+      return import('./parts/BuildStatic/BuildStatic.js')
     case 'bundle/electron':
     case 'electron-bundle':
       return import('./parts/BundleElectronApp/BundleElectronApp.js')
