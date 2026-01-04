@@ -90,13 +90,9 @@ const actions = [
 
     LifeCycle.mark(LifeCyclePhase.Fourteen)
 
-    if (platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
-      await Command.execute('ElectronApplicationMenu.hydrate')
-    } else {
-      Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
-      await Command.execute('Layout.loadTitleBarIfVisible')
-      Performance.mark(PerformanceMarkerType.DidLoadTitleBar)
-    }
+    Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
+    await Command.execute('Layout.loadTitleBarIfVisible')
+    Performance.mark(PerformanceMarkerType.DidLoadTitleBar)
   },
 ]
 
