@@ -192,8 +192,8 @@ export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
-export const reloadIconTheme = async () => {
-  await IconTheme.hydrate()
+export const reloadIconTheme = async (platform, assetDir) => {
+  await IconTheme.hydrate(platform, assetDir)
 }
 
 export const reloadColorTheme = async () => {

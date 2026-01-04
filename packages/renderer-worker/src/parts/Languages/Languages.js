@@ -48,11 +48,11 @@ export const getTokenizeFunctionPath = (languageId) => {
   return LanguagesState.getTokenizeFunctionPath(languageId)
 }
 
-export const hydrate = async () => {
+export const hydrate = async (platform, assetDir) => {
   LanguagesState.setHydrating(true)
   // TODO handle error
   // TODO main parts should have nothing todo with shared process -> only sub components
-  const languages = await ExtensionHostLanguages.getLanguages()
+  const languages = await ExtensionHostLanguages.getLanguages(platform, assetDir)
   // TODO avoid side effect here, but how?
   // possible icon theme worker can ask for languages to be loaded, that way the dependency is reversed
   await IconThemeWorker.invoke('IconTheme.addLanguages', languages)
