@@ -18,6 +18,8 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Platform from '../Platform/Platform.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -53,6 +55,8 @@ export const create = (id, uri, x, y, width, height) => {
     languageId,
     width,
     moduleId: ViewletModuleId.EditorText,
+    platform: Platform.getPlatform(),
+    assetDir: AssetDir.assetDir,
   }
 }
 
@@ -86,7 +90,7 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id, x, y, width, height } = state
+  const { uri, id, x, y, width, height, platform, assetDir } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
@@ -122,35 +126,37 @@ export const loadContent = async (state, savedState, context) => {
   const lineToReveal = context?.rowIndex || 0
   const columnToReveal = context?.columnIndex || 0
   await EditorWorker.invoke('Editor.create', {
-    id,
-    content,
-    savedDeltaY,
-    rowHeight,
-    fontSize,
-    hoverEnabled,
-    letterSpacing,
-    tabSize,
-    links,
-    lineNumbers,
-    formatOnSave,
-    isAutoClosingBracketsEnabled,
-    isAutoClosingTagsEnabled,
-    isAutoClosingQuotesEnabled,
-    isQuickSuggestionsEnabled,
+    assetDir,
+    columnToReveal,
     completionTriggerCharacters,
-    savedSelections,
+    content,
+    diagnosticsEnabled,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    formatOnSave,
+    height,
+    hoverEnabled,
+    id,
+    isAutoClosingBracketsEnabled,
+    isAutoClosingQuotesEnabled,
+    isAutoClosingTagsEnabled,
+    isMonospaceFont,
+    isQuickSuggestionsEnabled,
     languageId,
+    letterSpacing,
+    lineNumbers,
+    lineToReveal,
+    links,
+    platform,
+    rowHeight,
+    savedDeltaY,
+    savedSelections,
+    tabSize,
+    uri,
+    width,
     x,
     y,
-    width,
-    height,
-    isMonospaceFont,
-    fontFamily,
-    fontWeight,
-    uri,
-    diagnosticsEnabled,
-    lineToReveal,
-    columnToReveal,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
