@@ -75,12 +75,12 @@ const actions = [
   async () => {
     await Command.execute('Layout.loadPreviewIfVisible')
   },
-  async () => {
+  async (platform, assetDir) => {
     LifeCycle.mark(LifeCyclePhase.Eleven)
 
     Performance.mark(PerformanceMarkerType.WillLoadIconTheme)
     // TODO check preferences if icon theme is enabled
-    await IconTheme.hydrate()
+    await IconTheme.hydrate(platform, assetDir)
     Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
   },
   async (platform) => {
@@ -197,7 +197,7 @@ export const startup = async (platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  await Promise.all(actions.map((action) => action()))
+  await Promise.all(actions.map((action) => action(platform, assetDir)))
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
