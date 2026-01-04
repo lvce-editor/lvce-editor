@@ -18,11 +18,11 @@ const toUiStatusBarItems = (statusBarItems) => {
   return statusBarItems.map(toUiStatusBarItem)
 }
 
-export const getStatusBarItems = async (showItems) => {
+export const getStatusBarItems = async (showItems, assetDir, platform) => {
   if (!showItems) {
     return []
   }
-  await ExtensionHostManagement.activateByEvent('onSourceControl')
+  await ExtensionHostManagement.activateByEvent('onSourceControl', assetDir, platform)
   const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
   const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return uiStatusBarItems

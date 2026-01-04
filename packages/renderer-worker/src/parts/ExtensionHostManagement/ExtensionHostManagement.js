@@ -58,7 +58,7 @@ const actuallyActivateByEvent = async (event, assetDir, platform) => {
 }
 
 // TODO add tests for this
-export const activateByEvent = async (event) => {
+export const activateByEvent = async (event, assetDir, platform) => {
   Assert.string(event)
   if (event === 'none') {
     const all = await Promise.all(Object.values(state.cachedActivationEvents))
@@ -66,7 +66,7 @@ export const activateByEvent = async (event) => {
     return [flatAll[0]]
   }
   if (!(event in state.cachedActivationEvents)) {
-    state.cachedActivationEvents[event] = actuallyActivateByEvent(event)
+    state.cachedActivationEvents[event] = actuallyActivateByEvent(event, assetDir, platform)
   }
   return state.cachedActivationEvents[event]
 }

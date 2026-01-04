@@ -6,7 +6,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeTextSearchProvider = async (scheme, query) => {
+export const executeTextSearchProvider = async (scheme, query, assetDir, platform) => {
   const result = await ExtensionHostShared.executeProviders({
     event: `onTextSearch:${scheme}`,
     method: ExtensionHostCommandType.TextSearchExecuteTextSearchProvider,
@@ -14,6 +14,8 @@ export const executeTextSearchProvider = async (scheme, query) => {
     noProviderFoundMessage: 'no text search providers found',
     noProviderFoundResult: [],
     combineResults,
+    assetDir,
+    platform,
   })
   return result
 }

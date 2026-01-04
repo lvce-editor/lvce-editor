@@ -11,7 +11,7 @@ const combineResults = (results) => {
   return results.flat(1)
 }
 
-export const getStatusBarItems = () => {
+export const getStatusBarItems = (assetDir, platform) => {
   return ExtensionHostShared.executeProviders({
     event: ExtensionHostActivationEvent.OnStatusBarItem,
     method: ExtensionHostCommandType.GetStatusBarItems,
@@ -19,6 +19,8 @@ export const getStatusBarItems = () => {
     noProviderFoundMessage: 'No status bar item provider found',
     noProviderFoundResult: [],
     combineResults,
+    assetDir,
+    platform,
   })
 }
 
