@@ -35,9 +35,9 @@ const actuallyActivateExtension = async (extension, event) => {
   return state.activatedExtensions[extension.id]
 }
 
-const actuallyActivateByEvent = async (event) => {
+const actuallyActivateByEvent = async (event, assetDir, platform) => {
   // TODO should not query extensions multiple times
-  const extensions = await ExtensionManagementWorker.invoke('Extensions.getAllExtensions')
+  const extensions = await ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, platform)
   const { resolved, rejected } = ExtensionMeta.organizeExtensions(extensions)
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
