@@ -18,7 +18,6 @@ import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
-import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
@@ -84,14 +83,14 @@ const actions = [
     await IconTheme.hydrate()
     Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
   },
-  async () => {
+  async (platform) => {
     LifeCycle.mark(LifeCyclePhase.Twelve)
 
     LifeCycle.mark(LifeCyclePhase.Thirteen)
 
     LifeCycle.mark(LifeCyclePhase.Fourteen)
 
-    if (Platform.getPlatform() === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
+    if (platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
       await Command.execute('ElectronApplicationMenu.hydrate')
     } else {
       Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
@@ -102,7 +101,7 @@ const actions = [
 ]
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
-export const startup = async () => {
+export const startup = async (platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
   // @ts-ignore
   onerror = UnhandledErrorHandling.handleUnhandledError
@@ -114,7 +113,7 @@ export const startup = async () => {
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
-  if (Platform.getPlatform() !== PlatformType.Web) {
+  if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
   }
 
@@ -193,7 +192,7 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
   Performance.mark(PerformanceMarkerType.WillLoadLanguages)
-  await Languages.hydrate()
+  await Languages.hydrate(platform, assetDir)
   Performance.mark(PerformanceMarkerType.DidLoadLanguages)
 
   LifeCycle.mark(LifeCyclePhase.Five)
@@ -203,7 +202,7 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
-    await ExecuteCurrentTest.executeCurrentTest(Platform.getPlatform(), initData)
+    await ExecuteCurrentTest.executeCurrentTest(platform, initData)
     return
   }
   Performance.mark(PerformanceMarkerType.WillLoadSaveState)
@@ -236,7 +235,7 @@ export const startup = async () => {
   Performance.measure(PerformanceMarkerType.LoadIconTheme, PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
 
   const autoUpdate = Preferences.get('application.updateMode')
-  const supportsAutoUpdate = Platform.getPlatform() === PlatformType.Electron // TODO also check if auto update is supported on this platform, e.g. windows
+  const supportsAutoUpdate = platform === PlatformType.Electron // TODO also check if auto update is supported on this platform, e.g. windows
   if (autoUpdate && autoUpdate !== 'none' && supportsAutoUpdate) {
     try {
       await Command.execute('AutoUpdater.checkForUpdates', autoUpdate)
