@@ -313,7 +313,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
   if (isNativeTitleBarStyle()) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 0
+    newPoints[LayoutKeys.TitleBarVisible] = 1
   } else {
     newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     newPoints[LayoutKeys.TitleBarVisible] = 1
