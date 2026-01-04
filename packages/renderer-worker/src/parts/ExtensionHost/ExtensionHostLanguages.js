@@ -6,10 +6,9 @@ import { VError } from '../VError/VError.js'
 import * as ExtensionHostLanguagesNode from './ExtensionHostLanguagesNode.js'
 import * as ExtensionHostLanguagesWeb from './ExtensionHostLanguagesWeb.js'
 
-export const getLanguages = async () => {
+export const getLanguages = async (platform, assetDir) => {
   try {
-    const platform = Platform.getPlatform()
-    return ExtensionManagementWorker.invoke('Extensions.getLanguages', platform)
+    return ExtensionManagementWorker.invoke('Extensions.getLanguages', platform, assetDir)
   } catch (error) {
     throw new VError(error, 'Failed to load languages')
   }

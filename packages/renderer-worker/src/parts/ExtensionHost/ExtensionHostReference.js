@@ -22,7 +22,7 @@ export const executeReferenceProvider = async (editor, offset) => {
   return result
 }
 
-export const executeFileReferenceProvider = (id, languageId) => {
+export const executeFileReferenceProvider = (id, languageId, assetDir, platform) => {
   return ExtensionHostShared.executeProviders({
     event: `onReferences:${languageId}`,
     method: ExtensionHostCommandType.ReferenceExecuteFileReferenceProvider,
@@ -30,5 +30,7 @@ export const executeFileReferenceProvider = (id, languageId) => {
     noProviderFoundMessage: 'no reference providers found',
     combineResults,
     noProviderFoundResult: [],
+    assetDir,
+    platform,
   })
 }
