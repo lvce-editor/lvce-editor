@@ -15,6 +15,9 @@ export const getTitle = (uri) => {
 }
 
 export const getLabel = (uri) => {
+  if (uri.startsWith('settings://')) {
+    return 'Settings'
+  }
   return Workspace.pathBaseName(uri)
 }
 
