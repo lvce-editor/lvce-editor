@@ -29,6 +29,12 @@
   display: none;
 }
 
+.InputBox::-webkit-outer-spin-button,
+.InputBox::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .SearchFieldInput {
   flex: 1;
   resize: none;
