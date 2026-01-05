@@ -21,5 +21,5 @@ export const handleClick = async (browserWindowId, label) => {
   }
   // TODO this might fail, e.g. when window closes before
   // a response can be returned, creating a possible promise memory leak
-  await JsonRpc.invoke(ipc, 'ElectronApplicationMenu.handleClick', label)
+  await JsonRpc.invoke(ipc, 'TitleBar.handleElectronMenuClick', label)
 }
