@@ -56,7 +56,6 @@ export const Exit = 59
 export const ElectronContextMenu = 60
 export const ElectronClipBoard = 61
 export const SaveFileAs = 62
-export const ElectronApplicationMenu = 63
 export const About = 64
 export const ConfirmPrompt = 65
 export const BulkReplacement = 66
