@@ -1,6 +1,7 @@
 export const Css = [
   '/css/parts/Filter.css',
   '/css/parts/Highlight.css',
+  '/css/parts/InputBadge.css',
   '/css/parts/InputBox.css',
   '/css/parts/Label.css',
   '/css/parts/ScrollBar.css',
