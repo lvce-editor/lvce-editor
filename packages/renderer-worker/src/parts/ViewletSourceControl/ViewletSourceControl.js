@@ -4,6 +4,8 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Platform from '../Platform/Platform.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -28,10 +30,13 @@ export const create = (id, uri, x, y, width, height) => {
     providerId: '',
     splitButtonEnabled: false,
     badgeCount: 0,
+    platform: Platform.getPlatform(),
+    assetDir: AssetDir.assetDir,
   }
 }
 
 export const loadContent = async (state, savedState) => {
+  const { platform, assetDir } = state
   await SourceControlWorker.invoke(
     'SourceControl.create2',
     state.uid,
@@ -41,6 +46,8 @@ export const loadContent = async (state, savedState) => {
     state.width,
     state.height,
     Workspace.state.workspacePath, // TODO use workspace uri
+    platform,
+    assetDir,
   )
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
@@ -159,6 +166,8 @@ export const hotReload = async (state) => {
     state.width,
     state.height,
     Workspace.state.workspacePath, // TODO use workspace uri
+    state.platform,
+    state.assetDir,
   )
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)

@@ -31,8 +31,26 @@ const getItem = (items, label) => {
   return undefined
 }
 
+/**
+ * @deprecated
+ */
 export const openContextMenu = async (x, y, id, ...args) => {
   const entries = await MenuEntries.getMenuEntries(id, ...args)
+  const electronMenuItems = convertMenuItems(entries)
+  const event = await SharedProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
+  if (event.type === 'close') {
+    return
+  }
+  const item = getItem(entries, event.data)
+  if (!item) {
+    return
+  }
+  const commandArgs = item.args || []
+  await Command.execute(item.command, ...commandArgs)
+}
+
+export const openContextMenu2 = async (x, y, uid, menuId, ...args) => {
+  const entries = await MenuEntries.getMenuEntries2(uid, menuId, ...args)
   const electronMenuItems = convertMenuItems(entries)
   const event = await SharedProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
   if (event.type === 'close') {

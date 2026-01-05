@@ -275,8 +275,8 @@ const getSavedPoints = (savedState) => {
   return new Uint16Array(LayoutKeys.Total)
 }
 
-const isNativeTitleBarStyle = () => {
-  return Platform.getPlatform() === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
+const isNativeTitleBarStyle = (platform) => {
+  return platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
 }
 
 const getSavedSideBarView = (savedState) => {
@@ -311,9 +311,9 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.PreviewWidth] ||= 600
   newPoints[LayoutKeys.PreviewMinWidth] = 100
   newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
-  if (isNativeTitleBarStyle()) {
+  if (isNativeTitleBarStyle(state.platform)) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 0
+    newPoints[LayoutKeys.TitleBarVisible] = 1
   } else {
     newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     newPoints[LayoutKeys.TitleBarVisible] = 1

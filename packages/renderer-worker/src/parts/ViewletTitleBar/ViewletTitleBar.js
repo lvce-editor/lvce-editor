@@ -4,6 +4,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 
 export const create = (id, uri, x, y, width, height) => {
+  const titleBarStyleCustom = Preferences.get('window.titleBarStyle') === 'custom'
   return {
     uid: id,
     disposed: false,
@@ -18,6 +19,7 @@ export const create = (id, uri, x, y, width, height) => {
     titleBarButtonsEnabled: true,
     titleBarButtonsWidth: 46 * 3,
     titleBarTitleEnabled: true,
+    titleBarStyleCustom,
     platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
   }
