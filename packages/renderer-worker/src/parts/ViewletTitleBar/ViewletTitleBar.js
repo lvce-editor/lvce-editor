@@ -5,6 +5,7 @@ import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 
 export const create = (id, uri, x, y, width, height) => {
   const titleBarStyleCustom = Preferences.get('window.titleBarStyle') === 'custom'
+  const controlsOverlayEnabled = Preferences.get('window.controlsOverlay.enabled') === true
   return {
     uid: id,
     disposed: false,
@@ -20,6 +21,7 @@ export const create = (id, uri, x, y, width, height) => {
     titleBarButtonsWidth: 46 * 3,
     titleBarTitleEnabled: true,
     titleBarStyleCustom,
+    controlsOverlayEnabled,
     platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
   }
