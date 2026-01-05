@@ -3,13 +3,11 @@ import * as Crash from '../Crash/Crash.js'
 import * as HeapSnapshot from '../HeapSnapshot/HeapSnapshot.js'
 import * as Developer from './Developer.js'
 
-export const name = 'Developer'
-
 export const Commands = {
-  allocateMemory: Developer.allocateMemory,
-  crashSharedProcess: Crash.crashSharedProcess,
-  createHeapSnapshot: HeapSnapshot.createHeapSnapshot,
-  createProfile: CpuProfile.createProfile,
-  sharedProcessMemoryUsage: Developer.sharedProcessMemoryUsage,
-  sharedProcessStartupPerformance: Developer.sharedProcessStartupPerformance,
+  'Developer.allocateMemory': Developer.allocateMemory,
+  'Developer.crashSharedProcess': Crash.crashSharedProcess,
+  'Developer.createHeapSnapshot': HeapSnapshot.createHeapSnapshot,
+  'Developer.createProfile': CpuProfile.createProfile,
+  'Developer.sharedProcessMemoryUsage': Developer.sharedProcessMemoryUsage,
+  'Developer.sharedProcessStartupPerformance': Developer.sharedProcessStartupPerformance,
 }

@@ -1,8 +1,6 @@
 import * as Crash from './Crash.js'
 
-export const name = 'Crash'
-
 export const Commands = {
-  crashMainProcess: Crash.crashMainProcess,
-  crashSharedProcess: Crash.crashSharedProcess,
+  'Crash.crashMainProcess': Crash.crashMainProcess,
+  'Crash.crashSharedProcess': Crash.crashSharedProcess,
 }

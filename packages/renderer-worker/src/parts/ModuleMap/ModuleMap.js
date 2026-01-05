@@ -67,8 +67,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.EditorDiagnostics
     case 3900:
       return ModuleId.EditorError
-    case 'ElectronApplicationMenu':
-      return ModuleId.ElectronApplicationMenu
     case 'ElectronBrowserView':
       return ModuleId.ElectronBrowserView
     case 'ElectronClipBoard':
@@ -79,8 +77,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWindow
     case 'ErrorHandling':
       return ModuleId.ErrorHandling
-    case 'Eval':
-      return ModuleId.Eval
     case 'Exit':
       return ModuleId.Exit
     case 'ExtensionHost':

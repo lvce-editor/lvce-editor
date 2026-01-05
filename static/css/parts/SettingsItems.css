@@ -28,6 +28,7 @@
   display: flex;
   flex-direction: column;
   contain: content;
+  padding-left: 14px;
 }
 
 .SettingsItemCheckBox {
@@ -63,10 +64,13 @@
 }
 
 .ModifiedIndicator {
-  width: 100%;
-  height: 2px;
   background: var(--ModifiedBackground);
   contain: strict;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 2px;
 }
 
 .SettingsItemHeading {
