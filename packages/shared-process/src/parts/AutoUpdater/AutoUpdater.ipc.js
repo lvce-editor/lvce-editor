@@ -1,8 +1,6 @@
 import * as AutoUpdater from './AutoUpdater.js'
 
-export const name = 'AutoUpdater'
-
 export const Commands = {
-  getAutoUpdateType: AutoUpdater.getAutoUpdateType,
-  getLatestVersion: AutoUpdater.getLatestVersion,
+  'AutoUpdater.getAutoUpdateType': AutoUpdater.getAutoUpdateType,
+  'AutoUpdater.getLatestVersion': AutoUpdater.getLatestVersion,
 }
