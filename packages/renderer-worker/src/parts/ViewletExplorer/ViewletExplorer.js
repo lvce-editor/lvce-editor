@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
 import * as Platform from '../Platform/Platform.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -20,6 +21,7 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     width,
     height,
     platform: Platform.getPlatform(),
+    assetDir: AssetDir.assetDir,
   }
 }
 
@@ -35,6 +37,7 @@ export const loadContent = async (state, savedState) => {
     null,
     state.parentUid,
     state.platform,
+    state.assetDir,
   )
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
@@ -94,6 +97,7 @@ export const hotReload = async (state) => {
     null,
     state.parentUid,
     state.platform,
+    state.assetDir,
   )
   await ExplorerViewWorker.invoke('Explorer.loadContent', state.uid, savedState)
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
