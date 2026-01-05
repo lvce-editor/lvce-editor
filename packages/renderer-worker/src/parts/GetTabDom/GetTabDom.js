@@ -18,7 +18,7 @@ const getIconDom = (icon) => {
 }
 
 export const getTabDom = (tab) => {
-  const { icon, tabWidth, uri, flags, uid, isActive, fixedWidth } = tab
+  const { icon, tabWidth, uri, flags, uid, isActive, fixedWidth, label } = tab
   let tabClassName = ClassNames.MainTab
   if (isActive) {
     tabClassName += ' ' + ClassNames.MainTabSelected
@@ -52,7 +52,7 @@ export const getTabDom = (tab) => {
       className: ClassNames.TabLabel,
       childCount: 1,
     },
-    text(tab.label),
+    text(label),
   )
 
   if (isDirty) {
