@@ -19,7 +19,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^2.31.0",
+    "@lvce-editor/main-process": "^3.0.0",
     "electron": "36.2.0"
   },
   "overrides": {
@@ -28,4 +28,5 @@
     }
   },
   "resolutions": {}
+  }
 }
