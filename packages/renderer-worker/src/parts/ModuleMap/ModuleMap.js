@@ -79,8 +79,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWindow
     case 'ErrorHandling':
       return ModuleId.ErrorHandling
-    case 'Eval':
-      return ModuleId.Eval
     case 'Exit':
       return ModuleId.Exit
     case 'ExtensionHost':

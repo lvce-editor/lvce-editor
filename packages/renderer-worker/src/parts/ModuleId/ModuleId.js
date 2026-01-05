@@ -46,7 +46,6 @@ export const OpenNativeFolder = 49
 export const ElectronWindow = 50
 export const Url = 51
 export const Mime = 52
-export const Eval = 53
 export const FilePicker = 54
 export const PersistentFileHandle = 55
 export const IndexedDb = 56
