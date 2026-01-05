@@ -31,4 +31,5 @@
 .SettingsContentHeading {
   margin: 0;
   contain: content;
+  padding-left: 15px;
 }
