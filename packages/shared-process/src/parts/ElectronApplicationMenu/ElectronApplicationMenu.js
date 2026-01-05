@@ -1,7 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as ParentIpc from '../MainProcess/MainProcess.js'
 
-export const state = {
+const state = {
   ipcMap: Object.create(null),
 }
 
@@ -13,14 +14,12 @@ export const setItems = (ipc, browserWindowId, items) => {
   return ParentIpc.invoke('ElectronApplicationMenu.setItems', items)
 }
 
-export const handleClick = (browserWindowId, label) => {
+export const handleClick = async (browserWindowId, label) => {
   const ipc = state.ipcMap[browserWindowId]
   if (!ipc) {
     return
   }
-  ipc.send({
-    jsonrpc: '2.0',
-    method: 'ElectronApplicationMenu.handleClick',
-    params: [label],
-  })
+  // TODO this might fail, e.g. when window closes before
+  // a response can be returned, creating a possible promise memory leak
+  await JsonRpc.invoke(ipc, 'TitleBar.handleElectronMenuClick', label)
 }
