@@ -124,8 +124,8 @@ export const handleRejectedExtensions = async (extensions) => {
   }
 }
 
-export const getExtensions = async () => {
-  return ExtensionManagementWorker.invoke('Extensions.getAllExtensions')
+export const getExtensions = async (assetDir, platform) => {
+  return ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, platform)
 }
 
 export const addNodeExtension = async (path) => {
