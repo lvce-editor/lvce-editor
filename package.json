@@ -10,7 +10,10 @@
     "dev": "nodemon",
     "e2e": "lerna run e2e",
     "electron": "node packages/build/src/parts/RunElectron/RunElectron.js",
-    "type-check": "lerna run type-check"
+    "type-check": "lerna run type-check",
+    "build:server": " node packages/build/bin/build.js --target=server",
+    "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.js",
+    "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci"
   },
   "keywords": [],
   "author": "",
