@@ -33,3 +33,7 @@
   contain: content;
   padding-left: 15px;
 }
+
+.SettingsResizer {
+  background: var(--ExtensionDetailTabsBorder);
+}
