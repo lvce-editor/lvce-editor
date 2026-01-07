@@ -189,6 +189,7 @@ export const getModuleId = (commandId) => {
     case 'Exec.exec':
       return ModuleId.Exec
     case 'PlatformPaths.getDisabledExtensionsJsonPath':
+    case 'PlatformPaths.getDisabledExtensionsJsonUri':
       return ModuleId.PlatformPaths
     case 'Platform.getAppDir':
     case 'Platform.getArch':

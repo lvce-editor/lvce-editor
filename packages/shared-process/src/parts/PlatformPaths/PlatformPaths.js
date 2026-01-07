@@ -31,6 +31,12 @@ export const getDisabledExtensionsJsonPath = () => {
   return Path.join(dataDir, 'extensions', 'disabled-extensions.json')
 }
 
+export const getDisabledExtensionsJsonUri = () => {
+  const path = Path.join(dataDir, 'extensions', 'disabled-extensions.json')
+  const uri = pathToFileURL(path).toString()
+  return uri
+}
+
 /**
  * @deprecated disabled extensions are now stored in a file disabled-extensions.json
  */
