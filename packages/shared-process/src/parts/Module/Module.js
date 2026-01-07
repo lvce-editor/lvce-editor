@@ -82,6 +82,8 @@ export const load = (moduleId) => {
       return import('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
     case ModuleId.Os:
       return import('../Os/Os.ipc.js')
+    case ModuleId.PlatformPaths:
+      return import('../PlatformPaths/PlatformPaths.ipc.js')
     case ModuleId.OutputChannel:
       return import('../OutputChannel/OutputChannel.ipc.js')
     case ModuleId.Performance:
