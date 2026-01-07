@@ -312,7 +312,7 @@
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.10.0"
+    "version": "0.11.0"
   },
   {
     "name": "builtin.theme-gruvbox",
