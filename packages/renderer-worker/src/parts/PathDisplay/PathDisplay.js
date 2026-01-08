@@ -18,6 +18,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('settings://')) {
     return 'Settings'
   }
+  if (uri.startsWith('simple-browser://')) {
+    return 'Simple Browser'
+  }
   return Workspace.pathBaseName(uri)
 }
 
