@@ -313,7 +313,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
   if (isNativeTitleBarStyle(state.platform)) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 1
+    newPoints[LayoutKeys.TitleBarVisible] = 0
   } else {
     newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     newPoints[LayoutKeys.TitleBarVisible] = 1
@@ -383,6 +383,7 @@ const show = async (state, module, currentViewletId) => {
 const hide = async (state, module) => {
   const { points } = state
   const { kVisible, moduleId } = module
+  console.log({ points, vis: points[LayoutKeys.TitleBarVisible], r: points[LayoutKeys.TitleBarHeight] })
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
