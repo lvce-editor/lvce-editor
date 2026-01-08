@@ -147,7 +147,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "1.6.1"
+    "version": "1.7.0"
   },
   {
     "name": "builtin.language-basics-json5",
