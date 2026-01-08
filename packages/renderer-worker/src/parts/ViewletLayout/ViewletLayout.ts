@@ -70,8 +70,6 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     // @ts-ignore
     const p9 = /* End of ActivityBar */ windowWidth
 
-    console.log({ titleBarHeight })
-
     if (titleBarVisible) {
       p2 = titleBarHeight
     }
