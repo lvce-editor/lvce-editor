@@ -51,6 +51,8 @@ export const PreviewMaxHeight = 42
 export const PreviewMinWidth = 43
 export const PreviewMaxWidth = 44
 
-export const Total = 45
+export const TitleBarNative = 45
+
+export const Total = 46
 
 export const SashId = 'sashId'
