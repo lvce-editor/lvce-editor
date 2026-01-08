@@ -1,4 +1,6 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as Platform from '../Platform/Platform.js'
 
 /**
  *
@@ -13,8 +15,8 @@ export const execute = ({
   combineResults,
   noProviderFoundMessage,
   noProviderFoundResult = undefined,
-  assetDir,
-  platform,
+  assetDir = AssetDir.assetDir,
+  platform = Platform.getPlatform(),
 }) => {
   return ExtensionHostShared.executeProviders({
     event: `${event}:${editor.languageId}`,
