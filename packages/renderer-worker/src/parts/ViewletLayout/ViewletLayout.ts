@@ -70,6 +70,8 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     // @ts-ignore
     const p9 = /* End of ActivityBar */ windowWidth
 
+    console.log({ titleBarHeight })
+
     if (titleBarVisible) {
       p2 = titleBarHeight
     }
@@ -125,7 +127,11 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarLeft] = p6
     destination[LayoutKeys.TitleBarTop] = p1
     destination[LayoutKeys.TitleBarWidth] = windowWidth
-    destination[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
+    if (source[LayoutKeys.TitleBarNative]) {
+      destination[LayoutKeys.TitleBarHeight] = 0
+    } else {
+      destination[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
+    }
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
 
     destination[LayoutKeys.PreviewLeft] = p65
@@ -313,10 +319,12 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
   if (isNativeTitleBarStyle(state.platform)) {
     newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 0
+    newPoints[LayoutKeys.TitleBarVisible] = 1
+    newPoints[LayoutKeys.TitleBarNative] = 1
   } else {
     newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     newPoints[LayoutKeys.TitleBarVisible] = 1
+    newPoints[LayoutKeys.TitleBarNative] = 0
   }
   newPoints[LayoutKeys.WindowHeight] = windowHeight
   newPoints[LayoutKeys.WindowWidth] = windowWidth
@@ -383,7 +391,6 @@ const show = async (state, module, currentViewletId) => {
 const hide = async (state, module) => {
   const { points } = state
   const { kVisible, moduleId } = module
-  console.log({ points, vis: points[LayoutKeys.TitleBarVisible], r: points[LayoutKeys.TitleBarHeight] })
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
