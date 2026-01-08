@@ -61,7 +61,7 @@
     "@lvce-editor/file-system-worker": "^4.2.0",
     "@lvce-editor/find-widget-worker": "^2.7.0",
     "@lvce-editor/hover-worker": "^2.0.0",
-    "@lvce-editor/icon-theme-worker": "^2.3.0",
+    "@lvce-editor/icon-theme-worker": "^2.4.0",
     "@lvce-editor/iframe-inspector": "^2.4.0",
     "@lvce-editor/iframe-worker": "^6.3.0",
     "@lvce-editor/keybindings-view": "^6.10.0",
