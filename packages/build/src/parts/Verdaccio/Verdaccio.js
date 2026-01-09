@@ -10,7 +10,6 @@ export const start = async () => {
   const cachePath = Path.absolute('packages/build/.tmp/verdaccio-cache')
   const lvceEditorPath = Path.join(cachePath, '@lvce-editor')
   await Remove.remove(lvceEditorPath)
-  await Remove.remove(Path.join(cachePath, 'jest-environment-lvce-editor'))
   await Mkdir.mkdir(cachePath)
   const passwordPath = join(Root.root, 'packages', 'build', '.tmp', 'verdaccio-auth', 'htpasswd')
   await mkdir(dirname(passwordPath), { recursive: true })
