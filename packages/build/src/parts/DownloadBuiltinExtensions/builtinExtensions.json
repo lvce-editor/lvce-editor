@@ -342,7 +342,7 @@
   {
     "name": "builtin.theme-palenight",
     "repository": "github.com/lvce-editor/theme-palenight",
-    "version": "0.0.7"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.vscode-icons",
