@@ -318,7 +318,7 @@ const { files, headers } = config;`,
     to: 'packages/build/.tmp/server/static-server/package.json',
     value: rest,
   })
-  // await Remove.remove('packages/build/.tmp/server/static-server/src')
+  await Remove.remove('packages/build/.tmp/server/static-server/src')
   await Remove.remove('packages/build/.tmp/server/static-server/node_modules')
 }
 
