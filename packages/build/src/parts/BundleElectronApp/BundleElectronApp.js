@@ -370,6 +370,13 @@ export const build = async ({
   })
   console.timeEnd('copySharedProcessFiles')
 
+  console.time('copyPreloadFiles')
+  await Copy.copy({
+    from: `${sharedProcessCachePath}/packages/preload`,
+    to: `${resourcesPath}/app/packages/preload`,
+  })
+  console.timeEnd('copyPreloadFiles')
+
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ resourcesPath })
   console.timeEnd('copyExtensionHostHelperProcessSources')
