@@ -332,7 +332,7 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.0.7"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.theme-noctis-uva",
