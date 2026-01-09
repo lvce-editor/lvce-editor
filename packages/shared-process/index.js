@@ -1,7 +1,6 @@
-import { dirname, isAbsolute, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { isAbsolute, join } from 'node:path'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = import.meta.dirname
 
 export const sharedProcessPath = join(__dirname, 'src', 'sharedProcessMain.js')
 
