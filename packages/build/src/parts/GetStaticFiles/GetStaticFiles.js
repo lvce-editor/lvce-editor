@@ -80,6 +80,7 @@ export const getStaticFiles = async ({ etag }) => {
   await writeJson({
     to: configJsonPath,
     value: {
+      etag,
       headers: uniqueHeaders.ours,
       files: map,
     },
