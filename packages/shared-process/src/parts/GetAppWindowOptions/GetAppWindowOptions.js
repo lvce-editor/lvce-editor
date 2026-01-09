@@ -1,7 +1,7 @@
 import * as GetBrowserWindowOptions from '../GetBrowserWindowOptions/GetBrowserWindowOptions.js'
 import * as Platform from '../Platform/Platform.js'
 
-export const getAppWindowOptions = (preferences, screenWidth, screenHeight) => {
+export const getAppWindowOptions = ({ preferences, screenWidth, screenHeight, preloadUrl }) => {
   const titleBarPreference = preferences['window.titleBarStyle']
   const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
@@ -17,6 +17,7 @@ export const getAppWindowOptions = (preferences, screenWidth, screenHeight) => {
         height: 29,
       }
     : undefined
+
   return GetBrowserWindowOptions.getBrowserWindowOptions({
     y: 0,
     x: screenWidth - 800,
@@ -26,5 +27,6 @@ export const getAppWindowOptions = (preferences, screenWidth, screenHeight) => {
     titleBarStyle,
     frame,
     titleBarOverlay,
+    preloadUrl,
   })
 }
