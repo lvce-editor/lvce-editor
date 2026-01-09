@@ -166,7 +166,6 @@ import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 
-const etag = '${etag}'
 
 export const getResponseInfo = (request, isImmutable) => {
   if (!isSupportedMethod(request.method)) {
@@ -310,7 +309,7 @@ const bundleStaticServer = async ({ commitHash }) => {
     replacement: `import { readFile } from 'node:fs/promises';
 import config from '../config.json' with { type: 'json' };
 
-const { files, headers } = config;`,
+const { files, headers, etag } = config;`,
   })
   const old = await JsonFile.readJson('packages/build/.tmp/server/static-server/package.json')
   const { dependencies, ...rest } = old
