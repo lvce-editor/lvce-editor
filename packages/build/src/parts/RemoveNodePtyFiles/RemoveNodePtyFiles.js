@@ -57,4 +57,22 @@ export const removeNodePtyFiles = async (to, platform) => {
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/windowsTerminal.js`))
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/windowsConoutConnection.js`))
   }
+
+  // Remove unused prebuilds based on platform
+  const prebuildsPath = Path.absolute(`${to}/node_modules/node-pty/prebuilds`)
+  if (platform === 'linux') {
+    // Remove darwin and win32 prebuilds, and all conpty
+    await Remove.remove(`${prebuildsPath}/darwin-arm64`)
+    await Remove.remove(`${prebuildsPath}/darwin-x64`)
+    await Remove.remove(`${prebuildsPath}/win32-arm64`)
+    await Remove.remove(`${prebuildsPath}/win32-x64`)
+  } else if (platform === 'darwin') {
+    // Remove win32 prebuilds and all conpty
+    await Remove.remove(`${prebuildsPath}/win32-arm64`)
+    await Remove.remove(`${prebuildsPath}/win32-x64`)
+  } else if (platform === 'win32') {
+    // Remove darwin prebuilds
+    await Remove.remove(`${prebuildsPath}/darwin-arm64`)
+    await Remove.remove(`${prebuildsPath}/darwin-x64`)
+  }
 }
