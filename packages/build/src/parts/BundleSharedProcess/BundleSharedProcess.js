@@ -55,6 +55,11 @@ export const bundleSharedProcess = async ({
   isArchLinux,
   isAppImage,
 }) => {
+  // Copy preload from node_modules to packages/preload/dist/index.js
+  await Copy.copyFile({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preload/src/index.js',
+    to: 'packages/preload/dist/index.js',
+  })
   await Copy.copy({
     from: 'packages/shared-process/src',
     to: `${cachePath}/src`,
