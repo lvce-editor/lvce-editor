@@ -68,6 +68,11 @@ export const bundleSharedProcess = async ({
     from: 'packages/shared-process/package.json',
     to: `${cachePath}/package.json`,
   })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/PreloadUrl/PreloadUrl.js`,
+    occurrence: `join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'preload', 'src', 'index.js')`,
+    replacement: `join(Root.root, 'packages', 'preload', 'dist', 'index.js')`,
+  })
   await WriteFile.writeFile({
     to: `${cachePath}/src/parts/GetExtraHeaders/GetExtraHeaders.js`,
     content: `import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
