@@ -337,7 +337,7 @@
   {
     "name": "builtin.theme-noctis-uva",
     "repository": "github.com/lvce-editor/theme-noctis-uva",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.theme-palenight",
