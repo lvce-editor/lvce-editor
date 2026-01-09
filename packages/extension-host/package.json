@@ -16,7 +16,7 @@
     "directory": "packages/extension-host"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "devDependencies": {},
   "dependencies": {},

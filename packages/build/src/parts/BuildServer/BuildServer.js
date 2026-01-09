@@ -37,7 +37,7 @@ const copyServerFiles = async ({ commitHash }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
-    replacement: `const { sharedProcessPath } = await import('@lvce-editor/shared-process')`,
+    replacement: `const sharedProcessPath = fileURLToPath(import.meta.resolve('@lvce-editor/shared-process'))`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
@@ -141,7 +141,6 @@ const setVersionsAndDependencies = async ({ version }) => {
   const files = [
     'packages/build/.tmp/server/extension-host-helper-process/package.json',
     'packages/build/.tmp/server/extension-host/package.json',
-    'packages/build/.tmp/server/jest-environment/package.json',
     'packages/build/.tmp/server/server/package.json',
     'packages/build/.tmp/server/shared-process/package.json',
     'packages/build/.tmp/server/static-server/package.json',
@@ -186,18 +185,6 @@ const setVersionsAndDependencies = async ({ version }) => {
       value: json,
     })
   }
-}
-
-const copyJestEnvironment = async ({ commitHash }) => {
-  await Copy.copy({
-    from: 'packages/build/files/jest-environment',
-    to: `packages/build/.tmp/server/jest-environment`,
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/server/jest-environment/src/index.js`,
-    occurrence: 'COMMIT_HASH',
-    replacement: commitHash,
-  })
 }
 
 export const build = async ({ product }) => {
@@ -246,10 +233,6 @@ export const build = async ({ product }) => {
   console.time('copyExtensionHostHelperProcessFiles')
   await copyExtensionHostHelperProcessFiles()
   console.timeEnd('copyExtensionHostHelperProcessFiles')
-
-  console.time('copyJestEnvironment')
-  await copyJestEnvironment({ commitHash })
-  console.timeEnd('copyJestEnvironment')
 
   console.time('setVersions')
   await setVersionsAndDependencies({ version })

@@ -20,7 +20,7 @@
     "directory": "packages/shared-process"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.5.1",

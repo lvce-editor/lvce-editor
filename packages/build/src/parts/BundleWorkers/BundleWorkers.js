@@ -366,4 +366,9 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
     to: `${toRoot}/js/preview-injected.js`,
   })
+
+  await Copy.copyFile({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preload/src/index.js',
+    to: Path.join(`${toRoot}/packages/preload`, 'dist', 'index.js'),
+  })
 }

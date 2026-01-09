@@ -1,12 +1,11 @@
 import * as BrowserWindowV8CacheOptions from '../BrowserWindowV8CacheOptions/BrowserWindowV8CacheOptions.js'
 import * as GetIcon from '../GetIcon/GetIcon.js'
-import * as PreloadUrl from '../PreloadUrl/PreloadUrl.js'
 
 /**
  *
  * @returns {any}
  */
-export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, background }) => {
+export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, background, preloadUrl }) => {
   const icon = GetIcon.getIcon()
   return {
     x,
@@ -23,7 +22,7 @@ export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, ti
       sandbox: true,
       contextIsolation: true,
       v8CacheOptions: BrowserWindowV8CacheOptions.browserWindowV8CacheOptions,
-      preload: PreloadUrl.preloadUrl,
+      preload: preloadUrl,
       additionalArguments: [],
     },
     backgroundColor: background,

@@ -83,6 +83,10 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/js/preview-injected.js`,
   })
+  await Copy.copyFile({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preload/src/index.js',
+    to: `packages/build/.tmp/server/static-server/static/${commitHash}/packages/preload/dist/index.js`,
+  })
   await Remove.remove(`packages/build/.tmp/server/static-server/static/images`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/sounds`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/lib-css/modern-normalize.css`)
@@ -162,7 +166,6 @@ import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 
-const etag = '${etag}'
 
 export const getResponseInfo = (request, isImmutable) => {
   if (!isSupportedMethod(request.method)) {
@@ -306,7 +309,7 @@ const bundleStaticServer = async ({ commitHash }) => {
     replacement: `import { readFile } from 'node:fs/promises';
 import config from '../config.json' with { type: 'json' };
 
-const { files, headers } = config;`,
+const { files, headers, etag } = config;`,
   })
   const old = await JsonFile.readJson('packages/build/.tmp/server/static-server/package.json')
   const { dependencies, ...rest } = old
@@ -314,7 +317,7 @@ const { files, headers } = config;`,
     to: 'packages/build/.tmp/server/static-server/package.json',
     value: rest,
   })
-  // await Remove.remove('packages/build/.tmp/server/static-server/src')
+  await Remove.remove('packages/build/.tmp/server/static-server/src')
   await Remove.remove('packages/build/.tmp/server/static-server/node_modules')
 }
 
