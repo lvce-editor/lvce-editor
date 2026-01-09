@@ -120,6 +120,18 @@ const copyStaticServerFiles = async ({ commitHash }) => {
     occurrence: `export const root = resolve(__dirname, '../../../../../')`,
     replacement: `export const root = resolve(__dirname, '../../../')`,
   })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.js',
+    occurrence: `export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
+  \`default-src 'none'\`,
+  \`connect-src https://github.com https://release-assets.githubusercontent.com\`,
+])
+`,
+    replacement: `export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
+  \`default-src 'none'\`,
+])
+`,
+  })
   await GetStaticFiles.getStaticFiles({ etag })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.js',
