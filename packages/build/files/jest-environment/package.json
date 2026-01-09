@@ -13,6 +13,6 @@
     "directory": "build/files/jest-enironment"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   }
 }

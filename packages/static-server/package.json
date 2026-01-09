@@ -18,7 +18,7 @@
     "directory": "packages/static-server"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "jest": {
     "injectGlobals": false,
