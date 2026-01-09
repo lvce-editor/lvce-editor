@@ -20,6 +20,6 @@ export const createAppWindow = async ({ preferences, parsedArgs, workingDirector
 
 export const openNew = async (url) => {
   const preferences = await Preferences.getAll()
-  const preloadUrl = PreloadUrl.preloadUrl
+  const preloadUrl = PreloadUrl.getPreloadUrl()
   return createAppWindow({ preferences, parsedArgs: [], workingDirectory: '', url, preloadUrl })
 }

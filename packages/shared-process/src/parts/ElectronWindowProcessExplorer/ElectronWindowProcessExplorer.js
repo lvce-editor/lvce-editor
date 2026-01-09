@@ -8,7 +8,7 @@ import * as ParentIpc from '../MainProcess/MainProcess.js'
 
 const getOptions = async (colorThemeJson) => {
   const backgroundColor = colorThemeJson.MainBackground
-  const preload = PreloadUrl.preloadUrl
+  const preload = PreloadUrl.getPreloadUrl()
   const options = {
     width: 800,
     height: 500,
