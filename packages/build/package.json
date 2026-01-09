@@ -14,7 +14,7 @@
   "author": "LVCE Editor",
   "license": "MIT",
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.28.5",
