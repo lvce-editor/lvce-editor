@@ -14,7 +14,7 @@
   border-bottom: 1px solid var(--ExtensionDetailTabsBorder);
   padding-left: 20px;
   contain: strict;
-  height: 37px;
+  height: 36px;
   max-width: var(--ExtensionDetailMaxWidth);
   margin: 0 auto;
   width: 100%;
@@ -30,6 +30,12 @@
   background: transparent;
   border: none;
   color: var(--ExtensionDetailTabForeground);
+}
+
+.ExtensionDetailTab:focus {
+  outline: 1px solid var(--FocusBorder);
+  outline-offset: -1px;
+  border: none;
 }
 
 .ExtensionDetailTab:where(:hover) {
