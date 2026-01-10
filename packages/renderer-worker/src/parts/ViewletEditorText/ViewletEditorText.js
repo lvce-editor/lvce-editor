@@ -172,8 +172,8 @@ export const rerender = async (state) => {
 }
 
 export const contentLoaded = async (state) => {
-  const { languageId } = state
-  ExtensionHostLanguages.load(languageId)
+  const { languageId, assetDir, platform } = state
+  ExtensionHostLanguages.load(languageId, assetDir, platform)
   return []
 }
 
