@@ -31,8 +31,10 @@
 }
 
 .ExtensionDetailNameBadge {
+  padding-left: 10px;
   font-size: 10px;
   font-style: italic;
+  contain: content;
 }
 
 .ExtensionDetailDescription {
