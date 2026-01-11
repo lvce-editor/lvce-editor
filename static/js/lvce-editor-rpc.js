@@ -586,6 +586,12 @@ class IpcChildWithModuleWorker extends Ipc {
 const wrap$f = global => {
   return new IpcChildWithModuleWorker(global);
 };
+const IpcChildWithModuleWorker$1 = {
+  __proto__: null,
+  listen: listen$7,
+  signal: signal$8,
+  wrap: wrap$f
+};
 const waitForFirstMessage = async port => {
   const {
     promise,
@@ -1543,7 +1549,7 @@ const waitForWebSocketToBeOpen = webSocket => {
     open: Open
   });
 };
-const create$p = async ({
+const create$q = async ({
   webSocket
 }) => {
   const firstWebSocketEvent = await waitForWebSocketToBeOpen(webSocket);
@@ -1580,7 +1586,7 @@ const wrap = webSocket => {
 };
 const IpcParentWithWebSocket$1 = {
   __proto__: null,
-  create: create$p,
+  create: create$q,
   wrap
 };
 
@@ -1798,7 +1804,7 @@ const getErrorResponse = (id, error, preparePrettyError, logError) => {
   const errorProperty = getErrorProperty(error, prettyError);
   return create$1$1(id, errorProperty);
 };
-const create$o = (message, result) => {
+const create$p = (message, result) => {
   return {
     jsonrpc: Two$1,
     id: message.id,
@@ -1807,7 +1813,7 @@ const create$o = (message, result) => {
 };
 const getSuccessResponse = (message, result) => {
   const resultProperty = result ?? null;
-  return create$o(message, resultProperty);
+  return create$p(message, resultProperty);
 };
 const getErrorResponseSimple = (id, error) => {
   return {
@@ -1921,14 +1927,14 @@ const execute = (command, ...args) => {
 };
 
 const Two = '2.0';
-const create$n = (method, params) => {
+const create$o = (method, params) => {
   return {
     jsonrpc: Two,
     method,
     params
   };
 };
-const create$m = (id, method, params) => {
+const create$n = (id, method, params) => {
   const message = {
     id,
     jsonrpc: Two,
@@ -1938,14 +1944,14 @@ const create$m = (id, method, params) => {
   return message;
 };
 let id = 0;
-const create$l = () => {
+const create$m = () => {
   return ++id;
 };
 
 /* eslint-disable n/no-unsupported-features/es-syntax */
 
 const registerPromise = map => {
-  const id = create$l();
+  const id = create$m();
   const {
     promise,
     resolve
@@ -1963,7 +1969,7 @@ const invokeHelper = async (callbacks, ipc, method, params, useSendAndTransfer) 
     id,
     promise
   } = registerPromise(callbacks);
-  const message = create$m(id, method, params);
+  const message = create$n(id, method, params);
   if (useSendAndTransfer && ipc.sendAndTransfer) {
     ipc.sendAndTransfer(message);
   } else {
@@ -1999,7 +2005,7 @@ const createRpc = ipc => {
      * @deprecated
      */
     send(method, ...params) {
-      const message = create$n(method, params);
+      const message = create$o(method, params);
       ipc.send(message);
     }
   };
@@ -2043,7 +2049,7 @@ const listen = async (module, options) => {
   const ipc = module.wrap(rawIpc);
   return ipc;
 };
-const create$k = async ({
+const create$l = async ({
   commandMap,
   messagePort,
   requiresSocket
@@ -2062,9 +2068,9 @@ const create$k = async ({
 };
 const ElectronMessagePortRpcClient = {
   __proto__: null,
-  create: create$k
+  create: create$l
 };
-const create$j = async ({
+const create$k = async ({
   commandMap
 }) => {
   // TODO create a commandMap per rpc instance
@@ -2076,9 +2082,9 @@ const create$j = async ({
 };
 const ElectronUtilityProcessRpcClient = {
   __proto__: null,
-  create: create$j
+  create: create$k
 };
-const create$i = async ({
+const create$j = async ({
   argv,
   commandMap,
   env,
@@ -2107,9 +2113,9 @@ const create$i = async ({
 };
 const ElectronUtilityProcessRpcParent = {
   __proto__: null,
-  create: create$i
+  create: create$j
 };
-const create$h = async ({
+const create$i = async ({
   commandMap,
   requiresSocket,
   webContents
@@ -2127,9 +2133,9 @@ const create$h = async ({
 };
 const ElectronWebContentsRpcClient = {
   __proto__: null,
-  create: create$h
+  create: create$i
 };
-const create$g = async ({
+const create$h = async ({
   commandMap,
   window
 }) => {
@@ -2142,9 +2148,9 @@ const create$g = async ({
 };
 const ElectronWindowRpcClient = {
   __proto__: null,
-  create: create$g
+  create: create$h
 };
-const create$f = async ({
+const create$g = async ({
   commandMap,
   messagePort
 }) => {
@@ -2159,9 +2165,9 @@ const create$f = async ({
 };
 const MessagePortRpcClient = {
   __proto__: null,
-  create: create$f
+  create: create$g
 };
-const create$e = async ({
+const create$f = async ({
   commandMap,
   isMessagePortOpen,
   messagePort
@@ -2179,13 +2185,13 @@ const create$e = async ({
 };
 const MessagePortRpcParent = {
   __proto__: null,
-  create: create$e
+  create: create$f
 };
 
 /**
  * @deprecated use createMockRpc instead
  */
-const create$d = ({
+const create$e = ({
   commandMap,
   invoke,
   invokeAndTransfer
@@ -2198,12 +2204,12 @@ const create$d = ({
 };
 const MockRpc = {
   __proto__: null,
-  create: create$d
+  create: create$e
 };
 const isWorker = value => {
   return value instanceof Worker;
 };
-const create$c = async ({
+const create$d = async ({
   commandMap,
   name,
   url
@@ -2224,9 +2230,9 @@ const create$c = async ({
 };
 const ModuleWorkerRpcParent = {
   __proto__: null,
-  create: create$c
+  create: create$d
 };
-const create$b = async ({
+const create$c = async ({
   commandMap,
   name,
   port,
@@ -2250,9 +2256,9 @@ const create$b = async ({
 };
 const ModuleWorkerWithMessagePortRpcParent = {
   __proto__: null,
-  create: create$b
+  create: create$c
 };
-const create$a = async ({
+const create$b = async ({
   commandMap
 }) => {
   // TODO create a commandMap per rpc instance
@@ -2264,9 +2270,9 @@ const create$a = async ({
 };
 const NodeForkedProcessRpcClient = {
   __proto__: null,
-  create: create$a
+  create: create$b
 };
-const create$9 = async ({
+const create$a = async ({
   argv,
   commandMap,
   env,
@@ -2290,9 +2296,9 @@ const create$9 = async ({
 };
 const NodeForkedProcessRpcParent = {
   __proto__: null,
-  create: create$9
+  create: create$a
 };
-const create$8 = async ({
+const create$9 = async ({
   commandMap,
   handle,
   request,
@@ -2313,9 +2319,9 @@ const create$8 = async ({
 };
 const NodeWebSocketRpcClient = {
   __proto__: null,
-  create: create$8
+  create: create$9
 };
-const create$7 = async ({
+const create$8 = async ({
   commandMap
 }) => {
   // TODO create a commandMap per rpc instance
@@ -2327,9 +2333,9 @@ const create$7 = async ({
 };
 const NodeWorkerRpcClient = {
   __proto__: null,
-  create: create$7
+  create: create$8
 };
-const create$6 = async ({
+const create$7 = async ({
   argv,
   commandMap,
   env,
@@ -2358,9 +2364,9 @@ const create$6 = async ({
 };
 const NodeWorkerRpcParent = {
   __proto__: null,
-  create: create$6
+  create: create$7
 };
-const create$5 = async ({
+const create$6 = async ({
   commandMap,
   isMessagePortOpen = true,
   messagePort
@@ -2379,22 +2385,22 @@ const create$5 = async ({
 };
 const PlainMessagePortRpc = {
   __proto__: null,
-  create: create$5
+  create: create$6
 };
-const create$4 = async ({
+const create$5 = async ({
   commandMap,
   messagePort
 }) => {
-  return create$5({
+  return create$6({
     commandMap,
     messagePort
   });
 };
 const PlainMessagePortRpcParent = {
   __proto__: null,
-  create: create$4
+  create: create$5
 };
-const create$3 = async ({
+const create$4 = async ({
   commandMap,
   isMessagePortOpen,
   send
@@ -2404,7 +2410,7 @@ const create$3 = async ({
     port2
   } = new MessageChannel();
   await send(port1);
-  return create$5({
+  return create$6({
     commandMap,
     isMessagePortOpen,
     messagePort: port2
@@ -2412,9 +2418,9 @@ const create$3 = async ({
 };
 const TransferMessagePortRpcParent = {
   __proto__: null,
-  create: create$3
+  create: create$4
 };
-const create$2 = async ({
+const create$3 = async ({
   commandMap,
   webSocket
 }) => {
@@ -2430,7 +2436,7 @@ const create$2 = async ({
 };
 const WebSocketRpcParent = {
   __proto__: null,
-  create: create$2
+  create: create$3
 };
 const Https = 'https:';
 const Ws = 'ws:';
@@ -2448,7 +2454,7 @@ const getHost = () => {
 const getProtocol = () => {
   return location.protocol;
 };
-const create$1 = async ({
+const create$2 = async ({
   commandMap,
   type
 }) => {
@@ -2456,7 +2462,7 @@ const create$1 = async ({
   const protocol = getProtocol();
   const wsUrl = getWebSocketUrl(type, host, protocol);
   const webSocket = new WebSocket(wsUrl);
-  const rpc = await create$2({
+  const rpc = await create$3({
     commandMap,
     webSocket
   });
@@ -2464,9 +2470,9 @@ const create$1 = async ({
 };
 const WebSocketRpcParent2 = {
   __proto__: null,
-  create: create$1
+  create: create$2
 };
-const create = async ({
+const create$1 = async ({
   commandMap
 }) => {
   // TODO create a commandMap per rpc instance
@@ -2477,6 +2483,20 @@ const create = async ({
   return rpc;
 };
 const WebWorkerRpcClient = {
+  __proto__: null,
+  create: create$1
+};
+const create = async ({
+  commandMap
+}) => {
+  // TODO create a commandMap per rpc instance
+  register(commandMap);
+  const ipc = await listen(IpcChildWithModuleWorker$1);
+  handleIpc(ipc);
+  const rpc = createRpc(ipc);
+  return rpc;
+};
+const WebWorkerRpcClient2 = {
   __proto__: null,
   create
 };
@@ -2499,7 +2519,7 @@ const createMockRpc = ({
   };
   return mockRpc;
 };
-const createWebWorkerRpcClient = create;
+const createWebWorkerRpcClient = create$1;
 const mockWebSocketRpc = () => {
   const originalLocation = globalThis.location;
   const originalWebSocket = globalThis.WebSocket;
@@ -2608,4 +2628,4 @@ const index = {
   handleUpgrade
 };
 
-export { ElectronMessagePortRpcClient, ElectronUtilityProcessRpcClient, ElectronUtilityProcessRpcParent, ElectronWebContentsRpcClient, ElectronWindowRpcClient, MessagePortRpcClient, MessagePortRpcParent, MockRpc, ModuleWorkerRpcParent, ModuleWorkerWithMessagePortRpcParent, NodeForkedProcessRpcClient, NodeForkedProcessRpcParent, NodeWebSocketRpcClient, NodeWorkerRpcClient, NodeWorkerRpcParent, PlainMessagePortRpc, PlainMessagePortRpcParent, TransferMessagePortRpcParent, WebSocketRpcParent, WebSocketRpcParent2, WebWorkerRpcClient, createMockRpc, createWebWorkerRpcClient, mockWebSocketRpc, mockWorkerGlobalRpc };
+export { ElectronMessagePortRpcClient, ElectronUtilityProcessRpcClient, ElectronUtilityProcessRpcParent, ElectronWebContentsRpcClient, ElectronWindowRpcClient, MessagePortRpcClient, MessagePortRpcParent, MockRpc, ModuleWorkerRpcParent, ModuleWorkerWithMessagePortRpcParent, NodeForkedProcessRpcClient, NodeForkedProcessRpcParent, NodeWebSocketRpcClient, NodeWorkerRpcClient, NodeWorkerRpcParent, PlainMessagePortRpc, PlainMessagePortRpcParent, TransferMessagePortRpcParent, WebSocketRpcParent, WebSocketRpcParent2, WebWorkerRpcClient, WebWorkerRpcClient2, createMockRpc, createWebWorkerRpcClient, mockWebSocketRpc, mockWorkerGlobalRpc };
