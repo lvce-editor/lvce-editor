@@ -65,7 +65,7 @@ const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 
 export const replaySession = async (sessionId) => {
   const events = await GetSessionEvents.getSessionEvents(sessionId)
-  const originalIpc = RendererProcess.state.ipc
+  const originalIpc = RendererProcess.state.rpc.ipc
   HandleIpc.unhandleIpc(originalIpc)
   const originalSend = originalIpc.send.bind(originalIpc)
   const originalAddEventListsner = originalIpc.addEventListener.bind(originalIpc)
@@ -78,25 +78,25 @@ export const replaySession = async (sessionId) => {
     } else if ('method' in data) {
       switch (data.method) {
         case 'TitleBar.handleTitleBarButtonClickClose':
-          RendererProcess.state.ipc.onmessage = originalAddEventListsner
-          RendererProcess.state.ipc.send = originalSend
+          RendererProcess.state.rpc.ipc.onmessage = originalAddEventListsner
+          RendererProcess.state.rpc.ipc.send = originalSend
           await Command.execute('ElectronWindow.close')
-          RendererProcess.state.ipc.onmessage = wrappedOnMessage
-          RendererProcess.state.ipc.send = wrappedSend
+          RendererProcess.state.rpc.ipc.onmessage = wrappedOnMessage
+          RendererProcess.state.rpc.ipc.send = wrappedSend
           break
         case 'TitleBar.handleTitleBarButtonClickMinimize':
-          RendererProcess.state.ipc.onmessage = originalAddEventListsner
-          RendererProcess.state.ipc.send = originalSend
+          RendererProcess.state.rpc.ipc.onmessage = originalAddEventListsner
+          RendererProcess.state.rpc.ipc.send = originalSend
           await Command.execute('ElectronWindow.minimize')
-          RendererProcess.state.ipc.onmessage = wrappedOnMessage
-          RendererProcess.state.ipc.send = wrappedSend
+          RendererProcess.state.rpc.ipc.onmessage = wrappedOnMessage
+          RendererProcess.state.rpc.ipc.send = wrappedSend
           break
         case 'TitleBar.handleTitleBarButtonClickToggleMaximize':
-          RendererProcess.state.ipc.onmessage = originalAddEventListsner
-          RendererProcess.state.ipc.send = originalSend
+          RendererProcess.state.rpc.ipc.onmessage = originalAddEventListsner
+          RendererProcess.state.rpc.ipc.send = originalSend
           await Command.execute('ElectronWindow.maximize')
-          RendererProcess.state.ipc.onmessage = wrappedOnMessage
-          RendererProcess.state.ipc.send = wrappedSend
+          RendererProcess.state.rpc.ipc.onmessage = wrappedOnMessage
+          RendererProcess.state.rpc.ipc.send = wrappedSend
           break
         default:
           break
@@ -105,8 +105,8 @@ export const replaySession = async (sessionId) => {
       throw new Error('unexpected message from renderer worker')
     }
   }
-  RendererProcess.state.ipc.send = wrappedSend
-  RendererProcess.state.ipc.addEventListener('message', wrappedOnMessage)
+  RendererProcess.state.rpc.send = wrappedSend
+  RendererProcess.state.rpc.addEventListener('message', wrappedOnMessage)
   const callbacks = Object.create(null)
   const invoke = (event) => {
     const { resolve, promise } = Promises.withResolvers()
@@ -178,7 +178,7 @@ const wrapIpc = (ipc, name, getData) => {
 }
 
 export const startRecording = () => {
-  RendererProcess.state.ipc = wrapIpc(RendererProcess.state.ipc, 'renderer-process', (event) => event.data)
+  RendererProcess.state.rpc.ipc = wrapIpc(RendererProcess.state.rpc, 'renderer-process', (event) => event.data)
   SharedProcessState.state.ipc = wrapIpc(SharedProcessState.state.ipc, 'shared-process', (event) => event)
 }
 
