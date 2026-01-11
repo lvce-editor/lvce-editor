@@ -1,3 +1,4 @@
+// @ts-nocheck
 const normalizeLine = line => {
   if (line.startsWith('Error: ')) {
     return line.slice('Error: '.length);
