@@ -17,7 +17,7 @@ const getError = async (promise) => {
 }
 
 test('invoke - error', async () => {
-  RendererProcess.state.ipc = {
+  RendererProcess.state.rpc = {
     send(message) {
       Callback.resolve(message.id, {
         jsonrpc: JsonRpcVersion.Two,
