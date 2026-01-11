@@ -1,3 +1,4 @@
+// @ts-ignore
 import { WebWorkerRpcClient2 } from '../../../../../static/js/lvce-editor-rpc.js'
 import * as CommandMapRef from '../CommandMapRef/CommandMapRef.js'
 
