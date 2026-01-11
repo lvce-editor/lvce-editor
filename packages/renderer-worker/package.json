@@ -75,7 +75,7 @@
     "@lvce-editor/settings-view": "^2.8.0",
     "@lvce-editor/simple-browser-view": "^2.0.0",
     "@lvce-editor/source-action-worker": "^1.4.0",
-    "@lvce-editor/source-control-worker": "^2.23.0",
+    "@lvce-editor/source-control-worker": "^2.24.0",
     "@lvce-editor/status-bar-worker": "^1.13.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
