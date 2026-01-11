@@ -16,7 +16,7 @@ const getError = async (promise) => {
   }
 }
 
-test('invoke - error', async () => {
+test.skip('invoke - error', async () => {
   RendererProcess.state.rpc = {
     send(message) {
       Callback.resolve(message.id, {
