@@ -55,6 +55,9 @@ const runFn = async (instance, id, key, fn, args) => {
       key === 'getActiveSideBarView' ||
       key === 'getCommit' ||
       key === 'getAssetDir' ||
+      key === 'getCommitDate' ||
+      key === 'getVersion' ||
+      key === 'getProductNameLong' ||
       key === 'getPlatform'
     ) {
       return newState
