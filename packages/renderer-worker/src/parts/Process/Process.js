@@ -6,6 +6,8 @@ export const commit = 'unknown commit'
 
 export const date = ''
 
+export const productNameLong = 'Lvce Editor - OSS'
+
 export const getPid = () => {
   return SharedProcess.invoke('Process.getPid')
 }
@@ -28,6 +30,10 @@ export const getVersion = () => {
 
 export const getCommit = () => {
   return commit
+}
+
+export const getProductNameLong = () => {
+  return productNameLong
 }
 
 export const getV8Version = () => {
