@@ -51,12 +51,16 @@
     "@lvce-editor/editor-worker": "^15.1.0",
     "@lvce-editor/embeds-worker": "^4.1.0",
     "@lvce-editor/error-worker": "^2.4.0",
+<<<<<<< HEAD
     "@lvce-editor/explorer-view": "^5.15.0",
+=======
+    "@lvce-editor/explorer-view": "^5.16.0",
+>>>>>>> origin/main
     "@lvce-editor/extension-detail-view": "^6.7.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^8.2.0",
     "@lvce-editor/extension-management-worker": "^2.2.0",
-    "@lvce-editor/extension-search-view": "^6.0.0",
+    "@lvce-editor/extension-search-view": "^6.3.0",
     "@lvce-editor/file-search-worker": "^6.17.0",
     "@lvce-editor/file-system-worker": "^4.2.0",
     "@lvce-editor/find-widget-worker": "^2.7.0",
@@ -75,7 +79,7 @@
     "@lvce-editor/settings-view": "^2.8.0",
     "@lvce-editor/simple-browser-view": "^2.0.0",
     "@lvce-editor/source-action-worker": "^1.4.0",
-    "@lvce-editor/source-control-worker": "^2.23.0",
+    "@lvce-editor/source-control-worker": "^2.24.0",
     "@lvce-editor/status-bar-worker": "^1.13.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",

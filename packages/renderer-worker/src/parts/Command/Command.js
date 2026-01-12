@@ -41,7 +41,7 @@ const getOrLoadModule = (moduleId) => {
   return state.pendingModules[moduleId]
 }
 
-const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
+export const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
 
 export const register = (commandId, listener) => {
   if (commandId.split('.').length >= 3) {

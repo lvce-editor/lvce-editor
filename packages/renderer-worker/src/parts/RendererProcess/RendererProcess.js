@@ -1,26 +1,28 @@
-/* istanbul ignore file */
-import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as IpcChild from '../IpcChild/IpcChild.js'
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+// @ts-ignore
+import { WebWorkerRpcClient2 } from '../../../../../static/js/lvce-editor-rpc.js'
+import * as CommandMapRef from '../CommandMapRef/CommandMapRef.js'
 
 export const state = {
   pendingMessages: [],
   /**
    * @type {any}
    */
-  ipc: undefined,
+  rpc: undefined,
 }
 
-const getIpc = () => {
-  return IpcChild.listen({ method: IpcChildType.Auto() })
+const getRpc = async () => {
+  // TODO replace this with a static commandmap
+
+  const rpc = await WebWorkerRpcClient2.create({
+    commandMap: CommandMapRef.commandMapRef,
+  })
+  return rpc
 }
 
 export const listen = async () => {
   console.assert(state.pendingMessages.length === 0)
-  const ipc = await getIpc()
-  HandleIpc.handleIpc(ipc)
-  state.ipc = ipc
+  const rpc = await getRpc()
+  state.rpc = rpc
 }
 
 /**
@@ -28,17 +30,17 @@ export const listen = async () => {
  * @param {*} message
  */
 export const send = (message) => {
-  state.ipc.send(message)
+  state.rpc.send(message)
 }
 
 export const invoke = (method, ...params) => {
-  return JsonRpc.invoke(state.ipc, method, ...params)
+  return state.rpc.invoke(method, ...params)
 }
 
 export const invokeAndTransfer = (method, ...params) => {
-  return JsonRpc.invokeAndTransfer(state.ipc, method, ...params)
+  return state.rpc.invokeAndTransfer(method, ...params)
 }
 
 export const sendAndTransfer = (message, transferables) => {
-  state.ipc.sendAndTransfer(message, transferables)
+  state.rpc.ipc.sendAndTransfer(message, transferables)
 }
