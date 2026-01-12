@@ -52,7 +52,7 @@
     "@lvce-editor/embeds-worker": "^4.1.0",
     "@lvce-editor/error-worker": "^2.4.0",
     "@lvce-editor/explorer-view": "^5.16.0",
-    "@lvce-editor/extension-detail-view": "^6.7.0",
+    "@lvce-editor/extension-detail-view": "^6.8.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^8.2.0",
     "@lvce-editor/extension-management-worker": "^2.2.0",
