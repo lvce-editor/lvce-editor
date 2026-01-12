@@ -377,6 +377,12 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `date = '${date}'`,
     })
 
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Process/Process.js`,
+      occurrence: `productNameLong = 'Lvce Editor - OSS'`,
+      replacement: `productNameLong = '${product.nameLong}'`,
+    })
+
     await WriteFile.writeFile({
       to: `${cachePath}/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
       content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
