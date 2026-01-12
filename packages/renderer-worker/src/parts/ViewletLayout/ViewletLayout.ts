@@ -1148,15 +1148,3 @@ export const getBadgeCounts = (state) => {
   }
   return badgeCounts
 }
-
-export const getCommitDate = () => {
-  return ''
-}
-
-export const getVersion = () => {
-  return '0.0.0-dev'
-}
-
-export const getProductNameLong = () => {
-  return 'Lvce Editor - OSS'
-}
