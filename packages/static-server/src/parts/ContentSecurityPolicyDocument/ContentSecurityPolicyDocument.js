@@ -1,7 +1,7 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 
 const getFrameSrc = () => {
-  return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
+  return [`frame-src 'self' lvce-oss-webview: http://localhost:3001 http://localhost:3002`]
 }
 
 const getManifestSrc = () => {

@@ -28,9 +28,12 @@ export const showCommands = () => {
   return show('commands')
 }
 
-export const showCustom = async (picks) => {
+export const showCustom = async (picks, options) => {
   const { callbackId, promise } = registerCallback()
-  await show('custom', picks, callbackId)
+  await show('custom', picks, callbackId, options)
+  if (options?.waitUntil === 'visible') {
+    return
+  }
   return promise
 }
 

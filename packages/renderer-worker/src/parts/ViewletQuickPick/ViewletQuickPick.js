@@ -23,6 +23,7 @@ const QuickPickState = {
 }
 
 export const create = (id, uri, x, y, width, height, args) => {
+  console.log({ args })
   return {
     uid: id,
     state: QuickPickState.Default,
@@ -43,11 +44,12 @@ export const create = (id, uri, x, y, width, height, args) => {
     focused: false,
     commands: [],
     assetDir: AssetDir.assetDir,
+    platform: Platform.getPlatform(),
   }
 }
 
 export const loadContent = async (state) => {
-  const { uri, args, assetDir } = state
+  const { uri, args, assetDir, platform } = state
   const listItemHeight = 22
   const renderAllItems = true
   await FileSearchWorker.invoke(
@@ -59,7 +61,7 @@ export const loadContent = async (state) => {
     state.y,
     state.width,
     state.height,
-    Platform.getPlatform(),
+    platform,
     args,
     renderAllItems,
     Workspace.state.workspacePath,

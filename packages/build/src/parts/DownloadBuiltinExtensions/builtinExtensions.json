@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "3.10.0"
+    "version": "3.11.0"
   },
   {
     "name": "builtin.csv-viewer",
@@ -122,7 +122,7 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   {
     "name": "builtin.video-preview",
@@ -317,7 +317,7 @@
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   {
     "name": "builtin.theme-high-contrast",
@@ -347,6 +347,6 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "1.5.0"
+    "version": "2.0.0"
   }
 ]

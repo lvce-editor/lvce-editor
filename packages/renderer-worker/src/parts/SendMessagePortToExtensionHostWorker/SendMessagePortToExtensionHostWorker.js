@@ -3,11 +3,12 @@ import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
+import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
@@ -82,6 +83,12 @@ export const sendMessagePortToIframeWorker = async (port, initialCommand, rpcId)
   Assert.object(port)
   Assert.string(initialCommand)
   await IframeWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToFileSearchWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await FileSearchWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
