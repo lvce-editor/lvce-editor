@@ -16,6 +16,13 @@ export const getWatchConfig = () => {
       command: 'Search.hotReload',
     })
   }
+  const titleBarWorkerPath = Preferences.get('develop.titleBarWorkerPath')
+  if (titleBarWorkerPath) {
+    watchConfig.push({
+      path: titleBarWorkerPath,
+      command: 'TitleBar.hotReload',
+    })
+  }
   const extensionDetail = Preferences.get('develop.extensionDetailViewWorkerPath')
   if (extensionDetail) {
     watchConfig.push({
