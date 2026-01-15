@@ -9,6 +9,8 @@ import * as Root from '../Root/Root.js'
 
 const { env } = process
 
+// TODO make these functions
+
 export const dataDir = Path.join(xdgData || tmpdir(), Platform.applicationName)
 
 export const configDir = Path.join(xdgConfig || tmpdir(), Platform.applicationName)
