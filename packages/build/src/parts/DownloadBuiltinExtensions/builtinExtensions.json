@@ -282,7 +282,7 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   {
     "name": "builtin.language-features-json",
