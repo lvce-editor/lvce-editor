@@ -73,7 +73,8 @@ export const getStateDir = () => {
 }
 
 export const getLogsDir = () => {
-  return Path.join(xdgState || tmpdir(), Platform.applicationName, 'logs')
+  const path = Path.join(xdgState || tmpdir(), Platform.applicationName, 'logs')
+  return pathToFileURL(path).toString()
 }
 
 export const getUserSettingsPath = () => {
