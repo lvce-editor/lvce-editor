@@ -329,7 +329,7 @@ test('backgroundLoad', async () => {
   })
   const { title, uri } = await ViewletManager.backgroundLoad({
     getModule,
-    id: '',
+    id: 'test',
     x: 0,
     y: 0,
     width: 0,
@@ -342,7 +342,7 @@ test('backgroundLoad', async () => {
   expect(uri).toBe('test://1')
   expect(getModule).toHaveBeenCalledTimes(1)
   // @ts-ignore
-  expect(getModule).toHaveBeenCalledWith('')
+  expect(getModule).toHaveBeenCalledWith('test')
   expect(mockModule.backgroundLoadContent).toHaveBeenCalledTimes(1)
   expect(mockModule.backgroundLoadContent).toHaveBeenCalledWith(
     {
