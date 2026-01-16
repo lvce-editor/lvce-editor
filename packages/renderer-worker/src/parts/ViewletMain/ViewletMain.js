@@ -423,6 +423,7 @@ export const openBackgroundTab = async (state, initialUri, props) => {
 const executeEditorCommand = async (editor, commandId) => {
   const uid = editor.uid
   await Viewlet.executeViewletCommand(uid, commandId)
+  return editor
 }
 
 const saveEditor = (editor) => {
