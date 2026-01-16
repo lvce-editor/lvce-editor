@@ -89,7 +89,7 @@ test('load - race condition', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, 'test', 0, 0, 0, 0)
   // @ts-ignore
   const promise = ViewletManager.load(state)
   state.version++
@@ -107,7 +107,7 @@ test.skip('load - error - no create method', async () => {
   const getModule = async () => {
     return {}
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, 'test', 0, 0, 0, 0)
   // @ts-ignore
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
@@ -329,7 +329,7 @@ test('backgroundLoad', async () => {
   })
   const { title, uri } = await ViewletManager.backgroundLoad({
     getModule,
-    id: '',
+    id: 'test',
     x: 0,
     y: 0,
     width: 0,
@@ -342,7 +342,7 @@ test('backgroundLoad', async () => {
   expect(uri).toBe('test://1')
   expect(getModule).toHaveBeenCalledTimes(1)
   // @ts-ignore
-  expect(getModule).toHaveBeenCalledWith('')
+  expect(getModule).toHaveBeenCalledWith('test')
   expect(mockModule.backgroundLoadContent).toHaveBeenCalledTimes(1)
   expect(mockModule.backgroundLoadContent).toHaveBeenCalledWith(
     {
