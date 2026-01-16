@@ -23,27 +23,32 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-export const saveState = (state) => {
-  const { currentViewletId } = state
-  return {
-    currentViewletId,
-  }
-}
+// export const saveState = (state) => {
+//   const { currentViewletId } = state
+//   return {
+//     currentViewletId,
+//   }
+// }
 
 export const saveChildState = (state) => {
   const { currentViewletId } = state
   return [currentViewletId]
 }
 
-const getSavedViewletId = (savedState) => {
-  if (savedState && savedState.currentViewletId) {
-    return savedState.currentViewletId
-  }
-  return ViewletModuleId.Explorer
-}
+// const getSavedViewletId = (savedState) => {
+//   if (savedState && savedState.currentViewletId) {
+//     return savedState.currentViewletId
+//   }
+//   return ViewletModuleId.Explorer
+// }
 
-export const loadContent = (state, savedState) => {
-  const savedViewletId = getSavedViewletId(savedState)
+export const loadContent = async (state, savedState) => {
+  // TODO get it from layout state
+  let savedViewletId = await Command.execute('Layout.getActiveSideBarView')
+  if (!savedViewletId) {
+    savedViewletId = ViewletModuleId.Explorer
+  }
+  // const savedViewletId = getSavedViewletId(savedState)
   return {
     ...state,
     currentViewletId: savedViewletId,
@@ -87,13 +92,19 @@ export const getChildren = (state) => {
   ]
 }
 
-// TODO no default parameter -> monomorphism
-export const openViewlet = async (state, moduleId, focus = false, args) => {
+export const handleSideBarViewletChange = async (state, moduleId) => {
   console.assert(typeof moduleId === 'string')
-  // if (state.currentViewletId) {
-  //   console.log('dispose current viewlet', state.currentViewletId)
-  //   Viewlet.dispose(state.currentViewletId)
-  // }
+  if (!moduleId) {
+    const currentViewletState = ViewletStates.getState(state.currentViewletId)
+    const currentViewletUid = currentViewletState.uid
+    const commands = []
+    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
+
+    // TODO return commands in a functional way
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    return state
+  }
+  // TODO set it in layout
   const { currentViewletId, titleAreaHeight } = state
   const savePromise = SaveState.saveViewletState(currentViewletId)
   state.currentViewletId = moduleId
@@ -117,44 +128,36 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
       height: childDimensions.height,
       parentUid: uid,
       append: true,
-      args,
+      args: [],
     },
     false,
     true,
   )
+  console.log({ commands })
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
     const currentViewletUid = currentViewletState.uid
     Assert.number(currentViewletUid)
     commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
-    const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
-    if (activityBar) {
-      const oldState = activityBar.state
-      const newState = await activityBar.factory.Commands.handleSideBarViewletChange(oldState, moduleId)
-      const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState, newState.uid)
-      activityBar.state = newState
-      commands.push(...extraCommands)
-    }
+
+    // TODO return commands in a functional way
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
   // // TODO race condition (check if disposed after created)
-  // const viewlet = ViewletManager.create(
-  //   ViewletModule.load,
-  //   id,
-  //   'SideBar',
-  //   'builtin://',
-  //   childDimensions.left,
-  //   childDimensions.top,
-  //   childDimensions.width,
-  //   childDimensions.height
-  // )
 
-  // // TODO add keybinding to title
-  // // @ts-ignore
-  // await ViewletManager.load(viewlet, focus, /* restore */ true)
   await savePromise
-  return { ...state }
+  return {
+    ...state,
+    currentViewletId: moduleId,
+  }
+}
+
+// TODO no default parameter -> monomorphism
+export const openViewlet = async (state, moduleId, focus = false, args) => {
+  await Command.execute('Layout.openSideBarViewlet', moduleId)
+
+  return state
 }
 
 export const dispose = (state) => {

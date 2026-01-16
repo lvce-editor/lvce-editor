@@ -1127,14 +1127,11 @@ export const getActiveSideBarView = (state: any) => {
   return state.sideBarViewletId
 }
 
-export const openSideBarView = (state, moduleId, focus = false, args) => {
-  // TODO
-  // 1. create side bar if it doesn't exist
-  // 2. load sidebar content
-  // 3. update activity bar
+export const openSideBarView = async (state, moduleId, focus = false, args) => {
+  const newState1 = await callGlobalEvent(state, 'handleSideBarViewletChange', moduleId)
   return {
-    ...state,
-    commands: [],
+    ...newState1,
+    commands: newState1.commands,
   }
 }
 
