@@ -89,7 +89,7 @@ test('load - race condition', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, 'test', 0, 0, 0, 0)
   // @ts-ignore
   const promise = ViewletManager.load(state)
   state.version++
@@ -107,7 +107,7 @@ test.skip('load - error - no create method', async () => {
   const getModule = async () => {
     return {}
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, 'test', 0, 0, 0, 0)
   // @ts-ignore
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
