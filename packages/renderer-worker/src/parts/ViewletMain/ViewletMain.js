@@ -295,7 +295,7 @@ const handleTitleUpdated = async (uid, title) => {
   await Viewlet.setState(state.uid, newState)
 }
 
-const mainAreaWorkerEnabled = false
+const mainAreaWorkerEnabled = true
 
 export const loadContent = async (state, savedState) => {
   if (mainAreaWorkerEnabled) {
