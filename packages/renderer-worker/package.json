@@ -79,7 +79,7 @@
     "@lvce-editor/status-bar-worker": "^1.13.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
-    "@lvce-editor/test-worker": "^11.2.0",
+    "@lvce-editor/test-worker": "^11.6.0",
     "@lvce-editor/text-measurement-worker": "^1.11.0",
     "@lvce-editor/text-search-worker": "^5.33.0",
     "@lvce-editor/title-bar-worker": "^3.12.0",
