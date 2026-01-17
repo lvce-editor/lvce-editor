@@ -5,6 +5,7 @@ import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as DeserializeEditorGroups from '../DeserializeEditorGroups/DeserializeEditorGroups.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
+import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as GetTabHighlightInfo from '../GetTabHighlightInfo/GetTabHighlightInfo.js'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
@@ -294,7 +295,21 @@ const handleTitleUpdated = async (uid, title) => {
   await Viewlet.setState(state.uid, newState)
 }
 
+const mainAreaWorkerEnabled = false
+
 export const loadContent = async (state, savedState) => {
+  if (mainAreaWorkerEnabled) {
+    await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, null)
+    await MainAreaWorker.invoke('MainArea.loadContent', state.uid, savedState)
+    const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
+    // @ts-ignore
+    const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
+  }
+  // return {
+  //   ...state,
+  //   // commands,
+  // }
+
   // TODO get restored editors from saved state
   const { activeGroupIndex, groups } = getRestoredGroups(savedState, state)
   // @ts-ignore
@@ -307,6 +322,16 @@ export const loadContent = async (state, savedState) => {
     groups,
     activeGroupIndex,
   }
+}
+
+export const hotReload = async (state) => {
+  await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, null)
+  await MainAreaWorker.invoke('MainArea.loadContent', state.uid, {})
+  const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
+  // @ts-ignore
+  const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
+  // TODO
+  return state
 }
 
 export const getChildren = (state) => {

@@ -23,6 +23,13 @@ export const getWatchConfig = () => {
       command: 'TitleBar.hotReload',
     })
   }
+  const mainAreaWorkerPath = Preferences.get('develop.mainAreaWorkerPath')
+  if (mainAreaWorkerPath) {
+    watchConfig.push({
+      path: mainAreaWorkerPath,
+      command: 'Main.hotReload',
+    })
+  }
   const extensionDetail = Preferences.get('develop.extensionDetailViewWorkerPath')
   if (extensionDetail) {
     watchConfig.push({
