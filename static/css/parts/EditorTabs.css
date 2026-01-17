@@ -23,7 +23,7 @@
   font-size: 13px;
   white-space: nowrap;
   max-width: 200px;
-  contain: strict;
+  contain: content;
   height: 100%;
   flex-shrink: 0;
   padding-left: 5px;
