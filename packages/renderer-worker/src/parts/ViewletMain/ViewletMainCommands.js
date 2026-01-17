@@ -12,6 +12,7 @@ export const Commands = {
   handleClickClose: ViewletMain.handleClickClose,
   reopenEditorWith: ViewletMain.reopenEditorWith,
   openKeyBindings: ViewletMain.openKeyBindings,
+  hotReload: ViewletMain.hotReload,
 }
 
 export const CommandsWithSideEffects = {
