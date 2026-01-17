@@ -5,7 +5,7 @@ import { wrapMainAreaCommand } from '../WrapMainAreaCommand/WrapMainAreaCommand.
 export const Commands = {}
 
 export const getCommands = async () => {
-  const commands = await MainAreaWorker.invoke('MainArea`.getCommandIds')
+  const commands = await MainAreaWorker.invoke('MainArea.getCommandIds')
   for (const command of commands) {
     Commands[command] = wrapMainAreaCommand(command)
   }
