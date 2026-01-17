@@ -391,6 +391,9 @@ const maybeRegisterMenuEntries = async (module) => {
 }
 
 const actuallyLoadModule = async (getModule, id) => {
+  if (!id) {
+    throw new Error(`id must be defined`)
+  }
   const module = await getModule(id)
   if (!module.hasFunctionalEvents) {
     await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id, /* hasFunctionalEvents */ module.hasFunctionalEvents)

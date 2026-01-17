@@ -12,7 +12,7 @@
   {
     "name": "builtin.chat",
     "repository": "github.com/lvce-editor/chat",
-    "version": "2.0.1"
+    "version": "2.1.0"
   },
   {
     "name": "builtin.language-basics-bat",
@@ -32,7 +32,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   {
     "name": "builtin.rest-client",
@@ -122,7 +122,7 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.15.0"
+    "version": "1.16.0"
   },
   {
     "name": "builtin.video-preview",
@@ -277,17 +277,17 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   {
     "name": "builtin.language-features-typescript",

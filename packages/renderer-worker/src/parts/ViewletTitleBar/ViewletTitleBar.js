@@ -53,6 +53,42 @@ export const loadContent = async (state) => {
   }
 }
 
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  await TitleBarWorker.restart('TitleBar.terminate')
+  const oldState = {
+    ...state,
+    items: [],
+  }
+  await TitleBarWorker.invoke(
+    'TitleBar.create3',
+    state.uid,
+    state.uri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    state.platform,
+    state.controlsOverlayEnabled,
+    state.titleBarStyleCustom,
+    state.assetDir,
+  )
+  await TitleBarWorker.invoke(`TitleBar.loadContent2`, state.uid)
+  const diffResult = await TitleBarWorker.invoke(`TitleBar.diff3`, state.uid)
+  const commands = await TitleBarWorker.invoke('TitleBar.render3', state.uid, diffResult)
+  return {
+    ...oldState,
+    commands,
+    isHotReloading: false,
+  }
+}
+
 export const handleFocusChange = (state, isFocused) => {
   return { ...state, isFocused }
 }

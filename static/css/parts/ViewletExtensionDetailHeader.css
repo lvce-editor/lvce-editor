@@ -41,7 +41,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  margin-top: 10px;
+  padding-top: 10px;
 }
 
 .ExtensionDetailIcon {
@@ -55,5 +55,5 @@
   display: flex;
   contain: content;
   gap: 10px;
-  margin-top: 10px;
+  padding-top: 10px;
 }

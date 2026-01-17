@@ -768,16 +768,17 @@ const getResizeCommands = async (oldPoints, newPoints) => {
     LayoutModules.Panel,
     LayoutModules.Preview,
   ]
-  const commands = []
-  // TODO resize all modules in parallel
-  for (const module of modules) {
-    const { kTop, kLeft, kWidth, kHeight, moduleId } = module
-    const instance = ViewletStates.getInstance(moduleId)
-    if (!instance) {
-      continue
-    }
-    const instanceUid = instance.state.uid
-    if (!isEqual(oldPoints, newPoints, kTop, kLeft, kWidth, kHeight)) {
+  const individualCommands = await Promise.all(
+    modules.map(async (module) => {
+      const { kTop, kLeft, kWidth, kHeight, moduleId } = module
+      const instance = ViewletStates.getInstance(moduleId)
+      if (!instance) {
+        return []
+      }
+      const instanceUid = instance.state.uid
+      if (isEqual(oldPoints, newPoints, kTop, kLeft, kWidth, kHeight)) {
+        return []
+      }
       const newTop = newPoints[kTop]
       const newLeft = newPoints[kLeft]
       const newWidth = newPoints[kWidth]
@@ -792,12 +793,10 @@ const getResizeCommands = async (oldPoints, newPoints) => {
         width: newWidth,
         height: newHeight,
       })
-      // @ts-ignore
-      commands.push(...resizeCommands)
-      // @ts-ignore
-      commands.push(['Viewlet.setBounds', instanceUid, newLeft, newTop, newWidth, newHeight])
-    }
-  }
+      return [...resizeCommands, ['Viewlet.setBounds', instanceUid, newLeft, newTop, newWidth, newHeight]]
+    }),
+  )
+  const commands = individualCommands.flat(1)
   return commands
 }
 
@@ -1128,14 +1127,11 @@ export const getActiveSideBarView = (state: any) => {
   return state.sideBarViewletId
 }
 
-export const openSideBarView = (state, moduleId, focus = false, args) => {
-  // TODO
-  // 1. create side bar if it doesn't exist
-  // 2. load sidebar content
-  // 3. update activity bar
+export const openSideBarView = async (state, moduleId, focus = false, args) => {
+  const newState1 = await callGlobalEvent(state, 'handleSideBarViewletChange', moduleId)
   return {
-    ...state,
-    commands: [],
+    ...newState1,
+    commands: newState1.commands,
   }
 }
 
