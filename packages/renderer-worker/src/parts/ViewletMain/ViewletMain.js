@@ -302,8 +302,11 @@ export const loadContent = async (state, savedState) => {
     await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, null)
     await MainAreaWorker.invoke('MainArea.loadContent', state.uid, savedState)
     const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
-    // @ts-ignore
     const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
+    return {
+      ...state,
+      commands,
+    }
   }
   // return {
   //   ...state,
@@ -328,10 +331,11 @@ export const hotReload = async (state) => {
   await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, null)
   await MainAreaWorker.invoke('MainArea.loadContent', state.uid, {})
   const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
-  // @ts-ignore
   const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
-  // TODO
-  return state
+  return {
+    ...state,
+    commands,
+  }
 }
 
 export const getChildren = (state) => {
