@@ -65,6 +65,7 @@
     "@lvce-editor/iframe-inspector": "^2.4.0",
     "@lvce-editor/iframe-worker": "^6.3.0",
     "@lvce-editor/keybindings-view": "^7.0.0",
+    "@lvce-editor/main-area-worker": "^1.1.0",
     "@lvce-editor/markdown-worker": "^4.0.0",
     "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/output-view": "^2.2.0",
