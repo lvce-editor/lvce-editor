@@ -6,4 +6,6 @@ export interface SearchState {
   readonly width: number
   readonly height: number
   readonly actionsDom: readonly any[]
+  readonly assetDir: string
+  readonly platform: number
 }
