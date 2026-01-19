@@ -13,6 +13,8 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     height,
     commands: [],
     actionsDom: [],
+    assetDir: AssetDir.assetDir,
+    platform: Platform.getPlatform(),
   }
 }
 
@@ -28,11 +30,11 @@ const doCreate = async (state: any): Promise<void> => {
     state.width,
     state.height,
     Workspace.state.workspacePath,
-    AssetDir.assetDir,
+    state.assetDir,
     itemHeight,
     value,
     replacement,
-    Platform.getPlatform(),
+    state.platform,
   )
 }
 
