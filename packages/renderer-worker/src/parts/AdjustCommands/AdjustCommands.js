@@ -11,6 +11,9 @@ export const apply = (oldState, newState) => {
     if (command[0] === 'Viewlet.setDom2') {
       return ['Viewlet.setDom2', newState.uid, ...command.slice(1)]
     }
+    if (command[0] === 'Viewlet.setPatches') {
+      return ['Viewlet.setPatches', newState.uid, ...command.slice(1)]
+    }
     if (command[0] === 'Viewlet.focusElementByName') {
       return ['Viewlet.focusElementByName', newState.uid, ...command.slice(1)]
     }
