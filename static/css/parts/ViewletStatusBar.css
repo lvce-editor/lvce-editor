@@ -66,4 +66,13 @@
   background: transparent;
   border: none;
   color: inherit;
+  display: flex;
+  contain: content;
+}
+
+.StatusBarItemLabel {
+  contain: content;
+  display: flex;
+  flex: 1;
+  height: 100%;
 }
