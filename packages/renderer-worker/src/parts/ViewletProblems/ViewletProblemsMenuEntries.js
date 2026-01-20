@@ -1,4 +1,4 @@
-import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.js'
+import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 
 export const menus = []
 
