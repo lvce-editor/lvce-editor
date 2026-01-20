@@ -1124,7 +1124,7 @@ export const handleExtensionsChanged = async (state: LayoutState) => {
   return callGlobalEvent(state, 'handleExtensionsChanged')
 }
 
-export const getActiveSideBarView = (state: any) => {
+export const getActiveSideBarView = (state: LayoutState) => {
   return state.sideBarView
 }
 
