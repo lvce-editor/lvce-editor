@@ -23,6 +23,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { assetDir } from '../AssetDir/AssetDir.js'
+import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
@@ -211,12 +212,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   }
 }
 
-export const create = (id) => {
+export const create = (id: number): LayoutState => {
   Assert.number(id)
   return {
     points: new Uint16Array(LayoutKeys.Total),
-    sideBarViewletId: '',
-    [LayoutKeys.SashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
     activityBarId: Id.create(),
@@ -247,10 +246,12 @@ export const create = (id) => {
     commit: Commit.commit,
     platform: Platform.platform,
     assetDir,
+    commands: [],
+    sashId: SashType.None,
   }
 }
 
-export const saveState = (state) => {
+export const saveState = (state: LayoutState) => {
   const { points, sideBarView } = state
   const pointsArray = [...points]
   return {
@@ -422,7 +423,7 @@ const toggle = (state, module, moduleId) => {
   return show(state, module, moduleId)
 }
 
-export const showSideBar = async (state) => {
+export const showSideBar = async (state: LayoutState) => {
   // @ts-ignore
   const { newState, commands } = await show(state, LayoutModules.SideBar)
   const { activityBarId } = newState
@@ -437,7 +438,7 @@ export const showSideBar = async (state) => {
   }
 }
 
-export const hideSideBar = async (state) => {
+export const hideSideBar = async (state: LayoutState) => {
   const { newState, commands } = await hide(state, LayoutModules.SideBar)
   const { activityBarId } = newState
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarHidden', activityBarId)
@@ -449,17 +450,17 @@ export const hideSideBar = async (state) => {
   }
 }
 
-export const toggleSideBar = (state) => {
+export const toggleSideBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.SideBar)
 }
 
-export const showPanel = (state) => {
+export const showPanel = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.Panel)
 }
 
-export const hidePanel = (state) => {
+export const hidePanel = (state: LayoutState) => {
   return hide(state, LayoutModules.Panel)
 }
 
@@ -467,72 +468,72 @@ export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
   return toggle(state, LayoutModules.Panel, moduleId)
 }
 
-export const showActivityBar = (state) => {
+export const showActivityBar = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.ActivityBar)
 }
 
-export const hideActivityBar = (state) => {
+export const hideActivityBar = (state: LayoutState) => {
   return hide(state, LayoutModules.ActivityBar)
 }
 
-export const toggleActivityBar = (state) => {
+export const toggleActivityBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.ActivityBar)
 }
 
-export const showStatusBar = (state) => {
+export const showStatusBar = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.StatusBar)
 }
 
-export const hideStatusBar = (state) => {
+export const hideStatusBar = (state: LayoutState) => {
   return hide(state, LayoutModules.StatusBar)
 }
 
-export const toggleStatusBar = (state) => {
+export const toggleStatusBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.StatusBar)
 }
 
-export const showPreview = (state) => {
+export const showPreview = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.Preview)
 }
 
-export const hidePreview = (state) => {
+export const hidePreview = (state: LayoutState) => {
   return hide(state, LayoutModules.Preview)
 }
 
-export const togglePreview = (state) => {
+export const togglePreview = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.Preview)
 }
 
-export const showTitleBar = (state) => {
+export const showTitleBar = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.TitleBar)
 }
 
-export const hideTitleBar = (state) => {
+export const hideTitleBar = (state: LayoutState) => {
   return hide(state, LayoutModules.TitleBar)
 }
 
-export const toggleTitleBar = (state) => {
+export const toggleTitleBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.TitleBar)
 }
 
-export const showMain = (state) => {
+export const showMain = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.Main)
 }
 
-export const hideMain = (state) => {
+export const hideMain = (state: LayoutState) => {
   return hide(state, LayoutModules.Main)
 }
 
-export const toggleMain = (state) => {
+export const toggleMain = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.Main)
 }
@@ -617,40 +618,40 @@ const loadIfVisible = async (state, module) => {
   }
 }
 
-export const loadMainIfVisible = (state) => {
+export const loadMainIfVisible = (state: LayoutState) => {
   return loadIfVisible(state, LayoutModules.Main)
 }
 
-export const loadSideBarIfVisible = async (state) => {
+export const loadSideBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.SideBar)
   return {
     ...updated,
   }
 }
 
-export const loadPanelIfVisible = (state) => {
+export const loadPanelIfVisible = (state: LayoutState) => {
   return loadIfVisible(state, LayoutModules.Panel)
 }
 
-export const loadActivityBarIfVisible = async (state) => {
+export const loadActivityBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
   return {
     ...updated,
   }
 }
 
-export const loadStatusBarIfVisible = (state) => {
+export const loadStatusBarIfVisible = (state: LayoutState) => {
   return loadIfVisible(state, LayoutModules.StatusBar)
 }
 
-export const loadTitleBarIfVisible = async (state) => {
+export const loadTitleBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.TitleBar)
   return {
     ...updated,
   }
 }
 
-export const loadPreviewIfVisible = (state) => {
+export const loadPreviewIfVisible = (state: LayoutState) => {
   return loadIfVisible(state, LayoutModules.Preview)
 }
 
@@ -870,7 +871,7 @@ const showPlaceholder = (uid, points, module) => {
   ]
 }
 
-export const handleSashPointerMove = async (state, x, y) => {
+export const handleSashPointerMove = async (state: LayoutState, x: number, y: number) => {
   const { points, sashId } = state
   const newPoints = getNewStatePointerMove(sashId, points, x, y)
   getPoints(newPoints, newPoints)
@@ -904,7 +905,7 @@ export const handleSashPointerMove = async (state, x, y) => {
   }
 }
 
-export const handleResize = async (state, windowWidth, windowHeight) => {
+export const handleResize = async (state: LayoutState, windowWidth: number, windowHeight: number) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   newPoints[LayoutKeys.WindowWidth] = windowWidth
@@ -932,20 +933,20 @@ const handleFocusChange = (state, isFocused) => {
   }
 }
 
-export const handleFocus = (state) => {
+export const handleFocus = (state: LayoutState) => {
   return handleFocusChange(state, true)
 }
 
-export const showE2eTests = async (state) => {
+export const showE2eTests = async (state: LayoutState) => {
   await Command.execute('SideBar.show', 'E2eTests')
   return state
 }
 
-export const handleBlur = (state) => {
+export const handleBlur = (state: LayoutState) => {
   return handleFocusChange(state, false)
 }
 
-const handleSashDoubleClickPanel = async (state) => {
+const handleSashDoubleClickPanel = async (state: LayoutState) => {
   const { points } = state
   if (points[LayoutKeys.PanelVisible]) {
     const newPoints = new Uint16Array(points)
@@ -967,7 +968,7 @@ const handleSashDoubleClickPanel = async (state) => {
 }
 
 // TODO return commands and newState
-const handleSashDoubleClickSideBar = async (state) => {
+const handleSashDoubleClickSideBar = async (state: LayoutState) => {
   const { points } = state
   if (points[LayoutKeys.SideBarVisible]) {
     const newPoints = new Uint16Array(points)
@@ -988,7 +989,7 @@ const handleSashDoubleClickSideBar = async (state) => {
   }
 }
 
-export const moveSideBar = async (state, position) => {
+export const moveSideBar = async (state: LayoutState, position: any) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   getPoints(newPoints, newPoints, position)
@@ -1004,15 +1005,15 @@ export const moveSideBar = async (state, position) => {
   }
 }
 
-export const moveSideBarLeft = (state) => {
+export const moveSideBarLeft = (state: LayoutState) => {
   return moveSideBar(state, SideBarLocationType.Left)
 }
 
-export const moveSideBarRight = (state) => {
+export const moveSideBarRight = (state: LayoutState) => {
   return moveSideBar(state, SideBarLocationType.Right)
 }
 
-export const toggleSideBarPosition = (state) => {
+export const toggleSideBarPosition = (state: LayoutState) => {
   const { sideBarLocation } = state
   if (sideBarLocation === SideBarLocationType.Left) {
     return moveSideBarRight(state)
@@ -1020,7 +1021,7 @@ export const toggleSideBarPosition = (state) => {
   return moveSideBarLeft(state)
 }
 
-export const handleSashDoubleClick = (state, sashId) => {
+export const handleSashDoubleClick = (state: LayoutState, sashId: string) => {
   switch (sashId) {
     case SashType.Panel:
       return handleSashDoubleClickPanel(state)
@@ -1031,12 +1032,12 @@ export const handleSashDoubleClick = (state, sashId) => {
   }
 }
 
-export const isSideBarVisible = (state) => {
+export const isSideBarVisible = (state: LayoutState) => {
   const { points } = state
   return points[LayoutKeys.SideBarVisible]
 }
 
-export const getInitialPlaceholderCommands = (state) => {
+export const getInitialPlaceholderCommands = (state: LayoutState) => {
   const { points } = state
   const commands = []
   const uid = state.uid
@@ -1062,7 +1063,7 @@ export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
 }
 
-const callGlobalEvent = async (state, eventName, ...args) => {
+const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<LayoutStateResult> => {
   const instances = ViewletStates.getAllInstances()
   const allCommands = []
   // @ts-ignore
@@ -1089,15 +1090,15 @@ const callGlobalEvent = async (state, eventName, ...args) => {
   }
 }
 
-export const getCommit = (state) => {
+export const getCommit = (state: LayoutState) => {
   return state.commit
 }
 
-export const getPlatform = (state) => {
+export const getPlatform = (state: LayoutState) => {
   return state.platform
 }
 
-export const getAssetDir = (state) => {
+export const getAssetDir = (state: LayoutState) => {
   return state.assetDir
 }
 
@@ -1111,7 +1112,7 @@ export const setUpdateState = async (state, updateState) => {
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
-export const handleWorkspaceRefresh = async (state) => {
+export const handleWorkspaceRefresh = async (state: LayoutState) => {
   return callGlobalEvent(state, 'handleWorkspaceRefresh')
 }
 
@@ -1119,15 +1120,15 @@ export const handleBadgeCountChange = async (state, changes) => {
   return callGlobalEvent(state, 'handleBadgeCountChange', changes)
 }
 
-export const handleExtensionsChanged = async (state) => {
+export const handleExtensionsChanged = async (state: LayoutState) => {
   return callGlobalEvent(state, 'handleExtensionsChanged')
 }
 
 export const getActiveSideBarView = (state: any) => {
-  return state.sideBarViewletId
+  return state.sideBarView
 }
 
-export const openSideBarView = async (state, moduleId, focus = false, args) => {
+export const openSideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
   const newState1 = await callGlobalEvent(state, 'handleSideBarViewletChange', moduleId)
   return {
     ...newState1,
@@ -1135,7 +1136,7 @@ export const openSideBarView = async (state, moduleId, focus = false, args) => {
   }
 }
 
-export const getBadgeCounts = (state) => {
+export const getBadgeCounts = (state: LayoutState) => {
   const states = ViewletStates.getAllInstances()
   const badgeCounts = Object.create(null)
   for (const value of Object.values(states)) {
