@@ -1129,10 +1129,10 @@ export const getActiveSideBarView = (state: LayoutState) => {
 }
 
 export const openSideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
-  const newState1 = await callGlobalEvent(state, 'handleSideBarViewletChange', moduleId)
+  const { newState, commands } = await callGlobalEvent(state, 'handleSideBarViewletChange', moduleId)
   return {
-    ...newState1,
-    commands: newState1.commands,
+    newState: { ...newState, sideBarView: moduleId },
+    commands,
   }
 }
 
