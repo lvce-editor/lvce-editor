@@ -69,7 +69,7 @@
     "@lvce-editor/markdown-worker": "^4.0.0",
     "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/output-view": "^2.2.0",
-    "@lvce-editor/problems-view": "^1.16.0",
+    "@lvce-editor/problems-view": "^1.18.0",
     "@lvce-editor/references-view": "^2.5.0",
     "@lvce-editor/rename-worker": "^1.28.0",
     "@lvce-editor/renderer-process": "^20.4.0",
