@@ -76,3 +76,9 @@
   flex: 1;
   height: 100%;
 }
+
+.StatusBarIcon {
+  width: 30px;
+  height: 19px;
+  contain: strict;
+}
