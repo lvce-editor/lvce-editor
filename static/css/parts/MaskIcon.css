@@ -261,6 +261,11 @@
   mask-image: url(/icons/error.svg);
 }
 
+.MaskIconWarning,
+.IconWarning {
+  mask-image: url(/icons/warning.svg);
+}
+
 .MaskIconCircleFilled,
 .IconCircleFilled {
   mask-image: url(/icons/circle-filled.svg);
