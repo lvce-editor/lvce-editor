@@ -7,7 +7,7 @@
   margin: 0;
   padding: 0;
   background: var(--TabsBackground); /* TODO variable name should match class name */
-  position: absolute;
+  /* position: absolute; */
   overflow: hidden;
 }
 
