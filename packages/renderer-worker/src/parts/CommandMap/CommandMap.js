@@ -472,6 +472,7 @@ export const commandMap = {
   'Layout.setUpdateState': lazy('Layout.setUpdateState'),
   'Layout.showActivityBar': lazy('Layout.showActivityBar'),
   'Layout.showE2eTests': lazy('Layout.showE2eTests'),
+  'Layout.getModuleId': lazy('Layout.getModuleId'),
   'Layout.showMain': lazy('Layout.showMain'),
   'Layout.showPanel': lazy('Layout.showPanel'),
   'Layout.showPreview': lazy('Layout.showPreview'),

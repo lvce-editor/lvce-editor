@@ -1,7 +1,9 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
+import { assetDir } from '../AssetDir/AssetDir.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
+import * as Commit from '../Commit/Commit.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
@@ -11,7 +13,6 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Commit from '../Commit/Commit.js'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
@@ -19,10 +20,10 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import { assetDir } from '../AssetDir/AssetDir.js'
 import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
 
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
@@ -1144,4 +1145,8 @@ export const getBadgeCounts = (state: LayoutState) => {
     badgeCounts[value.moduleId] = value.state.badgeCount || 0
   }
   return badgeCounts
+}
+
+export const getModuleId = (state: LayoutState, uri: string) => {
+  return ViewletMap.getModuleId(uri)
 }
