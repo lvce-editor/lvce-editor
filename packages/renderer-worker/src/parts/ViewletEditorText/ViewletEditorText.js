@@ -44,6 +44,7 @@ export const handleTokenizeChange = () => {
 
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
+  console.log({ uri })
   const fileName = Workspace.pathBaseName(uri)
   const languageId = Languages.getLanguageId(fileName)
   const state = Editor.create(id, uri, languageId)
