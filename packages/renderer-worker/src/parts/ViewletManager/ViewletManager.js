@@ -58,6 +58,7 @@ const runFn = async (instance, id, key, fn, args) => {
       key === 'getCommitDate' ||
       key === 'getVersion' ||
       key === 'getProductNameLong' ||
+      key === 'getModuleId' ||
       key === 'getPlatform'
     ) {
       return newState

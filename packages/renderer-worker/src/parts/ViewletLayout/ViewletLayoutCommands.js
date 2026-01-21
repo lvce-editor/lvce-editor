@@ -8,7 +8,7 @@ export const Commands = {
   getPlatform: ViewletLayout.getPlatform,
   getAssetDir: ViewletLayout.getAssetDir,
   getBadgeCounts: ViewletLayout.getBadgeCounts,
-
+  getModuleId: ViewletLayout.getModuleId,
 }
 
 export const CommandsWithSideEffects = {
