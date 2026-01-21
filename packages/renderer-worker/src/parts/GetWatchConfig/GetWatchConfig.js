@@ -30,6 +30,13 @@ export const getWatchConfig = () => {
       command: 'Main.hotReload',
     })
   }
+  const statusBarWorkerPath = Preferences.get('develop.statusBarWorkerPath')
+  if (statusBarWorkerPath) {
+    watchConfig.push({
+      path: statusBarWorkerPath,
+      command: 'StatusBar.hotReload',
+    })
+  }
   const extensionDetail = Preferences.get('develop.extensionDetailViewWorkerPath')
   if (extensionDetail) {
     watchConfig.push({
