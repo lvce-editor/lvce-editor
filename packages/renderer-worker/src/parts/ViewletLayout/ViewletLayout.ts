@@ -525,7 +525,15 @@ export const toggleTitleBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.TitleBar)
 }
 
-export const createViewlet = async (state: LayoutState, viewletModuleId: string, requestId: number, tabId: number, bounds: any, uri: string) => {
+export const createViewlet = async (
+  state: LayoutState,
+  viewletModuleId: string,
+  requestId: number,
+  tabId: number,
+  bounds: any,
+  uri: string,
+  instanceId: number,
+) => {
   console.log({ uri })
   const commands = await ViewletManager.load(
     {
@@ -534,6 +542,7 @@ export const createViewlet = async (state: LayoutState, viewletModuleId: string,
       type: 0,
       // @ts-ignore
       uri: uri,
+      uid: instanceId,
       show: false,
       focus: false,
       setBounds: false,
@@ -548,7 +557,6 @@ export const createViewlet = async (state: LayoutState, viewletModuleId: string,
     false,
     true,
   )
-  console.log({ viewletModuleId, requestId, tabId, bounds, uri, commands })
   // @ts-ignore
   return {
     newState: state,
