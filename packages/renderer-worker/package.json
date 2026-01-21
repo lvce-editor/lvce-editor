@@ -83,7 +83,7 @@
     "@lvce-editor/test-worker": "^11.6.0",
     "@lvce-editor/text-measurement-worker": "^1.11.0",
     "@lvce-editor/text-search-worker": "^5.34.0",
-    "@lvce-editor/title-bar-worker": "^3.12.0",
+    "@lvce-editor/title-bar-worker": "^3.13.0",
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
