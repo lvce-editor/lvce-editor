@@ -58,22 +58,22 @@ export const getKeyBindings = () => {
 
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyX,
-      command: 'Focus.set',
+      command: 'Layout.openSideBarViewlet',
       args: ['Extensions'],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyG,
-      command: 'Focus.set',
+      command: 'Layout.openSideBarViewlet',
       args: ['Source Control'],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyE,
-      command: 'Focus.set',
+      command: 'Layout.openSideBarViewlet',
       args: ['Explorer'],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyF,
-      command: 'Focus.set',
+      command: 'Layout.openSideBarViewlet',
       args: ['Search'],
     },
     {
