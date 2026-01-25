@@ -387,7 +387,7 @@ export const build = async ({
   await copyCss({ resourcesPath })
   console.timeEnd('copyCss')
 
-  const assetDir = `../../../../..`
+  const assetDir = `/${commitHash}`
   const toRoot = `${resourcesPath}/app/static/${commitHash}`
 
   await BundleWorkers.bundleWorkers({
