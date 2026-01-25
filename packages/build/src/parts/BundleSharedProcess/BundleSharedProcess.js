@@ -191,6 +191,11 @@ export const getBuiltinExtensionsPath = () => {
       occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
       replacement: `Path.join(Root.root, 'static', '${commitHash}', 'config', 'defaultSettings.json')`,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
+      occurrence: `return process.env.BUILTIN_EXTENSIONS_PATH || Path.join(Root.root, 'extensions');`,
+      replacement: `return Path.join(Root.root, 'static', '${commitHash}', 'extensions');`,
+    })
   }
   if (target === 'server') {
     await Copy.copy({
