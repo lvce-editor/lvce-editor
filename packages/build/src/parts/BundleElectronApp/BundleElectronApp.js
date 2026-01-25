@@ -13,6 +13,7 @@ import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Rename from '../Rename/Rename.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
@@ -204,6 +205,10 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
     ignore: ['css'],
   })
   await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
+  await Rename.rename({
+    from: `${resourcesPath}/app/static/${commitHash}/index.html`,
+    to: `${resourcesPath}/app/static/index.html`,
+  })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
     occurrence: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
