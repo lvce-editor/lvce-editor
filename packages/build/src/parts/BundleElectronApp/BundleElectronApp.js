@@ -364,7 +364,7 @@ export const build = async ({
     version,
     bundleSharedProcess,
     date,
-    target: '',
+    target,
     isArchLinux,
     isAppImage,
   })

@@ -20,18 +20,18 @@ import * as Symlink from '../Symlink/Symlink.js'
 import * as Template from '../Template/Template.js'
 import * as Version from '../Version/Version.js'
 
-const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales, arch = ArchType.Amd64, platform }) => {
+const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales, arch = ArchType.Amd64, platform, target }) => {
   // if (existsSync(Path.absolute(`packages/build/.tmp/electron-bundle`))) {
   //   console.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
   // @ts-ignore
-  await build({ product, version, shouldRemoveUnusedLocales, arch, platform })
+  await build({ product, version, shouldRemoveUnusedLocales, arch, platform, target })
 }
 
-const copyElectronResult = async ({ product, version, arch, debArch, platform }) => {
-  await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true, arch, platform })
+const copyElectronResult = async ({ product, version, arch, debArch, platform, target }) => {
+  await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true, arch, platform, target })
   await Copy.copy({
     from: `packages/build/.tmp/electron-bundle/${arch}`,
     to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
@@ -188,7 +188,7 @@ const cleanup = async ({ debArch }) => {
   await Remove.remove(cwd)
 }
 
-export const build = async ({ product, arch }) => {
+export const build = async ({ product, arch, target }) => {
   const platform = 'linux'
   if (arch === ArchType.ArmHf) {
     arch = ArchType.Armv7l
@@ -206,7 +206,7 @@ export const build = async ({ product, arch }) => {
   console.timeEnd('cleanup')
 
   console.time('copyElectronResult')
-  await copyElectronResult({ product, version, arch, debArch, platform })
+  await copyElectronResult({ product, version, arch, debArch, platform, target })
   console.timeEnd('copyElectronResult')
 
   console.time('copyMetaFiles')
