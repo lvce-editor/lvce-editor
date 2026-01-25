@@ -241,9 +241,9 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ resourcesPath }) => {
+const copyCss = async ({ resourcesPath, commitHash }) => {
   await BundleCss.bundleCss({
-    outDir: `${resourcesPath}/app/static/css`,
+    outDir: `${resourcesPath}/app/static/${commitHash}/css`,
   })
 }
 
@@ -389,7 +389,7 @@ export const build = async ({
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ resourcesPath })
+  await copyCss({ resourcesPath, commitHash })
   console.timeEnd('copyCss')
 
   const assetDir = `/${commitHash}`
