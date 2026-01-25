@@ -409,7 +409,7 @@ export const build = async ({
   await generateConfigJson({
     etag,
     configRoot: Path.absolute(`${resourcesPath}/app`),
-    staticRoot: Path.absolute(`${resourcesPath}/app/static`),
+    staticRoot: Path.absolute(`${resourcesPath}/app`),
   })
 
   console.time('addRootPackageJson')
