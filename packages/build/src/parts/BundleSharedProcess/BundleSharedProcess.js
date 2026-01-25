@@ -193,8 +193,8 @@ export const getBuiltinExtensionsPath = () => {
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
-      occurrence: `return process.env.BUILTIN_EXTENSIONS_PATH || Path.join(Root.root, 'extensions');`,
-      replacement: `return Path.join(Root.root, 'static', '${commitHash}', 'extensions');`,
+      occurrence: `return process.env.BUILTIN_EXTENSIONS_PATH || Path.join(Root.root, 'extensions')`,
+      replacement: `return Path.join(Root.root, 'static', '${commitHash}', 'extensions')`,
     })
   }
   if (target === 'server') {
