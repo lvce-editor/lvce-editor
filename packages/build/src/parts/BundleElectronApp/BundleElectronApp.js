@@ -166,13 +166,13 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHas
         }
       }
       await Copy.copy({
-        from: `${resourcesPath}/app/extensions/${dirent}/src`,
-        to: `${resourcesPath}/app/extensions/builtin.language-basics/${postfix}`,
+        from: `${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/src`,
+        to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}`,
       })
       if (existsSync(Path.absolute(`${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`))) {
         await Copy.copy({
-          from: `${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`,
-          to: `${resourcesPath}/app/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
+          from: `${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/languageConfiguration.json`,
+          to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
         })
       }
       await Remove.remove(`${resourcesPath}/app/extensions/${dirent}`)
