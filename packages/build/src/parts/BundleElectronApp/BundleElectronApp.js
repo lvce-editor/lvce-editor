@@ -129,9 +129,9 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHas
     dereference: true,
   })
 
-  await Remove.remove(`${resourcesPath}/app/extensions/builtin.language-features-html/typescript`)
+  await Remove.remove(`${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-features-html/typescript`)
   await Replace.replace({
-    path: `${resourcesPath}/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
+    path: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
     occurrence: '../../../../typescript/lib/typescript-esm.js',
     replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
   })
