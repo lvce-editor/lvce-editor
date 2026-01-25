@@ -387,7 +387,7 @@ export const build = async ({
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ optimizeLanguageBasics, resourcesPath })
+  await copyExtensions({ optimizeLanguageBasics, resourcesPath, commitHash })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
