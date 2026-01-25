@@ -55,7 +55,6 @@ export const bundleSharedProcess = async ({
   isArchLinux,
   isAppImage,
 }) => {
-  // await new Promise(() => {}) // prevent this script from running)
   await Copy.copy({
     from: 'packages/shared-process/src',
     to: `${cachePath}/src`,
