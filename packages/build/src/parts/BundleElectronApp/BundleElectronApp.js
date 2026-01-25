@@ -146,14 +146,14 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHas
   //   replacement: '/file-icons',
   // })
   if (optimizeLanguageBasics) {
-    const dirents = await ReadDir.readDir(`${resourcesPath}/app/extensions`)
+    const dirents = await ReadDir.readDir(`${resourcesPath}/app/static/${commitHash}/extensions`)
     const allLanguages = []
     for (const dirent of dirents) {
       if (!dirent.startsWith('builtin.language-basics-')) {
         continue
       }
       const postfix = dirent.slice('builtin.language-basics-'.length)
-      const extensionJson = await JsonFile.readJson(`${resourcesPath}/app/extensions/${dirent}/extension.json`)
+      const extensionJson = await JsonFile.readJson(`${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/extension.json`)
       if (extensionJson && extensionJson.languages && Array.isArray(extensionJson.languages)) {
         for (const language of extensionJson.languages) {
           if (language.configuration) {
