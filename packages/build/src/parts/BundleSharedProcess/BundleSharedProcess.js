@@ -66,7 +66,7 @@ export const bundleSharedProcess = async ({
   await Replace.replace({
     path: `${cachePath}/src/parts/PreloadUrl/PreloadUrl.js`,
     occurrence: `join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'preload', 'src', 'index.js')`,
-    replacement: `join(Root.root, 'packages', 'preload', 'dist', 'index.js')`,
+    replacement: `join(Root.root, 'static', '${commitHash}', 'packages', 'preload', 'dist', 'index.js')`,
   })
   await WriteFile.writeFile({
     to: `${cachePath}/src/parts/GetExtraHeaders/GetExtraHeaders.js`,
