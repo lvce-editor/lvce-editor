@@ -175,10 +175,10 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHas
           to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
         })
       }
-      await Remove.remove(`${resourcesPath}/app/extensions/${dirent}`)
+      await Remove.remove(`${resourcesPath}/app/static/${commitHash}/extensions/${dirent}`)
     }
     await JsonFile.writeJson({
-      to: `${resourcesPath}/app/extensions/builtin.language-basics/extension.json`,
+      to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/extension.json`,
       value: {
         id: 'builtin.language-basics',
         name: 'Language Basics',
@@ -187,7 +187,7 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHas
       },
     })
     await WriteFile.writeFile({
-      to: `${resourcesPath}/app/extensions/builtin.language-basics/README.md`,
+      to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/README.md`,
       content: `# Language Basics
 
 Syntax highlighting for Lvce Editor.
