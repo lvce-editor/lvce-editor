@@ -216,6 +216,11 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '/css/App.css',
+    replacement: `/${commitHash}/css/App.css`,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: '\n    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />',
     replacement: ``,
   })
