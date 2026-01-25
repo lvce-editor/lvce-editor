@@ -197,17 +197,17 @@ For performance reason, all languages extensions are bundled into one during bui
   }
 }
 
-const copyStaticFiles = async ({ resourcesPath }) => {
+const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'static',
-    to: `${resourcesPath}/app/static`,
+    to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['css'],
   })
   await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
     occurrence: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
-    replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
+    replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
@@ -380,7 +380,7 @@ export const build = async ({
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles({ resourcesPath })
+  await copyStaticFiles({ resourcesPath, commitHash })
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
