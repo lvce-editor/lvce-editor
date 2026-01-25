@@ -39,6 +39,11 @@ export const bundleMainProcess = async ({
   })
   await Replace.replace({
     path: `${cachePath}/dist/mainProcessMain.js`,
+    occurrence: `const useIpcForResponse = true`,
+    replacement: `const useIpcForResponse = false`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/dist/mainProcessMain.js`,
     occurrence: `const isLinux = platform === 'linux'`,
     replacement: `const isLinux = ${isLinux}`,
   })

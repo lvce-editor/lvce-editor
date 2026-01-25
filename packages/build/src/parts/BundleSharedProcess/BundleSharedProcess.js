@@ -184,6 +184,14 @@ export const getBuiltinExtensionsPath = () => {
       replacement: `export const isMacOs = ${Platform.isMacos()}`,
     })
   }
+
+  if (target.includes('electron')) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
+      occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
+      replacement: `Path.join(Root.root, 'static', '${commitHash}', 'config', 'defaultSettings.json')`,
+    })
+  }
   if (target === 'server') {
     await Copy.copy({
       from: 'packages/shared-process/bin',

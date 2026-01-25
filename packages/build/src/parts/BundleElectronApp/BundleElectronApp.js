@@ -23,6 +23,7 @@ import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage }) => {
   const files = [
@@ -387,7 +388,7 @@ export const build = async ({
   console.timeEnd('copyCss')
 
   const assetDir = `../../../../..`
-  const toRoot = `${resourcesPath}/app`
+  const toRoot = `${resourcesPath}/app/static/${commitHash}`
 
   await BundleWorkers.bundleWorkers({
     platform: 'electron',
@@ -402,6 +403,14 @@ export const build = async ({
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })
   console.timeEnd('copyPlaygroundFiles')
+
+  const etag = `W/"${commitHash}"`
+
+  await generateConfigJson({
+    etag,
+    configRoot: Path.absolute(`${resourcesPath}/app`),
+    staticRoot: Path.absolute(`${resourcesPath}/app/static`),
+  })
 
   console.time('addRootPackageJson')
   await AddRootPackageJson.addRootPackageJson({
