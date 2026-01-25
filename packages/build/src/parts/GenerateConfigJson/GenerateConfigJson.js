@@ -52,7 +52,7 @@ export const generateConfigJson = async ({ etag, staticRoot, configRoot }) => {
   const isImmutable = 1
   const headers = filePaths.map((file) => getHeadersModule.getHeaders(file, etag, isImmutable))
   const uniqueHeaders = getUniqueHeaders(headers)
-  const configJsonPath = Path.absolute(`${configRoot}}/config.json`)
+  const configJsonPath = Path.absolute(`${configRoot}/config.json`)
   const map = generateFilesCodeMap(uniqueHeaders.indexes, uris)
   await writeJson({
     to: configJsonPath,
