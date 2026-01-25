@@ -253,11 +253,12 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
-  const { points, sideBarView } = state
+  const { points, sideBarView, sideBarLocation } = state
   const pointsArray = [...points]
   return {
     points: pointsArray,
     sideBarView,
+    sideBarLocation,
   }
 }
 
