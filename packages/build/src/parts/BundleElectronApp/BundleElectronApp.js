@@ -122,10 +122,10 @@ const removeSrcPrefix = (postfix) => {
   return postfix
 }
 
-const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
+const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'extensions',
-    to: `${resourcesPath}/app/extensions`,
+    to: `${resourcesPath}/app/static/${commitHash}/extensions`,
     dereference: true,
   })
 
