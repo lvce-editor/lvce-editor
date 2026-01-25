@@ -185,9 +185,7 @@ export const getBuiltinExtensionsPath = () => {
     })
   }
 
-  console.log({ target })
   if (target.includes('electron')) {
-    console.log('replace config')
     await Replace.replace({
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
