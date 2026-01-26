@@ -13,6 +13,7 @@ import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Rename from '../Rename/Rename.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
@@ -23,6 +24,7 @@ import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage }) => {
   const files = [
@@ -120,16 +122,16 @@ const removeSrcPrefix = (postfix) => {
   return postfix
 }
 
-const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
+const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'extensions',
-    to: `${resourcesPath}/app/extensions`,
+    to: `${resourcesPath}/app/static/${commitHash}/extensions`,
     dereference: true,
   })
 
-  await Remove.remove(`${resourcesPath}/app/extensions/builtin.language-features-html/typescript`)
+  await Remove.remove(`${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-features-html/typescript`)
   await Replace.replace({
-    path: `${resourcesPath}/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
+    path: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
     occurrence: '../../../../typescript/lib/typescript-esm.js',
     replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
   })
@@ -144,14 +146,14 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
   //   replacement: '/file-icons',
   // })
   if (optimizeLanguageBasics) {
-    const dirents = await ReadDir.readDir(`${resourcesPath}/app/extensions`)
+    const dirents = await ReadDir.readDir(`${resourcesPath}/app/static/${commitHash}/extensions`)
     const allLanguages = []
     for (const dirent of dirents) {
       if (!dirent.startsWith('builtin.language-basics-')) {
         continue
       }
       const postfix = dirent.slice('builtin.language-basics-'.length)
-      const extensionJson = await JsonFile.readJson(`${resourcesPath}/app/extensions/${dirent}/extension.json`)
+      const extensionJson = await JsonFile.readJson(`${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/extension.json`)
       if (extensionJson && extensionJson.languages && Array.isArray(extensionJson.languages)) {
         for (const language of extensionJson.languages) {
           if (language.configuration) {
@@ -164,19 +166,19 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
         }
       }
       await Copy.copy({
-        from: `${resourcesPath}/app/extensions/${dirent}/src`,
-        to: `${resourcesPath}/app/extensions/builtin.language-basics/${postfix}`,
+        from: `${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/src`,
+        to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}`,
       })
       if (existsSync(Path.absolute(`${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`))) {
         await Copy.copy({
-          from: `${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`,
-          to: `${resourcesPath}/app/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
+          from: `${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/languageConfiguration.json`,
+          to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
         })
       }
-      await Remove.remove(`${resourcesPath}/app/extensions/${dirent}`)
+      await Remove.remove(`${resourcesPath}/app/static/${commitHash}/extensions/${dirent}`)
     }
     await JsonFile.writeJson({
-      to: `${resourcesPath}/app/extensions/builtin.language-basics/extension.json`,
+      to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/extension.json`,
       value: {
         id: 'builtin.language-basics',
         name: 'Language Basics',
@@ -185,7 +187,7 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
       },
     })
     await WriteFile.writeFile({
-      to: `${resourcesPath}/app/extensions/builtin.language-basics/README.md`,
+      to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/README.md`,
       content: `# Language Basics
 
 Syntax highlighting for Lvce Editor.
@@ -196,17 +198,26 @@ For performance reason, all languages extensions are bundled into one during bui
   }
 }
 
-const copyStaticFiles = async ({ resourcesPath }) => {
+const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'static',
-    to: `${resourcesPath}/app/static`,
+    to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['css'],
   })
   await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
+  await Rename.rename({
+    from: `${resourcesPath}/app/static/${commitHash}/index.html`,
+    to: `${resourcesPath}/app/static/index.html`,
+  })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
     occurrence: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
-    replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
+    replacement: `${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '/css/App.css',
+    replacement: `/${commitHash}/css/App.css`,
   })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
@@ -235,9 +246,10 @@ const copyStaticFiles = async ({ resourcesPath }) => {
   await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ resourcesPath }) => {
+const copyCss = async ({ resourcesPath, commitHash }) => {
   await BundleCss.bundleCss({
-    outDir: `${resourcesPath}/app/static/css`,
+    outDir: `${resourcesPath}/app/static/${commitHash}/css`,
+    assetDir: `/${commitHash}`,
   })
 }
 
@@ -358,7 +370,7 @@ export const build = async ({
     version,
     bundleSharedProcess,
     date,
-    target: '',
+    target,
     isArchLinux,
     isAppImage,
   })
@@ -375,19 +387,19 @@ export const build = async ({
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ optimizeLanguageBasics, resourcesPath })
+  await copyExtensions({ optimizeLanguageBasics, resourcesPath, commitHash })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles({ resourcesPath })
+  await copyStaticFiles({ resourcesPath, commitHash })
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ resourcesPath })
+  await copyCss({ resourcesPath, commitHash })
   console.timeEnd('copyCss')
 
-  const assetDir = `../../../../..`
-  const toRoot = `${resourcesPath}/app`
+  const assetDir = `/${commitHash}`
+  const toRoot = `${resourcesPath}/app/static/${commitHash}`
 
   await BundleWorkers.bundleWorkers({
     platform: 'electron',
@@ -402,6 +414,14 @@ export const build = async ({
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch, resourcesPath })
   console.timeEnd('copyPlaygroundFiles')
+
+  const etag = `W/"${commitHash}"`
+
+  await generateConfigJson({
+    etag,
+    configRoot: Path.absolute(`${resourcesPath}/app`),
+    staticRoot: Path.absolute(`${resourcesPath}/app`),
+  })
 
   console.time('addRootPackageJson')
   await AddRootPackageJson.addRootPackageJson({
