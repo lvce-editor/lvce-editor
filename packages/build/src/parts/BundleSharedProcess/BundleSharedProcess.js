@@ -66,7 +66,7 @@ export const bundleSharedProcess = async ({
   await Replace.replace({
     path: `${cachePath}/src/parts/PreloadUrl/PreloadUrl.js`,
     occurrence: `join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'preload', 'src', 'index.js')`,
-    replacement: `join(Root.root, 'packages', 'preload', 'dist', 'index.js')`,
+    replacement: `join(Root.root, 'static', '${commitHash}', 'packages', 'preload', 'dist', 'index.js')`,
   })
   await WriteFile.writeFile({
     to: `${cachePath}/src/parts/GetExtraHeaders/GetExtraHeaders.js`,
@@ -182,6 +182,19 @@ export const getBuiltinExtensionsPath = () => {
       path: `${cachePath}/src/parts/Platform/Platform.js`,
       occurrence: `export const isMacOs = platform === 'darwin'`,
       replacement: `export const isMacOs = ${Platform.isMacos()}`,
+    })
+  }
+
+  if (target.includes('electron')) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
+      occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
+      replacement: `Path.join(Root.root, 'static', '${commitHash}', 'config', 'defaultSettings.json')`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
+      occurrence: `return process.env.BUILTIN_EXTENSIONS_PATH || Path.join(Root.root, 'extensions')`,
+      replacement: `return Path.join(Root.root, 'static', '${commitHash}', 'extensions')`,
     })
   }
   if (target === 'server') {

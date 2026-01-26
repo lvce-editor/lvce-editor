@@ -67,8 +67,8 @@ export const handleData = async (state, data) => {
 }
 
 export const dispose = async (state) => {
-  const { uid, terminal } = state
-  await terminal.dispose(uid)
+  // const { uid, terminal } = state
+  // await terminal.dispose(uid)
   return {
     ...state,
     disposed: true,

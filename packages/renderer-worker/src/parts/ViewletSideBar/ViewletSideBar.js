@@ -133,7 +133,6 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     false,
     true,
   )
-  console.log({ commands })
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
     const currentViewletUid = currentViewletState.uid

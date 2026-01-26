@@ -253,11 +253,12 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
-  const { points, sideBarView } = state
+  const { points, sideBarView, sideBarLocation } = state
   const pointsArray = [...points]
   return {
     points: pointsArray,
     sideBarView,
+    sideBarLocation,
   }
 }
 
@@ -1166,6 +1167,9 @@ export const handleExtensionsChanged = async (state: LayoutState) => {
 
 export const getActiveSideBarView = (state: LayoutState) => {
   return state.sideBarView
+}
+export const getSideBarPosition = (state: LayoutState) => {
+  return state.sideBarLocation
 }
 
 export const openSideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {

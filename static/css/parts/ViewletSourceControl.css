@@ -74,6 +74,7 @@
 .SourceControlButtons {
   display: var(--SourceControlButtonsDisplay);
   contain: content;
+  display: flex;
 }
 
 .SourceControlItems .TreeItem:hover {

@@ -1,6 +1,8 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ListIndex from '../ListIndex/ListIndex.js'
 import * as LocationType from '../LocationType/LocationType.js'
+import * as Platform from '../Platform/Platform.js'
 import * as ReferencesWorker from '../ReferencesWorker/ReferencesWorker.js'
 
 export const create = (id, uri, x, y, width, height, args) => {
@@ -12,13 +14,15 @@ export const create = (id, uri, x, y, width, height, args) => {
     id,
     args,
     actionsDom: [],
+    assetDir: AssetDir.assetDir,
+    platform: Platform.getPlatform(),
   }
 }
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 export const loadContent = async (state, savedState) => {
-  await ReferencesWorker.invoke('References.create', state.id, state.uri, state.x, state.y, state.width, state.height)
+  await ReferencesWorker.invoke('References.create', state.id, state.uri, state.x, state.y, state.width, state.height, state.assetDir, state.platform)
   await ReferencesWorker.invoke('References.loadContent', state.id, savedState)
   const diff = await ReferencesWorker.invoke('References.diff2', state.id)
   const commands = await ReferencesWorker.invoke('References.render2', state.id, diff)
