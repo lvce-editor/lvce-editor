@@ -564,6 +564,13 @@ export const createViewlet = async (
     commands: commands,
   }
 }
+export const attachViewlet = async (state: LayoutState, parentUid: number, uid: number) => {
+  const commands = ['Viewlet.append', parentUid, uid]
+  return {
+    newState: state,
+    commands: commands,
+  }
+}
 
 export const showMain = (state: LayoutState) => {
   // @ts-ignore

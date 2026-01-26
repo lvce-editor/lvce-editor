@@ -58,4 +58,5 @@ export const CommandsWithSideEffects = {
   toggleStatusBar: ViewletLayout.toggleStatusBar,
   toggleTitleBar: ViewletLayout.toggleTitleBar,
   createViewlet: ViewletLayout.createViewlet,
+  attachViewlet: ViewletLayout.attachViewlet,
 }
