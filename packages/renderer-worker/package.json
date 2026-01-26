@@ -80,7 +80,7 @@
     "@lvce-editor/status-bar-worker": "^1.14.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
-    "@lvce-editor/test-worker": "^11.7.0",
+    "@lvce-editor/test-worker": "^11.8.0",
     "@lvce-editor/text-measurement-worker": "^1.11.0",
     "@lvce-editor/text-search-worker": "^6.0.0",
     "@lvce-editor/title-bar-worker": "^3.15.0",
