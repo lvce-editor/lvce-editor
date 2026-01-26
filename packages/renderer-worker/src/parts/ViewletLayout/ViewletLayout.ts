@@ -995,8 +995,15 @@ export const moveSideBar = async (state: LayoutState, position: any) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   getPoints(newPoints, newPoints, position)
-  // TODO update preferences
+
+  // persist side bar location preference so it persists across reloads
+  const location = position === SideBarLocationType.Left ? 'left' : 'right'
+  await Preferences.set('workbench.sideBarLocation', location)
+
+  // TODO dispatch settings chnage event to components
+
   const resizeCommands = await getResizeCommands(points, newPoints)
+
   return {
     newState: {
       ...state,
