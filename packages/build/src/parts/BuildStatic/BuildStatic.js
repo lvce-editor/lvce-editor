@@ -7,6 +7,7 @@ import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -522,6 +523,8 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/dist/${commitHash}/playground`,
   })
+  // Copy git-tracked source files to playground/source for browsing in the editor
+  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/dist/${commitHash}/playground/source`)
 }
 
 export const build = async ({ product }) => {
