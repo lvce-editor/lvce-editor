@@ -42,13 +42,13 @@
   },
   "dependencies": {
     "@lvce-editor/about-view": "^7.1.0",
-    "@lvce-editor/activity-bar-worker": "^3.1.0",
+    "@lvce-editor/activity-bar-worker": "^3.2.0",
     "@lvce-editor/clipboard-worker": "^1.16.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^3.0.0",
     "@lvce-editor/debug-worker": "^4.0.0",
     "@lvce-editor/diff-worker": "^1.6.0",
-    "@lvce-editor/editor-worker": "^15.2.0",
+    "@lvce-editor/editor-worker": "^16.0.0",
     "@lvce-editor/embeds-worker": "^4.1.0",
     "@lvce-editor/error-worker": "^2.4.0",
     "@lvce-editor/explorer-view": "^5.20.0",
@@ -80,10 +80,10 @@
     "@lvce-editor/status-bar-worker": "^1.14.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
-    "@lvce-editor/test-worker": "^11.7.0",
+    "@lvce-editor/test-worker": "^11.8.0",
     "@lvce-editor/text-measurement-worker": "^1.11.0",
     "@lvce-editor/text-search-worker": "^6.0.0",
-    "@lvce-editor/title-bar-worker": "^3.13.0",
+    "@lvce-editor/title-bar-worker": "^3.15.0",
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {

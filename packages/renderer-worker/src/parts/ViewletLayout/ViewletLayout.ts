@@ -1041,15 +1041,37 @@ export const moveSideBar = async (state: LayoutState, position: any) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   getPoints(newPoints, newPoints, position)
-  // TODO update preferences
+
+  // update layout state synchronously to avoid races when moveSideBar
+  // is called multiple times — update the viewlet state first
+  const immediateState = {
+    ...state,
+    points: newPoints,
+    sideBarLocation: position,
+  }
+  await Viewlet.setState(state.uid, immediateState)
+
+  // persist side bar location preference so it persists across reloads
+  const location = position === SideBarLocationType.Left ? 'left' : 'right'
+  // use Preferences.update to ensure a global "preferences.changed" event is emitted
+  await Preferences.update({ 'workbench.sideBarLocation': location })
+
+  // notify all viewlets about the preference change using callGlobalEvent
+  const prefEventResult = await callGlobalEvent(immediateState, 'handlePreferencesChanged')
+  const prefCommands = prefEventResult.commands || []
+
   const resizeCommands = await getResizeCommands(points, newPoints)
+
+  const allCommands = [...resizeCommands, ...prefCommands]
+
   return {
     newState: {
-      ...state,
+      ...prefEventResult.newState,
+      // keep the points and location we already applied
       points: newPoints,
       sideBarLocation: position,
     },
-    commands: resizeCommands,
+    commands: allCommands,
   }
 }
 
