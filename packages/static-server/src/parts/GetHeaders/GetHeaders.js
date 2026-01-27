@@ -7,6 +7,7 @@ import * as GetHeadersCompletionWorker from '../GetHeadersCompletionWorker/GetHe
 import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersExtensionManagementWorker from '../GetHeadersExtensionManagementWorker/GetHeadersExtensionManagementWorker.js'
+import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
 import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
@@ -68,6 +69,9 @@ export const getHeaders = (absolutePath, etag, isImmutable) => {
   }
   if (absolutePath.endsWith('outputViewWorkerMain.js')) {
     return GetHeadersOutputViewWorker.getHeadersOutputViewWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('openerWorkerMain.js')) {
+    return GetHeadersOpenerWorker.getHeadersOpenerBarWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
