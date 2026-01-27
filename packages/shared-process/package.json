@@ -28,14 +28,14 @@
     "@lvce-editor/json-rpc": "^7.2.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
     "@lvce-editor/pretty-error": "^2.0.0",
-    "@lvce-editor/rpc-registry": "^7.5.0",
+    "@lvce-editor/rpc-registry": "^7.6.0",
     "@lvce-editor/verror": "^1.7.0",
     "is-object": "^1.0.2",
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
     "@lvce-editor/embeds-process": "^4.1.0",
-    "@lvce-editor/file-system-process": "^4.1.0",
+    "@lvce-editor/file-system-process": "^5.0.0",
     "@lvce-editor/file-watcher-process": "^3.6.0",
     "@lvce-editor/network-process": "^5.2.0",
     "@lvce-editor/preload": "^1.5.0",
