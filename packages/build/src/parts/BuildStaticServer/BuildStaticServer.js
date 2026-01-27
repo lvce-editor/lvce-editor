@@ -2,6 +2,7 @@ import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
@@ -353,6 +354,8 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground`,
   })
+  // Copy git-tracked source files to playground/source for browsing in the editor
+  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/server/static-server/static/${commitHash}/playground/source`)
 }
 
 const shouldBeCopied = (extensionName) => {
