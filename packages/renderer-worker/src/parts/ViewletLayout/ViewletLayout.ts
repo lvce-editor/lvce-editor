@@ -527,7 +527,6 @@ export const toggleTitleBar = (state: LayoutState) => {
 }
 
 export const createViewlet = async (state: LayoutState, viewletModuleId: string, editorUid: number, tabId: number, bounds: any, uri: string) => {
-  console.log({ uri })
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
