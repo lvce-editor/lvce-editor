@@ -203,12 +203,9 @@ const getRestoredGroups = (savedState, state) => {
   }
 }
 
-export const saveState = (state) => {
-  const { groups, activeGroupIndex } = state
-  return {
-    groups: SerializeEditorGroups.serializeEditorGroups(groups),
-    activeGroupIndex,
-  }
+export const saveState = async (state) => {
+  const saved = await MainAreaWorker.invoke('MainArea.saveState', state.uid)
+  return saved
 }
 
 const handleEditorChange = async (editor) => {
