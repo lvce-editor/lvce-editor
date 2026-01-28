@@ -526,6 +526,43 @@ export const toggleTitleBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.TitleBar)
 }
 
+export const createViewlet = async (state: LayoutState, viewletModuleId: string, editorUid: number, tabId: number, bounds: any, uri: string) => {
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id: viewletModuleId,
+      type: 0,
+      // @ts-ignore
+      uri: uri,
+      uid: editorUid,
+      show: false,
+      focus: false,
+      setBounds: false,
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height,
+      parentUid: -1,
+      append: false,
+      args: [],
+    },
+    false,
+    true,
+  )
+  // @ts-ignore
+  return {
+    newState: state,
+    commands: commands,
+  }
+}
+export const attachViewlet = async (state: LayoutState, parentUid: number, uid: number) => {
+  const commands = ['Viewlet.append', parentUid, uid]
+  return {
+    newState: state,
+    commands: commands,
+  }
+}
+
 export const showMain = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.Main)
