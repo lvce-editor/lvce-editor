@@ -303,7 +303,6 @@ export const loadContent = async (state, savedState) => {
     await MainAreaWorker.invoke('MainArea.loadContent', state.uid, savedState)
     const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
     const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
-    console.log({ commands })
     return {
       ...state,
       commands,
