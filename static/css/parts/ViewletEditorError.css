@@ -24,3 +24,7 @@
 .EditorTextIconError {
   color: var(--IconErrorForeground);
 }
+
+.Viewlet.Error {
+  user-select: text;
+}
