@@ -24,7 +24,7 @@ export const getResponseInfo = async (request, isImmutable) => {
   if (MatchesEtag.matchesEtag(request, etag)) {
     return NotModifiedResponse.notModifiedResponse
   }
-  const headers = GetHeaders.getHeaders(absolutePath, etag, isImmutable)
+  const headers = GetHeaders.getHeaders({ absolutePath, etag, isImmutable, isForElectronProduction: false })
   return {
     absolutePath,
     status: HttpStatusCode.Ok,

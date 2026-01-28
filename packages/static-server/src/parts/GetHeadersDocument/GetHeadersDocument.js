@@ -5,10 +5,10 @@ import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOrigin
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 
-export const getHeadersDocument = (mime, etag) => {
+export const getHeadersDocument = (mime, etag, isForElectronProduction) => {
   return {
     [HttpHeader.CacheControl]: CachingHeaders.NoCache,
-    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
+    [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.getValue(isForElectronProduction),
     [HttpHeader.ContentType]: mime,
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
