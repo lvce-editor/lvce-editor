@@ -327,7 +327,7 @@ export const build = async ({
   console.timeEnd('copyBuildResources')
 
   console.time('runElectronBuilder')
-  await runElectronBuilder({ config, arch, platform })
+  await runElectronBuilder({ config, arch })
   console.timeEnd('runElectronBuilder')
 
   console.time('renameReleaseFile')
