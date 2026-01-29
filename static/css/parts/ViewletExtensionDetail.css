@@ -3,7 +3,6 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  position: absolute;
   background: var(--MainBackground);
   color: var(--WorkbenchForeground);
   padding-left: var(--ExtensionDetailPaddingLeft);
