@@ -64,7 +64,13 @@ export const getStaticFiles = async ({ etag }) => {
   const getHeadersUri = pathToFileURL(getHeadersPath).toString()
   const getHeadersModule = await import(getHeadersUri)
   const isImmutable = 1
-  const headers = filePaths.map((file) => getHeadersModule.getHeaders(file, etag, isImmutable))
+  const headers = filePaths.map((absolutePath) =>
+    getHeadersModule.getHeaders({
+      absolutePath,
+      etag,
+      isImmutable,
+    }),
+  )
   const uniqueHeaders = getUniqueHeaders(headers)
   const headersCode = generateHeadersCode(uniqueHeaders.ours, uniqueHeaders.indexes, uris)
   const headersCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js`)

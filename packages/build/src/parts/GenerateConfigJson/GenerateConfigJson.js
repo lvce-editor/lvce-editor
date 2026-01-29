@@ -50,7 +50,14 @@ export const generateConfigJson = async ({ etag, staticRoot, configRoot }) => {
   const getHeadersUri = pathToFileURL(getHeadersPath).toString()
   const getHeadersModule = await import(getHeadersUri)
   const isImmutable = 1
-  const headers = filePaths.map((file) => getHeadersModule.getHeaders(file, etag, isImmutable))
+  const headers = filePaths.map((absolutePath) =>
+    getHeadersModule.getHeaders({
+      absolutePath,
+      etag,
+      isImmutable,
+      isForElectronProduction: true,
+    }),
+  )
   const uniqueHeaders = getUniqueHeaders(headers)
   const configJsonPath = Path.absolute(`${configRoot}/config.json`)
   const map = generateFilesCodeMap(uniqueHeaders.indexes, uris)
