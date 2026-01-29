@@ -11,7 +11,6 @@
   outline: none;
   border: none;
   font-family: var(--EditorFontFamily);
-  position: relative;
   white-space: pre;
   font-size: var(--EditorFontSize);
   letter-spacing: var(--EditorLetterSpacing);
@@ -20,7 +19,6 @@
   font-display: block;
   cursor: text;
   font-weight: var(--EditorFontWeight);
-  position: absolute;
   display: flex;
 }
 
