@@ -9,6 +9,9 @@
   background: var(--TabsBackground); /* TODO variable name should match class name */
   /* position: absolute; */
   overflow: hidden;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
 
 .MainTab {
