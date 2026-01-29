@@ -351,7 +351,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
 const generatePlaygroundFileMap = async ({ commitHash }) => {
   const staticBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}`)
   const fileSet = new Set()
-  
+
   // Add playground files
   const playgroundPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
   try {
@@ -366,7 +366,7 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
   } catch (error) {
     // Playground directory might not exist yet
   }
-  
+
   // Add extension files (if any are served)
   const extensionsPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/extensions`)
   try {
@@ -381,7 +381,7 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
   } catch (error) {
     // Extensions directory might not exist yet
   }
-  
+
   // Add packages files (source files that are served)
   const packagesPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/packages`)
   try {
@@ -396,7 +396,7 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
   } catch (error) {
     // Packages directory might not exist yet
   }
-  
+
   const files = Array.from(fileSet).sort()
   const fileMapPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/config/fileMap.json`)
   await JsonFile.writeJson({
