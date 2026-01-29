@@ -348,11 +348,69 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   })
 }
 
+const generatePlaygroundFileMap = async ({ commitHash }) => {
+  const staticBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}`)
+  const fileSet = new Set()
+  
+  // Add playground files
+  const playgroundPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
+  try {
+    const playgroundDirents = await readdir(playgroundPath, { recursive: true, withFileTypes: true })
+    const playgroundFiles = playgroundDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(playgroundPath, '')
+        return `/playground${relativePath}/${file.name}`
+      })
+    playgroundFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Playground directory might not exist yet
+  }
+  
+  // Add extension files (if any are served)
+  const extensionsPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/extensions`)
+  try {
+    const extensionsDirents = await readdir(extensionsPath, { recursive: true, withFileTypes: true })
+    const extensionFiles = extensionsDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(staticBasePath, '')
+        return `${relativePath}/${file.name}`
+      })
+    extensionFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Extensions directory might not exist yet
+  }
+  
+  // Add packages files (source files that are served)
+  const packagesPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/packages`)
+  try {
+    const packagesDirents = await readdir(packagesPath, { recursive: true, withFileTypes: true })
+    const packageFiles = packagesDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(staticBasePath, '')
+        return `${relativePath}/${file.name}`
+      })
+    packageFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Packages directory might not exist yet
+  }
+  
+  const files = Array.from(fileSet).sort()
+  const fileMapPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/config/fileMap.json`)
+  await JsonFile.writeJson({
+    to: fileMapPath,
+    value: files,
+  })
+}
+
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground`,
   })
+  await generatePlaygroundFileMap({ commitHash })
 }
 
 const shouldBeCopied = (extensionName) => {
