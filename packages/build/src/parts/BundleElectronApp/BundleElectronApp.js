@@ -421,6 +421,7 @@ export const build = async ({
     etag,
     configRoot: Path.absolute(`${resourcesPath}/app`),
     staticRoot: Path.absolute(`${resourcesPath}/app`),
+    applicationName: product.applicationName,
   })
 
   console.time('addRootPackageJson')
