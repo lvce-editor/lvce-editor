@@ -5,7 +5,6 @@ import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as DeserializeEditorGroups from '../DeserializeEditorGroups/DeserializeEditorGroups.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
-import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as GetTabHighlightInfo from '../GetTabHighlightInfo/GetTabHighlightInfo.js'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
@@ -13,13 +12,13 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
+import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SerializeEditorGroups from '../SerializeEditorGroups/SerializeEditorGroups.js'
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -203,12 +202,9 @@ const getRestoredGroups = (savedState, state) => {
   }
 }
 
-export const saveState = (state) => {
-  const { groups, activeGroupIndex } = state
-  return {
-    groups: SerializeEditorGroups.serializeEditorGroups(groups),
-    activeGroupIndex,
-  }
+export const saveState = async (state) => {
+  const saved = await MainAreaWorker.invoke('MainArea.saveState', state.uid)
+  return saved
 }
 
 const handleEditorChange = async (editor) => {
@@ -295,7 +291,7 @@ const handleTitleUpdated = async (uid, title) => {
   await Viewlet.setState(state.uid, newState)
 }
 
-const mainAreaWorkerEnabled = false
+const mainAreaWorkerEnabled = true
 
 export const loadContent = async (state, savedState) => {
   if (mainAreaWorkerEnabled) {
@@ -308,10 +304,6 @@ export const loadContent = async (state, savedState) => {
       commands,
     }
   }
-  // return {
-  //   ...state,
-  //   // commands,
-  // }
 
   // TODO get restored editors from saved state
   const { activeGroupIndex, groups } = getRestoredGroups(savedState, state)
