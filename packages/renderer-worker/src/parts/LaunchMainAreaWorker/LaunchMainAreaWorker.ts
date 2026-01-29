@@ -4,7 +4,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
-export const launchMainAreaBarWorker = async () => {
+export const launchMainAreaWorker = async () => {
   const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.mainAreaWorkerPath', ActivityBarWorkerUrl.activityBarWorkerUrl)
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
