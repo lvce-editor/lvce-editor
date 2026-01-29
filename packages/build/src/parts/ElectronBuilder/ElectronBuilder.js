@@ -76,6 +76,12 @@ const runElectronBuilder = async ({ config, arch }) => {
 
       // win: ['portable'],
     }
+
+    // Set platform-specific options
+    if (config === ElectronBuilderConfigType.WindowsExe) {
+      options.win = [arch === 'arm64' ? 'nsis:arm64' : 'nsis:x64']
+    }
+
     // if (process.env.HIGHEST_COMPRESSION) {
     //   Logger.info('[info] using highest compression, this may take some time')
     //   process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
