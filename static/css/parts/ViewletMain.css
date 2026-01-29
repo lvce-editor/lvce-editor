@@ -49,3 +49,9 @@
   height: 35px;
   justify-content: space-between;
 }
+
+.SplitEditorGroupButton {
+  background: transparent;
+  color: white;
+  border: none;
+}
