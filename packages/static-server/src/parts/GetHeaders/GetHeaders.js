@@ -48,12 +48,12 @@ import * as GetHeadersUpdateWorker from '../GetHeadersUpdateWorker/GetHeadersUpd
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
 import * as Path from '../Path/Path.js'
 
-export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProduction }) => {
+export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProduction, applicationName }) => {
   const extension = Path.extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const defaultCachingHeader = isImmutable ? CachingHeaders.OneYear : CachingHeaders.NoCache
   if (absolutePath.endsWith('index.html')) {
-    return GetHeadersDocument.getHeadersDocument(mime, etag, isForElectronProduction)
+    return GetHeadersDocument.getHeadersDocument({ mime, etag, isForElectronProduction, applicationName })
   }
   if (absolutePath.endsWith('rendererWorkerMain.js') || absolutePath.endsWith('rendererWorkerMain.ts')) {
     return GetHeadersRendererWorker.getHeadersRendererWorker(mime, etag, defaultCachingHeader)

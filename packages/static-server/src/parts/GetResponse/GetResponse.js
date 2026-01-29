@@ -4,7 +4,7 @@ import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import { readFile } from 'node:fs/promises'
 
 export const getResponse = async (request) => {
-  const { absolutePath, status, headers } = await GetResponseInfo.getResponseInfo(request, IsImmutable.isImmutable)
+  const { absolutePath, status, headers } = await GetResponseInfo.getResponseInfo({ request, isImmutable: IsImmutable.isImmutable })
   const hasBody = request.method !== 'HEAD'
   if (status === HttpStatusCode.MethodNotAllowed) {
     return {
@@ -30,6 +30,7 @@ export const getResponse = async (request) => {
       hasBody: false,
     }
   }
+  // TODO maybe read content as blob
   // TODO implment buffering
   try {
     const content = await readFile(absolutePath)

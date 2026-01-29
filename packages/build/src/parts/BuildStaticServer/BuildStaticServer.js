@@ -144,7 +144,7 @@ import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 
-export const getResponseInfo = async (request, isImmutable) => {
+export const getResponseInfo = async ({ request, isImmutable, applicationName = 'lvce-oss' }) => {
   if (!isSupportedMethod(request.method)) {
     return {
       absolutePath: '',
@@ -161,7 +161,7 @@ export const getResponseInfo = async (request, isImmutable) => {
   if (MatchesEtag.matchesEtag(request, etag)) {
     return NotModifiedResponse.notModifiedResponse
   }
-  const headers = GetHeaders.getHeaders({ absolutePath, etag, isImmutable, isForElectronProduction: false })
+  const headers = GetHeaders.getHeaders({ absolutePath, etag, isImmutable, isForElectronProduction: false, applicationName })
   return {
     absolutePath,
     status: HttpStatusCode.Ok,
@@ -179,7 +179,7 @@ import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse
 import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 
 
-export const getResponseInfo = (request, isImmutable) => {
+export const getResponseInfo = async ({ request, isImmutable, applicationName = 'lvce-oss' }) => {
   if (!isSupportedMethod(request.method)) {
     return {
       absolutePath: '',

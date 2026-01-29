@@ -1,10 +1,10 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 
-const getFrameSrc = (isForElectronProduction) => {
+const getFrameSrc = ({ isForElectronProduction, applicationName }) => {
   if (isForElectronProduction) {
-    return [`frame-src lvce-webview:`]
+    return [`frame-src ${applicationName}-webview:`]
   }
-  return [`frame-src 'self' lvce-oss-webview: http://localhost:3001 http://localhost:3002`]
+  return [`frame-src 'self' ${applicationName}-webview: http://localhost:3001 http://localhost:3002`]
 }
 
 const getManifestSrc = () => {
@@ -24,7 +24,7 @@ const getSandbox = () => {
   return [`sandbox allow-scripts allow-same-origin`]
 }
 
-export const getValue = (isForElectronProduction) =>
+export const getValue = ({ isForElectronProduction, applicationName }) =>
   GetContentSecurityPolicy.getContentSecurityPolicy([
     `default-src 'none'`,
     `font-src 'self'`,
@@ -33,7 +33,7 @@ export const getValue = (isForElectronProduction) =>
     `script-src 'self'`,
     `style-src 'self'`,
     ...getFrameAncestors(),
-    ...getFrameSrc(isForElectronProduction),
+    ...getFrameSrc({ isForElectronProduction, applicationName }),
     ...getManifestSrc(),
     ...getSandbox(),
   ])
