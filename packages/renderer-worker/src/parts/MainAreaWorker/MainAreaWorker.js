@@ -1,6 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
-import { launchMainAreaBarWorker } from '../LaunchMainAreaWorker/LaunchMainAreaWorker.ts'
+import { launchMainAreaWorker } from '../LaunchMainAreaWorker/LaunchMainAreaWorker.ts'
 
-const { invoke, restart } = GetOrCreateWorker.getOrCreateWorker(launchMainAreaBarWorker)
+const { invoke, restart } = GetOrCreateWorker.getOrCreateWorker(launchMainAreaWorker)
 
 export { invoke, restart }
