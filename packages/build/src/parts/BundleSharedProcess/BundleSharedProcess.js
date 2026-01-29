@@ -73,7 +73,7 @@ export const bundleSharedProcess = async ({
     content: `import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersOtherWorker from '../GetHeadersOtherWorker/GetHeadersOtherWorker.js'
 
-export const getExtraHeaders = (pathName, fileExtension) => {
+export const getExtraHeaders = ({ pathName, fileExtension }) => {
   if (pathName.endsWith('WorkerMain.js') || pathName.endsWith('WorkerMain.ts')) {
     return GetHeadersOtherWorker.getHeadersOtherWorker(pathName)
   }
