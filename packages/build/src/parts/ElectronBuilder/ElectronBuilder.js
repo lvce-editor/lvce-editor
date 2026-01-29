@@ -61,7 +61,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   })
 }
 
-const runElectronBuilder = async ({ config }) => {
+const runElectronBuilder = async ({ config, arch }) => {
   try {
     const debArch = 'amd64'
 
@@ -72,6 +72,7 @@ const runElectronBuilder = async ({ config }) => {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`packages/build/.tmp/linux/snap/${debArch}/app`),
       publish: 'never',
+      arm64: arch === 'arm64',
 
       // win: ['portable'],
     }
@@ -320,7 +321,7 @@ export const build = async ({
   console.timeEnd('copyBuildResources')
 
   console.time('runElectronBuilder')
-  await runElectronBuilder({ config })
+  await runElectronBuilder({ config, arch })
   console.timeEnd('runElectronBuilder')
 
   console.time('renameReleaseFile')
