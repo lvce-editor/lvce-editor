@@ -20,8 +20,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15, windows-2025]
-    runs-on: ${{ matrix.os }}
+        versions:
+          [
+            { os: windows-2025, arch: x64 },
+            { os: windows-2025, arch: arm64 },
+            { os: macos-15, arch: arm64 },
+            { os: ubuntu-24.04, arch: x64 },
+            { os: ubuntu-24.04, arch: arm64 },
+            { os: ubuntu-24.04, arch: armhf },
+          ]
+    runs-on: ${{ matrix.versions.os }}
     timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
@@ -90,32 +98,41 @@ jobs:
         run: npm run e2e:headless:ci
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Build Electron App (deb)
-        if: matrix.os == 'ubuntu-24.04'
+      - name: Build Electron App (deb, x64)
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: node packages/build/bin/build.js --target=electron-deb
+      - name: Build Electron App (deb, arm64)
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
+        run: node packages/build/bin/build.js --target=electron-deb --arch=arm64
+      - name: Build Electron App (deb, armhf)
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
+        run: node packages/build/bin/build.js --target=electron-deb --arch=armhf
       - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.os == 'macos-15'
+        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
         run: node packages/build/bin/build.js --target=electron-builder-mac --arch=arm64
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v4
         id: electron-builder-cache-windows
-        if: matrix.os == 'windows-2025'
+        if: matrix.versions.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
-      - name: Build Electron App (exe)
-        if: matrix.os == 'windows-2025'
-        run: node packages/build/bin/build.js --target=electron-builder-windows-exe
+      - name: Build Electron App (exe, x64)
+        if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'x64'
+        run: node packages/build/bin/build.js --target=electron-builder-windows-exe --arch=x64
+      - name: Build Electron App (exe, arm64)
+        if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'arm64'
+        run: node packages/build/bin/build.js --target=electron-builder-windows-exe --arch=arm64
       - name: Build Electron App (AppImage)
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: node packages/build/bin/build.js --target=electron-builder-app-image
       - name: Build static site
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: node packages/build/bin/build.js --target=static
         env:
           PATH_PREFIX: /lvce-editor
       - name: Upload artifact
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./packages/build/.tmp/dist
