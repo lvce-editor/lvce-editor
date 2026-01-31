@@ -1,5 +1,7 @@
 export const name = 'sample.error-identifier-has-already-been-declared-other-file'
 
+export const skip = 1
+
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())

@@ -9,8 +9,7 @@
     "e2e": "node src/_all.js",
     "e2e:ci": "node src/_all.js --ci",
     "e2e:headless": "node src/_all.js --headless",
-    "#e2e:headless:ci": "node src/_all.js --headless --ci",
-    "e2e:headless:ci": "echo ok",
+    "e2e:headless:ci": "node src/_all.js --headless --ci",
     "type-check": "tsc"
   },
   "keywords": [],
