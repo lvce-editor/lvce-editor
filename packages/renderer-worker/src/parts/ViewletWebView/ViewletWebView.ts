@@ -1,6 +1,8 @@
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 import * as GetRealUri from '../GetRealUri/GetRealUri.js'
+import { assetDir } from '../AssetDir/AssetDir.js'
+import { getPlatform } from '../Platform/Platform.js'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
   return {
@@ -18,6 +20,8 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
     y,
     width,
     height,
+    assetDir: assetDir,
+    platform: getPlatform(),
     commands: [],
   }
 }
@@ -26,7 +30,7 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
   const savedState = {}
   const realUri = await GetRealUri.getRealUri(state.uri)
 
-  await IframeWorker.invoke('WebView.create4', state.id, realUri, state.x, state.y, state.width, state.height, null)
+  await IframeWorker.invoke('WebView.create4', state.id, realUri, state.x, state.y, state.width, state.height, state.platform, state.assetDir)
   await IframeWorker.invoke('WebView.loadContent', state.id, savedState)
   const diffResult = await IframeWorker.invoke('WebView.diff2', state.id)
   const commands = await IframeWorker.invoke('WebView.render2', state.id, diffResult)

@@ -14,4 +14,6 @@ export interface ViewletWebViewState {
   readonly width: number
   readonly height: number
   readonly commands: readonly any[]
+  readonly assetDir: string
+  readonly platform: number
 }
