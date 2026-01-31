@@ -27,6 +27,7 @@ export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWe
   await IframeWorker.invoke('WebView.loadContent', state.id, savedState)
   const diffResult = await IframeWorker.invoke('WebView.diff2', state.id)
   const commands = await IframeWorker.invoke('WebView.render2', state.id, diffResult)
+  console.log({ commands })
   return {
     ...state,
     commands,
