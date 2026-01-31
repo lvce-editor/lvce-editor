@@ -1,6 +1,4 @@
-import * as GetRealUri from '../GetRealUri/GetRealUri.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as WebView from '../WebView/WebView.ts'
+import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
@@ -19,17 +17,19 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
     y,
     width,
     height,
+    commands: [],
   }
 }
 
 export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWebViewState> => {
-  const { uri, id } = state
-  // TODO always use real uri, which simplifies path handling for windows
-  const realUri = await GetRealUri.getRealUri(uri)
-  await WebView.create3(realUri, id)
+  const savedState = {}
+  await IframeWorker.invoke('WebView.create4', state.id, '', state.x, state.y, state.width, state.height, null)
+  await IframeWorker.invoke('WebView.loadContent', state.id, savedState)
+  const diffResult = await IframeWorker.invoke('WebView.diff2', state.id)
+  const commands = await IframeWorker.invoke('WebView.render2', state.id, diffResult)
   return {
     ...state,
-    x: state.x + 1,
+    commands,
   }
 }
 
@@ -43,6 +43,5 @@ export const resize = (state, dimensions) => {
 }
 
 export const dispose = async (state) => {
-  await RendererProcess.invoke('WebView.dispose', state.uid)
   return state
 }
