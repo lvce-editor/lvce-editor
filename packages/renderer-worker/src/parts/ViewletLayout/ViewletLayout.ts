@@ -640,10 +640,8 @@ const loadIfVisible = async (state, module) => {
         commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
-    console.log({ commands })
     const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
-
     return {
       newState: {
         ...latestState,
