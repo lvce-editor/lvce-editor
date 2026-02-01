@@ -643,6 +643,7 @@ const loadIfVisible = async (state, module) => {
     console.log({ commands })
     const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
+
     return {
       newState: {
         ...latestState,
