@@ -48,7 +48,7 @@
     "@lvce-editor/completion-worker": "^3.0.0",
     "@lvce-editor/debug-worker": "^4.0.0",
     "@lvce-editor/diff-worker": "^1.6.0",
-    "@lvce-editor/editor-worker": "^16.4.0",
+    "@lvce-editor/editor-worker": "^16.5.0",
     "@lvce-editor/embeds-worker": "^4.1.0",
     "@lvce-editor/error-worker": "^2.4.0",
     "@lvce-editor/explorer-view": "^5.21.0",
