@@ -21,3 +21,7 @@ export const renderEventListeners = async () => {
   const listeners = await MainAreaWorker.invoke('MainArea.renderEventListeners')
   return listeners
 }
+
+// TODO in renderer process, when creating references viewlet and appending it
+// and it is an iframe, send renderer worker message that iframe was appended
+// then it can create a connection to load the actual content
