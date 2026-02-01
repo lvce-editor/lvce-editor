@@ -132,9 +132,6 @@ const wrapViewletCommandWithSideEffect = (id, key, fn) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
-    if (id === 'loadMainIfVisible') {
-      // TODO ask main area worker that content is visible now
-    }
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, key)
   return wrappedViewletCommand
