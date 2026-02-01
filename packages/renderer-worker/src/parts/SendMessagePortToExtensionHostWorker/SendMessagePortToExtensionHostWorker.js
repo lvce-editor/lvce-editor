@@ -50,6 +50,12 @@ export const sendMessagePortToMarkdownWorker = async (port, initialCommand, rpcI
   await MarkdownWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
+export const sendMessagePortToMainAreaWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await MarkdownWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
 export const sendMessagePortToFileSystemWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)

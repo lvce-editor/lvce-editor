@@ -17,4 +17,5 @@ export const Commands = {
   sendMessagePortToSourceControlWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToSourceControlWorker,
   sendMessagePortToTextMeasurementWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToTextMeasurementWorker,
   sendMessagePortToOpenerWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker,
+  sendMessagePortToMainAreaWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToMainAreaWorker,
 }
