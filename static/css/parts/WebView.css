@@ -19,7 +19,5 @@
   flex: 1;
   contain: strict;
   border: none;
-  position: absolute;
   background: var(--MainBackground);
-  z-index: 1;
 }

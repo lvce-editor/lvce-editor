@@ -1,16 +1,23 @@
-import type { ViewletWebViewState } from './ViewletWebViewState.ts'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-const renderIframe = {
-  isEqual(oldState: ViewletWebViewState, newState: ViewletWebViewState) {
-    return oldState.x === newState.x && oldState.y === newState.y && oldState.width === newState.width && oldState.height === newState.height
+export const hasFunctionalEvents = true
+
+const renderItems = {
+  isEqual(oldState, newState) {
+    return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
   },
-  apply(oldState: ViewletWebViewState, newState: ViewletWebViewState) {
-    return ['setPosition', newState.id, newState.x, newState.y, newState.width, newState.height]
-  },
+  apply: AdjustCommands.apply,
+  multiple: true,
 }
 
-export const render = [renderIframe]
+export const render = [renderItems]
+
+export const renderEventListeners = async () => {
+  const listeners = await IframeWorker.invoke('WebView.renderEventListeners')
+  return listeners
+}
