@@ -26,6 +26,7 @@
   height: 100%;
   flex-shrink: 0;
   padding-left: 5px;
+  border-bottom: 1px solid transparent;
 }
 
 .MainTabPreview {
@@ -34,7 +35,7 @@
 
 .MainTabSelected {
   border-right: 1px solid var(--TabBorder, rgb(34, 34, 34));
-  border-bottom: 1px solid var(--TabBorderBottom, transparent);
+  border-bottom-color: var(--TabBorderBottom, transparent);
   background: var(--TabActiveBackground);
   color: var(--TabActiveForeground);
 }
