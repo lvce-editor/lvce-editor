@@ -8,7 +8,7 @@
   background: var(--TabsBackground); /* TODO variable name should match class name */
   overflow: hidden;
   overflow-x: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scrollbar-color: transparent transparent;
 }
 
