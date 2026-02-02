@@ -3,6 +3,7 @@ import type { ViewletWebViewState } from './ViewletWebViewState.ts'
 import * as GetRealUri from '../GetRealUri/GetRealUri.js'
 import { assetDir } from '../AssetDir/AssetDir.js'
 import { getPlatform } from '../Platform/Platform.js'
+import * as Scheme from '../Scheme/Scheme.ts'
 
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletWebViewState => {
   return {
@@ -23,18 +24,28 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
     assetDir: assetDir,
     platform: getPlatform(),
     commands: [],
+    webViewScheme: Scheme.WebView,
   }
 }
 
 export const loadContent = async (state: ViewletWebViewState): Promise<ViewletWebViewState> => {
   const savedState = {}
   const realUri = await GetRealUri.getRealUri(state.uri)
-
-  await IframeWorker.invoke('WebView.create4', state.id, realUri, state.x, state.y, state.width, state.height, state.platform, state.assetDir)
+  await IframeWorker.invoke(
+    'WebView.create4',
+    state.id,
+    realUri,
+    state.x,
+    state.y,
+    state.width,
+    state.height,
+    state.platform,
+    state.assetDir,
+    state.webViewScheme,
+  )
   await IframeWorker.invoke('WebView.loadContent', state.id, savedState)
   const diffResult = await IframeWorker.invoke('WebView.diff2', state.id)
   const commands = await IframeWorker.invoke('WebView.render2', state.id, diffResult)
-  console.log({ commands })
   return {
     ...state,
     commands,
