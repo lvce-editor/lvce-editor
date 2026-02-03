@@ -164,17 +164,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   }
 }
 
-const isLanguageBasics = (name) => {
-  return name.startsWith('builtin.language-basics')
-}
-
-const getLanguageBasicsNames = async () => {
-  const extensionPath = Path.absolute('extensions')
-  const extensions = await readdir(extensionPath)
-  const languageBasics = extensions.filter(isLanguageBasics)
-  return languageBasics
-}
-
 const getThemeNames = async () => {
   const extensionPath = Path.absolute('extensions')
   const extensions = await readdir(extensionPath)
@@ -496,9 +485,7 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
   const playgroundPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground`)
   try {
     const playgroundDirents = await ReadDir.readDirWithFileTypes(playgroundPath)
-    const playgroundFiles = playgroundDirents
-      .filter((dirent) => !dirent.isDirectory())
-      .map((file) => `/playground/${file.name}`)
+    const playgroundFiles = playgroundDirents.filter((dirent) => !dirent.isDirectory()).map((file) => `/playground/${file.name}`)
     playgroundFiles.forEach((file) => fileSet.add(file))
   } catch (error) {
     // Playground directory might not exist yet
