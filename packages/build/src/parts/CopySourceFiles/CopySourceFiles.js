@@ -31,7 +31,6 @@ const shouldIncludeFile = (file) => {
   // Exclude certain files and directories
   const excludePatterns = [
     /^\.git/,
-    /^\.github/,
     /^node_modules/,
     /^packages\/build\/.tmp/,
     /^packages\/.*\/\.tmp/,
@@ -40,7 +39,6 @@ const shouldIncludeFile = (file) => {
     /^dist\//,
     /^build\//,
     /package-lock\.json$/,
-    /\.nvmrc$/,
     /^scripts\/(run-electron|download|update|cyclic-dependencies)/,
   ]
 

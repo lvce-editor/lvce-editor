@@ -149,13 +149,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     from: 'static/icons',
     to: `packages/build/.tmp/dist/${commitHash}/icons`,
   })
-  const languageBasics = await getLanguageBasicsNames()
-  for (const languageBasic of languageBasics) {
-    await Copy.copy({
-      from: `extensions/${languageBasic}`,
-      to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
-    })
-  }
   const themes = await getThemeNames()
   for (const item of themes) {
     await Copy.copy({
@@ -195,28 +188,6 @@ const getAbsolutePath = (extensionName) => {
 
 const exists = (path) => {
   return existsSync(path)
-}
-
-const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
-  const languageBasics = await getLanguageBasicsNames()
-  const extensionPaths = languageBasics.map(getAbsolutePath)
-  const existingExtensionPaths = extensionPaths.filter(exists)
-  const extensions = await Promise.all(existingExtensionPaths.map(JsonFile.readJson))
-  const getLanguages = (extension) => {
-    const getLanguage = (language) => {
-      return {
-        ...language,
-        tokenize: `${pathPrefix}/${commitHash}/extensions/${extension.id}/${language.tokenize}`,
-      }
-    }
-    const languages = extension.languages || []
-    return languages.map(getLanguage)
-  }
-  const languages = extensions.flatMap(getLanguages)
-  await JsonFile.writeJson({
-    to: `packages/build/.tmp/dist/${commitHash}/config/languages.json`,
-    value: languages,
-  })
 }
 
 const getAllExtensionsJson = async ({ pathPrefix, commitHash }) => {
@@ -585,10 +556,6 @@ export const build = async ({ product }) => {
     await copyIconThemes({ commitHash })
     Console.timeEnd('copyIconThemes')
   }
-
-  Console.time('bundleLanguageJsonFiles')
-  await bundleLanguageJsonFiles({ commitHash, pathPrefix })
-  Console.timeEnd('bundleLanguageJsonFiles')
 
   Console.time('bundleExtensionsJson')
   await bundleExtensionsJson({ commitHash, pathPrefix })

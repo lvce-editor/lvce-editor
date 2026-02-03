@@ -367,6 +367,21 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
     // Playground directory might not exist yet
   }
 
+  // Add source files from playground/source (all git-tracked source files)
+  const sourceBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground/source`)
+  try {
+    const sourceDirents = await readdir(sourceBasePath, { recursive: true, withFileTypes: true })
+    const sourceFiles = sourceDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(sourceBasePath, '')
+        return `/playground/source${relativePath}/${file.name}`
+      })
+    sourceFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Source directory might not exist yet
+  }
+
   // Add extension files (if any are served)
   const extensionsPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/extensions`)
   try {
