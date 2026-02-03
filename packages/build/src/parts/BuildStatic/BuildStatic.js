@@ -489,6 +489,54 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   }
 }
 
+const generatePlaygroundFileMap = async ({ commitHash }) => {
+  const fileSet = new Set()
+
+  // Add playground files
+  const playgroundPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground`)
+  try {
+    const playgroundDirents = await ReadDir.readDirWithFileTypes(playgroundPath)
+    const playgroundFiles = playgroundDirents
+      .filter((dirent) => !dirent.isDirectory())
+      .map((file) => `/playground/${file.name}`)
+    playgroundFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Playground directory might not exist yet
+  }
+
+  // Add source files from playground/source (all git-tracked source files)
+  const sourceBasePath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground/source`)
+  try {
+    const sourceDirents = await ReadDir.readDirWithFileTypes(sourceBasePath)
+    const addSourceFiles = async (dirents, basePath) => {
+      for (const dirent of dirents) {
+        const fullPath = Path.join(basePath, dirent.name)
+        if (dirent.isDirectory()) {
+          try {
+            const subDirents = await ReadDir.readDirWithFileTypes(fullPath)
+            await addSourceFiles(subDirents, fullPath)
+          } catch (error) {
+            // Skip directories that can't be read
+          }
+        } else {
+          const relativePath = fullPath.replace(sourceBasePath, '')
+          fileSet.add(`/playground/source${relativePath}`)
+        }
+      }
+    }
+    await addSourceFiles(sourceDirents, sourceBasePath)
+  } catch (error) {
+    // Source directory might not exist yet
+  }
+
+  const files = Array.from(fileSet).sort()
+  const fileMapPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/config/fileMap.json`)
+  await JsonFile.writeJson({
+    to: fileMapPath,
+    value: files,
+  })
+}
+
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: `packages/build/files/playground-source`,
@@ -496,6 +544,7 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
   })
   // Copy git-tracked source files to playground/source for browsing in the editor
   await CopySourceFiles.copySourceFiles(`packages/build/.tmp/dist/${commitHash}/playground/source`)
+  await generatePlaygroundFileMap({ commitHash })
 }
 
 export const build = async ({ product }) => {
