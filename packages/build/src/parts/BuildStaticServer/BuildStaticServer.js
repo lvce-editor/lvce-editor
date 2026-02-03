@@ -2,6 +2,7 @@ import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
@@ -348,11 +349,86 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
   })
 }
 
+const generatePlaygroundFileMap = async ({ commitHash }) => {
+  const staticBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}`)
+  const fileSet = new Set()
+
+  // Add playground files
+  const playgroundPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
+  try {
+    const playgroundDirents = await readdir(playgroundPath, { recursive: true, withFileTypes: true })
+    const playgroundFiles = playgroundDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(playgroundPath, '')
+        return `/playground${relativePath}/${file.name}`
+      })
+    playgroundFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Playground directory might not exist yet
+  }
+
+  // Add source files from playground (all git-tracked source files)
+  const sourceBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
+  try {
+    const sourceDirents = await readdir(sourceBasePath, { recursive: true, withFileTypes: true })
+    const sourceFiles = sourceDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(sourceBasePath, '')
+        return `/playground${relativePath}/${file.name}`
+      })
+    sourceFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Source directory might not exist yet
+  }
+
+  // Add extension files (if any are served)
+  const extensionsPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/extensions`)
+  try {
+    const extensionsDirents = await readdir(extensionsPath, { recursive: true, withFileTypes: true })
+    const extensionFiles = extensionsDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(staticBasePath, '')
+        return `${relativePath}/${file.name}`
+      })
+    extensionFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Extensions directory might not exist yet
+  }
+
+  // Add packages files (source files that are served)
+  const packagesPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/packages`)
+  try {
+    const packagesDirents = await readdir(packagesPath, { recursive: true, withFileTypes: true })
+    const packageFiles = packagesDirents
+      .filter((dirent) => dirent.isFile())
+      .map((file) => {
+        const relativePath = file.parentPath.replace(staticBasePath, '')
+        return `${relativePath}/${file.name}`
+      })
+    packageFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Packages directory might not exist yet
+  }
+
+  const files = Array.from(fileSet).sort()
+  const fileMapPath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/config/fileMap.json`)
+  await JsonFile.writeJson({
+    to: fileMapPath,
+    value: files,
+  })
+}
+
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground`,
   })
+  // Copy git-tracked source files to playground for browsing in the editor
+  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
+  await generatePlaygroundFileMap({ commitHash })
 }
 
 const shouldBeCopied = (extensionName) => {

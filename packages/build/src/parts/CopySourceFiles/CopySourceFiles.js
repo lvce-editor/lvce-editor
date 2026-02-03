@@ -30,8 +30,7 @@ const getGitTrackedFiles = () => {
 const shouldIncludeFile = (file) => {
   // Exclude certain files and directories
   const excludePatterns = [
-    /^\.git/,
-    /^\.github/,
+    /^\.git\//,
     /^node_modules/,
     /^packages\/build\/.tmp/,
     /^packages\/.*\/\.tmp/,
@@ -39,8 +38,6 @@ const shouldIncludeFile = (file) => {
     /^\.vscode/,
     /^dist\//,
     /^build\//,
-    /package-lock\.json$/,
-    /\.nvmrc$/,
     /^scripts\/(run-electron|download|update|cyclic-dependencies)/,
   ]
 
@@ -58,7 +55,7 @@ export const copySourceFiles = async (destination, root = Path.absolute('.')) =>
   const files = getGitTrackedFiles()
   const filteredFiles = files.filter(shouldIncludeFile)
 
-  console.log(`Copying ${filteredFiles.length} tracked files to playground/source`)
+  console.log(`Copying ${filteredFiles.length} tracked files to playground`)
 
   for (const file of filteredFiles) {
     const sourcePath = Path.join(root, file)

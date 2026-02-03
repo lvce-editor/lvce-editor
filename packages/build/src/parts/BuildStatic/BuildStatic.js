@@ -149,13 +149,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     from: 'static/icons',
     to: `packages/build/.tmp/dist/${commitHash}/icons`,
   })
-  const languageBasics = await getLanguageBasicsNames()
-  for (const languageBasic of languageBasics) {
-    await Copy.copy({
-      from: `extensions/${languageBasic}`,
-      to: `packages/build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
-    })
-  }
   const themes = await getThemeNames()
   for (const item of themes) {
     await Copy.copy({
@@ -171,17 +164,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   }
 }
 
-const isLanguageBasics = (name) => {
-  return name.startsWith('builtin.language-basics')
-}
-
-const getLanguageBasicsNames = async () => {
-  const extensionPath = Path.absolute('extensions')
-  const extensions = await readdir(extensionPath)
-  const languageBasics = extensions.filter(isLanguageBasics)
-  return languageBasics
-}
-
 const getThemeNames = async () => {
   const extensionPath = Path.absolute('extensions')
   const extensions = await readdir(extensionPath)
@@ -195,28 +177,6 @@ const getAbsolutePath = (extensionName) => {
 
 const exists = (path) => {
   return existsSync(path)
-}
-
-const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
-  const languageBasics = await getLanguageBasicsNames()
-  const extensionPaths = languageBasics.map(getAbsolutePath)
-  const existingExtensionPaths = extensionPaths.filter(exists)
-  const extensions = await Promise.all(existingExtensionPaths.map(JsonFile.readJson))
-  const getLanguages = (extension) => {
-    const getLanguage = (language) => {
-      return {
-        ...language,
-        tokenize: `${pathPrefix}/${commitHash}/extensions/${extension.id}/${language.tokenize}`,
-      }
-    }
-    const languages = extension.languages || []
-    return languages.map(getLanguage)
-  }
-  const languages = extensions.flatMap(getLanguages)
-  await JsonFile.writeJson({
-    to: `packages/build/.tmp/dist/${commitHash}/config/languages.json`,
-    value: languages,
-  })
 }
 
 const getAllExtensionsJson = async ({ pathPrefix, commitHash }) => {
@@ -518,13 +478,50 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   }
 }
 
+const generatePlaygroundFileMap = async ({ commitHash }) => {
+  const fileSet = new Set()
+
+  // Add playground files (single level)
+  const playgroundPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground`)
+  try {
+    const playgroundDirents = await ReadDir.readDirWithFileTypes(playgroundPath)
+    const playgroundFiles = playgroundDirents.filter((dirent) => !dirent.isDirectory()).map((file) => `/playground/${file.name}`)
+    playgroundFiles.forEach((file) => fileSet.add(file))
+  } catch (error) {
+    // Playground directory might not exist yet
+  }
+
+  // Add source files from playground (all git-tracked source files)
+  const sourceBasePath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground`)
+  try {
+    const { readdir } = await import('node:fs/promises')
+    const sourceDirents = await readdir(sourceBasePath, { recursive: true, withFileTypes: true })
+    for (const dirent of sourceDirents) {
+      if (dirent.isFile()) {
+        const relativePath = dirent.parentPath.replace(sourceBasePath, '')
+        fileSet.add(`/playground${relativePath}/${dirent.name}`)
+      }
+    }
+  } catch (error) {
+    // Source directory might not exist yet
+  }
+
+  const files = Array.from(fileSet).sort()
+  const fileMapPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/config/fileMap.json`)
+  await JsonFile.writeJson({
+    to: fileMapPath,
+    value: files,
+  })
+}
+
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/dist/${commitHash}/playground`,
   })
-  // Copy git-tracked source files to playground/source for browsing in the editor
-  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/dist/${commitHash}/playground/source`)
+  // Copy git-tracked source files to playground for browsing in the editor
+  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/dist/${commitHash}/playground`)
+  await generatePlaygroundFileMap({ commitHash })
 }
 
 export const build = async ({ product }) => {
@@ -585,10 +582,6 @@ export const build = async ({ product }) => {
     await copyIconThemes({ commitHash })
     Console.timeEnd('copyIconThemes')
   }
-
-  Console.time('bundleLanguageJsonFiles')
-  await bundleLanguageJsonFiles({ commitHash, pathPrefix })
-  Console.timeEnd('bundleLanguageJsonFiles')
 
   Console.time('bundleExtensionsJson')
   await bundleExtensionsJson({ commitHash, pathPrefix })
