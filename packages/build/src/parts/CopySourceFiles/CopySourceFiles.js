@@ -38,7 +38,6 @@ const shouldIncludeFile = (file) => {
     /^\.vscode/,
     /^dist\//,
     /^build\//,
-    /package-lock\.json$/,
     /^scripts\/(run-electron|download|update|cyclic-dependencies)/,
   ]
 
