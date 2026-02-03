@@ -481,7 +481,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
 const generatePlaygroundFileMap = async ({ commitHash }) => {
   const fileSet = new Set()
 
-  // Add playground files
+  // Add playground files (single level)
   const playgroundPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground`)
   try {
     const playgroundDirents = await ReadDir.readDirWithFileTypes(playgroundPath)
@@ -491,27 +491,17 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
     // Playground directory might not exist yet
   }
 
-  // Add source files from playground/source (all git-tracked source files)
-  const sourceBasePath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground/source`)
+  // Add source files from playground (all git-tracked source files)
+  const sourceBasePath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/playground`)
   try {
-    const sourceDirents = await ReadDir.readDirWithFileTypes(sourceBasePath)
-    const addSourceFiles = async (dirents, basePath) => {
-      for (const dirent of dirents) {
-        const fullPath = Path.join(basePath, dirent.name)
-        if (dirent.isDirectory()) {
-          try {
-            const subDirents = await ReadDir.readDirWithFileTypes(fullPath)
-            await addSourceFiles(subDirents, fullPath)
-          } catch (error) {
-            // Skip directories that can't be read
-          }
-        } else {
-          const relativePath = fullPath.replace(sourceBasePath, '')
-          fileSet.add(`/playground/source${relativePath}`)
-        }
+    const { readdir } = await import('node:fs/promises')
+    const sourceDirents = await readdir(sourceBasePath, { recursive: true, withFileTypes: true })
+    for (const dirent of sourceDirents) {
+      if (dirent.isFile()) {
+        const relativePath = dirent.parentPath.replace(sourceBasePath, '')
+        fileSet.add(`/playground${relativePath}/${dirent.name}`)
       }
     }
-    await addSourceFiles(sourceDirents, sourceBasePath)
   } catch (error) {
     // Source directory might not exist yet
   }
@@ -529,8 +519,8 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/dist/${commitHash}/playground`,
   })
-  // Copy git-tracked source files to playground/source for browsing in the editor
-  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/dist/${commitHash}/playground/source`)
+  // Copy git-tracked source files to playground for browsing in the editor
+  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/dist/${commitHash}/playground`)
   await generatePlaygroundFileMap({ commitHash })
 }
 

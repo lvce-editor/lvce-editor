@@ -368,15 +368,15 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
     // Playground directory might not exist yet
   }
 
-  // Add source files from playground/source (all git-tracked source files)
-  const sourceBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground/source`)
+  // Add source files from playground (all git-tracked source files)
+  const sourceBasePath = Path.absolute(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
   try {
     const sourceDirents = await readdir(sourceBasePath, { recursive: true, withFileTypes: true })
     const sourceFiles = sourceDirents
       .filter((dirent) => dirent.isFile())
       .map((file) => {
         const relativePath = file.parentPath.replace(sourceBasePath, '')
-        return `/playground/source${relativePath}/${file.name}`
+        return `/playground${relativePath}/${file.name}`
       })
     sourceFiles.forEach((file) => fileSet.add(file))
   } catch (error) {
@@ -426,8 +426,8 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
     from: `packages/build/files/playground-source`,
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground`,
   })
-  // Copy git-tracked source files to playground/source for browsing in the editor
-  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/server/static-server/static/${commitHash}/playground/source`)
+  // Copy git-tracked source files to playground for browsing in the editor
+  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
   await generatePlaygroundFileMap({ commitHash })
 }
 
