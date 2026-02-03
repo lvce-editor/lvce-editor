@@ -56,7 +56,7 @@ export const copySourceFiles = async (destination, root = Path.absolute('.')) =>
   const files = getGitTrackedFiles()
   const filteredFiles = files.filter(shouldIncludeFile)
 
-  console.log(`Copying ${filteredFiles.length} tracked files to playground/source`)
+  console.log(`Copying ${filteredFiles.length} tracked files to playground`)
 
   for (const file of filteredFiles) {
     const sourcePath = Path.join(root, file)
