@@ -14,6 +14,9 @@ export const apply = (oldState, newState) => {
     if (command[0] === 'Viewlet.setPatches') {
       return ['Viewlet.setPatches', newState.uid, ...command.slice(1)]
     }
+    if (command[0] === 'Viewlet.move') {
+      return ['Viewlet.move', newState.uid, ...command.slice(1)]
+    }
     if (command[0] === 'Viewlet.focusElementByName') {
       return ['Viewlet.focusElementByName', newState.uid, ...command.slice(1)]
     }

@@ -5,6 +5,9 @@ import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
 export const readFile = async (uri, encoding = EncodingType.Utf8) => {
   const protocol = GetProtocol.getProtocol(uri)
+  if (protocol === 'untitled') {
+    return ''
+  }
   const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   return fileSystem.readFile(path, encoding)

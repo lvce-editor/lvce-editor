@@ -1,22 +1,21 @@
 .MainTabs {
   height: 35px;
-  background: rgb(40, 46, 47);
   display: flex;
   contain: strict;
   width: 100%;
   margin: 0;
   padding: 0;
   background: var(--TabsBackground); /* TODO variable name should match class name */
-  /* position: absolute; */
   overflow: hidden;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
 }
 
 .MainTab {
   border-right: 1px solid var(--TabBorder, rgb(34, 34, 34));
   background: var(--TabBackground);
   color: var(--TabForeground);
-  /* padding-left: 5px; */
-  /* padding-right: 5px; */
   display: flex;
   gap: 4px;
   align-items: center;
@@ -27,6 +26,7 @@
   height: 100%;
   flex-shrink: 0;
   padding-left: 5px;
+  border-bottom: 1px solid transparent;
 }
 
 .MainTabPreview {
@@ -35,7 +35,7 @@
 
 .MainTabSelected {
   border-right: 1px solid var(--TabBorder, rgb(34, 34, 34));
-  border-bottom: 1px solid var(--TabBorderBottom, transparent);
+  border-bottom-color: var(--TabBorderBottom, transparent);
   background: var(--TabActiveBackground);
   color: var(--TabActiveForeground);
 }
@@ -120,7 +120,16 @@
 
 .EditorContainer {
   width: 100%;
-  height: 100%;
   display: flex;
   contain: strict;
+  flex: 1;
+}
+
+.iframe-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+.iframe-wrapper iframe {
+  flex: 1;
 }

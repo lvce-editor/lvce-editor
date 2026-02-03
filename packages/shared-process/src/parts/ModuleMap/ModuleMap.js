@@ -51,6 +51,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronContextMenu
     case 'ElectronDialog.showMessageBox':
     case 'ElectronDialog.showOpenDialog':
+    case 'ElectronDialog.showSaveDialog':
       return ModuleId.ElectronDialog
     case 'ElectronInitialize.electronInitialize':
       return ModuleId.ElectronInitialize

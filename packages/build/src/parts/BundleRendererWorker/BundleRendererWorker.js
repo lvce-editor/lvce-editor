@@ -362,6 +362,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/editor-worker/dist/editorWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/OpenerWorkerUrl/OpenerWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/opener-worker/dist/openerWorkerMain.js`,
+      replacement: `/packages/opener-worker/dist/openerWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/Product/Product.js`,
       occurrence: `productNameLong = 'Lvce Editor - OSS'`,
       replacement: `productNameLong = '${product.nameLong}'`,
