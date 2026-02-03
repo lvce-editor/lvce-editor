@@ -30,7 +30,7 @@ const getGitTrackedFiles = () => {
 const shouldIncludeFile = (file) => {
   // Exclude certain files and directories
   const excludePatterns = [
-    /^\.git/,
+    /^\.git\//,
     /^node_modules/,
     /^packages\/build\/.tmp/,
     /^packages\/.*\/\.tmp/,
