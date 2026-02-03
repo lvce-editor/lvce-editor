@@ -41,6 +41,8 @@
   align-self: flex-start;
   background: transparent;
   border: none;
+  padding: 0;
+  color: var(--WorkbenchForeground);
 }
 
 .SearchHeaderDetailsExpanded {
