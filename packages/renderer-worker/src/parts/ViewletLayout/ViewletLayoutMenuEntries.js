@@ -5,6 +5,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Updater: Check for Updates',
     },
     {
+      id: 'Main.openUri',
+      label: 'Show Language Models',
+      args: ['language-models:///1'],
+    },
+    {
       id: 'Layout.toggleSideBar',
       label: 'Layout: Toggle Side Bar',
     },
