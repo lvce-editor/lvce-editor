@@ -1,7 +1,16 @@
+import * as Assert from '../Assert/Assert.ts'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 
 export const wrapMainAreaCommand = (key: string) => {
   const fn = async (state, ...args) => {
+    if (key === 'resize') {
+      const commands = await MainAreaWorker.invoke(`MainArea.${key}`, state.uid, ...args)
+      Assert.array(commands)
+      return {
+        ...state,
+        commands,
+      }
+    }
     await MainAreaWorker.invoke(`MainArea.${key}`, state.uid, ...args)
     const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
     if (diffResult.length === 0) {
