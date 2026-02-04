@@ -21,6 +21,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('extension-detail://')) {
     return ViewletModuleId.ExtensionDetail
   }
+  if (uri.startsWith('language-models://')) {
+    return ViewletModuleId.LanguageModels
+  }
   if (uri.startsWith('settings://')) {
     return ViewletModuleId.Settings
   }

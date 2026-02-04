@@ -108,6 +108,8 @@ export const EditorSourceActions = 'EditorSourceActions'
 
 export const MarkDownPreview = 'MarkDownPreview'
 
+export const LanguageModels = 'LanguageModels'
+
 export const Confirm = 'Confirm'
 
 export const E2eTests = 'E2eTests'
