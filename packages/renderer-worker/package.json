@@ -43,7 +43,7 @@
   "dependencies": {
     "@lvce-editor/about-view": "^7.1.0",
     "@lvce-editor/activity-bar-worker": "^3.2.0",
-    "@lvce-editor/clipboard-worker": "^1.16.0",
+    "@lvce-editor/clipboard-worker": "^1.17.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^3.0.0",
     "@lvce-editor/debug-worker": "^4.0.0",
@@ -65,7 +65,7 @@
     "@lvce-editor/iframe-inspector": "^2.4.0",
     "@lvce-editor/iframe-worker": "^6.8.0",
     "@lvce-editor/keybindings-view": "^8.0.0",
-    "@lvce-editor/main-area-worker": "^7.0.0",
+    "@lvce-editor/main-area-worker": "^7.3.0",
     "@lvce-editor/markdown-worker": "^4.0.0",
     "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/opener-worker": "^1.5.0",
