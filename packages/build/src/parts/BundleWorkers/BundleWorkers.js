@@ -148,6 +148,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/output-view`, 'dist', 'outputViewWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/language-models-view/dist/languageModelsViewMain.js',
+    to: Path.join(`${toRoot}/packages/language-models-view`, 'dist', 'languageModelsViewMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/opener-worker/dist/openerWorkerMain.js',
     to: Path.join(`${toRoot}/packages/opener-worker`, 'dist', 'openerWorkerMain.js'),
   })
