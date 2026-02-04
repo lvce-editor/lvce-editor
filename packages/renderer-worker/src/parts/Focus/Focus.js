@@ -4,12 +4,15 @@ import * as Context from '../Context/Context.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 /**
  * @param {number} focusKey
  * @param {number=} additionalFocusKey
+ * @param {number=} uid - Optional: UID of the viewlet instance that is gaining focus
+ * @param {string=} viewletModuleId - Optional: Module ID of the viewlet instance (e.g., 'EditorText', 'Explorer')
  */
-export const setFocus = (focusKey, additionalFocusKey) => {
+export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => {
   Assert.number(focusKey)
   if (FocusState.get()) {
     Context.remove(FocusState.get())
@@ -20,14 +23,27 @@ export const setFocus = (focusKey, additionalFocusKey) => {
     Context.set(additionalFocusKey, true)
   }
 
+  // Track the focused viewlet instance if provided
+  if (typeof uid === 'number' && typeof viewletModuleId === 'string') {
+    ViewletStates.setFocusedInstanceByType(uid, viewletModuleId)
+  }
+
   KeyBindingsState.update()
 }
 
 /**
  * @param {number} key
+ * @param {number=} uid - Optional: UID of the viewlet instance
+ * @param {string=} viewletModuleId - Optional: Module ID of the viewlet instance
  */
-export const setAdditionalFocus = (key) => {
+export const setAdditionalFocus = (key, uid, viewletModuleId) => {
   Context.set(key, true)
+
+  // Track the focused viewlet instance if provided
+  if (typeof uid === 'number' && typeof viewletModuleId === 'string') {
+    ViewletStates.setFocusedInstanceByType(uid, viewletModuleId)
+  }
+
   KeyBindingsState.update()
 }
 
