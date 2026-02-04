@@ -23,6 +23,13 @@ export const getWatchConfig = () => {
       command: 'TitleBar.hotReload',
     })
   }
+  const languageModelsWorkerPath = Preferences.get('develop.languageModelsViewPath')
+  if (languageModelsWorkerPath) {
+    watchConfig.push({
+      path: languageModelsWorkerPath,
+      command: 'LanguageModels.hotReload',
+    })
+  }
   const mainAreaWorkerPath = Preferences.get('develop.mainAreaWorkerPath')
   if (mainAreaWorkerPath) {
     watchConfig.push({
