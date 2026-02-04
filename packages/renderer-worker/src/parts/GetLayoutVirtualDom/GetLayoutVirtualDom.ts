@@ -4,28 +4,28 @@ import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
 
 const getMainContentsVirtualDom = (state: LayoutState) => {
   const children: any[] = []
-  
+
   if (state.mainVisible) {
     children.push({
       type: VirtualDomElements.Reference,
       uid: state.mainId,
     })
   }
-  
+
   if (state.panelSashVisible) {
     children.push({
       type: VirtualDomElements.Reference,
       uid: state.panelSashId,
     })
   }
-  
+
   if (state.panelVisible) {
     children.push({
       type: VirtualDomElements.Reference,
       uid: state.panelId,
     })
   }
-  
+
   return [
     {
       type: VirtualDomElements.Div,
@@ -107,15 +107,13 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   const dom: any[] = []
   let workbenchChildCount = 0
 
-  dom.push(
-    {
-      type: VirtualDomElements.Div,
-      id: 'Workbench',
-      className: 'Viewlet Layout Workbench new',
-      role: 'application',
-      childCount: 0,
-    },
-  )
+  dom.push({
+    type: VirtualDomElements.Div,
+    id: 'Workbench',
+    className: 'Viewlet Layout Workbench new',
+    role: 'application',
+    childCount: 0,
+  })
 
   // Add TitleBar if visible
   if (state.titleBarVisible) {
