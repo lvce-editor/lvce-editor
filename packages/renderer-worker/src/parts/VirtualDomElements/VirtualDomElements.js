@@ -53,3 +53,4 @@ export const TextArea = 62
 export const Select = 63
 export const Option = 64
 export const Code = 65
+export const Reference = 100
