@@ -8,5 +8,7 @@ export const getCommands = async () => {
   for (const command of commands) {
     Commands[command] = wrapLanguageModelsCommand(command)
   }
+  Commands['hotReload'] = hotReload
+
   return Commands
 }
