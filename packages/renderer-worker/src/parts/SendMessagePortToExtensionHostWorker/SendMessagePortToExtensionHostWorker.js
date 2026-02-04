@@ -13,6 +13,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
+import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -48,6 +49,12 @@ export const sendMessagePortToMarkdownWorker = async (port, initialCommand, rpcI
   Assert.object(port)
   Assert.string(initialCommand)
   await MarkdownWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToClipBoardWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await ClipBoardWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToMainAreaWorker = async (port, initialCommand, rpcId) => {
