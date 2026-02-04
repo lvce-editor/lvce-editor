@@ -3,6 +3,8 @@ import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 
 export const hasFunctionalRender = true
 
+export const hasFunctionalResize = true
+
 export const hasFunctionalRootRender = true
 
 export const hasFunctionalEvents = true
