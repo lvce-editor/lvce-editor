@@ -12,12 +12,10 @@ import * as CopyElectron from '../CopyElectron/CopyElectron.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.js'
@@ -99,30 +97,7 @@ const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
   })
 }
 
-const quickJoinPath = (prefix, postfix) => {
-  if (postfix.startsWith('./')) {
-    return prefix + '/' + postfix.slice('./'.length)
-  }
-  return prefix + '/' + postfix
-}
-
-const removeSrcPrefix = (postfix) => {
-  if (postfix.startsWith('./src/')) {
-    return postfix.slice('./src/'.length)
-  }
-  if (postfix.startsWith('./src')) {
-    return postfix.slice('./src'.length)
-  }
-  if (postfix.startsWith('src/')) {
-    return postfix.slice('src/'.length)
-  }
-  if (postfix.startsWith('src')) {
-    return postfix.slice('src'.length)
-  }
-  return postfix
-}
-
-const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHash }) => {
+const copyExtensions = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'extensions',
     to: `${resourcesPath}/app/static/${commitHash}/extensions`,
@@ -145,57 +120,6 @@ const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath, commitHas
   //   occurrence: '/icons',
   //   replacement: '/file-icons',
   // })
-  if (optimizeLanguageBasics) {
-    const dirents = await ReadDir.readDir(`${resourcesPath}/app/static/${commitHash}/extensions`)
-    const allLanguages = []
-    for (const dirent of dirents) {
-      if (!dirent.startsWith('builtin.language-basics-')) {
-        continue
-      }
-      const postfix = dirent.slice('builtin.language-basics-'.length)
-      const extensionJson = await JsonFile.readJson(`${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/extension.json`)
-      if (extensionJson && extensionJson.languages && Array.isArray(extensionJson.languages)) {
-        for (const language of extensionJson.languages) {
-          if (language.configuration) {
-            language.configuration = quickJoinPath(postfix, language.configuration)
-          }
-          if (language.tokenize) {
-            language.tokenize = quickJoinPath(postfix, removeSrcPrefix(language.tokenize))
-          }
-          allLanguages.push(language)
-        }
-      }
-      await Copy.copy({
-        from: `${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/src`,
-        to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}`,
-      })
-      if (existsSync(Path.absolute(`${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`))) {
-        await Copy.copy({
-          from: `${resourcesPath}/app/static/${commitHash}/extensions/${dirent}/languageConfiguration.json`,
-          to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
-        })
-      }
-      await Remove.remove(`${resourcesPath}/app/static/${commitHash}/extensions/${dirent}`)
-    }
-    await JsonFile.writeJson({
-      to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/extension.json`,
-      value: {
-        id: 'builtin.language-basics',
-        name: 'Language Basics',
-        description: 'Provides syntax highlighting and bracket matching in files.',
-        languages: allLanguages,
-      },
-    })
-    await WriteFile.writeFile({
-      to: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-basics/README.md`,
-      content: `# Language Basics
-
-Syntax highlighting for Lvce Editor.
-
-For performance reason, all languages extensions are bundled into one during build.
-`,
-    })
-  }
 }
 
 const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
@@ -287,7 +211,7 @@ export const build = async ({
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
   const isLinux = Platform.isLinux()
-  const optimizeLanguageBasics = true
+  // Language-basics extensions are now copied individually
   const resourcesPath = isMacos
     ? `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
     : `packages/build/.tmp/electron-bundle/${arch}/resources`
@@ -387,7 +311,7 @@ export const build = async ({
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ optimizeLanguageBasics, resourcesPath, commitHash })
+  await copyExtensions({ resourcesPath, commitHash })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')

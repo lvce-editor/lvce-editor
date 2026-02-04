@@ -118,7 +118,7 @@ export const getPtyHostPath = async () => {
     // TODO where should builtinExtension be located?
     const shouldBeCopied = (extensionName) => {
       return (
-        extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
+        extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-')
       )
     }
     const extensionNames = await readdir(Path.absolute('extensions'))

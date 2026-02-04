@@ -335,9 +335,6 @@ const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) =>
 }
 
 const isOther = (extension) => {
-  if (extension.startsWith('builtin.language-basics')) {
-    return false
-  }
   if (extension.startsWith('builtin.language-features')) {
     return false
   }
@@ -358,18 +355,21 @@ const copyWebOtherExtensions = async ({ commitHash, pathPrefix }) => {
       }
       throw error
     }
-    if (!manifest.browser) {
+    const isLanguageBasics = extension.startsWith('builtin.language-basics')
+    if (!manifest.browser && !isLanguageBasics) {
       continue
     }
     await Copy.copy({
       from: `extensions/${extension}`,
       to: `packages/build/.tmp/dist/${commitHash}/extensions/${extension}`,
     })
-    webExtensions.push({
-      ...manifest,
-      path: `${pathPrefix}/${commitHash}/extensions/${extension}`,
-      isWeb: true,
-    })
+    if (manifest.browser || isLanguageBasics) {
+      webExtensions.push({
+        ...manifest,
+        path: `${pathPrefix}/${commitHash}/extensions/${extension}`,
+        isWeb: true,
+      })
+    }
   }
   const existingWebExtensions = await JsonFile.readJson(`packages/build/.tmp/dist/${commitHash}/config/webExtensions.json`)
   await JsonFile.writeJson({
