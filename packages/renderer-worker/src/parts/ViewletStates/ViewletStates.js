@@ -10,6 +10,12 @@ export const state = {
    * @type {any}
    */
   focusedInstance: undefined,
+  /**
+   * Track focused instance by module ID/type
+   * Allows commands to target the focused viewlet of a given type
+   * @type {Object<string, number>}
+   */
+  focusedInstanceByType: Object.create(null),
 }
 
 export const set = (key, value) => {
@@ -119,6 +125,37 @@ export const getFocusedInstance = () => {
   return state.focusedInstance
 }
 
-export const setFocusedInstance = (state, instance) => {
-  state.focusedIndex = instance
+/**
+ * Set the focused viewlet instance for a given module type
+ * @param {number} uid - The UID of the instance
+ * @param {string} moduleId - The module ID/type (e.g., 'EditorText', 'Explorer')
+ */
+export const setFocusedInstanceByType = (uid, moduleId) => {
+  if (typeof uid !== 'number') {
+    return
+  }
+  if (typeof moduleId !== 'string') {
+    return
+  }
+  state.focusedInstanceByType[moduleId] = uid
+}
+
+/**
+ * Get the focused instance UID for a given module type
+ * @param {string} moduleId - The module ID/type
+ * @returns {number|undefined} The UID of the focused instance, or undefined
+ */
+export const getFocusedInstanceByType = (moduleId) => {
+  return state.focusedInstanceByType[moduleId]
+}
+
+/**
+ * Clear the focused instance for a given module type (e.g., when viewlet is disposed)
+ * @param {number} uid - The UID of the instance
+ * @param {string} moduleId - The module ID/type
+ */
+export const clearFocusedInstanceByType = (uid, moduleId) => {
+  if (state.focusedInstanceByType[moduleId] === uid) {
+    delete state.focusedInstanceByType[moduleId]
+  }
 }

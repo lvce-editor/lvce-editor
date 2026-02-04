@@ -110,16 +110,32 @@ const wrapViewletCommand = (id, key, fn) => {
   Assert.fn(fn)
   if (fn.returnValue) {
     const wrappedViewletCommand = async (...args) => {
-      // TODO get actual focused instance
-      const activeInstance = ViewletStates.getInstance(id)
+      // Get the focused instance of this type, or fall back to first instance
+      const focusedUid = ViewletStates.getFocusedInstanceByType(id)
+      let activeInstance
+      if (focusedUid) {
+        activeInstance = ViewletStates.getByUid(focusedUid)
+      }
+      if (!activeInstance) {
+        // Fallback to first instance if none focused
+        activeInstance = ViewletStates.getInstance(id)
+      }
       const result = await fn(activeInstance.state, ...args)
       return result
     }
     return wrappedViewletCommand
   }
   const wrappedViewletCommand = async (...args) => {
-    // TODO get actual focused instance
-    const activeInstance = ViewletStates.getInstance(id)
+    // Get the focused instance of this type, or fall back to first instance
+    const focusedUid = ViewletStates.getFocusedInstanceByType(id)
+    let activeInstance
+    if (focusedUid) {
+      activeInstance = ViewletStates.getByUid(focusedUid)
+    }
+    if (!activeInstance) {
+      // Fallback to first instance if none focused
+      activeInstance = ViewletStates.getInstance(id)
+    }
     const result = await runFn(activeInstance, id, key, fn, args)
     return result
   }
@@ -129,8 +145,16 @@ const wrapViewletCommand = (id, key, fn) => {
 
 const wrapViewletCommandWithSideEffect = (id, key, fn) => {
   const wrappedViewletCommand = async (...args) => {
-    // TODO get actual focused instance
-    const activeInstance = ViewletStates.getInstance(id)
+    // Get the focused instance of this type, or fall back to first instance
+    const focusedUid = ViewletStates.getFocusedInstanceByType(id)
+    let activeInstance
+    if (focusedUid) {
+      activeInstance = ViewletStates.getByUid(focusedUid)
+    }
+    if (!activeInstance) {
+      // Fallback to first instance if none focused
+      activeInstance = ViewletStates.getInstance(id)
+    }
     await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, key)
