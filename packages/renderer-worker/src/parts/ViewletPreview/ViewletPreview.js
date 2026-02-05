@@ -26,7 +26,6 @@ export const loadContent = async (state) => {
   await PreviewWorker.invoke('Preview.loadContent', state.uid, savedState)
   const diffResult = await PreviewWorker.invoke('Preview.diff2', state.uid)
   const commands = await PreviewWorker.invoke('Preview.render2', state.uid, diffResult)
-  console.log({ commands })
   return {
     ...state,
     commands,
