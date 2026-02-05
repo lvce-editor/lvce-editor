@@ -1,5 +1,7 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as WrapPreviewCommand from '../WrapPreviewCommand/WrapPreviewCommand.ts'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -17,12 +19,13 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const loadContent = async (state) => {
+  const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
+  const uri = layoutState.previewUri || state.uri
   const savedState = {}
-  await PreviewWorker.invoke('Preview.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
+  await PreviewWorker.invoke('Preview.create', state.uid, uri, state.x, state.y, state.width, state.height)
   await PreviewWorker.invoke('Preview.loadContent', state.uid, savedState)
   const diffResult = await PreviewWorker.invoke('Preview.diff2', state.uid)
   const commands = await PreviewWorker.invoke('Preview.render2', state.uid, diffResult)
-  console.log({ commands })
   return {
     ...state,
     commands,
