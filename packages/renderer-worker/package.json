@@ -44,7 +44,7 @@
     "@lvce-editor/about-view": "^7.1.0",
     "@lvce-editor/activity-bar-worker": "^3.2.0",
     "@lvce-editor/clipboard-worker": "^1.17.0",
-    "@lvce-editor/language-models-view": "^1.7.0",
+    "@lvce-editor/language-models-view": "^1.8.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^3.0.0",
     "@lvce-editor/debug-worker": "^4.0.0",
