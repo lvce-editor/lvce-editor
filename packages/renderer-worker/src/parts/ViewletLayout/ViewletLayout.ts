@@ -268,6 +268,7 @@ export const saveState = (state: LayoutState) => {
     points: pointsArray,
     sideBarView,
     sideBarLocation,
+    previewUri: state.previewUri,
   }
 }
 
@@ -309,6 +310,7 @@ export const loadContent = (state, savedState) => {
   const sideBarLocation = getSideBarLocationType()
   const newPoints = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
+  const previewUri = savedState?.previewUri || ''
   newPoints[LayoutKeys.ActivityBarVisible] = 1
   newPoints[LayoutKeys.ActivityBarWidth] = 48
   newPoints[LayoutKeys.MainVisible] = 1
@@ -353,6 +355,7 @@ export const loadContent = (state, savedState) => {
     mainContentsVisible: true,
     workbenchVisible: true,
     sideBarView: savedView,
+    previewUri,
   }
 }
 
