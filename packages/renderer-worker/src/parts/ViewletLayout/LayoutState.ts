@@ -21,6 +21,8 @@ export interface LayoutState {
   readonly titleBarId: number
   readonly workbenchId: number
   readonly previewId: number
+  readonly previewSashId: number
+  readonly previewUri: string
   readonly activityBarVisible: boolean
   readonly activityBarSashVisible: boolean
   readonly contentAreaVisible: boolean
@@ -28,6 +30,8 @@ export interface LayoutState {
   readonly mainVisible: boolean
   readonly panelSashVisible: boolean
   readonly panelVisible: boolean
+  readonly previewSashVisible: boolean
+  readonly previewVisible: boolean
   readonly sideBarSashVisible: boolean
   readonly sideBarVisible: boolean
   readonly statusBarVisible: boolean
