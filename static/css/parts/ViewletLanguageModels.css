@@ -13,3 +13,7 @@
   gap: 10px;
   padding: 10px;
 }
+
+.TableRowDisabled {
+  text-decoration: line-through;
+}
