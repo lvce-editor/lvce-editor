@@ -5,10 +5,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as PreviewWorkerUrl from '../PreviewWorkerUrl/PreviewWorkerUrl.js'
 
 export const launchPreviewWorker = async () => {
-  const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl(
-    'develop.previewWorkerPath',
-    PreviewWorkerUrl.previewWorkerUrl,
-  )
+  const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.previewWorkerPath', PreviewWorkerUrl.previewWorkerUrl)
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     url: configuredWorkerUrl,
