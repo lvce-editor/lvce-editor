@@ -1,4 +1,3 @@
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
