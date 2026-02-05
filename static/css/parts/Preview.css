@@ -1,0 +1,7 @@
+.Preview {
+  background: orange;
+  z-index: 100;
+  position: absolute;
+  top: 0 !important;
+  right: 0 !important;
+}

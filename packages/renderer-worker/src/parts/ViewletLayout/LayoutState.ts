@@ -19,6 +19,7 @@ export interface LayoutState {
   readonly statusBarId: number
   readonly titleBarId: number
   readonly workbenchId: number
+  readonly previewId: number
   readonly activityBarVisible: boolean
   readonly contentAreaVisible: boolean
   readonly mainContentsVisible: boolean

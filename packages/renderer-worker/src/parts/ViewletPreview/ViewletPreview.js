@@ -1,11 +1,16 @@
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const create = () => {
+export const create = (uid) => {
   return {
     count: 0,
     disposed: false,
+    uid,
+  }
+}
+export const loadContent = (state) => {
+  return {
+    ...state,
   }
 }
 
@@ -33,18 +38,21 @@ export const dispose = (state) => {
 export const hasFunctionalRender = true
 export const hasFunctionalRootRender = true
 export const hasFunctionalResize = true
+export const hasFunctionalEvents = true
 
 const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.count === newState.count
+    console.log('is eq prev')
+    return oldState === newState
   },
   apply(oldState, newState) {
+    console.log('render prev')
     return [
-      /* method */ RenderMethod.SetDom,
-      newState.uid,
+      'Viewlet.setDom2',
       [
         {
           type: VirtualDomElements.Div,
+          className: 'Viewlet Preview',
           childCount: 1,
         },
         text('Hello world'),
@@ -54,3 +62,5 @@ const renderDom = {
 }
 
 export const render = [renderDom]
+
+export const Css = ['/css/parts/Preview.css']
