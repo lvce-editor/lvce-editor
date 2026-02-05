@@ -5,6 +5,10 @@
   contain: strict;
 }
 
+.LanguageModels .TableWrapper {
+  overflow-y: auto;
+}
+
 .LanguageModelsHeader {
   display: flex;
   contain: content;
