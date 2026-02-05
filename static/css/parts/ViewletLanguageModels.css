@@ -7,5 +7,9 @@
 
 .LanguageModelsHeader {
   display: flex;
-  contain: content;
+  contain: strict;
+  height: 50px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
 }
