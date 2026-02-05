@@ -262,13 +262,13 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
-  const { points, sideBarView, sideBarLocation } = state
+  const { points, sideBarView, sideBarLocation, previewUri } = state
   const pointsArray = [...points]
   return {
     points: pointsArray,
     sideBarView,
     sideBarLocation,
-    previewUri: state.previewUri,
+    previewUri,
   }
 }
 
@@ -519,10 +519,15 @@ export const toggleStatusBar = (state: LayoutState) => {
 }
 
 export const showPreview = async (state: LayoutState, uri: string) => {
+  // @ts-ignore
+  state.previewUri = uri
   if (state.previewVisible) {
     await Command.execute('Preview.setUri', uri)
     return {
-      newState: state,
+      newState: {
+        ...state,
+        previewUri: uri,
+      },
       commands: [],
     }
   }
