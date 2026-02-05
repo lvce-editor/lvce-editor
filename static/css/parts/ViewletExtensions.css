@@ -142,6 +142,7 @@
 .ExtensionListItemFooter {
   display: flex;
   justify-content: space-between;
+  contain: content;
 }
 
 .ExtensionListItemAuthorName {
