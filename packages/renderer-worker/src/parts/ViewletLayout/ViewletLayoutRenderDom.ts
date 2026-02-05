@@ -123,6 +123,31 @@ const getMainContentsCommands = (oldState, newState, commands, contentAppendIds)
   }
 }
 
+const getPreviewSashCommands = (oldState, newState, commands, workbenchAppendIds) => {
+  if (oldState.previewSashVisible && !newState.previewSashVisible) {
+    commands.push(['Viewlet.remove', newState.previewSashId])
+    return
+  }
+  if (!oldState.previewSashVisible && newState.previewSashVisible) {
+    commands.push(['Viewlet.createFunctionalRoot', `${newState.previewSashId}`, newState.previewSashId, true])
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: `Sash SashPreview`,
+        childCount: 0,
+      },
+    ]
+    commands.push(['Viewlet.setDom2', newState.previewSashId, dom])
+  }
+  if (newState.previewSashVisible) {
+    workbenchAppendIds.push(newState.previewSashId)
+  }
+}
+
+const getPreviewCommands = (oldState, newState, commands, workbenchAppendIds) => {
+  return renderComponent('previewVisible', 'previewId', oldState, newState, commands, workbenchAppendIds)
+}
+
 const getTitleBarCommands = (oldState, newState, commands, workbenchAppendIds) => {
   return renderComponent('titleBarVisible', 'titleBarId', oldState, newState, commands, workbenchAppendIds)
 }
@@ -211,6 +236,8 @@ export const renderDom = (oldState, newState) => {
   const workbenchAppendIds: any[] = []
   getTitleBarCommands(oldState, newState, commands, workbenchAppendIds)
   getContentCommands(oldState, newState, commands, workbenchAppendIds)
+  getPreviewSashCommands(oldState, newState, commands, workbenchAppendIds)
+  getPreviewCommands(oldState, newState, commands, workbenchAppendIds)
   getStatusBarCommands(oldState, newState, commands, workbenchAppendIds)
   getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds)
 

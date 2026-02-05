@@ -234,6 +234,7 @@ export const create = (id: number): LayoutState => {
     titleBarId: Id.create(),
     workbenchId: Id.create(),
     previewId: Id.create(),
+    previewSashId: Id.create(),
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: false,
@@ -241,6 +242,8 @@ export const create = (id: number): LayoutState => {
     mainVisible: false,
     panelSashVisible: false,
     panelVisible: false,
+    previewSashVisible: false,
+    previewVisible: false,
     sideBarSashVisible: false,
     sideBarVisible: false,
     statusBarVisible: false,
@@ -254,6 +257,7 @@ export const create = (id: number): LayoutState => {
     assetDir,
     commands: [],
     sashId: SashType.None,
+    previewUri: '',
   }
 }
 
@@ -344,6 +348,8 @@ export const loadContent = (state, savedState) => {
     activityBarSashVisible: true,
     sideBarSashVisible: true,
     panelSashVisible: true,
+    previewSashVisible: true,
+    previewVisible: true,
     mainContentsVisible: true,
     workbenchVisible: true,
     sideBarView: savedView,
@@ -387,10 +393,12 @@ const show = async (state, module, currentViewletId) => {
   }
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
+  const isPreview = moduleId === ViewletModuleId.Preview
   return {
     newState: {
       ...state,
       points: newPoints,
+      ...(isPreview && { previewVisible: true, previewSashVisible: true }),
     },
     commands,
   }
@@ -414,10 +422,12 @@ const hide = async (state, module) => {
   // but in a functional way so that there is only
   // one rendering event
 
+  const isPreview = moduleId === ViewletModuleId.Preview
   return {
     newState: {
       ...state,
       points: newPoints,
+      ...(isPreview && { previewVisible: false, previewSashVisible: false }),
     },
     commands,
   }
@@ -505,7 +515,14 @@ export const toggleStatusBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.StatusBar)
 }
 
-export const showPreview = (state: LayoutState) => {
+export const showPreview = async (state: LayoutState, uri: string) => {
+  if (state.previewVisible) {
+    await Command.execute('Preview.setUri', uri)
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   // @ts-ignore
   return show(state, LayoutModules.Preview)
 }
@@ -514,7 +531,9 @@ export const hidePreview = (state: LayoutState) => {
   return hide(state, LayoutModules.Preview)
 }
 
-export const togglePreview = (state: LayoutState) => {
+export const togglePreview = (state: LayoutState, uri: string) => {
+  // @ts-ignore
+  state.previewUri = uri
   // @ts-ignore
   return toggle(state, LayoutModules.Preview)
 }
@@ -958,12 +977,12 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
   getPoints(newPoints, newPoints)
   // TODO resize commands, resize viewlets recursively
   const allCommands = await getResizeCommands(points, newPoints)
-  const newState = {
+  let newState = {
     ...state,
     points: newPoints,
   }
   const uid = state.uid
-  const modules = [LayoutModules.Panel, LayoutModules.SideBar]
+  const modules = [LayoutModules.Panel, LayoutModules.SideBar, LayoutModules.Preview]
   for (const module of modules) {
     const { kVisible, moduleId } = module
     if (points[kVisible] !== newPoints[kVisible]) {
@@ -972,11 +991,25 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
         const commands = showPlaceholder(uid, newPoints, module)
         // @ts-ignore
         allCommands.push(commands)
+        if (moduleId === ViewletModuleId.Preview) {
+          newState = {
+            ...newState,
+            previewVisible: true,
+            previewSashVisible: true,
+          }
+        }
       } else {
         await SaveState.saveViewletState(moduleId)
         const commands = Viewlet.disposeFunctional(moduleId)
         // @ts-ignore
         allCommands.push(...commands)
+        if (moduleId === ViewletModuleId.Preview) {
+          newState = {
+            ...newState,
+            previewVisible: false,
+            previewSashVisible: false,
+          }
+        }
       }
     }
   }

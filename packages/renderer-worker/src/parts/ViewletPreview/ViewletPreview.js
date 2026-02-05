@@ -27,12 +27,23 @@ export const decrement = (state) => {
     count: state.count - 1,
   }
 }
+export const setUri = (state, uri) => {
+  console.log({ uri })
+  return {
+    ...state,
+    uri,
+  }
+}
 
 export const dispose = (state) => {
   return {
     ...state,
     disposed: true,
   }
+}
+
+export const Commands = {
+  setUri,
 }
 
 export const hasFunctionalRender = true
@@ -42,11 +53,9 @@ export const hasFunctionalEvents = true
 
 const renderDom = {
   isEqual(oldState, newState) {
-    console.log('is eq prev')
     return oldState === newState
   },
   apply(oldState, newState) {
-    console.log('render prev')
     return [
       'Viewlet.setDom2',
       [
