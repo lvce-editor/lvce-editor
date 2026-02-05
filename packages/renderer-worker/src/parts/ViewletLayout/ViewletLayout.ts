@@ -313,7 +313,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.SideBarWidth] ||= 240
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
-  newPoints[LayoutKeys.PreviewVisible] = 1
+  newPoints[LayoutKeys.PreviewVisible] = 0 // TODO
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200
