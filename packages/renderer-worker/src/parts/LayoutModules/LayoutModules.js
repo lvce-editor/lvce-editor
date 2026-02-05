@@ -68,7 +68,7 @@ export const Panel = {
 }
 
 export const Preview = {
-  moduleId: ViewletModuleId.E2eTest,
+  moduleId: ViewletModuleId.Preview,
   kVisible: LayoutKeys.PreviewVisible,
   kTop: LayoutKeys.PreviewTop,
   kLeft: LayoutKeys.PreviewLeft,

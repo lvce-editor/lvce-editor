@@ -230,6 +230,7 @@ export const create = (id: number): LayoutState => {
     statusBarId: Id.create(),
     titleBarId: Id.create(),
     workbenchId: Id.create(),
+    previewId: Id.create(),
     activityBarVisible: false,
     contentAreaVisible: false,
     mainContentsVisible: false,
@@ -312,6 +313,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.SideBarWidth] ||= 240
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
+  newPoints[LayoutKeys.PreviewVisible] = 1
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200
@@ -585,6 +587,7 @@ const getReferenceNodes = (sideBarLocation) => {
       'SashSideBar',
       ViewletModuleId.SideBar,
       ViewletModuleId.Main,
+      ViewletModuleId.Preview,
       'SashPanel',
       ViewletModuleId.Panel,
       ViewletModuleId.StatusBar,
@@ -594,6 +597,7 @@ const getReferenceNodes = (sideBarLocation) => {
     ViewletModuleId.TitleBar,
     ViewletModuleId.Main,
     ViewletModuleId.SideBar,
+    ViewletModuleId.Preview,
     'SashSideBar',
     ViewletModuleId.ActivityBar,
     'SashPanel',
