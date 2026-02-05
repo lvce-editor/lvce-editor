@@ -44,3 +44,23 @@ export const hotReload = async (state) => {
     commands,
   }
 }
+
+export const menus = []
+
+export const getMenus = async () => {
+  try {
+    const ids = await LanguageModelsViewWorker.invoke('LanguageModels.getMenuEntryIds')
+    const adjusted = ids.map((id) => {
+      return {
+        id,
+        async getMenuEntries(...args) {
+          const entries = await LanguageModelsViewWorker.invoke('LanguageModels.getMenuEntries', ...args)
+          return entries
+        },
+      }
+    })
+    return adjusted
+  } catch {
+    return []
+  }
+}
