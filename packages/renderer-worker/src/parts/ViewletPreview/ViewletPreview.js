@@ -1,16 +1,31 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
+import * as WrapPreviewCommand from '../WrapPreviewCommand/WrapPreviewCommand.ts'
 
-export const create = (uid) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
+    uri,
+    x,
+    y,
+    width,
+    height,
     count: 0,
     disposed: false,
-    uid,
+    commands: [],
   }
 }
-export const loadContent = (state) => {
+
+export const loadContent = async (state) => {
+  const savedState = {}
+  await PreviewWorker.invoke('Preview.create', state.uid, state.uri, state.x, state.y, state.width, state.height)
+  await PreviewWorker.invoke('Preview.loadContent', state.uid, savedState)
+  const diffResult = await PreviewWorker.invoke('Preview.diff2', state.uid)
+  const commands = await PreviewWorker.invoke('Preview.render2', state.uid, diffResult)
+  console.log({ commands })
   return {
     ...state,
+    commands,
   }
 }
 
@@ -27,13 +42,7 @@ export const decrement = (state) => {
     count: state.count - 1,
   }
 }
-export const setUri = (state, uri) => {
-  console.log({ uri })
-  return {
-    ...state,
-    uri,
-  }
-}
+export const setUri = WrapPreviewCommand.wrapPreviewCommand('setUri')
 
 export const dispose = (state) => {
   return {
@@ -51,25 +60,14 @@ export const hasFunctionalRootRender = true
 export const hasFunctionalResize = true
 export const hasFunctionalEvents = true
 
-const renderDom = {
+const renderItems = {
   isEqual(oldState, newState) {
-    return oldState === newState
+    return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
   },
-  apply(oldState, newState) {
-    return [
-      'Viewlet.setDom2',
-      [
-        {
-          type: VirtualDomElements.Div,
-          className: 'Viewlet Preview',
-          childCount: 1,
-        },
-        text('Hello world'),
-      ],
-    ]
-  },
+  apply: AdjustCommands.apply,
+  multiple: true,
 }
 
-export const render = [renderDom]
+export const render = [renderItems]
 
 export const Css = ['/css/parts/Preview.css']
