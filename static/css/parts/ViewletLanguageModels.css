@@ -9,3 +9,7 @@
   display: flex;
   contain: content;
 }
+
+.TableRowDisabled {
+  text-decoration: line-through;
+}
