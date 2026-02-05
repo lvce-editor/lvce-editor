@@ -121,3 +121,5 @@ export const WebView = 'WebView'
 export const EditorTextError = 'EditorTextError'
 
 export const Settings = 'Settings'
+
+export const Preview = 'Preview'

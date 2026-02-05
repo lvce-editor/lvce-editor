@@ -11,6 +11,7 @@ export const map = {
   [ViewletModuleId.LanguageModels]: () => import('../ViewletLanguageModels/ViewletLanguageModels.ipc.ts'),
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),
   [ViewletModuleId.Dialog]: () => import('../ViewletDialog/ViewletDialog.ipc.js'),
+  [ViewletModuleId.Preview]: () => import('../ViewletPreview/ViewletPreview.ipc.js'),
   [ViewletModuleId.DiffEditor]: () => import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js'),
   [ViewletModuleId.E2eTest]: () => import('../ViewletE2eTest/ViewletE2eTest.ipc.ts'),
   [ViewletModuleId.E2eTests]: () => import('../ViewletE2eTests/ViewletE2eTests.ipc.ts'),
