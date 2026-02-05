@@ -9,6 +9,7 @@ export interface LayoutState {
   readonly uid: number
   readonly points: Uint16Array
   readonly activityBarId: number
+  readonly activityBarSashId: number
   readonly sideBarSashId: number
   readonly sideBarId: number
   readonly panelSashId: number
@@ -21,6 +22,7 @@ export interface LayoutState {
   readonly workbenchId: number
   readonly previewId: number
   readonly activityBarVisible: boolean
+  readonly activityBarSashVisible: boolean
   readonly contentAreaVisible: boolean
   readonly mainContentsVisible: boolean
   readonly mainVisible: boolean

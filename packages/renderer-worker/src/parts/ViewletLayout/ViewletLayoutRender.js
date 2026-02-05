@@ -75,7 +75,18 @@ const kTitleBarWidth = 34
 const kTitleBarHeight = 35
 
 // @ts-ignore
-const kTotal = 36
+const kPreviewVisible = 36
+// @ts-ignore
+const kPreviewTop = 37
+// @ts-ignore
+const kPreviewLeft = 38
+// @ts-ignore
+const kPreviewWidth = 39
+// @ts-ignore
+const kPreviewHeight = 40
+
+// @ts-ignore
+const kTotal = 46
 
 const kSashId = 'sashId'
 
@@ -93,10 +104,23 @@ const renderSashes = {
     const panelTop = points[kpanelTop]
     const panelLeft = points[kPanelLeft]
     const panelWidth = points[kPanelWidth]
+    const previewLeft = points[kPreviewLeft]
+    const previewTop = points[kPreviewTop]
+    const previewHeight = points[kPreviewHeight]
     const sideBarActive = newState[kSashId] === 'SideBar'
     const panelActive = newState[kSashId] === 'Panel'
+    const activityBarActive = newState[kSashId] === 'ActivityBar'
     return [
       'setSashes',
+      {
+        id: 'SashActivityBar',
+        x: previewLeft,
+        y: previewTop,
+        width: 4,
+        height: previewHeight,
+        direction: SashDirectionType.Horizontal,
+        active: activityBarActive,
+      },
       {
         id: 'SashSideBar',
         x: sideBarLeft,

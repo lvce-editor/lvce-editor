@@ -38,36 +38,24 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
   const sideBarMaxWidth = source[LayoutKeys.SideBarMaxWidth]
   const panelMinHeight = source[LayoutKeys.PanelMinHeight]
-  const previewMinHeight = source[LayoutKeys.PreviewMinHeight]
-  const previewMaxHeight = source[LayoutKeys.PreviewMaxHeight]
   const panelMaxHeight = source[LayoutKeys.PanelMaxHeight]
   const titleBarHeight = source[LayoutKeys.TitleBarHeight]
   const sideBarWidth = source[LayoutKeys.SideBarWidth]
   const panelHeight = source[LayoutKeys.PanelHeight]
-  const activityBarWidth = source[LayoutKeys.ActivityBarWidth]
   const statusBarHeight = source[LayoutKeys.StatusBarHeight]
-  const previewHeight = source[LayoutKeys.PreviewHeight]
-  const previewWidth = source[LayoutKeys.PreviewWidth]
-  const previewMinWidth = source[LayoutKeys.PreviewMinWidth]
-  const previewMaxWidth = source[LayoutKeys.PreviewMaxWidth]
 
   const newSideBarWidth = Clamp.clamp(sideBarWidth, sideBarMinWidth, sideBarMaxWidth)
-  const newPreviewHeight = Clamp.clamp(previewHeight, previewMinHeight, previewMaxHeight)
-  const newPreviewWidth = Clamp.clamp(previewWidth, previewMinWidth, previewMaxWidth)
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
 
   if (sideBarLocation === SideBarLocationType.Right) {
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
-    let p25 /* End of SideBar */ = 0
     let p3 = /* End of Main */ 0
     let p4 = /* End of Panel */ 0
     // @ts-ignore
     const p5 = /* End of StatusBar */ windowHeight
 
     const p6 = /* Left */ 0
-    let p65 /* Start of Preview */ = 0
-    let p7 = /* End of Main */ windowWidth - activityBarWidth
     let p8 = /* End of SideBar */ windowWidth
     // @ts-ignore
     const p9 = /* End of ActivityBar */ windowWidth
@@ -78,27 +66,32 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     if (statusBarVisible) {
       p4 = windowHeight - statusBarHeight
     }
-    if (previewVisible) {
-      p25 = Math.max(p4 - previewHeight, 300)
-    }
     p3 = p4
     if (panelVisible) {
       p3 -= newPanelHeight
     }
+
+    // When preview is visible, constrain elements to left 50% of window
+    const availableWidth = previewVisible ? windowWidth / 2 : windowWidth
+
     if (activityBarVisible) {
-      p8 = windowWidth - activityBarWidth
+      p8 = availableWidth - 48 // Activity bar at right edge of left section
+    } else {
+      p8 = availableWidth
     }
-    if (sideBarVisible) {
-      p7 = p8 - newSideBarWidth
-    }
-    if (previewVisible) {
-      p65 = Math.max(p7 - previewWidth, 300)
-    }
+
     destination[LayoutKeys.ActivityBarLeft] = p8
     destination[LayoutKeys.ActivityBarTop] = p2
     destination[LayoutKeys.ActivityBarWidth] = 48
     destination[LayoutKeys.ActivityBarHeight] = p4 - p2
     destination[LayoutKeys.ActivityBarVisible] = activityBarVisible
+
+    // Calculate sidebar width for left section
+    const adjustedSideBarWidth = previewVisible ? Math.min(newSideBarWidth, (availableWidth - 48) * 0.3) : newSideBarWidth
+    let p7 = p8 - adjustedSideBarWidth
+    if (sideBarVisible && p7 < 0) {
+      p7 = 0
+    }
 
     destination[LayoutKeys.MainLeft] = p6
     destination[LayoutKeys.MainTop] = p2
@@ -108,13 +101,13 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
 
     destination[LayoutKeys.PanelLeft] = p6
     destination[LayoutKeys.panelTop] = p3
-    destination[LayoutKeys.PanelWidth] = p8 - p6
+    destination[LayoutKeys.PanelWidth] = previewVisible ? availableWidth : windowWidth
     destination[LayoutKeys.PanelHeight] = p4 - p3
     destination[LayoutKeys.PanelVisible] = panelVisible
 
     destination[LayoutKeys.SideBarLeft] = p7
     destination[LayoutKeys.SideBarTop] = p2
-    destination[LayoutKeys.SideBarWidth] = p8 - p7
+    destination[LayoutKeys.SideBarWidth] = adjustedSideBarWidth
     destination[LayoutKeys.SideBarHeight] = p3 - p2
     destination[LayoutKeys.SideBarVisible] = sideBarVisible
 
@@ -134,10 +127,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     }
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
 
-    destination[LayoutKeys.PreviewLeft] = p65
-    destination[LayoutKeys.PreviewTop] = p25
-    destination[LayoutKeys.PreviewWidth] = newPreviewWidth
-    destination[LayoutKeys.PreviewHeight] = newPreviewHeight
+    destination[LayoutKeys.PreviewLeft] = previewVisible ? availableWidth : 0
+    destination[LayoutKeys.PreviewTop] = p2
+    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth / 2 : 0
+    destination[LayoutKeys.PreviewHeight] = p3 - p2
     destination[LayoutKeys.PreviewVisible] = previewVisible
   } else {
     const p1 = /* Top */ 0
@@ -163,11 +156,17 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     if (panelVisible) {
       p3 -= newPanelHeight
     }
+
+    // When preview is visible, constrain elements to left 50% of window
+    const availableWidth = previewVisible ? windowWidth / 2 : windowWidth
+
     if (activityBarVisible) {
-      p7 = activityBarWidth
+      p7 = 48
     }
     if (sideBarVisible) {
-      p8 = p7 + sideBarWidth
+      p8 = p7 + Math.min(newSideBarWidth, availableWidth - 48)
+    } else {
+      p8 = p7
     }
     destination[LayoutKeys.ActivityBarLeft] = p6
     destination[LayoutKeys.ActivityBarTop] = p2
@@ -175,15 +174,18 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.ActivityBarHeight] = p4 - p2
     destination[LayoutKeys.ActivityBarVisible] = activityBarVisible
 
+    // For when preview is visible, constrain main area to left 50% of window
+    let mainWidth = availableWidth - p8
+
     destination[LayoutKeys.MainLeft] = p8
     destination[LayoutKeys.MainTop] = p2
-    destination[LayoutKeys.MainWidth] = windowWidth - p8
+    destination[LayoutKeys.MainWidth] = mainWidth
     destination[LayoutKeys.MainHeight] = p3 - p2
     destination[LayoutKeys.MainVisible] = 1
 
     destination[LayoutKeys.PanelLeft] = p6
     destination[LayoutKeys.panelTop] = p3
-    destination[LayoutKeys.PanelWidth] = p8 - p6
+    destination[LayoutKeys.PanelWidth] = availableWidth
     destination[LayoutKeys.PanelHeight] = p4 - p3
     destination[LayoutKeys.PanelVisible] = panelVisible
 
@@ -205,10 +207,10 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[LayoutKeys.TitleBarHeight] = titleBarHeight
     destination[LayoutKeys.TitleBarVisible] = titleBarVisible
 
-    destination[LayoutKeys.PreviewLeft] = windowWidth / 2
-    destination[LayoutKeys.PreviewTop] = windowHeight / 2
-    destination[LayoutKeys.PreviewWidth] = windowWidth / 2
-    destination[LayoutKeys.PreviewHeight] = windowHeight / 3
+    destination[LayoutKeys.PreviewLeft] = previewVisible ? availableWidth : 0
+    destination[LayoutKeys.PreviewTop] = p2
+    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth / 2 : 0
+    destination[LayoutKeys.PreviewHeight] = p3 - p2
     destination[LayoutKeys.PreviewVisible] = previewVisible
   }
 }
@@ -220,6 +222,7 @@ export const create = (id: number): LayoutState => {
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
     activityBarId: Id.create(),
+    activityBarSashId: Id.create(),
     sideBarSashId: Id.create(),
     sideBarId: Id.create(),
     panelSashId: Id.create(),
@@ -232,6 +235,7 @@ export const create = (id: number): LayoutState => {
     workbenchId: Id.create(),
     previewId: Id.create(),
     activityBarVisible: false,
+    activityBarSashVisible: false,
     contentAreaVisible: false,
     mainContentsVisible: false,
     mainVisible: false,
@@ -337,6 +341,7 @@ export const loadContent = (state, savedState) => {
     ...state,
     points: newPoints,
     sideBarLocation,
+    activityBarSashVisible: true,
     sideBarSashVisible: true,
     panelSashVisible: true,
     mainContentsVisible: true,
@@ -584,6 +589,7 @@ const getReferenceNodes = (sideBarLocation) => {
     return [
       ViewletModuleId.TitleBar,
       ViewletModuleId.ActivityBar,
+      'SashActivityBar',
       'SashSideBar',
       ViewletModuleId.SideBar,
       ViewletModuleId.Main,
@@ -598,6 +604,7 @@ const getReferenceNodes = (sideBarLocation) => {
     ViewletModuleId.Main,
     ViewletModuleId.SideBar,
     ViewletModuleId.Preview,
+    'SashActivityBar',
     'SashSideBar',
     ViewletModuleId.ActivityBar,
     'SashPanel',
@@ -745,6 +752,35 @@ const getNewStatePointerMoveSideBar = (points, x, y) => {
   return newPoints
 }
 
+const getNewStatePointerMoveActivityBar = (points, x, y) => {
+  const windowWidth = points[LayoutKeys.WindowWidth]
+  const previewMinWidth = 200 // TODO: make configurable
+  const mainMinWidth = 100 // TODO: make configurable
+  const newPreviewWidth = windowWidth - x
+  const newPoints = new Uint16Array(points)
+
+  if (newPreviewWidth < previewMinWidth / 2) {
+    // Hide preview when dragging too far left
+    newPoints[LayoutKeys.PreviewVisible] = 0
+    newPoints[LayoutKeys.PreviewWidth] = 0
+    newPoints[LayoutKeys.PreviewLeft] = windowWidth
+    newPoints[LayoutKeys.MainWidth] = windowWidth - 48
+  } else if (newPreviewWidth < previewMinWidth) {
+    // Snap to minimum preview width
+    newPoints[LayoutKeys.PreviewVisible] = 1
+    newPoints[LayoutKeys.PreviewWidth] = previewMinWidth
+    newPoints[LayoutKeys.PreviewLeft] = x
+    newPoints[LayoutKeys.MainWidth] = x - 48
+  } else {
+    newPoints[LayoutKeys.PreviewVisible] = 1
+    newPoints[LayoutKeys.PreviewLeft] = x
+    newPoints[LayoutKeys.PreviewWidth] = newPreviewWidth
+    newPoints[LayoutKeys.MainWidth] = Math.max(mainMinWidth, x - 48)
+  }
+
+  return newPoints
+}
+
 const getNewStatePointerMovePanel = (points, x, y) => {
   const windowHeight = points[LayoutKeys.WindowHeight]
   const statusBarHeight = points[LayoutKeys.StatusBarHeight]
@@ -788,6 +824,8 @@ const getNewStatePointerMove = (sashId, points, x, y) => {
       return getNewStatePointerMovePanel(points, x, y)
     case SashType.Preview:
       return getNewStatePointerMovePreview(points, x, y)
+    case SashType.ActivityBar:
+      return getNewStatePointerMoveActivityBar(points, x, y)
     default:
       throw new Error(`unsupported sash type ${sashId}`)
   }
@@ -1032,6 +1070,27 @@ const handleSashDoubleClickSideBar = async (state: LayoutState) => {
   }
 }
 
+const handleSashDoubleClickActivityBar = async (state: LayoutState) => {
+  const { points } = state
+  if (points[LayoutKeys.PreviewVisible]) {
+    const newPoints = new Uint16Array(points)
+    newPoints[LayoutKeys.PreviewWidth] = 600 // Reset to default width
+    getPoints(newPoints, newPoints)
+    const commands = await getResizeCommands(points, newPoints)
+    return {
+      newState: {
+        ...state,
+        points: newPoints,
+      },
+      commands,
+    }
+  }
+  return {
+    newState: state,
+    commands: [],
+  }
+}
+
 export const moveSideBar = async (state: LayoutState, position: any) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
@@ -1092,6 +1151,8 @@ export const handleSashDoubleClick = (state: LayoutState, sashId: string) => {
       return handleSashDoubleClickPanel(state)
     case SashType.SideBar:
       return handleSashDoubleClickSideBar(state)
+    case SashType.ActivityBar:
+      return handleSashDoubleClickActivityBar(state)
     default:
       throw new Error(`unsupported sash type ${sashId}`)
   }
