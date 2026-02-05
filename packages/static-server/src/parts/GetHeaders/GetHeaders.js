@@ -30,6 +30,7 @@ import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeader
 import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
 import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
+import * as GetHeadersPreviewWorker from '../GetHeadersPreviewWorker/GetHeadersPreviewWorker.js'
 import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
 import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
 import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
@@ -130,6 +131,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('aboutWorkerMain.js')) {
     return GetHeadersAboutWorker.getHeadersAboutWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('previewWorkerMain.js')) {
+    return GetHeadersPreviewWorker.getHeadersPreviewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('clipBoardWorkerMain.js')) {
     return GetHeadersClipBoardWorker.getHeadersClipBoardWorker(mime, etag, defaultCachingHeader)
