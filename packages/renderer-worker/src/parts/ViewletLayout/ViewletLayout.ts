@@ -262,13 +262,14 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
-  const { points, sideBarView, sideBarLocation, previewUri } = state
+  const { points, sideBarView, sideBarLocation, previewUri, previewVisible } = state
   const pointsArray = [...points]
   return {
     points: pointsArray,
     sideBarView,
     sideBarLocation,
     previewUri,
+    previewVisible,
   }
 }
 
@@ -311,6 +312,7 @@ export const loadContent = (state, savedState) => {
   const newPoints = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
+  const previewVisible = savedState?.previewVisible || false
   newPoints[LayoutKeys.ActivityBarVisible] = 1
   newPoints[LayoutKeys.ActivityBarWidth] = 48
   newPoints[LayoutKeys.MainVisible] = 1
@@ -323,7 +325,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.SideBarWidth] ||= 240
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
-  newPoints[LayoutKeys.PreviewVisible] = 0
+  newPoints[LayoutKeys.PreviewVisible] = previewVisible ? 1 : 0
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200
@@ -351,7 +353,7 @@ export const loadContent = (state, savedState) => {
     sideBarSashVisible: true,
     panelSashVisible: true,
     previewSashVisible: true,
-    previewVisible: false,
+    previewVisible,
     mainContentsVisible: true,
     workbenchVisible: true,
     sideBarView: savedView,
