@@ -98,29 +98,30 @@ const renderSashes = {
   },
   apply(oldState, newState) {
     const { points } = newState
+    const mainLeft = points[kMainLeft]
+    const mainWidth = points[kMainWidth]
     const sideBarLeft = points[kSideBarLeft]
     const sideBarTop = points[kSideBarTop]
     const sideBarHeight = points[kSideBarHeight]
+    const activityBarLeft = points[kActivityBarLeft]
+    const activityBarTop = points[kActivityBarTop]
+    const activityBarHeight = points[kActivityBarHeight]
     const panelTop = points[kpanelTop]
-    const panelLeft = points[kPanelLeft]
     const panelWidth = points[kPanelWidth]
-    const previewLeft = points[kPreviewLeft]
-    const previewTop = points[kPreviewTop]
-    const previewHeight = points[kPreviewHeight]
     const sideBarActive = newState[kSashId] === 'SideBar'
     const panelActive = newState[kSashId] === 'Panel'
     const activityBarActive = newState[kSashId] === 'ActivityBar'
     return [
       'setSashes',
-      {
-        id: 'SashActivityBar',
-        x: previewLeft,
-        y: previewTop,
-        width: 4,
-        height: previewHeight,
-        direction: SashDirectionType.Horizontal,
-        active: activityBarActive,
-      },
+      // {
+      //   id: 'SashActivityBar',
+      //   x: activityBarLeft,
+      //   y: activityBarTop,
+      //   width: 4,
+      //   height: activityBarHeight,
+      //   direction: SashDirectionType.Horizontal,
+      //   active: activityBarActive,
+      // },
       {
         id: 'SashSideBar',
         x: sideBarLeft,
@@ -132,7 +133,7 @@ const renderSashes = {
       },
       {
         id: 'SashPanel',
-        x: panelLeft,
+        x: mainLeft,
         y: panelTop,
         width: panelWidth,
         height: 4,
