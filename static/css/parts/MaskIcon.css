@@ -298,6 +298,10 @@
   mask-image: url(/icons/symbol-variable.svg);
 }
 
+.MaskIconPreview {
+  mask-image: url(/icons/open-preview.svg);
+}
+
 .MaskIconSymbolKeyword,
 .IconSymbolKeyword {
   mask-image: url(/icons/symbol-keyword.svg);
