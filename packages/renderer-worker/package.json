@@ -71,7 +71,7 @@
     "@lvce-editor/menu-worker": "^3.1.0",
     "@lvce-editor/opener-worker": "^1.5.0",
     "@lvce-editor/output-view": "^2.2.0",
-    "@lvce-editor/preview-worker": "^1.7.0",
+    "@lvce-editor/preview-worker": "^1.8.0",
     "@lvce-editor/problems-view": "^1.18.0",
     "@lvce-editor/references-view": "^2.5.0",
     "@lvce-editor/rename-worker": "^1.28.0",
