@@ -99,18 +99,18 @@ const renderSashes = {
   apply(oldState, newState) {
     const { points } = newState
     const mainLeft = points[kMainLeft]
-    const mainWidth = points[kMainWidth]
+    // const mainWidth = points[kMainWidth]
     const sideBarLeft = points[kSideBarLeft]
     const sideBarTop = points[kSideBarTop]
     const sideBarHeight = points[kSideBarHeight]
-    const activityBarLeft = points[kActivityBarLeft]
-    const activityBarTop = points[kActivityBarTop]
-    const activityBarHeight = points[kActivityBarHeight]
+    // const activityBarLeft = points[kActivityBarLeft]
+    // const activityBarTop = points[kActivityBarTop]
+    // const activityBarHeight = points[kActivityBarHeight]
     const panelTop = points[kpanelTop]
     const panelWidth = points[kPanelWidth]
     const sideBarActive = newState[kSashId] === 'SideBar'
     const panelActive = newState[kSashId] === 'Panel'
-    const activityBarActive = newState[kSashId] === 'ActivityBar'
+    // const activityBarActive = newState[kSashId] === 'ActivityBar'
     return [
       'setSashes',
       // {
