@@ -351,7 +351,7 @@ export const loadContent = (state, savedState) => {
     sideBarSashVisible: true,
     panelSashVisible: true,
     previewSashVisible: true,
-    previewVisible: true,
+    previewVisible: false,
     mainContentsVisible: true,
     workbenchVisible: true,
     sideBarView: savedView,
