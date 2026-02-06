@@ -43,7 +43,7 @@ const kSideBarMaxWidth = 18
 // @ts-ignore
 const kPanelVisible = 19
 const kpanelTop = 20
-const kPanelLeft = 21
+// const kPanelLeft = 21
 const kPanelWidth = 22
 // @ts-ignore
 const kPanelHeight = 23
