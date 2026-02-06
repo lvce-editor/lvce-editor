@@ -129,7 +129,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
 
     destination[LayoutKeys.PreviewLeft] = previewVisible ? availableWidth : 0
     destination[LayoutKeys.PreviewTop] = p2
-    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth / 2 : 0
+    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth - availableWidth : 0
     destination[LayoutKeys.PreviewHeight] = p3 - p2
     destination[LayoutKeys.PreviewVisible] = previewVisible
   } else {
@@ -209,7 +209,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
 
     destination[LayoutKeys.PreviewLeft] = previewVisible ? availableWidth : 0
     destination[LayoutKeys.PreviewTop] = p2
-    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth / 2 : 0
+    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth - availableWidth : 0
     destination[LayoutKeys.PreviewHeight] = p3 - p2
     destination[LayoutKeys.PreviewVisible] = previewVisible
   }
@@ -629,11 +629,11 @@ const getReferenceNodes = (sideBarLocation) => {
   return [
     ViewletModuleId.TitleBar,
     ViewletModuleId.Main,
-    ViewletModuleId.SideBar,
-    ViewletModuleId.Preview,
-    'SashActivityBar',
     'SashSideBar',
+    ViewletModuleId.SideBar,
+    'SashActivityBar',
     ViewletModuleId.ActivityBar,
+    ViewletModuleId.Preview,
     'SashPanel',
     ViewletModuleId.Panel,
     ViewletModuleId.StatusBar,
