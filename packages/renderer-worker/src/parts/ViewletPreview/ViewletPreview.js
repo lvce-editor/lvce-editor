@@ -47,6 +47,7 @@ export const decrement = (state) => {
 }
 export const setUri = WrapPreviewCommand.wrapPreviewCommand('setUri')
 export const rerender = WrapPreviewCommand.wrapPreviewCommand('rerender')
+export const renderEventListeners = WrapPreviewCommand.wrapPreviewCommand('renderEventListeners')
 
 export const dispose = (state) => {
   return {
@@ -58,6 +59,7 @@ export const dispose = (state) => {
 export const Commands = {
   setUri,
   rerender,
+  renderEventListeners,
 }
 
 export const hasFunctionalRender = true
