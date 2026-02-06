@@ -323,7 +323,7 @@ export const loadContent = (state, savedState) => {
   newPoints[LayoutKeys.SideBarWidth] ||= 240
   newPoints[LayoutKeys.StatusBarHeight] = 20
   newPoints[LayoutKeys.StatusBarVisible] = 1
-  newPoints[LayoutKeys.PreviewVisible] = 0 // TODO
+  newPoints[LayoutKeys.PreviewVisible] = 0
   newPoints[LayoutKeys.PreviewHeight] ||= 350
   newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
   newPoints[LayoutKeys.PreviewMaxHeight] = 1200
@@ -519,9 +519,10 @@ export const toggleStatusBar = (state: LayoutState) => {
 }
 
 export const showPreview = async (state: LayoutState, uri: string) => {
-  // @ts-ignore
-  state.previewUri = uri
-  if (state.previewVisible) {
+  const { points } = state
+  const previewIsVisible = points[LayoutKeys.PreviewVisible] === 1
+
+  if (previewIsVisible) {
     await Command.execute('Preview.setUri', uri)
     return {
       newState: {
@@ -532,7 +533,14 @@ export const showPreview = async (state: LayoutState, uri: string) => {
     }
   }
   // @ts-ignore
-  return show(state, LayoutModules.Preview)
+  const result = await show(state, LayoutModules.Preview)
+  return {
+    ...result,
+    newState: {
+      ...result.newState,
+      previewUri: uri,
+    },
+  }
 }
 
 export const hidePreview = (state: LayoutState) => {
