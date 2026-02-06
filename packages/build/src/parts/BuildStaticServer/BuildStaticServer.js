@@ -432,7 +432,9 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
 }
 
 const shouldBeCopied = (extensionName) => {
-  return extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-')
+  return (
+    extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics-')
+  )
 }
 
 const copyExtensions = async ({ commitHash }) => {
