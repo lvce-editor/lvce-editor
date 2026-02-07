@@ -26,10 +26,11 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
         [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
         [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
         [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
+        [HttpHeader.ContentType]: 'text/html',
       }
       return GetContentResponse.getContentResponse(content, headers)
     }
-    if (pathName === '/tests/') {
+    if (pathName === '/tests/' || pathName === '/tests') {
       const testPath = GetTestPath.getTestPath()
       const testPathSrc = join(testPath, 'src')
       const body = await CreateTestOverview.createTestOverview(testPathSrc)
@@ -38,6 +39,7 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
         [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
         [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
         [HttpHeader.ContentSecurityPolicy]: "default-src 'none'",
+        [HttpHeader.ContentType]: 'text/html',
       }
       return GetMultipleChoiceResponse.getMultipleChoiceResponse(body, headers)
     }
