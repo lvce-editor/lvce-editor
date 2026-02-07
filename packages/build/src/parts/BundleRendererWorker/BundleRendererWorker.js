@@ -367,7 +367,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/opener-worker/dist/openerWorkerMain.js`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/PreviweWorkerUrl/PreviweWorkerUrl.js`,
+      path: `${cachePath}/src/parts/PreviewWorkerUrl/PreviewWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/preview-worker/dist/previewWorkerMain.js`,
       replacement: `/packages/preview-worker/dist/previewWorkerMain.js`,
     })
