@@ -534,6 +534,10 @@ export const showPreview = async (state: LayoutState, uri: string) => {
       commands: [],
     }
   }
+  await Viewlet.setState(state.uid, {
+    ...state,
+    previewUri: uri,
+  })
   // @ts-ignore
   const result = await show(state, LayoutModules.Preview)
   return {
