@@ -30,6 +30,7 @@ import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeader
 import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
 import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
+import * as GetHeadersPreviewSandBoxWorker from '../GetHeadersPreviewSandBoxWorker/GetHeadersPreviewSandBoxWorker.js'
 import * as GetHeadersPreviewWorker from '../GetHeadersPreviewWorker/GetHeadersPreviewWorker.js'
 import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
 import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
@@ -77,6 +78,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('previewSandboxWorkerMain.js')) {
+    return GetHeadersPreviewSandBoxWorker.getHeadersPreviewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('menuWorkerMain.js')) {
     return GetHeadersMenuWorker.getHeadersMenuWorker(mime, etag, defaultCachingHeader)
