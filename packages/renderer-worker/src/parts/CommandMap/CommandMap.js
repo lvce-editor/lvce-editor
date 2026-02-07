@@ -246,6 +246,7 @@ export const commandMap = {
   'Notification.showWithOptions': lazy('Notification.showWithOptions'),
   'OffscreenCanvas.create': lazy('OffscreenCanvas.create'),
   'OffscreenCanvas.createForTerminal': lazy('OffscreenCanvas.createForTerminal'),
+  'OffscreenCanvas.createForPreview': lazy('OffscreenCanvas.createForPreview'),
   'Open.openExternal': lazy('Open.openExternal'),
   'Open.openUrl': lazy('Open.openUrl'),
   'OpenNativeFolder.openNativeFolder': lazy('OpenNativeFolder.openNativeFolder'),
