@@ -49,6 +49,7 @@ export const decrement = (state) => {
 export const setUri = WrapPreviewCommand.wrapPreviewCommand('setUri')
 export const rerender = WrapPreviewCommand.wrapPreviewCommand('rerender')
 export const handleClick = WrapPreviewCommand.wrapPreviewCommand('handleClick')
+export const handleMouseMove = WrapPreviewCommand.wrapPreviewCommand('handleMouseMove')
 export const handleKeyDown = WrapPreviewCommand.wrapPreviewCommand('handleKeyDown')
 export const handleInput = WrapPreviewCommand.wrapPreviewCommand('handleInput')
 export const renderEventListeners = () => PreviewWorker.invoke('Preview.renderEventListeners')
@@ -86,6 +87,7 @@ export const Commands = {
   rerender,
   handleKeyDown,
   handleClick,
+  handleMouseMove,
   handleInput,
   renderEventListeners,
   hotReload,
