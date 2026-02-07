@@ -314,6 +314,9 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToIconThemeWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToIconThemeWorker',
   ),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToPreviewSandBoxWorker': lazy(
+    'SendMessagePortToExtensionHostWorker.sendMessagePortToPreviewSandBoxWorker',
+  ),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToIframeWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToIframeWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker',
