@@ -7,6 +7,7 @@ import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
+import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -109,6 +110,12 @@ export const sendMessagePortToOpenerWorker = async (port, initialCommand, rpcId)
   Assert.object(port)
   Assert.string(initialCommand)
   await OpenerWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToPreviewSandBoxWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await PreviewSandBoxWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
