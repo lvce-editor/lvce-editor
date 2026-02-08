@@ -1,6 +1,6 @@
 .Viewlet {
   contain: strict;
-  flex: 1;
+  /* flex: 1; */
 }
 
 .ViewletError {
