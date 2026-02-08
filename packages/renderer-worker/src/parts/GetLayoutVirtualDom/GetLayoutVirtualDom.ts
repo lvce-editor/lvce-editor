@@ -61,6 +61,17 @@ const getSashPreviewDom = () => {
   }
 }
 
+<<<<<<< HEAD
+=======
+const getSashPreviewDom = () => {
+  return {
+    type: VirtualDomElements.Div,
+    className: 'Viewlet Sash SashVertical',
+    onPointerDown: DomEventListenerFunctions.HandleSashPreviewPointerDown,
+  }
+}
+
+>>>>>>> origin/main
 // @ts-ignore
 const getSashPanelDom = () => {
   return {
@@ -150,8 +161,12 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(getSideBarDom(sideBarId))
   }
   if (sideBarSashVisible) {
+<<<<<<< HEAD
     children.push(...getSashSideBarDom())
     delta--
+=======
+    children.push(getSashSideBarDom())
+>>>>>>> origin/main
   }
   if (mainVisible) {
     children.push(getMainDom(mainId))
@@ -192,10 +207,15 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   if (mainVisible) {
     children.push(getMainDom(mainId))
   }
+<<<<<<< HEAD
   let delta = 0
   if (sideBarSashVisible) {
     children.push(...getSashSideBarDom())
     delta--
+=======
+  if (sideBarSashVisible) {
+    children.push(getSashSideBarDom())
+>>>>>>> origin/main
   }
   if (sideBarVisible) {
     children.push(getSideBarDom(sideBarId))
