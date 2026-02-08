@@ -135,6 +135,7 @@ const getCss = (newState: LayoutState) => {
 
 const renderCss = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
+    console.log('render css')
     return false
   },
   apply(oldState: LayoutState, newState: LayoutState) {
@@ -151,6 +152,14 @@ export const renderEventListeners = () => {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
       params: ['handleSashSideBarPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashSideBarPointerMove,
+      params: ['handleSashPointerMove', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashSideBarPointerUp,
+      params: ['handleSashPointerUp'],
     },
     {
       name: DomEventListenersFunctions.HandleSashPanelPointerMove,

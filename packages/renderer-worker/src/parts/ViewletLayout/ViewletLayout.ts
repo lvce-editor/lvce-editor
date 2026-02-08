@@ -871,6 +871,7 @@ const showPlaceholder = (uid, points, module) => {
 
 export const handleSashPointerMove = async (state: LayoutState, x: number, y: number) => {
   const { sashId } = state
+  console.log({ x, y })
   let newState = getNewStatePointerMove(sashId, state, x, y)
   // TODO resize commands, resize viewlets recursively
   const allCommands = await getResizeCommands(state, newState)
