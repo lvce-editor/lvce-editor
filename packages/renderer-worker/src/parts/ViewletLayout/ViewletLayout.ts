@@ -465,6 +465,7 @@ export const showSideBar = async (state: LayoutState) => {
 export const hideSideBar = async (state: LayoutState) => {
   const { newState, commands } = await hide(state, LayoutModules.SideBar)
   const { activityBarId } = newState
+  // TODO instead of this, call handleSidebarViewChange. activity bar then can get active view if needed
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarHidden', activityBarId)
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
