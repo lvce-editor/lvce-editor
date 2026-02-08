@@ -8,8 +8,8 @@ export interface LayoutState {
   readonly commit: string
   readonly contentAreaId: number
   readonly contentAreaVisible: boolean
-  readonly mainContentsId: number
-  readonly mainContentsVisible: boolean
+  // readonly mainContentsId: number
+  // readonly mainContentsVisible: boolean
   readonly mainId: number
   readonly mainVisible: boolean
   readonly panelId: number

@@ -52,7 +52,7 @@ const getSashPanelDom = () => {
   }
 }
 
-const getContentAreaVirtualDomLeft = (state) => {
+const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   const children: any[] = []
 
   // Add components based on sidebar location
@@ -87,8 +87,8 @@ const getContentAreaVirtualDomLeft = (state) => {
   if (state.sideBarSashVisible) {
     children.push(getSashSideBarDom())
   }
-  if (state.mainContentsVisible && state.mainContentsId !== -1) {
-    if (state.mainContentsId === -1) {
+  if (state.mainVisible && state.mainId !== -1) {
+    if (state.mainId === -1) {
       children.push({
         type: VirtualDomElements.Div,
         className: 'Viewlet Main',
@@ -97,7 +97,7 @@ const getContentAreaVirtualDomLeft = (state) => {
     } else {
       children.push({
         type: VirtualDomElements.Reference,
-        uid: state.mainContentsId,
+        uid: state.mainId,
       })
     }
   }
@@ -111,12 +111,12 @@ const getContentAreaVirtualDomLeft = (state) => {
   ]
 }
 
-const getContentAreaVirtualDomRight = (state) => {
+const getContentAreaVirtualDomRight = (state: LayoutState) => {
   const children: any[] = []
 
   // Right sidebar location
-  if (state.mainContentsVisible) {
-    if (state.mainContentsId === -1) {
+  if (state.mainVisible) {
+    if (state.mainId === -1) {
       children.push({
         type: VirtualDomElements.Div,
         className: 'Viewlet Main',
@@ -125,7 +125,7 @@ const getContentAreaVirtualDomRight = (state) => {
     } else {
       children.push({
         type: VirtualDomElements.Reference,
-        uid: state.mainContentsId,
+        uid: state.mainId,
       })
     }
   } else {
