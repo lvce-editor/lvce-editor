@@ -12,29 +12,30 @@ export interface LayoutState {
   readonly commit: string
   readonly contentAreaId: number
   readonly contentAreaVisible: boolean
+  readonly initial: boolean
   readonly mainHeight: number
   readonly mainId: number
   readonly mainLeft: number
   readonly mainTop: number
   readonly mainVisible: boolean
-  readonly titleBarNative: boolean
   readonly mainWidth: number
   readonly panelHeight: number
-  readonly panelMinHeight: number
-  readonly sideBarMaxWidth: number
-  readonly sideBarMinWidth: number
-  readonly previewMinHeight: number
-  readonly previewMaxHeight: number
-  readonly previewMinWidth: number
-  readonly previewMaxWidth: number
-  readonly panelMaxHeight: number
   readonly panelId: number
   readonly panelLeft: number
+  readonly panelMaxHeight: number
+  readonly panelMinHeight: number
   readonly panelSashId: number
   readonly panelSashVisible: boolean
   readonly panelTop: number
   readonly panelView: string
   readonly panelVisible: boolean
+  readonly previewMaxHeight: number
+  readonly previewMaxWidth: number
+  readonly previewMinHeight: number
+  readonly previewMinWidth: number
+  readonly sideBarMaxWidth: number
+  readonly sideBarMinWidth: number
+  readonly titleBarNative: boolean
   readonly panelWidth: number
   readonly platform: number
   readonly previewHeight: number

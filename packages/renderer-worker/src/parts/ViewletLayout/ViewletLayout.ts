@@ -106,6 +106,7 @@ export const create = (id: number): LayoutState => {
     sashId: SashType.None,
     previewUri: '',
     panelView: ViewletModuleId.Problems,
+    initial: true,
   }
 }
 
@@ -198,6 +199,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     sideBarSashVisible: true,
     sideBarView: savedView,
     workbenchVisible: true,
+    initial: false,
   }
   // TODO get side bar min width from preferences
   const newState = getPoints(intermediateState)

@@ -191,4 +191,14 @@ export const renderEventListeners = () => {
   ]
 }
 
-export const render = [renderDom, renderCss]
+const renderWindowListeners = {
+  isEqual(oldState: LayoutState, newState: LayoutState) {
+    return !oldState.initial
+  },
+  apply(oldState: LayoutState, newState: LayoutState) {
+    return [['Viewlet.attachWindowEvents']]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderCss, renderWindowListeners]
