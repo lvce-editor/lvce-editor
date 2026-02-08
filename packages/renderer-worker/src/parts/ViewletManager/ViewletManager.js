@@ -463,6 +463,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     viewlet.id === 'TitleBar' ||
     viewlet.id === 'Panel' ||
     viewlet.id === 'ActivityBar' ||
+    viewlet.id === 'Main' ||
     viewlet.id === 'StatusBar'
   ) {
     viewlet.setBounds = false
