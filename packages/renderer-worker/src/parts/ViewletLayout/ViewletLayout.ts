@@ -274,10 +274,9 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   }
 }
 
-const toggle = (state, module, moduleId) => {
-  const { points } = state
+const toggle = (state: LayoutState, module: LayoutModules.LayoutModule, moduleId?: any) => {
   const { kVisible } = module
-  if (points[kVisible]) {
+  if (state[kVisible]) {
     return hide(state, module)
   }
   return show(state, module, moduleId)
@@ -394,9 +393,7 @@ export const hidePreview = (state: LayoutState) => {
 }
 
 export const togglePreview = (state: LayoutState, uri: string) => {
-  // @ts-ignore
   state.previewUri = uri
-  // @ts-ignore
   return toggle(state, LayoutModules.Preview)
 }
 
