@@ -40,6 +40,7 @@ export const CommandsWithSideEffects = {
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
   openSideBarViewlet: ViewletLayout.openSideBarView,
+  openPanelViewlet: ViewletLayout.openPanelView,
   setUpdateState: ViewletLayout.setUpdateState,
   showActivityBar: ViewletLayout.showActivityBar,
   showE2eTests: ViewletLayout.showE2eTests,

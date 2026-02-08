@@ -258,6 +258,7 @@ export const create = (id: number): LayoutState => {
     commands: [],
     sashId: SashType.None,
     previewUri: '',
+    panelView: ViewletModuleId.Problems,
   }
 }
 
@@ -467,6 +468,7 @@ export const showSideBar = async (state: LayoutState) => {
 export const hideSideBar = async (state: LayoutState) => {
   const { newState, commands } = await hide(state, LayoutModules.SideBar)
   const { activityBarId } = newState
+  // TODO instead of this, call handleSidebarViewChange. activity bar then can get active view if needed
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarHidden', activityBarId)
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
@@ -536,7 +538,7 @@ export const showPreview = async (state: LayoutState, uri: string) => {
       commands: [],
     }
   }
-  await Viewlet.setState(state.uid, {
+  ViewletStates.setState(state.uid, {
     ...state,
     previewUri: uri,
   })
@@ -1320,6 +1322,13 @@ export const getSideBarPosition = (state: LayoutState) => {
 
 export const openSideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
   const { newState, commands } = await callGlobalEvent(state, 'handleSideBarViewletChange', moduleId)
+  return {
+    newState: { ...newState, sideBarView: moduleId },
+    commands,
+  }
+}
+export const openPanelView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
+  const { newState, commands } = await callGlobalEvent(state, 'handlePanelViewletChange', moduleId)
   return {
     newState: { ...newState, sideBarView: moduleId },
     commands,
