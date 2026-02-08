@@ -1,7 +1,10 @@
 import { getSideBarDom } from '../GetSideBarDom/GetSideBarDom.js'
 
 export const hasFunctionalRender = true
+
 export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
 
 const renderDom = {
   isEqual(oldState, newState) {
