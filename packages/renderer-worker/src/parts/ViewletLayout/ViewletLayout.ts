@@ -29,7 +29,6 @@ import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
 export const create = (id: number): LayoutState => {
   Assert.number(id)
   return {
-    points: new Uint16Array(LayoutKeys.Total),
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
     activityBarId: -1,
@@ -81,6 +80,8 @@ export const create = (id: number): LayoutState => {
     statusBarHeight: 0,
     statusBarLeft: 0,
     statusBarTop: 0,
+    windowWidth: 0,
+    windowHeight: 0,
     statusBarWidth: 0,
     titleBarHeight: 0,
     titleBarLeft: 0,
