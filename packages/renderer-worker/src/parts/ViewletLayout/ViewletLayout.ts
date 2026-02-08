@@ -459,7 +459,10 @@ export const showSideBar = async (state: LayoutState) => {
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
   return {
-    newState,
+    newState: {
+      ...newState,
+      sideBarVisible: true,
+    },
     commands: [...commands, ...activityBarCommands],
   }
 }
@@ -472,7 +475,10 @@ export const hideSideBar = async (state: LayoutState) => {
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
   return {
-    newState,
+    newState: {
+      ...newState,
+      sideBarVisible: false,
+    },
     commands: [...commands, ...activityBarCommands],
   }
 }
