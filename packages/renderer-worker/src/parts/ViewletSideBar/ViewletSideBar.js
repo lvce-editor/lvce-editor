@@ -49,7 +49,6 @@ export const loadContent = async (state, savedState) => {
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
-  console.log({ savedViewletId })
   // const savedViewletId = getSavedViewletId(savedState)
   return handleSideBarViewletChange(state, savedViewletId)
 }
