@@ -760,6 +760,14 @@ export const handleSashPointerDown = (state, sashId) => {
   }
 }
 
+export const handleSashSideBarPointerDown = (state) => {
+  return handleSashPointerDown(state, SashType.SideBar)
+}
+
+export const handleSashPanelPointerDown = (state) => {
+  return handleSashPointerDown(state, SashType.Panel)
+}
+
 export const handleSashPointerUp = (state, sashId) => {
   const newState = {
     ...state,
