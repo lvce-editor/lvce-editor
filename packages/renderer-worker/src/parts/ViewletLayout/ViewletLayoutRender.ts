@@ -119,7 +119,7 @@ const renderCss = {
     const css = getCss(newState)
     return ['Viewlet.setCss', css]
   },
-  multiple: true,
+  multiple: false,
 }
 
 export const render = [renderDom, renderCss]
