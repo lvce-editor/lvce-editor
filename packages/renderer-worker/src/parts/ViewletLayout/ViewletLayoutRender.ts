@@ -97,12 +97,18 @@ const renderDom = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
     return (
       oldState.mainVisible === newState.mainVisible &&
+      oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&
+      oldState.titleBarId === newState.titleBarId &&
       oldState.activityBarVisible === newState.activityBarVisible &&
+      oldState.activityBarId === newState.activityBarId &&
       oldState.panelVisible === newState.panelVisible &&
+      oldState.panelId === newState.panelId &&
       oldState.sideBarLocation === newState.sideBarLocation &&
       oldState.sideBarVisible === newState.sideBarVisible &&
-      oldState.statusBarVisible === newState.statusBarVisible
+      oldState.sideBarId === newState.sideBarId &&
+      oldState.statusBarVisible === newState.statusBarVisible &&
+      oldState.statusBarId === newState.statusBarId
     )
   },
   apply(oldState: LayoutState, newState: LayoutState) {
