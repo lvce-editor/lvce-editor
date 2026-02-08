@@ -7,4 +7,6 @@ export const Commands = {
   selectIndex: ViewletPanel.selectIndex,
   selectView: ViewletPanel.selectView,
   toggleView: ViewletPanel.toggleView,
+  handleClickClose: ViewletPanel.handleClickClose,
+  handleClickMaximize: ViewletPanel.handleClickMaximize,
 }

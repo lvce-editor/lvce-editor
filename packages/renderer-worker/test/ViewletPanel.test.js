@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as ViewletPanel from '../src/parts/ViewletPanel/ViewletPanel.js'
 
 test('create', () => {
@@ -13,14 +12,6 @@ test.skip('loadContent', async () => {
     disposed: false,
     src: 'abc',
   })
-})
-
-// TODO
-test.skip('contentLoaded', async () => {
-  const state = { ...ViewletPanel.create(), src: 'abc' }
-  await ViewletPanel.contentLoaded(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith({})
 })
 
 test('dispose', () => {
