@@ -21,6 +21,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('simple-browser://')) {
     return 'Simple Browser'
   }
+  if (uri.startsWith('language-models://')) {
+    return 'Language Models'
+  }
   return Workspace.pathBaseName(uri)
 }
 

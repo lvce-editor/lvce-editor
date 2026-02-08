@@ -6,8 +6,6 @@ import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/Get
 import * as GetHeadersCompletionWorker from '../GetHeadersCompletionWorker/GetHeadersCompletionWorker.js'
 import * as GetHeadersDebugWorker from '../GetHeadersDebugWorker/GetHeadersDebugWorker.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
-import * as GetHeadersExtensionManagementWorker from '../GetHeadersExtensionManagementWorker/GetHeadersExtensionManagementWorker.js'
-import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
 import * as GetHeadersEditorWorker from '../GetHeadersEditorWorker/GetHeadersEditorWorker.js'
 import * as GetHeadersEmbedsWorker from '../GetHeadersEmbedsWorker/GetHeadersEmbedsWorker.js'
@@ -16,7 +14,7 @@ import * as GetHeadersExplorerWorker from '../GetHeadersExplorerWorker/GetHeader
 import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDetailViewWorker/GetHeadersExtensionDetailViewWorker.js'
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
-import * as GetHeadersMainAreaWorker from '../GetHeadersMainAreaWorker/GetHeadersMainAreaWorker.js'
+import * as GetHeadersExtensionManagementWorker from '../GetHeadersExtensionManagementWorker/GetHeadersExtensionManagementWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
@@ -26,9 +24,14 @@ import * as GetHeadersIconThemeWorker from '../GetHeadersIconThemeWorker/GetHead
 import * as GetHeadersIframeInspectorWorker from '../GetHeadersIframeInspectorWorker/GetHeadersIframeInspectorWorker.js'
 import * as GetHeadersIframeWorker from '../GetHeadersIframeWorker/GetHeadersIframeWorker.js'
 import * as GetHeadersKeyBindingsViewWorker from '../GetHeadersKeyBindingsViewWorker/GetHeadersKeyBindingsViewWorker.js'
+import { getHeadersLanguageModelsView } from '../GetHeadersLanguageModelsView/GetHeadersLanguageModelsView.js'
+import * as GetHeadersMainAreaWorker from '../GetHeadersMainAreaWorker/GetHeadersMainAreaWorker.js'
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
 import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
+import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
+import * as GetHeadersPreviewSandBoxWorker from '../GetHeadersPreviewSandBoxWorker/GetHeadersPreviewSandBoxWorker.js'
+import * as GetHeadersPreviewWorker from '../GetHeadersPreviewWorker/GetHeadersPreviewWorker.js'
 import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
 import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
 import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
@@ -76,6 +79,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
   }
+  if (absolutePath.endsWith('previewSandboxWorkerMain.js')) {
+    return GetHeadersPreviewSandBoxWorker.getHeadersPreviewWorker(mime, etag, defaultCachingHeader)
+  }
   if (absolutePath.endsWith('menuWorkerMain.js')) {
     return GetHeadersMenuWorker.getHeadersMenuWorker(mime, etag, defaultCachingHeader)
   }
@@ -84,6 +90,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('mainAreaWorkerMain.js')) {
     return GetHeadersMainAreaWorker.getHeadersMainAreaWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('languageModelsViewMain.js')) {
+    return getHeadersLanguageModelsView(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('textMeasurementWorkerMain.js')) {
     return GetHeadersTextMeasurementWorker.getHeadersTextMeasurementWorker(mime, etag, defaultCachingHeader)
@@ -126,6 +135,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('aboutWorkerMain.js')) {
     return GetHeadersAboutWorker.getHeadersAboutWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('previewWorkerMain.js')) {
+    return GetHeadersPreviewWorker.getHeadersPreviewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('clipBoardWorkerMain.js')) {
     return GetHeadersClipBoardWorker.getHeadersClipBoardWorker(mime, etag, defaultCachingHeader)

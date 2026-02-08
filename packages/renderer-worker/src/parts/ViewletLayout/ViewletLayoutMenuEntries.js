@@ -5,6 +5,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Updater: Check for Updates',
     },
     {
+      id: 'Main.openUri',
+      label: 'Show Language Models',
+      args: ['language-models:///1'],
+    },
+    {
       id: 'Layout.toggleSideBar',
       label: 'Layout: Toggle Side Bar',
     },
@@ -23,6 +28,14 @@ export const getQuickPickMenuEntries = () => {
     {
       id: 'Layout.togglePreview',
       label: 'Layout: Toggle Preview',
+    },
+    {
+      id: 'Layout.hidePreview',
+      label: 'Layout: Hide Preview',
+    },
+    {
+      id: 'Layout.showPreview',
+      label: 'Layout: Show Preview',
     },
     {
       id: 'Layout.toggleSideBarPosition',

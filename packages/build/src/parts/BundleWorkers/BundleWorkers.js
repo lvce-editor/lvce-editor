@@ -148,6 +148,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/output-view`, 'dist', 'outputViewWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/language-models-view/dist/languageModelsViewMain.js',
+    to: Path.join(`${toRoot}/packages/language-models-view`, 'dist', 'languageModelsViewMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/opener-worker/dist/openerWorkerMain.js',
     to: Path.join(`${toRoot}/packages/opener-worker`, 'dist', 'openerWorkerMain.js'),
   })
@@ -166,6 +170,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/update-worker/dist/updateWorkerMain.js',
     to: Path.join(`${toRoot}/packages/update-worker`, 'dist', 'updateWorkerMain.js'),
+  })
+  await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/preview-worker/dist/previewWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/preview-worker`, 'dist', 'previewWorkerMain.js'),
   })
   await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js',

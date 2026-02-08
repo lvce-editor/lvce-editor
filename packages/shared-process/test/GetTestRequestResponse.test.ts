@@ -46,9 +46,10 @@ test('getTestRequestResponse', async () => {
     init: {
       headers: {
         'Cache-Control': 'public, max-age=0, must-revalidate',
+        'Content-Security-Policy': "default-src 'none'",
+        'Content-Type': 'text/html',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin',
-        'Content-Security-Policy': "default-src 'none'",
       },
       status: 300,
     },

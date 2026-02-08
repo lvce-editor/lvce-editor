@@ -37,7 +37,7 @@
     "@lvce-editor/assert": "^1.5.1",
     "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.3",
     "fs-extra": "^11.3.3",
     "got": "^14.6.6",
     "gzip-size": "^7.0.0",

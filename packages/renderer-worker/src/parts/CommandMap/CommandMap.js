@@ -246,6 +246,7 @@ export const commandMap = {
   'Notification.showWithOptions': lazy('Notification.showWithOptions'),
   'OffscreenCanvas.create': lazy('OffscreenCanvas.create'),
   'OffscreenCanvas.createForTerminal': lazy('OffscreenCanvas.createForTerminal'),
+  'OffscreenCanvas.createForPreview': lazy('OffscreenCanvas.createForPreview'),
   'Open.openExternal': lazy('Open.openExternal'),
   'Open.openUrl': lazy('Open.openUrl'),
   'OpenNativeFolder.openNativeFolder': lazy('OpenNativeFolder.openNativeFolder'),
@@ -313,6 +314,9 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToIconThemeWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToIconThemeWorker',
   ),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToPreviewSandBoxWorker': lazy(
+    'SendMessagePortToExtensionHostWorker.sendMessagePortToPreviewSandBoxWorker',
+  ),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToIframeWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToIframeWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker',
@@ -377,6 +381,7 @@ export const commandMap = {
   'Viewlet.dispose': lazy('Viewlet.dispose'),
   'Viewlet.executeViewletCommand': lazy('Viewlet.executeViewletCommand'),
   'Viewlet.focus': lazy('Viewlet.focus'),
+  'Viewlet.resize': lazy('Viewlet.resize'),
   'Viewlet.getAllStates': lazy('Viewlet.getAllStates'),
   'Viewlet.openWidget': lazy('Viewlet.openWidget'),
   'Viewlet.send': lazy('Viewlet.send'),

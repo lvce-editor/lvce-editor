@@ -108,6 +108,8 @@ export const EditorSourceActions = 'EditorSourceActions'
 
 export const MarkDownPreview = 'MarkDownPreview'
 
+export const LanguageModels = 'LanguageModels'
+
 export const Confirm = 'Confirm'
 
 export const E2eTests = 'E2eTests'
@@ -119,3 +121,5 @@ export const WebView = 'WebView'
 export const EditorTextError = 'EditorTextError'
 
 export const Settings = 'Settings'
+
+export const Preview = 'Preview'

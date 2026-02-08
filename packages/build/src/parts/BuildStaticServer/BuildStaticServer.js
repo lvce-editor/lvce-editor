@@ -2,7 +2,6 @@ import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as Copy from '../Copy/Copy.js'
-import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
@@ -422,17 +421,23 @@ const generatePlaygroundFileMap = async ({ commitHash }) => {
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
+  // For server builds, only copy languages and sample-folder to keep it lightweight
+  // (Source files are only included in static builds)
   await Copy.copy({
-    from: `packages/build/files/playground-source`,
-    to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground`,
+    from: `packages/build/files/playground-source/languages`,
+    to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground/languages`,
   })
-  // Copy git-tracked source files to playground for browsing in the editor
-  await CopySourceFiles.copySourceFiles(`packages/build/.tmp/server/static-server/static/${commitHash}/playground`)
+  await Copy.copy({
+    from: `packages/build/files/playground-source/sample-folder`,
+    to: `packages/build/.tmp/server/static-server/static/${commitHash}/playground/sample-folder`,
+  })
   await generatePlaygroundFileMap({ commitHash })
 }
 
 const shouldBeCopied = (extensionName) => {
-  return extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-')
+  return (
+    extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics-')
+  )
 }
 
 const copyExtensions = async ({ commitHash }) => {
