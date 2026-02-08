@@ -1,12 +1,12 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as GetPanelViews from '../GetPanelViews/GetPanelViews.js'
+import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -22,6 +22,8 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     actions: [],
     badgeCounts: Object.create(null),
+    childUid: -1,
+    actionsUid: -1,
   }
 }
 
@@ -34,7 +36,7 @@ export const saveState = (state) => {
 
 const getSavedViewletId = (savedState) => {
   if (savedState && savedState.currentViewletId) {
-    return savedState.currentViewletId
+    return savedState.currentViewletId || ViewletModuleId.Problems
   }
   return ViewletModuleId.Problems
 }
@@ -50,13 +52,12 @@ const getSelectedIndex = (views, savedViewletId) => {
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
   const views = GetPanelViews.getPanelViews()
-  const selectedIndex = getSelectedIndex(views, savedViewletId)
-  return {
+  const loaded = {
     ...state,
     views,
     currentViewletId: savedViewletId,
-    selectedIndex,
   }
+  return openViewlet(loaded, savedViewletId)
 }
 
 export const setBadgeCount = (state, id, count) => {
@@ -70,10 +71,10 @@ export const setBadgeCount = (state, id, count) => {
   }
 }
 
-export const contentLoaded = (state) => {
-  const commands = []
-  return commands
-}
+// export const contentLoaded = (state) => {
+//   const commands = []
+//   return commands
+// }
 
 const getContentDimensions = (dimensions) => {
   return {
@@ -85,15 +86,15 @@ const getContentDimensions = (dimensions) => {
 }
 
 // TODO
-export const getChildren = (state) => {
-  const { currentViewletId } = state
-  return [
-    {
-      id: currentViewletId,
-      ...getContentDimensions(state),
-    },
-  ]
-}
+// export const getChildren = (state) => {
+//   const { currentViewletId } = state
+//   return [
+//     {
+//       id: currentViewletId,
+//       ...getContentDimensions(state),
+//     },
+//   ]
+// }
 
 export const dispose = (state) => {
   return {
@@ -107,40 +108,70 @@ export const dispose = (state) => {
 export const openViewlet = async (state, id, focus = false) => {
   console.assert(typeof id === 'string')
   const { currentViewletId } = state
-  state.currentViewletId = id
   const childDimensions = getContentDimensions(state)
-  // TODO load actions
-  const commands = await ViewletManager.load({
-    getModule: ViewletModule.load,
-    id,
-    type: 0,
-    // @ts-ignore
-    uri: '',
-    show: false,
-    focus: false,
-    setBounds: false,
-    x: childDimensions.x,
-    y: childDimensions.y,
-    width: childDimensions.width,
-    parentUid: state.uid,
-    height: childDimensions.height,
-    append: true,
-  })
+
+  const uid = state.uid
+
+  const childUid = Id.create()
+
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id: currentViewletId,
+      type: 0,
+      // @ts-ignore
+      uri: '',
+      show: false,
+      focus: false,
+      setBounds: false,
+      x: childDimensions.x,
+      y: childDimensions.y,
+      width: childDimensions.width,
+      height: childDimensions.height,
+      parentUid: uid,
+      append: false,
+      args: [],
+      uid: childUid,
+      shouldRenderEvents: false,
+    },
+    false,
+    true,
+  )
+  let actionsDom = []
+  let actionsUid = -1
   if (commands) {
-    const currentViewletState = ViewletStates.getState(currentViewletId)
-    const currentViewletUid = currentViewletState.uid
-    Assert.number(currentViewletUid)
-    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-    if (commands.at(-1).includes(ViewletModuleId.Error)) {
-      state.currentViewletId = ViewletModuleId.Error
+    const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
+    if (actionsDomIndex !== -1) {
+      actionsDom = commands[actionsDomIndex][3]
+      commands.splice(actionsDomIndex, 1)
     }
+    const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
+    const events = commands[eventsIndex][2]
+    actionsUid = Id.create()
+    commands.push(
+      ['Viewlet.createFunctionalRoot', currentViewletId, actionsUid, true],
+      ['Viewlet.registerEventListeners', actionsUid, events],
+      ['Viewlet.setDom2', actionsUid, actionsDom],
+      ['Viewlet.setUid', actionsUid, childUid],
+    )
+    console.log({ commands })
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
-  return { ...state }
+  return { ...state, currentViewletId, childUid, actionsUid }
 }
 
 export const hidePanel = async (state) => {
   await Command.execute('Layout.hidePanel')
+  return state
+}
+
+export const handleClickClose = async (state) => {
+  await Command.execute('Layout.hidePanel')
+  return state
+}
+
+export const handleClickMaximize = async (state) => {
+  // TODO
   return state
 }
 
@@ -182,3 +213,16 @@ export const handleFilterInput = async (state, value) => {
 }
 
 export * from '../HandleClickAction/HandleClickAction.js'
+
+export const renderEventListeners = () => {
+  return [
+    {
+      name: DomEventListenersFunctions.HandleClickMaximize,
+      params: ['handleClickMaximize'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickClose,
+      params: ['handleClickClose'],
+    },
+  ]
+}
