@@ -534,7 +534,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (module.getKeyBindings) {
       const keyBindings = await module.getKeyBindings(viewletUid)
-      console.log({ keyBindings, moduleId })
+      console.log({ keyBindings, moduleId: module.name })
       KeyBindingsState.addKeyBindings(viewlet.id, keyBindings)
     }
     if (module.Commands && module.Commands.getMouseActions) {
