@@ -1,8 +1,14 @@
 .Sash {
-  /* position: fixed; */
-  /* contain: strict; */
-  /* z-index: 1; */
-  background: var(--MainBackground);
+  position: absolute;
+  contain: strict;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  z-index: 1;
+}
+
+.Sash:active {
+  background: var(--SashHoverBorder, #3d5252);
 }
 
 .SashHorizontal {
@@ -30,4 +36,8 @@
   top: 0;
   right: 0;
   height: 100%;
+}
+
+.SashSideBar {
+  left: var(--SashSideBarLeft);
 }

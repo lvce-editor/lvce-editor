@@ -39,11 +39,18 @@ const getMainContentsVirtualDom = (state: LayoutState) => {
 }
 
 const getSashSideBarDom = () => {
-  return {
-    type: VirtualDomElements.Div,
-    className: 'Viewlet Sash SashVertical',
-    onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
-  }
+  return [
+    {
+      type: VirtualDomElements.Button,
+      className: 'Viewlet Sash SashVertical SashSideBar',
+      onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ]
 }
 
 const getSashPreviewDom = () => {
@@ -134,6 +141,7 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   } = state
   const children: any[] = []
 
+  let delta = 0
   // Add components based on sidebar location
   if (activityBarVisible && activityBarId !== -1) {
     children.push(getActivityBarDom(activityBarId))
@@ -142,7 +150,8 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(getSideBarDom(sideBarId))
   }
   if (sideBarSashVisible) {
-    children.push(getSashSideBarDom())
+    children.push(...getSashSideBarDom())
+    delta--
   }
   if (mainVisible) {
     children.push(getMainDom(mainId))
@@ -160,7 +169,7 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     {
       type: VirtualDomElements.Div,
       className: 'ContentArea',
-      childCount: children.length,
+      childCount: children.length + delta,
     },
     ...children,
   ]
@@ -183,8 +192,10 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   if (mainVisible) {
     children.push(getMainDom(mainId))
   }
+  let delta = 0
   if (sideBarSashVisible) {
-    children.push(getSashSideBarDom())
+    children.push(...getSashSideBarDom())
+    delta--
   }
   if (sideBarVisible) {
     children.push(getSideBarDom(sideBarId))
@@ -203,7 +214,7 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     {
       type: VirtualDomElements.Div,
       className: 'ContentArea',
-      childCount: children.length,
+      childCount: children.length + delta,
     },
     ...children,
   ]

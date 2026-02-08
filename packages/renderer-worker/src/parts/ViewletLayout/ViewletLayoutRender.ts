@@ -124,12 +124,14 @@ const getCss = (newState: LayoutState) => {
   const panelHeight = newState.panelHeight
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
+  const sashSideBarLeft = newState.sideBarLeft
   return `:root {
   --ActivityBarWidth: ${activityBarWidth}px;
   --PanelHeight: ${panelHeight}px;
   --SideBarWidth: ${sideBarWidth}px;
   --TitleBarHeight: ${titleBarHeight}px;
   --PreviewWidth: ${previewWidth}px;
+  --SashSideBarLeft: ${sashSideBarLeft}px;
 }`
 }
 
