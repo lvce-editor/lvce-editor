@@ -56,7 +56,18 @@ const getSashPanelDom = () => {
 }
 
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
-  const { activityBarVisible, activityBarId, sideBarVisible, sideBarId, sideBarSashVisible, mainVisible, mainId, previewSashVisible, previewVisible, previewId } = state
+  const {
+    activityBarVisible,
+    activityBarId,
+    sideBarVisible,
+    sideBarId,
+    sideBarSashVisible,
+    mainVisible,
+    mainId,
+    previewSashVisible,
+    previewVisible,
+    previewId,
+  } = state
   const children: any[] = []
 
   // Add components based on sidebar location
@@ -140,7 +151,18 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
 }
 
 const getContentAreaVirtualDomRight = (state: LayoutState) => {
-  const { mainVisible, mainId, sideBarSashVisible, sideBarVisible, sideBarId, activityBarVisible, activityBarId, previewSashVisible, previewVisible, previewId } = state
+  const {
+    mainVisible,
+    mainId,
+    sideBarSashVisible,
+    sideBarVisible,
+    sideBarId,
+    activityBarVisible,
+    activityBarId,
+    previewSashVisible,
+    previewVisible,
+    previewId,
+  } = state
   const children: any[] = []
 
   // Right sidebar location
