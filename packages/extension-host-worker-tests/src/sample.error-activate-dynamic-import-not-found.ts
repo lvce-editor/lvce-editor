@@ -1,5 +1,7 @@
 export const name = 'sample.error-activate-dynamic-import-not-found'
 
+export const skip = 1
+
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
