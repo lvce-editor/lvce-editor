@@ -535,7 +535,7 @@ export const showPreview = async (state: LayoutState, uri: string) => {
       commands: [],
     }
   }
-  await Viewlet.setState(state.uid, {
+  ViewletStates.setState(state.uid, {
     ...state,
     previewUri: uri,
   })
