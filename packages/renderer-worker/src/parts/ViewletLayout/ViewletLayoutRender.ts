@@ -135,7 +135,6 @@ const getCss = (newState: LayoutState) => {
 
 const renderCss = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
-    console.log('render css')
     return false
   },
   apply(oldState: LayoutState, newState: LayoutState) {
