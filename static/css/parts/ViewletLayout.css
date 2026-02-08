@@ -17,6 +17,7 @@
 
 .ActivityBar {
   background: var(--ActivityBarBackground);
+  width: var(--ActivityBarWidth);
 }
 
 .SideBar {
