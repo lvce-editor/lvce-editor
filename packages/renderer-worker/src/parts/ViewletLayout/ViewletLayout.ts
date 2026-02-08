@@ -694,34 +694,41 @@ const getNewStatePointerMoveActivityBar = (points, x, y) => {
   return newPoints
 }
 
-const getNewStatePointerMovePanel = (points, x, y) => {
-  const windowHeight = points[LayoutKeys.WindowHeight]
-  const statusBarHeight = points[LayoutKeys.StatusBarHeight]
-  const titleBarHeight = points[LayoutKeys.TitleBarHeight]
-  const activityBarHeight = points[LayoutKeys.ActivityBarHeight]
-  const panelMinHeight = points[LayoutKeys.PanelMinHeight]
+const getNewStatePointerMovePanel = (state: LayoutState, x: number, y: number): LayoutState => {
+  const windowHeight = state[LayoutKeys.WindowHeight]
+  const statusBarHeight = state[LayoutKeys.StatusBarHeight]
+  const titleBarHeight = state[LayoutKeys.TitleBarHeight]
+  const activityBarHeight = state[LayoutKeys.ActivityBarHeight]
+  const panelMinHeight = state[LayoutKeys.PanelMinHeight]
   const newPanelHeight = windowHeight - statusBarHeight - y
-  const newPoints = new Uint16Array(points)
   if (newPanelHeight < panelMinHeight / 2) {
-    newPoints[LayoutKeys.PanelVisible] = 0
-    newPoints[LayoutKeys.MainHeight] = windowHeight - statusBarHeight - titleBarHeight
+    return {
+      ...state,
+      panelVisible: false,
+      mainHeight: windowHeight - statusBarHeight - titleBarHeight,
+    }
   } else if (newPanelHeight <= panelMinHeight) {
-    newPoints[LayoutKeys.PanelVisible] = 1
-    newPoints[LayoutKeys.PanelHeight] = panelMinHeight
-    newPoints[LayoutKeys.MainHeight] = windowHeight - activityBarHeight - panelMinHeight
+    return {
+      ...state,
+      panelVisible: true,
+      panelHeight: panelMinHeight,
+      mainHeight: windowHeight - activityBarHeight - panelMinHeight,
+    }
   } else {
-    newPoints[LayoutKeys.PanelVisible] = 1
-    newPoints[LayoutKeys.MainHeight] = y - titleBarHeight
-    newPoints[LayoutKeys.panelTop] = y
-    newPoints[LayoutKeys.PanelHeight] = windowHeight - statusBarHeight - y
+    return {
+      ...state,
+      panelVisible: true,
+      mainHeight: y - titleBarHeight,
+      panelTop: y,
+      panelHeight: windowHeight - statusBarHeight - y,
+    }
   }
-  return newPoints
 }
 
-const getNewStatePointerMovePreview = (points, x, y) => {
-  const windowHeight = points[LayoutKeys.WindowHeight]
-  const windowWidth = points[LayoutKeys.WindowWidth]
-  const newPoints = new Uint16Array(points)
+const getNewStatePointerMovePreview = (state: LayoutState, x: number, y: number): LayoutState => {
+  const windowHeight = state[LayoutKeys.WindowHeight]
+  const windowWidth = state[LayoutKeys.WindowWidth]
+  const newPoints = new Uint16Array(state)
   newPoints[LayoutKeys.PreviewLeft] = x
   newPoints[LayoutKeys.PreviewTop] = y
   newPoints[LayoutKeys.PreviewWidth] = windowWidth - x
