@@ -1,5 +1,9 @@
 export interface LayoutState {
   readonly activityBarId: number
+  readonly activityBarTop: number
+  readonly activityBarLeft: number
+  readonly activityBarWidth: number
+  readonly activityBarHeight: number
   readonly activityBarSashId: number
   readonly activityBarSashVisible: boolean
   readonly activityBarVisible: boolean
@@ -13,6 +17,10 @@ export interface LayoutState {
   readonly mainId: number
   readonly mainVisible: boolean
   readonly panelId: number
+  readonly panelTop: number
+  readonly panelLeft: number
+  readonly panelWidth: number
+  readonly panelHeight: number
   readonly panelSashId: number
   readonly panelSashVisible: boolean
   readonly panelView: string
@@ -20,6 +28,10 @@ export interface LayoutState {
   readonly platform: number
   readonly points: Uint16Array
   readonly previewId: number
+  readonly previewTop: number
+  readonly previewLeft: number
+  readonly previewWidth: number
+  readonly previewHeight: number
   readonly previewSashId: number
   readonly previewSashVisible: boolean
   readonly previewUri: string
@@ -29,11 +41,19 @@ export interface LayoutState {
   readonly sideBarLocation: number
   readonly sideBarSashId: number
   readonly sideBarSashVisible: boolean
+  readonly sideBarTop: boolean
+  readonly sideBarLeft: boolean
+  readonly sideBarWidth: boolean
+  readonly sideBarHeight: boolean
   readonly sideBarView: string
   readonly sideBarVisible: boolean
   readonly statusBarId: number
   readonly statusBarVisible: boolean
   readonly titleBarId: number
+  readonly titleBarTop: number
+  readonly titleBarLeft: number
+  readonly titleBarWidth: number
+  readonly titleBarHeight: number
   readonly titleBarVisible: boolean
   readonly uid: number
   readonly updateProgress: number
