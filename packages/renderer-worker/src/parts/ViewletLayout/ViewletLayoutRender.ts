@@ -135,10 +135,20 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
       params: ['handleSashSideBarPointerDown'],
+      trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashPanelPointerMove,
+      params: ['handleSashSideBarPointerMove', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashPanelPointerUp,
+      params: ['handleSashSideBarPointerUp'],
     },
     {
       name: DomEventListenersFunctions.HandleSashPanelPointerDown,
       params: ['handleSashPanelPointerDown'],
+      trackPointerEvents: [DomEventListenersFunctions.HandleSashPanelPointerMove, DomEventListenersFunctions.HandleSashPanelPointerUp],
     },
   ]
 }
