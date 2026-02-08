@@ -301,6 +301,7 @@ export const showSideBar = async (state: LayoutState) => {
 
 export const hideSideBar = async (state: LayoutState) => {
   const { newState, commands } = await hide(state, LayoutModules.SideBar)
+  console.log({ commands })
   const { activityBarId } = newState
   // TODO instead of this, call handleSidebarViewChange. activity bar then can get active view if needed
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarHidden', activityBarId)
@@ -762,7 +763,7 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
         width: newWidth,
         height: newHeight,
       })
-      return [...resizeCommands, ['Viewlet.setBounds', instanceUid, newLeft, newTop, newWidth, newHeight]]
+      return [...resizeCommands]
     }),
   )
   const commands = individualCommands.flat(1)
