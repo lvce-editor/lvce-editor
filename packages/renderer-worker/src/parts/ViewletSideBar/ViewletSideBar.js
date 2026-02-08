@@ -49,7 +49,6 @@ export const loadContent = async (state, savedState) => {
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
-  console.log({ savedViewletId })
   // const savedViewletId = getSavedViewletId(savedState)
   return handleSideBarViewletChange(state, savedViewletId)
 }
@@ -131,6 +130,7 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       append: false,
       args: [],
       uid: childUid,
+      shouldRenderEvents: false,
     },
     false,
     true,
@@ -143,13 +143,18 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       actionsDom = commands[actionsDomIndex][3]
       commands.splice(actionsDomIndex, 1)
     }
-    // const eventsIndex = commands.findIndex((command) => command[2] === 'setEvents')
+    const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
+    const events = commands[eventsIndex][2]
     actionsUid = Id.create()
-    commands.push(['Viewlet.createFunctionalRoot', moduleId, actionsUid, true], ['Viewlet.setDom2', actionsUid, actionsDom])
+    commands.push(
+      ['Viewlet.createFunctionalRoot', moduleId, actionsUid, true],
+      ['Viewlet.registerEventListeners', actionsUid, events],
+      ['Viewlet.setDom2', actionsUid, actionsDom],
+      ['Viewlet.setUid', actionsUid, childUid],
+    )
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
-  console.log({ commands })
   // TODO race condition (check if disposed after created)
 
   await savePromise
