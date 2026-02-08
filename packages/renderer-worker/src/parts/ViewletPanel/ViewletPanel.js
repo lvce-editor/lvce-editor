@@ -1,12 +1,12 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetPanelViews from '../GetPanelViews/GetPanelViews.js'
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -39,14 +39,6 @@ const getSavedViewletId = (savedState) => {
     return savedState.currentViewletId || ViewletModuleId.Problems
   }
   return ViewletModuleId.Problems
-}
-
-const getSelectedIndex = (views, savedViewletId) => {
-  const index = views.indexOf(savedViewletId)
-  if (index === -1) {
-    return 0
-  }
-  return index
 }
 
 export const loadContent = (state, savedState) => {
@@ -154,7 +146,6 @@ export const openViewlet = async (state, id, focus = false) => {
       ['Viewlet.setDom2', actionsUid, actionsDom],
       ['Viewlet.setUid', actionsUid, childUid],
     )
-    console.log({ commands })
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
   return { ...state, currentViewletId, childUid, actionsUid }
