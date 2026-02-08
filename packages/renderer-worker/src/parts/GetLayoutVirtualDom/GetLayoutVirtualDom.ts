@@ -71,7 +71,7 @@ const getContentAreaVirtualDomLeft = (state) => {
   if (state.sideBarSashVisible) {
     children.push({
       type: VirtualDomElements.Div,
-      className: 'Sash SashSideBar',
+      className: 'Viewlet Sash SashVertical',
     })
   }
   if (state.mainContentsVisible && state.mainContentsId !== -1) {
@@ -125,7 +125,7 @@ const getContentAreaVirtualDomRight = (state) => {
   if (state.sideBarSashVisible) {
     children.push({
       type: VirtualDomElements.Div,
-      className: 'Viewlet SideBarSash',
+      className: 'Viewlet Sash SashVertical',
       childCount: 0,
     })
   }

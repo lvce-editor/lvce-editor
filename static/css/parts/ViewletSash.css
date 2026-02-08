@@ -1,17 +1,19 @@
 .Sash {
-  position: fixed;
-  contain: strict;
-  z-index: 1;
+  /* position: fixed; */
+  /* contain: strict; */
+  /* z-index: 1; */
 }
 
 .SashHorizontal {
   height: 4px;
   cursor: row-resize;
+  width: 100%;
 }
 
 .SashVertical {
   width: 4px;
   cursor: col-resize;
+  height: 100%;
 }
 
 .SashVisible {
