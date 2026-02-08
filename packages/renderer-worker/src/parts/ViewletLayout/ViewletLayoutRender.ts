@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+=======
+import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
+import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
+>>>>>>> origin/main
 
 // @ts-ignore
 const kWindowWidth = 0
@@ -89,9 +94,67 @@ const kPreviewHeight = 40
 // @ts-ignore
 const kTotal = 46
 
+<<<<<<< HEAD
 export const hasFunctionalRender = true
 export const hasFunctionalRootRender = true
 export const hasFunctionalEvents = true
+=======
+const kSashId = 'sashId'
+
+export const hasFunctionalRender = true
+
+const renderSashes = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    const { points } = newState
+    const mainLeft = points[kMainLeft]
+    // const mainWidth = points[kMainWidth]
+    const sideBarLeft = points[kSideBarLeft]
+    const sideBarTop = points[kSideBarTop]
+    const sideBarHeight = points[kSideBarHeight]
+    // const activityBarLeft = points[kActivityBarLeft]
+    // const activityBarTop = points[kActivityBarTop]
+    // const activityBarHeight = points[kActivityBarHeight]
+    const panelTop = points[kpanelTop]
+    const panelWidth = points[kPanelWidth]
+    const sideBarActive = newState[kSashId] === 'SideBar'
+    const panelActive = newState[kSashId] === 'Panel'
+    // const activityBarActive = newState[kSashId] === 'ActivityBar'
+    return [
+      'setSashes',
+      // {
+      //   id: 'SashActivityBar',
+      //   x: activityBarLeft,
+      //   y: activityBarTop,
+      //   width: 4,
+      //   height: activityBarHeight,
+      //   direction: SashDirectionType.Horizontal,
+      //   active: activityBarActive,
+      // },
+      {
+        id: 'SashSideBar',
+        x: sideBarLeft,
+        y: sideBarTop,
+        width: 4,
+        height: sideBarHeight,
+        direction: SashDirectionType.Horizontal,
+        active: sideBarActive,
+      },
+      {
+        id: 'SashPanel',
+        x: mainLeft,
+        y: panelTop,
+        width: panelWidth,
+        height: 4,
+        direction: SashDirectionType.Vertical,
+        active: panelActive,
+      },
+    ]
+  },
+}
+>>>>>>> origin/main
 
 const renderDom = {
   isEqual(oldState, newState) {
@@ -100,11 +163,16 @@ const renderDom = {
   apply(oldState, newState) {
     // @ts-ignore
     const commands = ViewletLayoutRenderDom.renderDom(oldState, newState)
+<<<<<<< HEAD
     return commands
+=======
+    return []
+>>>>>>> origin/main
   },
   multiple: true,
 }
 
+<<<<<<< HEAD
 const getCss = (newState: LayoutState) => {
   const sideBarWidth = newState.points[kSideBarWidth]
   const activityBarWidth = newState.points[kActivityBarWidth]
@@ -162,3 +230,6 @@ export const renderEventListeners = () => {
 }
 
 export const render = [renderDom, renderCss]
+=======
+export const render = [renderDom, renderSashes]
+>>>>>>> origin/main
