@@ -967,17 +967,14 @@ const handleSashDoubleClickPanel = async (state: LayoutState) => {
 
 // TODO return commands and newState
 const handleSashDoubleClickSideBar = async (state: LayoutState) => {
-  const { points } = state
-  if (points[LayoutKeys.SideBarVisible]) {
-    const newPoints = new Uint16Array(points)
-    newPoints[LayoutKeys.SideBarWidth] = 240
-    getPoints(newPoints, newPoints)
-    const commands = await getResizeCommands(points, newPoints)
+  if (state.sideBarVisible) {
+    const newState = getPoints({
+      ...state,
+      sideBarWidth: 240,
+    })
+    const commands = await getResizeCommands(state, newState)
     return {
-      newState: {
-        ...state,
-        points: newPoints,
-      },
+      newState,
       commands,
     }
   }
@@ -1071,28 +1068,6 @@ export const handleSashDoubleClick = (state: LayoutState, sashId: string) => {
 export const isSideBarVisible = (state: LayoutState) => {
   const { sideBarVisible } = state
   return sideBarVisible
-}
-
-export const getInitialPlaceholderCommands = (state: LayoutState) => {
-  const { points } = state
-  const commands = []
-  const uid = state.uid
-  const modules = [
-    LayoutModules.TitleBar,
-    LayoutModules.Main,
-    LayoutModules.SideBar,
-    LayoutModules.ActivityBar,
-    LayoutModules.Panel,
-    LayoutModules.StatusBar,
-  ]
-  for (const module of modules) {
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    if (points[kVisible]) {
-      // @ts-ignore
-      commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
-    }
-  }
-  return commands
 }
 
 export const getAllQuickPickMenuEntries = () => {
