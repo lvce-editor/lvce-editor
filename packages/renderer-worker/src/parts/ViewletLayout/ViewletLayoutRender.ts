@@ -150,6 +150,14 @@ export const renderEventListeners = () => {
       params: ['handleSashPanelPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashPanelPointerMove, DomEventListenersFunctions.HandleSashPanelPointerUp],
     },
+    {
+      name: DomEventListenersFunctions.HandleSashPanelPointerMove,
+      params: ['handleSashPanelPointerMove', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashPanelPointerUp,
+      params: ['handleSashPanelPointerUp'],
+    },
   ]
 }
 
