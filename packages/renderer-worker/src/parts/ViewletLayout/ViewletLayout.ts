@@ -258,6 +258,7 @@ export const create = (id: number): LayoutState => {
     commands: [],
     sashId: SashType.None,
     previewUri: '',
+    panelView: ViewletModuleId.Problems,
   }
 }
 
