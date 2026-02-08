@@ -465,6 +465,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     throw new Error('viewlet must be empty')
   }
   const shouldRender = viewlet.render ?? true
+  const shouldRenderEvents = viewlet.shouldRenderEvents ?? true
   let state = ViewletState.Default
   // @ts-ignore
   const viewletUid = viewlet.uid || Id.create()
@@ -507,10 +508,16 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     const args = viewlet.args || []
     let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
 
+    const commands = []
+
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
       const eventListeners = await module.renderEventListeners()
-      await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
+      if (shouldRenderEvents === false) {
+        commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
+      } else {
+        await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
+      }
     }
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
@@ -585,7 +592,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
     }
-    const commands = []
     if (module.hasFunctionalRootRender) {
       commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid, module.hasFunctionalEvents])
     } else {
