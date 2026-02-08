@@ -238,15 +238,12 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   if (commands) {
     commands.push(['Viewlet.append', uid, childUid])
   }
-  const resizeCommands = await getResizeCommands(points, newPoints)
+  const resizeCommands = await getResizeCommands(state, intermediateState)
   commands.push(...resizeCommands)
-  const isPreview = moduleId === ViewletModuleId.Preview
   return {
     newState: {
-      ...state,
+      ...intermediateState,
       [kId]: childUid,
-      points: newPoints,
-      ...(isPreview && { previewVisible: true, previewSashVisible: true }),
     },
     commands,
   }
