@@ -756,12 +756,15 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
       Assert.number(newLeft)
       Assert.number(newWidth)
       Assert.number(newHeight)
-      const resizeCommands = await Viewlet.resize(instanceUid, {
+      let resizeCommands = await Viewlet.resize(instanceUid, {
         x: newLeft,
         y: newTop,
         width: newWidth,
         height: newHeight,
       })
+      if (resizeCommands.length === 1 && resizeCommands[0][0] === 'Viewlet.setBounds' && resizeCommands[0][1] === newState.mainId) {
+        return []
+      }
       return [...resizeCommands]
     }),
   )
@@ -876,6 +879,7 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
       }
     }
   }
+  console.log({ allCommands })
   return {
     newState,
     commands: allCommands,
