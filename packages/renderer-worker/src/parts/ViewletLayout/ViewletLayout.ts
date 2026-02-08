@@ -665,33 +665,37 @@ const getNewStatePointerMoveSideBar = (state: LayoutState, x: number, y: number)
   }
 }
 
-const getNewStatePointerMoveActivityBar = (points, x, y) => {
-  const windowWidth = points[LayoutKeys.WindowWidth]
+const getNewStatePointerMoveActivityBar = (state: LayoutState, x: number, y: number): LayoutState => {
+  const windowWidth = state[LayoutKeys.WindowWidth]
   const previewMinWidth = 200 // TODO: make configurable
   const mainMinWidth = 100 // TODO: make configurable
   const newPreviewWidth = windowWidth - x
-  const newPoints = new Uint16Array(points)
 
   if (newPreviewWidth < previewMinWidth / 2) {
-    // Hide preview when dragging too far left
-    newPoints[LayoutKeys.PreviewVisible] = 0
-    newPoints[LayoutKeys.PreviewWidth] = 0
-    newPoints[LayoutKeys.PreviewLeft] = windowWidth
-    newPoints[LayoutKeys.MainWidth] = windowWidth - 48
+    return {
+      ...state,
+      previewVisible: false,
+      previewWidth: 0,
+      previewLeft: windowWidth,
+      mainWidth: windowWidth - 48,
+    }
   } else if (newPreviewWidth < previewMinWidth) {
-    // Snap to minimum preview width
-    newPoints[LayoutKeys.PreviewVisible] = 1
-    newPoints[LayoutKeys.PreviewWidth] = previewMinWidth
-    newPoints[LayoutKeys.PreviewLeft] = x
-    newPoints[LayoutKeys.MainWidth] = x - 48
+    return {
+      ...state,
+      previewVisible: true,
+      previewWidth: previewMinWidth,
+      previewLeft: x,
+      mainWidth: x - 48,
+    }
   } else {
-    newPoints[LayoutKeys.PreviewVisible] = 1
-    newPoints[LayoutKeys.PreviewLeft] = x
-    newPoints[LayoutKeys.PreviewWidth] = newPreviewWidth
-    newPoints[LayoutKeys.MainWidth] = Math.max(mainMinWidth, x - 48)
+    return {
+      ...state,
+      previewVisible: true,
+      previewLeft: x,
+      previewWidth: newPreviewWidth,
+      mainWidth: Math.max(mainMinWidth, x - 48),
+    }
   }
-
-  return newPoints
 }
 
 const getNewStatePointerMovePanel = (state: LayoutState, x: number, y: number): LayoutState => {
