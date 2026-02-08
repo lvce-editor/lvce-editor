@@ -464,35 +464,6 @@ export const toggleMain = (state: LayoutState) => {
   return toggle(state, LayoutModules.Main)
 }
 
-const getReferenceNodes = (sideBarLocation) => {
-  if (sideBarLocation === SideBarLocationType.Left) {
-    return [
-      ViewletModuleId.TitleBar,
-      ViewletModuleId.ActivityBar,
-      'SashActivityBar',
-      'SashSideBar',
-      ViewletModuleId.SideBar,
-      ViewletModuleId.Main,
-      ViewletModuleId.Preview,
-      'SashPanel',
-      ViewletModuleId.Panel,
-      ViewletModuleId.StatusBar,
-    ]
-  }
-  return [
-    ViewletModuleId.TitleBar,
-    ViewletModuleId.Main,
-    'SashSideBar',
-    ViewletModuleId.SideBar,
-    'SashActivityBar',
-    ViewletModuleId.ActivityBar,
-    ViewletModuleId.Preview,
-    'SashPanel',
-    ViewletModuleId.Panel,
-    ViewletModuleId.StatusBar,
-  ]
-}
-
 const loadIfVisible = async (
   state: LayoutState,
   module: any,
