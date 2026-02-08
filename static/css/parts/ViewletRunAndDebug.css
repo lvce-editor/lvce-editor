@@ -3,6 +3,7 @@
   color: var(--TitleBarForeground);
   overflow-y: auto;
   outline: none;
+  flex: 1;
 }
 
 .RunAndDebug::-webkit-scrollbar {
