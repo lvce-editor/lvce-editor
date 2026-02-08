@@ -1321,6 +1321,13 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
     commands,
   }
 }
+export const openPanelView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
+  const { newState, commands } = await callGlobalEvent(state, 'handlePanelViewletChange', moduleId)
+  return {
+    newState: { ...newState, sideBarView: moduleId },
+    commands,
+  }
+}
 
 export const getBadgeCounts = (state: LayoutState) => {
   const states = ViewletStates.getAllInstances()
