@@ -1009,15 +1009,10 @@ const handleSashDoubleClickActivityBar = async (state: LayoutState) => {
 }
 
 export const moveSideBar = async (state: LayoutState, position: any) => {
-  const { points } = state
-  const newPoints = new Uint16Array(points)
-  getPoints(newPoints, newPoints, position)
-
   // update layout state synchronously to avoid races when moveSideBar
   // is called multiple times — update the viewlet state first
-  const immediateState = {
-    ...state,
-    points: newPoints,
+  const immediateState: LayoutState = {
+    ...getPoints(state, position),
     sideBarLocation: position,
   }
   await Viewlet.setState(state.uid, immediateState)
@@ -1031,15 +1026,13 @@ export const moveSideBar = async (state: LayoutState, position: any) => {
   const prefEventResult = await callGlobalEvent(immediateState, 'handlePreferencesChanged')
   const prefCommands = prefEventResult.commands || []
 
-  const resizeCommands = await getResizeCommands(points, newPoints)
+  const resizeCommands = await getResizeCommands(state, immediateState)
 
   const allCommands = [...resizeCommands, ...prefCommands]
 
   return {
     newState: {
       ...prefEventResult.newState,
-      // keep the points and location we already applied
-      points: newPoints,
       sideBarLocation: position,
     },
     commands: allCommands,
@@ -1076,8 +1069,8 @@ export const handleSashDoubleClick = (state: LayoutState, sashId: string) => {
 }
 
 export const isSideBarVisible = (state: LayoutState) => {
-  const { points } = state
-  return points[LayoutKeys.SideBarVisible]
+  const { sideBarVisible } = state
+  return sideBarVisible
 }
 
 export const getInitialPlaceholderCommands = (state: LayoutState) => {
