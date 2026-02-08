@@ -565,7 +565,6 @@ export const loadPreviewIfVisible = (state: LayoutState) => {
 }
 
 export const handleSashPointerDown = (state: LayoutState, sashId: string) => {
-  console.log('sash down', sashId)
   const newState = {
     ...state,
     [LayoutKeys.SashId]: sashId,
