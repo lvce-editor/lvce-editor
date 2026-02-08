@@ -466,7 +466,7 @@ export const toggleMain = (state: LayoutState) => {
 
 const loadIfVisible = async (
   state: LayoutState,
-  module: any,
+  module: LayoutModules.LayoutModule,
 ): Promise<{
   newState: LayoutState
   commands: any[]
