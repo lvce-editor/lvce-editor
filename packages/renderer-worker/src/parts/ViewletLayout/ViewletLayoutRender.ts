@@ -1,3 +1,4 @@
+import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
 // @ts-ignore
@@ -102,4 +103,23 @@ const renderDom = {
   multiple: true,
 }
 
-export const render = [renderDom]
+const getCss = (newState: LayoutState) => {
+  const sideBarWidth = newState.points[kSideBarWidth]
+  return `:root {
+  --SideBarWidth: ${sideBarWidth}px;
+}`
+}
+
+const renderCss = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    // @ts-ignore
+    const css = getCss(newState)
+    return ['Viewlet.setCss', css]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderCss]

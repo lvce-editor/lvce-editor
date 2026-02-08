@@ -619,9 +619,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           ...extraCommands,
           // ['Viewlet.show', viewlet.id],
         ]
-        if (viewlet.setBounds !== false) {
-          allCommands.splice(1, 0, [kSetBounds, viewletUid, x, y, width, height])
-        }
+        // if (viewlet.setBounds !== false) {
+        //   allCommands.splice(1, 0, [kSetBounds, viewletUid, x, y, width, height])
+        // }
         if (module.contentLoadedEffects) {
           module.contentLoadedEffects(newState)
         }
