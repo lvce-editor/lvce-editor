@@ -728,12 +728,13 @@ const getNewStatePointerMovePanel = (state: LayoutState, x: number, y: number): 
 const getNewStatePointerMovePreview = (state: LayoutState, x: number, y: number): LayoutState => {
   const windowHeight = state[LayoutKeys.WindowHeight]
   const windowWidth = state[LayoutKeys.WindowWidth]
-  const newPoints = new Uint16Array(state)
-  newPoints[LayoutKeys.PreviewLeft] = x
-  newPoints[LayoutKeys.PreviewTop] = y
-  newPoints[LayoutKeys.PreviewWidth] = windowWidth - x
-  newPoints[LayoutKeys.PreviewHeight] = windowHeight - y
-  return newPoints
+  return {
+    ...state,
+    previewLeft: x,
+    previewTop: y,
+    previewWidth: windowWidth - x,
+    previewHeight: windowHeight - y,
+  }
 }
 
 const getNewStatePointerMove = (sashId: string, state: LayoutState, x: number, y: number): LayoutState => {
