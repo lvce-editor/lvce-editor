@@ -135,17 +135,29 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     false,
     true,
   )
+  let actionsDom = []
+  let actionsUid = -1
   if (commands) {
+    const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
+    if (actionsDomIndex) {
+      actionsDom = commands[actionsDomIndex][3]
+      commands.splice(actionsDomIndex, 1)
+    }
+    // const eventsIndex = commands.findIndex((command) => command[2] === 'setEvents')
+    actionsUid = Id.create()
+    commands.push(['Viewlet.createFunctionalRoot', moduleId, actionsUid, true], ['Viewlet.setDom2', actionsUid, actionsDom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
-  // // TODO race condition (check if disposed after created)
+  console.log({ commands })
+  // TODO race condition (check if disposed after created)
 
   await savePromise
   return {
     ...state,
     currentViewletId: moduleId,
     childUid,
+    actionsUid,
   }
 }
 
