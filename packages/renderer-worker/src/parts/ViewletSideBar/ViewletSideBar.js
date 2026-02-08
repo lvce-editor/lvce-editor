@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -8,6 +7,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Id from '../Id/Id.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -20,6 +20,7 @@ export const create = (id, uri, x, y, width, height) => {
     titleAreaHeight: 35,
     actions: [],
     title: Character.EmptyString,
+    childUid: -1,
   }
 }
 
@@ -30,10 +31,10 @@ export const create = (id, uri, x, y, width, height) => {
 //   }
 // }
 
-export const saveChildState = (state) => {
-  const { currentViewletId } = state
-  return [currentViewletId]
-}
+// export const saveChildState = (state) => {
+//   const { currentViewletId } = state
+//   return [currentViewletId]
+// }
 
 // const getSavedViewletId = (savedState) => {
 //   if (savedState && savedState.currentViewletId) {
@@ -48,17 +49,15 @@ export const loadContent = async (state, savedState) => {
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
+  console.log({ savedViewletId })
   // const savedViewletId = getSavedViewletId(savedState)
-  return {
-    ...state,
-    currentViewletId: savedViewletId,
-  }
+  return handleSideBarViewletChange(state, savedViewletId)
 }
 
-export const contentLoaded = async (state, savedState) => {
-  const commands = []
-  return commands
-}
+// export const contentLoaded = async (state, savedState) => {
+//   const commands = []
+//   return commands
+// }
 
 // export const loadContentEffects = () => {
 //   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
@@ -81,27 +80,27 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
 }
 
 // TODO
-export const getChildren = (state) => {
-  const { titleAreaHeight, currentViewletId } = state
-  return [
-    {
-      id: currentViewletId,
-      ...getContentDimensions(state, titleAreaHeight),
-      setBounds: false,
-    },
-  ]
-}
+// export const getChildren = (state) => {
+//   const { titleAreaHeight, currentViewletId } = state
+//   return [
+//     {
+//       id: currentViewletId,
+//       ...getContentDimensions(state, titleAreaHeight),
+//       setBounds: false,
+//     },
+//   ]
+// }
 
 export const handleSideBarViewletChange = async (state, moduleId) => {
   console.assert(typeof moduleId === 'string')
   if (!moduleId) {
-    const currentViewletState = ViewletStates.getState(state.currentViewletId)
-    const currentViewletUid = currentViewletState.uid
-    const commands = []
-    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
+    // const currentViewletState = ViewletStates.getState(state.currentViewletId)
+    // const currentViewletUid = currentViewletState.uid
+    // const commands = []
+    // commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
 
     // TODO return commands in a functional way
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    // await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     return state
   }
   // TODO set it in layout
@@ -111,6 +110,8 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
   const uid = state.uid
+
+  const childUid = Id.create()
 
   const commands = await ViewletManager.load(
     {
@@ -127,28 +128,36 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       width: childDimensions.width,
       height: childDimensions.height,
       parentUid: uid,
-      append: true,
+      append: false,
       args: [],
+      uid: childUid,
     },
     false,
     true,
   )
+  let actionsDom = []
+  let actionsUid = -1
   if (commands) {
-    const currentViewletState = ViewletStates.getState(currentViewletId)
-    const currentViewletUid = currentViewletState.uid
-    Assert.number(currentViewletUid)
-    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
-
-    // TODO return commands in a functional way
+    const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
+    if (actionsDomIndex) {
+      actionsDom = commands[actionsDomIndex][3]
+      commands.splice(actionsDomIndex, 1)
+    }
+    // const eventsIndex = commands.findIndex((command) => command[2] === 'setEvents')
+    actionsUid = Id.create()
+    commands.push(['Viewlet.createFunctionalRoot', moduleId, actionsUid, true], ['Viewlet.setDom2', actionsUid, actionsDom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
-  // // TODO race condition (check if disposed after created)
+  console.log({ commands })
+  // TODO race condition (check if disposed after created)
 
   await savePromise
   return {
     ...state,
     currentViewletId: moduleId,
+    childUid,
+    actionsUid,
   }
 }
 
