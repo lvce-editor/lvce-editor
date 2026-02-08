@@ -1,5 +1,6 @@
 .List {
   position: relative;
+  flex: 1;
 }
 
 .ListItems {
