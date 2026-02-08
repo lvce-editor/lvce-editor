@@ -125,10 +125,10 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   // Add ContentArea if visible
-  if (state.contentAreaVisible && state.contentAreaId !== -1) {
-    workbenchChildCount++
-    dom.push(...getContentAreaVirtualDom(state))
-  }
+  // if (state.contentAreaVisible && state.contentAreaId !== -1) {
+  workbenchChildCount++
+  dom.push(...getContentAreaVirtualDom(state))
+  // }
 
   // Add StatusBar if visible
   if (state.statusBarVisible && state.statusBarId !== -1) {

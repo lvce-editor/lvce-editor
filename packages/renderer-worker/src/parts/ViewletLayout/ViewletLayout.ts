@@ -237,7 +237,7 @@ export const create = (id: number): LayoutState => {
     previewSashId: -1,
     activityBarVisible: false,
     activityBarSashVisible: false,
-    contentAreaVisible: false,
+    contentAreaVisible: true,
     mainContentsVisible: false,
     mainVisible: false,
     panelSashVisible: false,
@@ -690,14 +690,15 @@ const loadIfVisible = async (state, module) => {
         true,
       )
       if (commands) {
-        const referenceNodes = getReferenceNodes(sideBarLocation)
+        // const referenceNodes = getReferenceNodes(sideBarLocation)
         // @ts-ignore
-        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+        // commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
     const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
-    console.log('loaded', kId)
+    console.log('loaded', kId, childUid)
+    console.log({ commands: [...orderedCommands] })
     return {
       newState: {
         ...latestState,
