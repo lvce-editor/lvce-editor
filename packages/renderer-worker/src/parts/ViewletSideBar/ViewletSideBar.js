@@ -30,10 +30,10 @@ export const create = (id, uri, x, y, width, height) => {
 //   }
 // }
 
-export const saveChildState = (state) => {
-  const { currentViewletId } = state
-  return [currentViewletId]
-}
+// export const saveChildState = (state) => {
+//   const { currentViewletId } = state
+//   return [currentViewletId]
+// }
 
 // const getSavedViewletId = (savedState) => {
 //   if (savedState && savedState.currentViewletId) {
@@ -55,10 +55,10 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const contentLoaded = async (state, savedState) => {
-  const commands = []
-  return commands
-}
+// export const contentLoaded = async (state, savedState) => {
+//   const commands = []
+//   return commands
+// }
 
 // export const loadContentEffects = () => {
 //   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
@@ -81,16 +81,16 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
 }
 
 // TODO
-export const getChildren = (state) => {
-  const { titleAreaHeight, currentViewletId } = state
-  return [
-    {
-      id: currentViewletId,
-      ...getContentDimensions(state, titleAreaHeight),
-      setBounds: false,
-    },
-  ]
-}
+// export const getChildren = (state) => {
+//   const { titleAreaHeight, currentViewletId } = state
+//   return [
+//     {
+//       id: currentViewletId,
+//       ...getContentDimensions(state, titleAreaHeight),
+//       setBounds: false,
+//     },
+//   ]
+// }
 
 export const handleSideBarViewletChange = async (state, moduleId) => {
   console.assert(typeof moduleId === 'string')
