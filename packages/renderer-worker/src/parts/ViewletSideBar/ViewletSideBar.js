@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
