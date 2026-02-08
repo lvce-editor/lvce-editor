@@ -437,7 +437,6 @@ export const createViewlet = async (state: LayoutState, viewletModuleId: string,
     false,
     true,
   )
-  // @ts-ignore
   return {
     newState: state,
     commands: commands,
