@@ -1,7 +1,6 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
-import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
