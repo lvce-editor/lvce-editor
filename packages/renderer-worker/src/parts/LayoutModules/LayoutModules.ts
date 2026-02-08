@@ -1,7 +1,18 @@
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const Main = {
+export interface LayoutModule {
+  readonly moduleId: string
+  readonly kVisible: number
+  readonly kTop: number
+  readonly kLeft: number
+  readonly kWidth: number
+  readonly kHeight: number
+  readonly kId: string
+  readonly kReady: string
+}
+
+export const Main: LayoutModule = {
   moduleId: ViewletModuleId.Main,
   kVisible: LayoutKeys.MainVisible,
   kTop: LayoutKeys.MainTop,
@@ -12,7 +23,7 @@ export const Main = {
   kReady: 'mainVisible',
 }
 
-export const ActivityBar = {
+export const ActivityBar: LayoutModule = {
   moduleId: ViewletModuleId.ActivityBar,
   kVisible: LayoutKeys.ActivityBarVisible,
   kTop: LayoutKeys.ActivityBarTop,
@@ -23,7 +34,7 @@ export const ActivityBar = {
   kReady: 'activityBarVisible',
 }
 
-export const SideBar = {
+export const SideBar: LayoutModule = {
   moduleId: ViewletModuleId.SideBar,
   kVisible: LayoutKeys.SideBarVisible,
   kTop: LayoutKeys.SideBarTop,
@@ -34,7 +45,7 @@ export const SideBar = {
   kReady: 'sideBarVisible',
 }
 
-export const TitleBar = {
+export const TitleBar: LayoutModule = {
   moduleId: ViewletModuleId.TitleBar,
   kVisible: LayoutKeys.TitleBarVisible,
   kTop: LayoutKeys.TitleBarTop,
@@ -45,7 +56,7 @@ export const TitleBar = {
   kReady: 'titleBarVisible',
 }
 
-export const StatusBar = {
+export const StatusBar: LayoutModule = {
   moduleId: ViewletModuleId.StatusBar,
   kVisible: LayoutKeys.StatusBarVisible,
   kTop: LayoutKeys.StatusBarTop,
@@ -56,7 +67,7 @@ export const StatusBar = {
   kReady: 'statusbarVisible',
 }
 
-export const Panel = {
+export const Panel: LayoutModule = {
   moduleId: ViewletModuleId.Panel,
   kVisible: LayoutKeys.PanelVisible,
   kTop: LayoutKeys.panelTop,
