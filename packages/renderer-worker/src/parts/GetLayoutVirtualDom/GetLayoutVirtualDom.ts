@@ -46,12 +46,47 @@ const getSashSideBarDom = () => {
   }
 }
 
+const getSashPreviewDom = () => {
+  return {
+    type: VirtualDomElements.Div,
+    className: 'Viewlet Sash SashVertical',
+    onPointerDown: DomEventListenerFunctions.HandleSashPreviewPointerDown,
+  }
+}
+
 // @ts-ignore
 const getSashPanelDom = () => {
   return {
     type: VirtualDomElements.Div,
     className: 'Viewlet Sash SashHorizontal',
     onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,
+  }
+}
+const getActivityBarDom = (activityBarId: number) => {
+  if (activityBarId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet ActivityBar',
+      childCount: 0,
+    }
+  }
+  return {
+    type: VirtualDomElements.Reference,
+    uid: activityBarId,
+  }
+}
+
+const getSideBarDom = (sideBarId: number) => {
+  if (sideBarId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet SideBar',
+      childCount: 0,
+    }
+  }
+  return {
+    type: VirtualDomElements.Reference,
+    uid: sideBarId,
   }
 }
 
@@ -72,32 +107,10 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
 
   // Add components based on sidebar location
   if (activityBarVisible && activityBarId !== -1) {
-    if (activityBarId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet ActivityBar',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: activityBarId,
-      })
-    }
+    children.push(getActivityBarDom(activityBarId))
   }
   if (sideBarVisible) {
-    if (sideBarId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet SideBar',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: sideBarId,
-      })
-    }
+    children.push(getSideBarDom(sideBarId))
   }
   if (sideBarSashVisible) {
     children.push(getSashSideBarDom())
