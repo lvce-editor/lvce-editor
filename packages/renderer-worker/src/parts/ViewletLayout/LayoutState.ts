@@ -1,44 +1,45 @@
 export interface LayoutState {
-  readonly sideBarView: string
-  readonly commands: readonly any[]
-  readonly assetDir: string
-  readonly commit: string
-  readonly platform: number
-  readonly sashId: any
-  readonly sideBarLocation: number
-  readonly uid: number
-  readonly points: Uint16Array
   readonly activityBarId: number
   readonly activityBarSashId: number
-  readonly sideBarSashId: number
-  readonly sideBarId: number
-  readonly panelSashId: number
-  readonly panelId: number
-  readonly mainId: number
+  readonly activityBarSashVisible: boolean
+  readonly activityBarVisible: boolean
+  readonly assetDir: string
+  readonly commands: readonly any[]
+  readonly commit: string
   readonly contentAreaId: number
+  readonly contentAreaVisible: boolean
   readonly mainContentsId: number
-  readonly statusBarId: number
-  readonly titleBarId: number
-  readonly workbenchId: number
+  readonly mainContentsVisible: boolean
+  readonly mainId: number
+  readonly mainVisible: boolean
+  readonly panelId: number
+  readonly panelSashId: number
+  readonly panelSashVisible: boolean
+  readonly panelView: string
+  readonly panelVisible: boolean
+  readonly platform: number
+  readonly points: Uint16Array
   readonly previewId: number
   readonly previewSashId: number
-  readonly previewUri: string
-  readonly activityBarVisible: boolean
-  readonly activityBarSashVisible: boolean
-  readonly contentAreaVisible: boolean
-  readonly mainContentsVisible: boolean
-  readonly mainVisible: boolean
-  readonly panelSashVisible: boolean
-  readonly panelVisible: boolean
   readonly previewSashVisible: boolean
+  readonly previewUri: string
   readonly previewVisible: boolean
+  readonly sashId: any
+  readonly sideBarId: number
+  readonly sideBarLocation: number
+  readonly sideBarSashId: number
   readonly sideBarSashVisible: boolean
+  readonly sideBarView: string
   readonly sideBarVisible: boolean
+  readonly statusBarId: number
   readonly statusBarVisible: boolean
+  readonly titleBarId: number
   readonly titleBarVisible: boolean
-  readonly workbenchVisible: boolean
-  readonly updateState: string
+  readonly uid: number
   readonly updateProgress: number
+  readonly updateState: string
+  readonly workbenchId: number
+  readonly workbenchVisible: boolean
 }
 
 export interface LayoutStateResult {
