@@ -715,7 +715,7 @@ const getNewStatePointerMove = (sashId: string, state: LayoutState, x: number, y
     case SashType.ActivityBar:
       return getNewStatePointerMoveActivityBar(state, x, y)
     default:
-      throw new Error(`unsupported sash type ${sashId}`)
+      return state
   }
 }
 
