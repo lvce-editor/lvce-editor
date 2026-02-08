@@ -348,17 +348,19 @@ export const loadContent = (state, savedState) => {
   getPoints(newPoints, newPoints, sideBarLocation)
   return {
     ...state,
-    points: newPoints,
-    sideBarLocation,
     activityBarSashVisible: true,
-    sideBarSashVisible: true,
-    panelSashVisible: true,
-    previewSashVisible: true,
-    previewVisible,
     mainContentsVisible: true,
-    workbenchVisible: true,
-    sideBarView: savedView,
+    panelSashVisible: true,
+    points: newPoints,
+    previewSashVisible: true,
     previewUri,
+    previewVisible,
+    sideBarLocation,
+    sideBarSashVisible: true,
+    sideBarView: savedView,
+    statusBarVisible: true,
+    titleBarVisible: true,
+    workbenchVisible: true,
   }
 }
 
