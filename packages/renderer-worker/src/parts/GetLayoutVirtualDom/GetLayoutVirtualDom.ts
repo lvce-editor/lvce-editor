@@ -44,6 +44,8 @@ const getSashSideBarDom = () => {
     onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
   }
 }
+
+// @ts-ignore
 const getSashPanelDom = () => {
   return {
     type: VirtualDomElements.Div,
