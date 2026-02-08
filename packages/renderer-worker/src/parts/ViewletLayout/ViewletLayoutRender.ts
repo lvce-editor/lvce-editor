@@ -1,5 +1,6 @@
 import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
+import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 // @ts-ignore
 const kWindowWidth = 0
@@ -127,6 +128,19 @@ const renderCss = {
     return [['Viewlet.setCss', newState.uid, css]]
   },
   multiple: true,
+}
+
+export const renderEventListeners = () => {
+  return [
+    {
+      name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
+      params: ['handleSashSideBarPointerDown'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashPanelPointerDown,
+      params: ['handleSashPanelPointerDown'],
+    },
+  ]
 }
 
 export const render = [renderDom, renderCss]
