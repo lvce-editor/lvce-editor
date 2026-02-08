@@ -72,6 +72,12 @@ const getContentAreaVirtualDom = (state: LayoutState) => {
         type: VirtualDomElements.Reference,
         uid: state.mainContentsId,
       })
+    } else {
+      children.push({
+        type: VirtualDomElements.Div,
+        className: 'Viewlet Main',
+        childCount: 0,
+      })
     }
     if (state.sideBarSashVisible && state.sideBarSashId !== -1) {
       children.push({
