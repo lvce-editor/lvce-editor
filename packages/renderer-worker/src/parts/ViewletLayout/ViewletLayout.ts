@@ -87,6 +87,15 @@ export const create = (id: number): LayoutState => {
     titleBarLeft: 0,
     titleBarTop: 0,
     titleBarWidth: 0,
+    panelMaxHeight: 0,
+    panelMinHeight: 0,
+    previewMaxHeight: 0,
+    previewMaxWidth: 0,
+    previewMinHeight: 0,
+    previewMinWidth: 0,
+    sideBarMaxWidth: 0,
+    sideBarMinWidth: 0,
+    titleBarNative: false,
     sideBarView: '',
     updateState: 'none',
     updateProgress: 0,
@@ -101,14 +110,14 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
-  const { points, sideBarView, sideBarLocation, previewUri, previewVisible } = state
-  const pointsArray = [...points]
+  const { sideBarView, sideBarLocation, previewUri, previewVisible } = state
   return {
-    points: pointsArray,
     sideBarView,
     sideBarLocation,
     previewUri,
     previewVisible,
+
+    // TODO save points
   }
 }
 
@@ -122,15 +131,15 @@ const getSideBarLocationType = () => {
   }
 }
 
-const getSavedPoints = (savedState) => {
-  if (savedState && savedState.points) {
-    const { points } = savedState
-    if (Array.isArray(points) && points.length === LayoutKeys.Total) {
-      return new Uint16Array(points)
-    }
-  }
-  return new Uint16Array(LayoutKeys.Total)
-}
+// const getSavedPoints = (savedState) => {
+//   if (savedState && savedState.points) {
+//     const { points } = savedState
+//     if (Array.isArray(points) && points.length === LayoutKeys.Total) {
+//       return new Uint16Array(points)
+//     }
+//   }
+//   return new Uint16Array(LayoutKeys.Total)
+// }
 
 const isNativeTitleBarStyle = (platform) => {
   return platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
@@ -143,64 +152,56 @@ const getSavedSideBarView = (savedState) => {
   return ViewletModuleId.Explorer
 }
 
-export const loadContent = (state, savedState) => {
+export const loadContent = (state: LayoutState, savedState: any): LayoutState => {
   const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
-  const newPoints = getSavedPoints(savedState)
+  // TODO restore saved points
+  // const newPoints = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
   const previewVisible = savedState?.previewVisible || false
-  // TODO
-  newPoints[LayoutKeys.ActivityBarVisible] = 1
-  newPoints[LayoutKeys.ActivityBarWidth] = 48
-  newPoints[LayoutKeys.MainVisible] = 1
-  newPoints[LayoutKeys.PanelHeight] ||= 160
-  newPoints[LayoutKeys.PanelMaxHeight] = 600
-  newPoints[LayoutKeys.PanelMinHeight] = 150
-  newPoints[LayoutKeys.SideBarMaxWidth] = 9999999
-  newPoints[LayoutKeys.SideBarMinWidth] = 170
-  newPoints[LayoutKeys.SideBarVisible] = 1
-  newPoints[LayoutKeys.SideBarWidth] ||= 240
-  newPoints[LayoutKeys.StatusBarHeight] = 20
-  newPoints[LayoutKeys.StatusBarVisible] = 1
-  newPoints[LayoutKeys.PreviewVisible] = previewVisible ? 1 : 0
-  newPoints[LayoutKeys.PreviewHeight] ||= 350
-  newPoints[LayoutKeys.PreviewMinHeight] = Math.max(200, windowHeight / 2)
-  newPoints[LayoutKeys.PreviewMaxHeight] = 1200
-  newPoints[LayoutKeys.PreviewWidth] ||= 600
-  newPoints[LayoutKeys.PreviewMinWidth] = 100
-  newPoints[LayoutKeys.PreviewMaxWidth] = Math.max(1800, windowWidth / 2)
-  if (isNativeTitleBarStyle(state.platform)) {
-    newPoints[LayoutKeys.TitleBarHeight] = 0
-    newPoints[LayoutKeys.TitleBarVisible] = 1
-    newPoints[LayoutKeys.TitleBarNative] = 1
-  } else {
-    newPoints[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
-    newPoints[LayoutKeys.TitleBarVisible] = 1
-    newPoints[LayoutKeys.TitleBarNative] = 0
-  }
-  newPoints[LayoutKeys.WindowHeight] = windowHeight
-  newPoints[LayoutKeys.WindowWidth] = windowWidth
-  // TODO get side bar min width from preferences
-  const newState = getPoints(newPoints, newPoints, sideBarLocation)
-  return {
+  const intermediateState: LayoutState = {
     ...state,
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    mainVisible: true,
+    panelHeight: 160,
+    panelMaxHeight: 600,
+    panelMinHeight: 150,
+    sideBarMaxWidth: 9999999,
+
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 240,
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    previewVisible,
+    previewHeight: 350,
+
+    previewMinHeight: Math.max(200, windowHeight / 2),
+    previewMaxHeight: 1200,
+    previewWidth: 600,
+    previewMinWidth: 100,
+    previewMaxWidth: Math.max(1800, windowWidth / 2),
+    titleBarHeight: isNativeTitleBarStyle(state.platform) ? 0 : GetDefaultTitleBarHeight.getDefaultTitleBarHeight(),
+    titleBarVisible: true,
+    titleBarNative: isNativeTitleBarStyle(state.platform),
+    windowHeight,
+    windowWidth,
     activityBarSashVisible: true,
-    mainContentsVisible: true,
     panelSashVisible: true,
-    points: newPoints,
     previewSashVisible: true,
     previewUri,
-    previewVisible,
     sideBarLocation,
     sideBarSashVisible: true,
     sideBarView: savedView,
-    statusBarVisible: true,
-    titleBarVisible: true,
     workbenchVisible: true,
   }
+  // TODO get side bar min width from preferences
+  const newState = getPoints(intermediateState)
+  return newState
 }
 
 const show = async (state: LayoutState, module, currentViewletId) => {

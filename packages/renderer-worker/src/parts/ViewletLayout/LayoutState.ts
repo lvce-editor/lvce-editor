@@ -17,8 +17,17 @@ export interface LayoutState {
   readonly mainLeft: number
   readonly mainTop: number
   readonly mainVisible: boolean
+  readonly titleBarNative: boolean
   readonly mainWidth: number
   readonly panelHeight: number
+  readonly panelMinHeight: number
+  readonly sideBarMaxWidth: number
+  readonly sideBarMinWidth: number
+  readonly previewMinHeight: number
+  readonly previewMaxHeight: number
+  readonly previewMinWidth: number
+  readonly previewMaxWidth: number
+  readonly panelMaxHeight: number
   readonly panelId: number
   readonly panelLeft: number
   readonly panelSashId: number
