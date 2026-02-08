@@ -2,6 +2,7 @@
   /* position: fixed; */
   /* contain: strict; */
   /* z-index: 1; */
+  background: var(--MainBackground);
 }
 
 .SashHorizontal {
