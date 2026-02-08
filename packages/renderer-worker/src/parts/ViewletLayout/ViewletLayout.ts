@@ -402,7 +402,6 @@ const show = async (state, module, currentViewletId) => {
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   const isPreview = moduleId === ViewletModuleId.Preview
-  console.log('kid', kId, childUid)
   return {
     newState: {
       ...state,
@@ -662,7 +661,7 @@ const getReferenceNodes = (sideBarLocation) => {
 
 const loadIfVisible = async (state, module) => {
   try {
-    const { points, sideBarLocation } = state
+    const { points } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
     const visible = points[kVisible]
     const x = points[kLeft]
@@ -671,7 +670,6 @@ const loadIfVisible = async (state, module) => {
     const height = points[kHeight]
     let commands = []
     let childUid = -1
-    const parentUid = state.uid
     if (visible) {
       childUid = Id.create()
       commands = await ViewletManager.load(
@@ -747,6 +745,7 @@ export const loadTitleBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.TitleBar)
   return {
     ...updated,
+    titleBarVisible: true,
   }
 }
 
