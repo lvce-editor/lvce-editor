@@ -985,17 +985,11 @@ const handleSashDoubleClickSideBar = async (state: LayoutState) => {
 }
 
 const handleSashDoubleClickActivityBar = async (state: LayoutState) => {
-  const { points } = state
-  if (points[LayoutKeys.PreviewVisible]) {
-    const newPoints = new Uint16Array(points)
-    newPoints[LayoutKeys.PreviewWidth] = 600 // Reset to default width
-    getPoints(newPoints, newPoints)
-    const commands = await getResizeCommands(points, newPoints)
+  if (state.previewVisible[LayoutKeys.PreviewVisible]) {
+    const newState = getPoints({ ...state, previewWidth: 600 })
+    const commands = await getResizeCommands(state, newState)
     return {
-      newState: {
-        ...state,
-        points: newPoints,
-      },
+      newState,
       commands,
     }
   }
