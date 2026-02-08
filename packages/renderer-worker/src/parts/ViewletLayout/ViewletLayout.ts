@@ -600,17 +600,16 @@ export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
 }
 
 const getNewStatePointerMoveSideBar = (state: LayoutState, x: number, y: number): LayoutState => {
-  const windowWidth = state[LayoutKeys.WindowWidth]
-  const activityBarWidth = state[LayoutKeys.ActivityBarWidth]
-  const sideBarMinWidth = state[LayoutKeys.SideBarMinWidth]
-  const newSideBarWidth = windowWidth - activityBarWidth - x
+  const { previewWidth, windowWidth, activityBarWidth, sideBarMinWidth } = state
+  const newSideBarWidth = windowWidth - activityBarWidth - x - previewWidth
   if (newSideBarWidth <= sideBarMinWidth / 2) {
     return {
       ...state,
       sideBarVisible: false,
       mainWidth: windowWidth - activityBarWidth,
     }
-  } else if (newSideBarWidth <= sideBarMinWidth) {
+  }
+  if (newSideBarWidth <= sideBarMinWidth) {
     return {
       ...state,
       sideBarWidth: sideBarMinWidth,
@@ -618,14 +617,13 @@ const getNewStatePointerMoveSideBar = (state: LayoutState, x: number, y: number)
       sideBarLeft: windowWidth - activityBarWidth - sideBarMinWidth,
       sideBarVisible: true,
     }
-  } else {
-    return {
-      ...state,
-      sideBarVisible: true,
-      mainWidth: x,
-      sideBarLeft: x,
-      sideBarWidth: newSideBarWidth,
-    }
+  }
+  return {
+    ...state,
+    sideBarVisible: true,
+    mainWidth: x,
+    sideBarLeft: x,
+    sideBarWidth: newSideBarWidth,
   }
 }
 
