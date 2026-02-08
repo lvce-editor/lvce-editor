@@ -90,6 +90,21 @@ const getSideBarDom = (sideBarId: number) => {
   }
 }
 
+const getMainDom = (mainId: number) => {
+  if (mainId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Main',
+      childCount: 0,
+    }
+  } else {
+    return {
+      type: VirtualDomElements.Reference,
+      uid: mainId,
+    }
+  }
+}
+
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   const {
     activityBarVisible,
@@ -115,19 +130,8 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   if (sideBarSashVisible) {
     children.push(getSashSideBarDom())
   }
-  if (mainVisible && mainId !== -1) {
-    if (mainId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet SideBar',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: mainId,
-      })
-    }
+  if (mainVisible) {
+    children.push(getMainDom())
   }
 
   // Preview sash (vertical)
