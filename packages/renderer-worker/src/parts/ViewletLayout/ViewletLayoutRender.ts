@@ -106,8 +106,14 @@ const renderDom = {
 
 const getCss = (newState: LayoutState) => {
   const sideBarWidth = newState.points[kSideBarWidth]
+  const activityBarWidth = newState.points[kActivityBarWidth]
+  const panelHeight = newState.points[kPanelHeight]
+  const titleBarHeight = newState.points[kTitleBarHeight]
   return `:root {
   --SideBarWidth: ${sideBarWidth}px;
+  --ActivityBarWidth: ${activityBarWidth}px;
+  --PanelHeight: ${panelHeight}px;
+  --TitleBarHeight: ${titleBarHeight}px;
 }`
 }
 
