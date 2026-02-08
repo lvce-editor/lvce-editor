@@ -161,7 +161,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   // const newPoints = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
-  const previewVisible = savedState?.previewVisible || false
+  const previewVisible = savedState?.previewVisible ?? false
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -264,6 +264,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   const resizeCommands = await getResizeCommands(state, newState)
   commands.push(...resizeCommands)
 
+  console.log({ commands })
   // TODO send change event to activity bar worker
   // but in a functional way so that there is only
   // one rendering event
@@ -363,9 +364,9 @@ export const toggleStatusBar = (state: LayoutState) => {
 }
 
 export const showPreview = async (state: LayoutState, uri: string) => {
-  const { previewVisible } = state
+  const { previewVisible, previewId } = state
 
-  if (previewVisible) {
+  if (previewVisible && previewId !== -1) {
     await Command.execute('Preview.setUri', uri)
     return {
       newState: {
