@@ -129,10 +129,6 @@ const getContentAreaVirtualDomRight = (state) => {
       childCount: 0,
     })
   }
-  children.push({
-    type: VirtualDomElements.Reference,
-    uid: state.sideBarSashId,
-  })
   if (state.sideBarVisible) {
     if (state.sideBarId === -1) {
       children.push({
