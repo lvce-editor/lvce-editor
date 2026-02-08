@@ -1,16 +1,14 @@
-import { getSideBarDom } from '../GetSideBarDom/GetSideBarDom.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
-export const hasFunctionalRootRender = true
 
-const renderDom = {
+const renderTitle = {
   isEqual(oldState, newState) {
     return false
   },
   apply(oldState, newState) {
-    const dom = getSideBarDom(newState)
-    return [/* method */ 'Viewlet.setDom2', dom]
+    return [/* method */ RenderMethod.SetTitle, /* name */ newState.title || newState.currentViewletId]
   },
 }
 
-export const render = [renderDom]
+export const render = [renderTitle]
