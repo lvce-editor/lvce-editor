@@ -90,6 +90,7 @@ const kTotal = 46
 
 export const hasFunctionalRender = true
 export const hasFunctionalRootRender = true
+export const hasFunctionalEvents = true
 
 const renderDom = {
   isEqual(oldState, newState) {
@@ -117,9 +118,9 @@ const renderCss = {
   apply(oldState, newState) {
     // @ts-ignore
     const css = getCss(newState)
-    return ['Viewlet.setCss', css]
+    return [['Viewlet.setCss', newState.uid, css]]
   },
-  multiple: false,
+  multiple: true,
 }
 
 export const render = [renderDom, renderCss]
