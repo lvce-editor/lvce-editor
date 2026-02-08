@@ -14,6 +14,7 @@ const getActionsDom = (newState) => {
 }
 
 const getTitleAreaDom = (newState) => {
+  const title = newState.title || newState.currentViewletId
   return [
     {
       type: VirtualDomElements.Div,
@@ -24,7 +25,7 @@ const getTitleAreaDom = (newState) => {
       type: VirtualDomElements.H2,
       childCount: 1,
     },
-    text(newState.title),
+    text(title),
     ...getActionsDom(newState),
   ]
 }
