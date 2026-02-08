@@ -24,6 +24,7 @@ const getTitleAreaDom = (newState) => {
     {
       type: VirtualDomElements.H2,
       childCount: 1,
+      className: 'SideBarTitleAreaTitle',
     },
     text(title),
     ...getActionsDom(newState),
