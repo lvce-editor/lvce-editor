@@ -597,35 +597,37 @@ export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
   }
 }
 
-const getNewStatePointerMoveSideBar = (state: LayoutState, x: number, y: number): LayoutState => {
+const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const { previewWidth, windowWidth, activityBarWidth, sideBarMinWidth } = state
   const newSideBarWidth = windowWidth - activityBarWidth - x - previewWidth
   if (newSideBarWidth <= sideBarMinWidth / 2) {
-    return {
-      ...state,
-      sideBarVisible: false,
-      mainWidth: windowWidth - activityBarWidth,
-    }
+    return hideSideBar(state)
   }
   if (newSideBarWidth <= sideBarMinWidth) {
     return {
-      ...state,
-      sideBarWidth: sideBarMinWidth,
-      mainWidth: windowWidth - activityBarWidth - sideBarMinWidth,
-      sideBarLeft: windowWidth - activityBarWidth - sideBarMinWidth,
-      sideBarVisible: true,
+      commands: [],
+      newState: {
+        ...state,
+        sideBarWidth: sideBarMinWidth,
+        mainWidth: windowWidth - activityBarWidth - sideBarMinWidth,
+        sideBarLeft: windowWidth - activityBarWidth - sideBarMinWidth,
+        sideBarVisible: true,
+      },
     }
   }
   return {
-    ...state,
-    sideBarVisible: true,
-    mainWidth: x,
-    sideBarLeft: x,
-    sideBarWidth: newSideBarWidth,
+    newState: {
+      ...state,
+      sideBarVisible: true,
+      mainWidth: x,
+      sideBarLeft: x,
+      sideBarWidth: newSideBarWidth,
+    },
+    commands: [],
   }
 }
 
-const getNewStatePointerMoveActivityBar = (state: LayoutState, x: number, y: number): LayoutState => {
+const getNewStatePointerMoveActivityBar = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const windowWidth = state[LayoutKeys.WindowWidth]
   const previewMinWidth = 200 // TODO: make configurable
   const mainMinWidth = 100 // TODO: make configurable
@@ -633,32 +635,42 @@ const getNewStatePointerMoveActivityBar = (state: LayoutState, x: number, y: num
 
   if (newPreviewWidth < previewMinWidth / 2) {
     return {
-      ...state,
-      previewVisible: false,
-      previewWidth: 0,
-      previewLeft: windowWidth,
-      mainWidth: windowWidth - 48,
+      commands: [],
+
+      newState: {
+        ...state,
+        previewVisible: false,
+        previewWidth: 0,
+        previewLeft: windowWidth,
+        mainWidth: windowWidth - 48,
+      },
     }
   } else if (newPreviewWidth < previewMinWidth) {
     return {
-      ...state,
-      previewVisible: true,
-      previewWidth: previewMinWidth,
-      previewLeft: x,
-      mainWidth: x - 48,
+      commands: [],
+      newState: {
+        ...state,
+        previewVisible: true,
+        previewWidth: previewMinWidth,
+        previewLeft: x,
+        mainWidth: x - 48,
+      },
     }
   } else {
     return {
-      ...state,
-      previewVisible: true,
-      previewLeft: x,
-      previewWidth: newPreviewWidth,
-      mainWidth: Math.max(mainMinWidth, x - 48),
+      newState: {
+        ...state,
+        previewVisible: true,
+        previewLeft: x,
+        previewWidth: newPreviewWidth,
+        mainWidth: Math.max(mainMinWidth, x - 48),
+      },
+      commands: [],
     }
   }
 }
 
-const getNewStatePointerMovePanel = (state: LayoutState, x: number, y: number): LayoutState => {
+const getNewStatePointerMovePanel = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const windowHeight = state[LayoutKeys.WindowHeight]
   const statusBarHeight = state[LayoutKeys.StatusBarHeight]
   const titleBarHeight = state[LayoutKeys.TitleBarHeight]
@@ -667,41 +679,58 @@ const getNewStatePointerMovePanel = (state: LayoutState, x: number, y: number): 
   const newPanelHeight = windowHeight - statusBarHeight - y
   if (newPanelHeight < panelMinHeight / 2) {
     return {
-      ...state,
-      panelVisible: false,
-      mainHeight: windowHeight - statusBarHeight - titleBarHeight,
+      newState: {
+        ...state,
+        panelVisible: false,
+        mainHeight: windowHeight - statusBarHeight - titleBarHeight,
+      },
+      commands: [],
     }
   } else if (newPanelHeight <= panelMinHeight) {
     return {
-      ...state,
-      panelVisible: true,
-      panelHeight: panelMinHeight,
-      mainHeight: windowHeight - activityBarHeight - panelMinHeight,
+      newState: {
+        ...state,
+        panelVisible: true,
+        panelHeight: panelMinHeight,
+        mainHeight: windowHeight - activityBarHeight - panelMinHeight,
+      },
+      commands: [],
     }
   } else {
     return {
-      ...state,
-      panelVisible: true,
-      mainHeight: y - titleBarHeight,
-      panelTop: y,
-      panelHeight: windowHeight - statusBarHeight - y,
+      newState: {
+        ...state,
+        panelVisible: true,
+        mainHeight: y - titleBarHeight,
+        panelTop: y,
+        panelHeight: windowHeight - statusBarHeight - y,
+      },
+      commands: [],
     }
   }
 }
 
-const getNewStatePointerMovePreview = (state: LayoutState, x: number, y: number): LayoutState => {
-  const windowHeight = state[LayoutKeys.WindowHeight]
-  const windowWidth = state[LayoutKeys.WindowWidth]
+const getNewStatePointerMovePreview = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
+  const windowHeight = state.windowHeight
+  const windowWidth = state.windowWidth
   return {
-    ...state,
-    previewLeft: x,
-    previewTop: y,
-    previewWidth: windowWidth - x,
-    previewHeight: windowHeight - y,
+    newState: {
+      ...state,
+      previewLeft: x,
+      previewTop: y,
+      previewWidth: windowWidth - x,
+      previewHeight: windowHeight - y,
+    },
+    commands: [],
   }
 }
 
-const getNewStatePointerMove = (sashId: string, state: LayoutState, x: number, y: number): LayoutState => {
+const getNewStatePointerMove = async (
+  sashId: string,
+  state: LayoutState,
+  x: number,
+  y: number,
+): Promise<{ newState: LayoutState; commands: any[] }> => {
   switch (sashId) {
     case SashType.SideBar:
       return getNewStatePointerMoveSideBar(state, x, y)
@@ -712,7 +741,10 @@ const getNewStatePointerMove = (sashId: string, state: LayoutState, x: number, y
     case SashType.ActivityBar:
       return getNewStatePointerMoveActivityBar(state, x, y)
     default:
-      return state
+      return {
+        newState: state,
+        commands: [],
+      }
   }
 }
 
@@ -842,7 +874,9 @@ const showPlaceholder = (uid, points, module) => {
 
 export const handleSashPointerMove = async (state: LayoutState, x: number, y: number) => {
   const { sashId } = state
-  let newState = getNewStatePointerMove(sashId, state, x, y)
+  let newState = state
+  const updated = await getNewStatePointerMove(sashId, state, x, y)
+  newState = updated.newState
   // TODO resize commands, resize viewlets recursively
   const allCommands = await getResizeCommands(state, newState)
   const uid = state.uid
