@@ -68,10 +68,10 @@ const getContentAreaVirtualDomLeft = (state) => {
       })
     }
   }
-  if (state.sideBarSashVisible && state.sideBarSashId !== -1) {
+  if (state.sideBarSashVisible) {
     children.push({
-      type: VirtualDomElements.Reference,
-      uid: state.sideBarSashId,
+      type: VirtualDomElements.Div,
+      className: 'Sash SashSideBar',
     })
   }
   if (state.mainContentsVisible && state.mainContentsId !== -1) {
@@ -122,19 +122,12 @@ const getContentAreaVirtualDomRight = (state) => {
       childCount: 0,
     })
   }
-  if (state.sideBarSashVisible && state.sideBarSashId !== -1) {
-    if (state.sideBarSashId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet SideBarSash',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: state.sideBarSashId,
-      })
-    }
+  if (state.sideBarSashVisible) {
+    children.push({
+      type: VirtualDomElements.Div,
+      className: 'Viewlet SideBarSash',
+      childCount: 0,
+    })
   }
   children.push({
     type: VirtualDomElements.Reference,
