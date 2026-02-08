@@ -141,7 +141,7 @@ export const renderEventListeners = () => {
     },
     {
       name: DomEventListenersFunctions.HandleSashPanelPointerMove,
-      params: ['handleSashSideBarPointerMove', 'event.clientX', 'event.clientY'],
+      params: ['handleSashPointerMove', 'event.clientX', 'event.clientY'],
     },
     {
       name: DomEventListenersFunctions.HandleSashPanelPointerUp,
@@ -154,7 +154,7 @@ export const renderEventListeners = () => {
     },
     {
       name: DomEventListenersFunctions.HandleSashPanelPointerMove,
-      params: ['handleSashPanelPointerMove', 'event.clientX', 'event.clientY'],
+      params: ['handleSashPointerMove', 'event.clientX', 'event.clientY'],
     },
     {
       name: DomEventListenersFunctions.HandleSashPanelPointerUp,
@@ -165,14 +165,6 @@ export const renderEventListeners = () => {
       params: ['handleSashPreviewPointerDown'],
       // trackPointerEvents: [DomEventListenersFunctions.HandleSashPanelPointerMove, DomEventListenersFunctions.HandleSashPanelPointerUp],
     },
-    // {
-    //   name: DomEventListenersFunctions.HandleSashPanelPointerMove,
-    //   params: ['handleSashPanelPointerMove', 'event.clientX', 'event.clientY'],
-    // },
-    // {
-    //   name: DomEventListenersFunctions.HandleSashPanelPointerUp,
-    //   params: ['handleSashPanelPointerUp'],
-    // },
   ]
 }
 
