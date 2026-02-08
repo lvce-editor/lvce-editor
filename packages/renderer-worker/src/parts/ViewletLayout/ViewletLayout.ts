@@ -172,6 +172,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     panelMaxHeight: 600,
     panelMinHeight: 150,
     sideBarMaxWidth: 9999999,
+    panelVisible: false,
 
     sideBarMinWidth: 170,
     sideBarVisible: true,
@@ -278,6 +279,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
 
 const toggle = (state: LayoutState, module: LayoutModules.LayoutModule, moduleId?: any) => {
   const { kVisible } = module
+  console.log({ kVisible, state })
   if (state[kVisible]) {
     return hide(state, module)
   }
