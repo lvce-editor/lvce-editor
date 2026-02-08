@@ -129,7 +129,7 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       width: childDimensions.width,
       height: childDimensions.height,
       parentUid: uid,
-      append: true,
+      append: false,
       args: [],
       uid: childUid,
     },
@@ -137,12 +137,7 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     true,
   )
   if (commands) {
-    // const currentViewletState = ViewletStates.getState(currentViewletId)
-    // const currentViewletUid = currentViewletState.uid
-    // Assert.number(currentViewletUid)
-    // commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
-    // // TODO return commands in a functional way
-    // await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
   // // TODO race condition (check if disposed after created)
