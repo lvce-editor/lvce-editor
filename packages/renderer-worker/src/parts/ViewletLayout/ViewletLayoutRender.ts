@@ -112,10 +112,10 @@ const getCss = (newState: LayoutState) => {
 }
 
 const renderCss = {
-  isEqual(oldState, newState) {
+  isEqual(oldState: LayoutState, newState: LayoutState) {
     return false
   },
-  apply(oldState, newState) {
+  apply(oldState: LayoutState, newState: LayoutState) {
     // @ts-ignore
     const css = getCss(newState)
     return [['Viewlet.setCss', newState.uid, css]]
