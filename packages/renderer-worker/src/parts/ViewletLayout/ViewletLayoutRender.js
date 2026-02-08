@@ -1,4 +1,3 @@
-import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
 // @ts-ignore
@@ -88,61 +87,8 @@ const kPreviewHeight = 40
 // @ts-ignore
 const kTotal = 46
 
-const kSashId = 'sashId'
-
 export const hasFunctionalRender = true
-
-const renderSashes = {
-  isEqual(oldState, newState) {
-    return false
-  },
-  apply(oldState, newState) {
-    const { points } = newState
-    const mainLeft = points[kMainLeft]
-    // const mainWidth = points[kMainWidth]
-    const sideBarLeft = points[kSideBarLeft]
-    const sideBarTop = points[kSideBarTop]
-    const sideBarHeight = points[kSideBarHeight]
-    // const activityBarLeft = points[kActivityBarLeft]
-    // const activityBarTop = points[kActivityBarTop]
-    // const activityBarHeight = points[kActivityBarHeight]
-    const panelTop = points[kpanelTop]
-    const panelWidth = points[kPanelWidth]
-    const sideBarActive = newState[kSashId] === 'SideBar'
-    const panelActive = newState[kSashId] === 'Panel'
-    // const activityBarActive = newState[kSashId] === 'ActivityBar'
-    return [
-      'setSashes',
-      // {
-      //   id: 'SashActivityBar',
-      //   x: activityBarLeft,
-      //   y: activityBarTop,
-      //   width: 4,
-      //   height: activityBarHeight,
-      //   direction: SashDirectionType.Horizontal,
-      //   active: activityBarActive,
-      // },
-      {
-        id: 'SashSideBar',
-        x: sideBarLeft,
-        y: sideBarTop,
-        width: 4,
-        height: sideBarHeight,
-        direction: SashDirectionType.Horizontal,
-        active: sideBarActive,
-      },
-      {
-        id: 'SashPanel',
-        x: mainLeft,
-        y: panelTop,
-        width: panelWidth,
-        height: 4,
-        direction: SashDirectionType.Vertical,
-        active: panelActive,
-      },
-    ]
-  },
-}
+export const hasFunctionalRootRender = true
 
 const renderDom = {
   isEqual(oldState, newState) {

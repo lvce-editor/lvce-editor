@@ -221,20 +221,20 @@ export const create = (id: number): LayoutState => {
     points: new Uint16Array(LayoutKeys.Total),
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
-    activityBarId: Id.create(),
-    activityBarSashId: Id.create(),
-    sideBarSashId: Id.create(),
-    sideBarId: Id.create(),
-    panelSashId: Id.create(),
-    panelId: Id.create(),
-    mainId: Id.create(),
-    contentAreaId: Id.create(),
-    mainContentsId: Id.create(),
-    statusBarId: Id.create(),
-    titleBarId: Id.create(),
-    workbenchId: Id.create(),
-    previewId: Id.create(),
-    previewSashId: Id.create(),
+    activityBarId: -1,
+    activityBarSashId: -1,
+    sideBarSashId: -1,
+    sideBarId: -1,
+    panelSashId: -1,
+    panelId: -1,
+    mainId: -1,
+    contentAreaId: -1,
+    mainContentsId: -1,
+    statusBarId: -1,
+    titleBarId: -1,
+    workbenchId: -1,
+    previewId: -1,
+    previewSashId: -1,
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: false,
@@ -363,7 +363,7 @@ export const loadContent = (state, savedState) => {
 
 const show = async (state, module, currentViewletId) => {
   const { points } = state
-  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 1
   getPoints(newPoints, newPoints)
@@ -399,9 +399,11 @@ const show = async (state, module, currentViewletId) => {
   const resizeCommands = await getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   const isPreview = moduleId === ViewletModuleId.Preview
+  console.log('kid', kId, childUid)
   return {
     newState: {
       ...state,
+      [kId]: childUid,
       points: newPoints,
       ...(isPreview && { previewVisible: true, previewSashVisible: true }),
     },
@@ -664,9 +666,10 @@ const loadIfVisible = async (state, module) => {
     const width = points[kWidth]
     const height = points[kHeight]
     let commands = []
+    let childUid = -1
     const parentUid = state.uid
     if (visible) {
-      const childUid = state[kId]
+      childUid = Id.create()
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
@@ -694,6 +697,7 @@ const loadIfVisible = async (state, module) => {
     }
     const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
+    console.log('loaded', kId)
     return {
       newState: {
         ...latestState,
@@ -701,6 +705,7 @@ const loadIfVisible = async (state, module) => {
         workbenchVisible: true,
         contentAreaVisible: true,
         mainContentsVisible: true,
+        [kId]: childUid,
       },
       commands: orderedCommands,
     }
