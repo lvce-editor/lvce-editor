@@ -252,31 +252,26 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   }
 }
 
-const hide = async (state, module) => {
-  const { points } = state
+const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState; commands: any }> => {
   const { kVisible, moduleId } = module
-  const newPoints = new Uint16Array(points)
-  newPoints[kVisible] = 0
-  getPoints(newPoints, newPoints)
+  const newState = getPoints({
+    ...state,
+    [kVisible]: false,
+  })
   // TODO save state to local storage after rending (in background)
   await SaveState.saveViewletState(moduleId)
   // TODO also resize other viewlets if necessary
   const instanceState = ViewletStates.getState(moduleId)
   const commands = Viewlet.disposeFunctional(instanceState.uid)
-  const resizeCommands = await getResizeCommands(points, newPoints)
+  const resizeCommands = await getResizeCommands(state, newState)
   commands.push(...resizeCommands)
 
   // TODO send change event to activity bar worker
   // but in a functional way so that there is only
   // one rendering event
 
-  const isPreview = moduleId === ViewletModuleId.Preview
   return {
-    newState: {
-      ...state,
-      points: newPoints,
-      ...(isPreview && { previewVisible: false, previewSashVisible: false }),
-    },
+    newState,
     commands,
   }
 }
@@ -369,10 +364,9 @@ export const toggleStatusBar = (state: LayoutState) => {
 }
 
 export const showPreview = async (state: LayoutState, uri: string) => {
-  const { points } = state
-  const previewIsVisible = points[LayoutKeys.PreviewVisible] === 1
+  const { previewVisible } = state
 
-  if (previewIsVisible) {
+  if (previewVisible) {
     await Command.execute('Preview.setUri', uri)
     return {
       newState: {
@@ -510,13 +504,12 @@ const loadIfVisible = async (
   commands: any[]
 }> => {
   try {
-    const { points } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
-    const visible = points[kVisible]
-    const x = points[kLeft]
-    const y = points[kTop]
-    const width = points[kWidth]
-    const height = points[kHeight]
+    const visible = state[kVisible]
+    const x = state[kLeft]
+    const y = state[kTop]
+    const width = state[kWidth]
+    const height = state[kHeight]
     let commands = []
     let childUid = -1
     if (visible) {
