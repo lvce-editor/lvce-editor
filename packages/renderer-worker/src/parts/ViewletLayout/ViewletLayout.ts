@@ -264,7 +264,6 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   const resizeCommands = await getResizeCommands(state, newState)
   commands.push(...resizeCommands)
 
-  console.log({ commands })
   // TODO send change event to activity bar worker
   // but in a functional way so that there is only
   // one rendering event
@@ -302,7 +301,6 @@ export const showSideBar = async (state: LayoutState) => {
 
 export const hideSideBar = async (state: LayoutState) => {
   const { newState, commands } = await hide(state, LayoutModules.SideBar)
-  console.log({ commands })
   const { activityBarId } = newState
   // TODO instead of this, call handleSidebarViewChange. activity bar then can get active view if needed
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarHidden', activityBarId)
