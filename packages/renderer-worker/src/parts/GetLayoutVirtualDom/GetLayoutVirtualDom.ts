@@ -1,5 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
 
 const getMainContentsVirtualDom = (state: LayoutState) => {
@@ -36,6 +37,21 @@ const getMainContentsVirtualDom = (state: LayoutState) => {
   ]
 }
 
+const getSashSideBarDom = () => {
+  return {
+    type: VirtualDomElements.Div,
+    className: 'Viewlet Sash SashVertical',
+    onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
+  }
+}
+const getSashPanelDom = () => {
+  return {
+    type: VirtualDomElements.Div,
+    className: 'Viewlet Sash SashHorizontal',
+    onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,
+  }
+}
+
 const getContentAreaVirtualDomLeft = (state) => {
   const children: any[] = []
 
@@ -69,10 +85,7 @@ const getContentAreaVirtualDomLeft = (state) => {
     }
   }
   if (state.sideBarSashVisible) {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Sash SashVertical',
-    })
+    children.push(getSashSideBarDom())
   }
   if (state.mainContentsVisible && state.mainContentsId !== -1) {
     if (state.mainContentsId === -1) {
@@ -123,11 +136,7 @@ const getContentAreaVirtualDomRight = (state) => {
     })
   }
   if (state.sideBarSashVisible) {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Sash SashVertical',
-      childCount: 0,
-    })
+    children.push(getSashSideBarDom())
   }
   if (state.sideBarVisible) {
     if (state.sideBarId === -1) {
