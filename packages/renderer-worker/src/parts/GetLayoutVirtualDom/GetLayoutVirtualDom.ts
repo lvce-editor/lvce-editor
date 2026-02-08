@@ -148,12 +148,10 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(getMainDom(mainId))
   }
 
-  // Preview sash (vertical)
   if (previewSashVisible) {
     children.push(getSashPreviewDom())
   }
 
-  // Preview panel
   if (previewVisible) {
     children.push(getPreviewDom(previewId))
   }
@@ -182,82 +180,23 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     previewId,
   } = state
   const children: any[] = []
-
-  // Right sidebar location
   if (mainVisible) {
-    if (mainId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet Main',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: mainId,
-      })
-    }
-  } else {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Main',
-      childCount: 0,
-    })
+    children.push(getMainDom(mainId))
   }
-
-  // Preview sash (vertical)
-  if (previewSashVisible) {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Sash SashVertical',
-      onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
-    })
-  }
-
-  // Preview panel
-  if (previewVisible && previewId !== -1) {
-    children.push({
-      type: VirtualDomElements.Reference,
-      uid: previewId,
-    })
-  } else if (previewVisible) {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Preview',
-      childCount: 0,
-    })
-  }
-
   if (sideBarSashVisible) {
     children.push(getSashSideBarDom())
   }
   if (sideBarVisible) {
-    if (sideBarId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet SideBar',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: sideBarId,
-      })
-    }
+    children.push(getSideBarDom(sideBarId))
   }
   if (activityBarVisible) {
-    if (activityBarId === -1) {
-      children.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet ActivityBar',
-        childCount: 0,
-      })
-    } else {
-      children.push({
-        type: VirtualDomElements.Reference,
-        uid: activityBarId,
-      })
-    }
+    children.push(getActivityBarDom(activityBarId))
+  }
+  if (previewSashVisible) {
+    children.push(getSashPreviewDom())
+  }
+  if (previewVisible) {
+    children.push(getPreviewDom(previewId))
   }
 
   return [
