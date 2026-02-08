@@ -94,11 +94,18 @@ export const hasFunctionalRootRender = true
 export const hasFunctionalEvents = true
 
 const renderDom = {
-  isEqual(oldState, newState) {
-    return false
+  isEqual(oldState: LayoutState, newState: LayoutState) {
+    return (
+      oldState.mainVisible === newState.mainVisible &&
+      oldState.titleBarVisible === newState.titleBarVisible &&
+      oldState.activityBarVisible === newState.activityBarVisible &&
+      oldState.panelVisible === newState.panelVisible &&
+      oldState.sideBarLocation === newState.sideBarLocation &&
+      oldState.sideBarVisible === newState.sideBarVisible &&
+      oldState.statusBarVisible === newState.statusBarVisible
+    )
   },
-  apply(oldState, newState) {
-    // @ts-ignore
+  apply(oldState: LayoutState, newState: LayoutState) {
     const commands = ViewletLayoutRenderDom.renderDom(oldState, newState)
     return commands
   },
