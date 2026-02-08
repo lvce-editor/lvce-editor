@@ -659,7 +659,13 @@ const getReferenceNodes = (sideBarLocation) => {
   ]
 }
 
-const loadIfVisible = async (state, module) => {
+const loadIfVisible = async (
+  state: LayoutState,
+  module: any,
+): Promise<{
+  newState: LayoutState
+  commands: any[]
+}> => {
   try {
     const { points } = state
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
@@ -706,6 +712,7 @@ const loadIfVisible = async (state, module) => {
         workbenchVisible: true,
         contentAreaVisible: true,
         mainContentsVisible: true,
+        mainVisible: true,
         [kId]: childUid,
       },
       commands: orderedCommands,
