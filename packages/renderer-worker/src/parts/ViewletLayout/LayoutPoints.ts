@@ -2,16 +2,9 @@ import * as Clamp from '../Clamp/Clamp.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
-<<<<<<< HEAD
 import { LayoutState } from './LayoutState.ts'
 
 export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocationType.Right): LayoutState => {
-=======
-
-export type LayoutPoints = Uint32Array | Uint16Array
-
-export const getPoints = (source: LayoutPoints, destination: LayoutPoints, sideBarLocation = SideBarLocationType.Right): void => {
->>>>>>> origin/main
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
   const panelVisible = source[LayoutKeys.PanelVisible]
   const sideBarVisible = source[LayoutKeys.SideBarVisible]
@@ -65,19 +58,11 @@ export const getPoints = (source: LayoutPoints, destination: LayoutPoints, sideB
       p8 = availableWidth
     }
 
-<<<<<<< HEAD
     const destinationActivityBarLeft = p8
     const destinationActivityBarTop = p2
     const destinationActivityBarWidth = 48
     const destinationActivityBarHeight = p4 - p2
     const destinationActivityBarVisible = activityBarVisible
-=======
-    destination[LayoutKeys.ActivityBarLeft] = p8
-    destination[LayoutKeys.ActivityBarTop] = p2
-    destination[LayoutKeys.ActivityBarWidth] = 48
-    destination[LayoutKeys.ActivityBarHeight] = p4 - p2
-    destination[LayoutKeys.ActivityBarVisible] = activityBarVisible
->>>>>>> origin/main
 
     // Calculate sidebar width for left section
     const adjustedSideBarWidth = previewVisible ? Math.min(newSideBarWidth, (availableWidth - 48) * 0.3) : newSideBarWidth
@@ -86,7 +71,6 @@ export const getPoints = (source: LayoutPoints, destination: LayoutPoints, sideB
       p7 = 0
     }
 
-<<<<<<< HEAD
     const destinationMainLeft = p6
     const destinationMainTop = p2
     const destinationMainWidth = p7 - p6
@@ -165,47 +149,6 @@ export const getPoints = (source: LayoutPoints, destination: LayoutPoints, sideB
       previewHeight: destinationPreviewHeight,
       previewVisible: destinationPreviewVisible,
     }
-=======
-    destination[LayoutKeys.MainLeft] = p6
-    destination[LayoutKeys.MainTop] = p2
-    destination[LayoutKeys.MainWidth] = p7 - p6
-    destination[LayoutKeys.MainHeight] = p3 - p2
-    destination[LayoutKeys.MainVisible] = 1
-
-    destination[LayoutKeys.PanelLeft] = p6
-    destination[LayoutKeys.panelTop] = p3
-    destination[LayoutKeys.PanelWidth] = previewVisible ? availableWidth : windowWidth
-    destination[LayoutKeys.PanelHeight] = p4 - p3
-    destination[LayoutKeys.PanelVisible] = panelVisible
-
-    destination[LayoutKeys.SideBarLeft] = p7
-    destination[LayoutKeys.SideBarTop] = p2
-    destination[LayoutKeys.SideBarWidth] = adjustedSideBarWidth
-    destination[LayoutKeys.SideBarHeight] = p3 - p2
-    destination[LayoutKeys.SideBarVisible] = sideBarVisible
-
-    destination[LayoutKeys.StatusBarLeft] = p1
-    destination[LayoutKeys.StatusBarTop] = p4
-    destination[LayoutKeys.StatusBarWidth] = windowWidth
-    destination[LayoutKeys.StatusBarHeight] = 20
-    destination[LayoutKeys.StatusBarVisible] = statusBarVisible
-
-    destination[LayoutKeys.TitleBarLeft] = p6
-    destination[LayoutKeys.TitleBarTop] = p1
-    destination[LayoutKeys.TitleBarWidth] = windowWidth
-    if (source[LayoutKeys.TitleBarNative]) {
-      destination[LayoutKeys.TitleBarHeight] = 0
-    } else {
-      destination[LayoutKeys.TitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
-    }
-    destination[LayoutKeys.TitleBarVisible] = titleBarVisible
-
-    destination[LayoutKeys.PreviewLeft] = previewVisible ? availableWidth : 0
-    destination[LayoutKeys.PreviewTop] = p2
-    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth - availableWidth : 0
-    destination[LayoutKeys.PreviewHeight] = p3 - p2
-    destination[LayoutKeys.PreviewVisible] = previewVisible
->>>>>>> origin/main
   } else {
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
@@ -242,24 +185,15 @@ export const getPoints = (source: LayoutPoints, destination: LayoutPoints, sideB
     } else {
       p8 = p7
     }
-<<<<<<< HEAD
     const destinationActivityBarLeft = p6
     const destinationActivityBarTop = p2
     const destinationActivityBarWidth = 48
     const destinationActivityBarHeight = p4 - p2
     const destinationActivityBarVisible = activityBarVisible
-=======
-    destination[LayoutKeys.ActivityBarLeft] = p6
-    destination[LayoutKeys.ActivityBarTop] = p2
-    destination[LayoutKeys.ActivityBarWidth] = 48
-    destination[LayoutKeys.ActivityBarHeight] = p4 - p2
-    destination[LayoutKeys.ActivityBarVisible] = activityBarVisible
->>>>>>> origin/main
 
     // For when preview is visible, constrain main area to left 50% of window
     let mainWidth = availableWidth - p8
 
-<<<<<<< HEAD
     const destinationMainLeft = p8
     const destinationMainTop = p2
     const destinationMainWidth = mainWidth
@@ -333,42 +267,5 @@ export const getPoints = (source: LayoutPoints, destination: LayoutPoints, sideB
       previewHeight: destinationPreviewHeight,
       previewVisible: destinationPreviewVisible,
     }
-=======
-    destination[LayoutKeys.MainLeft] = p8
-    destination[LayoutKeys.MainTop] = p2
-    destination[LayoutKeys.MainWidth] = mainWidth
-    destination[LayoutKeys.MainHeight] = p3 - p2
-    destination[LayoutKeys.MainVisible] = 1
-
-    destination[LayoutKeys.PanelLeft] = p6
-    destination[LayoutKeys.panelTop] = p3
-    destination[LayoutKeys.PanelWidth] = availableWidth
-    destination[LayoutKeys.PanelHeight] = p4 - p3
-    destination[LayoutKeys.PanelVisible] = panelVisible
-
-    destination[LayoutKeys.SideBarLeft] = p7
-    destination[LayoutKeys.SideBarTop] = p2
-    destination[LayoutKeys.SideBarWidth] = p8 - p7
-    destination[LayoutKeys.SideBarHeight] = p3 - p2
-    destination[LayoutKeys.SideBarVisible] = sideBarVisible
-
-    destination[LayoutKeys.StatusBarLeft] = p1
-    destination[LayoutKeys.StatusBarTop] = p4
-    destination[LayoutKeys.StatusBarWidth] = windowWidth
-    destination[LayoutKeys.StatusBarHeight] = 20
-    destination[LayoutKeys.StatusBarVisible] = statusBarVisible
-
-    destination[LayoutKeys.TitleBarLeft] = p6
-    destination[LayoutKeys.TitleBarTop] = p1
-    destination[LayoutKeys.TitleBarWidth] = windowWidth
-    destination[LayoutKeys.TitleBarHeight] = titleBarHeight
-    destination[LayoutKeys.TitleBarVisible] = titleBarVisible
-
-    destination[LayoutKeys.PreviewLeft] = previewVisible ? availableWidth : 0
-    destination[LayoutKeys.PreviewTop] = p2
-    destination[LayoutKeys.PreviewWidth] = previewVisible ? windowWidth - availableWidth : 0
-    destination[LayoutKeys.PreviewHeight] = p3 - p2
-    destination[LayoutKeys.PreviewVisible] = previewVisible
->>>>>>> origin/main
   }
 }
