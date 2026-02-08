@@ -879,7 +879,6 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
       }
     }
   }
-  console.log({ allCommands })
   return {
     newState,
     commands: allCommands,
