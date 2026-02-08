@@ -1,15 +1,19 @@
-import * as GetPanelTabsVirtualDom from '../GetPanelTabsVirtualDom/GetPanelTabsVirtualDom.js'
+import { getPanelDom } from '../GetPanelDom/GetPanelDom.js'
 
 export const hasFunctionalRender = true
 
-const renderTabs = {
+export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
+
+const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.views === newState.views && oldState.selectedIndex === newState.selectedIndex && oldState.badgeCounts === newState.badgeCounts
+    return false
   },
   apply(oldState, newState) {
-    const dom = GetPanelTabsVirtualDom.getPanelTabsVirtualDom(newState.views, newState.selectedIndex, newState.badgeCounts)
-    return [/* method */ 'setTabsDom', /* tabs */ dom]
+    const dom = getPanelDom(newState)
+    return [/* method */ 'Viewlet.setDom2', dom]
   },
 }
 
-export const render = [renderTabs]
+export const render = [renderDom]
