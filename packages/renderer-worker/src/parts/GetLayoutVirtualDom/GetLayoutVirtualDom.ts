@@ -56,7 +56,7 @@ const getSashPanelDom = () => {
 }
 
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
-  const { activityBarVisible, activityBarId, sideBarVisible, sideBarId, sideBarSashVisible, mainVisible, mainId } = state
+  const { activityBarVisible, activityBarId, sideBarVisible, sideBarId, sideBarSashVisible, mainVisible, mainId, previewSashVisible, previewVisible, previewId } = state
   const children: any[] = []
 
   // Add components based on sidebar location
@@ -105,6 +105,30 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
       })
     }
   }
+
+  // Preview sash (vertical)
+  if (previewSashVisible) {
+    children.push({
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Sash SashVertical',
+      onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
+    })
+  }
+
+  // Preview panel
+  if (previewVisible && previewId !== -1) {
+    children.push({
+      type: VirtualDomElements.Reference,
+      uid: previewId,
+    })
+  } else if (previewVisible) {
+    children.push({
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Preview',
+      childCount: 0,
+    })
+  }
+
   return [
     {
       type: VirtualDomElements.Div,
@@ -116,7 +140,7 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
 }
 
 const getContentAreaVirtualDomRight = (state: LayoutState) => {
-  const { mainVisible, mainId, sideBarSashVisible, sideBarVisible, sideBarId, activityBarVisible, activityBarId } = state
+  const { mainVisible, mainId, sideBarSashVisible, sideBarVisible, sideBarId, activityBarVisible, activityBarId, previewSashVisible, previewVisible, previewId } = state
   const children: any[] = []
 
   // Right sidebar location
@@ -140,6 +164,30 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
       childCount: 0,
     })
   }
+
+  // Preview sash (vertical)
+  if (previewSashVisible) {
+    children.push({
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Sash SashVertical',
+      onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
+    })
+  }
+
+  // Preview panel
+  if (previewVisible && previewId !== -1) {
+    children.push({
+      type: VirtualDomElements.Reference,
+      uid: previewId,
+    })
+  } else if (previewVisible) {
+    children.push({
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Preview',
+      childCount: 0,
+    })
+  }
+
   if (sideBarSashVisible) {
     children.push(getSashSideBarDom())
   }
