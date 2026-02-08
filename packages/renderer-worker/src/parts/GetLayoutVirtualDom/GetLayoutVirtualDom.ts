@@ -105,6 +105,20 @@ const getMainDom = (mainId: number) => {
   }
 }
 
+const getPreviewDom = (previewId: number) => {
+  if (previewId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet Preview',
+      childCount: 0,
+    }
+  }
+  return {
+    type: VirtualDomElements.Reference,
+    uid: previewId,
+  }
+}
+
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   const {
     activityBarVisible,
@@ -131,30 +145,17 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(getSashSideBarDom())
   }
   if (mainVisible) {
-    children.push(getMainDom())
+    children.push(getMainDom(mainId))
   }
 
   // Preview sash (vertical)
   if (previewSashVisible) {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Sash SashVertical',
-      onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
-    })
+    children.push(getSashPreviewDom())
   }
 
   // Preview panel
-  if (previewVisible && previewId !== -1) {
-    children.push({
-      type: VirtualDomElements.Reference,
-      uid: previewId,
-    })
-  } else if (previewVisible) {
-    children.push({
-      type: VirtualDomElements.Div,
-      className: 'Viewlet Preview',
-      childCount: 0,
-    })
+  if (previewVisible) {
+    children.push(getPreviewDom(previewId))
   }
 
   return [
