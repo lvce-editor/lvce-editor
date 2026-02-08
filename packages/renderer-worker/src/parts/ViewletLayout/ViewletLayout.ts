@@ -594,7 +594,8 @@ export const loadPreviewIfVisible = (state: LayoutState) => {
   return loadIfVisible(state, LayoutModules.Preview)
 }
 
-export const handleSashPointerDown = (state, sashId) => {
+export const handleSashPointerDown = (state: LayoutState, sashId: string) => {
+  console.log('sash down', sashId)
   const newState = {
     ...state,
     [LayoutKeys.SashId]: sashId,
@@ -606,15 +607,15 @@ export const handleSashPointerDown = (state, sashId) => {
   }
 }
 
-export const handleSashSideBarPointerDown = (state) => {
+export const handleSashSideBarPointerDown = (state: LayoutState) => {
   return handleSashPointerDown(state, SashType.SideBar)
 }
 
-export const handleSashPanelPointerDown = (state) => {
+export const handleSashPanelPointerDown = (state: LayoutState) => {
   return handleSashPointerDown(state, SashType.Panel)
 }
 
-export const handleSashPointerUp = (state, sashId) => {
+export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
   const newState = {
     ...state,
     [LayoutKeys.SashId]: '',
