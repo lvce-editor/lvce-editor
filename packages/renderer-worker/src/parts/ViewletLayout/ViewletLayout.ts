@@ -111,12 +111,29 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
-  const { sideBarView, sideBarLocation, previewUri, previewVisible } = state
+  const {
+    sideBarView,
+    sideBarLocation,
+    previewUri,
+    previewVisible,
+    sideBarWidth,
+    previewWidth,
+    sideBarVisible,
+    panelVisible,
+    panelHeight,
+    activityBarVisible,
+  } = state
   return {
     sideBarView,
     sideBarLocation,
     previewUri,
     previewVisible,
+    activityBarVisible,
+    previewWidth,
+    sideBarWidth,
+    sideBarVisible,
+    panelVisible,
+    panelHeight,
 
     // TODO save points
   }
@@ -159,7 +176,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   // TODO restore saved points
-  // const newPoints = getSavedPoints(savedState)
+  const newPoints = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
   const previewVisible = savedState?.previewVisible ?? false
