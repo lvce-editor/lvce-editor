@@ -242,7 +242,6 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   if (commands) {
     commands.push(['Viewlet.append', uid, childUid])
   }
-  console.log({ commands })
   const resizeCommands = await getResizeCommands(state, intermediateState)
   commands.push(...resizeCommands)
   return {
