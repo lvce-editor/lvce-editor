@@ -242,6 +242,7 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   if (commands) {
     commands.push(['Viewlet.append', uid, childUid])
   }
+  console.log({ commands })
   const resizeCommands = await getResizeCommands(state, intermediateState)
   commands.push(...resizeCommands)
   return {
@@ -504,9 +505,9 @@ const loadIfVisible = async (
         true,
       )
       if (commands) {
-        // const referenceNodes = getReferenceNodes(sideBarLocation)
+        const referenceNodes = getReferenceNodes(sideBarLocation)
         // @ts-ignore
-        // commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
     }
     const orderedCommands = reorderCommands(commands)
