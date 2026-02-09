@@ -134,8 +134,6 @@ export const saveState = (state: LayoutState) => {
     sideBarVisible,
     panelVisible,
     panelHeight,
-
-    // TODO save points
   }
 }
 
