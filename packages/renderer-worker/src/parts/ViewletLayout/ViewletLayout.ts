@@ -186,10 +186,10 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
-  // TODO restore saved points
   const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
+  console.log({ savedState })
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -230,7 +230,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     initial: false,
   }
   // TODO get side bar min width from preferences
-  const newState = getPoints(intermediateState)
+  const newState = getPoints(intermediateState, sideBarLocation)
   return newState
 }
 
