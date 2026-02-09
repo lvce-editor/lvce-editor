@@ -154,7 +154,7 @@ const getSavedPoints = (savedState) => {
     return {
       sideBarVisible: true,
       sideBarWidth: 240,
-      previewWidth: 600,
+      previewWidth: 0,
       previewVisible: false,
       panelVisible: false,
       panelHeight: 160,
@@ -165,7 +165,7 @@ const getSavedPoints = (savedState) => {
   return {
     sideBarVisible: sideBarVisible || true,
     sideBarWidth: sideBarWidth || 240,
-    previewWidth: previewWidth || 600,
+    previewWidth: previewWidth || 0,
     previewVisible: previewVisible || false,
     panelVisible: panelVisible || false,
     panelHeight: panelHeight || 160,
