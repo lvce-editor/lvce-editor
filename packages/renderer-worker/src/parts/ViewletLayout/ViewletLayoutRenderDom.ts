@@ -97,7 +97,7 @@ const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) =
   return renderComponent('panelVisible', 'panelId', oldState, newState, commands, mainContentsAppendIds)
 }
 
-const getMainContentsCommands = (oldState: LayoutState, newState, commands, contentAppendIds) => {
+const getMainContentsCommands = (oldState, newState, commands, contentAppendIds) => {
   if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
     commands.push(['Viewlet.remove', newState.mainContentsId])
     return
