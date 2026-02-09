@@ -149,15 +149,28 @@ const getSideBarLocationType = () => {
   }
 }
 
-// const getSavedPoints = (savedState) => {
-//   if (savedState && savedState.points) {
-//     const { points } = savedState
-//     if (Array.isArray(points) && points.length === LayoutKeys.Total) {
-//       return new Uint16Array(points)
-//     }
-//   }
-//   return new Uint16Array(LayoutKeys.Total)
-// }
+const getSavedPoints = (savedState) => {
+  if (!savedState) {
+    return {
+      sideBarVisible: true,
+      sideBarWidth: 240,
+      previewWidth: 600,
+      previewVisible: false,
+      panelVisible: false,
+      panelHeight: 160,
+    }
+  }
+  const { sideBarVisible, sideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } = savedState
+
+  return {
+    sideBarVisible,
+    sideBarWidth,
+    previewWidth,
+    previewVisible,
+    panelVisible,
+    panelHeight,
+  }
+}
 
 const isNativeTitleBarStyle = (platform) => {
   return platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
@@ -176,24 +189,23 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   // TODO restore saved points
-  const newPoints = getSavedPoints(savedState)
+  const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
-  const previewVisible = savedState?.previewVisible ?? false
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
     activityBarWidth: 48,
     mainVisible: true,
-    panelHeight: 160,
+    panelHeight,
     panelMaxHeight: 600,
     panelMinHeight: 150,
     sideBarMaxWidth: 9999999,
-    panelVisible: false,
+    panelVisible,
 
     sideBarMinWidth: 170,
-    sideBarVisible: true,
-    sideBarWidth: 240,
+    sideBarVisible,
+    sideBarWidth,
     statusBarHeight: 20,
     statusBarVisible: true,
     previewVisible,
@@ -201,7 +213,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 
     previewMinHeight: Math.max(200, windowHeight / 2),
     previewMaxHeight: 1200,
-    previewWidth: 600,
+    previewWidth,
     previewMinWidth: 100,
     previewMaxWidth: Math.max(1800, windowWidth / 2),
     titleBarHeight: isNativeTitleBarStyle(state.platform) ? 0 : GetDefaultTitleBarHeight.getDefaultTitleBarHeight(),
