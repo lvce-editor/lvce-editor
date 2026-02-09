@@ -44,6 +44,8 @@ export const create = (id: number): LayoutState => {
     workbenchId: Id.create(),
     previewId: Id.create(),
     previewSashId: Id.create(),
+    mainContentsVisible: true,
+    mainContentsId: Id.create(),
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: true,
@@ -1092,6 +1094,7 @@ export const getInitialPlaceholderCommands = (state: LayoutState) => {
       commands.push(['Viewlet.createPlaceholder', moduleId, uid, state[kTop], state[kLeft], state[kWidth], state[kHeight]])
     }
   }
+  console.log({ commands })
   return commands
 }
 

@@ -2,6 +2,7 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import { render } from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { LayoutState } from './LayoutState.ts'
 
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
@@ -96,7 +97,7 @@ const getPanelCommands = (oldState, newState, commands, mainContentsAppendIds) =
   return renderComponent('panelVisible', 'panelId', oldState, newState, commands, mainContentsAppendIds)
 }
 
-const getMainContentsCommands = (oldState, newState, commands, contentAppendIds) => {
+const getMainContentsCommands = (oldState: LayoutState, newState, commands, contentAppendIds) => {
   if (oldState.mainContentsVisible && !newState.mainContentsVisible) {
     commands.push(['Viewlet.remove', newState.mainContentsId])
     return
@@ -241,6 +242,7 @@ export const renderDom = (oldState, newState) => {
   getStatusBarCommands(oldState, newState, commands, workbenchAppendIds)
   getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds)
 
+  console.log({ commands, newState })
   // TODO ensure focus commands are last in the commands array
   return commands
 }
