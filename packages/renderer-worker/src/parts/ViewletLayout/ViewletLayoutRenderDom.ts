@@ -242,7 +242,6 @@ export const renderDom = (oldState, newState) => {
   getStatusBarCommands(oldState, newState, commands, workbenchAppendIds)
   getWorkbenchCommands(oldState, newState, commands, workbenchAppendIds)
 
-  console.log({ commands, newState })
   // TODO ensure focus commands are last in the commands array
   return commands
 }

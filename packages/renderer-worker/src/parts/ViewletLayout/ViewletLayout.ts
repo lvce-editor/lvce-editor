@@ -1092,7 +1092,6 @@ export const getInitialPlaceholderCommands = (state: LayoutState) => {
       commands.push(['Viewlet.createPlaceholder', moduleId, uid, state[kTop], state[kLeft], state[kWidth], state[kHeight]])
     }
   }
-  console.log({ commands })
   return commands
 }
 
