@@ -536,7 +536,7 @@ const loadIfVisible = async (
       if (commands) {
         const referenceNodes = getReferenceNodes(state.sideBarLocation)
         // @ts-ignore
-        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+        commands.push(['Viewlet.append', state.uid, childUid, referenceNodes])
       }
     }
     const orderedCommands = reorderCommands(commands)
