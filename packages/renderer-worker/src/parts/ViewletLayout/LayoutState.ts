@@ -1,43 +1,80 @@
 export interface LayoutState {
+  readonly activityBarHeight: number
   readonly activityBarId: number
+  readonly activityBarLeft: number
   readonly activityBarSashId: number
   readonly activityBarSashVisible: boolean
+  readonly activityBarTop: number
   readonly activityBarVisible: boolean
+  readonly activityBarWidth: number
   readonly assetDir: string
   readonly commands: readonly any[]
   readonly commit: string
   readonly contentAreaId: number
   readonly contentAreaVisible: boolean
-  readonly mainContentsId: number
-  readonly mainContentsVisible: boolean
+  readonly initial: boolean
+  readonly mainHeight: number
   readonly mainId: number
+  readonly mainLeft: number
+  readonly mainTop: number
   readonly mainVisible: boolean
+  readonly mainWidth: number
+  readonly panelHeight: number
   readonly panelId: number
+  readonly panelLeft: number
+  readonly panelMaxHeight: number
+  readonly panelMinHeight: number
   readonly panelSashId: number
   readonly panelSashVisible: boolean
+  readonly panelTop: number
   readonly panelView: string
   readonly panelVisible: boolean
+  readonly previewMaxHeight: number
+  readonly previewMaxWidth: number
+  readonly previewMinHeight: number
+  readonly previewMinWidth: number
+  readonly sideBarMaxWidth: number
+  readonly sideBarMinWidth: number
+  readonly titleBarNative: boolean
+  readonly panelWidth: number
   readonly platform: number
-  readonly points: Uint16Array
+  readonly previewHeight: number
   readonly previewId: number
+  readonly previewLeft: number
   readonly previewSashId: number
   readonly previewSashVisible: boolean
+  readonly previewTop: number
   readonly previewUri: string
   readonly previewVisible: boolean
+  readonly previewWidth: number
   readonly sashId: any
+  readonly sideBarHeight: number
   readonly sideBarId: number
+  readonly sideBarLeft: number
   readonly sideBarLocation: number
   readonly sideBarSashId: number
   readonly sideBarSashVisible: boolean
+  readonly sideBarTop: number
   readonly sideBarView: string
   readonly sideBarVisible: boolean
+  readonly sideBarWidth: number
+  readonly statusBarHeight: number
   readonly statusBarId: number
+  readonly statusBarLeft: number
+  readonly statusBarTop: number
   readonly statusBarVisible: boolean
+  readonly statusBarWidth: number
+  readonly titleBarHeight: number
   readonly titleBarId: number
+  readonly titleBarLeft: number
+  readonly titleBarTop: number
   readonly titleBarVisible: boolean
+  readonly titleBarWidth: number
   readonly uid: number
   readonly updateProgress: number
   readonly updateState: string
+  readonly windowHeight: number
+  readonly windowWidth: number
   readonly workbenchId: number
   readonly workbenchVisible: boolean
 }
