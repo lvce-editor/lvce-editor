@@ -50,6 +50,8 @@ export const setUri = WrapPreviewCommand.wrapPreviewCommand('setUri')
 export const rerender = WrapPreviewCommand.wrapPreviewCommand('rerender')
 export const handleClick = WrapPreviewCommand.wrapPreviewCommand('handleClick')
 export const handleMouseMove = WrapPreviewCommand.wrapPreviewCommand('handleMouseMove')
+export const handleMousemove = WrapPreviewCommand.wrapPreviewCommand('handleMousemove')
+export const handleMousedown = WrapPreviewCommand.wrapPreviewCommand('handleMousedown')
 export const handleKeyUp = WrapPreviewCommand.wrapPreviewCommand('handleKeyUp')
 export const handleKeyDown = WrapPreviewCommand.wrapPreviewCommand('handleKeyDown')
 export const handleInput = WrapPreviewCommand.wrapPreviewCommand('handleInput')
@@ -93,6 +95,8 @@ export const Commands = {
   handleInput,
   renderEventListeners,
   hotReload,
+  handleMousemove,
+  handleMousedown,
 }
 
 export const hasFunctionalRender = true
