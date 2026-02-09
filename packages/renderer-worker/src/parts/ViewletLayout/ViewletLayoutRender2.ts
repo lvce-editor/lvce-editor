@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// @ts-nocheck
+>>>>>>> origin/main
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'

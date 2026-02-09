@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+=======
+import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
+>>>>>>> origin/main
 import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
@@ -90,8 +94,62 @@ const kPreviewHeight = 40
 const kTotal = 46
 
 export const hasFunctionalRender = true
+<<<<<<< HEAD
 export const hasFunctionalRootRender = true
 export const hasFunctionalEvents = true
+=======
+
+const renderSashes = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState: LayoutState, newState: LayoutState) {
+    const mainLeft = newState[kMainLeft]
+    // const mainWidth = points[kMainWidth]
+    const sideBarLeft = newState[kSideBarLeft]
+    const sideBarTop = newState[kSideBarTop]
+    const sideBarHeight = newState[kSideBarHeight]
+    // const activityBarLeft = points[kActivityBarLeft]
+    // const activityBarTop = points[kActivityBarTop]
+    // const activityBarHeight = points[kActivityBarHeight]
+    const panelTop = newState[kpanelTop]
+    const panelWidth = newState[kPanelWidth]
+    const sideBarActive = newState[kSashId] === 'SideBar'
+    const panelActive = newState[kSashId] === 'Panel'
+    // const activityBarActive = newState[kSashId] === 'ActivityBar'
+    return [
+      'setSashes',
+      // {
+      //   id: 'SashActivityBar',
+      //   x: activityBarLeft,
+      //   y: activityBarTop,
+      //   width: 4,
+      //   height: activityBarHeight,
+      //   direction: SashDirectionType.Horizontal,
+      //   active: activityBarActive,
+      // },
+      {
+        id: 'SashSideBar',
+        x: sideBarLeft,
+        y: sideBarTop,
+        width: 4,
+        height: sideBarHeight,
+        direction: SashDirectionType.Horizontal,
+        active: sideBarActive,
+      },
+      {
+        id: 'SashPanel',
+        x: mainLeft,
+        y: panelTop,
+        width: panelWidth,
+        height: 4,
+        direction: SashDirectionType.Vertical,
+        active: panelActive,
+      },
+    ]
+  },
+}
+>>>>>>> origin/main
 
 const renderDom = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
