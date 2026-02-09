@@ -467,6 +467,35 @@ export const toggleMain = (state: LayoutState) => {
   return toggle(state, LayoutModules.Main)
 }
 
+const getReferenceNodes = (sideBarLocation) => {
+  if (sideBarLocation === SideBarLocationType.Left) {
+    return [
+      ViewletModuleId.TitleBar,
+      ViewletModuleId.ActivityBar,
+      'SashActivityBar',
+      'SashSideBar',
+      ViewletModuleId.SideBar,
+      ViewletModuleId.Main,
+      ViewletModuleId.Preview,
+      'SashPanel',
+      ViewletModuleId.Panel,
+      ViewletModuleId.StatusBar,
+    ]
+  }
+  return [
+    ViewletModuleId.TitleBar,
+    ViewletModuleId.Main,
+    'SashSideBar',
+    ViewletModuleId.SideBar,
+    'SashActivityBar',
+    ViewletModuleId.ActivityBar,
+    ViewletModuleId.Preview,
+    'SashPanel',
+    ViewletModuleId.Panel,
+    ViewletModuleId.StatusBar,
+  ]
+}
+
 const loadIfVisible = async (
   state: LayoutState,
   module: LayoutModules.LayoutModule,
@@ -505,7 +534,7 @@ const loadIfVisible = async (
         true,
       )
       if (commands) {
-        const referenceNodes = getReferenceNodes(sideBarLocation)
+        const referenceNodes = getReferenceNodes(state.sideBarLocation)
         // @ts-ignore
         commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
       }
