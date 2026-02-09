@@ -189,7 +189,6 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
-  console.log({ savedState })
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
