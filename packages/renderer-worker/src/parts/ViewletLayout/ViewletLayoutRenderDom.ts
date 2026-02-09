@@ -2,7 +2,6 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import { render } from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { LayoutState } from './LayoutState.ts'
 
 const getDom = (id) => {
   const instance = ViewletStates.getByUid(id)
