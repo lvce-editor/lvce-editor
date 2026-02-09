@@ -112,28 +112,28 @@ export const create = (id: number): LayoutState => {
 
 export const saveState = (state: LayoutState) => {
   const {
-    sideBarView,
-    sideBarLocation,
+    activityBarVisible,
+    panelHeight,
+    panelVisible,
     previewUri,
     previewVisible,
-    sideBarWidth,
     previewWidth,
+    sideBarLocation,
+    sideBarView,
     sideBarVisible,
-    panelVisible,
-    panelHeight,
-    activityBarVisible,
+    sideBarWidth,
   } = state
   return {
-    sideBarView,
-    sideBarLocation,
+    activityBarVisible,
+    panelHeight,
+    panelVisible,
     previewUri,
     previewVisible,
-    activityBarVisible,
     previewWidth,
-    sideBarWidth,
+    sideBarLocation,
+    sideBarView,
     sideBarVisible,
-    panelVisible,
-    panelHeight,
+    sideBarWidth,
   }
 }
 
@@ -530,11 +530,6 @@ const loadIfVisible = async (
         false,
         true,
       )
-      if (commands) {
-        // const referenceNodes = getReferenceNodes(sideBarLocation)
-        // @ts-ignore
-        // commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
-      }
     }
     const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
@@ -543,9 +538,10 @@ const loadIfVisible = async (
         ...latestState,
         [kReady]: true,
         workbenchVisible: true,
-        contentAreaVisible: true,
-        mainContentsVisible: true,
+        // contentAreaVisible: true,
+        // mainContentsVisible: true,
         mainVisible: true,
+        [kVisible]: true,
         [kId]: childUid,
       },
       commands: orderedCommands,
