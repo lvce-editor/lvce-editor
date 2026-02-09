@@ -481,9 +481,9 @@ const loadIfVisible = async (
     const width = state[kWidth]
     const height = state[kHeight]
     let commands = []
-    let childUid = -1
+    let childUid = state[kId]
     if (visible) {
-      childUid = Id.create()
+      // childUid = Id.create()
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
