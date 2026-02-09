@@ -1074,6 +1074,27 @@ export const isSideBarVisible = (state: LayoutState) => {
   return sideBarVisible
 }
 
+export const getInitialPlaceholderCommands = (state: LayoutState) => {
+  const commands = []
+  const uid = state.uid
+  const modules = [
+    LayoutModules.TitleBar,
+    LayoutModules.Main,
+    LayoutModules.SideBar,
+    LayoutModules.ActivityBar,
+    LayoutModules.Panel,
+    LayoutModules.StatusBar,
+  ]
+  for (const module of modules) {
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+    if (state[kVisible]) {
+      // @ts-ignore
+      commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
+    }
+  }
+  return commands
+}
+
 export const getAllQuickPickMenuEntries = () => {
   return MenuEntriesState.getAll()
 }
