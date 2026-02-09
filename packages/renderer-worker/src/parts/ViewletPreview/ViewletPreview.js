@@ -46,15 +46,7 @@ export const decrement = (state) => {
     count: state.count - 1,
   }
 }
-export const setUri = WrapPreviewCommand.wrapPreviewCommand('setUri')
-export const rerender = WrapPreviewCommand.wrapPreviewCommand('rerender')
-export const handleClick = WrapPreviewCommand.wrapPreviewCommand('handleClick')
-export const handleMouseMove = WrapPreviewCommand.wrapPreviewCommand('handleMouseMove')
-export const handleMousemove = WrapPreviewCommand.wrapPreviewCommand('handleMousemove')
-export const handleMousedown = WrapPreviewCommand.wrapPreviewCommand('handleMousedown')
-export const handleKeyUp = WrapPreviewCommand.wrapPreviewCommand('handleKeyUp')
-export const handleKeyDown = WrapPreviewCommand.wrapPreviewCommand('handleKeyDown')
-export const handleInput = WrapPreviewCommand.wrapPreviewCommand('handleInput')
+
 export const renderEventListeners = () => PreviewWorker.invoke('Preview.renderEventListeners')
 
 export const dispose = (state) => {
@@ -85,18 +77,16 @@ export const hotReload = async (state) => {
   }
 }
 
-export const Commands = {
-  setUri,
-  rerender,
-  handleKeyDown,
-  handleKeyUp,
-  handleClick,
-  handleMouseMove,
-  handleInput,
-  renderEventListeners,
-  hotReload,
-  handleMousemove,
-  handleMousedown,
+export const Commands = {}
+
+export const getCommands = async () => {
+  const commands = await PreviewWorker.invoke('Preview.getCommandIds')
+  for (const command of commands) {
+    Commands[command] = WrapPreviewCommand.wrapPreviewCommand(command)
+  }
+  Commands['hotReload'] = hotReload
+
+  return Commands
 }
 
 export const hasFunctionalRender = true
