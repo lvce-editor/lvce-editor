@@ -2,6 +2,7 @@
   color: var(--SideBarForeground, white);
   display: flex;
   flex-direction: column;
+  contain: strict;
 }
 
 .SideBarTitleArea {

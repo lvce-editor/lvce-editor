@@ -2,4 +2,5 @@
   color: var(--ActivityBarForeground);
   display: flex;
   flex-direction: column;
+  contain: strict;
 }
