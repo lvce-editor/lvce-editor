@@ -3,11 +3,11 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export interface LayoutModule {
   readonly moduleId: string
-  readonly kVisible: number
-  readonly kTop: number
-  readonly kLeft: number
-  readonly kWidth: number
-  readonly kHeight: number
+  readonly kVisible: string
+  readonly kTop: string
+  readonly kLeft: string
+  readonly kWidth: string
+  readonly kHeight: string
   readonly kId: string
   readonly kReady: string
 }
@@ -78,7 +78,7 @@ export const Panel: LayoutModule = {
   kReady: 'panelVisible',
 }
 
-export const Preview = {
+export const Preview: LayoutModule = {
   moduleId: ViewletModuleId.Preview,
   kVisible: LayoutKeys.PreviewVisible,
   kTop: LayoutKeys.PreviewTop,
