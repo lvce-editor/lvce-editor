@@ -1089,7 +1089,7 @@ export const getInitialPlaceholderCommands = (state: LayoutState) => {
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
     if (state[kVisible]) {
       // @ts-ignore
-      commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
+      commands.push(['Viewlet.createPlaceholder', moduleId, uid, state[kTop], state[kLeft], state[kWidth], state[kHeight]])
     }
   }
   return commands
