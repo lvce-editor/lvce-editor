@@ -39,11 +39,18 @@ const getMainContentsVirtualDom = (state: LayoutState) => {
 }
 
 const getSashSideBarDom = () => {
-  return {
-    type: VirtualDomElements.Div,
-    className: 'Viewlet Sash SashVertical',
-    onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
-  }
+  return [
+    {
+      type: VirtualDomElements.Button,
+      className: 'Viewlet Sash SashVertical SashSideBar',
+      onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ]
 }
 
 const getSashPreviewDom = () => {
@@ -134,6 +141,7 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   } = state
   const children: any[] = []
 
+  let delta = 0
   // Add components based on sidebar location
   if (activityBarVisible && activityBarId !== -1) {
     children.push(getActivityBarDom(activityBarId))
@@ -142,7 +150,8 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(getSideBarDom(sideBarId))
   }
   if (sideBarSashVisible) {
-    children.push(getSashSideBarDom())
+    children.push(...getSashSideBarDom())
+    delta--
   }
   if (mainVisible) {
     children.push(getMainDom(mainId))
@@ -160,7 +169,7 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     {
       type: VirtualDomElements.Div,
       className: 'ContentArea',
-      childCount: children.length,
+      childCount: children.length + delta,
     },
     ...children,
   ]
@@ -183,8 +192,10 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   if (mainVisible) {
     children.push(getMainDom(mainId))
   }
+  let delta = 0
   if (sideBarSashVisible) {
-    children.push(getSashSideBarDom())
+    children.push(...getSashSideBarDom())
+    delta--
   }
   if (sideBarVisible) {
     children.push(getSideBarDom(sideBarId))
@@ -203,10 +214,54 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     {
       type: VirtualDomElements.Div,
       className: 'ContentArea',
-      childCount: children.length,
+      childCount: children.length + delta,
     },
     ...children,
   ]
+}
+
+const getTitleBarDom = (titleBarId: number) => {
+  if (titleBarId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet TitleBar',
+      childCount: 0,
+    }
+  } else {
+    return {
+      type: VirtualDomElements.Reference,
+      uid: titleBarId,
+    }
+  }
+}
+
+const getStatusBarDom = (statusBarId: number) => {
+  if (statusBarId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet StatusBar',
+      childCount: 0,
+    }
+  } else {
+    return {
+      type: VirtualDomElements.Reference,
+      uid: statusBarId,
+    }
+  }
+}
+const getPanelDom = (panelId: number) => {
+  if (panelId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet StatusBar',
+      childCount: 0,
+    }
+  } else {
+    return {
+      type: VirtualDomElements.Reference,
+      uid: panelId,
+    }
+  }
 }
 
 const getContentAreaVirtualDom = (state: LayoutState) => {
@@ -218,7 +273,7 @@ const getContentAreaVirtualDom = (state: LayoutState) => {
 }
 
 export const getLayoutVirtualDom = (state: LayoutState) => {
-  const { titleBarVisible, titleBarId, statusBarVisible, statusBarId } = state
+  const { titleBarVisible, titleBarId, statusBarVisible, statusBarId, panelVisible, panelId } = state
   const dom: any[] = []
   let workbenchChildCount = 0
 
@@ -232,38 +287,20 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   if (titleBarVisible) {
     workbenchChildCount++
-    if (titleBarId === -1) {
-      dom.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet TitleBar',
-        childCount: 0,
-      })
-    } else {
-      dom.push({
-        type: VirtualDomElements.Reference,
-        uid: titleBarId,
-      })
-    }
+    dom.push(getTitleBarDom(titleBarId))
   }
 
   workbenchChildCount++
   dom.push(...getContentAreaVirtualDom(state))
 
+  if (panelVisible) {
+    workbenchChildCount++
+    dom.push(getPanelDom(panelId))
+  }
   // Add StatusBar if visible
   if (statusBarVisible) {
     workbenchChildCount++
-    if (statusBarId === -1) {
-      dom.push({
-        type: VirtualDomElements.Div,
-        className: 'Viewlet StatusBar',
-        childCount: 0,
-      })
-    } else {
-      dom.push({
-        type: VirtualDomElements.Reference,
-        uid: statusBarId,
-      })
-    }
+    dom.push(getStatusBarDom(statusBarId))
   }
 
   // Update workbench childCount
