@@ -1,4 +1,5 @@
 import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
+import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
 // @ts-ignore
@@ -96,18 +97,17 @@ const renderSashes = {
   isEqual(oldState, newState) {
     return false
   },
-  apply(oldState, newState) {
-    const { points } = newState
-    const mainLeft = points[kMainLeft]
+  apply(oldState: LayoutState, newState: LayoutState) {
+    const mainLeft = newState[kMainLeft]
     // const mainWidth = points[kMainWidth]
-    const sideBarLeft = points[kSideBarLeft]
-    const sideBarTop = points[kSideBarTop]
-    const sideBarHeight = points[kSideBarHeight]
+    const sideBarLeft = newState[kSideBarLeft]
+    const sideBarTop = newState[kSideBarTop]
+    const sideBarHeight = newState[kSideBarHeight]
     // const activityBarLeft = points[kActivityBarLeft]
     // const activityBarTop = points[kActivityBarTop]
     // const activityBarHeight = points[kActivityBarHeight]
-    const panelTop = points[kpanelTop]
-    const panelWidth = points[kPanelWidth]
+    const panelTop = newState[kpanelTop]
+    const panelWidth = newState[kPanelWidth]
     const sideBarActive = newState[kSashId] === 'SideBar'
     const panelActive = newState[kSashId] === 'Panel'
     // const activityBarActive = newState[kSashId] === 'ActivityBar'

@@ -1,58 +1,58 @@
-export const WindowWidth = 0
-export const WindowHeight = 1
+export const WindowWidth = 'windowWidth'
+export const WindowHeight = 'windowHeight'
 
-export const MainVisible = 2
-export const MainTop = 3
-export const MainLeft = 4
-export const MainWidth = 5
-export const MainHeight = 6
+export const MainVisible = 'mainVisible'
+export const MainTop = 'mainTop'
+export const MainLeft = 'mainLeft'
+export const MainWidth = 'mainWidth'
+export const MainHeight = 'mainHeight'
 
-export const ActivityBarVisible = 7
-export const ActivityBarTop = 8
-export const ActivityBarLeft = 9
-export const ActivityBarWidth = 10
-export const ActivityBarHeight = 11
+export const ActivityBarVisible = 'activityBarVisible'
+export const ActivityBarTop = 'activityBarTop'
+export const ActivityBarLeft = 'activityBarLeft'
+export const ActivityBarWidth = 'activityBarWidth'
+export const ActivityBarHeight = 'activityBarHeight'
 
-export const SideBarVisible = 12
-export const SideBarTop = 13
-export const SideBarLeft = 14
-export const SideBarWidth = 15
-export const SideBarHeight = 16
-export const SideBarMinWidth = 17
-export const SideBarMaxWidth = 18
+export const SideBarVisible = 'sideBarVisible'
+export const SideBarTop = 'sideBarTop'
+export const SideBarLeft = 'sideBarLeft'
+export const SideBarWidth = 'sideBarWidth'
+export const SideBarHeight = 'sideBarHeight'
+export const SideBarMinWidth = 'sideBarMinWidth'
+export const SideBarMaxWidth = 'sideBarMaxWidth'
 
-export const PanelVisible = 19
-export const panelTop = 20
-export const PanelLeft = 21
-export const PanelWidth = 22
-export const PanelHeight = 23
-export const PanelMinHeight = 24
-export const PanelMaxHeight = 25
+export const PanelVisible = 'panelVisible'
+export const panelTop = 'panelTop'
+export const PanelLeft = 'panelLeft'
+export const PanelWidth = 'panelWidth'
+export const PanelHeight = 'panelHeight'
+export const PanelMinHeight = 'panelMinHeight'
+export const PanelMaxHeight = 'panelMaxHeight'
 
-export const StatusBarVisible = 26
-export const StatusBarTop = 27
-export const StatusBarLeft = 28
-export const StatusBarWidth = 29
-export const StatusBarHeight = 30
+export const StatusBarVisible = 'statusBarVisible'
+export const StatusBarTop = 'statusBarTop'
+export const StatusBarLeft = 'statusBarLeft'
+export const StatusBarWidth = 'statusBarWidth'
+export const StatusBarHeight = 'statusBarHeight'
 
-export const TitleBarVisible = 31
-export const TitleBarTop = 32
-export const TitleBarLeft = 33
-export const TitleBarWidth = 34
-export const TitleBarHeight = 35
+export const TitleBarVisible = 'titleBarVisible'
+export const TitleBarTop = 'titleBarTop'
+export const TitleBarLeft = 'titleBarLeft'
+export const TitleBarWidth = 'titleBarWidth'
+export const TitleBarHeight = 'titleBarHeight'
 
-export const PreviewVisible = 36
-export const PreviewTop = 37
-export const PreviewLeft = 38
-export const PreviewWidth = 39
-export const PreviewHeight = 40
-export const PreviewMinHeight = 41
-export const PreviewMaxHeight = 42
-export const PreviewMinWidth = 43
-export const PreviewMaxWidth = 44
+export const PreviewVisible = 'previewVisible'
+export const PreviewTop = 'previewTop'
+export const PreviewLeft = 'previewLeft'
+export const PreviewWidth = 'previewWidth'
+export const PreviewHeight = 'previewHeight'
+export const PreviewMinHeight = 'previewMinHeight'
+export const PreviewMaxHeight = 'previewMaxHeight'
+export const PreviewMinWidth = 'previewMinWidth'
+export const PreviewMaxWidth = 'previewMaxWidth'
 
-export const TitleBarNative = 45
+export const TitleBarNative = 'titleBarNative'
 
-export const Total = 46
+export const Total = 'total'
 
 export const SashId = 'sashId'
