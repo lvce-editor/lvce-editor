@@ -1,8 +1,9 @@
 .Main {
   background: var(--MainBackground);
-  position: absolute;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  contain: strict;
 }
 
 .DragOverlay {

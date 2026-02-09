@@ -1,12 +1,9 @@
 .Preview {
   background: var(--EditorBackground);
-  z-index: 100;
-  position: fixed;
-  backface-visibility: hidden;
-  transform: translateZ(0);
   border-left: 1px solid var(--SeparatorBorder);
   background: white;
   color: black;
   margin: 8px;
   user-select: text;
+  width: var(--PreviewWidth);
 }

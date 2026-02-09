@@ -31,19 +31,19 @@ export const create = (id: number): LayoutState => {
   return {
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
-    activityBarId: Id.create(),
-    activityBarSashId: Id.create(),
-    sideBarSashId: Id.create(),
-    sideBarId: Id.create(),
-    panelSashId: Id.create(),
-    panelId: Id.create(),
-    mainId: Id.create(),
-    contentAreaId: Id.create(),
-    statusBarId: Id.create(),
-    titleBarId: Id.create(),
-    workbenchId: Id.create(),
-    previewId: Id.create(),
-    previewSashId: Id.create(),
+    activityBarId: -1,
+    activityBarSashId: -1,
+    sideBarSashId: -1,
+    sideBarId: -1,
+    panelSashId: -1,
+    panelId: -1,
+    mainId: -1,
+    contentAreaId: -1,
+    statusBarId: -1,
+    titleBarId: -1,
+    workbenchId: -1,
+    previewId: -1,
+    previewSashId: -1,
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: true,
@@ -112,30 +112,28 @@ export const create = (id: number): LayoutState => {
 
 export const saveState = (state: LayoutState) => {
   const {
-    sideBarView,
-    sideBarLocation,
+    activityBarVisible,
+    panelHeight,
+    panelVisible,
     previewUri,
     previewVisible,
-    sideBarWidth,
     previewWidth,
+    sideBarLocation,
+    sideBarView,
     sideBarVisible,
-    panelVisible,
-    panelHeight,
-    activityBarVisible,
+    sideBarWidth,
   } = state
   return {
-    sideBarView,
-    sideBarLocation,
+    activityBarVisible,
+    panelHeight,
+    panelVisible,
     previewUri,
     previewVisible,
-    activityBarVisible,
     previewWidth,
-    sideBarWidth,
+    sideBarLocation,
+    sideBarView,
     sideBarVisible,
-    panelVisible,
-    panelHeight,
-
-    // TODO save points
+    sideBarWidth,
   }
 }
 
@@ -188,7 +186,6 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
-  // TODO restore saved points
   const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
@@ -232,7 +229,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     initial: false,
   }
   // TODO get side bar min width from preferences
-  const newState = getPoints(intermediateState)
+  const newState = getPoints(intermediateState, sideBarLocation)
   return newState
 }
 
@@ -269,7 +266,7 @@ const show = async (state: LayoutState, module, currentViewletId) => {
     undefined,
   )
   if (commands) {
-    commands.push(['Viewlet.append', uid, childUid])
+    // commands.push(['Viewlet.append', uid, childUid])
   }
   const resizeCommands = await getResizeCommands(state, intermediateState)
   commands.push(...resizeCommands)
@@ -495,35 +492,6 @@ export const toggleMain = (state: LayoutState) => {
   return toggle(state, LayoutModules.Main)
 }
 
-const getReferenceNodes = (sideBarLocation) => {
-  if (sideBarLocation === SideBarLocationType.Left) {
-    return [
-      ViewletModuleId.TitleBar,
-      ViewletModuleId.ActivityBar,
-      'SashActivityBar',
-      'SashSideBar',
-      ViewletModuleId.SideBar,
-      ViewletModuleId.Main,
-      ViewletModuleId.Preview,
-      'SashPanel',
-      ViewletModuleId.Panel,
-      ViewletModuleId.StatusBar,
-    ]
-  }
-  return [
-    ViewletModuleId.TitleBar,
-    ViewletModuleId.Main,
-    'SashSideBar',
-    ViewletModuleId.SideBar,
-    'SashActivityBar',
-    ViewletModuleId.ActivityBar,
-    ViewletModuleId.Preview,
-    'SashPanel',
-    ViewletModuleId.Panel,
-    ViewletModuleId.StatusBar,
-  ]
-}
-
 const loadIfVisible = async (
   state: LayoutState,
   module: LayoutModules.LayoutModule,
@@ -539,9 +507,9 @@ const loadIfVisible = async (
     const width = state[kWidth]
     const height = state[kHeight]
     let commands = []
-    let childUid = state[kId]
+    let childUid = -1
     if (visible) {
-      // childUid = Id.create()
+      childUid = Id.create()
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
@@ -561,11 +529,6 @@ const loadIfVisible = async (
         false,
         true,
       )
-      if (commands) {
-        const referenceNodes = getReferenceNodes(state.sideBarLocation)
-        // @ts-ignore
-        commands.push(['Viewlet.append', state.uid, childUid, referenceNodes])
-      }
     }
     const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
@@ -574,9 +537,10 @@ const loadIfVisible = async (
         ...latestState,
         [kReady]: true,
         workbenchVisible: true,
-        contentAreaVisible: true,
-        mainContentsVisible: true,
+        // contentAreaVisible: true,
+        // mainContentsVisible: true,
         mainVisible: true,
+        [kVisible]: true,
         [kId]: childUid,
       },
       commands: orderedCommands,
@@ -1130,27 +1094,6 @@ export const handleSashDoubleClick = (state: LayoutState, sashId: string) => {
 export const isSideBarVisible = (state: LayoutState) => {
   const { sideBarVisible } = state
   return sideBarVisible
-}
-
-export const getInitialPlaceholderCommands = (state: LayoutState) => {
-  const commands = []
-  const uid = state.uid
-  const modules = [
-    LayoutModules.TitleBar,
-    LayoutModules.Main,
-    LayoutModules.SideBar,
-    LayoutModules.ActivityBar,
-    LayoutModules.Panel,
-    LayoutModules.StatusBar,
-  ]
-  for (const module of modules) {
-    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-    if (state[kVisible]) {
-      // @ts-ignore
-      commands.push(['Viewlet.createPlaceholder', moduleId, uid, state[kTop], state[kLeft], state[kWidth], state[kHeight]])
-    }
-  }
-  return commands
 }
 
 export const getAllQuickPickMenuEntries = () => {

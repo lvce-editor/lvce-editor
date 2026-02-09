@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
@@ -32,11 +31,8 @@ const kActivityBarHeight = 11
 
 // @ts-ignore
 const kSideBarVisible = 12
-const kSideBarTop = 13
-const kSideBarLeft = 14
 // @ts-ignore
 const kSideBarWidth = 15
-const kSideBarHeight = 16
 // @ts-ignore
 const kSideBarMinWidth = 17
 // @ts-ignore
@@ -44,9 +40,7 @@ const kSideBarMaxWidth = 18
 
 // @ts-ignore
 const kPanelVisible = 19
-const kpanelTop = 20
 // const kPanelLeft = 21
-const kPanelWidth = 22
 // @ts-ignore
 const kPanelHeight = 23
 // @ts-ignore
@@ -139,10 +133,10 @@ const getCss = (newState: LayoutState) => {
 }
 
 const renderCss = {
-  isEqual(oldState: LayoutState, newState: LayoutState) {
+  isEqual() {
     return false
   },
-  apply(oldState: LayoutState, newState: LayoutState) {
+  apply(newState: LayoutState) {
     // @ts-ignore
     const css = getCss(newState)
     return [['Viewlet.setCss', newState.uid, css]]
@@ -195,10 +189,10 @@ export const renderEventListeners = () => {
 }
 
 const renderWindowListeners = {
-  isEqual(oldState: LayoutState, newState: LayoutState) {
+  isEqual(oldState: LayoutState) {
     return !oldState.initial
   },
-  apply(oldState: LayoutState, newState: LayoutState) {
+  apply() {
     return [['Viewlet.attachWindowEvents']]
   },
   multiple: true,

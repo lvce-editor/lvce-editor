@@ -1,17 +1,27 @@
 .Sash {
-  position: fixed;
+  position: absolute;
   contain: strict;
+  padding: 0;
+  margin: 0;
+  border: 0;
   z-index: 1;
+  background: transparent;
+}
+
+.Sash:active {
+  background: var(--SashHoverBorder, #3d5252);
 }
 
 .SashHorizontal {
   height: 4px;
   cursor: row-resize;
+  width: 100%;
 }
 
 .SashVertical {
   width: 4px;
   cursor: col-resize;
+  height: 100%;
 }
 
 .SashVisible {
@@ -27,4 +37,8 @@
   top: 0;
   right: 0;
   height: 100%;
+}
+
+.SashSideBar {
+  left: var(--SashSideBarLeft);
 }

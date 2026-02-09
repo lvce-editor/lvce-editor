@@ -30,7 +30,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleInternal.js'
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as WatchFilesForHotReload from '../WatchFilesForHotReload/WatchFilesForHotReload.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -179,9 +178,11 @@ export const startup = async (platform, assetDir) => {
     { ...initData, ...layoutState },
   )
   commands.splice(1, 1)
-  const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
-  const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
-  commands.push(...placeholderCommands)
+
+  // TODO add back placeholder rendering
+  // const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
+  // const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
+  // commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', layout.uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // await Layout.hydrate(initData)

@@ -230,7 +230,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   if (module.renderTitle && !module.renderTitle.isEqual(oldState, newState)) {
     const title = module.renderTitle.apply(oldState, newState)
     if (parentId) {
-      commands.push(['Viewlet.send', parentId, 'setTitle', title])
+      // commands.push(['Viewlet.send', parentId, 'setTitle', title])
     }
   }
 
@@ -457,7 +457,15 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
   // console.time(`load/${viewlet.id}`)
   // TODO
-  if (viewlet.id === 'Terminal') {
+  if (
+    viewlet.id === 'Terminal' ||
+    viewlet.id === 'SideBar' ||
+    viewlet.id === 'TitleBar' ||
+    viewlet.id === 'Panel' ||
+    viewlet.id === 'ActivityBar' ||
+    viewlet.id === 'Main' ||
+    viewlet.id === 'StatusBar'
+  ) {
     viewlet.setBounds = false
   }
   if (viewlet.type !== 0) {
@@ -619,9 +627,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           ...extraCommands,
           // ['Viewlet.show', viewlet.id],
         ]
-        if (viewlet.setBounds !== false) {
-          allCommands.splice(1, 0, [kSetBounds, viewletUid, x, y, width, height])
-        }
+        // if (viewlet.setBounds !== false) {
+        //   allCommands.splice(1, 0, [kSetBounds, viewletUid, x, y, width, height])
+        // }
         if (module.contentLoadedEffects) {
           module.contentLoadedEffects(newState)
         }
