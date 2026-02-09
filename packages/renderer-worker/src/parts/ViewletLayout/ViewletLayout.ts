@@ -163,7 +163,7 @@ const getSavedPoints = (savedState) => {
   const { sideBarVisible, sideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } = savedState
 
   return {
-    sideBarVisible: sideBarVisible || false,
+    sideBarVisible: sideBarVisible || true,
     sideBarWidth: sideBarWidth || 240,
     previewWidth: previewWidth || 600,
     previewVisible: previewVisible || false,
