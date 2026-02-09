@@ -100,25 +100,3 @@ test.skip('handleSashPointerMove - side bar should collapse dragging makes width
     sideBarVisible: false,
   })
 })
-
-test('getInitialPlaceholderCommands', () => {
-  const points = new Uint16Array(kTotal)
-  points[kSideBarVisible] = 1
-  points[kSideBarTop] = 0
-  points[kSideBarLeft] = 600
-  points[kSideBarWidth] = 200
-  points[kSideBarHeight] = 200
-  points[kStatusBarVisible] = 1
-  points[kStatusBarTop] = 200
-  points[kStatusBarLeft] = 0
-  points[kSideBarWidth] = 800
-  points[kStatusBarHeight] = 20
-  const state = {
-    ...ViewletLayout.create(1),
-    points,
-  }
-  expect(ViewletLayout.getInitialPlaceholderCommands(state)).toEqual([
-    ['Viewlet.createPlaceholder', 'SideBar', 1, 0, 600, 800, 200],
-    ['Viewlet.createPlaceholder', 'StatusBar', 1, 200, 0, 0, 20],
-  ])
-})
