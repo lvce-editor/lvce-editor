@@ -44,8 +44,6 @@ export const create = (id: number): LayoutState => {
     workbenchId: Id.create(),
     previewId: Id.create(),
     previewSashId: Id.create(),
-    mainContentsVisible: true,
-    mainContentsId: Id.create(),
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: true,
