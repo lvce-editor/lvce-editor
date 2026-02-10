@@ -372,6 +372,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/preview-worker/dist/previewWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/PreviewSandBoxWorkerUrl/PreviewSandBoxWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js`,
+      replacement: `/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/LanguageModelsViewWorkerUrl/LanguageModelsViewWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/language-models-view/dist/languageModelsViewMain.js`,
       replacement: `/packages/language-models-view/dist/languageModelsViewMain.js`,
