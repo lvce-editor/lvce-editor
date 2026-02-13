@@ -161,12 +161,12 @@ const getSavedPoints = (savedState) => {
   const { sideBarVisible, sideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } = savedState
 
   return {
-    sideBarVisible: sideBarVisible || true,
-    sideBarWidth: sideBarWidth || 240,
-    previewWidth: previewWidth || 0,
-    previewVisible: previewVisible || false,
-    panelVisible: panelVisible || false,
-    panelHeight: panelHeight || 160,
+    sideBarVisible: sideBarVisible ?? true,
+    sideBarWidth: sideBarWidth ?? 240,
+    previewWidth: previewWidth ?? 0,
+    previewVisible: previewVisible ?? false,
+    panelVisible: panelVisible ?? false,
+    panelHeight: panelHeight ?? 160,
   }
 }
 
@@ -220,7 +220,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     windowWidth,
     activityBarSashVisible: true,
     panelSashVisible: true,
-    previewSashVisible: true,
+    previewSashVisible: false,
     previewUri,
     sideBarLocation,
     sideBarSashVisible: true,
@@ -535,13 +535,11 @@ const loadIfVisible = async (
     return {
       newState: {
         ...latestState,
-        [kReady]: true,
-        workbenchVisible: true,
-        // contentAreaVisible: true,
-        // mainContentsVisible: true,
-        mainVisible: true,
-        [kVisible]: true,
         [kId]: childUid,
+        [kReady]: true,
+        [kVisible]: visible,
+        mainVisible: true,
+        workbenchVisible: true,
       },
       commands: orderedCommands,
     }
