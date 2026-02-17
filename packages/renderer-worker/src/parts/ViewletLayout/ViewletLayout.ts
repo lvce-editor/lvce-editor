@@ -305,7 +305,6 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
 
 const toggle = (state: LayoutState, module: LayoutModules.LayoutModule, moduleId?: any) => {
   const { kVisible } = module
-  console.log({ kVisible, state })
   if (state[kVisible]) {
     return hide(state, module)
   }
