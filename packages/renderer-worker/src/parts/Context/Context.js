@@ -1,4 +1,4 @@
-const contexts = Object.create(null)
+let contexts = Object.create(null)
 
 // TODO all context keys should be numeric
 // comparing numbers is faster and more efficient than comparing strings every time
@@ -14,10 +14,18 @@ export const getAll = () => {
   return contexts
 }
 
+export const reset = () => {
+  contexts = Object.create(null)
+}
+
 export const set = (key, value) => {
-  contexts[key] = value
+  contexts = {
+    ...contexts,
+    [key]: value,
+  }
 }
 
 export const remove = (key) => {
-  delete contexts[key]
+  const { [key]: _, ...rest } = contexts
+  contexts = rest
 }
