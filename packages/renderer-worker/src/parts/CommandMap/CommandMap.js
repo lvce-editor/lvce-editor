@@ -14,6 +14,7 @@ export const commandMap = {
   'Ajax.getText': lazy('Ajax.getText'),
   'Audio.handleAudioError': lazy('Audio.handleAudioError'),
   'Audio.playBell': lazy('Audio.playBell'),
+  'Audio.play': lazy('Audio.play'),
   'AutoUpdater.checkForUpdates': lazy('AutoUpdater.checkForUpdates'),
   'Blob.base64StringToBlob': lazy('Blob.base64StringToBlob'),
   'Blob.binaryStringToBlob': lazy('Blob.binaryStringToBlob'),
