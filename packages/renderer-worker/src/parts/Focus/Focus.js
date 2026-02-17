@@ -14,9 +14,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
  */
 export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => {
   Assert.number(focusKey)
-  if (FocusState.get()) {
-    Context.remove(FocusState.get())
-  }
+  Context.reset()
   FocusState.set(focusKey)
   Context.set(FocusState.get(), true)
   if (additionalFocusKey) {
