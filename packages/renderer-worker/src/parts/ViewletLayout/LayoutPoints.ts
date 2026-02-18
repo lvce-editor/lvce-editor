@@ -11,6 +11,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const statusBarVisible = source[LayoutKeys.StatusBarVisible]
   const titleBarVisible = source[LayoutKeys.TitleBarVisible]
   const previewVisible = source[LayoutKeys.PreviewVisible]
+  const previewMinWidth = source[LayoutKeys.PreviewMinWidth]
   const windowWidth = source[LayoutKeys.WindowWidth]
   const windowHeight = source[LayoutKeys.WindowHeight]
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
@@ -49,11 +50,12 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       p3 -= newPanelHeight
     }
 
-    // When preview is visible, constrain elements to left 50% of window
-    const availableWidth = previewVisible ? windowWidth / 2 : windowWidth
+    // When preview is visible, reserve at least previewMinWidth for preview
+    const maxLeftSectionWidth = Math.max(0, windowWidth - previewMinWidth)
+    const availableWidth = previewVisible ? Math.min(windowWidth / 2, maxLeftSectionWidth) : windowWidth
 
     if (activityBarVisible) {
-      p8 = availableWidth - 48 // Activity bar at right edge of left section
+      p8 = Math.max(0, availableWidth - 48) // Activity bar at right edge of left section
     } else {
       p8 = availableWidth
     }
@@ -65,7 +67,8 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationActivityBarVisible = activityBarVisible
 
     // Calculate sidebar width for left section
-    const adjustedSideBarWidth = previewVisible ? Math.min(newSideBarWidth, (availableWidth - 48) * 0.3) : newSideBarWidth
+    const maxSideBarWidth = Math.max(0, availableWidth - 48)
+    const adjustedSideBarWidth = previewVisible ? Math.min(newSideBarWidth, maxSideBarWidth * 0.3) : newSideBarWidth
     let p7 = p8 - adjustedSideBarWidth
     if (sideBarVisible && p7 < 0) {
       p7 = 0
@@ -174,14 +177,15 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       p3 -= newPanelHeight
     }
 
-    // When preview is visible, constrain elements to left 50% of window
-    const availableWidth = previewVisible ? windowWidth / 2 : windowWidth
+    // When preview is visible, reserve at least previewMinWidth for preview
+    const maxLeftSectionWidth = Math.max(0, windowWidth - previewMinWidth)
+    const availableWidth = previewVisible ? Math.min(windowWidth / 2, maxLeftSectionWidth) : windowWidth
 
     if (activityBarVisible) {
       p7 = 48
     }
     if (sideBarVisible) {
-      p8 = p7 + Math.min(newSideBarWidth, availableWidth - 48)
+      p8 = p7 + Math.min(newSideBarWidth, Math.max(0, availableWidth - 48))
     } else {
       p8 = p7
     }
@@ -192,7 +196,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationActivityBarVisible = activityBarVisible
 
     // For when preview is visible, constrain main area to left 50% of window
-    let mainWidth = availableWidth - p8
+    let mainWidth = Math.max(0, availableWidth - p8)
 
     const destinationMainLeft = p8
     const destinationMainTop = p2
