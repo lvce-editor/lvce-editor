@@ -235,14 +235,14 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 
 const show = async (state: LayoutState, module, currentViewletId) => {
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
-  const intermediateState: LayoutState = {
+  const intermediateState: LayoutState = getPoints({
     ...state,
     [kVisible]: true,
-  }
-  const x = state[kLeft]
-  const y = state[kTop]
-  const width = state[kWidth]
-  const height = state[kHeight]
+  })
+  const x = intermediateState[kLeft]
+  const y = intermediateState[kTop]
+  const width = intermediateState[kWidth]
+  const height = intermediateState[kHeight]
   const uid = state.uid
   const childUid = Id.create()
   const commands = await ViewletManager.load(
@@ -268,6 +268,8 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   if (commands) {
     // commands.push(['Viewlet.append', uid, childUid])
   }
+
+  // TODO component might already be hidden again at this point
   const resizeCommands = await getResizeCommands(state, intermediateState)
   commands.push(...resizeCommands)
   return {
