@@ -50,16 +50,17 @@ const runFn = async (instance, id, key, fn, args) => {
     const newState = await fn(oldState, ...args)
 
     if (
-      key === 'getAllQuickPickMenuEntries' ||
-      key === 'getBadgeCounts' ||
       key === 'getActiveSideBarView' ||
-      key === 'getCommit' ||
+      key === 'getAllQuickPickMenuEntries' ||
       key === 'getAssetDir' ||
-      key === 'getSideBarPosition' ||
+      key === 'getBadgeCounts' ||
+      key === 'getCommit' ||
       key === 'getCommitDate' ||
-      key === 'getVersion' ||
-      key === 'getProductNameLong' ||
       key === 'getModuleId' ||
+      key === 'getProductNameLong' ||
+      key === 'getSideBarPosition' ||
+      key === 'getSideBarVisible' ||
+      key === 'getVersion' ||
       key === 'getPlatform'
     ) {
       return newState
