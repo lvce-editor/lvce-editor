@@ -136,7 +136,7 @@ const renderCss = {
   isEqual() {
     return false
   },
-  apply(newState: LayoutState) {
+  apply(oldState: LayoutState, newState: LayoutState) {
     // @ts-ignore
     const css = getCss(newState)
     return [['Viewlet.setCss', newState.uid, css]]
