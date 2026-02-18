@@ -4,6 +4,7 @@ import * as ViewletLayout from './ViewletLayout.ts'
 export const Commands = {
   getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
   getActiveSideBarView: ViewletLayout.getActiveSideBarView,
+  getSideBarVisible: ViewletLayout.getActiveSideBarView,
   getSideBarPosition: ViewletLayout.getSideBarPosition,
   getCommit: ViewletLayout.getCommit,
   getPlatform: ViewletLayout.getPlatform,

@@ -1159,6 +1159,11 @@ export const handleExtensionsChanged = async (state: LayoutState) => {
 export const getActiveSideBarView = (state: LayoutState) => {
   return state.sideBarView
 }
+
+export const getSideBarVisible = (state: LayoutState): boolean => {
+  return state.sideBarVisible
+}
+
 export const getSideBarPosition = (state: LayoutState) => {
   return state.sideBarLocation
 }
