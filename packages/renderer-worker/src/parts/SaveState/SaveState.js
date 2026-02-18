@@ -7,6 +7,9 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const saveViewletState = async (id) => {
   const instance = ViewletStates.getInstance(id)
   const savedState = await SerializeViewlet.serializeInstance(instance)
+  if (savedState === undefined) {
+    return
+  }
   await InstanceStorage.setJson(id, savedState)
   if (instance && instance.factory.saveChildState) {
     const childIds = instance.factory.saveChildState(instance.state)
