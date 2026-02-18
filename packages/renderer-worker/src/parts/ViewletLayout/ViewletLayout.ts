@@ -422,9 +422,7 @@ export const hidePreview = (state: LayoutState) => {
 }
 
 export const togglePreview = (state: LayoutState, uri: string) => {
-  // @ts-ignore
-  state.previewUri = uri
-  return toggle(state, LayoutModules.Preview)
+  return toggle({ ...state, previewUri: uri }, LayoutModules.Preview)
 }
 
 export const showTitleBar = (state: LayoutState) => {
