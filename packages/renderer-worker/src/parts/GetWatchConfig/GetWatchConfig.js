@@ -128,6 +128,13 @@ export const getWatchConfig = () => {
       command: 'Editor.hotReload',
     })
   }
+  const editor = Preferences.get('develop.editorWorkerPath')
+  if (editor) {
+    watchConfig.push({
+      path: find,
+      command: 'Editor.hotReload',
+    })
+  }
   const preview = Preferences.get('develop.previewWorkerPath')
   if (preview) {
     watchConfig.push({
