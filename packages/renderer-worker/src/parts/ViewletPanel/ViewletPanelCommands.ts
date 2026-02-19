@@ -1,15 +1,15 @@
-import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
-import * as WrapStatusBarCommand from '../WrapStatusBarCommand/WrapStatusBarCommand.ts'
-import * as ViewletStatusBar from '../ViewletStatusBar/ViewletStatusBar.js'
+import * as PanelWorker from '../PanelWorker/PanelWorker.js'
+import * as WrapPanelCommand from '../WrapPanelCommand/WrapPanelCommand.ts'
+import * as ViewletPanel from '../ViewletPanel/ViewletPanel.js'
 
 export const Commands = {}
 
 export const getCommands = async () => {
-  const commands = await StatusBarWorker.invoke('StatusBar.getCommandIds')
+  const commands = await PanelWorker.invoke('Panel.getCommandIds')
   for (const command of commands) {
-    Commands[command] = WrapStatusBarCommand.wrapStatusBarCommand(command)
+    Commands[command] = WrapPanelCommand.wrapPanelCommand(command)
   }
-  Commands['hotReload'] = ViewletStatusBar.hotReload
+  Commands['hotReload'] = ViewletPanel.hotReload
 
   return Commands
 }
