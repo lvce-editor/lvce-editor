@@ -1,5 +1,6 @@
 .Problems {
   color: var(--WorkbenchForeground, white);
+  flex: 1;
 }
 
 .ProblemList {
