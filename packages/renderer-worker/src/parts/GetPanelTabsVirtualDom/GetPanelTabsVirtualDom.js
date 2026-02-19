@@ -1,9 +1,10 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const createPanelTab = (tab, badgeCount, isSelected) => {
+const createPanelTab = (tab, badgeCount, isSelected, index) => {
   const label = tab
   let className = ClassNames.PanelTab
   if (isSelected) {
@@ -15,6 +16,8 @@ const createPanelTab = (tab, badgeCount, isSelected) => {
         className,
         role: AriaRoles.Tab,
         ariaSelected: isSelected,
+        'data-index': index,
+        onClick: DomEventListenerFunctions.HandleClickSelectTab,
       },
       1,
     ),
@@ -40,7 +43,7 @@ export const getPanelTabsVirtualDom = (tabs, selectedIndex, badgeCounts) => {
     const isSelected = i === selectedIndex
     const tab = tabs[i]
     const badgeCount = badgeCounts[tab] || 0
-    dom.push(...createPanelTab(tab, badgeCount, isSelected))
+    dom.push(...createPanelTab(tab, badgeCount, isSelected, i))
   }
   return dom
 }

@@ -174,6 +174,10 @@ export const selectIndex = async (state, index) => {
   }
 }
 
+export const selectRaw = async (state, rawIndex) => {
+  return selectIndex(state, parseInt(rawIndex))
+}
+
 export const selectView = async (state, name) => {
   const index = state.views.find((view) => view === name)
   if (index === -1) {
@@ -214,6 +218,10 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleClickClose,
       params: ['handleClickClose'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickSelectTab,
+      params: ['selectIndexRaw', 'event.target.dataset.index'],
     },
   ]
 }

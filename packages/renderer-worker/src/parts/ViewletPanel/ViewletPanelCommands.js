@@ -9,4 +9,5 @@ export const Commands = {
   toggleView: ViewletPanel.toggleView,
   handleClickClose: ViewletPanel.handleClickClose,
   handleClickMaximize: ViewletPanel.handleClickMaximize,
+  selectIndexRaw: ViewletPanel.selectRaw,
 }
