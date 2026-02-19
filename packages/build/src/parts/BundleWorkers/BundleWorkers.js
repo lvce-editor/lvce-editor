@@ -196,6 +196,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/problems-view`, 'dist', 'problemsViewWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/panel-worker/dist/panelWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/panel-worker`, 'dist', 'panelWorkerMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js',
     to: Path.join(`${toRoot}/packages/settings-view`, 'dist', 'settingsViewWorkerMain.js'),
   })
