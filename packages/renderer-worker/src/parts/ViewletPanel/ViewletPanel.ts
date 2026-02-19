@@ -1,13 +1,4 @@
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
-import * as Height from '../Height/Height.js'
-
-// TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
-// TODO should just pass index
-// then if item is viewlet -> open viewlet
-// else if item is settings -> open settings
-
-// TODO this should be create
-// TODO unregister listeners when hidden
 
 export const create = (id, uri, x, y, width, height): any => {
   return {
