@@ -7,6 +7,7 @@ export const map = {
   [ViewletModuleId.BrowserViewOverview]: () => import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js'),
   [ViewletModuleId.Clock]: () => import('../ViewletClock/ViewletClock.ipc.js'),
   [ViewletModuleId.Confirm]: () => import('../ViewletConfirm/ViewletConfirm.ipc.js'),
+  [ViewletModuleId.Terminal2]: () => import('../ViewletTerminal2/ViewletTerminal2.ipc.ts'),
   [ViewletModuleId.DebugConsole]: () => import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js'),
   [ViewletModuleId.LanguageModels]: () => import('../ViewletLanguageModels/ViewletLanguageModels.ipc.ts'),
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),

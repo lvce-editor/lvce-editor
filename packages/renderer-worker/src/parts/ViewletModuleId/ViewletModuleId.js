@@ -12,6 +12,8 @@ export const Counter = 'Counter'
 
 export const DebugConsole = 'Debug Console'
 
+export const Terminal2 = 'Terminal2'
+
 export const DefineKeyBinding = 'DefineKeyBinding'
 
 export const IframeInspector = 'IframeInspector'
