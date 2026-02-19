@@ -51,6 +51,7 @@ const runFn = async (instance, id, key, fn, args) => {
 
     if (
       key === 'getActiveSideBarView' ||
+      key === 'getActivePanelView' ||
       key === 'getAllQuickPickMenuEntries' ||
       key === 'getAssetDir' ||
       key === 'getBadgeCounts' ||

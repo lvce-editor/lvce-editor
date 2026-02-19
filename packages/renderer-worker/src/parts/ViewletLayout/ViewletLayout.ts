@@ -1162,6 +1162,10 @@ export const getActiveSideBarView = (state: LayoutState) => {
   return state.sideBarView
 }
 
+export const getActivePanelView = (state: LayoutState) => {
+  return state.panelView
+}
+
 export const getSideBarVisible = (state: LayoutState): boolean => {
   return state.sideBarVisible
 }
