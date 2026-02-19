@@ -142,5 +142,12 @@ export const getWatchConfig = () => {
       command: 'Preview.hotReload',
     })
   }
+  const panel = Preferences.get('develop.panelWorkerPath')
+  if (panel) {
+    watchConfig.push({
+      path: preview,
+      command: 'Panel.hotReload',
+    })
+  }
   return watchConfig
 }
