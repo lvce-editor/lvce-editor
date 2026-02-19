@@ -30,6 +30,7 @@ import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeader
 import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
 import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
+import * as GetHeadersPanelWorker from '../GetHeadersPanelWorker/GetHeadersPanelWorker.js'
 import * as GetHeadersPreviewSandBoxWorker from '../GetHeadersPreviewSandBoxWorker/GetHeadersPreviewSandBoxWorker.js'
 import * as GetHeadersPreviewWorker from '../GetHeadersPreviewWorker/GetHeadersPreviewWorker.js'
 import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
@@ -93,6 +94,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('languageModelsViewMain.js')) {
     return getHeadersLanguageModelsView(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('panelWorkerMain.js')) {
+    return GetHeadersPanelWorker.getHeadersPanelWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('textMeasurementWorkerMain.js')) {
     return GetHeadersTextMeasurementWorker.getHeadersTextMeasurementWorker(mime, etag, defaultCachingHeader)
