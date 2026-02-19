@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ViewletStatusBar from '../ViewletStatusBar/ViewletStatusBar.js'
 import { wrapEditorCommand } from '../WrapEditorCommand/WrapEditorCommand.ts'
 

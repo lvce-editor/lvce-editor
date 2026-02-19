@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 

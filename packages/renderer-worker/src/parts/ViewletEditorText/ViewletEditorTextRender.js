@@ -1,5 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
 export const hasFunctionalRender = true
 

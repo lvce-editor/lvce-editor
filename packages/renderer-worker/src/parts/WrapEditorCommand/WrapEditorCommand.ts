@@ -1,4 +1,4 @@
-import * as EditorWorker from '../EditorWorker/EditorWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
 export const wrapEditorCommand = (key: string) => {
   const fn = async (state, ...args) => {
