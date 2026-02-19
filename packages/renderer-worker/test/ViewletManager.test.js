@@ -278,14 +278,15 @@ test('load - does not call Viewlet.loadModule for Editor', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   const mockModule = {
     hasFunctionalEvents: true,
+    hasFunctionalRootRender: true,
     create: jest.fn(() => {
       return {
         x: 0,
       }
     }),
-    loadContent: jest.fn(async (state) => {
+    loadContent: jest.fn(async () => {
       return {
-        ...state,
+        uid: 1,
         x: 1,
       }
     }),
@@ -294,7 +295,9 @@ test('load - does not call Viewlet.loadModule for Editor', async () => {
     return mockModule
   }
   const state = ViewletManager.create(getModule, 'Editor', 0, '', 0, 0, 0, 0)
-  await ViewletManager.load(state)
+  // @ts-ignore
+  const commands = await ViewletManager.load(state)
+  expect(commands).toEqual(expect.arrayContaining([['Viewlet.createFunctionalRoot', 'Editor', 1, true]]))
   expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.loadModule', 'Editor')
 })
 
