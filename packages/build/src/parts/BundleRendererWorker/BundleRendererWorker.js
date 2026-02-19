@@ -367,6 +367,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/opener-worker/dist/openerWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/PanelWorkerUrl/PanelWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/panel-worker/dist/panelWorkerMain.js`,
+      replacement: `/packages/panel-worker/dist/panelWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/PreviewWorkerUrl/PreviewWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/preview-worker/dist/previewWorkerMain.js`,
       replacement: `/packages/preview-worker/dist/previewWorkerMain.js`,
