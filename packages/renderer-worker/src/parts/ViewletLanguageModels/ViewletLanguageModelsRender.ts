@@ -1,4 +1,4 @@
-import type { LangaugeModelsState } from './ViewletLanguageModelsTypes.ts'
+import type { LanguageModelsState } from './ViewletLanguageModelsTypes.ts'
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
 
@@ -9,7 +9,7 @@ export const hasFunctionalRootRender = true
 export const hasFunctionalEvents = true
 
 export const renderDialog = {
-  isEqual(oldState: LangaugeModelsState, newState: LangaugeModelsState) {
+  isEqual(oldState: LanguageModelsState, newState: LanguageModelsState) {
     return false
   },
   apply: AdjustCommands.apply,

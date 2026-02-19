@@ -1,4 +1,4 @@
-export interface LangaugeModelsState {
+export interface LanguageModelsState {
   readonly commands: any[]
   readonly id: number
   readonly x: number
