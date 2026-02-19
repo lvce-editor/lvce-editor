@@ -22,7 +22,6 @@ export const loadContent = async (state: any): Promise<any> => {
   await PanelWorker.invoke('Panel.loadContent', state.uid, savedState)
   const diffResult = await PanelWorker.invoke('Panel.diff2', state.uid)
   const commands = await PanelWorker.invoke('Panel.render2', state.uid, diffResult)
-  console.log({ commands })
   return {
     ...state,
     commands,
