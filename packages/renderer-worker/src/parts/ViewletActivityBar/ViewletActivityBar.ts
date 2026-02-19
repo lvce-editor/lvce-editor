@@ -13,15 +13,6 @@ import type { ActivityBarState } from './ActivityBarState.ts'
 export const create = (id, uri, x, y, width, height): ActivityBarState => {
   return {
     uid: id,
-    // TODO declarative event api is good, but need to bind
-    // listeners to state somehow
-    // also the use of global event bus is not good
-    // and this api is not strongly typed
-    events: {
-      'SourceControl.changeBadgeCount': 8012,
-      'Layout.hideSideBar': 8014,
-      'SideBar.viewletChange': 8013,
-    },
     activityBarItems: [],
     filteredItems: [],
     focusedIndex: -1,

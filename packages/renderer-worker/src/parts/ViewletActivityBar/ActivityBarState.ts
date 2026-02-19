@@ -2,7 +2,6 @@ import type { ActivityBarItem } from '../ActivityBarItem/ActivityBarItem.ts'
 
 export interface ActivityBarState {
   readonly uid: number
-  readonly events: any
   readonly activityBarItems: readonly ActivityBarItem[]
   readonly filteredItems: readonly ActivityBarItem[]
   readonly focusedIndex: number
