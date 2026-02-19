@@ -1,3 +1,7 @@
+.Output {
+  flex: 1;
+}
+
 .Output:focus {
   outline: 1px solid red;
   outline-offset: -1px;
