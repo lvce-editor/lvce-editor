@@ -5,11 +5,7 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const launchPanelWorker = async () => {
-<<<<<<< HEAD
   const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.panelWorkerPath', PanelWorkerUrl.panelWorkerUrl)
-=======
-  const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.PanelWorkerPath', PanelWorkerUrl.panelWorkerUrl)
->>>>>>> origin/main
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     url: configuredWorkerUrl,
