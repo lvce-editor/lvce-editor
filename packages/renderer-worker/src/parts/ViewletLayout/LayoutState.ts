@@ -29,18 +29,15 @@ export interface LayoutState {
   readonly panelTop: number
   readonly panelView: string
   readonly panelVisible: boolean
-  readonly previewMaxHeight: number
-  readonly previewMaxWidth: number
-  readonly previewMinHeight: number
-  readonly previewMinWidth: number
-  readonly sideBarMaxWidth: number
-  readonly sideBarMinWidth: number
-  readonly titleBarNative: boolean
   readonly panelWidth: number
   readonly platform: number
   readonly previewHeight: number
   readonly previewId: number
   readonly previewLeft: number
+  readonly previewMaxHeight: number
+  readonly previewMaxWidth: number
+  readonly previewMinHeight: number
+  readonly previewMinWidth: number
   readonly previewSashId: number
   readonly previewSashVisible: boolean
   readonly previewTop: number
@@ -52,6 +49,8 @@ export interface LayoutState {
   readonly sideBarId: number
   readonly sideBarLeft: number
   readonly sideBarLocation: number
+  readonly sideBarMaxWidth: number
+  readonly sideBarMinWidth: number
   readonly sideBarSashId: number
   readonly sideBarSashVisible: boolean
   readonly sideBarTop: number
@@ -67,6 +66,7 @@ export interface LayoutState {
   readonly titleBarHeight: number
   readonly titleBarId: number
   readonly titleBarLeft: number
+  readonly titleBarNative: boolean
   readonly titleBarTop: number
   readonly titleBarVisible: boolean
   readonly titleBarWidth: number
