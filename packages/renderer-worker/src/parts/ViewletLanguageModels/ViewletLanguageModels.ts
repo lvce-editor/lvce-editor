@@ -1,7 +1,7 @@
 import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
-import type { LangaugeModelsState } from './ViewletLanguageModelsTypes.ts'
+import type { LanguageModelsState } from './ViewletLanguageModelsTypes.ts'
 
-export const create = (id: number, uri, x, y, width, height): LangaugeModelsState => {
+export const create = (id: number, uri, x, y, width, height): LanguageModelsState => {
   return {
     id,
     commands: [],
@@ -12,7 +12,7 @@ export const create = (id: number, uri, x, y, width, height): LangaugeModelsStat
   }
 }
 
-export const loadContent = async (state: LangaugeModelsState): Promise<LangaugeModelsState> => {
+export const loadContent = async (state: LanguageModelsState): Promise<LanguageModelsState> => {
   const { id } = state
   await LanguageModelsViewWorker.invoke('LanguageModels.create', id, '', state.x, state.y, state.width, state.height, null)
   await LanguageModelsViewWorker.invoke('LanguageModels.loadContent', id)
