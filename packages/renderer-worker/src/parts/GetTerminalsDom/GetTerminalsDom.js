@@ -14,6 +14,7 @@ export const getTerminalsDom = (state) => {
   return [
     {
       type: VirtualDomElements.Div,
+      className: 'Viewlet Terminals',
       childCount: terminalTabsEnabled ? 2 : 1,
     },
     ...getTabsDom(state),
