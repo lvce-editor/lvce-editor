@@ -23,13 +23,34 @@
   contain: strict;
 }
 
+.EditorGroupsVertical {
+  flex-direction: row;
+}
+
+.EditorGroupsHorizontal {
+  flex-direction: column;
+}
+
 .EditorGroup {
   contain: strict;
-  flex: 1;
+  /* flex: 1; */
   display: flex;
   width: 100%;
   height: 100%;
   flex-direction: column;
+}
+
+.EmptyGroupCloseButton {
+  display: flex;
+  background: transparent;
+  border: none;
+  color: white;
+  align-self: end;
+  width: 30px;
+  height: 30px;
+  contain: strict;
+  align-items: center;
+  justify-content: center;
 }
 
 .TextEditor {
