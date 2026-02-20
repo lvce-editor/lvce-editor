@@ -254,8 +254,8 @@ export const resize = async (id, dimensions) => {
   }
   const resizeFn = instance.factory?.Commands?.resize || instance.factory.resize
   const oldState = instance.state
-  let newState
-  let commands
+  let newState = oldState
+  let commands = []
   if (instance.factory.hasFunctionalResize) {
     newState = await resizeFn(oldState, dimensions)
     if ('newState' in newState) {
@@ -266,7 +266,7 @@ export const resize = async (id, dimensions) => {
       instance.factory.resizeEffect(newState)
     }
     commands = ViewletManager.render(instance.factory, instance.state, newState)
-  } else {
+  } else if (typeof instance.factory.resize === 'function') {
     // deprecated
     const result = await instance.factory.resize(oldState, dimensions)
     newState = result.newState
