@@ -1,19 +1,17 @@
-import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
+import * as GetTerminalsDom from '../GetTerminalsDom/GetTerminalsDom.js'
 
 export const hasFunctionalRender = true
 
-const renderTabs = {
+export const hasFunctionalRootRender = true
+
+const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.tabs === newState.tabs && oldState.selectedIndex === newState.selectedIndex
+    return false
   },
   apply(oldState, newState) {
-    const { y, width, height, tabsWidth, tabs, selectedIndex, terminalTabsEnabled } = newState
-    if (!terminalTabsEnabled) {
-      return []
-    }
-    const dom = GetTerminalTabsDom.getTerminalTabsDom(tabs, width - tabsWidth, y, tabsWidth, height, selectedIndex)
-    return ['setTabsDom', dom]
+    const dom = GetTerminalsDom.getTerminalsDom(newState)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
-export const render = [renderTabs]
+export const render = [renderDom]
