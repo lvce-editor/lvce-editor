@@ -122,13 +122,15 @@ const getCss = (newState: LayoutState) => {
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
+  const roundedSideBarWidth = Math.round(sideBarWidth)
+  const roundedSashSideBarLeft = Math.round(sashSideBarLeft)
   return `:root {
   --ActivityBarWidth: ${activityBarWidth}px;
   --PanelHeight: ${panelHeight}px;
-  --SideBarWidth: ${sideBarWidth}px;
+  --SideBarWidth: ${roundedSideBarWidth}px;
   --TitleBarHeight: ${titleBarHeight}px;
   --PreviewWidth: ${previewWidth}px;
-  --SashSideBarLeft: ${sashSideBarLeft}px;
+  --SashSideBarLeft: ${roundedSashSideBarLeft}px;
 }`
 }
 
