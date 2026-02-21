@@ -93,3 +93,28 @@
   color: white;
   border: none;
 }
+
+.WaterMarkWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: strict;
+  flex: 1;
+}
+
+.WaterMark {
+  height: 200px;
+  background: var(--SideBarBackground);
+  max-width: 200px;
+  width: 100%;
+  display: flex;
+  mask-image: url(/icons/icon.svg);
+  contain: strict;
+  mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-size: 200px;
+  mask-position: 50% 50%;
+  pointer-events: none;
+  contain: strict;
+  flex-shrink: 0;
+}
