@@ -77,7 +77,7 @@
     "@lvce-editor/references-view": "^2.5.0",
     "@lvce-editor/rename-worker": "^1.28.0",
     "@lvce-editor/panel-worker": "^1.12.0",
-    "@lvce-editor/renderer-process": "^23.0.0",
+    "@lvce-editor/renderer-process": "^23.1.0",
     "@lvce-editor/settings-view": "^2.8.0",
     "@lvce-editor/simple-browser-view": "^2.0.0",
     "@lvce-editor/source-action-worker": "^1.4.0",
