@@ -51,6 +51,7 @@
   contain: strict;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .TextEditor {
