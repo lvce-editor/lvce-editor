@@ -6,22 +6,33 @@
   border: 0;
   z-index: 1;
   background: transparent;
+  display: flex;
 }
 
 .Sash:active {
   background: var(--SashHoverBorder, #3d5252);
 }
 
+.Sash:active .SashBorder {
+  background: var(--SashHoverBorder, #3d5252);
+}
+
+.SashVertical:active .SashBorder {
+  width: 100%;
+}
+
 .SashHorizontal {
   height: 4px;
   cursor: row-resize;
   width: 100%;
+  align-items: center;
 }
 
 .SashVertical {
   width: 4px;
   cursor: col-resize;
   height: 100%;
+  justify-content: center;
 }
 
 .SashVisible {
@@ -41,4 +52,10 @@
 
 .SashSideBar {
   left: var(--SashSideBarLeft);
+}
+
+.SashBorder {
+  height: 100%;
+  width: 1px;
+  background: var(--SashBorder, gray);
 }
