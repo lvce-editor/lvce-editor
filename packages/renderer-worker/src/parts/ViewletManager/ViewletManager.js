@@ -40,6 +40,10 @@ const kAppendViewlet = 'Viewlet.appendViewlet'
 const kHandleError = 'Viewlet.handleError'
 const kDispose = 'Viewlet.dispose'
 
+const shouldLoadModuleInRendererProcess = (id) => {
+  return id !== ViewletModuleId.EditorText
+}
+
 const runFn = async (instance, id, key, fn, args) => {
   if (!instance) {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
@@ -423,7 +427,7 @@ const actuallyLoadModule = async (getModule, id) => {
     throw new Error(`id must be defined`)
   }
   const module = await getModule(id)
-  if (!module.hasFunctionalEvents) {
+  if (!module.hasFunctionalEvents && shouldLoadModuleInRendererProcess(id)) {
     await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id, /* hasFunctionalEvents */ module.hasFunctionalEvents)
   }
   await ViewletManagerVisitor.loadModule(id, module)
@@ -583,7 +587,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     state = ViewletState.ContentLoaded
     if (viewlet.show === false) {
-    } else {
+    } else if (shouldLoadModuleInRendererProcess(viewlet.id)) {
       await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
     }
     if (viewlet.disposed) {
@@ -696,7 +700,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         return []
       }
       const commands = []
-      if (state < ViewletState.RendererProcessViewletLoaded) {
+      if (state < ViewletState.RendererProcessViewletLoaded && shouldLoadModuleInRendererProcess(viewlet.id)) {
         await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
       const parentUid = viewlet.parentUid
