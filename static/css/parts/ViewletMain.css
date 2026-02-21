@@ -40,6 +40,21 @@
   flex-direction: column;
 }
 
+.editor-groups-container::-webkit-scrollbar {
+  height: 14px;
+}
+
+.editor-groups-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-groups-container::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
+}
+
+.editor-groups-container::-webkit-scrollbar-thumb:hover {
+}
+
 .EmptyGroupCloseButton {
   display: flex;
   background: transparent;
