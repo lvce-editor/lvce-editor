@@ -245,13 +245,17 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   const height = intermediateState[kHeight]
   const uid = state.uid
   const childUid = Id.create()
+  let uri = ''
+  if (module === LayoutModules.Preview && state.previewUri) {
+    uri = state.previewUri
+  }
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
       id: moduleId,
       type: 0,
       // @ts-ignore
-      uri: '',
+      uri,
       show: false,
       focus: false,
       x,
@@ -392,7 +396,7 @@ export const toggleStatusBar = (state: LayoutState) => {
 }
 
 export const showPreview = async (state: LayoutState, uri: string) => {
-  const { previewVisible, previewId } = state
+  const { previewVisible, previewId, uid } = state
 
   if (previewVisible && previewId !== -1) {
     await Command.execute('Preview.setUri', uri)
@@ -404,18 +408,16 @@ export const showPreview = async (state: LayoutState, uri: string) => {
       commands: [],
     }
   }
-  ViewletStates.setState(state.uid, {
+  const partialNewState = {
     ...state,
     previewUri: uri,
-  })
+  }
+  ViewletStates.setState(uid, partialNewState)
   // @ts-ignore
-  const result = await show(state, LayoutModules.Preview)
+  const result = await show(partialNewState, LayoutModules.Preview)
   return {
     ...result,
-    newState: {
-      ...result.newState,
-      previewUri: uri,
-    },
+    newState: result.newState,
   }
 }
 
