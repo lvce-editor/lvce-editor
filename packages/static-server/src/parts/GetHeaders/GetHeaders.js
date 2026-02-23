@@ -80,7 +80,7 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
   }
-  if (absolutePath.endsWith('previewSandboxWorkerMain.js')) {
+  if (absolutePath.endsWith('previewSandboxWorkerMain.js') || absolutePath.endsWith('previewSandBoxWorkerMain.js')) {
     return GetHeadersPreviewSandBoxWorker.getHeadersPreviewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('menuWorkerMain.js')) {
