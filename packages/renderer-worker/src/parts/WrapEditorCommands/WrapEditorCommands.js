@@ -10,6 +10,15 @@ export const wrapEditorCommand = (id) => {
     const fullId = id.includes('.') ? id : `Editor.${id}`
     // @ts-ignore
     const result = await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
+    if (!result) {
+      const commands = await EditorWorker.invoke('Editor.render', editor.uid)
+      return {
+        ...editor,
+        commands,
+      }
+    }
+
+    // deprecated
     if (result && result.commands) {
       return {
         ...editor,
