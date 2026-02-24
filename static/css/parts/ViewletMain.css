@@ -81,6 +81,13 @@
   height: 100%;
 }
 
+.EditorContentError,
+.EditorContent--error {
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+}
+
 .EditorGroupHeader {
   display: flex;
   contain: strict;
