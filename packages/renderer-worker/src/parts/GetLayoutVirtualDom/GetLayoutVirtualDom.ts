@@ -4,7 +4,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
 
 const getMainContentsVirtualDom = (state: LayoutState) => {
-  const { mainVisible, mainId, panelSashVisible, panelSashId, panelVisible, panelId } = state
+  const { mainVisible, mainId, panelSashVisible, panelVisible, panelId } = state
   const children: any[] = []
 
   if (mainVisible && mainId !== -1) {
@@ -14,11 +14,8 @@ const getMainContentsVirtualDom = (state: LayoutState) => {
     })
   }
 
-  if (panelSashVisible && panelSashId !== -1) {
-    children.push({
-      type: VirtualDomElements.Reference,
-      uid: panelSashId,
-    })
+  if (panelSashVisible) {
+    children.push(getSashPanelDom())
   }
 
   if (panelVisible && panelId !== -1) {
@@ -61,7 +58,6 @@ const getSashPreviewDom = () => {
   }
 }
 
-// @ts-ignore
 const getSashPanelDom = () => {
   return {
     type: VirtualDomElements.Div,
@@ -69,6 +65,7 @@ const getSashPanelDom = () => {
     onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,
   }
 }
+
 const getActivityBarDom = (activityBarId: number) => {
   if (activityBarId === -1) {
     return {
