@@ -2,7 +2,7 @@ import * as Clamp from '../Clamp/Clamp.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
-import { LayoutState } from './LayoutState.ts'
+import type { LayoutState } from './LayoutState.ts'
 
 export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocationType.Right): LayoutState => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
