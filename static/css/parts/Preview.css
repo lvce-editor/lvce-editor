@@ -7,6 +7,6 @@
   width: var(--PreviewWidth);
 }
 
-.Preview .Html {
+.Preview > .Html {
   margin: 8px;
 }
