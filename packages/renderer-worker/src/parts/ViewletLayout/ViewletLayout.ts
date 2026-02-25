@@ -622,8 +622,7 @@ export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
 const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const { activityBarWidth, previewWidth, sideBarLocation, sideBarMinWidth, windowWidth } = state
   const mainMinWidth = 300
-  const newSideBarWidth =
-    sideBarLocation === SideBarLocationType.Left ? x - activityBarWidth : windowWidth - activityBarWidth - x - previewWidth
+  const newSideBarWidth = sideBarLocation === SideBarLocationType.Left ? x - activityBarWidth : windowWidth - activityBarWidth - x - previewWidth
   const availableWidth = Math.max(0, windowWidth - previewWidth)
   const sideBarMaxWidthForMain = Math.max(0, availableWidth - activityBarWidth - mainMinWidth)
   const constrainedSideBarWidth = Math.min(newSideBarWidth, sideBarMaxWidthForMain)
@@ -634,19 +633,25 @@ const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: n
     const adjustedSideBarMinWidth = Math.min(sideBarMinWidth, sideBarMaxWidthForMain)
     return {
       commands: [],
-      newState: getPoints({
-        ...state,
-        sideBarWidth: adjustedSideBarMinWidth,
-        sideBarVisible: true,
-      }, sideBarLocation),
+      newState: getPoints(
+        {
+          ...state,
+          sideBarWidth: adjustedSideBarMinWidth,
+          sideBarVisible: true,
+        },
+        sideBarLocation,
+      ),
     }
   }
   return {
-    newState: getPoints({
-      ...state,
-      sideBarVisible: true,
-      sideBarWidth: constrainedSideBarWidth,
-    }, sideBarLocation),
+    newState: getPoints(
+      {
+        ...state,
+        sideBarVisible: true,
+        sideBarWidth: constrainedSideBarWidth,
+      },
+      sideBarLocation,
+    ),
     commands: [],
   }
 }
