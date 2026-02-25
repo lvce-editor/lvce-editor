@@ -3,7 +3,10 @@
   border-left: 1px solid var(--SeparatorBorder);
   background: white;
   color: black;
-  margin: 8px;
   user-select: text;
   width: var(--PreviewWidth);
+}
+
+.Preview > .Html {
+  margin: 8px;
 }
