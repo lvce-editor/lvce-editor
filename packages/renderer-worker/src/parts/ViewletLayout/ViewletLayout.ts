@@ -620,31 +620,38 @@ export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
 }
 
 const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
-  const { previewWidth, windowWidth, activityBarWidth, sideBarMinWidth } = state
-  const newSideBarWidth = windowWidth - activityBarWidth - x - previewWidth
-  if (newSideBarWidth <= sideBarMinWidth / 2) {
+  const { activityBarWidth, previewWidth, sideBarLocation, sideBarMinWidth, windowWidth } = state
+  const mainMinWidth = 300
+  const newSideBarWidth = sideBarLocation === SideBarLocationType.Left ? x - activityBarWidth : windowWidth - activityBarWidth - x - previewWidth
+  const availableWidth = Math.max(0, windowWidth - previewWidth)
+  const sideBarMaxWidthForMain = Math.max(0, availableWidth - activityBarWidth - mainMinWidth)
+  const constrainedSideBarWidth = Math.min(newSideBarWidth, sideBarMaxWidthForMain)
+  if (constrainedSideBarWidth <= sideBarMinWidth / 2) {
     return hideSideBar(state)
   }
-  if (newSideBarWidth <= sideBarMinWidth) {
+  if (constrainedSideBarWidth <= sideBarMinWidth) {
+    const adjustedSideBarMinWidth = Math.min(sideBarMinWidth, sideBarMaxWidthForMain)
     return {
       commands: [],
-      newState: {
-        ...state,
-        sideBarWidth: sideBarMinWidth,
-        mainWidth: windowWidth - activityBarWidth - sideBarMinWidth,
-        sideBarLeft: windowWidth - activityBarWidth - sideBarMinWidth,
-        sideBarVisible: true,
-      },
+      newState: getPoints(
+        {
+          ...state,
+          sideBarWidth: adjustedSideBarMinWidth,
+          sideBarVisible: true,
+        },
+        sideBarLocation,
+      ),
     }
   }
   return {
-    newState: {
-      ...state,
-      sideBarVisible: true,
-      mainWidth: x,
-      sideBarLeft: x,
-      sideBarWidth: newSideBarWidth,
-    },
+    newState: getPoints(
+      {
+        ...state,
+        sideBarVisible: true,
+        sideBarWidth: constrainedSideBarWidth,
+      },
+      sideBarLocation,
+    ),
     commands: [],
   }
 }
