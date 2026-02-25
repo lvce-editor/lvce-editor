@@ -133,3 +133,10 @@
 .iframe-wrapper iframe {
   flex: 1;
 }
+
+.EditorGroupActions {
+  display: flex;
+  contain: content;
+  align-items: center;
+  background: var(--TabsBackground);
+}
