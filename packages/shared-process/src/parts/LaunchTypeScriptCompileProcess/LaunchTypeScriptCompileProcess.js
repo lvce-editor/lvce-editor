@@ -12,6 +12,7 @@ export const launchTypeScriptCompileProcess = async () => {
   const typescriptCompileProcess = await IpcParent.create({
     method,
     path: TypeScriptCompileProcessPath.typescriptCompileProcessPath,
+    execArgv: ['--disable-warning=ExperimentalWarnings'], // TODO remove this when stripTypes is stable
     argv: [],
     stdio: 'inherit',
     name: 'TypeScript Compile Process',
