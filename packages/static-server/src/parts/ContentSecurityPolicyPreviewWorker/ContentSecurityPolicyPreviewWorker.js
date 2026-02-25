@@ -4,5 +4,6 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   "script-src 'self' 'unsafe-eval'",
+  'connect-src https://unpkg.com https://esm.sh', // TODO move loading dependencies into a separate worker
   `sandbox allow-same-origin`,
 ])
