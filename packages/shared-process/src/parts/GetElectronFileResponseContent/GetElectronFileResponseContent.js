@@ -10,6 +10,9 @@ export const getElectronFileResponseContent = async (request, absolutePath, url)
   if (ShouldTranspileTypescript.shouldTranspileTypescript(request, url)) {
     const content = await readFile(absolutePath)
     const newContent = await TranspileTypeScript.transpileTypeScript(content.toString(), useCache)
+    if (typeof newContent === 'string') {
+      return Buffer.from(newContent)
+    }
     const newContentString = newContent.outputText
     const newContentBuffer = Buffer.from(newContentString)
     return newContentBuffer
