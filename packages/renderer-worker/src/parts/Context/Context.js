@@ -1,3 +1,5 @@
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+
 let contexts = Object.create(null)
 
 // TODO all context keys should be numeric
@@ -15,7 +17,13 @@ export const getAll = () => {
 }
 
 export const reset = () => {
+  const oldContexts = contexts
   contexts = Object.create(null)
+  for (const key of [WhenExpression.BrowserChromium, WhenExpression.BrowserChromium, WhenExpression.BrowserFirefox]) {
+    if (oldContexts[key]) {
+      contexts = { ...contexts, [key]: true }
+    }
+  }
 }
 
 export const set = (key, value) => {
