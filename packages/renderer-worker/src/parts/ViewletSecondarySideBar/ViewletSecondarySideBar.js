@@ -27,7 +27,7 @@ export const create = (id, uri, x, y, width, height) => {
 export const loadContent = async (state, savedState) => {
   let savedViewletId = await Command.execute('Layout.getActiveSecondarySideBarView')
   if (!savedViewletId) {
-    savedViewletId = ViewletModuleId.LanguageModels
+    savedViewletId = ViewletModuleId.Chat
   }
   return handleSecondarySideBarViewletChange(state, savedViewletId)
 }
@@ -116,7 +116,7 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
 export const dispose = (state) => {}
 
 export const openDefaultViewlet = async (state) => {
-  await openViewlet(state, ViewletModuleId.LanguageModels)
+  await openViewlet(state, ViewletModuleId.Chat)
 }
 
 export const close = (state) => {
