@@ -15,6 +15,7 @@ import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDeta
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionManagementWorker from '../GetHeadersExtensionManagementWorker/GetHeadersExtensionManagementWorker.js'
+import * as GetHeadersQuickPickWorker from '../GetHeadersQuickPickWorker/GetHeadersQuickPickWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
@@ -79,6 +80,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('editorWorkerMain.js')) {
     return GetHeadersEditorWorker.getHeadersEditorWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('quickPickWorkerMain.js')) {
+    return GetHeadersQuickPickWorker.getHeadersQuickPickWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('previewSandboxWorkerMain.js') || absolutePath.endsWith('previewSandBoxWorkerMain.js')) {
     return GetHeadersPreviewSandBoxWorker.getHeadersPreviewWorker(mime, etag, defaultCachingHeader)
