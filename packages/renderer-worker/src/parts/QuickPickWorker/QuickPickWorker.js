@@ -1,6 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import { launchQuickPickWorker } from '../LaunchQuickPickWorker/LaunchQuickPickWorker.js'
 
-const { invoke } = GetOrCreateWorker.getOrCreateWorker(launchQuickPickWorker)
+const { invoke, invokeAndTransfer, restart } = GetOrCreateWorker.getOrCreateWorker(launchQuickPickWorker)
 
-export { invoke }
+export { invoke, invokeAndTransfer, restart }
