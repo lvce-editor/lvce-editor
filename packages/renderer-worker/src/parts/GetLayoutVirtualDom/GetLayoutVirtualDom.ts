@@ -194,13 +194,13 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
 
 const getContentAreaVirtualDomRight = (state: LayoutState) => {
   const {
+    secondarySideBarVisible,
+    secondarySideBarId,
     mainVisible,
     mainId,
     sideBarSashVisible,
     sideBarVisible,
     sideBarId,
-    secondarySideBarVisible,
-    secondarySideBarId,
     activityBarVisible,
     activityBarId,
     previewSashVisible,
@@ -208,11 +208,11 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     previewId,
   } = state
   const children: any[] = []
-  if (mainVisible) {
-    children.push(getMainDom(mainId))
-  }
   if (secondarySideBarVisible) {
     children.push(getSecondarySideBarDom(secondarySideBarId))
+  }
+  if (mainVisible) {
+    children.push(getMainDom(mainId))
   }
   let delta = 0
   if (sideBarSashVisible) {

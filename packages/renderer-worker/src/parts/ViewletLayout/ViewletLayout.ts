@@ -205,7 +205,7 @@ const getSavedSecondarySideBarView = (savedState) => {
   if (savedState && savedState.secondarySideBarView && typeof savedState.secondarySideBarView === 'string') {
     return savedState.secondarySideBarView
   }
-  return ViewletModuleId.LanguageModels
+  return ViewletModuleId.Chat
 }
 
 export const loadContent = (state: LayoutState, savedState: any): LayoutState => {

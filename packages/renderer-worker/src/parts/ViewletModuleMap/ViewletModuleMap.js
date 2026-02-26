@@ -5,6 +5,7 @@ export const map = {
   [ViewletModuleId.ActivityBar]: () => import('../ViewletActivityBar/ViewletActivityBar.ipc.ts'),
   [ViewletModuleId.Audio]: () => import('../ViewletAudio/ViewletAudio.ipc.js'),
   [ViewletModuleId.BrowserViewOverview]: () => import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js'),
+  [ViewletModuleId.Chat]: () => import('../ViewletChat/ViewletChat.ipc.ts'),
   [ViewletModuleId.Clock]: () => import('../ViewletClock/ViewletClock.ipc.js'),
   [ViewletModuleId.Confirm]: () => import('../ViewletConfirm/ViewletConfirm.ipc.js'),
   [ViewletModuleId.Terminal2]: () => import('../ViewletTerminal2/ViewletTerminal2.ipc.ts'),
