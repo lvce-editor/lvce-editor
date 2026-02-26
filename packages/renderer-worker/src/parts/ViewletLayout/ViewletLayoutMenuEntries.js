@@ -14,6 +14,14 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Side Bar',
     },
     {
+      id: 'Layout.showSecondarySideBar',
+      label: 'Layout: Show Secondary Side Bar',
+    },
+    {
+      id: 'Layout.hideSecondarySideBar',
+      label: 'Layout: Hide Secondary Side Bar',
+    },
+    {
       id: 'Developer.openIframeInspector',
       label: 'Developer: Open Iframe Inspector',
     },

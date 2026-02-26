@@ -94,6 +94,20 @@ const getSideBarDom = (sideBarId: number) => {
   }
 }
 
+const getSecondarySideBarDom = (secondarySideBarId: number) => {
+  if (secondarySideBarId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet SecondarySideBar',
+      childCount: 0,
+    }
+  }
+  return {
+    type: VirtualDomElements.Reference,
+    uid: secondarySideBarId,
+  }
+}
+
 const getMainDom = (mainId: number) => {
   if (mainId === -1) {
     return {
@@ -132,6 +146,8 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     sideBarSashVisible,
     mainVisible,
     mainId,
+    secondarySideBarVisible,
+    secondarySideBarId,
     previewSashVisible,
     previewVisible,
     previewId,
@@ -152,6 +168,10 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   }
   if (mainVisible) {
     children.push(getMainDom(mainId))
+  }
+
+  if (secondarySideBarVisible) {
+    children.push(getSecondarySideBarDom(secondarySideBarId))
   }
 
   if (previewSashVisible) {
@@ -179,6 +199,8 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     sideBarSashVisible,
     sideBarVisible,
     sideBarId,
+    secondarySideBarVisible,
+    secondarySideBarId,
     activityBarVisible,
     activityBarId,
     previewSashVisible,
@@ -188,6 +210,9 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   const children: any[] = []
   if (mainVisible) {
     children.push(getMainDom(mainId))
+  }
+  if (secondarySideBarVisible) {
+    children.push(getSecondarySideBarDom(secondarySideBarId))
   }
   let delta = 0
   if (sideBarSashVisible) {

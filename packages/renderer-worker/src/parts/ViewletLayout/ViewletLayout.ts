@@ -35,6 +35,7 @@ export const create = (id: number): LayoutState => {
     activityBarSashId: -1,
     sideBarSashId: -1,
     sideBarId: -1,
+    secondarySideBarId: -1,
     panelSashId: -1,
     panelId: -1,
     mainId: -1,
@@ -54,6 +55,7 @@ export const create = (id: number): LayoutState => {
     previewVisible: false,
     sideBarSashVisible: false,
     sideBarVisible: false,
+    secondarySideBarVisible: false,
     statusBarVisible: false,
     titleBarVisible: false,
     workbenchVisible: false,
@@ -77,6 +79,10 @@ export const create = (id: number): LayoutState => {
     sideBarLeft: 0,
     sideBarTop: 0,
     sideBarWidth: 0,
+    secondarySideBarHeight: 0,
+    secondarySideBarLeft: 0,
+    secondarySideBarTop: 0,
+    secondarySideBarWidth: 0,
     statusBarHeight: 0,
     statusBarLeft: 0,
     statusBarTop: 0,
@@ -95,8 +101,11 @@ export const create = (id: number): LayoutState => {
     previewMinWidth: 0,
     sideBarMaxWidth: 0,
     sideBarMinWidth: 0,
+    secondarySideBarMaxWidth: 0,
+    secondarySideBarMinWidth: 0,
     titleBarNative: false,
     sideBarView: '',
+    secondarySideBarView: '',
     updateState: 'none',
     updateProgress: 0,
     commit: Commit.commit,
@@ -122,6 +131,9 @@ export const saveState = (state: LayoutState) => {
     sideBarView,
     sideBarVisible,
     sideBarWidth,
+    secondarySideBarView,
+    secondarySideBarVisible,
+    secondarySideBarWidth,
   } = state
   return {
     activityBarVisible,
@@ -134,6 +146,9 @@ export const saveState = (state: LayoutState) => {
     sideBarView,
     sideBarVisible,
     sideBarWidth,
+    secondarySideBarView,
+    secondarySideBarVisible,
+    secondarySideBarWidth,
   }
 }
 
@@ -152,17 +167,21 @@ const getSavedPoints = (savedState) => {
     return {
       sideBarVisible: true,
       sideBarWidth: 240,
+      secondarySideBarVisible: false,
+      secondarySideBarWidth: 300,
       previewWidth: 0,
       previewVisible: false,
       panelVisible: false,
       panelHeight: 0,
     }
   }
-  const { sideBarVisible, sideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } = savedState
+  const { sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } = savedState
 
   return {
     sideBarVisible: sideBarVisible ?? true,
     sideBarWidth: sideBarWidth ?? 240,
+    secondarySideBarVisible: secondarySideBarVisible ?? false,
+    secondarySideBarWidth: secondarySideBarWidth ?? 300,
     previewWidth: previewWidth ?? 0,
     previewVisible: previewVisible ?? false,
     panelVisible: panelVisible ?? false,
@@ -181,13 +200,21 @@ const getSavedSideBarView = (savedState) => {
   return ViewletModuleId.Explorer
 }
 
+const getSavedSecondarySideBarView = (savedState) => {
+  if (savedState && savedState.secondarySideBarView && typeof savedState.secondarySideBarView === 'string') {
+    return savedState.secondarySideBarView
+  }
+  return ViewletModuleId.LanguageModels
+}
+
 export const loadContent = (state: LayoutState, savedState: any): LayoutState => {
   const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
-  const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
+  const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
+  const savedSecondaryView = getSavedSecondarySideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
   const intermediateState: LayoutState = {
     ...state,
@@ -198,11 +225,15 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     panelMaxHeight: 600,
     panelMinHeight: 150,
     sideBarMaxWidth: 9999999,
+    secondarySideBarMaxWidth: 9999999,
     panelVisible,
 
     sideBarMinWidth: 170,
+    secondarySideBarMinWidth: 220,
     sideBarVisible,
     sideBarWidth,
+    secondarySideBarVisible,
+    secondarySideBarWidth,
     statusBarHeight: 20,
     statusBarVisible: true,
     previewVisible,
@@ -225,6 +256,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     sideBarLocation,
     sideBarSashVisible: true,
     sideBarView: savedView,
+    secondarySideBarView: savedSecondaryView,
     workbenchVisible: true,
     initial: false,
   }
@@ -352,6 +384,20 @@ export const hideSideBar = async (state: LayoutState) => {
 export const toggleSideBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.SideBar)
+}
+
+export const showSecondarySideBar = (state: LayoutState) => {
+  // @ts-ignore
+  return show(state, LayoutModules.SecondarySideBar)
+}
+
+export const hideSecondarySideBar = (state: LayoutState) => {
+  return hide(state, LayoutModules.SecondarySideBar)
+}
+
+export const toggleSecondarySideBar = (state: LayoutState) => {
+  // @ts-ignore
+  return toggle(state, LayoutModules.SecondarySideBar)
 }
 
 export const showPanel = (state: LayoutState) => {
@@ -555,6 +601,13 @@ export const loadMainIfVisible = (state: LayoutState) => {
 
 export const loadSideBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.SideBar)
+  return {
+    ...updated,
+  }
+}
+
+export const loadSecondarySideBarIfVisible = async (state: LayoutState) => {
+  const updated = await loadIfVisible(state, LayoutModules.SecondarySideBar)
   return {
     ...updated,
   }
@@ -791,6 +844,7 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
     LayoutModules.Main,
     LayoutModules.ActivityBar,
     LayoutModules.SideBar,
+    LayoutModules.SecondarySideBar,
     LayoutModules.TitleBar,
     LayoutModules.StatusBar,
     LayoutModules.Panel,
@@ -836,6 +890,7 @@ const getFocusChangeCommands = (isFocused) => {
     LayoutModules.Main,
     LayoutModules.ActivityBar,
     LayoutModules.SideBar,
+    LayoutModules.SecondarySideBar,
     LayoutModules.TitleBar,
     LayoutModules.StatusBar,
     LayoutModules.Panel,
@@ -1171,12 +1226,20 @@ export const getActiveSideBarView = (state: LayoutState) => {
   return state.sideBarView
 }
 
+export const getActiveSecondarySideBarView = (state: LayoutState) => {
+  return state.secondarySideBarView
+}
+
 export const getActivePanelView = (state: LayoutState) => {
   return state.panelView
 }
 
 export const getSideBarVisible = (state: LayoutState): boolean => {
   return state.sideBarVisible
+}
+
+export const getSecondarySideBarVisible = (state: LayoutState): boolean => {
+  return state.secondarySideBarVisible
 }
 
 export const getSideBarPosition = (state: LayoutState) => {
@@ -1190,6 +1253,15 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
     commands,
   }
 }
+
+export const openSecondarySideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
+  const { newState, commands } = await callGlobalEvent(state, 'handleSecondarySideBarViewletChange', moduleId)
+  return {
+    newState: { ...newState, secondarySideBarView: moduleId },
+    commands,
+  }
+}
+
 export const openPanelView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
   const { newState, commands } = await callGlobalEvent(state, 'handlePanelViewletChange', moduleId)
   return {

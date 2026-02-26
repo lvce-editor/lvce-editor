@@ -17,6 +17,10 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const windowHeight = source[LayoutKeys.WindowHeight]
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
   const sideBarMaxWidth = source[LayoutKeys.SideBarMaxWidth]
+  const secondarySideBarVisible = source[LayoutKeys.SecondarySideBarVisible]
+  const secondarySideBarMinWidth = source[LayoutKeys.SecondarySideBarMinWidth]
+  const secondarySideBarMaxWidth = source[LayoutKeys.SecondarySideBarMaxWidth]
+  const secondarySideBarWidth = source[LayoutKeys.SecondarySideBarWidth]
   const panelMinHeight = source[LayoutKeys.PanelMinHeight]
   const panelMaxHeight = source[LayoutKeys.PanelMaxHeight]
   const titleBarHeight = source[LayoutKeys.TitleBarHeight]
@@ -25,6 +29,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const statusBarHeight = source[LayoutKeys.StatusBarHeight]
 
   const newSideBarWidth = Clamp.clamp(sideBarWidth, sideBarMinWidth, sideBarMaxWidth)
+  const newSecondarySideBarWidth = Clamp.clamp(secondarySideBarWidth, secondarySideBarMinWidth, secondarySideBarMaxWidth)
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
 
   if (sideBarLocation === SideBarLocationType.Right) {
@@ -75,9 +80,13 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       p7 = 0
     }
 
+    const maxSecondarySideBarWidth = Math.max(0, p7 - p6 - mainMinWidth)
+    const adjustedSecondarySideBarWidth = secondarySideBarVisible ? Math.min(newSecondarySideBarWidth, maxSecondarySideBarWidth) : 0
+    const secondarySideBarLeft = p7 - adjustedSecondarySideBarWidth
+
     const destinationMainLeft = p6
     const destinationMainTop = p2
-    const destinationMainWidth = p7 - p6
+    const destinationMainWidth = secondarySideBarLeft - p6
     const destinationMainHeight = p3 - p2
     const destinationMainVisible = 1
 
@@ -92,6 +101,12 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationSideBarWidth = adjustedSideBarWidth
     const destinationSideBarHeight = p3 - p2
     const destinationSideBarVisible = sideBarVisible
+
+    const destinationSecondarySideBarLeft = secondarySideBarLeft
+    const destinationSecondarySideBarTop = p2
+    const destinationSecondarySideBarWidth = adjustedSecondarySideBarWidth
+    const destinationSecondarySideBarHeight = p3 - p2
+    const destinationSecondarySideBarVisible = secondarySideBarVisible
 
     const destinationStatusBarLeft = p1
     const destinationStatusBarTop = p4
@@ -137,6 +152,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       sideBarWidth: destinationSideBarWidth,
       sideBarHeight: destinationSideBarHeight,
       sideBarVisible: destinationSideBarVisible,
+      secondarySideBarLeft: destinationSecondarySideBarLeft,
+      secondarySideBarTop: destinationSecondarySideBarTop,
+      secondarySideBarWidth: destinationSecondarySideBarWidth,
+      secondarySideBarHeight: destinationSecondarySideBarHeight,
+      secondarySideBarVisible: destinationSecondarySideBarVisible,
       statusBarLeft: destinationStatusBarLeft,
       statusBarTop: destinationStatusBarTop,
       statusBarWidth: destinationStatusBarWidth,
@@ -196,8 +216,12 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationActivityBarHeight = p4 - p2
     const destinationActivityBarVisible = activityBarVisible
 
+    const maxSecondarySideBarWidth = Math.max(0, availableWidth - p8 - mainMinWidth)
+    const adjustedSecondarySideBarWidth = secondarySideBarVisible ? Math.min(newSecondarySideBarWidth, maxSecondarySideBarWidth) : 0
+    const secondarySideBarLeft = availableWidth - adjustedSecondarySideBarWidth
+
     // For when preview is visible, constrain main area to left 50% of window
-    let mainWidth = Math.max(0, availableWidth - p8)
+    let mainWidth = Math.max(0, secondarySideBarLeft - p8)
 
     const destinationMainLeft = p8
     const destinationMainTop = p2
@@ -216,6 +240,12 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationSideBarWidth = p8 - p7
     const destinationSideBarHeight = p3 - p2
     const destinationSideBarVisible = sideBarVisible
+
+    const destinationSecondarySideBarLeft = secondarySideBarLeft
+    const destinationSecondarySideBarTop = p2
+    const destinationSecondarySideBarWidth = adjustedSecondarySideBarWidth
+    const destinationSecondarySideBarHeight = p3 - p2
+    const destinationSecondarySideBarVisible = secondarySideBarVisible
 
     const destinationStatusBarLeft = p1
     const destinationStatusBarTop = p4
@@ -256,6 +286,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       sideBarWidth: destinationSideBarWidth,
       sideBarHeight: destinationSideBarHeight,
       sideBarVisible: destinationSideBarVisible,
+      secondarySideBarLeft: destinationSecondarySideBarLeft,
+      secondarySideBarTop: destinationSecondarySideBarTop,
+      secondarySideBarWidth: destinationSecondarySideBarWidth,
+      secondarySideBarHeight: destinationSecondarySideBarHeight,
+      secondarySideBarVisible: destinationSecondarySideBarVisible,
       statusBarLeft: destinationStatusBarLeft,
       statusBarTop: destinationStatusBarTop,
       statusBarWidth: destinationStatusBarWidth,
