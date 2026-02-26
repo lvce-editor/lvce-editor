@@ -6,8 +6,6 @@ export const BrowserViewOverview = 'BrowserViewOverview'
 
 export const Clock = 'Clock'
 
-export const Chat = 'Chat'
-
 export const ColorPicker = 'ColorPicker'
 
 export const Counter = 'Counter'
