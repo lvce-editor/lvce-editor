@@ -172,6 +172,10 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/update-worker`, 'dist', 'updateWorkerMain.js'),
   })
   await Copy.copyFile({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/quick-pick-worker/dist/quickPickWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/quick-pick-worker`, 'dist', 'quickPickWorkerMain.js'),
+  })
+  await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/preview-worker/dist/previewWorkerMain.js',
     to: Path.join(`${toRoot}/packages/preview-worker`, 'dist', 'previewWorkerMain.js'),
   })

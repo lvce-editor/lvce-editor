@@ -44,7 +44,7 @@
     "@lvce-editor/about-view": "^7.1.0",
     "@lvce-editor/activity-bar-worker": "^4.1.0",
     "@lvce-editor/clipboard-worker": "^1.17.0",
-    "@lvce-editor/language-models-view": "^1.10.0",
+    "@lvce-editor/language-models-view": "^1.11.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^3.0.0",
     "@lvce-editor/debug-worker": "^4.0.0",
@@ -58,7 +58,8 @@
     "@lvce-editor/extension-host-worker": "^8.5.0",
     "@lvce-editor/extension-management-worker": "^3.0.0",
     "@lvce-editor/extension-search-view": "^7.3.0",
-    "@lvce-editor/file-search-worker": "^7.4.0",
+    "@lvce-editor/file-search-worker": "^7.5.0",
+    "@lvce-editor/quick-pick-worker": "^1.0.1",
     "@lvce-editor/file-system-worker": "^5.1.0",
     "@lvce-editor/find-widget-worker": "^3.3.0",
     "@lvce-editor/hover-worker": "^2.0.0",
@@ -92,6 +93,6 @@
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
-    "@types/node": "^25.2.0"
+    "@types/node": "^25.3.1"
   }
 }

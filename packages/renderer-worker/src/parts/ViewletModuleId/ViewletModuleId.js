@@ -78,6 +78,8 @@ export const Search = 'Search'
 
 export const SideBar = 'SideBar'
 
+export const SecondarySideBar = 'SecondarySideBar'
+
 export const SimpleBrowser = 'SimpleBrowser'
 
 export const SourceControl = 'Source Control'

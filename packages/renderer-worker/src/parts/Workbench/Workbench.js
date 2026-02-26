@@ -51,6 +51,8 @@ const actions = [
   async () => {
     LifeCycle.mark(LifeCyclePhase.Eight)
 
+    await Command.execute('Layout.loadSecondarySideBarIfVisible')
+
     Performance.mark(PerformanceMarkerType.WillLoadPanel)
     await Command.execute('Layout.loadPanelIfVisible')
     Performance.mark(PerformanceMarkerType.DidLoadPanel)
