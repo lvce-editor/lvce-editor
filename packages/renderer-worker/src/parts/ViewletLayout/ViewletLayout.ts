@@ -175,7 +175,8 @@ const getSavedPoints = (savedState) => {
       panelHeight: 0,
     }
   }
-  const { sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } = savedState
+  const { sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewWidth, previewVisible, panelVisible, panelHeight } =
+    savedState
 
   return {
     sideBarVisible: sideBarVisible ?? true,
@@ -212,7 +213,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
-  const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewVisible, previewWidth } = getSavedPoints(savedState)
+  const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewVisible, previewWidth } =
+    getSavedPoints(savedState)
   const savedView = getSavedSideBarView(savedState)
   const savedSecondaryView = getSavedSecondarySideBarView(savedState)
   const previewUri = savedState?.previewUri || ''
