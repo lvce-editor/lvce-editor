@@ -149,5 +149,12 @@ export const getWatchConfig = () => {
       command: 'Panel.hotReload',
     })
   }
+  const chat = Preferences.get('develop.chatViewWorkerPath')
+  if (chat) {
+    watchConfig.push({
+      path: preview,
+      command: 'Chat.hotReload',
+    })
+  }
   return watchConfig
 }
