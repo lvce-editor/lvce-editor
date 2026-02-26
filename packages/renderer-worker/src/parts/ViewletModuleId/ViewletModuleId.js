@@ -10,6 +10,8 @@ export const ColorPicker = 'ColorPicker'
 
 export const Counter = 'Counter'
 
+export const Chat = 'Chat'
+
 export const DebugConsole = 'Debug Console'
 
 export const Terminal2 = 'Terminal2'
