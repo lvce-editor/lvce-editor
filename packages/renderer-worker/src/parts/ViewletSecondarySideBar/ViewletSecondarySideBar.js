@@ -1,5 +1,6 @@
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
+import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -7,7 +8,6 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Id from '../Id/Id.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -78,32 +78,14 @@ export const handleSecondarySideBarViewletChange = async (state, moduleId) => {
     false,
     true,
   )
-  let actionsDom = []
-  let actionsUid = -1
-  if (commands) {
-    const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
-    if (actionsDomIndex) {
-      actionsDom = commands[actionsDomIndex][3]
-      commands.splice(actionsDomIndex, 1)
-    }
-    const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
-    const events = commands[eventsIndex][2]
-    actionsUid = Id.create()
-    commands.push(
-      ['Viewlet.createFunctionalRoot', moduleId, actionsUid, true],
-      ['Viewlet.registerEventListeners', actionsUid, events],
-      ['Viewlet.setDom2', actionsUid, actionsDom],
-      ['Viewlet.setUid', actionsUid, childUid],
-    )
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  }
+
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 
   await savePromise
   return {
     ...state,
     currentViewletId: moduleId,
     childUid,
-    actionsUid,
   }
 }
 
