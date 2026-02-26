@@ -1,5 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -18,6 +18,6 @@ export const renderItems = {
 export const render = [renderItems]
 
 export const renderEventListeners = async () => {
-  const listeners = await FileSearchWorker.invoke('QuickPick.renderEventListeners')
+  const listeners = await QuickPickWorker.invoke('QuickPick.renderEventListeners')
   return listeners
 }

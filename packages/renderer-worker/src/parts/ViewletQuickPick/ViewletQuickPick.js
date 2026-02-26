@@ -1,5 +1,5 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -51,7 +51,7 @@ export const loadContent = async (state) => {
   const { uri, args, assetDir, platform } = state
   const listItemHeight = 22
   const renderAllItems = true
-  await FileSearchWorker.invoke(
+  await QuickPickWorker.invoke(
     'QuickPick.create2',
     state.uid,
     uri,
@@ -66,9 +66,9 @@ export const loadContent = async (state) => {
     Workspace.state.workspacePath,
     assetDir,
   )
-  await FileSearchWorker.invoke('QuickPick.loadContent', state.uid)
-  const diffResult = await FileSearchWorker.invoke('QuickPick.diff2', state.uid)
-  const commands = await FileSearchWorker.invoke('QuickPick.render2', state.uid, diffResult)
+  await QuickPickWorker.invoke('QuickPick.loadContent', state.uid)
+  const diffResult = await QuickPickWorker.invoke('QuickPick.diff2', state.uid)
+  const commands = await QuickPickWorker.invoke('QuickPick.render2', state.uid, diffResult)
 
   return {
     ...state,

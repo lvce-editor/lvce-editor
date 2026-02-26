@@ -1,4 +1,4 @@
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 
 export const state = {
   /**
@@ -16,5 +16,5 @@ export const add = async (menuEntries) => {
   // TODO store menu entries here or in file search worker?
   // Usually don't want to start worker for the menu entries
   // But also quickpick menu entries would be better stored there
-  await FileSearchWorker.invoke('QuickPick.addMenuEntries', menuEntries)
+  await QuickPickWorker.invoke('QuickPick.addMenuEntries', menuEntries)
 }

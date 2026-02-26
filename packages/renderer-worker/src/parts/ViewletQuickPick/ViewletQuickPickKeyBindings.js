@@ -1,5 +1,5 @@
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 
 export const getKeyBindings = () => {
-  return FileSearchWorker.invoke('QuickPick.getKeyBindings')
+  return QuickPickWorker.invoke('QuickPick.getKeyBindings')
 }
