@@ -6,6 +6,8 @@ export const hasFunctionalRootRender = true
 
 export const hasFunctionalEvents = true
 
+export const hasFunctionalResize = true
+
 const renderDom = {
   isEqual(oldState, newState) {
     return false
