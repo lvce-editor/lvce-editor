@@ -1,13 +1,13 @@
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 
 export const wrapQuickPickCommand = (key) => {
   const fn = async (state, ...args) => {
-    await FileSearchWorker.invoke(`QuickPick.${key}`, state.uid, ...args)
-    const diffResult = await FileSearchWorker.invoke('QuickPick.diff2', state.uid)
+    await QuickPickWorker.invoke(`QuickPick.${key}`, state.uid, ...args)
+    const diffResult = await QuickPickWorker.invoke('QuickPick.diff2', state.uid)
     if (diffResult.length === 0) {
       return state
     }
-    const commands = await FileSearchWorker.invoke('QuickPick.render2', state.uid, diffResult)
+    const commands = await QuickPickWorker.invoke('QuickPick.render2', state.uid, diffResult)
     return {
       ...state,
       commands,

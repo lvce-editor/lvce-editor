@@ -3,7 +3,7 @@ import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
-import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
@@ -103,7 +103,7 @@ export const sendMessagePortToIframeWorker = async (port, initialCommand, rpcId)
 export const sendMessagePortToFileSearchWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  await FileSearchWorker.invokeAndTransfer(initialCommand, port, rpcId)
+  await QuickPickWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToOpenerWorker = async (port, initialCommand, rpcId) => {
