@@ -41,6 +41,7 @@ export const map = {
   [ViewletModuleId.Search]: () => import('../ViewletSearch/ViewletSearch.ipc.ts'),
   [ViewletModuleId.Settings]: () => import('../ViewletSettings/ViewletSettings.ipc.js'),
   [ViewletModuleId.SideBar]: () => import('../ViewletSideBar/ViewletSideBar.ipc.js'),
+  [ViewletModuleId.SecondarySideBar]: () => import('../ViewletSecondarySideBar/ViewletSecondarySideBar.ipc.js'),
   [ViewletModuleId.SimpleBrowser]: () => import('../ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js'),
   [ViewletModuleId.SourceControl]: () => import('../ViewletSourceControl/ViewletSourceControl.ipc.js'),
   [ViewletModuleId.StatusBar]: () => import('../ViewletStatusBar/ViewletStatusBar.ipc.js'),
