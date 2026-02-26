@@ -30,6 +30,7 @@ import * as GetHeadersMainAreaWorker from '../GetHeadersMainAreaWorker/GetHeader
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
 import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
 import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
+import * as GetHeadersChatViewWorker from '../GetHeadersChatView/GetHeadersChatView.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
 import * as GetHeadersPanelWorker from '../GetHeadersPanelWorker/GetHeadersPanelWorker.js'
 import * as GetHeadersPreviewSandBoxWorker from '../GetHeadersPreviewSandBoxWorker/GetHeadersPreviewSandBoxWorker.js'
@@ -164,6 +165,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('sourceActionWorkerMain.js')) {
     return GetHeadersSourceActionWorker.getHeadersSourceActionWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('chatViewWorkerMain.js')) {
+    return GetHeadersChatViewWorker.getHeadersChatViewWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('debugWorkerMain.js')) {
     return GetHeadersDebugWorker.getHeadersDebugWorker(mime, etag, defaultCachingHeader)
