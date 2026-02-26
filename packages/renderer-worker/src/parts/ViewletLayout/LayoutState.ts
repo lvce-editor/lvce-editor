@@ -57,6 +57,15 @@ export interface LayoutState {
   readonly sideBarView: string
   readonly sideBarVisible: boolean
   readonly sideBarWidth: number
+  readonly secondarySideBarHeight: number
+  readonly secondarySideBarId: number
+  readonly secondarySideBarLeft: number
+  readonly secondarySideBarMaxWidth: number
+  readonly secondarySideBarMinWidth: number
+  readonly secondarySideBarTop: number
+  readonly secondarySideBarView: string
+  readonly secondarySideBarVisible: boolean
+  readonly secondarySideBarWidth: number
   readonly statusBarHeight: number
   readonly statusBarId: number
   readonly statusBarLeft: number

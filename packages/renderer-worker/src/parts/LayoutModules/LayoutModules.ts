@@ -45,6 +45,17 @@ export const SideBar: LayoutModule = {
   kReady: 'sideBarVisible',
 }
 
+export const SecondarySideBar: LayoutModule = {
+  moduleId: ViewletModuleId.SecondarySideBar,
+  kVisible: LayoutKeys.SecondarySideBarVisible,
+  kTop: LayoutKeys.SecondarySideBarTop,
+  kLeft: LayoutKeys.SecondarySideBarLeft,
+  kWidth: LayoutKeys.SecondarySideBarWidth,
+  kHeight: LayoutKeys.SecondarySideBarHeight,
+  kId: 'secondarySideBarId',
+  kReady: 'secondarySideBarVisible',
+}
+
 export const TitleBar: LayoutModule = {
   moduleId: ViewletModuleId.TitleBar,
   kVisible: LayoutKeys.TitleBarVisible,
