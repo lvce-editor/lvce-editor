@@ -19,3 +19,24 @@ export const loadContent = async (state: ChatState): Promise<ChatState> => {
     commands,
   }
 }
+
+export const hotReload = async (state) => {
+  if (state.isHotReloading) {
+    return state
+  }
+  // TODO avoid mutation
+  state.isHotReloading = true
+  // possible TODO race condition during hot reload
+  // there could still be pending promises when the worker is disposed
+  const savedState = await ChatViewWorker.invoke('Chat.saveState', state.uid)
+  await ChatViewWorker.restart('Chat.terminate')
+  await ChatViewWorker.invoke('Chat.create', state.uid, '', state.x, state.y, state.width, state.height, null)
+  await ChatViewWorker.invoke('Chat.loadContent', state.uid, savedState)
+  const diffResult = await ChatViewWorker.invoke('Chat.diff2', state.uid)
+  const commands = await ChatViewWorker.invoke('Chat.render2', state.uid, diffResult)
+  state.isHotReloading = false
+  return {
+    ...state,
+    commands,
+  }
+}
