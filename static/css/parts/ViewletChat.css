@@ -67,3 +67,16 @@
   contain: strict;
   align-items: center;
 }
+
+.ChatSendArea {
+  display: flex;
+  contain: strict;
+  height: 45px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.ChatSendArea .MultilineInputBox {
+  height: 100%;
+}
