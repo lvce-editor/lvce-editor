@@ -92,3 +92,11 @@
 .ChatSendArea .MultilineInputBox {
   height: 100%;
 }
+
+.ChatMessages {
+  flex: 1;
+  contain: strict;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
