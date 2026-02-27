@@ -17,6 +17,12 @@
   justify-content: space-between;
 }
 
+.ChatHeader .IconButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .ChatActions {
   contain: content;
   display: flex;
