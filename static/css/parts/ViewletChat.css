@@ -43,13 +43,10 @@
   min-height: 0;
 }
 
-.ChatList .ChatList {
+.ChatListItem {
   contain: strict;
+  height: 80px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 8px;
 }
 
 .TestActive {
@@ -65,7 +62,6 @@
 .ChatDetails {
   contain: strict;
   display: flex;
-  flex: 1;
   min-height: 0;
   padding: 8px;
 }
