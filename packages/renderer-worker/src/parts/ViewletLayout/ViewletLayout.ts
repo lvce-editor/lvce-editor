@@ -721,8 +721,7 @@ const getNewStatePointerMoveSecondarySideBar = async (state: LayoutState, x: num
   const secondarySideBarRight = previewVisible ? previewLeft : windowWidth
   const mainLeft = sideBarLocation === SideBarLocationType.Left ? sideBarLeft + sideBarWidth : 0
   const maxSecondarySideBarWidth = Math.max(0, secondarySideBarRight - mainLeft - mainMinWidth)
-  const newSecondarySideBarWidth =
-    sideBarLocation === SideBarLocationType.Left ? secondarySideBarRight - x : sideBarLeft - x
+  const newSecondarySideBarWidth = sideBarLocation === SideBarLocationType.Left ? secondarySideBarRight - x : sideBarLeft - x
   const constrainedSecondarySideBarWidth = Math.min(newSecondarySideBarWidth, maxSecondarySideBarWidth)
 
   if (constrainedSecondarySideBarWidth <= secondarySideBarMinWidth / 2) {
