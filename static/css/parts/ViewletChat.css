@@ -25,16 +25,6 @@
   gap: 8px;
 }
 
-.Label {
-  contain: content;
-  padding: 2px 0;
-}
-
-.IconButton {
-  contain: content;
-  padding: 4px 8px;
-}
-
 .ChatList {
   contain: strict;
   display: flex;
@@ -43,13 +33,10 @@
   min-height: 0;
 }
 
-.ChatList .ChatList {
+.ChatListItem {
   contain: strict;
+  height: 80px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 8px;
 }
 
 .TestActive {
@@ -57,15 +44,9 @@
   padding: 2px;
 }
 
-.Button {
-  contain: content;
-  padding: 4px 8px;
-}
-
 .ChatDetails {
   contain: strict;
   display: flex;
-  flex: 1;
   min-height: 0;
   padding: 8px;
 }
@@ -83,12 +64,4 @@
 .ChatWelcomeMessage {
   contain: content;
   padding: 8px;
-}
-
-.MultilineInputBox {
-  contain: content;
-  width: 100%;
-  min-height: 84px;
-  padding: 8px;
-  box-sizing: border-box;
 }
