@@ -117,17 +117,12 @@ export const resize = async (state, dimensions) => {
     ...dimensions,
   }
   if (!currentViewletInstance) {
-    return {
-      newState,
-      commands: [],
-    }
+    return newState
   }
   const currentViewletUid = currentViewletInstance.state.uid
+  // @ts-ignore
   const commands = await Viewlet.resize(currentViewletUid, childDimensions)
-  return {
-    newState,
-    commands,
-  }
+  return newState
 }
 
 export const focus = async (state) => {
