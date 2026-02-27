@@ -60,3 +60,10 @@
   contain: content;
   padding: 8px;
 }
+
+.ChatName {
+  flex: 1;
+  display: flex;
+  contain: strict;
+  align-items: center;
+}
