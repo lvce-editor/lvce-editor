@@ -11,10 +11,10 @@
 .ChatHeader {
   contain: strict;
   display: flex;
-  flex-direction: column;
   gap: 8px;
   padding: 8px;
   height: 40px;
+  justify-content: space-between;
 }
 
 .ChatActions {
@@ -29,19 +29,13 @@
   contain: strict;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-height: 0;
+  flex: 1;
 }
 
 .ChatListItem {
   contain: strict;
   height: 80px;
   display: flex;
-}
-
-.TestActive {
-  contain: content;
-  padding: 2px;
 }
 
 .ChatDetails {
