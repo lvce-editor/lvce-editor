@@ -1,4 +1,4 @@
-import { getSideBarDom } from '../GetSideBarDom/GetSideBarDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const hasFunctionalRender = true
 
@@ -13,7 +13,18 @@ const renderDom = {
     return false
   },
   apply(oldState, newState) {
-    const dom = getSideBarDom(newState)
+    const { childUid } = newState
+    const dom = [
+      {
+        type: VirtualDomElements.Div,
+        className: 'SideBar',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Reference,
+        uid: childUid,
+      },
+    ]
     return [/* method */ 'Viewlet.setDom2', dom]
   },
 }
