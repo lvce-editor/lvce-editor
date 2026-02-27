@@ -34,7 +34,7 @@
 
 .ChatListItem {
   contain: strict;
-  height: 80px;
+  height: 40px;
   display: flex;
   background: transparent;
 }
