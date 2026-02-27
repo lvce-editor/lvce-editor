@@ -125,10 +125,7 @@ const getCss = (newState: LayoutState) => {
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
-  const sashSecondarySideBarLeft =
-    newState.sideBarLocation === SideBarLocationType.Right
-      ? newState.secondarySideBarLeft + newState.secondarySideBarWidth
-      : newState.secondarySideBarLeft
+  const sashSecondarySideBarLeft = newState.secondarySideBarLeft
   const roundedSideBarWidth = Math.round(sideBarWidth)
   const roundedSashSideBarLeft = Math.round(sashSideBarLeft)
   const roundedSashSecondarySideBarLeft = Math.round(sashSecondarySideBarLeft)
