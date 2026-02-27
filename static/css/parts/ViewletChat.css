@@ -5,7 +5,7 @@
   flex: 1;
   gap: 10px;
   min-height: 0;
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 .ChatHeader {
@@ -37,6 +37,7 @@
   height: 40px;
   display: flex;
   background: transparent;
+  padding-left: 10px;
 }
 
 .ChatDetails {
