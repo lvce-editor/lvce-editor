@@ -39,6 +39,10 @@
   overflow-y: auto;
 }
 
+.ChatListItemLabel {
+  flex: 1;
+}
+
 .ChatListItem {
   contain: strict;
   height: 40px;
