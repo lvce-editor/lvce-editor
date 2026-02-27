@@ -47,3 +47,8 @@
 .ButtonWide {
   max-width: 300px;
 }
+
+.ButtonDisabled {
+  background: gray;
+  cursor: not-allowed;
+}
