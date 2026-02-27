@@ -37,6 +37,7 @@
   contain: strict;
   height: 80px;
   display: flex;
+  background: transparent;
 }
 
 .TestActive {
