@@ -1,4 +1,5 @@
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import type { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
@@ -102,6 +103,8 @@ const renderDom = {
       oldState.sideBarLocation === newState.sideBarLocation &&
       oldState.sideBarVisible === newState.sideBarVisible &&
       oldState.sideBarId === newState.sideBarId &&
+      oldState.secondarySideBarVisible === newState.secondarySideBarVisible &&
+      oldState.secondarySideBarId === newState.secondarySideBarId &&
       oldState.statusBarVisible === newState.statusBarVisible &&
       oldState.statusBarId === newState.statusBarId &&
       oldState.previewVisible === newState.previewVisible &&
@@ -122,8 +125,13 @@ const getCss = (newState: LayoutState) => {
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
+  const sashSecondarySideBarLeft =
+    newState.sideBarLocation === SideBarLocationType.Right
+      ? newState.secondarySideBarLeft + newState.secondarySideBarWidth
+      : newState.secondarySideBarLeft
   const roundedSideBarWidth = Math.round(sideBarWidth)
   const roundedSashSideBarLeft = Math.round(sashSideBarLeft)
+  const roundedSashSecondarySideBarLeft = Math.round(sashSecondarySideBarLeft)
   return `:root {
   --ActivityBarWidth: ${activityBarWidth}px;
   --PanelHeight: ${panelHeight}px;
@@ -131,6 +139,7 @@ const getCss = (newState: LayoutState) => {
   --TitleBarHeight: ${titleBarHeight}px;
   --PreviewWidth: ${previewWidth}px;
   --SashSideBarLeft: ${roundedSashSideBarLeft}px;
+  --SashSecondarySideBarLeft: ${roundedSashSecondarySideBarLeft}px;
 }`
 }
 
@@ -151,6 +160,11 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
       params: ['handleSashSideBarPointerDown'],
+      trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashSecondarySideBarPointerDown,
+      params: ['handleSashSecondarySideBarPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
     },
     {
