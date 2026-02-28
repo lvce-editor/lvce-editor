@@ -44,3 +44,7 @@ export const hotReload = async (state) => {
     commands,
   }
 }
+
+export const saveState = (state) => {
+  return ChatViewWorker.invoke('Chat.saveState', state.uid)
+}
