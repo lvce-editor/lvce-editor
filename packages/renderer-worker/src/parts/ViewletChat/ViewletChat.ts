@@ -12,10 +12,10 @@ export const create = (id, uri, x, y, width, height, args, parentUid): ChatState
   }
 }
 
-export const loadContent = async (state: ChatState): Promise<ChatState> => {
+export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const { id, x, y, width, height } = state
   await ChatViewWorker.invoke('Chat.create', id, x, y, width, height)
-  await ChatViewWorker.invoke('Chat.loadContent2', id)
+  await ChatViewWorker.invoke('Chat.loadContent2', id, savedState)
   const diffResult = await ChatViewWorker.invoke('Chat.diff2', id)
   const commands = await ChatViewWorker.invoke('Chat.render2', id, diffResult)
   return {
