@@ -105,7 +105,8 @@ const renderDom = {
       oldState.statusBarVisible === newState.statusBarVisible &&
       oldState.statusBarId === newState.statusBarId &&
       oldState.previewVisible === newState.previewVisible &&
-      oldState.previewId === newState.previewId
+      oldState.previewId === newState.previewId &&
+      oldState.secondarySideBarVisible === newState.secondarySideBarVisible
     )
   },
   apply(oldState: LayoutState, newState: LayoutState) {
