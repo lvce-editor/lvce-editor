@@ -70,6 +70,8 @@
 .ChatWelcomeMessage {
   contain: content;
   padding: 8px;
+  display: flex;
+  flex: 1;
 }
 
 .ChatName {
