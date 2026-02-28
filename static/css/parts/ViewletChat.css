@@ -50,6 +50,10 @@
   padding-left: 10px;
 }
 
+.ChatListItem:hover {
+  background: var(--ListHoverBackground);
+}
+
 .ChatDetails {
   contain: strict;
   display: flex;
@@ -88,6 +92,12 @@
   flex-direction: column;
   height: 90px;
   contain: strict;
+}
+
+.ChatSendAreaContent {
+  background: var(--InputBoxBackground);
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .ChatSendArea .MultilineInputBox {
