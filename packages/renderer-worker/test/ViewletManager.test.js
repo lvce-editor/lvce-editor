@@ -273,6 +273,34 @@ test('load - canceled', async () => {
   expect(ViewletStates.getInstance('test')).toBeUndefined()
 })
 
+test('load - does not call Viewlet.loadModule for Editor', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const mockModule = {
+    hasFunctionalEvents: true,
+    hasFunctionalRootRender: true,
+    create: jest.fn(() => {
+      return {
+        x: 0,
+      }
+    }),
+    loadContent: jest.fn(async () => {
+      return {
+        uid: 1,
+        x: 1,
+      }
+    }),
+  }
+  const getModule = async () => {
+    return mockModule
+  }
+  const state = ViewletManager.create(getModule, 'Editor', 0, '', 0, 0, 0, 0)
+  // @ts-ignore
+  const commands = await ViewletManager.load(state)
+  expect(commands).toEqual(expect.arrayContaining([['Viewlet.createFunctionalRoot', 'Editor', 1, true]]))
+  expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.loadModule', 'Editor')
+})
+
 test.skip('load - shouldApplyNewState returns false', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
