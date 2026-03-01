@@ -111,6 +111,9 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
+  contain: strict;
 }
 
 .ChatSendAreaBottom {
