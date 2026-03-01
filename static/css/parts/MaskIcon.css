@@ -151,6 +151,11 @@
   mask-image: url(/icons/new-file.svg);
 }
 
+.MaskIconSend,
+.IconSend {
+  mask-image: url(/icons/send.svg);
+}
+
 .MaskIconNewFolder,
 .IconNewFolder {
   mask-image: url(/icons/new-folder.svg);
