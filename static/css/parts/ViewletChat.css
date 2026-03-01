@@ -128,6 +128,7 @@
   contain: content;
   flex-direction: column;
   padding-right: 3px;
+  cursor: text;
 }
 
 .MessageUser {
