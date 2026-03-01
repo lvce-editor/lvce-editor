@@ -658,6 +658,10 @@ export const handleSashSideBarPointerDown = (state: LayoutState) => {
   return handleSashPointerDown(state, SashType.SideBar)
 }
 
+export const handleSashSecondarySideBarPointerDown = (state: LayoutState) => {
+  return handleSashPointerDown(state, SashType.SecondarySideBar)
+}
+
 export const handleSashPanelPointerDown = (state: LayoutState) => {
   return handleSashPointerDown(state, SashType.Panel)
 }
@@ -707,6 +711,41 @@ const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: n
       },
       sideBarLocation,
     ),
+    commands: [],
+  }
+}
+
+const getNewStatePointerMoveSecondarySideBar = async (state: LayoutState, x: number): Promise<{ newState: LayoutState; commands: any[] }> => {
+  const { sideBarLocation, secondarySideBarMinWidth, sideBarLeft, sideBarWidth, windowWidth, previewVisible, previewLeft } = state
+  const mainMinWidth = 300
+  const secondarySideBarRight = previewVisible ? previewLeft : windowWidth
+  const mainLeft = sideBarLocation === SideBarLocationType.Left ? sideBarLeft + sideBarWidth : 0
+  const maxSecondarySideBarWidth = Math.max(0, secondarySideBarRight - mainLeft - mainMinWidth)
+  const newSecondarySideBarWidth = sideBarLocation === SideBarLocationType.Left ? secondarySideBarRight - x : sideBarLeft - x
+  const constrainedSecondarySideBarWidth = Math.min(newSecondarySideBarWidth, maxSecondarySideBarWidth)
+
+  if (constrainedSecondarySideBarWidth <= secondarySideBarMinWidth / 2) {
+    return hideSecondarySideBar(state)
+  }
+
+  if (constrainedSecondarySideBarWidth <= secondarySideBarMinWidth) {
+    const adjustedSecondarySideBarMinWidth = Math.min(secondarySideBarMinWidth, maxSecondarySideBarWidth)
+    return {
+      commands: [],
+      newState: getPoints({
+        ...state,
+        secondarySideBarWidth: adjustedSecondarySideBarMinWidth,
+        secondarySideBarVisible: true,
+      }),
+    }
+  }
+
+  return {
+    newState: getPoints({
+      ...state,
+      secondarySideBarVisible: true,
+      secondarySideBarWidth: constrainedSecondarySideBarWidth,
+    }),
     commands: [],
   }
 }
@@ -818,6 +857,8 @@ const getNewStatePointerMove = async (
   switch (sashId) {
     case SashType.SideBar:
       return getNewStatePointerMoveSideBar(state, x, y)
+    case SashType.SecondarySideBar:
+      return getNewStatePointerMoveSecondarySideBar(state, x)
     case SashType.Panel:
       return getNewStatePointerMovePanel(state, x, y)
     case SashType.Preview:
@@ -966,7 +1007,7 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
   // TODO resize commands, resize viewlets recursively
   const allCommands = await getResizeCommands(state, newState)
   const uid = state.uid
-  const modules = [LayoutModules.Panel, LayoutModules.SideBar, LayoutModules.Preview]
+  const modules = [LayoutModules.Panel, LayoutModules.SideBar, LayoutModules.SecondarySideBar, LayoutModules.Preview]
   for (const module of modules) {
     const { kVisible, moduleId } = module
     if (state[kVisible] !== newState[kVisible]) {
