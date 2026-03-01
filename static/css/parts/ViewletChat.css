@@ -110,6 +110,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .ChatSendAreaBottom {
@@ -117,4 +118,28 @@
   contain: strict;
   height: 20px;
   justify-content: space-between;
+}
+
+.Message {
+  display: flex;
+  contain: content;
+  flex-direction: column;
+  padding-right: 3px;
+}
+
+.MessageUser {
+  align-self: flex-end;
+  padding-right: 10px;
+}
+
+.MessageAssistant {
+  align-self: flex-start;
+  padding-left: 10px;
+}
+
+.ChatMessageContent {
+  contain: content;
+  background: var(--InputBoxBackground);
+  padding: 5px;
+  border-radius: 5px;
 }
