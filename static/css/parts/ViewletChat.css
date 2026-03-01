@@ -123,9 +123,8 @@
 .Message {
   display: flex;
   contain: content;
-  background: var(--InputBoxBackground);
-  padding: 5px;
-  border-radius: 5px;
+  flex-direction: column;
+  padding-right: 3px;
 }
 
 .MessageUser {
@@ -136,4 +135,11 @@
 .MessageAssistant {
   align-self: flex-start;
   padding-left: 10px;
+}
+
+.ChatMessageContent {
+  contain: content;
+  background: var(--InputBoxBackground);
+  padding: 5px;
+  border-radius: 5px;
 }
