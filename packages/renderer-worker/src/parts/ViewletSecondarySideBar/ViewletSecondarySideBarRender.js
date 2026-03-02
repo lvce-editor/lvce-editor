@@ -17,7 +17,7 @@ const renderDom = {
     const dom = [
       {
         type: VirtualDomElements.Div,
-        className: 'SideBar',
+        className: 'SideBar SecondarySideBar',
         childCount: 1,
       },
       {

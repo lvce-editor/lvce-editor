@@ -25,6 +25,10 @@
   width: var(--SideBarWidth);
 }
 
+.SecondarySideBar {
+  width: var(--SecondarySideBarWidth);
+}
+
 .Main {
   background: var(--MainBackground);
 }
