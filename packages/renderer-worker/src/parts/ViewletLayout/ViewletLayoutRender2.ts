@@ -125,7 +125,7 @@ const getCss = (newState: LayoutState) => {
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
-  const sashSecondarySideBarLeft = newState.secondarySideBarLeft
+  const sashSecondarySideBarLeft = newState.secondarySideBarLeft + newState.secondarySideBarWidth
   const roundedSideBarWidth = Math.round(sideBarWidth)
   const roundedSashSideBarLeft = Math.round(sashSideBarLeft)
   const roundedSashSecondarySideBarLeft = Math.round(sashSecondarySideBarLeft)
@@ -141,8 +141,8 @@ const getCss = (newState: LayoutState) => {
 }
 
 const renderCss = {
-  isEqual() {
-    return false
+  isEqual(oldState: LayoutState, newState: LayoutState) {
+    return getCss(oldState) === getCss(newState)
   },
   apply(oldState: LayoutState, newState: LayoutState) {
     // @ts-ignore
