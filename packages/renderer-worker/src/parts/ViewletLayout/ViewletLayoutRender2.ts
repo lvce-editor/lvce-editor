@@ -127,12 +127,14 @@ const getCss = (newState: LayoutState) => {
   const sashSideBarLeft = newState.sideBarLeft
   const sashSecondarySideBarLeft = newState.secondarySideBarLeft + newState.secondarySideBarWidth
   const roundedSideBarWidth = Math.round(sideBarWidth)
+  const roundedSecondarySideBarWidth = Math.round(newState.secondarySideBarWidth)
   const roundedSashSideBarLeft = Math.round(sashSideBarLeft)
   const roundedSashSecondarySideBarLeft = Math.round(sashSecondarySideBarLeft)
   return `:root {
   --ActivityBarWidth: ${activityBarWidth}px;
   --PanelHeight: ${panelHeight}px;
   --SideBarWidth: ${roundedSideBarWidth}px;
+  --SecondarySideBarWidth: ${roundedSecondarySideBarWidth}px;
   --TitleBarHeight: ${titleBarHeight}px;
   --PreviewWidth: ${previewWidth}px;
   --SashSideBarLeft: ${roundedSashSideBarLeft}px;
