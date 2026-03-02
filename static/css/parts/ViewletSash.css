@@ -54,6 +54,10 @@
   left: var(--SashSideBarLeft);
 }
 
+.SashSecondarySideBar {
+  left: var(--SashSecondarySideBarLeft);
+}
+
 .SashBorder {
   height: 100%;
   width: 1px;

@@ -90,6 +90,7 @@ export const handleSecondarySideBarViewletChange = async (state, moduleId) => {
 }
 
 export const openViewlet = async (state, moduleId, focus = false, args) => {
+  await Command.execute('Layout.showSecondarySideBar')
   await Command.execute('Layout.openSecondarySideBarViewlet', moduleId)
 
   return state
