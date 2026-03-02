@@ -2,6 +2,6 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
-  `connect-src https://openrouter.ai/api/v1/chat/completions`,
+  `connect-src https://openrouter.ai`,
   `sandbox allow-same-origin`,
 ])
