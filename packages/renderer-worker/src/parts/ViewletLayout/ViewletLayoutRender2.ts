@@ -1,5 +1,4 @@
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
-import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import type { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
