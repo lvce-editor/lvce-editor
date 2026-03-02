@@ -25,6 +25,7 @@ import * as Template from '../Template/Template.js'
 const bundleElectronMaybe = async ({
   product,
   version,
+  config,
   supportsAutoUpdate,
   shouldRemoveUnusedLocales,
   isMacos,
@@ -38,7 +39,27 @@ const bundleElectronMaybe = async ({
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform, isArchLinux, isAppImage, target: '' })
+  const target = getBundleTarget(config)
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform, isArchLinux, isAppImage, target })
+}
+
+const getBundleTarget = (config) => {
+  switch (config) {
+    case ElectronBuilderConfigType.WindowsExe:
+      return 'electron-builder-windows-exe'
+    case ElectronBuilderConfigType.Deb:
+      return 'electron-builder-deb'
+    case ElectronBuilderConfigType.ArchLinux:
+      return 'electron-builder-arch-linux'
+    case ElectronBuilderConfigType.Snap:
+      return 'electron-builder-snap'
+    case ElectronBuilderConfigType.Mac:
+      return 'electron-builder-mac'
+    case ElectronBuilderConfigType.AppImage:
+      return 'electron-builder-app-image'
+    default:
+      return 'electron-builder'
+  }
 }
 
 const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {
@@ -210,6 +231,7 @@ const copyElectronResult = async ({
   await bundleElectronMaybe({
     product,
     version,
+    config,
     supportsAutoUpdate,
     shouldRemoveUnusedLocales,
     isMacos,

@@ -3,9 +3,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 10px;
   min-height: 0;
-  /* padding: 10px; */
 }
 
 .ChatHeader {
@@ -13,8 +11,15 @@
   display: flex;
   gap: 8px;
   padding: 8px;
-  height: 40px;
+  height: 50px;
   justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+.ChatHeader .IconButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ChatActions {
@@ -30,6 +35,11 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-y: auto;
+}
+
+.ChatListItemLabel {
+  flex: 1;
 }
 
 .ChatListItem {
@@ -38,6 +48,10 @@
   display: flex;
   background: transparent;
   padding-left: 10px;
+}
+
+.ChatListItem:hover {
+  background: var(--ListHoverBackground);
 }
 
 .ChatDetails {
@@ -60,6 +74,8 @@
 .ChatWelcomeMessage {
   contain: content;
   padding: 8px;
+  display: flex;
+  flex: 1;
 }
 
 .ChatName {
@@ -71,13 +87,65 @@
 
 .ChatSendArea {
   display: flex;
-  contain: strict;
-  height: 45px;
-  align-items: center;
   gap: 10px;
+  padding: 10px;
+  flex-direction: column;
+  height: 90px;
+  contain: strict;
+}
+
+.ChatSendAreaContent {
+  background: var(--InputBoxBackground);
+  border-radius: 5px;
   padding: 10px;
 }
 
 .ChatSendArea .MultilineInputBox {
-  height: 100%;
+  height: 20px;
+}
+
+.ChatMessages {
+  flex: 1;
+  contain: strict;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
+  contain: strict;
+  user-select: text;
+}
+
+.ChatSendAreaBottom {
+  display: flex;
+  contain: strict;
+  height: 20px;
+  justify-content: space-between;
+}
+
+.Message {
+  display: flex;
+  contain: content;
+  flex-direction: column;
+  padding-right: 3px;
+  cursor: text;
+  word-wrap: break-word;
+}
+
+.MessageUser {
+  align-self: flex-end;
+  padding-right: 10px;
+}
+
+.MessageAssistant {
+  align-self: flex-start;
+  padding-left: 10px;
+}
+
+.ChatMessageContent {
+  contain: content;
+  background: var(--InputBoxBackground);
+  padding: 5px;
+  border-radius: 5px;
 }
