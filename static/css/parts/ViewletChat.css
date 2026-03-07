@@ -101,7 +101,7 @@
 }
 
 .ChatSendArea .MultilineInputBox {
-  height: 20px;
+  height: var(--ChatInputBoxHeight, 20px);
 }
 
 .ChatMessages {
