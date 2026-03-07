@@ -149,3 +149,8 @@
   padding: 5px;
   border-radius: 5px;
 }
+
+.ChatListEmpty {
+  contain: strict;
+  flex: 1;
+}
