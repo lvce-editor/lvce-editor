@@ -269,6 +269,12 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 
 const show = async (state: LayoutState, module, currentViewletId) => {
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
+  if (state[kVisible]) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   const intermediateState: LayoutState = getPoints({
     ...state,
     [kVisible]: true,
@@ -609,6 +615,7 @@ export const loadSideBarIfVisible = async (state: LayoutState) => {
 }
 
 export const loadSecondarySideBarIfVisible = async (state: LayoutState) => {
+  console.trace('load secondary, ...')
   const updated = await loadIfVisible(state, LayoutModules.SecondarySideBar)
   return {
     ...updated,
