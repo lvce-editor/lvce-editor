@@ -45,13 +45,11 @@ const actions = [
     LifeCycle.mark(LifeCyclePhase.Seven)
 
     Performance.mark(PerformanceMarkerType.WillLoadSideBar)
-    await Command.execute('Layout.loadSideBarIfVisible')
+    await Promise.all([Command.execute('Layout.loadSideBarIfVisible'), Command.execute('Layout.loadSecondarySideBarIfVisible')])
     Performance.mark(PerformanceMarkerType.DidLoadSideBar)
   },
   async () => {
     LifeCycle.mark(LifeCyclePhase.Eight)
-
-    await Command.execute('Layout.loadSecondarySideBarIfVisible')
 
     Performance.mark(PerformanceMarkerType.WillLoadPanel)
     await Command.execute('Layout.loadPanelIfVisible')
