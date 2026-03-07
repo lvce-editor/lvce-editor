@@ -26,6 +26,7 @@
 }
 
 .SecondarySideBar {
+  background: var(--SideBarBackground, rgb(30, 35, 36));
   width: var(--SecondarySideBarWidth);
 }
 
