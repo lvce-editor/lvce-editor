@@ -615,7 +615,6 @@ export const loadSideBarIfVisible = async (state: LayoutState) => {
 }
 
 export const loadSecondarySideBarIfVisible = async (state: LayoutState) => {
-  console.trace('load secondary, ...')
   const updated = await loadIfVisible(state, LayoutModules.SecondarySideBar)
   return {
     ...updated,
