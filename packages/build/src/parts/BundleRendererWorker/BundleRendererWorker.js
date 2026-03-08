@@ -352,6 +352,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/error-worker/dist/errorWorkerMain.js`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/ChatNetworkWorkerUrl/ChatNetworkWorkerUrl.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/chat-network-worker/dist/chatNetworkWorkerMain.js`,
+      replacement: `/packages/chat-network-worker/dist/chatNetworkWorkerMain.js`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/ExplorerWorkerUrl/ExplorerWorkerUrl.js`,
       occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/explorer-view/dist/explorerViewWorkerMain.js`,
       replacement: `/packages/explorer-worker/dist/explorerViewWorkerMain.js`,
