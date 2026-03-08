@@ -49,8 +49,9 @@
     "@lvce-editor/completion-worker": "^3.0.0",
     "@lvce-editor/debug-worker": "^4.0.0",
     "@lvce-editor/diff-worker": "^1.6.0",
-    "@lvce-editor/chat-view": "^2.0.0",
-    "@lvce-editor/chat-network-worker": "^2.0.0",
+    "@lvce-editor/chat-view": "^2.4.0",
+    "@lvce-editor/chat-network-worker": "^2.2.0",
+    "@lvce-editor/chat-debug-view": "^2.2.0",
     "@lvce-editor/editor-worker": "^18.6.0",
     "@lvce-editor/embeds-worker": "^4.1.0",
     "@lvce-editor/error-worker": "^2.4.0",
@@ -75,7 +76,7 @@
     "@lvce-editor/opener-worker": "^1.5.0",
     "@lvce-editor/output-view": "^2.2.0",
     "@lvce-editor/preview-worker": "^5.0.0",
-    "@lvce-editor/preview-sandbox-worker": "^2.0.0",
+    "@lvce-editor/preview-sandbox-worker": "^2.1.0",
     "@lvce-editor/problems-view": "^1.18.0",
     "@lvce-editor/references-view": "^2.5.0",
     "@lvce-editor/rename-worker": "^1.28.0",
@@ -95,6 +96,6 @@
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.1"
+    "@types/node": "^25.3.5"
   }
 }
