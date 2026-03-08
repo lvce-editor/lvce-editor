@@ -61,7 +61,7 @@ import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json'
 
 const workerHeaders = new Map(
   workers.map((worker) => {
-    return [worker.fileName, GetContentSecurityPolicy.getContentSecurityPolicy(worker.csp)]
+    return [worker.fileName, GetContentSecurityPolicy.getContentSecurityPolicy(worker.contentSecurityPolicy)]
   }),
 )
 

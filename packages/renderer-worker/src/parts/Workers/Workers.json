@@ -6,7 +6,7 @@
     "productionPath": "/packages/activity-bar-worker/dist/activityBarWorkerMain.js",
     "settingName": "develop.activityBarWorkerPath",
     "hotReloadCommand": "ActivityBar.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "chatDebug",
@@ -15,7 +15,7 @@
     "productionPath": "/packages/chat-view/dist/chatDebugViewWorkerMain.js",
     "settingName": "develop.chatDebugViewWorkerPath",
     "hotReloadCommand": "ChatDebug.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "chatView",
@@ -24,7 +24,7 @@
     "productionPath": "/packages/chat-view/dist/chatViewWorkerMain.js",
     "settingName": "develop.chatViewWorkerPath",
     "hotReloadCommand": "Chat.hotReload",
-    "csp": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
   },
   {
     "id": "clipBoard",
@@ -33,7 +33,7 @@
     "productionPath": "/packages/clipboard-worker/dist/clipBoardWorkerMain.js",
     "settingName": "develop.clipBoardWorkerPath",
     "hotReloadCommand": "ClipBoard.hotReload",
-    "csp": ["default-src 'none'", "connect-src 'self'"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"]
   },
   {
     "id": "debug",
@@ -42,7 +42,7 @@
     "productionPath": "/packages/debug-worker/dist/debugWorkerMain.js",
     "settingName": "develop.debugWorkerPath",
     "hotReloadCommand": "Run And Debug.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "editor",
@@ -51,7 +51,7 @@
     "productionPath": "/packages/editor-worker/dist/editorWorkerMain.js",
     "settingName": "develop.editorWorkerPath",
     "hotReloadCommand": "Editor.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "explorer",
@@ -60,7 +60,7 @@
     "productionPath": "/packages/explorer-worker/dist/explorerViewWorkerMain.js",
     "settingName": "develop.explorerWorkerPath",
     "hotReloadCommand": "Explorer.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "extensionDetail",
@@ -69,7 +69,7 @@
     "productionPath": "/packages/extension-detail-view-worker/dist/extensionDetailViewWorkerMain.js",
     "settingName": "develop.extensionDetailViewWorkerPath",
     "hotReloadCommand": "ExtensionDetail.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "extensionSearch",
@@ -78,7 +78,7 @@
     "productionPath": "/packages/extension-search-view-worker/dist/extensionSearchViewWorkerMain.js",
     "settingName": "develop.extensionSearchViewWorkerPath",
     "hotReloadCommand": "Extensions.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "findWidget",
@@ -87,7 +87,7 @@
     "productionPath": "/packages/find-widget-worker/dist/findWidgetWorkerMain.js",
     "settingName": "develop.findWidgetWorkerPath",
     "hotReloadCommand": "Editor.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "iframeInspector",
@@ -96,7 +96,7 @@
     "productionPath": "/packages/iframe-inspector/dist/iframeInspectorWorkerMain.js",
     "settingName": "develop.iframeInspectorWorkerPath",
     "hotReloadCommand": "IframeInspector.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "keyBindings",
@@ -105,7 +105,7 @@
     "productionPath": "/packages/keybindings-view-worker/dist/keyBindingsViewWorkerMain.js",
     "settingName": "develop.keyBindingsViewWorkerPath",
     "hotReloadCommand": "KeyBindings.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "languageModels",
@@ -114,7 +114,7 @@
     "productionPath": "/packages/language-models-view/dist/languageModelsViewMain.js",
     "settingName": "develop.languageModelsViewPath",
     "hotReloadCommand": "LanguageModels.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "mainArea",
@@ -123,7 +123,7 @@
     "productionPath": "/packages/main-area-worker/dist/mainAreaWorkerMain.js",
     "settingName": "develop.mainAreaWorkerPath",
     "hotReloadCommand": "Main.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "output",
@@ -132,7 +132,7 @@
     "productionPath": "/packages/output-view/dist/outputViewWorkerMain.js",
     "settingName": "develop.outputViewWorkerPath",
     "hotReloadCommand": "Output.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "panel",
@@ -141,7 +141,7 @@
     "productionPath": "/packages/panel-worker/dist/panelWorkerMain.js",
     "settingName": "develop.panelWorkerPath",
     "hotReloadCommand": "Panel.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "preview",
@@ -150,7 +150,7 @@
     "productionPath": "/packages/preview-worker/dist/previewWorkerMain.js",
     "settingName": "develop.previewWorkerPath",
     "hotReloadCommand": "Preview.hotReload",
-    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "references",
@@ -159,7 +159,7 @@
     "productionPath": "/packages/references-view/dist/referencesViewWorkerMain.js",
     "settingName": "develop.referencesWorkerPath",
     "hotReloadCommand": "Locations.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "settings",
@@ -168,7 +168,7 @@
     "productionPath": "/packages/settings-view/dist/settingsViewWorkerMain.js",
     "settingName": "develop.settingsWorkerPath",
     "hotReloadCommand": "Settings.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "sourceControl",
@@ -177,7 +177,7 @@
     "productionPath": "/packages/source-control-worker/dist/sourceControlWorkerMain.js",
     "settingName": "develop.sourceControlWorkerPath",
     "hotReloadCommand": "Source Control.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "statusBar",
@@ -186,7 +186,7 @@
     "productionPath": "/packages/status-bar-worker/dist/statusBarWorkerMain.js",
     "settingName": "develop.statusBarWorkerPath",
     "hotReloadCommand": "StatusBar.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
     "id": "textSearch",
@@ -195,7 +195,7 @@
     "productionPath": "/packages/text-search-worker/dist/textSearchWorkerMain.js",
     "settingName": "develop.textSearchWorkerPath",
     "hotReloadCommand": "Search.hotReload",
-    "csp": ["default-src 'none'", "connect-src 'self'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'", "sandbox allow-same-origin"]
   },
   {
     "id": "titleBar",
@@ -204,6 +204,6 @@
     "productionPath": "/packages/title-bar-worker/dist/titleBarWorkerMain.js",
     "settingName": "develop.titleBarWorkerPath",
     "hotReloadCommand": "TitleBar.hotReload",
-    "csp": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"]
   }
 ]
