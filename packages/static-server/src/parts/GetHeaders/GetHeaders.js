@@ -2,6 +2,7 @@ import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
 import * as GetHeadersActivityBarWorker from '../GetHeadersActivityBarWorker/GetHeadersActivityBarWorker.js'
 import * as GetHeadersChatNetworkWorker from '../GetHeadersChatNetworkWorker/GetHeadersChatNetworkWorker.js'
+import * as GetHeadersChatToolWorker from '../GetHeadersChatToolWorker/GetHeadersChatToolWorker.js'
 import * as GetHeadersChatViewWorker from '../GetHeadersChatView/GetHeadersChatView.js'
 import * as GetHeadersClipBoardWorker from '../GetHeadersClipBoardWorker/GetHeadersClipBoardWorker.js'
 import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/GetHeadersColorPickerWorker.js'
@@ -163,6 +164,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('testWorkerMain.js')) {
     return GetHeadersTestWorker.getHeadersTestWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('chatToolWorkerMain.js')) {
+    return GetHeadersChatToolWorker.getHeadersChatToolWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('sourceActionWorkerMain.js')) {
     return GetHeadersSourceActionWorker.getHeadersSourceActionWorker(mime, etag, defaultCachingHeader)
