@@ -131,7 +131,7 @@ export const getWatchConfig = () => {
   const editor = Preferences.get('develop.editorWorkerPath')
   if (editor) {
     watchConfig.push({
-      path: find,
+      path: editor,
       command: 'Editor.hotReload',
     })
   }
@@ -145,15 +145,22 @@ export const getWatchConfig = () => {
   const panel = Preferences.get('develop.panelWorkerPath')
   if (panel) {
     watchConfig.push({
-      path: preview,
+      path: panel,
       command: 'Panel.hotReload',
     })
   }
   const chat = Preferences.get('develop.chatViewWorkerPath')
   if (chat) {
     watchConfig.push({
-      path: preview,
+      path: chat,
       command: 'Chat.hotReload',
+    })
+  }
+  const chatDebug = Preferences.get('develop.chatDebugViewWorkerPath')
+  if (chatDebug) {
+    watchConfig.push({
+      path: chatDebug,
+      command: 'ChatDebug.hotReload',
     })
   }
   return watchConfig
