@@ -44,7 +44,7 @@
 
 .ChatListItem {
   contain: strict;
-  height: 40px;
+  height: var(--ChatListItemHeight, 40px);
   display: flex;
   background: transparent;
   padding-left: 10px;
