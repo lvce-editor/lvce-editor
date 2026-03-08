@@ -118,4 +118,10 @@ export const sendMessagePortToPreviewSandBoxWorker = async (port, initialCommand
   await PreviewSandBoxWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
+export const sendMessagePortToChatNetworkWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await PreviewSandBoxWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
