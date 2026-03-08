@@ -204,8 +204,8 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     to: Path.join(`${toRoot}/packages/chat-network-worker`, 'dist', 'chatNetworkWorkerMain.js'),
   })
   await Copy.copyFile({
-    from: 'packages/renderer-worker/node_modules/@lvce-editor/chat-debug-worker/dist/chatDebugWorkerMain.js',
-    to: Path.join(`${toRoot}/packages/chat-debug-worker`, 'dist', 'chatDebugWorkerMain.js'),
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/chat-debug-view/dist/chatDebugWorkerMain.js',
+    to: Path.join(`${toRoot}/packages/chat-debug-view`, 'dist', 'chatDebugViewWorkerMain.js'),
   })
   await Copy.copyFile({
     from: 'packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js',
