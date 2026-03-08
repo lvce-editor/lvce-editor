@@ -20,14 +20,14 @@ const renderItems = {
 export const render = [renderItems]
 
 export const renderEventListeners = async () => {
-  const listeners = await ChatDebugViewWorker.invoke('StatusBar.renderEventListeners')
+  const listeners = await ChatDebugViewWorker.invoke('ChatDebug.renderEventListeners')
   return listeners
 }
 
 export const resize = async (state, dimensions) => {
-  await ChatDebugViewWorker.invoke('StatusBar.resize', state.uid, dimensions)
-  const diffResult = await ChatDebugViewWorker.invoke('StatusBar.diff2', state.uid)
-  const commands = await ChatDebugViewWorker.invoke('StatusBar.render2', state.uid, diffResult)
+  await ChatDebugViewWorker.invoke('ChatDebug.resize', state.uid, dimensions)
+  const diffResult = await ChatDebugViewWorker.invoke('ChatDebug.diff2', state.uid)
+  const commands = await ChatDebugViewWorker.invoke('ChatDebug.render2', state.uid, diffResult)
   return {
     ...state,
     commands,
