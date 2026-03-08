@@ -1,4 +1,5 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
+import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
 import * as GetHeadersActivityBarWorker from '../GetHeadersActivityBarWorker/GetHeadersActivityBarWorker.js'
 import * as GetHeadersChatNetworkWorker from '../GetHeadersChatNetworkWorker/GetHeadersChatNetworkWorker.js'
@@ -53,8 +54,16 @@ import * as GetHeadersTextMeasurementWorker from '../GetHeadersTextMeasurementWo
 import * as GetHeadersTextSearchWorker from '../GetHeadersTextSearchWorker/GetHeadersTextSearchWorker.js'
 import * as GetHeadersTitleBarWorker from '../GetHeadersTitleBarWorker/GetHeadersTitleBarWorker.js'
 import * as GetHeadersUpdateWorker from '../GetHeadersUpdateWorker/GetHeadersUpdateWorker.js'
+import * as GetHeadersWorker from '../GetHeadersWorker/GetHeadersWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
 import * as Path from '../Path/Path.js'
+import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
+
+const workerHeaders = new Map(
+  workers.map((worker) => {
+    return [worker.fileName, GetContentSecurityPolicy.getContentSecurityPolicy(worker.csp)]
+  })
+)
 
 export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProduction, applicationName }) => {
   const extension = Path.extname(absolutePath)
@@ -62,6 +71,13 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   const defaultCachingHeader = isImmutable ? CachingHeaders.OneYear : CachingHeaders.NoCache
   if (absolutePath.endsWith('index.html')) {
     return GetHeadersDocument.getHeadersDocument({ mime, etag, isForElectronProduction, applicationName })
+  }
+  const worker = workers.find((item) => {
+    return absolutePath.endsWith(item.fileName)
+  })
+  if (worker) {
+    const csp = workerHeaders.get(worker.fileName)
+    return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, csp)
   }
   if (absolutePath.endsWith('rendererWorkerMain.js') || absolutePath.endsWith('rendererWorkerMain.ts')) {
     return GetHeadersRendererWorker.getHeadersRendererWorker(mime, etag, defaultCachingHeader)

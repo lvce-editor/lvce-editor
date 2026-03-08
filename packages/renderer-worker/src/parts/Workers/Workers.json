@@ -1,0 +1,209 @@
+[
+  {
+    "id": "activityBar",
+    "fileName": "activityBarWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/activity-bar-worker/dist/activityBarWorkerMain.js",
+    "productionPath": "/packages/activity-bar-worker/dist/activityBarWorkerMain.js",
+    "settingName": "develop.activityBarWorkerPath",
+    "hotReloadCommand": "ActivityBar.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "chatDebug",
+    "fileName": "chatDebugViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view/dist/chatDebugViewWorkerMain.js",
+    "productionPath": "/packages/chat-view/dist/chatDebugViewWorkerMain.js",
+    "settingName": "develop.chatDebugViewWorkerPath",
+    "hotReloadCommand": "ChatDebug.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "chatView",
+    "fileName": "chatViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view/dist/chatViewWorkerMain.js",
+    "productionPath": "/packages/chat-view/dist/chatViewWorkerMain.js",
+    "settingName": "develop.chatViewWorkerPath",
+    "hotReloadCommand": "Chat.hotReload",
+    "csp": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "clipBoard",
+    "fileName": "clipBoardWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/clipboard-worker/dist/clipBoardWorkerMain.js",
+    "productionPath": "/packages/clipboard-worker/dist/clipBoardWorkerMain.js",
+    "settingName": "develop.clipBoardWorkerPath",
+    "hotReloadCommand": "ClipBoard.hotReload",
+    "csp": ["default-src 'none'", "connect-src 'self'"]
+  },
+  {
+    "id": "debug",
+    "fileName": "debugWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/debug-worker/dist/debugWorkerMain.js",
+    "productionPath": "/packages/debug-worker/dist/debugWorkerMain.js",
+    "settingName": "develop.debugWorkerPath",
+    "hotReloadCommand": "Run And Debug.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "editor",
+    "fileName": "editorWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js",
+    "productionPath": "/packages/editor-worker/dist/editorWorkerMain.js",
+    "settingName": "develop.editorWorkerPath",
+    "hotReloadCommand": "Editor.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "explorer",
+    "fileName": "explorerViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/explorer-view/dist/explorerViewWorkerMain.js",
+    "productionPath": "/packages/explorer-worker/dist/explorerViewWorkerMain.js",
+    "settingName": "develop.explorerWorkerPath",
+    "hotReloadCommand": "Explorer.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "extensionDetail",
+    "fileName": "extensionDetailViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-detail-view/dist/extensionDetailViewWorkerMain.js",
+    "productionPath": "/packages/extension-detail-view-worker/dist/extensionDetailViewWorkerMain.js",
+    "settingName": "develop.extensionDetailViewWorkerPath",
+    "hotReloadCommand": "ExtensionDetail.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "extensionSearch",
+    "fileName": "extensionSearchViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-search-view/dist/extensionSearchViewWorkerMain.js",
+    "productionPath": "/packages/extension-search-view-worker/dist/extensionSearchViewWorkerMain.js",
+    "settingName": "develop.extensionSearchViewWorkerPath",
+    "hotReloadCommand": "Extensions.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "findWidget",
+    "fileName": "findWidgetWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/find-widget-worker/dist/findWidgetWorkerMain.js",
+    "productionPath": "/packages/find-widget-worker/dist/findWidgetWorkerMain.js",
+    "settingName": "develop.findWidgetWorkerPath",
+    "hotReloadCommand": "Editor.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "iframeInspector",
+    "fileName": "iframeInspectorWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/iframe-inspector/dist/iframeInspectorWorkerMain.js",
+    "productionPath": "/packages/iframe-inspector/dist/iframeInspectorWorkerMain.js",
+    "settingName": "develop.iframeInspectorWorkerPath",
+    "hotReloadCommand": "IframeInspector.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "keyBindings",
+    "fileName": "keyBindingsViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/keybindings-view/dist/keyBindingsViewWorkerMain.js",
+    "productionPath": "/packages/keybindings-view-worker/dist/keyBindingsViewWorkerMain.js",
+    "settingName": "develop.keyBindingsViewWorkerPath",
+    "hotReloadCommand": "KeyBindings.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "languageModels",
+    "fileName": "languageModelsViewMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/language-models-view/dist/languageModelsViewMain.js",
+    "productionPath": "/packages/language-models-view/dist/languageModelsViewMain.js",
+    "settingName": "develop.languageModelsViewPath",
+    "hotReloadCommand": "LanguageModels.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "mainArea",
+    "fileName": "mainAreaWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/main-area-worker/dist/mainAreaWorkerMain.js",
+    "productionPath": "/packages/main-area-worker/dist/mainAreaWorkerMain.js",
+    "settingName": "develop.mainAreaWorkerPath",
+    "hotReloadCommand": "Main.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "output",
+    "fileName": "outputViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/output-view/dist/outputViewWorkerMain.js",
+    "productionPath": "/packages/output-view/dist/outputViewWorkerMain.js",
+    "settingName": "develop.outputViewWorkerPath",
+    "hotReloadCommand": "Output.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "panel",
+    "fileName": "panelWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/panel-worker/dist/panelWorkerMain.js",
+    "productionPath": "/packages/panel-worker/dist/panelWorkerMain.js",
+    "settingName": "develop.panelWorkerPath",
+    "hotReloadCommand": "Panel.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "preview",
+    "fileName": "previewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/preview-worker/dist/previewWorkerMain.js",
+    "productionPath": "/packages/preview-worker/dist/previewWorkerMain.js",
+    "settingName": "develop.previewWorkerPath",
+    "hotReloadCommand": "Preview.hotReload",
+    "csp": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "references",
+    "fileName": "referencesViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/references-view/dist/referencesViewWorkerMain.js",
+    "productionPath": "/packages/references-view/dist/referencesViewWorkerMain.js",
+    "settingName": "develop.referencesWorkerPath",
+    "hotReloadCommand": "Locations.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "settings",
+    "fileName": "settingsViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",
+    "productionPath": "/packages/settings-view/dist/settingsViewWorkerMain.js",
+    "settingName": "develop.settingsWorkerPath",
+    "hotReloadCommand": "Settings.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "sourceControl",
+    "fileName": "sourceControlWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/source-control-worker/dist/sourceControlWorkerMain.js",
+    "productionPath": "/packages/source-control-worker/dist/sourceControlWorkerMain.js",
+    "settingName": "develop.sourceControlWorkerPath",
+    "hotReloadCommand": "Source Control.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "statusBar",
+    "fileName": "statusBarWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/status-bar-worker/dist/statusBarWorkerMain.js",
+    "productionPath": "/packages/status-bar-worker/dist/statusBarWorkerMain.js",
+    "settingName": "develop.statusBarWorkerPath",
+    "hotReloadCommand": "StatusBar.hotReload",
+    "csp": ["default-src 'none'"]
+  },
+  {
+    "id": "textSearch",
+    "fileName": "textSearchWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/text-search-worker/dist/textSearchWorkerMain.js",
+    "productionPath": "/packages/text-search-worker/dist/textSearchWorkerMain.js",
+    "settingName": "develop.textSearchWorkerPath",
+    "hotReloadCommand": "Search.hotReload",
+    "csp": ["default-src 'none'", "connect-src 'self'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "titleBar",
+    "fileName": "titleBarWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/title-bar-worker/dist/titleBarWorkerMain.js",
+    "productionPath": "/packages/title-bar-worker/dist/titleBarWorkerMain.js",
+    "settingName": "develop.titleBarWorkerPath",
+    "hotReloadCommand": "TitleBar.hotReload",
+    "csp": ["default-src 'none'"]
+  }
+]
