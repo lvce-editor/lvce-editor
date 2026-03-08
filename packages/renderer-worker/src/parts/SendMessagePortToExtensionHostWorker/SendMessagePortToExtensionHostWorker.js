@@ -16,6 +16,7 @@ import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
+import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -123,6 +124,12 @@ export const sendMessagePortToChatNetworkWorker = async (port, initialCommand, r
   Assert.object(port)
   Assert.string(initialCommand)
   await ChatNetworkWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToChatToolWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await ChatToolWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
