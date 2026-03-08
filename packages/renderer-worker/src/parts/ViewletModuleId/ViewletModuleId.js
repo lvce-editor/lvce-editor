@@ -42,6 +42,8 @@ export const Explorer = 'Explorer'
 
 export const ExtensionDetail = 'ExtensionDetail'
 
+export const ChatDebug = 'ChatDebug'
+
 export const Extensions = 'Extensions'
 
 export const Iframe = 'Iframe'
