@@ -145,12 +145,19 @@
 
 .ChatMessageContent {
   contain: content;
-  background: var(--InputBoxBackground);
-  padding: 5px;
-  border-radius: 5px;
+  background: rgba(108, 81, 110, 0.13);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--ChatMessageForeground, #bcbebe);
 }
 
 .ChatListEmpty {
   contain: strict;
   flex: 1;
+}
+
+.Message .Markdown {
+  margin: 0;
 }
