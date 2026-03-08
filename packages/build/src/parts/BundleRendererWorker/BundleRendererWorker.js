@@ -358,8 +358,8 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/ChatDebugViewWorkerUrl/ChatDebugViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/chat-network-worker/dist/chatDebugViewWorkerMain.js`,
-      replacement: `/packages/chat-network-worker/dist/chatDebugViewWorkerMain.js`,
+      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/chat-debug-view/dist/chatDebugViewWorkerMain.js`,
+      replacement: `/packages/chat-debug-view/dist/chatDebugViewWorkerMain.js`,
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/ExplorerWorkerUrl/ExplorerWorkerUrl.js`,
