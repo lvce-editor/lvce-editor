@@ -7,6 +7,8 @@ export const hasFunctionalRootRender = true
 
 export const hasFunctionalEvents = true
 
+export const hasFunctionalResize = true
+
 const renderItems = {
   isEqual(oldState, newState) {
     return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
@@ -21,8 +23,6 @@ export const renderEventListeners = async () => {
   const listeners = await ChatDebugViewWorker.invoke('StatusBar.renderEventListeners')
   return listeners
 }
-
-export const hasFunctionalResize = true
 
 export const resize = async (state, dimensions) => {
   await ChatDebugViewWorker.invoke('StatusBar.resize', state.uid, dimensions)
