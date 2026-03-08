@@ -15,6 +15,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
+import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -121,7 +122,7 @@ export const sendMessagePortToPreviewSandBoxWorker = async (port, initialCommand
 export const sendMessagePortToChatNetworkWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  await PreviewSandBoxWorker.invokeAndTransfer(initialCommand, port, rpcId)
+  await ChatNetworkWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
