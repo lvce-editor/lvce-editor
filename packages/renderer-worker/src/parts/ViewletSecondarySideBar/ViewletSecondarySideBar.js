@@ -17,7 +17,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
-    titleAreaHeight: 35,
+    titleAreaHeight: 0,
     actions: [],
     title: Character.EmptyString,
     childUid: -1,
