@@ -1,6 +1,8 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetHeadersAboutWorker from '../GetHeadersAboutWorker/GetHeadersAboutWorker.js'
 import * as GetHeadersActivityBarWorker from '../GetHeadersActivityBarWorker/GetHeadersActivityBarWorker.js'
+import * as GetHeadersChatNetworkWorker from '../GetHeadersChatNetworkWorker/GetHeadersChatNetworkWorker.js'
+import * as GetHeadersChatViewWorker from '../GetHeadersChatView/GetHeadersChatView.js'
 import * as GetHeadersClipBoardWorker from '../GetHeadersClipBoardWorker/GetHeadersClipBoardWorker.js'
 import * as GetHeadersColorPickerWorker from '../GetHeadersColorPickerWorker/GetHeadersColorPickerWorker.js'
 import * as GetHeadersCompletionWorker from '../GetHeadersCompletionWorker/GetHeadersCompletionWorker.js'
@@ -15,7 +17,6 @@ import * as GetHeadersExtensionDetailViewWorker from '../GetHeadersExtensionDeta
 import * as GetHeadersExtensionHostSubWorker from '../GetHeadersExtensionHostSubWorker/GetHeadersExtensionHostSubWorker.js'
 import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
 import * as GetHeadersExtensionManagementWorker from '../GetHeadersExtensionManagementWorker/GetHeadersExtensionManagementWorker.js'
-import * as GetHeadersQuickPickWorker from '../GetHeadersQuickPickWorker/GetHeadersQuickPickWorker.js'
 import * as GetHeadersExtensionSearchViewWorker from '../GetHeadersExtensionSearchViewWorker/GetHeadersExtensionSearchViewWorker.js'
 import * as GetHeadersFileSearchWorker from '../GetHeadersFileSearchWorker/GetHeadersFileSearchWorker.js'
 import * as GetHeadersFileSystemWorker from '../GetHeadersFileSystemWorker/GetHeadersFileSystemWorker.js'
@@ -30,12 +31,12 @@ import * as GetHeadersMainAreaWorker from '../GetHeadersMainAreaWorker/GetHeader
 import * as GetHeadersMarkdownWorker from '../GetHeadersMarkdownWorker/GetHeadersMarkdownWorker.js'
 import * as GetHeadersMenuWorker from '../GetHeadersMenuWorker/GetHeadersMenuWorker.js'
 import * as GetHeadersOpenerWorker from '../GetHeadersOpenerWorker/GetHeadersOpenerWorker.js'
-import * as GetHeadersChatViewWorker from '../GetHeadersChatView/GetHeadersChatView.js'
 import * as GetHeadersOutputViewWorker from '../GetHeadersOutputViewWorker/GetHeadersOutputViewWorker.js'
 import * as GetHeadersPanelWorker from '../GetHeadersPanelWorker/GetHeadersPanelWorker.js'
 import * as GetHeadersPreviewSandBoxWorker from '../GetHeadersPreviewSandBoxWorker/GetHeadersPreviewSandBoxWorker.js'
 import * as GetHeadersPreviewWorker from '../GetHeadersPreviewWorker/GetHeadersPreviewWorker.js'
 import * as GetHeadersProblemsWorker from '../GetHeadersProblemsWorker/GetHeadersProblemsWorker.js'
+import * as GetHeadersQuickPickWorker from '../GetHeadersQuickPickWorker/GetHeadersQuickPickWorker.js'
 import * as GetHeadersReferencesViewWorker from '../GetHeadersReferencesViewWorker/GetHeadersReferencesViewWorker.js'
 import * as GetHeadersRenameWorker from '../GetHeadersRenameWorker/GetHeadersRenameWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
@@ -168,6 +169,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('chatViewWorkerMain.js')) {
     return GetHeadersChatViewWorker.getHeadersChatViewWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.endsWith('chatNetworkWorkerMain.js')) {
+    return GetHeadersChatNetworkWorker.getHeadersChatNetworkWorker(mime, etag, defaultCachingHeader)
   }
   if (absolutePath.endsWith('debugWorkerMain.js')) {
     return GetHeadersDebugWorker.getHeadersDebugWorker(mime, etag, defaultCachingHeader)
