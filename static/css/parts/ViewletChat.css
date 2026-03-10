@@ -6,22 +6,6 @@
   min-height: 0;
 }
 
-.ChatHeader {
-  contain: strict;
-  display: flex;
-  gap: 8px;
-  padding: 8px;
-  height: 50px;
-  justify-content: space-between;
-  padding-bottom: 20px;
-}
-
-.ChatHeader .IconButton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .ChatActions {
   contain: content;
   display: flex;
@@ -85,25 +69,6 @@
   align-items: center;
 }
 
-.ChatSendArea {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  flex-direction: column;
-  height: 90px;
-  contain: strict;
-}
-
-.ChatSendAreaContent {
-  background: var(--InputBoxBackground);
-  border-radius: 5px;
-  padding: 10px;
-}
-
-.ChatSendArea .MultilineInputBox {
-  height: var(--ChatInputBoxHeight, 20px);
-}
-
 .ChatMessages {
   flex: 1;
   contain: strict;
@@ -115,13 +80,6 @@
   scrollbar-width: thin;
   contain: strict;
   user-select: text;
-}
-
-.ChatSendAreaBottom {
-  display: flex;
-  contain: strict;
-  height: 20px;
-  justify-content: space-between;
 }
 
 .Message {
@@ -160,4 +118,15 @@
 
 .Message .Markdown {
   margin: 0;
+}
+
+.ChatMessageLink {
+  color: #4d94ff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.Message .Actions {
+  gap: 8px;
+  margin-top: 8px;
 }
