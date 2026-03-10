@@ -6,22 +6,6 @@
   min-height: 0;
 }
 
-.ChatHeader {
-  contain: strict;
-  display: flex;
-  gap: 8px;
-  padding: 8px;
-  height: 50px;
-  justify-content: space-between;
-  padding-bottom: 20px;
-}
-
-.ChatHeader .IconButton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .ChatActions {
   contain: content;
   display: flex;
@@ -140,4 +124,9 @@
   color: #4d94ff;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.Message .Actions {
+  gap: 8px;
+  margin-top: 8px;
 }
