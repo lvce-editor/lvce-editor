@@ -1,9 +1,14 @@
+:root {
+  --ChatForeground: rgb(188, 190, 190);
+}
+
 .Chat {
   contain: strict;
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  color: var(--ChatForeground);
 }
 
 .ChatActions {
@@ -12,6 +17,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+}
+
+.ChatActions .MaskIcon {
+  width: 16px;
+  height: 16px;
+  contain: strict;
 }
 
 .ChatList {
