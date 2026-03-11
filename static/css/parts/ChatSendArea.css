@@ -8,6 +8,7 @@
 }
 
 .ChatSendAreaContent {
+  position: relative;
   background: var(--InputBoxBackground);
   border-radius: 5px;
   padding: 10px;
