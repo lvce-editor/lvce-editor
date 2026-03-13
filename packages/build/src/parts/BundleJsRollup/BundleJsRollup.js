@@ -5,6 +5,7 @@ import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '@lvce-editor/verror'
 
+/** @type {import('rollup').Plugin} */
 const jsonPlugin = {
   name: 'json',
   load(id) {
@@ -48,6 +49,7 @@ export const bundleJs = async ({
 }) => {
   try {
     const allExternal = getExternal(babelExternal, external)
+    /** @type {import('rollup').Plugin[]} */
     const plugins = [jsonPlugin]
     if (platform === 'node/cjs' || platform === 'node') {
       const { default: commonjs } = await import('@rollup/plugin-commonjs')
