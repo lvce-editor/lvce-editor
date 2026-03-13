@@ -1,3 +1,4 @@
+import * as AdjustWorkers from '../AdjustWorkers/AdjustWorkers.js'
 import * as BundleColorPickerWorkerCached from '../BundleColorPickerWorkerCached/BundleColorPickerWorkerCached.js'
 import * as BundleDebugWorkerCached from '../BundleDebugWorkerCached/BundleDebugWorkerCached.js'
 import * as BundleDiffWorkerCached from '../BundleDiffWorkerCached/BundleDiffWorkerCached.js'
@@ -23,115 +24,8 @@ import * as BundleTextSearchWorkerCached from '../BundleTextSearchWorkerCached/B
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as Replace from '../Replace/Replace.js'
 
 const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
-
-const workerIdsToCopy = new Set([
-  'activityBar',
-  'chatDebug',
-  'chatNetworkWorker',
-  'chatView',
-  'clipBoard',
-  'completionWorker',
-  'extensionManagementWorker',
-  'fileSystemWorker',
-  'findWidget',
-  'hoverWorker',
-  'iconThemeWorker',
-  'languageModels',
-  'mainArea',
-  'markdownWorker',
-  'menuWorker',
-  'openerWorker',
-  'output',
-  'panel',
-  'preview',
-  'previewSandBoxWorker',
-  'previewSandboxWorker',
-  'problemsViewWorker',
-  'quickPickWorker',
-  'references',
-  'renameWorker',
-  'settings',
-  'sourceActionWorker',
-  'statusBar',
-  'textMeasurementWorker',
-  'titleBar',
-  'updateWorker',
-  'aboutWorker',
-])
-
-const workerPathOverrides = {
-  aboutWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/aboutWorkerMain.js',
-    productionPath: '/packages/about-view-worker/dist/aboutWorkerMain.js',
-  },
-  chatDebug: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/chat-debug-view/dist/chatDebugViewWorkerMain.js',
-    productionPath: '/packages/chat-debug-view/dist/chatDebugViewWorkerMain.js',
-  },
-  chatNetworkWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/chat-network-worker/dist/chatNetworkWorkerMain.js',
-    productionPath: '/packages/chat-network-worker/dist/chatNetworkWorkerMain.js',
-  },
-  completionWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
-    productionPath: '/packages/completion-worker/dist/completionWorkerMain.js',
-  },
-  extensionManagementWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/extension-management-worker/dist/extensionManagementWorkerMain.js',
-    productionPath: '/packages/extension-management-worker/dist/extensionManagementWorkerMain.js',
-  },
-  fileSystemWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js',
-    productionPath: '/packages/file-system-worker/dist/fileSystemWorkerMain.js',
-  },
-  hoverWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/hover-worker/dist/hoverWorkerMain.js',
-    productionPath: '/packages/hover-worker/dist/hoverWorkerMain.js',
-  },
-  markdownWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/markdown-worker/dist/markdownWorkerMain.js',
-    productionPath: '/packages/markdown-worker/dist/markdownWorkerMain.js',
-  },
-  menuWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/menu-worker/dist/menuWorkerMain.js',
-    productionPath: '/packages/menu-worker/dist/menuWorkerMain.js',
-  },
-  previewSandboxWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js',
-    productionPath: '/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js',
-  },
-  previewSandBoxWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js',
-    productionPath: '/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js',
-  },
-  problemsViewWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js',
-    productionPath: '/packages/problems-view/dist/problemsViewWorkerMain.js',
-  },
-  quickPickWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/quick-pick-worker/dist/quickPickWorkerMain.js',
-    productionPath: '/packages/quick-pick-worker/dist/quickPickWorkerMain.js',
-  },
-  renameWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/rename-worker/dist/renameWorkerMain.js',
-    productionPath: '/packages/rename-worker/dist/renameWorkerMain.js',
-  },
-  sourceActionWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/source-action-worker/dist/sourceActionWorkerMain.js',
-    productionPath: '/packages/source-action-worker/dist/sourceActionWorkerMain.js',
-  },
-  textMeasurementWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js',
-    productionPath: '/packages/text-measurement-worker/dist/textMeasurementWorkerMain.js',
-  },
-  updateWorker: {
-    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/update-worker/dist/updateWorkerMain.js',
-    productionPath: '/packages/update-worker/dist/updateWorkerMain.js',
-  },
-}
 
 const stripLeadingSlash = (path) => {
   return path.startsWith('/') ? path.slice(1) : path
@@ -140,12 +34,10 @@ const stripLeadingSlash = (path) => {
 const copyWorkers = async ({ toRoot }) => {
   const workers = await JsonFile.readJson(workersJsonPath)
   for (const worker of workers) {
-    if (!workerIdsToCopy.has(worker.id)) {
+    if (worker.id === 'rendererWorker') {
       continue
     }
-    const override = workerPathOverrides[worker.id] || {}
-    const defaultPath = worker.defaultPath || override.defaultPath
-    const productionPath = worker.productionPath || override.productionPath
+    const { defaultPath, productionPath } = worker
     if (!defaultPath || !productionPath) {
       continue
     }
@@ -154,25 +46,6 @@ const copyWorkers = async ({ toRoot }) => {
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
     })
   }
-}
-
-const adjustWorkers = async ({ toRoot, commitHash, date, version }) => {
-  const aboutWorkerPath = Path.join(toRoot, 'packages/about-view-worker', 'dist', 'aboutWorkerMain.js')
-  await Replace.replace({
-    path: aboutWorkerPath,
-    occurrence: `const commit = 'unknown commit'`,
-    replacement: `const commit = '${commitHash}'`,
-  })
-  await Replace.replace({
-    path: aboutWorkerPath,
-    occurrence: `commitDate = ''`,
-    replacement: `commitDate = '${date}'`,
-  })
-  await Replace.replace({
-    path: aboutWorkerPath,
-    occurrence: `version = '0.0.0-dev'`,
-    replacement: `version = '${version}'`,
-  })
 }
 
 export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
@@ -400,7 +273,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
   console.timeEnd('copyEmbedsWorkerFiles')
 
-  await adjustWorkers({
+  await AdjustWorkers.adjustWorkers({
     toRoot,
     commitHash,
     date,
