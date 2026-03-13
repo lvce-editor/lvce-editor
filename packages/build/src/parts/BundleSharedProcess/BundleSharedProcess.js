@@ -438,6 +438,9 @@ export const ptyHostPath = ResolveBin.resolveBin('@lvce-editor/pty-host')
     if (dirent.isDirectory()) {
       continue
     }
+    if (!direntName.endsWith('.js') && !direntName.endsWith('.ts')) {
+      continue
+    }
     const content = await readFile(direntName, 'utf8')
     const newContent = await ReplaceTs.replaceTs(content)
     if (content !== newContent) {
