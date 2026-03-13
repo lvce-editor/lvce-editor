@@ -8,11 +8,11 @@ import * as GetMimeType from '../GetMimeType/GetMimeType.js'
 import * as Path from '../Path/Path.js'
 import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
 
-const workerHeaders = new Map(
-  workers.map((worker) => {
-    return [worker.fileName, GetContentSecurityPolicy.getContentSecurityPolicy(worker.contentSecurityPolicy)]
-  }),
-)
+const workerHeaders = Object.create(null)
+
+for (const worker of workers) {
+  workerHeaders[worker.fileName] = GetContentSecurityPolicy.getContentSecurityPolicy(worker.contentSecurityPolicy)
+}
 
 export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProduction, applicationName }) => {
   const extension = Path.extname(absolutePath)
@@ -25,7 +25,7 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
     return absolutePath.endsWith(item.fileName)
   })
   if (worker) {
-    const csp = workerHeaders.get(worker.fileName)
+    const csp = workerHeaders[worker.fileName]
     return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, csp)
   }
   if (absolutePath.endsWith('rendererWorkerMain.js') || absolutePath.endsWith('rendererWorkerMain.ts')) {
