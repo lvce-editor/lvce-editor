@@ -16,6 +16,13 @@ const getManifestSrc = () => {
   return [`manifest-src 'self'`]
 }
 
+const getConnectSrc = () => {
+  if (IsElectron.isElectron) {
+    return []
+  }
+  return [`connect-src 'self'`]
+}
+
 const getFrameAncestors = () => {
   return [`frame-ancestors 'none'`]
 }
@@ -31,6 +38,7 @@ const getSandbox = () => {
 
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
+  ...getConnectSrc(),
   `font-src 'self'`,
   `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
   `media-src 'self'`,
