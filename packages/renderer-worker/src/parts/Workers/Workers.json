@@ -40,7 +40,7 @@
     "fileName": "chatToolWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-tool-worker/dist/chatToolWorkerMain.js",
-    "productionPath": "",
+    "productionPath": "/packages/chat-tool-worker/dist/chatToolWorkerMain.js",
     "settingName": "develop.chatToolWorkerPath",
     "hotReloadCommand": ""
   },
@@ -230,7 +230,7 @@
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/iframe-worker/dist/iframeWorkerMain.js",
     "productionPath": "/packages/iframe-worker/dist/iframeWorkerMain.js",
-    "settingName": "develop.iframeInspectorWorkerPath",
+    "settingName": "develop.iframeWorkerPath",
     "hotReloadCommand": ""
   },
   {
@@ -318,8 +318,8 @@
     "id": "previewSandboxWorker",
     "fileName": "previewSandboxWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "script-src 'self' 'unsafe-eval' https://esm.sh", "sandbox allow-same-origin"],
-    "defaultPath": "",
-    "productionPath": "",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js",
+    "productionPath": "/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js",
     "settingName": "develop.previewSandboxWorkerPath",
     "hotReloadCommand": ""
   },
@@ -338,7 +338,7 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js",
     "productionPath": "/packages/problems-view/dist/problemsViewWorkerMain.js",
-    "settingName": "",
+    "settingName": "develop.problemsWorkerPath",
     "hotReloadCommand": ""
   },
   {
@@ -372,7 +372,7 @@
     "id": "searchViewWorker",
     "fileName": "searchViewWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'"],
-    "defaultPath": "",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/search-view-worker/dist/searchViewWorkerMain.js",
     "productionPath": "/packages/search-view-worker/dist/searchViewWorkerMain.js",
     "settingName": "develop.searchViewWorkerPath",
     "hotReloadCommand": ""
@@ -419,7 +419,7 @@
     "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
     "productionPath": "/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
-    "settingName": "",
+    "settingName": "developer.syntaxHighlightingWorkerPath",
     "hotReloadCommand": ""
   },
   {
