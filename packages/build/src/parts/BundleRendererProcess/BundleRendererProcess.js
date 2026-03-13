@@ -1,6 +1,38 @@
 import { VError } from '@lvce-editor/verror'
+import { readFile, writeFile } from 'node:fs/promises'
 import * as Copy from '../Copy/Copy.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Replace from '../Replace/Replace.js'
+
+const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
+
+const getWorkerPathReplacements = async () => {
+  const workers = await JsonFile.readJson(workersJsonPath)
+  return workers
+    .filter((worker) => {
+      return worker.defaultPath && worker.productionPath && worker.defaultPath !== worker.productionPath
+    })
+    .map((worker) => {
+      return {
+        occurrence: worker.defaultPath,
+        replacement: worker.productionPath,
+      }
+    })
+}
+
+const replaceWorkerPaths = async (path) => {
+  const replacements = await getWorkerPathReplacements()
+  const content = await readFile(path, 'utf8')
+  let newContent = content
+  for (const { occurrence, replacement } of replacements) {
+    if (newContent.includes(occurrence)) {
+      newContent = newContent.split(occurrence).join(replacement)
+    }
+  }
+  if (newContent !== content) {
+    await writeFile(path, newContent)
+  }
+}
 
 const getPlatformCode = (platform) => {
   switch (platform) {
@@ -32,21 +64,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       occurrence: `const assetDir = getAssetDir();`,
       replacement: `const assetDir = '${assetDir}';`,
     })
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: `const syntaxHighlightingWorkerUrl = getConfiguredSyntaxHighlightingWorkerUrl() || \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js\`;`,
-      replacement: `const syntaxHighlightingWorkerUrl = \`\${assetDir}/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js\`;`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: `const extensionHostWorkerUrl = getConfiguredExtensionHostWorkerUrl() || \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js\`;`,
-      replacement: 'const extensionHostWorkerUrl = `${assetDir}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`;',
-    })
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererProcessMain.js`,
-      occurrence: `const editorWorkerUrl = getConfiguredEditorWorkerUrl() || \`\${assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js\`;`,
-      replacement: 'const editorWorkerUrl = `${assetDir}/packages/editor-worker/dist/editorWorkerMain.js`;',
-    })
+    await replaceWorkerPaths(`${cachePath}/dist/rendererProcessMain.js`)
     const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/dist/rendererProcessMain.js`,
