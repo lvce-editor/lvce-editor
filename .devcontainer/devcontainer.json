@@ -1,16 +1,17 @@
 {
   "name": "Node.js",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
 
   // Features to add to the dev container. More info: https://containers.dev/implementors/features.
-  // "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm ci",
-  "postStartCommand": "npm run dev -- --public"
+  "postCreateCommand": "npm ci && cd packages/extension-host-worker-tests && npx playwright install"
 
   // Configure tool-specific properties.
   // "customizations": {},
