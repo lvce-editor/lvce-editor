@@ -1,5 +1,14 @@
 [
   {
+    "id": "aboutWorker",
+    "fileName": "aboutWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/aboutWorkerMain.js",
+    "productionPath": "/packages/about-view-worker/dist/aboutWorkerMain.js",
+    "settingName": "develop.aboutViewWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "activityBar",
     "fileName": "activityBarWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/activity-bar-worker/dist/activityBarWorkerMain.js",
@@ -16,6 +25,24 @@
     "settingName": "develop.chatDebugViewWorkerPath",
     "hotReloadCommand": "ChatDebug.hotReload",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "chatNetworkWorker",
+    "fileName": "chatNetworkWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-network-worker/dist/chatNetworkWorkerMain.js",
+    "productionPath": "/packages/chat-network-worker/dist/chatNetworkWorkerMain.js",
+    "settingName": "develop.chatNetworkWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "chatToolWorker",
+    "fileName": "chatToolWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-tool-worker/dist/chatToolWorkerMain.js",
+    "productionPath": "",
+    "settingName": "develop.chatToolWorkerPath",
+    "hotReloadCommand": ""
   },
   {
     "id": "chatView",
@@ -36,6 +63,24 @@
     "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"]
   },
   {
+    "id": "colorPickerWorker",
+    "fileName": "colorPickerWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/color-picker-worker/dist/colorPickerWorkerMain.js",
+    "productionPath": "/packages/color-picker-worker/dist/colorPickerWorkerMain.js",
+    "settingName": "develop.colorPickerWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "completionWorker",
+    "fileName": "completionWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js",
+    "productionPath": "/packages/completion-worker/dist/completionWorkerMain.js",
+    "settingName": "develop.completionWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "debug",
     "fileName": "debugWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/debug-worker/dist/debugWorkerMain.js",
@@ -52,6 +97,24 @@
     "settingName": "develop.editorWorkerPath",
     "hotReloadCommand": "Editor.hotReload",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "embedsWorker",
+    "fileName": "embedsWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/embeds-worker/dist/embedsWorkerMain.js",
+    "productionPath": "/packages/embeds-worker/dist/embedsWorkerMain.js",
+    "settingName": "develop.embedsWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "errorWorker",
+    "fileName": "errorWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/error-worker/dist/errorWorkerMain.js",
+    "productionPath": "/packages/error-worker/dist/errorWorkerMain.js",
+    "settingName": "develop.errorWorkerPath",
+    "hotReloadCommand": ""
   },
   {
     "id": "explorer",
@@ -72,6 +135,33 @@
     "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
+    "id": "extensionHostSubWorker",
+    "fileName": "extensionHostSubWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "script-src 'self'", "font-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js",
+    "productionPath": "/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js",
+    "settingName": "develop.extensionHostSubWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "extensionHostWorker",
+    "fileName": "extensionHostWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'", "script-src 'self'", "font-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js",
+    "productionPath": "/packages/extension-host-worker/dist/extensionHostWorkerMain.js",
+    "settingName": "develop.extensionHostWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "extensionManagementWorker",
+    "fileName": "extensionManagementWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-management-worker/dist/extensionManagementWorkerMain.js",
+    "productionPath": "/packages/extension-management-worker/dist/extensionManagementWorkerMain.js",
+    "settingName": "develop.extensionManagementWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "extensionSearch",
     "fileName": "extensionSearchViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-search-view/dist/extensionSearchViewWorkerMain.js",
@@ -79,6 +169,24 @@
     "settingName": "develop.extensionSearchViewWorkerPath",
     "hotReloadCommand": "Extensions.hotReload",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "fileSearchWorker",
+    "fileName": "fileSearchWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/file-search-worker/dist/fileSearchWorkerMain.js",
+    "productionPath": "/packages/file-search-worker/dist/fileSearchWorkerMain.js",
+    "settingName": "develop.fileSearchWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "fileSystemWorker",
+    "fileName": "fileSystemWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js",
+    "productionPath": "/packages/file-system-worker/dist/fileSystemWorkerMain.js",
+    "settingName": "develop.fileSystemWorkerPath",
+    "hotReloadCommand": ""
   },
   {
     "id": "findWidget",
@@ -90,6 +198,24 @@
     "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
+    "id": "hoverWorker",
+    "fileName": "hoverWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/hover-worker/dist/hoverWorkerMain.js",
+    "productionPath": "/packages/hover-worker/dist/hoverWorkerMain.js",
+    "settingName": "develop.hoverWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "iconThemeWorker",
+    "fileName": "iconThemeWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/icon-theme-worker/dist/iconThemeWorkerMain.js",
+    "productionPath": "/packages/icon-theme-worker/dist/iconThemeWorkerMain.js",
+    "settingName": "develop.iconThemeWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "iframeInspector",
     "fileName": "iframeInspectorWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/iframe-inspector/dist/iframeInspectorWorkerMain.js",
@@ -97,6 +223,15 @@
     "settingName": "develop.iframeInspectorWorkerPath",
     "hotReloadCommand": "IframeInspector.hotReload",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
+    "id": "iframeWorker",
+    "fileName": "iframeWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/iframe-worker/dist/iframeWorkerMain.js",
+    "productionPath": "/packages/iframe-worker/dist/iframeWorkerMain.js",
+    "settingName": "develop.iframeInspectorWorkerPath",
+    "hotReloadCommand": ""
   },
   {
     "id": "keyBindings",
@@ -126,6 +261,33 @@
     "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
+    "id": "markdownWorker",
+    "fileName": "markdownWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/markdown-worker/dist/markdownWorkerMain.js",
+    "productionPath": "/packages/markdown-worker/dist/markdownWorkerMain.js",
+    "settingName": "develop.markdownWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "menuWorker",
+    "fileName": "menuWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/menu-worker/dist/menuWorkerMain.js",
+    "productionPath": "/packages/menu-worker/dist/menuWorkerMain.js",
+    "settingName": "develop.menuWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "openerWorker",
+    "fileName": "openerWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/opener-worker/dist/openerWorkerMain.js",
+    "productionPath": "/packages/opener-worker/dist/openerWorkerMain.js",
+    "settingName": "develop.openerWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "output",
     "fileName": "outputViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/output-view/dist/outputViewWorkerMain.js",
@@ -153,6 +315,42 @@
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
+    "id": "previewSandboxWorker",
+    "fileName": "previewSandboxWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self' 'unsafe-eval' https://esm.sh", "sandbox allow-same-origin"],
+    "defaultPath": "",
+    "productionPath": "",
+    "settingName": "develop.previewSandboxWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "previewSandBoxWorker",
+    "fileName": "previewSandBoxWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self' 'unsafe-eval' https://esm.sh", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js",
+    "productionPath": "/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js",
+    "settingName": "develop.previewSandboxWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "problemsViewWorker",
+    "fileName": "problemsViewWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js",
+    "productionPath": "/packages/problems-view/dist/problemsViewWorkerMain.js",
+    "settingName": "",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "quickPickWorker",
+    "fileName": "quickPickWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/quick-pick-worker/dist/quickPickWorkerMain.js",
+    "productionPath": "/packages/quick-pick-worker/dist/quickPickWorkerMain.js",
+    "settingName": "develop.quickPickWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "references",
     "fileName": "referencesViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/references-view/dist/referencesViewWorkerMain.js",
@@ -162,6 +360,24 @@
     "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
+    "id": "renameWorker",
+    "fileName": "renameWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/rename-worker/dist/renameWorkerMain.js",
+    "productionPath": "/packages/rename-worker/dist/renameWorkerMain.js",
+    "settingName": "develop.renameWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "searchViewWorker",
+    "fileName": "searchViewWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "",
+    "productionPath": "/packages/search-view-worker/dist/searchViewWorkerMain.js",
+    "settingName": "develop.searchViewWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "settings",
     "fileName": "settingsViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",
@@ -169,6 +385,15 @@
     "settingName": "develop.settingsWorkerPath",
     "hotReloadCommand": "Settings.hotReload",
     "contentSecurityPolicy": ["default-src 'none'"]
+  },
+  {
+    "id": "sourceActionWorker",
+    "fileName": "sourceActionWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/source-action-worker/dist/sourceActionWorkerMain.js",
+    "productionPath": "/packages/source-action-worker/dist/sourceActionWorkerMain.js",
+    "settingName": "develop.sourceActionWorkerPath",
+    "hotReloadCommand": ""
   },
   {
     "id": "sourceControl",
@@ -189,6 +414,42 @@
     "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
+    "id": "syntaxHighlightingWorker",
+    "fileName": "syntaxHighlightingWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
+    "productionPath": "/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
+    "settingName": "",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "terminalWorker",
+    "fileName": "terminalWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'", "script-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/terminal-worker/dist/terminalWorkerMain.js",
+    "productionPath": "/packages/terminal-worker/dist/terminalWorkerMain.js",
+    "settingName": "develop.terminalWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "testWorker",
+    "fileName": "testWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/test-worker/dist/testWorkerMain.js",
+    "productionPath": "/packages/test-worker/dist/testWorkerMain.js",
+    "settingName": "develop.testWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
+    "id": "textMeasurementWorker",
+    "fileName": "textMeasurementWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "font-src 'self'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js",
+    "productionPath": "/packages/text-measurement-worker/dist/textMeasurementWorkerMain.js",
+    "settingName": "develop.textMeasurementWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "textSearch",
     "fileName": "textSearchWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/text-search-worker/dist/textSearchWorkerMain.js",
@@ -205,5 +466,14 @@
     "settingName": "develop.titleBarWorkerPath",
     "hotReloadCommand": "TitleBar.hotReload",
     "contentSecurityPolicy": ["default-src 'none'"]
+  },
+  {
+    "id": "updateWorker",
+    "fileName": "updateWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://github.com https://release-assets.githubusercontent.com"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/update-worker/dist/updateWorkerMain.js",
+    "productionPath": "/packages/update-worker/dist/updateWorkerMain.js",
+    "settingName": "develop.updateWorkerPath",
+    "hotReloadCommand": ""
   }
 ]
