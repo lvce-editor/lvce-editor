@@ -27,6 +27,15 @@
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
+    "id": "chatMathWorker",
+    "fileName": "chatMathWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-math-worker/dist/chatMathWorkerMain.js",
+    "productionPath": "/packages/chat-math-worker/dist/chatMathWorkerMain.js",
+    "settingName": "develop.chatMathWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "chatNetworkWorker",
     "fileName": "chatNetworkWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"],
@@ -366,15 +375,6 @@
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/rename-worker/dist/renameWorkerMain.js",
     "productionPath": "/packages/rename-worker/dist/renameWorkerMain.js",
     "settingName": "develop.renameWorkerPath",
-    "hotReloadCommand": ""
-  },
-  {
-    "id": "searchViewWorker",
-    "fileName": "searchViewWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'"],
-    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/search-view-worker/dist/searchViewWorkerMain.js",
-    "productionPath": "/packages/search-view-worker/dist/searchViewWorkerMain.js",
-    "settingName": "develop.searchViewWorkerPath",
     "hotReloadCommand": ""
   },
   {
