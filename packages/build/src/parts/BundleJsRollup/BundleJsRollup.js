@@ -1,8 +1,24 @@
 import { basename, join } from 'node:path'
+import { readFileSync } from 'node:fs'
 import * as rollup from 'rollup'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '@lvce-editor/verror'
+
+const jsonPlugin = {
+  name: 'json',
+  load(id) {
+    if (!id.endsWith('.json')) {
+      return null
+    }
+    const content = readFileSync(id, 'utf8')
+    const parsed = JSON.parse(content)
+    return {
+      code: `export default ${JSON.stringify(parsed)}`,
+      map: null,
+    }
+  },
+}
 
 const getExternal = (babelExternal, initialExternal) => {
   const external = [...initialExternal]
@@ -32,7 +48,7 @@ export const bundleJs = async ({
 }) => {
   try {
     const allExternal = getExternal(babelExternal, external)
-    const plugins = []
+    const plugins = [jsonPlugin]
     if (platform === 'node/cjs' || platform === 'node') {
       const { default: commonjs } = await import('@rollup/plugin-commonjs')
       const { nodeResolve } = await import('@rollup/plugin-node-resolve')
