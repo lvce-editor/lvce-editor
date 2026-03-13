@@ -198,6 +198,15 @@ export const getBuiltinExtensionsPath = () => {
     })
   }
   if (target === 'server') {
+    await Copy.copyFile({
+      from: 'packages/renderer-worker/src/parts/Workers/Workers.json',
+      to: `${cachePath}/src/parts/Workers/Workers.json`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/ExportStatic/ExportStatic.js`,
+      occurrence: `../../../../renderer-worker/src/parts/Workers/Workers.json`,
+      replacement: `../Workers/Workers.json`,
+    })
     await Copy.copy({
       from: 'packages/shared-process/bin',
       to: `${cachePath}/bin`,
