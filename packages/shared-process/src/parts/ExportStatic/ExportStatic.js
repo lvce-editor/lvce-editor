@@ -5,6 +5,7 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
 
 const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
@@ -34,6 +35,25 @@ const replace = async (path, occurrence, replacement) => {
   // @ts-ignore
   const newContent = oldContent.replaceAll(occurrence, replacement)
   await FileSystem.writeFile(path, newContent)
+}
+
+const getWorkerById = (id) => {
+  const worker = workers.find((item) => {
+    return item.id === id
+  })
+  if (!worker) {
+    throw new Error(`worker not found: ${id}`)
+  }
+  return worker
+}
+
+const getDistPathFromWorkerPath = (path) => {
+  return path.split('/').filter(Boolean)
+}
+
+const getWorkerDistPath = (root, commitHash, id) => {
+  const worker = getWorkerById(id)
+  return Path.join(root, 'dist', commitHash, ...getDistPathFromWorkerPath(worker.productionPath))
 }
 
 /**
@@ -116,6 +136,7 @@ const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }) =
 }
 
 const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }) => {
+  const extensionHostWorkerDistPath = getWorkerDistPath(root, commitHash, 'extensionHostWorker')
   await applyOverridesRendererProcess({ root, commitHash, pathPrefix })
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
@@ -128,20 +149,12 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
     `${pathPrefix}/${commitHash}`,
   )
   await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
+    extensionHostWorkerDistPath,
     `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
     `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
   )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
-    `/${commitHash}`,
-    `${pathPrefix}/${commitHash}`,
-  )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
-    `const platform = Remote`,
-    `const platform = Web`,
-  )
+  await replace(extensionHostWorkerDistPath, `/${commitHash}`, `${pathPrefix}/${commitHash}`)
+  await replace(extensionHostWorkerDistPath, `const platform = Remote`, `const platform = Web`)
   // await replace(
   //   Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
   //   `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
