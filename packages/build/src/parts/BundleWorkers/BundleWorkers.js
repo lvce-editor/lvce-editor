@@ -1,14 +1,28 @@
+import { existsSync } from 'node:fs'
 import * as AdjustWorkers from '../AdjustWorkers/AdjustWorkers.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 
 const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
 
 const stripLeadingSlash = (path) => {
   return path.startsWith('/') ? path.slice(1) : path
+}
+
+const getWorkerSourcePath = (defaultPath) => {
+  const sourcePath = stripLeadingSlash(defaultPath)
+  if (existsSync(Path.absolute(sourcePath))) {
+    return sourcePath
+  }
+  const hoistedPath = sourcePath.replace(/^packages\/renderer-worker\/node_modules\//, 'node_modules/')
+  if (existsSync(Path.absolute(hoistedPath))) {
+    return hoistedPath
+  }
+  return ''
 }
 
 const copyWorkers = async ({ toRoot }) => {
@@ -21,8 +35,13 @@ const copyWorkers = async ({ toRoot }) => {
     if (!defaultPath || !productionPath) {
       continue
     }
+    const from = getWorkerSourcePath(defaultPath)
+    if (!from) {
+      Logger.info(`[bundleWorkers] skipped missing worker artifact for ${worker.id}: ${defaultPath}`)
+      continue
+    }
     await Copy.copyFile({
-      from: stripLeadingSlash(defaultPath),
+      from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
     })
   }
