@@ -1,5 +1,5 @@
 import { VError } from '@lvce-editor/verror'
-import { readFile, writeFile } from 'node:fs/promises'
+import { readFile, readdir, writeFile } from 'node:fs/promises'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
@@ -66,6 +66,56 @@ const getCssDeclarationsFromText = (content) => {
     .replaceAll(/\/\/.*/g, '')
   const parsed = JSON.parse(almostParsed)
   return parsed
+}
+
+const getWorkerPathReplacements = async (cachePath) => {
+  const workersJsonPath = Path.join(cachePath, 'src', 'parts', 'Workers', 'Workers.json')
+  const content = await readFile(workersJsonPath, 'utf8')
+  const workers = JSON.parse(content)
+  return workers
+    .filter((worker) => {
+      return worker.defaultPath && worker.productionPath && worker.defaultPath !== worker.productionPath
+    })
+    .map((worker) => {
+      return {
+        occurrence: worker.defaultPath,
+        replacement: worker.productionPath,
+      }
+    })
+}
+
+const getSourceFiles = async (path) => {
+  const entries = await readdir(path, { withFileTypes: true })
+  const files = []
+  for (const entry of entries) {
+    const childPath = Path.join(path, entry.name)
+    if (entry.isDirectory()) {
+      const childFiles = await getSourceFiles(childPath)
+      files.push(...childFiles)
+      continue
+    }
+    if (entry.name.endsWith('.js') || entry.name.endsWith('.ts')) {
+      files.push(childPath)
+    }
+  }
+  return files
+}
+
+const replaceWorkerPaths = async (cachePath) => {
+  const replacements = await getWorkerPathReplacements(cachePath)
+  const sourceFiles = await getSourceFiles(Path.join(cachePath, 'src', 'parts'))
+  for (const sourceFile of sourceFiles) {
+    const content = await readFile(sourceFile, 'utf8')
+    let newContent = content
+    for (const { occurrence, replacement } of replacements) {
+      if (newContent.includes(occurrence)) {
+        newContent = newContent.split(occurrence).join(replacement)
+      }
+    }
+    if (newContent !== content) {
+      await writeFile(sourceFile, newContent)
+    }
+  }
 }
 
 export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date, product }) => {
@@ -156,255 +206,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       occurrence: '/packages/extension-host-worker/src/extensionHostWorkerMain.ts',
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
     })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/TerminalWorkerUrl/TerminalWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/terminal-worker/dist/terminalWorkerMain.js`,
-      replacement: `/packages/terminal-worker/dist/terminalWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/IconThemeWorkerUrl/IconThemeWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/icon-theme-worker/dist/iconThemeWorkerMain.js`,
-      replacement: `/packages/icon-theme-worker/dist/iconThemeWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ExtensionManagementWorkerUrl/ExtensionManagementWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/extension-management-worker/dist/extensionManagementWorkerMain.js`,
-      replacement: `/packages/extension-management-worker/dist/extensionManagementWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/MainAreaWorkerUrl/MainAreaWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/main-area-worker/dist/mainAreaWorkerMain.js`,
-      replacement: `/packages/main-area-worker/dist/mainAreaWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ActivityBarWorkerUrl/ActivityBarWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/activity-bar-worker/dist/activityBarWorkerMain.js`,
-      replacement: `/packages/activity-bar-worker/dist/activityBarWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ExtensionHostSubWorkerUrl/ExtensionHostSubWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js',
-      replacement: '/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/IframeInspectorWorkerUrl/IframeInspectorWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/iframe-inspector/dist/iframeInspectorWorkerMain.js',
-      replacement: '/packages/iframe-inspector/dist/iframeInspectorWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/HoverWorkerUrl/HoverWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/hover-worker/dist/hoverWorkerMain.js',
-      replacement: '/packages/hover-worker/dist/hoverWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/SourceControlWorkerUrl/SourceControlWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/source-control-worker/dist/sourceControlWorkerMain.js',
-      replacement: '/packages/source-control-worker/dist/sourceControlWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/StatusBarWorkerUrl/StatusBarWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/status-bar-worker/dist/statusBarWorkerMain.js',
-      replacement: '/packages/status-bar-worker/dist/statusBarWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ProblemsWorkerUrl/ProblemsWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js',
-      replacement: '/packages/problems-view/dist/problemsViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/MenuWorkerUrl/MenuWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/menu-worker/dist/menuWorkerMain.js',
-      replacement: '/packages/menu-worker/dist/menuWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/UpdateWorkerUrl/UpdateWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/update-worker/dist/updateWorkerMain.js',
-      replacement: '/packages/update-worker/dist/updateWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/FileSystemWorkerUrl/FileSystemWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js',
-      replacement: '/packages/file-system-worker/dist/fileSystemWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ClipBoardWorkerUrl/ClipBoardWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/clipboard-worker/dist/clipBoardWorkerMain.js',
-      replacement: '/packages/clipboard-worker/dist/clipBoardWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/RenameWorkerUrl/RenameWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/rename-worker/dist/renameWorkerMain.js',
-      replacement: '/packages/rename-worker/dist/renameWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ReferencesWorkerUrl/ReferencesWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/references-view/dist/referencesViewWorkerMain.js',
-      replacement: '/packages/references-view/dist/referencesViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ColorPickerWorkerUrl/ColorPickerWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/color-picker-worker/dist/colorPickerWorkerMain.js',
-      replacement: '/packages/color-picker-worker/dist/colorPickerWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/FindWidgetWorkerUrl/FindWidgetWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/find-widget-worker/dist/findWidgetWorkerMain.js',
-      replacement: '/packages/find-widget-worker/dist/findWidgetWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/SettingsWorkerUrl/SettingsWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js',
-      replacement: '/packages/settings-view/dist/settingsViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/CompletionWorkerUrl/CompletionWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/completion-worker/dist/completionWorkerMain.js',
-      replacement: '/packages/completion-worker/dist/completionWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/KeyBindingsViewWorkerUrl/KeyBindingsViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/keybindings-view/dist/keyBindingsViewWorkerMain.js`,
-      replacement: '/packages/keybindings-view-worker/dist/keyBindingsViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/DebugWorkerUrl/DebugWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/debug-worker/dist/debugWorkerMain.js`,
-      replacement: '/packages/debug-worker/dist/debugWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/AboutViewWorkerUrl/AboutViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/aboutWorkerMain.js`,
-      replacement: '/packages/about-view-worker/dist/aboutWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/IframeWorkerUrl/IframeWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/iframe-worker/dist/iframeWorkerMain.js`,
-      replacement: '/packages/iframe-worker/dist/iframeWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/TextMeasurementWorkerUrl/TextMeasurementWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js`,
-      replacement: '/packages/text-measurement-worker/dist/textMeasurementWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/OutputViewWorkerUrl/OutputViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/output-view/dist/outputViewWorkerMain.js`,
-      replacement: '/packages/output-view/dist/outputViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/MarkdownWorkerUrl/MarkdownWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/markdown-worker/dist/markdownWorkerMain.js`,
-      replacement: '/packages/markdown-worker/dist/markdownWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/SourceActionWorkerUrl/SourceActionWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/source-action-worker/dist/sourceActionWorkerMain.js`,
-      replacement: '/packages/source-action-worker/dist/sourceActionWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/TitleBarWorkerUrl/TitleBarWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/title-bar-worker/dist/titleBarWorkerMain.js`,
-      replacement: '/packages/title-bar-worker/dist/titleBarWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ExtensionSearchViewWorkerUrl/ExtensionSearchViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/extension-search-view/dist/extensionSearchViewWorkerMain.js`,
-      replacement: '/packages/extension-search-view-worker/dist/extensionSearchViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ExtensionDetailViewWorkerUrl/ExtensionDetailViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/extension-detail-view/dist/extensionDetailViewWorkerMain.js`,
-      replacement: '/packages/extension-detail-view-worker/dist/extensionDetailViewWorkerMain.js',
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/EmbedsWorkerUrl/EmbedsWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/embeds-worker/dist/embedsWorkerMain.js`,
-      replacement: `/packages/embeds-worker/dist/embedsWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/SyntaxHighlightingWorkerUrl/SyntaxHighlightingWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js`,
-      replacement: `/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/FileSearchWorkerUrl/FileSearchWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/file-search-worker/dist/fileSearchWorkerMain.js`,
-      replacement: `/packages/file-search-worker/dist/fileSearchWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/QuickPickWorkerUrl/QuickPickWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/quick-pick-worker/dist/quickPickWorkerMain.js`,
-      replacement: `/packages/quick-pick-worker/dist/quickPickWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/TextSearchWorkerUrl/TextSearchWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/text-search-worker/dist/textSearchWorkerMain.js`,
-      replacement: `/packages/text-search-worker/dist/textSearchWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ChatViewWorkerUrl/ChatViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/chat-view/dist/chatViewWorkerMain.js`,
-      replacement: `/packages/chat-view/dist/chatViewWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ErrorWorkerUrl/ErrorWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/error-worker/dist/errorWorkerMain.js`,
-      replacement: `/packages/error-worker/dist/errorWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ChatNetworkWorkerUrl/ChatNetworkWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/chat-network-worker/dist/chatNetworkWorkerMain.js`,
-      replacement: `/packages/chat-network-worker/dist/chatNetworkWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ChatDebugViewWorkerUrl/ChatDebugViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/chat-debug-view/dist/chatDebugViewWorkerMain.js`,
-      replacement: `/packages/chat-debug-view/dist/chatDebugViewWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/ExplorerWorkerUrl/ExplorerWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/explorer-view/dist/explorerViewWorkerMain.js`,
-      replacement: `/packages/explorer-worker/dist/explorerViewWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/DiffWorkerUrl/DiffWorkerUrl.js`,
-      occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/diff-worker/dist/diffWorkerMain.js',
-      replacement: `/packages/diff-worker/dist/diffWorkerMain.js`,
-    })
+    await replaceWorkerPaths(cachePath)
     await Replace.replace({
       path: `${cachePath}/src/parts/IsProduction/IsProduction.js`,
       occurrence: 'isProduction = false',
       replacement: `isProduction = true`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/EditorWorkerUrl/EditorWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js`,
-      replacement: `/packages/editor-worker/dist/editorWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/OpenerWorkerUrl/OpenerWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/opener-worker/dist/openerWorkerMain.js`,
-      replacement: `/packages/opener-worker/dist/openerWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/PanelWorkerUrl/PanelWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/panel-worker/dist/panelWorkerMain.js`,
-      replacement: `/packages/panel-worker/dist/panelWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/PreviewWorkerUrl/PreviewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/preview-worker/dist/previewWorkerMain.js`,
-      replacement: `/packages/preview-worker/dist/previewWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/PreviewSandBoxWorkerUrl/PreviewSandBoxWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js`,
-      replacement: `/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/LanguageModelsViewWorkerUrl/LanguageModelsViewWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/language-models-view/dist/languageModelsViewMain.js`,
-      replacement: `/packages/language-models-view/dist/languageModelsViewMain.js`,
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/Product/Product.js`,
@@ -453,11 +259,6 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
         replacement: ``,
       })
     }
-    await Replace.replace({
-      path: `${cachePath}/src/parts/TestWorkerUrl/TestWorkerUrl.js`,
-      occurrence: `/packages/renderer-worker/node_modules/@lvce-editor/test-worker/dist/testWorkerMain.js`,
-      replacement: `/packages/test-worker/dist/testWorkerMain.js`,
-    })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.ts`,
