@@ -2,6 +2,11 @@ import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 
 export const menus = []
 
+export const getQuickPickMenuEntries = async () => {
+  const entries = await ChatViewWorker.invoke('Chat.getQuickPickMenuEntries')
+  return entries
+}
+
 export const getMenus = async () => {
   try {
     const ids = await ChatViewWorker.invoke('Chat.getMenuEntryIds')
