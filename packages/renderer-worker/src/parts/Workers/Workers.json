@@ -63,6 +63,15 @@
     "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
   },
   {
+    "id": "chatCoordinator",
+    "fileName": "chatCoordinatorWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-coordinator-worker/dist/chatCoordinatorWorkerMain.js",
+    "productionPath": "/packages/chat-coordinator-worker/dist/chatCoordinatorWorkerMain.js",
+    "settingName": "develop.chatCoordinatorWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
+  },
+  {
     "id": "clipBoard",
     "fileName": "clipBoardWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/clipboard-worker/dist/clipBoardWorkerMain.js",
