@@ -52,7 +52,7 @@
     "@lvce-editor/chat-network-worker": "^4.1.0",
     "@lvce-editor/chat-math-worker": "^1.1.0",
     "@lvce-editor/chat-coordinator-worker": "^1.2.0",
-    "@lvce-editor/chat-tool-worker": "^7.4.0",
+    "@lvce-editor/chat-tool-worker": "^7.5.0",
     "@lvce-editor/chat-debug-view": "^3.3.0",
     "@lvce-editor/editor-worker": "^18.6.0",
     "@lvce-editor/embeds-worker": "^4.1.0",
