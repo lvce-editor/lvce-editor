@@ -1,0 +1,53 @@
+.ChatModelPickerContainer {
+  position: relative;
+}
+
+.ChatModelPicker {
+  background: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 8px;
+  bottom: calc(100% + 8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  left: 0;
+  min-width: 280px;
+  position: absolute;
+  z-index: 100;
+}
+
+.ChatModelPickerHeader {
+  align-items: center;
+  border-bottom: 1px solid var(--vscode-editorWidget-border);
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+}
+
+.ChatModelPickerHeader .InputBox {
+  flex: 1;
+}
+
+.ChatModelPickerList {
+  max-height: 240px;
+  overflow: auto;
+  padding: 4px 0;
+}
+
+.ChatModelPickerItem {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  height: 28px;
+  justify-content: flex-start;
+  padding: 0 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.ChatModelPickerItem:hover,
+.ChatModelPickerItemSelected {
+  background: var(--vscode-list-hoverBackground);
+}
