@@ -14,6 +14,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.js'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
@@ -84,6 +85,12 @@ export const sendMessagePortToTextMeasurementWorker = async (port, initialComman
   Assert.object(port)
   Assert.string(initialCommand)
   await TextMeasurementWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToTextSearchWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await TextSearchWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToSourceControlWorker = async (port, initialCommand, rpcId) => {

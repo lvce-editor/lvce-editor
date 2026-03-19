@@ -332,6 +332,9 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToTextMeasurementWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToTextMeasurementWorker',
   ),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToTextSearchWorker': lazy(
+    'SendMessagePortToExtensionHostWorker.sendMessagePortToTextSearchWorker',
+  ),
   'SendMessagePortToRendererProcess.sendMessagePortToRendererProcess': lazy('SendMessagePortToRendererProcess.sendMessagePortToRendererProcess'),
   'SendMessagePortToSyntaxHighlightingWorker.sendMessagePortToSyntaxHighlightingWorker': lazy(
     'SendMessagePortToSyntaxHighlightingWorker.sendMessagePortToSyntaxHighlightingWorker',
