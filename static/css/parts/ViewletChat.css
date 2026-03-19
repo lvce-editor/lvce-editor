@@ -294,7 +294,9 @@
   overflow: hidden;
   padding: 0 10px;
   text-overflow: ellipsis;
-  transition: background-color 80ms ease, color 80ms ease;
+  transition:
+    background-color 80ms ease,
+    color 80ms ease;
   white-space: nowrap;
 }
 
@@ -340,7 +342,9 @@
   justify-content: center;
   opacity: 0;
   padding: 0;
-  transition: opacity 90ms ease, background-color 90ms ease;
+  transition:
+    opacity 90ms ease,
+    background-color 90ms ease;
   visibility: hidden;
   width: 18px;
 }
@@ -372,7 +376,9 @@
   overflow: hidden;
   padding: 0 10px 0 28px;
   text-overflow: ellipsis;
-  transition: background-color 80ms ease, color 80ms ease;
+  transition:
+    background-color 80ms ease,
+    color 80ms ease;
   white-space: nowrap;
 }
 

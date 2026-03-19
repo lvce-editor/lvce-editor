@@ -18,8 +18,7 @@
 .ChatSendArea .MultilineInputBox {
   height: var(--ChatTextAreaHeight, var(--ChatInputBoxHeight, 20px));
   min-height: var(--ChatTextAreaHeight, var(--ChatInputBoxHeight, 20px));
-  padding: var(--ChatTextAreaPaddingTop, 0) var(--ChatTextAreaPaddingRight, 0) var(--ChatTextAreaPaddingBottom, 0)
-    var(--ChatTextAreaPaddingLeft, 0);
+  padding: var(--ChatTextAreaPaddingTop, 0) var(--ChatTextAreaPaddingRight, 0) var(--ChatTextAreaPaddingBottom, 0) var(--ChatTextAreaPaddingLeft, 0);
 }
 
 .ChatSendAreaBottom {
