@@ -44,6 +44,38 @@
   padding: 12px;
 }
 
+.ChatToolCallRenderHtmlBody hr {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 78%, transparent);
+  display: block;
+  height: 0;
+  margin: 12px 0;
+  width: 100%;
+}
+
 .ChatToolCallRenderHtmlBody * {
   box-sizing: border-box;
+}
+
+.ChatToolCallQuestionText {
+  margin-bottom: 6px;
+}
+
+.ChatToolCallQuestionOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ChatToolCallQuestionOption {
+  background: color-mix(in srgb, var(--ColorBadgeBackground, #2f3640) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 70%, transparent);
+  border-radius: 999px;
+  color: var(--ColorForeground, #d5dbe3);
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

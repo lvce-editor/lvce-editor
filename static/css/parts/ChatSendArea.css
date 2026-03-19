@@ -1,9 +1,10 @@
 .ChatSendArea {
   display: flex;
   gap: 10px;
-  padding: 10px;
+  padding: var(--ChatSendAreaPaddingTop, 10px) var(--ChatSendAreaPaddingRight, 10px) var(--ChatSendAreaPaddingBottom, 10px)
+    var(--ChatSendAreaPaddingLeft, 10px);
   flex-direction: column;
-  height: 90px;
+  height: var(--ChatSendAreaHeight, 90px);
   contain: strict;
 }
 
@@ -15,7 +16,9 @@
 }
 
 .ChatSendArea .MultilineInputBox {
-  height: var(--ChatInputBoxHeight, 20px);
+  height: var(--ChatTextAreaHeight, var(--ChatInputBoxHeight, 20px));
+  min-height: var(--ChatTextAreaHeight, var(--ChatInputBoxHeight, 20px));
+  padding: var(--ChatTextAreaPaddingTop, 0) var(--ChatTextAreaPaddingRight, 0) var(--ChatTextAreaPaddingBottom, 0) var(--ChatTextAreaPaddingLeft, 0);
 }
 
 .ChatSendAreaBottom {
