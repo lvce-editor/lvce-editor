@@ -63,6 +63,15 @@
     "hotReloadCommand": ""
   },
   {
+    "id": "chatStorageWorker",
+    "fileName": "chatStorageWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-storage-worker/dist/chatStorageWorkerMain.js",
+    "productionPath": "/packages/chat-storage-worker/dist/chatStorageWorkerMain.js",
+    "settingName": "develop.chatStorageWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "chatView",
     "fileName": "chatViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view/dist/chatViewWorkerMain.js",
