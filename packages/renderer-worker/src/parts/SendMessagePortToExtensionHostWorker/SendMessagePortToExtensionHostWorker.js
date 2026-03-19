@@ -19,6 +19,7 @@ import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.js'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
+import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
@@ -139,6 +140,12 @@ export const sendMessagePortToChatMathWorker = async (port, initialCommand, rpcI
   Assert.object(port)
   Assert.string(initialCommand)
   await ChatMathWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToChatStorageWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await ChatStorageWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToChatCoordinatorWorker = async (port, initialCommand, rpcId) => {
