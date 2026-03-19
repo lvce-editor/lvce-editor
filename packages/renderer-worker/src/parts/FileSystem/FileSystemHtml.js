@@ -6,7 +6,9 @@ import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
 import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
+import * as GetDirectoryHandle from '../GetDirectoryHandle/GetDirectoryHandle.js'
 import * as GetFileHandle from '../GetFileHandle/GetFileHandle.js'
+import * as Path from '../Path/Path.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
 
@@ -114,6 +116,38 @@ export const writeFile = async (uri, content) => {
     await FileSystemFileHandle.write(handle, content)
   } catch (error) {
     throw new VError(error, 'Failed to save file')
+  }
+}
+
+const ensureDirectoryHandle = async (uri) => {
+  const existingHandle = await PersistentFileHandle.getHandle(uri)
+  if (existingHandle) {
+    if (existingHandle.kind !== 'directory') {
+      throw new VError(`Expected directory at ${uri}`)
+    }
+    return existingHandle
+  }
+  const dirname = Path.dirname(pathSeparator, uri)
+  if (uri === dirname) {
+    throw new VError(`Directory handle not found for ${uri}`)
+  }
+  let parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
+  if (!parentHandle) {
+    parentHandle = await ensureDirectoryHandle(dirname)
+  }
+  const baseName = Path.getBaseName(pathSeparator, uri)
+  const directoryHandle = await parentHandle.getDirectoryHandle(baseName, {
+    create: true,
+  })
+  await PersistentFileHandle.addHandle(uri, directoryHandle)
+  return directoryHandle
+}
+
+export const mkdir = async (uri) => {
+  try {
+    await ensureDirectoryHandle(uri)
+  } catch (error) {
+    throw new VError(error, 'Failed to create directory')
   }
 }
 
