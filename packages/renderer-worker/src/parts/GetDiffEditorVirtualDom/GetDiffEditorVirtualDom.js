@@ -105,6 +105,7 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     {
       type: VirtualDomElements.Div,
       className: `${ClassNames.Sash} ${ClassNames.SashVertical}`,
+      role: 'none',
       childcount: 0,
     },
     ...getLinesVirtualDom(linesRight, ClassNames.DiffEditorContentRight),
