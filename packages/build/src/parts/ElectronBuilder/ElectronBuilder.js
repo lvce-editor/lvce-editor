@@ -62,7 +62,7 @@ const getBundleTarget = (config) => {
   }
 }
 
-const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess, asar }) => {
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
@@ -79,6 +79,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     '@@MAIN@@': mainProcessPath,
+    '@@ASAR@@': String(asar),
   })
 }
 
@@ -222,6 +223,7 @@ const copyElectronResult = async ({
   supportsAutoUpdate,
   shouldRemoveUnusedLocales,
   bundleMainProcess,
+  asar = false,
   isMacos,
   arch = 'x64',
   platform,
@@ -282,7 +284,7 @@ const copyElectronResult = async ({
     await Template.write('windows_cli_bash', `packages/build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
       '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
-    await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion })
+    await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion, asar })
     await Copy.copyFile({
       from: `packages/build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
       to: `packages/build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
@@ -305,6 +307,7 @@ export const build = async ({
   config,
   product,
   shouldRemoveUnusedLocales = false,
+  asar = false,
   arch,
   isMacos = false,
   platform = process.platform,
@@ -332,6 +335,7 @@ export const build = async ({
     supportsAutoUpdate,
     shouldRemoveUnusedLocales,
     bundleMainProcess,
+    asar,
     isMacos,
     arch,
     platform,
@@ -341,7 +345,7 @@ export const build = async ({
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess })
+  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess, asar })
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')

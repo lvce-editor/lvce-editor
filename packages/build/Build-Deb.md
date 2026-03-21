@@ -8,6 +8,12 @@ Generate a `.deb` file that can be installed with the `apt` package manager.
 node bin/build.js --target=electron-deb --force
 ```
 
+Enable `asar` packaging explicitly:
+
+```sh
+node bin/build.js --target=electron-deb --force --asar
+```
+
 ## Try out
 
 ```sh
