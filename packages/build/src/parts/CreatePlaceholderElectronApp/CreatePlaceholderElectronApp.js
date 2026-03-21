@@ -5,7 +5,7 @@ import * as Path from '../Path/Path.js'
 import * as Template from '../Template/Template.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const copyElectronBuilderConfig = async ({ config, version, product, electronVersion }) => {
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, asar = false }) => {
   await Template.write(config, 'packages/build/.tmp/electron-builder-placeholder-app/package.json', {
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
@@ -17,6 +17,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     '@@MAIN@@': 'packages/main-process/dist/mainProcessMain.js',
+    '@@ASAR@@': String(asar),
   })
 }
 
@@ -37,8 +38,8 @@ const runElectronBuilder = async ({}) => {
 // workaround for modifying exe properties, which
 // doesn't seem to be possible with electron builder
 // for prepackaged apps
-export const createPlaceholderElectronApp = async ({ config, product, version, electronVersion }) => {
-  await copyElectronBuilderConfig({ config, product, version, electronVersion })
+export const createPlaceholderElectronApp = async ({ config, product, version, electronVersion, asar = false }) => {
+  await copyElectronBuilderConfig({ config, product, version, electronVersion, asar })
 
   await WriteFile.writeFile({
     to: 'packages/build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
