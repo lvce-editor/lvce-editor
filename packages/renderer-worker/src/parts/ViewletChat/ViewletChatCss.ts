@@ -6,7 +6,8 @@ export const Css = [
   '/css/parts/InputBox.css',
   '/css/parts/Select.css',
   '/css/parts/ViewletChat.css',
-  '/css/parts/ViewletChatTodoList.css',
+  '/css/parts/ViewletChatFocusMode.css',
   '/css/parts/ViewletChatModelPicker.css',
+  '/css/parts/ViewletChatTodoList.css',
   '/css/parts/ViewletDialog.css',
 ]
