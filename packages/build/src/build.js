@@ -61,9 +61,15 @@ const getBuildModule = (target) => {
 // TODO warn when build dependencies are not yet installed
 
 const main = async () => {
-  const argv = minimist(Process.argv.slice(2))
+  const argv = minimist(Process.argv.slice(2), {
+    boolean: ['asar'],
+    default: {
+      asar: false,
+    },
+  })
   const target = argv.target
   const arch = argv.arch || process.arch
+  const asar = argv.asar
   if (!target) {
     console.error('Error: target not specified')
     console.error(`Hint: Try using "node build.js --target=static"`)
@@ -74,7 +80,7 @@ const main = async () => {
   const module = await getBuildModule(target)
   try {
     // @ts-ignore
-    await module.build({ product, arch, target })
+    await module.build({ product, arch, target, asar })
   } catch (error) {
     console.error(`Build failed:`)
     console.error(error)

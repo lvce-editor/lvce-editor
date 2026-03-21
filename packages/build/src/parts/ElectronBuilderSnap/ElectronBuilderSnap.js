@@ -4,7 +4,7 @@ import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Process from '../Process/Process.js'
 
-export const build = async ({ product, arch }) => {
+export const build = async ({ product, arch, asar }) => {
   if (Process.platform === 'win32') {
     Logger.info('building snap is not supported on windows')
     Process.exit(ExitCode.Error)
@@ -18,5 +18,6 @@ export const build = async ({ product, arch }) => {
     config: ElectronBuilderConfigType.Snap,
     product,
     arch,
+    asar,
   })
 }

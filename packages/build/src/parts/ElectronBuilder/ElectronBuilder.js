@@ -62,7 +62,7 @@ const getBundleTarget = (config) => {
   }
 }
 
-const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess, asar }) => {
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
@@ -79,6 +79,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     '@@MAIN@@': mainProcessPath,
+    '@@ASAR@@': String(asar),
   })
 }
 
@@ -305,6 +306,7 @@ export const build = async ({
   config,
   product,
   shouldRemoveUnusedLocales = false,
+  asar = false,
   arch,
   isMacos = false,
   platform = process.platform,
@@ -341,7 +343,7 @@ export const build = async ({
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess })
+  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess, asar })
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')

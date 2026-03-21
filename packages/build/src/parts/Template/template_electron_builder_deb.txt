@@ -8,7 +8,7 @@
   "homepage": "@@HOMEPAGE@@",
   "build": {
     "publish": [],
-    "asar": false,
+    "asar": @@ASAR@@,
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "linux": {
