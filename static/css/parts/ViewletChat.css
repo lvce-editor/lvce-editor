@@ -38,6 +38,51 @@
 }
 
 .ChatListItem {
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+.ChatListItemFocused {
+  background: var(--vscode-list-activeSelectionBackground);
+  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
+.ChatListItemStatusRow {
+  width: 16px;
+  min-width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ChatListItemStatusIcon {
+  font-size: 10px;
+}
+
+.ChatListItemStatusStopped {
+  color: var(--vscode-disabledForeground);
+}
+
+.ChatListItemStatusInProgress {
+  color: var(--vscode-charts-blue);
+}
+
+.ChatListItemStatusFinished {
+  color: var(--vscode-testing-iconPassed);
+}
+
+.ChatListItem .SessionArchiveButton {
+  opacity: 0;
+}
+
+.ChatListItem:hover .SessionArchiveButton,
+.ChatListItem:focus-within .SessionArchiveButton {
+  opacity: 1;
+}
+
+.ChatListItem {
   contain: strict;
   height: var(--ChatListItemHeight, 40px);
   display: flex;
@@ -485,4 +530,16 @@
 .TokenAttribute,
 .TokenProperty {
   color: var(--ColorChartsOrange, #ef9f76);
+}
+
+.ChatMessageContent p + p {
+  margin-top: 0.75em;
+}
+
+.MissingApiKeyForm {
+  padding-top: 10px;
+}
+
+a.Button {
+  text-decoration: none;
 }
