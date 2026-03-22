@@ -21,3 +21,14 @@
   font-weight: 400;
   font-size: 13px;
 }
+
+.ChatHeaderLabel {
+  margin: 0;
+  font-size: 14px;
+}
+
+.ChatHeaderLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
