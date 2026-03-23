@@ -9,3 +9,36 @@
   contain: content;
   outline: none;
 }
+
+.Select .MaskIcon {
+  width: 20px;
+}
+
+.Select:hover {
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+}
+
+button.Select[name='model-picker-toggle'] {
+  display: flex;
+  gap: 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
+  padding: 0 !important;
+  min-width: 0;
+}
+
+button.Select[name='model-picker-toggle']:hover {
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+  color: var(--vscode-foreground);
+}
+
+button.Select[name='model-picker-toggle'] .SelectLabel {
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
