@@ -18,6 +18,7 @@ import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.js'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
+import * as ChatMessageParsingWorker from '../ChatMessageParsingWorker/ChatMessageParsingWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
@@ -140,6 +141,12 @@ export const sendMessagePortToChatMathWorker = async (port, initialCommand, rpcI
   Assert.object(port)
   Assert.string(initialCommand)
   await ChatMathWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToChatMessageParsingWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await ChatMessageParsingWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToChatStorageWorker = async (port, initialCommand, rpcId) => {
