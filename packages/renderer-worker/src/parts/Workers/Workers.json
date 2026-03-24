@@ -45,6 +45,15 @@
     "hotReloadCommand": ""
   },
   {
+    "id": "chatMessageParsingWorker",
+    "fileName": "chatMessageParsingWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-message-parsing-worker/dist/chatMessageParsingWorkerMain.js",
+    "productionPath": "/packages/chat-message-parsing-worker/dist/chatMessageParsingWorkerMain.js",
+    "settingName": "develop.chatMessageParsingWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "chatNetworkWorker",
     "fileName": "chatNetworkWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"],
