@@ -41,7 +41,7 @@ export const resolveRoot = async () => {
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
         pathSeparator: Platform.getPathSeparator(),
-        source: 'shared-process-default',
+        source: WorkspaceSource.SharedProcessCliArg,
       }
     }
   }

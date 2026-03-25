@@ -19,7 +19,8 @@ const env = {
 }
 
 const main = () => {
-  const child = spawn(electronPath, ['.'], {
+  const cliArgs = process.argv.slice(2)
+  const child = spawn(electronPath, ['.', ...cliArgs], {
     cwd: mainProcessPath,
     env,
   })
