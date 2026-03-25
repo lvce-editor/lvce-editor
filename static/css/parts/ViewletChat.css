@@ -463,6 +463,13 @@
   padding: 0;
 }
 
+.ChatFocus .ChatMessages > .Message,
+.ChatFocus .ChatSendAreaContent {
+  width: min(100%, var(--ChatFocusContentMaxWidth, 100%));
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .Chat .Select {
   -moz-appearance: none;
   -webkit-appearance: none;

@@ -22,10 +22,20 @@
 }
 
 .ChatSendAreaBottom {
+  align-items: center;
   display: flex;
   contain: strict;
+  gap: 8px;
   height: 20px;
   justify-content: space-between;
+}
+
+.ChatSendAreaPrimaryControls {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
 }
 
 .ChatInputBox {
@@ -36,6 +46,8 @@
   flex: 1;
   background: var(--InputBoxBackground);
   padding: 4px 6px;
+  padding-left: 0;
+  padding-right: 0;
   color: var(--InputBoxForeground);
   font-size: 13px;
   height: 24px;
@@ -45,6 +57,15 @@
   white-space: pre;
   text-overflow: ellipsis;
 }
+
+.ChatInputBox::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatInputBox::-moz-selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .ChatSendArea:focus-within {
   border-color: darkcyan;
 }
