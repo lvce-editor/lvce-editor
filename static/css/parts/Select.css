@@ -14,11 +14,17 @@
   width: 20px;
 }
 
+.CustomSelectContainer {
+  position: relative;
+  min-width: 0;
+}
+
 .Select:hover {
   background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
 }
 
-button.Select[name='model-picker-toggle'] {
+button.Select[name='model-picker-toggle'],
+button.Select[name='run-mode-picker-toggle'] {
   display: flex;
   gap: 4px;
   border: none;
@@ -29,16 +35,40 @@ button.Select[name='model-picker-toggle'] {
   min-width: 0;
 }
 
-button.Select[name='model-picker-toggle']:hover {
+button.Select[name='model-picker-toggle']:hover,
+button.Select[name='run-mode-picker-toggle']:hover {
   background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
   color: var(--vscode-foreground);
 }
 
-button.Select[name='model-picker-toggle'] .SelectLabel {
+button.Select[name='model-picker-toggle'] .SelectLabel,
+button.Select[name='run-mode-picker-toggle'] .SelectLabel {
   width: auto;
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.CustomSelectPopOver {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  margin: 0;
+  z-index: 1;
+}
+
+.SelectLabel {
+  font-size: 11px;
+  display: flex;
+  contain: content;
+  align-items: center;
+  pointer-events: none;
+}
+
+.Chat .Select .MaskIcon {
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
 }
