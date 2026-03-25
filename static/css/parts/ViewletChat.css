@@ -550,3 +550,19 @@
 a.Button {
   text-decoration: none;
 }
+
+.ChatOrderedListItem {
+  display: flex;
+  contain: content;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.ChatOrderedListItem .FileIcon {
+  display: none;
+}
+
+.ChatOrderedList {
+  padding: 0;
+  margin: 0;
+}
