@@ -1,6 +1,8 @@
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 
-const getFrameSrc = ({ isForElectronProduction, applicationName }) => {
+const defaultApplicationName = 'lvce-oss'
+
+const getFrameSrc = ({ isForElectronProduction, applicationName = defaultApplicationName }) => {
   if (isForElectronProduction) {
     return [`frame-src ${applicationName}-webview:`]
   }
@@ -31,7 +33,7 @@ const getSandbox = () => {
   return [`sandbox allow-scripts allow-same-origin`]
 }
 
-export const getValue = ({ isForElectronProduction, applicationName }) =>
+export const getValue = ({ isForElectronProduction, applicationName = defaultApplicationName }) =>
   GetContentSecurityPolicy.getContentSecurityPolicy([
     `default-src 'none'`,
     ...getConnectSrc({ isForElectronProduction }),

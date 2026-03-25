@@ -5,7 +5,7 @@ import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOrigin
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 
-export const getHeadersDocument = ({ mime, etag, isForElectronProduction, applicationName }) => {
+export const getHeadersDocument = ({ mime, etag, isForElectronProduction, applicationName = 'lvce-oss' }) => {
   return {
     [HttpHeader.CacheControl]: CachingHeaders.NoCache,
     [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.getValue({ isForElectronProduction, applicationName }),
