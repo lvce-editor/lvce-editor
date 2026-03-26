@@ -14,6 +14,16 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Side Bar',
     },
     {
+      id: 'Layout.openChat',
+      label: 'Layout: Open Chat',
+      aliases: ['Show Chat'],
+    },
+    {
+      id: 'Layout.closeChat',
+      label: 'Layout: Close Chat',
+      aliases: ['Hide Chat'],
+    },
+    {
       id: 'Layout.showSecondarySideBar',
       label: 'Layout: Show Secondary Side Bar',
     },
