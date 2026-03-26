@@ -33,6 +33,18 @@ export const resolveRoot = async () => {
     const argv = await ParentIpc.invoke('Process.getArgv')
     const relevantArgv = argv.slice(2)
     const last = relevantArgv.at(-1)
+    if (last && last === '.') {
+      const actual = process.cwd()
+      return {
+        path: actual,
+        uri: toUri(actual),
+        workspaceId: GetWorkspaceId.getWorkspaceId(actual),
+        homeDir: PlatformPaths.getHomeDir(),
+        homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        pathSeparator: Platform.getPathSeparator(),
+        source: WorkspaceSource.SharedProcessCliArg,
+      }
+    }
     if (last && isAbsolute(last)) {
       return {
         path: last,
