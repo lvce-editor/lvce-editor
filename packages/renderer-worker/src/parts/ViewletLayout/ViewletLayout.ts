@@ -408,6 +408,26 @@ export const toggleSecondarySideBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.SecondarySideBar)
 }
 
+export const openChat = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (state.secondarySideBarVisible && state.secondarySideBarView === ViewletModuleId.Chat) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  // @ts-ignore
+  const openResult = await openSecondarySideBarView(state, ViewletModuleId.Chat)
+  const showResult = await showSecondarySideBar(openResult.newState)
+  return {
+    newState: showResult.newState,
+    commands: [...openResult.commands, ...showResult.commands],
+  }
+}
+
+export const closeChat = (state: LayoutState) => {
+  return hideSecondarySideBar(state)
+}
+
 export const showPanel = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.Panel)
