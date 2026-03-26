@@ -415,6 +415,7 @@ export const openChat = async (state: LayoutState): Promise<LayoutStateResult> =
       commands: [],
     }
   }
+  // @ts-ignore
   const openResult = await openSecondarySideBarView(state, ViewletModuleId.Chat)
   const showResult = await showSecondarySideBar(openResult.newState)
   return {
