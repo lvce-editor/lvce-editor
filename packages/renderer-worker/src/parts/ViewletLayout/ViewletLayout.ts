@@ -24,7 +24,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { getPoints } from './LayoutPoints.ts'
-import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
+import type { ChatViewFullScreenLayoutStateSnapshot, LayoutState, LayoutStateResult } from './LayoutState.ts'
 
 export const create = (id: number): LayoutState => {
   Assert.number(id)
@@ -111,6 +111,8 @@ export const create = (id: number): LayoutState => {
     commit: Commit.commit,
     platform: Platform.platform,
     assetDir,
+    chatViewFullScreen: false,
+    chatViewFullScreenLayout: undefined,
     commands: [],
     sashId: SashType.None,
     previewUri: '',
@@ -222,6 +224,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     ...state,
     activityBarVisible: true,
     activityBarWidth: 48,
+    chatViewFullScreen: false,
+    chatViewFullScreenLayout: undefined,
     mainVisible: true,
     panelHeight,
     panelMaxHeight: 600,
@@ -265,6 +269,157 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   // TODO get side bar min width from preferences
   const newState = getPoints(intermediateState, sideBarLocation)
   return newState
+}
+
+const allLayoutModules = [
+  LayoutModules.Main,
+  LayoutModules.ActivityBar,
+  LayoutModules.SideBar,
+  LayoutModules.SecondarySideBar,
+  LayoutModules.TitleBar,
+  LayoutModules.StatusBar,
+  LayoutModules.Panel,
+  LayoutModules.Preview,
+]
+
+const getChatViewFullScreenLayoutSnapshot = (state: LayoutState): ChatViewFullScreenLayoutStateSnapshot => {
+  return {
+    activityBarVisible: state.activityBarVisible,
+    panelHeight: state.panelHeight,
+    panelVisible: state.panelVisible,
+    previewVisible: state.previewVisible,
+    previewWidth: state.previewWidth,
+    sideBarLocation: state.sideBarLocation,
+    sideBarView: state.sideBarView,
+    sideBarVisible: state.sideBarVisible,
+    sideBarWidth: state.sideBarWidth,
+    secondarySideBarView: state.secondarySideBarView,
+    secondarySideBarVisible: state.secondarySideBarVisible,
+    secondarySideBarWidth: state.secondarySideBarWidth,
+    statusBarVisible: state.statusBarVisible,
+    titleBarVisible: state.titleBarVisible,
+  }
+}
+
+const getEnterChatViewFullScreenState = (state: LayoutState, snapshot: ChatViewFullScreenLayoutStateSnapshot): LayoutState => {
+  return getPoints(
+    {
+      ...state,
+      activityBarVisible: false,
+      activityBarSashVisible: false,
+      chatViewFullScreen: true,
+      chatViewFullScreenLayout: snapshot,
+      mainVisible: false,
+      panelVisible: false,
+      panelSashVisible: false,
+      previewVisible: false,
+      previewSashVisible: false,
+      secondarySideBarVisible: true,
+      secondarySideBarView: ViewletModuleId.Chat,
+      secondarySideBarWidth: state.windowWidth,
+      sideBarVisible: false,
+      sideBarSashVisible: false,
+      statusBarVisible: false,
+      titleBarVisible: false,
+    },
+    state.sideBarLocation,
+  )
+}
+
+const getLeaveChatViewFullScreenState = (state: LayoutState, snapshot: ChatViewFullScreenLayoutStateSnapshot): LayoutState => {
+  const titleBarHeight = isNativeTitleBarStyle(state.platform) ? 0 : GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
+  return getPoints(
+    {
+      ...state,
+      activityBarVisible: snapshot.activityBarVisible,
+      activityBarSashVisible: true,
+      chatViewFullScreen: false,
+      chatViewFullScreenLayout: undefined,
+      mainVisible: true,
+      panelHeight: snapshot.panelHeight,
+      panelVisible: snapshot.panelVisible,
+      panelSashVisible: true,
+      previewSashVisible: snapshot.previewVisible,
+      previewVisible: snapshot.previewVisible,
+      previewWidth: snapshot.previewWidth,
+      sideBarLocation: snapshot.sideBarLocation,
+      sideBarSashVisible: true,
+      sideBarView: snapshot.sideBarView,
+      sideBarVisible: snapshot.sideBarVisible,
+      sideBarWidth: snapshot.sideBarWidth,
+      secondarySideBarView: snapshot.secondarySideBarView,
+      secondarySideBarVisible: snapshot.secondarySideBarVisible,
+      secondarySideBarWidth: snapshot.secondarySideBarWidth,
+      statusBarHeight: 20,
+      statusBarVisible: snapshot.statusBarVisible,
+      titleBarHeight,
+      titleBarVisible: snapshot.titleBarVisible,
+    },
+    snapshot.sideBarLocation,
+  )
+}
+
+const applyLayoutVisibilityChanges = async (oldState: LayoutState, targetState: LayoutState): Promise<LayoutStateResult> => {
+  let newState = targetState
+  const disposeCommands = []
+  const loadCommands = []
+
+  for (const module of allLayoutModules) {
+    const { kVisible, moduleId, kId } = module
+    if (!oldState[kVisible] || targetState[kVisible]) {
+      continue
+    }
+    await SaveState.saveViewletState(moduleId)
+    const instance = ViewletStates.getInstance(moduleId)
+    if (instance) {
+      disposeCommands.push(...Viewlet.disposeFunctional(instance.state.uid))
+    }
+    newState = {
+      ...newState,
+      [kId]: -1,
+    }
+  }
+
+  const resizeCommands = await getResizeCommands(oldState, newState)
+
+  for (const module of allLayoutModules) {
+    const { kVisible, moduleId, kId, kLeft, kTop, kWidth, kHeight } = module
+    if (oldState[kVisible] || !newState[kVisible]) {
+      continue
+    }
+    const childUid = Id.create()
+    const uri = moduleId === ViewletModuleId.Preview ? newState.previewUri : ''
+    const commands = await ViewletManager.load(
+      {
+        getModule: ViewletModule.load,
+        id: moduleId,
+        type: 0,
+        // @ts-ignore
+        uri,
+        show: false,
+        focus: false,
+        x: newState[kLeft],
+        y: newState[kTop],
+        width: newState[kWidth],
+        height: newState[kHeight],
+        parentUid: newState.uid,
+        uid: childUid,
+      },
+      false,
+      true,
+      undefined,
+    )
+    loadCommands.push(...commands)
+    newState = {
+      ...newState,
+      [kId]: childUid,
+    }
+  }
+
+  return {
+    newState,
+    commands: [...disposeCommands, ...resizeCommands, ...loadCommands],
+  }
 }
 
 const show = async (state: LayoutState, module, currentViewletId) => {
@@ -404,6 +559,9 @@ export const hideSecondarySideBar = (state: LayoutState) => {
 }
 
 export const toggleSecondarySideBar = (state: LayoutState) => {
+  if (state.chatViewFullScreen) {
+    return leaveChatViewFullScreen(state)
+  }
   // @ts-ignore
   return toggle(state, LayoutModules.SecondarySideBar)
 }
@@ -425,7 +583,51 @@ export const openChat = async (state: LayoutState): Promise<LayoutStateResult> =
 }
 
 export const closeChat = (state: LayoutState) => {
+  if (state.chatViewFullScreen) {
+    return leaveChatViewFullScreen(state)
+  }
   return hideSecondarySideBar(state)
+}
+
+export const enterChatViewFullScreen = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (state.chatViewFullScreen) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const snapshot = getChatViewFullScreenLayoutSnapshot(state)
+  const openResult = await openChat(state)
+  const fullScreenState = getEnterChatViewFullScreenState(openResult.newState, snapshot)
+  const transitionResult = await applyLayoutVisibilityChanges(openResult.newState, fullScreenState)
+  return {
+    newState: transitionResult.newState,
+    commands: [...openResult.commands, ...transitionResult.commands],
+  }
+}
+
+export const leaveChatViewFullScreen = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.chatViewFullScreen || !state.chatViewFullScreenLayout) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const snapshot = state.chatViewFullScreenLayout
+  const restoredState = getLeaveChatViewFullScreenState(state, snapshot)
+  const transitionResult = await applyLayoutVisibilityChanges(state, restoredState)
+  if (snapshot.secondarySideBarVisible && snapshot.secondarySideBarView !== transitionResult.newState.secondarySideBarView) {
+    const openResult = await openSecondarySideBarView(transitionResult.newState, snapshot.secondarySideBarView)
+    return {
+      newState: {
+        ...openResult.newState,
+        chatViewFullScreen: false,
+        chatViewFullScreenLayout: undefined,
+      },
+      commands: [...transitionResult.commands, ...openResult.commands],
+    }
+  }
+  return transitionResult
 }
 
 export const showPanel = (state: LayoutState) => {

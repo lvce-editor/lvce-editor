@@ -1,3 +1,20 @@
+export interface ChatViewFullScreenLayoutStateSnapshot {
+  readonly activityBarVisible: boolean
+  readonly panelHeight: number
+  readonly panelVisible: boolean
+  readonly previewVisible: boolean
+  readonly previewWidth: number
+  readonly sideBarLocation: number
+  readonly sideBarView: string
+  readonly sideBarVisible: boolean
+  readonly sideBarWidth: number
+  readonly secondarySideBarView: string
+  readonly secondarySideBarVisible: boolean
+  readonly secondarySideBarWidth: number
+  readonly statusBarVisible: boolean
+  readonly titleBarVisible: boolean
+}
+
 export interface LayoutState {
   readonly activityBarHeight: number
   readonly activityBarId: number
@@ -8,6 +25,8 @@ export interface LayoutState {
   readonly activityBarVisible: boolean
   readonly activityBarWidth: number
   readonly assetDir: string
+  readonly chatViewFullScreen: boolean
+  readonly chatViewFullScreenLayout: ChatViewFullScreenLayoutStateSnapshot | undefined
   readonly commands: readonly any[]
   readonly commit: string
   readonly contentAreaId: number

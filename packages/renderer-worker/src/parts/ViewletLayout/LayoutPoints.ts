@@ -32,6 +32,56 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const newSecondarySideBarWidth = Clamp.clamp(secondarySideBarWidth, secondarySideBarMinWidth, secondarySideBarMaxWidth)
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
 
+  if (source.chatViewFullScreen) {
+    return {
+      ...source,
+      activityBarTop: 0,
+      activityBarLeft: 0,
+      activityBarWidth: 0,
+      activityBarHeight: 0,
+      activityBarVisible: false,
+      mainLeft: 0,
+      mainTop: 0,
+      mainWidth: 0,
+      mainHeight: 0,
+      mainVisible: false,
+      panelLeft: 0,
+      panelTop: windowHeight,
+      panelWidth: 0,
+      panelHeight: 0,
+      panelVisible: false,
+      sideBarLeft: 0,
+      sideBarTop: 0,
+      sideBarWidth: 0,
+      sideBarHeight: 0,
+      sideBarVisible: false,
+      secondarySideBarLeft: 0,
+      secondarySideBarTop: 0,
+      secondarySideBarWidth: windowWidth,
+      secondarySideBarHeight: windowHeight,
+      secondarySideBarVisible: true,
+      statusBarLeft: 0,
+      statusBarTop: windowHeight,
+      statusBarWidth: 0,
+      statusBarHeight: 0,
+      statusBarVisible: false,
+      titleBarLeft: 0,
+      titleBarTop: 0,
+      titleBarWidth: 0,
+      titleBarHeight: 0,
+      titleBarVisible: false,
+      previewLeft: windowWidth,
+      previewTop: 0,
+      previewWidth: 0,
+      previewHeight: 0,
+      previewVisible: false,
+      activityBarSashVisible: false,
+      panelSashVisible: false,
+      previewSashVisible: false,
+      sideBarSashVisible: false,
+    }
+  }
+
   if (sideBarLocation === SideBarLocationType.Right) {
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
