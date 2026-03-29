@@ -58,7 +58,7 @@
     "@lvce-editor/editor-worker": "^18.7.0",
     "@lvce-editor/embeds-worker": "^4.1.0",
     "@lvce-editor/error-worker": "^2.4.0",
-    "@lvce-editor/explorer-view": "^6.0.0",
+    "@lvce-editor/explorer-view": "^6.1.0",
     "@lvce-editor/extension-detail-view": "^7.0.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-host-worker": "^8.5.0",
@@ -80,7 +80,7 @@
     "@lvce-editor/output-view": "^2.2.0",
     "@lvce-editor/panel-worker": "^1.12.0",
     "@lvce-editor/preview-sandbox-worker": "^2.2.0",
-    "@lvce-editor/preview-worker": "^5.0.0",
+    "@lvce-editor/preview-worker": "^6.1.0",
     "@lvce-editor/problems-view": "^1.18.0",
     "@lvce-editor/quick-pick-worker": "^2.0.0",
     "@lvce-editor/references-view": "^2.5.0",
@@ -93,14 +93,14 @@
     "@lvce-editor/status-bar-worker": "^2.1.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.2.0",
     "@lvce-editor/terminal-worker": "^1.2.0",
-    "@lvce-editor/test-worker": "^13.15.0",
+    "@lvce-editor/test-worker": "^13.16.0",
     "@lvce-editor/text-measurement-worker": "^1.12.0",
     "@lvce-editor/text-search-worker": "^6.5.0",
     "@lvce-editor/title-bar-worker": "^3.21.0",
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
-    "@lvce-editor/chat-message-parsing-worker": "^1.7.0",
+    "@lvce-editor/chat-message-parsing-worker": "^1.8.0",
     "@types/node": "^25.5.0"
   }
 }
