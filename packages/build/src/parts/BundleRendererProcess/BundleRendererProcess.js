@@ -72,11 +72,11 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       replacement: `const platform = ${platformCode};`,
     })
     if (platform === 'electron') {
-      await Replace.replace({
-        path: `${cachePath}/dist/rendererProcessMain.js`,
-        occurrence: `const isFirefox = getIsFirefox()`,
-        replacement: `const isFirefox = false`,
-      })
+      // await Replace.replace({
+      //   path: `${cachePath}/dist/rendererProcessMain.js`,
+      //   occurrence: `const isFirefox = getIsFirefox()`,
+      //   replacement: `const isFirefox = false`,
+      // })
     }
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer process`)
