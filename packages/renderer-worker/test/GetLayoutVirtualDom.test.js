@@ -25,7 +25,9 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
     titleBarId: -1,
   }
 
+  // @ts-ignore
   const dom = getLayoutVirtualDom(state)
+  // @ts-ignore
   const mainContentsDom = getMainContentsLayoutVirtualDom(state)
   const sashes = [...dom, ...mainContentsDom].filter((node) => node.className?.includes('Sash'))
 
