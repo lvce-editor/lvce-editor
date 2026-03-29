@@ -49,7 +49,7 @@
     "@lvce-editor/chat-network-worker": "^4.1.0",
     "@lvce-editor/chat-storage-worker": "^1.5.0",
     "@lvce-editor/chat-tool-worker": "^7.12.0",
-    "@lvce-editor/chat-view": "^7.0.0",
+    "@lvce-editor/chat-view": "^7.1.0",
     "@lvce-editor/clipboard-worker": "^1.17.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^3.0.0",
@@ -100,7 +100,7 @@
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
-    "@lvce-editor/chat-message-parsing-worker": "^1.6.0",
+    "@lvce-editor/chat-message-parsing-worker": "^1.7.0",
     "@types/node": "^25.5.0"
   }
 }
