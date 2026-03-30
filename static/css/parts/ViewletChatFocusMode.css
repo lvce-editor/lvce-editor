@@ -200,6 +200,18 @@
   background: color-mix(in srgb, var(--ColorButtonSecondaryHoverBackground, #2a3039) 78%, transparent);
 }
 
+.ChatFocusMainArea {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ChatFocusMainArea > .ChatMessages {
+  flex: 1;
+  min-height: 0;
+}
+
 .ChatList,
 .ChatListEmpty,
 .ChatMessages {
