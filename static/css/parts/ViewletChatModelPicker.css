@@ -64,6 +64,14 @@
   width: 100%;
 }
 
+.ChatGitBranchPickerMessage {
+  padding: 6px 8px;
+}
+
+.ChatGitBranchPickerErrorMessage {
+  color: var(--vscode-errorForeground, var(--vscode-foreground));
+}
+
 .ChatModelPickerItemLabel {
   min-width: 0;
   flex: 1;
