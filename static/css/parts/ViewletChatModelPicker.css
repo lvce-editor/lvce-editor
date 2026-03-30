@@ -88,8 +88,8 @@
 
 .ChatModelPickerItem:hover,
 .ChatModelPickerItemSelected {
-  background: var(--vscode-list-hoverBackground);
-  color: var(--vscode-list-hoverForeground);
+  background: var(--ListHoverBackground);
+  color: var(--ListHoverForeground);
 }
 
 .ChatModelPickerItem > * {
