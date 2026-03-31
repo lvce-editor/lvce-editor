@@ -79,7 +79,7 @@
     "@lvce-editor/opener-worker": "^1.5.0",
     "@lvce-editor/output-view": "^2.2.0",
     "@lvce-editor/panel-worker": "^1.12.0",
-    "@lvce-editor/preview-sandbox-worker": "^2.2.0",
+    "@lvce-editor/preview-sandbox-worker": "^2.3.0",
     "@lvce-editor/preview-worker": "^6.1.0",
     "@lvce-editor/problems-view": "^1.18.0",
     "@lvce-editor/quick-pick-worker": "^2.1.0",
