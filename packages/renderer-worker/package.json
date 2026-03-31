@@ -82,7 +82,7 @@
     "@lvce-editor/preview-sandbox-worker": "^2.2.0",
     "@lvce-editor/preview-worker": "^6.1.0",
     "@lvce-editor/problems-view": "^1.18.0",
-    "@lvce-editor/quick-pick-worker": "^2.0.0",
+    "@lvce-editor/quick-pick-worker": "^2.1.0",
     "@lvce-editor/references-view": "^2.5.0",
     "@lvce-editor/rename-worker": "^1.28.0",
     "@lvce-editor/renderer-process": "^24.4.0",
