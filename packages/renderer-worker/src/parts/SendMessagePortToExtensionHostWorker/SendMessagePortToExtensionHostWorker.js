@@ -35,6 +35,12 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
   await SharedProcess.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
+export const sendMessagePortToTerminalProcess = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await SharedProcess.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
 export const sendMessagePortToErrorWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
