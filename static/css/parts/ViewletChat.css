@@ -167,6 +167,13 @@
   color: var(--ChatMessageForeground, #bcbebe);
 }
 
+.ChatMessageContent .Markdown {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .ChatAttachments {
   display: flex;
   flex-wrap: wrap;
