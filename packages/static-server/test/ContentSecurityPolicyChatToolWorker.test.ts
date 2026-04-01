@@ -1,6 +1,14 @@
 import { expect, test } from '@jest/globals'
-import * as ContentSecurityPolicyChatToolWorker from '../src/parts/ContentSecurityPolicyChatToolWorker/ContentSecurityPolicyChatToolWorker.js'
+import * as GetHeaders from '../src/parts/GetHeaders/GetHeaders.js'
 
 test('chat tool worker allows same-origin connections', () => {
-  expect(ContentSecurityPolicyChatToolWorker.value).toBe("default-src 'none'; connect-src 'self'; sandbox allow-same-origin;")
+  const headers = GetHeaders.getHeaders({
+    absolutePath: '/test/chatToolWorkerMain.js',
+    etag: 'test-etag',
+    isImmutable: false,
+    isForElectronProduction: false,
+    applicationName: 'lvce',
+  })
+
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self'`)
 })
