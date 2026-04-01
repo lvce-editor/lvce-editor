@@ -65,7 +65,7 @@
   {
     "id": "chatToolWorker",
     "fileName": "chatToolWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-tool-worker/dist/chatToolWorkerMain.js",
     "productionPath": "/packages/chat-tool-worker/dist/chatToolWorkerMain.js",
     "settingName": "develop.chatToolWorkerPath",
