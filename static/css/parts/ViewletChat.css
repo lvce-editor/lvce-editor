@@ -554,10 +554,6 @@
   margin-right: auto;
 }
 
-.ChatMessages > .MessageUser .ChatAttachments {
-  justify-content: flex-end;
-}
-
 .ChatFocus .ChatMessages > .Message > .ChatMessageContent {
   max-inline-size: 100%;
 }
