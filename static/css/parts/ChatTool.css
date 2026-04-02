@@ -8,7 +8,6 @@
 }
 
 .ChatToolCallsLabel {
-  position: absolute;
   top: -8px;
   left: 8px;
   padding: 0 4px;
@@ -19,6 +18,8 @@
   line-height: 14px;
   text-transform: lowercase;
   letter-spacing: 0.02em;
+  height: 14px;
+  contain: strict;
 }
 
 .ChatToolCallReadFileLink {
