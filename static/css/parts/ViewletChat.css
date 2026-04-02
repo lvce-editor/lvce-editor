@@ -167,8 +167,6 @@
   color: var(--ChatMessageForeground, #bcbebe);
 }
 
-<<<<<<< HEAD
-=======
 .ChatMessageContent .Markdown {
   color: inherit;
   font-family: inherit;
@@ -243,7 +241,6 @@
   background: color-mix(in srgb, var(--vscode-editor-background) 88%, black);
 }
 
->>>>>>> origin/main
 .ChatListEmpty {
   contain: strict;
   flex: 1;
