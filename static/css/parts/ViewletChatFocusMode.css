@@ -212,6 +212,14 @@
   min-height: 0;
 }
 
+.ChatList {
+  overflow-y: auto;
+}
+
+.ChatListItem {
+  flex-shrink: 0;
+}
+
 .ChatList,
 .ChatListEmpty,
 .ChatMessages {
