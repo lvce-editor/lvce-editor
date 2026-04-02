@@ -8,6 +8,476 @@
   contain: strict;
   flex: 1;
 }
+.ChatDebugView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  gap: 8px;
+  contain: strict;
+}
+.ChatDebugView--devtools {
+  gap: 4px;
+}
+.ChatDebugViewTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  contain: content;
+}
+.ChatDebugViewTop--devtools {
+  align-items: stretch;
+}
+.ChatDebugViewFilterInput {
+  flex: 1;
+  min-width: 0;
+  max-width: 500px;
+  contain: content;
+}
+.ChatDebugViewFilterInput--devtools {
+  flex: 0 1 80px;
+  width: 100%;
+  max-width: 80px;
+}
+.ChatDebugViewQuickFilterPill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border: 1px solid var(--vscode-editorWidget-border, #454545);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 120ms ease-out,
+    border-color 120ms ease-out,
+    color 120ms ease-out,
+    transform 120ms ease-out;
+  contain: content;
+}
+.ChatDebugViewQuickFilterPill:not(.ChatDebugViewQuickFilterPillSelected):hover {
+  border-color: var(--vscode-focusBorder, #007fd4);
+  background: color-mix(in srgb, var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.16)) 82%, transparent 18%);
+  color: var(--vscode-list-hoverForeground, inherit);
+  transform: translateY(-1px);
+}
+.ChatDebugViewQuickFilters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  min-height: 28px;
+  font-size: 12px;
+  line-height: 1;
+  contain: content;
+}
+.ChatDebugViewQuickFilterPillSelected {
+  border-color: var(--vscode-focusBorder, #007fd4);
+  background: var(--vscode-list-activeSelectionBackground, rgba(14, 99, 156, 0.35));
+  color: var(--vscode-list-activeSelectionForeground, inherit);
+}
+.ChatDebugViewQuickFilterInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  contain: content;
+}
+.ChatDebugViewEvents {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-width: 0;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4)) transparent;
+  contain: strict;
+}
+.ChatDebugView--devtools .ChatDebugViewEvents {
+  border-radius: 6px;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+.ChatDebugViewEventsFullWidth {
+  flex: 1 1 100%;
+}
+.ChatDebugViewDevtoolsMain {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: stretch;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  contain: strict;
+}
+.ChatDebugViewDevtoolsMain > .ChatDebugViewTimeline {
+  flex: 0 0 auto;
+}
+.ChatDebugViewDevtoolsSplit {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  contain: strict;
+}
+.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents {
+  flex: 0 1 var(--ChatDebugViewTableWidth);
+  min-width: 0;
+}
+.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
+  flex: 1 1 100%;
+}
+.ChatDebugViewDevtoolsSplit > .ChatDebugViewDetails {
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  flex: 1;
+}
+.ChatDebugViewSash {
+  flex: 0 0 var(--ChatDebugViewSashWidth);
+  position: relative;
+  cursor: col-resize;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+  contain: strict;
+}
+.ChatDebugViewSashLine {
+  width: 1px;
+  height: 100%;
+  background: var(--vscode-editorWidget-border, #454545);
+  pointer-events: none;
+  contain: strict;
+}
+.ChatDebugViewSash:hover .ChatDebugViewSashLine {
+  background: var(--vscode-focusBorder, #007fd4);
+}
+.ChatDebugViewTable {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  contain: strict;
+}
+.ChatDebugViewTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
+  background: color-mix(
+    in srgb,
+    var(--vscode-editorWidget-background, transparent) 82%,
+    var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.12)) 18%
+  );
+  contain: content;
+}
+.ChatDebugViewTimelineTop {
+  display: flex;
+  align-items: center;
+  contain: content;
+}
+.ChatDebugViewTimelineSummary {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 16px;
+  opacity: 0.8;
+  contain: content;
+}
+.ChatDebugViewTimelineControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  contain: content;
+}
+.ChatDebugViewTimelineBuckets {
+  display: flex;
+  align-items: end;
+  gap: 3px;
+  flex: 1 1 auto;
+  min-height: 52px;
+  pointer-events: none;
+  contain: strict;
+}
+.ChatDebugViewTimelineInteractive {
+  display: flex;
+  position: relative;
+  min-height: 52px;
+  cursor: crosshair;
+  user-select: none;
+  contain: strict;
+}
+.ChatDebugViewTimelineSelectionOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  contain: strict;
+}
+.ChatDebugViewTimelineSelectionRange {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: color-mix(in srgb, var(--vscode-charts-blue, #75beff) 20%, transparent 80%);
+  border-left: 1px solid color-mix(in srgb, var(--vscode-charts-blue, #75beff) 65%, transparent 35%);
+  border-right: 1px solid color-mix(in srgb, var(--vscode-charts-blue, #75beff) 65%, transparent 35%);
+  contain: strict;
+}
+.ChatDebugViewTimelineSelectionMarker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--vscode-focusBorder, #007fd4);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vscode-focusBorder, #007fd4) 24%, transparent 76%);
+  contain: strict;
+}
+.ChatDebugViewTimelineBucket {
+  --ChatDebugViewTimelineBucketBarBackground: color-mix(in srgb, var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.16)) 74%, transparent 26%);
+  --ChatDebugViewTimelineBucketBarBorderColor: transparent;
+  display: flex;
+  align-items: stretch;
+  flex: 1 1 10px;
+  min-width: 10px;
+  min-height: 52px;
+  contain: strict;
+}
+.ChatDebugViewTimelineBucketSelected {
+  --ChatDebugViewTimelineBucketBarBackground: color-mix(in srgb, var(--vscode-charts-blue, #75beff) 72%, transparent 28%);
+  --ChatDebugViewTimelineBucketBarBorderColor: var(--vscode-focusBorder, #007fd4);
+}
+.ChatDebugViewTimelinePresetInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  contain: content;
+}
+.ChatDebugViewTimelineBucketBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: 6px 1px 2px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  width: 100%;
+  background: var(--ChatDebugViewTimelineBucketBarBackground);
+  border-color: var(--ChatDebugViewTimelineBucketBarBorderColor);
+  contain: strict;
+}
+.ChatDebugViewTimelineBucketBarSelected {
+  background: color-mix(in srgb, var(--vscode-charts-blue, #75beff) 72%, transparent 28%);
+  border-color: var(--vscode-focusBorder, #007fd4);
+}
+.ChatDebugViewTimelineBucketUnit {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--vscode-charts-blue, #75beff);
+  contain: strict;
+}
+.ChatDebugViewTimelineBucketUnitEmpty {
+  opacity: 0.35;
+  background: var(--vscode-editorWidget-border, #454545);
+}
+.ChatDebugViewTableHeaderRow,
+.ChatDebugViewEventRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  contain: content;
+}
+.ChatDebugViewTableHeader {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
+  background: var(--vscode-editorWidget-background, transparent);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  contain: content;
+}
+.ChatDebugViewHeaderCell {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+  contain: content;
+}
+.ChatDebugViewTableBody {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  contain: strict;
+}
+.ChatDebugViewEventRowLabel {
+  display: block;
+  contain: content;
+}
+.ChatDebugViewEventRowLabelSelected .ChatDebugViewEventRow,
+.ChatDebugViewEventRowSelected {
+  background: var(--vscode-list-activeSelectionBackground, rgba(14, 99, 156, 0.35));
+  color: var(--vscode-list-activeSelectionForeground, inherit);
+}
+.ChatDebugViewEventRowInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  contain: content;
+}
+.ChatDebugViewEventRow {
+  padding: 2px 8px;
+  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
+  cursor: pointer;
+}
+.ChatDebugViewEventRow:hover {
+  background: var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.31));
+  color: var(--vscode-list-hoverForeground, inherit);
+}
+.ChatDebugViewCell {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  contain: content;
+}
+.ChatDebugViewCellType {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+.ChatDebugViewCellTime {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.ChatDebugViewCellDuration {
+  flex: 0 0 90px;
+  justify-content: flex-end;
+  text-align: right;
+}
+.ChatDebugViewCellStatus {
+  flex: 0 0 64px;
+  justify-content: flex-end;
+  text-align: right;
+}
+.ChatDebugViewDetails {
+  border: 1px solid var(--vscode-editorWidget-border, #454545);
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  contain: strict;
+}
+.ChatDebugViewDetailsTop {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
+  contain: content;
+}
+.ChatDebugViewDetailsClose {
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  color: var(--vscode-foreground, #cccccc);
+  background: transparent;
+  align-self: center;
+  flex: 0 0 auto;
+  contain: strict;
+}
+.ChatDebugViewDetailsClose:hover {
+  background: var(--vscode-toolbar-hoverBackground, rgba(90, 93, 94, 0.31));
+}
+.ChatDebugViewDetailsClose::before,
+.ChatDebugViewDetailsClose::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: currentColor;
+}
+.ChatDebugViewDetailsClose::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.ChatDebugViewDetailsClose::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.ChatDebugViewDetailsBody {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
+  contain: strict;
+}
+.ChatDebugViewDetailsTabs {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 2px;
+  min-width: 0;
+  padding: 0;
+  overflow-x: auto;
+  contain: content;
+}
+.ChatDebugViewDetailsTab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 10px;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--vscode-descriptionForeground, var(--vscode-foreground, #cccccc));
+  cursor: pointer;
+  white-space: nowrap;
+  contain: strict;
+}
+.ChatDebugViewDetailsTab:hover {
+  color: var(--vscode-foreground, #cccccc);
+}
+.ChatDebugViewDetailsTabSelected {
+  border-bottom-color: var(--vscode-focusBorder, #007fd4);
+  color: var(--vscode-foreground, #cccccc);
+}
+.ChatDebugViewDetailsPanel {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  padding: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: flex-start;
+  contain: strict;
+}
 
 .ChatDebugViewTop {
   display: flex;
