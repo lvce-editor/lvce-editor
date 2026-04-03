@@ -8,6 +8,7 @@ import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
+import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -1351,4 +1352,8 @@ export const getBadgeCounts = (state: LayoutState) => {
 
 export const getModuleId = (state: LayoutState, uri: string) => {
   return ViewletMap.getModuleId(uri)
+}
+
+export const getHref = (state: LayoutState) => {
+  return Location.getHref()
 }

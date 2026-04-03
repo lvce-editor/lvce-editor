@@ -56,6 +56,7 @@ const runFn = async (instance, id, key, fn, args) => {
       key === 'getAllQuickPickMenuEntries' ||
       key === 'getAssetDir' ||
       key === 'getBadgeCounts' ||
+      key === 'getHref' ||
       key === 'getCommit' ||
       key === 'getCommitDate' ||
       key === 'getModuleId' ||
