@@ -48,7 +48,8 @@ export const handleSecondarySideBarViewletChange = async (state, moduleId) => {
   }
   const { currentViewletId, titleAreaHeight } = state
   const savePromise = SaveState.saveViewletState(currentViewletId)
-  state.currentViewletId = moduleId
+  // TODO avoid mutation
+  // state.currentViewletId = moduleId
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
   const uid = state.uid
