@@ -178,3 +178,24 @@
   color: var(--vscode-disabledForeground);
   cursor: default;
 }
+
+.ChatSelect {
+  position: relative;
+  min-width: 0;
+}
+
+.ChatSelect {
+  display: flex;
+  gap: 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
+  padding: 0 !important;
+}
+
+.ChatSelect .MaskIcon {
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
