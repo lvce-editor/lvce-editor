@@ -5,4 +5,5 @@ export interface ChatState {
   readonly y: number
   readonly width: number
   readonly height: number
+  readonly platform: number
 }
