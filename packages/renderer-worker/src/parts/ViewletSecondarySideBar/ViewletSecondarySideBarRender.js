@@ -10,7 +10,7 @@ export const hasFunctionalResize = true
 
 const renderDom = {
   isEqual(oldState, newState) {
-    return false
+    return oldState.currentViewletId === newState.currentViewletId
   },
   apply(oldState, newState) {
     const { childUid } = newState
