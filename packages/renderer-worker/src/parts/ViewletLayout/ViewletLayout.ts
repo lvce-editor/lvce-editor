@@ -12,6 +12,7 @@ import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as Product from '../Product/Product.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
@@ -26,6 +27,10 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
+
+const getInitialBackendUrl = () => {
+  return Preferences.get('layout.backendUrl') || Product.getBackendUrl()
+}
 
 export const create = (id: number): LayoutState => {
   Assert.number(id)
@@ -112,6 +117,7 @@ export const create = (id: number): LayoutState => {
     commit: Commit.commit,
     platform: Platform.platform,
     assetDir,
+    backendUrl: getInitialBackendUrl(),
     commands: [],
     sashId: SashType.None,
     previewUri: '',
@@ -1268,6 +1274,10 @@ export const getPlatform = (state: LayoutState) => {
 
 export const getAssetDir = (state: LayoutState) => {
   return state.assetDir
+}
+
+export const getBackendUrl = (state: LayoutState) => {
+  return state.backendUrl
 }
 
 export const setUpdateState = async (state, updateState) => {

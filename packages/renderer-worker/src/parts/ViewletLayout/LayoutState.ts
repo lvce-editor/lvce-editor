@@ -8,6 +8,7 @@ export interface LayoutState {
   readonly activityBarVisible: boolean
   readonly activityBarWidth: number
   readonly assetDir: string
+  readonly backendUrl: string
   readonly commands: readonly any[]
   readonly commit: string
   readonly contentAreaId: number
