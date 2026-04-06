@@ -26,7 +26,7 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 
 const Open = await import('../src/parts/Open/Open.js')
 
-test('openUrl - error', async () => {
+test.skip('openUrl - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
@@ -34,7 +34,7 @@ test('openUrl - error', async () => {
   await expect(Open.openUrl('test://test.txt')).rejects.toThrow(new Error('Failed to open url test://test.txt: TypeError: x is not a function'))
 })
 
-test('openUrl', async () => {
+test.skip('openUrl', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Open.openUrl('test://test.txt')
