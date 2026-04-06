@@ -87,7 +87,8 @@
     "productionPath": "/packages/chat-view/dist/chatViewWorkerMain.js",
     "settingName": "develop.chatViewWorkerPath",
     "hotReloadCommand": "Chat.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "sandbox allow-same-origin"],
+    "comment": "TODO need to adjust csp for connect src. maybe use a separate worker for connections"
   },
   {
     "id": "chatCoordinator",
