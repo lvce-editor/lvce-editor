@@ -76,3 +76,4 @@ export const HandleMessagePortForFileSystemProcess = 81
 export const HandleMessagePortForClipBoardProcess = 82
 export const Exec = 83
 export const PlatformPaths = 84
+export const OAuthServer = 85
