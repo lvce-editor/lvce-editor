@@ -55,6 +55,7 @@ const runFn = async (instance, id, key, fn, args) => {
       key === 'getActivePanelView' ||
       key === 'getAllQuickPickMenuEntries' ||
       key === 'getAssetDir' ||
+      key === 'getBackendUrl' ||
       key === 'getBadgeCounts' ||
       key === 'getHref' ||
       key === 'getCommit' ||

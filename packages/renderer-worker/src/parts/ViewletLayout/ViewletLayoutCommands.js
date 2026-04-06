@@ -12,6 +12,7 @@ export const Commands = {
   getCommit: ViewletLayout.getCommit,
   getPlatform: ViewletLayout.getPlatform,
   getAssetDir: ViewletLayout.getAssetDir,
+  getBackendUrl: ViewletLayout.getBackendUrl,
   getBadgeCounts: ViewletLayout.getBadgeCounts,
   getHref: ViewletLayout.getHref,
   getModuleId: ViewletLayout.getModuleId,

@@ -456,6 +456,7 @@ export const commandMap = {
   'Layout.getActiveSecondarySideBarView': lazy('Layout.getActiveSecondarySideBarView'),
   'Layout.getSecondarySideBarVisible': lazy('Layout.getSecondarySideBarVisible'),
   'Layout.getAssetDir': lazy('Layout.getAssetDir'),
+  'Layout.getBackendUrl': lazy('Layout.getBackendUrl'),
   'Layout.getBadgeCounts': lazy('Layout.getBadgeCounts'),
   'Layout.getCommit': lazy('Layout.getCommit'),
   'Layout.getModuleId': lazy('Layout.getModuleId'),
