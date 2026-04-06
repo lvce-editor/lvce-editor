@@ -121,6 +121,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Notification
     case 'Open':
       return ModuleId.Open
+    case 'OAuthServer':
+      return ModuleId.OAuthServer
     case 'OpenNativeFolder':
       return ModuleId.OpenNativeFolder
     case 'PersistentFileHandle':

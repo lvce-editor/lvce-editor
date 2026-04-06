@@ -250,6 +250,8 @@ export const commandMap = {
   'OffscreenCanvas.createForPreview': lazy('OffscreenCanvas.createForPreview'),
   'Open.openExternal': lazy('Open.openExternal'),
   'Open.openUrl': lazy('Open.openUrl'),
+  'OAuthServer.create': lazy('OAuthServer.create'),
+  'OAuthServer.dispose': lazy('OAuthServer.dispose'),
   'OpenNativeFolder.openNativeFolder': lazy('OpenNativeFolder.openNativeFolder'),
   'Panel.handleClickAction': lazy('Panel.handleClickAction'),
   'Panel.handleFilterInput': lazy('Panel.handleFilterInput'),
