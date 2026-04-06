@@ -24,6 +24,15 @@ test('create', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('OAuthServer.create', 'window-1')
 })
 
+test('getCode', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async () => 'auth-code')
+  const result = await OAuthServer.getCode('window-1')
+  expect(result).toBe('auth-code')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('OAuthServer.getCode', 'window-1')
+})
+
 test('dispose', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async () => {})
