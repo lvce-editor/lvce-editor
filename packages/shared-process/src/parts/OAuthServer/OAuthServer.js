@@ -1,9 +1,17 @@
 import { createServer } from 'node:http'
+import * as Assert from '../Assert/Assert.js'
 
-/** @type {{ server: import('node:http').Server | undefined, portPromise: Promise<number> | undefined }} */
-const state = {
-  server: undefined,
-  portPromise: undefined,
+/** @type {Record<string, { server: import('node:http').Server | undefined, portPromise: Promise<number> | undefined }>} */
+const states = Object.create(null)
+
+const getOrCreateState = (id) => {
+  if (!states[id]) {
+    states[id] = {
+      server: undefined,
+      portPromise: undefined,
+    }
+  }
+  return states[id]
 }
 
 const handleRequest = (request, response) => {
@@ -14,29 +22,32 @@ const handleRequest = (request, response) => {
 }
 
 const listen = (server) => {
-  return new Promise((resolve, reject) => {
-    const onError = (error) => {
-      server.off('listening', onListening)
-      reject(error)
-    }
+  const { promise, resolve, reject } = Promise.withResolvers()
 
-    const onListening = () => {
-      server.off('error', onError)
-      const address = server.address()
-      if (!address || typeof address === 'string') {
-        reject(new Error('failed to determine oauth server port'))
-        return
-      }
-      resolve(address.port)
-    }
+  const onError = (error) => {
+    server.off('listening', onListening)
+    reject(error)
+  }
 
-    server.once('error', onError)
-    server.once('listening', onListening)
-    server.listen(0, 'localhost')
-  })
+  const onListening = () => {
+    server.off('error', onError)
+    const address = server.address()
+    if (!address || typeof address === 'string') {
+      reject(new Error('failed to determine oauth server port'))
+      return
+    }
+    resolve(address.port)
+  }
+
+  server.once('error', onError)
+  server.once('listening', onListening)
+  server.listen(0, 'localhost')
+  return promise
 }
 
-export const create = async () => {
+export const create = async (id) => {
+  Assert.string(id)
+  const state = getOrCreateState(id)
   if (state.portPromise) {
     return state.portPromise
   }
@@ -48,25 +59,29 @@ export const create = async () => {
   } catch (error) {
     state.server = undefined
     state.portPromise = undefined
+    delete states[id]
     throw error
   }
 }
 
-export const dispose = async () => {
+export const dispose = async (id) => {
+  Assert.string(id)
+  const state = getOrCreateState(id)
   if (!state.server) {
-    state.portPromise = undefined
+    delete states[id]
     return
   }
   const { server } = state
   state.server = undefined
   state.portPromise = undefined
-  await new Promise((resolve, reject) => {
-    server.close((error) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      resolve(undefined)
-    })
+  const { promise, resolve, reject } = Promise.withResolvers()
+  server.close((error) => {
+    if (error) {
+      reject(error)
+      return
+    }
+    resolve(undefined)
   })
+  await promise
+  delete states[id]
 }
