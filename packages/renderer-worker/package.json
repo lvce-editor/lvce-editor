@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lvce-editor/about-view": "^7.1.0",
-    "@lvce-editor/activity-bar-worker": "^4.1.0",
+    "@lvce-editor/activity-bar-worker": "^4.4.0",
     "@lvce-editor/auth-worker": "^1.2.0",
     "@lvce-editor/chat-coordinator-worker": "^1.4.0",
     "@lvce-editor/chat-debug-view": "^5.2.0",
