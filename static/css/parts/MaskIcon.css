@@ -61,6 +61,11 @@
   mask-image: url(/icons/search.svg);
 }
 
+.MaskIconAccount,
+.IconAccount {
+  mask-image: url(/icons/account.svg);
+}
+
 .MaskIconSourceControl,
 .IconSourceControl {
   mask-image: url(/icons/source-control.svg);
