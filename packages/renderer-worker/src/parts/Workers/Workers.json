@@ -18,6 +18,15 @@
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
+    "id": "authWorker",
+    "fileName": "authWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/auth-worker/dist/authWorkerMain.js",
+    "productionPath": "/packages/auth-worker/dist/authWorkerMain.js",
+    "settingName": "develop.authWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src *"]
+  },
+  {
     "id": "chatDebug",
     "fileName": "chatDebugViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-debug-view/dist/chatDebugViewWorkerMain.js",
