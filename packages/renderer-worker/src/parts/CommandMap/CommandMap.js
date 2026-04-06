@@ -251,6 +251,7 @@ export const commandMap = {
   'Open.openExternal': lazy('Open.openExternal'),
   'Open.openUrl': lazy('Open.openUrl'),
   'OAuthServer.create': lazy('OAuthServer.create'),
+  'OAuthServer.getCode': lazy('OAuthServer.getCode'),
   'OAuthServer.dispose': lazy('OAuthServer.dispose'),
   'OpenNativeFolder.openNativeFolder': lazy('OpenNativeFolder.openNativeFolder'),
   'Panel.handleClickAction': lazy('Panel.handleClickAction'),

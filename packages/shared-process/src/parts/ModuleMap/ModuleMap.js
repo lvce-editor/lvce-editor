@@ -190,6 +190,7 @@ export const getModuleId = (commandId) => {
     case 'Exec.exec':
       return ModuleId.Exec
     case 'OAuthServer.create':
+    case 'OAuthServer.getCode':
     case 'OAuthServer.dispose':
       return ModuleId.OAuthServer
     case 'PlatformPaths.getDisabledExtensionsJsonPath':
