@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
@@ -45,6 +46,11 @@ export const sendMessagePortToErrorWorker = async (port, initialCommand, rpcId) 
   Assert.object(port)
   Assert.string(initialCommand)
   await ErrorWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+export const sendMessagePortToAuthWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await AuthWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToEditorWorker = async (port, initialCommand, rpcId) => {
