@@ -7,6 +7,8 @@ export interface LayoutState {
   readonly activityBarTop: number
   readonly activityBarVisible: boolean
   readonly activityBarWidth: number
+  readonly authAccessToken: string
+  readonly authErrorMessage: string
   readonly assetDir: string
   readonly backendUrl: string
   readonly commands: readonly any[]
@@ -83,6 +85,10 @@ export interface LayoutState {
   readonly uid: number
   readonly updateProgress: number
   readonly updateState: string
+  readonly userName: string
+  readonly userState: string
+  readonly userSubscriptionPlan: string
+  readonly userUsedTokens: number
   readonly windowHeight: number
   readonly windowWidth: number
   readonly workbenchId: number

@@ -52,3 +52,18 @@ test('getBackendUrl returns backend url from layout state', () => {
     }),
   ).toBe('https://example.com/')
 })
+
+test('getAuthState returns auth data from layout state', () => {
+  expect(
+    // @ts-ignore
+    ViewletLayout.getAuthState({
+      authAccessToken: 'token-1',
+      userName: 'Test User',
+      userState: 'loggedIn',
+    }),
+  ).toEqual({
+    accessToken: 'token-1',
+    signInState: 'loggedIn',
+    userName: 'Test User',
+  })
+})
