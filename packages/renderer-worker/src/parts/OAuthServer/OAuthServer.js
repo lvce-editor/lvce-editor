@@ -1,7 +1,7 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const create = (id) => {
-  return SharedProcess.invoke('OAuthServer.create', id)
+export const create = (id, successHtml, errorHtml) => {
+  return SharedProcess.invoke('OAuthServer.create', id, successHtml, errorHtml)
 }
 
 export const getCode = (id) => {
