@@ -305,6 +305,7 @@ export const commandMap = {
   'SendMessagePortToElectron.sendMessagePortToElectron': lazy('SendMessagePortToElectron.sendMessagePortToElectron'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker'),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToExtensionHostWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToExtensionHostWorker',
