@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
-import * as AuthWorker from '../AuthWorker/AuthWorker.ts'
+import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
