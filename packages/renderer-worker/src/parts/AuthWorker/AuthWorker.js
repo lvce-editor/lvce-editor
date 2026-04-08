@@ -3,8 +3,12 @@ import * as LaunchAuthWorker from '../LaunchAuthWorker/LaunchAuthWorker.js'
 
 const { invoke, invokeAndTransfer, restart } = GetOrCreateWorker.getOrCreateWorker(LaunchAuthWorker.launchAuthWorker)
 
-export const initialize = (platform) => {
-  return invoke('Auth.initialize', platform)
+export const initialize = (backendUrl, platform, href) => {
+  return invoke('Auth.initialize', {
+    backendUrl,
+    href,
+    platform,
+  })
 }
 
 export const signIn = (backendUrl, platform) => {
