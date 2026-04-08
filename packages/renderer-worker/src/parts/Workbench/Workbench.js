@@ -1,6 +1,7 @@
 import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
@@ -143,6 +144,7 @@ export const startup = async (platform, assetDir) => {
     Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
   }
 
+  await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
   const authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
