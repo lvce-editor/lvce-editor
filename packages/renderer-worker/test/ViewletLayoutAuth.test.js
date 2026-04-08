@@ -31,6 +31,55 @@ test('create initializes auth state', () => {
   })
 })
 
+test('setAuthState merges startup auth state into layout state', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = await ViewletLayout.setAuthState(state, {
+    authAccessToken: 'token-1',
+    authErrorMessage: '',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+
+  expect(result).toEqual({
+    commands: [],
+    newState: {
+      ...state,
+      authAccessToken: 'token-1',
+      authErrorMessage: '',
+      userName: 'Test User',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 42,
+    },
+  })
+})
+
+test('setAuthState accepts public auth state shape', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = await ViewletLayout.setAuthState(state, {
+    accessToken: 'token-2',
+    signInState: 'loggedIn',
+    userName: 'Another User',
+  })
+
+  expect(result).toEqual({
+    commands: [],
+    newState: {
+      ...state,
+      authAccessToken: 'token-2',
+      authErrorMessage: '',
+      userName: 'Another User',
+      userState: 'loggedIn',
+      userSubscriptionPlan: '',
+      userUsedTokens: 0,
+    },
+  })
+})
+
 test('signIn merges auth worker state into layout state', async () => {
   // @ts-ignore
   AuthWorker.signIn.mockResolvedValue({

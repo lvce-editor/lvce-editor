@@ -1306,14 +1306,33 @@ export const getAuthState = (state: LayoutState) => {
 }
 
 const mergeAuthState = (state: LayoutState, authState) => {
+  const authAccessToken =
+    typeof authState?.authAccessToken === 'string'
+      ? authState.authAccessToken
+      : typeof authState?.accessToken === 'string'
+        ? authState.accessToken
+        : state.authAccessToken
+  const userState =
+    typeof authState?.userState === 'string'
+      ? authState.userState
+      : typeof authState?.signInState === 'string'
+        ? authState.signInState
+        : state.userState
   return {
     ...state,
-    authAccessToken: typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : state.authAccessToken,
+    authAccessToken,
     authErrorMessage: typeof authState?.authErrorMessage === 'string' ? authState.authErrorMessage : state.authErrorMessage,
     userName: typeof authState?.userName === 'string' ? authState.userName : state.userName,
-    userState: typeof authState?.userState === 'string' ? authState.userState : state.userState,
+    userState,
     userSubscriptionPlan: typeof authState?.userSubscriptionPlan === 'string' ? authState.userSubscriptionPlan : state.userSubscriptionPlan,
     userUsedTokens: typeof authState?.userUsedTokens === 'number' ? authState.userUsedTokens : state.userUsedTokens,
+  }
+}
+
+export const setAuthState = async (state: LayoutState, authState): Promise<LayoutStateResult> => {
+  return {
+    newState: mergeAuthState(state, authState),
+    commands: [],
   }
 }
 

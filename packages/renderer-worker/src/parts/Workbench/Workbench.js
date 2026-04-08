@@ -1,11 +1,13 @@
 import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
+import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
@@ -143,7 +145,11 @@ export const startup = async (platform, assetDir) => {
     Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
   }
 
-  const authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+  let authState
+  if (HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)) {
+    await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
+    authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+  }
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
