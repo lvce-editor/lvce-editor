@@ -7,6 +7,10 @@ jest.unstable_mockModule('../src/parts/Location/Location.js', () => {
     }),
   }
 })
+
+const CleanAuthCallbackUrl = await import('../src/parts/CleanAuthCallbackUrl/CleanAuthCallbackUrl.js')
+const Location = await import('../src/parts/Location/Location.js')
+
 afterEach(() => {
   jest.resetAllMocks()
 })
@@ -38,8 +42,4 @@ test('cleanAuthCallbackUrl ignores urls without auth callback params', async () 
   await CleanAuthCallbackUrl.cleanAuthCallbackUrl('https://app.example/workspace?folder=/tmp/project')
 
   expect(Location.setPathName).not.toHaveBeenCalled()
-    userState: 'loggedIn',
-  })
-
-  expect(Location.removeSearchParams).not.toHaveBeenCalled()
 })
