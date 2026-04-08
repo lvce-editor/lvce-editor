@@ -24,6 +24,7 @@ import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
+import * as StartupAuth from '../StartupAuth/StartupAuth.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -142,6 +143,8 @@ export const startup = async (platform, assetDir) => {
     Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
   }
 
+  const authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
@@ -185,6 +188,7 @@ export const startup = async (platform, assetDir) => {
   // commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', layout.uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  await Command.execute('Layout.setAuthState', authState)
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
