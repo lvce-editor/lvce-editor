@@ -295,9 +295,11 @@
   pointer-events: none;
 }
 
+/*
 .ChatOverlays > * {
   pointer-events: auto;
 }
+*/
 
 .ChatViewDropOverlayActive {
   opacity: 1;

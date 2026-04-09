@@ -92,9 +92,11 @@
   color: var(--ListHoverForeground);
 }
 
+/*
 .ChatModelPickerItem > * {
   pointer-events: none;
 }
+*/
 
 .ChatModelPickerContainer {
   position: absolute;
