@@ -130,7 +130,7 @@
   contain: strict;
 }
 
-.ChatDebugViewDetailsPanel > .ChatDebugViewEvent {
+.ChatDebugViewEvent {
   border: 0;
   border-radius: 0;
   margin-bottom: 0;
@@ -198,7 +198,7 @@
   contain: strict;
 }
 
-.ChatDebugViewDevtoolsMain > .ChatDebugViewTimeline {
+.ChatDebugViewTimeline {
   flex: 0 0 auto;
 }
 
@@ -213,19 +213,19 @@
   contain: strict;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewDetails {
+.ChatDebugViewDetails {
   border-left: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   flex: 1;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents {
+.ChatDebugViewEvents {
   flex: 0 1 var(--ChatDebugViewTableWidth);
   min-width: 0;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
+.ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
   flex: 1 1 100%;
 }
 
@@ -397,17 +397,17 @@
   contain: content;
 }
 
-.ChatDebugViewTableHeaderRow > .ChatDebugViewHeaderCell:nth-child(1) {
+.ChatDebugViewHeaderCell:nth-child(1) {
   flex: 1 1 140px;
   min-width: 0;
 }
 
-.ChatDebugViewTableHeaderRow > .ChatDebugViewHeaderCell:nth-child(2) {
+.ChatDebugViewHeaderCell:nth-child(2) {
   flex: 0 0 90px;
   justify-content: flex-end;
 }
 
-.ChatDebugViewTableHeaderRow > .ChatDebugViewHeaderCell:nth-child(3) {
+.ChatDebugViewHeaderCell:nth-child(3) {
   flex: 0 0 96px;
   justify-content: flex-end;
 }
