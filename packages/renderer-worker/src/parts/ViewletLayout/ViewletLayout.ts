@@ -74,7 +74,7 @@ export const create = (id: number): LayoutState => {
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: true,
-    mainVisible: false,
+    mainVisible: true,
     panelSashVisible: false,
     panelVisible: false,
     previewSashVisible: false,
@@ -587,12 +587,17 @@ export const showMain = (state: LayoutState) => {
 }
 
 export const hideMain = (state: LayoutState) => {
-  return hide(state, LayoutModules.Main)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 export const toggleMain = (state: LayoutState) => {
-  // @ts-ignore
-  return toggle(state, LayoutModules.Main)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 const loadIfVisible = async (
