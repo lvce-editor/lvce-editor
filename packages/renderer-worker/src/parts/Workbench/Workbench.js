@@ -98,6 +98,9 @@ const actions = [
   },
 ]
 
+const loadMainAction = actions[0]
+const deferredActions = actions.slice(1)
+
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
@@ -204,7 +207,8 @@ export const startup = async (platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  await Promise.all(actions.map((action) => action(platform, assetDir)))
+  await loadMainAction(platform, assetDir)
+  await Promise.all(deferredActions.map((action) => action(platform, assetDir)))
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
