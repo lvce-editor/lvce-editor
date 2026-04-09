@@ -297,7 +297,7 @@
   cursor: default;
 }
 
-.ChatDebugViewTableBody > .ChatDebugViewEventRow:nth-child(even) {
+.ChatDebugViewEventRowEven {
   background: color-mix(
     in srgb,
     var(--vscode-editorWidget-background, transparent) 84%,
