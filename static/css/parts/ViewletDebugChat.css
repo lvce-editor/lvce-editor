@@ -58,13 +58,17 @@
 
 .ChatDebugViewDetails {
   border: 1px solid var(--vscode-editorWidget-border, #454545);
+  border-left: 0;
   border-radius: 6px;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
   overflow: hidden;
   min-width: 0;
   min-height: 0;
   display: flex;
-  flex-direction: column;
   contain: strict;
+  flex: 1;
+  flex-direction: column;
 }
 
 .ChatDebugViewDetailsBody {
@@ -76,6 +80,12 @@
   min-height: 0;
   align-items: stretch;
   contain: strict;
+}
+
+.ChatDebugViewDetailsBottom {
+  display: flex;
+  contain: strict;
+  flex: 1;
 }
 
 .ChatDebugViewDetailsClose {
@@ -130,12 +140,6 @@
   contain: strict;
 }
 
-.ChatDebugViewEvent {
-  border: 0;
-  border-radius: 0;
-  margin-bottom: 0;
-}
-
 .ChatDebugViewDetailsTab {
   display: flex;
   align-items: center;
@@ -177,14 +181,15 @@
   align-items: stretch;
   justify-content: flex-start;
   gap: 8px;
+  height: 33px;
   padding: 0 8px;
   border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
-  contain: content;
   background: color-mix(
     in srgb,
     var(--vscode-editorWidget-background, transparent) 72%,
     var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.18)) 28%
   );
+  contain: strict;
 }
 
 .ChatDebugViewDevtoolsMain {
@@ -198,10 +203,6 @@
   contain: strict;
 }
 
-.ChatDebugViewTimeline {
-  flex: 0 0 auto;
-}
-
 .ChatDebugViewDevtoolsSplit {
   display: flex;
   flex: 1;
@@ -211,22 +212,6 @@
   min-height: 0;
   overflow: hidden;
   contain: strict;
-}
-
-.ChatDebugViewDetails {
-  border-left: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  flex: 1;
-}
-
-.ChatDebugViewEvents {
-  flex: 0 1 var(--ChatDebugViewTableWidth);
-  min-width: 0;
-}
-
-.ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
-  flex: 1 1 100%;
 }
 
 .ChatDebugViewEmpty {
@@ -297,6 +282,11 @@
   cursor: default;
 }
 
+.ChatDebugViewEventRow:hover {
+  background: var(--ListHoverBackground, var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.31)));
+  color: var(--ListHoverForeground, var(--vscode-list-hoverForeground, inherit));
+}
+
 .ChatDebugViewEventRowEven {
   background: color-mix(
     in srgb,
@@ -305,12 +295,9 @@
   );
 }
 
-.ChatDebugViewEventRow:hover {
-  background: var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.31));
-  color: var(--vscode-list-hoverForeground, inherit);
-}
-
-.ChatDebugViewEventRowInput {
+.ChatDebugViewEventRowInput,
+.ChatDebugViewQuickFilterInput,
+.ChatDebugViewTimelinePresetInput {
   position: absolute;
   opacity: 0;
   pointer-events: none;
@@ -334,6 +321,7 @@
 
 .ChatDebugViewEvents {
   display: flex;
+  flex: 0 1 var(--ChatDebugViewTableWidth);
   flex-direction: column;
   overflow: auto;
   min-width: 0;
@@ -367,6 +355,7 @@
   background: transparent;
 }
 
+.ChatDebugViewEvents.ChatDebugViewEventsFullWidth,
 .ChatDebugViewEventsFullWidth {
   flex: 1 1 100%;
 }
@@ -412,13 +401,6 @@
   justify-content: flex-end;
 }
 
-.ChatDebugViewQuickFilterInput {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  contain: content;
-}
-
 .ChatDebugViewQuickFilterPill {
   display: flex;
   align-items: center;
@@ -459,6 +441,43 @@
   font-size: 12px;
   line-height: 1;
   contain: content;
+}
+
+.ChatDebugViewRefreshButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.ChatDebugViewRefreshButton:active {
+  transform: translateY(1px);
+}
+
+.ChatDebugViewRefreshButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 1px;
+}
+
+.ChatDebugViewRefreshButton:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 .ChatDebugViewSash {
@@ -525,6 +544,7 @@
 
 .ChatDebugViewTimeline {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 6px;
   border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
@@ -609,13 +629,6 @@
   cursor: crosshair;
   user-select: none;
   contain: strict;
-}
-
-.ChatDebugViewTimelinePresetInput {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  contain: content;
 }
 
 .ChatDebugViewTimelineSelectionMarker {
@@ -758,6 +771,7 @@
   width: max-content;
   white-space: nowrap;
   contain: strict;
+  flex-shrink: 0;
   gap: 12px;
   height: 20px;
 }
@@ -785,68 +799,4 @@
 .TokenText {
   color: var(--vscode-editor-foreground, inherit);
   contain: content;
-}
-
-.ChatDebugViewDetails {
-  contain: strict;
-}
-
-.ChatDebugViewDetailsTop {
-  height: 33px;
-  contain: strict;
-}
-
-.ChatDebugViewDetailsBottom {
-  display: flex;
-  contain: strict;
-  flex: 1;
-}
-.ChatDebugViewEvent {
-  contain: content;
-}
-
-.row {
-  flex-shrink: 0;
-}
-
-.ChatDebugViewRefreshButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  min-height: 28px;
-  padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
-  color: inherit;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    transform 120ms ease;
-}
-
-.ChatDebugViewRefreshButton:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
-  border-color: rgba(255, 255, 255, 0.24);
-}
-
-.ChatDebugViewRefreshButton:active {
-  transform: translateY(1px);
-}
-
-.ChatDebugViewRefreshButton:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.4);
-  outline-offset: 1px;
-}
-
-.ChatDebugViewEventRow:hover {
-  background: var(--ListHoverBackground);
-  color: var(--ListHoverForeground);
 }
