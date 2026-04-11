@@ -11,6 +11,8 @@
   padding-right: 15px;
   contain: strict;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .Table {
