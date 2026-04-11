@@ -10,12 +10,6 @@
   flex: 0 0 auto;
   flex-direction: column;
   gap: 6px;
-  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
-  background: color-mix(
-    in srgb,
-    var(--vscode-editorWidget-background, transparent) 82%,
-    var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.12)) 18%
-  );
   contain: content;
 }
 
