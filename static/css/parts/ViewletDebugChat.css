@@ -1,3 +1,15 @@
+:root {
+  --KeyBindingsEditorColor: #e1e2de;
+}
+
+.ChatDebugView {
+  color: var(--KeyBindingsEditorColor);
+  background: var(--MainBackground);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .ChatDebugView {
   padding: 8px;
   display: flex;
