@@ -1,0 +1,189 @@
+.ChatDebugViewQuickFilterInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  contain: content;
+}
+
+.ChatDebugViewFilterInput {
+  flex: 1;
+  min-width: 0;
+  max-width: 500px;
+  contain: content;
+}
+
+.ChatDebugViewFilterInput--devtools {
+  flex: 0 1 80px;
+  width: 100%;
+  max-width: 80px;
+}
+
+.ChatDebugViewQuickFilterPill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border: 1px solid var(--vscode-editorWidget-border, #454545);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 120ms ease-out,
+    border-color 120ms ease-out,
+    color 120ms ease-out,
+    transform 120ms ease-out;
+  contain: content;
+}
+
+.ChatDebugViewQuickFilterPill:not(.ChatDebugViewQuickFilterPillSelected):hover {
+  border-color: var(--vscode-focusBorder, #007fd4);
+  background: color-mix(in srgb, var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.16)) 82%, transparent 18%);
+  color: var(--vscode-list-hoverForeground, inherit);
+  transform: translateY(-1px);
+}
+
+.ChatDebugViewQuickFilterPillSelected {
+  border-color: var(--vscode-focusBorder, #007fd4);
+  background: var(--vscode-list-activeSelectionBackground, rgba(14, 99, 156, 0.35));
+  color: var(--vscode-list-activeSelectionForeground, inherit);
+}
+
+.ChatDebugViewQuickFilters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  min-height: 28px;
+  font-size: 12px;
+  line-height: 1;
+  contain: content;
+}
+
+.ChatDebugViewRefreshButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.ChatDebugViewRefreshButton:active {
+  transform: translateY(1px);
+}
+
+.ChatDebugViewRefreshButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 1px;
+}
+
+.ChatDebugViewRefreshButton:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.ChatDebugViewSession {
+  font-size: 12px;
+  opacity: 0.8;
+  contain: content;
+}
+
+.ChatDebugViewToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  contain: content;
+}
+
+.ChatDebugViewToggleLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ChatDebugViewTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  contain: content;
+}
+
+.ChatDebugViewTop .InputBox {
+  flex: 1;
+}
+
+.ChatDebugViewTop--devtools {
+  align-items: stretch;
+}
+
+.ChatDebugViewTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ChatDebugViewFilterInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.ChatDebugViewFilterInput--devtools {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.ChatDebugViewRefreshButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  margin-left: auto;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.ChatDebugViewRefreshButton:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.ChatDebugViewRefreshButton:active {
+  transform: translateY(1px);
+}
+
+.ChatDebugViewRefreshButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 1px;
+}
