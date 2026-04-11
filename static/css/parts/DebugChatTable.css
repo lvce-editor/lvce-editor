@@ -276,3 +276,9 @@
   background: var(--ListHoverBackground);
   color: var(--ListHoverForeground);
 }
+
+.ChatDebugView .TableHead {
+  height: 30px;
+  contain: strict;
+  border-bottom: 1px solid gray;
+}
