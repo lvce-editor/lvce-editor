@@ -139,7 +139,6 @@
   border-radius: 6px;
   margin-bottom: 8px;
   white-space: nowrap;
-  font-family: var(--vscode-editor-font-family, monospace);
   font-size: 12px;
   user-select: text;
   contain: content;
@@ -274,8 +273,6 @@
 }
 
 .ChatDebugViewEvent {
-  border-color: var(--vscode-widget-border, rgba(255, 255, 255, 0.14));
-  background: var(--vscode-toolbar-hoverBackground, rgba(255, 255, 255, 0.06));
   color: var(--vscode-foreground, inherit);
   overflow: auto;
   display: flex;
