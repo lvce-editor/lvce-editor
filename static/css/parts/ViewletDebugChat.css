@@ -57,7 +57,6 @@
 }
 
 .ChatDebugViewDetails {
-  border: 1px solid var(--vscode-editorWidget-border, #454545);
   border-left: 0;
   border-radius: 6px;
   border-bottom-left-radius: 0;
