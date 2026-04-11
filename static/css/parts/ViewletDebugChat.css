@@ -308,11 +308,6 @@
   contain: content;
 }
 
-.ChatDebugViewEventRowLabelSelected .ChatDebugViewEventRow {
-  background: var(--vscode-list-activeSelectionBackground, rgba(14, 99, 156, 0.35));
-  color: var(--vscode-list-activeSelectionForeground, inherit);
-}
-
 .ChatDebugViewEventRowSelected {
   background: var(--vscode-list-activeSelectionBackground, rgba(14, 99, 156, 0.35));
   color: var(--vscode-list-activeSelectionForeground, inherit);
