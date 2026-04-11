@@ -231,7 +231,6 @@
 .ChatDebugViewEvent {
   margin: 0;
   padding: 8px;
-  border: 1px solid var(--vscode-editorWidget-border, #454545);
   border-radius: 6px;
   margin-bottom: 8px;
   white-space: nowrap;
