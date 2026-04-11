@@ -10,7 +10,8 @@
   flex: 0 0 auto;
   flex-direction: column;
   gap: 6px;
-  contain: content;
+  contain: strict;
+  height: 78px;
 }
 
 .ChatDebugViewTimelineBucket {
