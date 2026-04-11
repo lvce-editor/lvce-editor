@@ -24,6 +24,8 @@
   justify-content: center;
   min-height: 22px;
   padding: 0 10px;
+  background: transparent;
+  color: inherit;
   border: 1px solid var(--vscode-editorWidget-border, #454545);
   border-radius: 999px;
   cursor: pointer;
