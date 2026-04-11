@@ -78,3 +78,7 @@
 .TableCellInvalid .Link:hover {
   text-decoration: inherit;
 }
+
+.ChatDebugView .TableWrapper {
+  padding: 0;
+}
