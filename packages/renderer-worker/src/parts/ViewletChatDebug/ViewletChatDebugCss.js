@@ -5,4 +5,5 @@ export const Css = [
   '/css/parts/DebugChatTimeline.css',
   '/css/parts/DebugChatTable.css',
   '/css/parts/DebugChatDetails.css',
+  '/css/parts/Table.css',
 ]
