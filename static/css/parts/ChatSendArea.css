@@ -1,3 +1,8 @@
+:root {
+  --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
+  --SendButtonDisabledForeground: rgba(204, 204, 204, 0.5);
+}
+
 .ChatSendArea {
   display: flex;
   gap: 10px;
@@ -174,8 +179,7 @@
 }
 
 .SendButtonDisabled {
-  background: var(--vscode-button-secondaryBackground);
-  color: var(--vscode-disabledForeground);
+  color: var(--SendButtonDisabledForeground);
   cursor: default;
 }
 
