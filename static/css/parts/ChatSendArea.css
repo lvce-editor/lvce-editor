@@ -1,3 +1,7 @@
+:root {
+  --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
+}
+
 .ChatSendArea {
   display: flex;
   gap: 10px;
@@ -198,4 +202,13 @@
   width: 10px;
   height: 10px;
   pointer-events: none;
+}
+
+.ChatSelect {
+  padding: 4px !important;
+  cursor: pointer;
+}
+
+.ChatSelect:hover {
+  background: var(--ToolBarHoverBackground);
 }
