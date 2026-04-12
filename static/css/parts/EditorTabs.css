@@ -55,7 +55,6 @@
   background: transparent;
   border-radius: 4px;
   display: flex;
-  margin-left: 4px;
   flex-shrink: 0;
   color: var(--TabForeground);
 }
@@ -116,6 +115,8 @@
 
 .TabTitle {
   pointer-events: none;
+  padding-right: 4px;
+  contain: content;
 }
 
 .EditorContainer {
