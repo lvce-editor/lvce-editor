@@ -180,18 +180,15 @@
 }
 
 .ChatSelect {
-  position: relative;
-  min-width: 0;
-}
-
-.ChatSelect {
+  background: transparent;
+  border-radius: 4px;
+  border: none;
+  color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
   display: flex;
   gap: 4px;
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
+  min-width: 0;
   padding: 0 !important;
+  position: relative;
 }
 
 .ChatSelect .MaskIcon {
