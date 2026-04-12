@@ -1,9 +1,6 @@
 :root {
   --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
-<<<<<<< HEAD
   --SendButtonDisabledForeground: rgba(204, 204, 204, 0.5);
-=======
->>>>>>> origin/main
 }
 
 .ChatSendArea {
