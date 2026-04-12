@@ -8,6 +8,7 @@ export const eagerLoadedCss = [
   'Button.css',
   'Chevron.css',
   'ChatAttachments.css',
+  'ChatComposerAttachments.css',
   'ChatHeader.css',
   'ChatSendArea.css',
   'ChatTool.css',
