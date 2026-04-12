@@ -56,7 +56,11 @@ test('loadCssStyleSheet', async () => {
   }
   await Css.loadCssStyleSheet('/test/Component.css')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', 'Css-test-Component', 'h1 { font-size: 20px; }')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Css.addCssStyleSheet',
+    'Css-test-Component',
+    '/* /test/Component.css (Css-test-Component) */\nh1 { font-size: 20px; }',
+  )
 })
 
 test('loadCssStyleSheet - twice', async () => {
@@ -74,5 +78,9 @@ test('loadCssStyleSheet - twice', async () => {
   expect(fetch).toHaveBeenCalledTimes(1)
   expect(fetch).toHaveBeenCalledWith('/test/Component.css')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', 'Css-test-Component', 'h1 { font-size: 20px; }')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Css.addCssStyleSheet',
+    'Css-test-Component',
+    '/* /test/Component.css (Css-test-Component) */\nh1 { font-size: 20px; }',
+  )
 })

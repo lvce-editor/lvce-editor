@@ -3,10 +3,18 @@ import * as GetCss from '../GetCss/GetCss.js'
 import * as GetCssId from '../GetCssId/GetCssId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
+const escapeCssComment = (value) => {
+  return value.replaceAll('*/', '* /')
+}
+
+const prependCssSourceComment = (cssPath, id, text) => {
+  return `/* ${escapeCssComment(cssPath)} (${escapeCssComment(id)}) */\n${text}`
+}
+
 const actuallyLoadCssStyleSheet = async (css) => {
   const text = await GetCss.getCss(css)
   const id = GetCssId.getCssId(css)
-  await addCssStyleSheet(id, text)
+  await addCssStyleSheet(id, prependCssSourceComment(css, id, text))
 }
 
 export const loadCssStyleSheet = (id) => {
