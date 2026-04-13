@@ -375,3 +375,12 @@
 .TokenString {
   white-space: nowrap;
 }
+
+.ChatDebugView .EditorRows {
+  overflow-y: auto;
+}
+
+.ChatDebugView .EditorRows {
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: auto;
+}
