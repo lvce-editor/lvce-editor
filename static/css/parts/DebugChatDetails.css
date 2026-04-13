@@ -8,19 +8,21 @@
   contain: strict;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewDetails {
+.ChatDebugViewDetails {
   border-left: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents {
+.ChatDebugViewEvents {
   flex: 0 1 var(--ChatDebugViewTableWidth);
   min-width: 0;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
+.ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
   flex: 1 1 100%;
 }
 
@@ -42,6 +44,7 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  flex: 1;
 }
 
 .ChatDebugViewDetailsPanel {
@@ -98,12 +101,6 @@
   gap: 8px;
   height: 33px;
   padding: 0 8px;
-  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
-  background: color-mix(
-    in srgb,
-    var(--vscode-editorWidget-background, transparent) 72%,
-    var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.18)) 28%
-  );
   contain: strict;
 }
 
@@ -238,7 +235,6 @@
   display: flex;
   justify-content: flex-end;
   flex: none;
-  margin-right: 12px;
   opacity: 0.6;
   user-select: none;
   contain: content;
@@ -257,12 +253,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 8px 10px;
-  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
   contain: content;
-}
-
-.ChatDebugViewTimingRow:last-child {
-  border-bottom: 0;
 }
 
 .ChatDebugViewTimingValue {
@@ -336,32 +327,6 @@
   flex-shrink: 0;
   min-width: 0;
   width: 100%;
-}
-
-.ChatDebugViewDetailsClose {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  margin-left: auto;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--vscode-descriptionForeground, inherit);
-  cursor: pointer;
-}
-
-.ChatDebugViewDetailsClose:hover {
-  background: var(--vscode-toolbar-hoverBackground, rgba(255, 255, 255, 0.08));
-  color: var(--vscode-foreground, inherit);
-}
-
-.ChatDebugViewDetailsClose:focus-visible {
-  outline: 2px solid var(--vscode-focusBorder, rgba(255, 255, 255, 0.45));
-  outline-offset: 1px;
 }
 
 .TokenString {

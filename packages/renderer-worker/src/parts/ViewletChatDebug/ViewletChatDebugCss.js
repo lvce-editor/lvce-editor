@@ -3,6 +3,7 @@ export const Css = [
   '/css/parts/CompletionItem.css',
   '/css/parts/DebugChatDetails.css',
   '/css/parts/DebugChatImagePreview.css',
+  '/css/parts/DebugChatDetailsClose.css',
   '/css/parts/DebugChatTable.css',
   '/css/parts/DebugChatTimeline.css',
   '/css/parts/DebugChatTop.css',
