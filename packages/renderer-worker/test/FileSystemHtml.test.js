@@ -49,6 +49,9 @@ jest.unstable_mockModule('../src/parts/PersistentFileHandle/PersistentFileHandle
     addHandles: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    removeHandle: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -353,4 +356,78 @@ test('readFile - not found', async () => {
   const error = await getError(FileSystemHtml.readFile('/test/not-found.txt'))
   expect(error).toBeInstanceOf(FileNotFoundError)
   expect(error.message).toBe("File not found '/test/not-found.txt'")
+})
+
+test('remove - file', async () => {
+  const removeEntry = jest.fn()
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return {
+          removeEntry,
+        }
+      case '/test/file.txt':
+        return {
+          kind: FileHandleType.File,
+        }
+      default:
+        return undefined
+    }
+  })
+  // @ts-ignore
+  PersistentFileHandle.removeHandle.mockImplementation(() => {})
+  await FileSystemHtml.remove('/test/file.txt')
+  expect(removeEntry).toHaveBeenCalledTimes(1)
+  expect(removeEntry).toHaveBeenCalledWith('file.txt')
+  expect(PersistentFileHandle.removeHandle).toHaveBeenCalledTimes(1)
+  expect(PersistentFileHandle.removeHandle).toHaveBeenCalledWith('/test/file.txt')
+})
+
+test('remove - directory', async () => {
+  const removeEntry = jest.fn()
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return {
+          removeEntry,
+        }
+      case '/test/folder':
+        return {
+          kind: FileHandleType.Directory,
+        }
+      default:
+        return undefined
+    }
+  })
+  // @ts-ignore
+  PersistentFileHandle.removeHandle.mockImplementation(() => {})
+  await FileSystemHtml.remove('/test/folder')
+  expect(removeEntry).toHaveBeenCalledTimes(1)
+  expect(removeEntry).toHaveBeenCalledWith('folder', { recursive: true })
+  expect(PersistentFileHandle.removeHandle).toHaveBeenCalledTimes(1)
+  expect(PersistentFileHandle.removeHandle).toHaveBeenCalledWith('/test/folder')
+})
+
+test('remove - error', async () => {
+  const removeEntry = jest.fn(() => {
+    throw new TypeError('x is not a function')
+  })
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return {
+          removeEntry,
+        }
+      case '/test/file.txt':
+        return {
+          kind: FileHandleType.File,
+        }
+      default:
+        return undefined
+    }
+  })
+  await expect(FileSystemHtml.remove('/test/file.txt')).rejects.toThrow(new Error('Failed to remove: TypeError: x is not a function'))
 })

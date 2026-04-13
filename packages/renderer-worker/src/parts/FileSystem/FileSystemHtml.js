@@ -119,6 +119,31 @@ export const writeFile = async (uri, content) => {
   }
 }
 
+export const remove = async (uri) => {
+  try {
+    const dirname = Path.dirname(pathSeparator, uri)
+    const parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
+    if (!parentHandle) {
+      throw new FileNotFoundError(uri)
+    }
+    const existingHandle = await PersistentFileHandle.getHandle(uri)
+    const baseName = Path.getBaseName(pathSeparator, uri)
+    if (existingHandle?.kind === 'directory') {
+      await parentHandle.removeEntry(baseName, {
+        recursive: true,
+      })
+    } else {
+      await parentHandle.removeEntry(baseName)
+    }
+    PersistentFileHandle.removeHandle(uri)
+  } catch (error) {
+    if (error instanceof FileNotFoundError || BrowserErrorTypes.isNotFoundError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, 'Failed to remove')
+  }
+}
+
 const ensureDirectoryHandle = async (uri) => {
   const existingHandle = await PersistentFileHandle.getHandle(uri)
   if (existingHandle) {
