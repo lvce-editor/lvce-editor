@@ -17,12 +17,12 @@
   flex-direction: column;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents {
+.ChatDebugViewEvents {
   flex: 0 1 var(--ChatDebugViewTableWidth);
   min-width: 0;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
+.ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
   flex: 1 1 100%;
 }
 
