@@ -11,6 +11,7 @@
   background: transparent;
   color: var(--vscode-descriptionForeground, inherit);
   cursor: pointer;
+  border: none;
 }
 
 .ChatDebugViewDetailsClose:hover {
