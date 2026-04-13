@@ -66,9 +66,6 @@
   flex: none;
   min-height: 28px;
   padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
   color: inherit;
   font: inherit;
   font-size: 12px;
@@ -76,10 +73,6 @@
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    transform 120ms ease;
 }
 
 .ChatDebugViewRefreshButton:active {
