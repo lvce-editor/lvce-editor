@@ -11,6 +11,7 @@ export const eagerLoadedCss = [
   'ChatComposerAttachments.css',
   'ChatHeader.css',
   'ChatSendArea.css',
+  'ChatSelect.css',
   'ChatTool.css',
   'CompletionItem.css',
   'ContextMenu.css',
