@@ -241,7 +241,6 @@
   display: flex;
   justify-content: flex-end;
   flex: none;
-  margin-right: 12px;
   opacity: 0.6;
   user-select: none;
   contain: content;
