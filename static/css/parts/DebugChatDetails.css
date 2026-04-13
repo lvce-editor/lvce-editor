@@ -259,12 +259,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 8px 10px;
-  border-bottom: 1px solid var(--vscode-editorWidget-border, #454545);
   contain: content;
-}
-
-.ChatDebugViewTimingRow:last-child {
-  border-bottom: 0;
 }
 
 .ChatDebugViewTimingValue {
@@ -349,7 +344,6 @@
   width: 28px;
   height: 28px;
   padding: 0;
-  border: 1px solid transparent;
   border-radius: 6px;
   background: transparent;
   color: var(--vscode-descriptionForeground, inherit);
@@ -394,7 +388,6 @@
   height: auto;
   max-height: 100%;
   align-self: center;
-  border: 1px solid var(--vscode-widget-border, rgba(255, 255, 255, 0.14));
   border-radius: 6px;
   object-fit: contain;
 }
