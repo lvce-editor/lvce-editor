@@ -364,50 +364,6 @@
   outline-offset: 1px;
 }
 
-.ChatDebugViewImagePreview {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-  max-width: 100%;
-  min-height: 0;
-  flex: 1;
-}
-
-.ChatDebugViewImagePreviewImageWrapper {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 0;
-  contain: strict;
-}
-
-.ChatDebugViewImagePreviewImage {
-  display: block;
-  max-width: 100%;
-  width: auto;
-  height: auto;
-  max-height: 100%;
-  align-self: center;
-  border: 1px solid var(--vscode-widget-border, rgba(255, 255, 255, 0.14));
-  border-radius: 6px;
-  object-fit: contain;
-}
-
-.ChatDebugViewImagePreviewLabel {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2px;
-  width: auto;
-  height: auto;
-  max-height: 100%;
-  align-self: center;
-}
-
 .TokenString {
   white-space: nowrap;
 }
