@@ -3,6 +3,10 @@
 }
 
 .ChatDebugView {
+  --EditorLineHeight: 20px;
+}
+
+.ChatDebugView {
   color: var(--KeyBindingsEditorColor);
   background: var(--MainBackground);
   padding: 8px;
@@ -13,6 +17,15 @@
   contain: strict;
   flex: 1;
   flex-direction: column;
+}
+
+.ChatDebugView .Editor {
+  user-select: text;
+}
+
+.ChatDebugView .Gutter {
+  padding-left: 12px;
+  padding-right: 8px;
 }
 
 .ChatDebugView--devtools {
