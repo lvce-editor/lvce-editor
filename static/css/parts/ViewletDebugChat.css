@@ -23,6 +23,11 @@
   user-select: text;
 }
 
+.ChatDebugView .Gutter {
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
 .ChatDebugView--devtools {
   gap: 4px;
 }
