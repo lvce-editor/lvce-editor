@@ -3,6 +3,10 @@
 }
 
 .ChatDebugView {
+  --EditorLineHeight: 20px;
+}
+
+.ChatDebugView {
   color: var(--KeyBindingsEditorColor);
   background: var(--MainBackground);
   padding: 8px;
