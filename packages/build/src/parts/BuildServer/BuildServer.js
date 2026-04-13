@@ -52,6 +52,9 @@ const copyServerFiles = async ({ commitHash }) => {
   if (url.startsWith('/fonts')) {
     return true
   }
+  if (url.startsWith('/static/icons')) {
+    return true
+  }
   if (url.startsWith('/icons')) {
     return true
   }

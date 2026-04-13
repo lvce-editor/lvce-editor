@@ -223,27 +223,11 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   // })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
-    occurrence: `export const getAbsolutePath = (pathName) => {
-  if (pathName === '/') {
-    return join(STATIC, 'index.html')
-  }
-  if (pathName === '/favicon.ico') {
-    return join(STATIC, 'favicon.ico')
-  }
-  if (pathName.startsWith('/packages')) {
+    occurrence: `  if (pathName.startsWith('/packages')) {
     return Path.join(root, pathName)
   }
-  return Path.join(STATIC, pathName)
-}`,
-    replacement: `export const getAbsolutePath = (pathName) => {
-  if (pathName === '/') {
-    return join(STATIC, 'index.html')
-  }
-  if (pathName === '/favicon.ico') {
-    return join(STATIC, 'favicon.ico')
-  }
-  return Path.join(STATIC, pathName)
-}`,
+`,
+    replacement: '',
   })
   // await Replace.replace({
   //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
