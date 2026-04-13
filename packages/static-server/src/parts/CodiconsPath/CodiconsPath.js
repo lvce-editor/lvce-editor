@@ -2,7 +2,10 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { root } from '../Root/Root.js'
 
-const codiconsPathCandidates = [join(root, 'packages', 'renderer-worker', 'node_modules', '@vscode', 'codicons'), join(root, 'node_modules', '@vscode', 'codicons')]
+const codiconsPathCandidates = [
+  join(root, 'packages', 'renderer-worker', 'node_modules', '@vscode', 'codicons'),
+  join(root, 'node_modules', '@vscode', 'codicons'),
+]
 
 const getCodiconsPath = () => {
   for (const candidate of codiconsPathCandidates) {
