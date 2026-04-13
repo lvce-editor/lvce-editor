@@ -1,6 +1,7 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
+import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
@@ -12,6 +13,7 @@ import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as Product from '../Product/Product.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
@@ -26,6 +28,29 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
+
+const getInitialBackendUrl = () => {
+  return Preferences.get('layout.backendUrl') || Product.getBackendUrl()
+}
+
+const getDefaultAuthState = () => {
+  return {
+    authAccessToken: '',
+    authErrorMessage: '',
+    userName: '',
+    userState: 'loggedOut',
+    userSubscriptionPlan: '',
+    userUsedTokens: 0,
+  }
+}
+
+const toAuthState = (state) => {
+  return {
+    accessToken: state.authAccessToken,
+    signInState: state.userState,
+    userName: state.userName,
+  }
+}
 
 export const create = (id: number): LayoutState => {
   Assert.number(id)
@@ -49,7 +74,7 @@ export const create = (id: number): LayoutState => {
     activityBarVisible: false,
     activityBarSashVisible: false,
     contentAreaVisible: true,
-    mainVisible: false,
+    mainVisible: true,
     panelSashVisible: false,
     panelVisible: false,
     previewSashVisible: false,
@@ -64,6 +89,7 @@ export const create = (id: number): LayoutState => {
     activityBarLeft: 0,
     activityBarTop: 0,
     activityBarWidth: 0,
+    ...getDefaultAuthState(),
     mainHeight: 0,
     mainLeft: 0,
     mainTop: 0,
@@ -112,6 +138,7 @@ export const create = (id: number): LayoutState => {
     commit: Commit.commit,
     platform: Platform.platform,
     assetDir,
+    backendUrl: getInitialBackendUrl(),
     commands: [],
     sashId: SashType.None,
     previewUri: '',
@@ -560,12 +587,17 @@ export const showMain = (state: LayoutState) => {
 }
 
 export const hideMain = (state: LayoutState) => {
-  return hide(state, LayoutModules.Main)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 export const toggleMain = (state: LayoutState) => {
-  // @ts-ignore
-  return toggle(state, LayoutModules.Main)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 const loadIfVisible = async (
@@ -1268,6 +1300,61 @@ export const getPlatform = (state: LayoutState) => {
 
 export const getAssetDir = (state: LayoutState) => {
   return state.assetDir
+}
+
+export const getBackendUrl = (state: LayoutState) => {
+  return state.backendUrl
+}
+
+export const getAuthState = (state: LayoutState) => {
+  return toAuthState(state)
+}
+
+const mergeAuthState = (state: LayoutState, authState) => {
+  const authAccessToken =
+    typeof authState?.authAccessToken === 'string'
+      ? authState.authAccessToken
+      : typeof authState?.accessToken === 'string'
+        ? authState.accessToken
+        : state.authAccessToken
+  const userState =
+    typeof authState?.userState === 'string'
+      ? authState.userState
+      : typeof authState?.signInState === 'string'
+        ? authState.signInState
+        : state.userState
+  return {
+    ...state,
+    authAccessToken,
+    authErrorMessage: typeof authState?.authErrorMessage === 'string' ? authState.authErrorMessage : state.authErrorMessage,
+    userName: typeof authState?.userName === 'string' ? authState.userName : state.userName,
+    userState,
+    userSubscriptionPlan: typeof authState?.userSubscriptionPlan === 'string' ? authState.userSubscriptionPlan : state.userSubscriptionPlan,
+    userUsedTokens: typeof authState?.userUsedTokens === 'number' ? authState.userUsedTokens : state.userUsedTokens,
+  }
+}
+
+export const setAuthState = async (state: LayoutState, authState): Promise<LayoutStateResult> => {
+  return {
+    newState: mergeAuthState(state, authState),
+    commands: [],
+  }
+}
+
+export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const authState = await AuthWorker.signIn(state.backendUrl, state.platform)
+  return {
+    newState: mergeAuthState(state, authState),
+    commands: [],
+  }
+}
+
+export const signOut = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const authState = await AuthWorker.signOut(state.backendUrl)
+  return {
+    newState: mergeAuthState(state, authState),
+    commands: [],
+  }
 }
 
 export const setUpdateState = async (state, updateState) => {

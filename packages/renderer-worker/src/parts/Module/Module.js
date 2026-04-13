@@ -108,6 +108,8 @@ export const load = (moduleId) => {
       return import('../Notification/Notification.ipc.js')
     case ModuleId.Open:
       return import('../Open/Open.ipc.js')
+    case ModuleId.OAuthServer:
+      return import('../OAuthServer/OAuthServer.ipc.js')
     case ModuleId.OpenNativeFolder:
       return import('../OpenNativeFolder/OpenNativeFolder.ipc.js')
     case ModuleId.PersistentFileHandle:

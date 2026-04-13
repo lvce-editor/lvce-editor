@@ -39,14 +39,14 @@
     "bytes": "^3.1.2",
     "esbuild": "^0.28.0",
     "fs-extra": "^11.3.4",
-    "got": "^15.0.0",
+    "got": "^15.0.1",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^7.0.4",
     "pretty-bytes": "^7.1.0",
     "rollup": "^4.53.3",
     "tar-fs": "^3.1.2",
-    "verdaccio": "6.3.2"
+    "verdaccio": "6.5.0"
   },
   "xo": {
     "rules": {

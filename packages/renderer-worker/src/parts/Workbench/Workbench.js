@@ -1,11 +1,13 @@
 import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
+import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
@@ -24,6 +26,7 @@ import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
+import * as StartupAuth from '../StartupAuth/StartupAuth.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -95,6 +98,9 @@ const actions = [
   },
 ]
 
+const loadMainAction = actions[0]
+const deferredActions = actions.slice(1)
+
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
@@ -142,6 +148,12 @@ export const startup = async (platform, assetDir) => {
     Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
   }
 
+  let authState
+  if (HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)) {
+    await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
+    authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+  }
+
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
@@ -185,6 +197,7 @@ export const startup = async (platform, assetDir) => {
   // commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', layout.uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  await Command.execute('Layout.setAuthState', authState)
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
@@ -194,7 +207,8 @@ export const startup = async (platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  await Promise.all(actions.map((action) => action(platform, assetDir)))
+  await loadMainAction(platform, assetDir)
+  await Promise.all(deferredActions.map((action) => action(platform, assetDir)))
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 

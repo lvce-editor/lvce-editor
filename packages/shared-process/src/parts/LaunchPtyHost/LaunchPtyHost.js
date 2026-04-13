@@ -9,7 +9,7 @@ export const launchPtyHost = async (method) => {
     defaultPath: PtyHostPath.ptyHostPath,
     isElectron: IsElectron.isElectron,
     name: 'Terminal Process',
-    settingName: '',
+    settingName: 'develop.ptyHostPath',
     targetRpcId: IpcId.TerminalProcess,
   })
   PtyHostState.state.ipc = ipc
