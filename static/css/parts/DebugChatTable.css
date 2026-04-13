@@ -181,3 +181,23 @@
   background: var(--ListHoverBackground, var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.31)));
   color: var(--ListHoverForeground, var(--vscode-list-hoverForeground, inherit));
 }
+
+.TableWrapper {
+  position: relative;
+  width: min(100%, var(--ChatDebugViewTableWidth));
+  max-width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.TableWrapperWrapper {
+  position: relative;
+  width: min(100%, var(--ChatDebugViewTableWidth));
+  max-width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
