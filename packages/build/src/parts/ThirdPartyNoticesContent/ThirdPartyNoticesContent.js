@@ -3,7 +3,7 @@ export const getThirdPartyNoticesContent = ({ commitHash }) => {
 differing from this project:
 
 
-1) License Notice for static/${commitHash}/icons (from https://github.com/microsoft/vscode-icons)
+1) License Notice for static/${commitHash}/icons (from https://github.com/microsoft/vscode-codicons)
 ---------------------------------------
 
 Attribution 4.0 International

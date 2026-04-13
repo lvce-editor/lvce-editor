@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
+import * as CodiconsPath from '../CodiconsPath/CodiconsPath.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
@@ -75,10 +76,7 @@ const copyStaticFiles = async ({ commitHash }) => {
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
   })
-  await Copy.copy({
-    from: 'static/icons',
-    to: `packages/build/.tmp/server/static-server/static/${commitHash}/icons`,
-  })
+  await copyIcons(`packages/build/.tmp/server/static-server/static/${commitHash}/icons`)
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/js/preview-injected.js`,
@@ -90,6 +88,19 @@ const copyStaticFiles = async ({ commitHash }) => {
   await Remove.remove(`packages/build/.tmp/server/static-server/static/images`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/sounds`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/lib-css/modern-normalize.css`)
+}
+
+const copyIcons = async (to) => {
+  await Copy.copy({
+    from: CodiconsPath.codiconsIconsPath,
+    to,
+  })
+  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
+  await Copy.copy({
+    from: 'static/icons',
+    to,
+    ignore: codiconNames,
+  })
 }
 
 const getObjectDependencies = (obj) => {
@@ -212,27 +223,11 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   // })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
-    occurrence: `export const getAbsolutePath = (pathName) => {
-  if (pathName === '/') {
-    return join(STATIC, 'index.html')
-  }
-  if (pathName === '/favicon.ico') {
-    return join(STATIC, 'favicon.ico')
-  }
-  if (pathName.startsWith('/packages')) {
+    occurrence: `  if (pathName.startsWith('/packages')) {
     return Path.join(root, pathName)
   }
-  return Path.join(STATIC, pathName)
-}`,
-    replacement: `export const getAbsolutePath = (pathName) => {
-  if (pathName === '/') {
-    return join(STATIC, 'index.html')
-  }
-  if (pathName === '/favicon.ico') {
-    return join(STATIC, 'favicon.ico')
-  }
-  return Path.join(STATIC, pathName)
-}`,
+`,
+    replacement: '',
   })
   // await Replace.replace({
   //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
