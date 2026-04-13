@@ -8,19 +8,19 @@
   contain: strict;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewDetails {
+.ChatDebugViewDetails {
   border-left: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   flex: 1;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents {
+.ChatDebugViewEvents {
   flex: 0 1 var(--ChatDebugViewTableWidth);
   min-width: 0;
 }
 
-.ChatDebugViewDevtoolsSplit > .ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
+.ChatDebugViewEvents.ChatDebugViewEventsFullWidth {
   flex: 1 1 100%;
 }
 
