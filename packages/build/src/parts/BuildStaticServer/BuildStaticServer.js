@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
+import * as CodiconsPath from '../CodiconsPath/CodiconsPath.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
@@ -76,7 +77,7 @@ const copyStaticFiles = async ({ commitHash }) => {
     assetDir: `/${commitHash}`,
   })
   await Copy.copy({
-    from: 'static/icons',
+    from: CodiconsPath.codiconsIconsPath,
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/icons`,
   })
   await Copy.copy({
