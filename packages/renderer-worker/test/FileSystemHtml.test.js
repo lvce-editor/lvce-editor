@@ -359,7 +359,7 @@ test('readFile - not found', async () => {
 })
 
 test('remove - file', async () => {
-  const removeEntry = jest.fn(() => {})
+  const removeEntry = jest.fn()
   // @ts-ignore
   PersistentFileHandle.getHandle.mockImplementation((uri) => {
     switch (uri) {
@@ -385,7 +385,7 @@ test('remove - file', async () => {
 })
 
 test('remove - directory', async () => {
-  const removeEntry = jest.fn(() => {})
+  const removeEntry = jest.fn()
   // @ts-ignore
   PersistentFileHandle.getHandle.mockImplementation((uri) => {
     switch (uri) {
