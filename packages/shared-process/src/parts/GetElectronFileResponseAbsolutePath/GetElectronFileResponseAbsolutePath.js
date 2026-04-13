@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -5,6 +6,24 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 import * as StaticPath from '../StaticPath/StaticPath.js'
+
+const invalidIconsPath = Path.join(Root.root, 'static', '__missing_vscode_icon__.svg')
+
+const getIconAbsolutePath = (pathName) => {
+  const relativePath = pathName.startsWith('/static/icons/') ? pathName.slice('/static/icons/'.length) : pathName.slice('/icons/'.length)
+  if (!relativePath || relativePath.includes('/') || relativePath.includes('\\') || relativePath.includes('..')) {
+    return invalidIconsPath
+  }
+  const codiconPath = Path.join(Root.root, 'packages', 'renderer-worker', 'node_modules', '@vscode', 'codicons', 'src', 'icons', relativePath)
+  if (existsSync(codiconPath)) {
+    return codiconPath
+  }
+  const staticIconPath = Path.join(Root.root, 'static', 'icons', relativePath)
+  if (existsSync(staticIconPath)) {
+    return staticIconPath
+  }
+  return invalidIconsPath
+}
 
 // TODO clean up this code
 export const getElectronFileResponseAbsolutePath = (pathName) => {
@@ -18,6 +37,9 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
   }
   if (pathName.startsWith(`/static`)) {
     return Path.join(Root.root, pathName)
+  }
+  if (pathName.startsWith('/icons/') || pathName.startsWith('/static/icons/')) {
+    return getIconAbsolutePath(pathName)
   }
   if (pathName.startsWith(`/extensions`)) {
     return Path.join(Root.root, pathName)
