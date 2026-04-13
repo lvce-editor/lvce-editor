@@ -76,10 +76,7 @@ const copyStaticFiles = async ({ commitHash }) => {
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
   })
-  await Copy.copy({
-    from: CodiconsPath.codiconsIconsPath,
-    to: `packages/build/.tmp/server/static-server/static/${commitHash}/icons`,
-  })
+  await copyIcons(`packages/build/.tmp/server/static-server/static/${commitHash}/icons`)
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/js/preview-injected.js`,
@@ -91,6 +88,19 @@ const copyStaticFiles = async ({ commitHash }) => {
   await Remove.remove(`packages/build/.tmp/server/static-server/static/images`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/sounds`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/lib-css/modern-normalize.css`)
+}
+
+const copyIcons = async (to) => {
+  await Copy.copy({
+    from: CodiconsPath.codiconsIconsPath,
+    to,
+  })
+  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
+  await Copy.copy({
+    from: 'static/icons',
+    to,
+    ignore: codiconNames,
+  })
 }
 
 const getObjectDependencies = (obj) => {

@@ -146,10 +146,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     assetDir: `${pathPrefix}/${commitHash}`,
     pathPrefix,
   })
-  await Copy.copy({
-    from: CodiconsPath.codiconsIconsPath,
-    to: `packages/build/.tmp/dist/${commitHash}/icons`,
-  })
+  await copyIcons(`packages/build/.tmp/dist/${commitHash}/icons`)
   const themes = await getThemeNames()
   for (const item of themes) {
     await Copy.copy({
@@ -163,6 +160,19 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
       to: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.vscode-icons`,
     })
   }
+}
+
+const copyIcons = async (to) => {
+  await Copy.copy({
+    from: CodiconsPath.codiconsIconsPath,
+    to,
+  })
+  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
+  await Copy.copy({
+    from: 'static/icons',
+    to,
+    ignore: codiconNames,
+  })
 }
 
 const getThemeNames = async () => {
