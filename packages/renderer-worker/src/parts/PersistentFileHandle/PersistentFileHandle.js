@@ -32,6 +32,7 @@ export const removeHandle = (uri) => {
   for (const key in handles) {
     if (key.startsWith(prefix)) {
       delete handles[key]
+    }
   }
 }
 
