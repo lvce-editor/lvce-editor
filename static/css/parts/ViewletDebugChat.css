@@ -5,12 +5,6 @@
 .ChatDebugView {
   color: var(--KeyBindingsEditorColor);
   background: var(--MainBackground);
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.ChatDebugView {
   padding: 8px;
   display: flex;
   height: 100%;
@@ -23,6 +17,10 @@
 
 .ChatDebugView--devtools {
   gap: 4px;
+}
+
+.ChatDebugView--devtools > .ChatDebugViewTimeline {
+  flex: 0 0 auto;
 }
 
 .ChatDebugView--devtools .ChatDebugViewEvents {
