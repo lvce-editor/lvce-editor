@@ -60,6 +60,10 @@
 .StopCircle {
   mask-image: url(/icons/stop-circle.svg);
 }
+.MaskIconArchive,
+.IconArchive {
+  mask-image: url(/icons/archive.svg);
+}
 
 .MaskIconSearch,
 .IconSearch {
