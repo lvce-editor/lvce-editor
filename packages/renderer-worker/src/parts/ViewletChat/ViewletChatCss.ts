@@ -3,6 +3,8 @@ export const Css = [
   '/css/parts/ChatAttachments.css',
   '/css/parts/ChatComposerAttachments.css',
   '/css/parts/ChatHeader.css',
+  '/css/parts/ChatModelPickerList.css',
+  '/css/parts/ChatModelPickerItem.css',
   '/css/parts/ChatSendArea.css',
   '/css/parts/ChatSelect.css',
   '/css/parts/ChatTool.css',
