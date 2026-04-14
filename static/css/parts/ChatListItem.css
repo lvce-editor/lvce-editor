@@ -1,5 +1,7 @@
 :root {
   --ChatListItemBorderRadius: 6px;
+  --ChatListItemNameForeground: rgb(188, 190, 190);
+  --DescriptionForeground: rgba(156, 162, 160, 0.7);
 }
 
 .ChatListItemLabel {
@@ -57,4 +59,13 @@
 .ChatListItem:hover .SessionArchiveButton,
 .ChatListItem:focus-within .SessionArchiveButton {
   opacity: 1;
+}
+
+.ChatListItemTitle {
+  color: var(--ChatListItemNameForeground);
+}
+
+.ChatListItemTime {
+  color: var(--DescriptionForeground);
+  font-size: 12px;
 }
