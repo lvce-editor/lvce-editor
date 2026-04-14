@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import { readdir } from 'node:fs/promises'
 import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
@@ -7,6 +8,7 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
+import * as CodiconsPath from '../CodiconsPath/CodiconsPath.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopyElectron from '../CopyElectron/CopyElectron.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
@@ -122,12 +124,28 @@ const copyExtensions = async ({ resourcesPath, commitHash }) => {
   // })
 }
 
+const copyIcons = async ({ resourcesPath, commitHash }) => {
+  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
+  for (const iconPath of [`${resourcesPath}/app/static/${commitHash}/icons`, `${resourcesPath}/app/static/icons`]) {
+    await Copy.copy({
+      from: CodiconsPath.codiconsIconsPath,
+      to: iconPath,
+    })
+    await Copy.copy({
+      from: 'static/icons',
+      to: iconPath,
+      ignore: codiconNames,
+    })
+  }
+}
+
 const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'static',
     to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['css'],
   })
+  await copyIcons({ resourcesPath, commitHash })
   await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
   await Rename.rename({
     from: `${resourcesPath}/app/static/${commitHash}/index.html`,
