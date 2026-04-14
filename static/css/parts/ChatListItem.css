@@ -4,6 +4,7 @@
 
 .ChatListItemLabel {
   flex: 1;
+  contain: content;
 }
 
 .ChatListItem {
