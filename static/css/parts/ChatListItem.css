@@ -1,3 +1,7 @@
+:root {
+  --ChatListItemBorderRadius: 6px;
+}
+
 .ChatListItemLabel {
   flex: 1;
 }
@@ -10,6 +14,7 @@
   background: transparent;
   box-shadow: inset 0 0 0 1px transparent;
   padding-left: 10px;
+  border-radius: var(--ChatListItemBorderRadius);
 }
 
 .ChatListItem:hover {
