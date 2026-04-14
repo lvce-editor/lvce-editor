@@ -13,7 +13,6 @@
   align-items: center;
   height: var(--ChatListItemHeight, 40px);
   background: transparent;
-  box-shadow: inset 0 0 0 1px transparent;
   padding-left: 10px;
   border-radius: var(--ChatListItemBorderRadius);
 }
@@ -24,7 +23,6 @@
 
 .ChatListItemFocused {
   background: var(--vscode-list-activeSelectionBackground);
-  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder);
   color: var(--vscode-list-activeSelectionForeground);
 }
 
