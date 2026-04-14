@@ -1,6 +1,7 @@
 export const Css = [
   '/css/parts/Button.css',
   '/css/parts/ChatAttachments.css',
+  '/css/parts/ChatListItem.css',
   '/css/parts/ChatComposerAttachments.css',
   '/css/parts/ChatHeader.css',
   '/css/parts/ChatModelPickerList.css',

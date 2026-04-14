@@ -18,6 +18,8 @@
   background: var(--InputBoxBackground, var(--vscode-input-background, var(--vscode-editorWidget-background, transparent)));
   border-radius: 5px;
   padding: 10px;
+  flex: 1;
+  contain: strict;
 }
 
 .InputInvalid {
@@ -44,7 +46,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-right: auto;
 }
 
 .ChatInputBox {

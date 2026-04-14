@@ -11,6 +11,7 @@ export const Css = [
   '/css/parts/IconButton.css',
   '/css/parts/IconButton.css',
   '/css/parts/InputBox.css',
+  '/css/parts/ChatListItem.css',
   '/css/parts/MaskIcon.css',
   '/css/parts/MaskIcon.css',
   '/css/parts/Resizer.css',
