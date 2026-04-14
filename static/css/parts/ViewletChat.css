@@ -1,5 +1,6 @@
 :root {
   --ChatForeground: rgb(188, 190, 190);
+  --ChatListPaddingInline: 6px;
 }
 
 .Chat {
@@ -31,6 +32,8 @@
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
+  padding-left: var(--ChatListPaddingInline);
+  padding-right: var(--ChatListPaddingInline);
 }
 
 .ChatListItemLabel {
