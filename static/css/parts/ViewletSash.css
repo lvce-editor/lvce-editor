@@ -1,3 +1,7 @@
+:root {
+  --SashBorder: #444444;
+  
+}
 .Sash {
   position: absolute;
   contain: strict;
@@ -8,6 +12,7 @@
   background: transparent;
   display: flex;
 }
+
 
 .Sash:active {
   background: var(--SashHoverBorder, #3d5252);
