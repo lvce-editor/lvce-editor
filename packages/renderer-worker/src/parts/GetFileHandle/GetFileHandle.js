@@ -5,7 +5,7 @@ import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHan
 
 const pathSeparator = '/'
 
-export const getFileHandle = async (uri) => {
+export const getFileHandle = async (uri, options) => {
   const handle = await PersistentFileHandle.getHandle(uri)
   if (handle) {
     return handle
@@ -16,6 +16,6 @@ export const getFileHandle = async (uri) => {
     return undefined
   }
   const baseName = Path.getBaseName(pathSeparator, uri)
-  const fileHandle = await FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName)
+  const fileHandle = await FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName, options)
   return fileHandle
 }

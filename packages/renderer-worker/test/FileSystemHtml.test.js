@@ -46,6 +46,9 @@ jest.unstable_mockModule('../src/parts/PersistentFileHandle/PersistentFileHandle
     getHandle: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    addHandle: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     addHandles: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -356,6 +359,43 @@ test('readFile - not found', async () => {
   const error = await getError(FileSystemHtml.readFile('/test/not-found.txt'))
   expect(error).toBeInstanceOf(FileNotFoundError)
   expect(error.message).toBe("File not found '/test/not-found.txt'")
+})
+
+test('writeFile - creates missing file', async () => {
+  const write = jest.fn()
+  const close = jest.fn()
+  const createWritable = jest.fn(() => {
+    return {
+      write,
+      close,
+    }
+  })
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation((uri) => {
+    switch (uri) {
+      case 'html:///test':
+        return {
+          getFileHandle: jest.fn((name, options) => {
+            expect(name).toBe('new-file.txt')
+            expect(options).toEqual({
+              create: true,
+            })
+            return {
+              createWritable,
+            }
+          }),
+        }
+      default:
+        return undefined
+    }
+  })
+
+  await FileSystemHtml.writeFile('html:///test/new-file.txt', 'hello')
+
+  expect(createWritable).toHaveBeenCalledTimes(1)
+  expect(write).toHaveBeenCalledTimes(1)
+  expect(write).toHaveBeenCalledWith('hello')
+  expect(close).toHaveBeenCalledTimes(1)
 })
 
 test('remove - file', async () => {
