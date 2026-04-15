@@ -33,7 +33,7 @@
 .SourceControlButtons {
   display: var(--SourceControlButtonsDisplay);
   contain: content;
-  display: flex;
+  /* display: flex; */
 }
 
 .SourceControlItems .TreeItem:hover {
