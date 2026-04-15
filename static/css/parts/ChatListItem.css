@@ -5,7 +5,6 @@
 }
 
 .ChatListItemLabel {
-  flex: 1;
   contain: content;
 }
 
@@ -31,8 +30,9 @@
 .ChatListItemContent {
   contain: strict;
   flex: 1;
-  align-items: center;
+  justify-content: center;
   display: flex;
+  flex-direction: column;
 }
 
 .ChatListItemStatusRow {
