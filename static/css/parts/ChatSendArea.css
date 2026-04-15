@@ -1,6 +1,8 @@
 :root {
   --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
   --SendButtonDisabledForeground: rgba(204, 204, 204, 0.5);
+  --ChatSendAreaBorder: 1px solid #37413f;
+  --ChatSendAreaFocusedBorderColor: #3d5252;
 }
 
 .ChatSendArea {
@@ -20,6 +22,14 @@
   padding: 10px;
   flex: 1;
   contain: strict;
+}
+
+.ChatSendAreaContent {
+  border: var(--ChatSendAreaBorder);
+}
+
+.ChatSendAreaContentFocused {
+  border-color: var(--ChatSendAreaFocusedBorderColor);
 }
 
 .InputInvalid {
