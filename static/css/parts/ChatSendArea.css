@@ -65,9 +65,6 @@
   outline: none;
   flex: 1;
   background: var(--InputBoxBackground, var(--vscode-input-background, var(--vscode-editorWidget-background, transparent)));
-  padding: 4px 6px;
-  padding-left: 0;
-  padding-right: 0;
   color: var(--InputBoxForeground, var(--vscode-input-foreground, var(--vscode-foreground, inherit)));
   font-family: inherit;
   font-size: 13px;
