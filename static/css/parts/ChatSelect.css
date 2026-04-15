@@ -12,6 +12,7 @@
   min-width: 0;
   padding: 0 !important;
   position: relative;
+  flex-shrink: 0;
 }
 
 .ChatSelect .MaskIcon {
