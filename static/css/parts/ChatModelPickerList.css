@@ -6,7 +6,7 @@
   overflow-y: auto;
   padding: 0;
   scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
 }
 
 .ChatModelPickerList::-webkit-scrollbar {
