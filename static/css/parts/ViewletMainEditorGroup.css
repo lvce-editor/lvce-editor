@@ -24,8 +24,7 @@
 }
 
 .EditorGroup:focus {
-  --WaterMarkBackground: red;
-  /* background: orange; */
+  --WaterMarkOpacity: 1;
 }
 
 .editor-groups-container::-webkit-scrollbar {

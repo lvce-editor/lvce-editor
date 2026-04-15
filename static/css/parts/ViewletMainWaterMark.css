@@ -1,6 +1,8 @@
 :root {
   --WaterMarkBackground: var(--SideBarBackground);
+  --WaterMarkOpacity: 0.5;
 }
+
 .WaterMarkWrapper {
   display: flex;
   align-items: center;
@@ -24,4 +26,5 @@
   pointer-events: none;
   contain: strict;
   flex-shrink: 0;
+  opacity: var(--WaterMarkOpacity);
 }
