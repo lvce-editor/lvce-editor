@@ -1,3 +1,8 @@
+:root {
+  --EmptyGroupCloseButtonForeground: #c5c5c5;
+  --EmptyGroupOpacity: 0.5;
+}
+
 .editor-groups-container {
   flex: 1;
   display: flex;
@@ -21,10 +26,11 @@
   height: 100%;
   flex-direction: column;
   outline: none;
+  opacity: var(--EmptyGroupOpacity);
 }
 
 .EditorGroup:focus {
-  --WaterMarkOpacity: 1;
+  --EmptyGroupOpacity: 1;
 }
 
 .editor-groups-container::-webkit-scrollbar {
@@ -46,7 +52,7 @@
   display: flex;
   background: transparent;
   border: none;
-  color: white;
+  color: var(--EmptyGroupCloseButtonForeground);
   align-self: end;
   width: 30px;
   height: 30px;
