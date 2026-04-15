@@ -12,6 +12,7 @@
   contain: content;
   padding-right: var(--SearchHeaderPaddingRight);
   padding-left: var(--SearchHeaderPaddingLeft);
+  gap: 2px;
 }
 
 .SearchHeaderTopRight {
