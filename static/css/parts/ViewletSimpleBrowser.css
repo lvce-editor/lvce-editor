@@ -1,5 +1,8 @@
 .SimpleBrowser {
-  position: absolute;
+  contain: strict;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .SimpleBrowserHeader {
