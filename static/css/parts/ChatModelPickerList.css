@@ -6,32 +6,5 @@
   overflow-y: auto;
   padding: 0;
   scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
-}
-
-.ChatModelPickerList::-webkit-scrollbar {
-  width: 10px;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-track {
-  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb {
-  background: var(--vscode-scrollbarSlider-hoverBackground);
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background-clip: content-box;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb:hover {
-  background: var(--vscode-scrollbarSlider-hoverBackground);
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb:active {
-  background: var(--vscode-scrollbarSlider-activeBackground);
-  border: 2px solid transparent;
-  background-clip: content-box;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
 }

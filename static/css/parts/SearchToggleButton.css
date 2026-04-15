@@ -9,7 +9,3 @@
   align-self: stretch;
   /* TODO contain */
 }
-
-.SearchToggleButton:where(:hover) {
-  background: lightgray;
-}
