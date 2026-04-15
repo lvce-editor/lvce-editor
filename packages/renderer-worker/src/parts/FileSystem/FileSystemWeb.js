@@ -12,6 +12,15 @@ export const state = {
   files: Object.create(null),
 }
 
+const webPrefix = 'web://'
+
+const getPath = (uri) => {
+  if (uri.startsWith(webPrefix)) {
+    return uri.slice(webPrefix.length)
+  }
+  return uri
+}
+
 state.files['/languages/index.dart'] = `void main() {
   print('Hello, World!');
 }`
@@ -226,6 +235,7 @@ const getName = (path) => {
 // }
 
 export const readFile = async (path) => {
+  path = getPath(path)
   const file = state.files[path]
   if (file === undefined) {
     throw new Error(`file not found ${path}`)
@@ -254,6 +264,7 @@ export const createFolder = async (path) => {
 }
 
 export const writeFile = async (path, content) => {
+  path = getPath(path)
   state.files[path] = content
 }
 
@@ -272,6 +283,7 @@ const getDirent = (path, relativePath) => {
 }
 
 export const readDirWithFileTypes = (path) => {
+  path = getPath(path)
   const dirents = []
   for (const key in state.files) {
     if (key.startsWith(path)) {

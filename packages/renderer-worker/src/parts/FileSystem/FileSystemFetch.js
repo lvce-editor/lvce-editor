@@ -12,7 +12,17 @@ export const state = {
   files: Object.create(null),
 }
 
+const fetchPrefix = 'fetch://'
+
+const normalizeUri = (uri) => {
+  if (uri.startsWith(fetchPrefix)) {
+    return uri.slice(fetchPrefix.length)
+  }
+  return uri
+}
+
 export const readFile = async (uri) => {
+  uri = normalizeUri(uri)
   if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
     return FileSystemWorker.invoke('FileSystem.readFile', `${location.protocol}//${uri}`)
   }
@@ -32,6 +42,7 @@ export const exists = async (uri) => {
 }
 
 export const readJson = async (uri) => {
+  uri = normalizeUri(uri)
   if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
     return FileSystemWorker.invoke('FileSystem.readJson', `${location.protocol}//${uri}`)
   }
@@ -42,10 +53,12 @@ export const readJson = async (uri) => {
 }
 
 export const writeFile = (uri, content) => {
+  uri = normalizeUri(uri)
   return ExtensionHostWorker.invoke('FileSystemFetch.writeFile', uri)
 }
 
 export const mkdir = (uri) => {
+  uri = normalizeUri(uri)
   return ExtensionHostWorker.invoke('FileSystemFetch.mkdir', uri)
 }
 
@@ -54,17 +67,21 @@ export const getPathSeparator = () => {
 }
 
 export const remove = (uri) => {
+  uri = normalizeUri(uri)
   return ExtensionHostWorker.invoke('FileSystemFetch.remove', uri)
 }
 
 export const readDirWithFileTypes = async (uri) => {
+  uri = normalizeUri(uri)
   return ExtensionHostWorker.invoke('FileSystemFetch.readDirWithFileTypes', uri)
 }
 
 export const chmod = (path, permissions) => {
+  path = normalizeUri(path)
   return ExtensionHostWorker.invoke('FileSystemFetch.chmod', path, permissions)
 }
 
 export const getBlob = async (uri, type) => {
+  uri = normalizeUri(uri)
   return ExtensionHostWorker.invoke('FileSystemFetch.getBlob', uri, type)
 }

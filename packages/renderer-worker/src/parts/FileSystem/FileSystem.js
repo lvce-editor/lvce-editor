@@ -8,52 +8,44 @@ export const readFile = async (uri, encoding = EncodingType.Utf8) => {
   if (protocol === 'untitled') {
     return ''
   }
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.readFile(path, encoding)
+  return fileSystem.readFile(uri, encoding)
 }
 
 export const readJson = async (uri, encoding) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.readJson(path, encoding)
+  return fileSystem.readJson(uri, encoding)
 }
 
 export const remove = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  await fileSystem.remove(path)
+  await fileSystem.remove(uri)
 }
 
 export const rename = async (oldUri, newUri) => {
   const protocol = GetProtocol.getProtocol(oldUri)
-  const oldPath = GetProtocol.getPath(protocol, oldUri)
-  const newPath = GetProtocol.getPath(protocol, newUri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  await fileSystem.rename(oldPath, newPath)
+  await fileSystem.rename(oldUri, newUri)
 }
 
 export const mkdir = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  await fileSystem.mkdir(path)
+  await fileSystem.mkdir(uri)
 }
 
 export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  await fileSystem.writeFile(path, content, encoding)
+  await fileSystem.writeFile(uri, content, encoding)
 }
 
 export const writeBlob = async (uri, blob) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  await fileSystem.writeBlob(path, blob)
+  await fileSystem.writeBlob(uri, blob)
 }
 
 export const createFile = (uri) => {
@@ -62,9 +54,8 @@ export const createFile = (uri) => {
 
 export const readDirWithFileTypes = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.readDirWithFileTypes(path)
+  return fileSystem.readDirWithFileTypes(uri)
 }
 
 export const unwatch = (id) => {
@@ -77,22 +68,20 @@ export const unwatchAll = () => {
 
 export const getBlobUrl = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   if (fileSystem.getBlobSrc) {
-    return fileSystem.getBlobSrc(path)
+    return fileSystem.getBlobSrc(uri)
   }
   if (fileSystem.getBlobUrl) {
-    return fileSystem.getBlobUrl(path)
+    return fileSystem.getBlobUrl(uri)
   }
   throw new Error(`Filesystem doesn't support the getBlobUrl function`)
 }
 
 export const getBlob = async (uri, type) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getBlob(path, type)
+  return fileSystem.getBlob(uri, type)
 }
 
 export const copy = async (sourceUri, targetUri) => {
@@ -101,51 +90,43 @@ export const copy = async (sourceUri, targetUri) => {
   // TODO what if it is not the same file system?
   const protocol = GetProtocol.getProtocol(sourceUri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  const sourcePath = GetProtocol.getPath(protocol, sourceUri)
-  const targetPath = GetProtocol.getPath(protocol, targetUri)
-  return fileSystem.copy(sourcePath, targetPath)
+  return fileSystem.copy(sourceUri, targetUri)
 }
 
 export const getPathSeparator = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getPathSeparator(path)
+  return fileSystem.getPathSeparator(uri)
 }
 
 export const getRealPath = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getRealPath(path)
+  return fileSystem.getRealPath(uri)
 }
 
 export const stat = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.stat(path)
+  return fileSystem.stat(uri)
 }
 
 export const getFolderSize = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getFolderSize(path)
+  return fileSystem.getFolderSize(uri)
 }
 
 export const chmod = async (uri, permissions) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.chmod(path, permissions)
+  return fileSystem.chmod(uri, permissions)
 }
 
 export const exists = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.exists(path)
+  return fileSystem.exists(uri)
 }
 
 export const canBeRestored = async (uri) => {

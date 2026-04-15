@@ -139,7 +139,7 @@ test('readDirWithFileTypes', async () => {
     ]
   })
 
-  expect(await FileSystemHtml.readDirWithFileTypes('test-folder')).toEqual([
+  expect(await FileSystemHtml.readDirWithFileTypes('html:///test-folder')).toEqual([
     {
       type: DirentType.File,
       name: 'file-1.txt',
@@ -337,7 +337,7 @@ test('readFile', async () => {
       },
     }
   })
-  expect(await FileSystemHtml.readFile('/test/file.txt')).toBe('test')
+  expect(await FileSystemHtml.readFile('html:///test/file.txt')).toBe('test')
 })
 
 test('readFile - not found', async () => {
@@ -363,11 +363,11 @@ test('remove - file', async () => {
   // @ts-ignore
   PersistentFileHandle.getHandle.mockImplementation((uri) => {
     switch (uri) {
-      case '/test':
+      case 'html:///test':
         return {
           removeEntry,
         }
-      case '/test/file.txt':
+      case 'html:///test/file.txt':
         return {
           kind: FileHandleType.File,
         }
@@ -377,11 +377,11 @@ test('remove - file', async () => {
   })
   // @ts-ignore
   PersistentFileHandle.removeHandle.mockImplementation(() => {})
-  await FileSystemHtml.remove('/test/file.txt')
+  await FileSystemHtml.remove('html:///test/file.txt')
   expect(removeEntry).toHaveBeenCalledTimes(1)
   expect(removeEntry).toHaveBeenCalledWith('file.txt')
   expect(PersistentFileHandle.removeHandle).toHaveBeenCalledTimes(1)
-  expect(PersistentFileHandle.removeHandle).toHaveBeenCalledWith('/test/file.txt')
+  expect(PersistentFileHandle.removeHandle).toHaveBeenCalledWith('html:///test/file.txt')
 })
 
 test('remove - directory', async () => {

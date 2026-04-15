@@ -8,8 +8,9 @@ export const openFolder = async () => {
       startIn: 'pictures',
       mode: 'readwrite',
     })
-    await Command.execute('PersistentFileHandle.addHandle', result.name, result)
-    await Command.execute('Workspace.setPath', `html://${result.name}`)
+    const uri = `html:///${result.name}`
+    await Command.execute('PersistentFileHandle.addHandle', uri, result)
+    await Command.execute('Workspace.setPath', uri)
   } catch (error) {
     if (IsAbortError.isAbortError(error)) {
       return

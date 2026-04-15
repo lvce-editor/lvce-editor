@@ -2,6 +2,15 @@ import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const name = 'App'
 
+const appPrefix = 'app://'
+
+const getPath = (uri) => {
+  if (uri.startsWith(appPrefix)) {
+    return uri.slice(appPrefix.length)
+  }
+  return uri
+}
+
 const getModule = (uri) => {
   switch (uri) {
     case 'startup-performance':
@@ -22,18 +31,18 @@ const getModule = (uri) => {
 }
 
 export const readFile = async (uri) => {
-  const module = await getModule(uri)
+  const module = await getModule(getPath(uri))
   return module.readFile()
 }
 
 export const readJson = async (uri) => {
-  const module = await getModule(uri)
+  const module = await getModule(getPath(uri))
   // @ts-ignore
   return module.readJson()
 }
 
 export const writeFile = async (uri, content) => {
-  const module = await getModule(uri)
+  const module = await getModule(getPath(uri))
   return module.writeFile(content)
 }
 

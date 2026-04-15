@@ -39,7 +39,7 @@ test('removeFile', async () => {
   remove.mockReturnValue(null)
   await FileSystem.remove('test://some-file.txt')
   expect(remove).toHaveBeenCalledTimes(1)
-  expect(remove).toHaveBeenCalledWith('some-file.txt')
+  expect(remove).toHaveBeenCalledWith('test://some-file.txt')
 })
 
 test.skip('removeFile - error', async () => {
