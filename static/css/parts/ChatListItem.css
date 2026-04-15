@@ -21,6 +21,7 @@
 
 .ChatListItem:hover {
   background: var(--ListHoverBackground);
+  color: var(--ListHoverForeground);
 }
 
 .ChatListItemFocused {
