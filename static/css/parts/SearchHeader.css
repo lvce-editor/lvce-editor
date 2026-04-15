@@ -1,3 +1,7 @@
+:root {
+  --SearchHeaderPaddingRight: 12px;
+  --SearchHeaderPaddingLeft: 0;
+}
 .SearchHeader {
   padding-top: 5px;
   contain: content;
@@ -7,6 +11,7 @@
   display: flex;
   contain: content;
   padding-right: 12px;
+  padding-left: var(--SearchHeaderPaddingLeft);
 }
 
 .SearchHeaderTopRight {
