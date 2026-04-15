@@ -1,28 +1,28 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
-import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
-import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
-import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
-import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
-import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
-import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
-import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
-import * as IframeWorker from '../IframeWorker/IframeWorker.js'
-import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
-import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
-import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.js'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
 import * as ChatMessageParsingWorker from '../ChatMessageParsingWorker/ChatMessageParsingWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
+import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
+import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
+import * as IframeWorker from '../IframeWorker/IframeWorker.js'
+import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
+import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
+import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
+import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -128,7 +128,7 @@ export const sendMessagePortToIframeWorker = async (port, initialCommand, rpcId)
 export const sendMessagePortToFileSearchWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  await QuickPickWorker.invokeAndTransfer(initialCommand, port, rpcId)
+  await FileSearchWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToOpenerWorker = async (port, initialCommand, rpcId) => {
