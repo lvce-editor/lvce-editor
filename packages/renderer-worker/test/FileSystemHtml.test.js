@@ -374,24 +374,26 @@ test('writeFile - creates missing file', async () => {
   PersistentFileHandle.getHandle.mockImplementation((uri) => {
     switch (uri) {
       case 'html:///test':
-        return {
-          getFileHandle: jest.fn((name, options) => {
-            expect(name).toBe('new-file.txt')
-            expect(options).toEqual({
-              create: true,
-            })
-            return {
-              createWritable,
-            }
-          }),
-        }
+        return {}
       default:
         return undefined
+    }
+  })
+  // @ts-ignore
+  FileSystemDirectoryHandle.getFileHandle.mockImplementation((handle, name, options) => {
+    expect(handle).toEqual({})
+    expect(name).toBe('new-file.txt')
+    expect(options).toEqual({
+      create: true,
+    })
+    return {
+      createWritable,
     }
   })
 
   await FileSystemHtml.writeFile('html:///test/new-file.txt', 'hello')
 
+  expect(FileSystemDirectoryHandle.getFileHandle).toHaveBeenCalledTimes(1)
   expect(createWritable).toHaveBeenCalledTimes(1)
   expect(write).toHaveBeenCalledTimes(1)
   expect(write).toHaveBeenCalledWith('hello')
