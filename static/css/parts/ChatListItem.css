@@ -12,7 +12,6 @@
 .ChatListItem {
   contain: strict;
   display: flex;
-  align-items: center;
   height: var(--ChatListItemHeight, 40px);
   background: transparent;
   padding-left: 10px;
@@ -32,6 +31,7 @@
 .ChatListItemContent {
   contain: strict;
   flex: 1;
+  align-items: center;
 }
 
 .ChatListItemStatusRow {
