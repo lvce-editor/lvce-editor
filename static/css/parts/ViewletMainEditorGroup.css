@@ -23,6 +23,11 @@
   flex-direction: column;
 }
 
+.EditorGroup:focus {
+  --WaterMarkBackground: red;
+  /* background: orange; */
+}
+
 .editor-groups-container::-webkit-scrollbar {
   height: 14px;
 }

@@ -6,15 +6,6 @@
   contain: strict;
 }
 
-.DragOverlay {
-  position: absolute;
-  background: rgba(83, 89, 93, 0.5);
-  z-index: 1;
-  pointer-events: none;
-  transition: all 100ms;
-  contain: strict;
-}
-
 .TextEditor {
   display: flex;
   flex-direction: column;
@@ -32,29 +23,4 @@
   contain: strict;
   display: flex;
   flex-direction: column;
-}
-
-.WaterMarkWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  contain: strict;
-  flex: 1;
-}
-
-.WaterMark {
-  height: 200px;
-  background: var(--SideBarBackground);
-  max-width: 200px;
-  width: 100%;
-  display: flex;
-  mask-image: url(/icons/icon.svg);
-  contain: strict;
-  mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  mask-size: 200px;
-  mask-position: 50% 50%;
-  pointer-events: none;
-  contain: strict;
-  flex-shrink: 0;
 }
