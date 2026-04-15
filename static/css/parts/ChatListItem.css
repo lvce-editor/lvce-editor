@@ -2,6 +2,7 @@
   --ChatListItemBorderRadius: 6px;
   --ChatListItemNameForeground: rgb(188, 190, 190);
   --DescriptionForeground: rgba(156, 162, 160, 0.7);
+  --ChatListItemActionDisplay: none;
 }
 
 .ChatListItemLabel {
@@ -20,6 +21,11 @@
 .ChatListItem:hover {
   background: var(--ListHoverBackground);
   color: var(--ListHoverForeground);
+  --ChatListItemActionDisplay: flex;
+}
+
+.ChatListItem .ChatActions {
+  display: var(--ChatListItemActionDisplay);
 }
 
 .ChatListItemFocused {
@@ -57,15 +63,6 @@
 
 .ChatListItemStatusFinished {
   color: var(--vscode-testing-iconPassed);
-}
-
-.ChatListItem .SessionArchiveButton {
-  opacity: 0;
-}
-
-.ChatListItem:hover .SessionArchiveButton,
-.ChatListItem:focus-within .SessionArchiveButton {
-  opacity: 1;
 }
 
 .ChatListItemTitle {
