@@ -28,6 +28,11 @@
   color: var(--vscode-list-activeSelectionForeground);
 }
 
+.ChatListItemContent {
+  contain: strict;
+  flex: 1;
+}
+
 .ChatListItemStatusRow {
   width: 16px;
   min-width: 16px;
