@@ -1,0 +1,41 @@
+.SourceControlButton {
+  width: 20px;
+  height: 20px;
+  contain: strict;
+  flex-shrink: 0;
+  border: none;
+  color: #c5c5c5;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.SourceControlButton[disabled] {
+  color: rgba(204, 204, 204, 0.5);
+}
+
+.SourceControlButton:hover {
+  background-color: hsla(0, 0%, 100%, 0.1);
+}
+
+.DecorationIcon {
+  width: 14px;
+  height: 14px;
+  contain: strict;
+  margin-right: 8px;
+}
+
+/* TODO avoid nesting */
+.SourceControlItems {
+  --SourceControlButtonsDisplay: none;
+}
+
+.SourceControlButtons {
+  display: var(--SourceControlButtonsDisplay);
+  contain: content;
+  display: flex;
+}
+
+.SourceControlItems .TreeItem:hover {
+  --SourceControlButtonsDisplay: flex;
+}
