@@ -10,6 +10,7 @@ import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
+import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -128,7 +129,7 @@ export const sendMessagePortToIframeWorker = async (port, initialCommand, rpcId)
 export const sendMessagePortToFileSearchWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  await QuickPickWorker.invokeAndTransfer(initialCommand, port, rpcId)
+  await FileSearchWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToOpenerWorker = async (port, initialCommand, rpcId) => {
