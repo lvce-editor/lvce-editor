@@ -26,6 +26,9 @@
   height: 100%;
   flex-direction: column;
   outline: none;
+}
+
+.EditorGroup:has(.EmptyGroupCloseButton) {
   opacity: var(--EmptyGroupOpacity);
 }
 
