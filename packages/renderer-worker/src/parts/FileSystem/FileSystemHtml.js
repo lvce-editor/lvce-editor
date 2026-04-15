@@ -109,7 +109,9 @@ export const readFile = async (uri) => {
 
 export const writeFile = async (uri, content) => {
   try {
-    const handle = await GetFileHandle.getFileHandle(uri)
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }

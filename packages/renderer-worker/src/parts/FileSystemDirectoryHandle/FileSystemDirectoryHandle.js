@@ -20,8 +20,9 @@ export const getChildHandles = async (handle) => {
  *
  * @param {FileSystemDirectoryHandle} handle
  * @param {string} name
+ * @param {FileSystemGetFileOptions=} options
  * @returns
  */
-export const getFileHandle = (handle, name) => {
-  return handle.getFileHandle(name)
+export const getFileHandle = (handle, name, options) => {
+  return handle.getFileHandle(name, options)
 }
