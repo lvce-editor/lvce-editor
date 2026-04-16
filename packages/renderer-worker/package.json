@@ -101,6 +101,7 @@
     "@lvce-editor/update-worker": "^2.5.0"
   },
   "devDependencies": {
+    "@lvce-editor/blob-worker": "^1.1.0",
     "@lvce-editor/chat-message-parsing-worker": "^1.8.0",
     "@types/node": "^25.5.0",
     "@vscode/codicons": "^0.0.45"
