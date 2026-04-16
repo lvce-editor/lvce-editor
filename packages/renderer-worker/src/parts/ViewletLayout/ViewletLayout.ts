@@ -139,6 +139,7 @@ export const create = (id: number): LayoutState => {
     platform: Platform.platform,
     assetDir,
     backendUrl: getInitialBackendUrl(),
+    badgeCounts: Object.create(null),
     commands: [],
     sashId: SashType.None,
     previewUri: '',
@@ -1375,6 +1376,29 @@ export const handleBadgeCountChange = async (state, changes) => {
   return callGlobalEvent(state, 'handleBadgeCountChange', changes)
 }
 
+export const setBadgeCount = async (state: LayoutState, moduleId: string, badgeCount: number): Promise<LayoutStateResult> => {
+  if (state.badgeCounts[moduleId] === badgeCount) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const newState = {
+    ...state,
+    badgeCounts: {
+      ...state.badgeCounts,
+      [moduleId]: badgeCount,
+    },
+  }
+  const result = await callGlobalEvent(newState, 'handleBadgeCountChange', {
+    [moduleId]: badgeCount,
+  })
+  return {
+    newState,
+    commands: result.commands,
+  }
+}
+
 export const handleExtensionsChanged = async (state: LayoutState) => {
   return callGlobalEvent(state, 'handleExtensionsChanged')
 }
@@ -1428,13 +1452,7 @@ export const openPanelView = async (state: LayoutState, moduleId, focus = false,
 }
 
 export const getBadgeCounts = (state: LayoutState) => {
-  const states = ViewletStates.getAllInstances()
-  const badgeCounts = Object.create(null)
-  for (const value of Object.values(states)) {
-    // @ts-ignore
-    badgeCounts[value.moduleId] = value.state.badgeCount || 0
-  }
-  return badgeCounts
+  return state.badgeCounts
 }
 
 export const getModuleId = (state: LayoutState, uri: string) => {

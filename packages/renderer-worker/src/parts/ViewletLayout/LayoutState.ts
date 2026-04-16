@@ -11,6 +11,7 @@ export interface LayoutState {
   readonly authErrorMessage: string
   readonly assetDir: string
   readonly backendUrl: string
+  readonly badgeCounts: Record<string, number>
   readonly commands: readonly any[]
   readonly commit: string
   readonly contentAreaId: number
