@@ -1,7 +1,8 @@
 .TitleBarTitle {
-  /* color: orange; */
   display: flex;
   justify-content: center;
   align-items: center;
   contain: content;
+  width: 60%;
+  max-width: fit-content;
 }
