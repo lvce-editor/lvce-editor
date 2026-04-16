@@ -154,6 +154,15 @@
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
+    "id": "diffView",
+    "fileName": "diffViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/diff-view/dist/diffViewWorkerMain.js",
+    "productionPath": "/packages/diff-view/dist/diffViewWorkerMain.js",
+    "settingName": "develop.diffViewWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+  },
+  {
     "id": "editor",
     "fileName": "editorWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js",
