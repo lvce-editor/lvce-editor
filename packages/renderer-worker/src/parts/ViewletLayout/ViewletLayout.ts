@@ -352,8 +352,8 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   }
 }
 
-const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarView: string) => {
-  await ActivityBarWorker.invoke('ActivityBar.handleSideBarViewletChange', activityBarId, sideBarView)
+const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarView: string, sideBarVisible: boolean) => {
+  await ActivityBarWorker.invoke('ActivityBar.handleSideBarStateChange', activityBarId, sideBarView, sideBarVisible)
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
   return activityBarCommands
@@ -377,7 +377,7 @@ export const showSideBar = async (state: LayoutState, moduleId = state.sideBarVi
       sideBarView,
       sideBarVisible: true,
     }
-    const activityBarCommands = await renderSideBarActivityBarCommands(newState.activityBarId, sideBarView)
+    const activityBarCommands = await renderSideBarActivityBarCommands(newState.activityBarId, sideBarView, true)
     return {
       newState,
       commands: [...switchResult.commands, ...activityBarCommands],
@@ -385,7 +385,7 @@ export const showSideBar = async (state: LayoutState, moduleId = state.sideBarVi
   }
   const sideBarState = sideBarView === state.sideBarView ? state : { ...state, sideBarView }
   const { newState, commands } = await show(sideBarState, LayoutModules.SideBar, sideBarView)
-  const activityBarCommands = await renderSideBarActivityBarCommands(newState.activityBarId, sideBarView)
+  const activityBarCommands = await renderSideBarActivityBarCommands(newState.activityBarId, sideBarView, true)
   return {
     newState: {
       ...newState,
@@ -405,8 +405,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   // TODO save state to local storage after rending (in background)
   await SaveState.saveViewletState(moduleId)
   // TODO also resize other viewlets if necessary
-  const instanceState = ViewletStates.getState(moduleId)
-  const commands = Viewlet.disposeFunctional(instanceState.uid)
+  const commands = Viewlet.disposeFunctional(moduleId)
   const resizeCommands = await getResizeCommands(state, newState)
   commands.push(...resizeCommands)
 
@@ -423,10 +422,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
 export const hideSideBar = async (state: LayoutState) => {
   const { newState, commands } = await hide(state, LayoutModules.SideBar)
   const { activityBarId } = newState
-  // TODO instead of this, call handleSidebarViewChange. activity bar then can get active view if needed
-  await ActivityBarWorker.invoke('ActivityBar.handleSideBarHidden', activityBarId)
-  const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
-  const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
+  const activityBarCommands = await renderSideBarActivityBarCommands(activityBarId, newState.sideBarView, false)
   return {
     newState: {
       ...newState,
@@ -439,6 +435,14 @@ export const hideSideBar = async (state: LayoutState) => {
 export const toggleSideBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.SideBar)
+}
+
+export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<LayoutStateResult> => {
+  const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
+  if (state.sideBarVisible && state.sideBarView === sideBarView) {
+    return hideSideBar(state)
+  }
+  return showSideBar(state, sideBarView)
 }
 
 export const showSecondarySideBar = (state: LayoutState) => {

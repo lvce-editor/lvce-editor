@@ -70,6 +70,7 @@ export const CommandsWithSideEffects = {
   showSecondarySideBar: ViewletLayout.showSecondarySideBar,
   showStatusBar: ViewletLayout.showStatusBar,
   showTitleBar: ViewletLayout.showTitleBar,
+  toggleSideBarView: ViewletLayout.toggleSideBarView,
   toggleActivityBar: ViewletLayout.toggleActivityBar,
   toggleMain: ViewletLayout.toggleMain,
   togglePanel: ViewletLayout.togglePanel,
