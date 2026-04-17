@@ -13,6 +13,7 @@ export const create = (id, uri, x, y, width, height) => {
   return {
     uid: id,
     currentViewletId: '',
+    currentViewletRequestId: 0,
     x,
     y,
     width,
@@ -43,9 +44,9 @@ export const create = (id, uri, x, y, width, height) => {
 //   return ViewletModuleId.Explorer
 // }
 
-export const loadContent = async (state, savedState) => {
+export const loadContent = async (state, savedState, targetViewletId) => {
   // TODO get it from layout state
-  let savedViewletId = await Command.execute('Layout.getActiveSideBarView')
+  let savedViewletId = targetViewletId || (await Command.execute('Layout.getActiveSideBarView'))
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
@@ -104,7 +105,9 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
   }
   // TODO set it in layout
   const { currentViewletId, titleAreaHeight } = state
+  const requestId = state.currentViewletRequestId + 1
   const savePromise = SaveState.saveViewletState(currentViewletId)
+  state.currentViewletRequestId = requestId
   state.currentViewletId = moduleId
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
@@ -135,6 +138,11 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     false,
     true,
   )
+  if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
+    Viewlet.disposeFunctional(childUid)
+    await savePromise
+    return state
+  }
   let actionsDom = []
   let actionsUid = -1
   if (commands) {
@@ -152,6 +160,11 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       ['Viewlet.setDom2', actionsUid, actionsDom],
       ['Viewlet.setUid', actionsUid, childUid],
     )
+    if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
+      Viewlet.disposeFunctional(childUid)
+      await savePromise
+      return state
+    }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
@@ -160,6 +173,7 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
   await savePromise
   return {
     ...state,
+    currentViewletRequestId: requestId,
     currentViewletId: moduleId,
     childUid,
     actionsUid,
