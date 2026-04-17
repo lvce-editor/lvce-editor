@@ -77,3 +77,10 @@
   color: white;
   border: none;
 }
+
+.EmptyGroupHeader {
+  display: flex;
+  height: 30px;
+  contain: strict;
+  justify-content: end;
+}
