@@ -1,0 +1,6 @@
+export * from './ViewletDiffEditor2.js'
+export * from './ViewletDiffEditor2Commands.js'
+export * from '../ViewletDiffEditor/ViewletDiffEditorCss.js'
+export * from '../ViewletDiffEditor/ViewletDiffEditorName.js'
+export * from './ViewletDiffEditor2Render.js'
+export * from './ViewletDiffEditor2SaveState.js'
