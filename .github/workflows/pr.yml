@@ -1,17 +1,13 @@
 name: PR
 
-
-
 on:
   pull_request:
     branches:
       - main
 
-
 permissions:
   id-token: write # Required for OIDC
   contents: write
-
 
 jobs:
   pr:
@@ -38,7 +34,8 @@ jobs:
           oidc-service-slug: github-actions-release-2l1r
           oidc-auth-only: 'true'
       - name: Validate token
-        run: curl -H "X-Api-Key: $CLOUDSMITH_API_KEY" https://api.cloudsmith.io/v1/user/self/
+        run: >
+          curl -H "X-Api-Key: $CLOUDSMITH_API_KEY" https://api.cloudsmith.io/v1/user/self/
 
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
