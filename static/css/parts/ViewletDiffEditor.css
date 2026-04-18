@@ -7,7 +7,8 @@
 .DiffEditor {
   display: flex;
   color: rgb(188, 190, 190);
-  position: absolute;
+  contain: strict;
+  flex: 1;
 }
 
 .DiffEditorContent {
