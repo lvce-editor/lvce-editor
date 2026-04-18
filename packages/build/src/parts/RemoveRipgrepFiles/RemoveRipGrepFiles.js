@@ -1,5 +1,4 @@
 import { existsSync } from 'node:fs'
-import { access } from 'node:fs/promises'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
