@@ -116,7 +116,7 @@ jobs:
         uses: cloudsmith-io/cloudsmith-cli-action@v2
         with:
           oidc-namespace: lvce-editor
-          oidc-service-slug: ${{ vars.CLOUDSMITH_OIDC_SERVICE_SLUG }}
+          oidc-service-slug: github-actions-release-2l1r
       - name: Build Electron App (deb, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb
