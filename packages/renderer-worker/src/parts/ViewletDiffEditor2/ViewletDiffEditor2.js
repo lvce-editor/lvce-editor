@@ -18,7 +18,9 @@ export const loadContent = async (state, savedState) => {
   await DiffViewWorker.invoke('DiffView.create', state.uid, state.uri, state.x, state.y, state.width, state.height, null)
   await DiffViewWorker.invoke('DiffView.loadContent', state.uid, savedState)
   const diffResult = await DiffViewWorker.invoke('DiffView.diff2', state.uid)
+  console.log({ diffResult })
   const commands = await DiffViewWorker.invoke('DiffView.render2', state.uid, diffResult)
+  console.log({ commands })
   return {
     ...state,
     commands,
