@@ -111,6 +111,12 @@ jobs:
         with:
           path: '~\AppData\Local\electron-builder'
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+      - name: Install Cloudsmith CLI
+        if: matrix.versions.os == 'ubuntu-24.04'
+        uses: cloudsmith-io/cloudsmith-cli-action@v2
+        with:
+          oidc-namespace: lvce-editor
+          oidc-service-slug: github-actions-release-2l1r # must match the service id in cloudsmith
       - name: Build Electron App (deb, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb
@@ -133,6 +139,9 @@ jobs:
           asset_path: ${{ env.ASSET_DEB_X64 }}
           asset_name: ${{ env.ASSET_DEB_X64 }}
           asset_content_type: application/octet-stream
+      - name: Publish Electron App (deb, x64) to Cloudsmith
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
+        run: cloudsmith push deb lvce-editor/lvce-editor/any-distro/any-version "${{ env.ASSET_DEB_X64 }}"
       - name: Build Electron App (deb, arm64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
@@ -155,6 +164,9 @@ jobs:
           asset_path: ${{ env.ASSET_DEB_ARM64 }}
           asset_name: ${{ env.ASSET_DEB_ARM64 }}
           asset_content_type: application/octet-stream
+      - name: Publish Electron App (deb, arm64) to Cloudsmith
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
+        run: cloudsmith push deb lvce-editor/lvce-editor/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
       - name: Build Electron App (deb, armhf)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
@@ -177,6 +189,9 @@ jobs:
           asset_path: ${{ env.ASSET_DEB_ARMHF }}
           asset_name: ${{ env.ASSET_DEB_ARMHF }}
           asset_content_type: application/octet-stream
+      - name: Publish Electron App (deb, armhf) to Cloudsmith
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
+        run: cloudsmith push deb lvce-editor/lvce-editor/any-distro/any-version "${{ env.ASSET_DEB_ARMHF }}"
       # - name: Build Electron App (Macos dmg, x64)
       #   if: matrix.versions.os == 'macos-15'
       #   run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
