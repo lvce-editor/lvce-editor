@@ -1,11 +1,27 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-export const readFile = (uri) => {
+const getProviderProtocolAndPath = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  if (protocol !== FileSystemProtocol.ExtensionHost) {
+    return {
+      protocol,
+      path: GetProtocol.getPath(protocol, uri),
+    }
+  }
+  const providerUri = GetProtocol.getPath(protocol, uri)
+  const providerProtocol = GetProtocol.getProtocol(providerUri)
+  return {
+    protocol: providerProtocol,
+    path: GetProtocol.getPath(providerProtocol, providerUri),
+  }
+}
+
+export const readFile = (uri) => {
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   // TODO there shouldn't be multiple file system providers for the same protocol
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
@@ -16,8 +32,7 @@ export const readFile = (uri) => {
 }
 
 export const remove = (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemRemove,
@@ -32,9 +47,12 @@ export const remove = (uri) => {
  * @param {string} newUri
  */
 export const rename = (oldUri, newUri) => {
-  const protocol = GetProtocol.getProtocol(oldUri)
-  const oldPath = GetProtocol.getPath(protocol, oldUri)
-  const newPath = GetProtocol.getPath(protocol, newUri)
+  const { protocol, path: oldPath } = getProviderProtocolAndPath(oldUri)
+  const { protocol: newProtocol, path: newPath } = getProviderProtocolAndPath(newUri)
+  Assert.string(newProtocol)
+  if (newProtocol !== protocol) {
+    throw new Error(`expected both uris to use same file system provider, got ${protocol} and ${newProtocol}`)
+  }
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemRename,
@@ -44,8 +62,7 @@ export const rename = (oldUri, newUri) => {
 }
 
 export const mkdir = (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemMkdir,
@@ -55,8 +72,7 @@ export const mkdir = (uri) => {
 }
 
 export const createFile = (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemWriteFile,
@@ -66,8 +82,7 @@ export const createFile = (uri) => {
 }
 
 export const createFolder = (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemCreateFolder,
@@ -77,8 +92,7 @@ export const createFolder = (uri) => {
 }
 
 export const writeFile = (uri, content) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemWriteFile,
@@ -88,8 +102,7 @@ export const writeFile = (uri, content) => {
 }
 
 export const readDirWithFileTypes = (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const path = GetProtocol.getPath(protocol, uri)
+  const { protocol, path } = getProviderProtocolAndPath(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemReadDirWithFileTypes,
@@ -99,7 +112,7 @@ export const readDirWithFileTypes = (uri) => {
 }
 
 export const getPathSeparator = async (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
+  const { protocol } = getProviderProtocolAndPath(uri)
   const pathSeparator = await ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemGetPathSeparator,
