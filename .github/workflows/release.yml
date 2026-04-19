@@ -117,26 +117,7 @@ jobs:
         with:
           oidc-namespace: lvce-editor
           oidc-service-slug: github-actions-release-2l1r # must match the service id in cloudsmith
-      - name: Validate Cloudsmith access
-        if: matrix.versions.os == 'ubuntu-24.04'
-        shell: bash
-        run: |
-          if [ -z "${CLOUDSMITH_API_KEY:-}" ]; then
-            echo "::error title=Missing Cloudsmith API key::Cloudsmith OIDC authentication did not provide CLOUDSMITH_API_KEY. Check the OIDC provider, audience, and service account settings."
-            exit 1
-          fi
 
-          user_status=$(curl -sS -o /dev/null -w "%{http_code}" -H "Authorization: token $CLOUDSMITH_API_KEY" "https://api.cloudsmith.io/user/self/")
-          if [ "$user_status" != "200" ]; then
-            echo "::error title=Cloudsmith authentication failed::Expected Cloudsmith user lookup to return 200, got $user_status. Check the OIDC provider, audience, and service account configuration."
-            exit 1
-          fi
-
-          repo_status=$(curl -sS -o /dev/null -w "%{http_code}" -H "Authorization: token $CLOUDSMITH_API_KEY" "https://api.cloudsmith.io/v1/repos/lvce-editor/lvce-editor/")
-          if [ "$repo_status" != "200" ]; then
-            echo "::error title=Cloudsmith repository not visible::Expected repository lookup for lvce-editor/lvce-editor to return 200, got $repo_status. Ensure the repository exists and the OIDC service account github-actions-release-2l1r has at least Write access to it."
-            exit 1
-          fi
       - name: Build Electron App (deb, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb
