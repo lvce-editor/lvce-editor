@@ -48,11 +48,7 @@ export const remove = (uri) => {
  */
 export const rename = (oldUri, newUri) => {
   const { protocol, path: oldPath } = getProviderProtocolAndPath(oldUri)
-  const { protocol: newProtocol, path: newPath } = getProviderProtocolAndPath(newUri)
-  Assert.string(newProtocol)
-  if (newProtocol !== protocol) {
-    throw new Error(`expected both uris to use same file system provider, got ${protocol} and ${newProtocol}`)
-  }
+  const { path: newPath } = getProviderProtocolAndPath(newUri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: ExtensionHostCommandType.FileSystemRename,
