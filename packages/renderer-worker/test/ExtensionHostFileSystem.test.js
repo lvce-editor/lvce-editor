@@ -24,6 +24,21 @@ test('readFile', async () => {
   expect(await ExtensionHostFileSystem.readFile('memfs:///test.txt')).toBe('test content')
 })
 
+test('readFile - wrapped extension host uri', async () => {
+  // @ts-ignore
+  ExtensionHostShared.executeProvider.mockImplementation(async () => {
+    return 'test content'
+  })
+  expect(await ExtensionHostFileSystem.readFile('extension-host://xyz:///test.txt')).toBe('test content')
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
+    event: 'onFileSystem:xyz',
+    method: 'ExtensionHostFileSystem.readFile',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['xyz', '/test.txt'],
+  })
+})
+
 test('readFile - error', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
@@ -63,6 +78,19 @@ test('rename', async () => {
     method: 'ExtensionHostFileSystem.rename',
     noProviderFoundMessage: 'no file system provider found',
     params: ['memfs', '/test.txt', '/test2.txt'],
+  })
+})
+
+test('rename - wrapped extension host uri', async () => {
+  // @ts-ignore
+  ExtensionHostShared.executeProvider.mockImplementation(() => {})
+  await ExtensionHostFileSystem.rename('extension-host://xyz:///test.txt', 'extension-host://xyz:///test2.txt')
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
+    event: 'onFileSystem:xyz',
+    method: 'ExtensionHostFileSystem.rename',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['xyz', '/test.txt', '/test2.txt'],
   })
 })
 
@@ -108,6 +136,19 @@ test('writeFile', async () => {
     method: 'ExtensionHostFileSystem.writeFile',
     noProviderFoundMessage: 'no file system provider found',
     params: ['memfs', '/test-folder', 'test'],
+  })
+})
+
+test('writeFile - wrapped extension host uri', async () => {
+  // @ts-ignore
+  ExtensionHostShared.executeProvider.mockImplementation(() => {})
+  await ExtensionHostFileSystem.writeFile('extension-host://xyz:///test-folder', 'test')
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
+    event: 'onFileSystem:xyz',
+    method: 'ExtensionHostFileSystem.writeFile',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['xyz', '/test-folder', 'test'],
   })
 })
 
