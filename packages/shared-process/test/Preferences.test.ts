@@ -16,7 +16,12 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
+  error: jest.fn(),
+}))
+
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
@@ -107,6 +112,20 @@ test('getAll - error', async () => {
   // @ts-ignore
   PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
   await expect(Preferences.getAll()).rejects.toThrow(/^Failed to get all preferences: Failed to load default preferences: File not found/)
+})
+
+test('getAllSafe - error', async () => {
+  const tmpDir = await getTmpDir()
+  // @ts-ignore
+  PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
+
+  await expect(Preferences.getAllSafe()).resolves.toEqual({})
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
+    expect.stringMatching(
+      /^\[shared-process\] Failed to load preferences on startup, continuing with defaults: VError: Failed to get all preferences:/,
+    ),
+  )
 })
 
 // test('getDefaultPreferences - error', async () => {

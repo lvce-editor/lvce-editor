@@ -1,5 +1,6 @@
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsoncFile from '../JsoncFile/JsoncFile.js'
+import * as Logger from '../Logger/Logger.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
@@ -78,6 +79,15 @@ export const getAll = async () => {
     return preferences
   } catch (error) {
     throw new VError(error, 'Failed to get all preferences')
+  }
+}
+
+export const getAllSafe = async () => {
+  try {
+    return await getAll()
+  } catch (error) {
+    Logger.error(`[shared-process] Failed to load preferences on startup, continuing with defaults: ${error}`)
+    return {}
   }
 }
 

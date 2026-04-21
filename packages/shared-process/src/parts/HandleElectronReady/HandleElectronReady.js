@@ -6,7 +6,7 @@ import * as PreloadUrl from '../PreloadUrl/PreloadUrl.js'
 export const handleElectronReady = async (parsedArgs, workingDirectory) => {
   Assert.object(parsedArgs)
   Assert.string(workingDirectory)
-  const preferences = await Preferences.getAll()
+  const preferences = await Preferences.getAllSafe()
   const preloadUrl = PreloadUrl.getPreloadUrl()
   await AppWindow.createAppWindow({ preferences, parsedArgs, workingDirectory, preloadUrl })
 }
