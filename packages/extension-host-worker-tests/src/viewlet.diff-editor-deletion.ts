@@ -11,8 +11,8 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => 
   await Main.openUri(`diff://${tmpDir}/file-1.txt<->${tmpDir}/file-2.txt`)
 
   // assert
-  const contentLeft = Locator('.DiffEditorContentLeft')
-  const contentRight = Locator('.DiffEditorContentRight')
+  const contentLeft = Locator('.DiffEditorContentLeft .DiffEditorRows')
+  const contentRight = Locator('.DiffEditorContentRight .DiffEditorRows')
   await expect(contentLeft).toHaveText('abc')
   await expect(contentRight).toHaveText('')
 }
