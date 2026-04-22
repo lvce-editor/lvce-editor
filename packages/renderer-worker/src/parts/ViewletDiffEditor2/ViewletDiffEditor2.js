@@ -2,6 +2,8 @@ import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 
+export const name = 'DiffView'
+
 export const create = (uid, uri, x, y, width, height, args, parentUid) => {
   return {
     id: uid,

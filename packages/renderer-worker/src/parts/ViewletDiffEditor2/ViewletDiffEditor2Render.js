@@ -4,6 +4,10 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
+export const hasFunctionalResize = true
+
 const renderItems = {
   isEqual(oldState, newState) {
     return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
