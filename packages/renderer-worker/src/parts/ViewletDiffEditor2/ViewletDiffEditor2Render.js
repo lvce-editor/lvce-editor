@@ -1,4 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -17,3 +18,12 @@ const renderItems = {
 }
 
 export const render = [renderItems]
+
+export const renderEventListeners = async () => {
+  try {
+    const listeners = await DiffViewWorker.invoke('DiffView.renderEventListeners')
+    return listeners
+  } catch {
+    return []
+  }
+}
