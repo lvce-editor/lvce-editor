@@ -14,10 +14,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
       - name: Setup Python 3
@@ -28,22 +28,22 @@ jobs:
         id: nodeModulesCacheKey
         run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: npm-cache
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: electron-rebuild-cache
         with:
           path: '~/.electron-gyp'
           key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: electron-builder-cache
         with:
           path: '~/.cache/electron-builder'
           key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: build-cache
         with:
           path: 'packages/build/.tmp/cachedDependencies'
@@ -57,7 +57,7 @@ jobs:
         id: builtinExtensionsCacheKey
         run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: builtin-extensions-cache
         with:
           path: extensions
@@ -93,7 +93,7 @@ jobs:
         if: matrix.os == 'macos-15'
         run: node packages/build/bin/build.js --target=electron-builder-mac --arch=arm64
       - name: Cache Electron Builder Dependencies (Windows)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: electron-builder-cache-windows
         if: matrix.os == 'windows-2025'
         with:
