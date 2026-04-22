@@ -1,1 +1,1 @@
-export const name = 'DiffEditor'
+export const name = 'DiffView'

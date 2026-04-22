@@ -22,7 +22,7 @@ export const IframeInspector = 'IframeInspector'
 
 export const Dialog = 'Dialog'
 
-export const DiffEditor = 'DiffEditor'
+export const DiffEditor = 'DiffView'
 
 export const InlineDiffEditor = 'InlineDiffEditor'
 
