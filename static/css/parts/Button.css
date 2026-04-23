@@ -9,7 +9,7 @@
   white-space: nowrap;
 }
 
-.Button:where(:focus) {
+.Button:where(:focus-visible) {
   background: var(--SplitButtonHoverBackground, #387674);
   outline: 1px solid var(--FocusBorder);
   outline-offset: 2px;
