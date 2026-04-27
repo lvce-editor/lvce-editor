@@ -601,8 +601,10 @@ a.Button {
 
 .Chat .Insertion {
   color: green;
+  contain: content;
 }
 
 .Chat .Deletion {
   color: red;
+  contain: content;
 }
