@@ -1,3 +1,7 @@
+.Chat {
+  --TextLinkForeground: dodgerblue;
+}
+
 .ChatToolCalls {
   position: relative;
   border: 1px solid var(--vscode-editorWidget-border);
@@ -23,7 +27,7 @@
 }
 
 .ChatToolCallReadFileLink {
-  color: var(--vscode-textLink-foreground);
+  color: var(--TextLinkForeground);
   text-decoration: underline;
 }
 
@@ -32,7 +36,7 @@
 }
 
 .ChatToolCallFileName:hover {
-  color: var(--vscode-textLink-foreground);
+  color: var(--TextLinkForeground);
 }
 
 .ChatToolCalls .ChatOrderedList {
