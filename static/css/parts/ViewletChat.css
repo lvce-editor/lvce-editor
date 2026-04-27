@@ -598,3 +598,11 @@ a.Button {
   padding: 0;
   margin: 0;
 }
+
+.Chat .Insertion {
+  color: green;
+}
+
+.Chat .Deletion {
+  color: red;
+}
