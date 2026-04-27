@@ -34,6 +34,7 @@
   overflow-y: auto;
   padding-left: var(--ChatListPaddingInline);
   padding-right: var(--ChatListPaddingInline);
+  outline: none;
 }
 
 .ChatDetails {
