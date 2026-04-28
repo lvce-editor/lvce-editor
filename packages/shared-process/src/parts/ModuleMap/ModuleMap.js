@@ -193,6 +193,9 @@ export const getModuleId = (commandId) => {
     case 'OAuthServer.getCode':
     case 'OAuthServer.dispose':
       return ModuleId.OAuthServer
+    case 'HandleMessagePortForAuthProcess.handleMessagePortForAuthProcess':
+    case 'HandleMessagePortForAuthProcess.handleAuthProcessIpcClosed':
+      return ModuleId.HandleMessagePortForAuthProcess
     case 'PlatformPaths.getDisabledExtensionsJsonPath':
     case 'PlatformPaths.getDisabledExtensionsJsonUri':
       return ModuleId.PlatformPaths
