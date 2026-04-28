@@ -71,3 +71,13 @@ export const hotReload = async (state) => {
     commands,
   }
 }
+
+export const resize = async (state, dimensions) => {
+  await DiffViewWorker.invoke('DiffView.resize', state.uid, dimensions)
+  const diffResult = await DiffViewWorker.invoke('DiffView.diff2', state.uid)
+  const commands = await DiffViewWorker.invoke('DiffView.render2', state.uid, diffResult)
+  return {
+    ...state,
+    commands,
+  }
+}
