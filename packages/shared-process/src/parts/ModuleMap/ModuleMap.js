@@ -189,10 +189,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.GetWindowId
     case 'Exec.exec':
       return ModuleId.Exec
-    case 'OAuthServer.create':
-    case 'OAuthServer.getCode':
-    case 'OAuthServer.dispose':
-      return ModuleId.OAuthServer
     case 'HandleMessagePortForAuthProcess.handleMessagePortForAuthProcess':
     case 'HandleMessagePortForAuthProcess.handleAuthProcessIpcClosed':
       return ModuleId.HandleMessagePortForAuthProcess
