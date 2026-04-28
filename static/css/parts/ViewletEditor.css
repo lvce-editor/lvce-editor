@@ -172,7 +172,8 @@
   display: none;
 }
 
-.LineNumber {
+.LineNumber,
+.DiffEditorLineNumber {
   color: var(--EditorLineNumberForeground, rgba(155, 162, 160, 0.3));
   contain: strict;
   margin-right: 1px;
