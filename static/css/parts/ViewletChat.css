@@ -81,7 +81,8 @@
   user-select: text;
 }
 
-.Message {
+/* TODO conflict with message.css */
+.Chat .Message {
   display: flex;
   contain: content;
   flex-direction: column;
