@@ -84,8 +84,6 @@ export const load = (moduleId) => {
       return import('../Os/Os.ipc.js')
     case ModuleId.PlatformPaths:
       return import('../PlatformPaths/PlatformPaths.ipc.js')
-    case ModuleId.OAuthServer:
-      return import('../OAuthServer/OAuthServer.ipc.js')
     case ModuleId.HandleMessagePortForAuthProcess:
       return import('../HandleMessagePortForAuthProcess/HandleMessagePortForAuthProcess.ipc.js')
     case ModuleId.OutputChannel:
