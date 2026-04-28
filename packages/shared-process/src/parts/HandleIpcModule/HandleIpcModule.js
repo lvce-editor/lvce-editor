@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as HandleIpcAuthProcess from '../HandleIpcAuthProcess/HandleIpcAuthProcess.js'
 import * as HandleIpcClipBoardProcess from '../HandleIpcClipBoardProcess/HandleIpcClipBoardProcess.js'
 import * as HandleIpcEmbedsProcess from '../HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
 import * as HandleIpcExtensionHostHelperProcess from '../HandleIpcExtensionHostHelperProcess/HandleIpcExtensionHostHelperProcess.js'
@@ -12,6 +13,8 @@ import * as IpcId from '../IpcId/IpcId.js'
 export const getModule = (ipcId) => {
   Assert.number(ipcId)
   switch (ipcId) {
+    case IpcId.AuthProcess:
+      return HandleIpcAuthProcess
     case IpcId.SharedProcess:
       return HandleIpcSharedProcess
     case IpcId.EmbedsProcess:
