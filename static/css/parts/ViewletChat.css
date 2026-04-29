@@ -1,6 +1,7 @@
 :root {
   --ChatForeground: rgb(188, 190, 190);
   --ChatListPaddingInline: 6px;
+  --ChatMessageContentBackground: rgba(108, 81, 110, 0.13);
 }
 
 .Chat {
@@ -103,7 +104,7 @@
 
 .ChatMessageContent {
   contain: content;
-  background: rgba(108, 81, 110, 0.13);
+  background: var(--ChatMessageContentBackground);
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
