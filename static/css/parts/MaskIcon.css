@@ -170,6 +170,11 @@
   mask-image: url(/icons/send.svg);
 }
 
+.MaskIconStopCircle,
+.IconStopCircle {
+  mask-image: url(/icons/stop-circle.svg);
+}
+
 .MaskIconNewFolder,
 .IconNewFolder {
   mask-image: url(/icons/new-folder.svg);
