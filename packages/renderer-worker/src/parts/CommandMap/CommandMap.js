@@ -40,6 +40,7 @@ export const commandMap = {
   'ClipBoard.writeImage': lazy('ClipBoard.writeImage'),
   'ClipBoard.writeNativeFiles': lazy('ClipBoard.writeNativeFiles'),
   'ClipBoard.writeText': lazy('ClipBoard.writeText'),
+  'ClipBoard.getSelectionText': lazy('ClipBoard.getSelectionText'),
   'ColorTheme.getColorThemeNames': lazy('ColorTheme.getColorThemeNames'),
   'ColorTheme.hydrate': lazy('ColorTheme.hydrate'),
   'ColorTheme.reload': lazy('ColorTheme.reload'),
