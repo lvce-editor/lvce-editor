@@ -34,6 +34,10 @@ export const readNativeFiles = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.readNativeFiles')
 }
 
+export const getSelectionText = async () => {
+  return await RendererProcess.invoke('Css.getSelectionText')
+}
+
 export const writeImage = async (blob) => {
   try {
     return await RendererProcess.invoke('ClipBoard.writeImage', blob)
