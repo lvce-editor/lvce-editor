@@ -2,6 +2,10 @@
   --IconErrorForeground: rgb(182, 78, 78);
 }
 
+.Viewlet.Error {
+  flex: 1;
+}
+
 .TextEditorError {
   display: flex;
   flex-direction: column;
