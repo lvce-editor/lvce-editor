@@ -23,10 +23,10 @@ test('falls back to static/icons for non-codicon assets', () => {
   expect(normalizePath(absolutePath)).toContain('/static/icons/squiggly-error.svg')
 })
 
-test('maps oauth callback route to callback html', () => {
+test('maps oauth callback route to index html', () => {
   const absolutePath = GetAbsolutePath.getAbsolutePath('/auth/callback')
 
-  expect(normalizePath(absolutePath)).toContain('/static/auth/callback.html')
+  expect(normalizePath(absolutePath)).toContain('/static/index.html')
 })
 
 test('returns 200 for oauth callback route with query params', async () => {

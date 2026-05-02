@@ -62,18 +62,11 @@ const copyTestWorkerFiles = async ({ commitHash }) => {
   // })
 }
 
-const copyAuthCallbackFile = async ({ pathPrefix }) => {
+const copyAuthCallbackFile = async () => {
   await Copy.copyFile({
-    from: 'static/auth/callback.html',
+    from: 'packages/build/.tmp/dist/index.html',
     to: 'packages/build/.tmp/dist/auth/callback.html',
   })
-  if (pathPrefix) {
-    await Replace.replace({
-      path: 'packages/build/.tmp/dist/auth/callback.html',
-      occurrence: `window.location.replace('/')`,
-      replacement: `window.location.replace('${pathPrefix}/')`,
-    })
-  }
 }
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
@@ -121,7 +114,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     from: 'static/index.html',
     to: `packages/build/.tmp/dist/index.html`,
   })
-  await copyAuthCallbackFile({ pathPrefix })
   await Replace.replace({
     path: `packages/build/.tmp/dist/index.html`,
     occurrence: '282e2f" />',
@@ -161,6 +153,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     assetDir: `${pathPrefix}/${commitHash}`,
     pathPrefix,
   })
+  await copyAuthCallbackFile()
   await copyIcons(`packages/build/.tmp/dist/${commitHash}/icons`)
   const themes = await getThemeNames()
   for (const item of themes) {

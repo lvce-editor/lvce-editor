@@ -1,4 +1,5 @@
 import * as Bounds from '../Bounds/Bounds.js'
+import * as AuthCallback from '../AuthCallback/AuthCallback.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
@@ -121,18 +122,23 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.One)
 
   const initData = await InitData.getInitData()
+  const href = await Location.getHref()
 
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
 
-  if (initData.Location.href.includes('?replayId')) {
-    const url = new URL(initData.Location.href)
+  if (href.includes('?replayId')) {
+    const url = new URL(href)
     const replayId = url.searchParams.get('replayId')
     await SessionReplay.replaySession(replayId)
     return
   }
 
-  if (initData.Location.href.startsWith('http://localhost:3001/tests/')) {
+  if (href.startsWith('http://localhost:3001/tests/')) {
     // TODO aquire port from other renderer worker
+  }
+
+  if (await AuthCallback.handleAuthCallback(href)) {
+    return
   }
 
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
@@ -149,9 +155,12 @@ export const startup = async (platform, assetDir) => {
   }
 
   let authState
-  if (HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)) {
-    await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
-    authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+  const hasCodeQueryParam = HasCodeQueryParam.hasCodeQueryParam(href)
+  if (hasCodeQueryParam || (await AuthCallback.hasStoredCallbackUrl())) {
+    if (hasCodeQueryParam) {
+      await CleanAuthCallbackUrl.cleanAuthCallbackUrl(href)
+    }
+    authState = await StartupAuth.initializeAuth(platform, href)
   }
 
   LifeCycle.mark(LifeCyclePhase.Twelve)

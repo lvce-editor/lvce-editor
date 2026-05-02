@@ -52,10 +52,6 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/index.html',
     to: `packages/build/.tmp/server/static-server/static/index.html`,
   })
-  await Copy.copyFile({
-    from: 'static/auth/callback.html',
-    to: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
-  })
   await Replace.replace({
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
@@ -79,6 +75,10 @@ const copyStaticFiles = async ({ commitHash }) => {
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
+  })
+  await Copy.copyFile({
+    from: 'packages/build/.tmp/server/static-server/static/index.html',
+    to: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
   })
   await copyIcons(`packages/build/.tmp/server/static-server/static/${commitHash}/icons`)
   await Copy.copy({
