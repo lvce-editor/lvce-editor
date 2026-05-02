@@ -79,6 +79,9 @@ const copyServerFiles = async ({ commitHash }) => {
   if (url.startsWith('/manifest.json')) {
     return true
   }
+  if (url.startsWith('/auth/')) {
+    return true
+  }
   if (url.startsWith('/packages') && url.endsWith('.js')) {
     return true
   }
@@ -92,6 +95,9 @@ const copyServerFiles = async ({ commitHash }) => {
     return true
   }
   if (url.startsWith('/favicon.ico')) {
+    return true
+  }
+  if (url.startsWith('/auth/')) {
     return true
   }
   if (url.startsWith('/manifest.ico')) {
