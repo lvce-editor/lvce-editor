@@ -23,6 +23,25 @@ test('falls back to static/icons for non-codicon assets', () => {
   expect(normalizePath(absolutePath)).toContain('/static/icons/squiggly-error.svg')
 })
 
+test('maps oauth callback route to callback html', () => {
+  const absolutePath = GetAbsolutePath.getAbsolutePath('/auth/callback')
+
+  expect(normalizePath(absolutePath)).toContain('/static/auth/callback.html')
+})
+
+test('returns 200 for oauth callback route with query params', async () => {
+  const response = await GetResponseInfo.getResponseInfo({
+    request: {
+      headers: {},
+      method: 'GET',
+      url: '/auth/callback?code=code-1&state=state-1',
+    },
+    isImmutable: false,
+  })
+
+  expect(response.status).toBe(HttpStatusCode.Ok)
+})
+
 test('returns 404 for missing vscode icon in development', async () => {
   const response = await GetResponseInfo.getResponseInfo({
     request: {

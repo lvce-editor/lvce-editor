@@ -27,6 +27,9 @@ export const getAbsolutePath = (pathName) => {
   if (pathName === '/') {
     return join(STATIC, 'index.html')
   }
+  if (pathName === '/auth/callback') {
+    return join(STATIC, 'auth', 'callback.html')
+  }
   if (pathName === '/favicon.ico') {
     return join(STATIC, 'favicon.ico')
   }
