@@ -15,7 +15,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
       headers: {},
     }
   }
-  const pathname = request.url
+  const pathname = request.path || request.url.split('?')[0]
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
   const etag = await GetPathEtag.getPathEtag(absolutePath)
   if (!etag) {

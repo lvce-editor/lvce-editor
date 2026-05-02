@@ -13,7 +13,7 @@ export const getResponseInfoProduction = (request) => {
       headers: {},
     }
   }
-  const pathName = request.url
+  const pathName = request.path || request.url.split('?')[0]
   const result = Files.get(pathName)
   if (!result) {
     return {
