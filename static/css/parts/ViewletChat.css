@@ -98,8 +98,9 @@
 }
 
 .MessageAssistant {
-  align-self: flex-start;
+  align-self: stretch;
   padding-left: 10px;
+  padding-right: 10px;
 }
 
 .ChatMessageContent {
@@ -110,6 +111,14 @@
   font-size: 13px;
   line-height: 19.5px;
   color: var(--ChatMessageForeground, #bcbebe);
+}
+
+.MessageAssistant .ChatMessageContent:not(.ChatImageMessageContent) {
+  background: transparent;
+  border-radius: 0;
+  color: var(--vscode-editor-foreground, var(--ChatForeground));
+  max-inline-size: 100%;
+  padding: 0;
 }
 
 .ChatMessageContent .Markdown {
