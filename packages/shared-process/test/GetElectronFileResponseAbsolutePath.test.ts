@@ -14,3 +14,9 @@ test('falls back to static/icons for non-codicon assets', () => {
 
   expect(normalizePath(absolutePath)).toContain('/static/icons/squiggly-error.svg')
 })
+
+test('maps /auth/callback to static auth callback page', () => {
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/auth/callback')
+
+  expect(normalizePath(absolutePath)).toContain('/static/auth/callback.html')
+})

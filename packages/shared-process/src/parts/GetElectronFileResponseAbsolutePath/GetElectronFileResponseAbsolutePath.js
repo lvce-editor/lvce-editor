@@ -32,6 +32,10 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
     const staticPath = StaticPath.getStaticPath()
     return Path.join(staticPath, 'index.html')
   }
+  if (pathName === '/auth/callback' || pathName === '/auth/callback/') {
+    const staticPath = StaticPath.getStaticPath()
+    return Path.join(staticPath, 'auth', 'callback.html')
+  }
   if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)
   }
