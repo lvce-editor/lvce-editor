@@ -530,6 +530,14 @@ export const closeChat = (state: LayoutState) => {
   return hideSecondarySideBar(state)
 }
 
+export const openCommandPalette = async (state: LayoutState): Promise<LayoutStateResult> => {
+  await Command.execute('QuickPick.showCommands')
+  return {
+    newState: state,
+    commands: [],
+  }
+}
+
 export const showPanel = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.Panel)

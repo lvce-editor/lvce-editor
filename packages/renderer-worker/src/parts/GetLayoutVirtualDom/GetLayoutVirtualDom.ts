@@ -325,7 +325,7 @@ const getContentAreaVirtualDom = (state: LayoutState) => {
 }
 
 export const getLayoutVirtualDom = (state: LayoutState) => {
-  const { titleBarVisible, titleBarId, statusBarVisible, statusBarId, panelVisible, panelId } = state
+  const { titleBarVisible, titleBarId, statusBarVisible, statusBarId, panelSashVisible, panelVisible, panelId } = state
   const dom: any[] = []
   let workbenchChildCount = 0
 
@@ -344,6 +344,11 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   workbenchChildCount++
   dom.push(...getContentAreaVirtualDom(state))
+
+  if (panelVisible && panelSashVisible) {
+    workbenchChildCount++
+    dom.push(getSashPanelDom())
+  }
 
   if (panelVisible) {
     workbenchChildCount++

@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
-import { getLayoutVirtualDom, getMainContentsLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
+import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
 test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
   const state = {
@@ -27,9 +27,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
 
   // @ts-ignore
   const dom = getLayoutVirtualDom(state)
-  // @ts-ignore
-  const mainContentsDom = getMainContentsLayoutVirtualDom(state)
-  const sashes = [...dom, ...mainContentsDom].filter((node) => node.className?.includes('Sash'))
+  const sashes = dom.filter((node) => node.className?.includes('Sash'))
 
   expect(sashes).toHaveLength(4)
   expect(sashes).toEqual(
