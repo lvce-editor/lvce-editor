@@ -495,6 +495,7 @@ export const commandMap = {
   'Layout.moveSideBarLeft': lazy('Layout.moveSideBarLeft'),
   'Layout.moveSideBarRight': lazy('Layout.moveSideBarRight'),
   'Layout.openChat': lazy('Layout.openChat'),
+  'Layout.openCommandPalette': lazy('Layout.openCommandPalette'),
   'Layout.openSideBarViewlet': lazy('Layout.openSideBarViewlet'),
   'Layout.openSecondarySideBarViewlet': lazy('Layout.openSecondarySideBarViewlet'),
   'Layout.setBadgeCount': lazy('Layout.setBadgeCount'),

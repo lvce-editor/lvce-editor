@@ -1,5 +1,13 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/AuthWorker/AuthWorker.js', () => {
   return {
     initialize: jest.fn(() => {
@@ -44,6 +52,7 @@ jest.unstable_mockModule('../src/parts/ChatViewWorker/ChatViewWorker.js', () => 
   }
 })
 
+const Command = await import('../src/parts/Command/Command.js')
 const AuthWorker = await import('../src/parts/AuthWorker/AuthWorker.js')
 const ActivityBarWorker = await import('../src/parts/ActivityBarWorker/ActivityBarWorker.js')
 const ChatViewWorker = await import('../src/parts/ChatViewWorker/ChatViewWorker.js')
@@ -130,6 +139,21 @@ test('getUserInfo returns the full auth snapshot from layout state', () => {
     userState: 'loggedIn',
     userSubscriptionPlan: 'pro',
     userUsedTokens: 42,
+  })
+})
+
+test('openCommandPalette delegates to QuickPick.showCommands', async () => {
+  const state = ViewletLayout.create(1)
+  // @ts-ignore
+  Command.execute.mockResolvedValue(undefined)
+
+  const result = await ViewletLayout.openCommandPalette(state)
+
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('QuickPick.showCommands')
+  expect(result).toEqual({
+    commands: [],
+    newState: state,
   })
 })
 
