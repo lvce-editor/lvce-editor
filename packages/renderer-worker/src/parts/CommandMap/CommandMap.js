@@ -453,6 +453,7 @@ export const commandMap = {
   'Workspace.setPath': lazy('Workspace.setPath'),
   'Workspace.setUri': lazy('Workspace.setUri'),
   'Layout.getAllQuickPickMenuEntries': lazy('Layout.getAllQuickPickMenuEntries'),
+  'Layout.createPanelViewlet': lazy('Layout.createPanelViewlet'),
   'Layout.createViewlet': lazy('Layout.createViewlet'),
   'Layout.getActiveSideBarView': lazy('Layout.getActiveSideBarView'),
   'Layout.getActiveSecondarySideBarView': lazy('Layout.getActiveSecondarySideBarView'),

@@ -655,6 +655,57 @@ export const createViewlet = async (state: LayoutState, viewletModuleId: string,
     commands: commands,
   }
 }
+
+export const createPanelViewlet = async (
+  state: LayoutState,
+  viewletModuleId: string,
+  editorUid: number,
+  tabId: number,
+  actionsUid: number,
+  bounds: any,
+  uri: string,
+) => {
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id: viewletModuleId,
+      type: 0,
+      // @ts-ignore
+      uri,
+      uid: editorUid,
+      show: false,
+      focus: false,
+      setBounds: false,
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height,
+      parentUid: -1,
+      append: false,
+      args: [],
+    },
+    false,
+    true,
+  )
+  const actionsDomIndex = commands.findIndex((command) => command[0] === 'Viewlet.send' && command[2] === 'setActionsDom')
+  const actionsDom = actionsDomIndex === -1 ? [] : commands[actionsDomIndex][3]
+  if (actionsDomIndex !== -1) {
+    commands.splice(actionsDomIndex, 1)
+  }
+  const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
+  const events = eventsIndex === -1 ? [] : commands[eventsIndex][2]
+  commands.push(
+    ['Viewlet.createFunctionalRoot', viewletModuleId, actionsUid, true],
+    ['Viewlet.registerEventListeners', actionsUid, events],
+    ['Viewlet.setDom2', actionsUid, actionsDom],
+    ['Viewlet.setUid', actionsUid, editorUid],
+  )
+  return {
+    newState: state,
+    commands,
+  }
+}
+
 export const attachViewlet = async (state: LayoutState, parentUid: number, uid: number) => {
   const commands = ['Viewlet.append', parentUid, uid]
   return {
