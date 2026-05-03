@@ -176,6 +176,46 @@ test('hideSideBar updates activity bar through shared sidebar render helper', as
   })
 })
 
+test('createPanelViewlet creates a linked actions root for child-contributed actions', async () => {
+  const state = ViewletLayout.create(1)
+  const events = [{ name: 'handleClickAction', params: ['run'] }]
+  const actionsDom = [{ type: 'Button', childCount: 0 }]
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.create', 'Output', 11],
+    ['Viewlet.registerEventListeners', 11, events],
+    ['Viewlet.send', -1, 'setActionsDom', actionsDom, 11],
+  ])
+
+  const result = await ViewletLayout.createPanelViewlet(
+    state,
+    'Output',
+    11,
+    22,
+    33,
+    {
+      x: 0,
+      y: 35,
+      width: 400,
+      height: 200,
+    },
+    '',
+  )
+
+  expect(ViewletManager.load).toHaveBeenCalledTimes(1)
+  expect(result).toEqual({
+    newState: state,
+    commands: [
+      ['Viewlet.create', 'Output', 11],
+      ['Viewlet.registerEventListeners', 11, events],
+      ['Viewlet.createFunctionalRoot', 'Output', 33, true],
+      ['Viewlet.registerEventListeners', 33, events],
+      ['Viewlet.setDom2', 33, actionsDom],
+      ['Viewlet.setUid', 33, 11],
+    ],
+  })
+})
+
 test('toggleSideBarView hides the current side bar view when the same item is clicked', async () => {
   mockActivityBarRender()
   const state = {
