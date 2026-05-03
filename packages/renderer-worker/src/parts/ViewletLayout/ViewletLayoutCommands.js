@@ -17,6 +17,7 @@ export const Commands = {
   getBadgeCounts: ViewletLayout.getBadgeCounts,
   getHref: ViewletLayout.getHref,
   getModuleId: ViewletLayout.getModuleId,
+  getUserInfo: ViewletLayout.getUserInfo,
 }
 
 export const CommandsWithSideEffects = {

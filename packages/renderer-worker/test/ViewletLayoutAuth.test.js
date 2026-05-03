@@ -14,7 +14,39 @@ jest.unstable_mockModule('../src/parts/AuthWorker/AuthWorker.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => {
+  return {
+    invoke: jest.fn(async (command) => {
+      switch (command) {
+        case 'ActivityBar.diff2':
+          return [1]
+        case 'ActivityBar.render2':
+          return [['ActivityBar.rendered']]
+        default:
+          return undefined
+      }
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ChatViewWorker/ChatViewWorker.js', () => {
+  return {
+    invoke: jest.fn(async (command) => {
+      switch (command) {
+        case 'Chat.diff2':
+          return [1]
+        case 'Chat.render2':
+          return [['Chat.rendered']]
+        default:
+          return undefined
+      }
+    }),
+  }
+})
+
 const AuthWorker = await import('../src/parts/AuthWorker/AuthWorker.js')
+const ActivityBarWorker = await import('../src/parts/ActivityBarWorker/ActivityBarWorker.js')
+const ChatViewWorker = await import('../src/parts/ChatViewWorker/ChatViewWorker.js')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
 beforeEach(() => {
@@ -78,6 +110,56 @@ test('setAuthState accepts public auth state shape', async () => {
       userUsedTokens: 0,
     },
   })
+})
+
+test('getUserInfo returns the full auth snapshot from layout state', () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    authAccessToken: 'token-1',
+    authErrorMessage: 'error',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  }
+
+  expect(ViewletLayout.getUserInfo(state)).toEqual({
+    authAccessToken: 'token-1',
+    authErrorMessage: 'error',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+})
+
+test('setAuthState fans auth changes out to activity bar and chat when visible', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 2,
+    secondarySideBarId: 3,
+    secondarySideBarView: 'Chat',
+  }
+
+  const result = await ViewletLayout.setAuthState(state, {
+    authAccessToken: 'token-1',
+    authErrorMessage: '',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+
+  expect(ActivityBarWorker.invoke).toHaveBeenCalledWith('ActivityBar.setUserLoginState', 2, 'logged in')
+  expect(ChatViewWorker.invoke).toHaveBeenCalledWith('Chat.handleAuthStateChange', 3, {
+    authAccessToken: 'token-1',
+    authErrorMessage: '',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+  expect(Array.isArray(result.commands)).toBe(true)
 })
 
 test('signIn merges auth worker state into layout state', async () => {

@@ -2,6 +2,7 @@ import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
+import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
@@ -49,6 +50,30 @@ const toAuthState = (state) => {
     accessToken: state.authAccessToken,
     signInState: state.userState,
     userName: state.userName,
+  }
+}
+
+const toUserInfo = (state) => {
+  return {
+    authAccessToken: state.authAccessToken,
+    authErrorMessage: state.authErrorMessage,
+    userName: state.userName,
+    userState: state.userState,
+    userSubscriptionPlan: state.userSubscriptionPlan,
+    userUsedTokens: state.userUsedTokens,
+  }
+}
+
+const toActivityBarUserLoginState = (userState) => {
+  switch (userState) {
+    case 'loggedIn':
+      return 'logged in'
+    case 'loggingIn':
+      return 'logging in'
+    case 'loggingOut':
+      return 'logging out'
+    default:
+      return 'logged out'
   }
 }
 
@@ -357,6 +382,32 @@ const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarVi
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
   return activityBarCommands
+}
+
+const renderActivityBarAuthCommands = async (activityBarId: number, userState: string) => {
+  if (activityBarId === -1) {
+    return []
+  }
+  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState))
+  const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
+  return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
+}
+
+const renderChatAuthCommands = async (state: LayoutState) => {
+  if (state.secondarySideBarId === -1 || state.secondarySideBarView !== ViewletModuleId.Chat) {
+    return []
+  }
+  await ChatViewWorker.invoke('Chat.handleAuthStateChange', state.secondarySideBarId, toUserInfo(state))
+  const diffResult = await ChatViewWorker.invoke('Chat.diff2', state.secondarySideBarId)
+  return ChatViewWorker.invoke('Chat.render2', state.secondarySideBarId, diffResult)
+}
+
+const getAuthFanoutCommands = async (state: LayoutState) => {
+  const [activityBarCommands, chatCommands] = await Promise.all([
+    renderActivityBarAuthCommands(state.activityBarId, state.userState),
+    renderChatAuthCommands(state),
+  ])
+  return [...(Array.isArray(activityBarCommands) ? activityBarCommands : []), ...(Array.isArray(chatCommands) ? chatCommands : [])]
 }
 
 const toggle = (state: LayoutState, module: LayoutModules.LayoutModule, moduleId?: any) => {
@@ -1333,6 +1384,10 @@ export const getAuthState = (state: LayoutState) => {
   return toAuthState(state)
 }
 
+export const getUserInfo = (state: LayoutState) => {
+  return toUserInfo(state)
+}
+
 const mergeAuthState = (state: LayoutState, authState) => {
   const authAccessToken =
     typeof authState?.authAccessToken === 'string'
@@ -1358,25 +1413,28 @@ const mergeAuthState = (state: LayoutState, authState) => {
 }
 
 export const setAuthState = async (state: LayoutState, authState): Promise<LayoutStateResult> => {
+  const newState = mergeAuthState(state, authState)
   return {
-    newState: mergeAuthState(state, authState),
-    commands: [],
+    newState,
+    commands: await getAuthFanoutCommands(newState),
   }
 }
 
 export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
   const authState = await AuthWorker.signIn(state.backendUrl, state.platform)
+  const newState = mergeAuthState(state, authState)
   return {
-    newState: mergeAuthState(state, authState),
-    commands: [],
+    newState,
+    commands: await getAuthFanoutCommands(newState),
   }
 }
 
 export const signOut = async (state: LayoutState): Promise<LayoutStateResult> => {
   const authState = await AuthWorker.signOut(state.backendUrl)
+  const newState = mergeAuthState(state, authState)
   return {
-    newState: mergeAuthState(state, authState),
-    commands: [],
+    newState,
+    commands: await getAuthFanoutCommands(newState),
   }
 }
 

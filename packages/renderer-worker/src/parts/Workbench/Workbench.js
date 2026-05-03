@@ -151,8 +151,8 @@ export const startup = async (platform, assetDir) => {
   let authState
   if (HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)) {
     await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
-    authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
   }
+  authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
