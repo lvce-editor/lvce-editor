@@ -6,6 +6,6 @@ const getInitialBackendUrl = () => {
   return Preferences.get('layout.backendUrl') || Product.getBackendUrl()
 }
 
-export const initializeAuth = (platform, href) => {
-  return AuthWorker.initialize(getInitialBackendUrl(), platform, href)
+export const initializeAuth = () => {
+  return AuthWorker.invoke('Auth.syncBackendAuth', getInitialBackendUrl())
 }

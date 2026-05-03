@@ -4,7 +4,7 @@ const lazy =
   (key) =>
   async (...args) => {
     await loadCommand(key)
-    execute(key, ...args)
+    return execute(key, ...args)
   }
 
 export const commandMap = {
@@ -464,6 +464,7 @@ export const commandMap = {
   'Layout.getCommit': lazy('Layout.getCommit'),
   'Layout.getModuleId': lazy('Layout.getModuleId'),
   'Layout.getPlatform': lazy('Layout.getPlatform'),
+  'Layout.getUserInfo': lazy('Layout.getUserInfo'),
   'Layout.handleBadgeCountChange': lazy('Layout.handleBadgeCountChange'),
   'Layout.handleBlur': lazy('Layout.handleBlur'),
   'Layout.handleExtensionsChanged': lazy('Layout.handleExtensionsChanged'),

@@ -7,6 +7,16 @@ test('getQuickPickMenuEntries includes chat commands', () => {
   expect(entries).toEqual(
     expect.arrayContaining([
       {
+        id: 'Layout.signIn',
+        label: 'Account: Sign In',
+        aliases: ['Sign In', 'Log In', 'Account Login'],
+      },
+      {
+        id: 'Layout.signOut',
+        label: 'Account: Sign Out',
+        aliases: ['Sign Out', 'Log Out', 'Account Logout'],
+      },
+      {
         id: 'Layout.openChat',
         label: 'Layout: Open Chat',
         aliases: ['Show Chat'],
