@@ -24,6 +24,15 @@ const createEventTarget = () => {
       existing.push(listener)
       listeners.set(type, existing)
     },
+    removeEventListener(type, listener) {
+      const existing = listeners.get(type) || []
+      const filtered = existing.filter((value) => value !== listener)
+      listeners.set(type, filtered)
+    },
+    dispatchEvent(event) {
+      this.dispatch(event.type)
+      return true
+    },
     dispatch(type) {
       const existing = listeners.get(type) || []
       for (const listener of existing) {
@@ -33,52 +42,81 @@ const createEventTarget = () => {
   }
 }
 
+const createRequest = () => {
+  return {
+    ...createEventTarget(),
+    error: null,
+    onblocked: null,
+    onerror: null,
+    onsuccess: null,
+    onupgradeneeded: null,
+    readyState: /** @type {IDBRequestReadyState} */ ('done'),
+    result: /** @type {any} */ (undefined),
+    source: null,
+    transaction: null,
+  }
+}
+
 const createIndexedDb = () => {
   let storedCallbackUrl = undefined
-  return {
-    open() {
-      const request = createEventTarget()
-      const database = {
-        objectStoreNames: {
-          contains() {
-            return false
-          },
-        },
-        createObjectStore() {},
-        transaction() {
-          const transaction = createEventTarget()
-          return {
-            addEventListener: transaction.addEventListener,
-            objectStore() {
-              return {
-                put(value) {
-                  storedCallbackUrl = value
-                  queueMicrotask(() => {
-                    transaction.dispatch('complete')
-                  })
-                },
-                get() {
-                  const getRequest = createEventTarget()
-                  queueMicrotask(() => {
-                    getRequest.result = storedCallbackUrl
-                    getRequest.dispatch('success')
-                  })
-                  return getRequest
-                },
-              }
+  return /** @type {IDBFactory} */ (
+    /** @type {unknown} */ ({
+      cmp(first, second) {
+        if (first === second) {
+          return 0
+        }
+        return first > second ? 1 : -1
+      },
+      async databases() {
+        return []
+      },
+      deleteDatabase() {
+        return createRequest()
+      },
+      open() {
+        const request = createRequest()
+        const database = {
+          objectStoreNames: {
+            contains() {
+              return false
             },
-          }
-        },
-        close() {},
-      }
-      request.result = database
-      queueMicrotask(() => {
-        request.dispatch('upgradeneeded')
-        request.dispatch('success')
-      })
-      return request
-    },
-  }
+          },
+          createObjectStore() {},
+          transaction() {
+            const transaction = createEventTarget()
+            return {
+              addEventListener: transaction.addEventListener,
+              objectStore() {
+                return {
+                  put(value) {
+                    storedCallbackUrl = value
+                    queueMicrotask(() => {
+                      transaction.dispatch('complete')
+                    })
+                  },
+                  get() {
+                    const getRequest = createRequest()
+                    queueMicrotask(() => {
+                      getRequest.result = storedCallbackUrl
+                      getRequest.dispatch('success')
+                    })
+                    return getRequest
+                  },
+                }
+              },
+            }
+          },
+          close() {},
+        }
+        request.result = database
+        queueMicrotask(() => {
+          request.dispatch('upgradeneeded')
+          request.dispatch('success')
+        })
+        return request
+      },
+    })
+  )
 }
 
 const originalIndexedDb = globalThis.indexedDB
