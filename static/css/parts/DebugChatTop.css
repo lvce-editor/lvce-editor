@@ -73,6 +73,8 @@
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
+  background: transparent;
+  border: none;
 }
 
 .ChatDebugViewRefreshButton:active {
