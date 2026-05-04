@@ -1,6 +1,8 @@
-import { readdir, stat } from 'node:fs/promises'
+import { stat } from 'node:fs/promises'
 import { join } from 'node:path'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 
 const serializeStats = (stats) => {
@@ -22,10 +24,11 @@ const getOnly = async (path) => {
 
 const getFolder = async (path) => {
   try {
-    const dirents = await readdir(path)
+    const dirents = await FileSystem.readDirWithFileTypes(path)
+    const folderNames = dirents.filter((dirent) => dirent.type === DirentType.Directory).map((dirent) => dirent.name)
     const stats = await Promise.all(
-      dirents.map(async (dirent) => {
-        const extensionManifestPath = join(path, dirent, 'extension.json')
+      folderNames.map(async (folderName) => {
+        const extensionManifestPath = join(path, folderName, 'extension.json')
         const direntStats = await stat(extensionManifestPath)
         return serializeStats(direntStats)
       }),

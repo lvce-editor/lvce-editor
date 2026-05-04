@@ -1,5 +1,6 @@
 import { readlink } from 'node:fs/promises'
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as MergeWithSymlinks from '../MergeWithSymlinks/MergeWithSymlinks.js'
@@ -24,8 +25,9 @@ export const getExtensionManifests = async (path) => {
     if (!path) {
       return []
     }
-    const dirents = await FileSystem.readDir(path)
-    const absolutePaths = ToAbsolutePaths.toAbsolutePaths(path, dirents)
+    const dirents = await FileSystem.readDirWithFileTypes(path)
+    const folderNames = dirents.filter((dirent) => dirent.type === DirentType.Directory).map((dirent) => dirent.name)
+    const absolutePaths = ToAbsolutePaths.toAbsolutePaths(path, folderNames)
     const manifests = await Promise.all(absolutePaths.map(ExtensionManifest.get))
     const symlinks = await readSymlinks(absolutePaths)
     const merged = MergeWithSymlinks.mergeWithSymLinks(manifests, symlinks)
