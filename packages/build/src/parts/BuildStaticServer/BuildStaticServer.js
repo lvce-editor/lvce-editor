@@ -327,7 +327,7 @@ const bundleStaticServer = async ({ commitHash }) => {
     replacement: `import { readFile } from 'node:fs/promises';
 import config from '../config.json' with { type: 'json' };
 
-const { files, headers, etag } = config;`,
+const { files, headers } = config;`,
   })
   const old = await JsonFile.readJson('packages/build/.tmp/server/static-server/package.json')
   const { dependencies, ...rest } = old
