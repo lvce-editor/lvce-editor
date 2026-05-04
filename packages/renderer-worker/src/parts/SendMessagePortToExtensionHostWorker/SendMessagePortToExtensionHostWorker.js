@@ -169,7 +169,7 @@ export const sendMessagePortToChatStorageWorker = async (port, initialCommand, r
   await ChatStorageWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
-export const sendMessagePortToChatViewModelWorker = async (port, initialCommand, rpcId) => {
+export const sendMessagePortToChatViewModel = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
   await ChatViewModelWorker.invokeAndTransfer(initialCommand, port, rpcId)
