@@ -90,6 +90,8 @@
   padding-right: 3px;
   cursor: text;
   word-wrap: break-word;
+  contain: content;
+  height: auto;
 }
 
 .MessageUser {
