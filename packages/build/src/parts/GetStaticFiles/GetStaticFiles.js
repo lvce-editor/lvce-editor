@@ -45,9 +45,10 @@ const generateFilesCodeMap = (indexes, uris) => {
   return map
 }
 
-const generateFilesCode = (indexes, uris) => {
+const generateFilesCode = (indexes, uris, etag) => {
   const lines = []
   lines.push(`export const files = {}`)
+  lines.push(`export const etag = ${JSON.stringify(etag)}`)
   lines.push('')
   return lines.join('\n')
 }
@@ -75,7 +76,7 @@ export const getStaticFiles = async ({ etag }) => {
   const headersCode = generateHeadersCode(uniqueHeaders.ours, uniqueHeaders.indexes, uris)
   const headersCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js`)
   await WriteFile.writeFile({ to: headersCodePath, content: headersCode })
-  const filesCode = generateFilesCode(uniqueHeaders.indexes, uris)
+  const filesCode = generateFilesCode(uniqueHeaders.indexes, uris, etag)
   const filesCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Files/Files.js`)
   await WriteFile.writeFile({
     to: filesCodePath,

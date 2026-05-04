@@ -22,12 +22,14 @@ export const getResponseInfoProduction = (request) => {
       headers: {},
     }
   }
-  if (MatchesEtag.matchesEtag(request, result.etag)) {
+  const headers = result.headers || result
+  const etag = result.etag || headers[HttpHeader.Etag] || Files.etag
+  if (etag && MatchesEtag.matchesEtag(request, etag)) {
     return {
       absolutePath: '',
       status: HttpStatusCode.NotModifed,
       headers: {
-        [HttpHeader.Etag]: result.etag,
+        [HttpHeader.Etag]: etag,
       },
     }
   }
@@ -35,6 +37,6 @@ export const getResponseInfoProduction = (request) => {
   return {
     absolutePath,
     status: HttpStatusCode.Ok,
-    headers: result.headers,
+    headers,
   }
 }
