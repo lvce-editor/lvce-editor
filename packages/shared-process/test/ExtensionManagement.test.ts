@@ -206,6 +206,37 @@ test('getExtensions - invalid extension.json', async () => {
   ])
 })
 
+test('getExtensions ignores files in extension folders', async () => {
+  const tmpDir1 = await getTmpDir()
+  await mkdir(join(tmpDir1, 'test-extension'))
+  await writeFile(join(tmpDir1, 'test-extension', 'extension.json'), JSON.stringify({ id: 'test-extension' }))
+  await writeFile(join(tmpDir1, 'disabled-extensions.json'), JSON.stringify({ disabledExtensions: [] }))
+  const tmpDir2 = await getTmpDir()
+  const tmpDir3 = await getTmpDir()
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir1)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  expect(await ExtensionManagement.getExtensions()).toEqual([
+    {
+      status: ExtensionManifestStatus.Resolved,
+      id: 'test-extension',
+      path: join(tmpDir1, 'test-extension'),
+      uri: expect.any(String),
+      disabled: false,
+      isBuiltin: false,
+    },
+  ])
+})
+
 test('disable', async () => {
   const tmpDir1 = await getTmpDir()
   const tmpDir2 = await getTmpDir()
