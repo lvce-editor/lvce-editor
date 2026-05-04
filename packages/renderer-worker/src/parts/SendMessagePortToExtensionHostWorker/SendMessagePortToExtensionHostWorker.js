@@ -7,6 +7,7 @@ import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as DiffWorker from '../DiffWorker/DiffWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
+import * as ChatViewModelWorker from '../ChatViewModelWorker/ChatViewModelWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
@@ -166,6 +167,12 @@ export const sendMessagePortToChatStorageWorker = async (port, initialCommand, r
   Assert.object(port)
   Assert.string(initialCommand)
   await ChatStorageWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToChatViewModel = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await ChatViewModelWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToChatCoordinatorWorker = async (port, initialCommand, rpcId) => {

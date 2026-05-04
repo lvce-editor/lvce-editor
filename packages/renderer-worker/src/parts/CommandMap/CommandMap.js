@@ -308,6 +308,7 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker'),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToChatViewModel': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToChatViewModel'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToExtensionHostWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToExtensionHostWorker',
   ),
