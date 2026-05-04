@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.ts'
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import type { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
@@ -130,15 +131,26 @@ const getCss = (newState: LayoutState) => {
   const sideBarWidth = newState.sideBarWidth
   const activityBarWidth = newState.activityBarWidth
   const panelHeight = newState.panelHeight
+  const secondarySideBarWidth = newState.secondarySideBarWidth
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
-  const sashSecondarySideBarLeft = newState.secondarySideBarLeft + newState.secondarySideBarWidth
+  const secondarySideBarLeft = newState.secondarySideBarLeft
+  Assert.number(activityBarWidth)
+  Assert.number(panelHeight)
+  Assert.number(sideBarWidth)
+  Assert.number(secondarySideBarWidth)
+  Assert.number(titleBarHeight)
+  Assert.number(previewWidth)
+  Assert.number(sashSideBarLeft)
+  Assert.number(secondarySideBarLeft)
+  const sashSecondarySideBarLeft = secondarySideBarLeft + secondarySideBarWidth
+  Assert.number(sashSecondarySideBarLeft)
   return `:root {
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
   --PanelHeight: ${getPixelValue(panelHeight)};
   --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};
-  --SecondarySideBarWidth: ${getRoundedPixelValue(newState.secondarySideBarWidth)};
+  --SecondarySideBarWidth: ${getRoundedPixelValue(secondarySideBarWidth)};
   --TitleBarHeight: ${getPixelValue(titleBarHeight)};
   --PreviewWidth: ${getPixelValue(previewWidth)};
   --SashSideBarLeft: ${getRoundedPixelValue(sashSideBarLeft)};
