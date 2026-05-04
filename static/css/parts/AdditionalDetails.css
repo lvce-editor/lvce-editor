@@ -63,14 +63,14 @@
   background: var(--MoreInfoOddBackground);
 }
 
-.Link {
+/* .Link {
   color: dodgerblue;
   cursor: pointer;
 }
 
 .Link:hover {
   text-decoration: underline;
-}
+} */
 
 .MoreInfoEntryKey {
   contain: content;
