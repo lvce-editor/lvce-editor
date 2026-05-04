@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.ts'
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import type { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
@@ -118,27 +119,42 @@ const renderDom = {
   multiple: true,
 }
 
+const getPixelValue = (value: number) => {
+  return Number.isFinite(value) ? `${value}px` : '0px'
+}
+
+const getRoundedPixelValue = (value: number) => {
+  return `${Math.round(Number.isFinite(value) ? value : 0)}px`
+}
+
 const getCss = (newState: LayoutState) => {
   const sideBarWidth = newState.sideBarWidth
   const activityBarWidth = newState.activityBarWidth
   const panelHeight = newState.panelHeight
+  const secondarySideBarWidth = newState.secondarySideBarWidth
   const titleBarHeight = newState.titleBarHeight
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
-  const sashSecondarySideBarLeft = newState.secondarySideBarLeft + newState.secondarySideBarWidth
-  const roundedSideBarWidth = Math.round(sideBarWidth)
-  const roundedSecondarySideBarWidth = Math.round(newState.secondarySideBarWidth)
-  const roundedSashSideBarLeft = Math.round(sashSideBarLeft)
-  const roundedSashSecondarySideBarLeft = Math.round(sashSecondarySideBarLeft)
+  const secondarySideBarLeft = newState.secondarySideBarLeft
+  Assert.number(activityBarWidth)
+  Assert.number(panelHeight)
+  Assert.number(sideBarWidth)
+  Assert.number(secondarySideBarWidth)
+  Assert.number(titleBarHeight)
+  Assert.number(previewWidth)
+  Assert.number(sashSideBarLeft)
+  Assert.number(secondarySideBarLeft)
+  const sashSecondarySideBarLeft = secondarySideBarLeft + secondarySideBarWidth
+  Assert.number(sashSecondarySideBarLeft)
   return `:root {
-  --ActivityBarWidth: ${activityBarWidth}px;
-  --PanelHeight: ${panelHeight}px;
-  --SideBarWidth: ${roundedSideBarWidth}px;
-  --SecondarySideBarWidth: ${roundedSecondarySideBarWidth}px;
-  --TitleBarHeight: ${titleBarHeight}px;
-  --PreviewWidth: ${previewWidth}px;
-  --SashSideBarLeft: ${roundedSashSideBarLeft}px;
-  --SashSecondarySideBarLeft: ${roundedSashSecondarySideBarLeft}px;
+  --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
+  --PanelHeight: ${getPixelValue(panelHeight)};
+  --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};
+  --SecondarySideBarWidth: ${getRoundedPixelValue(secondarySideBarWidth)};
+  --TitleBarHeight: ${getPixelValue(titleBarHeight)};
+  --PreviewWidth: ${getPixelValue(previewWidth)};
+  --SashSideBarLeft: ${getRoundedPixelValue(sashSideBarLeft)};
+  --SashSecondarySideBarLeft: ${getRoundedPixelValue(sashSecondarySideBarLeft)};
 }`
 }
 
