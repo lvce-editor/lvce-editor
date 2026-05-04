@@ -74,4 +74,5 @@
   height: 20px;
   contain: strict;
   color: inherit;
+  display: flex;
 }
