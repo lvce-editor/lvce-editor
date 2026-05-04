@@ -187,10 +187,10 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
     replacement: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
 import * as Headers from '../Headers/Headers.js'
 import * as Files from '../Files/Files.js'
+import * as HttpHeader from '../HttpHeader/HttpHeader.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
-import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
 import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
 
 
@@ -208,9 +208,16 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   }
   const index = Files.files[pathname]
   const headers = Headers.headers[index]
+  const etag = headers[HttpHeader.Etag] || Files.etag
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
-  if (MatchesEtag.matchesEtag(request, etag)) {
-    return NotModifiedResponse.notModifiedResponse
+  if (etag && MatchesEtag.matchesEtag(request, etag)) {
+    return {
+      absolutePath: '',
+      status: HttpStatusCode.NotModifed,
+      headers: {
+        [HttpHeader.Etag]: etag,
+      },
+    }
   }
   return {
     absolutePath,
