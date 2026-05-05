@@ -11,6 +11,7 @@ test('renderCss throws for invalid layout bounds', () => {
     sideBarWidth: undefined,
     secondarySideBarWidth: Number.NaN,
     titleBarHeight: undefined,
+    previewLeft: Number.NaN,
     previewWidth: Number.NaN,
     sideBarLeft: undefined,
     secondarySideBarLeft: Number.NaN,
@@ -28,6 +29,7 @@ test('renderCss serializes valid layout bounds', () => {
     sideBarWidth: 240.2,
     secondarySideBarWidth: 299.6,
     titleBarHeight: 35,
+    previewLeft: 799.6,
     previewWidth: 400,
     sideBarLeft: 48.4,
     secondarySideBarLeft: 700.2,
@@ -45,10 +47,23 @@ test('renderCss serializes valid layout bounds', () => {
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;
+  --SashPreviewLeft: 800px;
   --PreviewWidth: 400px;
   --SashSideBarLeft: 48px;
   --SashSecondarySideBarLeft: 1000px;
 }`,
     ],
   ])
+})
+
+test('renderEventListeners tracks preview sash pointer events', () => {
+  const listeners = ViewletLayoutRender2.renderEventListeners()
+  const previewListener = listeners.find((listener) => listener.name === 'HandleSashPreviewPointerDown')
+
+  expect(previewListener).toEqual(
+    expect.objectContaining({
+      params: ['handleSashPreviewPointerDown'],
+      trackPointerEvents: ['HandleSashSideBarPointerMove', 'HandleSashSideBarPointerUp'],
+    }),
+  )
 })

@@ -31,6 +31,7 @@ export const CommandsWithSideEffects = {
   handleSashSideBarPointerDown: ViewletLayout.handleSashSideBarPointerDown,
   handleSashSecondarySideBarPointerDown: ViewletLayout.handleSashSecondarySideBarPointerDown,
   handleSashPanelPointerDown: ViewletLayout.handleSashPanelPointerDown,
+  handleSashPreviewPointerDown: ViewletLayout.handleSashPreviewPointerDown,
   handleSashPointerMove: ViewletLayout.handleSashPointerMove,
   handleSashPointerUp: ViewletLayout.handleSashPointerUp,
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,

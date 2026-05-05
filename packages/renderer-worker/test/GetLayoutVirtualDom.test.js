@@ -41,7 +41,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
         tabIndex: -1,
       }),
       expect.objectContaining({
-        className: 'Viewlet Sash SashVertical',
+        className: 'Viewlet Sash SashVertical SashPreview',
         tabIndex: -1,
       }),
       expect.objectContaining({
