@@ -1480,7 +1480,8 @@ export const setAuthState = async (state: LayoutState, authState): Promise<Layou
 }
 
 export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
-  const authState = await AuthWorker.signIn(state.backendUrl, state.platform)
+  const { platform, backendUrl } = state
+  const authState = await AuthWorker.signIn(backendUrl, platform)
   const newState = mergeAuthState(state, authState)
   return {
     newState,
