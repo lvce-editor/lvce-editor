@@ -72,7 +72,7 @@ const getSashSecondarySideBarDom = () => {
 const getSashPreviewDom = () => {
   return {
     type: VirtualDomElements.Div,
-    className: 'Viewlet Sash SashVertical',
+    className: 'Viewlet Sash SashVertical SashPreview',
     tabIndex: -1,
     role: 'none',
     onPointerDown: DomEventListenerFunctions.HandleSashPreviewPointerDown,

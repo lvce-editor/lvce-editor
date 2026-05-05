@@ -307,7 +307,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     windowWidth,
     activityBarSashVisible: true,
     panelSashVisible: true,
-    previewSashVisible: false,
+    previewSashVisible: previewVisible,
     previewUri,
     sideBarLocation,
     sideBarSashVisible: true,
@@ -332,6 +332,7 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   const intermediateState: LayoutState = getPoints({
     ...state,
     [kVisible]: true,
+    ...(module === LayoutModules.Preview ? { previewSashVisible: true } : {}),
   })
   const x = intermediateState[kLeft]
   const y = intermediateState[kTop]
@@ -452,6 +453,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   const newState = getPoints({
     ...state,
     [kVisible]: false,
+    ...(module === LayoutModules.Preview ? { previewSashVisible: false } : {}),
   })
   // TODO save state to local storage after rending (in background)
   await SaveState.saveViewletState(moduleId)
@@ -856,6 +858,10 @@ export const handleSashSecondarySideBarPointerDown = (state: LayoutState) => {
 
 export const handleSashPanelPointerDown = (state: LayoutState) => {
   return handleSashPointerDown(state, SashType.Panel)
+}
+
+export const handleSashPreviewPointerDown = (state: LayoutState) => {
+  return handleSashPointerDown(state, SashType.Preview)
 }
 
 export const handleSashPointerUp = (state: LayoutState, sashId: string) => {

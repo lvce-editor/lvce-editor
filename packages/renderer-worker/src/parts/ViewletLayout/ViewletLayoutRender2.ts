@@ -107,7 +107,10 @@ const renderDom = {
       oldState.secondarySideBarId === newState.secondarySideBarId &&
       oldState.statusBarVisible === newState.statusBarVisible &&
       oldState.statusBarId === newState.statusBarId &&
+      oldState.panelSashVisible === newState.panelSashVisible &&
+      oldState.sideBarSashVisible === newState.sideBarSashVisible &&
       oldState.previewVisible === newState.previewVisible &&
+      oldState.previewSashVisible === newState.previewSashVisible &&
       oldState.previewId === newState.previewId &&
       oldState.secondarySideBarVisible === newState.secondarySideBarVisible
     )
@@ -133,6 +136,7 @@ const getCss = (newState: LayoutState) => {
   const panelHeight = newState.panelHeight
   const secondarySideBarWidth = newState.secondarySideBarWidth
   const titleBarHeight = newState.titleBarHeight
+  const previewLeft = newState.previewLeft
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
   const secondarySideBarLeft = newState.secondarySideBarLeft
@@ -141,6 +145,7 @@ const getCss = (newState: LayoutState) => {
   Assert.number(sideBarWidth)
   Assert.number(secondarySideBarWidth)
   Assert.number(titleBarHeight)
+  Assert.number(previewLeft)
   Assert.number(previewWidth)
   Assert.number(sashSideBarLeft)
   Assert.number(secondarySideBarLeft)
@@ -152,6 +157,7 @@ const getCss = (newState: LayoutState) => {
   --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};
   --SecondarySideBarWidth: ${getRoundedPixelValue(secondarySideBarWidth)};
   --TitleBarHeight: ${getPixelValue(titleBarHeight)};
+  --SashPreviewLeft: ${getRoundedPixelValue(previewLeft)};
   --PreviewWidth: ${getPixelValue(previewWidth)};
   --SashSideBarLeft: ${getRoundedPixelValue(sashSideBarLeft)};
   --SashSecondarySideBarLeft: ${getRoundedPixelValue(sashSecondarySideBarLeft)};
@@ -214,7 +220,7 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleSashPreviewPointerDown,
       params: ['handleSashPreviewPointerDown'],
-      // trackPointerEvents: [DomEventListenersFunctions.HandleSashPanelPointerMove, DomEventListenersFunctions.HandleSashPanelPointerUp],
+      trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
     },
   ]
 }
