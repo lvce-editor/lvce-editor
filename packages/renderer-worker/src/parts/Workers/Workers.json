@@ -92,7 +92,7 @@
   {
     "id": "chatViewModelWorker",
     "fileName": "chatViewModelWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view-model-worker/dist/chatViewModelWorkerMain.js",
     "productionPath": "/packages/chat-view-model-worker/dist/chatViewModelWorkerMain.js",
     "settingName": "develop.chatViewModelWorkerPath",
