@@ -161,7 +161,7 @@ export const create = (id: number): LayoutState => {
     updateState: 'none',
     updateProgress: 0,
     commit: Commit.commit,
-    platform: Platform.platform,
+    platform: Platform.getPlatform(),
     assetDir,
     backendUrl: getInitialBackendUrl(),
     badgeCounts: Object.create(null),
