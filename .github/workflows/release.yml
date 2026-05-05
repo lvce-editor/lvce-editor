@@ -141,7 +141,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Publish Electron App (deb, x64) to Cloudsmith
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: cloudsmith push deb lvce-editor/lvce-editor/any-distro/any-version "${{ env.ASSET_DEB_X64 }}"
+        run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_X64 }}"
       - name: Build Electron App (deb, arm64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
@@ -166,7 +166,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Publish Electron App (deb, arm64) to Cloudsmith
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
-        run: cloudsmith push deb lvce-editor/lvce-editor/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
+        run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
       - name: Build Electron App (deb, armhf)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
         run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
