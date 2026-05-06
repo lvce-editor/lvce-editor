@@ -46,7 +46,7 @@
     "@lvce-editor/auth-worker": "^1.18.0",
     "@lvce-editor/diff-view": "^3.12.0",
     "@lvce-editor/chat-coordinator-worker": "^2.6.0",
-    "@lvce-editor/chat-debug-view": "^10.7.0",
+    "@lvce-editor/chat-debug-view": "^10.8.0",
     "@lvce-editor/chat-math-worker": "^1.1.0",
     "@lvce-editor/chat-network-worker": "^4.1.0",
     "@lvce-editor/chat-storage-worker": "^2.1.0",
