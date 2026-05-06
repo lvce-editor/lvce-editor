@@ -75,7 +75,7 @@
     "@lvce-editor/iframe-worker": "^6.8.0",
     "@lvce-editor/keybindings-view": "^8.0.0",
     "@lvce-editor/language-models-view": "^1.11.0",
-    "@lvce-editor/main-area-worker": "^9.11.0",
+    "@lvce-editor/main-area-worker": "^9.12.0",
     "@lvce-editor/markdown-worker": "^4.0.0",
     "@lvce-editor/menu-worker": "^4.0.0",
     "@lvce-editor/opener-worker": "^1.8.0",
@@ -97,7 +97,7 @@
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^14.7.0",
     "@lvce-editor/text-measurement-worker": "^1.12.0",
-    "@lvce-editor/text-search-worker": "^6.3.0",
+    "@lvce-editor/text-search-worker": "^7.0.0",
     "@lvce-editor/title-bar-worker": "^4.0.0",
     "@lvce-editor/update-worker": "^2.5.0"
   },
