@@ -23,9 +23,7 @@ jest.unstable_mockModule('../src/parts/GetPathName/GetPathName.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
-  error: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
+  error: jest.fn(),
 }))
 
 const GetTestRequestResponse = await import('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js')
@@ -41,19 +39,21 @@ test('getTestRequestResponse', async () => {
   jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests/')
   jest.spyOn(CreateTestOverview, 'createTestOverview').mockResolvedValue('test overview html')
   jest.spyOn(GetTestPath, 'getTestPath').mockReturnValue('/test')
-  expect(await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)).toEqual({
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
+  expect(result).toEqual({
     body: 'test overview html',
     init: {
       headers: {
-        'Cache-Control': 'public, max-age=0, must-revalidate',
+        'Cache-Control': 'no-store',
         'Content-Security-Policy': "default-src 'none'",
         'Content-Type': 'text/html',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin',
       },
-      status: 300,
+      status: 200,
     },
   })
+  expect(CreateTestOverview.createTestOverview).toHaveBeenCalledWith('/test/src')
 })
 
 test('getTestRequestResponse - error in createTestOverview', async () => {

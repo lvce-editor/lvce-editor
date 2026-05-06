@@ -2,6 +2,7 @@ import { homedir, tmpdir } from 'node:os'
 import { isAbsolute, join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
+import * as GetResolvedTestPath from '../GetResolvedTestPath/GetResolvedTestPath.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
@@ -104,12 +105,7 @@ export const getDefaultSettingsPath = () => {
 }
 
 export const getTestPath = () => {
-  if (env.TEST_PATH) {
-    const absolutePath = isAbsolute(env.TEST_PATH) ? env.TEST_PATH : Path.join(process.cwd(), env.TEST_PATH)
-    const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
-    return testPath
-  }
-  const absolutePath = join(Root.root, 'packages/extension-host-worker-tests')
+  const absolutePath = GetResolvedTestPath.getResolvedTestPath()
   const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
   return testPath
 }

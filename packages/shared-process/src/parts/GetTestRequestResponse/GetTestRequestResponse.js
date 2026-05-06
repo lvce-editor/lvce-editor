@@ -7,7 +7,6 @@ import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOr
 import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js'
 import * as GetContentResponse from '../GetContentResponse/GetContentResponse.js'
-import * as GetMultipleChoiceResponse from '../GetMultipleChoiceResponse/GetMultipleChoiceResponse.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
@@ -35,13 +34,13 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
       const testPathSrc = join(testPath, 'src')
       const body = await CreateTestOverview.createTestOverview(testPathSrc)
       const headers = {
-        [HttpHeader.CacheControl]: 'public, max-age=0, must-revalidate',
+        [HttpHeader.CacheControl]: 'no-store',
         [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
         [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
         [HttpHeader.ContentSecurityPolicy]: "default-src 'none'",
         [HttpHeader.ContentType]: 'text/html',
       }
-      return GetMultipleChoiceResponse.getMultipleChoiceResponse(body, headers)
+      return GetContentResponse.getContentResponse(body, headers)
     }
     return GetNotFoundResponse.getNotFoundResponse()
   } catch (error) {
