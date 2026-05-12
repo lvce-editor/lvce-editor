@@ -64,8 +64,8 @@ const toUserInfo = (state) => {
   }
 }
 
-const toFilteredUserInfo = (state: LayoutState, options = {}) => {
-  const { includeAccessToken = false, includeTokenUsage = false } = options as GetUserInfoOptions
+const toFilteredUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
+  const { includeAccessToken = false, includeTokenUsage = false } = options
   const info = toUserInfo(state)
   if (!includeAccessToken) {
     delete info.authAccessToken
@@ -74,11 +74,6 @@ const toFilteredUserInfo = (state: LayoutState, options = {}) => {
     delete info.userUsedTokens
   }
   return info
-}
-
-interface GetUserInfoOptions {
-  readonly includeAccessToken?: boolean
-  readonly includeTokenUsage?: boolean
 }
 
 const toActivityBarUserLoginState = (userState) => {
@@ -1470,7 +1465,7 @@ export const getAuthState = (state: LayoutState) => {
   return toAuthState(state)
 }
 
-export const getUserInfo = (state: LayoutState, options = {}) => {
+export const getUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
   return toFilteredUserInfo(state, options)
 }
 
