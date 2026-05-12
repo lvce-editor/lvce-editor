@@ -469,6 +469,7 @@ export const commandMap = {
   'Layout.getUserInfo': lazy('Layout.getUserInfo'),
   'Layout.handleBadgeCountChange': lazy('Layout.handleBadgeCountChange'),
   'Layout.handleBlur': lazy('Layout.handleBlur'),
+  'Layout.handleContextMenu': lazy('Layout.handleContextMenu'),
   'Layout.handleExtensionsChanged': lazy('Layout.handleExtensionsChanged'),
   'Layout.handleFocus': lazy('Layout.handleFocus'),
   'Layout.handleResize': lazy('Layout.handleResize'),

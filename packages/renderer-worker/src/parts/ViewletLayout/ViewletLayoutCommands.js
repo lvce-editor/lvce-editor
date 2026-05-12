@@ -24,6 +24,7 @@ export const CommandsWithSideEffects = {
   handleBadgeCountChange: ViewletLayout.handleBadgeCountChange,
   handleExtensionsChanged: ViewletLayout.handleExtensionsChanged,
   handleBlur: ViewletLayout.handleBlur,
+  handleContextMenu: ViewletLayout.handleContextMenu,
   handleFocus: ViewletLayout.handleFocus,
   handleResize: ViewletLayout.handleResize,
   handleSashDoubleClick: ViewletLayout.handleSashDoubleClick,
