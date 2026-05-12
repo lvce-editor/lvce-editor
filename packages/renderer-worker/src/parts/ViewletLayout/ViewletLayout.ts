@@ -64,6 +64,23 @@ const toUserInfo = (state) => {
   }
 }
 
+const toFilteredUserInfo = (state: LayoutState, options: GetUserInfoOptions = {}) => {
+  const { includeAccessToken = false, includeTokenUsage = false } = options
+  const info = toUserInfo(state)
+  if (!includeAccessToken) {
+    delete info.authAccessToken
+  }
+  if (!includeTokenUsage) {
+    delete info.userUsedTokens
+  }
+  return info
+}
+
+interface GetUserInfoOptions {
+  readonly includeAccessToken?: boolean
+  readonly includeTokenUsage?: boolean
+}
+
 const toActivityBarUserLoginState = (userState) => {
   switch (userState) {
     case 'loggedIn':
@@ -1453,8 +1470,8 @@ export const getAuthState = (state: LayoutState) => {
   return toAuthState(state)
 }
 
-export const getUserInfo = (state: LayoutState) => {
-  return toUserInfo(state)
+export const getUserInfo = (state: LayoutState, options: GetUserInfoOptions = {}) => {
+  return toFilteredUserInfo(state, options)
 }
 
 const mergeAuthState = (state: LayoutState, authState) => {
