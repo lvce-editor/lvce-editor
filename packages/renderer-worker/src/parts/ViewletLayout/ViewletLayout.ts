@@ -864,6 +864,10 @@ export const handleSashPreviewPointerDown = (state: LayoutState) => {
   return handleSashPointerDown(state, SashType.Preview)
 }
 
+export const handleContextMenu = (state: LayoutState) => {
+  return state
+}
+
 export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
   const newState = {
     ...state,

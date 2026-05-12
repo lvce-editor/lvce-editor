@@ -179,6 +179,10 @@ const renderCss = {
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenersFunctions.HandleContextMenu,
+      params: ['handleContextMenu'],
+    },
+    {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
       params: ['handleSashSideBarPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],

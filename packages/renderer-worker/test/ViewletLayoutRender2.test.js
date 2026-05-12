@@ -67,3 +67,14 @@ test('renderEventListeners tracks preview sash pointer events', () => {
     }),
   )
 })
+
+test('renderEventListeners registers context menu handler', () => {
+  const listeners = ViewletLayoutRender2.renderEventListeners()
+  const contextMenuListener = listeners.find((listener) => listener.name === 'handleContextMenu')
+
+  expect(contextMenuListener).toEqual(
+    expect.objectContaining({
+      params: ['handleContextMenu'],
+    }),
+  )
+})

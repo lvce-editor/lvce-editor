@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
@@ -35,18 +36,22 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
       expect.objectContaining({
         className: 'Viewlet Sash SashVertical SashSideBar',
         tabIndex: -1,
+        onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
       expect.objectContaining({
         className: 'Viewlet Sash SashVertical SashSecondarySideBar',
         tabIndex: -1,
+        onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
       expect.objectContaining({
         className: 'Viewlet Sash SashVertical SashPreview',
         tabIndex: -1,
+        onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
       expect.objectContaining({
         className: 'Viewlet Sash SashHorizontal',
         tabIndex: -1,
+        onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
     ]),
   )
