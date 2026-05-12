@@ -93,8 +93,8 @@
     "id": "chatViewModelWorker",
     "fileName": "chatViewModelWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "sandbox allow-same-origin"],
-    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view-model-worker/dist/chatViewModelWorkerMain.js",
-    "productionPath": "/packages/chat-view-model-worker/dist/chatViewModelWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view-model/dist/chatViewModelWorkerMain.js",
+    "productionPath": "/packages/chat-view-model/dist/chatViewModelWorkerMain.js",
     "settingName": "develop.chatViewModelWorkerPath",
     "hotReloadCommand": ""
   },
