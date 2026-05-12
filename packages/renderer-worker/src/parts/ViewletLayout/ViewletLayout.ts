@@ -64,8 +64,8 @@ const toUserInfo = (state) => {
   }
 }
 
-const toFilteredUserInfo = (state: LayoutState, options: GetUserInfoOptions = {}) => {
-  const { includeAccessToken = false, includeTokenUsage = false } = options
+const toFilteredUserInfo = (state: LayoutState, options = {}) => {
+  const { includeAccessToken = false, includeTokenUsage = false } = options as GetUserInfoOptions
   const info = toUserInfo(state)
   if (!includeAccessToken) {
     delete info.authAccessToken
@@ -1470,7 +1470,7 @@ export const getAuthState = (state: LayoutState) => {
   return toAuthState(state)
 }
 
-export const getUserInfo = (state: LayoutState, options: GetUserInfoOptions = {}) => {
+export const getUserInfo = (state: LayoutState, options = {}) => {
   return toFilteredUserInfo(state, options)
 }
 
