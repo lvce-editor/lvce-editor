@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/about-view": "^7.1.0",
+    "@lvce-editor/about-view": "^7.2.0",
     "@lvce-editor/activity-bar-worker": "^6.0.0",
     "@lvce-editor/auth-worker": "^2.0.0",
     "@lvce-editor/chat-coordinator-worker": "^3.2.0",
@@ -50,8 +50,8 @@
     "@lvce-editor/chat-network-worker": "^4.1.0",
     "@lvce-editor/chat-storage-worker": "^2.4.0",
     "@lvce-editor/chat-tool-worker": "^9.6.0",
-    "@lvce-editor/chat-view": "^9.1.0",
-    "@lvce-editor/chat-view-model": "^9.1.0",
+    "@lvce-editor/chat-view": "^9.2.0",
+    "@lvce-editor/chat-view-model": "^9.2.0",
     "@lvce-editor/clipboard-worker": "^1.17.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
     "@lvce-editor/completion-worker": "^3.0.0",
