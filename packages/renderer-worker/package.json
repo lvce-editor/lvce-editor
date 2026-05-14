@@ -50,7 +50,7 @@
     "@lvce-editor/chat-network-worker": "^4.1.0",
     "@lvce-editor/chat-storage-worker": "^2.5.0",
     "@lvce-editor/chat-tool-worker": "^9.6.0",
-    "@lvce-editor/chat-view": "^9.5.0",
+    "@lvce-editor/chat-view": "^9.6.0",
     "@lvce-editor/chat-view-model": "^9.2.0",
     "@lvce-editor/clipboard-worker": "^1.17.0",
     "@lvce-editor/color-picker-worker": "^3.0.0",
