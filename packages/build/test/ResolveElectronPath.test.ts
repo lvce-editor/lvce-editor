@@ -1,4 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
+import { join } from 'path'
 import { resolveElectronLaunch } from '../src/parts/ResolveElectronPath/ResolveElectronPath.js'
 
 describe('resolveElectronLaunch', () => {
@@ -12,7 +13,7 @@ describe('resolveElectronLaunch', () => {
 
     expect(electronLaunch).toEqual({
       command: '/usr/bin/node',
-      argsPrefix: ['/workspace/packages/main-process/node_modules/electron/cli.js'],
+      argsPrefix: [join('/workspace', 'packages', 'main-process', 'node_modules', 'electron', 'cli.js')],
     })
   })
 
@@ -24,7 +25,7 @@ describe('resolveElectronLaunch', () => {
     })
 
     expect(electronLaunch).toEqual({
-      command: '/workspace/packages/main-process/node_modules/electron/dist/electron',
+      command: join('/workspace', 'packages', 'main-process', 'node_modules', 'electron', 'dist', 'electron'),
       argsPrefix: [],
     })
   })
@@ -37,7 +38,7 @@ describe('resolveElectronLaunch', () => {
     })
 
     expect(electronLaunch).toEqual({
-      command: '/workspace/packages/main-process/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron',
+      command: join('/workspace', 'packages', 'main-process', 'node_modules', 'electron', 'dist', 'Electron.app', 'Contents', 'MacOS', 'Electron'),
       argsPrefix: [],
     })
   })
@@ -50,7 +51,7 @@ describe('resolveElectronLaunch', () => {
     })
 
     expect(electronLaunch).toEqual({
-      command: '/workspace/packages/main-process/node_modules/electron/dist/electron.exe',
+      command: join('/workspace', 'packages', 'main-process', 'node_modules', 'electron', 'dist', 'electron.exe'),
       argsPrefix: [],
     })
   })
