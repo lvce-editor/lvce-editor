@@ -7,7 +7,7 @@ describe('resolveElectronPath', () => {
       root: '/workspace',
       platform: 'linux',
       requireFromMainProcess: () => '/workspace/packages/main-process/node_modules/electron/dist/electron',
-      existsSyncFn: path => path === '/workspace/packages/main-process/node_modules/electron/dist/electron',
+      existsSyncFn: (path) => path === '/workspace/packages/main-process/node_modules/electron/dist/electron',
     })
 
     expect(electronPath).toBe('/workspace/packages/main-process/node_modules/electron/dist/electron')

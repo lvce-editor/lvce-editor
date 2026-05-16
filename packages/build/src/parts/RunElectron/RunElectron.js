@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url)
 const electronPath = resolveElectronPath({
   root,
   platform: process.platform,
-  requireFromMainProcess: request => require(join(root, 'packages', 'main-process', 'node_modules', request)),
+  requireFromMainProcess: (request) => require(join(root, 'packages', 'main-process', 'node_modules', request)),
 })
 
 const mainProcessPath = process.env.LVCE_MAIN_PROCESS_PATH || join(root, 'packages', 'main-process', 'node_modules', '@lvce-editor', 'main-process')
