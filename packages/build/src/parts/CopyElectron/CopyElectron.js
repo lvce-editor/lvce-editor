@@ -5,12 +5,17 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Root from '../Root/Root.js'
 import * as Template from '../Template/Template.js'
+import { existsSync } from 'node:fs'
 
 export const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform, version }) => {
+  const sourceMode = useInstalledElectronVersion ? 'installed' : 'downloaded'
+  const outDir = useInstalledElectronVersion
+    ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
+    : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
   try {
-    const outDir = useInstalledElectronVersion
-      ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
-      : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
+    if (!existsSync(outDir)) {
+      throw new Error(`electron source path does not exist (${sourceMode}): ${outDir}`)
+    }
     await Remove.remove(`packages/build/.tmp/electron-bundle/${arch}`)
     await Copy.copy({
       from: outDir,
@@ -56,6 +61,6 @@ export const copyElectron = async ({ arch, electronVersion, useInstalledElectron
       })
     }
   } catch (error) {
-    throw new VError(error, `Failed to copy electron`)
+    throw new VError(error, `Failed to copy electron (sourceMode=${sourceMode}, sourcePath=${outDir})`)
   }
 }
