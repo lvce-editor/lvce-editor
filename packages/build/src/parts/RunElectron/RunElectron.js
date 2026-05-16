@@ -1,14 +1,11 @@
-import { createRequire } from 'module'
 import { join } from 'path'
 import { root } from '../Root/Root.js'
 import { spawn } from 'child_process'
-import { resolveElectronPath } from '../ResolveElectronPath/ResolveElectronPath.js'
+import { resolveElectronLaunch } from '../ResolveElectronPath/ResolveElectronPath.js'
 
-const require = createRequire(import.meta.url)
-const electronPath = resolveElectronPath({
+const electronLaunch = resolveElectronLaunch({
   root,
   platform: process.platform,
-  requireFromMainProcess: (request) => require(join(root, 'packages', 'main-process', 'node_modules', request)),
 })
 
 const mainProcessPath = process.env.LVCE_MAIN_PROCESS_PATH || join(root, 'packages', 'main-process', 'node_modules', '@lvce-editor', 'main-process')
@@ -22,7 +19,7 @@ const env = {
 
 const main = () => {
   const cliArgs = process.argv.slice(2)
-  const child = spawn(electronPath, ['.', ...cliArgs], {
+  const child = spawn(electronLaunch.command, [...electronLaunch.argsPrefix, '.', ...cliArgs], {
     cwd: mainProcessPath,
     env,
   })

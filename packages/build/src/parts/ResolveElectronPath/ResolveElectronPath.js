@@ -1,6 +1,10 @@
 import { existsSync } from 'fs'
 import { join } from 'path'
 
+const getElectronCliPath = root => {
+  return join(root, 'packages', 'main-process', 'node_modules', 'electron', 'cli.js')
+}
+
 const getLegacyElectronPath = (root, platform) => {
   if (platform === 'darwin') {
     return join(root, 'packages', 'main-process', 'node_modules', 'electron', 'dist', 'Electron.app', 'Contents', 'MacOS', 'Electron')
@@ -11,14 +15,16 @@ const getLegacyElectronPath = (root, platform) => {
   return join(root, 'packages', 'main-process', 'node_modules', 'electron', 'dist', 'electron')
 }
 
-export const resolveElectronPath = ({ root, platform, requireFromMainProcess, existsSyncFn = existsSync }) => {
-  try {
-    const electronPath = requireFromMainProcess('electron')
-    if (typeof electronPath === 'string' && electronPath && existsSyncFn(electronPath)) {
-      return electronPath
+export const resolveElectronLaunch = ({ root, platform, existsSyncFn = existsSync, nodePath = process.execPath }) => {
+  const electronCliPath = getElectronCliPath(root)
+  if (existsSyncFn(electronCliPath)) {
+    return {
+      command: nodePath,
+      argsPrefix: [electronCliPath],
     }
-  } catch {
-    // fall back to the legacy dist path below
   }
-  return getLegacyElectronPath(root, platform)
+  return {
+    command: getLegacyElectronPath(root, platform),
+    argsPrefix: [],
+  }
 }

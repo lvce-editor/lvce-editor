@@ -1,50 +1,57 @@
 import { describe, expect, test } from '@jest/globals'
-import { resolveElectronPath } from '../src/parts/ResolveElectronPath/ResolveElectronPath.js'
+import { resolveElectronLaunch } from '../src/parts/ResolveElectronPath/ResolveElectronPath.js'
 
-describe('resolveElectronPath', () => {
-  test('uses the executable path exported by electron package', () => {
-    const electronPath = resolveElectronPath({
+describe('resolveElectronLaunch', () => {
+  test('uses electron cli script when available', () => {
+    const electronLaunch = resolveElectronLaunch({
       root: '/workspace',
       platform: 'linux',
-      requireFromMainProcess: () => '/workspace/packages/main-process/node_modules/electron/dist/electron',
-      existsSyncFn: (path) => path === '/workspace/packages/main-process/node_modules/electron/dist/electron',
+      nodePath: '/usr/bin/node',
+      existsSyncFn: path => path === '/workspace/packages/main-process/node_modules/electron/cli.js',
     })
 
-    expect(electronPath).toBe('/workspace/packages/main-process/node_modules/electron/dist/electron')
+    expect(electronLaunch).toEqual({
+      command: '/usr/bin/node',
+      argsPrefix: ['/workspace/packages/main-process/node_modules/electron/cli.js'],
+    })
   })
 
-  test('falls back to legacy linux dist path when package entrypoint is unavailable', () => {
-    const electronPath = resolveElectronPath({
+  test('falls back to legacy linux dist path when electron cli is unavailable', () => {
+    const electronLaunch = resolveElectronLaunch({
       root: '/workspace',
       platform: 'linux',
-      requireFromMainProcess: () => {
-        throw new Error('Cannot find module')
-      },
-    })
-
-    expect(electronPath).toBe('/workspace/packages/main-process/node_modules/electron/dist/electron')
-  })
-
-  test('falls back to legacy macOS app bundle path when package entrypoint is unavailable', () => {
-    const electronPath = resolveElectronPath({
-      root: '/workspace',
-      platform: 'darwin',
-      requireFromMainProcess: () => {
-        throw new Error('Cannot find module')
-      },
-    })
-
-    expect(electronPath).toBe('/workspace/packages/main-process/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron')
-  })
-
-  test('falls back when electron package returns a missing path', () => {
-    const electronPath = resolveElectronPath({
-      root: '/workspace',
-      platform: 'win32',
-      requireFromMainProcess: () => 'C:/workspace/packages/main-process/node_modules/electron/dist/electron.exe',
       existsSyncFn: () => false,
     })
 
-    expect(electronPath).toBe('/workspace/packages/main-process/node_modules/electron/dist/electron.exe')
+    expect(electronLaunch).toEqual({
+      command: '/workspace/packages/main-process/node_modules/electron/dist/electron',
+      argsPrefix: [],
+    })
+  })
+
+  test('falls back to legacy macOS app bundle path when electron cli is unavailable', () => {
+    const electronLaunch = resolveElectronLaunch({
+      root: '/workspace',
+      platform: 'darwin',
+      existsSyncFn: () => false,
+    })
+
+    expect(electronLaunch).toEqual({
+      command: '/workspace/packages/main-process/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron',
+      argsPrefix: [],
+    })
+  })
+
+  test('falls back to legacy windows dist path when electron cli is unavailable', () => {
+    const electronLaunch = resolveElectronLaunch({
+      root: '/workspace',
+      platform: 'win32',
+      existsSyncFn: () => false,
+    })
+
+    expect(electronLaunch).toEqual({
+      command: '/workspace/packages/main-process/node_modules/electron/dist/electron.exe',
+      argsPrefix: [],
+    })
   })
 })
