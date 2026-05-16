@@ -4,16 +4,17 @@ import { resolveElectronLaunch } from '../src/parts/ResolveElectronPath/ResolveE
 
 describe('resolveElectronLaunch', () => {
   test('uses electron cli script when available', () => {
+    const electronCliPath = join('/workspace', 'packages', 'main-process', 'node_modules', 'electron', 'cli.js')
     const electronLaunch = resolveElectronLaunch({
       root: '/workspace',
       platform: 'linux',
       nodePath: '/usr/bin/node',
-      existsSyncFn: (path) => path === '/workspace/packages/main-process/node_modules/electron/cli.js',
+      existsSyncFn: (path) => path === electronCliPath,
     })
 
     expect(electronLaunch).toEqual({
       command: '/usr/bin/node',
-      argsPrefix: [join('/workspace', 'packages', 'main-process', 'node_modules', 'electron', 'cli.js')],
+      argsPrefix: [electronCliPath],
     })
   })
 
