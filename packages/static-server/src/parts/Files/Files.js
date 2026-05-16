@@ -12,6 +12,9 @@ const files = {
   '/': {
     headers: indexHeaders,
   },
+  '/auth/callback': {
+    headers: indexHeaders,
+  },
   '/def': {
     headers: specialHeaders,
   },

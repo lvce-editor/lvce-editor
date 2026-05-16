@@ -37,3 +37,20 @@ test('returns 304 with config etag header for conditional head request in produc
     },
   })
 })
+
+test('returns 200 for oauth callback route with query params in production', () => {
+  const response = GetResponseInfoProduction.getResponseInfoProduction({
+    method: 'GET',
+    headers: {},
+    url: '/auth/callback?code=code-1&state=state-1',
+  })
+
+  expect(response).toEqual({
+    absolutePath: expect.stringContaining('/static/auth/callback.html'),
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'abc',
+      Etag: 'W/123',
+    },
+  })
+})
