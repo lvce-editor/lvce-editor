@@ -7,7 +7,7 @@ describe('resolveElectronLaunch', () => {
       root: '/workspace',
       platform: 'linux',
       nodePath: '/usr/bin/node',
-      existsSyncFn: path => path === '/workspace/packages/main-process/node_modules/electron/cli.js',
+      existsSyncFn: (path) => path === '/workspace/packages/main-process/node_modules/electron/cli.js',
     })
 
     expect(electronLaunch).toEqual({

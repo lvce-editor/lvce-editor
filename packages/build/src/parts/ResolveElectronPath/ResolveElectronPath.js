@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import { join } from 'path'
 
-const getElectronCliPath = root => {
+const getElectronCliPath = (root) => {
   return join(root, 'packages', 'main-process', 'node_modules', 'electron', 'cli.js')
 }
 
