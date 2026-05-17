@@ -101,6 +101,33 @@ test('load - race condition', async () => {
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
 })
 
+test('load should mark the loaded instance as focused for its module type', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const mockModule = {
+    create: jest.fn(() => {
+      return {
+        x: 0,
+      }
+    }),
+    loadContent: jest.fn(async (state) => {
+      return {
+        ...state,
+        x: 42,
+      }
+    }),
+  }
+  const getModule = async () => {
+    return mockModule
+  }
+  const state = ViewletManager.create(getModule, 'chat-debug-instance', 0, 'test', 0, 0, 0, 0)
+  state.moduleId = 'ChatDebug'
+
+  await ViewletManager.load(state)
+
+  expect(ViewletStates.getFocusedInstanceByType('ChatDebug')).toBe(1)
+})
+
 test.skip('load - error - no create method', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
