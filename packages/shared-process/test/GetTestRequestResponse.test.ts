@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { join } from 'node:path'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -53,7 +54,7 @@ test('getTestRequestResponse', async () => {
       status: 200,
     },
   })
-  expect(CreateTestOverview.createTestOverview).toHaveBeenCalledWith('/test/src')
+  expect(CreateTestOverview.createTestOverview).toHaveBeenCalledWith(join('/test', 'src'))
 })
 
 test('getTestRequestResponse - error in createTestOverview', async () => {
