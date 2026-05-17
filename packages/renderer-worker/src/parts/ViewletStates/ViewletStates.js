@@ -18,6 +18,27 @@ export const state = {
   focusedInstanceByType: Object.create(null),
 }
 
+const normalizeModuleId = (key) => {
+  if (key === 'Editor') {
+    return 'EditorText'
+  }
+  if (key === 'EditorText') {
+    return 'Editor'
+  }
+  if (key === 'EditorCompletion') {
+    return 'Editor'
+  }
+  return key
+}
+
+const getFocusedInstanceForModuleId = (moduleId) => {
+  const focusedUid = getFocusedInstanceByType(moduleId)
+  if (typeof focusedUid !== 'number') {
+    return undefined
+  }
+  return getByUid(focusedUid)
+}
+
 export const set = (key, value) => {
   // TODO separate factories from state
   Assert.object(value)
@@ -41,17 +62,19 @@ export const getInstance = (key) => {
   if (fast) {
     return fast
   }
-  if (key === 'Editor') {
-    key = 'EditorText'
+  const normalizedKey = normalizeModuleId(key)
+  if (normalizedKey !== key) {
+    const normalizedFast = state.instances[normalizedKey]
+    if (normalizedFast) {
+      return normalizedFast
+    }
   }
-  if (key === 'EditorText') {
-    key = 'Editor'
-  }
-  if (key === 'EditorCompletion') {
-    key = 'Editor'
+  const focusedInstance = getFocusedInstanceForModuleId(key) || getFocusedInstanceForModuleId(normalizedKey)
+  if (focusedInstance) {
+    return focusedInstance
   }
   for (const value of Object.values(state.instances)) {
-    if (value.moduleId === key) {
+    if (value.moduleId === key || value.moduleId === normalizedKey) {
       return value
     }
   }
@@ -63,12 +86,19 @@ export const hasInstance = (key) => {
 }
 
 export const remove = (key) => {
+  const instance = state.instances[key]
+  if (instance) {
+    clearFocusedInstanceByType(instance.renderedState?.uid, instance.moduleId)
+  }
   delete state.instances[key]
 }
 
 export const dispose = async (key) => {
   const instance = state.instances[key]
   delete state.instances[key]
+  if (instance) {
+    clearFocusedInstanceByType(instance.renderedState?.uid, instance.moduleId)
+  }
   if (instance.factory.dispose) {
     await instance.factory.dispose(instance.state)
   }
@@ -119,6 +149,7 @@ export const setRenderedState = (key, newState) => {
 
 export const reset = () => {
   state.instances = Object.create(null)
+  state.focusedInstanceByType = Object.create(null)
 }
 
 export const getFocusedInstance = () => {

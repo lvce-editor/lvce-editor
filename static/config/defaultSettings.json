@@ -41,7 +41,7 @@
 
   "terminal.separateConnection": false,
 
-  "window.titleBarStyle": "native",
+  "window.titleBarStyle": "custom",
   "window.zoomLevel": 0,
   "window.controlsOverlay.enabled": true,
 

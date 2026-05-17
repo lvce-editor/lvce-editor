@@ -76,3 +76,8 @@
   color: inherit;
   display: flex;
 }
+
+/* TODO change this maybe */
+.ExtensionDetail .Sash {
+  position: relative;
+}

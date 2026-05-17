@@ -43,6 +43,7 @@ const getSashSideBarDom = () => {
       tabIndex: -1,
       role: 'none',
       onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       childCount: 1,
     },
     {
@@ -60,6 +61,7 @@ const getSashSecondarySideBarDom = () => {
       tabIndex: -1,
       role: 'none',
       onPointerDown: DomEventListenerFunctions.HandleSashSecondarySideBarPointerDown,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       childCount: 1,
     },
     {
@@ -72,10 +74,11 @@ const getSashSecondarySideBarDom = () => {
 const getSashPreviewDom = () => {
   return {
     type: VirtualDomElements.Div,
-    className: 'Viewlet Sash SashVertical',
+    className: 'Viewlet Sash SashVertical SashPreview',
     tabIndex: -1,
     role: 'none',
     onPointerDown: DomEventListenerFunctions.HandleSashPreviewPointerDown,
+    onContextMenu: DomEventListenerFunctions.HandleContextMenu,
   }
 }
 
@@ -86,6 +89,7 @@ const getSashPanelDom = () => {
     tabIndex: -1,
     role: 'none',
     onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,
+    onContextMenu: DomEventListenerFunctions.HandleContextMenu,
   }
 }
 

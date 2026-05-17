@@ -7,6 +7,7 @@
   "scripts": {
     "build:remote": "node src/build.js --remote",
     "build:electron": "node src/build.js --electron",
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
     "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress",
     "type-check": "tsc"
   },
@@ -38,15 +39,15 @@
     "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.28.0",
-    "fs-extra": "^11.3.4",
-    "got": "^15.0.3",
+    "fs-extra": "^11.3.5",
+    "got": "^15.0.5",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^7.0.4",
     "pretty-bytes": "^7.1.0",
     "rollup": "^4.53.3",
     "tar-fs": "^3.1.2",
-    "verdaccio": "6.5.2"
+    "verdaccio": "6.7.1"
   },
   "xo": {
     "rules": {
@@ -85,6 +86,23 @@
       "unicorn/prevent-abbreviations": "off",
       "n/prefer-global/process": "off",
       "quotes": "off"
+    }
+  },
+  "jest": {
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
     }
   }
 }

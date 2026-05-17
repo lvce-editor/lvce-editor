@@ -1,3 +1,7 @@
+:root {
+  --ChatDebugViewSashWidth: 4px;
+}
+
 .ChatDebugViewCellDuration {
   text-align: right;
 }

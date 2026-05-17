@@ -1,13 +1,12 @@
 import { join } from 'path'
 import { root } from '../Root/Root.js'
 import { spawn } from 'child_process'
+import { resolveElectronLaunch } from '../ResolveElectronPath/ResolveElectronPath.js'
 
-let electronPath = ''
-if (process.platform === 'darwin') {
-  electronPath = join(root, 'packages/main-process/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron')
-} else {
-  electronPath = join(root, 'packages/main-process/node_modules/electron/dist/electron')
-}
+const electronLaunch = resolveElectronLaunch({
+  root,
+  platform: process.platform,
+})
 
 const mainProcessPath = process.env.LVCE_MAIN_PROCESS_PATH || join(root, 'packages', 'main-process', 'node_modules', '@lvce-editor', 'main-process')
 const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
@@ -20,7 +19,7 @@ const env = {
 
 const main = () => {
   const cliArgs = process.argv.slice(2)
-  const child = spawn(electronPath, ['.', ...cliArgs], {
+  const child = spawn(electronLaunch.command, [...electronLaunch.argsPrefix, '.', ...cliArgs], {
     cwd: mainProcessPath,
     env,
   })
