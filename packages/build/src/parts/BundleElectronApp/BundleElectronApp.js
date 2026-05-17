@@ -63,6 +63,17 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
   })
 }
 
+const hasInstalledElectronArtifact = ({ platform }) => {
+  const basePath = Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
+  if (platform === 'darwin') {
+    return existsSync(Path.join(basePath, 'Electron.app', 'Contents', 'MacOS', 'Electron'))
+  }
+  if (platform === 'win32') {
+    return existsSync(Path.join(basePath, 'electron.exe'))
+  }
+  return existsSync(Path.join(basePath, 'electron'))
+}
+
 const copyDependencies = async ({ cachePath, resourcesPath }) => {
   await Copy.copy({
     from: cachePath,
@@ -234,7 +245,8 @@ export const build = async ({
     ? `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
     : `packages/build/.tmp/electron-bundle/${arch}/resources`
 
-  const useInstalledElectronVersion = isInstalled && installedArch === arch && installedPlatform === platform
+  const useInstalledElectronVersion =
+    isInstalled && installedArch === arch && installedPlatform === platform && hasInstalledElectronArtifact({ platform })
   if (!useInstalledElectronVersion) {
     console.time('downloadElectron')
     await downloadElectron({

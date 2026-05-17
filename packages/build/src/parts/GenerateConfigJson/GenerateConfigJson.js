@@ -34,6 +34,7 @@ const generateFilesCodeMap = (indexes, uris) => {
     map[uri] = index
   }
   map['/'] = map['/index.html']
+  map['/auth/callback'] = map['/auth/callback.html']
   return map
 }
 

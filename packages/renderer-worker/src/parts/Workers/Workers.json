@@ -92,7 +92,7 @@
   {
     "id": "chatViewModelWorker",
     "fileName": "chatViewModelWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "sandbox allow-same-origin"],
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/chat-view-model/dist/chatViewModelWorkerMain.js",
     "productionPath": "/packages/chat-view-model/dist/chatViewModelWorkerMain.js",
     "settingName": "develop.chatViewModelWorkerPath",
@@ -105,8 +105,7 @@
     "productionPath": "/packages/chat-view/dist/chatViewWorkerMain.js",
     "settingName": "develop.chatViewWorkerPath",
     "hotReloadCommand": "Chat.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "sandbox allow-same-origin"],
-    "comment": "TODO need to adjust csp for connect src. maybe use a separate worker for connections"
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
   },
   {
     "id": "chatCoordinator",
@@ -115,7 +114,11 @@
     "productionPath": "/packages/chat-coordinator-worker/dist/chatCoordinatorWorkerMain.js",
     "settingName": "develop.chatCoordinatorWorkerPath",
     "hotReloadCommand": "",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://openrouter.ai https://api.openai.com", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": [
+      "default-src 'none'",
+      "connect-src https://openrouter.ai https://api.openai.com https://lvce-editor.dev",
+      "sandbox allow-same-origin"
+    ]
   },
   {
     "id": "clipBoard",
