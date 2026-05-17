@@ -603,6 +603,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       factory: module,
       moduleId: viewlet.moduleId || viewlet.id || '',
     })
+    ViewletStates.setFocusedInstanceByType(viewletUid, viewlet.moduleId || viewlet.id || '')
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
     }
