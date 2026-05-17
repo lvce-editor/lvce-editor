@@ -112,6 +112,7 @@ test('load should mark the loaded instance as focused for its module type', asyn
     }),
     loadContent: jest.fn(async (state) => {
       return {
+        // @ts-ignore
         ...state,
         x: 42,
       }
@@ -120,8 +121,11 @@ test('load should mark the loaded instance as focused for its module type', asyn
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, 'chat-debug-instance', 0, 'test', 0, 0, 0, 0)
-  state.moduleId = 'ChatDebug'
+  const state = {
+    ...ViewletManager.create(getModule, 'chat-debug-instance', 0, 'test', 0, 0, 0, 0),
+    disposed: false,
+    moduleId: 'ChatDebug',
+  }
 
   await ViewletManager.load(state)
 
