@@ -142,6 +142,30 @@ test('getUserInfo returns the full auth snapshot from layout state', () => {
   })
 })
 
+test('getUserInfo can omit auth access token and token usage', () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    authAccessToken: 'token-1',
+    authErrorMessage: 'error',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  }
+
+  expect(
+    ViewletLayout.getUserInfo(state, {
+      includeAccessToken: false,
+      includeTokenUsage: false,
+    }),
+  ).toEqual({
+    authErrorMessage: 'error',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+  })
+})
+
 test('openCommandPalette delegates to QuickPick.showCommands', async () => {
   const state = ViewletLayout.create(1)
   // @ts-ignore

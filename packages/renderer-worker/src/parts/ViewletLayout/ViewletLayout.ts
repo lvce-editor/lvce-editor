@@ -65,7 +65,7 @@ const toUserInfo = (state) => {
 }
 
 const toFilteredUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
-  const { includeAccessToken = false, includeTokenUsage = false } = options
+  const { includeAccessToken = true, includeTokenUsage = true } = options
   const info = toUserInfo(state)
   if (!includeAccessToken) {
     delete info.authAccessToken
