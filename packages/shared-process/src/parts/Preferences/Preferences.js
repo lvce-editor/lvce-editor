@@ -6,6 +6,10 @@ import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
 // TODO need jsonc parser for settings with comments
 
+const builtinPreferences = {
+  'window.titleBarStyle': 'custom',
+}
+
 export const getUserPreferences = async () => {
   try {
     const userSettingsPath = PlatformPaths.getUserSettingsPath()
@@ -64,6 +68,7 @@ export const getAll = async () => {
     // TODO separate backend and frontend preferences, ui only needs frontend preferences
     const preferences = {
       ...defaultPreferences,
+      ...builtinPreferences,
       ...userPreferences,
       ...overrides,
     }
@@ -87,7 +92,7 @@ export const getAllSafe = async () => {
     return await getAll()
   } catch (error) {
     Logger.error(`[shared-process] Failed to load preferences on startup, continuing with defaults: ${error}`)
-    return {}
+    return builtinPreferences
   }
 }
 
