@@ -17,8 +17,10 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
+import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import { rewriteIconThemePaths } from '../RewriteIconThemePaths/RewriteIconThemePaths.js'
 import * as StaticContentSecurityPolicy from '../StaticContentSecurityPolicy/StaticContentSecurityPolicy.js'
 import * as TranspileFiles from '../TranspileFiles/TranspileFiles.js'
 import * as Version from '../Version/Version.js'
@@ -190,6 +192,15 @@ const copyIcons = async (to) => {
   })
 }
 
+const rewriteBuiltinIconThemePaths = async ({ commitHash, pathPrefix }) => {
+  const iconThemePath = `packages/build/.tmp/dist/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`
+  const content = await ReadFile.readFile(iconThemePath)
+  await WriteFile.writeFile({
+    to: iconThemePath,
+    content: rewriteIconThemePaths(content, `${pathPrefix}/${commitHash}/icons`),
+  })
+}
+
 const getThemeNames = async () => {
   const extensionPath = Path.absolute('extensions')
   const extensions = await readdir(extensionPath)
@@ -331,6 +342,7 @@ const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) =>
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
   for (const languageFeature of languageFeatures) {
+    await rewriteBuiltinIconThemePaths({ commitHash, pathPrefix })
     let manifest
     try {
       manifest = await JsonFile.readJson(Path.absolute(`extensions/${languageFeature}/extension.json`))
