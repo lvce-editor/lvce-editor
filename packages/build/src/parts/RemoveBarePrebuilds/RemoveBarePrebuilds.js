@@ -5,7 +5,7 @@ const getPrebuildsToKeep = (platform, arch) => {
   if (platform === 'linux' && arch === 'x64') {
     return 'linux-x64'
   }
-  if (platform === 'linux' && arch === 'arm') {
+  if (platform === 'linux' && arch === 'arm64') {
     return 'linux-arm64'
   }
   if (platform === 'darwin' && arch === 'x64') {
@@ -25,7 +25,7 @@ export const removeBarePrebuilds = async (to, platform, arch) => {
   if (toKeep === '*') {
     return
   }
-  const modules = ['bare-fs', 'bare-os']
+  const modules = ['bare-fs', 'bare-os', 'bare-url']
   for (const module of modules) {
     const dirents = await ReadDir.readDir(`${to}/node_modules/${module}/prebuilds`)
     if (!dirents.includes(toKeep)) {

@@ -48,6 +48,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/bare-fs/CMakeLists.txt`)
   await Remove.remove(`${to}/node_modules/bare-os/binding.c`)
   await Remove.remove(`${to}/node_modules/bare-os/CMakeLists.txt`)
+  await Remove.remove(`${to}/node_modules/bare-url/binding.c`)
+  await Remove.remove(`${to}/node_modules/bare-url/CMakeLists.txt`)
   await Remove.remove(`${to}/node_modules/eventemitter3/umd`)
   await Remove.remove(`${to}/node_modules/extract-zip/cli.js`)
   await Remove.remove(`${to}/node_modules/fast-fifo/bench.js`)
