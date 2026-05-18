@@ -8,6 +8,24 @@ import { VError } from '../VError/VError.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as FileSystem from './FileSystem.js'
 
+const isEnoentError = (error) => {
+  if (!error) {
+    return false
+  }
+  if (error.code === ErrorCodes.ENOENT) {
+    return true
+  }
+  if (!error.message) {
+    return false
+  }
+  return (
+    error.message.includes('File not found:') ||
+    error.message.includes('ENOENT') ||
+    error.message.includes('The system cannot find the file specified.') ||
+    error.message.includes('The system cannot find the path specified.')
+  )
+}
+
 const readFileWeb = async (path, defaultContent) => {
   const content = await LocalStorage.getText(path)
   return content ?? defaultContent
@@ -24,8 +42,7 @@ const readFileNode = async (path, defaultContent) => {
     const userSettingsContent = await FileSystem.readFile(path)
     return userSettingsContent
   } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (isEnoentError(error)) {
       try {
         const dirname = Workspace.pathDirName(path)
         await FileSystem.mkdir(dirname)
@@ -45,8 +62,7 @@ const readJsonNode = async (path, defaultContent) => {
     const userSettingsContent = await FileSystem.readJson(path)
     return userSettingsContent
   } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (isEnoentError(error)) {
       try {
         const dirname = Workspace.pathDirName(path)
         await FileSystem.mkdir(dirname)
@@ -93,8 +109,7 @@ const writeFileNode = async (path, content) => {
   } catch (error) {
     // TODO error should just have enoent code that could be checked
 
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (isEnoentError(error)) {
       try {
         const dirname = Workspace.pathDirName(path)
         await FileSystem.mkdir(dirname)
