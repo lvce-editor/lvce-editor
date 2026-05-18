@@ -1,5 +1,7 @@
 {
   "name": "@@NAME@@",
+  "productName": "@@PRODUCT_NAME@@",
+  "desktopName": "@@NAME@@.desktop",
   "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
@@ -13,11 +15,12 @@
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "linux": {
+      "executableName": "@@NAME@@",
       "category": "Utility;TextEditor;Development;IDE;",
       "desktop": {
         "GenericName": "Text Editor",
         "StartupNotify": "false",
-        "StartupWMClass": "@@NAME@@",
+        "StartupWMClass": "@@PRODUCT_NAME@@",
         "Keywords": "@@NAME@@;"
       },
       "target": [

@@ -14,6 +14,7 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
+import * as ResolveBuiltArtifactPath from '../ResolveBuiltArtifactPath/ResolveBuiltArtifactPath.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
@@ -292,8 +293,7 @@ const copyElectronResult = async ({
   }
 }
 
-const renameReleaseFile = async ({ config, version, product, arch }) => {
-  const finalFileName = getFinalFileName({ config, version, product, arch })
+const renameReleaseFile = async ({ config, product, arch, finalFileName }) => {
   const releaseFileName = getReleaseFileName({ config, product, arch })
   const releaseFilePath = `packages/build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
@@ -356,8 +356,19 @@ export const build = async ({
   await runElectronBuilder({ config, arch })
   console.timeEnd('runElectronBuilder')
 
+  const distPath = 'packages/build/.tmp/electron-builder/dist'
+  const distEntries = await readdir(Path.absolute(distPath))
+  const expectedFinalFileName = getFinalFileName({ config, version, product, arch })
+  const finalFileName = ResolveBuiltArtifactPath.resolveBuiltArtifactPath({
+    config,
+    version,
+    expectedPath: expectedFinalFileName,
+    distEntries,
+    distPath,
+  })
+
   console.time('renameReleaseFile')
-  const releaseFilePath = await renameReleaseFile({ config, version, product, arch })
+  const releaseFilePath = await renameReleaseFile({ config, product, arch, finalFileName })
   console.timeEnd('renameReleaseFile')
 
   await printFinalSize(releaseFilePath)
