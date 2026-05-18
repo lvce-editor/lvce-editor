@@ -139,6 +139,14 @@ test('writeFile - nonexistent file', async () => {
   await expect(FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')).rejects.toThrow(`File not found: '/test/non-existing-file.txt'`)
 })
 
+test('readFile - windows file not found message', async () => {
+  // @ts-ignore
+  fs.readFile.mockImplementation(() => {
+    throw new Error('The system cannot find the file specified.')
+  })
+  await expect(FileSystem.readFile('/test/non-existing-file.txt')).rejects.toThrow(`File not found: '/test/non-existing-file.txt'`)
+})
+
 test.skip('writeFile - parallel write on different files works', async () => {
   // queue would be correct but slower
 

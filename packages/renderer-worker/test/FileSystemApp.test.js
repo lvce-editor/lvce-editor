@@ -131,6 +131,24 @@ test('readFile - settings - error - file does not exist', async () => {
   expect(FileSystem.readFile).toHaveBeenCalledWith('~/.config/app/settings.json')
 })
 
+test('readFile - settings - error - windows file not found message', async () => {
+  // @ts-ignore
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => {
+    return '~/.config/app/settings.json'
+  })
+  // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    throw new Error('The system cannot find the file specified.')
+  })
+  expect(await FileSystemApp.readFile('settings.json')).toBe('{}')
+  expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(1, '~/.config/app/settings.json', '{}')
+  expect(FileSystem.mkdir).toHaveBeenCalledTimes(1)
+  expect(FileSystem.mkdir).toHaveBeenCalledWith('~/.config/app')
+})
+
 test('writeFile - settings - error parent folder does not exist', async () => {
   // @ts-ignore
   PlatformPaths.getUserSettingsPath.mockImplementation(() => {
