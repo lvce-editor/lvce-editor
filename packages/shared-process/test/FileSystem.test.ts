@@ -61,7 +61,7 @@ class NodeError extends Error {
 
 test('copy - file', async () => {
   // @ts-ignore
-  fs.cp.mockImplementation(() => {})
+  fs.cp.mockImplementation(() => { })
   await FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
   expect(fs.cp).toHaveBeenCalledTimes(1)
   expect(fs.cp).toHaveBeenCalledWith('/test-1/a.txt', '/test-2/a.txt', {
@@ -91,7 +91,7 @@ test('copy - to self', async () => {
 
 test('createFile', async () => {
   // @ts-ignore
-  fs.writeFile.mockImplementation(() => {})
+  fs.writeFile.mockImplementation(() => { })
   await FileSystem.createFile('/test/a.txt')
   expect(fs.writeFile).toHaveBeenCalledTimes(1)
   expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', '', { flag: 'wx' })
@@ -107,7 +107,7 @@ test('createFile - should throw error if file already exists', async () => {
 
 test('create folder', async () => {
   // @ts-ignore
-  fs.mkdir.mockImplementation(() => {})
+  fs.mkdir.mockImplementation(() => { })
   await FileSystem.createFolder('/test/a', {})
   expect(fs.mkdir).toHaveBeenCalledTimes(1)
   expect(fs.mkdir).toHaveBeenCalledWith('/test/a', {})
@@ -125,7 +125,7 @@ test('create folder - should fail if folder already exists', async () => {
 
 test('writeFile', async () => {
   // @ts-ignore
-  fs.writeFile.mockImplementation(() => {})
+  fs.writeFile.mockImplementation(() => { })
   await FileSystem.writeFile('/test/a.txt', 'Hello World')
   expect(fs.writeFile).toHaveBeenCalledTimes(1)
   expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', 'Hello World', EncodingType.Utf8)
@@ -207,9 +207,9 @@ test.skip('writeFile (string, error handling)', async () => {
 
 test('ensureFile - created parent folders recursively', async () => {
   // @ts-ignore
-  fs.mkdir.mockImplementation(() => {})
+  fs.mkdir.mockImplementation(() => { })
   // @ts-ignore
-  fs.writeFile.mockImplementation(() => {})
+  fs.writeFile.mockImplementation(() => { })
   await FileSystem.ensureFile('/test/a/b/c/d/writefile.txt', 'Hello World')
   expect(fs.mkdir).toHaveBeenCalledTimes(1)
   expect(fs.mkdir).toHaveBeenCalledWith('/test/a/b/c/d', { recursive: true })
@@ -219,7 +219,7 @@ test('ensureFile - created parent folders recursively', async () => {
 
 test('remove', async () => {
   // @ts-ignore
-  Trash.trash.mockImplementation(() => {})
+  Trash.trash.mockImplementation(() => { })
   await FileSystem.remove('/test/file-to-be-removed.txt')
   expect(Trash.trash).toHaveBeenCalledTimes(1)
   expect(Trash.trash).toHaveBeenCalledWith('/test/file-to-be-removed.txt')
@@ -227,7 +227,7 @@ test('remove', async () => {
 
 test('remove - non-existing file', async () => {
   // @ts-ignore
-  Trash.trash.mockImplementation(() => {})
+  Trash.trash.mockImplementation(() => { })
   await FileSystem.remove('/test/non-existing.txt')
   expect(Trash.trash).toHaveBeenCalledTimes(1)
   expect(Trash.trash).toHaveBeenCalledWith('/test/non-existing.txt')
@@ -235,7 +235,7 @@ test('remove - non-existing file', async () => {
 
 test('rename', async () => {
   // @ts-ignore
-  fs.rename.mockImplementation(() => {})
+  fs.rename.mockImplementation(() => { })
   await FileSystem.rename('/test/file-to-be-moved.txt', '/test/file-has-been-moved.txt')
   expect(fs.rename).toHaveBeenCalledTimes(1)
   expect(fs.rename).toHaveBeenCalledWith('/test/file-to-be-moved.txt', '/test/file-has-been-moved.txt')
@@ -257,9 +257,9 @@ test('rename - error - EXDEV', async () => {
     throw new NodeError(ErrorCodes.EXDEV)
   })
   // @ts-ignore
-  fs.cp.mockImplementation(() => {})
+  fs.cp.mockImplementation(() => { })
   // @ts-ignore
-  fs.rm.mockImplementation(() => {})
+  fs.rm.mockImplementation(() => { })
   await FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
   expect(fs.cp).toHaveBeenCalledTimes(1)
   expect(fs.cp).toHaveBeenCalledWith('/test/non-existing.txt', '/test/file-has-been-moved.txt', { recursive: true })
