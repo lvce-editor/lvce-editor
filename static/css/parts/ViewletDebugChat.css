@@ -76,3 +76,253 @@
   contain: content;
   display: flex;
 }
+
+.TableWrapper {
+  height: calc(var(--ChatDebugViewTableHeaderHeight) + var(--ChatDebugViewTableBodyHeight));
+  overflow: hidden;
+  position: relative;
+}
+
+.Table {
+  width: calc(100% - var(--ChatDebugViewTableScrollBarWidth));
+}
+
+.TableColZero {
+  width: var(--ChatDebugViewTableColZeroWidth);
+}
+
+.TableColOne {
+  width: var(--ChatDebugViewTableColOneWidth);
+}
+
+.TableColTwo {
+  width: var(--ChatDebugViewTableColTwoWidth);
+}
+
+.TableColThree {
+  width: var(--ChatDebugViewTableColThreeWidth);
+}
+
+.TableColFour {
+  width: var(--ChatDebugViewTableColFourWidth);
+}
+
+.Resizers {
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: var(--ChatDebugViewTableScrollBarWidth);
+  top: 0;
+}
+
+.Resizer {
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  cursor: col-resize;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  top: 0;
+  transform: translateX(calc(-0.5 * var(--ChatDebugViewSashWidth)));
+  width: var(--ChatDebugViewSashWidth);
+}
+
+.ResizerOne {
+  left: var(--ResizerOneLeft);
+}
+
+.ResizerTwo {
+  left: var(--ResizerTwoLeft);
+}
+
+.ResizerThree {
+  left: var(--ResizerThreeLeft);
+}
+
+.ResizerFour {
+  left: var(--ResizerFourLeft);
+}
+
+.ResizerInner {
+  background: var(--vscode-panel-border, rgba(255, 255, 255, 0.12));
+  bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: translateX(-0.5px);
+  width: 1px;
+}
+
+.ChatDebugViewTimeline {
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: var(--ChatDebugViewTimelineHeight);
+}
+
+.ChatDebugViewTimelineInteractive {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.ChatDebugViewDetailsBottom .Gutter {
+  flex: 0 0 var(--ChatDebugViewDetailsLineNumberWidth);
+  width: var(--ChatDebugViewDetailsLineNumberWidth);
+}
+
+.ChatDebugViewHeadersTable {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.ChatDebugViewHeadersSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.ChatDebugViewHeadersSection + .ChatDebugViewHeadersSection {
+  margin-top: 16px;
+}
+
+.ChatDebugViewHeadersSectionHeading {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--vscode-descriptionForeground, rgba(255, 255, 255, 0.7));
+  cursor: pointer;
+  display: flex;
+  font-size: 11px;
+  font-weight: 600;
+  justify-content: flex-start;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  padding: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.ChatDebugViewHeadersSectionHeading:hover {
+  color: var(--vscode-editor-foreground);
+}
+
+.ChatDebugViewHeadersRow {
+  display: grid;
+  grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+}
+
+.ChatDebugViewHeadersCell {
+  border-bottom: 1px solid var(--vscode-panel-border, rgba(255, 255, 255, 0.12));
+  min-width: 0;
+  color: var(--vscode-editor-foreground);
+  padding: 6px 10px;
+  text-align: left;
+  word-break: break-word;
+}
+
+.ChatDebugViewHeadersRowOdd {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ChatDebugViewHeadersRowEven {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ChatDebugViewHeadersCellName {
+  font-weight: 500;
+}
+
+.ChatDebugViewHeadersSectionInfo {
+  color: var(--vscode-descriptionForeground, rgba(255, 255, 255, 0.7));
+  font-size: 11px;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
+.PreviewVirtualizedEditor {
+  height: var(--ChatDebugViewPreviewViewportHeight);
+  overflow: hidden;
+  position: relative;
+}
+
+.PreviewVirtualizedEditor .Editor {
+  width: calc(100% - var(--ChatDebugViewPreviewScrollBarWidth));
+}
+
+.PreviewTextScrollBar {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  height: var(--ChatDebugViewPreviewViewportHeight);
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: var(--ChatDebugViewPreviewScrollBarWidth);
+}
+
+.PreviewTextScrollBarThumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  height: var(--ChatDebugViewPreviewScrollBarHeight);
+  left: 2px;
+  position: absolute;
+  top: var(--ChatDebugViewPreviewScrollBarOffset);
+  width: calc(100% - 4px);
+}
+
+.TableScrollBar {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  height: var(--ChatDebugViewTableBodyHeight);
+  position: absolute;
+  right: 0;
+  top: var(--ChatDebugViewTableHeaderHeight);
+  width: var(--ChatDebugViewTableScrollBarWidth);
+}
+
+.TableScrollBarThumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  height: var(--ChatDebugViewTableScrollBarHeight);
+  left: 2px;
+  position: absolute;
+  top: var(--ChatDebugViewTableScrollBarOffset);
+  width: calc(100% - 4px);
+}
+
+.TokenText {
+  color: var(--vscode-editor-foreground);
+}
+
+.TokenString {
+  color: var(--vscode-debugTokenExpression-string, #ce9178);
+}
+
+.TokenNumeric {
+  color: var(--vscode-debugTokenExpression-number, #b5cea8);
+}
+
+.TokenBoolean {
+  color: var(--vscode-debugTokenExpression-boolean, #569cd6);
+}
+
+.TokenKey,
+.TokenAttributeName,
+.TokenPropertyName {
+  color: var(--vscode-symbolIcon-propertyForeground, #9cdcfe);
+}
+
+.TokenKeyword,
+.TokenTag,
+.TokenSelector {
+  color: var(--vscode-symbolIcon-keywordForeground, #569cd6);
+}
+
+.TokenComment {
+  color: var(--vscode-editorLineNumber-foreground, #6a9955);
+}
