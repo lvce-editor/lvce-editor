@@ -17,8 +17,10 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
+import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import { rewriteIconThemePaths } from '../RewriteIconThemePaths/RewriteIconThemePaths.js'
 import * as StaticContentSecurityPolicy from '../StaticContentSecurityPolicy/StaticContentSecurityPolicy.js'
 import * as TranspileFiles from '../TranspileFiles/TranspileFiles.js'
 import * as Version from '../Version/Version.js'
@@ -190,6 +192,22 @@ const copyIcons = async (to) => {
   })
 }
 
+const rewriteBuiltinIconThemePaths = async ({ commitHash, pathPrefix }) => {
+  const iconThemePath = `packages/build/.tmp/dist/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`
+  const content = await ReadFile.readFile(iconThemePath)
+  await WriteFile.writeFile({
+    to: iconThemePath,
+    content: rewriteIconThemePaths(content, `${pathPrefix}/${commitHash}/icons`),
+  })
+}
+
+export const maybeRewriteBuiltinIconThemePaths = async ({ commitHash, pathPrefix, ignoreIconTheme }) => {
+  if (ignoreIconTheme) {
+    return
+  }
+  await rewriteBuiltinIconThemePaths({ commitHash, pathPrefix })
+}
+
 const getThemeNames = async () => {
   const extensionPath = Path.absolute('extensions')
   const extensions = await readdir(extensionPath)
@@ -306,7 +324,7 @@ const copyColorThemes = async ({ commitHash }) => {
   })
 }
 
-const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) => {
+const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix, ignoreIconTheme }) => {
   const allExtension = await readdir(Path.absolute('extensions'))
   const extensionsArray = []
   for (const extension of allExtension) {
@@ -327,6 +345,8 @@ const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) =>
     to: `packages/build/.tmp/dist/${commitHash}/config/extensions.json`,
     value: extensionsArray,
   })
+
+  await maybeRewriteBuiltinIconThemePaths({ commitHash, pathPrefix, ignoreIconTheme })
 
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
@@ -596,7 +616,7 @@ export const build = async ({ product }) => {
   Console.timeEnd('copyColorThemes')
 
   Console.time('copyWebLangugageFeaturesExtensions')
-  await copyWebLangugageFeaturesExtensions({ commitHash, pathPrefix })
+  await copyWebLangugageFeaturesExtensions({ commitHash, pathPrefix, ignoreIconTheme })
   Console.timeEnd('copyWebLangugageFeaturesExtensions')
 
   Console.time('copyWebOtherExtensions')

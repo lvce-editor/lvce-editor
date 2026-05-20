@@ -22,6 +22,7 @@ import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.js'
 import * as Replace from '../Replace/Replace.js'
+import { rewriteIconThemePaths } from '../RewriteIconThemePaths/RewriteIconThemePaths.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.js'
@@ -123,6 +124,12 @@ const copyExtensions = async ({ resourcesPath, commitHash }) => {
     occurrence: '../../../../typescript/lib/typescript-esm.js',
     replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
   })
+  const iconThemePath = `${resourcesPath}/app/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`
+  const iconThemeContent = await ReadFile.readFile(iconThemePath)
+  await WriteFile.writeFile({
+    to: iconThemePath,
+    content: rewriteIconThemePaths(iconThemeContent, `/${commitHash}/icons`),
+  })
   // await Copy.copy({
   //   from: `${resourcesPath}/app/extensions/builtin.vscode-icons/icons`,
   //   to: `${resourcesPath}/app/static/file-icons`,
@@ -137,17 +144,16 @@ const copyExtensions = async ({ resourcesPath, commitHash }) => {
 
 const copyIcons = async ({ resourcesPath, commitHash }) => {
   const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
-  for (const iconPath of [`${resourcesPath}/app/static/${commitHash}/icons`, `${resourcesPath}/app/static/icons`]) {
-    await Copy.copy({
-      from: CodiconsPath.codiconsIconsPath,
-      to: iconPath,
-    })
-    await Copy.copy({
-      from: 'static/icons',
-      to: iconPath,
-      ignore: codiconNames,
-    })
-  }
+  const iconPath = `${resourcesPath}/app/static/${commitHash}/icons`
+  await Copy.copy({
+    from: CodiconsPath.codiconsIconsPath,
+    to: iconPath,
+  })
+  await Copy.copy({
+    from: 'static/icons',
+    to: iconPath,
+    ignore: codiconNames,
+  })
 }
 
 const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
@@ -157,7 +163,6 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
     ignore: ['css'],
   })
   await copyIcons({ resourcesPath, commitHash })
-  await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
   await Rename.rename({
     from: `${resourcesPath}/app/static/${commitHash}/index.html`,
     to: `${resourcesPath}/app/static/index.html`,
