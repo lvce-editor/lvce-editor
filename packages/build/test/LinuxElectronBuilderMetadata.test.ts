@@ -33,6 +33,7 @@ describe('linux electron-builder metadata', () => {
 
       expect(json.productName).toBe('Lvce Editor')
       expect(json.desktopName).toBe('lvce-editor.desktop')
+      expect(json.build.icon).toBe('./build/icons/')
       expect(json.build.linux.executableName).toBe('lvce-editor')
       expect(json.build.linux.desktop.StartupWMClass).toBe('Lvce Editor')
     },
