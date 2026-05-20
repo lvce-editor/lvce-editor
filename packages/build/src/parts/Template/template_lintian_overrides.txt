@@ -3,7 +3,6 @@
 @@NAME@@: embedded-library freetype [usr/lib/@@NAME@@/@@NAME@@]
 @@NAME@@: embedded-library lcms2 [usr/lib/@@NAME@@/@@NAME@@]
 @@NAME@@: embedded-library libjpeg [usr/lib/@@NAME@@/@@NAME@@]
-@@NAME@@: embedded-library libjsoncpp [usr/lib/@@NAME@@/@@NAME@@]
 @@NAME@@: embedded-library libpng [usr/lib/@@NAME@@/@@NAME@@]
 @@NAME@@: embedded-library openjpeg [usr/lib/@@NAME@@/@@NAME@@]
 @@NAME@@: embedded-library srtp [usr/lib/@@NAME@@/@@NAME@@]
@@ -29,7 +28,7 @@
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/@@NAME@@]
 
 # electron missing dependencies
-@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 9 others
+@@NAME@@: missing-dependency-on-libc
 
 # ripgrep - how to resolve this error?
 @@NAME@@: statically-linked-binary usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep/bin/rg
@@ -43,7 +42,7 @@
 @@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.gz (native package)
 
 # node modules
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
+@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any)
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
@@ -57,20 +56,11 @@
 # bare os, bare fs
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-x64/bare-fs.bare]
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-x64/bare-os.bare]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
-@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare]
-@@NAME@@: binary-from-other-architecture [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/bare-os/prebuilds/linux-arm64/bare-os.bare]
 
 # binaries
 
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/process-explorer/bin/processExplorer.js]
-
 # extensions
 @@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
-
-# svg
-@@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/static/file-icons/file_type_docusaurus.svg]
 
 # other
 @@NAME@@: extended-description-is-empty

@@ -177,6 +177,10 @@ const fixPermissions = async ({ debArch, product }) => {
       stdout: 'ignore',
       stderr: 'inherit',
     })
+    await Exec.exec('find', [folder, '-type', 'f', '-name', '*.svg', '-perm', '755', '-print', '-exec', 'chmod', '644', '{}', '+'], {
+      stdout: 'ignore',
+      stderr: 'inherit',
+    })
     await chmod(Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/chrome-sandbox`), 0o4755)
   } catch (error) {
     throw new VError(error, 'Failed to fix permissions')
