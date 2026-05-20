@@ -201,6 +201,13 @@ const rewriteBuiltinIconThemePaths = async ({ commitHash, pathPrefix }) => {
   })
 }
 
+export const maybeRewriteBuiltinIconThemePaths = async ({ commitHash, pathPrefix, ignoreIconTheme }) => {
+  if (ignoreIconTheme) {
+    return
+  }
+  await rewriteBuiltinIconThemePaths({ commitHash, pathPrefix })
+}
+
 const getThemeNames = async () => {
   const extensionPath = Path.absolute('extensions')
   const extensions = await readdir(extensionPath)
@@ -317,7 +324,7 @@ const copyColorThemes = async ({ commitHash }) => {
   })
 }
 
-const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) => {
+const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix, ignoreIconTheme }) => {
   const allExtension = await readdir(Path.absolute('extensions'))
   const extensionsArray = []
   for (const extension of allExtension) {
@@ -339,10 +346,11 @@ const copyWebLangugageFeaturesExtensions = async ({ commitHash, pathPrefix }) =>
     value: extensionsArray,
   })
 
+  await maybeRewriteBuiltinIconThemePaths({ commitHash, pathPrefix, ignoreIconTheme })
+
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
   for (const languageFeature of languageFeatures) {
-    await rewriteBuiltinIconThemePaths({ commitHash, pathPrefix })
     let manifest
     try {
       manifest = await JsonFile.readJson(Path.absolute(`extensions/${languageFeature}/extension.json`))
@@ -608,7 +616,7 @@ export const build = async ({ product }) => {
   Console.timeEnd('copyColorThemes')
 
   Console.time('copyWebLangugageFeaturesExtensions')
-  await copyWebLangugageFeaturesExtensions({ commitHash, pathPrefix })
+  await copyWebLangugageFeaturesExtensions({ commitHash, pathPrefix, ignoreIconTheme })
   Console.timeEnd('copyWebLangugageFeaturesExtensions')
 
   Console.time('copyWebOtherExtensions')
