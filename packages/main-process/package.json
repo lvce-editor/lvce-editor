@@ -20,6 +20,6 @@
     "node": ">=24"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^6.2.0"
+    "@lvce-editor/main-process": "^6.3.0"
   }
 }
