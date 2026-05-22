@@ -4,6 +4,7 @@ import * as Root from '../src/parts/Root/Root.js'
 import * as GetTestPath from '../src/parts/GetTestPath/GetTestPath.js'
 
 const originalTestPath = process.env.TEST_PATH
+const originalArgv = process.argv
 
 beforeEach(() => {
   if (originalTestPath === undefined) {
@@ -11,6 +12,19 @@ beforeEach(() => {
   } else {
     process.env.TEST_PATH = originalTestPath
   }
+  process.argv = originalArgv
+})
+
+test('getTestPath - uses absolute --test-path arg', () => {
+  process.argv = [...originalArgv, '--test-path=/home/simon/Documents/levivilet/chat-view/packages/e2e']
+
+  expect(GetTestPath.getTestPath()).toEqual('/home/simon/Documents/levivilet/chat-view/packages/e2e')
+})
+
+test('getTestPath - resolves relative --test-path arg from cwd', () => {
+  process.argv = [...originalArgv, '--test-path=packages/e2e']
+
+  expect(GetTestPath.getTestPath()).toEqual(join(process.cwd(), 'packages/e2e'))
 })
 
 test('getTestPath - uses absolute TEST_PATH', () => {

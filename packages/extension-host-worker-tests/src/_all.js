@@ -60,6 +60,10 @@ const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
+const getServerArgs = (argv) => {
+  return argv.slice(2).filter((arg) => arg.startsWith('--test-path='))
+}
+
 const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
   if (ci) {
     const app = express()
@@ -79,7 +83,8 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
       },
     }
   }
-  const server = fork(SERVER_PATH, {
+  const serverArgs = getServerArgs(process.argv)
+  const server = fork(SERVER_PATH, serverArgs, {
     stdio: 'inherit',
     env: {
       XDG_CONFIG_HOME: configDir,
