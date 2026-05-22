@@ -1,13 +1,23 @@
 import { isAbsolute, join } from 'node:path'
 import * as Root from '../Root/Root.js'
 
-export const getResolvedTestPath = () => {
-  const { TEST_PATH } = process.env
-  if (TEST_PATH) {
-    if (isAbsolute(TEST_PATH)) {
-      return TEST_PATH
+const getCliTestPath = () => {
+  for (const arg of process.argv.slice(2)) {
+    if (arg.startsWith('--test-path=')) {
+      return arg.slice('--test-path='.length)
     }
-    return join(process.cwd(), TEST_PATH)
+  }
+  return ''
+}
+
+export const getResolvedTestPath = () => {
+  const cliTestPath = getCliTestPath()
+  const testPath = cliTestPath || process.env.TEST_PATH
+  if (testPath) {
+    if (isAbsolute(testPath)) {
+      return testPath
+    }
+    return join(process.cwd(), testPath)
   }
   return join(Root.root, 'packages', 'extension-host-worker-tests')
 }
