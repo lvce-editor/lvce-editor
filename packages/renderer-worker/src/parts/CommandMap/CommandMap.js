@@ -375,6 +375,7 @@ export const commandMap = {
   'Terminals.addTerminal': lazy('Terminals.addTerminal'),
   'Terminals.handleClickTab': lazy('Terminals.handleClickTab'),
   'Test.execute': lazy('Test.execute'),
+  'Test.tryAutoFix': lazy('Test.tryAutoFix'),
   'TestFrameWork.checkConditionError': lazy('TestFrameWork.checkConditionError'),
   'TestFrameWork.checkMultiElementCondition': lazy('TestFrameWork.checkMultiElementCondition'),
   'TestFrameWork.checkSingleElementCondition': lazy('TestFrameWork.checkSingleElementCondition'),

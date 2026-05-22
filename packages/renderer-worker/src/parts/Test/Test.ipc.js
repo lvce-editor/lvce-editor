@@ -4,4 +4,5 @@ export const name = 'Test'
 
 export const Commands = {
   execute: Test.execute,
+  tryAutoFix: Test.tryAutoFix,
 }
