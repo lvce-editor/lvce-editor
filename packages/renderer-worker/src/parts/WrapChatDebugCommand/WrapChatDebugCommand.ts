@@ -2,7 +2,10 @@ import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker
 
 export const wrapChatDebugCommand = (key: string) => {
   const fn = async (state, ...args) => {
-    await ChatDebugViewWorker.invoke(`ChatDebug.${key}`, state.uid, ...args)
+    const result = await ChatDebugViewWorker.invoke(`ChatDebug.${key}`, state.uid, ...args)
+    if (key === 'getPayload') {
+      return result
+    }
     const diffResult = await ChatDebugViewWorker.invoke(`ChatDebug.diff2`, state.uid)
     const commands = await ChatDebugViewWorker.invoke('ChatDebug.render2', state.uid, diffResult)
     if (commands.length === 0) {
