@@ -3,7 +3,7 @@ import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker
 export const wrapChatDebugCommand = (key: string) => {
   const fn = async (state, ...args) => {
     const result = await ChatDebugViewWorker.invoke(`ChatDebug.${key}`, state.uid, ...args)
-    if (key === 'getPayload') {
+    if (key === 'getPayload' || key === 'getResponse') {
       return result
     }
     const diffResult = await ChatDebugViewWorker.invoke(`ChatDebug.diff2`, state.uid)
