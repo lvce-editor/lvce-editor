@@ -5,13 +5,10 @@ import * as CodiconsPath from '../CodiconsPath/CodiconsPath.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
-import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Replace from '../Replace/Replace.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import { rewriteIconThemePaths } from '../RewriteIconThemePaths/RewriteIconThemePaths.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
@@ -110,14 +107,6 @@ const copyIcons = async (to) => {
   })
 }
 
-const rewriteBuiltinIconThemePaths = async ({ iconThemePath, commitHash }) => {
-  const content = await ReadFile.readFile(iconThemePath)
-  await WriteFile.writeFile({
-    to: iconThemePath,
-    content: rewriteIconThemePaths(content, `/${commitHash}/icons`),
-  })
-}
-
 const getObjectDependencies = (obj) => {
   if (!obj || !obj.dependencies) {
     return []
@@ -158,7 +147,6 @@ const copyStaticServerFiles = async ({ commitHash }) => {
 ])
 `,
   })
-  await Remove.remove('packages/build/.tmp/server/static-server/static/icons')
   await GetStaticFiles.getStaticFiles({ etag })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.js',
@@ -468,10 +456,6 @@ const copyExtensions = async ({ commitHash }) => {
       })
     }
   }
-  await rewriteBuiltinIconThemePaths({
-    iconThemePath: `packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
-    commitHash,
-  })
   // await Copy.copy({
   //   from: `packages/build/.tmp/server/static-server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
   //   to: `packages/build/.tmp/server/static-server/static/${commitHash}/file-icons`,
