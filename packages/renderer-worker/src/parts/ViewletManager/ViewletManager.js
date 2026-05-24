@@ -66,6 +66,7 @@ const runFn = async (instance, id, key, fn, args) => {
       key === 'getSideBarVisible' ||
       key === 'getUserInfo' ||
       key === 'getPayload' ||
+      key === 'getResponse' ||
       key === 'getVersion' ||
       key === 'getPlatform'
     ) {
