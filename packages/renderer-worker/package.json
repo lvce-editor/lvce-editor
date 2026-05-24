@@ -45,7 +45,7 @@
     "@lvce-editor/activity-bar-worker": "^6.1.0",
     "@lvce-editor/auth-worker": "^3.0.0",
     "@lvce-editor/chat-coordinator-worker": "^5.1.0",
-    "@lvce-editor/chat-debug-view": "^11.0.0",
+    "@lvce-editor/chat-debug-view": "^11.1.0",
     "@lvce-editor/chat-math-worker": "^1.1.0",
     "@lvce-editor/chat-network-worker": "^4.1.0",
     "@lvce-editor/chat-storage-worker": "^3.0.0",
