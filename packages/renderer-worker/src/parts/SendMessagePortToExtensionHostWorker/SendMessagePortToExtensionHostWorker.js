@@ -21,6 +21,7 @@ import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SettingsWorker from '../SettingsWorker/SettingsWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
@@ -36,6 +37,12 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
   Assert.object(port)
   Assert.string(initialCommand)
   await SharedProcess.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToSettingsWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await SettingsWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToTerminalProcess = async (port, initialCommand, rpcId) => {
