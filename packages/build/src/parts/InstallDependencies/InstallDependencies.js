@@ -14,13 +14,18 @@ const installCommands = ['npm ci --ignore-scripts', 'npm run postinstall']
  */
 
 /**
- * @param {{
+ * @typedef {{
  *   execSyncFn?: ExecSyncFn
  *   maxAttempts?: number
  *   log?: (message: string) => void
- * }} [options]
+ * }} InstallDependenciesOptions
  */
-export const installDependencies = ({ execSyncFn = /** @type {ExecSyncFn} */ (execSync), maxAttempts = 3, log = console.log } = {}) => {
+
+/**
+ * @param {InstallDependenciesOptions} [options]
+ */
+export const installDependencies = (options = {}) => {
+  const { execSyncFn = /** @type {ExecSyncFn} */ (execSync), maxAttempts = 3, log = console.log } = options
   let lastError
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -33,9 +38,11 @@ export const installDependencies = ({ execSyncFn = /** @type {ExecSyncFn} */ (ex
       if (attempt === maxAttempts) {
         throw error
       }
+
       log(`npm ci failed on attempt ${attempt}, retrying...`)
     }
   }
+
   throw lastError
 }
 
