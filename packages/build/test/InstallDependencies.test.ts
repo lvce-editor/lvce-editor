@@ -1,17 +1,17 @@
 import { describe, expect, test } from '@jest/globals'
-import { installDependencies } from '../src/parts/InstallDependencies/InstallDependencies.js'
+import { installDependenciesWithRetry } from '../src/parts/InstallDependencies/InstallDependencies.js'
 
-describe('installDependencies', () => {
+type ExecSyncFn = Parameters<typeof installDependenciesWithRetry>[0]
+
+describe('installDependenciesWithRetry', () => {
   test('runs npm ci and postinstall once when the first attempt succeeds', () => {
     const commands: string[] = []
+    const execSyncFn: ExecSyncFn = (command, options) => {
+      commands.push(command)
+      expect(options).toEqual({ stdio: 'inherit' })
+    }
 
-    installDependencies({
-      execSyncFn: (command, options) => {
-        commands.push(command)
-        expect(options).toEqual({ stdio: 'inherit' })
-      },
-      log: () => {},
-    })
+    installDependenciesWithRetry(execSyncFn, () => {})
 
     expect(commands).toEqual(['npm ci --ignore-scripts', 'npm run postinstall'])
   })
@@ -19,34 +19,30 @@ describe('installDependencies', () => {
   test('retries the full install flow until it succeeds', () => {
     const commands: string[] = []
     let attempt = 0
-
-    installDependencies({
-      execSyncFn: (command) => {
-        commands.push(command)
-        if (command === 'npm ci --ignore-scripts') {
-          attempt++
-          if (attempt < 3) {
-            throw new Error('transient failure')
-          }
+    const execSyncFn: ExecSyncFn = (command) => {
+      commands.push(command)
+      if (command === 'npm ci --ignore-scripts') {
+        attempt++
+        if (attempt < 3) {
+          throw new Error('transient failure')
         }
-      },
-      log: () => {},
-    })
+      }
+    }
+
+    installDependenciesWithRetry(execSyncFn, () => {})
 
     expect(commands).toEqual(['npm ci --ignore-scripts', 'npm ci --ignore-scripts', 'npm ci --ignore-scripts', 'npm run postinstall'])
   })
 
   test('throws after the maximum number of attempts', () => {
     let logCount = 0
+    const execSyncFn: ExecSyncFn = () => {
+      throw new Error('persistent failure')
+    }
 
     expect(() =>
-      installDependencies({
-        execSyncFn: () => {
-          throw new Error('persistent failure')
-        },
-        log: () => {
-          logCount++
-        },
+      installDependenciesWithRetry(execSyncFn, () => {
+        logCount++
       }),
     ).toThrow('persistent failure')
 
