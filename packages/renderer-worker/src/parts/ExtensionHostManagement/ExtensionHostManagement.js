@@ -11,16 +11,22 @@ export const state = {
    * @type {readonly any[]}
    */
   extensionHosts: [],
-  cachedActivationEvents: Object.create(null),
   /**
    * @type {any}
    */
-  activatedExtensions: Object.create(null),
+  activatingExtensions: Object.create(null),
+  /**
+   * @type {any}
+   */
+  runningExtensions: Object.create(null),
 }
 
 const actuallyActivateExtension = async (extension, event) => {
   const platform = Platform.getPlatform()
-  if (!(extension.id in state.activatedExtensions)) {
+  if (extension.id in state.runningExtensions) {
+    return
+  }
+  if (!(extension.id in state.activatingExtensions)) {
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
       extension.id,
       extension.isWeb,
@@ -30,9 +36,18 @@ const actuallyActivateExtension = async (extension, event) => {
       Origin.origin,
       Platform.getPlatform(),
     )
-    state.activatedExtensions[extension.id] = ExtensionManagementWorker.invoke('Extensions.activate3', extension, absolutePath, event, platform)
+    state.activatingExtensions[extension.id] = ExtensionManagementWorker.invoke('Extensions.activate3', extension, absolutePath, event, platform)
+      .then((result) => {
+        delete state.activatingExtensions[extension.id]
+        state.runningExtensions[extension.id] = true
+        return result
+      })
+      .catch((error) => {
+        delete state.activatingExtensions[extension.id]
+        throw error
+      })
   }
-  return state.activatedExtensions[extension.id]
+  return state.activatingExtensions[extension.id]
 }
 
 const actuallyActivateByEvent = async (event, assetDir, platform) => {
@@ -53,20 +68,17 @@ const actuallyActivateByEvent = async (event, assetDir, platform) => {
   const additionalExtensions = ExtensionMetaState.state.webExtensions
   const additionalExtensionsToActivate = ExtensionMeta.filterByMatchingEvent(additionalExtensions, event)
   for (const extension of additionalExtensionsToActivate) {
-    await actuallyActivateExtension(extension)
+    await actuallyActivateExtension(extension, event)
   }
 }
 
 // TODO add tests for this
 export const activateByEvent = async (event, assetDir, platform) => {
+  console.log('activate called', event, assetDir, platform)
   Assert.string(event)
   if (event === 'none') {
-    const all = await Promise.all(Object.values(state.cachedActivationEvents))
-    const flatAll = all.flat(1)
-    return [flatAll[0]]
+    const all = await Promise.all(Object.values(state.activatingExtensions))
+    return [all[0]]
   }
-  if (!(event in state.cachedActivationEvents)) {
-    state.cachedActivationEvents[event] = actuallyActivateByEvent(event, assetDir, platform)
-  }
-  return state.cachedActivationEvents[event]
+  return actuallyActivateByEvent(event, assetDir, platform)
 }

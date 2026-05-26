@@ -1,12 +1,15 @@
 import * as Character from '../Character/Character.js'
+import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionMetaState from '../ExtensionMetaState/ExtensionMetaState.js'
-import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as WebViews from '../WebViews/WebViews.ts'
+
+const notifyExtenionChanges = true
 
 export const addWebExtension = async (path) => {
   const manifest = await ExtensionHostWorker.invoke('Extensions.addWebExtension', path)
@@ -36,6 +39,9 @@ export const addWebExtension = async (path) => {
   }
   // const absolutePath = manifest.path + '/' + manifest.browser
   // await ExtensionHostWorker.invoke('ExtensionHostExtension.activate', manifest, absolutePath)
+  if (notifyExtenionChanges) {
+    await Command.execute(`Layout.handleExtensionsChanged`)
+  }
 }
 
 // TODO status fulfilled should be handled as resolved
