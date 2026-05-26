@@ -1,5 +1,5 @@
-import * as SettingsWorker from '../SettingsWorker/SettingsWorker.ts'
+import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 
 export const getKeyBindings = () => {
-  return SettingsWorker.invoke('Settings.getKeyBindings')
+  return SettingsViewWorker.invoke('Settings.getKeyBindings')
 }

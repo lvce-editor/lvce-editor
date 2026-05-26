@@ -1,6 +1,6 @@
-import * as SettingsWorker from '../SettingsWorker/SettingsWorker.ts'
+import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 
 export const saveState = async (state) => {
-  const savedState = await SettingsWorker.invoke('Settings.saveState', state.uid)
+  const savedState = await SettingsViewWorker.invoke('Settings.saveState', state.uid)
   return savedState
 }

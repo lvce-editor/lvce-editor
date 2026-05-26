@@ -459,10 +459,19 @@
     "hotReloadCommand": ""
   },
   {
-    "id": "settings",
+    "id": "settingsView",
     "fileName": "settingsViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",
     "productionPath": "/packages/settings-view/dist/settingsViewWorkerMain.js",
+    "settingName": "develop.settingsWorkerPath",
+    "hotReloadCommand": "Settings.hotReload",
+    "contentSecurityPolicy": ["default-src 'none'"]
+  },
+  {
+    "id": "settings",
+    "fileName": "settingsWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",
+    "productionPath": "/packages/settings-view/dist/settingsWorkerMain.js",
     "settingName": "develop.settingsWorkerPath",
     "hotReloadCommand": "Settings.hotReload",
     "contentSecurityPolicy": ["default-src 'none'"]

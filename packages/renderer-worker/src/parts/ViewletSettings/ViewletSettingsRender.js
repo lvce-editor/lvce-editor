@@ -1,5 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
-import * as SettingsWorker from '../SettingsWorker/SettingsWorker.ts'
+import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 
 export const hasFunctionalRender = true
 
@@ -18,6 +18,6 @@ const renderItems = {
 export const render = [renderItems]
 
 export const renderEventListeners = async () => {
-  const listeners = await SettingsWorker.invoke('Settings.renderEventListeners')
+  const listeners = await SettingsViewWorker.invoke('Settings.renderEventListeners')
   return listeners
 }
