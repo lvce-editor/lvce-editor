@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
@@ -10,6 +11,7 @@ import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorCont
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
+import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
@@ -18,8 +20,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Platform from '../Platform/Platform.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -128,48 +128,62 @@ export const loadContent = async (state, savedState, context) => {
   const fontWeight = EditorPreferences.getFontWeight()
   const lineToReveal = context?.rowIndex || 0
   const columnToReveal = context?.columnIndex || 0
-  await EditorWorker.invoke('Editor.create', {
-    assetDir,
-    columnToReveal,
-    completionTriggerCharacters,
-    content,
-    diagnosticsEnabled,
-    fontFamily,
-    fontSize,
-    fontWeight,
-    formatOnSave,
-    height,
-    hoverEnabled,
-    id,
-    isAutoClosingBracketsEnabled,
-    isAutoClosingQuotesEnabled,
-    isAutoClosingTagsEnabled,
-    isMonospaceFont,
-    isQuickSuggestionsEnabled,
-    languageId,
-    letterSpacing,
-    lineNumbers,
-    lineToReveal,
-    links,
-    platform,
-    rowHeight,
-    savedDeltaY,
-    savedSelections,
-    tabSize,
-    uri,
-    width,
-    x,
-    y,
-    useFunctionalRendering,
-  })
+
+  if (useFunctionalRendering) {
+    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir)
+    await EditorWorker.invoke('Editor.loadContent', id)
+  } else {
+    await EditorWorker.invoke('Editor.create', {
+      assetDir,
+      columnToReveal,
+      completionTriggerCharacters,
+      content,
+      diagnosticsEnabled,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      formatOnSave,
+      height,
+      hoverEnabled,
+      id,
+      isAutoClosingBracketsEnabled,
+      isAutoClosingQuotesEnabled,
+      isAutoClosingTagsEnabled,
+      isMonospaceFont,
+      isQuickSuggestionsEnabled,
+      languageId,
+      letterSpacing,
+      lineNumbers,
+      lineToReveal,
+      links,
+      platform,
+      rowHeight,
+      savedDeltaY,
+      savedSelections,
+      tabSize,
+      uri,
+      width,
+      x,
+      y,
+      useFunctionalRendering,
+    })
+  }
+
   // TODO send render commands directly from editor worker
   // to renderer process
   return rerender(newState2)
 }
 
 export const rerender = async (state) => {
+  if (state.useFunctionalRendering) {
+    const diffResult = await EditorWorker.invoke('Editor.diff2', state.id)
+    const commands = await EditorWorker.invoke('Editor.render2', state.id, diffResult)
+    return {
+      ...state,
+      commands,
+    }
+  }
   const commands = await EditorWorker.invoke('Editor.render', state.id)
-  console.log({ commands })
   return {
     ...state,
     commands,
