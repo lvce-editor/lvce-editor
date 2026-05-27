@@ -1,7 +1,7 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
 
 afterEach(() => {
-  jest.restoreAllMocks()
+  jest.resetAllMocks()
 })
 
 jest.unstable_mockModule('../src/parts/AppWindow/AppWindow.js', () => ({

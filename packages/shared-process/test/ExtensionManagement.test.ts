@@ -1,5 +1,4 @@
 import { expect, jest, test, beforeAll, afterAll, afterEach } from '@jest/globals'
-import getPort from 'get-port'
 import { createWriteStream } from 'node:fs'
 import { access, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import http from 'node:http'
@@ -89,20 +88,24 @@ let handler
 let marketplaceUrl
 
 beforeAll(async () => {
-  const port = await getPort()
   server = http.createServer((request, response) => {
     handler(request, response)
   })
   await new Promise((resolve) => {
-    server.listen(port, () => {
+    server.listen(0, '127.0.0.1', () => {
       resolve(undefined)
     })
   })
+  const address = server.address()
+  if (!address || typeof address === 'string') {
+    throw new Error('Failed to determine test server address')
+  }
+  const { port } = address
   marketplaceUrl = `http://localhost:${port}`
 })
 
 afterAll(() => {
-  server.close()
+  server?.close()
 })
 
 afterEach(() => {
