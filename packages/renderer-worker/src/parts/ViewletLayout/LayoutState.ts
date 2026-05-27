@@ -17,12 +17,16 @@ export interface LayoutState {
   readonly contentAreaId: number
   readonly contentAreaVisible: boolean
   readonly initial: boolean
+  readonly keyBindings: readonly any[]
+  readonly keyBindingIdentifiers: Uint32Array
+  readonly keyBindingSets: Record<string, readonly any[]>
   readonly mainHeight: number
   readonly mainId: number
   readonly mainLeft: number
   readonly mainTop: number
   readonly mainVisible: boolean
   readonly mainWidth: number
+  readonly matchingKeyBindings: readonly any[]
   readonly panelHeight: number
   readonly panelId: number
   readonly panelLeft: number

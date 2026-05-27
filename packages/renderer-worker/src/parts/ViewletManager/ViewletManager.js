@@ -540,9 +540,18 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     const extraCommands = []
 
+    if (viewlet.id === ViewletModuleId.Layout) {
+      ViewletStates.set(viewletUid, {
+        state: newState,
+        renderedState: viewletState,
+        factory: module,
+        moduleId: viewlet.moduleId || viewlet.id || '',
+      })
+    }
+
     if (module.getKeyBindings) {
       const keyBindings = await module.getKeyBindings(viewletUid)
-      KeyBindingsState.addKeyBindings(viewlet.id, keyBindings)
+      KeyBindingsState.addKeyBindings(viewletUid, keyBindings)
     }
     if (module.Commands && module.Commands.getMouseActions) {
       const mouseActions = await module.Commands.getMouseActions(viewletUid)
@@ -598,6 +607,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     // TODO race condition: viewlet state may have been updated again in the mean time
     state = ViewletState.RendererProcessViewletLoaded
+
+    if (viewlet.id === ViewletModuleId.Layout) {
+      newState = ViewletStates.getState(viewletUid)
+    }
 
     ViewletStates.set(viewletUid, {
       state: newState,

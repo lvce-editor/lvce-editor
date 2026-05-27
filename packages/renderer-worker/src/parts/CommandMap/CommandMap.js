@@ -458,6 +458,8 @@ export const commandMap = {
   'Workspace.setPath': lazy('Workspace.setPath'),
   'Workspace.setUri': lazy('Workspace.setUri'),
   'Layout.getAllQuickPickMenuEntries': lazy('Layout.getAllQuickPickMenuEntries'),
+  'Layout.addKeyBindings': lazy('Layout.addKeyBindings'),
+  'Layout.attachViewlet': lazy('Layout.attachViewlet'),
   'Layout.createPanelViewlet': lazy('Layout.createPanelViewlet'),
   'Layout.createViewlet': lazy('Layout.createViewlet'),
   'Layout.getActiveSideBarView': lazy('Layout.getActiveSideBarView'),
@@ -505,6 +507,7 @@ export const commandMap = {
   'Layout.openCommandPalette': lazy('Layout.openCommandPalette'),
   'Layout.openSideBarViewlet': lazy('Layout.openSideBarViewlet'),
   'Layout.openSecondarySideBarViewlet': lazy('Layout.openSecondarySideBarViewlet'),
+  'Layout.removeKeyBindings': lazy('Layout.removeKeyBindings'),
   'Layout.setBadgeCount': lazy('Layout.setBadgeCount'),
   'Layout.setUpdateState': lazy('Layout.setUpdateState'),
   'Layout.signIn': lazy('Layout.signIn'),
@@ -528,4 +531,5 @@ export const commandMap = {
   'Layout.toggleSideBarPosition': lazy('Layout.toggleSideBarPosition'),
   'Layout.toggleStatusBar': lazy('Layout.toggleStatusBar'),
   'Layout.toggleTitleBar': lazy('Layout.toggleTitleBar'),
+  'Layout.updateKeyBindings': lazy('Layout.updateKeyBindings'),
 }
