@@ -17,7 +17,18 @@ export const setExitCode = (exitCode) => {
   process.exitCode = exitCode
 }
 
-export const { argv } = process
+export const argv = new Proxy([], {
+  get(_target, property) {
+    const value = Reflect.get(process.argv, property)
+    if (typeof value === 'function') {
+      return value.bind(process.argv)
+    }
+    return value
+  },
+  set(_target, property, value) {
+    return Reflect.set(process.argv, property, value)
+  },
+})
 
 export const cwd = () => {
   return process.cwd()

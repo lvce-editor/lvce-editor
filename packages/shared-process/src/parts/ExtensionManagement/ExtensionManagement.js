@@ -7,6 +7,7 @@ import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js
 import * as GetEtagFromStats from '../GetEtagFromStats/GetEtagFromStats.js'
 import * as GetExtensionEtags from '../GetExtensionEtags/GetExtensionEtags.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+import * as TransientLinkedExtensions from '../TransientLinkedExtensions/TransientLinkedExtensions.js'
 import { VError } from '../VError/VError.js'
 
 export const enable = async (id) => {
@@ -95,12 +96,19 @@ export const getInstalledExtensions = () => {
 }
 
 export const getExtensions = () => {
+  const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link) => {
+    return {
+      type: ExtensionManifestInputType.LinkedExtension,
+      path: link.resolvedPath,
+    }
+  })
   return ExtensionManifests.getAll(
     [
       {
         type: ExtensionManifestInputType.OnlyExtension,
         path: PlatformPaths.getOnlyExtensionPath(),
       },
+      ...transientLinkedExtensions,
       {
         type: ExtensionManifestInputType.Folder,
         path: PlatformPaths.getLinkedExtensionsPath(),
@@ -119,11 +127,18 @@ export const getExtensions = () => {
 }
 
 export const getExtensionsEtag = async () => {
+  const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link) => {
+    return {
+      type: ExtensionManifestInputType.LinkedExtension,
+      path: link.resolvedPath,
+    }
+  })
   const stats = await GetExtensionEtags.getExtensionEtags([
     {
       type: ExtensionManifestInputType.OnlyExtension,
       path: PlatformPaths.getOnlyExtensionPath(),
     },
+    ...transientLinkedExtensions,
     {
       type: ExtensionManifestInputType.Folder,
       path: PlatformPaths.getLinkedExtensionsPath(),

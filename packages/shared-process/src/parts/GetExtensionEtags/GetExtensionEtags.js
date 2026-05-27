@@ -13,13 +13,26 @@ const serializeStats = (stats) => {
   }
 }
 
+const getManifestStats = async (path) => {
+  const absolutePath = join(path, 'extension.json')
+  try {
+    const stats = await stat(absolutePath)
+    return [serializeStats(stats)]
+  } catch (error) {
+    if (IsEnoentError.isEnoentError(error)) {
+      const monoRepoPath = join(path, 'packages', 'extension', 'extension.json')
+      const stats = await stat(monoRepoPath)
+      return [serializeStats(stats)]
+    }
+    throw error
+  }
+}
+
 const getOnly = async (path) => {
   if (!path) {
     return []
   }
-  const absolutePath = join(path, 'extension.json')
-  const stats = await stat(absolutePath)
-  return [serializeStats(stats)]
+  return getManifestStats(path)
 }
 
 const getFolder = async (path) => {
@@ -47,6 +60,7 @@ const get = (input) => {
     case ExtensionManifestInputType.LinkedExtensionsFolder:
       return getFolder(input.path)
     case ExtensionManifestInputType.OnlyExtension:
+    case ExtensionManifestInputType.LinkedExtension:
       return getOnly(input.path)
     default:
       return []

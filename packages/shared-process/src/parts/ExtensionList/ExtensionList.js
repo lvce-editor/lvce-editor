@@ -3,6 +3,7 @@ import * as ExtensionManifestInputType from '../ExtensionManifestInputType/Exten
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+import * as TransientLinkedExtensions from '../TransientLinkedExtensions/TransientLinkedExtensions.js'
 import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensionsPath.js'
 import { VError } from '../VError/VError.js'
 
@@ -49,7 +50,14 @@ const getManifestInfos = (manifests) => {
 
 export const list = async () => {
   try {
+    const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link) => {
+      return {
+        type: ExtensionManifestInputType.LinkedExtension,
+        path: link.resolvedPath,
+      }
+    })
     const manifests = await ExtensionManifests.getAll([
+      ...transientLinkedExtensions,
       {
         type: ExtensionManifestInputType.LinkedExtensionsFolder,
         path: PlatformPaths.getLinkedExtensionsPath(),
