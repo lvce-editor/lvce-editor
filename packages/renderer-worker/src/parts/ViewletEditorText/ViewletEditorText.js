@@ -42,6 +42,8 @@ export const handleTokenizeChange = () => {
   Viewlet.setState('EditorText', newState)
 }
 
+const useFunctionalRendering = false
+
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
   const fileName = Workspace.pathBaseName(uri)
@@ -57,6 +59,7 @@ export const create = (id, uri, x, y, width, height) => {
     moduleId: ViewletModuleId.EditorText,
     platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
+    useFunctionalRendering,
   }
 }
 
@@ -90,7 +93,7 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id, x, y, width, height, platform, assetDir } = state
+  const { uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
@@ -157,6 +160,7 @@ export const loadContent = async (state, savedState, context) => {
     width,
     x,
     y,
+    useFunctionalRendering,
   })
   // TODO send render commands directly from editor worker
   // to renderer process
@@ -165,6 +169,7 @@ export const loadContent = async (state, savedState, context) => {
 
 export const rerender = async (state) => {
   const commands = await EditorWorker.invoke('Editor.render', state.id)
+  console.log({ commands })
   return {
     ...state,
     commands,
