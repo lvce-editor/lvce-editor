@@ -74,7 +74,6 @@ const actuallyActivateByEvent = async (event, assetDir, platform) => {
 
 // TODO add tests for this
 export const activateByEvent = async (event, assetDir, platform) => {
-  console.log('activate called', event, assetDir, platform)
   Assert.string(event)
   if (event === 'none') {
     const all = await Promise.all(Object.values(state.activatingExtensions))
