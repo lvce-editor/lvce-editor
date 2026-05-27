@@ -42,7 +42,7 @@ export const handleTokenizeChange = () => {
   Viewlet.setState('EditorText', newState)
 }
 
-const useFunctionalRendering = false
+const useFunctionalRendering = true
 
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
