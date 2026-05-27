@@ -2,6 +2,7 @@ import * as DeduplicateExtensions from '../DeduplicateExtensions/DeduplicateExte
 import { getDisabledExtensionIds } from '../ExtensionManagement/ExtensionManagement.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifestsGetFromFolder from './ExtensionManifestsFromFolder.js'
+import * as ExtensionManifestsGetFromLinkedExtension from './ExtensionManifestsFromLinkedExtension.js'
 import * as ExtensionManifestsGetFromLinkedExtensionsFolder from './ExtensionManifestsFromLinkedExtensionsFolder.js'
 import * as ExtensionManifestsGetFromOnlyExtension from './ExtensionManifestsFromOnlyExtension.js'
 
@@ -11,6 +12,8 @@ const getModule = (type) => {
       return ExtensionManifestsGetFromFolder
     case ExtensionManifestInputType.OnlyExtension:
       return ExtensionManifestsGetFromOnlyExtension
+    case ExtensionManifestInputType.LinkedExtension:
+      return ExtensionManifestsGetFromLinkedExtension
     case ExtensionManifestInputType.LinkedExtensionsFolder:
       return ExtensionManifestsGetFromLinkedExtensionsFolder
     default:
