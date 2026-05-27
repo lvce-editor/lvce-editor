@@ -41,6 +41,7 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
 
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
+const originalArgv = process.argv
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -106,6 +107,7 @@ afterAll(() => {
 
 afterEach(() => {
   jest.restoreAllMocks()
+  process.argv = originalArgv
 })
 
 test('uninstall', async () => {
@@ -231,6 +233,42 @@ test('getExtensions ignores files in extension folders', async () => {
       id: 'test-extension',
       path: join(tmpDir1, 'test-extension'),
       uri: expect.any(String),
+      disabled: false,
+      isBuiltin: false,
+    },
+  ])
+})
+
+test('getExtensions - includes transient linked extension from --link', async () => {
+  const tmpDir1 = await getTmpDir()
+  const tmpDir2 = await getTmpDir()
+  const tmpDir3 = await getTmpDir()
+  const transientRoot = await getTmpDir()
+  const transientExtensionPath = join(transientRoot, 'packages', 'extension')
+  await mkdir(transientExtensionPath, { recursive: true })
+  await writeFile(join(transientExtensionPath, 'extension.json'), JSON.stringify({ id: 'transient-extension', version: '1.0.0' }))
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir1)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  process.argv = [...originalArgv, '--link', transientRoot]
+
+  expect(await ExtensionManagement.getExtensions()).toEqual([
+    {
+      status: ExtensionManifestStatus.Resolved,
+      id: 'transient-extension',
+      version: '1.0.0',
+      path: transientExtensionPath,
+      uri: expect.any(String),
+      symlink: transientRoot,
       disabled: false,
       isBuiltin: false,
     },

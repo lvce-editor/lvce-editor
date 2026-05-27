@@ -20,6 +20,10 @@ jest.unstable_mockModule('../src/parts/Process/Process.js', () => ({
   setExitCode: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/TransientLinkedExtensions/TransientLinkedExtensions.js', () => ({
+  validate: jest.fn(() => {}),
+}))
+
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
   error: jest.fn(() => {
     throw new Error('not implemented')
@@ -30,6 +34,7 @@ const CliInstall = await import('../src/parts/CliInstall/CliInstall.js')
 const CliList = await import('../src/parts/CliList/CliList.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 const Process = await import('../src/parts/Process/Process.js')
+const TransientLinkedExtensions = await import('../src/parts/TransientLinkedExtensions/TransientLinkedExtensions.js')
 const Cli = await import('../src/parts/Cli/Cli.js')
 
 test('handleCliArgs - install - error', async () => {
@@ -52,6 +57,7 @@ test('handleCliArgs - install', async () => {
   await Cli.handleCliArgs({
     _: ['install'],
   })
+  expect(TransientLinkedExtensions.validate).toHaveBeenCalledTimes(1)
   expect(CliInstall.handleCliArgs).toHaveBeenCalledTimes(1)
   expect(CliInstall.handleCliArgs).toHaveBeenCalledWith(['install'])
 })
@@ -62,6 +68,7 @@ test('handleCliArgs - list', async () => {
   await Cli.handleCliArgs({
     _: ['list'],
   })
+  expect(TransientLinkedExtensions.validate).toHaveBeenCalledTimes(1)
   expect(CliList.handleCliArgs).toHaveBeenCalledTimes(1)
   expect(CliList.handleCliArgs).toHaveBeenCalledWith(['list'])
 })
