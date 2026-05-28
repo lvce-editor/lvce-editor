@@ -14,13 +14,13 @@ const emptyState = {
 
 const pendingOperations = []
 
-const flushPendingOperations = () => {
+const flushPendingOperations = async () => {
   if (!hasLayoutState()) {
     return
   }
   while (pendingOperations.length > 0) {
     const [command, ...args] = pendingOperations.shift()
-    void Command.execute(command, ...args)
+    await Command.execute(command, ...args)
   }
 }
 
@@ -62,11 +62,11 @@ export const getKeyBinding = (identifier) => {
 }
 
 export const update = () => {
-  if (!hasLayoutState()) {
-    return
-  }
   if (LifeCycle.state.phase < LifeCyclePhase.Fifteen) {
     pendingOperations.push(['Layout.updateKeyBindings'])
+    return
+  }
+  if (!hasLayoutState()) {
     return
   }
   void Command.execute('Layout.updateKeyBindings')
@@ -74,22 +74,22 @@ export const update = () => {
 
 export const addKeyBindings = (id, keyBindings) => {
   Assert.array(keyBindings)
-  if (!hasLayoutState()) {
-    return
-  }
   if (LifeCycle.state.phase < LifeCyclePhase.Fifteen) {
     pendingOperations.push(['Layout.addKeyBindings', id, keyBindings])
+    return
+  }
+  if (!hasLayoutState()) {
     return
   }
   void Command.execute('Layout.addKeyBindings', id, keyBindings)
 }
 
 export const removeKeyBindings = (id) => {
-  if (!hasLayoutState()) {
-    return
-  }
   if (LifeCycle.state.phase < LifeCyclePhase.Fifteen) {
     pendingOperations.push(['Layout.removeKeyBindings', id])
+    return
+  }
+  if (!hasLayoutState()) {
     return
   }
   void Command.execute('Layout.removeKeyBindings', id)
