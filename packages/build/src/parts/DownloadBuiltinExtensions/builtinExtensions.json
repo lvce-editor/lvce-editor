@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "4.2.0"
+    "version": "4.3.0"
   },
   {
     "name": "builtin.csv-viewer",
