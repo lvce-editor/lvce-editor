@@ -612,12 +612,16 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       newState = ViewletStates.getState(viewletUid)
     }
 
-    ViewletStates.set(viewletUid, {
+    const instance = {
       state: newState,
       renderedState: viewletState,
       factory: module,
       moduleId: viewlet.moduleId || viewlet.id || '',
-    })
+    }
+    ViewletStates.set(viewletUid, instance)
+    if (viewlet.id === ViewletModuleId.Layout) {
+      ViewletStates.set(ViewletModuleId.Layout, instance)
+    }
     ViewletStates.setFocusedInstanceByType(viewletUid, viewlet.moduleId || viewlet.id || '')
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
