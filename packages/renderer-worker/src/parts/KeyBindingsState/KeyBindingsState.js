@@ -11,14 +11,14 @@ const emptyState = {
 }
 
 const getLayoutState = () => {
-  if (!ViewletStates.hasInstance(ViewletModuleId.Layout)) {
+  if (!ViewletStates.hasState(ViewletModuleId.Layout)) {
     return emptyState
   }
   return ViewletStates.getState(ViewletModuleId.Layout)
 }
 
 const hasLayoutState = () => {
-  return ViewletStates.hasInstance(ViewletModuleId.Layout)
+  return ViewletStates.hasState(ViewletModuleId.Layout)
 }
 
 export const state = {
