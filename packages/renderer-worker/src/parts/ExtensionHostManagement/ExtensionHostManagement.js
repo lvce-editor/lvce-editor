@@ -31,7 +31,7 @@ const actuallyActivateExtension = async (extension, event) => {
       extension.id,
       extension.isWeb,
       extension.builtin,
-      extension.path,
+      extension.uri || extension.path,
       extension.browser,
       Origin.origin,
       Platform.getPlatform(),
