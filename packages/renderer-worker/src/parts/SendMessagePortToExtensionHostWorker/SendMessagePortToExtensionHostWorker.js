@@ -20,6 +20,7 @@ import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
@@ -143,6 +144,12 @@ export const sendMessagePortToPreviewSandBoxWorker = async (port, initialCommand
   Assert.object(port)
   Assert.string(initialCommand)
   await PreviewSandBoxWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToQuickPickWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await QuickPickWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToChatNetworkWorker = async (port, initialCommand, rpcId) => {
