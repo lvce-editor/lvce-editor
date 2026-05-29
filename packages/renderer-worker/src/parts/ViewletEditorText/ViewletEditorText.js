@@ -5,7 +5,6 @@ import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
-import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
@@ -191,8 +190,8 @@ export const rerender = async (state) => {
 }
 
 export const contentLoaded = async (state) => {
-  const { languageId } = state
-  ExtensionHostLanguages.load(languageId)
+  // const { languageId } = state
+  // ExtensionHostLanguages.load(languageId)
   return []
 }
 
@@ -250,9 +249,9 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.emitEvent('editor.create', state)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   // Tokenizer.addConnectedEditor(state.uid)
-  const newLanguageId = getLanguageId(state)
-  const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
-  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
+  // const newLanguageId = getLanguageId(state)
+  // const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
+  // await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   // await updateSemanticTokens(state)
@@ -278,6 +277,7 @@ export const dispose = (state) => {
 }
 
 export const hasFunctionalRender = true
+export const hasFunctionalRootRender = true
 
 export const render = Editor.render
 
@@ -289,3 +289,8 @@ export const focus = (state) => {
 }
 
 export const customErrorRenderer = ViewletModuleId.EditorTextError
+
+export const renderEventListeners = async () => {
+  const listeners = await EditorWorker.invoke('Editor.renderEventListeners')
+  return listeners
+}

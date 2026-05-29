@@ -26,6 +26,7 @@ const renderAll = {
         command[0] === 'Viewlet.setAdditionalFocus' ||
         command[0] === 'Viewlet.unsetAdditionalFocus' ||
         command[0] === 'Viewlet.setUid' ||
+        command[0] === 'Viewlet.setPatches' ||
         command[0] === 'Viewlet.dispose'
       ) {
         return command

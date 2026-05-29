@@ -146,6 +146,7 @@ const ids = [
   'handleFocus',
   'handleMouseDown',
   'handleMouseMove',
+  'handlePointerDown',
   'handleMouseMoveWithAltKey',
   'handleNativeSelectionChange',
   'handlePointerCaptureLost',
