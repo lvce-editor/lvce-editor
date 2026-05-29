@@ -154,7 +154,7 @@ export const disposeFunctional = (id) => {
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(uid)
+      KeyBindingsState.removeKeyBindings(id)
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -218,7 +218,7 @@ export const hideFunctional = (id) => {
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(uid)
+      KeyBindingsState.removeKeyBindings(id)
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)

@@ -5,19 +5,16 @@ import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
-import * as Context from '../Context/Context.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
-import * as Logger from '../Logger/Logger.js'
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Product from '../Product/Product.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
@@ -26,6 +23,7 @@ import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -45,46 +43,6 @@ const getDefaultAuthState = () => {
     userSubscriptionPlan: '',
     userUsedTokens: 0,
   }
-}
-
-const getKey = (keyBinding) => {
-  return keyBinding.key
-}
-
-const matchesContext = (keyBinding) => {
-  if (!keyBinding.when) {
-    return true
-  }
-  return Context.get(keyBinding.when)
-}
-
-const getMatchingKeyBindings = (keyBindingSets) => {
-  return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
-}
-
-const getAvailableKeyBindings = (keyBindings) => {
-  return new Uint32Array(keyBindings.map(getKey))
-}
-
-const cloneKeyBindingSets = (keyBindingSets) => {
-  return Object.assign(Object.create(null), keyBindingSets)
-}
-
-const getNewKeyBindingState = (state: LayoutState, keyBindingSets = state.keyBindingSets): LayoutState => {
-  const matchingKeyBindings = getMatchingKeyBindings(keyBindingSets)
-  const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
-  const keyBindings = Object.values(keyBindingSets).flat(1)
-  return {
-    ...state,
-    keyBindings,
-    keyBindingSets,
-    keyBindingIdentifiers,
-    matchingKeyBindings,
-  }
-}
-
-const syncKeyBindingIdentifiers = async (state: LayoutState) => {
-  await RendererProcess.invoke('KeyBindings.setIdentifiers', state.keyBindingIdentifiers)
 }
 
 const toAuthState = (state) => {
@@ -164,9 +122,6 @@ export const create = (id: number): LayoutState => {
     statusBarVisible: false,
     titleBarVisible: false,
     workbenchVisible: false,
-    keyBindings: [],
-    keyBindingIdentifiers: new Uint32Array(),
-    keyBindingSets: Object.create(null),
     activityBarHeight: 0,
     activityBarLeft: 0,
     activityBarTop: 0,
@@ -176,7 +131,6 @@ export const create = (id: number): LayoutState => {
     mainLeft: 0,
     mainTop: 0,
     mainWidth: 0,
-    matchingKeyBindings: [],
     panelHeight: 0,
     panelLeft: 0,
     panelTop: 0,
@@ -1574,54 +1528,6 @@ export const setUpdateState = async (state, updateState) => {
     }
   }
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
-}
-
-export const updateKeyBindings = async (state: LayoutState): Promise<LayoutStateResult> => {
-  const newState = getNewKeyBindingState(state)
-  await syncKeyBindingIdentifiers(newState)
-  return {
-    newState,
-    commands: [],
-  }
-}
-
-export const addKeyBindings = async (state: LayoutState, id: string | number, keyBindings: readonly any[]): Promise<LayoutStateResult> => {
-  Assert.array(keyBindings)
-  const key = String(id)
-  if (key in state.keyBindingSets) {
-    Logger.warn(`cannot add keybindings multiple times: ${key}`)
-    return {
-      newState: state,
-      commands: [],
-    }
-  }
-  const keyBindingSets = cloneKeyBindingSets(state.keyBindingSets)
-  keyBindingSets[key] = keyBindings
-  const newState = getNewKeyBindingState(state, keyBindingSets)
-  await syncKeyBindingIdentifiers(newState)
-  return {
-    newState,
-    commands: [],
-  }
-}
-
-export const removeKeyBindings = async (state: LayoutState, id: string | number): Promise<LayoutStateResult> => {
-  const key = String(id)
-  if (!(key in state.keyBindingSets)) {
-    Logger.warn(`cannot remove keybindings that are not registered: ${key}`)
-    return {
-      newState: state,
-      commands: [],
-    }
-  }
-  const keyBindingSets = cloneKeyBindingSets(state.keyBindingSets)
-  delete keyBindingSets[key]
-  const newState = getNewKeyBindingState(state, keyBindingSets)
-  await syncKeyBindingIdentifiers(newState)
-  return {
-    newState,
-    commands: [],
-  }
 }
 
 export const handleWorkspaceRefresh = async (state: LayoutState) => {

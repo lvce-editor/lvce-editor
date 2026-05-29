@@ -21,7 +21,6 @@ export const Commands = {
 }
 
 export const CommandsWithSideEffects = {
-  addKeyBindings: ViewletLayout.addKeyBindings,
   attachViewlet: ViewletLayout.attachViewlet,
   handleBadgeCountChange: ViewletLayout.handleBadgeCountChange,
   handleExtensionsChanged: ViewletLayout.handleExtensionsChanged,
@@ -62,7 +61,6 @@ export const CommandsWithSideEffects = {
   openSideBarViewlet: ViewletLayout.openSideBarView,
   openSecondarySideBarViewlet: ViewletLayout.openSecondarySideBarView,
   openPanelViewlet: ViewletLayout.openPanelView,
-  removeKeyBindings: ViewletLayout.removeKeyBindings,
   setBadgeCount: ViewletLayout.setBadgeCount,
   setAuthState: ViewletLayout.setAuthState,
   setUpdateState: ViewletLayout.setUpdateState,
@@ -87,7 +85,6 @@ export const CommandsWithSideEffects = {
   toggleSideBarPosition: ViewletLayout.toggleSideBarPosition,
   toggleStatusBar: ViewletLayout.toggleStatusBar,
   toggleTitleBar: ViewletLayout.toggleTitleBar,
-  updateKeyBindings: ViewletLayout.updateKeyBindings,
   createViewlet: ViewletLayout.createViewlet,
   createPanelViewlet: ViewletLayout.createPanelViewlet,
 }

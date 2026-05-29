@@ -1,59 +1,23 @@
 import * as Assert from '../Assert/Assert.ts'
-import * as Command from '../Command/Command.js'
-import * as LifeCycle from '../LifeCycle/LifeCycle.js'
-import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Context from '../Context/Context.js'
+import * as Logger from '../Logger/Logger.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-const emptyState = {
+export const state = {
   keyBindings: [],
   keyBindingSets: Object.create(null),
+  /**
+   * @type {Uint32Array}
+   */
   keyBindingIdentifiers: new Uint32Array(),
+  /**
+   * @type {any}
+   */
   matchingKeyBindings: [],
 }
 
-const pendingOperations = []
-
-const flushPendingOperations = async () => {
-  if (!hasLayoutState()) {
-    return
-  }
-  while (pendingOperations.length > 0) {
-    const [command, ...args] = pendingOperations.shift()
-    await Command.execute(command, ...args)
-  }
-}
-
-LifeCycle.once(LifeCyclePhase.Fifteen, flushPendingOperations)
-
-const getLayoutState = () => {
-  if (!ViewletStates.hasInstance(ViewletModuleId.Layout)) {
-    return emptyState
-  }
-  return ViewletStates.getState(ViewletModuleId.Layout)
-}
-
-const hasLayoutState = () => {
-  return ViewletStates.hasInstance(ViewletModuleId.Layout)
-}
-
-export const state = {
-  get keyBindings() {
-    return getLayoutState().keyBindings
-  },
-  get keyBindingSets() {
-    return getLayoutState().keyBindingSets
-  },
-  get keyBindingIdentifiers() {
-    return getLayoutState().keyBindingIdentifiers
-  },
-  get matchingKeyBindings() {
-    return getLayoutState().matchingKeyBindings
-  },
-}
-
 export const getKeyBinding = (identifier) => {
-  for (const keyBinding of getLayoutState().matchingKeyBindings) {
+  for (const keyBinding of state.matchingKeyBindings) {
     if (keyBinding.key === identifier) {
       return keyBinding
     }
@@ -61,40 +25,54 @@ export const getKeyBinding = (identifier) => {
   return undefined
 }
 
+const getKey = (keyBinding) => {
+  return keyBinding.key
+}
+
+const matchesContext = (keyBinding) => {
+  if (!keyBinding.when) {
+    return true
+  }
+  return Context.get(keyBinding.when)
+}
+
+const getMatchingKeyBindings = (keyBindingSets) => {
+  return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
+}
+
+const getAvailableKeyBindings = (keyBindings) => {
+  return new Uint32Array(keyBindings.map(getKey))
+}
+
 export const update = () => {
-  if (LifeCycle.state.phase < LifeCyclePhase.Fifteen) {
-    pendingOperations.push(['Layout.updateKeyBindings'])
-    return
-  }
-  if (!hasLayoutState()) {
-    return
-  }
-  void Command.execute('Layout.updateKeyBindings')
+  const matchingKeyBindings = getMatchingKeyBindings(state.keyBindingSets)
+  const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
+  RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
+  state.matchingKeyBindings = matchingKeyBindings
+  state.keyBindingIdentifiers = keyBindingIdentifiers
 }
 
 export const addKeyBindings = (id, keyBindings) => {
+  Assert.string(id)
   Assert.array(keyBindings)
-  if (LifeCycle.state.phase < LifeCyclePhase.Fifteen) {
-    pendingOperations.push(['Layout.addKeyBindings', id, keyBindings])
+  if (id in state.keyBindingSets) {
+    Logger.warn(`cannot add keybindings multiple times: ${id}`)
     return
   }
-  if (!hasLayoutState()) {
-    return
-  }
-  void Command.execute('Layout.addKeyBindings', id, keyBindings)
+  state.keyBindingSets[id] = keyBindings
+  update()
 }
 
 export const removeKeyBindings = (id) => {
-  if (LifeCycle.state.phase < LifeCyclePhase.Fifteen) {
-    pendingOperations.push(['Layout.removeKeyBindings', id])
+  const { keyBindingSets } = state
+  if (!(id in keyBindingSets)) {
+    Logger.warn(`cannot remove keybindings that are not registered: ${id}`)
     return
   }
-  if (!hasLayoutState()) {
-    return
-  }
-  void Command.execute('Layout.removeKeyBindings', id)
+  delete keyBindingSets[id]
+  update()
 }
 
 export const getKeyBindings = () => {
-  return getLayoutState().keyBindings
+  return state.keyBindings
 }
