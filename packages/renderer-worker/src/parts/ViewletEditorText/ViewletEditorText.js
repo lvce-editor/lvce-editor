@@ -279,6 +279,8 @@ export const dispose = (state) => {
 export const hasFunctionalRender = true
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
 export const render = Editor.render
 
 export const focus = (state) => {
