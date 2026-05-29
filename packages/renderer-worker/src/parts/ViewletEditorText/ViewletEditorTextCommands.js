@@ -152,6 +152,7 @@ const ids = [
   'handleNativeSelectionChange',
   'handlePointerCaptureLost',
   'handleScrollBarClick',
+  'handleWheel',
   'handleScrollBarHorizontalMove',
   'handleScrollBarHorizontalPointerDown',
   'handleScrollBarMove',
