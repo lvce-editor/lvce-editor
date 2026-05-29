@@ -8,24 +8,14 @@ export const wrapEditorCommand = (id) => {
     const editor = args[0]
     const restArgs = args.slice(1)
     const fullId = id.includes('.') ? id : `Editor.${id}`
-    // @ts-ignore
-    const result = await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-    if (!result) {
-      const commands = await EditorWorker.invoke('Editor.render', editor.uid)
-      return {
-        ...editor,
-        commands,
-      }
-    }
 
-    // deprecated
-    if (result && result.commands) {
-      return {
-        ...editor,
-        commands: result.commands,
-      }
+    await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
+    const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
+    const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
+    return {
+      ...editor,
+      commands,
     }
-    return result
   }
 }
 
