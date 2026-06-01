@@ -81,3 +81,7 @@ export const activateByEvent = async (event, assetDir, platform) => {
   }
   return actuallyActivateByEvent(event, assetDir, platform)
 }
+
+export const getStatusBarItems = async () => {
+  return ExtensionManagementWorker.invoke('Extensions.getStatusBarItems')
+}

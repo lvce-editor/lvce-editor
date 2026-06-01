@@ -105,6 +105,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.KeyBindings
     case 'KeyBindingsInitial':
       return ModuleId.KeyBindingsInitial
+    case 'LaunchIsolatedExtensionHostWorker':
+      return ModuleId.LaunchIsolatedExtensionHostWorker
     case 3444:
       return ModuleId.Listener
     case 'LocalStorage':
