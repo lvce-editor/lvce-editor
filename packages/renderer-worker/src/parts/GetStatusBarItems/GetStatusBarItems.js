@@ -3,7 +3,7 @@ import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHo
 
 const toUiStatusBarItem = (extensionHostStatusBarItem) => {
   return {
-    name: extensionHostStatusBarItem.id || '',
+    name: extensionHostStatusBarItem.id || extensionHostStatusBarItem.name || '',
     text: extensionHostStatusBarItem.text || '',
     tooltip: extensionHostStatusBarItem.tooltip || '',
     command: extensionHostStatusBarItem.command || '',
@@ -23,7 +23,8 @@ export const getStatusBarItems = async (showItems, assetDir, platform) => {
     return []
   }
   await ExtensionHostManagement.activateByEvent('onSourceControl', assetDir, platform)
-  const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
-  const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
+  const extensionStatusBarItems = (await ExtensionHostStatusBarItems.getStatusBarItems()) || []
+  const isolatedExtensionStatusBarItems = (await ExtensionHostManagement.getStatusBarItems()) || []
+  const uiStatusBarItems = toUiStatusBarItems([...extensionStatusBarItems, ...isolatedExtensionStatusBarItems])
   return uiStatusBarItems
 }
