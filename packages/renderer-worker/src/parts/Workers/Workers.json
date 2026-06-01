@@ -243,15 +243,6 @@
     "hotReloadCommand": ""
   },
   {
-    "id": "extensionApiWorker",
-    "fileName": "extensionApiWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'", "script-src 'self'", "font-src 'self'"],
-    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-api/dist/extensionApiWorkerMain.js",
-    "productionPath": "/packages/extension-api/dist/extensionApiWorkerMain.js",
-    "settingName": "develop.extensionApiWorkerPath",
-    "hotReloadCommand": ""
-  },
-  {
     "id": "extensionManagementWorker",
     "fileName": "extensionManagementWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
