@@ -4,4 +4,5 @@ export const name = 'ExtensionHostManagement'
 
 export const Commands = {
   activateByEvent: ExtensionHostManagement.activateByEvent,
+  getStatusBarItems: ExtensionHostManagement.getStatusBarItems,
 }
