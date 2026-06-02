@@ -8,7 +8,6 @@ export const launchIsolatedExtensionHostWorker = async (port, extensionId, url) 
   const suffix = extensionId ? `: ${extensionId}` : ''
   const name = Platform.getPlatform() === PlatformType.Electron ? `Extension API (Electron)${suffix}` : `Extension API${suffix}`
   const id = Id.create()
-  console.log('before send')
   await RendererProcess.invokeAndTransfer('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     name,
@@ -17,5 +16,4 @@ export const launchIsolatedExtensionHostWorker = async (port, extensionId, url) 
     url,
     id,
   })
-  console.log('did send')
 }

@@ -32,7 +32,11 @@ test('launchIsolatedExtensionHostWorker', async () => {
   // @ts-ignore
   RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
 
-  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(port, 'sample.extension', '/remote/sample/main.js')
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(
+    port,
+    'sample.extension',
+    '/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
+  )
 
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith(
@@ -42,7 +46,7 @@ test('launchIsolatedExtensionHostWorker', async () => {
       name: 'Extension API: sample.extension',
       port,
       raw: true,
-      url: '/remote/sample/main.js',
+      url: '/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
     }),
   )
 })

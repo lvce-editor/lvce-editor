@@ -1,6 +1,7 @@
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 const getCommandsFromExtension = (extension) => {
@@ -23,13 +24,28 @@ export const getCommands = async (assetDir, platform) => {
 // TODO add test for this
 // TODO add test for when this errors
 
-export const executeCommand = (id, ...args) => {
+const isCommandNotFoundError = (error) => {
+  return error instanceof Error && error.name === 'CommandNotFoundError'
+}
+
+const executeLegacyExtensionHostCommand = (id, args) => {
   return ExtensionHostShared.executeProvider({
     event: `onCommand:${id}`,
     method: ExtensionHostCommandType.CommandExecute,
     params: [id, ...args],
     noProviderFoundMessage: 'No command provider found',
   })
+}
+
+export const executeCommand = async (id, ...args) => {
+  try {
+    return await ExtensionManagementWorker.invoke('Extensions.executeCommand', id, ...args)
+  } catch (error) {
+    if (!isCommandNotFoundError(error)) {
+      throw error
+    }
+    return executeLegacyExtensionHostCommand(id, args)
+  }
 }
 
 export const searchFileWithFetch = (...args) => {

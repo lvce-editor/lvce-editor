@@ -63,9 +63,9 @@ test('getRecentlyOpenedPath', () => {
 })
 
 test('getTestPath - uses absolute TEST_PATH', () => {
-  process.env.TEST_PATH = '/home/simon/Documents/levivilet/chat-view/packages/e2e'
+  process.env.TEST_PATH = '/test/chat-view/packages/e2e'
 
-  expect(PlatformPaths.getTestPath()).toEqual('/remote' + pathToFileURL('/home/simon/Documents/levivilet/chat-view/packages/e2e').toString().slice(7))
+  expect(PlatformPaths.getTestPath()).toEqual('/remote' + pathToFileURL('/test/chat-view/packages/e2e').toString().slice(7))
 })
 
 test('getTestPath - resolves relative TEST_PATH from cwd', () => {
@@ -77,5 +77,10 @@ test('getTestPath - resolves relative TEST_PATH from cwd', () => {
 test('getTestPath - falls back to extension-host-worker-tests', () => {
   delete process.env.TEST_PATH
 
-  expect(PlatformPaths.getTestPath()).toEqual('/remote' + pathToFileURL(join(Root.root, 'packages', 'extension-host-worker-tests')).toString().slice(7))
+  expect(PlatformPaths.getTestPath()).toEqual(
+    '/remote' +
+      pathToFileURL(join(Root.root, 'packages', 'extension-host-worker-tests'))
+        .toString()
+        .slice(7),
+  )
 })
