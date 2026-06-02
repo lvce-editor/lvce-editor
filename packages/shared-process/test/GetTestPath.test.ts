@@ -16,9 +16,9 @@ beforeEach(() => {
 })
 
 test('getTestPath - uses absolute --test-path arg', () => {
-  process.argv = [...originalArgv, '--test-path=/home/simon/Documents/levivilet/chat-view/packages/e2e']
+  process.argv = [...originalArgv, '--test-path=/test/packages/e2e']
 
-  expect(GetTestPath.getTestPath()).toEqual('/home/simon/Documents/levivilet/chat-view/packages/e2e')
+  expect(GetTestPath.getTestPath()).toEqual('/test/packages/e2e')
 })
 
 test('getTestPath - resolves relative --test-path arg from cwd', () => {
@@ -28,9 +28,9 @@ test('getTestPath - resolves relative --test-path arg from cwd', () => {
 })
 
 test('getTestPath - uses absolute TEST_PATH', () => {
-  process.env.TEST_PATH = '/home/simon/Documents/levivilet/chat-view/packages/e2e'
+  process.env.TEST_PATH = '/test/packages/e2e'
 
-  expect(GetTestPath.getTestPath()).toEqual('/home/simon/Documents/levivilet/chat-view/packages/e2e')
+  expect(GetTestPath.getTestPath()).toEqual('/test/packages/e2e')
 })
 
 test('getTestPath - resolves relative TEST_PATH from cwd', () => {
