@@ -6,6 +6,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Id from '../Id/Id.js'
 
@@ -79,6 +80,16 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
   }
 }
 
+const getChildModuleId = (moduleId) => {
+  if (moduleId in ViewletModuleMap.map) {
+    return moduleId
+  }
+  if (!moduleId.includes('.')) {
+    return moduleId
+  }
+  return ViewletModuleId.ExtensionView
+}
+
 // TODO
 // export const getChildren = (state) => {
 //   const { titleAreaHeight, currentViewletId } = state
@@ -114,14 +125,15 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
   const uid = state.uid
 
   const childUid = Id.create()
+  const childModuleId = getChildModuleId(moduleId)
 
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
-      id: moduleId,
+      id: childModuleId,
       type: 0,
       // @ts-ignore
-      uri: '',
+      uri: moduleId,
       show: false,
       focus: false,
       setBounds: false,
@@ -147,19 +159,21 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
   let actionsUid = -1
   if (commands) {
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
-    if (actionsDomIndex) {
+    if (actionsDomIndex >= 0) {
       actionsDom = commands[actionsDomIndex][3]
       commands.splice(actionsDomIndex, 1)
     }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
-    const events = commands[eventsIndex][2]
-    actionsUid = Id.create()
-    commands.push(
-      ['Viewlet.createFunctionalRoot', moduleId, actionsUid, true],
-      ['Viewlet.registerEventListeners', actionsUid, events],
-      ['Viewlet.setDom2', actionsUid, actionsDom],
-      ['Viewlet.setUid', actionsUid, childUid],
-    )
+    if (eventsIndex >= 0 || actionsDom.length > 0) {
+      const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []
+      actionsUid = Id.create()
+      commands.push(
+        ['Viewlet.createFunctionalRoot', moduleId, actionsUid, true],
+        ['Viewlet.registerEventListeners', actionsUid, events],
+        ['Viewlet.setDom2', actionsUid, actionsDom],
+        ['Viewlet.setUid', actionsUid, childUid],
+      )
+    }
     if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
       Viewlet.disposeFunctional(childUid)
       await savePromise

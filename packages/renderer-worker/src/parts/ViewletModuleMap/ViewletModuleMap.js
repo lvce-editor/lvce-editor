@@ -24,6 +24,7 @@ export const map = {
   [ViewletModuleId.EmptyEditor]: () => import('../ViewletEmptyEditor/ViewletEmptyEditor.ipc.js'),
   [ViewletModuleId.Explorer]: () => import('../ViewletExplorer/ViewletExplorer.ipc.js'),
   [ViewletModuleId.ExtensionDetail]: () => import('../ViewletExtensionDetail/ViewletExtensionDetail.ipc.ts'),
+  [ViewletModuleId.ExtensionView]: () => import('../ViewletExtensionView/ViewletExtensionView.ipc.ts'),
   [ViewletModuleId.Extensions]: () => import('../ViewletExtensions/ViewletExtensions.ipc.js'),
   [ViewletModuleId.IframeInspector]: () => import('../ViewletIframeInspector/ViewletIframeInspector.ipc.ts'),
   [ViewletModuleId.Implementations]: () => import('../ViewletImplementations/ViewletImplementations.ipc.js'),
