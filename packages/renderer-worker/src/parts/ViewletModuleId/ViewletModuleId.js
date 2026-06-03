@@ -40,6 +40,8 @@ export const Explorer = 'Explorer'
 
 export const ExtensionDetail = 'ExtensionDetail'
 
+export const ExtensionView = 'ExtensionView'
+
 export const ChatDebug = 'ChatDebug'
 
 export const Extensions = 'Extensions'
