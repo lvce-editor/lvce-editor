@@ -9,6 +9,17 @@ import * as StaticPath from '../StaticPath/StaticPath.js'
 
 const invalidIconsPath = Path.join(Root.root, 'static', '__missing_vscode_icon__.svg')
 
+export class InvalidRemotePathError extends Error {
+  constructor(pathName) {
+    super(`Invalid remote path: ${pathName}`)
+    this.name = 'InvalidRemotePathError'
+  }
+}
+
+export const isInvalidRemotePathError = (error) => {
+  return error instanceof InvalidRemotePathError
+}
+
 const getIconAbsolutePath = (pathName) => {
   const relativePath = pathName.startsWith('/static/icons/') ? pathName.slice('/static/icons/'.length) : pathName.slice('/icons/'.length)
   if (!relativePath || relativePath.includes('/') || relativePath.includes('\\') || relativePath.includes('..')) {
@@ -23,6 +34,25 @@ const getIconAbsolutePath = (pathName) => {
     return staticIconPath
   }
   return invalidIconsPath
+}
+
+const driveLetterPath = /^\/?[A-Za-z]:\//
+const driveLetterWithoutSlashPath = /^\/?[A-Za-z]:[^/]/
+
+const getRemoteAbsolutePath = (pathName) => {
+  const uri = pathName.slice('/remote'.length)
+  if (!uri) {
+    throw new InvalidRemotePathError(pathName)
+  }
+  const normalized = uri.replaceAll('\\', '/')
+  if (Platform.isWindows || driveLetterPath.test(normalized) || driveLetterWithoutSlashPath.test(normalized)) {
+    if (driveLetterWithoutSlashPath.test(normalized)) {
+      throw new InvalidRemotePathError(pathName)
+    }
+    const normalizedUri = normalized.startsWith('/') ? normalized : `/${normalized}`
+    return fileURLToPath(`file://` + normalizedUri)
+  }
+  return normalized
 }
 
 // TODO clean up this code
@@ -46,11 +76,7 @@ export const getElectronFileResponseAbsolutePath = (pathName) => {
   }
   // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
   if (pathName.startsWith(`/remote`)) {
-    const uri = pathName.slice('/remote'.length)
-    if (Platform.isWindows) {
-      return fileURLToPath(`file://` + uri)
-    }
-    return uri
+    return getRemoteAbsolutePath(pathName)
   }
   if (pathName.startsWith('/process-explorer/process-explorer-theme.css')) {
     const processExplorerThemeCss = join(tmpdir(), 'process-explorer-theme.css')
