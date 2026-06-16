@@ -103,7 +103,7 @@ jobs:
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run type-check
       - run: npm test
-      - run: node packages/build/bin/build.js --target=server
+      - run: npm run build:server
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v5
         id: electron-builder-cache-windows
@@ -119,7 +119,7 @@ jobs:
 
       - name: Build Electron App (deb, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-deb
+        run: npm run build:electron:deb:x64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, x64)
@@ -144,7 +144,7 @@ jobs:
         run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_X64 }}"
       - name: Build Electron App (deb, arm64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
+        run: npm run build:electron:deb:arm64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, arm64)
@@ -169,7 +169,7 @@ jobs:
         run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
       - name: Build Electron App (deb, armhf)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
+        run: npm run build:electron:deb:armhf -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, armhf)
@@ -191,7 +191,7 @@ jobs:
           asset_content_type: application/octet-stream
       # - name: Build Electron App (Macos dmg, x64)
       #   if: matrix.versions.os == 'macos-15'
-      #   run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
+      #   run: npm run build:electron:mac:x64 -- --product=lvce
       # - name: Rename Electron App (Macos dmg, x64)
       #   if: matrix.versions.os == 'macos-15'
       #   shell: bash
@@ -211,7 +211,7 @@ jobs:
       #     asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
+        run: npm run build:electron:mac:arm64 -- --product=lvce
       - name: Rename Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
         shell: bash
@@ -231,7 +231,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, x64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=x64
+        run: npm run build:electron:windows:exe:x64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, x64)
@@ -253,7 +253,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, arm64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=arm64
+        run: npm run build:electron:windows:exe:arm64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, arm64)
@@ -275,7 +275,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-app-image
+        run: npm run build:electron:app-image:x64 -- --product=lvce
       - name: Rename Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         shell: bash
