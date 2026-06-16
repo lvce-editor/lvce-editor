@@ -476,10 +476,13 @@ const generateTestOverviewHtml = (dirents) => {
 }
 
 const getName = (name) => {
-  return name.slice(0, -'.js'.length)
+  return name.replace(/\.(js|ts)$/, '')
 }
 const isTestFile = (file) => {
-  return file !== '_all.js'
+  if (file.startsWith('_')) {
+    return false
+  }
+  return file.endsWith('.js') || file.endsWith('.ts')
 }
 
 const getTestFiles = (testFilesRaw) => {

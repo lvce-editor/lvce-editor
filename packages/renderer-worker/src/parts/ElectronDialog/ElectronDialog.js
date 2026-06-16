@@ -3,7 +3,23 @@ import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as Product from '../Product/Product.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
+let mockOpenDialogPaths = undefined
+
+export const mockOpenDialog = (paths) => {
+  if (!Array.isArray(paths)) {
+    throw new TypeError('expected paths to be an array')
+  }
+  mockOpenDialogPaths = paths
+}
+
+export const resetMockOpenDialog = () => {
+  mockOpenDialogPaths = undefined
+}
+
 export const showOpenDialog = (title, properties) => {
+  if (mockOpenDialogPaths) {
+    return mockOpenDialogPaths
+  }
   return SharedProcess.invoke('ElectronDialog.showOpenDialog', title, properties)
 }
 
