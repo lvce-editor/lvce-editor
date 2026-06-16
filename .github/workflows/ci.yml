@@ -90,9 +90,9 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build server
-        run: node packages/build/bin/build.js --target=server
+        run: npm run build:server
       - name: Test Static Export
-        run: node packages/build/src/parts/TestStaticExport/TestStaticExport.js
+        run: npm run test-static-export
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless:ci
@@ -100,16 +100,16 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --target=electron-deb
+        run: npm run build:electron:deb:x64
       - name: Build Electron App (deb, arm64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --target=electron-deb --arch=arm64
+        run: npm run build:electron:deb:arm64
       - name: Build Electron App (deb, armhf)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        run: node packages/build/bin/build.js --target=electron-deb --arch=armhf
+        run: npm run build:electron:deb:armhf
       - name: Build Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --target=electron-builder-mac --arch=arm64
+        run: npm run build:electron:mac:arm64
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v5
         id: electron-builder-cache-windows
@@ -119,16 +119,16 @@ jobs:
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Build Electron App (exe, x64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --target=electron-builder-windows-exe --arch=x64
+        run: npm run build:electron:windows:exe:x64
       - name: Build Electron App (exe, arm64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --target=electron-builder-windows-exe --arch=arm64
+        run: npm run build:electron:windows:exe:arm64
       - name: Build Electron App (AppImage)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --target=electron-builder-app-image
+        run: npm run build:electron:app-image:x64
       - name: Build static site
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --target=static
+        run: npm run build:static
         env:
           PATH_PREFIX: /lvce-editor
       - name: Upload artifact
