@@ -5,6 +5,10 @@ const isTestFile = (dirent) => {
   return dirent.endsWith('.js') || dirent.endsWith('.ts')
 }
 
+const toTestName = (dirent) => {
+  return dirent.replace(/\.(js|ts)$/, '')
+}
+
 export const createTestOverviewHtml = (dirents) => {
   const pre = `<!DOCTYPE html>
 <html lang="en">
@@ -22,7 +26,7 @@ export const createTestOverviewHtml = (dirents) => {
   // TODO properly escape name
   for (const dirent of dirents) {
     if (isTestFile(dirent)) {
-      const name = dirent.slice(0, -'.js'.length)
+      const name = toTestName(dirent)
       middle += `      <li><a href="./${name}.html">${name}</a></li>
 `
     }

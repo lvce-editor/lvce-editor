@@ -36,6 +36,10 @@ const getPreviewTransform = (width: number, height: number) => {
   return previewTransform
 }
 
+const toHtmlFileName = (testFileName: string): string => {
+  return testFileName.replace(/\.(js|ts)$/, '.html')
+}
+
 export const loadContent = async (state: E2eTestState): Promise<E2eTestState> => {
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
   // const root = await SharedProcess.invoke('Platform.getRoot')
@@ -45,7 +49,7 @@ export const loadContent = async (state: E2eTestState): Promise<E2eTestState> =>
   // const filePath = `${absolutePath}/${fileName}`
   // const content = await FileSystem.readFile(filePath)
   const fileName = 'viewlet.about.js'
-  const htmlFileName = fileName.replace('.js', '.html')
+  const htmlFileName = toHtmlFileName(fileName)
   const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
   // const previewTransform = getPreviewTransform(state.width, state.height)
   return {
