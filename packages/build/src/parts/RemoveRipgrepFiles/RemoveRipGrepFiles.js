@@ -1,7 +1,22 @@
 import { existsSync } from 'node:fs'
 import * as Path from '../Path/Path.js'
+import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Replace from '../Replace/Replace.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
+
+const legacyDownloadRipGrepExport = `export { downloadRipGrep } from './downloadRipGrep.js'`
+
+const removeLegacyDownloadRipGrepExport = async (indexJsPath) => {
+  const content = await ReadFile.readFile(indexJsPath)
+  if (!content.includes(legacyDownloadRipGrepExport)) {
+    return
+  }
+  const newContent = content.replaceAll(legacyDownloadRipGrepExport, '')
+  await WriteFile.writeFile({
+    to: indexJsPath,
+    content: newContent,
+  })
+}
 
 export const removeRipGrepFiles = async (to, platform, arch) => {
   await Remove.remove(Path.absolute(`${to}/node_modules/@lvce-editor/ripgrep/src/index.d.ts`))
@@ -11,9 +26,5 @@ export const removeRipGrepFiles = async (to, platform, arch) => {
   if (!existsSync(indexJsPath)) {
     throw new Error(`ripgrep indexjs not found at: ${indexJsPath}`)
   }
-  await Replace.replace({
-    path: indexJsPath,
-    occurrence: `export { downloadRipGrep } from './downloadRipGrep.js'`,
-    replacement: '',
-  })
+  await removeLegacyDownloadRipGrepExport(indexJsPath)
 }
