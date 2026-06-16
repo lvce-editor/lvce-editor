@@ -29,7 +29,7 @@
     "@lvce-editor/json-rpc": "^8.0.0",
     "@lvce-editor/jsonc-parser": "^1.5.0",
     "@lvce-editor/pretty-error": "^2.0.0",
-    "@lvce-editor/rpc-registry": "^9.26.0",
+    "@lvce-editor/rpc-registry": "^9.27.0",
     "@lvce-editor/verror": "^1.7.0",
     "is-object": "^1.0.2",
     "xdg-basedir": "^5.1.0"
@@ -43,7 +43,7 @@
     "@lvce-editor/preview-process": "^11.0.0",
     "@lvce-editor/process-explorer": "^2.4.0",
     "@lvce-editor/pty-host": "^8.1.0",
-    "@lvce-editor/search-process": "^13.1.0",
+    "@lvce-editor/search-process": "^15.0.0",
     "@lvce-editor/typescript-compile-process": "^5.1.0",
     "open": "^11.0.0",
     "tail": "^2.2.6",
