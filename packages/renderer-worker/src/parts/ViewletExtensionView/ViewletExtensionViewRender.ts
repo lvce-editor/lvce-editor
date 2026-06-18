@@ -18,4 +18,58 @@ const renderIframe = {
   },
 }
 
-export const render = [renderIframe]
+const renderDom = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return newState.kind !== 'virtualDom' || oldState.dom === newState.dom
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return ['Viewlet.setDom2', newState.dom]
+  },
+}
+
+const renderPatches = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return newState.kind !== 'virtualDom' || oldState.patches === newState.patches || newState.patches.length === 0
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return ['Viewlet.setPatches', newState.patches]
+  },
+}
+
+const renderCommands = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return newState.commands.length === 0
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return newState.commands
+  },
+  multiple: true,
+}
+
+export const render = [renderIframe, renderDom, renderPatches, renderCommands]
+
+export const renderEventListeners = (): readonly any[] => {
+  return [
+    {
+      name: 'handleInput',
+      params: ['handleInput', 'event.target.name', 'event.target.value'],
+    },
+    {
+      name: 'handleClick',
+      params: ['handleClick', 'event.target.name'],
+    },
+    {
+      name: 'handleSubmit',
+      params: ['handleSubmit', 'event.target.name'],
+      preventDefault: true,
+    },
+    {
+      name: 'handleFocus',
+      params: ['handleFocus', 'event.target.name'],
+    },
+    {
+      name: 'handleBlur',
+      params: ['handleBlur', 'event.target.name'],
+    },
+  ]
+}

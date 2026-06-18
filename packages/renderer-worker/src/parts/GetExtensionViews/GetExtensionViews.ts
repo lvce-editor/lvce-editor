@@ -14,6 +14,7 @@ export interface ExtensionView {
   readonly icon: string
   readonly id: string
   readonly iframe?: ExtensionViewIframe
+  readonly kind?: string
   readonly title: string
 }
 
