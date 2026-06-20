@@ -458,14 +458,17 @@ const generateTestOverviewHtml = (dirents) => {
 }
 
 const getName = (dirent) => {
-  return dirent.name.slice(0, -'.js'.length)
+  return dirent.name.replace(/\.(js|ts)$/, '')
 }
 const isTestFile = (file) => {
-  return file !== '_all.js'
+  if (file.name.startsWith('_')) {
+    return false
+  }
+  return file.name.endsWith('.js') || file.name.endsWith('.ts')
 }
 
 const getTestFiles = (testFilesRaw) => {
-  return testFilesRaw.map(getName).filter(isTestFile)
+  return testFilesRaw.filter(isTestFile).map(getName)
 }
 
 const copyTestFiles = async ({ pathPrefix, commitHash }) => {
@@ -482,21 +485,38 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
 
   const testFilesRaw = await ReadDir.readDirWithFileTypes('packages/extension-host-worker-tests/src')
   const testFiles = getTestFiles(testFilesRaw)
-  await Mkdir.mkdir(`packages/build/.tmp/dist/${commitHash}/tests`)
+  const hashTestsPath = `packages/build/.tmp/dist/${commitHash}/tests`
+  const rootTestsPath = `packages/build/.tmp/dist/tests`
+  await Mkdir.mkdir(hashTestsPath)
+  await Mkdir.mkdir(rootTestsPath)
   for (const testFile of testFiles) {
     await Copy.copyFile({
       from: `packages/build/.tmp/dist/index.html`,
-      to: `packages/build/.tmp/dist/tests/${testFile}.html`,
+      to: `${hashTestsPath}/${testFile}.html`,
+    })
+    await Copy.copyFile({
+      from: `packages/build/.tmp/dist/index.html`,
+      to: `${rootTestsPath}/${testFile}.html`,
     })
   }
   const testOverviewHtml = generateTestOverviewHtml(testFiles)
   await WriteFile.writeFile({
-    to: `packages/build/.tmp/dist/tests/index.html`,
+    to: `${hashTestsPath}/index.html`,
+    content: testOverviewHtml,
+  })
+  await WriteFile.writeFile({
+    to: `${rootTestsPath}/index.html`,
     content: testOverviewHtml,
   })
   if (pathPrefix) {
     await Replace.replace({
-      path: `packages/build/.tmp/dist/tests/index.html`,
+      path: `${rootTestsPath}/index.html`,
+      occurrence: '</title>',
+      replacement: `</title>
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
+    })
+    await Replace.replace({
+      path: `${hashTestsPath}/index.html`,
       occurrence: '</title>',
       replacement: `</title>
     <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,

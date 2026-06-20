@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url'
 import * as Copy from '../Copy/Copy.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
+import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as TranspileFiles from '../TranspileFiles/TranspileFiles.js'
@@ -27,6 +28,10 @@ const main = async () => {
     to: join(testPath, 'package.json'),
     content: `{}`,
   })
+  await WriteFile.writeFile({
+    to: join(testPath, 'src', 'sample.test.ts'),
+    content: `export const test = async () => {}\n`,
+  })
   await Copy.copy({
     from: `packages/build/.tmp/server`,
     to: join(tmpDir, 'node_modules', `@lvce-editor`),
@@ -46,6 +51,12 @@ const main = async () => {
     commitHash = result.commitHash
   } catch (error) {
     throw new VError(error, `static export failed`)
+  }
+  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'sample.test.html'))
+  await ReadFile.readFile(join(tmpDir, 'dist', 'tests', 'sample.test.html'))
+  const testOverview = await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'index.html'))
+  if (!testOverview.includes('sample.test.html')) {
+    throw new Error('static export test overview does not include sample.test.html')
   }
   await Remove.remove(`packages/build/.tmp/server/shared_process/node_modules`)
 
