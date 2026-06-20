@@ -486,7 +486,7 @@ const isTestFile = (file) => {
 }
 
 const getTestFiles = (testFilesRaw) => {
-  return testFilesRaw.map(getName).filter(isTestFile)
+  return testFilesRaw.filter(isTestFile).map(getName)
 }
 
 const transpileFile = (typescript, content) => {
@@ -575,13 +575,17 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
 
   const testFilesRaw = await FileSystem.readDir(`${testRoot}/src`)
   const testFiles = getTestFiles(testFilesRaw)
-  await FileSystem.mkdir(`${root}/dist/${commitHash}/tests`)
-  await FileSystem.mkdir(`${root}/dist/tests`)
+  const hashTestsPath = `${root}/dist/${commitHash}/tests`
+  const rootTestsPath = `${root}/dist/tests`
+  await FileSystem.mkdir(hashTestsPath)
+  await FileSystem.mkdir(rootTestsPath)
   for (const testFile of testFiles) {
-    await FileSystem.copyFile(`${root}/dist/index.html`, `${root}/dist/tests/${testFile}.html`)
+    await FileSystem.copyFile(`${root}/dist/index.html`, `${hashTestsPath}/${testFile}.html`)
+    await FileSystem.copyFile(`${root}/dist/index.html`, `${rootTestsPath}/${testFile}.html`)
   }
   const testOverviewHtml = generateTestOverviewHtml(testFiles)
-  await FileSystem.writeFile(`${root}/dist/tests/index.html`, testOverviewHtml)
+  await FileSystem.writeFile(`${hashTestsPath}/index.html`, testOverviewHtml)
+  await FileSystem.writeFile(`${rootTestsPath}/index.html`, testOverviewHtml)
 }
 
 const resolveServerStaticPath = (root) => {
