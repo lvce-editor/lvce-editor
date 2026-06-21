@@ -579,6 +579,8 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   const rootTestsPath = `${root}/dist/tests`
   await FileSystem.mkdir(hashTestsPath)
   await FileSystem.mkdir(rootTestsPath)
+  await FileSystem.copyFile(`${root}/dist/index.html`, `${hashTestsPath}/_all.html`)
+  await FileSystem.copyFile(`${root}/dist/index.html`, `${rootTestsPath}/_all.html`)
   for (const testFile of testFiles) {
     await FileSystem.copyFile(`${root}/dist/index.html`, `${hashTestsPath}/${testFile}.html`)
     await FileSystem.copyFile(`${root}/dist/index.html`, `${rootTestsPath}/${testFile}.html`)
