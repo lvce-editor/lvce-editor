@@ -17,6 +17,18 @@ import * as Logger from '../Logger/Logger.js'
 export const getTestRequestResponse = async (request, indexHtmlPath) => {
   try {
     const pathName = GetPathName.getPathName(request)
+    if (pathName === '/tests/_all.html') {
+      const body = await readFile(indexHtmlPath, 'utf8')
+      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
+      const headers = {
+        [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+        [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
+        [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+        [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
+        [HttpHeader.ContentType]: 'text/html',
+      }
+      return GetContentResponse.getContentResponse(content, headers)
+    }
     if (pathName.endsWith('.html')) {
       const body = await readFile(indexHtmlPath, 'utf8')
       const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
