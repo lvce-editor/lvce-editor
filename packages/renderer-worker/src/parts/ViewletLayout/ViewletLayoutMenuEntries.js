@@ -50,6 +50,14 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Panel',
     },
     {
+      id: 'Layout.maximizePanel',
+      label: 'Layout: Maximize Panel',
+    },
+    {
+      id: 'Layout.unmaximizePanel',
+      label: 'Layout: Unmaximize Panel',
+    },
+    {
       id: 'Layout.toggleActivityBar',
       label: 'Layout: Toggle Activity Bar',
     },

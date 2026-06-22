@@ -36,6 +36,8 @@ export const PanelWidth = 'panelWidth'
 export const PanelHeight = 'panelHeight'
 export const PanelMinHeight = 'panelMinHeight'
 export const PanelMaxHeight = 'panelMaxHeight'
+export const PanelMaximized = 'panelMaximized'
+export const PanelHeightBeforeMaximize = 'panelHeightBeforeMaximize'
 
 export const StatusBarVisible = 'statusBarVisible'
 export const StatusBarTop = 'statusBarTop'
