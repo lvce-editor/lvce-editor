@@ -39,7 +39,16 @@ const generateFilesCodeMap = (indexes, uris) => {
 }
 
 // TODO merge this with getStaticFiles
-export const generateConfigJson = async ({ etag, staticRoot, configRoot, applicationName }) => {
+export const generateConfigJson = async ({
+  etag,
+  staticRoot,
+  configRoot,
+  applicationName,
+  name,
+  productName,
+  version,
+  electronVersion,
+}) => {
   const staticFolder = Path.absolute(`${staticRoot}/static`)
   const dirents = await readdir(staticFolder, { recursive: true, withFileTypes: true })
   const files = dirents.filter((dirent) => dirent.isFile())
@@ -66,6 +75,10 @@ export const generateConfigJson = async ({ etag, staticRoot, configRoot, applica
   await writeJson({
     to: configJsonPath,
     value: {
+      name,
+      productName,
+      version,
+      electronVersion,
       etag,
       headers: uniqueHeaders.ours,
       files: map,
