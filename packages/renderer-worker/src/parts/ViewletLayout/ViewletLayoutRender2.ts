@@ -140,6 +140,7 @@ const getCss = (newState: LayoutState) => {
   const previewWidth = newState.previewWidth
   const sashSideBarLeft = newState.sideBarLeft
   const secondarySideBarLeft = newState.secondarySideBarLeft
+  const sashPanelTop = newState.panelTop
   Assert.number(activityBarWidth)
   Assert.number(panelHeight)
   Assert.number(sideBarWidth)
@@ -149,6 +150,7 @@ const getCss = (newState: LayoutState) => {
   Assert.number(previewWidth)
   Assert.number(sashSideBarLeft)
   Assert.number(secondarySideBarLeft)
+  Assert.number(sashPanelTop)
   const sashSecondarySideBarLeft = secondarySideBarLeft + secondarySideBarWidth
   Assert.number(sashSecondarySideBarLeft)
   return `:root {
@@ -161,6 +163,7 @@ const getCss = (newState: LayoutState) => {
   --PreviewWidth: ${getPixelValue(previewWidth)};
   --SashSideBarLeft: ${getRoundedPixelValue(sashSideBarLeft)};
   --SashSecondarySideBarLeft: ${getRoundedPixelValue(sashSecondarySideBarLeft)};
+  --SashPanelTop: ${getRoundedPixelValue(sashPanelTop)};
 }`
 }
 

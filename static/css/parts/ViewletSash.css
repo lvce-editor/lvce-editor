@@ -66,6 +66,10 @@
   left: var(--SashSecondarySideBarLeft);
 }
 
+.SashPanel {
+  top: var(--SashPanelTop);
+}
+
 .SashBorder {
   height: 100%;
   width: 1px;

@@ -49,7 +49,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
         onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
       expect.objectContaining({
-        className: 'Viewlet Sash SashHorizontal',
+        className: 'Viewlet Sash SashHorizontal SashPanel',
         tabIndex: -1,
         onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
