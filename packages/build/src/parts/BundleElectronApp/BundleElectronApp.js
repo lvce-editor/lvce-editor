@@ -376,6 +376,10 @@ export const build = async ({
     configRoot: Path.absolute(`${resourcesPath}/app`),
     staticRoot: Path.absolute(`${resourcesPath}/app`),
     applicationName: product.applicationName,
+    name: product.applicationName,
+    productName: product.nameLong,
+    version,
+    electronVersion,
   })
 
   console.time('addRootPackageJson')
