@@ -2,6 +2,7 @@ import * as CachingHeaders from '../CachingHeaders/CachingHeaders.js'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.js'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.js'
+import * as GetHeadersExtensionWorker from '../GetHeadersExtensionWorker/GetHeadersExtensionWorker.js'
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
 import * as GetHeadersWorker from '../GetHeadersWorker/GetHeadersWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
@@ -30,6 +31,9 @@ export const getHeaders = ({ absolutePath, etag, isImmutable, isForElectronProdu
   }
   if (absolutePath.endsWith('rendererWorkerMain.js') || absolutePath.endsWith('rendererWorkerMain.ts')) {
     return GetHeadersRendererWorker.getHeadersRendererWorker(mime, etag, defaultCachingHeader)
+  }
+  if (absolutePath.includes('/extensions/') && (absolutePath.endsWith('.js') || absolutePath.endsWith('.ts'))) {
+    return GetHeadersExtensionWorker.getHeadersExtensionWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)
 }
