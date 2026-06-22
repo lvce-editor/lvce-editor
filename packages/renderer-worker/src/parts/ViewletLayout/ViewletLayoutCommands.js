@@ -79,6 +79,8 @@ export const CommandsWithSideEffects = {
   toggleActivityBar: ViewletLayout.toggleActivityBar,
   toggleMain: ViewletLayout.toggleMain,
   togglePanel: ViewletLayout.togglePanel,
+  maximizePanel: ViewletLayout.maximizePanel,
+  unmaximizePanel: ViewletLayout.unmaximizePanel,
   togglePreview: ViewletLayout.togglePreview,
   toggleSideBar: ViewletLayout.toggleSideBar,
   toggleSecondarySideBar: ViewletLayout.toggleSecondarySideBar,

@@ -158,6 +158,8 @@ export const create = (id: number): LayoutState => {
     titleBarTop: 0,
     titleBarWidth: 0,
     panelMaxHeight: 0,
+    panelMaximized: false,
+    panelHeightBeforeMaximize: 0,
     panelMinHeight: 0,
     previewMaxHeight: 0,
     previewMaxWidth: 0,
@@ -563,6 +565,51 @@ export const hidePanel = (state: LayoutState) => {
 
 export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
   return toggle(state, LayoutModules.Panel, moduleId)
+}
+
+const mainMinHeight = 100
+
+export const maximizePanel = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (state.panelMaximized) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const maxPanelHeight = state.windowHeight - state.titleBarHeight - state.statusBarHeight - mainMinHeight
+  const intermediateState = {
+    ...state,
+    panelMaximized: true,
+    panelHeightBeforeMaximize: state.panelHeight,
+    panelVisible: true,
+    panelHeight: Math.min(maxPanelHeight, state.panelMaxHeight || Infinity),
+  }
+  const newState = getPoints(intermediateState)
+  const commands = await getResizeCommands(state, newState)
+  return {
+    newState,
+    commands,
+  }
+}
+
+export const unmaximizePanel = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.panelMaximized || !state.panelVisible) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const intermediateState = {
+    ...state,
+    panelMaximized: false,
+    panelHeight: state.panelHeightBeforeMaximize,
+  }
+  const newState = getPoints(intermediateState)
+  const commands = await getResizeCommands(state, newState)
+  return {
+    newState,
+    commands,
+  }
 }
 
 export const showActivityBar = (state: LayoutState) => {

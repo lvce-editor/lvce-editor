@@ -27,6 +27,8 @@ export interface LayoutState {
   readonly panelId: number
   readonly panelLeft: number
   readonly panelMaxHeight: number
+  readonly panelMaximized: boolean
+  readonly panelHeightBeforeMaximize: number
   readonly panelMinHeight: number
   readonly panelSashId: number
   readonly panelSashVisible: boolean
