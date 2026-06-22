@@ -19,7 +19,7 @@ const env = {
 
 const main = () => {
   const cliArgs = process.argv.slice(2)
-  const child = spawn(electronLaunch.command, [...electronLaunch.argsPrefix, '.', ...cliArgs], {
+  const child = spawn(electronLaunch.command, [...electronLaunch.argsPrefix, '--no-sandbox', '.', ...cliArgs], {
     cwd: mainProcessPath,
     env,
   })
