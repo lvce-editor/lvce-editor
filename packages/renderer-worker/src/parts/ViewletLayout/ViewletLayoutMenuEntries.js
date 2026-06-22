@@ -62,6 +62,10 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Activity Bar',
     },
     {
+      id: 'Layout.toggleStatusBar',
+      label: 'Layout: Toggle Status Bar',
+    },
+    {
       id: 'Layout.togglePreview',
       label: 'Layout: Toggle Preview',
     },
