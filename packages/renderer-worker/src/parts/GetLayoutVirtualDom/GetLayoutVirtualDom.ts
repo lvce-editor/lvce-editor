@@ -85,7 +85,7 @@ const getSashPreviewDom = () => {
 const getSashPanelDom = () => {
   return {
     type: VirtualDomElements.Div,
-    className: 'Viewlet Sash SashHorizontal',
+    className: 'Viewlet Sash SashHorizontal SashPanel',
     tabIndex: -1,
     role: 'none',
     onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,

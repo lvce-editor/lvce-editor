@@ -29,6 +29,7 @@ test('renderCss serializes valid layout bounds', () => {
     sideBarWidth: 240.2,
     secondarySideBarWidth: 299.6,
     titleBarHeight: 35,
+    panelTop: 200,
     previewLeft: 799.6,
     previewWidth: 400,
     sideBarLeft: 48.4,
@@ -51,6 +52,7 @@ test('renderCss serializes valid layout bounds', () => {
   --PreviewWidth: 400px;
   --SashSideBarLeft: 48px;
   --SashSecondarySideBarLeft: 1000px;
+  --SashPanelTop: 200px;
 }`,
     ],
   ])
