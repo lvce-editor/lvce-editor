@@ -1,6 +1,62 @@
-import { expect, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
+
+const panelWorkerInvocations = []
+let panelWorkerDiffResult = []
+let panelWorkerRenderCommands = []
+
+jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
+  return {
+    invoke: async (method, ...args) => {
+      panelWorkerInvocations.push([method, ...args])
+      switch (method) {
+        case 'Panel.handlePanelLayoutChanged':
+          return undefined
+        case 'Panel.diff2':
+          return panelWorkerDiffResult
+        case 'Panel.render2':
+          return panelWorkerRenderCommands
+        default:
+          throw new Error(`unexpected panel worker method ${method}`)
+      }
+    },
+    restart: async () => {},
+  }
+})
 
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+
+beforeEach(() => {
+  ViewletStates.reset()
+  panelWorkerInvocations.length = 0
+  panelWorkerDiffResult = []
+  panelWorkerRenderCommands = []
+})
+
+const createPanelInstance = (uid = 77) => {
+  const instance = {
+    factory: {
+      resize: async (state, dimensions) => {
+        return {
+          newState: {
+            ...state,
+            ...dimensions,
+          },
+          commands: [],
+        }
+      },
+    },
+    moduleId: 'Panel',
+    renderedState: {
+      uid,
+    },
+    state: {
+      uid,
+    },
+  }
+  ViewletStates.set('Panel', instance)
+  ViewletStates.set(uid, instance)
+}
 
 test('create initializes panelMaximized to false', () => {
   const state = ViewletLayout.create(1)
@@ -35,6 +91,31 @@ test('maximizePanel enlarges panel and sets panelMaximized to true', async () =>
   expect(result.newState.panelHeight).toBe(600)
 })
 
+test('maximizePanel notifies panel worker when panel instance exists', async () => {
+  createPanelInstance()
+  panelWorkerDiffResult = [11]
+  panelWorkerRenderCommands = [['Viewlet.setPatches', 77, []]]
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: true,
+    panelHeight: 200,
+    panelMaxHeight: 600,
+    titleBarHeight: 0,
+    statusBarHeight: 20,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.maximizePanel(state)
+
+  expect(result.commands).toEqual([['Viewlet.setPatches', 77, []]])
+  expect(panelWorkerInvocations).toEqual([
+    ['Panel.handlePanelLayoutChanged', 77, { maximized: true }],
+    ['Panel.diff2', 77],
+    ['Panel.render2', 77, [11]],
+  ])
+})
+
 test('maximizePanel clamps height to panelMaxHeight', async () => {
   const state = {
     ...ViewletLayout.create(1),
@@ -55,6 +136,7 @@ test('maximizePanel clamps height to panelMaxHeight', async () => {
 })
 
 test('maximizePanel is a no-op when already maximized', async () => {
+  createPanelInstance()
   const state = {
     ...ViewletLayout.create(1),
     panelVisible: true,
@@ -74,6 +156,7 @@ test('maximizePanel is a no-op when already maximized', async () => {
     newState: state,
     commands: [],
   })
+  expect(panelWorkerInvocations).toEqual([])
 })
 
 test('maximizePanel auto-shows the panel if hidden', async () => {
@@ -114,7 +197,35 @@ test('unmaximizePanel restores saved height and clears maximized flag', async ()
   expect(result.newState.panelHeight).toBe(200)
 })
 
+test('unmaximizePanel notifies panel worker when panel instance exists', async () => {
+  createPanelInstance()
+  panelWorkerDiffResult = [11]
+  panelWorkerRenderCommands = [['Viewlet.setPatches', 77, []]]
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: true,
+    panelHeight: 680,
+    panelMaximized: true,
+    panelHeightBeforeMaximize: 200,
+    panelMaxHeight: 600,
+    titleBarHeight: 0,
+    statusBarHeight: 20,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.unmaximizePanel(state)
+
+  expect(result.commands).toEqual([['Viewlet.setPatches', 77, []]])
+  expect(panelWorkerInvocations).toEqual([
+    ['Panel.handlePanelLayoutChanged', 77, { maximized: false }],
+    ['Panel.diff2', 77],
+    ['Panel.render2', 77, [11]],
+  ])
+})
+
 test('unmaximizePanel is a no-op when not maximized', async () => {
+  createPanelInstance()
   const state = {
     ...ViewletLayout.create(1),
     panelVisible: true,
@@ -133,6 +244,7 @@ test('unmaximizePanel is a no-op when not maximized', async () => {
     newState: state,
     commands: [],
   })
+  expect(panelWorkerInvocations).toEqual([])
 })
 
 test('unmaximizePanel is a no-op when panel is hidden', async () => {

@@ -11,6 +11,7 @@ import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as Location from '../Location/Location.js'
+import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -585,10 +586,11 @@ export const maximizePanel = async (state: LayoutState): Promise<LayoutStateResu
     panelHeight: Math.min(maxPanelHeight, state.panelMaxHeight || Infinity),
   }
   const newState = getPoints(intermediateState)
-  const commands = await getResizeCommands(state, newState)
+  const resizeCommands = await getResizeCommands(state, newState)
+  const panelLayoutCommands = await getPanelLayoutChangeCommands(newState)
   return {
     newState,
-    commands,
+    commands: [...resizeCommands, ...panelLayoutCommands],
   }
 }
 
@@ -605,10 +607,11 @@ export const unmaximizePanel = async (state: LayoutState): Promise<LayoutStateRe
     panelHeight: state.panelHeightBeforeMaximize,
   }
   const newState = getPoints(intermediateState)
-  const commands = await getResizeCommands(state, newState)
+  const resizeCommands = await getResizeCommands(state, newState)
+  const panelLayoutCommands = await getPanelLayoutChangeCommands(newState)
   return {
     newState,
-    commands,
+    commands: [...resizeCommands, ...panelLayoutCommands],
   }
 }
 
@@ -1186,6 +1189,23 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
     }),
   )
   const commands = individualCommands.flat(1)
+  return commands
+}
+
+const getPanelLayoutChangeCommands = async (newState: LayoutState) => {
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  if (!instance) {
+    return []
+  }
+  const panelUid = instance.state.uid
+  await PanelWorker.invoke('Panel.handlePanelLayoutChanged', panelUid, {
+    maximized: newState.panelMaximized,
+  })
+  const diffResult = await PanelWorker.invoke('Panel.diff2', panelUid)
+  if (diffResult.length === 0) {
+    return []
+  }
+  const commands = await PanelWorker.invoke('Panel.render2', panelUid, diffResult)
   return commands
 }
 
