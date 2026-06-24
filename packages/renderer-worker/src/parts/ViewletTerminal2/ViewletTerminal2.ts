@@ -26,6 +26,7 @@ export const create = (id) => {
     setBounds: false,
     columns: 80,
     rows: 24,
+    xtermMounted: false,
   }
 }
 
@@ -40,6 +41,7 @@ export const loadContent = async (state) => {
     ...state,
     command,
     args,
+    xtermMounted: true,
   }
 }
 
