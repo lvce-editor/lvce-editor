@@ -82,6 +82,7 @@ test('getTestRequestResponse - _all.html serves index html', async () => {
   expect(result).toMatchObject({
     init: {
       headers: {
+        'Content-Security-Policy': expect.stringContaining(`style-src 'self' 'unsafe-inline'`),
         'Content-Type': 'text/html',
       },
       status: 200,

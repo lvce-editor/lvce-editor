@@ -14,7 +14,7 @@ const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityP
   `manifest-src 'self'`,
   `media-src 'self' blob:`,
   `script-src 'self'`,
-  `style-src 'self'`,
+  `style-src 'self' 'unsafe-inline'`,
   `frame-src 'self' blob:`,
 ])
 
