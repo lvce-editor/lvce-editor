@@ -41,7 +41,7 @@ export const getValue = ({ isForElectronProduction, applicationName = defaultApp
     `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
     `media-src 'self'`,
     `script-src 'self'`,
-    `style-src 'self'`,
+    `style-src 'self' 'unsafe-inline'`,
     ...getFrameAncestors(),
     ...getFrameSrc({ isForElectronProduction, applicationName }),
     ...getManifestSrc(),
