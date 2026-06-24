@@ -12,3 +12,15 @@
   width: 780px;
   height: 625px;
 }
+
+.XtermTerminal {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+}
+
+.XtermTerminal .xterm {
+  width: 100%;
+  height: 100%;
+}
