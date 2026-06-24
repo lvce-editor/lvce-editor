@@ -39,6 +39,8 @@
 
   "simpleBrowser.suggestions": false,
 
+  "terminal.backend": "real",
+  "terminal.renderer": "termterm",
   "terminal.separateConnection": false,
 
   "window.titleBarStyle": "custom",
