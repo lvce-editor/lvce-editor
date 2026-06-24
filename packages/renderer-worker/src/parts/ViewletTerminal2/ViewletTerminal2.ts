@@ -1,90 +1,76 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Focus from '../Focus/Focus.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
-import * as Id from '../Id/Id.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as Focus from '../Focus/Focus.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
-// TODO implement a functional terminal component, maybe using offscreencanvas
+const renderer = 'xterm'
+const defaultBackend = 'real'
+
+const getBackend = () => {
+  return Preferences.get('terminal.backend') || defaultBackend
+}
 
 export const create = (id) => {
   Assert.number(id)
-  const separateConnection = true
   return {
     disposed: false,
     id: 0,
     uid: id,
-    separateConnection,
+    separateConnection: true,
     command: '',
     args: [],
     setBounds: false,
+    columns: 80,
+    rows: 24,
   }
 }
 
 export const loadContent = async (state) => {
-  // TODO this should be async and open a pty
   const { uid } = state
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
-  const canvasTextId = Id.create()
-  const canvasCursorId = Id.create()
-  await TerminalWorker.invoke('Terminal.create', canvasTextId, canvasCursorId, uid, Workspace.state.workspacePath, command, args)
-  const terminal = {
-    handleBlur() {
-      return TerminalWorker.invoke('Terminal.handleBlur', uid)
-    },
-    handleKeyDown(key) {
-      return TerminalWorker.invoke('Terminal.handleKeyDown', uid, key)
-    },
-    handleMouseDown() {
-      return TerminalWorker.invoke('Terminal.handleMouseDown', uid)
-    },
-    resize() {
-      // TODO
-    },
-  }
+  await TerminalWorker.invoke('Terminal.create', uid, Workspace.state.workspacePath, command, args, {
+    backend: getBackend(),
+    renderer,
+  })
   return {
     ...state,
-    id: Id.create(),
     command,
     args,
-    canvasCursorId,
-    canvasTextId,
-    terminal,
   }
 }
 
-export const handleBlur = (state) => {
-  const { terminal } = state
-  terminal.handleBlur()
+export const handleInput = async (state, data) => {
+  await TerminalWorker.invoke('Terminal.write', state.uid, data)
   return state
 }
 
 export const handleData = async (state, data) => {
-  const { terminal } = state
-  terminal.write(data)
+  await RendererProcess.invoke('Viewlet.send', state.uid, 'write', data)
+  return state
+}
+
+export const handleBlur = (state) => {
+  return state
 }
 
 export const dispose = async (state) => {
-  // const { uid, terminal } = state
-  // await terminal.dispose(uid)
+  await TerminalWorker.invoke('Terminal.dispose', state.uid)
   return {
     ...state,
     disposed: true,
   }
 }
 
-export const handleKeyDown = (state, key) => {
-  const { terminal } = state
-  terminal.handleKeyDown(key)
+export const handleKeyDown = (state) => {
   return state
 }
 
 export const handleMouseDown = (state) => {
-  const { terminal } = state
   Focus.setFocus(WhenExpression.FocusTerminal)
-  terminal.handleMouseDown()
   return state
 }
 
@@ -98,18 +84,19 @@ export const resize = (state, dimensions) => {
 }
 
 export const resizeEffect = async (state) => {
-  const { height } = state
-  const { uid, terminal } = state
-  // TODO columnWidth etc. should be in renderer process
-  const rowHeight = 14
-  // const columns = Math.round(width / columnWidth)
-  const columns = 7
-  const rows = Math.round(height / rowHeight)
-  await terminal.resize(uid, columns, rows)
+  const columns = state.columns || Math.max(2, Math.floor(state.width / 9))
+  const rows = state.rows || Math.max(2, Math.floor(state.height / 17))
+  await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+}
 
-  // Terminal.resize(state, width, height)
+export const focus = (state) => {
+  return {
+    ...state,
+    focused: true,
+  }
 }
 
 export const clear = async (state) => {
-  await RendererProcess.invoke(/* ViewletTerminal.write */ 'Terminal.write', /* data */ new TextEncoder().encode('TODO clear terminal'))
+  await RendererProcess.invoke('Viewlet.send', state.uid, 'write', new TextEncoder().encode('\u001Bc'))
+  return state
 }

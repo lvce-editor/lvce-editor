@@ -8,5 +8,6 @@ export const Commands = {
   showOverlay: TestFrameWork.showOverlay,
   showTestResults: TestFrameWork.showTestResults,
   performAction: TestFrameWork.performAction,
+  performKeyBoardAction: TestFrameWork.performKeyBoardAction,
   checkConditionError: TestFrameWork.checkConditionError,
 }

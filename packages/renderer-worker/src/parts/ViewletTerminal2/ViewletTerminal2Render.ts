@@ -1,12 +1,12 @@
 export const hasFunctionalRender = true
 
-const renderCanvas = {
+const renderTerminal = {
   isEqual(oldState, newState) {
-    return oldState.canvasCursorId === newState.canvasCursorId && oldState.canvasTextId === newState.canvasTextId
+    return oldState.uid === newState.uid
   },
   apply(oldState, newState) {
-    return ['setTerminal', newState.canvasCursorId, newState.canvasTextId]
+    return ['setTerminal', newState.uid]
   },
 }
 
-export const render = [renderCanvas]
+export const render = [renderTerminal]
