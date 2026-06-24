@@ -131,6 +131,9 @@ const getRoundedPixelValue = (value: number) => {
 }
 
 const getCss = (newState: LayoutState) => {
+  const explicitBounds = newState.explicitBounds
+  const windowWidth = newState.windowWidth
+  const windowHeight = newState.windowHeight
   const sideBarWidth = newState.sideBarWidth
   const activityBarWidth = newState.activityBarWidth
   const panelHeight = newState.panelHeight
@@ -151,9 +154,17 @@ const getCss = (newState: LayoutState) => {
   Assert.number(sashSideBarLeft)
   Assert.number(secondarySideBarLeft)
   Assert.number(sashPanelTop)
+  if (explicitBounds) {
+    Assert.number(windowWidth)
+    Assert.number(windowHeight)
+  }
   const sashSecondarySideBarLeft = secondarySideBarLeft + secondarySideBarWidth
   Assert.number(sashSecondarySideBarLeft)
+  const appWidth = explicitBounds ? getPixelValue(windowWidth) : '100%'
+  const appHeight = explicitBounds ? getPixelValue(windowHeight) : '100%'
   return `:root {
+  --AppWidth: ${appWidth};
+  --AppHeight: ${appHeight};
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
   --PanelHeight: ${getPixelValue(panelHeight)};
   --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};

@@ -58,10 +58,75 @@ const createPanelInstance = (uid = 77) => {
   ViewletStates.set(uid, instance)
 }
 
+const createActivityBarInstance = (uid = 88) => {
+  const instance = {
+    factory: {
+      resize: async (state, dimensions) => {
+        return {
+          newState: {
+            ...state,
+            ...dimensions,
+          },
+          commands: [['Viewlet.setBounds', uid, dimensions.x, dimensions.y, dimensions.width, dimensions.height]],
+        }
+      },
+    },
+    moduleId: 'ActivityBar',
+    renderedState: {
+      uid,
+    },
+    state: {
+      uid,
+    },
+  }
+  ViewletStates.set('ActivityBar', instance)
+  ViewletStates.set(uid, instance)
+}
+
 test('create initializes panelMaximized to false', () => {
   const state = ViewletLayout.create(1)
 
   expect(state.panelMaximized).toBe(false)
+})
+
+test('create initializes explicitBounds to false', () => {
+  const state = ViewletLayout.create(1)
+
+  expect(state.explicitBounds).toBe(false)
+})
+
+test('setExplicitBounds enables explicit bounds and resizes layout', async () => {
+  createActivityBarInstance()
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 88,
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    mainVisible: true,
+    panelMaxHeight: 600,
+    panelMinHeight: 150,
+    sideBarMaxWidth: 9999999,
+    sideBarMinWidth: 170,
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    titleBarHeight: 35,
+    titleBarVisible: true,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.setExplicitBounds(state, 480, 320)
+
+  expect(result.newState).toMatchObject({
+    explicitBounds: true,
+    windowWidth: 480,
+    windowHeight: 320,
+    mainLeft: 0,
+    mainTop: 35,
+    mainWidth: 300,
+    mainHeight: 265,
+  })
+  expect(result.commands).toEqual([['Viewlet.setBounds', 88, 432, 35, 48, 265]])
 })
 
 test('create initializes panelHeightBeforeMaximize to 0', () => {

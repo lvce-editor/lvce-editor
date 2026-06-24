@@ -1,6 +1,6 @@
 .Workbench {
-  width: 100%;
-  height: 100%;
+  width: var(--AppWidth);
+  height: var(--AppHeight);
   contain: strict;
   font-size: 13px;
   line-height: 1.4;

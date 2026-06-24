@@ -104,6 +104,7 @@ export const create = (id: number): LayoutState => {
     panelId: -1,
     mainId: -1,
     contentAreaId: -1,
+    explicitBounds: false,
     statusBarId: -1,
     titleBarId: -1,
     workbenchId: -1,
@@ -1332,6 +1333,22 @@ export const handleResize = async (state: LayoutState, windowWidth: number, wind
     windowHeight,
   })
   // TODO duplicate code with handleSashPointerMove
+  const commands = await getResizeCommands(state, newState)
+  return {
+    newState,
+    commands,
+  }
+}
+
+export const setExplicitBounds = async (state: LayoutState, width: number, height: number) => {
+  Assert.number(width)
+  Assert.number(height)
+  const newState = getPoints({
+    ...state,
+    explicitBounds: true,
+    windowWidth: width,
+    windowHeight: height,
+  })
   const commands = await getResizeCommands(state, newState)
   return {
     newState,
