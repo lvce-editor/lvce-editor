@@ -16,6 +16,7 @@ export interface LayoutState {
   readonly commit: string
   readonly contentAreaId: number
   readonly contentAreaVisible: boolean
+  readonly explicitBounds: boolean
   readonly initial: boolean
   readonly mainHeight: number
   readonly mainId: number
