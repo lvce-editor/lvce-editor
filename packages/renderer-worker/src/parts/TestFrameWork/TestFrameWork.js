@@ -20,6 +20,10 @@ export const performAction = (...args) => {
   return RendererProcess.invoke('TestFrameWork.performAction', ...args)
 }
 
+export const performKeyBoardAction = (...args) => {
+  return RendererProcess.invoke('TestFrameWork.performKeyBoardAction', ...args)
+}
+
 export const checkConditionError = (...args) => {
   return RendererProcess.invoke('TestFrameWork.checkConditionError', ...args)
 }

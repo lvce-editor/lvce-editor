@@ -44,9 +44,16 @@ const getChildBounds = (state) => {
   }
 }
 
+const getTerminalModuleId = () => {
+  if (Preferences.get('terminal.renderer') === 'xterm') {
+    return ViewletModuleId.Terminal2
+  }
+  return ViewletModuleId.Terminal
+}
+
 const createViewlet = async (state, childUid) => {
   const bounds = getChildBounds(state)
-  await Command.execute('Layout.createViewlet', ViewletModuleId.Terminal, childUid, 0, bounds, '')
+  await Command.execute('Layout.createViewlet', getTerminalModuleId(), childUid, 0, bounds, '')
 }
 
 export const loadContent = async (state) => {
