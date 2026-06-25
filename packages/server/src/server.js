@@ -320,7 +320,7 @@ const hasErrorListener = new WeakSet()
 
 const handleResponseViaStaticServer = async (request, res, method, ...params) => {
   request.on('error', handleRequestError)
-  if (!hasErrorListener.has(res.socket)) {
+  if (res.socket && !hasErrorListener.has(res.socket)) {
     res.socket.on('error', handleSocketError)
     hasErrorListener.add(res.socket)
   }
