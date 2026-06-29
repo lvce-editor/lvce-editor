@@ -13,6 +13,7 @@ export const Commands = {
   getCacheUri: PlatformPaths.getCacheUri,
   getCommit: Platform.getCommit,
   getConfigDir: PlatformPaths.getConfigDir,
+  getConfigJsonPath: PlatformPaths.getConfigJsonPath,
   getDataDir: PlatformPaths.getDataDir,
   getDate: Platform.getDate,
   getDisabledExtensionsPath: PlatformPaths.getDisabledExtensionsPath,

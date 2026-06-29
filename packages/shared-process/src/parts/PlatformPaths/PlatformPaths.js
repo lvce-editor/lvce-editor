@@ -142,6 +142,10 @@ export const getConfigDir = () => {
   return configDir
 }
 
+export const getConfigJsonPath = () => {
+  return import.meta.resolve('../../../../static/config.json')
+}
+
 export const getDataDir = () => {
   return dataDir
 }
