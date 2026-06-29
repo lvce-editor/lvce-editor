@@ -143,7 +143,10 @@ export const getConfigDir = () => {
 }
 
 export const getConfigJsonPath = () => {
-  return import.meta.resolve('../../../../static/config.json')
+  if (Platform.isProduction) {
+    return pathToFileURL(Path.join(Root.root, 'config.json')).toString()
+  }
+  return pathToFileURL(Path.join(Root.root, 'static', 'config.json')).toString()
 }
 
 export const getDataDir = () => {

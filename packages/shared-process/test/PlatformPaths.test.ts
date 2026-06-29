@@ -62,6 +62,10 @@ test('getRecentlyOpenedPath', () => {
   expect(PlatformPaths.getRecentlyOpenedPath()).toEqual(expect.any(String))
 })
 
+test('getConfigJsonPath - dev fallback', () => {
+  expect(PlatformPaths.getConfigJsonPath()).toBe(pathToFileURL(join(Root.root, 'static', 'config.json')).toString())
+})
+
 test('getTestPath - uses absolute TEST_PATH', () => {
   process.env.TEST_PATH = '/test/chat-view/packages/e2e'
 
