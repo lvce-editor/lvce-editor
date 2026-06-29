@@ -273,6 +273,7 @@ export const commandMap = {
   'PlatformPaths.getCacheUri': lazy('PlatformPaths.getCacheUri'),
   'PlatformPaths.getDisabledExtensionsJsonPath': lazy('PlatformPaths.getDisabledExtensionsJsonPath'),
   'PlatformPaths.getLogsDir': lazy('PlatformPaths.getLogsDir'),
+  'PlatformPaths.getConfigJsonPath': lazy('PlatformPaths.getConfigJsonPath'),
   'PlatformPaths.getTmpDir': lazy('PlatformPaths.getTmpDir'),
   'PointerCapture.mock': lazy('PointerCapture.mock'),
   'PointerCapture.unmock': lazy('PointerCapture.unmock'),
