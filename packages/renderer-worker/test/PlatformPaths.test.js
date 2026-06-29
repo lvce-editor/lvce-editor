@@ -55,6 +55,20 @@ test('getUserSettingsPath', async () => {
   expect(await PlatformPaths.getUserSettingsPath()).toBe('~/.config/app/settings.json')
 })
 
+test('getConfigJsonPath', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Platform.getConfigJsonPath':
+        return 'file:///test/config.json'
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  expect(await PlatformPaths.getConfigJsonPath()).toBe('file:///test/config.json')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Platform.getConfigJsonPath')
+})
+
 test('getUserSettingsPath - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
