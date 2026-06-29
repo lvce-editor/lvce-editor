@@ -430,6 +430,7 @@ export const commandMap = {
   'ViewletLayout.getAssetDir': lazy('ViewletLayout.getAssetDir'),
   'ViewletLayout.getBadgeCounts': lazy('ViewletLayout.getBadgeCounts'),
   'ViewletLayout.getCommit': lazy('ViewletLayout.getCommit'),
+  'ViewletLayout.getHref': lazy('ViewletLayout.getHref'),
   'ViewletLayout.getPlatform': lazy('ViewletLayout.getPlatform'),
   'ViewletQuickPickElectron.handleBeforeInput': lazy('ViewletQuickPickElectron.handleBeforeInput'),
   'ViewletQuickPickElectron.handleBlur': lazy('ViewletQuickPickElectron.handleBlur'),
