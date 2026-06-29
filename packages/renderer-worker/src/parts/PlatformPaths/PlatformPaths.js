@@ -24,6 +24,10 @@ export const getDisabledExtensionsJsonPath = () => {
   return SharedProcess.invoke(/* Platform.getDisabledExtensionsJsonPath */ 'Platform.getDisabledExtensionsJsonPath')
 }
 
+export const getConfigJsonPath = () => {
+  return SharedProcess.invoke(/* Platform.getConfigJsonPath */ 'Platform.getDisabledExtensionsJsonPath')
+}
+
 export const getCachedExtensionsPath = () => {
   return SharedProcess.invoke(/* Platform.getCachedExtensionsPath */ 'Platform.getCachedExtensionsPath')
 }
