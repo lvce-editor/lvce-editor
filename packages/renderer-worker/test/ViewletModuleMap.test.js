@@ -12,3 +12,12 @@ test('diff editor uses worker-backed module', async () => {
   // expect(typeof module.Commands.setDeltaY).toBe('function')
   // expect(typeof module.Commands.handleWheel).toBe('function')
 })
+
+test('process explorer uses worker-backed module', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.ProcessExplorer]()
+
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(typeof module.loadContent).toBe('function')
+  expect(typeof module.getCommands).toBe('function')
+  expect(typeof module.getKeyBindings).toBe('function')
+})

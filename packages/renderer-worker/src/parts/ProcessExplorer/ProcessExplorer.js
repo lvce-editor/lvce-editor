@@ -1,20 +1,5 @@
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-
-const getModule = () => {
-  switch (Platform.getPlatform()) {
-    case PlatformType.Electron:
-      return import('./ProcessExplorerElectron.js')
-    case PlatformType.Remote:
-      return import('./ProcessExplorerRemote.js')
-    case PlatformType.Web:
-      return import('./ProcessExplorerWeb.js')
-    default:
-      throw new Error('unsupported platform')
-  }
-}
+import * as OpenUri from '../OpenUri/OpenUri.js'
 
 export const open = async () => {
-  const module = await getModule()
-  return module.open()
+  await OpenUri.openUri('process-explorer://')
 }
