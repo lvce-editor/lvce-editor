@@ -1,0 +1,50 @@
+.ProcessExplorer {
+  contain: strict;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--EditorBackground);
+  color: var(--WorkbenchForeground, white);
+}
+
+.ProcessExplorerTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.ProcessExplorerHeaderCell,
+.ProcessExplorerCell {
+  height: 22px;
+  padding: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.ProcessExplorerHeaderCell {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid var(--PanelBorder, rgba(128, 128, 128, 0.35));
+  background: var(--EditorBackground);
+  font-weight: 600;
+}
+
+.ProcessExplorerRowFocused {
+  background: var(--ListActiveSelectionBackground);
+  color: var(--ListActiveSelectionForeground, white);
+}
+
+.ProcessExplorerNameCell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ProcessExplorerError {
+  padding: 8px;
+  color: var(--ErrorForeground, #f48771);
+}

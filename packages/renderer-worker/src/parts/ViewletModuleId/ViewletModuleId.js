@@ -72,6 +72,8 @@ export const Panel = 'Panel'
 
 export const Problems = 'Problems'
 
+export const ProcessExplorer = 'ProcessExplorer'
+
 export const QuickPick = 'QuickPick'
 
 export const References = 'References'

@@ -24,6 +24,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('language-models://')) {
     return 'Language Models'
   }
+  if (uri.startsWith('process-explorer://')) {
+    return 'Process Explorer'
+  }
   return Workspace.pathBaseName(uri)
 }
 
@@ -38,6 +41,9 @@ export const getFileIcon = (uri) => {
   }
   if (uri.startsWith('extension-detail://')) {
     return `MaskIcon${Icon.Extensions}`
+  }
+  if (uri.startsWith('process-explorer://')) {
+    return `MaskIcon${Icon.DebugAlt2}`
   }
   const baseName = Workspace.pathBaseName(uri)
   const icon = IconTheme.getFileIcon({ name: baseName })

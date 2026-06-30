@@ -21,3 +21,7 @@ test('video - mkv', async () => {
 test('audio - opus', async () => {
   expect(await ViewletMap.getModuleId('/test/file.opus')).toBe(ViewletModuleId.Audio)
 })
+
+test('process explorer', async () => {
+  expect(await ViewletMap.getModuleId('process-explorer://')).toBe(ViewletModuleId.ProcessExplorer)
+})

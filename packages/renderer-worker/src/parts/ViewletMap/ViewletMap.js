@@ -30,6 +30,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('settings://')) {
     return ViewletModuleId.Settings
   }
+  if (uri.startsWith('process-explorer://')) {
+    return ViewletModuleId.ProcessExplorer
+  }
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }

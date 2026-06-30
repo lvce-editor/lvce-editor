@@ -37,6 +37,7 @@ export const map = {
   [ViewletModuleId.Output]: () => import('../ViewletOutput/ViewletOutput.ipc.ts'),
   [ViewletModuleId.Panel]: () => import('../ViewletPanel/ViewletPanel.ipc.ts'),
   [ViewletModuleId.Problems]: () => import('../ViewletProblems/ViewletProblems.ipc.js'),
+  [ViewletModuleId.ProcessExplorer]: () => import('../ViewletProcessExplorer/ViewletProcessExplorer.ipc.js'),
   [ViewletModuleId.QuickPick]: () => import('../ViewletQuickPick/ViewletQuickPick.ipc.js'),
   [ViewletModuleId.References]: () => import('../ViewletReferences/ViewletReferences.ipc.js'),
   [ViewletModuleId.RunAndDebug]: () => import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js'),
