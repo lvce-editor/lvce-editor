@@ -720,7 +720,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         return []
       }
       const commands = []
-      if (state < ViewletState.RendererProcessViewletLoaded) {
+      if (state < ViewletState.RendererProcessViewletLoaded && !module?.hasFunctionalEvents) {
         await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
       const parentUid = viewlet.parentUid
