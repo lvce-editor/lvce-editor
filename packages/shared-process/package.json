@@ -41,7 +41,7 @@
     "@lvce-editor/network-process": "^5.2.0",
     "@lvce-editor/preload": "^1.5.0",
     "@lvce-editor/preview-process": "^11.0.0",
-    "@lvce-editor/process-explorer": "^2.4.0",
+    "@lvce-editor/process-explorer": "^3.0.0",
     "@lvce-editor/pty-host": "^8.1.0",
     "@lvce-editor/search-process": "^15.0.0",
     "@lvce-editor/typescript-compile-process": "^5.1.0",
