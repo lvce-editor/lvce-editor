@@ -1,6 +1,7 @@
 import * as HandleWebSocketForClipBoardProcess from '../HandleWebSocketForClipBoardProcess/HandleWebSocketForClipBoardProcess.js'
 import * as HandleWebSocketForExtensionHostHelperProcess from '../HandleWebSocketForExtensionHostHelperProcess/HandleWebSocketForExtensionHostHelperProcess.js'
 import * as HandleWebSocketForFileSystemProcess from '../HandleWebSocketForFileSystemProcess/HandleWebSocketForFileSystemProcess.js'
+import * as HandleWebSocketForProcessExplorer from '../HandleWebSocketForProcessExplorer/HandleWebSocketForProcessExplorer.js'
 import * as HandleWebSocketForSearchProcess from '../HandleWebSocketForSearchProcess/HandleWebSocketForSearchProcess.js'
 import * as HandleWebSocketForSharedProcess from '../HandleWebSocketForSharedProcess/HandleWebSocketForSharedProcess.js'
 import * as HandleWebSocketForTerminalProcess from '../HandleWebSocketForTerminalProcess/HandleWebSocketForTerminalProcess.js'
@@ -23,6 +24,8 @@ export const load = (protocol) => {
       return HandleWebSocketForTerminalProcess
     case ProtocolType.SearchProcess:
       return HandleWebSocketForSearchProcess
+    case ProtocolType.ProcessExplorer:
+      return HandleWebSocketForProcessExplorer
     case ProtocolType.FileSystemProcess:
       return HandleWebSocketForFileSystemProcess
     default:

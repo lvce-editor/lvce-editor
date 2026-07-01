@@ -1,6 +1,7 @@
 export const ExtensionHost = 'extension-host'
 export const ExtensionHostHelperProcess = 'extension-host-helper-process'
 export const SearchProcess = 'search-process'
+export const ProcessExplorer = 'process-explorer'
 export const FileSystemProcess = 'file-system-process'
 export const SharedProcess = 'shared-process'
 export const ClipBoardProcess = 'clipboard-process'

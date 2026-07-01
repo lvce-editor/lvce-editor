@@ -9,3 +9,20 @@ test('upgradeMessagePort', () => {
     params: [port],
   })
 })
+
+test('upgradeWebSocket', () => {
+  const message = {}
+  const handle = {
+    isHandle: true,
+  }
+  expect(HandleIpcProcessExplorer.upgradeWebSocket(handle, message)).toEqual({
+    type: 'send',
+    method: 'HandleWebSocket.handleWebSocket',
+    params: [
+      {
+        isHandle: true,
+      },
+      {},
+    ],
+  })
+})
