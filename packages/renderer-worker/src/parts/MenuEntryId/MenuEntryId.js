@@ -53,3 +53,5 @@ export const KeyBindingsTable = 26
 export const E2eTests = 27
 
 export const DiffView = 28
+
+export const ProcessExplorer = 29

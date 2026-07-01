@@ -20,4 +20,5 @@ test('process explorer uses worker-backed module', async () => {
   expect(typeof module.loadContent).toBe('function')
   expect(typeof module.getCommands).toBe('function')
   expect(typeof module.getKeyBindings).toBe('function')
+  expect(typeof module.getMenus).toBe('function')
 })
