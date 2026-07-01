@@ -434,7 +434,7 @@
   {
     "id": "processExplorer",
     "fileName": "process-explorer-worker/index.js",
-    "contentSecurityPolicy": ["default-src 'none'"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/process-explorer-worker/index.js",
     "productionPath": "/packages/process-explorer-worker/index.js",
     "settingName": "develop.processExplorerWorkerPath",
