@@ -178,7 +178,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   if (!etag) {
     return NotFoundResponse.notFoundResponse
   }
-  if (MatchesEtag.matchesEtag(request, etag)) {
+  if (!absolutePath.endsWith('index.html') && MatchesEtag.matchesEtag(request, etag)) {
     return NotModifiedResponse.notModifiedResponse
   }
   const headers = GetHeaders.getHeaders({ absolutePath, etag, isImmutable, isForElectronProduction: false, applicationName })
