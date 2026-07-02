@@ -10,6 +10,18 @@ interface ViewRenderResult {
   readonly type: string
 }
 
+interface CreateViewInstanceSuccess {
+  readonly ok: true
+  readonly result: ViewRenderResult
+}
+
+interface CreateViewInstanceError {
+  readonly error: unknown
+  readonly ok: false
+}
+
+type CreateViewInstanceResult = CreateViewInstanceSuccess | CreateViewInstanceError
+
 const toCommands = (result: ViewRenderResult): readonly (readonly unknown[])[] => {
   if (result.type === 'setDom') {
     return [['Viewlet.setDom2', result.dom || []]]
@@ -28,11 +40,19 @@ const createContext = (state: ViewletExtensionViewState, savedState: unknown): u
   }
 }
 
-const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRenderResult): ViewletExtensionViewState => {
+const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRenderResult | undefined): ViewletExtensionViewState => {
+  if (!result) {
+    return {
+      ...state,
+      commands: [],
+      patches: [],
+    }
+  }
   return {
     ...state,
     commands: toCommands(result),
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
+    error: undefined,
     patches: result.type === 'setPatches' ? result.patches || [] : [],
   }
 }
@@ -71,8 +91,20 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
       assetDir,
       getPlatform(),
     )
+    const createResult = result as CreateViewInstanceResult
+    if (createResult.ok === false) {
+      return {
+        ...state,
+        commands: [],
+        error: createResult.error,
+        kind: view.kind,
+        patches: [],
+        title: view.title,
+      }
+    }
+    const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
     return {
-      ...renderVirtualDomResult(state, result as ViewRenderResult),
+      ...renderVirtualDomResult(state, renderResult),
       kind: view.kind,
       title: view.title,
     }
@@ -105,7 +137,7 @@ const dispatchEvent = async (state: ViewletExtensionViewState, event: unknown): 
     return state
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.uri, state.uid, event, assetDir, getPlatform())
-  return renderVirtualDomResult(state, result as ViewRenderResult)
+  return renderVirtualDomResult(state, result as ViewRenderResult | undefined)
 }
 
 export const handleInput = (state: ViewletExtensionViewState, name: string, value: string): Promise<ViewletExtensionViewState> => {
