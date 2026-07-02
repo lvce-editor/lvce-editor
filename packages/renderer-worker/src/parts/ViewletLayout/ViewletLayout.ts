@@ -1503,22 +1503,30 @@ export const getAllQuickPickMenuEntries = () => {
 }
 
 const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<LayoutStateResult> => {
-  const instances = ViewletStates.getAllInstances()
-  const allCommands = []
-  // @ts-ignore
-  for (const [key, value] of Object.entries(instances)) {
+  const instances = Object.entries(ViewletStates.getAllInstances()).filter(([, value]) => {
     // @ts-ignore
-    if (value.factory.Commands && value.factory.Commands[eventName]) {
+    return value.factory.Commands && value.factory.Commands[eventName]
+  })
+  const results = await Promise.all(
+    instances.map(async ([, value]) => {
       // @ts-ignore
       const oldState = value.state
       // @ts-ignore
       const newState = await value.factory.Commands[eventName](oldState, ...args)
-      if (oldState !== newState) {
-        // @ts-ignore
-        const commands = ViewletManager.render(value.factory, value.renderedState, newState)
-        // @ts-ignore
-        allCommands.push(...commands)
+      return {
+        oldState,
+        newState,
+        value,
       }
+    }),
+  )
+  const allCommands = []
+  for (const { oldState, newState, value } of results) {
+    if (oldState !== newState) {
+      // @ts-ignore
+      const commands = ViewletManager.render(value.factory, value.renderedState, newState)
+      // @ts-ignore
+      allCommands.push(...commands)
     }
   }
   return {
