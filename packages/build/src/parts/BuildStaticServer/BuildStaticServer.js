@@ -152,6 +152,7 @@ const copyStaticServerFiles = async ({ commitHash, product, version }) => {
     name: product.applicationName,
     productName: product.nameLong,
     version,
+    commitHash,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.js',
