@@ -36,6 +36,16 @@ const renderPatches = {
   },
 }
 
+const renderCss = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return !newState.css || (oldState.css === newState.css && oldState.cssId === newState.cssId)
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return [['Viewlet.setCss', newState.cssId, newState.css]]
+  },
+  multiple: true,
+}
+
 const renderCommands = {
   isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
     return newState.commands.length === 0
@@ -46,7 +56,7 @@ const renderCommands = {
   multiple: true,
 }
 
-export const render = [renderIframe, renderDom, renderPatches, renderCommands]
+export const render = [renderIframe, renderDom, renderPatches, renderCss, renderCommands]
 
 export const renderEventListeners = (): readonly any[] => {
   return [

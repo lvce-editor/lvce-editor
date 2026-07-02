@@ -1,6 +1,7 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
+import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
 import { getPlatform } from '../Platform/Platform.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
@@ -18,6 +19,26 @@ const toCommands = (result: ViewRenderResult): readonly (readonly unknown[])[] =
     return [['Viewlet.setPatches', result.patches || []]]
   }
   return []
+}
+
+const getCssId = (view: ExtensionView): string => {
+  return `ExtensionView:${view.id}`
+}
+
+const loadCss = async (view: ExtensionView): Promise<string> => {
+  if (!view.css) {
+    return ''
+  }
+  try {
+    const response = await fetch(view.css)
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
+    return response.text()
+  } catch (error) {
+    console.warn(`[renderer-worker] Failed to load css for extension view ${view.id}: ${error}`)
+    return ''
+  }
 }
 
 const createContext = (state: ViewletExtensionViewState, savedState: unknown): unknown => {
@@ -40,6 +61,8 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletExtensionViewState => {
   return {
     commands: [],
+    css: '',
+    cssId: '',
     csp: '',
     credentialless: true,
     dom: [],
@@ -62,6 +85,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   if (!view) {
     throw new Error(`view ${state.uri} not found`)
   }
+  const css = await loadCss(view)
+  const cssId = css ? getCssId(view) : ''
   if (view.kind === 'virtualDom') {
     const result = await ExtensionManagementWorker.invoke(
       'Extensions.createViewInstance',
@@ -73,6 +98,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     )
     return {
       ...renderVirtualDomResult(state, result as ViewRenderResult),
+      css,
+      cssId,
       kind: view.kind,
       title: view.title,
     }
@@ -82,6 +109,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   }
   return {
     ...state,
+    css,
+    cssId,
     csp: view.iframe.csp,
     credentialless: view.iframe.credentialless,
     iframeSandbox: view.iframe.sandbox,

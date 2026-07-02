@@ -1,5 +1,7 @@
 export interface ViewletExtensionViewState {
   readonly commands: readonly (readonly unknown[])[]
+  readonly css: string
+  readonly cssId: string
   readonly csp: string
   readonly credentialless: boolean
   readonly dom: readonly unknown[]
