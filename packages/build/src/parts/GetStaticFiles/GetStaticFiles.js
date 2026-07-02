@@ -54,7 +54,7 @@ const generateFilesCode = (indexes, uris, etag) => {
   return lines.join('\n')
 }
 
-export const getStaticFiles = async ({ etag, name, productName, version }) => {
+export const getStaticFiles = async ({ etag, name, productName, version, commitHash }) => {
   const staticFolder = Path.absolute(`packages/build/.tmp/server/static-server/static`)
   const dirents = await readdir(staticFolder, { recursive: true, withFileTypes: true })
   const files = dirents.filter((dirent) => dirent.isFile())
@@ -91,6 +91,7 @@ export const getStaticFiles = async ({ etag, name, productName, version }) => {
       name,
       productName,
       version,
+      commit: commitHash,
       etag,
       headers: uniqueHeaders.ours,
       files: map,

@@ -380,6 +380,7 @@ export const build = async ({
     productName: product.nameLong,
     version,
     electronVersion,
+    commitHash,
   })
 
   console.time('addRootPackageJson')
