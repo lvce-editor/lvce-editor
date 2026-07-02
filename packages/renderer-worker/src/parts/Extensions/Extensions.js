@@ -27,6 +27,12 @@ const applyViewRenderResult = async (uid, result) => {
 
 export const createViewInstance = async (viewId, uid, context) => {
   const result = await ExtensionManagementWorker.invoke('Extensions.createViewInstance', viewId, uid, context, assetDir, getPlatform())
+  if (result?.ok === false) {
+    return result
+  }
+  if (result?.ok === true) {
+    return applyViewRenderResult(uid, result.result)
+  }
   return applyViewRenderResult(uid, result)
 }
 
