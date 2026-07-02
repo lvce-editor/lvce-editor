@@ -1,4 +1,5 @@
 import * as GetContentResponse from '../GetContentResponse/GetContentResponse.js'
+import * as GetBadRequestResponse from '../GetBadRequestResponse/GetBadRequestResponse.js'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.js'
 import * as GetElectronFileResponseContent from '../GetElectronFileResponseContent/GetElectronFileResponseContent.js'
 import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponseRelativePath/GetElectronFileResponseRelativePath.js'
@@ -44,6 +45,9 @@ export const getElectronFileResponse = async (url, request) => {
     headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     return GetContentResponse.getContentResponse(content, headers)
   } catch (error) {
+    if (GetElectronFileResponseAbsolutePath.isInvalidRemotePathError(error)) {
+      return GetBadRequestResponse.getBadRequestResponse()
+    }
     if (IsEnoentError.isEnoentError(error)) {
       return GetNotFoundResponse.getNotFoundResponse()
     }
