@@ -50,3 +50,28 @@ test('launchIsolatedExtensionHostWorker', async () => {
     }),
   )
 })
+
+test('launchIsolatedExtensionHostWorker - uses custom worker name', async () => {
+  const port = {}
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
+
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(
+    port,
+    'builtin.trello',
+    '/test/trello/packages/extension/dist/trelloMain.js',
+    'Trello Worker',
+  )
+
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith(
+    'IpcParent.create',
+    expect.objectContaining({
+      method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
+      name: 'Trello Worker',
+      port,
+      raw: true,
+      url: '/test/trello/packages/extension/dist/trelloMain.js',
+    }),
+  )
+})
