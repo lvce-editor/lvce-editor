@@ -33,6 +33,26 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
+test('render adds uid to setPatches command', () => {
+  const patches = [{ type: 1 }]
+  const mockModule = {
+    render: [
+      {
+        apply() {
+          return ['Viewlet.setPatches', patches]
+        },
+        isEqual() {
+          return false
+        },
+      },
+    ],
+  }
+
+  const commands = ViewletManager.render(mockModule, {}, {}, 42)
+
+  expect(commands).toEqual([['Viewlet.setPatches', 42, patches]])
+})
+
 test.skip('load', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})

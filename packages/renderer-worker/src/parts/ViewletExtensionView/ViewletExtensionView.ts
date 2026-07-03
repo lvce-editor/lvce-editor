@@ -11,16 +11,6 @@ interface ViewRenderResult {
   readonly type: string
 }
 
-const toCommands = (result: ViewRenderResult): readonly (readonly unknown[])[] => {
-  if (result.type === 'setDom') {
-    return [['Viewlet.setDom2', result.dom || []]]
-  }
-  if (result.type === 'setPatches') {
-    return [['Viewlet.setPatches', result.patches || []]]
-  }
-  return []
-}
-
 const getCssId = (view: ExtensionView): string => {
   return `ExtensionView:${view.id}`
 }
@@ -52,7 +42,7 @@ const createContext = (state: ViewletExtensionViewState, savedState: unknown): u
 const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRenderResult): ViewletExtensionViewState => {
   return {
     ...state,
-    commands: toCommands(result),
+    commands: [],
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     patches: result.type === 'setPatches' ? result.patches || [] : [],
   }
@@ -171,6 +161,14 @@ export const handleBlur = (state: ViewletExtensionViewState, name: string): Prom
     name,
     type: 'blur',
   })
+}
+
+export const Commands = {
+  handleBlur,
+  handleClick,
+  handleFocus,
+  handleInput,
+  handleSubmit,
 }
 
 export const dispose = async (state: ViewletExtensionViewState): Promise<void> => {

@@ -1,11 +1,32 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
+const defaultTimeout = 1000
+const interval = 50
+
+const delay = (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+const checkCondition = async (method, locator, fnName, options) => {
+  const timeout = options?.timeout ?? defaultTimeout
+  const deadline = Date.now() + timeout
+  while (true) {
+    const result = await RendererProcess.invoke(method, locator, fnName, options)
+    if (!result?.error || Date.now() >= deadline) {
+      return result
+    }
+    await delay(interval)
+  }
+}
+
 export const checkSingleElementCondition = (locator, fnName, options) => {
-  return RendererProcess.invoke('TestFrameWork.checkSingleElementCondition', locator, fnName, options)
+  return checkCondition('TestFrameWork.checkSingleElementCondition', locator, fnName, options)
 }
 
 export const checkMultiElementCondition = (locator, fnName, options) => {
-  return RendererProcess.invoke('TestFrameWork.checkMultiElementCondition', locator, fnName, options)
+  return checkCondition('TestFrameWork.checkMultiElementCondition', locator, fnName, options)
 }
 
 export const showOverlay = (...args) => {
