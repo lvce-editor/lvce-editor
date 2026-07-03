@@ -1,6 +1,7 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
+import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
 import { getPlatform } from '../Platform/Platform.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
@@ -22,14 +23,24 @@ interface CreateViewInstanceError {
 
 type CreateViewInstanceResult = CreateViewInstanceSuccess | CreateViewInstanceError
 
-const toCommands = (result: ViewRenderResult): readonly (readonly unknown[])[] => {
-  if (result.type === 'setDom') {
-    return [['Viewlet.setDom2', result.dom || []]]
+const getCssId = (view: ExtensionView): string => {
+  return `ExtensionView:${view.id}`
+}
+
+const loadCss = async (view: ExtensionView): Promise<string> => {
+  if (!view.css) {
+    return ''
   }
-  if (result.type === 'setPatches') {
-    return [['Viewlet.setPatches', result.patches || []]]
+  try {
+    const response = await fetch(view.css)
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
+    return response.text()
+  } catch (error) {
+    console.warn(`[renderer-worker] Failed to load css for extension view ${view.id}: ${error}`)
+    return ''
   }
-  return []
 }
 
 const createContext = (state: ViewletExtensionViewState, savedState: unknown): unknown => {
@@ -50,7 +61,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
   }
   return {
     ...state,
-    commands: toCommands(result),
+    commands: [],
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     error: undefined,
     patches: result.type === 'setPatches' ? result.patches || [] : [],
@@ -64,6 +75,8 @@ const getViewTitle = (view: GetExtensionViews.ExtensionView): string => {
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletExtensionViewState => {
   return {
     commands: [],
+    css: '',
+    cssId: '',
     csp: '',
     credentialless: true,
     dom: [],
@@ -87,6 +100,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     throw new Error(`view ${state.uri} not found`)
   }
   const title = getViewTitle(view)
+  const css = await loadCss(view)
+  const cssId = css ? getCssId(view) : ''
   if (view.kind === 'virtualDom') {
     const result = await ExtensionManagementWorker.invoke(
       'Extensions.createViewInstance',
@@ -101,6 +116,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
       return {
         ...state,
         commands: [],
+        css,
+        cssId,
         error: createResult.error,
         kind: view.kind,
         patches: [],
@@ -110,6 +127,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
     return {
       ...renderVirtualDomResult(state, renderResult),
+      css,
+      cssId,
       kind: view.kind,
       title,
     }
@@ -119,6 +138,8 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   }
   return {
     ...state,
+    css,
+    cssId,
     csp: view.iframe.csp,
     credentialless: view.iframe.credentialless,
     iframeSandbox: view.iframe.sandbox,
@@ -187,6 +208,14 @@ export const handleBlur = (state: ViewletExtensionViewState, name: string): Prom
     name,
     type: 'blur',
   })
+}
+
+export const Commands = {
+  handleBlur,
+  handleClick,
+  handleFocus,
+  handleInput,
+  handleSubmit,
 }
 
 export const dispose = async (state: ViewletExtensionViewState): Promise<void> => {
