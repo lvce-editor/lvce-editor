@@ -147,14 +147,15 @@ const sortObject = (object) => {
   return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
 
-const setVersionsAndDependencies = async ({ version }) => {
-  const files = [
-    'packages/build/.tmp/server/extension-host-helper-process/package.json',
-    'packages/build/.tmp/server/extension-host/package.json',
-    'packages/build/.tmp/server/server/package.json',
-    'packages/build/.tmp/server/shared-process/package.json',
-    'packages/build/.tmp/server/static-server/package.json',
-  ]
+const serverPackageJsonFiles = [
+  'packages/build/.tmp/server/extension-host-helper-process/package.json',
+  'packages/build/.tmp/server/extension-host/package.json',
+  'packages/build/.tmp/server/server/package.json',
+  'packages/build/.tmp/server/shared-process/package.json',
+  'packages/build/.tmp/server/static-server/package.json',
+]
+
+export const setVersionsAndDependencies = async ({ version, files = serverPackageJsonFiles }) => {
   for (const file of files) {
     const json = await JsonFile.readJson(file)
     delete json['xo']
@@ -165,14 +166,20 @@ const setVersionsAndDependencies = async ({ version }) => {
       delete json['optionalDependencies']['@vscode/windows-process-tree']
       delete json['optionalDependencies']['symlink-dir']
     }
-    if (file === 'packages/build/.tmp/server/server/package.json') {
+    if (json.name === '@lvce-editor/server') {
+      json.dependencies ||= {}
       json.dependencies['@lvce-editor/shared-process'] = version
       json.dependencies['@lvce-editor/static-server'] = version
     }
-    if (file === 'packages/build/.tmp/server/shared-process/package.json') {
+    if (json.name === '@lvce-editor/shared-process') {
+      json.dependencies ||= {}
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
+      const processExplorerVersion = json.optionalDependencies?.['@lvce-editor/process-explorer']
+      if (processExplorerVersion) {
+        json.dependencies['@lvce-editor/process-explorer'] = processExplorerVersion
+        delete json.optionalDependencies['@lvce-editor/process-explorer']
+      }
       json.optionalDependencies ||= {}
-      delete json.optionalDependencies['@lvce-editor/process-explorer']
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
