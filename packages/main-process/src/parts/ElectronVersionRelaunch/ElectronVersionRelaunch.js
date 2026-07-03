@@ -1,8 +1,10 @@
-import { app } from 'electron'
+import Electron from 'electron'
 import { spawn } from 'node:child_process'
 import * as ElectronVersionCache from '../ElectronVersionCache/ElectronVersionCache.js'
 import * as ElectronVersionCliArgs from '../ElectronVersionCliArgs/ElectronVersionCliArgs.js'
 import * as ElectronVersionPaths from '../ElectronVersionPaths/ElectronVersionPaths.js'
+
+const { app } = Electron
 
 export const maybeRelaunchWithElectronVersion = async ({
   appPath = app.getAppPath(),

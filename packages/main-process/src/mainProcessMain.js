@@ -1,9 +1,10 @@
-import { app } from 'electron'
+import Electron from 'electron'
 import { existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as ElectronVersionRelaunch from './parts/ElectronVersionRelaunch/ElectronVersionRelaunch.js'
 
+const { app } = Electron
 const root = process.env.LVCE_ROOT || process.cwd()
 const iconPath = join(root, 'packages', 'build', 'files', 'icon.png')
 const __dirname = dirname(fileURLToPath(import.meta.url))
