@@ -16,7 +16,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
-    '@@MAIN@@': 'packages/main-process/dist/mainProcessMain.js',
+    '@@MAIN@@': 'packages/main-process/src/mainProcessMain.js',
     '@@ASAR@@': String(asar),
   })
 }
@@ -42,7 +42,7 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
   await copyElectronBuilderConfig({ config, product, version, electronVersion, asar })
 
   await WriteFile.writeFile({
-    to: 'packages/build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
+    to: 'packages/build/.tmp/electron-builder-placeholder-app/packages/main-process/src/mainProcessMain.js',
     content: '',
   })
 

@@ -22,6 +22,10 @@ export const bundleMainProcess = async ({
     from: `packages/main-process/node_modules/@lvce-editor/main-process/pages`,
     to: `${cachePath}/pages`,
   })
+  await Copy.copy({
+    from: 'packages/main-process/src',
+    to: Path.join(cachePath, 'src'),
+  })
   await Replace.replace({
     path: `${cachePath}/dist/mainProcessMain.js`,
     occurrence: `const isProduction = false`,

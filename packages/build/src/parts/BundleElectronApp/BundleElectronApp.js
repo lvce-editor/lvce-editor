@@ -388,7 +388,6 @@ export const build = async ({
     electronVersion,
     product,
     cachePath: Path.absolute(`${resourcesPath}/app`),
-    bundleMainProcess,
     version,
   })
   console.timeEnd('addRootPackageJson')

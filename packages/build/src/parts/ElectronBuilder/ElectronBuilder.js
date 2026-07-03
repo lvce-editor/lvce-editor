@@ -63,11 +63,11 @@ const getBundleTarget = (config) => {
   }
 }
 
-const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess, asar }) => {
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, asar }) => {
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
-  const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.js` : `packages/main-process/src/mainProcessMain.js`
+  const mainProcessPath = `packages/main-process/src/mainProcessMain.js`
   await Template.write(config, 'packages/build/.tmp/electron-builder/package.json', {
     '@@SNAP_NAME@@': product.snapName,
     '@@NAME@@': product.applicationName,
@@ -256,7 +256,6 @@ const copyElectronResult = async ({
     cachePath: `${resourcesPath}/app`,
     version,
     product,
-    bundleMainProcess,
     electronVersion,
   })
   if (supportsAutoUpdate) {
@@ -345,7 +344,7 @@ export const build = async ({
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess, asar })
+  await copyElectronBuilderConfig({ config, version, product, electronVersion, asar })
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')
