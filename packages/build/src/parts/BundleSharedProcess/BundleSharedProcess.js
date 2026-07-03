@@ -393,6 +393,27 @@ export const ptyHostPath = Path.join(Root.root, 'packages', 'shared-process', 'n
 export const ptyHostPath = ResolveBin.resolveBin('@lvce-editor/pty-host')
 `,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/ProcessExplorerPath/ProcessExplorerPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const processExplorerPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'process-explorer',
+  'dist',
+  'index.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const processExplorerPath = ResolveBin.resolveBin('@lvce-editor/process-explorer')
+`,
+    })
     await Copy.copyFile({
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,
