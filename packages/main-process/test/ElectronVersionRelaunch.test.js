@@ -86,6 +86,7 @@ describe('electron version cache', () => {
     const executablePath = '/cache/electron-42.0.0-linux-x64/electron'
     const existingPaths = new Set([cachePath])
     const calls = []
+    const messages = []
     const result = await ensureElectronVersion({
       arch: 'x64',
       cachePath,
@@ -93,8 +94,13 @@ describe('electron version cache', () => {
       existsSyncFn(path) {
         return existingPaths.has(path)
       },
-      async downloadArtifactFn() {
+      async downloadArtifactFn(options) {
         calls.push('download')
+        await options.downloadOptions.getProgressCallback({
+          percent: 0.25,
+          transferred: 25 * 1024 * 1024,
+          total: 100 * 1024 * 1024,
+        })
         return '/tmp/electron.zip'
       },
       async extractZipFn() {
@@ -105,6 +111,11 @@ describe('electron version cache', () => {
         calls.push(`mkdir:${path}`)
         existingPaths.add(path)
       },
+      log: {
+        info(message) {
+          messages.push(message)
+        },
+      },
       platform: 'linux',
       async rmFn(path) {
         calls.push(`rm:${path}`)
@@ -114,5 +125,12 @@ describe('electron version cache', () => {
 
     expect(result).toBe(executablePath)
     expect(calls).toEqual([`rm:${cachePath}`, `mkdir:${cachePath}`, 'download', 'extract'])
+    expect(messages).toEqual([
+      `[electron-version] removing incomplete Electron 42.0.0 cache at ${cachePath}`,
+      '[electron-version] downloading Electron 42.0.0 for linux x64',
+      '[electron-version] downloading Electron 42.0.0: 25% (25.0 MB / 100.0 MB)',
+      `[electron-version] extracting Electron 42.0.0 to ${cachePath}`,
+      `[electron-version] Electron 42.0.0 is ready at ${executablePath}`,
+    ])
   })
 })

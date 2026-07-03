@@ -12,6 +12,7 @@ export const maybeRelaunchWithElectronVersion = async ({
   env = process.env,
   exitFn = app.exit.bind(app),
   getUserDataPath = () => app.getPath('userData'),
+  log = console,
   platform = process.platform,
   spawnFn = spawn,
 } = {}) => {
@@ -24,6 +25,7 @@ export const maybeRelaunchWithElectronVersion = async ({
   if (!electronVersionArg) {
     return false
   }
+  log.info(`[electron-version] requested Electron ${electronVersionArg.electronVersion}`)
   const cachePath = ElectronVersionPaths.getElectronVersionCachePath({
     arch,
     electronVersion: electronVersionArg.electronVersion,
@@ -35,8 +37,10 @@ export const maybeRelaunchWithElectronVersion = async ({
     arch,
     cachePath,
     electronVersion: electronVersionArg.electronVersion,
+    log,
     platform,
   })
+  log.info(`[electron-version] launching ${executablePath}`)
   const child = spawnFn(executablePath, [appPath, ...electronVersionArg.filteredArgv], {
     cwd: appPath,
     detached: true,
