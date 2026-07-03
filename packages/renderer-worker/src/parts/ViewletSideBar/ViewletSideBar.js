@@ -155,6 +155,11 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     await savePromise
     return state
   }
+  const childInstance = ViewletStates.getInstance(childUid)
+  const title =
+    childModuleId === ViewletModuleId.ExtensionView
+      ? childInstance?.state?.title || Character.EmptyString
+      : Character.EmptyString
   let actionsDom = []
   let actionsUid = -1
   if (commands) {
@@ -192,6 +197,7 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     currentViewletId: moduleId,
     childUid,
     actionsUid,
+    title,
   }
 }
 

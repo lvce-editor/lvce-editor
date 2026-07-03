@@ -57,6 +57,10 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
   }
 }
 
+const getViewTitle = (view: GetExtensionViews.ExtensionView): string => {
+  return view.displayName || view.name || view.title
+}
+
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletExtensionViewState => {
   return {
     commands: [],
@@ -82,6 +86,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   if (!view) {
     throw new Error(`view ${state.uri} not found`)
   }
+  const title = getViewTitle(view)
   if (view.kind === 'virtualDom') {
     const result = await ExtensionManagementWorker.invoke(
       'Extensions.createViewInstance',
@@ -99,14 +104,14 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
         error: createResult.error,
         kind: view.kind,
         patches: [],
-        title: view.title,
+        title,
       }
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
     return {
       ...renderVirtualDomResult(state, renderResult),
       kind: view.kind,
-      title: view.title,
+      title,
     }
   }
   if (!view.iframe) {
@@ -119,7 +124,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     iframeSandbox: view.iframe.sandbox,
     iframeSrc: view.iframe.src,
     kind: 'iframe',
-    title: view.title,
+    title,
   }
 }
 
@@ -137,6 +142,14 @@ const dispatchEvent = async (state: ViewletExtensionViewState, event: unknown): 
     return state
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.uri, state.uid, event, assetDir, getPlatform())
+  return renderVirtualDomResult(state, result as ViewRenderResult | undefined)
+}
+
+export const rerender = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
+  if (state.kind !== 'virtualDom') {
+    return state
+  }
+  const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.uri, state.uid, assetDir, getPlatform())
   return renderVirtualDomResult(state, result as ViewRenderResult | undefined)
 }
 

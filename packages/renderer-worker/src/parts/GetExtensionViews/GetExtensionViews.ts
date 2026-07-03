@@ -10,11 +10,13 @@ export interface ExtensionViewIframe {
 }
 
 export interface ExtensionView {
+  readonly displayName?: string
   readonly extensionId: string
   readonly icon: string
   readonly id: string
   readonly iframe?: ExtensionViewIframe
   readonly kind?: string
+  readonly name?: string
   readonly title: string
 }
 
