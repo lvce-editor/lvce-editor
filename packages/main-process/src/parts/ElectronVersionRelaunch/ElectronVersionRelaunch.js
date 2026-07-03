@@ -40,8 +40,14 @@ export const maybeRelaunchWithElectronVersion = async ({
     log,
     platform,
   })
+  const relaunchArgv = ElectronVersionPaths.getElectronRelaunchArgv({
+    appPath,
+    filteredArgv: electronVersionArg.filteredArgv,
+    cwd,
+  })
   log.info(`[electron-version] launching ${executablePath}`)
-  const child = spawnFn(executablePath, [appPath, ...electronVersionArg.filteredArgv], {
+  log.info(`[electron-version] launch args: ${relaunchArgv.join(' ')}`)
+  const child = spawnFn(executablePath, relaunchArgv, {
     cwd: appPath,
     detached: true,
     env,

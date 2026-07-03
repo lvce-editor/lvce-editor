@@ -4,6 +4,7 @@ import { ensureElectronVersion } from '../src/parts/ElectronVersionCache/Electro
 import { parseElectronVersionCliArgs } from '../src/parts/ElectronVersionCliArgs/ElectronVersionCliArgs.js'
 import {
   getElectronExecutablePath,
+  getElectronRelaunchArgv,
   getElectronUserArgv,
   getElectronVersionCachePath,
 } from '../src/parts/ElectronVersionPaths/ElectronVersionPaths.js'
@@ -77,6 +78,16 @@ describe('electron version relaunch paths', () => {
         cwd: '/workspace/packages/main-process',
       }),
     ).toEqual(['--electron-version=42.0.0'])
+  })
+
+  test('keeps electron switches before app path when relaunching', () => {
+    expect(
+      getElectronRelaunchArgv({
+        appPath: '/workspace/packages/main-process',
+        filteredArgv: ['--no-sandbox', '.', '/workspace/playground'],
+        cwd: '/workspace/packages/main-process',
+      }),
+    ).toEqual(['--no-sandbox', '/workspace/packages/main-process', '/workspace/playground'])
   })
 })
 

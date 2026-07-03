@@ -32,3 +32,13 @@ export const getElectronUserArgv = ({ appPath, argv, cwd }) => {
   }
   return argv.slice(1)
 }
+
+export const getElectronRelaunchArgv = ({ appPath, filteredArgv, cwd }) => {
+  const appPathIndex = filteredArgv.findIndex((arg) => {
+    return isAppPathArg({ arg, appPath, cwd })
+  })
+  if (appPathIndex === -1) {
+    return [appPath, ...filteredArgv]
+  }
+  return [...filteredArgv.slice(0, appPathIndex), appPath, ...filteredArgv.slice(appPathIndex + 1)]
+}
