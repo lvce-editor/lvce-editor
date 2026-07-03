@@ -60,6 +60,30 @@ const createDeferred = () => {
   return { promise, resolve }
 }
 
+test('handleSideBarViewletChange does not create title actions root without actions dom', async () => {
+  const events = [{ name: 'handleClick', params: ['handleClick', 'event.target.name'] }]
+  // @ts-ignore
+  Id.create.mockReturnValueOnce(201)
+  // @ts-ignore
+  SaveState.saveViewletState.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.registerEventListeners', 201, events]])
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 600)
+
+  const result = await ViewletSideBar.handleSideBarViewletChange(state, 'trello.views.boards')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.registerEventListeners', 201, events]])
+  expect(result).toEqual({
+    ...state,
+    actionsUid: -1,
+    childUid: 201,
+    currentViewletId: 'trello.views.boards',
+  })
+})
+
 test('handleSideBarViewletChange ignores stale loads', async () => {
   const explorerDeferred = createDeferred()
   const sourceControlDeferred = createDeferred()

@@ -160,11 +160,12 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
   if (commands) {
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
     if (actionsDomIndex >= 0) {
-      actionsDom = commands[actionsDomIndex][3]
+      const nextActionsDom = commands[actionsDomIndex][3]
+      actionsDom = Array.isArray(nextActionsDom) ? nextActionsDom : []
       commands.splice(actionsDomIndex, 1)
     }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
-    if (eventsIndex >= 0 || actionsDom.length > 0) {
+    if (actionsDom.length > 0) {
       const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []
       actionsUid = Id.create()
       commands.push(
