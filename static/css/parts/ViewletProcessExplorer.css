@@ -47,4 +47,5 @@
 .ProcessExplorerError {
   padding: 8px;
   color: var(--ErrorForeground, #f48771);
+  user-select: text;
 }
