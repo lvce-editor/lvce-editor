@@ -32,6 +32,31 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
+
+test('render adds uid to setPatches command', () => {
+  const patches = [{ type: 1 }]
+  const mockModule = {
+    render: [
+      {
+        apply() {
+          return ['Viewlet.setPatches', patches]
+        },
+        isEqual() {
+          return false
+        },
+      },
+    ],
+  }
+
+  const commands = ViewletManager.render(mockModule, {}, {}, 42)
+
+  expect(commands).toEqual([['Viewlet.setPatches', 42, patches]])
+})
+
+test('extension view render supports functional events', () => {
+  expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
+})
 
 test.skip('load', async () => {
   // @ts-ignore
