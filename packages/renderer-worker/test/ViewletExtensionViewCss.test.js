@@ -42,6 +42,16 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 
 const ViewletExtensionView = await import('../src/parts/ViewletExtensionView/ViewletExtensionView.ts')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+
+test('render supports functional events', () => {
+  expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
+})
+
+test('exports virtual dom event commands', () => {
+  expect(ViewletExtensionView.Commands.handleInput).toBe(ViewletExtensionView.handleInput)
+  expect(ViewletExtensionView.Commands.handleClick).toBe(ViewletExtensionView.handleClick)
+})
 
 test('loadContent loads css from extension view metadata', async () => {
   const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
@@ -51,6 +61,40 @@ test('loadContent loads css from extension view metadata', async () => {
   expect(fetch).toHaveBeenCalledWith('/extensions/sample/view.css')
   expect(newState.css).toBe('.Testing { color: red; }')
   expect(newState.cssId).toBe('ExtensionView:sample.views.testing')
+})
+
+test('loadContent stores virtual dom without duplicate commands', async () => {
+  const dom = [{ type: 4 }]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    dom,
+    type: 'setDom',
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState.commands).toEqual([])
+  expect(newState.dom).toBe(dom)
+  expect(newState.patches).toEqual([])
+})
+
+test('handleClick stores patches without duplicate commands', async () => {
+  const patches = [{ type: 1 }]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    patches,
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'virtualDom',
+  }
+
+  const newState = await ViewletExtensionView.handleClick(state, 'connect')
+
+  expect(newState.commands).toEqual([])
+  expect(newState.patches).toBe(patches)
 })
 
 test('loadContent ignores css load errors', async () => {

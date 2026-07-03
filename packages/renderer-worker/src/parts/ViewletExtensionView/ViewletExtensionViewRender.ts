@@ -4,6 +4,8 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
+export const hasFunctionalEvents = true
+
 const renderIframe = {
   isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
     return (
