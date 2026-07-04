@@ -4,7 +4,8 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const id = MenuEntryId.ProcessExplorer
 
-export const getMenuEntries = () => {
+export const getMenuEntries = async () => {
   const processExplorerState = Viewlet.getState('ProcessExplorer')
-  return ProcessExplorerWorker.invoke('ProcessExplorer.getMenuEntries2', processExplorerState.uid)
+  const r = await ProcessExplorerWorker.invoke('ProcessExplorer.getMenuEntries', processExplorerState.uid)
+  return r
 }
