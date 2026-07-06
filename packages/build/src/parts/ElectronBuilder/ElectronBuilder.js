@@ -84,25 +84,60 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   })
 }
 
-const runElectronBuilder = async ({ config, arch }) => {
-  try {
-    const debArch = 'amd64'
+const getElectronBuilderArch = (arch) => {
+  switch (arch) {
+    case 'x64':
+      return ElectronBuilder.Arch.x64
+    case 'armv7l':
+      return ElectronBuilder.Arch.armv7l
+    case 'arm64':
+      return ElectronBuilder.Arch.arm64
+    default:
+      throw new Error(`unsupported electron-builder arch "${arch}"`)
+  }
+}
 
+const getPrepackagedPath = ({ config, product }) => {
+  const debArch = 'amd64'
+  const appPath = `packages/build/.tmp/linux/snap/${debArch}/app`
+  if (config === ElectronBuilderConfigType.Mac) {
+    return Path.absolute(`${appPath}/${product.applicationName}.app`)
+  }
+  return Path.absolute(appPath)
+}
+
+const getElectronBuilderTargets = ({ config, arch }) => {
+  const electronBuilderArch = getElectronBuilderArch(arch)
+  switch (config) {
+    case ElectronBuilderConfigType.ArchLinux:
+      return ElectronBuilder.Platform.LINUX.createTarget('pacman', electronBuilderArch)
+    case ElectronBuilderConfigType.Deb:
+      return ElectronBuilder.Platform.LINUX.createTarget('deb', electronBuilderArch)
+    case ElectronBuilderConfigType.Snap:
+      return ElectronBuilder.Platform.LINUX.createTarget('snap', electronBuilderArch)
+    case ElectronBuilderConfigType.AppImage:
+      return ElectronBuilder.Platform.LINUX.createTarget('appImage', electronBuilderArch)
+    case ElectronBuilderConfigType.Mac:
+      return ElectronBuilder.Platform.MAC.createTarget('dmg', electronBuilderArch)
+    case ElectronBuilderConfigType.WindowsExe:
+      return ElectronBuilder.Platform.WINDOWS.createTarget('nsis', electronBuilderArch)
+    default:
+      throw new Error(`cannot get electron-builder target for config "${config}"`)
+  }
+}
+
+const runElectronBuilder = async ({ config, product, arch }) => {
+  try {
     /**
      * @type {ElectronBuilder.CliOptions}
      */
     const options = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
-      prepackaged: Path.absolute(`packages/build/.tmp/linux/snap/${debArch}/app`),
+      prepackaged: getPrepackagedPath({ config, product }),
       publish: 'never',
-      arm64: arch === 'arm64',
+      targets: getElectronBuilderTargets({ config, arch }),
 
       // win: ['portable'],
-    }
-
-    // Set platform-specific options
-    if (config === ElectronBuilderConfigType.WindowsExe) {
-      options.win = [arch === 'arm64' ? 'nsis:arm64' : 'nsis:x64']
     }
 
     // if (process.env.HIGHEST_COMPRESSION) {
@@ -353,7 +388,7 @@ export const build = async ({
   console.timeEnd('copyBuildResources')
 
   console.time('runElectronBuilder')
-  await runElectronBuilder({ config, arch })
+  await runElectronBuilder({ config, product, arch })
   console.timeEnd('runElectronBuilder')
 
   const distPath = 'packages/build/.tmp/electron-builder/dist'

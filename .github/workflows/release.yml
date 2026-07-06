@@ -219,7 +219,7 @@ jobs:
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
           mv "packages/build/.tmp/releases/lvce-arm64.dmg" "$staging"
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (Macos dmg, x64)
+      - name: Release Electron App (Macos dmg, arm64)
         uses: actions/upload-release-asset@v1.0.1
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         env:
