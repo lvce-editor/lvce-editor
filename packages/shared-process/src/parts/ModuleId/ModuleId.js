@@ -10,6 +10,7 @@ export const Preferences = 9
 export const RecentlyOpened = 10
 export const GetWindowId = 377
 export const ElectronWindowProcessExplorer = 12
+export const ProcessExplorer = 13
 export const Terminal = 14
 export const TextDocument = 15
 export const Workspace = 17

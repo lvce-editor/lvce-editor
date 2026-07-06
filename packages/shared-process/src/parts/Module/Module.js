@@ -96,6 +96,8 @@ export const load = (moduleId) => {
       return import('../Preferences/Preferences.ipc.js')
     case ModuleId.Process:
       return import('../Process/Process.ipc.js')
+    case ModuleId.ProcessExplorer:
+      return import('../ProcessExplorer/ProcessExplorer.ipc.js')
     case ModuleId.ProcessId:
       return import('../ProcessId/ProcessId.ipc.js')
     case ModuleId.RebuildNodePty:

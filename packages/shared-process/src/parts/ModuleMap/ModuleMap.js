@@ -235,6 +235,8 @@ export const getModuleId = (commandId) => {
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':
       return ModuleId.ProcessId
+    case 'ProcessExplorer.decreaseRefCount':
+      return ModuleId.ProcessExplorer
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
