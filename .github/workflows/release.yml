@@ -113,7 +113,7 @@ jobs:
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Install Cloudsmith CLI
         if: matrix.versions.os == 'ubuntu-24.04'
-        uses: cloudsmith-io/cloudsmith-cli-action@v2
+        uses: cloudsmith-io/cloudsmith-cli-action@159f1619275d5d3147f059c3cc110938ec221d16
         with:
           api-key: ${{ secrets.CLOUDSMITH_API_TOKEN }}
 
