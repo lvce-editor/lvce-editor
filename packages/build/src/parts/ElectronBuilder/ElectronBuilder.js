@@ -84,9 +84,40 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   })
 }
 
+const getElectronBuilderArch = (arch) => {
+  switch (arch) {
+    case 'x64':
+      return ElectronBuilder.Arch.x64
+    case 'arm64':
+      return ElectronBuilder.Arch.arm64
+    default:
+      throw new Error(`unsupported electron-builder arch "${arch}"`)
+  }
+}
+
+const getElectronBuilderArchOptions = (arch) => {
+  switch (arch) {
+    case 'armv7l':
+      return {
+        armv7l: true,
+      }
+    case 'x64':
+      return {
+        x64: true,
+      }
+    case 'arm64':
+      return {
+        arm64: true,
+      }
+    default:
+      throw new Error(`unsupported electron-builder arch "${arch}"`)
+  }
+}
+
 const runElectronBuilder = async ({ config, arch }) => {
   try {
     const debArch = 'amd64'
+    const archOptions = getElectronBuilderArchOptions(arch)
 
     /**
      * @type {ElectronBuilder.CliOptions}
@@ -95,12 +126,15 @@ const runElectronBuilder = async ({ config, arch }) => {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`packages/build/.tmp/linux/snap/${debArch}/app`),
       publish: 'never',
-      arm64: arch === 'arm64',
+      ...archOptions,
 
       // win: ['portable'],
     }
 
     // Set platform-specific options
+    if (config === ElectronBuilderConfigType.Mac) {
+      options.targets = ElectronBuilder.Platform.MAC.createTarget('dmg', getElectronBuilderArch(arch))
+    }
     if (config === ElectronBuilderConfigType.WindowsExe) {
       options.win = [arch === 'arm64' ? 'nsis:arm64' : 'nsis:x64']
     }
