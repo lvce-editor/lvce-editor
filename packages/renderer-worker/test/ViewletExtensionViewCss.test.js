@@ -58,6 +58,7 @@ test('exports virtual dom event commands', () => {
   expect(ViewletExtensionView.Commands.handleInput).toBe(ViewletExtensionView.handleInput)
   expect(ViewletExtensionView.Commands.handleClick).toBe(ViewletExtensionView.handleClick)
   expect(ViewletExtensionView.Commands.handleViewEvent).toBe(ViewletExtensionView.handleViewEvent)
+  expect(ViewletExtensionView.Commands.rerender).toBe(ViewletExtensionView.rerender)
 })
 
 test('loadContent loads css from extension view metadata', async () => {
@@ -115,6 +116,38 @@ test('handleClick stores patches without duplicate commands', async () => {
 
   expect(newState.commands).toEqual([])
   expect(newState.patches).toBe(patches)
+})
+
+test('rerender stores patches without duplicate commands', async () => {
+  const patches = [{ type: 1 }]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    patches,
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    commands: [['stale']],
+    kind: 'virtualDom',
+  }
+
+  const newState = await ViewletExtensionView.rerender(state)
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.renderViewInstance', 'sample.views.testing', 1, '', 4)
+  expect(newState.commands).toEqual([])
+  expect(newState.patches).toBe(patches)
+})
+
+test('rerender ignores iframe views', async () => {
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'iframe',
+  }
+
+  const newState = await ViewletExtensionView.rerender(state)
+
+  expect(newState).toBe(state)
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
 })
 
 test('loadContent ignores css load errors', async () => {

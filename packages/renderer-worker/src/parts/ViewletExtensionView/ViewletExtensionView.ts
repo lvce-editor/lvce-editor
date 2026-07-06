@@ -179,6 +179,14 @@ export const handleViewEvent = (
   })
 }
 
+export const rerender = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
+  if (state.kind !== 'virtualDom') {
+    return state
+  }
+  const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.uri, state.uid, assetDir, getPlatform())
+  return renderVirtualDomResult(state, result as ViewRenderResult)
+}
+
 export const handleInput = (state: ViewletExtensionViewState, name: string, value: string): Promise<ViewletExtensionViewState> => {
   return handleViewEvent(state, 'input', name, value)
 }
@@ -206,6 +214,7 @@ export const Commands = {
   handleInput,
   handleSubmit,
   handleViewEvent,
+  rerender,
 }
 
 export const dispose = async (state: ViewletExtensionViewState): Promise<void> => {
