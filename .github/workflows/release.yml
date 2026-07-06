@@ -45,7 +45,7 @@ jobs:
           [
             { os: windows-2025, arch: x64 },
             { os: windows-2025, arch: arm64 },
-            { os: macos-15, arch: arm64 },
+            { os: macos-26, arch: arm64 },
             { os: ubuntu-24.04, arch: x64 },
             { os: ubuntu-24.04, arch: arm64 },
             { os: ubuntu-24.04, arch: armhf },
@@ -190,10 +190,10 @@ jobs:
           asset_name: ${{ env.ASSET_DEB_ARMHF }}
           asset_content_type: application/octet-stream
       # - name: Build Electron App (Macos dmg, x64)
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   run: npm run build:electron:mac:x64 -- --product=lvce
       # - name: Rename Electron App (Macos dmg, x64)
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   shell: bash
       #   run: |
       #     staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
@@ -201,7 +201,7 @@ jobs:
       #     echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
       # - name: Release Electron App (Macos dmg, x64)
       #   uses: actions/upload-release-asset@v1.0.1
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
@@ -210,10 +210,10 @@ jobs:
       #     asset_name: ${{ env.ASSET_DMG_X64 }}
       #     asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         run: npm run build:electron:mac:arm64 -- --product=lvce
       - name: Rename Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
@@ -221,7 +221,7 @@ jobs:
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (Macos dmg, x64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
