@@ -88,27 +88,10 @@ const getElectronBuilderArch = (arch) => {
   switch (arch) {
     case 'x64':
       return ElectronBuilder.Arch.x64
+    case 'armv7l':
+      return ElectronBuilder.Arch.armv7l
     case 'arm64':
       return ElectronBuilder.Arch.arm64
-    default:
-      throw new Error(`unsupported electron-builder arch "${arch}"`)
-  }
-}
-
-const getElectronBuilderArchOptions = (arch) => {
-  switch (arch) {
-    case 'armv7l':
-      return {
-        armv7l: true,
-      }
-    case 'x64':
-      return {
-        x64: true,
-      }
-    case 'arm64':
-      return {
-        arm64: true,
-      }
     default:
       throw new Error(`unsupported electron-builder arch "${arch}"`)
   }
@@ -123,10 +106,28 @@ const getPrepackagedPath = ({ config, product }) => {
   return Path.absolute(appPath)
 }
 
+const getElectronBuilderTargets = ({ config, arch }) => {
+  const electronBuilderArch = getElectronBuilderArch(arch)
+  switch (config) {
+    case ElectronBuilderConfigType.ArchLinux:
+      return ElectronBuilder.Platform.LINUX.createTarget('pacman', electronBuilderArch)
+    case ElectronBuilderConfigType.Deb:
+      return ElectronBuilder.Platform.LINUX.createTarget('deb', electronBuilderArch)
+    case ElectronBuilderConfigType.Snap:
+      return ElectronBuilder.Platform.LINUX.createTarget('snap', electronBuilderArch)
+    case ElectronBuilderConfigType.AppImage:
+      return ElectronBuilder.Platform.LINUX.createTarget('appImage', electronBuilderArch)
+    case ElectronBuilderConfigType.Mac:
+      return ElectronBuilder.Platform.MAC.createTarget('dmg', electronBuilderArch)
+    case ElectronBuilderConfigType.WindowsExe:
+      return ElectronBuilder.Platform.WINDOWS.createTarget('nsis', electronBuilderArch)
+    default:
+      throw new Error(`cannot get electron-builder target for config "${config}"`)
+  }
+}
+
 const runElectronBuilder = async ({ config, product, arch }) => {
   try {
-    const archOptions = getElectronBuilderArchOptions(arch)
-
     /**
      * @type {ElectronBuilder.CliOptions}
      */
@@ -134,17 +135,9 @@ const runElectronBuilder = async ({ config, product, arch }) => {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
       prepackaged: getPrepackagedPath({ config, product }),
       publish: 'never',
-      ...archOptions,
+      targets: getElectronBuilderTargets({ config, arch }),
 
       // win: ['portable'],
-    }
-
-    // Set platform-specific options
-    if (config === ElectronBuilderConfigType.Mac) {
-      options.targets = ElectronBuilder.Platform.MAC.createTarget('dmg', getElectronBuilderArch(arch))
-    }
-    if (config === ElectronBuilderConfigType.WindowsExe) {
-      options.win = [arch === 'arm64' ? 'nsis:arm64' : 'nsis:x64']
     }
 
     // if (process.env.HIGHEST_COMPRESSION) {
