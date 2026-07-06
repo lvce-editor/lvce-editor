@@ -9,7 +9,6 @@
     "appId": "@@MAC_BUNDLE_ID@@",
     "publish": [],
     "asar": @@ASAR@@,
-    "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "mac": {
       "target": "dmg",
