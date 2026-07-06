@@ -7,6 +7,7 @@ const defaultReplacements: Record<string, string> = {
   '@@ELECTRON_VERSION@@': '42.0.0',
   '@@HOMEPAGE@@': 'https://example.com',
   '@@LICENSE@@': 'MIT',
+  '@@MAC_BUNDLE_ID@@': 'com.lvceeditor.lvce',
   '@@MAIN@@': 'packages/main-process/src/mainProcessMain.js',
   '@@NAME@@': 'lvce-editor',
   '@@NAME_LONG@@': 'Lvce Editor',
@@ -38,4 +39,18 @@ describe('linux electron-builder metadata', () => {
       expect(json.build.linux.desktop.StartupWMClass).toBe('Lvce Editor')
     },
   )
+})
+
+describe('mac electron-builder metadata', () => {
+  test('defines signing and notarization metadata', async () => {
+    const json = await renderTemplate('electron_builder_mac')
+
+    expect(json.build.appId).toBe('com.lvceeditor.lvce')
+    expect(json.build.mac.target).toBe('dmg')
+    expect(json.build.mac.category).toBe('public.app-category.developer-tools')
+    expect(json.build.mac.hardenedRuntime).toBe(true)
+    expect(json.build.mac.notarize).toBe(true)
+    expect(json.build.mac.entitlements).toBe('build/entitlements.mac.plist')
+    expect(json.build.mac.entitlementsInherit).toBe('build/entitlements.mac.inherit.plist')
+  })
 })
