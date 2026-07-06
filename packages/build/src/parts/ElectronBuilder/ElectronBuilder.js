@@ -114,9 +114,17 @@ const getElectronBuilderArchOptions = (arch) => {
   }
 }
 
-const runElectronBuilder = async ({ config, arch }) => {
+const getPrepackagedPath = ({ config, product }) => {
+  const debArch = 'amd64'
+  const appPath = `packages/build/.tmp/linux/snap/${debArch}/app`
+  if (config === ElectronBuilderConfigType.Mac) {
+    return Path.absolute(`${appPath}/${product.applicationName}.app`)
+  }
+  return Path.absolute(appPath)
+}
+
+const runElectronBuilder = async ({ config, product, arch }) => {
   try {
-    const debArch = 'amd64'
     const archOptions = getElectronBuilderArchOptions(arch)
 
     /**
@@ -124,7 +132,7 @@ const runElectronBuilder = async ({ config, arch }) => {
      */
     const options = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
-      prepackaged: Path.absolute(`packages/build/.tmp/linux/snap/${debArch}/app`),
+      prepackaged: getPrepackagedPath({ config, product }),
       publish: 'never',
       ...archOptions,
 
@@ -387,7 +395,7 @@ export const build = async ({
   console.timeEnd('copyBuildResources')
 
   console.time('runElectronBuilder')
-  await runElectronBuilder({ config, arch })
+  await runElectronBuilder({ config, product, arch })
   console.timeEnd('runElectronBuilder')
 
   const distPath = 'packages/build/.tmp/electron-builder/dist'
