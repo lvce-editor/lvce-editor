@@ -1,0 +1,94 @@
+name: macos-signing-smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos-signing-smoke:
+    name: macos-signing-smoke
+    runs-on: macos-26
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Setup Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v5
+        id: npm-cache
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+          restore-keys: ${{ runner.os }}-cacheNodeModules-
+      - uses: actions/cache@v5
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v5
+        id: build-cache
+        with:
+          path: 'packages/build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: npm ci
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.js
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v5
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - run: npm run type-check
+      - run: npm test
+      - name: Prepare Apple API key
+        shell: bash
+        env:
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+        run: |
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
+          printf '%s' "$APPLE_API_KEY_BASE64" | base64 -D > "$api_key_path"
+          chmod 600 "$api_key_path"
+          echo "APPLE_API_KEY_PATH=$api_key_path" >> $GITHUB_ENV
+      - name: Build signed and notarized macOS DMG
+        run: npm run build:electron:mac:arm64 -- --product=lvce
+        env:
+          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Verify signing and notarization
+        shell: bash
+        run: |
+          app_path="$(find packages/build/.tmp/electron-builder/dist -maxdepth 3 -name '*.app' -print -quit)"
+          dmg_path="packages/build/.tmp/releases/lvce-arm64.dmg"
+          test -n "$app_path"
+          test -f "$dmg_path"
+          codesign --verify --deep --strict --verbose=2 "$app_path"
+          spctl --assess --type execute --verbose "$app_path"
+          xcrun stapler validate "$app_path"
+          xcrun stapler validate "$dmg_path"

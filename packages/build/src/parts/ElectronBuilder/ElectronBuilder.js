@@ -79,6 +79,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
+    '@@MAC_BUNDLE_ID@@': product.macBundleId,
     '@@MAIN@@': mainProcessPath,
     '@@ASAR@@': String(asar),
   })
@@ -160,6 +161,20 @@ const copyBuildResources = async ({ config }) => {
     from: 'packages/build/files/icons',
     to: 'packages/build/.tmp/electron-builder/build/icons',
   })
+  if (config === ElectronBuilderConfigType.Mac) {
+    await Copy.copyFile({
+      from: `packages/build/files/icon.icns`,
+      to: 'packages/build/.tmp/electron-builder/build/icon.icns',
+    })
+    await Copy.copyFile({
+      from: `packages/build/files/mac/entitlements.mac.plist`,
+      to: 'packages/build/.tmp/electron-builder/build/entitlements.mac.plist',
+    })
+    await Copy.copyFile({
+      from: `packages/build/files/mac/entitlements.mac.inherit.plist`,
+      to: 'packages/build/.tmp/electron-builder/build/entitlements.mac.inherit.plist',
+    })
+  }
   if (config === ElectronBuilderConfigType.WindowsExe) {
     await Copy.copyFile({
       from: `packages/build/files/windows/installer.nsh`,
