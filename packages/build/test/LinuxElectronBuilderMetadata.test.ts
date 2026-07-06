@@ -26,6 +26,23 @@ const renderTemplate = async (name: string) => {
   return JSON.parse(template)
 }
 
+const electronBuilderTemplates = [
+  'electron_builder_deb',
+  'electron_builder_arch_linux',
+  'electron_builder_app_image',
+  'electron_builder_snap',
+  'electron_builder_mac',
+  'electron_builder_windows_exe',
+]
+
+describe('electron-builder metadata', () => {
+  test.each(electronBuilderTemplates)('%s omits removed schema fields', async (templateName) => {
+    const json = await renderTemplate(templateName)
+
+    expect(json.build).not.toHaveProperty('includeSubNodeModules')
+  })
+})
+
 describe('linux electron-builder metadata', () => {
   test.each(['electron_builder_deb', 'electron_builder_arch_linux', 'electron_builder_app_image', 'electron_builder_snap'])(
     '%s defines stable product and desktop metadata',
@@ -36,7 +53,7 @@ describe('linux electron-builder metadata', () => {
       expect(json.desktopName).toBe('lvce-editor.desktop')
       expect(json.build.icon).toBe('./build/icons/')
       expect(json.build.linux.executableName).toBe('lvce-editor')
-      expect(json.build.linux.desktop.StartupWMClass).toBe('Lvce Editor')
+      expect(json.build.linux).not.toHaveProperty('desktop')
     },
   )
 })
