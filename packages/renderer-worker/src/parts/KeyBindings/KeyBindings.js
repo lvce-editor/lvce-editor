@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as ExtensionKeyBindings from '../ExtensionKeyBindings/ExtensionKeyBindings.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 
 // TODO where to store keybindings? need them here and in renderer process
@@ -33,4 +34,9 @@ export const handleKeyBinding = async (identifier) => {
   //     ...(keyBinding.args || [])
   //   )
   // }
+}
+
+export const hydrate = async () => {
+  const keyBindings = await ExtensionKeyBindings.getKeyBindings()
+  KeyBindingsState.setKeyBindings('extensions', keyBindings)
 }
