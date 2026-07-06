@@ -60,28 +60,33 @@ const renderCommands = {
 
 export const render = [renderIframe, renderDom, renderPatches, renderCss, renderCommands]
 
-export const renderEventListeners = (): readonly any[] => {
+const defaultEventListeners = [
+  {
+    name: 'handleInput',
+    params: ['handleInput', 'event.target.name', 'event.target.value'],
+  },
+  {
+    name: 'handleClick',
+    params: ['handleClick', 'event.target.name'],
+  },
+  {
+    name: 'handleSubmit',
+    params: ['handleSubmit', 'event.target.name'],
+    preventDefault: true,
+  },
+  {
+    name: 'handleFocus',
+    params: ['handleFocus', 'event.target.name'],
+  },
+  {
+    name: 'handleBlur',
+    params: ['handleBlur', 'event.target.name'],
+  },
+]
+
+export const renderEventListeners = (state?: ViewletExtensionViewState): readonly any[] => {
   return [
-    {
-      name: 'handleInput',
-      params: ['handleInput', 'event.target.name', 'event.target.value'],
-    },
-    {
-      name: 'handleClick',
-      params: ['handleClick', 'event.target.name'],
-    },
-    {
-      name: 'handleSubmit',
-      params: ['handleSubmit', 'event.target.name'],
-      preventDefault: true,
-    },
-    {
-      name: 'handleFocus',
-      params: ['handleFocus', 'event.target.name'],
-    },
-    {
-      name: 'handleBlur',
-      params: ['handleBlur', 'event.target.name'],
-    },
+    ...defaultEventListeners,
+    ...(state?.eventListeners || []),
   ]
 }

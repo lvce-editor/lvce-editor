@@ -3,6 +3,12 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const extensionViews = {
   view: {
     css: '/extensions/sample/view.css',
+    eventListeners: [
+      {
+        name: 'handleDragStart',
+        params: ['handleViewEvent', 'dragstart', 'event.target.name'],
+      },
+    ],
     extensionId: 'sample.extension',
     icon: '',
     id: 'sample.views.testing',
@@ -51,6 +57,7 @@ test('render supports functional events', () => {
 test('exports virtual dom event commands', () => {
   expect(ViewletExtensionView.Commands.handleInput).toBe(ViewletExtensionView.handleInput)
   expect(ViewletExtensionView.Commands.handleClick).toBe(ViewletExtensionView.handleClick)
+  expect(ViewletExtensionView.Commands.handleViewEvent).toBe(ViewletExtensionView.handleViewEvent)
 })
 
 test('loadContent loads css from extension view metadata', async () => {
@@ -76,7 +83,20 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
 
   expect(newState.commands).toEqual([])
   expect(newState.dom).toBe(dom)
+  expect(newState.eventListeners).toBe(extensionViews.view.eventListeners)
   expect(newState.patches).toEqual([])
+})
+
+test('renderEventListeners includes extension view listeners', () => {
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    eventListeners: extensionViews.view.eventListeners,
+  }
+
+  expect(ViewletExtensionViewRender.renderEventListeners(state)).toEqual([
+    ...ViewletExtensionViewRender.renderEventListeners(),
+    ...extensionViews.view.eventListeners,
+  ])
 })
 
 test('handleClick stores patches without duplicate commands', async () => {
