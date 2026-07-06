@@ -207,8 +207,18 @@ export const handleBlur = (state: ViewletExtensionViewState, name: string): Prom
   return handleViewEvent(state, 'blur', name)
 }
 
+export const handleContextMenu = (state: ViewletExtensionViewState, name: string, x: number, y: number): Promise<ViewletExtensionViewState> => {
+  return dispatchEvent(state, {
+    name,
+    type: 'contextmenu',
+    x,
+    y,
+  })
+}
+
 export const Commands = {
   handleBlur,
+  handleContextMenu,
   handleClick,
   handleFocus,
   handleInput,

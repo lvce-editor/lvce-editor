@@ -84,7 +84,7 @@ const defaultEventListeners = [
   },
   {
     name: 'handleContextMenu',
-    params: ['handleViewEvent', 'contextmenu', 'event.target.name'],
+    params: ['handleContextMenu', 'event.target.name', 'event.clientX', 'event.clientY'],
     preventDefault: true,
   },
   {
