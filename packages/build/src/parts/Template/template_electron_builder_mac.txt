@@ -6,12 +6,17 @@
   "version": "@@VERSION@@",
   "homepage": "@@HOMEPAGE@@",
   "build": {
+    "appId": "@@MAC_BUNDLE_ID@@",
     "publish": [],
     "asar": @@ASAR@@,
-    "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "category": "public.app-category.developer-tools",
+      "hardenedRuntime": true,
+      "notarize": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.inherit.plist"
     },
     "dmg": {
 			"writeUpdateInfo": false

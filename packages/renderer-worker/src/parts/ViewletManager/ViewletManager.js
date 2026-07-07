@@ -530,7 +530,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
-      const eventListeners = await module.renderEventListeners()
+      const eventListeners = await module.renderEventListeners(newState)
       if (shouldRenderEvents === false) {
         commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
       } else {

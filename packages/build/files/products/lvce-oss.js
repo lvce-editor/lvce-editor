@@ -10,6 +10,8 @@ export const comment = 'Web Based Text Editor That Aims To Have Low Memory Usage
 
 export const applicationName = 'lvce-oss'
 
+export const macBundleId = 'com.lvceeditor.lvce-oss'
+
 export const licenseName = 'MIT'
 
 export const licenseUrl = 'https://github.com/lvce-editor/lvce-editor/blob/main/LICENSE'

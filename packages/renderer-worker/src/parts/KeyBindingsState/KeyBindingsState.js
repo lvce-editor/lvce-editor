@@ -63,6 +63,13 @@ export const addKeyBindings = (id, keyBindings) => {
   update()
 }
 
+export const setKeyBindings = (id, keyBindings) => {
+  Assert.string(id)
+  Assert.array(keyBindings)
+  state.keyBindingSets[id] = keyBindings
+  update()
+}
+
 export const removeKeyBindings = (id) => {
   const { keyBindingSets } = state
   if (!(id in keyBindingSets)) {

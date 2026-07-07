@@ -3,8 +3,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as HandleIncomingIpcMessagePort from '../HandleIncomingIpcMessagePort/HandleIncomingIpcMessagePort.js'
 import * as HandleIncomingIpcWebSocket from '../HandleIncomingIpcWebSocket/HandleIncomingIpcWebSocket.js'
 import * as HandleIpcModule from '../HandleIpcModule/HandleIpcModule.js'
+import * as IpcId from '../IpcId/IpcId.js'
 import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
 import * as IsSocket from '../IsSocket/IsSocket.js'
+import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 
 const strinfyHandle = (handle) => {
   if (!handle) {
@@ -31,5 +33,12 @@ export const handleIncomingIpc = async (ipcId, handle, message) => {
   Assert.number(ipcId)
   const module = HandleIpcModule.getModule(ipcId)
   const { target, response } = await getIpcAndResponse(module, handle, message)
-  await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
+  try {
+    await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
+  } catch (error) {
+    if (ipcId === IpcId.ProcessExplorer) {
+      ProcessExplorer.decreaseRefCount()
+    }
+    throw error
+  }
 }

@@ -1,7 +1,6 @@
+import * as ExtensionKeyBindings from '../ExtensionKeyBindings/ExtensionKeyBindings.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
-// TODO extension key bindings
 
 const getViewletKeyBindings = (module) => {
   if (module.getKeyBindings) {
@@ -21,7 +20,6 @@ const maybeLoad = async (id) => {
 export const getKeyBindings = async () => {
   const ids = Object.keys(ViewletModuleId)
   const modules = await Promise.all(ids.map(maybeLoad))
-  const keyBindingsPromises = await Promise.all(modules.map(getViewletKeyBindings))
-  const keybindings = keyBindingsPromises.flat(1)
-  return keybindings
+  const keyBindingsPromises = await Promise.all([...modules.map(getViewletKeyBindings), ExtensionKeyBindings.getKeyBindings()])
+  return keyBindingsPromises.flat(1)
 }

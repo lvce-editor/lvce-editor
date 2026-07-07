@@ -28,7 +28,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.0.1",
     "@types/tar-fs": "^2.0.4",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "^26.15.3",
     "execa": "^9.6.1",
     "extract-zip": "^2.0.1",
     "glob": "^13.0.6",

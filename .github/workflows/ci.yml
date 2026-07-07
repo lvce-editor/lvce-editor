@@ -24,7 +24,7 @@ jobs:
           [
             { os: windows-2025, arch: x64 },
             { os: windows-2025, arch: arm64 },
-            { os: macos-15, arch: arm64 },
+            { os: macos-26, arch: arm64 },
             { os: ubuntu-24.04, arch: x64 },
             { os: ubuntu-24.04, arch: arm64 },
             { os: ubuntu-24.04, arch: armhf },
@@ -108,7 +108,7 @@ jobs:
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
         run: npm run build:electron:deb:armhf
       - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         run: npm run build:electron:mac:arm64
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v5
