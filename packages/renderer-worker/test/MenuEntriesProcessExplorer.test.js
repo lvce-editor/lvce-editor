@@ -47,6 +47,6 @@ test('getMenuEntries', async () => {
   expect(Viewlet.getState).toHaveBeenCalledTimes(1)
   expect(Viewlet.getState).toHaveBeenCalledWith('ProcessExplorer')
   expect(ProcessExplorerWorker.invoke).toHaveBeenCalledTimes(1)
-  expect(ProcessExplorerWorker.invoke).toHaveBeenCalledWith('ProcessExplorer.getMenuEntries2', 42)
+  expect(ProcessExplorerWorker.invoke).toHaveBeenCalledWith('ProcessExplorer.getMenuEntries', 42)
   expect(result).toBe(menuEntries)
 })
