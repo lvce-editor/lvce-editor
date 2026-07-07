@@ -148,6 +148,7 @@ export const commandMap = {
   'ExtensionManagement.handleExtensionStatusUpdate': lazy('ExtensionManagement.handleExtensionStatusUpdate'),
   'ExtensionManagement.handleViewContextChange': lazy('ExtensionManagement.handleViewContextChange'),
   'ExtensionManagement.invalidateExtensionsCache': lazy('ExtensionManagement.invalidateExtensionsCache'),
+  'ExtensionManagement.showViewContextMenu': lazy('ExtensionManagement.showViewContextMenu'),
   'ExtensionManagement.uninstall': lazy('ExtensionManagement.uninstall'),
   'ExtensionMeta.addNodeExtension': lazy('ExtensionMeta.addNodeExtension'),
   'ExtensionMeta.addWebExtension': lazy('ExtensionMeta.addWebExtension'),

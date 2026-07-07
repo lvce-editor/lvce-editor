@@ -48,7 +48,9 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 
 const ViewletExtensionView = await import('../src/parts/ViewletExtensionView/ViewletExtensionView.ts')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
+const ViewletExtensionViewMenuEntries = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewMenuEntries.ts')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 test('render supports functional events', () => {
   expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
@@ -57,8 +59,17 @@ test('render supports functional events', () => {
 test('exports virtual dom event commands', () => {
   expect(ViewletExtensionView.Commands.handleInput).toBe(ViewletExtensionView.handleInput)
   expect(ViewletExtensionView.Commands.handleClick).toBe(ViewletExtensionView.handleClick)
+  expect(ViewletExtensionView.Commands.handleContextMenu).toBe(ViewletExtensionView.handleContextMenu)
   expect(ViewletExtensionView.Commands.handleViewEvent).toBe(ViewletExtensionView.handleViewEvent)
   expect(ViewletExtensionView.Commands.rerender).toBe(ViewletExtensionView.rerender)
+})
+
+test('renderEventListeners includes context menu coordinates', () => {
+  expect(ViewletExtensionViewRender.renderEventListeners()).toContainEqual({
+    name: 'handleContextMenu',
+    params: ['handleContextMenu', 'event.target.name', 'event.clientX', 'event.clientY'],
+    preventDefault: true,
+  })
 })
 
 test('loadContent loads css from extension view metadata', async () => {
@@ -148,6 +159,69 @@ test('rerender ignores iframe views', async () => {
 
   expect(newState).toBe(state)
   expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+})
+
+test('handleContextMenu dispatches coordinates to extension view', async () => {
+  const patches = [{ type: 1 }]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    patches,
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'virtualDom',
+  }
+
+  await ViewletExtensionView.handleContextMenu(state, 'card:card-1', 10, 20)
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.dispatchViewEvent',
+    'sample.views.testing',
+    1,
+    {
+      name: 'card:card-1',
+      type: 'contextmenu',
+      x: 10,
+      y: 20,
+    },
+    '',
+    4,
+  )
+})
+
+test('extension view menu entries delegate to extension management worker', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce([
+    {
+      command: 'sample.open',
+      flags: 0,
+      id: 'open',
+      label: 'Open',
+    },
+  ])
+  ViewletStates.set(1, {
+    factory: {},
+    renderedState: {
+      uid: 1,
+    },
+    state: {
+      uid: 1,
+      uri: 'sample.views.testing',
+    },
+  })
+
+  await expect(ViewletExtensionViewMenuEntries.menus[0].getMenuEntries(1, { menuId: 'sample.card' })).resolves.toEqual([
+    {
+      command: 'sample.open',
+      flags: 0,
+      id: 'open',
+      label: 'Open',
+    },
+  ])
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.getViewMenuEntries', 'sample.views.testing', 1, 'sample.card', '', 4)
+  ViewletStates.remove(1)
 })
 
 test('loadContent ignores css load errors', async () => {
