@@ -96,6 +96,7 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   expect(newState.commands).toEqual([])
   expect(newState.dom).toBe(dom)
   expect(newState.eventListeners).toBe(extensionViews.view.eventListeners)
+  expect(newState.focusSelector).toBe('')
   expect(newState.patches).toEqual([])
 })
 
@@ -129,6 +130,45 @@ test('handleClick stores patches without duplicate commands', async () => {
   expect(newState.patches).toBe(patches)
 })
 
+test('handleClick stores focus selector from render result', async () => {
+  const patches = [{ type: 1 }]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    focusSelector: '[name="newCardTitle:list-1"]',
+    patches,
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'virtualDom',
+  }
+
+  const newState = await ViewletExtensionView.handleClick(state, 'connect')
+
+  expect(newState.focusSelector).toBe('[name="newCardTitle:list-1"]')
+  expect(ViewletExtensionViewRender.render[3].apply(/** @type {any} */ (state), /** @type {any} */ (newState))).toEqual([
+    ['Viewlet.focusSelector', 1, '[name="newCardTitle:list-1"]'],
+  ])
+})
+
+test('renderFocus ignores missing, empty, and repeated selectors', () => {
+  const oldState = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    focusSelector: '[name="newCardTitle:list-1"]',
+    kind: 'virtualDom',
+  }
+  const resetState = {
+    ...oldState,
+    focusSelector: '',
+  }
+  const repeatedState = {
+    ...oldState,
+  }
+
+  expect(ViewletExtensionViewRender.render[3].isEqual(/** @type {any} */ (oldState), /** @type {any} */ (resetState))).toBe(true)
+  expect(ViewletExtensionViewRender.render[3].isEqual(/** @type {any} */ (oldState), /** @type {any} */ (repeatedState))).toBe(true)
+})
+
 test('rerender stores patches without duplicate commands', async () => {
   const patches = [{ type: 1 }]
   // @ts-ignore
@@ -146,6 +186,7 @@ test('rerender stores patches without duplicate commands', async () => {
 
   expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.renderViewInstance', 'sample.views.testing', 1, '', 4)
   expect(newState.commands).toEqual([])
+  expect(newState.focusSelector).toBe('')
   expect(newState.patches).toBe(patches)
 })
 
@@ -251,7 +292,7 @@ test('render emits set css command', () => {
     cssId: 'ExtensionView:sample.views.testing',
   }
 
-  expect(ViewletExtensionViewRender.render[3].apply(/** @type {any} */ (oldState), /** @type {any} */ (newState))).toEqual([
+  expect(ViewletExtensionViewRender.render[4].apply(/** @type {any} */ (oldState), /** @type {any} */ (newState))).toEqual([
     ['Viewlet.setCss', 'ExtensionView:sample.views.testing', '.Testing { color: red; }'],
   ])
 })

@@ -38,6 +38,16 @@ const renderPatches = {
   },
 }
 
+const renderFocus = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return newState.kind !== 'virtualDom' || !newState.focusSelector || oldState.focusSelector === newState.focusSelector
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return [['Viewlet.focusSelector', newState.uid, newState.focusSelector]]
+  },
+  multiple: true,
+}
+
 const renderCss = {
   isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
     return !newState.css || (oldState.css === newState.css && oldState.cssId === newState.cssId)
@@ -58,7 +68,7 @@ const renderCommands = {
   multiple: true,
 }
 
-export const render = [renderIframe, renderDom, renderPatches, renderCss, renderCommands]
+export const render = [renderIframe, renderDom, renderPatches, renderFocus, renderCss, renderCommands]
 
 const defaultEventListeners = [
   {
@@ -112,8 +122,5 @@ const defaultEventListeners = [
 ]
 
 export const renderEventListeners = (state?: ViewletExtensionViewState): readonly any[] => {
-  return [
-    ...defaultEventListeners,
-    ...(state?.eventListeners || []),
-  ]
+  return [...defaultEventListeners, ...(state?.eventListeners || [])]
 }
