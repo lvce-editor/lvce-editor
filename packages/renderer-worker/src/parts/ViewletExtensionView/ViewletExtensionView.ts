@@ -7,6 +7,7 @@ import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
 interface ViewRenderResult {
   readonly dom?: readonly unknown[]
+  readonly focusSelector?: string
   readonly patches?: readonly unknown[]
   readonly type: string
 }
@@ -56,6 +57,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     return {
       ...state,
       commands: [],
+      focusSelector: '',
       patches: [],
     }
   }
@@ -64,6 +66,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     commands: [],
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     error: undefined,
+    focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
     patches: result.type === 'setPatches' ? result.patches || [] : [],
   }
 }
@@ -77,6 +80,7 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
     credentialless: true,
     dom: [],
     eventListeners: [],
+    focusSelector: '',
     height,
     iframeSandbox: [],
     iframeSrc: '',

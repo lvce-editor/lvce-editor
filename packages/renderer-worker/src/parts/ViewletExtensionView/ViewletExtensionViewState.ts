@@ -7,6 +7,7 @@ export interface ViewletExtensionViewState {
   readonly dom: readonly unknown[]
   readonly error?: unknown
   readonly eventListeners: readonly unknown[]
+  readonly focusSelector: string
   readonly height: number
   readonly iframeSandbox: readonly string[]
   readonly iframeSrc: string
