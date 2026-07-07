@@ -54,4 +54,6 @@ export const E2eTests = 27
 
 export const DiffView = 28
 
+export const ProcessExplorer = 29
+
 export const ExtensionView = 30
