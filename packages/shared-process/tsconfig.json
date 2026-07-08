@@ -18,5 +18,5 @@
     "composite": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["src", "test"]
+  "include": ["index.js", "src", "test"]
 }
