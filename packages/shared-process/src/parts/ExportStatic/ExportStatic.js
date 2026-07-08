@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import { stripTypeScriptTypes } from 'node:module'
 import { isAbsolute, join, relative } from 'node:path'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
@@ -518,22 +519,16 @@ const getTestFiles = (testFilesRaw) => {
   return testFilesRaw.filter(isTestFile).map(getName)
 }
 
-const transpileFile = (typescript, content) => {
-  const result = typescript.transpileModule(content, {
-    compilerOptions: {
-      target: 'esnext',
-    },
-  })
-  return result.outputText
+export const transpileFile = (content) => {
+  return stripTypeScriptTypes(content)
 }
 
 const transpileFiles = async (folder) => {
-  const typescript = await import('typescript')
   const dirents = await readdir(folder)
   for (const dirent of dirents) {
     if (dirent.endsWith('.ts')) {
       const content = await readFile(join(folder, dirent), 'utf-8')
-      const js = transpileFile(typescript, content)
+      const js = transpileFile(content)
       await writeFile(join(folder, dirent.slice(0, -2) + 'js'), js)
     }
   }
