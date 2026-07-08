@@ -8,7 +8,7 @@ import * as Screen from '../Screen/Screen.js'
 
 export const createAppWindow = async ({ preferences, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl, preloadUrl }) => {
   const { width, height } = await Screen.getBounds()
-  const windowOptions = GetAppWindowOptions.getAppWindowOptions({
+  const windowOptions = await GetAppWindowOptions.getAppWindowOptions({
     preferences,
     screenWidth: width,
     screenHeight: height,

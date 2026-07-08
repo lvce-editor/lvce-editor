@@ -1,7 +1,41 @@
 import * as GetBrowserWindowOptions from '../GetBrowserWindowOptions/GetBrowserWindowOptions.js'
+import * as ExtensionManagementColorTheme from '../ExtensionManagement/ExtensionManagementColorTheme.js'
 import * as Platform from '../Platform/Platform.js'
 
-export const getAppWindowOptions = ({ preferences, screenWidth, screenHeight, preloadUrl }) => {
+const fallbackBackground = '#1e2324'
+const fallbackSymbolColor = '#74b1be'
+
+const getColor = (colors, keys, fallback) => {
+  for (const key of keys) {
+    if (colors[key]) {
+      return colors[key]
+    }
+  }
+  return fallback
+}
+
+const getColorThemeJson = async (preferences) => {
+  const colorThemeId = preferences['workbench.colorTheme']
+  if (!colorThemeId) {
+    return {}
+  }
+  try {
+    return await ExtensionManagementColorTheme.getColorThemeJson(colorThemeId)
+  } catch {
+    return {}
+  }
+}
+
+export const getAppWindowOptions = async ({ preferences, screenWidth, screenHeight, preloadUrl }) => {
+  const colorThemeJson = await getColorThemeJson(preferences)
+  const colors = colorThemeJson.colors && typeof colorThemeJson.colors === 'object' ? colorThemeJson.colors : {}
+  const background = getColor(colors, ['MainBackground'], fallbackBackground)
+  const titleBarBackground = getColor(colors, ['TitleBarActiveBackground', 'TitleBarBackground', 'MainBackground'], fallbackBackground)
+  const titleBarSymbolColor = getColor(
+    colors,
+    ['TitleBarForegroundActive', 'TitleBarForeground', 'TitleBarColor', 'TitleBarColorInactive'],
+    fallbackSymbolColor,
+  )
   const titleBarPreference = preferences['window.titleBarStyle']
   const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
@@ -12,8 +46,8 @@ export const getAppWindowOptions = ({ preferences, screenWidth, screenHeight, pr
 
   const titleBarOverlay = windowControlsOverlayPreference
     ? {
-        color: '#1e2324',
-        symbolColor: '#74b1be',
+        color: titleBarBackground,
+        symbolColor: titleBarSymbolColor,
         height: 29,
       }
     : undefined
@@ -23,7 +57,7 @@ export const getAppWindowOptions = ({ preferences, screenWidth, screenHeight, pr
     x: screenWidth - 800,
     width: 800,
     height: screenHeight,
-    background: '#1e2324',
+    background,
     titleBarStyle,
     frame,
     titleBarOverlay,
