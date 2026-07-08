@@ -167,6 +167,7 @@ export const create = (id: number): LayoutState => {
     previewMaxWidth: 0,
     previewMinHeight: 0,
     previewMinWidth: 0,
+    restore: true,
     sideBarMaxWidth: 0,
     sideBarMinWidth: 0,
     secondarySideBarMaxWidth: 0,
@@ -283,11 +284,13 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
+  const restore = savedState?.restore !== false
+  const stateToRestore = restore ? savedState : undefined
   const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewVisible, previewWidth } =
-    getSavedPoints(savedState)
-  const savedView = getSavedSideBarView(savedState)
-  const savedSecondaryView = getSavedSecondarySideBarView(savedState)
-  const previewUri = savedState?.previewUri || ''
+    getSavedPoints(stateToRestore)
+  const savedView = getSavedSideBarView(stateToRestore)
+  const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
+  const previewUri = stateToRestore?.previewUri || ''
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -325,6 +328,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     panelSashVisible: true,
     previewSashVisible: previewVisible,
     previewUri,
+    restore,
     sideBarLocation,
     sideBarSashVisible: true,
     sideBarView: savedView,
@@ -816,6 +820,8 @@ const loadIfVisible = async (
     let childUid = -1
     if (visible) {
       childUid = Id.create()
+      const restore = state.restore !== false
+      const restoreState = restore ? undefined : { restore: false }
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
@@ -833,7 +839,8 @@ const loadIfVisible = async (
           // render: false,
         },
         false,
-        true,
+        restore,
+        restoreState,
       )
     }
     const orderedCommands = reorderCommands(commands)

@@ -72,6 +72,33 @@ test('loadContent enables preview sash when preview is restored', () => {
   })
 })
 
+test('loadContent ignores saved layout when restore is disabled', () => {
+  const state = ViewletLayout.create(1)
+
+  const result = ViewletLayout.loadContent(state, {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    panelVisible: true,
+    previewVisible: true,
+    restore: false,
+    secondarySideBarVisible: true,
+    sideBarView: 'Search',
+  })
+
+  expect(result).toMatchObject({
+    panelVisible: false,
+    previewVisible: false,
+    restore: false,
+    secondarySideBarVisible: false,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+  })
+})
+
 test('showPreview enables preview sash', async () => {
   const state = {
     ...ViewletLayout.create(1),

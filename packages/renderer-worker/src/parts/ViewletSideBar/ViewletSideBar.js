@@ -47,12 +47,13 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state, savedState, targetViewletId) => {
   // TODO get it from layout state
-  let savedViewletId = targetViewletId || (await Command.execute('Layout.getActiveSideBarView'))
+  const restore = savedState?.restore !== false
+  let savedViewletId = restore ? targetViewletId || (await Command.execute('Layout.getActiveSideBarView')) : ViewletModuleId.Explorer
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
   // const savedViewletId = getSavedViewletId(savedState)
-  return handleSideBarViewletChange(state, savedViewletId)
+  return handleSideBarViewletChange(state, savedViewletId, restore)
 }
 
 // export const contentLoaded = async (state, savedState) => {
@@ -102,7 +103,7 @@ const getChildModuleId = (moduleId) => {
 //   ]
 // }
 
-export const handleSideBarViewletChange = async (state, moduleId) => {
+export const handleSideBarViewletChange = async (state, moduleId, restore = true) => {
   console.assert(typeof moduleId === 'string')
   if (!moduleId) {
     // const currentViewletState = ViewletStates.getState(state.currentViewletId)
@@ -148,7 +149,8 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       shouldRenderEvents: false,
     },
     false,
-    true,
+    restore,
+    restore ? undefined : { restore: false },
   )
   if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
     Viewlet.disposeFunctional(childUid)

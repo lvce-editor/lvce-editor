@@ -51,6 +51,7 @@ export interface LayoutState {
   readonly previewUri: string
   readonly previewVisible: boolean
   readonly previewWidth: number
+  readonly restore: boolean
   readonly sashId: any
   readonly sideBarHeight: number
   readonly sideBarId: number
