@@ -19,6 +19,16 @@ const extensionViews = {
 
 beforeEach(() => {
   jest.clearAllMocks()
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    return {
+      dom: [],
+      type: 'setDom',
+    }
+  })
   globalThis.fetch = /** @type {any} */ (
     jest.fn(async () => {
       return {
@@ -37,7 +47,10 @@ jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', 
 
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
-    invoke: jest.fn(async () => {
+    invoke: jest.fn(async (method) => {
+      if (method === 'Extensions.getViewActions') {
+        return []
+      }
       return {
         dom: [],
         type: 'setDom',
@@ -46,10 +59,17 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
   }
 })
 
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(async () => {}),
+  }
+})
+
 const ViewletExtensionView = await import('../src/parts/ViewletExtensionView/ViewletExtensionView.ts')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletExtensionViewMenuEntries = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewMenuEntries.ts')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const Command = await import('../src/parts/Command/Command.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 test('render supports functional events', () => {
@@ -59,6 +79,7 @@ test('render supports functional events', () => {
 test('exports virtual dom event commands', () => {
   expect(ViewletExtensionView.Commands.handleInput).toBe(ViewletExtensionView.handleInput)
   expect(ViewletExtensionView.Commands.handleClick).toBe(ViewletExtensionView.handleClick)
+  expect(ViewletExtensionView.Commands.handleClickAction).toBe(ViewletExtensionView.handleClickAction)
   expect(ViewletExtensionView.Commands.handleContextMenu).toBe(ViewletExtensionView.handleContextMenu)
   expect(ViewletExtensionView.Commands.handleViewEvent).toBe(ViewletExtensionView.handleViewEvent)
   expect(ViewletExtensionView.Commands.rerender).toBe(ViewletExtensionView.rerender)
@@ -94,6 +115,7 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   const newState = await ViewletExtensionView.loadContent(state, undefined)
 
   expect(newState.commands).toEqual([])
+  expect(newState.actionsDom).toEqual([])
   expect(newState.dom).toBe(dom)
   expect(newState.eventListeners).toBe(extensionViews.view.eventListeners)
   expect(newState.focusSelector).toBe('')
@@ -128,6 +150,51 @@ test('handleClick stores patches without duplicate commands', async () => {
 
   expect(newState.commands).toEqual([])
   expect(newState.patches).toBe(patches)
+})
+
+test('loadContent stores rendered sidebar actions', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'Extensions.getViewActions') {
+      return [
+        {
+          command: 'sample.refresh',
+          icon: 'Refresh',
+          title: 'Refresh',
+        },
+      ]
+    }
+    return {
+      dom: [],
+      type: 'setDom',
+    }
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState.actionsDom).toEqual([
+    {
+      childCount: 1,
+      className: 'Actions',
+      role: 'toolbar',
+      type: 4,
+    },
+    {
+      'data-command': 'sample.refresh',
+      childCount: 1,
+      className: 'IconButton',
+      title: 'Refresh',
+      type: 1,
+    },
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconRefresh',
+      role: 'none',
+      type: 4,
+    },
+  ])
+  expect(ViewletExtensionViewRender.renderActions.apply(state, newState)).toBe(newState.actionsDom)
 })
 
 test('handleClick stores focus selector from render result', async () => {
@@ -188,6 +255,15 @@ test('rerender stores patches without duplicate commands', async () => {
   expect(newState.commands).toEqual([])
   expect(newState.focusSelector).toBe('')
   expect(newState.patches).toBe(patches)
+})
+
+test('handleClickAction executes extension command', async () => {
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.handleClickAction(state, 0, 'sample.refresh')
+
+  expect(newState).toBe(state)
+  expect(Command.execute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'sample.refresh')
 })
 
 test('rerender ignores iframe views', async () => {

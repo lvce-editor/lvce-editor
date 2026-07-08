@@ -70,6 +70,15 @@ const renderCommands = {
 
 export const render = [renderIframe, renderDom, renderPatches, renderFocus, renderCss, renderCommands]
 
+export const renderActions = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return oldState.actionsDom === newState.actionsDom
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return newState.actionsDom
+  },
+}
+
 const defaultEventListeners = [
   {
     name: 'handleInput',
