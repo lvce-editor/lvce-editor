@@ -32,6 +32,10 @@ export const getPathSeparator = () => {
   return PathSeparatorType.Slash
 }
 
+export const isReadonly = () => {
+  return false
+}
+
 export const remove = (uri) => {
   return ExtensionHostWorker.invoke('FileSystemMemory.remove', getPath(uri))
 }

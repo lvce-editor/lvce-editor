@@ -118,3 +118,13 @@ export const getPathSeparator = async (uri) => {
   Assert.string(pathSeparator)
   return pathSeparator
 }
+
+export const isReadonly = async (uri) => {
+  const { protocol } = getProviderProtocolAndPath(uri)
+  return ExtensionHostShared.executeProvider({
+    event: `onFileSystem:${protocol}`,
+    method: ExtensionHostCommandType.FileSystemIsReadonly,
+    params: [protocol],
+    noProviderFoundMessage: 'no file system provider found',
+  })
+}
