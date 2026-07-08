@@ -13,5 +13,6 @@ export const Commands = {
   get: Preferences.get,
   getMany: Preferences.getMany,
   getAll: Preferences.getAll,
+  toggleAutoSave: Preferences.toggleAutoSave,
   update: Preferences.update,
 }

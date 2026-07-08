@@ -286,6 +286,7 @@ export const commandMap = {
   'Preferences.openKeyBindingsJson': lazy('Preferences.openKeyBindingsJson'),
   'Preferences.openSettingsJson': lazy('Preferences.openSettingsJson'),
   'Preferences.openSettingsUi': lazy('Preferences.openSettingsUi'),
+  'Preferences.toggleAutoSave': lazy('Preferences.toggleAutoSave'),
   'Preferences.update': lazy('Preferences.update'),
   'Process.getArch': lazy('Process.getArch'),
   'Process.getChromeVersion': lazy('Process.getChromeVersion'),
