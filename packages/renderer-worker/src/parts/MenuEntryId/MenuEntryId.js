@@ -57,3 +57,5 @@ export const DiffView = 28
 export const ProcessExplorer = 29
 
 export const ExtensionView = 30
+
+export const StatusBar = 31
