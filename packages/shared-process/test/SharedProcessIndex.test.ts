@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { join } from 'node:path'
 
 jest.unstable_mockModule('../src/parts/ExportStatic/ExportStatic.js', () => ({
   exportStatic: jest.fn(),
@@ -29,7 +30,7 @@ test('exportStatic forwards multiple extension paths', async () => {
     root: '/test/root',
     pathPrefix: '',
     extensionPath: undefined,
-    extensionPaths: ['/test/root/packages/extension-a', '/test/root/packages/extension-b'],
+    extensionPaths: [join('/test/root', 'packages', 'extension-a'), join('/test/root', 'packages', 'extension-b')],
     testPath: '',
   })
 })
