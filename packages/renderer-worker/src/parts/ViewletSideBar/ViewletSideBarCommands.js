@@ -9,4 +9,5 @@ export const Commands = {
   handleClickAction: ViewletSideBar.handleClickAction,
   handleUpdateStateChange: ViewletSideBar.handleUpdateStateChange,
   handleSideBarViewletChange: ViewletSideBar.handleSideBarViewletChange,
+  setTitle: ViewletSideBar.setTitle,
 }

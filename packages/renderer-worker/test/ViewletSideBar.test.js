@@ -130,3 +130,28 @@ test('loadContent opens explorer when restore is disabled', async () => {
     currentViewletId: 'Explorer',
   })
 })
+
+test('handleSideBarViewletChange uses child title', async () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.createFunctionalRoot', 'Explorer', 2, true],
+    ['Viewlet.send', 1, 'setTitle', 'workspace-name'],
+  ])
+
+  const newState = await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.createFunctionalRoot', 'Explorer', 2, true]])
+  expect(newState).toMatchObject({
+    currentViewletId: 'Explorer',
+    title: 'workspace-name',
+  })
+})
+
+test('setTitle', () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+
+  expect(ViewletSideBar.setTitle(state, 'workspace-name')).toEqual({
+    ...state,
+    title: 'workspace-name',
+  })
+})

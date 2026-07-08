@@ -159,12 +159,18 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   }
   let actionsDom = []
   let actionsUid = -1
+  let title = Character.EmptyString
   if (commands) {
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
     if (actionsDomIndex >= 0) {
       const nextActionsDom = commands[actionsDomIndex][3]
       actionsDom = Array.isArray(nextActionsDom) ? nextActionsDom : []
       commands.splice(actionsDomIndex, 1)
+    }
+    const titleIndex = commands.findIndex((command) => command[2] === 'setTitle')
+    title = titleIndex === -1 ? Character.EmptyString : commands[titleIndex][3]
+    if (titleIndex !== -1) {
+      commands.splice(titleIndex, 1)
     }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
     if (actionsDom.length > 0) {
@@ -194,6 +200,14 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     currentViewletId: moduleId,
     childUid,
     actionsUid,
+    title,
+  }
+}
+
+export const setTitle = (state, title) => {
+  return {
+    ...state,
+    title,
   }
 }
 
