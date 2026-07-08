@@ -58,6 +58,69 @@ test('showMessage - electron', async () => {
   expect(ElectronDialog.showMessageBox).toHaveBeenCalledWith('Error: Oops', [], ElectronMessageBoxType.Error)
 })
 
+test('openFile - web', async () => {
+  const fileHandle = {
+    kind: 'file',
+    name: 'test.txt',
+  }
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: PlatformType.Web,
+      getPlatform: jest.fn(() => {
+        return PlatformType.Web
+      }),
+      assetDir: '',
+    }
+  })
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+    return {
+      execute: jest.fn((command) => {
+        if (command === 'FilePicker.showFilePicker') {
+          return [fileHandle]
+        }
+        return undefined
+      }),
+    }
+  })
+
+  const Command = await import('../src/parts/Command/Command.js')
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await Dialog.openFile()
+  expect(Command.execute).toHaveBeenCalledTimes(3)
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'FilePicker.showFilePicker', {
+    multiple: false,
+  })
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'PersistentFileHandle.addHandle', 'html:///test.txt', fileHandle)
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Main.openUri', 'html:///test.txt', true, {})
+})
+
+test('openFile - web - canceled', async () => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: PlatformType.Web,
+      getPlatform: jest.fn(() => {
+        return PlatformType.Web
+      }),
+      assetDir: '',
+    }
+  })
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+    return {
+      execute: jest.fn(() => {
+        throw new DOMException('The user aborted a request.', 'AbortError')
+      }),
+    }
+  })
+
+  const Command = await import('../src/parts/Command/Command.js')
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await Dialog.openFile()
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('FilePicker.showFilePicker', {
+    multiple: false,
+  })
+})
+
 test.skip('close - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
