@@ -10,6 +10,7 @@ export const Commands = {
   getFolderSize: FileSystem.getFolderSize,
   getPathSeparator: FileSystem.getPathSeparator,
   getRealPath: FileSystem.getRealPath,
+  isReadonly: FileSystem.isReadonly,
   mkdir: FileSystem.mkdir,
   readDirWithFileTypes: FileSystem.readDirWithFileTypes,
   readFile: FileSystem.readFile,

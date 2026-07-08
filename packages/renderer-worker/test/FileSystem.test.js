@@ -7,6 +7,7 @@ import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.j
 const readFile = jest.fn()
 const writeFile = jest.fn()
 const remove = jest.fn()
+const isReadonly = jest.fn()
 
 FileSystemState.registerAll({
   test() {
@@ -14,6 +15,7 @@ FileSystemState.registerAll({
       readFile,
       writeFile,
       remove,
+      isReadonly,
     }
   },
 })
@@ -40,6 +42,12 @@ test('removeFile', async () => {
   await FileSystem.remove('test://some-file.txt')
   expect(remove).toHaveBeenCalledTimes(1)
   expect(remove).toHaveBeenCalledWith('test://some-file.txt')
+})
+
+test('isReadonly', async () => {
+  isReadonly.mockReturnValue(true)
+  expect(await FileSystem.isReadonly('test://some-file.txt')).toBe(true)
+  expect(isReadonly).toHaveBeenCalledWith('test://some-file.txt')
 })
 
 test.skip('removeFile - error', async () => {

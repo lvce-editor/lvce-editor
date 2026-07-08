@@ -182,6 +182,10 @@ export const getPathSeparator = () => {
   return pathSeparator
 }
 
+export const isReadonly = () => {
+  return false
+}
+
 export const getBlobSrc = async (uri) => {
   const handle = await GetFileHandle.getFileHandle(uri)
   if (!handle) {
