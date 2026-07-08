@@ -159,6 +159,7 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
   await Workspace.hydrate(initData.Location)
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
+  const isTestRun = Workspace.isTest() || initData.Location.href.includes('/tests/')
 
   await Focus.hydrate()
 
@@ -187,7 +188,7 @@ export const startup = async (platform, assetDir) => {
     },
     false,
     false,
-    { ...initData, ...layoutState },
+    { ...initData, ...layoutState, restore: !isTestRun },
   )
   commands.splice(1, 1)
 

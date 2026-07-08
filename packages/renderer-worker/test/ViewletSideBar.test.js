@@ -1,10 +1,46 @@
 // @ts-nocheck
-import { jest } from '@jest/globals'
-import { beforeAll, afterAll, test, expect, beforeEach, afterEach } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import { beforeEach, expect, jest, test } from '@jest/globals'
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => undefined),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => undefined),
+    state: {},
+  }
+})
+
+jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
+  return {
+    saveViewletState: jest.fn(() => undefined),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => {
+  return {
+    load: jest.fn(() => []),
+  }
+})
+
+const Command = await import('../src/parts/Command/Command.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SaveState = await import('../src/parts/SaveState/SaveState.js')
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const ViewletSideBar = await import('../src/parts/ViewletSideBar/ViewletSideBar.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const JsonRpcVersion = await import('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
+
+beforeEach(() => {
+  jest.resetAllMocks()
+  Command.execute.mockResolvedValue('Search')
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  SaveState.saveViewletState.mockResolvedValue(undefined)
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'Explorer', 2, true]])
+})
 
 test.skip('openViewlet', async () => {
   RendererProcess.state.send = jest.fn()
@@ -72,5 +108,25 @@ test.skip('loadContent - get viewlet id from savedState', async () => {
   })
   expect(newState).toMatchObject({
     currentViewletId: 'Test',
+  })
+})
+
+test('loadContent opens explorer when restore is disabled', async () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+
+  const newState = await ViewletSideBar.loadContent(state, { restore: false }, 'Search')
+
+  expect(Command.execute).not.toHaveBeenCalled()
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'Explorer',
+      uri: 'Explorer',
+    }),
+    false,
+    false,
+    { restore: false },
+  )
+  expect(newState).toMatchObject({
+    currentViewletId: 'Explorer',
   })
 })
