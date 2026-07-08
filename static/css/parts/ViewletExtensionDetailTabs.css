@@ -1,17 +1,9 @@
-:root {
-  --ExtensionDetailTabsBorder: rgba(128, 128, 128, 0.35);
-  /* --ExtensionDetailTabSelectedBorder: white; */
-  /* --ExtensionDetailTabSelectedForeground: white; */
-  --ExtensionDetailTabForeground: var(--WorkbenchForeground);
-  --ExtensionDetailTabHoverForeground: white;
-}
-
 /* TODO move into separate files */
 .ExtensionDetailTabs {
   display: flex;
   gap: 10px;
   contain: content;
-  border-bottom: 1px solid var(--ExtensionDetailTabsBorder);
+  border-bottom: 1px solid var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 28%, transparent));
   padding-left: 20px;
   contain: strict;
   height: 36px;
@@ -29,7 +21,7 @@
   font-size: 11px;
   background: transparent;
   border: none;
-  color: var(--ExtensionDetailTabForeground);
+  color: var(--PanelTabForeground, color-mix(in srgb, var(--WorkbenchForeground) 72%, transparent));
 }
 
 .ExtensionDetailTab:focus-visible {
@@ -39,10 +31,10 @@
 }
 
 .ExtensionDetailTab:where(:hover) {
-  color: var(--ExtensionDetailTabHoverForeground);
+  color: var(--PanelTabHoverForeground, var(--WorkbenchForeground));
 }
 
 .ExtensionDetailTabSelected {
-  border-bottom: 1px solid var(--ExtensionDetailTabSelectedBorder, white);
-  color: var(--ExtensionDetailTabSelectedForeground, white);
+  border-bottom: 1px solid var(--PanelTabActiveForeground, var(--FocusBorder, currentColor));
+  color: var(--PanelTabActiveForeground, var(--WorkbenchForeground));
 }

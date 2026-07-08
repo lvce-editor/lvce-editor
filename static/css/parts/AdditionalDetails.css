@@ -1,5 +1,15 @@
-:root {
-  --MoreInfoOddBackground: hsla(0, 0%, 51%, 0.06);
+.AdditionalDetails {
+  --AdditionalDetailsBorder: var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 22%, transparent));
+  --MoreInfoOddBackground: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 7%, transparent));
+  --MoreInfoKeyForeground: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 72%, transparent));
+  contain: strict;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  gap: 15px;
 }
 
 .Aside {
@@ -10,17 +20,6 @@
   display: flex;
   flex-direction: column;
   width: var(--ExtensionDetailSideBarWidth);
-}
-
-.AdditionalDetails {
-  contain: strict;
-  flex: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  overflow-y: auto;
-  gap: 15px;
 }
 
 .AdditionalDetails:focus {
@@ -40,7 +39,7 @@
   /* padding-top: 15px; */
   padding-bottom: 15px;
   contain: content;
-  border-bottom: 1px solid hsla(0, 0%, 50%, 0.22);
+  border-bottom: 1px solid var(--AdditionalDetailsBorder);
 }
 
 .MoreInfo {
@@ -73,6 +72,7 @@
 } */
 
 .MoreInfoEntryKey {
+  color: var(--MoreInfoKeyForeground);
   contain: content;
 }
 

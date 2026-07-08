@@ -31,13 +31,21 @@
 }
 
 .ExtensionDetailNameBadge {
-  padding-left: 10px;
+  background: var(--BadgeBackground, color-mix(in srgb, var(--WorkbenchForeground) 14%, transparent));
+  border-radius: 2px;
+  color: var(--BadgeForeground, var(--WorkbenchForeground));
+  display: inline-flex;
   font-size: 10px;
   font-style: italic;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 1px 6px;
   contain: content;
+  vertical-align: middle;
 }
 
 .ExtensionDetailDescription {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
