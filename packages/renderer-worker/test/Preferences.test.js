@@ -3,6 +3,7 @@ import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  IsTest.state.isTest = true
   for (const key in Preferences.state) {
     delete Preferences.state[key]
   }
@@ -44,6 +45,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const IsTest = await import('../src/parts/IsTest/IsTest.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
 const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
@@ -136,6 +138,22 @@ test('hydrate - error - permission denied', async () => {
 test('get', () => {
   Object.assign(Preferences.state, { x: 42 })
   expect(Preferences.get('x')).toBe(42)
+})
+
+test('toggleAutoSave - turns auto save on', async () => {
+  Object.assign(Preferences.state, { 'files.autoSave': 'off' })
+
+  await Preferences.toggleAutoSave()
+
+  expect(Preferences.state['files.autoSave']).toBe('afterDelay')
+})
+
+test('toggleAutoSave - turns auto save off', async () => {
+  Object.assign(Preferences.state, { 'files.autoSave': 'afterDelay' })
+
+  await Preferences.toggleAutoSave()
+
+  expect(Preferences.state['files.autoSave']).toBe('off')
 })
 
 test.skip('set', async () => {

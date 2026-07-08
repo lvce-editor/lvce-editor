@@ -87,4 +87,10 @@ export const update = async (settings) => {
   await GlobalEventBus.emitEvent('preferences.changed')
 }
 
+export const toggleAutoSave = async () => {
+  const autoSave = PreferencesState.get('files.autoSave')
+  const nextAutoSave = autoSave === 'off' ? 'afterDelay' : 'off'
+  await update({ 'files.autoSave': nextAutoSave })
+}
+
 export { state } from '../PreferencesState/PreferencesState.js'
