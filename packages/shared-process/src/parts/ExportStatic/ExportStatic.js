@@ -285,21 +285,23 @@ const addExtensionThemes = async ({ root, extensionPath, extensionJson, commitHa
   }
   for (const colorTheme of colorThemes) {
     const { id, path } = colorTheme
-    await FileSystem.mkdir(Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`))
+    const extensionId = `builtin.theme-${id}`
+    await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionId))
+    await FileSystem.mkdir(Path.join(root, 'dist', commitHash, 'extensions', extensionId))
     await FileSystem.copy(Path.join(extensionPath, path), Path.join(root, 'dist', commitHash, 'themes', `${id}.json`))
     await replace(
       Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
       `"workbench.colorTheme": "slime"`,
       `"workbench.colorTheme": "${id}"`,
     )
-    await FileSystem.copyFile(Path.join(root, 'README.md'), Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'README.md'))
+    await FileSystem.copyFile(Path.join(root, 'README.md'), Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'README.md'))
     await FileSystem.copyFile(
       Path.join(extensionPath, 'extension.json'),
-      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'extension.json'),
+      Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'extension.json'),
     )
     await FileSystem.copyFile(
       Path.join(extensionPath, 'color-theme.json'),
-      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'color-theme.json'),
+      Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'color-theme.json'),
     )
   }
   const themesJson = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'config', 'themes.json'))
@@ -369,6 +371,29 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
   }
 }
 
+export const mergeExtensionManifests = (manifests, extraExtensions) => {
+  const replacements = Object.create(null)
+  for (const extension of extraExtensions) {
+    replacements[extension.id] = extension
+  }
+  const used = Object.create(null)
+  const merged = manifests.map((manifest) => {
+    const replacement = replacements[manifest.id]
+    if (replacement) {
+      used[manifest.id] = true
+      return replacement
+    }
+    return manifest
+  })
+  for (const extension of extraExtensions) {
+    if (used[extension.id]) {
+      continue
+    }
+    merged.push(extension)
+  }
+  return merged
+}
+
 const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensions }) => {
   const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
   const manifests = await Promise.all(
@@ -381,10 +406,13 @@ const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensi
       }
     }),
   )
-  for (const extension of extraExtensions) {
-    extension.path = `${pathPrefix}/${commitHash}/extensions/${extension.id}`
-  }
-  const newExtensions = [...manifests, ...extraExtensions]
+  const localExtensions = extraExtensions.map((extension) => {
+    return {
+      ...extension,
+      path: `${pathPrefix}/${commitHash}/extensions/${extension.id}`,
+    }
+  })
+  const newExtensions = mergeExtensionManifests(manifests, localExtensions)
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
 }
 
@@ -408,6 +436,7 @@ const addExtensionWebExtension = async ({ root, extensionPath, commitHash, exten
     },
   ]
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
+  await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
   for (const dirent of ['src', 'extension.json']) {
     await FileSystem.copy(Path.join(extensionPath, dirent), Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id, dirent))
   }
@@ -618,21 +647,51 @@ const resolveServerStaticPath = (root) => {
   throw new Error(`server static path not found`)
 }
 
+const toArray = (value) => {
+  if (!value) {
+    return []
+  }
+  if (Array.isArray(value)) {
+    return value
+  }
+  return [value]
+}
+
+const getExtensionPaths = (extensionPath, extensionPaths) => {
+  const seen = Object.create(null)
+  const allExtensionPaths = []
+  for (const path of [...toArray(extensionPath), ...toArray(extensionPaths)]) {
+    if (!path || seen[path]) {
+      continue
+    }
+    seen[path] = true
+    allExtensionPaths.push(path)
+  }
+  return allExtensionPaths
+}
+
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
-export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, useSimpleWebExtensionFile, serverStaticPath }) => {
+export const exportStatic = async ({ root, pathPrefix, extensionPath, extensionPaths, testPath, useSimpleWebExtensionFile, serverStaticPath }) => {
   if (!existsSync(root)) {
     throw new Error(`root path does not exist: ${root}`)
   }
-  if (extensionPath && !existsSync(extensionPath)) {
-    throw new Error(`extension path does not exist: ${extensionPath}`)
+  const allExtensionPaths = getExtensionPaths(extensionPath, extensionPaths)
+  for (const extensionPath of allExtensionPaths) {
+    if (!existsSync(extensionPath)) {
+      throw new Error(`extension path does not exist: ${extensionPath}`)
+    }
   }
   if (!serverStaticPath) {
     serverStaticPath = resolveServerStaticPath(root)
   }
   if (pathPrefix === 'auto') {
+    if (allExtensionPaths.length === 0) {
+      throw new Error(`extension path is required when path prefix is auto`)
+    }
+    const [extensionPath] = allExtensionPaths
     const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
     const { id } = extensionJson
     const [author, name] = id.split('.')
@@ -660,7 +719,7 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath, 
 
   await updateExtensionsJson({ root, commitHash, pathPrefix, extraExtensions: [] })
 
-  if (extensionPath) {
+  for (const extensionPath of allExtensionPaths) {
     console.time('addExtension')
     await addExtension({
       extensionPath,
