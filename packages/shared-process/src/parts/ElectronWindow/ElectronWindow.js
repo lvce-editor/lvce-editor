@@ -14,7 +14,7 @@ export const minimize = (windowId) => {
 
 export const toggleDevtools = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'toggleDevTools')
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'toggleDevtools')
 }
 
 export const maximize = (windowId) => {
