@@ -1,5 +1,13 @@
 import { expect, test } from '@jest/globals'
-import { mergeExtensionManifests } from '../src/parts/ExportStatic/ExportStatic.js'
+import { mergeExtensionManifests, transpileFile } from '../src/parts/ExportStatic/ExportStatic.js'
+
+test('transpileFile removes typescript annotations', () => {
+  const content = `const value: number = 1
+export const getValue = (): number => value
+`
+
+  expect(transpileFile(content)).toContain(`export const getValue = ()         => value`)
+})
 
 test('mergeExtensionManifests replaces existing extension with matching id', () => {
   const builtinCobalt = {
