@@ -9,7 +9,7 @@ const electronLaunch = resolveElectronLaunch({
 })
 
 const mainProcessPath = process.env.LVCE_MAIN_PROCESS_PATH || join(root, 'packages', 'main-process')
-const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
+const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
 
 const env = {
   ...process.env,

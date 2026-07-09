@@ -11,6 +11,7 @@
     "skipLibCheck": true,
     "rootDir": ".",
     "noEmit": true,
+    "noCheck": true,
     "allowSyntheticDefaultImports": true,
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
@@ -18,5 +19,5 @@
     "composite": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["index.js", "src", "test"]
+  "include": ["index.ts", "bin", "src", "test"]
 }
