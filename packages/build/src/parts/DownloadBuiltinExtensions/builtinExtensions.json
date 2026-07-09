@@ -317,7 +317,7 @@
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   {
     "name": "builtin.theme-gruvbox",
