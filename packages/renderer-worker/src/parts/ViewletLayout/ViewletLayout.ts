@@ -565,9 +565,44 @@ export const openCommandPalette = async (state: LayoutState): Promise<LayoutStat
   }
 }
 
-export const showPanel = (state: LayoutState) => {
+const getPanelViewChangeCommands = async (moduleId: string) => {
+  if (!moduleId) {
+    return []
+  }
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  if (!instance) {
+    return []
+  }
+  const panelUid = instance.state.uid
+  await PanelWorker.invoke('Panel.toggleView', panelUid, moduleId)
+  const diffResult = await PanelWorker.invoke('Panel.diff2', panelUid)
+  if (diffResult.length === 0) {
+    return []
+  }
+  return PanelWorker.invoke('Panel.render2', panelUid, diffResult)
+}
+
+export const showPanel = async (state: LayoutState, moduleId = state.panelView) => {
+  if (state.panelVisible) {
+    const commands = await getPanelViewChangeCommands(moduleId)
+    return {
+      newState: {
+        ...state,
+        panelView: moduleId,
+      },
+      commands,
+    }
+  }
   // @ts-ignore
-  return show(state, LayoutModules.Panel)
+  const { newState, commands } = await show(state, LayoutModules.Panel)
+  const panelViewCommands = await getPanelViewChangeCommands(moduleId)
+  return {
+    newState: {
+      ...newState,
+      panelView: moduleId,
+    },
+    commands: [...commands, ...panelViewCommands],
+  }
 }
 
 export const hidePanel = (state: LayoutState) => {
