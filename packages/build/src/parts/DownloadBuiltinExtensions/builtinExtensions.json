@@ -137,7 +137,7 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   {
     "name": "builtin.language-basics-java",
