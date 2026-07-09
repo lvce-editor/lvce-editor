@@ -405,11 +405,17 @@ const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarVi
   return activityBarCommands
 }
 
-const renderActivityBarAuthCommands = async (activityBarId: number, userState: string) => {
+const renderActivityBarAuthCommands = async (state: LayoutState) => {
+  const { activityBarId, userState } = state
   if (activityBarId === -1) {
     return []
   }
-  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState))
+  await ActivityBarWorker.invoke(
+    'ActivityBar.setUserLoginState',
+    activityBarId,
+    toActivityBarUserLoginState(userState),
+    toFilteredUserInfo(state, { includeAccessToken: false }),
+  )
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
@@ -424,10 +430,7 @@ const renderChatAuthCommands = async (state: LayoutState) => {
 }
 
 const getAuthFanoutCommands = async (state: LayoutState) => {
-  const [activityBarCommands, chatCommands] = await Promise.all([
-    renderActivityBarAuthCommands(state.activityBarId, state.userState),
-    renderChatAuthCommands(state),
-  ])
+  const [activityBarCommands, chatCommands] = await Promise.all([renderActivityBarAuthCommands(state), renderChatAuthCommands(state)])
   return [...(Array.isArray(activityBarCommands) ? activityBarCommands : []), ...(Array.isArray(chatCommands) ? chatCommands : [])]
 }
 
