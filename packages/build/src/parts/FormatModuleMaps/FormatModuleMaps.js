@@ -84,7 +84,7 @@ const formatModuleMap = async (absolutePath) => {
 export const formatAllModuleMaps = async () => {
   const moduleMapPaths = [
     'packages/renderer-process/src/parts/ModuleMap/ModuleMap.js',
-    'packages/shared-process/src/parts/ModuleMap/ModuleMap.js',
+    'packages/shared-process/src/parts/ModuleMap/ModuleMap.ts',
     'packages/renderer-worker/src/parts/ModuleMap/ModuleMap.js',
   ]
   for (const moduleMapPath of moduleMapPaths) {
