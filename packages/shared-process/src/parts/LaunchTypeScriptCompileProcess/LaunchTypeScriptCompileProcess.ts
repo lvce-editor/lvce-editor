@@ -6,7 +6,7 @@ import * as GetTypeScriptPath from '../GetTypeScriptPath/GetTypeScriptPath.ts'
 import * as IpcId from '../IpcId/IpcId.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
-export const launchTypeScriptCompileProcess = async () => {
+export const launchTypeScriptCompileProcess = async (): Promise<any> => {
   const method = IsElectron.isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
   const TypeScriptCompileProcessPath = await import('../TypeScriptCompileProcessPath/TypeScriptCompileProcessPath.ts')
   const typescriptCompileProcess = await IpcParent.create({

@@ -1,7 +1,7 @@
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.ts'
 import * as ModuleId from '../ModuleId/ModuleId.ts'
 
-export const getModuleId = (commandId) => {
+export const getModuleId = (commandId: any): any => {
   switch (commandId) {
     case 'ElectronPowerSaveBlocker.start':
     case 'ElectronPowerSaveBlocker.stop':

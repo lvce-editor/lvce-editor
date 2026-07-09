@@ -3,7 +3,7 @@ import * as ParentIpc from '../MainProcess/MainProcess.ts'
 import * as PreviewProcess from '../PreviewProcess/PreviewProcess.ts'
 import * as WebViewProtocolState from '../WebViewProtocolState/WebViewProtocolState.ts'
 
-const doRegisterWebViewProtocol = async () => {
+const doRegisterWebViewProtocol = async (): Promise<any> => {
   const { port1, port2 } = await GetPortTuple.getPortTuple()
   await ParentIpc.invokeAndTransfer('ElectronSession.registerWebviewProtocol', port1)
   // TODO launch preview process at the start of this
@@ -11,6 +11,6 @@ const doRegisterWebViewProtocol = async () => {
 }
 
 // TODO send port directly to from preview process to renderer worker?
-export const registerWebViewProtocol = async () => {
+export const registerWebViewProtocol = async (): Promise<any> => {
   return WebViewProtocolState.getOrCreate(doRegisterWebViewProtocol)
 }

@@ -6,7 +6,7 @@ import * as Preferences from '../Preferences/Preferences.ts'
 import * as PreloadUrl from '../PreloadUrl/PreloadUrl.ts'
 import * as Screen from '../Screen/Screen.ts'
 
-export const createAppWindow = async ({ preferences, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl, preloadUrl }) => {
+export const createAppWindow = async ({ preferences, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl, preloadUrl }: any): Promise<any> => {
   const { width, height } = await Screen.getBounds()
   const windowOptions = await GetAppWindowOptions.getAppWindowOptions({
     preferences,
@@ -18,13 +18,13 @@ export const createAppWindow = async ({ preferences, parsedArgs, workingDirector
   return ParentIpc.invoke('AppWindow.createAppWindow', windowOptions, parsedArgs, workingDirectory, titleBarItems, url)
 }
 
-export const openNew = async (url) => {
+export const openNew = async (url: any): Promise<any> => {
   const preferences = await Preferences.getAll()
   const preloadUrl = PreloadUrl.getPreloadUrl()
   return createAppWindow({ preferences, parsedArgs: [], workingDirectory: '', url, preloadUrl })
 }
 
-export const openNewWithUri = async (uri) => {
+export const openNewWithUri = async (uri: any): Promise<any> => {
   const url = new URL(DefaultUrl.defaultUrl)
   url.searchParams.set('openUri', uri)
   return openNew(url.toString())

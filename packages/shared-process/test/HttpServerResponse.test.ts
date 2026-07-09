@@ -4,10 +4,10 @@ import * as HttpServerResponse from '../src/parts/HttpServerResponse/HttpServerR
 import { setTimeout } from 'node:timers/promises'
 
 test('send', () => {
-  const request = {}
+  const request: Record<string, any> = {}
   let output = ''
   const socket = new Writable({
-    write(chunk, encoding, callback) {
+    write(chunk: any, encoding: any, callback: any): any {
       output += chunk
       callback()
     },
@@ -24,10 +24,10 @@ test('send', () => {
 })
 
 test('send - error response', () => {
-  const request = {}
+  const request: Record<string, any> = {}
   let output = ''
   const socket = new Writable({
-    write(chunk, encoding, callback) {
+    write(chunk: any, encoding: any, callback: any): any {
       output += chunk
       callback()
     },
@@ -44,11 +44,11 @@ test('send - error response', () => {
 })
 
 test('send - epipe error', async () => {
-  const request = {}
+  const request: Record<string, any> = {}
   let output = ''
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const socket = new Writable({
-    write(chunk, encoding, callback) {
+    write(chunk: any, encoding: any, callback: any): any {
       const error = new Error('write EPIPE')
       // @ts-ignore
       error.code = 'EPIPE'

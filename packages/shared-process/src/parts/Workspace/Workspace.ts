@@ -7,7 +7,7 @@ import * as ResolveRoot from '../ResolveRoot/ResolveRoot.ts'
 /**
  * @deprecated use platform instead
  */
-export const getHomeDir = () => {
+export const getHomeDir = (): any => {
   if (Platform.isWindows) {
     return ''
   }
@@ -17,7 +17,7 @@ export const getHomeDir = () => {
 
 export const resolveRoot = ResolveRoot.resolveRoot
 
-export const resolveUri = (uri) => {
+export const resolveUri = (uri: any): any => {
   const path = fileURLToPath(uri)
   return {
     path,

@@ -4,16 +4,16 @@ import * as PtyHost from '../PtyHost/PtyHost.ts'
 import * as TerminalState from '../TerminalState/TerminalState.ts'
 import { VError } from '../VError/VError.ts'
 
-const createTerminal = (ptyHost, socket) => {
-  const handleMessage = (message) => {
+const createTerminal = (ptyHost: any, socket: any): any => {
+  const handleMessage = (message: any): any => {
     socket.send(message)
   }
-  const handleClose = () => {
+  const handleClose = (): any => {
     // socket.off('close', handleClose)
     ptyHost.off('message', handleMessage)
     ptyHost.dispose()
   }
-  const dispose = () => {
+  const dispose = (): any => {
     ptyHost.off('message', handleMessage)
     socket.off('close', handleClose)
   }
@@ -28,7 +28,7 @@ const createTerminal = (ptyHost, socket) => {
   }
 }
 
-export const create = async (ipc, id, cwd, command, args) => {
+export const create = async (ipc: any, id: any, cwd: any, command: any, args: any): Promise<any> => {
   try {
     Assert.object(ipc)
     Assert.number(id)
@@ -47,7 +47,7 @@ export const create = async (ipc, id, cwd, command, args) => {
   }
 }
 
-export const write = (id, data) => {
+export const write = (id: any, data: any): any => {
   Assert.number(id)
   Assert.string(data)
   const ptyHost = PtyHost.getCurrentInstance()
@@ -60,11 +60,11 @@ export const write = (id, data) => {
   ptyHost.send(message)
 }
 
-export const resize = (state, columns, rows) => {
+export const resize = (state: any, columns: any, rows: any): any => {
   // state.pty.resize(columns, rows)
 }
 
-export const dispose = async (id) => {
+export const dispose = async (id: any): Promise<any> => {
   const terminal = TerminalState.get(id)
   terminal.dispose()
   TerminalState.remove(id)
@@ -74,6 +74,6 @@ export const dispose = async (id) => {
   ptyHost.send(message)
 }
 
-export const disposeAll = () => {
+export const disposeAll = (): any => {
   PtyHost.disposeAll()
 }

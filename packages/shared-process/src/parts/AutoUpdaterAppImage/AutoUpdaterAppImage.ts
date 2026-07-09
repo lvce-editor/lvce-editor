@@ -10,13 +10,13 @@ import * as Platform from '../Platform/Platform.ts'
 import * as Restart from '../Restart/Restart.ts'
 import { VError } from '../VError/VError.ts'
 
-const getOutfilePath = (version) => {
+const getOutfilePath = (version: any): any => {
   Assert.string(version)
   const outFile = join(tmpdir(), `appimage-${version}`)
   return outFile
 }
 
-export const downloadUpdate = async (version) => {
+export const downloadUpdate = async (version: any): Promise<any> => {
   try {
     Assert.string(version)
     const repository = Platform.getRepository()
@@ -30,7 +30,7 @@ export const downloadUpdate = async (version) => {
   }
 }
 
-const installNewAppImage = async (currentAppImageFile, downloadPath) => {
+const installNewAppImage = async (currentAppImageFile: any, downloadPath: any): Promise<any> => {
   try {
     await rename(downloadPath, currentAppImageFile)
     return currentAppImageFile
@@ -39,7 +39,7 @@ const installNewAppImage = async (currentAppImageFile, downloadPath) => {
   }
 }
 
-export const installAndRestart = async (downloadPath) => {
+export const installAndRestart = async (downloadPath: any): Promise<any> => {
   try {
     Assert.string(downloadPath)
     const currentAppImageFile = GetAppImagePath.getAppImagePath()

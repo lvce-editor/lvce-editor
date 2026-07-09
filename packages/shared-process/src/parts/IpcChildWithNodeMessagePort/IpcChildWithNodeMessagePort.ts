@@ -1,23 +1,23 @@
 import { IpcError } from '../IpcError/IpcError.ts'
 import * as IsMessagePort from '../IsMessagePort/IsMessagePort.ts'
 
-export const listen = ({ messagePort }) => {
+export const listen = ({ messagePort }: any): any => {
   if (!IsMessagePort.isMessagePort(messagePort)) {
     throw new IpcError('port must be of type MessagePort')
   }
   return messagePort
 }
 
-const getActualData = (message) => {
+const getActualData = (message: any): any => {
   return message
 }
 
-export const wrap = (messagePort) => {
+export const wrap = (messagePort: any): any => {
   return {
     messagePort,
-    on(event, listener) {
+    on(event: any, listener: any): any {
       if (event === 'message') {
-        const wrappedListener = (event) => {
+        const wrappedListener = (event: any): any => {
           const actualData = getActualData(event)
           const syntheticEvent = {
             data: actualData,
@@ -32,16 +32,16 @@ export const wrap = (messagePort) => {
         throw new Error(`unsupported event type ${event}`)
       }
     },
-    off(event, listener) {
+    off(event: any, listener: any): any {
       this.messagePort.off(event, listener)
     },
-    send(message) {
+    send(message: any): any {
       this.messagePort.postMessage(message)
     },
-    dispose() {
+    dispose(): any {
       this.messagePort.close()
     },
-    start() {
+    start(): any {
       this.messagePort.start()
     },
   }

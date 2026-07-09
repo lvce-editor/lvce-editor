@@ -1,6 +1,6 @@
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.ts'
 
-export const getNewContent = (content, ranges, replacement) => {
+export const getNewContent = (content: any, ranges: any, replacement: any): any => {
   if (ranges.length === 0) {
     return content
   }

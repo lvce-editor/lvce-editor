@@ -7,7 +7,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagementCo
 const ExtensionManagementColorTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js')
 const GetAppWindowOptions = await import('../src/parts/GetAppWindowOptions/GetAppWindowOptions.js')
 
-const getOptions = (preferences: any) => {
+const getOptions = (preferences: any): any => {
   return GetAppWindowOptions.getAppWindowOptions({
     preferences: {
       'window.titleBarStyle': 'custom',

@@ -1,3 +1,3 @@
-export const isGreater = (version, otherVersion) => {
+export const isGreater = (version: any, otherVersion: any): any => {
   return true
 }

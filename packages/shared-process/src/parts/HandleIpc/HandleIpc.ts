@@ -2,7 +2,7 @@ import * as HandleMessage from '../HandleMessage/HandleMessage.ts'
 
 const handled = new WeakSet()
 
-export const handleIpc = (ipc) => {
+export const handleIpc = (ipc: any): any => {
   if (handled.has(ipc)) {
     return
   }
@@ -15,7 +15,7 @@ export const handleIpc = (ipc) => {
   }
 }
 
-export const unhandleIpc = (ipc) => {
+export const unhandleIpc = (ipc: any): any => {
   handled.delete(ipc)
   if ('removeEventListener' in ipc) {
     ipc.removeEventListener('message', HandleMessage.handleMessage)

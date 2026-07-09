@@ -3,8 +3,8 @@ import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 
-const getCliLinkArgs = () => {
-  const links = []
+const getCliLinkArgs = (): any => {
+  const links: any[] = []
   const argv = Process.argv.slice(2)
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
@@ -27,15 +27,15 @@ const getCliLinkArgs = () => {
   return links
 }
 
-const resolveLinkPath = (path) => {
+const resolveLinkPath = (path: any): any => {
   if (Path.isAbsolute(path)) {
     return path
   }
   return Path.join(Process.cwd(), path)
 }
 
-export const getLinkedExtensions = () => {
-  return getCliLinkArgs().map((link) => {
+export const getLinkedExtensions = (): any => {
+  return getCliLinkArgs().map((link: any) => {
     return {
       ...link,
       resolvedPath: resolveLinkPath(link.path),
@@ -43,14 +43,14 @@ export const getLinkedExtensions = () => {
   })
 }
 
-const createMissingPathError = (link) => {
+const createMissingPathError = (link: any): any => {
   const error = new Error(`Failed to start: ${link.source} requires a folder path`)
   // @ts-ignore
   error.code = ErrorCodes.ENOENT
   return error
 }
 
-const createPathNotFoundError = (link) => {
+const createPathNotFoundError = (link: any): any => {
   const message = link.path === link.resolvedPath ? link.path : `${link.path} (resolved to ${link.resolvedPath})`
   const error = new Error(`Failed to start: ${link.source} path does not exist: ${message}`)
   // @ts-ignore
@@ -58,7 +58,7 @@ const createPathNotFoundError = (link) => {
   return error
 }
 
-export const validate = async () => {
+export const validate = async (): Promise<any> => {
   const links = getLinkedExtensions()
   for (const link of links) {
     if (!link.path) {

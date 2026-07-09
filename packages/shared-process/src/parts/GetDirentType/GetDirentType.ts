@@ -3,7 +3,7 @@ import * as DirentType from '../DirentType/DirentType.ts'
 /**
  * @param {import('fs').Dirent|import('fs').StatsBase} dirent
  */
-export const getDirentType = (dirent) => {
+export const getDirentType = (dirent: any): any => {
   if (dirent.isFile()) {
     return DirentType.File
   }

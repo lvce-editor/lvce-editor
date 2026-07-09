@@ -13,9 +13,8 @@ jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc', () => {
   }
 })
 
-const HandleMessagePortForExtensionHostHelperProcess = await import(
-  '../src/parts/HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js'
-)
+const HandleMessagePortForExtensionHostHelperProcess =
+  await import('../src/parts/HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
 const ExtensionHostHelperProcessIpc = await import('../src/parts/ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 
@@ -31,7 +30,7 @@ test.skip('handleMessagePortForExtensionHostHelperProcess - close', async () => 
   const ipc = {
     __isIpc: true,
     dispose: jest.fn(),
-    sendAndTransfer: jest.fn((message) => {
+    sendAndTransfer: jest.fn((message: any) => {
       // @ts-ignore
       JsonRpc.resolve(message.id, {
         result: null,
@@ -56,7 +55,7 @@ test.skip('handleMessagePortForExtensionHostHelperProcess - close', async () => 
   const ipc = {
     __isIpc: true,
     dispose: jest.fn(),
-    sendAndTransfer: jest.fn((message) => {
+    sendAndTransfer: jest.fn((message: any) => {
       // @ts-ignore
       JsonRpc.resolve(message.id, {
         result: null,

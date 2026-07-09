@@ -4,7 +4,7 @@ import * as ExtensionUnlink from '../ExtensionUnlink/ExtensionUnlink.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
 
-export const handleCliArgs = async (argv) => {
+export const handleCliArgs = async (argv: any): Promise<any> => {
   try {
     const path = argv.length > 1 ? argv[1] : Process.cwd()
     await ExtensionUnlink.unlink(path)

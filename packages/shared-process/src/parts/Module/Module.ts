@@ -1,6 +1,6 @@
 import * as ModuleId from '../ModuleId/ModuleId.ts'
 
-export const load = (moduleId) => {
+export const load = (moduleId: any): any => {
   switch (moduleId) {
     case ModuleId.AttachDebugger:
       return import('../AttachDebugger/AttachDebugger.ipc.ts')

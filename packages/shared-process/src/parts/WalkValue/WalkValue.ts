@@ -1,4 +1,4 @@
-export const walkValue = (value, transferrables, isTransferrable) => {
+export const walkValue = (value: any, transferrables: any, isTransferrable: any): any => {
   if (!value) {
     return
   }

@@ -5,7 +5,7 @@ import * as Hash from '../Hash/Hash.ts'
 import * as TypeScriptCompileCachePath from '../TypeScriptCompileCachePath/TypeScriptCompileCachePath.ts'
 import * as TypeScriptCompileProcess from '../TypeScriptCompileProcess/TypeScriptCompileProcess.ts'
 
-export const transpileTypeScriptCached = async (code) => {
+export const transpileTypeScriptCached = async (code: any): Promise<any> => {
   const hash = Hash.fromString(code)
   const cachePath = join(TypeScriptCompileCachePath.typescriptCompileCachePath, `${hash}.ts`)
   if (!existsSync(cachePath)) {

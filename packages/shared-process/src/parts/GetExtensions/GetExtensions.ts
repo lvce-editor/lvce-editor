@@ -1,5 +1,5 @@
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.ts'
 
-export const getExtensions = () => {
+export const getExtensions = (): any => {
   return ExtensionManagement.getExtensions()
 }

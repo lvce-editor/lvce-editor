@@ -3,7 +3,7 @@ import * as ExtensionInstall from '../ExtensionInstall/ExtensionInstall.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
 
-export const handleCliArgs = async (argv) => {
+export const handleCliArgs = async (argv: any): Promise<any> => {
   try {
     const extension = argv[1]
     if (!extension) {

@@ -4,7 +4,7 @@ import { VError } from '../VError/VError.ts'
 import * as Character from '../Character/Character.ts'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 
-export const parse = async (string, filePath) => {
+export const parse = async (string: any, filePath: any): Promise<any> => {
   try {
     return JSON.parse(string)
   } catch (error) {
@@ -15,6 +15,6 @@ export const parse = async (string, filePath) => {
   }
 }
 
-export const stringify = (value) => {
+export const stringify = (value: any): any => {
   return JSON.stringify(value, null, 2) + Character.NewLine
 }

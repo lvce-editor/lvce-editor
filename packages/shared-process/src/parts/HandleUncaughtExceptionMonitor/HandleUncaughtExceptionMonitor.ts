@@ -1,15 +1,15 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.ts'
 
-const handleUncaughtExceptionMonitor = (error) => {
-  ErrorHandling.handleUncaughtExceptionMonitor(error)
+const handleUncaughtExceptionMonitor = (error: any): any => {
+  ErrorHandling.handleUncaughtExceptionMonitor(error, undefined)
 }
 
-export const handleUncaughtException = (error) => {
+export const handleUncaughtException = (error: any): any => {
   handleUncaughtExceptionMonitor(error)
   process.exit(1)
 }
 
-export const handleUnhandledRejection = (error) => {
+export const handleUnhandledRejection = (error: any): any => {
   handleUncaughtExceptionMonitor(error)
   process.exit(1)
 }

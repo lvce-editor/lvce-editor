@@ -4,7 +4,7 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.ts'
 
-export const create = async (options) => {
+export const create = async (options: any): Promise<any> => {
   // TODO how to launch process without race condition?
   // when promise resolves, process might have already exited
   if (!options.rpcId && !options.targetRpcId) {
@@ -20,11 +20,11 @@ export const create = async (options) => {
   return port1
 }
 
-export const signal = (port) => {
+export const signal = (port: any): any => {
   port.start()
 }
 
-const getActualData = (event) => {
+const getActualData = (event: any): any => {
   const { data, ports } = event
   if (ports.length > 0) {
     return {
@@ -35,25 +35,25 @@ const getActualData = (event) => {
   return data
 }
 
-export const wrap = (port) => {
+export const wrap = (port: any): any => {
   return {
     port,
     wrappedListener: undefined,
-    send(message) {
+    send(message: any): any {
       this.port.postMessage(message)
     },
-    async sendAndTransfer(message) {
+    async sendAndTransfer(message: any): Promise<any> {
       const { newValue, transfer } = FixElectronParameters.fixElectronParameters(message)
       this.port.postMessage(newValue, transfer)
     },
-    on(event, listener) {
+    on(event: any, listener: any): any {
       switch (event) {
         case 'close':
           this.port.on(event, listener)
           break
         case 'message':
           // @ts-ignore
-          this.wrappedListener = (event) => {
+          this.wrappedListener = (event: any) => {
             const syntheticEvent = {
               data: getActualData(event),
               target: this,
@@ -66,7 +66,7 @@ export const wrap = (port) => {
           break
       }
     },
-    off(event, listener) {
+    off(event: any, listener: any): any {
       switch (event) {
         case 'close':
           this.port.off(event, listener)
@@ -79,7 +79,7 @@ export const wrap = (port) => {
           break
       }
     },
-    dispose() {
+    dispose(): any {
       this.port.close()
       ParentIpc.invoke('TemporaryMessagePort.dispose', this.port.name)
     },

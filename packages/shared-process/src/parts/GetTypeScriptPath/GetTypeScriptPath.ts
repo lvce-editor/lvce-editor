@@ -4,7 +4,7 @@ import * as BuiltinExtensionsPath from '../BuiltinExtensionsPath/BuiltinExtensio
 import * as IsBuiltServer from '../IsBuiltServer/IsBuiltServer.ts'
 import * as IsProduction from '../IsProduction/IsProduction.ts'
 
-export const getTypeScriptUri = () => {
+export const getTypeScriptUri = (): any => {
   if (!IsProduction.isProduction || IsBuiltServer.isBuiltServer) {
     return 'typescript'
   }

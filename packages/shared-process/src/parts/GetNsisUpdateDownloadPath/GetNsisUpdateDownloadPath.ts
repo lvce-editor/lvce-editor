@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import * as Assert from '../Assert/Assert.ts'
 import * as Platform from '../Platform/Platform.ts'
 
-export const getNsisUpdateDownloadPath = (version) => {
+export const getNsisUpdateDownloadPath = (version: any): any => {
   Assert.string(version)
   const name = Platform.applicationName
   const outFile = join(tmpdir(), `${name}-update-${version}.exe`)

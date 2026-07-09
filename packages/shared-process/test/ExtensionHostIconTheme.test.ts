@@ -19,7 +19,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.j
 const ExtensionHostIconTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementIconTheme.js')
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 

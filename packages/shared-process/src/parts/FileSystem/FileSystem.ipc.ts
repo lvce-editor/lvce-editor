@@ -1,7 +1,7 @@
 import * as FileSystem from './FileSystem.ts'
 
 // TODO ugly code here -> should be inside FileSystem.js
-const fileSystemWatch = (socket, id, path) => {
+const fileSystemWatch = (socket: any, id: any, path: any): any => {
   // const watcher = FileSystem.watch(path, {
   //   onAll(...args) {
   //     socket.send(JSON.stringify([/* callback */ id, /* event */ args]))

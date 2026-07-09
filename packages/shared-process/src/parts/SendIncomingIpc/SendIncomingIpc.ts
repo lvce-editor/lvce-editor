@@ -3,7 +3,7 @@ import * as IpcId from '../IpcId/IpcId.ts'
 import * as IpcTransferState from '../IpcTransferState/IpcTransferState.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
-const supportsPartialIpcHandling = (ipcId) => {
+const supportsPartialIpcHandling = (ipcId: any): any => {
   switch (ipcId) {
     case IpcId.AuthProcess:
     case IpcId.TerminalProcess:
@@ -22,7 +22,7 @@ const supportsPartialIpcHandling = (ipcId) => {
 // duplicated ipc can also be collected
 // when it is out of scope
 
-export const sendIncomingIpc = async (target, response, ipcId) => {
+export const sendIncomingIpc = async (target: any, response: any, ipcId: any): Promise<any> => {
   if (!IpcTransferState.has(ipcId) && supportsPartialIpcHandling(ipcId)) {
     HandleIpc.handleIpc(target)
   }

@@ -3,46 +3,46 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Clamp from '../Clamp/Clamp.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-export const openNew = (_windowId, url) => {
+export const openNew = (_windowId: any, url: any): any => {
   return AppWindow.openNew(url)
 }
 
-export const openNewWithUri = (_windowId, uri) => {
+export const openNewWithUri = (_windowId: any, uri: any): any => {
   Assert.string(uri)
   return AppWindow.openNewWithUri(uri)
 }
 
-export const minimize = (windowId) => {
+export const minimize = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'minimize')
 }
 
-export const toggleDevtools = (windowId) => {
+export const toggleDevtools = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'toggleDevtools')
 }
 
-export const maximize = (windowId) => {
+export const maximize = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'maximize')
 }
 
-export const unmaximize = (windowId) => {
+export const unmaximize = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'unmaximize')
 }
 
-export const close = (windowId) => {
+export const close = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'close')
 }
 
-export const reload = (windowId) => {
+export const reload = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'reload')
 }
 
-const setZoom = async (windowId, zoomFactor, minZoomLevel, maxZoomLevel) => {
+const setZoom = async (windowId: any, zoomFactor: any, minZoomLevel: any, maxZoomLevel: any): Promise<any> => {
   const newZoomFactor = Clamp.clamp(zoomFactor, minZoomLevel, maxZoomLevel)
   await ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'setZoomLevel', newZoomFactor)
   // TODO
@@ -57,7 +57,7 @@ const setZoom = async (windowId, zoomFactor, minZoomLevel, maxZoomLevel) => {
  * @param {*} getMaxZoomLevel
  * @returns
  */
-const setZoomDelta = async (windowId, getDelta, getMinZoomLevel, getMaxZoomLevel) => {
+const setZoomDelta = async (windowId: any, getDelta: any, getMinZoomLevel: any, getMaxZoomLevel: any): Promise<any> => {
   const delta = getDelta()
   const minZoomLevel = getMinZoomLevel()
   const maxZoomLevel = getMaxZoomLevel()
@@ -65,51 +65,51 @@ const setZoomDelta = async (windowId, getDelta, getMinZoomLevel, getMaxZoomLevel
   return setZoom(windowId, currentZoomLevel + delta, minZoomLevel, maxZoomLevel)
 }
 
-const getMinZoomLevel = () => {
+const getMinZoomLevel = (): any => {
   return -3
 }
 
-const getMaxZoomLevel = () => {
+const getMaxZoomLevel = (): any => {
   return 3
 }
 
-const getZoomInDelta = () => {
+const getZoomInDelta = (): any => {
   return 0.2
 }
 
-const getZoomOutDelta = () => {
+const getZoomOutDelta = (): any => {
   return -0.2
 }
 
-const getDefaultZoomLevel = () => {
+const getDefaultZoomLevel = (): any => {
   return 0
 }
 
-export const zoomIn = (windowId) => {
+export const zoomIn = (windowId: any): any => {
   return setZoomDelta(windowId, getZoomInDelta, getMinZoomLevel, getMaxZoomLevel)
 }
 
-export const zoomOut = (windowId) => {
+export const zoomOut = (windowId: any): any => {
   return setZoomDelta(windowId, getZoomOutDelta, getMinZoomLevel, getMaxZoomLevel)
 }
 
-export const zoomReset = (windowId) => {
+export const zoomReset = (windowId: any): any => {
   return setZoom(windowId, getDefaultZoomLevel(), getMinZoomLevel(), getMaxZoomLevel())
 }
 
-export const getZoom = (windowId) => {
+export const getZoom = (windowId: any): any => {
   // TODO zoom level should be stored in shared process
   return ParentIpc.invoke('ElectronWindow.getZoom', windowId)
 }
 
-export const focus = (windowId) => {
+export const focus = (windowId: any): any => {
   return ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'focus')
 }
 
-export const handleClose = (windowId) => {
+export const handleClose = (windowId: any): any => {
   // TODO
 }
 
-export const getFocusedWindowId = () => {
+export const getFocusedWindowId = (): any => {
   return ParentIpc.invoke('ElectronWindow.getFocusedWindowId')
 }

@@ -1,13 +1,13 @@
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-export const getWidth = () => {
+export const getWidth = (): any => {
   return ParentIpc.invoke('ElectronScreen.getWidth')
 }
 
-export const getHeight = () => {
+export const getHeight = (): any => {
   return ParentIpc.invoke('ElectronScreen.getHeight')
 }
 
-export const getBounds = () => {
+export const getBounds = (): any => {
   return ParentIpc.invoke('ElectronScreen.getBounds')
 }

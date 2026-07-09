@@ -16,7 +16,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.j
   }),
 }))
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
-  join(...parts) {
+  join(...parts: any): any {
     return parts.join('/')
   },
 }))
@@ -32,7 +32,7 @@ const FileSystemWatch = await import('../src/parts/WatchFile/WatchFile.js')
 
 test('watch', async () => {
   // @ts-ignore
-  FileSystemWatch.watchFile.mockImplementation((path, fn) => {
+  FileSystemWatch.watchFile.mockImplementation((path: any, fn: any) => {
     fn()
   })
   const webSocket = {

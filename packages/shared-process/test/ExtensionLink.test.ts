@@ -16,7 +16,7 @@ jest.unstable_mockModule('../src/parts/SymLink/SymLink', () => {
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
-    getLinkedExtensionsPath: () => {
+    getLinkedExtensionsPath: (): any => {
       return '/test/linked-extensions'
     },
   }
@@ -24,10 +24,10 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
 
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => {
   return {
-    join: (a, b) => {
+    join: (a: any, b: any): any => {
       return a + '/' + b
     },
-    basename: (path) => {
+    basename: (path: any): any => {
       return path.slice(path.lastIndexOf('/') + 1)
     },
   }
@@ -53,7 +53,7 @@ const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
   code: any
-  constructor(code) {
+  constructor(code: any) {
     super(code)
     this.code = code
   }
@@ -61,7 +61,7 @@ class NodeError extends Error {
 
 class PermissionDeniedError extends Error {
   code: string
-  constructor(from, to) {
+  constructor(from: any, to: any) {
     super(`EPERM: operation not permittet, symlink ${from} -> ${to}`)
     this.code = 'EPERM'
   }
@@ -108,7 +108,7 @@ test('link - error - symlink already exists', async () => {
 
 test('link - error - no manifest file found', async () => {
   // @ts-ignore
-  FileSystem.readFile.mockImplementation((uri) => {
+  FileSystem.readFile.mockImplementation((uri: any) => {
     throw new FileNotFoundError(uri)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrow(
@@ -122,7 +122,7 @@ test('link - error - permission denied', async () => {
     return '{ "id": "my-extension" }'
   })
   // @ts-ignore
-  SymLink.createSymLink.mockImplementation((from, to) => {
+  SymLink.createSymLink.mockImplementation((from: any, to: any) => {
     throw new PermissionDeniedError(from, to)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrow(

@@ -14,11 +14,11 @@ import { VError } from '../VError/VError.ts'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
 
-export const state = {
+export const state: any = {
   watcherMap: Object.create(null),
 }
 
-export const copy = async (source, target) => {
+export const copy = async (source: any, target: any): Promise<any> => {
   try {
     await fs.cp(source, target, { recursive: true })
   } catch (error) {
@@ -37,7 +37,7 @@ export const copy = async (source, target) => {
  * @param {BufferEncoding} encoding
  * @returns
  */
-export const readFile = async (path, encoding = EncodingType.Utf8) => {
+export const readFile = async (path: any, encoding: any = EncodingType.Utf8): Promise<any> => {
   // console.info('[shared-process] read file', path)
   try {
     Assert.string(path)
@@ -56,14 +56,14 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
   }
 }
 
-const toPath = (uri) => {
+const toPath = (uri: any): any => {
   if (uri.startsWith('file://')) {
     return fileURLToPath(uri)
   }
   return uri
 }
 
-export const readJson = async (uri) => {
+export const readJson = async (uri: any): Promise<any> => {
   try {
     Assert.string(uri)
     const path = toPath(uri)
@@ -78,7 +78,7 @@ export const readJson = async (uri) => {
   }
 }
 
-export const readFileAsBuffer = async (path) => {
+export const readFileAsBuffer = async (path: any): Promise<any> => {
   try {
     Assert.string(path)
     const content = await fs.readFile(path)
@@ -97,7 +97,7 @@ export const readFileAsBuffer = async (path) => {
  * @param {string} content
  * @param {BufferEncoding} encoding
  */
-export const writeFile = async (path, content, encoding = EncodingType.Utf8) => {
+export const writeFile = async (path: any, content: any, encoding: any = EncodingType.Utf8): Promise<any> => {
   try {
     Assert.string(path)
     Assert.string(content)
@@ -112,7 +112,7 @@ export const writeFile = async (path, content, encoding = EncodingType.Utf8) => 
   }
 }
 
-export const ensureFile = async (path, content) => {
+export const ensureFile = async (path: any, content: any): Promise<any> => {
   try {
     await fs.mkdir(Path.dirname(path), { recursive: true })
     await fs.writeFile(path, content)
@@ -121,7 +121,7 @@ export const ensureFile = async (path, content) => {
   }
 }
 
-export const createFile = async (path) => {
+export const createFile = async (path: any): Promise<any> => {
   try {
     await fs.writeFile(path, '', { flag: 'wx' })
   } catch (error) {
@@ -129,7 +129,7 @@ export const createFile = async (path) => {
   }
 }
 
-export const createFolder = async (path, options) => {
+export const createFolder = async (path: any, options: any): Promise<any> => {
   try {
     await fs.mkdir(path, options)
   } catch (error) {
@@ -137,7 +137,7 @@ export const createFolder = async (path, options) => {
   }
 }
 
-const isOkayToRemove = (path) => {
+const isOkayToRemove = (path: any): any => {
   if (path === '/') {
     return false
   }
@@ -150,7 +150,7 @@ const isOkayToRemove = (path) => {
   return true
 }
 
-export const remove = async (path) => {
+export const remove = async (path: any): Promise<any> => {
   if (!isOkayToRemove(path)) {
     console.warn('not removing path')
     return
@@ -165,7 +165,7 @@ export const remove = async (path) => {
   }
 }
 
-export const forceRemove = async (path) => {
+export const forceRemove = async (path: any): Promise<any> => {
   if (!isOkayToRemove(path)) {
     console.warn('not removing path')
     return
@@ -177,7 +177,7 @@ export const forceRemove = async (path) => {
   }
 }
 
-export const exists = async (path) => {
+export const exists = async (path: any): Promise<any> => {
   try {
     await fs.access(path)
     return true
@@ -189,14 +189,14 @@ export const exists = async (path) => {
 /**
  * @param {import('fs').Dirent} dirent
  */
-const toPrettyDirent = (dirent) => {
+const toPrettyDirent = (dirent: any): any => {
   return {
     name: dirent.name,
     type: GetDirentType.getDirentType(dirent),
   }
 }
 
-export const readDirWithFileTypes = async (path) => {
+export const readDirWithFileTypes = async (path: any): Promise<any> => {
   try {
     const dirents = await fs.readdir(path, { withFileTypes: true })
     const prettyDirents = dirents.map(toPrettyDirent)
@@ -206,7 +206,7 @@ export const readDirWithFileTypes = async (path) => {
   }
 }
 
-export const readDir = async (path) => {
+export const readDir = async (path: any): Promise<any> => {
   try {
     const dirents = await fs.readdir(path)
     return dirents
@@ -218,7 +218,7 @@ export const readDir = async (path) => {
   }
 }
 
-export const mkdir = async (path) => {
+export const mkdir = async (path: any): Promise<any> => {
   try {
     await fs.mkdir(path, { recursive: true })
   } catch (error) {
@@ -226,7 +226,7 @@ export const mkdir = async (path) => {
   }
 }
 
-const fallbackRename = async (oldPath, newPath) => {
+const fallbackRename = async (oldPath: any, newPath: any): Promise<any> => {
   try {
     await fs.cp(oldPath, newPath, { recursive: true })
     await fs.rm(oldPath, { recursive: true })
@@ -235,7 +235,7 @@ const fallbackRename = async (oldPath, newPath) => {
   }
 }
 
-export const rename = async (oldPath, newPath) => {
+export const rename = async (oldPath: any, newPath: any): Promise<any> => {
   try {
     await fs.rename(oldPath, newPath)
   } catch (error) {
@@ -246,11 +246,11 @@ export const rename = async (oldPath, newPath) => {
   }
 }
 
-export const getPathSeparator = () => {
+export const getPathSeparator = (): any => {
   return Platform.getPathSeparator()
 }
 
-export const getRealPath = async (path) => {
+export const getRealPath = async (path: any): Promise<any> => {
   try {
     return await fs.realpath(path)
   } catch (error) {
@@ -274,16 +274,16 @@ export const getRealPath = async (path) => {
 }
 
 // TODO handle error
-export const stat = async (path) => {
+export const stat = async (path: any): Promise<any> => {
   const stats = await fs.stat(path)
   const type = GetDirentType.getDirentType(stats)
   return type
 }
 
-export const chmod = async (path, permissions) => {
+export const chmod = async (path: any, permissions: any): Promise<any> => {
   await fs.chmod(path, permissions)
 }
-export const copyFile = async (from, to) => {
+export const copyFile = async (from: any, to: any): Promise<any> => {
   try {
     await fs.copyFile(from, to)
   } catch (error) {
@@ -291,7 +291,7 @@ export const copyFile = async (from, to) => {
   }
 }
 
-export const cp = async (from, to) => {
+export const cp = async (from: any, to: any): Promise<any> => {
   try {
     await fs.cp(from, to, { recursive: true })
   } catch (error) {
@@ -313,7 +313,7 @@ export const cp = async (from, to) => {
 // TODO ui should show useful error message when file cannot be saved
 // and for permission denied error it should use that npm module that allows root
 
-export const getRealUri = (pathOrUri) => {
+export const getRealUri = (pathOrUri: any): any => {
   try {
     const uri = fileURLToPath(pathOrUri).toString()
     return uri

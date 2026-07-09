@@ -5,10 +5,10 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: () => {
+  getExtensionsPath: (): any => {
     return '/test/extensions'
   },
-  getCachedExtensionsPath: () => {
+  getCachedExtensionsPath: (): any => {
     return '/test/cached-extensions'
   },
 }))
@@ -80,7 +80,7 @@ test('install - error - missing id in extension manifest', async () => {
     return `{}`
   })
   // @ts-ignore
-  Path.join.mockImplementation((...parts) => {
+  Path.join.mockImplementation((...parts: any) => {
     return parts.join('/')
   })
   // @ts-ignore
@@ -105,7 +105,7 @@ test('install - error - manifest contains null', async () => {
     return `null`
   })
   // @ts-ignore
-  Path.join.mockImplementation((...parts) => {
+  Path.join.mockImplementation((...parts: any) => {
     return parts.join('/')
   })
   // @ts-ignore
@@ -125,7 +125,7 @@ test('install', async () => {
   // @ts-ignore
   DownloadAndExtract.downloadAndExtractTarGz.mockImplementation(() => {})
   // @ts-ignore
-  Path.join.mockImplementation((...parts) => {
+  Path.join.mockImplementation((...parts: any) => {
     return parts.join('/')
   })
   // @ts-ignore

@@ -1,7 +1,7 @@
 import { VError } from '@lvce-editor/verror'
 import _trash from 'trash'
 
-export const trash = async (path) => {
+export const trash = async (path: any): Promise<any> => {
   try {
     await _trash(path)
   } catch (error) {

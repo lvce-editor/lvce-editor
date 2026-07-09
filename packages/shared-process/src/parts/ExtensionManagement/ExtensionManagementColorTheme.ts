@@ -10,7 +10,7 @@ import * as ExtensionManagement from './ExtensionManagement.ts'
 // TODO test this function
 // TODO very similar with getIconTheme
 
-const getColorThemePath = async (extensions, colorThemeId) => {
+const getColorThemePath = async (extensions: any, colorThemeId: any): Promise<any> => {
   for (const extension of extensions) {
     if (!extension.colorThemes) {
       continue
@@ -26,7 +26,7 @@ const getColorThemePath = async (extensions, colorThemeId) => {
   return ''
 }
 
-export const getColorThemeJson = async (colorThemeId) => {
+export const getColorThemeJson = async (colorThemeId: any): Promise<any> => {
   Assert.string(colorThemeId)
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
@@ -41,33 +41,33 @@ export const getColorThemeJson = async (colorThemeId) => {
   }
 }
 
-const getColorThemeInfo = (extension) => {
+const getColorThemeInfo = (extension: any): any => {
   return extension.colorThemes || []
 }
 
-const getExtensionColorThemeNames = (extension) => {
+const getExtensionColorThemeNames = (extension: any): any => {
   return extension.colorThemes || []
 }
 
-const getColorThemeId = (colorTheme) => {
+const getColorThemeId = (colorTheme: any): any => {
   return colorTheme.id
 }
 
 // TODO should send names to renderer worker or names with ids?
-export const getColorThemeNames = async () => {
+export const getColorThemeNames = async (): Promise<any> => {
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemes = extensions.flatMap(getExtensionColorThemeNames)
   const colorThemeNames = colorThemes.map(getColorThemeId)
   return colorThemeNames
 }
 
-export const getColorThemes = async () => {
+export const getColorThemes = async (): Promise<any> => {
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemes = extensions.flatMap(getColorThemeInfo)
   return colorThemes
 }
 
-export const watch = async (socket, colorThemeId) => {
+export const watch = async (socket: any, colorThemeId: any): Promise<any> => {
   // console.log({ socket, colorThemeId })
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
@@ -75,7 +75,7 @@ export const watch = async (socket, colorThemeId) => {
   if (verbose) {
     console.info(`[shared-process] starting to watch color theme ${colorThemeId} at ${colorThemePath}`)
   }
-  const callback = () => {
+  const callback = (): any => {
     socket.send({ jsonrpc: JsonRpcVersion.Two, method: 'ColorTheme.reload', params: [] })
   }
   await FileSystemWatch.watchFile(colorThemePath, callback)

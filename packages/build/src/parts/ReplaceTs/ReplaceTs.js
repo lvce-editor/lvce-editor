@@ -11,6 +11,10 @@ export const fixImports = (content) => {
     .replaceAll('sharedProcessMain.ts', 'sharedProcessMain.js')
 }
 
+const normalizeStrippedTypes = (content) => {
+  return content.replaceAll(/([A-Za-z0-9_$])\s+(?=[,)])/g, '$1').replaceAll(/\)\s+=>/g, ') =>')
+}
+
 export const replaceTs = async (content) => {
   if (!content) {
     return content
@@ -18,5 +22,5 @@ export const replaceTs = async (content) => {
   const strippedContent = stripTypeScriptTypes(content, {
     mode: 'strip',
   })
-  return fixImports(strippedContent)
+  return fixImports(normalizeStrippedTypes(strippedContent))
 }

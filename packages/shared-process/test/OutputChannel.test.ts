@@ -8,7 +8,7 @@ import waitForExpect from 'wait-for-expect'
 import * as OutputChannel from '../src/parts/OutputChannel/OutputChannel.js'
 import * as Platform from '../src/parts/Platform/Platform.js'
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
@@ -20,7 +20,7 @@ if (Platform.isWindows) {
     const tmpDir = await getTmpDir()
     await fs.writeFile(join(tmpDir, 'log.txt'), '')
     const onData = jest.fn()
-    const state = OutputChannel.open(join(tmpDir, 'log.txt'), onData)
+    const state = OutputChannel.open(join(tmpDir, 'log.txt'), onData, jest.fn())
     const writeStream = createWriteStream(join(tmpDir, 'log.txt'))
     writeStream.write('a')
     // @ts-ignore
@@ -46,7 +46,7 @@ if (Platform.isWindows) {
     const tmpDir = await getTmpDir()
     await fs.writeFile(join(tmpDir, 'log.txt'), '')
     const onData = jest.fn()
-    const state = OutputChannel.open(join(tmpDir, 'log.txt'), onData)
+    const state = OutputChannel.open(join(tmpDir, 'log.txt'), onData, jest.fn())
     await fs.writeFile(join(tmpDir, 'log.txt'), 'abc\n')
     // @ts-ignore
     await waitForExpect(() => {

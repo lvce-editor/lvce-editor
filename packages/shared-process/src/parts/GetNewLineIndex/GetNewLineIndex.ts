@@ -6,6 +6,6 @@ import * as Character from '../Character/Character.ts'
  * @param {number|undefined} startIndex
  * @returns
  */
-export const getNewLineIndex = (string, startIndex = undefined) => {
+export const getNewLineIndex = (string: any, startIndex?: any): any => {
   return string.indexOf(Character.NewLine, startIndex)
 }

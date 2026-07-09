@@ -2,7 +2,7 @@ import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallT
 import * as Path from '../Path/Path.ts'
 import * as ParseUrlGithub from '../ParseUrlGithub/ParseUrlGithub.ts'
 
-const parseUrl = (input) => {
+const parseUrl = (input: any): any => {
   if (input.startsWith('https://github.com')) {
     return ParseUrlGithub.parseUrlGithub(input)
   }
@@ -22,7 +22,7 @@ const parseUrl = (input) => {
   }
 }
 
-const parseFile = (input) => {
+const parseFile = (input: any): any => {
   return {
     type: ExtensionInstallType.File,
     options: {
@@ -31,7 +31,7 @@ const parseFile = (input) => {
   }
 }
 
-export const parse = (input) => {
+export const parse = (input: any): any => {
   if (input.startsWith('https://')) {
     return parseUrl(input)
   }

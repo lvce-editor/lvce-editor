@@ -1,6 +1,6 @@
 import * as LaunchProcessExplorer from '../LaunchProcessExplorer/LaunchProcessExplorer.ts'
 
-export const state = {
+export const state: any = {
   /**
    * @type {any}
    */
@@ -8,14 +8,14 @@ export const state = {
   refCount: 0,
 }
 
-export const getOrCreate = async () => {
+export const getOrCreate = async (): Promise<any> => {
   if (!state.ipc) {
     state.ipc = LaunchProcessExplorer.launchProcessExplorer()
   }
   return state.ipc
 }
 
-export const acquire = async () => {
+export const acquire = async (): Promise<any> => {
   state.refCount++
   try {
     return await getOrCreate()
@@ -25,7 +25,7 @@ export const acquire = async () => {
   }
 }
 
-const disposeLater = (ipcPromise) => {
+const disposeLater = (ipcPromise: any): any => {
   setTimeout(async () => {
     try {
       const ipc = await ipcPromise
@@ -36,7 +36,7 @@ const disposeLater = (ipcPromise) => {
   }, 0)
 }
 
-export const decreaseRefCount = () => {
+export const decreaseRefCount = (): any => {
   if (state.refCount > 0) {
     state.refCount--
   }

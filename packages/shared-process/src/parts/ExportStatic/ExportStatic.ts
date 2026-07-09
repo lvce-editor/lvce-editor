@@ -19,16 +19,16 @@ const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityP
   `frame-src 'self' blob:`,
 ])
 
-const readExtensionManifest = async (path) => {
+const readExtensionManifest = async (path: any): Promise<any> => {
   const json = await JsonFile.readJson(path)
   return { ...json, path }
 }
 
-const getThemeName = (dirent) => {
+const getThemeName = (dirent: any): any => {
   return dirent.slice('builtin.theme-'.length)
 }
 
-const replace = async (path, occurrence, replacement) => {
+const replace = async (path: any, occurrence: any, replacement: any): Promise<any> => {
   const oldContent = await FileSystem.readFile(path)
   if (!oldContent.includes(occurrence)) {
     throw new Error(`failed to replace occurrence ${occurrence} in ${path}: Not found`)
@@ -38,8 +38,8 @@ const replace = async (path, occurrence, replacement) => {
   await FileSystem.writeFile(path, newContent)
 }
 
-const getWorkerById = (id) => {
-  const worker = workers.find((item) => {
+const getWorkerById = (id: any): any => {
+  const worker = workers.find((item: any) => {
     return item.id === id
   })
   if (!worker) {
@@ -48,11 +48,11 @@ const getWorkerById = (id) => {
   return worker
 }
 
-const getDistPathFromWorkerPath = (path) => {
+const getDistPathFromWorkerPath = (path: any): any => {
   return path.split('/').filter(Boolean)
 }
 
-const getWorkerDistPath = (root, commitHash, id) => {
+const getWorkerDistPath = (root: any, commitHash: any, id: any): any => {
   const worker = getWorkerById(id)
   return Path.join(root, 'dist', commitHash, ...getDistPathFromWorkerPath(worker.productionPath))
 }
@@ -60,35 +60,35 @@ const getWorkerDistPath = (root, commitHash, id) => {
 /**
  * @param {string} dirent
  */
-const isLanguageBasics = (dirent) => {
+const isLanguageBasics = (dirent: any): any => {
   return dirent.startsWith('builtin.language-basics')
 }
 
 /**
  * @param {string} dirent
  */
-const isTheme = (dirent) => {
+const isTheme = (dirent: any): any => {
   return dirent.startsWith('builtin.theme-')
 }
 
 /**
  * @param {string} dirent
  */
-const isIconTheme = (dirent) => {
+const isIconTheme = (dirent: any): any => {
   return dirent === 'builtin.vscode-icons'
 }
 
-const compare = (a, b) => {
+const compare = (a: any, b: any): any => {
   return a.localeCompare(b)
 }
 
-const toSorted = (objects, compare) => {
+const toSorted = (objects: any, compare: any): any => {
   return [...objects].sort(compare)
 }
 
-const mergeThemes = (builtinThemes, extensionThemes) => {
-  const seen = []
-  const merged = []
+const mergeThemes = (builtinThemes: any, extensionThemes: any): any => {
+  const seen: any[] = []
+  const merged: any[] = []
   for (const extensionTheme of extensionThemes) {
     seen.push(extensionTheme)
     merged.push(extensionTheme)
@@ -104,14 +104,14 @@ const mergeThemes = (builtinThemes, extensionThemes) => {
 }
 
 const RE_COMMIT_HASH = /^[a-z\d]+$/
-const isCommitHash = (dirent) => {
+const isCommitHash = (dirent: any): any => {
   return dirent.length === 7 && dirent.match(RE_COMMIT_HASH)
 }
 
 /**
  * @param {string} root
  */
-const clean = async (root) => {
+const clean = async (root: any): Promise<any> => {
   await FileSystem.forceRemove(Path.join(root, 'dist'))
   await FileSystem.mkdir(Path.join(root, 'dist'))
 }
@@ -119,11 +119,11 @@ const clean = async (root) => {
 /**
  * @param {string} root
  */
-const copyStaticFiles = async (root, serverStaticPath) => {
+const copyStaticFiles = async (root: any, serverStaticPath: any): Promise<any> => {
   await FileSystem.copy(serverStaticPath, Path.join(root, 'dist'))
 }
 
-const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }) => {
+const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }: any): Promise<any> => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
     'platform = Remote;',
@@ -136,7 +136,7 @@ const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }) =
   )
 }
 
-const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }) => {
+const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }: any): Promise<any> => {
   const extensionHostWorkerDistPath = getWorkerDistPath(root, commitHash, 'extensionHostWorker')
   await applyOverridesRendererProcess({ root, commitHash, pathPrefix })
   await replace(
@@ -168,8 +168,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
   const themeDirents = extensionDirents.filter(isTheme)
   const iconThemeDirents = extensionDirents.filter(isIconTheme)
 
-  const getLanguages = (extension) => {
-    const languages = []
+  const getLanguages = (extension: any): any => {
+    const languages: any[] = []
     for (const language of extension.languages || []) {
       languages.push({
         ...language,
@@ -179,8 +179,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
     return languages
   }
 
-  const getWebViews = (extension) => {
-    const webViews = []
+  const getWebViews = (extension: any): any => {
+    const webViews: any[] = []
     for (const webView of extension.webViews || []) {
       webViews.push({
         ...webView,
@@ -194,7 +194,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
   /**
    * @param {string} dirent
    */
-  const getManifestPath = (dirent) => {
+  const getManifestPath = (dirent: any): any => {
     return Path.join(serverStaticPath, commitHash, 'extensions', dirent, 'extension.json')
   }
 
@@ -263,7 +263,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
   }
 }
 
-const addExtensionSeo = async ({ root, name, description, commitHash }) => {
+const addExtensionSeo = async ({ root, name, description, commitHash }: any): Promise<any> => {
   await replace(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
@@ -275,11 +275,11 @@ const addExtensionSeo = async ({ root, name, description, commitHash }) => {
   )
 }
 
-const getId = (object) => {
+const getId = (object: any): any => {
   return object.id
 }
 
-const addExtensionThemes = async ({ root, extensionPath, extensionJson, commitHash }) => {
+const addExtensionThemes = async ({ root, extensionPath, extensionJson, commitHash }: any): Promise<any> => {
   const colorThemes = extensionJson.colorThemes || []
   if (colorThemes.length === 0) {
     return
@@ -311,13 +311,13 @@ const addExtensionThemes = async ({ root, extensionPath, extensionJson, commitHa
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'themes.json'), mergedThemes)
 }
 
-const compareId = (a, b) => {
+const compareId = (a: any, b: any): any => {
   return a.id.localeCompare(b.id)
 }
 
-const mergeLanguages = (languages, extensionLanguages) => {
-  const seen = []
-  const merged = []
+const mergeLanguages = (languages: any, extensionLanguages: any): any => {
+  const seen: any[] = []
+  const merged: any[] = []
   for (const language of extensionLanguages) {
     seen.push(language.id)
     merged.push(language)
@@ -332,11 +332,11 @@ const mergeLanguages = (languages, extensionLanguages) => {
   return merged
 }
 
-const toPlaygroundFile = (file) => {
+const toPlaygroundFile = (file: any): any => {
   return `/playground/${file}`
 }
 
-const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commitHash, pathPrefix }) => {
+const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commitHash, pathPrefix }: any): Promise<any> => {
   const languages = extensionJson.languages || []
   if (languages.length === 0) {
     return
@@ -350,7 +350,7 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
       await FileSystem.copy(Path.join(extensionPath, file), Path.join(root, 'dist', commitHash, 'extensions', extensionId, file))
     }
   }
-  const extensionLanguages = []
+  const extensionLanguages: any[] = []
   for (const language of languages) {
     if (!language.tokenize) {
       continue
@@ -372,13 +372,13 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
   }
 }
 
-export const mergeExtensionManifests = (manifests, extraExtensions) => {
+export const mergeExtensionManifests = (manifests: any, extraExtensions: any): any => {
   const replacements = Object.create(null)
   for (const extension of extraExtensions) {
     replacements[extension.id] = extension
   }
   const used = Object.create(null)
-  const merged = manifests.map((manifest) => {
+  const merged = manifests.map((manifest: any) => {
     const replacement = replacements[manifest.id]
     if (replacement) {
       used[manifest.id] = true
@@ -395,10 +395,10 @@ export const mergeExtensionManifests = (manifests, extraExtensions) => {
   return merged
 }
 
-const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensions }) => {
+const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensions }: any): Promise<any> => {
   const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
   const manifests = await Promise.all(
-    dirents.map(async (dirent) => {
+    dirents.map(async (dirent: any) => {
       const json = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'extensions', dirent, 'extension.json'))
       const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${dirent}`
       return {
@@ -407,7 +407,7 @@ const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensi
       }
     }),
   )
-  const localExtensions = extraExtensions.map((extension) => {
+  const localExtensions = extraExtensions.map((extension: any) => {
     return {
       ...extension,
       path: `${pathPrefix}/${commitHash}/extensions/${extension.id}`,
@@ -417,7 +417,14 @@ const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensi
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'extensions.json'), newExtensions)
 }
 
-const addExtensionWebExtension = async ({ root, extensionPath, commitHash, extensionJson, pathPrefix, useSimpleWebExtensionFile }) => {
+const addExtensionWebExtension = async ({
+  root,
+  extensionPath,
+  commitHash,
+  extensionJson,
+  pathPrefix,
+  useSimpleWebExtensionFile,
+}: any): Promise<any> => {
   await updateExtensionsJson({ root, commitHash, pathPrefix, extraExtensions: [extensionJson] })
 
   if (!extensionJson.browser) {
@@ -443,7 +450,7 @@ const addExtensionWebExtension = async ({ root, extensionPath, commitHash, exten
   }
 }
 
-const addExtension = async ({ root, extensionPath, commitHash, pathPrefix, useSimpleWebExtensionFile }) => {
+const addExtension = async ({ root, extensionPath, commitHash, pathPrefix, useSimpleWebExtensionFile }: any): Promise<any> => {
   const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
   const name = extensionJson.name || extensionJson.id || ''
   const description = extensionJson.description || ''
@@ -477,7 +484,7 @@ const addExtension = async ({ root, extensionPath, commitHash, pathPrefix, useSi
   })
 }
 
-const generateTestOverviewHtml = (dirents) => {
+const generateTestOverviewHtml = (dirents: any): any => {
   const pre = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -505,25 +512,25 @@ const generateTestOverviewHtml = (dirents) => {
   return pre + middle + post
 }
 
-const getName = (name) => {
+const getName = (name: any): any => {
   return name.replace(/\.(js|ts)$/, '')
 }
-const isTestFile = (file) => {
+const isTestFile = (file: any): any => {
   if (file.startsWith('_')) {
     return false
   }
   return file.endsWith('.js') || file.endsWith('.ts')
 }
 
-const getTestFiles = (testFilesRaw) => {
+const getTestFiles = (testFilesRaw: any): any => {
   return testFilesRaw.filter(isTestFile).map(getName)
 }
 
-export const transpileFile = (content) => {
+export const transpileFile = (content: any): any => {
   return stripTypeScriptTypes(content)
 }
 
-const transpileFiles = async (folder) => {
+const transpileFiles = async (folder: any): Promise<any> => {
   const dirents = await readdir(folder)
   for (const dirent of dirents) {
     if (dirent.endsWith('.ts')) {
@@ -539,8 +546,8 @@ const transpileFiles = async (folder) => {
   }
 }
 
-export const createFilemap = async (fixturesPath) => {
-  const filemap = {}
+export const createFilemap = async (fixturesPath: any): Promise<any> => {
+  const filemap: Record<string, any> = {}
 
   const dirents = await readdir(fixturesPath, { withFileTypes: true, recursive: true })
 
@@ -567,14 +574,14 @@ export const createFilemap = async (fixturesPath) => {
   return filemap
 }
 
-export const createFilemapsPerFixture = async (fixturesPath) => {
+export const createFilemapsPerFixture = async (fixturesPath: any): Promise<any> => {
   const dirents = await readdir(fixturesPath, { withFileTypes: true })
 
-  const fixtureDirectories = dirents.filter((dirent) => dirent.isDirectory())
+  const fixtureDirectories = dirents.filter((dirent: any) => dirent.isDirectory())
 
   // Create filemaps in parallel
   await Promise.all(
-    fixtureDirectories.map(async (dirent) => {
+    fixtureDirectories.map(async (dirent: any) => {
       const fixturePath = join(fixturesPath, dirent.name)
       const filemap = await createFilemap(fixturePath)
 
@@ -585,7 +592,7 @@ export const createFilemapsPerFixture = async (fixturesPath) => {
   )
 }
 
-const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
+const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }: any): Promise<any> => {
   const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
   await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
   if (existsSync(`${testRoot}/fixtures`)) {
@@ -614,7 +621,7 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
   await FileSystem.writeFile(`${rootTestsPath}/index.html`, testOverviewHtml)
 }
 
-const resolveServerStaticPath = (root) => {
+const resolveServerStaticPath = (root: any): any => {
   const guessOne = Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static')
   if (existsSync(guessOne)) {
     return guessOne
@@ -642,7 +649,7 @@ const resolveServerStaticPath = (root) => {
   throw new Error(`server static path not found`)
 }
 
-const toArray = (value) => {
+const toArray = (value: any): any => {
   if (!value) {
     return []
   }
@@ -652,9 +659,9 @@ const toArray = (value) => {
   return [value]
 }
 
-const getExtensionPaths = (extensionPath, extensionPaths) => {
+const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
   const seen = Object.create(null)
-  const allExtensionPaths = []
+  const allExtensionPaths: any[] = []
   for (const path of [...toArray(extensionPath), ...toArray(extensionPaths)]) {
     if (!path || seen[path]) {
       continue
@@ -669,7 +676,15 @@ const getExtensionPaths = (extensionPath, extensionPaths) => {
  *
  * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
-export const exportStatic = async ({ root, pathPrefix, extensionPath, extensionPaths, testPath, useSimpleWebExtensionFile, serverStaticPath }) => {
+export const exportStatic = async ({
+  root,
+  pathPrefix,
+  extensionPath,
+  extensionPaths,
+  testPath,
+  useSimpleWebExtensionFile,
+  serverStaticPath,
+}: any): Promise<any> => {
   if (!existsSync(root)) {
     throw new Error(`root path does not exist: ${root}`)
   }

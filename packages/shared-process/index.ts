@@ -4,7 +4,7 @@ const __dirname = import.meta.dirname
 
 export const sharedProcessPath = join(__dirname, 'src', 'sharedProcessMain.ts')
 
-const toArray = (value) => {
+const toArray = (value: any): any => {
   if (!value) {
     return []
   }
@@ -14,7 +14,7 @@ const toArray = (value) => {
   return [value]
 }
 
-const toAbsoluteExtensionPath = (root, extensionPath) => {
+const toAbsoluteExtensionPath = (root: any, extensionPath: any): any => {
   if (extensionPath && extensionPath !== root && !isAbsolute(extensionPath)) {
     return join(root, extensionPath)
   }
@@ -24,7 +24,7 @@ const toAbsoluteExtensionPath = (root, extensionPath) => {
 /**
  * @param {{extensionPath?: string, extensionPaths?: string[] | string, testPath?: string, root?: string}} [options]
  */
-export const exportStatic = async (options = {}) => {
+export const exportStatic = async (options: any = {}): Promise<any> => {
   const { extensionPath, extensionPaths = [], testPath = '', root = '' } = options
   if (!root) {
     throw new Error(`root argument is required`)
@@ -33,7 +33,7 @@ export const exportStatic = async (options = {}) => {
   const extensionPathList = toArray(extensionPaths)
   const defaultExtensionPath = extensionPath === undefined && extensionPathList.length === 0 ? process.cwd() : extensionPath
   const absoluteExtensionPath = toAbsoluteExtensionPath(root, defaultExtensionPath)
-  const absoluteExtensionPaths = extensionPathList.map((extensionPath) => toAbsoluteExtensionPath(root, extensionPath))
+  const absoluteExtensionPaths = extensionPathList.map((extensionPath: any) => toAbsoluteExtensionPath(root, extensionPath))
   const pathPrefix = process.env.PATH_PREFIX || ''
   return fn.exportStatic({ root, pathPrefix, extensionPath: absoluteExtensionPath, extensionPaths: absoluteExtensionPaths, testPath })
 }

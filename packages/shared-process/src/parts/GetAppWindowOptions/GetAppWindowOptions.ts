@@ -5,7 +5,7 @@ import * as Platform from '../Platform/Platform.ts'
 const fallbackBackground = '#1e2324'
 const fallbackSymbolColor = '#74b1be'
 
-const getColor = (colors, keys, fallback) => {
+const getColor = (colors: any, keys: any, fallback: any): any => {
   for (const key of keys) {
     if (colors[key]) {
       return colors[key]
@@ -14,7 +14,7 @@ const getColor = (colors, keys, fallback) => {
   return fallback
 }
 
-const getColorThemeJson = async (preferences) => {
+const getColorThemeJson = async (preferences: any): Promise<any> => {
   const colorThemeId = preferences['workbench.colorTheme']
   if (!colorThemeId) {
     return {}
@@ -26,7 +26,7 @@ const getColorThemeJson = async (preferences) => {
   }
 }
 
-export const getAppWindowOptions = async ({ preferences, screenWidth, screenHeight, preloadUrl }) => {
+export const getAppWindowOptions = async ({ preferences, screenWidth, screenHeight, preloadUrl }: any): Promise<any> => {
   const colorThemeJson = await getColorThemeJson(preferences)
   const colors = colorThemeJson.colors && typeof colorThemeJson.colors === 'object' ? colorThemeJson.colors : {}
   const background = getColor(colors, ['MainBackground'], fallbackBackground)

@@ -5,25 +5,25 @@ import * as GetDirentType from '../src/parts/GetDirentType/GetDirentType.js'
 test('getDirentType - file', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return true
     },
-    isDirectory() {
+    isDirectory(): any {
       return false
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return false
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',
@@ -35,25 +35,25 @@ test('getDirentType - file', () => {
 test('getDirentType - directory', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return false
     },
-    isDirectory() {
+    isDirectory(): any {
       return true
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return false
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',
@@ -65,25 +65,25 @@ test('getDirentType - directory', () => {
 test('getDirentType - symlink', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return false
     },
-    isDirectory() {
+    isDirectory(): any {
       return false
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return true
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',
@@ -95,25 +95,25 @@ test('getDirentType - symlink', () => {
 test('getDirentType - socket', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return false
     },
-    isDirectory() {
+    isDirectory(): any {
       return false
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return false
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return true
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',
@@ -125,25 +125,25 @@ test('getDirentType - socket', () => {
 test('getDirentType - block device', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return false
     },
-    isDirectory() {
+    isDirectory(): any {
       return false
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return true
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',
@@ -155,25 +155,25 @@ test('getDirentType - block device', () => {
 test('getDirentType - character device', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return false
     },
-    isDirectory() {
+    isDirectory(): any {
       return false
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return false
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return true
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',
@@ -185,25 +185,25 @@ test('getDirentType - character device', () => {
 test('getDirentType - unknown', () => {
   const dirent = {
     path: '',
-    isFile() {
+    isFile(): any {
       return false
     },
-    isDirectory() {
+    isDirectory(): any {
       return false
     },
-    isSymbolicLink() {
+    isSymbolicLink(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return false
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isFIFO(): any {
       return false
     },
     name: '',

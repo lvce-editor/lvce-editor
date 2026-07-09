@@ -7,11 +7,11 @@ import * as Logger from '../Logger/Logger.ts'
 import * as PrettyError from '../PrettyError/PrettyError.ts'
 import * as Process from '../Process/Process.ts'
 
-export const state = {
+export const state: any = {
   seenErrors: [],
 }
 
-const preparePrettyError = (error) => {
+const preparePrettyError = (error: any): any => {
   const cause = error.cause()
   return {
     message: error.message,
@@ -20,11 +20,11 @@ const preparePrettyError = (error) => {
   }
 }
 
-const printPrettyError = (prettyError) => {
+const printPrettyError = (prettyError: any): any => {
   console.error(`${prettyError.message}\n${prettyError.codeFrame}\n${prettyError.stack}`)
 }
 
-export const handleError = (error) => {
+export const handleError = (error: any): any => {
   if (state.seenErrors.includes(error.message)) {
     return
   }
@@ -48,7 +48,7 @@ export const handleError = (error) => {
 
 // TODO use named functions here
 
-const firstErrorLine = (error) => {
+const firstErrorLine = (error: any): any => {
   if (error.stack) {
     return error.stack.slice(0, GetNewLineIndex.getNewLineIndex(error.stack))
   }
@@ -58,7 +58,7 @@ const firstErrorLine = (error) => {
   return `${error}`
 }
 
-export const handleUncaughtExceptionMonitor = (error, origin) => {
+export const handleUncaughtExceptionMonitor = (error: any, origin: any): any => {
   Logger.info(`[shared process] Uncaught exception: ${firstErrorLine(error)}`)
   if (IsIgnoredError.isIgnoredError(error)) {
     return

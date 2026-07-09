@@ -1,7 +1,7 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as Logger from '../Logger/Logger.ts'
 
-export const handleSocketError = (error) => {
+export const handleSocketError = (error: any): any => {
   if (error && error.code === ErrorCodes.ECONNRESET) {
     return
   }

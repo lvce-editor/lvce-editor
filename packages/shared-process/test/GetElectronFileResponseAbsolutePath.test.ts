@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as GetElectronFileResponseAbsolutePath from '../src/parts/GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.js'
 
-const normalizePath = (path: string) => path.replaceAll('\\', '/')
+const normalizePath = (path: any): any => path.replaceAll('\\', '/')
 
 test('maps /icons requests to renderer-worker codicons', () => {
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/icons/chevron-right.svg')

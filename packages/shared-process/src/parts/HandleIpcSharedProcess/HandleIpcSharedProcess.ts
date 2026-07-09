@@ -5,7 +5,7 @@ import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 import * as IpcId from '../IpcId/IpcId.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-export const targetWebSocket = async (handle, message) => {
+export const targetWebSocket = async (handle: any, message: any): Promise<any> => {
   handle.on('error', HandleSocketError.handleSocketError)
   const ipc = await IpcChild.listen({
     method: IpcChildType.WebSocket,
@@ -15,13 +15,13 @@ export const targetWebSocket = async (handle, message) => {
   return ipc
 }
 
-export const upgradeWebSocket = () => {
+export const upgradeWebSocket = (): any => {
   return {
     type: 'handle',
   }
 }
 
-export const targetMessagePort = async (messagePort, message) => {
+export const targetMessagePort = async (messagePort: any, message: any): Promise<any> => {
   Assert.object(messagePort)
   const ipc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,
@@ -38,7 +38,7 @@ export const targetMessagePort = async (messagePort, message) => {
   return ipc
 }
 
-export const upgradeMessagePort = () => {
+export const upgradeMessagePort = (): any => {
   return {
     type: 'handle',
   }

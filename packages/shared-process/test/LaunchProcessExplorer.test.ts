@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 
-const setup = async (isElectron: boolean) => {
+const setup = async (isElectron: any): Promise<any> => {
   jest.resetModules()
 
   const ipc = {
@@ -8,14 +8,11 @@ const setup = async (isElectron: boolean) => {
   }
   const connectIpcToElectron = jest.fn()
   const unhandleIpc = jest.fn()
-  const launchProcess = jest.fn(async (_options: unknown) => ipc)
+  const launchProcess = jest.fn(async (_options: any) => ipc)
 
-  jest.unstable_mockModule(
-    '../src/parts/ConnectIpcToElectron/ConnectIpcToElectron.js',
-    () => ({
-      connectIpcToElectron,
-    }),
-  )
+  jest.unstable_mockModule('../src/parts/ConnectIpcToElectron/ConnectIpcToElectron.js', () => ({
+    connectIpcToElectron,
+  }))
 
   jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc.js', () => ({
     unhandleIpc,
@@ -29,17 +26,12 @@ const setup = async (isElectron: boolean) => {
     launchProcess,
   }))
 
-  jest.unstable_mockModule(
-    '../src/parts/ProcessExplorerPath/ProcessExplorerPath.js',
-    () => ({
-      processExplorerPath: '/test/processExplorerMain.js',
-    }),
-  )
+  jest.unstable_mockModule('../src/parts/ProcessExplorerPath/ProcessExplorerPath.js', () => ({
+    processExplorerPath: '/test/processExplorerMain.js',
+  }))
 
   const IpcId = await import('../src/parts/IpcId/IpcId.js')
-  const LaunchProcessExplorer = await import(
-    '../src/parts/LaunchProcessExplorer/LaunchProcessExplorer.js'
-  )
+  const LaunchProcessExplorer = await import('../src/parts/LaunchProcessExplorer/LaunchProcessExplorer.js')
 
   return {
     connectIpcToElectron,
@@ -52,14 +44,7 @@ const setup = async (isElectron: boolean) => {
 }
 
 test('launchProcessExplorer - browser/server', async () => {
-  const {
-    connectIpcToElectron,
-    ipc,
-    IpcId,
-    launchProcess,
-    LaunchProcessExplorer,
-    unhandleIpc,
-  } = await setup(false)
+  const { connectIpcToElectron, ipc, IpcId, launchProcess, LaunchProcessExplorer, unhandleIpc } = await setup(false)
 
   const result = await LaunchProcessExplorer.launchProcessExplorer()
 
@@ -76,14 +61,7 @@ test('launchProcessExplorer - browser/server', async () => {
 })
 
 test('launchProcessExplorer - electron', async () => {
-  const {
-    connectIpcToElectron,
-    ipc,
-    IpcId,
-    launchProcess,
-    LaunchProcessExplorer,
-    unhandleIpc,
-  } = await setup(true)
+  const { connectIpcToElectron, ipc, IpcId, launchProcess, LaunchProcessExplorer, unhandleIpc } = await setup(true)
 
   const result = await LaunchProcessExplorer.launchProcessExplorer()
 
@@ -95,9 +73,6 @@ test('launchProcessExplorer - electron', async () => {
     settingName: 'develop.processExplorerPath',
     targetRpcId: IpcId.ProcessExplorer,
   })
-  expect(connectIpcToElectron).toHaveBeenCalledWith(
-    ipc,
-    IpcId.ProcessExplorerRenderer,
-  )
+  expect(connectIpcToElectron).toHaveBeenCalledWith(ipc, IpcId.ProcessExplorerRenderer)
   expect(unhandleIpc).toHaveBeenCalledWith(ipc)
 })

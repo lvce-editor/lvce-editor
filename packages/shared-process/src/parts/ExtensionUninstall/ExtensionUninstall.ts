@@ -3,7 +3,7 @@ import * as Path from '../Path/Path.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import { VError } from '../VError/VError.ts'
 
-export const uninstall = async (id) => {
+export const uninstall = async (id: any): Promise<any> => {
   try {
     const extensionsPath = PlatformPaths.getExtensionsPath()
     await rm(Path.join(extensionsPath, id), { recursive: true })

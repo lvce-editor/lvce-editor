@@ -1,6 +1,6 @@
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 
-export const getColorThemeJson = async () => {
+export const getColorThemeJson = async (): Promise<any> => {
   return {
     MainBackground: '#1e2324',
     TreeItemForeground: ` rgb(188, 190, 190)`,
@@ -8,11 +8,11 @@ export const getColorThemeJson = async () => {
   }
 }
 
-const toInnerLine = ([key, value]) => {
+const toInnerLine = ([key, value]: any): any => {
   return `  --${key}: ${value};`
 }
 
-export const toCss = (colorThemeJson) => {
+export const toCss = (colorThemeJson: any): any => {
   const innerLines = Object.entries(colorThemeJson).map(toInnerLine)
   const css = `:root {
 ${JoinLines.joinLines(innerLines)}

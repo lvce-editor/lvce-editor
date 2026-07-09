@@ -2,8 +2,8 @@ import { join } from 'node:path'
 import * as GetRemoteUrl from '../GetRemoteUrl/GetRemoteUrl.ts'
 import { pathToFileURL } from 'node:url'
 
-export const getWebViewsFromExtensions = (extensions) => {
-  const webViews = []
+export const getWebViewsFromExtensions = (extensions: any): any => {
+  const webViews: any[] = []
   for (const extension of extensions) {
     if (extension && extension.webViews) {
       for (const webView of extension.webViews) {

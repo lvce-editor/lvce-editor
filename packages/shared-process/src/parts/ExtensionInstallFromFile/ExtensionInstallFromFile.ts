@@ -5,7 +5,7 @@ import * as Path from '../Path/Path.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import { VError } from '../VError/VError.ts'
 
-const getCachedExtensionFolderName = (path) => {
+const getCachedExtensionFolderName = (path: any): any => {
   const baseName = Path.basename(path)
   if (baseName.endsWith('.tar.br')) {
     return 'file-' + baseName.slice(0, -'.tar.br'.length)
@@ -13,7 +13,7 @@ const getCachedExtensionFolderName = (path) => {
   return `file-${baseName}`
 }
 
-export const install = async ({ path }) => {
+export const install = async ({ path }: any): Promise<any> => {
   try {
     const cachedExtensionsPath = PlatformPaths.getCachedExtensionsPath()
     const cachedExtensionFolderName = getCachedExtensionFolderName(path)

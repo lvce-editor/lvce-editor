@@ -7,7 +7,7 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as SymLink from '../SymLink/SymLink.ts'
 import { VError } from '../VError/VError.ts'
 
-const linkFallBack = async (path) => {
+const linkFallBack = async (path: any): Promise<any> => {
   try {
     const manifest = await ExtensionManifest.get(path)
     if (manifest.status === ExtensionManifestStatus.Rejected) {
@@ -23,7 +23,7 @@ const linkFallBack = async (path) => {
   }
 }
 
-export const link = async (path) => {
+export const link = async (path: any): Promise<any> => {
   try {
     const manifest = await ExtensionManifest.get(path)
     if (manifest.status === ExtensionManifestStatus.Rejected) {

@@ -1,7 +1,7 @@
 import { chmod } from 'node:fs/promises'
 import { VError } from '../VError/VError.ts'
 
-export const makeExecutable = async (file) => {
+export const makeExecutable = async (file: any): Promise<any> => {
   try {
     await chmod(file, 0o755)
   } catch (error) {

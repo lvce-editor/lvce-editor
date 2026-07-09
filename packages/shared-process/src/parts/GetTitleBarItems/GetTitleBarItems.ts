@@ -13,7 +13,7 @@ const UiStrings = {
   Help: 'Help',
 }
 
-export const getTitleBarItems = () => {
+export const getTitleBarItems = (): any => {
   return [
     {
       label: UiStrings.File,

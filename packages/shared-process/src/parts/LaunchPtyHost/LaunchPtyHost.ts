@@ -4,7 +4,7 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.ts'
 import * as PtyHostState from '../PtyHostState/PtyHostState.ts'
 
-export const launchPtyHost = async (method) => {
+export const launchPtyHost = async (method: any): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
     defaultPath: PtyHostPath.ptyHostPath,
     isElectron: IsElectron.isElectron,

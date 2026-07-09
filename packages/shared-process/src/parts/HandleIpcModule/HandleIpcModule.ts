@@ -10,7 +10,7 @@ import * as HandleIpcSharedProcess from '../HandleIpcSharedProcess/HandleIpcShar
 import * as HandleIpcTerminalProcess from '../HandleIpcTerminalProcess/HandleIpcTerminalProcess.ts'
 import * as IpcId from '../IpcId/IpcId.ts'
 
-export const getModule = (ipcId) => {
+export const getModule = (ipcId: any): any => {
   Assert.number(ipcId)
   switch (ipcId) {
     case IpcId.AuthProcess:

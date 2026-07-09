@@ -7,7 +7,7 @@ import * as PreloadUrl from '../PreloadUrl/PreloadUrl.ts'
 import * as Process from '../Process/Process.ts'
 import * as TransientLinkedExtensions from '../TransientLinkedExtensions/TransientLinkedExtensions.ts'
 
-export const handleElectronReady = async (parsedArgs, workingDirectory) => {
+export const handleElectronReady = async (parsedArgs: any, workingDirectory: any): Promise<any> => {
   Assert.object(parsedArgs)
   Assert.string(workingDirectory)
   try {

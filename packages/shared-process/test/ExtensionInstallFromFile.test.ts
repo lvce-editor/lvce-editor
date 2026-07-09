@@ -6,10 +6,10 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: () => {
+  getExtensionsPath: (): any => {
     return '/test/extensions'
   },
-  getCachedExtensionsPath: () => {
+  getCachedExtensionsPath: (): any => {
     return '/test/cached-extensions'
   },
 }))
@@ -21,13 +21,13 @@ jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
-  join: (...parts) => {
+  join: (...parts: any): any => {
     return parts.join('/')
   },
-  basename: (path) => {
+  basename: (path: any): any => {
     return path.slice(path.lastIndexOf('/') + 1)
   },
-  dirname: (path) => {
+  dirname: (path: any): any => {
     return dirname(path)
   },
 }))

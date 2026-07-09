@@ -6,13 +6,13 @@ import * as JsonFile from '../JsonFile/JsonFile.ts'
 import { VError } from '../VError/VError.ts'
 import * as ExtensionManagement from './ExtensionManagement.ts'
 
-const getLanguagesFromExtension = (extension) => {
+const getLanguagesFromExtension = (extension: any): any => {
   // TODO what if extension is null? should not crash process, handle error gracefully
   if (!extension.languages) {
     return []
   }
   const extensionPath = extension.path
-  const getLanguageFromExtension = (language) => {
+  const getLanguageFromExtension = (language: any): any => {
     if (language.tokenize) {
       if (typeof language.tokenize !== 'string') {
         console.warn(`[info] ${language.id}: language.tokenize must be of type string but was of type ${typeof language.tokenize}`)
@@ -33,21 +33,21 @@ const getLanguagesFromExtension = (extension) => {
   return extension.languages.map(getLanguageFromExtension)
 }
 
-const getLanguagesFromExtensions = (extensions) => {
+const getLanguagesFromExtensions = (extensions: any): any => {
   return extensions.flatMap(getLanguagesFromExtension)
 }
 
-export const getLanguages = async () => {
+export const getLanguages = async (): Promise<any> => {
   throw new Error('deprecated')
 }
 
-export const getWebViews = async () => {
+export const getWebViews = async (): Promise<any> => {
   const extensions = await ExtensionManagement.getExtensions()
   const webViews = GetWebViewsFromEXtensions.getWebViewsFromExtensions(extensions)
   return webViews
 }
 
-const getLanguageConfigurationPathFromExtensions = (extensions, languageId) => {
+const getLanguageConfigurationPathFromExtensions = (extensions: any, languageId: any): any => {
   for (const extension of extensions) {
     if (extension.languages && extension.languages) {
       for (const language of extension.languages) {
@@ -60,7 +60,7 @@ const getLanguageConfigurationPathFromExtensions = (extensions, languageId) => {
   return ''
 }
 
-export const getLanguageConfiguration = async (languageId) => {
+export const getLanguageConfiguration = async (languageId: any): Promise<any> => {
   try {
     const extensions = await ExtensionManagement.getExtensions()
     const languageConfigurationPath = getLanguageConfigurationPathFromExtensions(extensions, languageId)

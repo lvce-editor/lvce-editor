@@ -13,13 +13,13 @@ import { VError } from '../VError/VError.ts'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
 
-const assertUri = (uri) => {
+const assertUri = (uri: any): any => {
   if (!uri.startsWith('file://')) {
     throw new Error(`path must be a valid file uri`)
   }
 }
 
-export const copy = async (sourceUri, targetUri) => {
+export const copy = async (sourceUri: any, targetUri: any): Promise<any> => {
   try {
     assertUri(sourceUri)
     assertUri(targetUri)
@@ -40,7 +40,7 @@ export const copy = async (sourceUri, targetUri) => {
  * @param {BufferEncoding} encoding
  * @returns
  */
-export const readFile = async (uri, encoding = EncodingType.Utf8) => {
+export const readFile = async (uri: any, encoding: any = EncodingType.Utf8): Promise<any> => {
   try {
     Assert.string(uri)
     assertUri(uri)
@@ -61,7 +61,7 @@ export const readFile = async (uri, encoding = EncodingType.Utf8) => {
  * @param {string} content
  * @param {BufferEncoding} encoding
  */
-export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
+export const writeFile = async (uri: any, content: any, encoding: any = EncodingType.Utf8): Promise<any> => {
   try {
     assertUri(uri)
     Assert.string(uri)
@@ -78,7 +78,7 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   }
 }
 
-const isOkayToRemove = (path) => {
+const isOkayToRemove = (path: any): any => {
   if (path === '/') {
     return false
   }
@@ -91,7 +91,7 @@ const isOkayToRemove = (path) => {
   return true
 }
 
-export const remove = async (uri) => {
+export const remove = async (uri: any): Promise<any> => {
   assertUri(uri)
   const path = fileURLToPath(uri)
   if (!isOkayToRemove(path)) {
@@ -108,7 +108,7 @@ export const remove = async (uri) => {
   }
 }
 
-export const forceRemove = async (uri) => {
+export const forceRemove = async (uri: any): Promise<any> => {
   assertUri(uri)
   const path = fileURLToPath(uri)
   if (!isOkayToRemove(path)) {
@@ -122,7 +122,7 @@ export const forceRemove = async (uri) => {
   }
 }
 
-export const exists = async (uri) => {
+export const exists = async (uri: any): Promise<any> => {
   try {
     assertUri(uri)
     const path = fileURLToPath(uri)
@@ -136,14 +136,14 @@ export const exists = async (uri) => {
 /**
  * @param {import('fs').Dirent} dirent
  */
-const toPrettyDirent = (dirent) => {
+const toPrettyDirent = (dirent: any): any => {
   return {
     name: dirent.name,
     type: GetDirentType.getDirentType(dirent),
   }
 }
 
-export const readDirWithFileTypes = async (uri) => {
+export const readDirWithFileTypes = async (uri: any): Promise<any> => {
   try {
     assertUri(uri)
     const path = fileURLToPath(uri)
@@ -155,7 +155,7 @@ export const readDirWithFileTypes = async (uri) => {
   }
 }
 
-export const readDir = async (uri) => {
+export const readDir = async (uri: any): Promise<any> => {
   try {
     const path = fileURLToPath(uri)
     const dirents = await fs.readdir(path)
@@ -168,7 +168,7 @@ export const readDir = async (uri) => {
   }
 }
 
-export const mkdir = async (uri) => {
+export const mkdir = async (uri: any): Promise<any> => {
   try {
     assertUri(uri)
     const path = fileURLToPath(uri)
@@ -178,7 +178,7 @@ export const mkdir = async (uri) => {
   }
 }
 
-const fallbackRename = async (oldUri, newUri) => {
+const fallbackRename = async (oldUri: any, newUri: any): Promise<any> => {
   try {
     const oldPath = fileURLToPath(oldUri)
     const newPath = fileURLToPath(newUri)
@@ -189,7 +189,7 @@ const fallbackRename = async (oldUri, newUri) => {
   }
 }
 
-export const rename = async (oldUri, newUri) => {
+export const rename = async (oldUri: any, newUri: any): Promise<any> => {
   try {
     const oldPath = fileURLToPath(oldUri)
     const newPath = fileURLToPath(newUri)
@@ -202,24 +202,24 @@ export const rename = async (oldUri, newUri) => {
   }
 }
 
-export const getPathSeparator = () => {
+export const getPathSeparator = (): any => {
   return '/'
 }
 
 // TODO handle error
-export const stat = async (uri) => {
+export const stat = async (uri: any): Promise<any> => {
   const path = fileURLToPath(uri)
   const stats = await fs.stat(path)
   const type = GetDirentType.getDirentType(stats)
   return type
 }
 
-export const chmod = async (uri, permissions) => {
+export const chmod = async (uri: any, permissions: any): Promise<any> => {
   const path = fileURLToPath(uri)
   await fs.chmod(path, permissions)
 }
 
-export const copyFile = async (fromUri, toUri) => {
+export const copyFile = async (fromUri: any, toUri: any): Promise<any> => {
   try {
     const fromPath = fileURLToPath(fromUri)
     const toPath = fileURLToPath(toUri)
@@ -229,7 +229,7 @@ export const copyFile = async (fromUri, toUri) => {
   }
 }
 
-export const cp = async (fromUri, toUri) => {
+export const cp = async (fromUri: any, toUri: any): Promise<any> => {
   try {
     const fromPath = fileURLToPath(fromUri)
     const toPath = fileURLToPath(toUri)
@@ -239,7 +239,7 @@ export const cp = async (fromUri, toUri) => {
   }
 }
 
-export const readJson = async (uri) => {
+export const readJson = async (uri: any): Promise<any> => {
   try {
     Assert.string(uri)
     assertUri(uri)
@@ -255,7 +255,7 @@ export const readJson = async (uri) => {
   }
 }
 
-export const getFolderSize = async (uri) => {
+export const getFolderSize = async (uri: any): Promise<any> => {
   const path = fileURLToPath(uri)
   const total = await GetFolderSizeInternal.getFolderSizeInternal(path)
   return total

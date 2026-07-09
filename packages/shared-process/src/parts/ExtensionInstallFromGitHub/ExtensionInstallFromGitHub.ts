@@ -5,7 +5,7 @@ import * as Path from '../Path/Path.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import { VError } from '../VError/VError.ts'
 
-export const install = async ({ user, repo, branch }) => {
+export const install = async ({ user, repo, branch }: any): Promise<any> => {
   try {
     const cachedExtensionsPath = PlatformPaths.getCachedExtensionsPath()
     const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`

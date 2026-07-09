@@ -1,3 +1,3 @@
-export const getHeadersDefault = () => {
+export const getHeadersDefault = (): any => {
   return {}
 }

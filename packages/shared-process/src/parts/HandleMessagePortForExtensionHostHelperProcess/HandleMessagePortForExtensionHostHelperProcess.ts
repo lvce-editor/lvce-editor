@@ -10,7 +10,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 // matching extension host helper processes
 // unless the app is exiting, in which case the child processes
 // would get cleaned up automatically
-export const handleMessagePortForExtensionHostHelperProcess = async (rendererWorkerIpc, port) => {
+export const handleMessagePortForExtensionHostHelperProcess = async (rendererWorkerIpc: any, port: any): Promise<any> => {
   Assert.object(port)
   const ipc = await ExtensionHostHelperProcessIpc.create({
     method: IpcParentType.ElectronUtilityProcess,

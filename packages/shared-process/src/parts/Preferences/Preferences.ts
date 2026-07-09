@@ -10,7 +10,7 @@ const builtinPreferences = {
   'window.titleBarStyle': 'custom',
 }
 
-export const getUserPreferences = async () => {
+export const getUserPreferences = async (): Promise<any> => {
   try {
     const userSettingsPath = PlatformPaths.getUserSettingsPath()
     let json
@@ -29,7 +29,7 @@ export const getUserPreferences = async () => {
 }
 
 // TODO handle error
-export const getDefaultPreferences = async () => {
+export const getDefaultPreferences = async (): Promise<any> => {
   try {
     const defaultSettingsPath = PlatformPaths.getDefaultSettingsPath()
     return await JsoncFile.readJsonc(defaultSettingsPath)
@@ -41,9 +41,9 @@ export const getDefaultPreferences = async () => {
 // TODO efficiently load preferences -> first load cached preferences
 //                                   -> on idle check preferences
 
-const getOverrides = () => {
+const getOverrides = (): any => {
   const argvSliced = Process.argv.slice(2)
-  const overrides = {}
+  const overrides: Record<string, any> = {}
   for (const argv of argvSliced) {
     if (argv.startsWith('--theme=')) {
       overrides['workbench.colorTheme'] = argv.slice('--theme='.length)
@@ -52,7 +52,7 @@ const getOverrides = () => {
   return overrides
 }
 // TODO compare with timestamp/hash that preferences are fresh
-export const getAll = async () => {
+export const getAll = async (): Promise<any> => {
   try {
     // try {
     //   const cachedPreferences = JSON.parse(
@@ -87,7 +87,7 @@ export const getAll = async () => {
   }
 }
 
-export const getAllSafe = async () => {
+export const getAllSafe = async (): Promise<any> => {
   try {
     return await getAll()
   } catch (error) {

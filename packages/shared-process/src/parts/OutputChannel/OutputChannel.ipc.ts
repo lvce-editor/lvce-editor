@@ -3,7 +3,7 @@ import { JsonRpcEvent } from '../JsonRpc/JsonRpc.ts'
 import * as OutputChannelState from '../OutputChannelState/OutputChannelState.ts'
 import * as OutputChannel from './OutputChannel.ts'
 
-const open = (socket, id, path) => {
+const open = (socket: any, id: any, path: any): any => {
   console.log({ path })
   Assert.object(socket)
   // Assert.string(id)
@@ -15,12 +15,12 @@ const open = (socket, id, path) => {
   if (OutputChannelState.has(id)) {
     OutputChannel.dispose(OutputChannelState.get(id))
   }
-  const onData = (data) => {
+  const onData = (data: any): any => {
     console.log('send data', data)
     const message = JsonRpcEvent.create('Output.handleData', [data])
     socket.send(message)
   }
-  const onError = (error) => {
+  const onError = (error: any): any => {
     console.info(`[shared process] output channel error: ${error}`)
     const message = JsonRpcEvent.create('Output.handleError', [error])
     socket.send(message)
@@ -29,7 +29,7 @@ const open = (socket, id, path) => {
   OutputChannelState.set(id, outputChannel)
 }
 
-const close = (socket, id) => {
+const close = (socket: any, id: any): any => {
   OutputChannel.dispose(OutputChannelState.get(id))
   OutputChannelState.remove(id)
 }

@@ -6,7 +6,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 
-const getConfiguredUrl = async (settingName, defaultPath) => {
+const getConfiguredUrl = async (settingName: any, defaultPath: any): Promise<any> => {
   if (Platform.isProduction) {
     return defaultPath
   }
@@ -18,7 +18,7 @@ const getConfiguredUrl = async (settingName, defaultPath) => {
   return defaultPath
 }
 
-export const launchProcess = async ({ settingName, defaultPath, targetRpcId, name, isElectron }) => {
+export const launchProcess = async ({ settingName, defaultPath, targetRpcId, name, isElectron }: any): Promise<any> => {
   const path = await getConfiguredUrl(settingName, defaultPath)
   const method = isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
   const ipc = await IpcParent.create({

@@ -1,7 +1,7 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
 import * as SendIncomingIpc from '../SendIncomingIpc/SendIncomingIpc.ts'
 
-export const applyIncomingIpcResponse = async (target, response, ipcId) => {
+export const applyIncomingIpcResponse = async (target: any, response: any, ipcId: any): Promise<any> => {
   switch (response.type) {
     case 'handle':
       HandleIpc.handleIpc(target)

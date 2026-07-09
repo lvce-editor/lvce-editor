@@ -2,7 +2,7 @@ import * as Exit from '../Exit/Exit.ts'
 import * as GetVersionString from '../GetVersionString/GetVersionString.ts'
 import * as Logger from '../Logger/Logger.ts'
 
-export const handleCliArgs = async (argv) => {
+export const handleCliArgs = async (argv: any): Promise<any> => {
   const versionString = GetVersionString.getVersionString()
   Logger.info(versionString)
   await Exit.exit()

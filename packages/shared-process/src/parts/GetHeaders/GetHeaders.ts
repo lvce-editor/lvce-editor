@@ -6,10 +6,10 @@ import * as ContentSecurityPolicyState from '../ContentSecurityPolicyState/Conte
 import * as GetMimeType from '../GetMimeType/GetMimeType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 
-export const getHeaders = async (absolutePath, pathName, etag, url, size) => {
+export const getHeaders = async (absolutePath: any, pathName: any, etag: any, url: any, size: any): Promise<any> => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
-  const headers = {
+  const headers: Record<string, any> = {
     [HttpHeader.ContentType]: mime,
     [HttpHeader.ContentLength]: `${size}`,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,

@@ -1,7 +1,7 @@
-export const state = {
+export const state: any = {
   id: 0,
 }
 
-export const create = () => {
+export const create = (): any => {
   return ++state.id
 }

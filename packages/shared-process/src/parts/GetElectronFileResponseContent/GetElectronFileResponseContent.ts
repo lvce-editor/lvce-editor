@@ -6,7 +6,7 @@ import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript
 
 const useCache = false // TODO enable this
 
-export const getElectronFileResponseContent = async (request, absolutePath, url) => {
+export const getElectronFileResponseContent = async (request: any, absolutePath: any, url: any): Promise<any> => {
   if (ShouldTranspileTypescript.shouldTranspileTypescript(request, url)) {
     const content = await readFile(absolutePath)
     const newContent = await TranspileTypeScript.transpileTypeScript(content.toString(), useCache)

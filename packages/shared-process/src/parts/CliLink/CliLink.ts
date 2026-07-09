@@ -4,7 +4,7 @@ import * as ExtensionLink from '../ExtensionLink/ExtensionLink.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
 
-export const handleCliArgs = async (argv) => {
+export const handleCliArgs = async (argv: any): Promise<any> => {
   try {
     const path = argv.length > 1 ? argv[1] : process.cwd()
     await ExtensionLink.link(path)

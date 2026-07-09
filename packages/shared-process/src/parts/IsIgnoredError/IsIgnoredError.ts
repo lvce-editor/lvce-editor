@@ -1,7 +1,7 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as Process from '../Process/Process.ts'
 
-export const isIgnoredError = (error) => {
+export const isIgnoredError = (error: any): any => {
   if (error && error.code === ErrorCodes.EPIPE && !process.connected) {
     // parent process is disposed, ignore
     return true

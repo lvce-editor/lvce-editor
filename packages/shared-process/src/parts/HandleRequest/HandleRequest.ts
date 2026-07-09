@@ -5,7 +5,7 @@ import * as HandleRequestTest from '../HandleRequestTest/HandleRequestTest.ts'
 import * as HttpServerResponse from '../HttpServerResponse/HttpServerResponse.ts'
 import * as StaticPath from '../StaticPath/StaticPath.ts'
 
-export const handleRequest = async (socket, request) => {
+export const handleRequest = async (socket: any, request: any): Promise<any> => {
   if (!request) {
     // socket might have been closed during transfer
     return

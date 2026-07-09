@@ -25,7 +25,7 @@ const ExtensionManifests = await import('../src/parts/ExtensionManifests/Extensi
 
 class NodeError extends Error {
   code: any
-  constructor(code, message = code) {
+  constructor(code: any, message: any = code) {
     super(message)
     this.code = code
   }

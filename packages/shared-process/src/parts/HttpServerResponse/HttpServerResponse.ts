@@ -2,11 +2,11 @@ import { ServerResponse } from 'node:http'
 import * as Assert from '../Assert/Assert.ts'
 import * as SetHeaders from '../SetHeaders/SetHeaders.ts'
 
-const handleResponseError = (error) => {
+const handleResponseError = (error: any): any => {
   console.error(`[shared-process] Failed to send response ${error}`)
 }
 
-export const send = async (request, socket, result) => {
+export const send = async (request: any, socket: any, result: any): Promise<any> => {
   Assert.object(request)
   Assert.object(socket)
   Assert.object(result)

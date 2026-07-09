@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises'
 import { join } from 'node:path'
 
-export const getFolderSizeInternal = async (path) => {
+export const getFolderSizeInternal = async (path: any): Promise<any> => {
   if (path === '/') {
     throw new Error('Invalid path for folder size')
   }

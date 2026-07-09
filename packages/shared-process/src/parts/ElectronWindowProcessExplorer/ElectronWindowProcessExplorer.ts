@@ -6,7 +6,7 @@ import * as PreloadUrl from '../PreloadUrl/PreloadUrl.ts'
 import * as GetProcessExplorerUrl from '../GetProcessExplorerUrl/GetProcessExplorerUrl.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-const getOptions = async (colorThemeJson) => {
+const getOptions = async (colorThemeJson: any): Promise<any> => {
   const backgroundColor = colorThemeJson.MainBackground
   const preload = PreloadUrl.getPreloadUrl()
   const options = {
@@ -23,7 +23,7 @@ const getOptions = async (colorThemeJson) => {
   return options
 }
 
-export const open = async () => {
+export const open = async (): Promise<any> => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
   const options = await getOptions(colorThemeJson)
   // TODO get actual process explorer theme css from somewhere

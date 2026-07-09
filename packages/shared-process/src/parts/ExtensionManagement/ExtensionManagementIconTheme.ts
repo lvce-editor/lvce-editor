@@ -3,7 +3,7 @@ import * as Path from '../Path/Path.ts'
 import { VError } from '../VError/VError.ts'
 import * as ExtensionManagement from './ExtensionManagement.ts'
 
-export const getIconTheme = async (iconThemeId) => {
+export const getIconTheme = async (iconThemeId: any): Promise<any> => {
   const extensions = await ExtensionManagement.getExtensions()
   for (const extension of extensions) {
     if (!extension.iconThemes) {

@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as GetTestRequestResponse from '../GetTestRequestResponse/GetTestRequestResponse.ts'
 import * as HttpServerResponse from '../HttpServerResponse/HttpServerResponse.ts'
 
-export const handleRequestTest = async (socket, request, indexHtmlPath) => {
+export const handleRequestTest = async (socket: any, request: any, indexHtmlPath: any): Promise<any> => {
   Assert.object(socket)
   Assert.object(request)
   Assert.string(indexHtmlPath)

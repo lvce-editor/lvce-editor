@@ -21,7 +21,7 @@ class NoErrorThrownError extends Error {}
 
 class NodeError extends Error {
   code: any
-  constructor(message, code) {
+  constructor(message: any, code: any) {
     super(message)
     this.code = code
   }
@@ -32,7 +32,7 @@ class NodeError extends Error {
  * @param {any} promise
  * @returns {Promise<Error>}
  *  */
-const getError = async (promise) => {
+const getError = async (promise: any): Promise<any> => {
   try {
     await promise
     throw new NoErrorThrownError()

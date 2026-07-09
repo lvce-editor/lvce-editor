@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-export const trash = async (path) => {
+export const trash = async (path: any): Promise<any> => {
   if (!existsSync(path)) {
     return
   }

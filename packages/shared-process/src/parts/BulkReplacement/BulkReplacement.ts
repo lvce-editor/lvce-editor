@@ -1,7 +1,7 @@
 import * as ApplyEdit from '../ApplyEdit/ApplyEdit.ts'
 import { VError } from '../VError/VError.ts'
 
-export const applyBulkReplacement = async (files, ranges, replacement) => {
+export const applyBulkReplacement = async (files: any, ranges: any, replacement: any): Promise<any> => {
   try {
     let rangeIndex = 0
     for (const file of files) {

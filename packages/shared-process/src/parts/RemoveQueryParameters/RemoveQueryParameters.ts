@@ -1,4 +1,4 @@
-export const removeQueryParameters = (url) => {
+export const removeQueryParameters = (url: any): any => {
   const questionIndex = url.indexOf('?')
   if (questionIndex === -1) {
     return url

@@ -2,7 +2,7 @@ import * as FileWatcherProcess from '../FileWatcherProcess/FileWatcherProcess.ts
 import * as Id from '../Id/Id.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
-const handleEvents = (id, ipc, event) => {
+const handleEvents = (id: any, ipc: any, event: any): any => {
   JsonRpc.send(ipc, 'FileWatcher.handleEvent', id, event)
 }
 
@@ -10,7 +10,7 @@ const handleEvents = (id, ipc, event) => {
 // TODO remove ipc and dispose file watcher when socket / messageport closes
 const internalIdMap = Object.create(null)
 
-export const watch = async (ipc, id, { roots, exclude }) => {
+export const watch = async (ipc: any, id: any, { roots, exclude }: any): Promise<any> => {
   const internalId = Id.create()
   internalIdMap[internalId] = { id, ipc }
   await FileWatcherProcess.invoke('FileWatcher.watchFolders', {
@@ -20,7 +20,7 @@ export const watch = async (ipc, id, { roots, exclude }) => {
   })
 }
 
-const disposeFileWatcher = async (internalId) => {
+const disposeFileWatcher = async (internalId: any): Promise<any> => {
   try {
     await FileWatcherProcess.invoke('FileWatcher.dispose', internalId)
   } catch {
@@ -28,9 +28,9 @@ const disposeFileWatcher = async (internalId) => {
   }
 }
 
-export const watchFile2 = async (ipc, id, uri) => {
+export const watchFile2 = async (ipc: any, id: any, uri: any): Promise<any> => {
   const internalId = Id.create()
-  const handleClose = async () => {
+  const handleClose = async (): Promise<any> => {
     ipc.off('close', handleClose)
     await disposeFileWatcher(internalId)
   }
@@ -40,7 +40,7 @@ export const watchFile2 = async (ipc, id, uri) => {
   await FileWatcherProcess.invoke('FileWatcher.watchFile2', internalId, uri)
 }
 
-export const handleChange = (event) => {
+export const handleChange = (event: any): any => {
   const ref = internalIdMap[event.id]
   handleEvents(ref.id, ref.ipc, event)
 }

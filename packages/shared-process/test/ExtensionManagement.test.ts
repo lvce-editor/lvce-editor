@@ -42,11 +42,11 @@ const ExtensionManagement = await import('../src/parts/ExtensionManagement/Exten
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const originalArgv = process.argv
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-const exists = async (path) => {
+const exists = async (path: any): Promise<any> => {
   try {
     await access(path)
     return true
@@ -59,7 +59,7 @@ const exists = async (path) => {
  * @param {string} inDir
  * @param {string} outFile
  */
-export const compress = async (inDir, outFile) => {
+export const compress = async (inDir: any, outFile: any): Promise<any> => {
   await mkdir(dirname(outFile), { recursive: true })
   await pipeline(
     tar.pack(inDir),
@@ -72,7 +72,7 @@ export const compress = async (inDir, outFile) => {
   )
 }
 
-const createExtensionTarBr = async (files) => {
+const createExtensionTarBr = async (files: any): Promise<any> => {
   const folder = '/tmp/extension-test/test-author.test-extension'
   await rm(folder, { force: true, recursive: true })
   await mkdir(folder, { recursive: true })
@@ -83,15 +83,15 @@ const createExtensionTarBr = async (files) => {
   await compress(folder, `${folder}.tar.br`)
 }
 
-let server
-let handler
-let marketplaceUrl
+let server: any
+let handler: any
+let marketplaceUrl: any
 
 beforeAll(async () => {
-  server = http.createServer((request, response) => {
+  server = http.createServer((request: any, response: any) => {
     handler(request, response)
   })
-  await new Promise((resolve) => {
+  await new Promise((resolve: any) => {
     server.listen(0, '127.0.0.1', () => {
       resolve(undefined)
     })

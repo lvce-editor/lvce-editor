@@ -36,7 +36,7 @@ jest.unstable_mockModule('node:fs/promises', () => {
 })
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
-    getRecentlyOpenedPath: () => {
+    getRecentlyOpenedPath: (): any => {
       return '/test/recently-opened.json'
     },
   }
@@ -49,7 +49,7 @@ const fs = await import('node:fs/promises')
 
 class NodeError extends Error {
   code: any
-  constructor(code) {
+  constructor(code: any) {
     super(code)
     this.code = code
   }
@@ -108,13 +108,13 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
   })
   let i = 0
   // @ts-ignore
-  fs.writeFile.mockImplementation((path) => {
+  fs.writeFile.mockImplementation((path: any) => {
     if (i++ === 0) {
       throw new NodeError(ErrorCodes.ENOENT)
     }
   })
   // @ts-ignore
-  fs.mkdir.mockImplementation((path) => {})
+  fs.mkdir.mockImplementation((path: any) => {})
   await RecentlyOpened.addPath('/test/new-path.txt')
   expect(fs.writeFile).toHaveBeenCalledTimes(2)
   expect(fs.mkdir).toHaveBeenCalledTimes(1)

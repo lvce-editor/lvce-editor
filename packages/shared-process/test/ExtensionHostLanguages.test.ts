@@ -24,7 +24,7 @@ const ExtensionHostLanguages = await import('../src/parts/ExtensionManagement/Ex
 
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
