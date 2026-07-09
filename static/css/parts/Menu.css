@@ -38,6 +38,12 @@
   outline: none;
 }
 
+.MenuItemDisabled,
+.MenuItem[disabled],
+.MenuItem[aria-disabled='true'] {
+  color: var(--MenuItemDisabledForeground, var(--vscode-disabledForeground, rgb(204 204 204 / 50%)));
+}
+
 .MenuItemSubMenuArrowRight {
   width: 16px;
   height: 16px;

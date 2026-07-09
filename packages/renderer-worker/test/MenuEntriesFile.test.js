@@ -23,4 +23,16 @@ test('getMenuEntries', () => {
     id: MenuEntryId.OpenRecent,
     label: 'Open Recent',
   })
+  expect(menuEntries).toContainEqual({
+    command: 'Main.save',
+    flags: MenuItemFlags.Disabled,
+    id: 'save',
+    label: 'Save',
+  })
+  expect(menuEntries).toContainEqual({
+    command: 'Main.saveAll',
+    flags: MenuItemFlags.Disabled,
+    id: 'saveAll',
+    label: 'Save All',
+  })
 })

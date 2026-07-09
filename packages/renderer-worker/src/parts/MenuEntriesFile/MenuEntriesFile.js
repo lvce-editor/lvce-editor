@@ -44,13 +44,13 @@ export const getMenuEntries = () => {
     {
       id: 'save',
       label: FileStrings.save(),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.Disabled,
       command: 'Main.save',
     },
     {
       id: 'saveAll',
       label: FileStrings.saveAll(),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.Disabled,
       command: 'Main.saveAll',
     },
   ]
