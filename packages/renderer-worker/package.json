@@ -59,7 +59,7 @@
     "@lvce-editor/diff-view": "^3.12.0",
     "@lvce-editor/diff-worker": "^3.1.0",
     "@lvce-editor/editor-worker": "^19.11.0",
-    "@lvce-editor/embeds-worker": "^4.1.0",
+    "@lvce-editor/embeds-worker": "^4.2.0",
     "@lvce-editor/error-worker": "^3.1.0",
     "@lvce-editor/explorer-view": "^7.3.0",
     "@lvce-editor/extension-detail-view": "^7.8.0",
