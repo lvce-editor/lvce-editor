@@ -302,7 +302,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.6.0"
+    "version": "2.7.0"
   },
   {
     "name": "builtin.theme-atom-one-dark",
