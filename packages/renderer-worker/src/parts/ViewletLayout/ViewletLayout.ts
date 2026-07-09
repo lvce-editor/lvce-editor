@@ -2,9 +2,11 @@ import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
+import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
+import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
@@ -1505,8 +1507,13 @@ export const isSideBarVisible = (state: LayoutState) => {
   return sideBarVisible
 }
 
-export const getAllQuickPickMenuEntries = () => {
-  return MenuEntriesState.getAll()
+export const getAllQuickPickMenuEntries = async () => {
+  const entries = MenuEntriesState.getAll()
+  const autoUpdateType = await GetAutoUpdateType.getAutoUpdateType()
+  if (autoUpdateType === AutoUpdateType.Deb) {
+    return entries.filter((entry) => entry.id !== 'AutoUpdater.checkForUpdates')
+  }
+  return entries
 }
 
 const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<LayoutStateResult> => {
