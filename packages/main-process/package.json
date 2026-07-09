@@ -1,6 +1,7 @@
 {
   "name": "@lvce-editor/main-process-legacy",
   "productName": "Lvce Editor",
+  "desktopName": "lvce-oss.desktop",
   "version": "0.0.0-dev",
   "description": "Lvce Editor",
   "main": "src/mainProcessMain.js",

@@ -29,6 +29,15 @@ test('maps oauth callback route to callback html', () => {
   expect(normalizePath(absolutePath)).toContain('/static/auth/callback.html')
 })
 
+test.each(['/auth/../../secret', '/css/../../secret', '/css/%2e%2e/%2e%2e/secret', '/packages/../../secret.js'])(
+  'prevents path traversal for %s',
+  (pathName) => {
+    const absolutePath = GetAbsolutePath.getAbsolutePath(pathName)
+
+    expect(normalizePath(absolutePath)).toContain('/static/__invalid_path__')
+  },
+)
+
 test('returns 200 for oauth callback route with query params', async () => {
   const response = await GetResponseInfo.getResponseInfo({
     request: {

@@ -1,11 +1,26 @@
 import { existsSync } from 'node:fs'
-import { join } from 'path'
+import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.js'
-import * as Path from '../Path/Path.js'
 import { STATIC } from '../Static/Static.js'
 import { root } from '../Root/Root.js'
 
 const invalidIconsPath = join(STATIC, '__missing_vscode_icon__.svg')
+const invalidStaticPath = join(STATIC, '__invalid_path__')
+
+const getContainedPath = (basePath, pathName) => {
+  let decodedPathName
+  try {
+    decodedPathName = decodeURIComponent(pathName)
+  } catch {
+    return invalidStaticPath
+  }
+  const absolutePath = resolve(basePath, decodedPathName.replace(/^[/\\]+/, ''))
+  const relativePath = relative(basePath, absolutePath)
+  if (relativePath === '..' || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath)) {
+    return invalidStaticPath
+  }
+  return absolutePath
+}
 
 const getIconAbsolutePath = (pathName) => {
   const relativePath = pathName.startsWith('/static/icons/') ? pathName.slice('/static/icons/'.length) : pathName.slice('/icons/'.length)
@@ -37,7 +52,7 @@ export const getAbsolutePath = (pathName) => {
     return getIconAbsolutePath(pathName)
   }
   if (pathName.startsWith('/packages')) {
-    return Path.join(root, pathName)
+    return getContainedPath(root, pathName)
   }
-  return Path.join(STATIC, pathName)
+  return getContainedPath(STATIC, pathName)
 }

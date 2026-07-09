@@ -8,6 +8,7 @@ export const addRootPackageJson = async ({ cachePath, electronVersion, product, 
     value: {
       name: product.applicationName,
       productName: product.nameLong,
+      desktopName: `${product.applicationName}.desktop`,
       version: version,
       electronVersion,
       type,

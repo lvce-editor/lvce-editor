@@ -241,7 +241,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
     occurrence: `  if (pathName.startsWith('/packages')) {
-    return Path.join(root, pathName)
+    return getContainedPath(root, pathName)
   }
 `,
     replacement: '',
