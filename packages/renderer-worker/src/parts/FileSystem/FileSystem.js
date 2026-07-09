@@ -1,7 +1,12 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as GetFileSystem from '../GetFileSystem/GetFileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+
+const notifyWorkspaceChanged = async () => {
+  await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh'), Command.execute('Layout.refreshSourceControlBadgeCount')])
+}
 
 export const readFile = async (uri, encoding = EncodingType.Utf8) => {
   const protocol = GetProtocol.getProtocol(uri)
@@ -22,12 +27,14 @@ export const remove = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.remove(uri)
+  await notifyWorkspaceChanged()
 }
 
 export const rename = async (oldUri, newUri) => {
   const protocol = GetProtocol.getProtocol(oldUri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.rename(oldUri, newUri)
+  await notifyWorkspaceChanged()
 }
 
 export const mkdir = async (uri) => {
@@ -40,6 +47,7 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.writeFile(uri, content, encoding)
+  await notifyWorkspaceChanged()
 }
 
 export const writeBlob = async (uri, blob) => {

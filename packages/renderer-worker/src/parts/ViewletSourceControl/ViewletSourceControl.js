@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
@@ -6,6 +7,7 @@ import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Platform from '../Platform/Platform.js'
 import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -54,17 +56,7 @@ export const loadContent = async (state, savedState) => {
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  // if (badgeCount > 0) {
-  //   const newState = {
-  //     ...state,
-  //     commands,
-  //     actionsDom,
-  //     badgeCount,
-  //   }
-  //   ViewletStates.setState(state.uid, newState)
-  //   ViewletStates.setRenderedState(state.uid, newState)
-  //   await Command.execute('Layout.handleBadgeCountChange')
-  // }
+  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...state,
     commands,
