@@ -4,8 +4,8 @@ import * as MenuEntriesTerminal from '../src/parts/MenuEntriesTerminal/MenuEntri
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesTerminal.getMenuEntries()
   expect(menuEntries).toContainEqual({
-    args: ['Terminal'],
-    command: 'Layout.togglePanel',
+    args: ['Terminals'],
+    command: 'Layout.showPanel',
     flags: 0,
     id: 'newTerminal',
     label: 'New Terminal',

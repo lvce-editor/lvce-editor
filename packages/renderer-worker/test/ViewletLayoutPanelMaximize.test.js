@@ -10,6 +10,7 @@ jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
       panelWorkerInvocations.push([method, ...args])
       switch (method) {
         case 'Panel.handlePanelLayoutChanged':
+        case 'Panel.toggleView':
           return undefined
         case 'Panel.diff2':
           return panelWorkerDiffResult
@@ -154,6 +155,27 @@ test('maximizePanel enlarges panel and sets panelMaximized to true', async () =>
   // Maximized height = min(windowHeight - titleBar - statusBar - mainMin, panelMaxHeight)
   // = min(800 - 0 - 20 - 100, 600) = 600
   expect(result.newState.panelHeight).toBe(600)
+})
+
+test('showPanel selects requested panel view when panel is visible', async () => {
+  createPanelInstance()
+  panelWorkerDiffResult = [11]
+  panelWorkerRenderCommands = [['Viewlet.setPatches', 77, []]]
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: true,
+    panelView: 'Problems',
+  }
+
+  const result = await ViewletLayout.showPanel(state, 'Terminals')
+
+  expect(result.newState.panelView).toBe('Terminals')
+  expect(result.commands).toEqual([['Viewlet.setPatches', 77, []]])
+  expect(panelWorkerInvocations).toEqual([
+    ['Panel.toggleView', 77, 'Terminals'],
+    ['Panel.diff2', 77],
+    ['Panel.render2', 77, [11]],
+  ])
 })
 
 test('maximizePanel notifies panel worker when panel instance exists', async () => {
