@@ -80,6 +80,10 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
   }
 }
 
+const getViewTitle = (view: GetExtensionViews.ExtensionView): string => {
+  return view.displayName || view.name || view.title
+}
+
 const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly unknown[]> => {
   if (state.kind !== 'virtualDom') {
     return []
@@ -134,6 +138,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   if (!view) {
     throw new Error(`view ${state.uri} not found`)
   }
+  const title = getViewTitle(view)
   const css = await loadCss(view)
   const cssId = css ? getCssId(view) : ''
   const eventListeners = view.eventListeners || []
@@ -158,7 +163,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
         eventListeners,
         kind: view.kind,
         patches: [],
-        title: view.title,
+        title,
       }
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
@@ -168,7 +173,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
       cssId,
       eventListeners,
       kind: view.kind,
-      title: view.title,
+      title,
     }
     return {
       ...newState,
@@ -189,7 +194,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     iframeSandbox: view.iframe.sandbox,
     iframeSrc: view.iframe.src,
     kind: 'iframe',
-    title: view.title,
+    title,
   }
 }
 

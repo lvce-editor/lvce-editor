@@ -172,6 +172,10 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     if (titleIndex !== -1) {
       commands.splice(titleIndex, 1)
     }
+    if (!title && childModuleId === ViewletModuleId.ExtensionView) {
+      const childInstance = ViewletStates.getInstance(childUid)
+      title = childInstance?.state?.title || Character.EmptyString
+    }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
     if (actionsDom.length > 0) {
       const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []

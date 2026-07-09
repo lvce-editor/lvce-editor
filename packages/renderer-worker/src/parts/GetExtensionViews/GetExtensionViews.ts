@@ -20,6 +20,7 @@ export interface DomEventListener {
 }
 
 export interface ExtensionView {
+  readonly displayName?: string
   readonly css?: string
   readonly eventListeners?: readonly DomEventListener[]
   readonly extensionId: string
@@ -27,6 +28,7 @@ export interface ExtensionView {
   readonly id: string
   readonly iframe?: ExtensionViewIframe
   readonly kind?: string
+  readonly name?: string
   readonly title: string
 }
 
