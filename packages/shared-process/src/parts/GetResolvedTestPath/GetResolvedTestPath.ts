@@ -1,7 +1,7 @@
 import { isAbsolute, join } from 'node:path'
 import * as Root from '../Root/Root.ts'
 
-const getCliTestPath = () => {
+const getCliTestPath = (): any => {
   for (const arg of process.argv.slice(2)) {
     if (arg.startsWith('--test-path=')) {
       return arg.slice('--test-path='.length)
@@ -10,7 +10,7 @@ const getCliTestPath = () => {
   return ''
 }
 
-export const getResolvedTestPath = () => {
+export const getResolvedTestPath = (): any => {
   const cliTestPath = getCliTestPath()
   const testPath = cliTestPath || process.env.TEST_PATH
   if (testPath) {

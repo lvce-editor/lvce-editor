@@ -9,7 +9,7 @@ import * as Path from '../Path/Path.ts'
 import { VError } from '../VError/VError.ts'
 
 // TODO json parsing and error handling should happen in renderer process
-export const get = async (path) => {
+export const get = async (path: any): Promise<any> => {
   const absolutePath = Path.join(path, 'extension.json')
   try {
     const json = await ReadJson.readJson(absolutePath)

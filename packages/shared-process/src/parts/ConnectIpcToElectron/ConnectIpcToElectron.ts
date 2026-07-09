@@ -3,7 +3,7 @@ import * as IpcId from '../IpcId/IpcId.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-export const connectIpcToElectron = async (ipc, ipcId = IpcId.Unknown) => {
+export const connectIpcToElectron = async (ipc: any, ipcId: any = IpcId.Unknown): Promise<any> => {
   const { port1, port2 } = await GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'HandleElectronMessagePort.handleElectronMessagePort', port1, IpcId.MainProcess),
@@ -11,7 +11,7 @@ export const connectIpcToElectron = async (ipc, ipcId = IpcId.Unknown) => {
   ])
 }
 
-export const connectIpcToMainProcess2 = async (ipc, ipcId = IpcId.Unknown) => {
+export const connectIpcToMainProcess2 = async (ipc: any, ipcId: any = IpcId.Unknown): Promise<any> => {
   const { port1, port2 } = await GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'Initialize.initialize', port1),

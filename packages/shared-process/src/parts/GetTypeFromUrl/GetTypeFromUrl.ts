@@ -1,6 +1,6 @@
 import { VError } from '../VError/VError.ts'
 
-export const getTypeFromUrl = (url) => {
+export const getTypeFromUrl = (url: any): any => {
   if (!url) {
     throw new VError('invalid url')
   }

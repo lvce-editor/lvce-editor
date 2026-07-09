@@ -5,7 +5,7 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as RemoveSymlink from '../RemoveSymlink/RemoveSymlink.ts'
 import { VError } from '../VError/VError.ts'
 
-export const unlink = async (path) => {
+export const unlink = async (path: any): Promise<any> => {
   try {
     const manifest = await ExtensionManifest.get(path)
     if (manifest.status === ExtensionManifestStatus.Rejected) {

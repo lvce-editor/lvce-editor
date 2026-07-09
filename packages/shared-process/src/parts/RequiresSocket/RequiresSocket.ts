@@ -19,6 +19,6 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'FileWatcher.watchFile2',
 ])
 
-export const requiresSocket = (method) => {
+export const requiresSocket = (method: any): any => {
   return METHODS_THAT_REQUIRE_SOCKET.has(method)
 }

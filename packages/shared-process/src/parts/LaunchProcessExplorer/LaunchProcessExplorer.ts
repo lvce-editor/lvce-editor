@@ -5,7 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 import * as ProcessExplorerPath from '../ProcessExplorerPath/ProcessExplorerPath.ts'
 
-export const launchProcessExplorer = async () => {
+export const launchProcessExplorer = async (): Promise<any> => {
   console.log('will start process explorer')
   const ipc = await LaunchProcess.launchProcess({
     name: 'Process Explorer',

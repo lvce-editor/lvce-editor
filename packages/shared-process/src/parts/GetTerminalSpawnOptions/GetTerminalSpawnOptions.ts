@@ -1,6 +1,6 @@
 import * as Platform from '../Platform/Platform.ts'
 
-export const getTerminalSpawnOptions = () => {
+export const getTerminalSpawnOptions = (): any => {
   if (Platform.isWindows) {
     return {
       command: 'powershell.exe',

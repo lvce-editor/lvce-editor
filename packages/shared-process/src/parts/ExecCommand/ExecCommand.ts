@@ -3,7 +3,7 @@ import { once } from 'node:events'
 import * as ExecPromise from '../ExecPromise/ExecPromise.ts'
 import * as Hash from '../Hash/Hash.ts'
 
-export const execCommand = async (command, args, options) => {
+export const execCommand = async (command: any, args: any, options: any): Promise<any> => {
   const { stdout, stderr } = await ExecPromise.execPromise(command, args, options)
   return {
     stdout,
@@ -11,7 +11,7 @@ export const execCommand = async (command, args, options) => {
   }
 }
 
-export const execCommandHash = async (command, args, options) => {
+export const execCommandHash = async (command: any, args: any, options: any): Promise<any> => {
   const child = NodeChildProcess.spawn(command, args, options)
   const hash = Hash.createHash('sha1')
   child.stdout.pipe(hash)
@@ -20,6 +20,6 @@ export const execCommandHash = async (command, args, options) => {
   return finalHash
 }
 
-export const execSync = (command) => {
+export const execSync = (command: any): any => {
   return NodeChildProcess.execSync(command).toString().trim()
 }

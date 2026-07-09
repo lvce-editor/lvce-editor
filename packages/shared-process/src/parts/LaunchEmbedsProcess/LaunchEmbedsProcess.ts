@@ -4,7 +4,7 @@ import * as IpcId from '../IpcId/IpcId.ts'
 import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
-export const launchEmbedsProcess = async () => {
+export const launchEmbedsProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
     name: 'Embeds Process',
     targetRpcId: IpcId.EmbedsProcess,

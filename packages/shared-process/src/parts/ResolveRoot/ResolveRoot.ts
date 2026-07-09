@@ -11,7 +11,7 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as Root from '../Root/Root.ts'
 import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.ts'
 
-const getAbsolutePath = (path) => {
+const getAbsolutePath = (path: any): any => {
   if (IsAbsolutePath.isAbsolutePath(path)) {
     return path
   }
@@ -24,11 +24,11 @@ const getAbsolutePath = (path) => {
   return path
 }
 
-const toUri = (path) => {
+const toUri = (path: any): any => {
   return pathToFileURL(path).toString()
 }
 
-export const resolveRoot = async () => {
+export const resolveRoot = async (): Promise<any> => {
   if (IsElectron.isElectron) {
     const argv = await ParentIpc.invoke('Process.getArgv')
     const relevantArgv = argv.slice(2)

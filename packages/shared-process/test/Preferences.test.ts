@@ -28,7 +28,7 @@ const Logger = await import('../src/parts/Logger/Logger.js')
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 

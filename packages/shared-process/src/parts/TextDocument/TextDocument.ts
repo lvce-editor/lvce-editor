@@ -1,6 +1,6 @@
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 
-export const state = {
+export const state: any = {
   textDocuments: Object.create(null),
   /** @type{any[]} */
   listeners: [],
@@ -20,7 +20,7 @@ export const state = {
 //   }
 // }
 
-export const applyEdit = (socket, textDocument, documentEdits) => {
+export const applyEdit = (socket: any, textDocument: any, documentEdits: any): any => {
   // TODO avoid extra object allocation and anonymous function
   // const offsetBasedEdits = documentEdits.map((e) =>
   //   toOffsetBasedEdit(textDocument, e)
@@ -30,10 +30,10 @@ export const applyEdit = (socket, textDocument, documentEdits) => {
   }
 }
 
-export const getText = (textDocument) => {
+export const getText = (textDocument: any): any => {
   return JoinLines.joinLines(textDocument.lines)
 }
 
-export const onChange = (listener) => {
+export const onChange = (listener: any): any => {
   state.listeners.push(listener)
 }

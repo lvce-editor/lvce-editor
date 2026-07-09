@@ -3,7 +3,7 @@ import { jest, beforeEach, test, expect } from '@jest/globals'
 
 test('getNewContent - no ranges', () => {
   const content = 'a'
-  const ranges = []
+  const ranges: any[] = []
   const replacement = 'b'
   expect(BulkReplacementContent.getNewContent(content, ranges, replacement)).toBe('a')
 })

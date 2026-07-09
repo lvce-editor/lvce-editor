@@ -5,13 +5,13 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as ToAbsolutePaths from '../ToAbsolutePaths/ToAbsolutePaths.ts'
 import { VError } from '../VError/VError.ts'
 
-export const getExtensionManifests = async (path) => {
+export const getExtensionManifests = async (path: any): Promise<any> => {
   try {
     if (!path) {
       return []
     }
     const dirents = await FileSystem.readDirWithFileTypes(path)
-    const folderNames = dirents.filter((dirent) => dirent.type === DirentType.Directory).map((dirent) => dirent.name)
+    const folderNames = dirents.filter((dirent: any) => dirent.type === DirentType.Directory).map((dirent: any) => dirent.name)
     const absolutePaths = ToAbsolutePaths.toAbsolutePaths(path, folderNames)
     const manifests = await Promise.all(absolutePaths.map(ExtensionManifest.get))
     return manifests

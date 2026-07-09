@@ -21,9 +21,9 @@ const HandleRequestTest = await import('../src/parts/HandleRequestTest/HandleReq
 const HttpServerResponse = await import('../src/parts/HttpServerResponse/HttpServerResponse.js')
 
 test('handleRequestTest', async () => {
-  const request = {}
+  const request: Record<string, any> = {}
   const indexHtmlPath = '/test/index.html'
-  const socket = {}
+  const socket: Record<string, any> = {}
   jest.spyOn(GetTestRequestResponse, 'getTestRequestResponse').mockResolvedValue({
     body: 'test',
     init: {
@@ -37,9 +37,9 @@ test('handleRequestTest', async () => {
 })
 
 test.skip('handleRequestTest - file not found', async () => {
-  const request = {}
+  const request: Record<string, any> = {}
   const indexHtmlPath = '/tests/nonexistent.html'
-  const socket = {}
+  const socket: Record<string, any> = {}
   const error = new Error('ENOENT: no such file or directory')
   // @ts-expect-error
   error.code = 'ENOENT'

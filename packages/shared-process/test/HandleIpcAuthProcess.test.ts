@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import * as HandleIpcAuthProcess from '../src/parts/HandleIpcAuthProcess/HandleIpcAuthProcess.js'
 
 test('upgradeMessagePort', () => {
-  const port = {}
+  const port: Record<string, any> = {}
   const message = {
     ipcId: 1,
   }

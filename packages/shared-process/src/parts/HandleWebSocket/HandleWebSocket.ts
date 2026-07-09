@@ -6,7 +6,7 @@ import * as IsAllowedWebSocketOrigin from '../IsAllowedWebSocketOrigin/IsAllowed
 import * as RejectWebSocket from '../RejectWebSocket/RejectWebSocket.ts'
 import { VError } from '../VError/VError.ts'
 
-export const handleWebSocket = async (handle, message) => {
+export const handleWebSocket = async (handle: any, message: any): Promise<any> => {
   try {
     Assert.object(handle)
     Assert.object(message)

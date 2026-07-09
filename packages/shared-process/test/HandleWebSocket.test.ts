@@ -11,10 +11,10 @@ jest.unstable_mockModule('../src/parts/HandleWebSocketModule/HandleWebSocketModu
 const HandleWebSocket = await import('../src/parts/HandleWebSocket/HandleWebSocket.js')
 const HandleWebSocketModule = await import('../src/parts/HandleWebSocketModule/HandleWebSocketModule.js')
 
-const createSocket = () => {
+const createSocket = (): any => {
   let output = ''
   return {
-    write: jest.fn((chunk) => {
+    write: jest.fn((chunk: any) => {
       output += chunk
     }),
     end: jest.fn(),

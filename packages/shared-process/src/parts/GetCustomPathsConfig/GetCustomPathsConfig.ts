@@ -1,6 +1,6 @@
 import * as GetRemoteUrl from '../GetRemoteUrl/GetRemoteUrl.ts'
 
-export const getCustomPathsConfig = (preferences) => {
+export const getCustomPathsConfig = (preferences: any): any => {
   const config = Object.create(null)
   if (preferences['develop.rendererProcessPath']) {
     config.rendererProcessPath = GetRemoteUrl.getRemoteUrl(preferences['develop.rendererProcessPath'])

@@ -8,7 +8,7 @@ import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.ts'
 import * as IsSocket from '../IsSocket/IsSocket.ts'
 import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.ts'
 
-const strinfyHandle = (handle) => {
+const strinfyHandle = (handle: any): any => {
   if (!handle) {
     return `${handle}`
   }
@@ -19,7 +19,7 @@ const strinfyHandle = (handle) => {
   return `${handle}`
 }
 
-const getIpcAndResponse = (module, handle, message) => {
+const getIpcAndResponse = (module: any, handle: any, message: any): any => {
   if (IsMessagePortMain.isMessagePortMain(handle)) {
     return HandleIncomingIpcMessagePort.handleIncomingIpcMessagePort(module, handle, message)
   }
@@ -29,7 +29,7 @@ const getIpcAndResponse = (module, handle, message) => {
   throw new Error(`Unexpected ipc handle: ${strinfyHandle(handle)}`)
 }
 
-export const handleIncomingIpc = async (ipcId, handle, message) => {
+export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): Promise<any> => {
   Assert.number(ipcId)
   const module = HandleIpcModule.getModule(ipcId)
   const { target, response } = await getIpcAndResponse(module, handle, message)

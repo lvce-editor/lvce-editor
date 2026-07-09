@@ -5,7 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
-export const launchFileSystemProcess = async () => {
+export const launchFileSystemProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
     name: 'File System Process',
     targetRpcId: IpcId.FileSystemProcess,

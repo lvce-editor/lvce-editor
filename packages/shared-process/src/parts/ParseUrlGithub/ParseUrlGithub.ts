@@ -1,6 +1,6 @@
 import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallType.ts'
 
-export const parseUrlGithub = (input) => {
+export const parseUrlGithub = (input: any): any => {
   const parts = input.split('/')
   const slashCount = parts.length
   if (slashCount === 5) {

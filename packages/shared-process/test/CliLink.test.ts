@@ -27,7 +27,7 @@ const Logger = await import('../src/parts/Logger/Logger.js')
 
 class ErrorWithCode extends Error {
   code: any
-  constructor(message, code) {
+  constructor(message: any, code: any) {
     super(message, code)
     this.code = code
   }

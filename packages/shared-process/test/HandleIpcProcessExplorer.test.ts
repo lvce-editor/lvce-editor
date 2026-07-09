@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import * as HandleIpcProcessExplorer from '../src/parts/HandleIpcProcessExplorer/HandleIpcProcessExplorer.js'
 
 test('upgradeMessagePort', () => {
-  const port = {}
+  const port: Record<string, any> = {}
   expect(HandleIpcProcessExplorer.upgradeMessagePort(port)).toEqual({
     type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
@@ -11,7 +11,7 @@ test('upgradeMessagePort', () => {
 })
 
 test('upgradeWebSocket', () => {
-  const message = {}
+  const message: Record<string, any> = {}
   const handle = {
     isHandle: true,
   }

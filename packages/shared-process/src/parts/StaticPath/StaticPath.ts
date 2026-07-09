@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import * as IsBuiltServer from '../IsBuiltServer/IsBuiltServer.ts'
 import * as Root from '../Root/Root.ts'
 
-export const getStaticPath = () => {
+export const getStaticPath = (): any => {
   if (IsBuiltServer.isBuiltServer) {
     // TODO maybe move static files to separate package
     const staticServerUri = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))

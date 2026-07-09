@@ -3,7 +3,7 @@ import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
 import * as TransientLinkedExtensions from '../TransientLinkedExtensions/TransientLinkedExtensions.ts'
 
-export const handleCliArgs = async (parsedArgs) => {
+export const handleCliArgs = async (parsedArgs: any): Promise<any> => {
   const module = await CliModule.getModule(parsedArgs)
   try {
     await TransientLinkedExtensions.validate()

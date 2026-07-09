@@ -10,14 +10,14 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as TransientLinkedExtensions from '../TransientLinkedExtensions/TransientLinkedExtensions.ts'
 import { VError } from '../VError/VError.ts'
 
-export const enable = async (id) => {
+export const enable = async (id: any): Promise<any> => {
   try {
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
     const oldDisabledExtensionIds = await getDisabledExtensionIds()
     if (!oldDisabledExtensionIds.includes(id)) {
       return
     }
-    const newDisabledExtensionIds = oldDisabledExtensionIds.filter((extensionId) => extensionId !== id)
+    const newDisabledExtensionIds = oldDisabledExtensionIds.filter((extensionId: any) => extensionId !== id)
     const content = getNewDisabledExtensionContent(newDisabledExtensionIds)
     await mkdir(dirname(disabledExtensionsJsonPath), { recursive: true })
     await writeFile(disabledExtensionsJsonPath, content)
@@ -26,7 +26,7 @@ export const enable = async (id) => {
   }
 }
 
-const getNewDisabledExtensionContent = (disabledExtensions) => {
+const getNewDisabledExtensionContent = (disabledExtensions: any): any => {
   const content =
     JSON.stringify(
       {
@@ -38,7 +38,7 @@ const getNewDisabledExtensionContent = (disabledExtensions) => {
   return content
 }
 
-export const disable = async (id) => {
+export const disable = async (id: any): Promise<any> => {
   try {
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
     const oldDisabledExtensionIds = await getDisabledExtensionIds()
@@ -54,7 +54,7 @@ export const disable = async (id) => {
   }
 }
 
-export const getDisabledExtensionIds = async () => {
+export const getDisabledExtensionIds = async (): Promise<any> => {
   try {
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
     if (!existsSync(disabledExtensionsJsonPath)) {
@@ -65,13 +65,13 @@ export const getDisabledExtensionIds = async () => {
     if (!parsed || !parsed.disabledExtensions || !Array.isArray(parsed.disabledExtensions)) {
       return []
     }
-    return parsed.disabledExtensions.filter((extensionId) => typeof extensionId === 'string')
+    return parsed.disabledExtensions.filter((extensionId: any) => typeof extensionId === 'string')
   } catch {
     return []
   }
 }
 
-export const getBuiltinExtensions = () => {
+export const getBuiltinExtensions = (): any => {
   return ExtensionManifests.getAll(
     [
       {
@@ -83,7 +83,7 @@ export const getBuiltinExtensions = () => {
   )
 }
 
-export const getInstalledExtensions = () => {
+export const getInstalledExtensions = (): any => {
   return ExtensionManifests.getAll(
     [
       {
@@ -95,8 +95,8 @@ export const getInstalledExtensions = () => {
   )
 }
 
-export const getExtensions = () => {
-  const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link) => {
+export const getExtensions = (): any => {
+  const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link: any) => {
     return {
       type: ExtensionManifestInputType.LinkedExtension,
       path: link.resolvedPath,
@@ -126,8 +126,8 @@ export const getExtensions = () => {
   )
 }
 
-export const getExtensionsEtag = async () => {
-  const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link) => {
+export const getExtensionsEtag = async (): Promise<any> => {
+  const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link: any) => {
     return {
       type: ExtensionManifestInputType.LinkedExtension,
       path: link.resolvedPath,
@@ -156,7 +156,7 @@ export const getExtensionsEtag = async () => {
   return etag
 }
 
-export const getDisabledExtensions = () => {
+export const getDisabledExtensions = (): any => {
   return ExtensionManifests.getAll(
     [
       {

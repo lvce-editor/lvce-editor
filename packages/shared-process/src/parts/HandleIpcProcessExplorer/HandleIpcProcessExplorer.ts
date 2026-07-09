@@ -1,15 +1,15 @@
 import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.ts'
 import * as Assert from '../Assert/Assert.ts'
 
-export const targetMessagePort = () => {
+export const targetMessagePort = (): any => {
   return ProcessExplorer.acquire()
 }
 
-export const targetWebSocket = () => {
+export const targetWebSocket = (): any => {
   return ProcessExplorer.acquire()
 }
 
-export const upgradeMessagePort = (port) => {
+export const upgradeMessagePort = (port: any): any => {
   Assert.object(port)
   return {
     type: 'send',
@@ -18,7 +18,7 @@ export const upgradeMessagePort = (port) => {
   }
 }
 
-export const upgradeWebSocket = (handle, message) => {
+export const upgradeWebSocket = (handle: any, message: any): any => {
   return {
     type: 'send',
     method: 'HandleWebSocket.handleWebSocket',

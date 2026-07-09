@@ -7,7 +7,7 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as TmpFile from '../TmpFile/TmpFile.ts'
 import { VError } from '../VError/VError.ts'
 
-export const install = async ({ url }) => {
+export const install = async ({ url }: any): Promise<any> => {
   try {
     // TODO cache extension tar br file, probably by url <cachedExtensions>/user/repo/releases/<tag>/<fileName>
     // const cachedExtensionsPath = Platform.getCachedExtensionsPath()

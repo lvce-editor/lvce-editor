@@ -1,6 +1,6 @@
 import { VError } from '@lvce-editor/verror'
 
-export const loadTypeScript = async (typescriptPath) => {
+export const loadTypeScript = async (typescriptPath: any): Promise<any> => {
   try {
     const typescript = await import(typescriptPath)
     const actual = typescript.default

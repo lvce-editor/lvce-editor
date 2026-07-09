@@ -6,7 +6,7 @@ import * as ExtensionManifestsGetFromLinkedExtension from './ExtensionManifestsF
 import * as ExtensionManifestsGetFromLinkedExtensionsFolder from './ExtensionManifestsFromLinkedExtensionsFolder.ts'
 import * as ExtensionManifestsGetFromOnlyExtension from './ExtensionManifestsFromOnlyExtension.ts'
 
-const getModule = (type) => {
+const getModule = (type: any): any => {
   switch (type) {
     case ExtensionManifestInputType.Folder:
       return ExtensionManifestsGetFromFolder
@@ -21,17 +21,17 @@ const getModule = (type) => {
   }
 }
 
-const get = (input) => {
+const get = (input: any): any => {
   const module = getModule(input.type)
   return module.getExtensionManifests(input.path)
 }
 
-const isBuiltin = (extension) => {
+const isBuiltin = (extension: any): any => {
   return extension && extension.id && extension.id.startsWith('builtin.')
 }
 
-const addExtensionDisabledStatus = (uniqueExtensions, disabledExtensionIds) => {
-  return uniqueExtensions.map((extension) => {
+const addExtensionDisabledStatus = (uniqueExtensions: any, disabledExtensionIds: any): any => {
+  return uniqueExtensions.map((extension: any) => {
     return {
       ...extension,
       disabled: disabledExtensionIds.includes(extension.id),
@@ -40,7 +40,7 @@ const addExtensionDisabledStatus = (uniqueExtensions, disabledExtensionIds) => {
   })
 }
 
-export const getAll = async (inputs, builtinExtensionsPath) => {
+export const getAll = async (inputs: any, builtinExtensionsPath: any = undefined): Promise<any> => {
   const manifests = await Promise.all(inputs.map(get))
   const disabledIds = await getDisabledExtensionIds()
   const flatManifests = manifests.flat(1)

@@ -2,7 +2,7 @@ import * as HandleIncomingIpc from '../HandleIncomingIpc/HandleIncomingIpc.ts'
 import * as IpcId from '../IpcId/IpcId.ts'
 import * as Assert from '../Assert/Assert.ts'
 
-export const handleElectronMessagePort = (messagePort, ipcId) => {
+export const handleElectronMessagePort = (messagePort: any, ipcId: any): any => {
   Assert.object(messagePort)
   const message = {
     ipcId,

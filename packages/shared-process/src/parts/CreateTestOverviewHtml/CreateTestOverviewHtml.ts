@@ -1,15 +1,15 @@
-const isTestFile = (dirent) => {
+const isTestFile = (dirent: any): any => {
   if (dirent.startsWith('_')) {
     return false
   }
   return dirent.endsWith('.js') || dirent.endsWith('.ts')
 }
 
-const toTestName = (dirent) => {
+const toTestName = (dirent: any): any => {
   return dirent.replace(/\.(js|ts)$/, '')
 }
 
-export const createTestOverviewHtml = (dirents) => {
+export const createTestOverviewHtml = (dirents: any): any => {
   const pre = `<!DOCTYPE html>
 <html lang="en">
   <head>

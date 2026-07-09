@@ -2,7 +2,7 @@ import { VError } from '@lvce-editor/verror'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.ts'
 
 // workaround for MessageChannelMain not being available in utility process
-export const getPortTuple = async () => {
+export const getPortTuple = async (): Promise<any> => {
   try {
     const { port1, port2 } = await TemporaryMessagePort.getPortTuple()
     return { port1, port2 }

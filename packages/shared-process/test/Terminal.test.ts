@@ -15,16 +15,16 @@ test.skip('Terminal', async () => {
   }
   let allData = ''
   const socket = {
-    send(message) {
+    send(message: any): any {
       const parsed = JSON.parse(message)
       console.log({ parsed })
       const data = Buffer.from(parsed.params[2].data).toString()
       allData += data
       console.log({ allData })
     },
-    on(event, listener) {},
+    on(event: any, listener: any): any {},
   }
-  Terminal.create(socket, 0, '/tmp')
+  Terminal.create(socket, 0, '/tmp', undefined, undefined)
   Terminal.write(0, 'abc')
   // @ts-ignore
   await waitForExpect(() => {

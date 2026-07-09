@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 
-export const getEtagFromStats = (stats) => {
+export const getEtagFromStats = (stats: any): any => {
   const hash = createHash('sha1')
   for (const stat of stats) {
     hash.update(`${stat.mtime}`)

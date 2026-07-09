@@ -14,7 +14,7 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as Logger from '../Logger/Logger.ts'
 
-export const getTestRequestResponse = async (request, indexHtmlPath) => {
+export const getTestRequestResponse = async (request: any, indexHtmlPath: any): Promise<any> => {
   try {
     const pathName = GetPathName.getPathName(request)
     if (pathName === '/tests/_all.html') {

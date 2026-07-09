@@ -10,7 +10,7 @@ const UiStrings = {
 
 const visitVersion = {
   key: UiStrings.OsVersion,
-  getValue() {
+  getValue(): any {
     const { version } = Platform
     return version
   },
@@ -18,7 +18,7 @@ const visitVersion = {
 
 const visitCpus = {
   key: UiStrings.Cpus,
-  getValue() {
+  getValue(): any {
     const cpus = Os.cpus()
     if (!cpus || cpus.length === 0) {
       return ''
@@ -33,7 +33,7 @@ const visitCpus = {
 
 const visitMemory = {
   key: UiStrings.Memory,
-  getValue() {
+  getValue(): any {
     const totalMemory = Os.totalmem()
     const freeMemory = Os.freemem()
     const totalGb = totalMemory / ByteSize.GB
@@ -44,17 +44,17 @@ const visitMemory = {
   },
 }
 
-const getKeyLength = (visitor) => {
+const getKeyLength = (visitor: any): any => {
   return visitor.key.length
 }
 
-const getLongestKeyLength = (visitors) => {
+const getLongestKeyLength = (visitors: any): any => {
   return Math.max(...visitors.map(getKeyLength))
 }
 
-const combineVisitors = (visitors) => {
+const combineVisitors = (visitors: any): any => {
   const longestKeyLength = getLongestKeyLength(visitors)
-  const result = []
+  const result: any[] = []
   for (const visitor of visitors) {
     const { key } = visitor
     const value = visitor.getValue()
@@ -63,7 +63,7 @@ const combineVisitors = (visitors) => {
   return result.join('\n')
 }
 
-export const getStatusString = async () => {
+export const getStatusString = async (): Promise<any> => {
   const visitors = [visitVersion, visitCpus, visitMemory]
   const result = combineVisitors(visitors)
   return result

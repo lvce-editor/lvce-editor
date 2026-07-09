@@ -1,7 +1,7 @@
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.ts'
 
-export const getExtensionManifests = async (path) => {
+export const getExtensionManifests = async (path: any): Promise<any> => {
   if (!path) {
     return []
   }

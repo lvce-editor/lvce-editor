@@ -2,11 +2,11 @@ import * as Assert from '../Assert/Assert.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 
-const state = {
+const state: any = {
   ipcMap: Object.create(null),
 }
 
-export const setItems = (ipc, browserWindowId, items) => {
+export const setItems = (ipc: any, browserWindowId: any, items: any): any => {
   Assert.object(ipc)
   Assert.number(browserWindowId)
   Assert.array(items)
@@ -14,7 +14,7 @@ export const setItems = (ipc, browserWindowId, items) => {
   return ParentIpc.invoke('ElectronApplicationMenu.setItems', items)
 }
 
-export const handleClick = async (browserWindowId, label) => {
+export const handleClick = async (browserWindowId: any, label: any): Promise<any> => {
   const ipc = state.ipcMap[browserWindowId]
   if (!ipc) {
     return

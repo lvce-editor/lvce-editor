@@ -2,7 +2,7 @@
  *
  * @param {any} error
  */
-export const getHttpErrorMessage = (error) => {
+export const getHttpErrorMessage = (error: any): any => {
   try {
     const body = error.response.body
     if (error.response.url.includes('api.github.com') && typeof body === 'string') {

@@ -1,7 +1,7 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import { VError } from '../VError/VError.ts'
 
-const getDisplayPath = (path) => {
+const getDisplayPath = (path: any): any => {
   if (path === '') {
     return '<empty string>'
   }
@@ -9,7 +9,9 @@ const getDisplayPath = (path) => {
 }
 
 export class FileNotFoundError extends VError {
-  constructor(path) {
+  code: any
+
+  constructor(path: any) {
     super(`File not found: '${getDisplayPath(path)}'`)
     this.code = ErrorCodes.ENOENT
   }

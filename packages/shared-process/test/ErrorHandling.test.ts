@@ -44,7 +44,7 @@ test('handleUncaughtExceptionMonitor', () => {
   22 |`,
     }
   })
-  ErrorHandling.handleUncaughtExceptionMonitor(error)
+  ErrorHandling.handleUncaughtExceptionMonitor(error, undefined)
   expect(Logger.info).toHaveBeenCalledTimes(1)
   expect(Logger.info).toHaveBeenCalledWith('[shared process] Uncaught exception: Error: oops')
   expect(Logger.error).toHaveBeenCalledTimes(1)

@@ -1,4 +1,4 @@
-export const state = {
+export const state: any = {
   /**
    * @type {any}
    */
@@ -11,7 +11,7 @@ export const state = {
    * @type {any[]}
    */
   pendingMessages: [],
-  send(message) {
+  send(message: any): any {
     state.pendingMessages.push(message)
   },
 }

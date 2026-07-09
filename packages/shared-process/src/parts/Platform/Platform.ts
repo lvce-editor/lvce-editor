@@ -23,41 +23,41 @@ export const isAppImage = false
 
 export const scheme = 'lvce-oss'
 
-export const getPathSeparator = () => {
+export const getPathSeparator = (): any => {
   return sep
 }
 
-export const getStateDir = () => {
+export const getStateDir = (): any => {
   return xdgState
 }
 
-export const setEnvironmentVariables = (variables) => {
+export const setEnvironmentVariables = (variables: any): any => {
   for (const [key, value] of Object.entries(variables)) {
-    env[key] = value
+    env[key] = value as any
   }
 }
 
-export const getNodePath = () => {
+export const getNodePath = (): any => {
   return Process.argv[0]
 }
 
-export const getTmpDir = () => {
+export const getTmpDir = (): any => {
   return tmpdir()
 }
 
-export const getRepository = () => {
+export const getRepository = (): any => {
   return `lvce-editor/lvce-editor`
 }
 
-export const getApplicationName = () => {
+export const getApplicationName = (): any => {
   return applicationName
 }
 
-export const getAppImageName = () => {
+export const getAppImageName = (): any => {
   return 'Lvce'
 }
 
-export const getSetupName = () => {
+export const getSetupName = (): any => {
   return 'Lvce-Setup'
 }
 
@@ -67,24 +67,24 @@ export const commit = 'unknown commit'
 
 export const date = ''
 
-export const getVersion = () => {
+export const getVersion = (): any => {
   return version
 }
 
-export const getCommit = () => {
+export const getCommit = (): any => {
   return commit
 }
 
-export const getDate = () => {
+export const getDate = (): any => {
   return date
 }
 
 export const productNameLong = 'Lvce Editor - OSS'
 
-export const getProductNameLong = () => {
+export const getProductNameLong = (): any => {
   return productNameLong
 }
 
-export const getArch = () => {
+export const getArch = (): any => {
   return process.arch
 }

@@ -5,7 +5,7 @@ import * as IsAppImage from '../IsAppImage/IsAppImage.ts'
 import * as Platform from '../Platform/Platform.ts'
 import { VError } from '../VError/VError.ts'
 
-export const getAutoUpdateType = async () => {
+export const getAutoUpdateType = async (): Promise<any> => {
   try {
     if (Platform.isDeb) {
       return AutoUpdateType.Deb
@@ -22,7 +22,7 @@ export const getAutoUpdateType = async () => {
   }
 }
 
-export const getLatestVersion = async () => {
+export const getLatestVersion = async (): Promise<any> => {
   const repository = Platform.getRepository()
   const version = await GetLatestReleaseVersion.getLatestReleaseVersion(repository)
   const currentVersion = Platform.version

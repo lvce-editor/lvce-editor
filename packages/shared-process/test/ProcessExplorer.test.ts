@@ -5,16 +5,11 @@ const ipc = {
 }
 const launchProcessExplorer = jest.fn(async () => ipc)
 
-jest.unstable_mockModule(
-  '../src/parts/LaunchProcessExplorer/LaunchProcessExplorer.js',
-  () => ({
-    launchProcessExplorer,
-  }),
-)
+jest.unstable_mockModule('../src/parts/LaunchProcessExplorer/LaunchProcessExplorer.js', () => ({
+  launchProcessExplorer,
+}))
 
-const ProcessExplorer = await import(
-  '../src/parts/ProcessExplorer/ProcessExplorer.js'
-)
+const ProcessExplorer = await import('../src/parts/ProcessExplorer/ProcessExplorer.js')
 
 beforeEach(() => {
   ProcessExplorer.state.ipc = undefined

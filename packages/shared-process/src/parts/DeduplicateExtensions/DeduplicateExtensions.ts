@@ -1,6 +1,6 @@
-export const deduplicateExtensions = (extensions, builtinExtensionsPath) => {
+export const deduplicateExtensions = (extensions: any, builtinExtensionsPath: any): any => {
   const seen = Object.create(null)
-  const uniqueExtensions = []
+  const uniqueExtensions: any[] = []
   for (const extension of extensions) {
     if (extension.id in seen) {
       continue

@@ -5,7 +5,7 @@ import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as Root from '../Root/Root.ts'
 
-export const getIcon = () => {
+export const getIcon = (): any => {
   if (!IsProduction.isProduction && IsLinux.isLinux) {
     return Path.join(Root.root, 'packages', 'build', 'files', 'icon.png')
   }

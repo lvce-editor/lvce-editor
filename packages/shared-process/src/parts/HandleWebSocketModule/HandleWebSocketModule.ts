@@ -9,7 +9,7 @@ import * as HandleWebSocketForUnknown from '../HandleWebSocketForUnknown/HandleW
 import * as ProtocolType from '../ProtocolType/ProtocolType.ts'
 import { VError } from '../VError/VError.ts'
 
-export const load = (protocol) => {
+export const load = (protocol: any): any => {
   if (!protocol) {
     throw new VError('missing sec websocket protocol header')
   }

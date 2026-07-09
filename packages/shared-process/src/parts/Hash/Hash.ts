@@ -1,6 +1,6 @@
 import * as NodeCrypto from 'node:crypto'
 
-export const fromString = (content) => {
+export const fromString = (content: any): any => {
   return NodeCrypto.createHash('sha1').update(content).digest('hex')
 }
 

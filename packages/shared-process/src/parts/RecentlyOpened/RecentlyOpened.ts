@@ -8,7 +8,7 @@ import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import { VError } from '../VError/VError.ts'
 
-const addToArrayUnique = (recentlyOpened, path) => {
+const addToArrayUnique = (recentlyOpened: any, path: any): any => {
   const index = recentlyOpened.indexOf(path)
   if (index === -1) {
     return [path, ...recentlyOpened]
@@ -16,7 +16,7 @@ const addToArrayUnique = (recentlyOpened, path) => {
   return [path, ...recentlyOpened.slice(0, index), ...recentlyOpened.slice(index + 1)]
 }
 
-const getRecentlyOpened = async (recentlyOpenedPath) => {
+const getRecentlyOpened = async (recentlyOpenedPath: any): Promise<any> => {
   try {
     const parsed = await JsonFile.readJson(recentlyOpenedPath)
     return parsed
@@ -32,7 +32,7 @@ const getRecentlyOpened = async (recentlyOpenedPath) => {
   }
 }
 
-const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
+const setRecentlyOpened = async (recentlyOpenedPath: any, newRecentlyOpened: any): Promise<any> => {
   const stringified = Json.stringify(newRecentlyOpened)
   try {
     await FileSystem.writeFile(recentlyOpenedPath, stringified)
@@ -46,7 +46,7 @@ const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
   }
 }
 
-export const addPath = async (path) => {
+export const addPath = async (path: any): Promise<any> => {
   try {
     Assert.string(path)
     const recentlyOpenedPath = PlatformPaths.getRecentlyOpenedPath()

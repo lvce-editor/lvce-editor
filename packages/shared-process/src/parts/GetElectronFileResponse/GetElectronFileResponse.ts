@@ -13,7 +13,7 @@ import * as Logger from '../Logger/Logger.ts'
 
 // TODO maybe handle app responses and webview responses separately
 // maybe send webview requests directly to preview process
-export const getElectronFileResponse = async (url, request) => {
+export const getElectronFileResponse = async (url: any, request: any): Promise<any> => {
   try {
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)

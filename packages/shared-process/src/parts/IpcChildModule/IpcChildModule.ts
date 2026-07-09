@@ -7,7 +7,7 @@ import {
 } from '@lvce-editor/ipc'
 import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
-export const getModule = (method) => {
+export const getModule = (method: any): any => {
   switch (method) {
     case IpcChildType.NodeForkedProcess:
       return IpcChildWithNodeForkedProcess

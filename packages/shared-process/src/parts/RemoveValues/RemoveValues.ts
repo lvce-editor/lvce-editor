@@ -1,9 +1,9 @@
-export const removeValues = (value, toRemove) => {
+export const removeValues = (value: any, toRemove: any): any => {
   if (!value) {
     return value
   }
   if (Array.isArray(value)) {
-    const newItems = []
+    const newItems: any[] = []
     for (const item of value) {
       if (!toRemove.includes(item)) {
         newItems.push(removeValues(item, toRemove))

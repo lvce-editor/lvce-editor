@@ -1,5 +1,5 @@
 import { tmpdir } from 'node:os'
 
-export const getTmpDir = () => {
+export const getTmpDir = (): any => {
   return tmpdir()
 }

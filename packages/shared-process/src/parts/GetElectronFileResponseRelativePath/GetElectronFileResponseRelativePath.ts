@@ -9,7 +9,7 @@ const prefixLength = prefix.length
 const webViewPrefix = `${Scheme.WebView}://-`
 const webViewPrefixLength = webViewPrefix.length
 
-export const getElectronFileResponseRelativePath = (requestUrl) => {
+export const getElectronFileResponseRelativePath = (requestUrl: any): any => {
   if (requestUrl.startsWith(prefix)) {
     // TODO only support reading from app root and extensions
     // maybe add a separate protocol for extensions (e.g. lvce-remote)

@@ -1,4 +1,4 @@
-export const getNodeStartupTiming = () => {
+export const getNodeStartupTiming = (): any => {
   const {
     name,
     entryType,

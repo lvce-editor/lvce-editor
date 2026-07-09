@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as CliCommandType from '../CliCommandType/CliCommandType.ts'
 
-export const getModule = (parsedArgs) => {
+export const getModule = (parsedArgs: any): any => {
   Assert.object(parsedArgs)
   if (parsedArgs[CliCommandType.Status]) {
     return import('../CliStatus/CliStatus.ts')

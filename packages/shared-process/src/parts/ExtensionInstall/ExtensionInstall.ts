@@ -1,7 +1,7 @@
 import * as ExtensionInstallParseInput from '../ExtensionInstallParseInput/ExtensionInstallParseInput.ts'
 import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallType.ts'
 
-const getModule = (type) => {
+const getModule = (type: any): any => {
   switch (type) {
     case ExtensionInstallType.GithubRepository:
       return import('../ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.ts')
@@ -14,7 +14,7 @@ const getModule = (type) => {
   }
 }
 
-export const install = async (input) => {
+export const install = async (input: any): Promise<any> => {
   const parsed = ExtensionInstallParseInput.parse(input)
   if (parsed.type === ExtensionInstallType.ParsingError) {
     throw new Error(`Cannot install ${input}: ${parsed.options.message}`)

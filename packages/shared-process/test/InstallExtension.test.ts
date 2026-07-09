@@ -36,11 +36,11 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
 const InstallExtension = await import('../src/parts/InstallExtension/InstallExtension.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-const exists = async (path) => {
+const exists = async (path: any): Promise<any> => {
   try {
     await access(path)
     return true
@@ -53,7 +53,7 @@ const exists = async (path) => {
  * @param {string} inDir
  * @param {string} outFile
  */
-export const compress = async (inDir, outFile) => {
+export const compress = async (inDir: any, outFile: any): Promise<any> => {
   await mkdir(dirname(outFile), { recursive: true })
   await pipeline(
     tar.pack(inDir),
@@ -66,7 +66,7 @@ export const compress = async (inDir, outFile) => {
   )
 }
 
-const createExtensionTarBr = async (files) => {
+const createExtensionTarBr = async (files: any): Promise<any> => {
   const folder = '/tmp/extension-test/test-author.test-extension'
   await rm(folder, { force: true, recursive: true })
   await mkdir(folder, { recursive: true })
@@ -77,16 +77,16 @@ const createExtensionTarBr = async (files) => {
   await compress(folder, `${folder}.tar.br`)
 }
 
-let server
-let handler
-let marketplaceUrl
+let server: any
+let handler: any
+let marketplaceUrl: any
 
 beforeAll(async () => {
   const port = await getPort()
-  server = http.createServer((request, response) => {
+  server = http.createServer((request: any, response: any) => {
     handler(request, response)
   })
-  await new Promise((resolve) => {
+  await new Promise((resolve: any) => {
     server.listen(port, () => {
       resolve(undefined)
     })
@@ -116,7 +116,7 @@ test.skip('install', async () => {
     'main.js': 'export const activate = () => { console.info("hello world") }',
     'package.json': '{ "type" : "module" }',
   })
-  handler = async (request, response) => {
+  handler = async (request: any, response: any) => {
     switch (request.url) {
       case '/download/test-author.test-extension':
         response.statusCode = 200
@@ -149,7 +149,7 @@ test.skip('install', async () => {
 // TODO test is flaky https://github.com/lvce-editor/lvce-editor/actions/runs/3684799038/jobs/6234968296
 // probably should use unit test instead of e2e test here
 test.skip('install should fail when the server sends a bad status code', async () => {
-  handler = (request, response) => {
+  handler = (request: any, response: any) => {
     switch (request.url) {
       default:
         response.statusCode = 404
@@ -186,7 +186,7 @@ test.skip('install should fail when the server sends an invalid compressed objec
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir4)
   // TODO avoid side effect in tests, use createServer
-  handler = (request, res) => {
+  handler = (request: any, res: any) => {
     switch (request.url) {
       case '/download/test-author.test-extension':
         res.statusCode = 200

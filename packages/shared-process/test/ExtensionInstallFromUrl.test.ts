@@ -53,7 +53,7 @@ test('install - error with extraction', async () => {
   // @ts-ignore
   Download.download.mockImplementation(() => {})
   // @ts-ignore
-  Extract.extractTarBr.mockImplementation((url) => {
+  Extract.extractTarBr.mockImplementation((url: any) => {
     throw new Error(`Failed to extract file ${url}`)
   })
   await expect(

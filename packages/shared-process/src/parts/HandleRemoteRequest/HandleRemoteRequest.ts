@@ -3,7 +3,7 @@ import * as GetElectronFileResponse from '../GetElectronFileResponse/GetElectron
 import * as HandleSocketError from '../HandleSocketError/HandleSocketError.ts'
 import * as HttpServerResponse from '../HttpServerResponse/HttpServerResponse.ts'
 
-export const handleRemoteRequest = async (socket, request) => {
+export const handleRemoteRequest = async (socket: any, request: any): Promise<any> => {
   Assert.object(socket)
   Assert.object(request)
   socket.on('error', HandleSocketError.handleSocketError)

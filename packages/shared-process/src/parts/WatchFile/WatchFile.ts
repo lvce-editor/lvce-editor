@@ -1,7 +1,7 @@
 import { VError } from '@lvce-editor/verror'
 import * as fs from 'node:fs/promises'
 
-export const watchFile = async (path, callback) => {
+export const watchFile = async (path: any, callback: any): Promise<any> => {
   try {
     const watcher = fs.watch(path)
     for await (const event of watcher) {

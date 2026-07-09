@@ -8,13 +8,13 @@ import * as ShouldLogError from '../ShouldLogError/ShouldLogError.ts'
 
 const preparePrettyError = PrettyError.prepare
 
-const logError = (error, prettyError) => {
+const logError = (error: any, prettyError?: any): any => {
   if (ShouldLogError.shouldLogError(error)) {
     PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
   }
 }
 
-export const handleMessage = (event) => {
+export const handleMessage = (event: any): any => {
   return JsonRpc.handleJsonRpcMessage(
     event.target,
     event.data,

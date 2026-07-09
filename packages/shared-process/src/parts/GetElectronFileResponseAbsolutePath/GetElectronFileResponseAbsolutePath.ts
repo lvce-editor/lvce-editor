@@ -9,7 +9,7 @@ import * as StaticPath from '../StaticPath/StaticPath.ts'
 
 const invalidIconsPath = Path.join(Root.root, 'static', '__missing_vscode_icon__.svg')
 
-const getIconAbsolutePath = (pathName) => {
+const getIconAbsolutePath = (pathName: any): any => {
   const relativePath = pathName.startsWith('/static/icons/') ? pathName.slice('/static/icons/'.length) : pathName.slice('/icons/'.length)
   if (!relativePath || relativePath.includes('/') || relativePath.includes('\\') || relativePath.includes('..')) {
     return invalidIconsPath
@@ -26,7 +26,7 @@ const getIconAbsolutePath = (pathName) => {
 }
 
 // TODO clean up this code
-export const getElectronFileResponseAbsolutePath = (pathName) => {
+export const getElectronFileResponseAbsolutePath = (pathName: any): any => {
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
     const staticPath = StaticPath.getStaticPath()

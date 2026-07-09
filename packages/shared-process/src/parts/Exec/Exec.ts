@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
  * @param {string[]} args
  * @returns
  */
-export const exec = async (uri, args) => {
+export const exec = async (uri: any, args: any): Promise<any> => {
   const path = fileURLToPath(uri)
   childProcess.execFileSync(path, args)
 }

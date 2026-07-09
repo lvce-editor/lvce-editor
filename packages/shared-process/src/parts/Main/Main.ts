@@ -6,7 +6,7 @@ import * as ParentIpc from '../MainProcess/MainProcess.ts'
 import * as ProcessListeners from '../ProcessListeners/ProcessListeners.ts'
 import * as Signal from '../Signal/Signal.ts'
 
-export const main = async () => {
+export const main = async (): Promise<any> => {
   Error.stackTraceLimit = 999
   Command.setLoad(Module.load)
   process.on('disconnect', HandleDisconnect.handleDisconnect)

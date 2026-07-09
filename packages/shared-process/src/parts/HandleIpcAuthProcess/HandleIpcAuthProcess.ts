@@ -1,10 +1,10 @@
 import * as AuthProcess from '../AuthProcess/AuthProcess.ts'
 
-export const targetMessagePort = () => {
+export const targetMessagePort = (): any => {
   return AuthProcess.getOrCreate()
 }
 
-export const upgradeMessagePort = (port, message) => {
+export const upgradeMessagePort = (port: any, message: any): any => {
   return {
     type: 'send',
     method: 'HandleMessagePort.handleMessagePort',

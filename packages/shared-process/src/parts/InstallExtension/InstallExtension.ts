@@ -5,7 +5,7 @@ import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as Queue from '../Queue/Queue.ts'
 import { VError } from '../VError/VError.ts'
 
-export const installExtension = async (id) => {
+export const installExtension = async (id: any): Promise<any> => {
   // TODO this should be a stateless function, renderer-worker should have info on marketplace url
   // TODO use command.execute
   try {

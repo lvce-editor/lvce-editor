@@ -1,4 +1,4 @@
-const getHeaderValue = (headers, name) => {
+const getHeaderValue = (headers: any, name: any): any => {
   const lowerCaseName = name.toLowerCase()
   for (const [key, value] of Object.entries(headers || {})) {
     if (key.toLowerCase() === lowerCaseName) {
@@ -8,7 +8,7 @@ const getHeaderValue = (headers, name) => {
   return ''
 }
 
-const normalizeHeaderValue = (value) => {
+const normalizeHeaderValue = (value: any): any => {
   if (Array.isArray(value)) {
     return value.join(',')
   }
@@ -18,14 +18,14 @@ const normalizeHeaderValue = (value) => {
   return value
 }
 
-const getAllowedHosts = (headers) => {
+const getAllowedHosts = (headers: any): any => {
   const host = normalizeHeaderValue(getHeaderValue(headers, 'host'))
   const forwardedHost = normalizeHeaderValue(getHeaderValue(headers, 'x-forwarded-host'))
   const hosts = [host, ...forwardedHost.split(',')]
-  return hosts.map((host) => host.trim().toLowerCase()).filter(Boolean)
+  return hosts.map((host: any) => host.trim().toLowerCase()).filter(Boolean)
 }
 
-export const isAllowedWebSocketOrigin = (request) => {
+export const isAllowedWebSocketOrigin = (request: any): any => {
   const { headers } = request
   const origin = normalizeHeaderValue(getHeaderValue(headers, 'origin'))
   if (!origin) {

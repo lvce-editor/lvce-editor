@@ -2,32 +2,32 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as Scheme from '../Scheme/Scheme.ts'
 
-const getFrameSrc = () => {
+const getFrameSrc = (): any => {
   if (IsElectron.isElectron) {
     return [`frame-src ${Scheme.WebView}:`]
   }
   return [`frame-src 'self' http://localhost:3001 http://localhost:3002`]
 }
 
-const getManifestSrc = () => {
+const getManifestSrc = (): any => {
   if (IsElectron.isElectron) {
     return []
   }
   return [`manifest-src 'self'`]
 }
 
-const getConnectSrc = () => {
+const getConnectSrc = (): any => {
   if (IsElectron.isElectron) {
     return []
   }
   return [`connect-src 'self'`]
 }
 
-const getFrameAncestors = () => {
+const getFrameAncestors = (): any => {
   return [`frame-ancestors 'none'`]
 }
 
-const getSandbox = () => {
+const getSandbox = (): any => {
   // disabled because chrome devtools shows a warning
   // for some reason when sandbox is enabled
   if (Math) {

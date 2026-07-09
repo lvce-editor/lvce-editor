@@ -5,7 +5,7 @@ import * as GetIcon from '../GetIcon/GetIcon.ts'
  *
  * @returns {any}
  */
-export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, background, preloadUrl }) => {
+export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, background, preloadUrl }: any): any => {
   const icon = GetIcon.getIcon()
   return {
     x,

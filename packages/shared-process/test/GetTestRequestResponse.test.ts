@@ -39,7 +39,7 @@ const temporaryDirectories: string[] = []
 afterEach(async () => {
   const directories = [...temporaryDirectories]
   temporaryDirectories.length = 0
-  await Promise.all(directories.map((directory) => rm(directory, { force: true, recursive: true })))
+  await Promise.all(directories.map((directory: any) => rm(directory, { force: true, recursive: true })))
 })
 
 test('getTestRequestResponse', async () => {

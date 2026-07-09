@@ -12,7 +12,7 @@ import * as UpdateState from '../UpdateState/UpdateState.ts'
 import * as UpdateStateType from '../UpdateStateType/UpdateStateType.ts'
 import { VError } from '../VError/VError.ts'
 
-const getArchPostFix = (arch) => {
+const getArchPostFix = (arch: any): any => {
   switch (arch) {
     case 'arm':
     case 'arm64':
@@ -23,7 +23,7 @@ const getArchPostFix = (arch) => {
 }
 
 // TODO make it possible to cancel downloading updates
-export const downloadUpdate = async (version) => {
+export const downloadUpdate = async (version: any): Promise<any> => {
   try {
     Assert.string(version)
     const repository = Platform.getRepository()
@@ -43,7 +43,7 @@ export const downloadUpdate = async (version) => {
   }
 }
 
-export const installAndRestart = async (downloadPath) => {
+export const installAndRestart = async (downloadPath: any): Promise<any> => {
   try {
     Assert.string(downloadPath)
     const args = GetNsisUpdateArgs.getNsisUpdateArgs()

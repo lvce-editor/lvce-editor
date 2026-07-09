@@ -2,7 +2,7 @@ import * as GetCustomPathsConfig from '../GetCustomPathsConfig/GetCustomPathsCon
 import * as Platform from '../Platform/Platform.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 
-export const addCustomPathsToIndexHtml = async (content) => {
+export const addCustomPathsToIndexHtml = async (content: any): Promise<any> => {
   if (Platform.isProduction) {
     return content
   }
