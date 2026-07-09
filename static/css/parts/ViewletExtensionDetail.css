@@ -49,6 +49,8 @@
 
 /* TODO use separate classname and avoid nesting */
 .ExtensionDetail .Markdown {
+  flex: 1;
+  min-width: 0;
   overflow: auto;
 }
 

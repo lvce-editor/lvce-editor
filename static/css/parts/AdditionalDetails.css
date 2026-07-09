@@ -13,6 +13,7 @@
 }
 
 .Aside {
+  flex: 0 0 var(--ExtensionDetailSideBarWidth);
   min-width: 175px;
   contain: strict;
   scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
