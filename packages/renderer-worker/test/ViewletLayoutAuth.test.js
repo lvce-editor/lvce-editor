@@ -198,7 +198,13 @@ test('setAuthState fans auth changes out to activity bar and chat when visible',
     userUsedTokens: 42,
   })
 
-  expect(ActivityBarWorker.invoke).toHaveBeenCalledWith('ActivityBar.setUserLoginState', 2, 'logged in')
+  expect(ActivityBarWorker.invoke).toHaveBeenCalledWith('ActivityBar.setUserLoginState', 2, 'logged in', {
+    authErrorMessage: '',
+    userName: 'Test User',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
   expect(ChatViewWorker.invoke).toHaveBeenCalledWith('Chat.handleAuthStateChange', 3, {
     authAccessToken: 'token-1',
     authErrorMessage: '',
