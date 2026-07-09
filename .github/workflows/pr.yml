@@ -105,6 +105,12 @@ jobs:
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:app-image
+      - name: Upload Electron App Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-app-${{ matrix.os }}
+          path: packages/build/.tmp/releases/*
+          if-no-files-found: error
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
