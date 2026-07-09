@@ -8,6 +8,7 @@ import tar from 'tar-fs'
 import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Process from '../Process/Process.js'
 import extensions from './builtinExtensions.json' with { type: 'json' }
@@ -29,6 +30,7 @@ const downloadExtension = async (extension) => {
     Assert.string(extension.repository)
     Assert.string(extension.name)
     Assert.string(extension.version)
+    Assert.string(extension.created)
     if (!extension.repository.startsWith('github.com/')) {
       throw new VError('currenly only extensions from github releases are supported')
     }
@@ -41,14 +43,31 @@ const downloadExtension = async (extension) => {
         // TODO check version of unpackaged extension and when it is different, unpack the new extension
         await extract(cachedPath, Path.absolute(Path.join(`extensions`, extension.name)))
       }
+      await applyExtensionMetadata(extension, outPath)
       return
     }
     const url = `https://${extension.repository}/releases/download/v${extension.version}/${baseName}-v${extension.version}.tar.br`
     await downloadUrl(url, cachedPath)
     await extract(cachedPath, outPath)
+    await applyExtensionMetadata(extension, outPath)
   } catch (error) {
     throw new VError(error, `Failed to download extension ${extension.name}`)
   }
+}
+
+const applyExtensionMetadata = async (extension, outPath) => {
+  const manifestPath = Path.join(outPath, 'extension.json')
+  const manifest = await JsonFile.readJson(manifestPath)
+  if (manifest.created === extension.created) {
+    return
+  }
+  await JsonFile.writeJson({
+    to: manifestPath,
+    value: {
+      ...manifest,
+      created: extension.created,
+    },
+  })
 }
 
 export const extract = async (inFile, outDir) => {
