@@ -404,6 +404,10 @@
   mask-image: url(/icons/record-keys.svg);
 }
 
+.MaskIconKeyboardTab {
+  mask-image: url(/icons/keyboard-tab.svg);
+}
+
 .MaskIconSortPrecedence {
   mask-image: url(/icons/sort-precedence.svg);
 }
