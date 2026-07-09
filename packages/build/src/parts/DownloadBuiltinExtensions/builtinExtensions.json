@@ -332,7 +332,7 @@
   {
     "name": "builtin.theme-material",
     "repository": "github.com/lvce-editor/theme-material",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.theme-monokai",
