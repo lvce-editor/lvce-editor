@@ -39,8 +39,9 @@ const checkboxChecked = {
 
 const disabled = {
   type: VirtualDomElements.Div,
-  className: ClassNames.MenuItem,
+  className: `${ClassNames.MenuItem} ${ClassNames.MenuItemDisabled}`,
   role: AriaRoles.MenuItem,
+  ariaDisabled: true,
   tabIndex: -1,
   disabled: true,
   childCount: 1,
