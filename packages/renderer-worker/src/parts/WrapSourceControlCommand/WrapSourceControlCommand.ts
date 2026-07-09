@@ -1,6 +1,7 @@
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as Command from '../Command/Command.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const wrapSourceControlCommand = (key: string) => {
   const fn = async (state, ...args) => {
@@ -23,7 +24,7 @@ export const wrapSourceControlCommand = (key: string) => {
 
       ViewletStates.setState(state.uid, newState)
       ViewletStates.setRenderedState(state.uid, newState)
-      await Command.execute('Layout.handleBadgeCountChange')
+      await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
     }
     return {
       ...state,

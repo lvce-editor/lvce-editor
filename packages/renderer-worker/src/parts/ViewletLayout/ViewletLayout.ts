@@ -22,6 +22,7 @@ import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -30,6 +31,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
 
@@ -1668,6 +1670,22 @@ export const setUpdateState = async (state, updateState) => {
 
 export const handleWorkspaceRefresh = async (state: LayoutState) => {
   return callGlobalEvent(state, 'handleWorkspaceRefresh')
+}
+
+export const refreshSourceControlBadgeCount = async (state: LayoutState): Promise<LayoutStateResult> => {
+  try {
+    const badgeCount = await SourceControlWorker.invoke('SourceControl.getWorkspaceBadgeCount', Workspace.state.workspacePath, assetDir, Platform.platform)
+    return setBadgeCount(state, ViewletModuleId.SourceControl, badgeCount)
+  } catch {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+}
+
+export const contentLoadedEffects = async (): Promise<void> => {
+  await Command.execute('Layout.refreshSourceControlBadgeCount')
 }
 
 export const handleBadgeCountChange = async (state, changes) => {
