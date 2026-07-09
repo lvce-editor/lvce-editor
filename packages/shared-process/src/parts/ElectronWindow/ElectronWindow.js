@@ -3,8 +3,13 @@ import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as ParentIpc from '../MainProcess/MainProcess.js'
 
-export const openNew = () => {
-  return AppWindow.openNew()
+export const openNew = (_windowId, url) => {
+  return AppWindow.openNew(url)
+}
+
+export const openNewWithUri = (_windowId, uri) => {
+  Assert.string(uri)
+  return AppWindow.openNewWithUri(uri)
 }
 
 export const minimize = (windowId) => {

@@ -23,3 +23,9 @@ export const openNew = async (url) => {
   const preloadUrl = PreloadUrl.getPreloadUrl()
   return createAppWindow({ preferences, parsedArgs: [], workingDirectory: '', url, preloadUrl })
 }
+
+export const openNewWithUri = async (uri) => {
+  const url = new URL(DefaultUrl.defaultUrl)
+  url.searchParams.set('openUri', uri)
+  return openNew(url.toString())
+}

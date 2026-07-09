@@ -254,6 +254,7 @@ export const getModuleId = (commandId) => {
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.minimize':
     case 'ElectronWindow.openNew':
+    case 'ElectronWindow.openNewWithUri':
     case 'ElectronWindow.reload':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.unmaximize':
