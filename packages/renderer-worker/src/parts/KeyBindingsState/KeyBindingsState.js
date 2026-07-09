@@ -6,6 +6,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 export const state = {
   keyBindings: [],
   keyBindingSets: Object.create(null),
+  keyBindingSetCounts: Object.create(null),
   /**
    * @type {Uint32Array}
    */
@@ -56,10 +57,11 @@ export const addKeyBindings = (id, keyBindings) => {
   Assert.string(id)
   Assert.array(keyBindings)
   if (id in state.keyBindingSets) {
-    Logger.warn(`cannot add keybindings multiple times: ${id}`)
+    state.keyBindingSetCounts[id]++
     return
   }
   state.keyBindingSets[id] = keyBindings
+  state.keyBindingSetCounts[id] = 1
   update()
 }
 
@@ -67,16 +69,22 @@ export const setKeyBindings = (id, keyBindings) => {
   Assert.string(id)
   Assert.array(keyBindings)
   state.keyBindingSets[id] = keyBindings
+  state.keyBindingSetCounts[id] = 1
   update()
 }
 
 export const removeKeyBindings = (id) => {
-  const { keyBindingSets } = state
+  const { keyBindingSets, keyBindingSetCounts } = state
   if (!(id in keyBindingSets)) {
     Logger.warn(`cannot remove keybindings that are not registered: ${id}`)
     return
   }
+  keyBindingSetCounts[id]--
+  if (keyBindingSetCounts[id] > 0) {
+    return
+  }
   delete keyBindingSets[id]
+  delete keyBindingSetCounts[id]
   update()
 }
 

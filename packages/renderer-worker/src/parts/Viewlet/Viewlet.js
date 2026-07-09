@@ -13,6 +13,10 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
+const getKeyBindingSetId = (instance, fallback) => {
+  return instance.moduleId || fallback
+}
+
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
@@ -118,7 +122,7 @@ export const dispose = async (id) => {
     instance.factory.dispose(instance.state)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(instanceUid)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, instanceUid))
     }
   } catch (error) {
     console.error(error)
@@ -154,7 +158,7 @@ export const disposeFunctional = (id) => {
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(id)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -218,7 +222,7 @@ export const hideFunctional = (id) => {
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(id)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -468,7 +472,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     Assert.number(uid)
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(uid)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, uid))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
