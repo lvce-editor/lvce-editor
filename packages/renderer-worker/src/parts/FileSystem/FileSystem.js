@@ -99,6 +99,12 @@ export const getPathSeparator = async (uri) => {
   return fileSystem.getPathSeparator(uri)
 }
 
+export const isReadonly = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  return fileSystem.isReadonly(uri)
+}
+
 export const getRealPath = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)

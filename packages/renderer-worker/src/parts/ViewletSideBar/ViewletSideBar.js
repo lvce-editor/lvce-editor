@@ -47,12 +47,13 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state, savedState, targetViewletId) => {
   // TODO get it from layout state
-  let savedViewletId = targetViewletId || (await Command.execute('Layout.getActiveSideBarView'))
+  const restore = savedState?.restore !== false
+  let savedViewletId = restore ? targetViewletId || (await Command.execute('Layout.getActiveSideBarView')) : ViewletModuleId.Explorer
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
   // const savedViewletId = getSavedViewletId(savedState)
-  return handleSideBarViewletChange(state, savedViewletId)
+  return handleSideBarViewletChange(state, savedViewletId, restore)
 }
 
 // export const contentLoaded = async (state, savedState) => {
@@ -102,7 +103,7 @@ const getChildModuleId = (moduleId) => {
 //   ]
 // }
 
-export const handleSideBarViewletChange = async (state, moduleId) => {
+export const handleSideBarViewletChange = async (state, moduleId, restore = true) => {
   console.assert(typeof moduleId === 'string')
   if (!moduleId) {
     // const currentViewletState = ViewletStates.getState(state.currentViewletId)
@@ -148,26 +149,32 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       shouldRenderEvents: false,
     },
     false,
-    true,
+    restore,
+    restore ? undefined : { restore: false },
   )
   if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
     Viewlet.disposeFunctional(childUid)
     await savePromise
     return state
   }
-  const childInstance = ViewletStates.getInstance(childUid)
-  const title =
-    childModuleId === ViewletModuleId.ExtensionView
-      ? childInstance?.state?.title || Character.EmptyString
-      : Character.EmptyString
   let actionsDom = []
   let actionsUid = -1
+  let title = Character.EmptyString
   if (commands) {
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
     if (actionsDomIndex >= 0) {
       const nextActionsDom = commands[actionsDomIndex][3]
       actionsDom = Array.isArray(nextActionsDom) ? nextActionsDom : []
       commands.splice(actionsDomIndex, 1)
+    }
+    const titleIndex = commands.findIndex((command) => command[2] === 'setTitle')
+    title = titleIndex === -1 ? Character.EmptyString : commands[titleIndex][3]
+    if (titleIndex !== -1) {
+      commands.splice(titleIndex, 1)
+    }
+    if (!title && childModuleId === ViewletModuleId.ExtensionView) {
+      const childInstance = ViewletStates.getInstance(childUid)
+      title = childInstance?.state?.title || Character.EmptyString
     }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
     if (actionsDom.length > 0) {
@@ -197,6 +204,13 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     currentViewletId: moduleId,
     childUid,
     actionsUid,
+    title,
+  }
+}
+
+export const setTitle = (state, title) => {
+  return {
+    ...state,
     title,
   }
 }

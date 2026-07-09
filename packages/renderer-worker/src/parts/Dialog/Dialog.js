@@ -8,13 +8,30 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as IsAbortError from '../IsAbortError/IsAbortError.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   dialog: undefined,
 }
 
-const openFileWeb = () => {
-  Logger.warn('open file - not implemented')
+const openFileWeb = async () => {
+  try {
+    const [fileHandle] = await Command.execute('FilePicker.showFilePicker', {
+      multiple: false,
+    })
+    if (!fileHandle) {
+      return
+    }
+    const uri = `html:///${fileHandle.name}`
+    await Command.execute('PersistentFileHandle.addHandle', uri, fileHandle)
+    await OpenUri.openUri(uri)
+  } catch (error) {
+    if (IsAbortError.isAbortError(error)) {
+      return
+    }
+    throw new VError(error, 'Failed to open file')
+  }
 }
 
 const openFileRemote = () => {

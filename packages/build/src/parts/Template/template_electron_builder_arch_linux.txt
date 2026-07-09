@@ -12,18 +12,11 @@
   "build": {
     "publish": [],
     "asar": @@ASAR@@,
-    "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "icon": "./build/icons/",
     "linux": {
       "executableName": "@@NAME@@",
       "category": "Utility;TextEditor;Development;IDE;",
-      "desktop": {
-        "GenericName": "Text Editor",
-        "StartupNotify": "false",
-        "StartupWMClass": "@@PRODUCT_NAME@@",
-        "Keywords": "@@NAME@@;"
-      },
       "target": [
         {
           "target": "pacman"

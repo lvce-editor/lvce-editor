@@ -194,7 +194,7 @@ const launchProcess = async (processPath, execArgv) => {
  * @returns {Promise<ChildProcess>}
  */
 const launchSharedProcess = async () => {
-  const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
+  const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
   return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
 }
 

@@ -45,7 +45,7 @@ jobs:
           [
             { os: windows-2025, arch: x64 },
             { os: windows-2025, arch: arm64 },
-            { os: macos-15, arch: arm64 },
+            { os: macos-26, arch: arm64 },
             { os: ubuntu-24.04, arch: x64 },
             { os: ubuntu-24.04, arch: arm64 },
             { os: ubuntu-24.04, arch: armhf },
@@ -113,7 +113,7 @@ jobs:
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
       - name: Install Cloudsmith CLI
         if: matrix.versions.os == 'ubuntu-24.04'
-        uses: cloudsmith-io/cloudsmith-cli-action@v2
+        uses: cloudsmith-io/cloudsmith-cli-action@159f1619275d5d3147f059c3cc110938ec221d16
         with:
           api-key: ${{ secrets.CLOUDSMITH_API_TOKEN }}
 
@@ -190,10 +190,10 @@ jobs:
           asset_name: ${{ env.ASSET_DEB_ARMHF }}
           asset_content_type: application/octet-stream
       # - name: Build Electron App (Macos dmg, x64)
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   run: npm run build:electron:mac:x64 -- --product=lvce
       # - name: Rename Electron App (Macos dmg, x64)
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   shell: bash
       #   run: |
       #     staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
@@ -201,7 +201,7 @@ jobs:
       #     echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
       # - name: Release Electron App (Macos dmg, x64)
       #   uses: actions/upload-release-asset@v1.0.1
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
@@ -209,19 +209,37 @@ jobs:
       #     asset_path: ${{ env.ASSET_DMG_X64 }}
       #     asset_name: ${{ env.ASSET_DMG_X64 }}
       #     asset_content_type: application/octet-stream
+      - name: Prepare Apple API key
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        shell: bash
+        env:
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+        run: |
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
+          printf '%s' "$APPLE_API_KEY_BASE64" | base64 -D > "$api_key_path"
+          chmod 600 "$api_key_path"
+          echo "APPLE_API_KEY_PATH=$api_key_path" >> $GITHUB_ENV
       - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         run: npm run build:electron:mac:arm64 -- --product=lvce
+        env:
+          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       - name: Rename Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
           mv "packages/build/.tmp/releases/lvce-arm64.dmg" "$staging"
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (Macos dmg, x64)
+      - name: Release Electron App (Macos dmg, arm64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

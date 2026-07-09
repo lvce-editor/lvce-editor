@@ -2,9 +2,11 @@ import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
+import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
+import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
@@ -167,6 +169,7 @@ export const create = (id: number): LayoutState => {
     previewMaxWidth: 0,
     previewMinHeight: 0,
     previewMinWidth: 0,
+    restore: true,
     sideBarMaxWidth: 0,
     sideBarMinWidth: 0,
     secondarySideBarMaxWidth: 0,
@@ -283,11 +286,13 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
+  const restore = savedState?.restore !== false
+  const stateToRestore = restore ? savedState : undefined
   const { panelHeight, panelVisible, sideBarVisible, sideBarWidth, secondarySideBarVisible, secondarySideBarWidth, previewVisible, previewWidth } =
-    getSavedPoints(savedState)
-  const savedView = getSavedSideBarView(savedState)
-  const savedSecondaryView = getSavedSecondarySideBarView(savedState)
-  const previewUri = savedState?.previewUri || ''
+    getSavedPoints(stateToRestore)
+  const savedView = getSavedSideBarView(stateToRestore)
+  const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
+  const previewUri = stateToRestore?.previewUri || ''
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -325,6 +330,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     panelSashVisible: true,
     previewSashVisible: previewVisible,
     previewUri,
+    restore,
     sideBarLocation,
     sideBarSashVisible: true,
     sideBarView: savedView,
@@ -401,11 +407,17 @@ const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarVi
   return activityBarCommands
 }
 
-const renderActivityBarAuthCommands = async (activityBarId: number, userState: string) => {
+const renderActivityBarAuthCommands = async (state: LayoutState) => {
+  const { activityBarId, userState } = state
   if (activityBarId === -1) {
     return []
   }
-  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState))
+  await ActivityBarWorker.invoke(
+    'ActivityBar.setUserLoginState',
+    activityBarId,
+    toActivityBarUserLoginState(userState),
+    toFilteredUserInfo(state, { includeAccessToken: false }),
+  )
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
@@ -420,10 +432,7 @@ const renderChatAuthCommands = async (state: LayoutState) => {
 }
 
 const getAuthFanoutCommands = async (state: LayoutState) => {
-  const [activityBarCommands, chatCommands] = await Promise.all([
-    renderActivityBarAuthCommands(state.activityBarId, state.userState),
-    renderChatAuthCommands(state),
-  ])
+  const [activityBarCommands, chatCommands] = await Promise.all([renderActivityBarAuthCommands(state), renderChatAuthCommands(state)])
   return [...(Array.isArray(activityBarCommands) ? activityBarCommands : []), ...(Array.isArray(chatCommands) ? chatCommands : [])]
 }
 
@@ -556,9 +565,44 @@ export const openCommandPalette = async (state: LayoutState): Promise<LayoutStat
   }
 }
 
-export const showPanel = (state: LayoutState) => {
+const getPanelViewChangeCommands = async (moduleId: string) => {
+  if (!moduleId) {
+    return []
+  }
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  if (!instance) {
+    return []
+  }
+  const panelUid = instance.state.uid
+  await PanelWorker.invoke('Panel.toggleView', panelUid, moduleId)
+  const diffResult = await PanelWorker.invoke('Panel.diff2', panelUid)
+  if (diffResult.length === 0) {
+    return []
+  }
+  return PanelWorker.invoke('Panel.render2', panelUid, diffResult)
+}
+
+export const showPanel = async (state: LayoutState, moduleId = state.panelView) => {
+  if (state.panelVisible) {
+    const commands = await getPanelViewChangeCommands(moduleId)
+    return {
+      newState: {
+        ...state,
+        panelView: moduleId,
+      },
+      commands,
+    }
+  }
   // @ts-ignore
-  return show(state, LayoutModules.Panel)
+  const { newState, commands } = await show(state, LayoutModules.Panel)
+  const panelViewCommands = await getPanelViewChangeCommands(moduleId)
+  return {
+    newState: {
+      ...newState,
+      panelView: moduleId,
+    },
+    commands: [...commands, ...panelViewCommands],
+  }
 }
 
 export const hidePanel = (state: LayoutState) => {
@@ -816,6 +860,8 @@ const loadIfVisible = async (
     let childUid = -1
     if (visible) {
       childUid = Id.create()
+      const restore = state.restore !== false
+      const restoreState = restore ? undefined : { restore: false }
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
@@ -833,7 +879,8 @@ const loadIfVisible = async (
           // render: false,
         },
         false,
-        true,
+        restore,
+        restoreState,
       )
     }
     const orderedCommands = reorderCommands(commands)
@@ -1498,8 +1545,13 @@ export const isSideBarVisible = (state: LayoutState) => {
   return sideBarVisible
 }
 
-export const getAllQuickPickMenuEntries = () => {
-  return MenuEntriesState.getAll()
+export const getAllQuickPickMenuEntries = async () => {
+  const entries = MenuEntriesState.getAll()
+  const autoUpdateType = await GetAutoUpdateType.getAutoUpdateType()
+  if (autoUpdateType === AutoUpdateType.Deb) {
+    return entries.filter((entry) => entry.id !== 'AutoUpdater.checkForUpdates')
+  }
+  return entries
 }
 
 const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<LayoutStateResult> => {

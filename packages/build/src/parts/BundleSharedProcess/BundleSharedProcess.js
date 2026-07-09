@@ -1,4 +1,4 @@
-import { readFile, readdir, rename, writeFile } from 'fs/promises'
+import { chmod, readFile, readdir, rm, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
@@ -9,6 +9,27 @@ import * as Remove from '../Remove/Remove.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Replace from '../Replace/Replace.js'
 import * as ReplaceTs from '../ReplaceTs/ReplaceTs.js'
+
+const transpileTypescriptFile = async (path) => {
+  const { mode } = await stat(path)
+  const content = await readFile(path, 'utf8')
+  const newContent = await ReplaceTs.replaceTs(content)
+  const jsPath = path.slice(0, -3) + '.js'
+  await writeFile(jsPath, newContent)
+  await chmod(jsPath, mode)
+  await rm(path)
+}
+
+const transpileTypescriptDirectory = async (path) => {
+  const dirents = await readdir(path, { recursive: true, withFileTypes: true })
+  for (const dirent of dirents) {
+    const direntName = join(dirent.parentPath, dirent.name)
+    if (dirent.isDirectory() || !direntName.endsWith('.ts')) {
+      continue
+    }
+    await transpileTypescriptFile(direntName)
+  }
+}
 
 const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   const newPackageJson = {
@@ -63,6 +84,7 @@ export const bundleSharedProcess = async ({
     from: 'packages/shared-process/package.json',
     to: `${cachePath}/package.json`,
   })
+  await transpileTypescriptDirectory(`${cachePath}/src`)
   await Replace.replace({
     path: `${cachePath}/src/parts/PreloadUrl/PreloadUrl.js`,
     occurrence: `join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'preload', 'src', 'index.js')`,
@@ -211,10 +233,12 @@ export const getBuiltinExtensionsPath = () => {
       from: 'packages/shared-process/bin',
       to: `${cachePath}/bin`,
     })
-    await Copy.copy({
-      from: 'packages/shared-process/index.js',
-      to: `${cachePath}/index.js`,
+    await transpileTypescriptDirectory(`${cachePath}/bin`)
+    await Copy.copyFile({
+      from: 'packages/shared-process/index.ts',
+      to: `${cachePath}/index.ts`,
     })
+    await transpileTypescriptFile(`${cachePath}/index.ts`)
     await Replace.replace({
       path: `${cachePath}/src/parts/Root/Root.js`,
       occurrence: `export const root = resolve(__dirname, '../../../../../')`,
@@ -453,24 +477,6 @@ export const processExplorerPath = ResolveBin.resolveBin('@lvce-editor/process-e
   }
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
   const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess, target)
-  const dirents = await readdir(`${cachePath}/src`, { recursive: true, withFileTypes: true })
-  for (const dirent of dirents) {
-    const direntName = join(dirent.parentPath, dirent.name)
-    if (dirent.isDirectory()) {
-      continue
-    }
-    if (!direntName.endsWith('.js') && !direntName.endsWith('.ts')) {
-      continue
-    }
-    const content = await readFile(direntName, 'utf8')
-    const newContent = await ReplaceTs.replaceTs(content)
-    if (content !== newContent) {
-      await writeFile(direntName, newContent)
-    }
-    if (direntName.endsWith('.ts')) {
-      await rename(direntName, `${direntName.slice(0, -3)}.js`)
-    }
-  }
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: newPackageJson,

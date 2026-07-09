@@ -1,0 +1,32 @@
+import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.ts'
+import * as FileSystem from '../FileSystem/FileSystem.ts'
+import * as JsonFile from '../JsonFile/JsonFile.ts'
+import * as Path from '../Path/Path.ts'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
+import { VError } from '../VError/VError.ts'
+
+export const install = async ({ user, repo, branch }) => {
+  try {
+    const cachedExtensionsPath = PlatformPaths.getCachedExtensionsPath()
+    const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
+    const cachedExtensionPath = Path.join(cachedExtensionsPath, `github-${user}-${repo}-${branch}`)
+    await DownloadAndExtract.downloadAndExtractTarGz({
+      url,
+      outDir: cachedExtensionPath,
+      strip: 1,
+    })
+    const extensionsPath = PlatformPaths.getExtensionsPath()
+    const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
+    const manifestJson = await JsonFile.readJson(manifestPath)
+    const { id } = manifestJson
+    if (!id) {
+      throw new Error('missing id in extension manifest')
+    }
+    const outDir = Path.join(extensionsPath, id)
+    await FileSystem.remove(outDir)
+    await FileSystem.mkdir(extensionsPath)
+    await FileSystem.rename(cachedExtensionPath, outDir)
+  } catch (error) {
+    throw new VError(error, `Failed to install ${user}/${repo}`)
+  }
+}

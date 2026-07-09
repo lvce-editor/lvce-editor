@@ -36,7 +36,7 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
-    occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
+    occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')`,
     replacement: `const sharedProcessUrl = new URL('src/sharedProcessMain.js', import.meta.resolve('@lvce-editor/shared-process')).toString()
   const sharedProcessPath = fileURLToPath(sharedProcessUrl)`,
   })

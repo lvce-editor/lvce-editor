@@ -62,6 +62,16 @@ test('Undo', () => {
   })
 })
 
+test('Toggle Developer Tools', () => {
+  expect(
+    ToElectronMenuItem.toElectronMenuItem({
+      label: 'Toggle Developer Tools',
+    }),
+  ).toEqual({
+    label: 'Toggle Developer Tools',
+  })
+})
+
 test('Separator', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({

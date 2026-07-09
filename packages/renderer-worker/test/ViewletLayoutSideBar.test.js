@@ -45,6 +45,7 @@ const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts'
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 const activityBarInvokeMock = /** @type {any} */ (ActivityBarWorker.invoke)
+const viewletManagerLoadMock = /** @type {any} */ (ViewletManager.load)
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -174,6 +175,31 @@ test('hideSideBar updates activity bar through shared sidebar render helper', as
       sideBarVisible: false,
     }),
   })
+})
+
+test('loadSideBarIfVisible disables child restore when layout restore is disabled', async () => {
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'SideBar', 1, true]])
+  const state = {
+    ...ViewletLayout.create(1),
+    restore: false,
+    sideBarHeight: 400,
+    sideBarLeft: 0,
+    sideBarTop: 0,
+    sideBarVisible: true,
+    sideBarWidth: 300,
+  }
+
+  await ViewletLayout.loadSideBarIfVisible(state)
+
+  expect(viewletManagerLoadMock.mock.calls[0]).toEqual([
+    expect.objectContaining({
+      id: 'SideBar',
+    }),
+    false,
+    false,
+    { restore: false },
+  ])
 })
 
 test('createPanelViewlet creates a linked actions root for child-contributed actions', async () => {

@@ -201,3 +201,18 @@ test('readDirWithFileTypes - error', async () => {
   })
   await expect(ExtensionHostFileSystem.readDirWithFileTypes('memfs:///test-folder')).rejects.toThrow(new TypeError('x is not a function'))
 })
+
+test('isReadonly', async () => {
+  // @ts-ignore
+  ExtensionHostShared.executeProvider.mockImplementation(async () => {
+    return true
+  })
+  expect(await ExtensionHostFileSystem.isReadonly('extension-host://xyz:///test-folder')).toBe(true)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
+    event: 'onFileSystem:xyz',
+    method: 'ExtensionHostFileSystem.isReadonly',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['xyz'],
+  })
+})

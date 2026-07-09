@@ -19,6 +19,10 @@ export const getPathSeparator = () => {
   return PathSeparatorType.Slash
 }
 
+export const isReadonly = () => {
+  return true
+}
+
 export const remove = (uri) => {
   throw new Error('not implemented')
 }

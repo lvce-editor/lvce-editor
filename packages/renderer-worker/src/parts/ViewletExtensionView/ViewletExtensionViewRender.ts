@@ -38,6 +38,16 @@ const renderPatches = {
   },
 }
 
+const renderFocus = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return newState.kind !== 'virtualDom' || !newState.focusSelector || oldState.focusSelector === newState.focusSelector
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return [['Viewlet.focusSelector', newState.uid, newState.focusSelector]]
+  },
+  multiple: true,
+}
+
 const renderCss = {
   isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
     return !newState.css || (oldState.css === newState.css && oldState.cssId === newState.cssId)
@@ -58,30 +68,68 @@ const renderCommands = {
   multiple: true,
 }
 
-export const render = [renderIframe, renderDom, renderPatches, renderCss, renderCommands]
+export const render = [renderIframe, renderDom, renderPatches, renderFocus, renderCss, renderCommands]
 
-export const renderEventListeners = (): readonly any[] => {
-  return [
-    {
-      name: 'handleInput',
-      params: ['handleInput', 'event.target.name', 'event.target.value'],
-    },
-    {
-      name: 'handleClick',
-      params: ['handleClick', 'event.target.name'],
-    },
-    {
-      name: 'handleSubmit',
-      params: ['handleSubmit', 'event.target.name'],
-      preventDefault: true,
-    },
-    {
-      name: 'handleFocus',
-      params: ['handleFocus', 'event.target.name'],
-    },
-    {
-      name: 'handleBlur',
-      params: ['handleBlur', 'event.target.name'],
-    },
-  ]
+export const renderActions = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return oldState.actionsDom === newState.actionsDom
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
+    return newState.actionsDom
+  },
+}
+
+const defaultEventListeners = [
+  {
+    name: 'handleInput',
+    params: ['handleInput', 'event.target.name', 'event.target.value'],
+  },
+  {
+    name: 'handleClick',
+    params: ['handleClick', 'event.target.name'],
+  },
+  {
+    name: 'handleSubmit',
+    params: ['handleSubmit', 'event.target.name'],
+    preventDefault: true,
+  },
+  {
+    name: 'handleFocus',
+    params: ['handleFocus', 'event.target.name'],
+  },
+  {
+    name: 'handleBlur',
+    params: ['handleBlur', 'event.target.name'],
+  },
+  {
+    name: 'handleContextMenu',
+    params: ['handleContextMenu', 'event.target.name', 'event.clientX', 'event.clientY'],
+    preventDefault: true,
+  },
+  {
+    name: 'handleDragStart',
+    params: ['handleViewEvent', 'dragstart', 'event.target.name'],
+  },
+  {
+    name: 'handleDragEnd',
+    params: ['handleViewEvent', 'dragend', 'event.target.name'],
+  },
+  {
+    name: 'handleDragOver',
+    params: ['handleViewEvent', 'dragover', 'event.target.name'],
+    preventDefault: true,
+  },
+  {
+    name: 'handleDragLeave',
+    params: ['handleViewEvent', 'dragleave', 'event.target.name'],
+  },
+  {
+    name: 'handleDrop',
+    params: ['handleViewEvent', 'drop', 'event.target.name'],
+    preventDefault: true,
+  },
+]
+
+export const renderEventListeners = (state?: ViewletExtensionViewState): readonly any[] => {
+  return [...defaultEventListeners, ...(state?.eventListeners || [])]
 }

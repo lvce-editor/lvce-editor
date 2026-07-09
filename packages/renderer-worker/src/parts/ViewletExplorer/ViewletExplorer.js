@@ -22,6 +22,15 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     height,
     platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
+    title: '',
+  }
+}
+
+export const getTitle = async (uid) => {
+  try {
+    return await ExplorerViewWorker.invoke('Explorer.getTitle', uid)
+  } catch {
+    return 'Explorer'
   }
 }
 
@@ -43,10 +52,12 @@ export const loadContent = async (state, savedState) => {
   const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
   const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
   const actionsDom = await ExplorerViewWorker.invoke('Explorer.renderActions2', state.uid)
+  const title = await getTitle(state.uid)
   return {
     ...state,
     commands,
     actionsDom,
+    title,
   }
 }
 

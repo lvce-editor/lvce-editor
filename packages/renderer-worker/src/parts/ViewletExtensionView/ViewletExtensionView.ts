@@ -1,5 +1,8 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
+import * as ActionType from '../ActionType/ActionType.js'
+import * as Command from '../Command/Command.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
 import { getPlatform } from '../Platform/Platform.js'
@@ -7,6 +10,7 @@ import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
 interface ViewRenderResult {
   readonly dom?: readonly unknown[]
+  readonly focusSelector?: string
   readonly patches?: readonly unknown[]
   readonly type: string
 }
@@ -22,6 +26,12 @@ interface CreateViewInstanceError {
 }
 
 type CreateViewInstanceResult = CreateViewInstanceSuccess | CreateViewInstanceError
+
+interface ViewAction {
+  readonly command: string
+  readonly icon: string
+  readonly title: string
+}
 
 const getCssId = (view: ExtensionView): string => {
   return `ExtensionView:${view.id}`
@@ -56,6 +66,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     return {
       ...state,
       commands: [],
+      focusSelector: '',
       patches: [],
     }
   }
@@ -64,6 +75,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     commands: [],
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     error: undefined,
+    focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
     patches: result.type === 'setPatches' ? result.patches || [] : [],
   }
 }
@@ -72,14 +84,41 @@ const getViewTitle = (view: GetExtensionViews.ExtensionView): string => {
   return view.displayName || view.name || view.title
 }
 
+const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly unknown[]> => {
+  if (state.kind !== 'virtualDom') {
+    return []
+  }
+  const actions = (await ExtensionManagementWorker.invoke(
+    'Extensions.getViewActions',
+    state.uri,
+    state.uid,
+    assetDir,
+    getPlatform(),
+  )) as readonly ViewAction[]
+  if (actions.length === 0) {
+    return []
+  }
+  return GetActionsVirtualDom.getActionsVirtualDom(
+    actions.map((action) => ({
+      command: action.command,
+      icon: action.icon,
+      id: action.title,
+      type: ActionType.Button,
+    })),
+  )
+}
+
 export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletExtensionViewState => {
   return {
+    actionsDom: [],
     commands: [],
     css: '',
     cssId: '',
     csp: '',
     credentialless: true,
     dom: [],
+    eventListeners: [],
+    focusSelector: '',
     height,
     iframeSandbox: [],
     iframeSrc: '',
@@ -102,6 +141,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   const title = getViewTitle(view)
   const css = await loadCss(view)
   const cssId = css ? getCssId(view) : ''
+  const eventListeners = view.eventListeners || []
   if (view.kind === 'virtualDom') {
     const result = await ExtensionManagementWorker.invoke(
       'Extensions.createViewInstance',
@@ -115,22 +155,29 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     if (createResult.ok === false) {
       return {
         ...state,
+        actionsDom: [],
         commands: [],
         css,
         cssId,
         error: createResult.error,
+        eventListeners,
         kind: view.kind,
         patches: [],
         title,
       }
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
-    return {
+    const newState = {
       ...renderVirtualDomResult(state, renderResult),
       css,
       cssId,
+      eventListeners,
       kind: view.kind,
       title,
+    }
+    return {
+      ...newState,
+      actionsDom: await getActionsDom(newState),
     }
   }
   if (!view.iframe) {
@@ -138,10 +185,12 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   }
   return {
     ...state,
+    actionsDom: [],
     css,
     cssId,
     csp: view.iframe.csp,
     credentialless: view.iframe.credentialless,
+    eventListeners,
     iframeSandbox: view.iframe.sandbox,
     iframeSrc: view.iframe.src,
     kind: 'iframe',
@@ -163,7 +212,24 @@ const dispatchEvent = async (state: ViewletExtensionViewState, event: unknown): 
     return state
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.uri, state.uid, event, assetDir, getPlatform())
-  return renderVirtualDomResult(state, result as ViewRenderResult | undefined)
+  const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
+  return {
+    ...newState,
+    actionsDom: await getActionsDom(newState),
+  }
+}
+
+export const handleViewEvent = (
+  state: ViewletExtensionViewState,
+  type: string,
+  name: string,
+  value?: unknown,
+): Promise<ViewletExtensionViewState> => {
+  return dispatchEvent(state, {
+    name,
+    type,
+    ...(value !== undefined && { value }),
+  })
 }
 
 export const rerender = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
@@ -171,51 +237,58 @@ export const rerender = async (state: ViewletExtensionViewState): Promise<Viewle
     return state
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.uri, state.uid, assetDir, getPlatform())
-  return renderVirtualDomResult(state, result as ViewRenderResult | undefined)
+  const newState = renderVirtualDomResult(state, result as ViewRenderResult)
+  return {
+    ...newState,
+    actionsDom: await getActionsDom(newState),
+  }
+}
+
+export const handleClickAction = async (state: ViewletExtensionViewState, index: number, command: string): Promise<ViewletExtensionViewState> => {
+  void index
+  await Command.execute('ExtensionHost.executeCommand', command)
+  return state
 }
 
 export const handleInput = (state: ViewletExtensionViewState, name: string, value: string): Promise<ViewletExtensionViewState> => {
-  return dispatchEvent(state, {
-    name,
-    type: 'input',
-    value,
-  })
+  return handleViewEvent(state, 'input', name, value)
 }
 
 export const handleClick = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
-  return dispatchEvent(state, {
-    name,
-    type: 'click',
-  })
+  return handleViewEvent(state, 'click', name)
 }
 
 export const handleSubmit = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
-  return dispatchEvent(state, {
-    name,
-    type: 'submit',
-  })
+  return handleViewEvent(state, 'submit', name)
 }
 
 export const handleFocus = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
-  return dispatchEvent(state, {
-    name,
-    type: 'focus',
-  })
+  return handleViewEvent(state, 'focus', name)
 }
 
 export const handleBlur = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
+  return handleViewEvent(state, 'blur', name)
+}
+
+export const handleContextMenu = (state: ViewletExtensionViewState, name: string, x: number, y: number): Promise<ViewletExtensionViewState> => {
   return dispatchEvent(state, {
     name,
-    type: 'blur',
+    type: 'contextmenu',
+    x,
+    y,
   })
 }
 
 export const Commands = {
   handleBlur,
+  handleContextMenu,
   handleClick,
+  handleClickAction,
   handleFocus,
   handleInput,
   handleSubmit,
+  handleViewEvent,
+  rerender,
 }
 
 export const dispose = async (state: ViewletExtensionViewState): Promise<void> => {

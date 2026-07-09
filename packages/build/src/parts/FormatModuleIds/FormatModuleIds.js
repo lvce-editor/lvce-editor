@@ -34,7 +34,7 @@ export const formatAllModuleIds = async () => {
   for (const relativePath of [
     'packages/renderer-process/src/parts/ModuleId/ModuleId.js',
     'packages/renderer-worker/src/parts/ModuleId/ModuleId.js',
-    'packages/shared-process/src/parts/ModuleId/ModuleId.js',
+    'packages/shared-process/src/parts/ModuleId/ModuleId.ts',
     'packages/main-process/src/parts/ModuleId/ModuleId.cjs',
   ]) {
     await formatModuleIds(relativePath)

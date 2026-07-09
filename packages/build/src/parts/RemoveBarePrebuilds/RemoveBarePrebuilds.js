@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 
@@ -27,7 +28,11 @@ export const removeBarePrebuilds = async (to, platform, arch) => {
   }
   const modules = ['bare-fs', 'bare-os', 'bare-url']
   for (const module of modules) {
-    const dirents = await ReadDir.readDir(`${to}/node_modules/${module}/prebuilds`)
+    const prebuildsPath = `${to}/node_modules/${module}/prebuilds`
+    if (!existsSync(prebuildsPath)) {
+      continue
+    }
+    const dirents = await ReadDir.readDir(prebuildsPath)
     if (!dirents.includes(toKeep)) {
       throw new Error('missing files to keep')
     }

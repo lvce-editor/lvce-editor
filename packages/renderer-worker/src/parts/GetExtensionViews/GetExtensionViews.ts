@@ -10,9 +10,19 @@ export interface ExtensionViewIframe {
   readonly src: string
 }
 
+export interface DomEventListener {
+  readonly capture?: boolean
+  readonly name: string | number
+  readonly params: readonly string[]
+  readonly passive?: boolean
+  readonly preventDefault?: boolean
+  readonly stopPropagation?: boolean
+}
+
 export interface ExtensionView {
   readonly displayName?: string
   readonly css?: string
+  readonly eventListeners?: readonly DomEventListener[]
   readonly extensionId: string
   readonly icon: string
   readonly id: string

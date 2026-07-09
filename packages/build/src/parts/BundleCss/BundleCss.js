@@ -25,6 +25,18 @@ const toSorted = (array) => {
   return [...array].sort().reverse()
 }
 
+const shouldPrependFileNameComment = (fileName) => {
+  return !EagerLoadedCss.eagerLoadedCss.includes(fileName)
+}
+
+const prependFileNameComment = async (path, fileName) => {
+  const content = await readFile(path, EncodingType.Utf8)
+  await WriteFile.writeFile({
+    to: path,
+    content: `/* ${fileName} */\n${content}`,
+  })
+}
+
 export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pathPrefix = '' }) => {
   try {
     let css = ``
@@ -47,10 +59,14 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       if (parts.includes(dirent)) {
         // ignore
       } else {
+        const outPath = Path.join(outDir, 'parts', dirent)
         await Copy.copy({
           from: `static/css/parts/${dirent}`,
-          to: Path.join(outDir, 'parts', dirent),
+          to: outPath,
         })
+        if (shouldPrependFileNameComment(dirent)) {
+          await prependFileNameComment(outPath, dirent)
+        }
       }
     }
 

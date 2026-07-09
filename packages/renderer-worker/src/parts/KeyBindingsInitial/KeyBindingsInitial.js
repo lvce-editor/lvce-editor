@@ -1,13 +1,26 @@
+import * as ExtensionKeyBindings from '../ExtensionKeyBindings/ExtensionKeyBindings.js'
+import * as Logger from '../Logger/Logger.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-// TODO extension key bindings
-
-const getViewletKeyBindings = (module) => {
+const getViewletKeyBindings = async (module) => {
   if (module.getKeyBindings) {
-    return module.getKeyBindings()
+    try {
+      return await module.getKeyBindings()
+    } catch (error) {
+      Logger.warn(`Failed to load keybindings for ${module.name}: ${error}`)
+    }
   }
   return []
+}
+
+const getExtensionKeyBindings = async () => {
+  try {
+    return await ExtensionKeyBindings.getKeyBindings()
+  } catch (error) {
+    Logger.warn(`Failed to load extension keybindings: ${error}`)
+    return []
+  }
 }
 
 const maybeLoad = async (id) => {
@@ -21,7 +34,6 @@ const maybeLoad = async (id) => {
 export const getKeyBindings = async () => {
   const ids = Object.keys(ViewletModuleId)
   const modules = await Promise.all(ids.map(maybeLoad))
-  const keyBindingsPromises = await Promise.all(modules.map(getViewletKeyBindings))
-  const keybindings = keyBindingsPromises.flat(1)
-  return keybindings
+  const keyBindingsPromises = await Promise.all([...modules.map(getViewletKeyBindings), getExtensionKeyBindings()])
+  return keyBindingsPromises.flat(1)
 }

@@ -238,7 +238,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   if (module.renderTitle && !module.renderTitle.isEqual(oldState, newState)) {
     const title = module.renderTitle.apply(oldState, newState)
     if (parentId) {
-      // commands.push(['Viewlet.send', parentId, 'setTitle', title])
+      commands.push(['Viewlet.send', parentId, 'setTitle', title])
     }
   }
 
@@ -530,7 +530,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
-      const eventListeners = await module.renderEventListeners()
+      const eventListeners = await module.renderEventListeners(newState)
       if (shouldRenderEvents === false) {
         commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
       } else {
@@ -541,19 +541,20 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       await module.show(newState)
     }
     const extraCommands = []
+    const moduleId = viewlet.moduleId || viewlet.id || ''
 
     if (viewlet.id === ViewletModuleId.Layout) {
       ViewletStates.set(viewletUid, {
         state: newState,
         renderedState: viewletState,
         factory: module,
-        moduleId: viewlet.moduleId || viewlet.id || '',
+        moduleId,
       })
     }
 
     if (module.getKeyBindings) {
       const keyBindings = await module.getKeyBindings(viewletUid)
-      KeyBindingsState.addKeyBindings(viewlet.id, keyBindings)
+      KeyBindingsState.addKeyBindings(moduleId, keyBindings)
     }
     if (module.Commands && module.Commands.getMouseActions) {
       const mouseActions = await module.Commands.getMouseActions(viewletUid)
@@ -618,13 +619,13 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       state: newState,
       renderedState: viewletState,
       factory: module,
-      moduleId: viewlet.moduleId || viewlet.id || '',
+      moduleId,
     }
     ViewletStates.set(viewletUid, instance)
     if (viewlet.id === ViewletModuleId.Layout) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }
-    ViewletStates.setFocusedInstanceByType(viewletUid, viewlet.moduleId || viewlet.id || '')
+    ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
     }

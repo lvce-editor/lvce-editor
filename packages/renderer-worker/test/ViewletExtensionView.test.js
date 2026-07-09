@@ -13,14 +13,18 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const GetSideBarDom = await import('../src/parts/GetSideBarDom/GetSideBarDom.js')
 const ViewletExtensionView = await import('../src/parts/ViewletExtensionView/ViewletExtensionView.ts')
-const ViewletExtensionViewCommands = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewCommands.ts')
 
 const createState = () => {
   return {
+    actionsDom: [],
     commands: [],
+    css: '',
+    cssId: '',
     csp: '',
     credentialless: true,
     dom: [],
+    eventListeners: [],
+    focusSelector: '',
     height: 100,
     iframeSandbox: [],
     iframeSrc: '',
@@ -48,11 +52,17 @@ test('loadContent uses displayName as title for virtual dom views', async () => 
         },
       ]
     }
+    if (method === 'Extensions.getAllExtensions') {
+      return []
+    }
     if (method === 'Extensions.createViewInstance') {
       return {
         dom: [],
         type: 'setDom',
       }
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
     }
     throw new Error(`unexpected method ${method}`)
   })
@@ -80,9 +90,17 @@ test('sidebar dom uses custom view title instead of id', () => {
 test('rerender requests virtual dom patches from extension management worker', async () => {
   const patches = [['setText', 0, 'updated']]
   const invoke = /** @type {any} */ (ExtensionManagementWorker.invoke)
-  invoke.mockResolvedValue({
-    patches,
-    type: 'setPatches',
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.renderViewInstance') {
+      return {
+        patches,
+        type: 'setPatches',
+      }
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
   })
   const state = createState()
 
@@ -94,5 +112,5 @@ test('rerender requests virtual dom patches from extension management worker', a
 })
 
 test('commands exports rerender', () => {
-  expect(ViewletExtensionViewCommands.Commands.rerender).toBe(ViewletExtensionView.rerender)
+  expect(ViewletExtensionView.Commands.rerender).toBe(ViewletExtensionView.rerender)
 })

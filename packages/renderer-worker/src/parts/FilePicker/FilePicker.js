@@ -17,8 +17,19 @@ export const showDirectoryPicker = async (options) => {
   }
 }
 
-export const showFilePicker = (options) => {
-  return RendererProcess.invoke('FilePicker.showFilePicker', options)
+export const showFilePicker = async (options) => {
+  try {
+    return await RendererProcess.invoke('FilePicker.showFilePicker', options)
+  } catch (error) {
+    if (
+      error &&
+      // @ts-ignore
+      (error.message === 'window.showOpenFilePicker is not a function' || error.message === 'window.showFilePicker is not a function')
+    ) {
+      throw new Error('showFilePicker not supported on this browser')
+    }
+    throw error
+  }
 }
 
 const doShowSaveFilePicker = async (options) => {

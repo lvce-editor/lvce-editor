@@ -317,4 +317,8 @@ export const getPathSeparator = () => {
   return PathSeparatorType.Slash
 }
 
+export const isReadonly = () => {
+  return false
+}
+
 export const canBeRestored = true

@@ -80,21 +80,22 @@
   align-items: center;
   contain: strict;
   position: absolute;
-  color: var(--WorkbenchForeground, rgb(188, 190, 190));
+  color: var(--ListForeground, var(--WorkbenchForeground, rgb(188, 190, 190)));
   width: 100%;
 }
 
 .ExtensionListItem:where(:hover) {
-  background: var(--ListHoverBackground, rgba(64, 92, 80, 0.2));
+  background: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent));
+  color: var(--ListHoverForeground, var(--WorkbenchForeground, rgb(188, 190, 190)));
 }
 
 .ExtensionActive {
-  background: var(--ListActiveSelectionBackground, #515f59);
-  color: var(--ListActiveSelectionForeground, white);
+  background: var(--ListActiveSelectionBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 34%, transparent));
+  color: var(--ListActiveSelectionForeground, var(--WorkbenchForeground, white));
 }
 
 .ExtensionListItem[data-state='disabled'] {
-  color: #606363;
+  color: var(--DisabledForeground, color-mix(in srgb, var(--WorkbenchForeground) 48%, transparent));
 }
 
 .ExtensionListItem[data-state='disabled'] .ExtensionIcon {
@@ -157,8 +158,11 @@
 }
 
 .ExtensionListItemActionInstall {
-  background: #2f6260;
-  color: white;
+  background: var(
+    --ButtonBackground,
+    var(--SplitButtonBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 34%, var(--MainBackground)))
+  );
+  color: var(--ButtonForeground, var(--SplitButtonForeground, var(--WorkbenchForeground)));
   border: none;
   cursor: inherit;
   height: 16px;
@@ -169,7 +173,10 @@
 }
 
 .ExtensionListItemActionInstall:hover {
-  background: #387674;
+  background: var(
+    --ButtonHoverBackground,
+    var(--SplitButtonHoverBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 44%, var(--MainBackground)))
+  );
 }
 
 .ExtensionListItemActionManage {

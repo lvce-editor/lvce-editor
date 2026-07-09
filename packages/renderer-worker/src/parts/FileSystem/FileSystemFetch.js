@@ -66,6 +66,10 @@ export const getPathSeparator = () => {
   return PathSeparatorType.Slash
 }
 
+export const isReadonly = () => {
+  return true
+}
+
 export const remove = (uri) => {
   uri = normalizeUri(uri)
   return ExtensionHostWorker.invoke('FileSystemFetch.remove', uri)

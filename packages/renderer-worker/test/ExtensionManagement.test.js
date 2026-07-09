@@ -25,7 +25,14 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
+  return {
+    show2: jest.fn(),
+  }
+})
+
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
+const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test.skip('install', async () => {
@@ -41,6 +48,15 @@ test.skip('install', async () => {
   await ExtensionManagement.install('test-author.test-extension')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(SharedProcessCommandType.InstallExtensionInstallExtension, 'test-author.test-extension')
+})
+
+test('showViewContextMenu opens extension view context menu', async () => {
+  await ExtensionManagement.showViewContextMenu(1, 'sample.views.testing', 'sample.card', 10, 20)
+
+  expect(ContextMenu.show2).toHaveBeenCalledWith(1, 30, 10, 20, false, {
+    menuId: 'sample.card',
+    viewId: 'sample.views.testing',
+  })
 })
 
 test.skip('install - error', async () => {

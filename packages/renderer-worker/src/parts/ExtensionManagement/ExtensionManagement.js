@@ -1,8 +1,11 @@
 import * as Command from '../Command/Command.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
 import * as InstallExtension from '../InstallExtension/InstallExtension.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -15,10 +18,22 @@ export const handleExtensionStatusUpdate = async () => {
 export const invalidateExtensionsCache = async () => {
   try {
     await ExtensionManagementWorker.invoke('Extensions.invalidateExtensionsCache')
+    await Command.execute('KeyBindings.hydrate')
     await Command.execute('Layout.handleExtensionsChanged')
   } catch {
     // ignore
   }
+}
+
+export const handleViewContextChange = (uid, viewId, context) => {
+  ExtensionViewContext.handleViewContextChange(uid, viewId, context)
+}
+
+export const showViewContextMenu = async (uid, viewId, menuId, x, y) => {
+  await ContextMenu.show2(uid, MenuEntryId.ExtensionView, x, y, false, {
+    menuId,
+    viewId,
+  })
 }
 
 export const install = async (id) => {
