@@ -217,7 +217,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   {
     "name": "builtin.language-basics-r",
