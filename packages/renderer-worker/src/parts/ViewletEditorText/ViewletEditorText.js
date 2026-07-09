@@ -267,9 +267,10 @@ export const handleLanguagesChanged = async (state) => {
 
 export const hasFunctionalResize = true
 
-export const resize = (state, dimensions) => {
+export const resize = async (state, dimensions) => {
+  await EditorWorker.invoke('Editor.resize', state.id, dimensions)
   const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.width, dimensions.height, state.columnWidth)
-  return newState
+  return rerender(newState)
 }
 
 export const dispose = (state) => {
