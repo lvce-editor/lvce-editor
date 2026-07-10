@@ -169,6 +169,11 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   })
   await Replace.replace({
     path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '\n    <script type="module" src="/js/register-extension-file-system-service-worker.js"></script>',
+    replacement: '',
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: '/css/App.css',
     replacement: `/${commitHash}/css/App.css`,
   })

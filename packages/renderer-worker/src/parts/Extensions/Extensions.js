@@ -1,5 +1,6 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as InstalledWebExtensions from '../InstalledWebExtensions/InstalledWebExtensions.js'
 import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
 import { getPlatform } from '../Platform/Platform.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
@@ -14,6 +15,10 @@ export const openCachedExtensionsFolder = async () => {
   const cachedExtensionsFolder = await PlatformPaths.getCachedExtensionsPath()
   await OpenNativeFolder.openNativeFolder(cachedExtensionsFolder)
 }
+
+export const installFromDisk = InstalledWebExtensions.installFromDisk
+
+export const restoreFromDisk = InstalledWebExtensions.restore
 
 const applyViewRenderResult = async (uid, result) => {
   if (result?.type === 'setDom') {
