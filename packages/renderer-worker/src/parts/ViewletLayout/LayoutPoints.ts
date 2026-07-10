@@ -13,6 +13,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const titleBarVisible = source[LayoutKeys.TitleBarVisible]
   const previewVisible = source[LayoutKeys.PreviewVisible]
   const previewMinWidth = source[LayoutKeys.PreviewMinWidth]
+  const previewWidth = source[LayoutKeys.PreviewWidth]
   const windowWidth = source[LayoutKeys.WindowWidth]
   const windowHeight = source[LayoutKeys.WindowHeight]
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
@@ -31,6 +32,8 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const newSideBarWidth = Clamp.clamp(sideBarWidth, sideBarMinWidth, sideBarMaxWidth)
   const newSecondarySideBarWidth = Clamp.clamp(secondarySideBarWidth, secondarySideBarMinWidth, secondarySideBarMaxWidth)
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
+  const preferredPreviewWidth = previewWidth > 0 ? previewWidth : windowWidth / 2
+  const availableWidth = previewVisible ? Math.max(0, windowWidth - Math.max(previewMinWidth, preferredPreviewWidth)) : windowWidth
 
   if (sideBarLocation === SideBarLocationType.Right) {
     const p1 = /* Top */ 0
@@ -55,10 +58,6 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     if (panelVisible) {
       p3 -= newPanelHeight
     }
-
-    // When preview is visible, reserve at least previewMinWidth for preview
-    const maxLeftSectionWidth = Math.max(0, windowWidth - previewMinWidth)
-    const availableWidth = previewVisible ? Math.min(windowWidth / 2, maxLeftSectionWidth) : windowWidth
 
     if (activityBarVisible) {
       p8 = Math.max(0, availableWidth - 48) // Activity bar at right edge of left section
@@ -197,10 +196,6 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     if (panelVisible) {
       p3 -= newPanelHeight
     }
-
-    // When preview is visible, reserve at least previewMinWidth for preview
-    const maxLeftSectionWidth = Math.max(0, windowWidth - previewMinWidth)
-    const availableWidth = previewVisible ? Math.min(windowWidth / 2, maxLeftSectionWidth) : windowWidth
 
     if (activityBarVisible) {
       p7 = 48
