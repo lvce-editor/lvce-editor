@@ -58,6 +58,25 @@ test('extension view render supports functional events', () => {
   expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
 })
 
+test('extension view render sends a dynamic title to its parent', () => {
+  const dom = []
+  const oldState = {
+    commands: [],
+    dom,
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    title: 'Testing: Updated',
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+
+  expect(commands).toEqual([['Viewlet.send', 2, 'setTitle', 'Testing: Updated']])
+})
+
 test.skip('load', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
