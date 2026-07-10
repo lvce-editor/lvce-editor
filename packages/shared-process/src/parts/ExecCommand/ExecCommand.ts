@@ -4,10 +4,10 @@ import * as ExecPromise from '../ExecPromise/ExecPromise.ts'
 import * as Hash from '../Hash/Hash.ts'
 
 export const execCommand = async (command: any, args: any, options: any): Promise<any> => {
-  const { stdout, stderr } = await ExecPromise.execPromise(command, args, options)
+  const { stderr, stdout } = await ExecPromise.execPromise(command, args, options)
   return {
-    stdout,
     stderr,
+    stdout,
   }
 }
 

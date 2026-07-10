@@ -15,6 +15,7 @@ test.skip('Terminal', async () => {
   }
   let allData = ''
   const socket = {
+    on(event: any, listener: any): any {},
     send(message: any): any {
       const parsed = JSON.parse(message)
       console.log({ parsed })
@@ -22,7 +23,6 @@ test.skip('Terminal', async () => {
       allData += data
       console.log({ allData })
     },
-    on(event: any, listener: any): any {},
   }
   Terminal.create(socket, 0, '/tmp', undefined, undefined)
   Terminal.write(0, 'abc')

@@ -23,14 +23,14 @@ const getValidatedAppUrl = (url: unknown): string => {
   return parsedUrl.toString()
 }
 
-export const createAppWindow = async ({ preferences, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl, preloadUrl }: any): Promise<any> => {
+export const createAppWindow = async ({ parsedArgs, preferences, preloadUrl, url = DefaultUrl.defaultUrl, workingDirectory }: any): Promise<any> => {
   const validatedUrl = getValidatedAppUrl(url)
-  const { width, height } = await Screen.getBounds()
+  const { height, width } = await Screen.getBounds()
   const windowOptions = await GetAppWindowOptions.getAppWindowOptions({
     preferences,
-    screenWidth: width,
-    screenHeight: height,
     preloadUrl,
+    screenHeight: height,
+    screenWidth: width,
   })
   const titleBarItems = GetTitleBarItems.getTitleBarItems()
   return ParentIpc.invoke('AppWindow.createAppWindow', windowOptions, parsedArgs, workingDirectory, titleBarItems, validatedUrl)
@@ -39,7 +39,7 @@ export const createAppWindow = async ({ preferences, parsedArgs, workingDirector
 export const openNew = async (url: any): Promise<any> => {
   const preferences = await Preferences.getAll()
   const preloadUrl = PreloadUrl.getPreloadUrl()
-  return createAppWindow({ preferences, parsedArgs: [], workingDirectory: '', url, preloadUrl })
+  return createAppWindow({ parsedArgs: [], preferences, preloadUrl, url, workingDirectory: '' })
 }
 
 export const openNewWithUri = async (uri: any): Promise<any> => {

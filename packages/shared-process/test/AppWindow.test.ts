@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/PreloadUrl/PreloadUrl.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Screen/Screen.js', () => ({
-  getBounds: jest.fn(() => ({ width: 1920, height: 1080 })),
+  getBounds: jest.fn(() => ({ height: 1080, width: 1920 })),
 }))
 
 const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')

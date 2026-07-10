@@ -1,5 +1,5 @@
-import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as DirentType from '../DirentType/DirentType.ts'
+import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as ToAbsolutePaths from '../ToAbsolutePaths/ToAbsolutePaths.ts'

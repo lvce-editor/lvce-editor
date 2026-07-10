@@ -2,13 +2,13 @@ import * as ExecCommand from '../ExecCommand/ExecCommand.ts'
 import * as Hash from '../Hash/Hash.ts'
 
 export const gitLsFiles = async (gitPath: any, cwd: any, limit: any): Promise<any> => {
-  const { stdout, stderr } = await ExecCommand.execCommand(gitPath, ['ls-files'], {
+  const { stderr, stdout } = await ExecCommand.execCommand(gitPath, ['ls-files'], {
     cwd,
   })
   const hash = Hash.fromString(stdout)
   return {
-    stdout,
     cacheId: hash,
+    stdout,
   }
 }
 

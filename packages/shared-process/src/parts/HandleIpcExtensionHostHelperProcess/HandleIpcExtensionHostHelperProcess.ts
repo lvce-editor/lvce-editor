@@ -10,9 +10,9 @@ export const targetWebSocket = async (): Promise<any> => {
 
 export const upgradeWebSocket = (handle: any, message: any): any => {
   return {
-    type: 'send',
     method: 'HandleWebSocket.handleWebSocket',
     params: [handle, message],
+    type: 'send',
   }
 }
 
@@ -25,8 +25,8 @@ export const targetMessagePort = async (): Promise<any> => {
 
 export const upgradeMessagePort = (port: any): any => {
   return {
-    type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
     params: [port],
+    type: 'send',
   }
 }

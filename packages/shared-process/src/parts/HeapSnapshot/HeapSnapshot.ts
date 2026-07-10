@@ -1,6 +1,6 @@
 import { createWriteStream } from 'node:fs'
-import { getHeapSnapshot } from 'node:v8'
 import { pipeline } from 'node:stream/promises'
+import { getHeapSnapshot } from 'node:v8'
 
 export const createHeapSnapshot = async (): Promise<any> => {
   await pipeline(

@@ -15,7 +15,7 @@ export const transpileTypeScriptCached = async (code: any): Promise<any> => {
   }
   const content = await readFile(cachePath, 'utf8')
   return {
-    outputText: content,
     diagnostics: [],
+    outputText: content,
   }
 }

@@ -3,9 +3,8 @@ import * as ModuleId from '../ModuleId/ModuleId.ts'
 
 export const getModuleId = (commandId: any): any => {
   switch (commandId) {
-    case 'ElectronPowerSaveBlocker.start':
-    case 'ElectronPowerSaveBlocker.stop':
-      return ModuleId.ElectronPowerSaveBlocker
+    case 4820:
+      return ModuleId.TextDocument
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':
@@ -25,6 +24,8 @@ export const getModuleId = (commandId: any): any => {
     case 'ClipBoard.readFiles':
     case 'ClipBoard.writeFiles':
       return ModuleId.ClipBoard
+    case 'ContentSecurityPolicy.set':
+      return ModuleId.ContentSecurityPolicy
     case 'Crash.crashMainProcess':
     case 'Crash.crashSharedProcess':
       return ModuleId.Crash
@@ -50,15 +51,22 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.ElectronContentTracing
     case 'ElectronContextMenu.openContextMenu':
       return ModuleId.ElectronContextMenu
+    case 'ElectronDeveloper.getPerformanceEntries':
+      return ModuleId.ElectronDeveloper
     case 'ElectronDialog.showMessageBox':
     case 'ElectronDialog.showOpenDialog':
     case 'ElectronDialog.showSaveDialog':
       return ModuleId.ElectronDialog
     case 'ElectronInitialize.electronInitialize':
       return ModuleId.ElectronInitialize
+    case 'ElectronNet.getJson':
+      return ModuleId.ElectronNet
     case 'ElectronNetLog.startLogging':
     case 'ElectronNetLog.stopLogging':
       return ModuleId.ElectronNetLog
+    case 'ElectronPowerSaveBlocker.start':
+    case 'ElectronPowerSaveBlocker.stop':
+      return ModuleId.ElectronPowerSaveBlocker
     case 'ElectronProcess.getChromeVersion':
     case 'ElectronProcess.getElectronVersion':
       return ModuleId.ElectronProcess
@@ -66,10 +74,26 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronSafeStorage.encryptString':
     case 'ElectronSafeStorage.isEncryptionAvailable':
       return ModuleId.ElectronSafeStorage
+    case 'ElectronWindow.close':
+    case 'ElectronWindow.focus':
+    case 'ElectronWindow.getZoom':
+    case 'ElectronWindow.maximize':
+    case 'ElectronWindow.minimize':
+    case 'ElectronWindow.openNew':
+    case 'ElectronWindow.openNewWithUri':
+    case 'ElectronWindow.reload':
+    case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.unmaximize':
+    case 'ElectronWindow.zoomIn':
+    case 'ElectronWindow.zoomOut':
+    case 'ElectronWindow.zoomReset':
+      return ModuleId.Window
     case 'ElectronWindowAbout.open':
       return ModuleId.ElectronWindowAbout
     case 'ElectronWindowProcessExplorer.open':
       return ModuleId.ElectronWindowProcessExplorer
+    case 'Exec.exec':
+      return ModuleId.Exec
     case 'Exit.exit':
       return ModuleId.Exit
     case 'ExtensionHost.dispose':
@@ -110,11 +134,11 @@ export const getModuleId = (commandId: any): any => {
     case 'ExtensionHostRename.executeRename':
     case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
     case 'ExtensionHostSourceControl.acceptInput':
+    case 'ExtensionHostTextDocument':
     case 'ExtensionHostTextDocument.setLanguageId':
     case 'ExtensionHostTextDocument.syncFull':
     case 'ExtensionHostTextDocument.syncIncremental':
     case 'ExtensionHostTextDocument.syncInitial':
-    case 'ExtensionHostTextDocument':
     case 'ExtensionHostWorkspace.setWorkspacePath':
       return ModuleId.ExtensionHost
     case 'ExtensionHost.getColorThemeJson':
@@ -126,14 +150,14 @@ export const getModuleId = (commandId: any): any => {
     case 'ExtensionHost.getLanguages':
     case 'ExtensionHost.getWebViews':
     case 'ExtensionHost.watchColorTheme':
+    case 'ExtensionHost.watchForHotReload':
     case 'ExtensionManagement.disable':
     case 'ExtensionManagement.enable':
     case 'ExtensionManagement.getAllExtensions':
     case 'ExtensionManagement.getExtensions':
+    case 'ExtensionManagement.getExtensionsEtag':
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
-    case 'ExtensionManagement.getExtensionsEtag':
-    case 'ExtensionHost.watchForHotReload':
       return ModuleId.ExtensionManagement
     case 'FileSystem.chmod':
     case 'FileSystem.copy':
@@ -146,13 +170,36 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystem.readDirWithFileTypes':
     case 'FileSystem.readFile':
     case 'FileSystem.readFileAsBuffer':
-    case 'FileSystem.remove':
     case 'FileSystem.readJson':
+    case 'FileSystem.remove':
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
+    case 'FileSystemDisk.chmod':
+    case 'FileSystemDisk.copy':
+    case 'FileSystemDisk.getFolderSize':
+    case 'FileSystemDisk.getPathSeparator':
+    case 'FileSystemDisk.mkdir':
+    case 'FileSystemDisk.readDirWithFileTypes':
+    case 'FileSystemDisk.readFile':
+    case 'FileSystemDisk.readJson':
+    case 'FileSystemDisk.remove':
+    case 'FileSystemDisk.rename':
+    case 'FileSystemDisk.stat':
+    case 'FileSystemDisk.writeFile':
+      return ModuleId.FileSystemDisk
+    case 'FileWatcher.handleChange':
+    case 'FileWatcher.watch':
+    case 'FileWatcher.watchFile2':
+      return ModuleId.FileWatcher
+    case 'GetElectronFileResponse.getElectronFileResponse':
+      return ModuleId.GetElectronFileResponse
+    case 'GetExtensions.getExtensions':
+      return ModuleId.GetExtensions
     case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
       return ModuleId.GetTerminalSpawnOptions
+    case 'GetWindowId.getWindowId':
+      return ModuleId.GetWindowId
     case 'GitLsFiles.gitLsFiles':
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
@@ -161,22 +208,50 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleCliArgs
     case 'HandleElectronMessagePort.handleElectronMessagePort':
       return ModuleId.HandleElectronMessagePort
+    case 'HandleElectronReady.handleElectronReady':
+      return ModuleId.HandleElectronReady
+    case 'HandleMessagePortForAuthProcess.handleAuthProcessIpcClosed':
+    case 'HandleMessagePortForAuthProcess.handleMessagePortForAuthProcess':
+      return ModuleId.HandleMessagePortForAuthProcess
+    case 'HandleMessagePortForClipBoardProcess.handleMessagePortForClipBoardProcess':
+      return ModuleId.HandleMessagePortForClipBoardProcess
+    case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
+    case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
+      return ModuleId.HandleMessagePortForEmbedsProcess
+    case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
+      return ModuleId.HandleMessagePortForExtensionHostHelperProcess
+    case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
+      return ModuleId.HandleMessagePortForFileSystemProcess
+    case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
+      return ModuleId.HandleMessagePortForProcessExplorer
+    case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':
+      return ModuleId.HandleMessagePortForSearchProcess
+    case 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess':
+      return ModuleId.HandleMessagePortForTerminalProcess
     case 'HandleNodeMessagePort.handleNodeMessagePort':
       return ModuleId.HandleNodeMessagePort
+    case 'HandleRemoteRequest.handleRemoteRequest':
+      return ModuleId.HandleRemoteRequest
+    case 'HandleRequest.handleRequest':
+      return ModuleId.HandleRequest
+    case 'HandleRequestTest.handleRequestTest':
+      return ModuleId.HandleRequestTest
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
+    case 'HandleWindowAllClosed.handleWindowAllClosed':
+      return ModuleId.HandleWindowAllClosed
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
     case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
       return ModuleId.ListProcessesWithMemoryUsage
-    case 'OpenExternal.openExternal':
-    case 'OpenExternal.showItemInFolder':
-      return ModuleId.OpenExternal
     case 'Native.openFolder':
     case 'OpenNativeFolder.openFolder':
       return ModuleId.OpenNativeFolder
+    case 'OpenExternal.openExternal':
+    case 'OpenExternal.showItemInFolder':
+      return ModuleId.OpenExternal
     case 'Os.getTmpDir':
       return ModuleId.Os
     case 'OutputChannel.close':
@@ -186,26 +261,14 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.PassThroughElectronMessagePort
     case 'Performance.getNodeStartupTiming':
       return ModuleId.Performance
-    case 'GetWindowId.getWindowId':
-      return ModuleId.GetWindowId
-    case 'Exec.exec':
-      return ModuleId.Exec
-    case 'HandleMessagePortForAuthProcess.handleMessagePortForAuthProcess':
-    case 'HandleMessagePortForAuthProcess.handleAuthProcessIpcClosed':
-      return ModuleId.HandleMessagePortForAuthProcess
-    case 'PlatformPaths.getDisabledExtensionsJsonPath':
-    case 'PlatformPaths.getDisabledExtensionsJsonUri':
-      return ModuleId.PlatformPaths
     case 'Platform.getAppDir':
-    case 'Platform.getArch':
     case 'Platform.getApplicationName':
+    case 'Platform.getArch':
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
     case 'Platform.getCacheDir':
     case 'Platform.getCacheUri':
     case 'Platform.getCommit':
-    case 'Platform.getRoot':
-    case 'Platform.getRootUri':
     case 'Platform.getConfigDir':
     case 'Platform.getDataDir':
     case 'Platform.getDate':
@@ -217,14 +280,17 @@ export const getModuleId = (commandId: any): any => {
     case 'Platform.getMarketplaceUrl':
     case 'Platform.getProductNameLong':
     case 'Platform.getRecentlyOpenedPath':
+    case 'Platform.getRoot':
+    case 'Platform.getRootUri':
     case 'Platform.getTestPath':
     case 'Platform.getUserKeyBindingsPath':
     case 'Platform.getUserSettingsPath':
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
-    case 'ElectronDeveloper.getPerformanceEntries':
-      return ModuleId.ElectronDeveloper
+    case 'PlatformPaths.getDisabledExtensionsJsonPath':
+    case 'PlatformPaths.getDisabledExtensionsJsonUri':
+      return ModuleId.PlatformPaths
     case 'Preferences.getAll':
       return ModuleId.Preferences
     case 'Process.getArch':
@@ -233,108 +299,42 @@ export const getModuleId = (commandId: any): any => {
     case 'Process.getV8Version':
     case 'Process.kill':
       return ModuleId.Process
+    case 'ProcessExplorer.decreaseRefCount':
+      return ModuleId.ProcessExplorer
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':
       return ModuleId.ProcessId
-    case 'ProcessExplorer.decreaseRefCount':
-      return ModuleId.ProcessExplorer
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
+    case 'Screen.getBounds':
+    case 'Screen.getHeight':
+    case 'Screen.getWidth':
+      return ModuleId.Screen
+    case 'TemporaryMessagePort.getPortTuple2':
+    case 'TemporaryMessagePort.getPortTuple3':
+    case 'TemporaryMessagePort.handlePorts':
+    case 'TemporaryMessagePort.sendTo2':
+    case 'TemporaryMessagePort.sendToElectron':
+      return ModuleId.TemporaryMessagePort
     case 'Terminal.create':
     case 'Terminal.dispose':
     case 'Terminal.resize':
     case 'Terminal.write':
       return ModuleId.Terminal
-    case 4820:
-      return ModuleId.TextDocument
-    case 'ElectronWindow.close':
-    case 'ElectronWindow.focus':
-    case 'ElectronWindow.getZoom':
-    case 'ElectronWindow.maximize':
-    case 'ElectronWindow.minimize':
-    case 'ElectronWindow.openNew':
-    case 'ElectronWindow.openNewWithUri':
-    case 'ElectronWindow.reload':
-    case 'ElectronWindow.toggleDevtools':
-    case 'ElectronWindow.unmaximize':
-    case 'ElectronWindow.zoomIn':
-    case 'ElectronWindow.zoomOut':
-    case 'ElectronWindow.zoomReset':
-      return ModuleId.Window
-    case 'Workspace.getHomeDir':
-    case 'Workspace.resolveRoot':
-      return ModuleId.Workspace
-    case 'ElectronNet.getJson':
-      return ModuleId.ElectronNet
-    case 'Screen.getWidth':
-    case 'Screen.getHeight':
-    case 'Screen.getBounds':
-      return ModuleId.Screen
-    case 'HandleElectronReady.handleElectronReady':
-      return ModuleId.HandleElectronReady
-    case 'HandleWindowAllClosed.handleWindowAllClosed':
-      return ModuleId.HandleWindowAllClosed
-    case 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess':
-      return ModuleId.HandleMessagePortForTerminalProcess
-    case 'HandleMessagePortForClipBoardProcess.handleMessagePortForClipBoardProcess':
-      return ModuleId.HandleMessagePortForClipBoardProcess
-    case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
-      return ModuleId.HandleMessagePortForFileSystemProcess
-    case 'TemporaryMessagePort.handlePorts':
-    case 'TemporaryMessagePort.sendTo2':
-    case 'TemporaryMessagePort.getPortTuple2':
-    case 'TemporaryMessagePort.getPortTuple3':
-    case 'TemporaryMessagePort.sendToElectron':
-      return ModuleId.TemporaryMessagePort
-    case 'GetElectronFileResponse.getElectronFileResponse':
-      return ModuleId.GetElectronFileResponse
-    case 'HandleRemoteRequest.handleRemoteRequest':
-      return ModuleId.HandleRemoteRequest
-    case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
-      return ModuleId.HandleMessagePortForExtensionHostHelperProcess
-    case 'HandleRequestTest.handleRequestTest':
-      return ModuleId.HandleRequestTest
-    case 'ContentSecurityPolicy.set':
-      return ModuleId.ContentSecurityPolicy
-    case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
-    case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
-      return ModuleId.HandleMessagePortForEmbedsProcess
-    case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
-      return ModuleId.HandleMessagePortForProcessExplorer
-    case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':
-      return ModuleId.HandleMessagePortForSearchProcess
-    case 'FileWatcher.watch':
-    case 'FileWatcher.watchFile2':
-    case 'FileWatcher.handleChange':
-      return ModuleId.FileWatcher
     case 'Transferrable.transfer':
       return ModuleId.Transferrable
     case 'WebViewServer.create':
-    case 'WebViewServer.start':
-    case 'WebViewServer.setHandler':
     case 'WebViewServer.registerProtocol':
+    case 'WebViewServer.setHandler':
     case 'WebViewServer.setInfo':
     case 'WebViewServer.setInfo2':
+    case 'WebViewServer.start':
       return ModuleId.WebViewServer
-    case 'GetExtensions.getExtensions':
-      return ModuleId.GetExtensions
-    case 'FileSystemDisk.chmod':
-    case 'FileSystemDisk.copy':
-    case 'FileSystemDisk.getPathSeparator':
-    case 'FileSystemDisk.mkdir':
-    case 'FileSystemDisk.readDirWithFileTypes':
-    case 'FileSystemDisk.readFile':
-    case 'FileSystemDisk.remove':
-    case 'FileSystemDisk.rename':
-    case 'FileSystemDisk.stat':
-    case 'FileSystemDisk.getFolderSize':
-    case 'FileSystemDisk.readJson':
-    case 'FileSystemDisk.writeFile':
-      return ModuleId.FileSystemDisk
-    case 'HandleRequest.handleRequest':
-      return ModuleId.HandleRequest
+    case 'Workspace.getHomeDir':
+    case 'Workspace.resolveRoot':
+      return ModuleId.Workspace
     default:
       throw new CommandNotFoundError(commandId)
   }

@@ -4,8 +4,8 @@ export const getNotModifiedResponse = async (headers: any = {}): Promise<any> =>
   return {
     body: '',
     init: {
-      status: HttpStatusCode.NotModifed,
       headers,
+      status: HttpStatusCode.NotModifed,
     },
   }
 }

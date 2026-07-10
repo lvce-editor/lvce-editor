@@ -32,7 +32,7 @@ const getIpcAndResponse = (module: any, handle: any, message: any): any => {
 export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): Promise<any> => {
   Assert.number(ipcId)
   const module = HandleIpcModule.getModule(ipcId)
-  const { target, response } = await getIpcAndResponse(module, handle, message)
+  const { response, target } = await getIpcAndResponse(module, handle, message)
   const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
   if (!error) {
     return

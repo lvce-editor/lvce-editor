@@ -1,12 +1,12 @@
 import { existsSync } from 'node:fs'
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { stripTypeScriptTypes } from 'node:module'
 import { isAbsolute, join, relative } from 'node:path'
+import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
-import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
-import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
 
 const testFileExtensionRegex = /\.(js|ts)$/
 const backslashRegex = /\\/g
@@ -126,7 +126,7 @@ const copyStaticFiles = async (root: any, serverStaticPath: any): Promise<any> =
   await FileSystem.copy(serverStaticPath, Path.join(root, 'dist'))
 }
 
-const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }: any): Promise<any> => {
+const applyOverridesRendererProcess = async ({ commitHash, pathPrefix, root }: any): Promise<any> => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
     'platform = Remote;',
@@ -139,9 +139,9 @@ const applyOverridesRendererProcess = async ({ root, commitHash, pathPrefix }: a
   )
 }
 
-const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }: any): Promise<any> => {
+const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
   const extensionHostWorkerDistPath = getWorkerDistPath(root, commitHash, 'extensionHostWorker')
-  await applyOverridesRendererProcess({ root, commitHash, pathPrefix })
+  await applyOverridesRendererProcess({ commitHash, pathPrefix, root })
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
     'platform = Remote;',
@@ -266,7 +266,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix, serverStaticPath }
   }
 }
 
-const addExtensionSeo = async ({ root, name, description, commitHash }: any): Promise<any> => {
+const addExtensionSeo = async ({ commitHash, description, name, root }: any): Promise<any> => {
   await replace(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
   await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
@@ -282,7 +282,7 @@ const getId = (object: any): any => {
   return object.id
 }
 
-const addExtensionThemes = async ({ root, extensionPath, extensionJson, commitHash }: any): Promise<any> => {
+const addExtensionThemes = async ({ commitHash, extensionJson, extensionPath, root }: any): Promise<any> => {
   const colorThemes = extensionJson.colorThemes || []
   if (colorThemes.length === 0) {
     return
@@ -339,7 +339,7 @@ const toPlaygroundFile = (file: any): any => {
   return `/playground/${file}`
 }
 
-const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commitHash, pathPrefix }: any): Promise<any> => {
+const addExtensionLanguages = async ({ commitHash, extensionJson, extensionPath, pathPrefix, root }: any): Promise<any> => {
   const languages = extensionJson.languages || []
   if (languages.length === 0) {
     return
@@ -398,7 +398,7 @@ export const mergeExtensionManifests = (manifests: any, extraExtensions: any): a
   return merged
 }
 
-const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensions }: any): Promise<any> => {
+const updateExtensionsJson = async ({ commitHash, extraExtensions, pathPrefix, root }: any): Promise<any> => {
   const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
   const manifests = await Promise.all(
     dirents.map(async (dirent: any) => {
@@ -421,14 +421,14 @@ const updateExtensionsJson = async ({ root, commitHash, pathPrefix, extraExtensi
 }
 
 const addExtensionWebExtension = async ({
-  root,
-  extensionPath,
   commitHash,
   extensionJson,
+  extensionPath,
   pathPrefix,
+  root,
   useSimpleWebExtensionFile,
 }: any): Promise<any> => {
-  await updateExtensionsJson({ root, commitHash, pathPrefix, extraExtensions: [extensionJson] })
+  await updateExtensionsJson({ commitHash, extraExtensions: [extensionJson], pathPrefix, root })
 
   if (!extensionJson.browser) {
     return
@@ -453,36 +453,36 @@ const addExtensionWebExtension = async ({
   }
 }
 
-const addExtension = async ({ root, extensionPath, commitHash, pathPrefix, useSimpleWebExtensionFile }: any): Promise<any> => {
+const addExtension = async ({ commitHash, extensionPath, pathPrefix, root, useSimpleWebExtensionFile }: any): Promise<any> => {
   const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
   const name = extensionJson.name || extensionJson.id || ''
   const description = extensionJson.description || ''
   await addExtensionSeo({
-    root,
     commitHash,
-    name,
     description,
+    name,
+    root,
   })
   await addExtensionThemes({
-    root,
     commitHash,
     extensionJson,
     extensionPath,
+    root,
   })
   await addExtensionLanguages({
-    root,
-    extensionPath,
     commitHash,
     extensionJson,
+    extensionPath,
     pathPrefix,
+    root,
   })
 
   await addExtensionWebExtension({
-    root,
-    extensionPath,
     commitHash,
     extensionJson,
+    extensionPath,
     pathPrefix,
+    root,
     useSimpleWebExtensionFile,
   })
 }
@@ -552,7 +552,7 @@ const transpileFiles = async (folder: any): Promise<any> => {
 export const createFilemap = async (fixturesPath: any): Promise<any> => {
   const filemap: Record<string, any> = {}
 
-  const dirents = await readdir(fixturesPath, { withFileTypes: true, recursive: true })
+  const dirents = await readdir(fixturesPath, { recursive: true, withFileTypes: true })
 
   for (const dirent of dirents) {
     if (dirent.isFile()) {
@@ -595,7 +595,7 @@ export const createFilemapsPerFixture = async (fixturesPath: any): Promise<any> 
   )
 }
 
-const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }: any): Promise<any> => {
+const addTestFiles = async ({ commitHash, pathPrefix, root, testPath }: any): Promise<any> => {
   const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
   await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
   if (existsSync(`${testRoot}/fixtures`)) {
@@ -680,13 +680,13 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
  * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
 export const exportStatic = async ({
-  root,
-  pathPrefix,
   extensionPath,
   extensionPaths,
+  pathPrefix,
+  root,
+  serverStaticPath,
   testPath,
   useSimpleWebExtensionFile,
-  serverStaticPath,
 }: any): Promise<any> => {
   if (!existsSync(root)) {
     throw new Error(`root path does not exist: ${root}`)
@@ -723,20 +723,20 @@ export const exportStatic = async ({
 
   console.time('applyOverrides')
   await applyOverrides({
-    root,
     commitHash,
     pathPrefix,
+    root,
     serverStaticPath,
   })
   console.timeEnd('applyOverrides')
 
-  await updateExtensionsJson({ root, commitHash, pathPrefix, extraExtensions: [] })
+  await updateExtensionsJson({ commitHash, extraExtensions: [], pathPrefix, root })
 
   for (const extensionPath of allExtensionPaths) {
     console.time('addExtension')
     await addExtension({
-      extensionPath,
       commitHash,
+      extensionPath,
       pathPrefix,
       root,
       useSimpleWebExtensionFile,
@@ -747,10 +747,10 @@ export const exportStatic = async ({
   if (testPath) {
     console.time('addTestFiles')
     await addTestFiles({
-      testPath,
       commitHash,
       pathPrefix,
       root,
+      testPath,
     })
     console.timeEnd('addTestFiles')
   }

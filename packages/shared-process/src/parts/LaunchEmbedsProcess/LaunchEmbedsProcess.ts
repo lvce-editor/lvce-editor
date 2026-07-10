@@ -6,11 +6,11 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
 export const launchEmbedsProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'Embeds Process',
-    targetRpcId: IpcId.EmbedsProcess,
     defaultPath: EmbedsProcessPath.embedsProcessPath,
     isElectron: IsElectron.isElectron,
+    name: 'Embeds Process',
     settingName: 'develop.embedsProcessPath',
+    targetRpcId: IpcId.EmbedsProcess,
   })
   // TODO embeds worker itself should connect to main process
   await ConnectIpcToElectron.connectIpcToMainProcess2(ipc, IpcId.EmbedsProcess)

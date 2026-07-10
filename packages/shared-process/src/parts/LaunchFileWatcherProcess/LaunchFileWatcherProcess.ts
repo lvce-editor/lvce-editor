@@ -5,10 +5,10 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
 export const launchFileWatcherProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'File Watcher Process',
-    settingName: 'develop.fileWatcherProcessPath',
     defaultPath: FileWatcherProcessPath.fileWatcherProcessPath,
     isElectron: IsElectron.isElectron,
+    name: 'File Watcher Process',
+    settingName: 'develop.fileWatcherProcessPath',
     targetRpcId: IpcId.FileWatcherProcess,
   })
   return ipc

@@ -7,12 +7,12 @@ export const parseUrlGithub = (input: any): any => {
     const user = parts[3]
     const repo = parts[4]
     return {
-      type: ExtensionInstallType.GithubRepository,
       options: {
-        user,
-        repo,
         branch: 'HEAD',
+        repo,
+        user,
       },
+      type: ExtensionInstallType.GithubRepository,
     }
   }
   if (slashCount === 7) {
@@ -22,36 +22,36 @@ export const parseUrlGithub = (input: any): any => {
     const commit = parts[6]
     if (type === 'tree') {
       return {
-        type: ExtensionInstallType.GithubRepository,
         options: {
-          user,
-          repo,
           branch: commit,
+          repo,
+          user,
         },
+        type: ExtensionInstallType.GithubRepository,
       }
     }
     if (type === 'pull') {
       return {
-        type: ExtensionInstallType.ParsingError,
         options: {
           message: 'Cannot download from Pull Request',
         },
+        type: ExtensionInstallType.ParsingError,
       }
     }
   }
 
   if (input.includes('/releases/download')) {
     return {
-      type: ExtensionInstallType.Url,
       options: {
         url: input,
       },
+      type: ExtensionInstallType.Url,
     }
   }
   return {
-    type: ExtensionInstallType.ParsingError,
     options: {
       message: 'Failed to parse github url',
     },
+    type: ExtensionInstallType.ParsingError,
   }
 }

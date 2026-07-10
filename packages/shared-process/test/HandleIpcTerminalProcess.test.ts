@@ -4,9 +4,9 @@ import * as HandleIpcTerminalProcess from '../src/parts/HandleIpcTerminalProcess
 test('upgradeMessagePort', () => {
   const port: Record<string, any> = {}
   expect(HandleIpcTerminalProcess.upgradeMessagePort(port)).toEqual({
-    type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
     params: [port],
+    type: 'send',
   })
 })
 
@@ -16,7 +16,6 @@ test('upgradeWebSocket', () => {
     isHandle: true,
   }
   expect(HandleIpcTerminalProcess.upgradeWebSocket(handle, message)).toEqual({
-    type: 'send',
     method: 'HandleWebSocket.handleWebSocket',
     params: [
       {
@@ -24,5 +23,6 @@ test('upgradeWebSocket', () => {
       },
       {},
     ],
+    type: 'send',
   })
 })

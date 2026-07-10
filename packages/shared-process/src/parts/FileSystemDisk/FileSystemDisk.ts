@@ -1,17 +1,17 @@
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as Assert from '../Assert/Assert.ts'
 import * as EncodingType from '../EncodingType/EncodingType.ts'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.ts'
 import * as GetDirentType from '../GetDirentType/GetDirentType.ts'
+import * as GetFolderSizeInternal from '../GetFolderSizeInternal/GetFolderSizeInternal.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as Trash from '../Trash/Trash.ts'
-import * as GetFolderSizeInternal from '../GetFolderSizeInternal/GetFolderSizeInternal.ts'
 import { VError } from '../VError/VError.ts'
-import { fileURLToPath } from 'node:url'
-import { join } from 'node:path'
 
 const assertUri = (uri: any): any => {
   if (!uri.startsWith('file://')) {

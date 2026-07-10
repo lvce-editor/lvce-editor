@@ -5,6 +5,7 @@ export const name = 'FileSystemDisk'
 export const Commands = {
   chmod: FileSystemDisk.chmod,
   copy: FileSystemDisk.copy,
+  getFolderSize: FileSystemDisk.getFolderSize,
   getPathSeparator: FileSystemDisk.getPathSeparator,
   mkdir: FileSystemDisk.mkdir,
   readDirWithFileTypes: FileSystemDisk.readDirWithFileTypes,
@@ -14,5 +15,4 @@ export const Commands = {
   rename: FileSystemDisk.rename,
   stat: FileSystemDisk.stat,
   writeFile: FileSystemDisk.writeFile,
-  getFolderSize: FileSystemDisk.getFolderSize,
 }

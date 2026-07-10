@@ -1,5 +1,5 @@
-import * as GetBrowserWindowOptions from '../GetBrowserWindowOptions/GetBrowserWindowOptions.ts'
 import * as ExtensionManagementColorTheme from '../ExtensionManagement/ExtensionManagementColorTheme.ts'
+import * as GetBrowserWindowOptions from '../GetBrowserWindowOptions/GetBrowserWindowOptions.ts'
 import * as Platform from '../Platform/Platform.ts'
 
 const fallbackBackground = '#1e2324'
@@ -26,7 +26,7 @@ const getColorThemeJson = async (preferences: any): Promise<any> => {
   }
 }
 
-export const getAppWindowOptions = async ({ preferences, screenWidth, screenHeight, preloadUrl }: any): Promise<any> => {
+export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeight, screenWidth }: any): Promise<any> => {
   const colorThemeJson = await getColorThemeJson(preferences)
   const colors = colorThemeJson.colors && typeof colorThemeJson.colors === 'object' ? colorThemeJson.colors : {}
   const background = getColor(colors, ['MainBackground'], fallbackBackground)
@@ -47,20 +47,20 @@ export const getAppWindowOptions = async ({ preferences, screenWidth, screenHeig
   const titleBarOverlay = windowControlsOverlayPreference
     ? {
         color: titleBarBackground,
-        symbolColor: titleBarSymbolColor,
         height: 29,
+        symbolColor: titleBarSymbolColor,
       }
     : undefined
 
   return GetBrowserWindowOptions.getBrowserWindowOptions({
-    y: 0,
-    x: screenWidth - 800,
-    width: 800,
-    height: screenHeight,
     background,
-    titleBarStyle,
     frame,
-    titleBarOverlay,
+    height: screenHeight,
     preloadUrl,
+    titleBarOverlay,
+    titleBarStyle,
+    width: 800,
+    x: screenWidth - 800,
+    y: 0,
   })
 }

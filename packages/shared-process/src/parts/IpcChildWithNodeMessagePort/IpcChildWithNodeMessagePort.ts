@@ -14,7 +14,13 @@ const getActualData = (message: any): any => {
 
 export const wrap = (messagePort: any): any => {
   return {
+    dispose(): any {
+      this.messagePort.close()
+    },
     messagePort,
+    off(event: any, listener: any): any {
+      this.messagePort.off(event, listener)
+    },
     on(event: any, listener: any): any {
       if (event === 'message') {
         const wrappedListener = (event: any): any => {
@@ -32,14 +38,8 @@ export const wrap = (messagePort: any): any => {
         throw new Error(`unsupported event type ${event}`)
       }
     },
-    off(event: any, listener: any): any {
-      this.messagePort.off(event, listener)
-    },
     send(message: any): any {
       this.messagePort.postMessage(message)
-    },
-    dispose(): any {
-      this.messagePort.close()
     },
     start(): any {
       this.messagePort.start()

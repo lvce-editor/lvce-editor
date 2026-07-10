@@ -24,24 +24,24 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
 
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => {
   return {
-    join: (a: any, b: any): any => {
-      return a + '/' + b
-    },
     basename: (path: any): any => {
       return path.slice(path.lastIndexOf('/') + 1)
+    },
+    join: (a: any, b: any): any => {
+      return a + '/' + b
     },
   }
 })
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
-    remove: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
     exists: jest.fn(() => {
       throw new Error('not implemented')
     }),
     readFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    remove: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }

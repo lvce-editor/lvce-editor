@@ -14,20 +14,20 @@ export const load = (protocol: any): any => {
     throw new VError('missing sec websocket protocol header')
   }
   switch (protocol) {
-    case ProtocolType.SharedProcess:
-      return HandleWebSocketForSharedProcess
     case ProtocolType.ClipBoardProcess:
       return HandleWebSocketForClipBoardProcess
     case ProtocolType.ExtensionHostHelperProcess:
       return HandleWebSocketForExtensionHostHelperProcess
-    case ProtocolType.TerminalProcess:
-      return HandleWebSocketForTerminalProcess
-    case ProtocolType.SearchProcess:
-      return HandleWebSocketForSearchProcess
-    case ProtocolType.ProcessExplorer:
-      return HandleWebSocketForProcessExplorer
     case ProtocolType.FileSystemProcess:
       return HandleWebSocketForFileSystemProcess
+    case ProtocolType.ProcessExplorer:
+      return HandleWebSocketForProcessExplorer
+    case ProtocolType.SearchProcess:
+      return HandleWebSocketForSearchProcess
+    case ProtocolType.SharedProcess:
+      return HandleWebSocketForSharedProcess
+    case ProtocolType.TerminalProcess:
+      return HandleWebSocketForTerminalProcess
     default:
       return HandleWebSocketForUnknown
   }

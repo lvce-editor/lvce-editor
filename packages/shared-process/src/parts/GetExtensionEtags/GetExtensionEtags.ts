@@ -59,8 +59,8 @@ const get = (input: any): any => {
     case ExtensionManifestInputType.Folder:
     case ExtensionManifestInputType.LinkedExtensionsFolder:
       return getFolder(input.path)
-    case ExtensionManifestInputType.OnlyExtension:
     case ExtensionManifestInputType.LinkedExtension:
+    case ExtensionManifestInputType.OnlyExtension:
       return getOnly(input.path)
     default:
       return []

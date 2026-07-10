@@ -14,7 +14,7 @@ export const handleElectronReady = async (parsedArgs: any, workingDirectory: any
     await TransientLinkedExtensions.validate()
     const preferences = await Preferences.getAllSafe()
     const preloadUrl = PreloadUrl.getPreloadUrl()
-    await AppWindow.createAppWindow({ preferences, parsedArgs, workingDirectory, preloadUrl })
+    await AppWindow.createAppWindow({ parsedArgs, preferences, preloadUrl, workingDirectory })
   } catch (error) {
     Logger.error(error)
     Process.exit(ExitCode.ExpectedError)

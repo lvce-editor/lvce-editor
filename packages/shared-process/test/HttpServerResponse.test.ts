@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
 import { Writable } from 'node:stream'
-import * as HttpServerResponse from '../src/parts/HttpServerResponse/HttpServerResponse.js'
 import { setTimeout } from 'node:timers/promises'
+import * as HttpServerResponse from '../src/parts/HttpServerResponse/HttpServerResponse.js'
 
 test('send', () => {
   const request: Record<string, any> = {}
@@ -14,8 +14,8 @@ test('send', () => {
   })
   const result = {
     init: {
-      status: 200,
       headers: {},
+      status: 200,
     },
   }
   HttpServerResponse.send(request, socket, result)
@@ -34,8 +34,8 @@ test('send - error response', () => {
   })
   const result = {
     init: {
-      status: 404,
       headers: {},
+      status: 404,
     },
   }
   HttpServerResponse.send(request, socket, result)
@@ -57,8 +57,8 @@ test('send - epipe error', async () => {
   })
   const result = {
     init: {
-      status: 200,
       headers: {},
+      status: 200,
     },
   }
   HttpServerResponse.send(request, socket, result)

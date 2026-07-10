@@ -6,8 +6,8 @@ beforeEach(() => {
 
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   return {
-    info: jest.fn(),
     error: jest.fn(),
+    info: jest.fn(),
   }
 })
 
@@ -33,8 +33,6 @@ test('handleUncaughtExceptionMonitor', () => {
   // @ts-ignore
   PrettyError.prepare.mockImplementation(() => {
     return {
-      message: 'oops',
-      stack: `    at main (/test/packages/shared-process/src/sharedProcessMain.ts:19:11)`,
       codeFrame: `  17 |
   18 |   if (Math) {
 > 19 |     throw new Error('oops')
@@ -42,6 +40,8 @@ test('handleUncaughtExceptionMonitor', () => {
   20 |   }
   21 | }
   22 |`,
+      message: 'oops',
+      stack: `    at main (/test/packages/shared-process/src/sharedProcessMain.ts:19:11)`,
     }
   })
   ErrorHandling.handleUncaughtExceptionMonitor(error, undefined)

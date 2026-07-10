@@ -34,7 +34,6 @@ test.skip('getLanguages', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.plaintext',
         languages: [
           {
@@ -44,15 +43,16 @@ test.skip('getLanguages', async () => {
           },
         ],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
   expect(await ExtensionHostLanguages.getLanguages()).toEqual([
     {
+      extensionPath: expect.any(String),
       id: 'plaintext',
       label: 'Plaintext',
       tokenize: `/remote/${pathToFileURL(join(tmpDir, 'src/tokenizePlainText.js')).toString().slice(8)}`,
-      extensionPath: expect.any(String),
     },
   ])
 })
@@ -64,10 +64,10 @@ test.skip('getLanguages - error - property languages is not of type array', asyn
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.plaintext',
         languages: {},
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -81,7 +81,6 @@ test.skip('getLanguages - language without tokenize property', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.icon-theme-test',
         languages: [
           {
@@ -90,6 +89,7 @@ test.skip('getLanguages - language without tokenize property', async () => {
           },
         ],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -108,27 +108,27 @@ test.skip('getLanguages - error - property tokenize is of type array', async () 
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.test',
         languages: [
           {
-            id: 'python',
-            extensions: ['.py'],
             configuration: './languageConfiguration.json',
+            extensions: ['.py'],
+            id: 'python',
             tokenize: ['src/tokenizePython.js'],
           },
         ],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
   expect(await ExtensionHostLanguages.getLanguages()).toEqual([
     {
       configuration: './languageConfiguration.json',
+      extensionPath: expect.any(String),
       extensions: ['.py'],
       id: 'python',
       tokenize: '',
-      extensionPath: expect.any(String),
     },
   ])
   expect(spy).toHaveBeenCalledTimes(1)
@@ -152,17 +152,17 @@ test.skip('getLanguageConfiguration', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [
           {
-            id: 'javascript',
-            extensions: ['.js'],
-            tokenize: 'src/tokenizeJavaScript.js',
             configuration: './languageConfiguration.json',
+            extensions: ['.js'],
+            id: 'javascript',
+            tokenize: 'src/tokenizeJavaScript.js',
           },
         ],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -180,17 +180,17 @@ test.skip('getLanguageConfiguration - error - language configuration file not fo
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [
           {
-            id: 'javascript',
-            extensions: ['.js'],
-            tokenize: 'src/tokenizeJavaScript.js',
             configuration: './languageConfiguration.json',
+            extensions: ['.js'],
+            id: 'javascript',
+            tokenize: 'src/tokenizeJavaScript.js',
           },
         ],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -207,17 +207,17 @@ test.skip('getLanguageConfiguration - error - language configuration has invalid
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [
           {
-            id: 'javascript',
-            extensions: ['.js'],
-            tokenize: 'src/tokenizeJavaScript.js',
             configuration: './languageConfiguration.json',
+            extensions: ['.js'],
+            id: 'javascript',
+            tokenize: 'src/tokenizeJavaScript.js',
           },
         ],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -238,10 +238,10 @@ test.skip('getLanguageConfiguration - error - no language configuration', async 
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.test',
         languages: [],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -254,10 +254,10 @@ test.skip('getLanguageConfiguration - error - language is null', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [null],
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })

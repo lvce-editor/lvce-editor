@@ -1,8 +1,8 @@
 // parsing error handling based on https://github.com/sindresorhus/parse-json/blob/main/index.js
 
-import { VError } from '../VError/VError.ts'
 import * as Character from '../Character/Character.ts'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
+import { VError } from '../VError/VError.ts'
 
 export const parse = async (string: any, filePath: any): Promise<any> => {
   try {

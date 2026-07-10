@@ -1,11 +1,11 @@
 import { expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: jest.fn(() => {
-    return '/test/extensions'
-  }),
   getCachedExtensionsPath: jest.fn(() => {
     return '/test/cached-extensions'
+  }),
+  getExtensionsPath: jest.fn(() => {
+    return '/test/extensions'
   }),
 }))
 
@@ -22,11 +22,11 @@ jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/TmpFile/TmpFile.js', () => ({
-  getTmpFile: jest.fn(() => {
-    return '/test/tmp-file'
-  }),
   getTmpDir: jest.fn(() => {
     return '/test/tmp-dir'
+  }),
+  getTmpFile: jest.fn(() => {
+    return '/test/tmp-file'
   }),
 }))
 

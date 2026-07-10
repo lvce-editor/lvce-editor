@@ -1,6 +1,6 @@
 import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallType.ts'
-import * as Path from '../Path/Path.ts'
 import * as ParseUrlGithub from '../ParseUrlGithub/ParseUrlGithub.ts'
+import * as Path from '../Path/Path.ts'
 
 const parseUrl = (input: any): any => {
   if (input.startsWith('https://github.com')) {
@@ -8,26 +8,26 @@ const parseUrl = (input: any): any => {
   }
   if (input.endsWith('.tar.br')) {
     return {
-      type: ExtensionInstallType.Url,
       options: {
         url: input,
       },
+      type: ExtensionInstallType.Url,
     }
   }
   return {
-    type: ExtensionInstallType.ParsingError,
     options: {
       message: 'Failed to parse url',
     },
+    type: ExtensionInstallType.ParsingError,
   }
 }
 
 const parseFile = (input: any): any => {
   return {
-    type: ExtensionInstallType.File,
     options: {
       path: input,
     },
+    type: ExtensionInstallType.File,
   }
 }
 
@@ -42,9 +42,9 @@ export const parse = (input: any): any => {
     return parseFile(input)
   }
   return {
-    type: ExtensionInstallType.ParsingError,
     options: {
       message: 'Failed to parse input',
     },
+    type: ExtensionInstallType.ParsingError,
   }
 }

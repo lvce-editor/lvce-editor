@@ -10,13 +10,13 @@ const GetAppWindowOptions = await import('../src/parts/GetAppWindowOptions/GetAp
 const getOptions = (preferences: any): any => {
   return GetAppWindowOptions.getAppWindowOptions({
     preferences: {
-      'window.titleBarStyle': 'custom',
       'window.controlsOverlay.enabled': true,
+      'window.titleBarStyle': 'custom',
       ...preferences,
     },
-    screenWidth: 1600,
-    screenHeight: 900,
     preloadUrl: 'file:///preload.js',
+    screenHeight: 900,
+    screenWidth: 1600,
   })
 }
 
@@ -25,8 +25,8 @@ test('getAppWindowOptions - uses active color theme for native title bar overlay
   ExtensionManagementColorTheme.getColorThemeJson.mockResolvedValue({
     colors: {
       MainBackground: '#101820',
-      TitleBarBackground: '#202830',
       TitleBarActiveBackground: '#303840',
+      TitleBarBackground: '#202830',
       TitleBarForeground: '#a0a8b0',
       TitleBarForegroundActive: '#f0f8ff',
     },
@@ -36,8 +36,8 @@ test('getAppWindowOptions - uses active color theme for native title bar overlay
     backgroundColor: '#101820',
     titleBarOverlay: {
       color: '#303840',
-      symbolColor: '#f0f8ff',
       height: 29,
+      symbolColor: '#f0f8ff',
     },
   })
   expect(ExtensionManagementColorTheme.getColorThemeJson).toHaveBeenCalledWith('test-theme')
@@ -51,8 +51,8 @@ test('getAppWindowOptions - falls back when color theme cannot be loaded', async
     backgroundColor: '#1e2324',
     titleBarOverlay: {
       color: '#1e2324',
-      symbolColor: '#74b1be',
       height: 29,
+      symbolColor: '#74b1be',
     },
   })
 })

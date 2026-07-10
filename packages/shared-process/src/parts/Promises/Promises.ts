@@ -12,8 +12,8 @@ export const withResolvers = (): any => {
     _reject = reject
   })
   return {
-    resolve: _resolve,
-    reject: _reject,
     promise,
+    reject: _reject,
+    resolve: _resolve,
   }
 }

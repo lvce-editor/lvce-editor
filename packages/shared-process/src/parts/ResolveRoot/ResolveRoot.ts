@@ -36,24 +36,24 @@ export const resolveRoot = async (): Promise<any> => {
     if (last && last === '.') {
       const actual = process.cwd()
       return {
-        path: actual,
-        uri: toUri(actual),
-        workspaceId: GetWorkspaceId.getWorkspaceId(actual),
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        path: actual,
         pathSeparator: Platform.getPathSeparator(),
         source: WorkspaceSource.SharedProcessCliArg,
+        uri: toUri(actual),
+        workspaceId: GetWorkspaceId.getWorkspaceId(actual),
       }
     }
     if (last && isAbsolute(last)) {
       return {
-        path: last,
-        uri: toUri(last),
-        workspaceId: GetWorkspaceId.getWorkspaceId(last),
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        path: last,
         pathSeparator: Platform.getPathSeparator(),
         source: WorkspaceSource.SharedProcessCliArg,
+        uri: toUri(last),
+        workspaceId: GetWorkspaceId.getWorkspaceId(last),
       }
     }
   }
@@ -63,13 +63,13 @@ export const resolveRoot = async (): Promise<any> => {
   if (!folder) {
     const path = join(Root.root, 'playground')
     return {
-      path,
-      uri: toUri(path),
-      workspaceId: GetWorkspaceId.getWorkspaceId(path),
       homeDir: PlatformPaths.getHomeDir(),
       homeDirUri: toUri(PlatformPaths.getHomeDir()),
+      path,
       pathSeparator: Platform.getPathSeparator(),
       source: WorkspaceSource.SharedProcessEnv,
+      uri: toUri(path),
+      workspaceId: GetWorkspaceId.getWorkspaceId(path),
     }
   }
   const absolutePath = getAbsolutePath(folder)
@@ -77,12 +77,12 @@ export const resolveRoot = async (): Promise<any> => {
   // TODO this slows down startup a lot (~30-50ms)
   // const workspaceStorage = await getWorkspaceStorage(workspaceId)
   return {
-    path: absolutePath,
-    uri: toUri(absolutePath),
-    workspaceId,
     homeDir: PlatformPaths.getHomeDir(),
     homeDirUri: toUri(PlatformPaths.getHomeDir()),
+    path: absolutePath,
     pathSeparator: Platform.getPathSeparator(),
     source: WorkspaceSource.SharedProcessDefault,
+    uri: toUri(absolutePath),
+    workspaceId,
   }
 }

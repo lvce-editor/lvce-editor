@@ -5,12 +5,12 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.j
   getExtensions: jest.fn(() => {
     return [
       {
-        path: '/test/extension-1',
         colorThemes: [
           {
             id: 'test-theme-1',
           },
         ],
+        path: '/test/extension-1',
       },
     ]
   }),

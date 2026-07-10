@@ -21,8 +21,8 @@ export const get = async (path: any): Promise<any> => {
     return {
       ...json,
       path,
-      uri,
       status: ExtensionManifestStatus.Resolved,
+      uri,
     }
   } catch (error) {
     const id = InferExtensionId.inferExtensionId(path)
@@ -40,8 +40,8 @@ export const get = async (path: any): Promise<any> => {
         return {
           ...json,
           path: extensionPath,
-          uri,
           status: ExtensionManifestStatus.Resolved,
+          uri,
         }
       } catch {}
       // @ts-ignore
@@ -54,8 +54,8 @@ export const get = async (path: any): Promise<any> => {
     }
     return {
       path,
-      status: ExtensionManifestStatus.Rejected,
       reason: enhancedError,
+      status: ExtensionManifestStatus.Rejected,
     }
   }
 }

@@ -3,7 +3,7 @@ import * as ProcessExitEventType from '../ProcessExitEventType/ProcessExitEventT
 
 export const waitForProcessToExit = (childProcess: any): any => {
   return GetFirstEvent.getFirstEvent(childProcess, {
-    error: ProcessExitEventType.Error,
     close: ProcessExitEventType.Exit,
+    error: ProcessExitEventType.Error,
   })
 }

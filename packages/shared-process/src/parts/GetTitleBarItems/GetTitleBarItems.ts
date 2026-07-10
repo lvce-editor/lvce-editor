@@ -2,15 +2,15 @@
  * @enum {string}
  */
 const UiStrings = {
-  File: 'File',
   Edit: 'Edit',
-  Selection: 'Selection',
-  View: 'View',
+  File: 'File',
   Go: 'Go',
-  Run: 'Run',
-  Terminal: 'Terminal',
-  Window: 'Window',
   Help: 'Help',
+  Run: 'Run',
+  Selection: 'Selection',
+  Terminal: 'Terminal',
+  View: 'View',
+  Window: 'Window',
 }
 
 export const getTitleBarItems = (): any => {

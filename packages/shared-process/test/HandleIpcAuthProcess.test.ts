@@ -7,8 +7,8 @@ test('upgradeMessagePort', () => {
     ipcId: 1,
   }
   expect(HandleIpcAuthProcess.upgradeMessagePort(port, message)).toEqual({
-    type: 'send',
     method: 'HandleMessagePort.handleMessagePort',
     params: [port, 1],
+    type: 'send',
   })
 })

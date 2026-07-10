@@ -1,5 +1,5 @@
-import { VError } from '../VError/VError.ts'
 import * as IsEsrchError from '../IsEsrchError/IsEsrchError.ts'
+import { VError } from '../VError/VError.ts'
 
 export const crash = (message: any): any => {
   throw new Error(message)

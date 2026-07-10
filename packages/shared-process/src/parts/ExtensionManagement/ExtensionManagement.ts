@@ -75,8 +75,8 @@ export const getBuiltinExtensions = (): any => {
   return ExtensionManifests.getAll(
     [
       {
-        type: ExtensionManifestInputType.Folder,
         path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
+        type: ExtensionManifestInputType.Folder,
       },
     ],
     BuiltinExtensionsPath.getBuiltinExtensionsPath(),
@@ -87,8 +87,8 @@ export const getInstalledExtensions = (): any => {
   return ExtensionManifests.getAll(
     [
       {
-        type: ExtensionManifestInputType.Folder,
         path: PlatformPaths.getExtensionsPath(),
+        type: ExtensionManifestInputType.Folder,
       },
     ],
     BuiltinExtensionsPath.getBuiltinExtensionsPath(),
@@ -98,28 +98,28 @@ export const getInstalledExtensions = (): any => {
 export const getExtensions = (): any => {
   const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link: any) => {
     return {
-      type: ExtensionManifestInputType.LinkedExtension,
       path: link.resolvedPath,
+      type: ExtensionManifestInputType.LinkedExtension,
     }
   })
   return ExtensionManifests.getAll(
     [
       {
-        type: ExtensionManifestInputType.OnlyExtension,
         path: PlatformPaths.getOnlyExtensionPath(),
+        type: ExtensionManifestInputType.OnlyExtension,
       },
       ...transientLinkedExtensions,
       {
-        type: ExtensionManifestInputType.Folder,
         path: PlatformPaths.getLinkedExtensionsPath(),
+        type: ExtensionManifestInputType.Folder,
       },
       {
-        type: ExtensionManifestInputType.Folder,
         path: PlatformPaths.getExtensionsPath(),
+        type: ExtensionManifestInputType.Folder,
       },
       {
-        type: ExtensionManifestInputType.Folder,
         path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
+        type: ExtensionManifestInputType.Folder,
       },
     ],
     BuiltinExtensionsPath.getBuiltinExtensionsPath(),
@@ -129,27 +129,27 @@ export const getExtensions = (): any => {
 export const getExtensionsEtag = async (): Promise<any> => {
   const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link: any) => {
     return {
-      type: ExtensionManifestInputType.LinkedExtension,
       path: link.resolvedPath,
+      type: ExtensionManifestInputType.LinkedExtension,
     }
   })
   const stats = await GetExtensionEtags.getExtensionEtags([
     {
-      type: ExtensionManifestInputType.OnlyExtension,
       path: PlatformPaths.getOnlyExtensionPath(),
+      type: ExtensionManifestInputType.OnlyExtension,
     },
     ...transientLinkedExtensions,
     {
-      type: ExtensionManifestInputType.Folder,
       path: PlatformPaths.getLinkedExtensionsPath(),
+      type: ExtensionManifestInputType.Folder,
     },
     {
-      type: ExtensionManifestInputType.Folder,
       path: PlatformPaths.getExtensionsPath(),
+      type: ExtensionManifestInputType.Folder,
     },
     {
-      type: ExtensionManifestInputType.Folder,
       path: BuiltinExtensionsPath.getBuiltinExtensionsPath(),
+      type: ExtensionManifestInputType.Folder,
     },
   ])
   const etag = GetEtagFromStats.getEtagFromStats(stats)
@@ -160,8 +160,8 @@ export const getDisabledExtensions = (): any => {
   return ExtensionManifests.getAll(
     [
       {
-        type: ExtensionManifestInputType.Folder,
         path: PlatformPaths.getDisabledExtensionsPath(),
+        type: ExtensionManifestInputType.Folder,
       },
     ],
     BuiltinExtensionsPath.getBuiltinExtensionsPath(),

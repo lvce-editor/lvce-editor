@@ -6,8 +6,8 @@ export const targetMessagePort = (): any => {
 
 export const upgradeMessagePort = (port: any, message: any): any => {
   return {
-    type: 'send',
     method: 'HandleMessagePort.handleMessagePort',
     params: [port, message.ipcId],
+    type: 'send',
   }
 }

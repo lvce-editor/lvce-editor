@@ -15,7 +15,6 @@ export default [
     rules: {
       ...disableConfiguredRules('@cspell/'),
       ...disableConfiguredRules('jest/'),
-      ...disableConfiguredRules('perfectionist/'),
       ...disableConfiguredRules('regex/'),
       ...disableConfiguredRules('sonarjs/'),
       ...disableConfiguredRules('unicorn/'),

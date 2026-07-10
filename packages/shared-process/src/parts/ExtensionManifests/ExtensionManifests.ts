@@ -10,12 +10,12 @@ const getModule = (type: any): any => {
   switch (type) {
     case ExtensionManifestInputType.Folder:
       return ExtensionManifestsGetFromFolder
-    case ExtensionManifestInputType.OnlyExtension:
-      return ExtensionManifestsGetFromOnlyExtension
     case ExtensionManifestInputType.LinkedExtension:
       return ExtensionManifestsGetFromLinkedExtension
     case ExtensionManifestInputType.LinkedExtensionsFolder:
       return ExtensionManifestsGetFromLinkedExtensionsFolder
+    case ExtensionManifestInputType.OnlyExtension:
+      return ExtensionManifestsGetFromOnlyExtension
     default:
       throw new Error('unsupported input type')
   }

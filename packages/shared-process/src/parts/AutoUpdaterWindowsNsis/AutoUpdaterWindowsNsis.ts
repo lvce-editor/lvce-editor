@@ -50,10 +50,10 @@ export const installAndRestart = async (downloadPath: any): Promise<any> => {
     Logger.info(`[shared-process] spawning nsis update: ${downloadPath}`)
     UpdateState.set(UpdateStateType.Updating)
     const child = spawn(downloadPath, args, {
-      stdio: 'inherit',
       detached: true,
+      stdio: 'inherit',
     })
-    const { type, event } = await GetFirstSpawnedProcessEvent.getFirstSpawnedProcessEvent(child)
+    const { event, type } = await GetFirstSpawnedProcessEvent.getFirstSpawnedProcessEvent(child)
     if (type === FirstNodeWorkerEventType.Error) {
       throw new Error(`Child process error: ${event}`)
     }
