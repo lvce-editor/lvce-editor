@@ -1,6 +1,16 @@
-import { expect, jest, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import { access } from 'node:fs/promises'
-import * as Developer from '../src/parts/Developer/Developer.js'
+
+jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
+  invoke: jest.fn(),
+}))
+
+const Developer = await import('../src/parts/Developer/Developer.js')
+const MainProcess = await import('../src/parts/MainProcess/MainProcess.js')
+
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 
 const exists = async (path: any): Promise<any> => {
   try {
@@ -32,4 +42,11 @@ test('sharedProcessMemoryUsage', () => {
     heapUsed: expect.any(Number),
     rss: expect.any(Number),
   })
+})
+
+test('showGpuInfo', async () => {
+  await Developer.showGpuInfo()
+
+  expect(MainProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(MainProcess.invoke).toHaveBeenCalledWith('ElectronWindowGpuInfo.open')
 })

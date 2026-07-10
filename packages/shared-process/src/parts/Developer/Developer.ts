@@ -1,3 +1,4 @@
+import * as MainProcess from '../MainProcess/MainProcess.ts'
 import * as Process from '../Process/Process.ts'
 
 export const measureLatencyBetweenExtensionHostAndSharedProcess = async (socket: any, id: any): Promise<any> => {
@@ -27,6 +28,10 @@ export const sharedProcessStartupPerformance = (): any => {
 export const sharedProcessMemoryUsage = (): any => {
   // TODO also print out number of watched files
   return Process.memoryUsage()
+}
+
+export const showGpuInfo = (): any => {
+  return MainProcess.invoke('ElectronWindowGpuInfo.open')
 }
 
 // TODO not sure if this is actually useful

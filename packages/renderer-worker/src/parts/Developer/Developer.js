@@ -224,6 +224,10 @@ export const openProcessExplorer = () => {
   return ProcessExplorer.open()
 }
 
+export const showGpuInfo = () => {
+  return SharedProcess.invoke('Developer.showGpuInfo')
+}
+
 export const downloadViewletState = async () => {
   const states = await Command.execute('Viewlet.getAllStates')
   await Command.execute('Download.downloadJson', /* json */ states, /* fileName */ 'viewlets.json')

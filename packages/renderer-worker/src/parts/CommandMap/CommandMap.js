@@ -77,6 +77,7 @@ export const commandMap = {
   'Developer.reloadColorTheme': lazy('Developer.reloadColorTheme'),
   'Developer.reloadIconTheme': lazy('Developer.reloadIconTheme'),
   'Developer.showColorThemeCss': lazy('Developer.showColorThemeCss'),
+  'Developer.showGpuInfo': lazy('Developer.showGpuInfo'),
   'Developer.showMemoryUsage': lazy('Developer.showMemoryUsage'),
   'Developer.showStartupPerformance': lazy('Developer.showStartupPerformance'),
   'Developer.startupPerformance': lazy('Developer.startupPerformance'),

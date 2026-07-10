@@ -36,6 +36,7 @@ export const getModuleId = (commandId: any): any => {
     case 'Developer.createProfile':
     case 'Developer.sharedProcessMemoryUsage':
     case 'Developer.sharedProcessStartupPerformance':
+    case 'Developer.showGpuInfo':
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
