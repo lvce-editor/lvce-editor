@@ -32,10 +32,10 @@ jest.unstable_mockModule('node:fs/promises', () => {
     rename: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    writeFile: jest.fn(() => {
+    rm: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    rm: jest.fn(() => {
+    writeFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }

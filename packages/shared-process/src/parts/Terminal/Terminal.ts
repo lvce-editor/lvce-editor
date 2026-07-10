@@ -20,11 +20,11 @@ const createTerminal = (ptyHost: any, socket: any): any => {
   ptyHost.on('message', handleMessage)
   socket.on('close', handleClose)
   return {
+    dispose,
+    handleClose,
+    handleMessage,
     ptyHost,
     socket,
-    handleMessage,
-    handleClose,
-    dispose,
   }
 }
 

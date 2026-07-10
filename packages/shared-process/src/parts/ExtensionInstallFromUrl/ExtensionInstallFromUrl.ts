@@ -24,7 +24,7 @@ export const install = async ({ url }: any): Promise<any> => {
       throw new Error('missing id in extension manifest')
     }
     const outDir = join(extensionsPath, id)
-    await rm(outDir, { recursive: true, force: true })
+    await rm(outDir, { force: true, recursive: true })
     await mkdir(dirname(outDir), { recursive: true })
     await rename(tmpDir, outDir)
   } catch (error) {

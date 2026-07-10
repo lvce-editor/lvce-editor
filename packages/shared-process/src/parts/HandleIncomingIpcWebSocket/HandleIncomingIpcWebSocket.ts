@@ -2,7 +2,7 @@ export const handleIncomingIpcWebSocket = async (module: any, handle: any, messa
   const response = module.upgradeWebSocket(handle, message)
   const target = await module.targetWebSocket(handle, message)
   return {
-    target,
     response,
+    target,
   }
 }

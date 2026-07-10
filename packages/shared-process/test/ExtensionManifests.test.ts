@@ -19,23 +19,23 @@ test('getAll', async () => {
   ExtensionManifestsFromFolder.getExtensionManifests.mockImplementation(() => {
     return [
       {
-        path: '/test/built-in-extensions/extension-1',
         name: 'extension-1',
+        path: '/test/built-in-extensions/extension-1',
       },
     ]
   })
   expect(
     await ExtensionManifests.getAll([
       {
-        type: ExtensionManifestInputType.Folder,
         path: '/test/built-in-extensions',
+        type: ExtensionManifestInputType.Folder,
       },
     ]),
   ).toEqual([
     {
-      path: '/test/built-in-extensions/extension-1',
-      name: 'extension-1',
       disabled: false,
+      name: 'extension-1',
+      path: '/test/built-in-extensions/extension-1',
     },
   ])
   expect(ExtensionManifestsFromFolder.getExtensionManifests).toHaveBeenCalledTimes(1)

@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as DestroyWebSocket from '../DestroySocket/DestroySocket.ts'
-import * as HandleWebSocketModule from '../HandleWebSocketModule/HandleWebSocketModule.ts'
 import * as GetTypeFromUrl from '../GetTypeFromUrl/GetTypeFromUrl.ts'
+import * as HandleWebSocketModule from '../HandleWebSocketModule/HandleWebSocketModule.ts'
 import * as IsAllowedWebSocketOrigin from '../IsAllowedWebSocketOrigin/IsAllowedWebSocketOrigin.ts'
 import * as RejectWebSocket from '../RejectWebSocket/RejectWebSocket.ts'
 import { VError } from '../VError/VError.ts'

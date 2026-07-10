@@ -7,11 +7,11 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
 export const launchFileSystemProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'File System Process',
-    targetRpcId: IpcId.FileSystemProcess,
     defaultPath: FileSystemProcessPath.fileSystemProcessPath,
     isElectron: IsElectron.isElectron,
+    name: 'File System Process',
     settingName: 'develop.fileSystemProcessPath',
+    targetRpcId: IpcId.FileSystemProcess,
   })
   // @ts-ignore
   set(IpcId.FileSystemProcess, ipc)

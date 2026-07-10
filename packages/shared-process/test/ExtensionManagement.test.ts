@@ -12,28 +12,28 @@ import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
 import { VError } from '../src/parts/VError/VError.js'
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
   getBuiltinExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getDisabledExtensionsPath: jest.fn(() => {
+  getCachedExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
   getDisabledExtensionsJsonPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getMarketplaceUrl: jest.fn(() => {
-    return marketplaceUrl
-  }),
-  getCachedExtensionsPath: jest.fn(() => {
+  getDisabledExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getOnlyExtensionPath: jest.fn(() => {
+  getExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
   getLinkedExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getMarketplaceUrl: jest.fn(() => {
+    return marketplaceUrl
+  }),
+  getOnlyExtensionPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -164,14 +164,14 @@ test.skip('getExtensions', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
       id: 'test-extension',
       path: join(tmpDir1, 'test-extension'),
+      status: ExtensionManifestStatus.Resolved,
     },
     {
-      status: ExtensionManifestStatus.Resolved,
       id: 'builtin-extension',
       path: join(tmpDir2, 'builtin-extension'),
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
@@ -198,6 +198,7 @@ test('getExtensions - invalid extension.json', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
+      disabled: false,
       path: join(tmpDir1, 'test-extension'),
       reason: new VError(
         `Failed to load extension manifest for test-extension: Failed to parse json at ${join(
@@ -207,7 +208,6 @@ test('getExtensions - invalid extension.json', async () => {
         )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
-      disabled: false,
     },
   ])
 })
@@ -233,12 +233,12 @@ test('getExtensions ignores files in extension folders', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
-      id: 'test-extension',
-      path: join(tmpDir1, 'test-extension'),
-      uri: expect.any(String),
       disabled: false,
+      id: 'test-extension',
       isBuiltin: false,
+      path: join(tmpDir1, 'test-extension'),
+      status: ExtensionManifestStatus.Resolved,
+      uri: expect.any(String),
     },
   ])
 })
@@ -267,14 +267,14 @@ test('getExtensions - includes transient linked extension from --link', async ()
 
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
-      id: 'transient-extension',
-      version: '1.0.0',
-      path: transientExtensionPath,
-      uri: expect.any(String),
-      symlink: transientRoot,
       disabled: false,
+      id: 'transient-extension',
       isBuiltin: false,
+      path: transientExtensionPath,
+      status: ExtensionManifestStatus.Resolved,
+      symlink: transientRoot,
+      uri: expect.any(String),
+      version: '1.0.0',
     },
   ])
 })
@@ -351,8 +351,8 @@ test.skip('getExtensions - empty object', async () => {
   PlatformPaths.getCachedExtensionsPath.mockImplementation(() => tmpDir3)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
       path: join(tmpDir1, '/test-extension-1'),
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
@@ -368,9 +368,9 @@ test.skip('getExtensions - error - invalid value - empty array', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
-
       path: join(tmpDir1, 'test-extension-1'),
+
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
@@ -390,11 +390,11 @@ test('getExtensions - error - invalid value - null', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -414,11 +414,11 @@ test('getExtensions - error - invalid value - string', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -438,11 +438,11 @@ test('getExtensions - error - invalid value - number', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -462,11 +462,11 @@ test('getExtensions - error - invalid value - boolean', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -487,6 +487,9 @@ test('getExtensions - error - invalid json', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
+      builtin: true,
+      disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
       reason: new VError(
         `Failed to load extension manifest for test-extension-1: Failed to parse json at ${join(
           tmpDir1,
@@ -495,9 +498,6 @@ test('getExtensions - error - invalid json', async () => {
         )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
-      path: join(tmpDir1, 'test-extension-1'),
-      builtin: true,
-      disabled: false,
     },
   ])
 })
@@ -517,9 +517,9 @@ test.skip('getExtensions - error - manifest not found', async () => {
   const manifestPath = join(tmpDir1, 'test-extension-1', 'extension.json')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError(`Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`),
       path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError(`Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })

@@ -20,17 +20,17 @@ beforeEach(() => {
 
 test('exportStatic forwards multiple extension paths', async () => {
   await SharedProcess.exportStatic({
-    root: '/test/root',
     extensionPaths: ['packages/extension-a', 'packages/extension-b'],
+    root: '/test/root',
   })
 
   // @ts-ignore
   const [options] = ExportStatic.exportStatic.mock.calls[0]
   expect(options).toEqual({
-    root: '/test/root',
-    pathPrefix: '',
     extensionPath: undefined,
     extensionPaths: [join('/test/root', 'packages', 'extension-a'), join('/test/root', 'packages', 'extension-b')],
+    pathPrefix: '',
+    root: '/test/root',
     testPath: '',
   })
 })

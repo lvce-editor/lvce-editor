@@ -1,6 +1,6 @@
+import * as Assert from '../Assert/Assert.ts'
 import * as HandleIncomingIpc from '../HandleIncomingIpc/HandleIncomingIpc.ts'
 import * as IpcId from '../IpcId/IpcId.ts'
-import * as Assert from '../Assert/Assert.ts'
 
 export const handleMessagePortForTerminalProcess = (port: any): any => {
   Assert.object(port)

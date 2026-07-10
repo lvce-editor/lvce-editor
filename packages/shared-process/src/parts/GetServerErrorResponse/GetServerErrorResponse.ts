@@ -4,9 +4,9 @@ export const getServerErrorResponse = (): any => {
   return {
     body: 'server-error',
     init: {
+      headers: {},
       status: HttpStatusCode.ServerError,
       statusText: 'server-error',
-      headers: {},
     },
   }
 }

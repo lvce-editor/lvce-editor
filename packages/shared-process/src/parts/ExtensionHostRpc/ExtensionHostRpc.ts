@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Logger from '../Logger/Logger.ts'
 import * as Timeout from '../Timeout/Timeout.ts'
 import { VError } from '../VError/VError.ts'
-import * as Logger from '../Logger/Logger.ts'
 // TODO maybe rename to extension host management for clarity
 
 const CONNECTION_TIMEOUT = 3000
@@ -69,14 +69,14 @@ export const create = async (ipc: any, socket: any): Promise<any> => {
   })
 
   return {
+    dispose(): any {
+      ipc.dispose()
+    },
     on(event: any, listener: any): any {
       ipc.on(event, listener)
     },
     send(message: any): any {
       ipc.send(message)
-    },
-    dispose(): any {
-      ipc.dispose()
     },
   }
 }

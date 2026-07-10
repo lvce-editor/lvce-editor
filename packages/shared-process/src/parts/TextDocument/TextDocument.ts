@@ -1,9 +1,9 @@
 import * as JoinLines from '../JoinLines/JoinLines.ts'
 
 export const state: any = {
-  textDocuments: Object.create(null),
   /** @type{any[]} */
   listeners: [],
+  textDocuments: Object.create(null),
 }
 
 // const toOffsetBasedEdit = (textDocument, documentEdit) => {

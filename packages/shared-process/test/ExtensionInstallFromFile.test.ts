@@ -6,11 +6,11 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: (): any => {
-    return '/test/extensions'
-  },
   getCachedExtensionsPath: (): any => {
     return '/test/cached-extensions'
+  },
+  getExtensionsPath: (): any => {
+    return '/test/extensions'
   },
 }))
 
@@ -21,18 +21,21 @@ jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
-  join: (...parts: any): any => {
-    return parts.join('/')
-  },
   basename: (path: any): any => {
     return path.slice(path.lastIndexOf('/') + 1)
   },
   dirname: (path: any): any => {
     return dirname(path)
   },
+  join: (...parts: any): any => {
+    return parts.join('/')
+  },
 }))
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  mkdir: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
   readFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -40,9 +43,6 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
     throw new Error('not implemented')
   }),
   rename: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  mkdir: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))

@@ -2,7 +2,7 @@ export const handleIncomingIpcMessagePort = async (module: any, handle: any, mes
   const response = module.upgradeMessagePort(handle, message)
   const target = await module.targetMessagePort(handle, message)
   return {
-    target,
     response,
+    target,
   }
 }

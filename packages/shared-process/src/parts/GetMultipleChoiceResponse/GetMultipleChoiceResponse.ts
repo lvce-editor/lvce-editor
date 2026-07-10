@@ -4,8 +4,8 @@ export const getMultipleChoiceResponse = async (content: any, headers: any = {})
   return {
     body: content,
     init: {
-      status: HttpStatusCode.MultipleChoices,
       headers,
+      status: HttpStatusCode.MultipleChoices,
     },
   }
 }

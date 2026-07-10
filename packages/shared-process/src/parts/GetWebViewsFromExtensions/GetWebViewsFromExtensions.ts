@@ -1,6 +1,6 @@
 import { join } from 'node:path'
-import * as GetRemoteUrl from '../GetRemoteUrl/GetRemoteUrl.ts'
 import { pathToFileURL } from 'node:url'
+import * as GetRemoteUrl from '../GetRemoteUrl/GetRemoteUrl.ts'
 
 export const getWebViewsFromExtensions = (extensions: any): any => {
   const webViews: any[] = []
@@ -16,8 +16,8 @@ export const getWebViewsFromExtensions = (extensions: any): any => {
         webViews.push({
           ...webView,
           path,
-          uri,
           remotePath,
+          uri,
         })
       }
     }

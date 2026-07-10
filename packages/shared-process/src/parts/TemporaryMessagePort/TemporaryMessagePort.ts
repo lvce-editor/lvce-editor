@@ -1,10 +1,10 @@
+import { get } from '@lvce-editor/rpc-registry'
 import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.ts'
 import * as IpcId from '../IpcId/IpcId.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
-import { get } from '@lvce-editor/rpc-registry'
 
 export const state: any = {
   ports: Object.create(null),

@@ -6,9 +6,9 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 const supportsPartialIpcHandling = (ipcId: any): any => {
   switch (ipcId) {
     case IpcId.AuthProcess:
-    case IpcId.TerminalProcess:
-    case IpcId.ProcessExplorer:
     case IpcId.EmbedsProcess:
+    case IpcId.ProcessExplorer:
+    case IpcId.TerminalProcess:
       return true
     default:
       return false

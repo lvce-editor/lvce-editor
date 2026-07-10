@@ -14,15 +14,15 @@ const HandleWebSocketModule = await import('../src/parts/HandleWebSocketModule/H
 const createSocket = (): any => {
   let output = ''
   return {
-    write: jest.fn((chunk: any) => {
-      output += chunk
-    }),
-    end: jest.fn(),
     destroy: jest.fn(),
-    pause: jest.fn(),
+    end: jest.fn(),
     get output(): string {
       return output
     },
+    pause: jest.fn(),
+    write: jest.fn((chunk: any) => {
+      output += chunk
+    }),
   }
 }
 
@@ -33,11 +33,11 @@ beforeEach(() => {
 test('handleWebSocket - rejects disallowed origin before upgrade', async () => {
   const socket = createSocket()
   const message = {
-    url: '/websocket/process-explorer',
     headers: {
       host: 'localhost:3000',
       origin: 'https://evil.example.com',
     },
+    url: '/websocket/process-explorer',
   }
 
   await HandleWebSocket.handleWebSocket(socket, message)
@@ -54,11 +54,11 @@ test('handleWebSocket - rejects disallowed origin before upgrade', async () => {
 test('handleWebSocket - allows process explorer upgrade from same origin', async () => {
   const socket = createSocket()
   const message = {
-    url: '/websocket/process-explorer',
     headers: {
       host: 'localhost:3000',
       origin: 'http://localhost:3000',
     },
+    url: '/websocket/process-explorer',
   }
 
   await HandleWebSocket.handleWebSocket(socket, message)
@@ -71,12 +71,12 @@ test('handleWebSocket - allows process explorer upgrade from same origin', async
 test('handleWebSocket - allows shared process upgrade from forwarded origin', async () => {
   const socket = createSocket()
   const message = {
-    url: '/websocket/shared-process',
     headers: {
       host: '127.0.0.1:3000',
       origin: 'https://example-codespace-3000.app.github.dev',
       'x-forwarded-host': 'example-codespace-3000.app.github.dev',
     },
+    url: '/websocket/shared-process',
   }
 
   await HandleWebSocket.handleWebSocket(socket, message)

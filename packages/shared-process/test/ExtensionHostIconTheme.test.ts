@@ -37,8 +37,6 @@ test('getIconTheme - wrong/invalid path', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
-        id: 'builtin.theme-test',
         iconThemes: [
           {
             id: 'test',
@@ -46,7 +44,9 @@ test('getIconTheme - wrong/invalid path', async () => {
             path: 'icon-theme.json',
           },
         ],
+        id: 'builtin.theme-test',
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -62,8 +62,6 @@ test('getIconTheme - invalid json', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
-        id: 'builtin.icon-theme-test',
         iconThemes: [
           {
             id: 'test',
@@ -71,7 +69,9 @@ test('getIconTheme - invalid json', async () => {
             path: 'icon-theme.json',
           },
         ],
+        id: 'builtin.icon-theme-test',
         path: tmpDir,
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })

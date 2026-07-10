@@ -17,13 +17,13 @@ test('getLinkedExtensions - reads repeated --link args', () => {
   expect(TransientLinkedExtensions.getLinkedExtensions()).toEqual([
     {
       path: 'packages/one',
-      source: '--link',
       resolvedPath: join(process.cwd(), 'packages/one'),
+      source: '--link',
     },
     {
       path: '/tmp/two',
-      source: '--link',
       resolvedPath: '/tmp/two',
+      source: '--link',
     },
   ])
 })
@@ -32,8 +32,8 @@ test('validate - fails when --link path is missing', async () => {
   process.argv = [...originalArgv, '--link']
 
   await expect(TransientLinkedExtensions.validate()).rejects.toMatchObject({
-    message: 'Failed to start: --link requires a folder path',
     code: ErrorCodes.ENOENT,
+    message: 'Failed to start: --link requires a folder path',
   })
 })
 
@@ -41,8 +41,8 @@ test('validate - fails when --link path does not exist', async () => {
   process.argv = [...originalArgv, '--link', 'missing-extension']
 
   await expect(TransientLinkedExtensions.validate()).rejects.toMatchObject({
-    message: `Failed to start: --link path does not exist: missing-extension (resolved to ${join(process.cwd(), 'missing-extension')})`,
     code: ErrorCodes.ENOENT,
+    message: `Failed to start: --link path does not exist: missing-extension (resolved to ${join(process.cwd(), 'missing-extension')})`,
   })
 })
 
@@ -55,8 +55,8 @@ test('validate - accepts existing paths', async () => {
   await expect(TransientLinkedExtensions.validate()).resolves.toEqual([
     {
       path: tmpDir,
-      source: '--link',
       resolvedPath: tmpDir,
+      source: '--link',
     },
   ])
 })

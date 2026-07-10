@@ -10,25 +10,25 @@ import { constants, createBrotliCompress } from 'node:zlib'
 import tar from 'tar-fs'
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: jest.fn(() => {
+  getBuiltinExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getBuiltinExtensionsPath: jest.fn(() => {
+  getCachedExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
   getDisabledExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getMarketplaceUrl: jest.fn(() => {
-    return marketplaceUrl
-  }),
-  getCachedExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  getOnlyExtensionPath: jest.fn(() => {
+  getExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
   getLinkedExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getMarketplaceUrl: jest.fn(() => {
+    return marketplaceUrl
+  }),
+  getOnlyExtensionPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))

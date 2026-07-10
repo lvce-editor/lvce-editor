@@ -5,11 +5,11 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: (): any => {
-    return '/test/extensions'
-  },
   getCachedExtensionsPath: (): any => {
     return '/test/cached-extensions'
+  },
+  getExtensionsPath: (): any => {
+    return '/test/extensions'
   },
 }))
 
@@ -25,6 +25,9 @@ jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  mkdir: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
   readFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -32,9 +35,6 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
     throw new Error('not implemented')
   }),
   rename: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  mkdir: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -51,9 +51,9 @@ test('install - error with download', async () => {
   })
   await expect(
     ExtensionInstallFromGitHub.install({
-      user: 'user',
-      repo: 'repo',
       branch: 'HEAD',
+      repo: 'repo',
+      user: 'user',
     }),
   ).rejects.toThrow(new Error('Failed to install user/repo: Failed to download'))
 })
@@ -65,9 +65,9 @@ test('install - error with extraction', async () => {
   })
   await expect(
     ExtensionInstallFromGitHub.install({
-      user: 'user',
-      repo: 'repo',
       branch: 'HEAD',
+      repo: 'repo',
+      user: 'user',
     }),
   ).rejects.toThrow(new Error(`Failed to install user/repo: Failed to extract file`))
 })
@@ -89,9 +89,9 @@ test('install - error - missing id in extension manifest', async () => {
   FileSystem.rename.mockImplementation(() => {})
   await expect(
     ExtensionInstallFromGitHub.install({
-      user: 'user',
-      repo: 'repo',
       branch: 'HEAD',
+      repo: 'repo',
+      user: 'user',
     }),
   ).rejects.toThrow(new Error(`Failed to install user/repo: missing id in extension manifest`))
 })
@@ -114,9 +114,9 @@ test('install - error - manifest contains null', async () => {
   FileSystem.rename.mockImplementation(() => {})
   await expect(
     ExtensionInstallFromGitHub.install({
-      user: 'user',
-      repo: 'repo',
       branch: 'HEAD',
+      repo: 'repo',
+      user: 'user',
     }),
   ).rejects.toThrow(new Error("Failed to install user/repo: TypeError: Cannot destructure property 'id' of 'manifestJson' as it is null."))
 })
@@ -141,9 +141,9 @@ test('install', async () => {
 }`
   })
   await ExtensionInstallFromGitHub.install({
-    user: 'user',
-    repo: 'repo',
     branch: 'HEAD',
+    repo: 'repo',
+    user: 'user',
   })
   expect(DownloadAndExtract.downloadAndExtractTarGz).toHaveBeenCalledTimes(1)
   expect(DownloadAndExtract.downloadAndExtractTarGz).toHaveBeenCalledWith({

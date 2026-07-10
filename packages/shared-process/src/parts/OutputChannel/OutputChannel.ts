@@ -10,8 +10,8 @@ export const open = (path: any, onData: any, onError: any): any => {
   let tail
   try {
     tail = new Tail(path, {
-      separator: null,
       fromBeginning: true,
+      separator: null,
     })
   } catch (error) {
     // @ts-ignore

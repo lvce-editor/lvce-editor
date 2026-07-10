@@ -1,5 +1,5 @@
-import * as Timeout from '../Timeout/Timeout.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
+import * as Timeout from '../Timeout/Timeout.ts'
 
 const handleTimeout = (): any => {
   throw new Error('oops')

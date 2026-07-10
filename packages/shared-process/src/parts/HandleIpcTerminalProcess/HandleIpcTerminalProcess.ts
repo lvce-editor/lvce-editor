@@ -1,5 +1,5 @@
-import * as PtyHost from '../PtyHost/PtyHost.ts'
 import * as IpcParentType from '../IpcParentType/IpcParentType.ts'
+import * as PtyHost from '../PtyHost/PtyHost.ts'
 
 export const targetWebSocket = (): any => {
   return PtyHost.getOrCreate(IpcParentType.NodeForkedProcess)
@@ -7,9 +7,9 @@ export const targetWebSocket = (): any => {
 
 export const upgradeWebSocket = (handle: any, message: any): any => {
   return {
-    type: 'send',
     method: 'HandleWebSocket.handleWebSocket',
     params: [handle, message],
+    type: 'send',
   }
 }
 
@@ -19,8 +19,8 @@ export const targetMessagePort = (): any => {
 
 export const upgradeMessagePort = (port: any): any => {
   return {
-    type: 'send',
     method: 'HandleElectronMessagePort.handleElectronMessagePort',
     params: [port],
+    type: 'send',
   }
 }

@@ -1,6 +1,6 @@
 import { readlink } from 'node:fs/promises'
-import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as DirentType from '../DirentType/DirentType.ts'
+import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as MergeWithSymlinks from '../MergeWithSymlinks/MergeWithSymlinks.ts'

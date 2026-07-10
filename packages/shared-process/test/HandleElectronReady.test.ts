@@ -44,12 +44,12 @@ test('handleElectronReady - uses safe preferences when creating the app window',
   expect(TransientLinkedExtensions.validate).toHaveBeenCalledTimes(1)
   expect(AppWindow.createAppWindow).toHaveBeenCalledTimes(1)
   expect(AppWindow.createAppWindow).toHaveBeenCalledWith({
+    parsedArgs: {},
     preferences: {
       'workbench.colorTheme': 'slime',
     },
-    parsedArgs: {},
-    workingDirectory: '/tmp',
     preloadUrl: 'file:///preload.js',
+    workingDirectory: '/tmp',
   })
 })
 

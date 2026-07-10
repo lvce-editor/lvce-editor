@@ -3,6 +3,6 @@ import * as HandleMessagePortForEmbedsProcess from './HandleMessagePortForEmbeds
 export const name = 'HandleMessagePortForEmbedsProcess'
 
 export const Commands = {
-  handleMessagePortForEmbedsProcess: HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess,
   handleEmbedsProcessIpcClosed: HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed,
+  handleMessagePortForEmbedsProcess: HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess,
 }

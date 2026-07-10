@@ -1,23 +1,22 @@
 import * as Os from 'node:os'
-import * as Platform from '../Platform/Platform.ts'
 import * as ByteSize from '../ByteSize/ByteSize.ts'
+import * as Platform from '../Platform/Platform.ts'
 
 const UiStrings = {
-  OsVersion: 'Os Version',
   Cpus: 'CPUs',
   Memory: 'Memory (System)',
+  OsVersion: 'Os Version',
 }
 
 const visitVersion = {
-  key: UiStrings.OsVersion,
   getValue(): any {
     const { version } = Platform
     return version
   },
+  key: UiStrings.OsVersion,
 }
 
 const visitCpus = {
-  key: UiStrings.Cpus,
   getValue(): any {
     const cpus = Os.cpus()
     if (!cpus || cpus.length === 0) {
@@ -29,10 +28,10 @@ const visitCpus = {
     const { speed } = firstCpu
     return `${model} (${cpuLength} x ${speed})`
   },
+  key: UiStrings.Cpus,
 }
 
 const visitMemory = {
-  key: UiStrings.Memory,
   getValue(): any {
     const totalMemory = Os.totalmem()
     const freeMemory = Os.freemem()
@@ -42,6 +41,7 @@ const visitMemory = {
     const freeGbShort = freeGb.toFixed(2)
     return `${totalGbShort} GB (${freeGbShort} GB free)`
   },
+  key: UiStrings.Memory,
 }
 
 const getKeyLength = (visitor: any): any => {

@@ -1,12 +1,12 @@
 import { expect, test } from '@jest/globals'
 import * as HandleIpcAuthProcess from '../src/parts/HandleIpcAuthProcess/HandleIpcAuthProcess.js'
-import * as HandleIpcModule from '../src/parts/HandleIpcModule/HandleIpcModule.js'
-import * as HandleIpcSharedProcess from '../src/parts/HandleIpcSharedProcess/HandleIpcSharedProcess.js'
-import * as HandleIpcTerminalProcess from '../src/parts/HandleIpcTerminalProcess/HandleIpcTerminalProcess.js'
+import * as HandleIpcEmbedsProcess from '../src/parts/HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
 import * as HandleIpcExtensionHostHelperProcess from '../src/parts/HandleIpcExtensionHostHelperProcess/HandleIpcExtensionHostHelperProcess.js'
+import * as HandleIpcModule from '../src/parts/HandleIpcModule/HandleIpcModule.js'
 import * as HandleIpcProcessExplorer from '../src/parts/HandleIpcProcessExplorer/HandleIpcProcessExplorer.js'
 import * as HandleIpcSearchProcess from '../src/parts/HandleIpcSearchProcess/HandleIpcSearchProcess.js'
-import * as HandleIpcEmbedsProcess from '../src/parts/HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
+import * as HandleIpcSharedProcess from '../src/parts/HandleIpcSharedProcess/HandleIpcSharedProcess.js'
+import * as HandleIpcTerminalProcess from '../src/parts/HandleIpcTerminalProcess/HandleIpcTerminalProcess.js'
 import * as IpcId from '../src/parts/IpcId/IpcId.js'
 
 test('auth process', () => {

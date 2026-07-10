@@ -1,5 +1,5 @@
-import * as LaunchNetworkProcess from '../LaunchNetworkProcess/LaunchNetworkProcess.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
+import * as LaunchNetworkProcess from '../LaunchNetworkProcess/LaunchNetworkProcess.ts'
 
 export const state: any = {
   /**

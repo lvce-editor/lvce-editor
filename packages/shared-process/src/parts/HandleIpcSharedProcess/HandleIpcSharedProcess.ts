@@ -8,9 +8,9 @@ import * as ParentIpc from '../MainProcess/MainProcess.ts'
 export const targetWebSocket = async (handle: any, message: any): Promise<any> => {
   handle.on('error', HandleSocketError.handleSocketError)
   const ipc = await IpcChild.listen({
+    handle,
     method: IpcChildType.WebSocket,
     request: message,
-    handle,
   })
   return ipc
 }
@@ -24,8 +24,8 @@ export const upgradeWebSocket = (): any => {
 export const targetMessagePort = async (messagePort: any, message: any): Promise<any> => {
   Assert.object(messagePort)
   const ipc = await IpcChild.listen({
-    method: IpcChildType.ElectronMessagePort,
     messagePort,
+    method: IpcChildType.ElectronMessagePort,
   })
   if (message.ipcId === IpcId.MainProcess) {
     // update ipc with message port ipc that supports transferring objects

@@ -18,16 +18,16 @@ const getConfiguredUrl = async (settingName: any, defaultPath: any): Promise<any
   return defaultPath
 }
 
-export const launchProcess = async ({ settingName, defaultPath, targetRpcId, name, isElectron }: any): Promise<any> => {
+export const launchProcess = async ({ defaultPath, isElectron, name, settingName, targetRpcId }: any): Promise<any> => {
   const path = await getConfiguredUrl(settingName, defaultPath)
   const method = isElectron ? IpcParentType.ElectronUtilityProcess : IpcParentType.NodeForkedProcess
   const ipc = await IpcParent.create({
-    method,
-    path,
     argv: [],
-    stdio: 'inherit',
-    name,
     ipcId: IpcId.SharedProcess,
+    method,
+    name,
+    path,
+    stdio: 'inherit',
     targetRpcId,
   })
   HandleIpc.handleIpc(ipc)

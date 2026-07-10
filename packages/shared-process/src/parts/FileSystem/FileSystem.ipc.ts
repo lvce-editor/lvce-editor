@@ -24,6 +24,7 @@ export const Commands = {
   ensureFile: FileSystem.ensureFile,
   getPathSeparator: FileSystem.getPathSeparator,
   getRealPath: FileSystem.getRealPath,
+  getRealUri: FileSystem.getRealUri,
   mkdir: FileSystem.mkdir,
   readDirWithFileTypes: FileSystem.readDirWithFileTypes,
   readFile: FileSystem.readFile,
@@ -33,5 +34,4 @@ export const Commands = {
   rename: FileSystem.rename,
   stat: FileSystem.stat,
   writeFile: FileSystem.writeFile,
-  getRealUri: FileSystem.getRealUri,
 }

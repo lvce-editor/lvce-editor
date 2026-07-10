@@ -15,22 +15,22 @@ export const getModule = (ipcId: any): any => {
   switch (ipcId) {
     case IpcId.AuthProcess:
       return HandleIpcAuthProcess
-    case IpcId.SharedProcess:
-      return HandleIpcSharedProcess
+    case IpcId.ClipBoardProcess:
+      return HandleIpcClipBoardProcess
     case IpcId.EmbedsProcess:
       return HandleIpcEmbedsProcess
-    case IpcId.TerminalProcess:
-      return HandleIpcTerminalProcess
     case IpcId.ExtensionHostHelperProcess:
       return HandleIpcExtensionHostHelperProcess
+    case IpcId.FileSystemProcess:
+      return HandleIpcFileSystemProcess
     case IpcId.ProcessExplorer:
       return HandleIpcProcessExplorer
     case IpcId.SearchProcess:
       return HandleIpcSearchProcess
-    case IpcId.FileSystemProcess:
-      return HandleIpcFileSystemProcess
-    case IpcId.ClipBoardProcess:
-      return HandleIpcClipBoardProcess
+    case IpcId.SharedProcess:
+      return HandleIpcSharedProcess
+    case IpcId.TerminalProcess:
+      return HandleIpcTerminalProcess
     default:
       throw new Error(`unexpected incoming ipc`)
   }

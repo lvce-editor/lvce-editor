@@ -37,14 +37,22 @@ const getActualData = (event: any): any => {
 
 export const wrap = (port: any): any => {
   return {
-    port,
-    wrappedListener: undefined,
-    send(message: any): any {
-      this.port.postMessage(message)
+    dispose(): any {
+      this.port.close()
+      ParentIpc.invoke('TemporaryMessagePort.dispose', this.port.name)
     },
-    async sendAndTransfer(message: any): Promise<any> {
-      const { newValue, transfer } = FixElectronParameters.fixElectronParameters(message)
-      this.port.postMessage(newValue, transfer)
+    off(event: any, listener: any): any {
+      switch (event) {
+        case 'close':
+          this.port.off(event, listener)
+          break
+        case 'message':
+          this.port.off(event, this.wrappedListener)
+          this.wrappedListener = undefined
+          break
+        default:
+          break
+      }
     },
     on(event: any, listener: any): any {
       switch (event) {
@@ -66,22 +74,14 @@ export const wrap = (port: any): any => {
           break
       }
     },
-    off(event: any, listener: any): any {
-      switch (event) {
-        case 'close':
-          this.port.off(event, listener)
-          break
-        case 'message':
-          this.port.off(event, this.wrappedListener)
-          this.wrappedListener = undefined
-          break
-        default:
-          break
-      }
+    port,
+    send(message: any): any {
+      this.port.postMessage(message)
     },
-    dispose(): any {
-      this.port.close()
-      ParentIpc.invoke('TemporaryMessagePort.dispose', this.port.name)
+    async sendAndTransfer(message: any): Promise<any> {
+      const { newValue, transfer } = FixElectronParameters.fixElectronParameters(message)
+      this.port.postMessage(newValue, transfer)
     },
+    wrappedListener: undefined,
   }
 }

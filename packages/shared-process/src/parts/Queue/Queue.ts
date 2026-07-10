@@ -21,14 +21,14 @@ const run = async (queue: any): Promise<any> => {
 
 export const add = async (key: any, fn: any): Promise<any> => {
   const queue = (state.queueMap[key] ||= {
-    state: 'idle',
     items: [],
+    state: 'idle',
   })
   await new Promise((resolve: any, reject: any) => {
     queue.items.push({
       fn,
-      resolve,
       reject,
+      resolve,
     })
     run(queue)
   })

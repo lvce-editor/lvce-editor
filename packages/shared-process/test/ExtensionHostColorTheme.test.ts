@@ -42,8 +42,6 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
-        id: 'builtin.test-cobalt2',
         colorThemes: [
           {
             id: 'cobalt2',
@@ -51,7 +49,9 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
             path: 'color-theme.json',
           },
         ],
+        id: 'builtin.test-cobalt2',
         path: join(tmpDir, 'builtin.theme-cobalt-2'),
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
@@ -67,7 +67,6 @@ test('getColorThemeJson - invalid json', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        id: 'builtin.test-theme',
         colorThemes: [
           {
             id: 'test-theme',
@@ -75,12 +74,12 @@ test('getColorThemeJson - invalid json', async () => {
             path: 'color-theme.json',
           },
         ],
+        id: 'builtin.test-theme',
         path: join(tmpDir, 'builtin.theme-test'),
       },
     ]
   })
   await JsonFile.writeJson(join(tmpDir, 'builtin.theme-test', 'extension.json'), {
-    id: 'builtin.test-theme',
     colorThemes: [
       {
         id: 'test-theme',
@@ -88,6 +87,7 @@ test('getColorThemeJson - invalid json', async () => {
         path: 'color-theme.json',
       },
     ],
+    id: 'builtin.test-theme',
     path: tmpDir,
   })
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
@@ -107,7 +107,6 @@ test('getColorThemeJson - wrong/invalid path', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        id: 'builtin.theme-test',
         colorThemes: [
           {
             id: 'test-theme',
@@ -115,12 +114,12 @@ test('getColorThemeJson - wrong/invalid path', async () => {
             path: 'color-theme.json',
           },
         ],
+        id: 'builtin.theme-test',
         path: join(tmpDir, 'builtin.theme-test'),
       },
     ]
   })
   await JsonFile.writeJson(join(tmpDir, 'builtin.theme-test', 'extension.json'), {
-    id: 'builtin.theme-test',
     colorThemes: [
       {
         id: 'test-theme',
@@ -128,6 +127,7 @@ test('getColorThemeJson - wrong/invalid path', async () => {
         path: 'color-theme.json',
       },
     ],
+    id: 'builtin.theme-test',
     path: tmpDir,
   })
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
@@ -141,8 +141,6 @@ test('getColorThemes', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
-        id: 'builtin.theme-slime',
         colorThemes: [
           {
             id: 'slime',
@@ -150,7 +148,9 @@ test('getColorThemes', async () => {
             path: 'color-theme.json',
           },
         ],
+        id: 'builtin.theme-slime',
         path: '/test',
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })

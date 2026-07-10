@@ -4,8 +4,8 @@ import { VError } from '../VError/VError.ts'
 
 export const state: any = {
   commands: Object.create(null),
-  pendingModules: Object.create(null),
   async load(moduleId: any): Promise<any> {},
+  pendingModules: Object.create(null),
 }
 
 const initializeModule = (module: any): any => {

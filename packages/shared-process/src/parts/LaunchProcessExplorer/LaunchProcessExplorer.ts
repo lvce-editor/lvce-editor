@@ -7,9 +7,9 @@ import * as ProcessExplorerPath from '../ProcessExplorerPath/ProcessExplorerPath
 
 export const launchProcessExplorer = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'Process Explorer',
     defaultPath: ProcessExplorerPath.processExplorerPath,
     isElectron: IsElectron.isElectron,
+    name: 'Process Explorer',
     settingName: 'develop.processExplorerPath',
     targetRpcId: IpcId.ProcessExplorer,
   })

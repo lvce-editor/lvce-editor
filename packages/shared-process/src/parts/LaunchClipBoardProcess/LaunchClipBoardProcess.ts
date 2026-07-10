@@ -5,11 +5,11 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
 export const launchClipBoardProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'ClipBoard Process',
-    targetRpcId: IpcId.ClipBoardProcess,
     defaultPath: ClipBoardProcessPath.clipBoardProcessPath,
     isElectron: IsElectron.isElectron,
+    name: 'ClipBoard Process',
     settingName: 'develop.clipBoardProcessPath',
+    targetRpcId: IpcId.ClipBoardProcess,
   })
   return ipc
 }

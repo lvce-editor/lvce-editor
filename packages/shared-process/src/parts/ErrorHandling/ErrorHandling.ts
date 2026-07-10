@@ -14,8 +14,8 @@ export const state: any = {
 const preparePrettyError = (error: any): any => {
   const cause = error.cause()
   return {
-    message: error.message,
     codeFrame: cause.codeFrame,
+    message: error.message,
     stack: cause.stack,
   }
 }

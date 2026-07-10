@@ -4,9 +4,9 @@ import * as SearchProcessPath from '../SearchProcessPath/SearchProcessPath.ts'
 
 export const launchSearchProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'Search Process',
     defaultPath: SearchProcessPath.searchProcessPath,
     isElectron: IsElectron.isElectron,
+    name: 'Search Process',
     settingName: 'develop.searchProcessPath',
     targetRpcId: undefined,
   })

@@ -5,11 +5,11 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 
 export const launchAuthProcess = async (): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
-    name: 'Auth Process',
-    targetRpcId: IpcId.AuthProcess,
     defaultPath: AuthProcessPath.authProcessPath,
     isElectron: IsElectron.isElectron,
+    name: 'Auth Process',
     settingName: 'develop.authProcessPath',
+    targetRpcId: IpcId.AuthProcess,
   })
   return ipc
 }

@@ -20,9 +20,9 @@ export const resolveRoot = ResolveRoot.resolveRoot
 export const resolveUri = (uri: any): any => {
   const path = fileURLToPath(uri)
   return {
-    path,
-    uri,
     homeDir: PlatformPaths.getHomeDir(),
+    path,
     pathSeparator: Platform.getPathSeparator(),
+    uri,
   }
 }

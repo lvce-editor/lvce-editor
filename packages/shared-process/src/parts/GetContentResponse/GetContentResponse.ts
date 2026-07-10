@@ -4,8 +4,8 @@ export const getContentResponse = async (content: any, headers: any = {}): Promi
   return {
     body: content,
     init: {
-      status: HttpStatusCode.Ok,
       headers,
+      status: HttpStatusCode.Ok,
     },
   }
 }

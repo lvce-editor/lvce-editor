@@ -50,9 +50,9 @@ test('launchProcessExplorer - browser/server', async () => {
 
   expect(result).toBe(ipc)
   expect(launchProcess).toHaveBeenCalledWith({
-    name: 'Process Explorer',
     defaultPath: '/test/processExplorerMain.js',
     isElectron: false,
+    name: 'Process Explorer',
     settingName: 'develop.processExplorerPath',
     targetRpcId: IpcId.ProcessExplorer,
   })
@@ -67,9 +67,9 @@ test('launchProcessExplorer - electron', async () => {
 
   expect(result).toBe(ipc)
   expect(launchProcess).toHaveBeenCalledWith({
-    name: 'Process Explorer',
     defaultPath: '/test/processExplorerMain.js',
     isElectron: true,
+    name: 'Process Explorer',
     settingName: 'develop.processExplorerPath',
     targetRpcId: IpcId.ProcessExplorer,
   })

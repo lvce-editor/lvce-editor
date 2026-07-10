@@ -3,6 +3,6 @@ import * as HandleMessagePortForAuthProcess from './HandleMessagePortForAuthProc
 export const name = 'HandleMessagePortForAuthProcess'
 
 export const Commands = {
-  handleMessagePortForAuthProcess: HandleMessagePortForAuthProcess.handleMessagePortForAuthProcess,
   handleAuthProcessIpcClosed: HandleMessagePortForAuthProcess.handleAuthProcessIpcClosed,
+  handleMessagePortForAuthProcess: HandleMessagePortForAuthProcess.handleMessagePortForAuthProcess,
 }
