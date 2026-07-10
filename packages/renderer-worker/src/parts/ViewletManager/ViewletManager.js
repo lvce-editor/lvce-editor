@@ -9,6 +9,7 @@ import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntri
 import * as MouseActions from '../MouseActions/MouseActions.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import { updateDynamicFocusContext } from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
@@ -98,10 +99,12 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   const result = await fn(oldState, ...args)
   const { newState, commands } = result
   Assert.object(newState)
+  const latestState = instance.state
+  const rebasedState = RebaseState.rebaseState(oldState, latestState, newState)
   const renderedState = instance.renderedState
   if (oldState !== newState) {
-    commands.push(...render(instance.factory, renderedState, newState))
-    ViewletStates.setRenderedState(id, newState)
+    commands.push(...render(instance.factory, renderedState, rebasedState))
+    ViewletStates.setRenderedState(id, rebasedState)
   }
   if (commands.length === 0) {
     return
