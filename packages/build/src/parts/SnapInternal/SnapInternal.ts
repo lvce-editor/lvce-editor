@@ -1,0 +1,35 @@
+import { existsSync } from 'node:fs'
+import * as ArchType from '../ArchType/ArchType.ts'
+import * as Copy from '../Copy/Copy.ts'
+import * as Logger from '../Logger/Logger.ts'
+import * as Path from '../Path/Path.ts'
+import * as Version from '../Version/Version.ts'
+
+// TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
+
+const bundleElectronMaybe = async ({ product, version }) => {
+  if (existsSync(Path.absolute(`packages/build/.tmp/bundle/electron-result`))) {
+    Logger.info('[electron build skipped]')
+    return
+  }
+  const { build } = await import('../BundleElectronApp/BundleElectronApp.ts')
+  await build({ product, version, target: '' })
+}
+
+const copyElectronResult = async ({ arch, product, version }) => {
+  await bundleElectronMaybe({ product, version })
+  // TODO could skip copy by changing which files to dump in snapcraft.yml
+  await Copy.copy({
+    from: 'packages/build/.tmp/bundle/electron-result',
+    to: `packages/build/.tmp/linux/snap/${arch}/files/usr/lib/${product.applicationName}`,
+  })
+}
+
+export const build = async ({ product }) => {
+  const arch = ArchType.X64
+  const version = await Version.getVersion()
+
+  console.time('copyElectronResult')
+  await copyElectronResult({ arch, product, version })
+  console.timeEnd('copyElectronResult')
+}

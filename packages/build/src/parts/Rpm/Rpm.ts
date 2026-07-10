@@ -1,0 +1,81 @@
+import * as ArchType from '../ArchType/ArchType.ts'
+import * as Copy from '../Copy/Copy.ts'
+import * as Exec from '../Exec/Exec.ts'
+import * as Path from '../Path/Path.ts'
+import * as Template from '../Template/Template.ts'
+
+const getRpmArch = (arch) => {
+  switch (arch) {
+    case ArchType.X64:
+      return 'x86_64'
+    case 'armhf':
+      return 'armv7hl'
+    case 'arm64':
+      return 'aarch64'
+    default:
+      throw new Error(`unsupported arch "${arch}"`)
+  }
+}
+
+const copyMetaFiles = async ({ arch, product }) => {
+  const rpmArch = getRpmArch(arch)
+  await Template.write(
+    'linux_desktop',
+    `packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/applications/${product.applicationName}.desktop`,
+    {
+      '@@NAME_LONG@@': product.nameLong,
+      '@@NAME_SHORT@@': product.nameShort,
+      '@@NAME@@': product.applicationName,
+      '@@EXEC@@': product.applicationName,
+      '@@ICON@@': product.applicationName,
+      '@@URLPROTOCOL@@': product.applicationName,
+      '@@SUMMARY@@': product.linuxSummary,
+      '@@KEYWORDS@@': `${product.applicationName};`,
+      '@@APPLICATION_NAME@@': product.applicationName,
+    },
+  )
+  await Template.write(
+    'linux_app_data_xml',
+    `packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/appdata/${product.applicationName}.appdata.xml`,
+    {
+      '@@NAME_LONG@@': product.nameLong,
+      '@@NAME@@': product.applicationName,
+      '@@LICENSE@@': product.licenseName,
+      '@@HOMEPAGE@@': product.homePage,
+      '@@SUMMARY@@': product.linuxSummary,
+    },
+  )
+  await Copy.copyFile({
+    from: 'packages/build/files/icon.png',
+    to: `packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/${product.applicationName}/usr/share/pixmaps/${product.applicationName}.png`,
+  })
+}
+
+const createRpm = async ({ arch, product }) => {
+  const rpmArch = getRpmArch(arch)
+  // @ts-ignore
+  const cwd = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
+  // @ts-ignore
+  const rpmBuildPath = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
+  // @ts-ignore
+  const rpmOut = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/RPMS/${rpmArch}`)
+  const destination = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}`)
+  const specPath = Path.absolute(`packages/build/.tmp/linux/rpm/${rpmArch}/rpmbuild/SPECS/${product.applicationName}.spec`)
+  await Exec.exec('fakeroot', [`rpmbuild --bb ${specPath} --target=${rpmArch}`], {
+    env: {
+      HOME: destination,
+    },
+  })
+}
+
+export const build = async ({ product }) => {
+  const arch = 'x64'
+
+  console.time('copyMetaFiles')
+  await copyMetaFiles({ arch, product })
+  console.timeEnd('copyMetaFiles')
+
+  console.time('createRpm')
+  await createRpm({ arch, product })
+  console.timeEnd('createRpm')
+}

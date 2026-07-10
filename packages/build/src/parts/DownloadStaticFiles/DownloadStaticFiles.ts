@@ -1,0 +1,32 @@
+import * as DownloadStaticFile from '../DownloadStaticFile/DownloadStaticFile.ts'
+import * as ExitCode from '../ExitCode/ExitCode.ts'
+import * as Process from '../Process/Process.ts'
+import * as Remove from '../Remove/Remove.ts'
+import staticFiles from './StaticFiles.json' with { type: 'json' }
+
+const downloadStaticFiles = async (staticFiles) => {
+  for (const staticFile of staticFiles) {
+    console.time(`[download] ${staticFile.name}`)
+    await DownloadStaticFile.downloadStaticFile(staticFile)
+    console.timeEnd(`[download] ${staticFile.name}`)
+  }
+}
+
+const main = async () => {
+  try {
+    await Remove.remove('static/js')
+    await Remove.remove('static/lib-css')
+    await downloadStaticFiles(staticFiles)
+  } catch (error) {
+    if (error && error instanceof Error && error.message.includes('Response code 404')) {
+      console.error(error.message)
+    } else if (error && error instanceof Error && error.message.includes('failed to extract actual url for')) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+    Process.exit(ExitCode.Error)
+  }
+}
+
+main()

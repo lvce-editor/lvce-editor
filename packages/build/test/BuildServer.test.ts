@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, test } from '@jest/globals'
-import { setVersionsAndDependencies } from '../src/parts/BuildServer/BuildServer.js'
+import { setVersionsAndDependencies } from '../src/parts/BuildServer/BuildServer.ts'
 
 const writeJson = async (path: string, value: unknown): Promise<void> => {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`)

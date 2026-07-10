@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, test } from '@jest/globals'
-import { bundleCss } from '../src/parts/BundleCss/BundleCss.js'
+import { bundleCss } from '../src/parts/BundleCss/BundleCss.ts'
 
 test('bundleCss adds filename comment to generated part css files', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))

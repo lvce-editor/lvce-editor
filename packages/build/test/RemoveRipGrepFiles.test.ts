@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals'
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { removeRipGrepFiles } from '../src/parts/RemoveRipgrepFiles/RemoveRipGrepFiles.js'
+import { removeRipGrepFiles } from '../src/parts/RemoveRipgrepFiles/RemoveRipGrepFiles.ts'
 
 const createRipGrepPackage = async (indexContent: string): Promise<string> => {
   const root = await mkdtemp(join(tmpdir(), 'lvce-ripgrep-'))
@@ -18,11 +18,7 @@ const createRipGrepPackage = async (indexContent: string): Promise<string> => {
 describe('removeRipGrepFiles', () => {
   test('removes legacy download ripgrep export when present', async () => {
     const root = await createRipGrepPackage(
-      [
-        `export { rgPath } from '@vscode/ripgrep'`,
-        `export { downloadRipGrep } from './downloadRipGrep.js'`,
-        '',
-      ].join('\n'),
+      [`export { rgPath } from '@vscode/ripgrep'`, `export { downloadRipGrep } from './downloadRipGrep.js'`, ''].join('\n'),
     )
 
     try {

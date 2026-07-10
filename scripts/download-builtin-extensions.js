@@ -1,1 +1,1 @@
-import '../packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js'
+import '../packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts'
