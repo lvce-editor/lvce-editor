@@ -27,12 +27,12 @@ jobs:
           echo "version is: ${{ env.RG_VERSION }}"
       - name: Create GitHub release
         id: release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.RG_VERSION }}
-          release_name: ${{ env.RG_VERSION }}
+          name: ${{ env.RG_VERSION }}
           draft: true
 
   build-release:
@@ -53,20 +53,20 @@ jobs:
     runs-on: ${{ matrix.versions.os }}
     timeout-minutes: 80
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
       - name: Setup Python 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
         run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         id: npm-cache
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
@@ -74,12 +74,12 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
           restore-keys: ${{ runner.os }}-cacheNodeModules-
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         id: electron-builder-cache
         with:
           path: '~/.cache/electron-builder'
           key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         id: build-cache
         with:
           path: 'packages/build/.tmp/cachedDependencies'
@@ -93,7 +93,7 @@ jobs:
         id: builtinExtensionsCacheKey
         run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         id: builtin-extensions-cache
         with:
           path: extensions
@@ -105,7 +105,7 @@ jobs:
       - run: npm test
       - run: npm run build:server
       - name: Cache Electron Builder Dependencies (Windows)
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: electron-builder-cache-windows
         if: matrix.versions.os == 'windows-2025'
         with:
@@ -311,7 +311,7 @@ jobs:
           asset_path: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_name: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_content_type: application/octet-stream
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         with:
           name: server
@@ -323,8 +323,8 @@ jobs:
     needs: ['create-release', 'build-release']
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: server
           path: packages/build/.tmp/server
