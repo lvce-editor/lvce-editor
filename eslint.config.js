@@ -33,7 +33,7 @@ export default [
       'no-useless-escape': 'off',
       'prefer-destructuring': 'off',
       'prefer-const': 'off',
-      'regex/hoist-regex': 'off',
+      'regex/hoist-regex': 'error',
     },
   },
 ]

@@ -8,6 +8,9 @@ import * as Path from '../Path/Path.ts'
 import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
 
+const testFileExtensionRegex = /\.(js|ts)$/
+const backslashRegex = /\\/g
+
 const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
   `font-src 'self'`,
@@ -513,7 +516,7 @@ const generateTestOverviewHtml = (dirents: any): any => {
 }
 
 const getName = (name: any): any => {
-  return name.replace(/\.(js|ts)$/, '')
+  return name.replace(testFileExtensionRegex, '')
 }
 const isTestFile = (file: any): any => {
   if (file.startsWith('_')) {
@@ -561,8 +564,8 @@ export const createFilemap = async (fixturesPath: any): Promise<any> => {
       } else {
         // Manually calculate relative path for cross-platform compatibility
         // Remove the fixturesPath prefix from parentPath and normalize separators
-        const normalizedFixturesPath = fixturesPath.replace(/\\/g, '/')
-        const normalizedParentPath = dirent.parentPath.replace(/\\/g, '/')
+        const normalizedFixturesPath = fixturesPath.replace(backslashRegex, '/')
+        const normalizedParentPath = dirent.parentPath.replace(backslashRegex, '/')
         const relativeDir = normalizedParentPath.replace(normalizedFixturesPath + '/', '')
         relativeFilePath = join(relativeDir, dirent.name)
       }

@@ -41,6 +41,7 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const originalArgv = process.argv
+const uninstallMissingExtensionErrorRegex = /^Failed to uninstall extension "test-author.test-extension": ENOENT: no such file or directory/
 
 const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -128,7 +129,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
   // @ts-ignore
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir)
   await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(
-    /^Failed to uninstall extension "test-author.test-extension": ENOENT: no such file or directory/,
+    uninstallMissingExtensionErrorRegex,
   )
 })
 

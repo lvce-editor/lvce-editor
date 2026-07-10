@@ -27,6 +27,8 @@ const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
+const getAllErrorRegex = /^Failed to get all preferences: Failed to load default preferences: File not found/
+const startupPreferencesErrorRegex = /^\[shared-process\] Failed to load preferences on startup, continuing with defaults: VError: Failed to get all preferences:/
 
 const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -114,7 +116,7 @@ test('getAll - error', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
-  await expect(Preferences.getAll()).rejects.toThrow(/^Failed to get all preferences: Failed to load default preferences: File not found/)
+  await expect(Preferences.getAll()).rejects.toThrow(getAllErrorRegex)
 })
 
 test('getAll - uses custom title bar style by default', async () => {
@@ -154,9 +156,7 @@ test('getAllSafe - error', async () => {
   })
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(
-    expect.stringMatching(
-      /^\[shared-process\] Failed to load preferences on startup, continuing with defaults: VError: Failed to get all preferences:/,
-    ),
+    expect.stringMatching(startupPreferencesErrorRegex),
   )
 })
 

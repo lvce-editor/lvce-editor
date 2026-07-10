@@ -35,6 +35,8 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
 
 const InstallExtension = await import('../src/parts/InstallExtension/InstallExtension.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
+const badStatusCodeErrorRegex = /Failed to install extension "test-author.test-extension": Failed to download "http:\/\/localhost:\d+\/download\/test-author.test-extension": Response code 404 \(Not Found\)/
+const invalidCompressedObjectErrorRegex = /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/
 
 const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -163,7 +165,7 @@ test.skip('install should fail when the server sends a bad status code', async (
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir2)
   await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrow(
-    /Failed to install extension "test-author.test-extension": Failed to download "http:\/\/localhost:\d+\/download\/test-author.test-extension": Response code 404 \(Not Found\)/,
+    badStatusCodeErrorRegex,
   )
 })
 
@@ -200,6 +202,6 @@ test.skip('install should fail when the server sends an invalid compressed objec
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
   await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrow(
-    /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/,
+    invalidCompressedObjectErrorRegex,
   )
 })
