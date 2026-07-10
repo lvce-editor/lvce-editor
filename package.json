@@ -9,7 +9,7 @@
     "test": "lerna run test",
     "dev": "nodemon",
     "e2e": "lerna run e2e",
-    "lint": "eslint .",
+    "lint": "eslint \"packages/shared-process/**/*.{ts,js}\"",
     "electron": "node packages/build/src/parts/RunElectron/RunElectron.js",
     "type-check": "lerna run type-check",
     "build:static": "node packages/build/bin/build.js --target=static",

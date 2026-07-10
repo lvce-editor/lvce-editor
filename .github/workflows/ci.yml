@@ -81,6 +81,7 @@ jobs:
       - name: Download Builtin Extensions
         run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - run: npm run lint
       - run: npm run type-check
       - run: npm test
       - name: install playwright dependencies (extension host worker tests)
