@@ -5,15 +5,9 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ElectronWindowAbout/ElectronWindowAbout.js', () => {
+jest.unstable_mockModule('../src/parts/AboutViewWorker/AboutViewWorker.js', () => {
   return {
-    open: jest.fn(),
-  }
-})
-
-jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
-  return {
-    openWidget: jest.fn(),
+    invoke: jest.fn(),
   }
 })
 
@@ -28,11 +22,10 @@ test('showAbout - electron', async () => {
     }
   })
   const About = await import('../src/parts/About/About.js')
-  const ElectronWindowAbout = await import('../src/parts/ElectronWindowAbout/ElectronWindowAbout.js')
-  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const AboutViewWorker = await import('../src/parts/AboutViewWorker/AboutViewWorker.js')
   await About.showAbout()
-  expect(ElectronWindowAbout.open).toHaveBeenCalledTimes(1)
-  expect(Viewlet.openWidget).not.toHaveBeenCalled()
+  expect(AboutViewWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(AboutViewWorker.invoke).toHaveBeenCalledWith('About.showAbout', PlatformType.Electron)
 })
 
 test('showAbout - web', async () => {
@@ -46,10 +39,8 @@ test('showAbout - web', async () => {
     }
   })
   const About = await import('../src/parts/About/About.js')
-  const ElectronWindowAbout = await import('../src/parts/ElectronWindowAbout/ElectronWindowAbout.js')
-  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const AboutViewWorker = await import('../src/parts/AboutViewWorker/AboutViewWorker.js')
   await About.showAbout()
-  expect(ElectronWindowAbout.open).not.toHaveBeenCalled()
-  expect(Viewlet.openWidget).toHaveBeenCalledTimes(1)
-  expect(Viewlet.openWidget).toHaveBeenCalledWith('About')
+  expect(AboutViewWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(AboutViewWorker.invoke).toHaveBeenCalledWith('About.showAbout', PlatformType.Web)
 })
