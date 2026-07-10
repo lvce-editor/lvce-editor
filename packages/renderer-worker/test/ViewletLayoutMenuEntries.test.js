@@ -29,3 +29,12 @@ test('getQuickPickMenuEntries includes chat commands', () => {
     ]),
   )
 })
+
+test('getQuickPickMenuEntries includes GPU info command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Developer.showGpuInfo',
+    label: 'Developer: Show GPU Info',
+  })
+})

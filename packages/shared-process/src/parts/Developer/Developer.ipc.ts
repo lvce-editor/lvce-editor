@@ -10,4 +10,5 @@ export const Commands = {
   'Developer.createProfile': CpuProfile.createProfile,
   'Developer.sharedProcessMemoryUsage': Developer.sharedProcessMemoryUsage,
   'Developer.sharedProcessStartupPerformance': Developer.sharedProcessStartupPerformance,
+  'Developer.showGpuInfo': Developer.showGpuInfo,
 }

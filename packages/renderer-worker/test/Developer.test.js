@@ -376,6 +376,16 @@ test('open process explorer - error', async () => {
   await expect(Developer.openProcessExplorer()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
+test('showGpuInfo', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockResolvedValue(undefined)
+
+  await Developer.showGpuInfo()
+
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Developer.showGpuInfo')
+})
+
 test('getAllStates', async () => {
   // @ts-ignore
   Viewlet.getAllStates.mockImplementation(() => {

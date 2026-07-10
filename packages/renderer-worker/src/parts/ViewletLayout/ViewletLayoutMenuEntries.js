@@ -354,6 +354,10 @@ export const getQuickPickMenuEntries = () => {
       label: 'Developer: Open Process Explorer',
     },
     {
+      id: 'Developer.showGpuInfo',
+      label: 'Developer: Show GPU Info',
+    },
+    {
       id: 'Developer.openStorageOverview',
       label: 'Developer: Open Storage Overview',
     },
