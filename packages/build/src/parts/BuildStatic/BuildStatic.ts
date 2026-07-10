@@ -1,6 +1,5 @@
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
-import { join } from 'node:path'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
@@ -10,6 +9,7 @@ import * as Copy from '../Copy/Copy.ts'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
+import * as GetAllExtensionsJson from '../GetAllExtensionsJson/GetAllExtensionsJson.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Mkdir from '../Mkdir/Mkdir.ts'
@@ -205,23 +205,8 @@ const exists = (path) => {
   return existsSync(path)
 }
 
-const getAllExtensionsJson = async ({ pathPrefix, commitHash }) => {
-  const extensionPath = Path.absolute('extensions')
-  const extensions = await readdir(extensionPath)
-  const allContent: any[] = []
-  for (const extension of extensions) {
-    const absolutePath = join(extensionPath, extension, 'extension.json')
-    const content = await JsonFile.readJson(absolutePath)
-    allContent.push({
-      ...content,
-      path: `${pathPrefix}/${commitHash}/extensions/${extension}`,
-    })
-  }
-  return allContent
-}
-
 const bundleExtensionsJson = async ({ commitHash, pathPrefix }) => {
-  const allContent = await getAllExtensionsJson({ pathPrefix, commitHash })
+  const allContent = await GetAllExtensionsJson.getAllExtensionsJson({ pathPrefix, commitHash })
   const outPath = Path.absolute(`packages/build/.tmp/dist/${commitHash}/config/extensions.json`)
   await JsonFile.writeJson({ to: outPath, value: allContent })
 }
