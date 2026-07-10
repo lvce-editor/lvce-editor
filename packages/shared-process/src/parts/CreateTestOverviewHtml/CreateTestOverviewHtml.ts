@@ -1,3 +1,5 @@
+const testFileExtensionRegex = /\.(js|ts)$/
+
 const isTestFile = (dirent: any): any => {
   if (dirent.startsWith('_')) {
     return false
@@ -6,7 +8,7 @@ const isTestFile = (dirent: any): any => {
 }
 
 const toTestName = (dirent: any): any => {
-  return dirent.replace(/\.(js|ts)$/, '')
+  return dirent.replace(testFileExtensionRegex, '')
 }
 
 export const createTestOverviewHtml = (dirents: any): any => {
