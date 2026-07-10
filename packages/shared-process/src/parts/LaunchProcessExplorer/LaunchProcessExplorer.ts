@@ -6,7 +6,6 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 import * as ProcessExplorerPath from '../ProcessExplorerPath/ProcessExplorerPath.ts'
 
 export const launchProcessExplorer = async (): Promise<any> => {
-  console.log('will start process explorer')
   const ipc = await LaunchProcess.launchProcess({
     name: 'Process Explorer',
     defaultPath: ProcessExplorerPath.processExplorerPath,
@@ -18,6 +17,5 @@ export const launchProcessExplorer = async (): Promise<any> => {
     await ConnectIpcToElectron.connectIpcToElectron(ipc, IpcId.ProcessExplorerRenderer)
   }
   HandleIpc.unhandleIpc(ipc)
-  console.log('did start process explorer')
   return ipc
 }
