@@ -1,9 +1,8 @@
 import { expect, jest, test } from '@jest/globals'
 import * as IpcId from '../src/parts/IpcId/IpcId.js'
 
-const applyIncomingIpcResponse = jest.fn(async () => {
-  throw new Error('Transfer failed')
-})
+const error = new Error('Transfer failed')
+const applyIncomingIpcResponse = jest.fn(async () => error)
 const decreaseRefCount = jest.fn()
 const getModule = jest.fn(() => ({}))
 const handleIncomingIpcWebSocket = jest.fn(async () => ({
@@ -41,8 +40,12 @@ jest.unstable_mockModule('../src/parts/ProcessExplorer/ProcessExplorer.js', () =
 
 const HandleIncomingIpc = await import('../src/parts/HandleIncomingIpc/HandleIncomingIpc.js')
 
-test('handleIncomingIpc - decrements process explorer ref count when forwarding fails', async () => {
-  await expect(HandleIncomingIpc.handleIncomingIpc(IpcId.ProcessExplorer, {}, {})).rejects.toThrow('Transfer failed')
+test('handleIncomingIpc - logs forwarding error and decrements process explorer ref count', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+  await expect(HandleIncomingIpc.handleIncomingIpc(IpcId.ProcessExplorer, {}, {})).resolves.toBeUndefined()
 
   expect(decreaseRefCount).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith(error)
+  spy.mockRestore()
 })

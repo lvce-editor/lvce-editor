@@ -33,12 +33,12 @@ export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): 
   Assert.number(ipcId)
   const module = HandleIpcModule.getModule(ipcId)
   const { target, response } = await getIpcAndResponse(module, handle, message)
-  try {
-    await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
-  } catch (error) {
-    if (ipcId === IpcId.ProcessExplorer) {
-      ProcessExplorer.decreaseRefCount()
-    }
-    throw error
+  const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
+  if (!error) {
+    return
   }
+  if (ipcId === IpcId.ProcessExplorer) {
+    ProcessExplorer.decreaseRefCount()
+  }
+  console.error(error)
 }
