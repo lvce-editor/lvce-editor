@@ -79,6 +79,15 @@ export const renderActions = {
   },
 }
 
+export const renderTitle = {
+  isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
+    return oldState.title === newState.title
+  },
+  apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): string {
+    return newState.title
+  },
+}
+
 const defaultEventListeners = [
   {
     name: 'handleInput',
