@@ -5,7 +5,7 @@ import * as FileSystemDirectoryHandle from '../src/parts/FileSystemDirectoryHand
 
 test('getChildHandles', async () => {
   /**
-   * @type {FileSystemDirectoryHandle}
+   * @type {Pick<FileSystemDirectoryHandle, 'values'>}
    */
   const handle = {
     // @ts-ignore
@@ -38,7 +38,7 @@ test('getChildHandles', async () => {
 
 test('getChildHandles - error - not allowed', async () => {
   /**
-   * @type {FileSystemDirectoryHandle}
+   * @type {Pick<FileSystemDirectoryHandle, 'values'>}
    */
   const handle = {
     // @ts-ignore
