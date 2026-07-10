@@ -12,6 +12,7 @@ interface ViewRenderResult {
   readonly dom?: readonly unknown[]
   readonly focusSelector?: string
   readonly patches?: readonly unknown[]
+  readonly title?: string
   readonly type: string
 }
 
@@ -77,6 +78,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     error: undefined,
     focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
     patches: result.type === 'setPatches' ? result.patches || [] : [],
+    title: typeof result.title === 'string' ? result.title : state.title,
   }
 }
 
@@ -108,7 +110,16 @@ const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly
   )
 }
 
-export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletExtensionViewState => {
+export const create = (
+  id: number,
+  uri: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  _args?: unknown,
+  parentUid?: number,
+): ViewletExtensionViewState => {
   return {
     actionsDom: [],
     commands: [],
@@ -123,6 +134,7 @@ export const create = (id: number, uri: string, x: number, y: number, width: num
     iframeSandbox: [],
     iframeSrc: '',
     kind: '',
+    parentUid,
     patches: [],
     title: '',
     uid: id,
@@ -167,13 +179,16 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
       }
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
+    const initialState = {
+      ...state,
+      title,
+    }
     const newState = {
-      ...renderVirtualDomResult(state, renderResult),
+      ...renderVirtualDomResult(initialState, renderResult),
       css,
       cssId,
       eventListeners,
       kind: view.kind,
-      title,
     }
     return {
       ...newState,

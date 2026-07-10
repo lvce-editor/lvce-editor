@@ -13,6 +13,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const GetSideBarDom = await import('../src/parts/GetSideBarDom/GetSideBarDom.js')
 const ViewletExtensionView = await import('../src/parts/ViewletExtensionView/ViewletExtensionView.ts')
+const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 
 const createState = () => {
   return {
@@ -38,6 +39,12 @@ const createState = () => {
     y: 0,
   }
 }
+
+test('create stores parent uid for sidebar title updates', () => {
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100, undefined, 2)
+
+  expect(state.parentUid).toBe(2)
+})
 
 test('loadContent uses displayName as title for virtual dom views', async () => {
   const invoke = /** @type {any} */ (ExtensionManagementWorker.invoke)
@@ -69,6 +76,39 @@ test('loadContent uses displayName as title for virtual dom views', async () => 
 
   await expect(ViewletExtensionView.loadContent(createState(), undefined)).resolves.toMatchObject({
     title: 'Testing Display',
+  })
+})
+
+test('loadContent uses rendered title for virtual dom views', async () => {
+  const invoke = /** @type {any} */ (ExtensionManagementWorker.invoke)
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.getViews') {
+      return [
+        {
+          displayName: 'Testing Display',
+          id: 'sample.views.testing',
+          kind: 'virtualDom',
+        },
+      ]
+    }
+    if (method === 'Extensions.getAllExtensions') {
+      return []
+    }
+    if (method === 'Extensions.createViewInstance') {
+      return {
+        dom: [],
+        title: 'Testing: Dynamic',
+        type: 'setDom',
+      }
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  await expect(ViewletExtensionView.loadContent(createState(), undefined)).resolves.toMatchObject({
+    title: 'Testing: Dynamic',
   })
 })
 
@@ -109,6 +149,30 @@ test('rerender requests virtual dom patches from extension management worker', a
   })
 
   expect(invoke).toHaveBeenCalledWith('Extensions.renderViewInstance', 'sample.views.testing', 1, expect.any(String), expect.any(Number))
+})
+
+test('rerender updates the title rendered by the parent sidebar', async () => {
+  const invoke = /** @type {any} */ (ExtensionManagementWorker.invoke)
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.renderViewInstance') {
+      return {
+        patches: [],
+        title: 'Testing: Updated',
+        type: 'setPatches',
+      }
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+  const state = createState()
+
+  const newState = await ViewletExtensionView.rerender(state)
+
+  expect(newState.title).toBe('Testing: Updated')
+  expect(ViewletExtensionViewRender.renderTitle.isEqual(state, newState)).toBe(false)
+  expect(ViewletExtensionViewRender.renderTitle.apply(state, newState)).toBe('Testing: Updated')
 })
 
 test('commands exports rerender', () => {

@@ -13,6 +13,7 @@ export interface ViewletExtensionViewState {
   readonly iframeSandbox: readonly string[]
   readonly iframeSrc: string
   readonly kind: string
+  readonly parentUid?: number
   readonly patches: readonly unknown[]
   readonly title: string
   readonly uid: number
