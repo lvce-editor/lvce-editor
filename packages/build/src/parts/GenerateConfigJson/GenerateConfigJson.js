@@ -39,7 +39,17 @@ const generateFilesCodeMap = (indexes, uris) => {
 }
 
 // TODO merge this with getStaticFiles
-export const generateConfigJson = async ({ etag, staticRoot, configRoot, applicationName, name, productName, version, electronVersion, commitHash }) => {
+export const generateConfigJson = async ({
+  etag,
+  staticRoot,
+  configRoot,
+  applicationName,
+  name,
+  productName,
+  version,
+  electronVersion,
+  commitHash,
+}) => {
   const staticFolder = Path.absolute(`${staticRoot}/static`)
   const dirents = await readdir(staticFolder, { recursive: true, withFileTypes: true })
   const files = dirents.filter((dirent) => dirent.isFile())
@@ -47,7 +57,7 @@ export const generateConfigJson = async ({ etag, staticRoot, configRoot, applica
   const staticUri = pathToFileURL(staticFolder).toString()
   const staticUriLength = staticUri.length
   const uris = filePaths.map((filePath) => pathToFileURL(filePath).toString().slice(staticUriLength))
-  const getHeadersPath = join(root, 'packages', 'static-server', 'src', 'parts', 'GetHeaders', 'GetHeaders.js')
+  const getHeadersPath = join(root, 'packages', 'static-server', 'src', 'parts', 'GetHeaders', 'GetHeaders.ts')
   const getHeadersUri = pathToFileURL(getHeadersPath).toString()
   const getHeadersModule = await import(getHeadersUri)
   const isImmutable = 1

@@ -126,17 +126,17 @@ const copyStaticServerFiles = async ({ commitHash, product, version }) => {
     to: 'packages/build/.tmp/server/static-server/LICENSE',
   })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.js',
+    path: 'packages/build/.tmp/server/static-server/src/parts/IsImmutable/IsImmutable.ts',
     occurrence: 'isImmutable = false',
     replacement: 'isImmutable = true',
   })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/Root/Root.js',
+    path: 'packages/build/.tmp/server/static-server/src/parts/Root/Root.ts',
     occurrence: `export const root = resolve(__dirname, '../../../../../')`,
     replacement: `export const root = resolve(__dirname, '../../../')`,
   })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.js',
+    path: 'packages/build/.tmp/server/static-server/src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.ts',
     occurrence: `export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   \`default-src 'none'\`,
   \`connect-src https://github.com https://release-assets.githubusercontent.com\`,
@@ -155,17 +155,24 @@ const copyStaticServerFiles = async ({ commitHash, product, version }) => {
     commitHash,
   })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.js',
-    occurrence: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
-import * as GetHeaders from '../GetHeaders/GetHeaders.js'
-import * as GetPathEtag from '../GetPathEtag/GetPathEtag.js'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
-import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
-import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
-import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.js'
+    path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.ts',
+    occurrence: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.ts'
+import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
+import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.ts'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
+import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.ts'
+import type { Request } from '../Request/Request.ts'
 
-export const getResponseInfo = async ({ request, isImmutable, applicationName = 'lvce-oss' }) => {
+interface GetResponseInfoOptions {
+  readonly applicationName?: string
+  readonly isImmutable: boolean
+  readonly request: Request
+}
+
+export const getResponseInfo = async ({ request, isImmutable, applicationName = 'lvce-oss' }: GetResponseInfoOptions) => {
   if (!isSupportedMethod(request.method)) {
     return {
       absolutePath: '',
@@ -173,7 +180,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
       headers: {},
     }
   }
-  const pathname = request.path || request.url.split('?')[0]
+  const pathname = request.path || request.url?.split('?')[0] || '/'
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathname)
   const etag = await GetPathEtag.getPathEtag(absolutePath)
   if (!etag) {
@@ -190,14 +197,14 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   }
 }
 `,
-    replacement: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.js'
-import * as Headers from '../Headers/Headers.js'
-import * as Files from '../Files/Files.js'
-import * as HttpHeader from '../HttpHeader/HttpHeader.js'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-import * as MatchesEtag from '../MatchesEtag/MatchesEtag.js'
-import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.js'
-import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.js'
+    replacement: `import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.ts'
+import * as Headers from '../Headers/Headers.ts'
+import * as Files from '../Files/Files.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
+import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.ts'
 
 
 export const getResponseInfo = async ({ request, isImmutable, applicationName = 'lvce-oss' }) => {
@@ -208,7 +215,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
       headers: {},
     }
   }
-  const pathname = request.path || request.url.split('?')[0]
+  const pathname = request.path || request.url?.split('?')[0] || '/'
   if(!Object.hasOwn(Files.files, pathname)){
     return NotFoundResponse.notFoundResponse
   }
@@ -234,12 +241,12 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
 `,
   })
   // await Replace.replace({
-  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.ts',
   //   occurrence: `frame-ancestors 'none'`,
   //   replacement: `\${frameAncestors}`,
   // })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.js',
+    path: 'packages/build/.tmp/server/static-server/src/parts/GetAbsolutePath/GetAbsolutePath.ts',
     occurrence: `  if (pathName.startsWith('/packages')) {
     return getContainedPath(root, pathName)
   }
@@ -247,22 +254,22 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
     replacement: '',
   })
   // await Replace.replace({
-  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.ts',
   //   occurrence: `frame-src 'self' http://localhost:3001 http://localhost:3002`,
   //   replacement: `\${frameSrc}`,
   // })
   // await Replace.replace({
-  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //   path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.ts',
   //   occurrence: `"default-src 'none'; font-src 'self'; img-src 'self'`,
   //   replacement: `\`default-src 'none'; font-src 'self'; img-src 'self'`,
   // })
   //   await Replace.replace({
-  //     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.ts',
   //     occurrence: `manifest-src 'self';"`,
   //     replacement: `manifest-src 'self';\``,
   //   })
   //   await Replace.replace({
-  //     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js',
+  //     path: 'packages/build/.tmp/server/static-server/src/parts/Headers/Headers.ts',
   //     occurrence: `export const headers =`,
   //     replacement: `import * as GetGitpodPreviewUrl from '../GetGitpodPreviewUrl/GetGitpodPreviewUrl.js'
   // import * as IsGitpod from '../IsGitpod/IsGitpod.js'
@@ -274,7 +281,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
   // export const headers =`,
   //   })
   await Replace.replace({
-    path: 'packages/build/.tmp/server/static-server/src/parts/IpcChildModule/IpcChildModule.js',
+    path: 'packages/build/.tmp/server/static-server/src/parts/IpcChildModule/IpcChildModule.ts',
     occurrence: `  switch (method) {
     case IpcChildType.NodeForkedProcess:
       return NodeForkedProcessRpcClient.create
@@ -303,7 +310,7 @@ export const getResponseInfo = async ({ request, isImmutable, applicationName = 
 const bundleStaticServer = async ({ commitHash }) => {
   await BundleJs.bundleJs({
     cwd: Path.absolute('packages/build/.tmp/server/static-server'),
-    from: `./src/static-server.js`,
+    from: `./src/static-server.ts`,
     platform: 'node',
     sourceMap: false,
   })
@@ -314,7 +321,7 @@ const bundleStaticServer = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/package.json',
-    occurrence: `"main": "src/static-server.js"`,
+    occurrence: `"main": "src/static-server.ts"`,
     replacement: `"main": "dist/static-server.js"`,
   })
   await Replace.replace({
