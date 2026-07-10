@@ -19,6 +19,10 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/js',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/js`,
   })
+  await Copy.copyFile({
+    from: 'static/extension-file-system-service-worker.js',
+    to: `packages/build/.tmp/server/static-server/static/extension-file-system-service-worker.js`,
+  })
   await Copy.copy({
     from: 'static/lib-css',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/lib-css`,
@@ -60,6 +64,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
     replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
+  })
+  await Replace.replace({
+    path: `packages/build/.tmp/server/static-server/static/index.html`,
+    occurrence: '/js/register-extension-file-system-service-worker.js',
+    replacement: `/${commitHash}/js/register-extension-file-system-service-worker.js`,
   })
   await Replace.replace({
     path: `packages/build/.tmp/server/static-server/static/index.html`,

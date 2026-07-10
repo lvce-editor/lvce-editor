@@ -155,6 +155,7 @@ export const commandMap = {
   'ExtensionMeta.addWebExtension': lazy('ExtensionMeta.addWebExtension'),
   'Extensions.openCachedExtensionsFolder': lazy('Extensions.openCachedExtensionsFolder'),
   'Extensions.openExtensionsFolder': lazy('Extensions.openExtensionsFolder'),
+  'Extensions.installFromDisk': lazy('Extensions.installFromDisk'),
   'FilePicker.mockSaveFilePicker': lazy('FilePicker.mockSaveFilePicker'),
   'FilePicker.showDirectoryPicker': lazy('FilePicker.showDirectoryPicker'),
   'FilePicker.showFilePicker': lazy('FilePicker.showFilePicker'),

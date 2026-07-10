@@ -10,6 +10,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
+import * as InstalledWebExtensions from '../InstalledWebExtensions/InstalledWebExtensions.js'
 import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
 import * as Languages from '../Languages/Languages.js'
@@ -198,6 +199,8 @@ export const startup = async (platform, assetDir) => {
   await Command.execute('Layout.setAuthState', authState)
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
+
+  await InstalledWebExtensions.restore()
 
   Performance.mark(PerformanceMarkerType.WillLoadLanguages)
   await Languages.hydrate(platform, assetDir)
