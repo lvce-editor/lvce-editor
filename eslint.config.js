@@ -19,7 +19,6 @@ export default [
       ...disableConfiguredRules('regex/'),
       ...disableConfiguredRules('sonarjs/'),
       ...disableConfiguredRules('unicorn/'),
-      '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
       '@typescript-eslint/no-implied-eval': 'off',

@@ -69,7 +69,7 @@ test('execute - error - module has syntax error', async () => {
   ModuleMap.getModuleId.mockImplementation(() => {
     return 21
   })
-  Command.state.load = async () => {
+  Command.state.load = async (): Promise<never> => {
     const error = new SyntaxError(`Unexpected token ','`)
     error.stack = `SyntaxError: Unexpected token ','`
     throw error
@@ -88,7 +88,7 @@ test('execute - error - ERR_MODULE_NOT_FOUND', async () => {
   ModuleMap.getModuleId.mockImplementation(() => {
     return 22
   })
-  Command.state.load = async () => {
+  Command.state.load = async (): Promise<never> => {
     const error = new NodeError(
       `[ERR_MODULE_NOT_FOUND]: Cannot find package 'vscode-ripgrep-with-github-api-error-fix' imported from /test/packages/shared-process/src/parts/RgPath/RgPath.js`,
       'ERR_MODULE_NOT_FOUND',

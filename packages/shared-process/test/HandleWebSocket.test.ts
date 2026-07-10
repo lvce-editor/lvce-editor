@@ -20,7 +20,7 @@ const createSocket = (): any => {
     end: jest.fn(),
     destroy: jest.fn(),
     pause: jest.fn(),
-    get output() {
+    get output(): string {
       return output
     },
   }

@@ -22,7 +22,7 @@ const exists = async (path: any): Promise<any> => {
 }
 
 test.skip('createHeapSnapshot', async () => {
-  Date.now = () => 123456
+  Date.now = (): number => 123456
   // TODO jest esm mock not working https://github.com/facebook/jest/issues/10025
   jest.mock('v8', () => ({
     getHeapSnapshot(): any {
