@@ -31,6 +31,7 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
+const Command = await import('../src/parts/Command/Command.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 
@@ -56,6 +57,102 @@ test('render adds uid to setPatches command', () => {
 
 test('extension view render supports functional events', () => {
   expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
+})
+
+test('concurrent side effect commands preserve completed state changes', async () => {
+  const createDeferred = () => {
+    let resolve = () => {}
+    /** @type {Promise<void>} */
+    const promise = new Promise((resolvePromise) => {
+      resolve = resolvePromise
+    })
+    return { promise, resolve }
+  }
+  const mainDeferred = createDeferred()
+  const titleBarDeferred = createDeferred()
+  const activityBarDeferred = createDeferred()
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const mockModule = {
+    CommandsWithSideEffects: {
+      loadActivityBar: async (state) => {
+        await activityBarDeferred.promise
+        return {
+          commands: [],
+          newState: {
+            ...state,
+            activityBarId: 3,
+          },
+        }
+      },
+      loadMain: async (state) => {
+        await mainDeferred.promise
+        return {
+          commands: [],
+          newState: {
+            ...state,
+            mainId: 1,
+          },
+        }
+      },
+      loadTitleBar: async (state) => {
+        await titleBarDeferred.promise
+        return {
+          commands: [],
+          newState: {
+            ...state,
+            titleBarId: 2,
+          },
+        }
+      },
+    },
+    create: jest.fn(() => ({
+      activityBarId: -1,
+      mainId: -1,
+      titleBarId: -1,
+      uid: 7,
+    })),
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [
+      {
+        apply: jest.fn(() => []),
+        isEqual: jest.fn(() => false),
+      },
+    ],
+  }
+  const getModule = async () => mockModule
+
+  const viewlet = {
+    disposed: false,
+    focus: false,
+    getModule,
+    id: 'ConcurrentLayout',
+    show: false,
+    type: 0,
+    uid: 7,
+    uri: '',
+  }
+  await ViewletManager.load(viewlet)
+
+  const mainPromise = Command.execute('ConcurrentLayout.loadMain')
+  const titleBarPromise = Command.execute('ConcurrentLayout.loadTitleBar')
+  const activityBarPromise = Command.execute('ConcurrentLayout.loadActivityBar')
+  await Promise.resolve()
+  mainDeferred.resolve()
+  await mainPromise
+  titleBarDeferred.resolve()
+  await titleBarPromise
+  activityBarDeferred.resolve()
+  await activityBarPromise
+
+  expect(ViewletStates.getState('ConcurrentLayout')).toMatchObject({
+    activityBarId: 3,
+    mainId: 1,
+    titleBarId: 2,
+  })
 })
 
 test('extension view render sends a dynamic title to its parent', () => {

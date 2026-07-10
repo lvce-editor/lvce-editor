@@ -24,7 +24,6 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as RunSequentially from '../RunSequentially/RunSequentially.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as StartupAuth from '../StartupAuth/StartupAuth.js'
@@ -37,7 +36,7 @@ import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as WatchFilesForHotReload from '../WatchFilesForHotReload/WatchFilesForHotReload.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-const layoutActions = [
+const actions = [
   async () => {
     Performance.mark(PerformanceMarkerType.WillLoadMain)
     await Command.execute('Layout.loadMainIfVisible')
@@ -49,8 +48,7 @@ const layoutActions = [
     LifeCycle.mark(LifeCyclePhase.Seven)
 
     Performance.mark(PerformanceMarkerType.WillLoadSideBar)
-    await Command.execute('Layout.loadSideBarIfVisible')
-    await Command.execute('Layout.loadSecondarySideBarIfVisible')
+    await Promise.all([Command.execute('Layout.loadSideBarIfVisible'), Command.execute('Layout.loadSecondarySideBarIfVisible')])
     Performance.mark(PerformanceMarkerType.DidLoadSideBar)
   },
   async () => {
@@ -79,6 +77,14 @@ const layoutActions = [
   async () => {
     await Command.execute('Layout.loadPreviewIfVisible')
   },
+  async (platform, assetDir) => {
+    LifeCycle.mark(LifeCyclePhase.Eleven)
+
+    Performance.mark(PerformanceMarkerType.WillLoadIconTheme)
+    // TODO check preferences if icon theme is enabled
+    await IconTheme.hydrate(platform, assetDir)
+    Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
+  },
   async (platform) => {
     LifeCycle.mark(LifeCyclePhase.Twelve)
 
@@ -91,18 +97,6 @@ const layoutActions = [
     Performance.mark(PerformanceMarkerType.DidLoadTitleBar)
   },
 ]
-
-const loadIconThemeAction = async (platform, assetDir) => {
-  LifeCycle.mark(LifeCyclePhase.Eleven)
-
-  Performance.mark(PerformanceMarkerType.WillLoadIconTheme)
-  // TODO check preferences if icon theme is enabled
-  await IconTheme.hydrate(platform, assetDir)
-  Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
-}
-
-const loadMainAction = layoutActions[0]
-const deferredLayoutActions = layoutActions.slice(1)
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (platform, assetDir) => {
@@ -211,9 +205,7 @@ export const startup = async (platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  await loadMainAction()
-  // Layout actions update the same state and must not overlap.
-  await Promise.all([RunSequentially.runSequentially(deferredLayoutActions, platform), loadIconThemeAction(platform, assetDir)])
+  await Promise.all(actions.map((action) => action(platform, assetDir)))
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
