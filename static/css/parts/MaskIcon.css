@@ -205,6 +205,11 @@
   mask-image: url(/icons/check.svg);
 }
 
+.MaskIconLock,
+.IconLock {
+  mask-image: url(/icons/lock.svg);
+}
+
 .MaskIconEllipsis,
 .IconEllipsis {
   mask-image: url(/icons/ellipsis.svg);
