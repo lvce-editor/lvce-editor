@@ -62,7 +62,7 @@ export const getStaticFiles = async ({ etag, name, productName, version, commitH
   const staticUri = pathToFileURL(staticFolder).toString()
   const staticUriLength = staticUri.length
   const uris = filePaths.map((filePath) => pathToFileURL(filePath).toString().slice(staticUriLength))
-  const getHeadersPath = join(root, 'packages', 'static-server', 'src', 'parts', 'GetHeaders', 'GetHeaders.js')
+  const getHeadersPath = join(root, 'packages', 'static-server', 'src', 'parts', 'GetHeaders', 'GetHeaders.ts')
   const getHeadersUri = pathToFileURL(getHeadersPath).toString()
   const getHeadersModule = await import(getHeadersUri)
   const isImmutable = 1
@@ -75,10 +75,10 @@ export const getStaticFiles = async ({ etag, name, productName, version, commitH
   )
   const uniqueHeaders = getUniqueHeaders(headers)
   const headersCode = generateHeadersCode(uniqueHeaders.ours, uniqueHeaders.indexes, uris)
-  const headersCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Headers/Headers.js`)
+  const headersCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Headers/Headers.ts`)
   await WriteFile.writeFile({ to: headersCodePath, content: headersCode })
   const filesCode = generateFilesCode(uniqueHeaders.indexes, uris, etag)
-  const filesCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Files/Files.js`)
+  const filesCodePath = Path.absolute(`packages/build/.tmp/server/static-server/src/parts/Files/Files.ts`)
   await WriteFile.writeFile({
     to: filesCodePath,
     content: filesCode,

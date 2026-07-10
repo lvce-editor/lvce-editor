@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals'
-import * as GetAbsolutePath from '../src/parts/GetAbsolutePath/GetAbsolutePath.js'
-import * as GetResponseInfo from '../src/parts/GetResponseInfo/GetResponseInfo.js'
-import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
+import * as GetAbsolutePath from '../src/parts/GetAbsolutePath/GetAbsolutePath.ts'
+import * as GetResponseInfo from '../src/parts/GetResponseInfo/GetResponseInfo.ts'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
-const normalizePath = (path) => path.replaceAll('\\', '/')
+const normalizePath = (path: string): string => path.replaceAll('\\', '/')
 
 test('maps /icons requests to renderer-worker vscode icons package', () => {
   const absolutePath = GetAbsolutePath.getAbsolutePath('/icons/chevron-right.svg')

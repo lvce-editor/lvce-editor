@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as GetHeadersDocument from '../src/parts/GetHeadersDocument/GetHeadersDocument.js'
+import * as GetHeadersDocument from '../src/parts/GetHeadersDocument/GetHeadersDocument.ts'
 
 test('uses default application name when missing', () => {
   const headers = GetHeadersDocument.getHeadersDocument({

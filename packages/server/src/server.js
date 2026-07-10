@@ -214,7 +214,7 @@ const getOrCreateSharedProcess = () => {
  * @returns {Promise<ChildProcess>}
  */
 const launchStaticServerProcess = async () => {
-  const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
+  const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.ts')
   const ipc = await launchProcess(staticServerPath, ['--ipc-type=node-worker'])
   ipc.on('message', handleMessage)
 
