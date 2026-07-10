@@ -38,7 +38,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "created": "2022-12-15"
   },
   {
