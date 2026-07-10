@@ -1,0 +1,9 @@
+import * as Copy from '../Copy/Copy.ts'
+import * as Path from '../Path/Path.ts'
+
+export const bundleDiffWorker = async ({ cachePath, commitHash, platform, assetDir }) => {
+  await Copy.copy({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/diff-worker/dist/diffWorkerMain.js',
+    to: Path.join(cachePath, 'dist', 'diffWorkerMain.js'),
+  })
+}

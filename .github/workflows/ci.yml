@@ -42,7 +42,7 @@ jobs:
           python-version: '3.11'
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
-        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v6
         id: npm-cache
@@ -65,13 +65,13 @@ jobs:
           path: 'packages/build/.tmp/cachedDependencies'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
-        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.js
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
-        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
         shell: bash
       - uses: actions/cache@v6
         id: builtin-extensions-cache
@@ -79,7 +79,7 @@ jobs:
           path: extensions
           key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
       - name: Download Builtin Extensions
-        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run lint
       - run: npm run type-check

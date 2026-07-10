@@ -1,11 +1,11 @@
 import { expect, jest, test } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/JsonFile/JsonFile.js', () => ({
+jest.unstable_mockModule('../src/parts/JsonFile/JsonFile.ts', () => ({
   writeJson: jest.fn(),
 }))
 
-const AddRootPackageJson = await import('../src/parts/AddRootPackageJson/AddRootPackageJson.js')
-const JsonFile = await import('../src/parts/JsonFile/JsonFile.js')
+const AddRootPackageJson = await import('../src/parts/AddRootPackageJson/AddRootPackageJson.ts')
+const JsonFile = await import('../src/parts/JsonFile/JsonFile.ts')
 
 test('addRootPackageJson - includes stable linux desktop name', async () => {
   await AddRootPackageJson.addRootPackageJson({

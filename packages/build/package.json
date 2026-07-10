@@ -2,11 +2,11 @@
   "name": "@lvce-editor/build",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/build.js",
+  "main": "src/build.ts",
   "type": "module",
   "scripts": {
-    "build:remote": "node src/build.js --remote",
-    "build:electron": "node src/build.js --electron",
+    "build:remote": "node src/build.ts --remote",
+    "build:electron": "node src/build.ts --electron",
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
     "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress",
     "type-check": "tsc"

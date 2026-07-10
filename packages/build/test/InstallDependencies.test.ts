@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import { installDependenciesWithRetry } from '../src/parts/InstallDependencies/InstallDependencies.js'
+import { installDependenciesWithRetry } from '../src/parts/InstallDependencies/InstallDependencies.ts'
 
 type ExecSyncFn = Parameters<typeof installDependenciesWithRetry>[0]
 
