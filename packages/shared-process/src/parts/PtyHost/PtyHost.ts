@@ -22,7 +22,7 @@ export const disposeAll = (): any => {
       PtyHostState.state.ipc = undefined
     }
     PtyHostState.state.ptyHostState = /* None */ 0
-    PtyHostState.state.send = (message: any) => {
+    PtyHostState.state.send = (message: any): void => {
       PtyHostState.state.pendingMessages.push(message)
     }
   }

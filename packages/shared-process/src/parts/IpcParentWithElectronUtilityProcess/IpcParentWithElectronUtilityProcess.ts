@@ -53,7 +53,7 @@ export const wrap = (port: any): any => {
           break
         case 'message':
           // @ts-ignore
-          this.wrappedListener = (event: any) => {
+          this.wrappedListener = (event: any): void => {
             const syntheticEvent = {
               data: getActualData(event),
               target: this,

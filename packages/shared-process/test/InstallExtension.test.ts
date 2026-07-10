@@ -118,7 +118,7 @@ test.skip('install', async () => {
     'main.js': 'export const activate = () => { console.info("hello world") }',
     'package.json': '{ "type" : "module" }',
   })
-  handler = async (request: any, response: any) => {
+  handler = async (request: any, response: any): Promise<void> => {
     switch (request.url) {
       case '/download/test-author.test-extension':
         response.statusCode = 200
@@ -151,7 +151,7 @@ test.skip('install', async () => {
 // TODO test is flaky https://github.com/lvce-editor/lvce-editor/actions/runs/3684799038/jobs/6234968296
 // probably should use unit test instead of e2e test here
 test.skip('install should fail when the server sends a bad status code', async () => {
-  handler = (request: any, response: any) => {
+  handler = (request: any, response: any): any => {
     switch (request.url) {
       default:
         response.statusCode = 404
@@ -188,7 +188,7 @@ test.skip('install should fail when the server sends an invalid compressed objec
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir4)
   // TODO avoid side effect in tests, use createServer
-  handler = (request: any, res: any) => {
+  handler = (request: any, res: any): any => {
     switch (request.url) {
       case '/download/test-author.test-extension':
         res.statusCode = 200
