@@ -87,15 +87,15 @@ export const copySharedProcessSources = async ({ to, product, commitHash, versio
     })
     await Replace.replace({
       path: `packages/build/.tmp/server/shared-process/src/parts/PtyHostPath/PtyHostPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const getPtyHostPath = async () => {
   return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
 }
 `,
-      replacement: `import * as Root from '../Root/Root.ts'
-import * as Path from '../Path/Path.ts'
+      replacement: `import * as Root from '../Root/Root.js'
+import * as Path from '../Path/Path.js'
 
 export const getPtyHostPath = async () => {
   try {

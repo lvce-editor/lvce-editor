@@ -287,8 +287,8 @@ export const getBuiltinExtensionsPath = () => {
 
     await Replace.replace({
       path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const searchProcessPath = Path.join(
   Root.root,
@@ -308,8 +308,8 @@ export const searchProcessPath = ResolveBin.resolveBin('@lvce-editor/search-proc
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/FileWatcherProcessPath/FileWatcherProcessPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const fileWatcherProcessPath = Path.join(
   Root.root,
@@ -329,8 +329,8 @@ export const fileWatcherProcessPath = ResolveBin.resolveBin('@lvce-editor/file-w
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/PreviewProcessPath/PreviewProcessPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const previewProcessPath = Path.join(
   Root.root,
@@ -350,8 +350,8 @@ export const previewProcessPath = ResolveBin.resolveBin('@lvce-editor/preview-pr
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/TypeScriptCompileProcessPath/TypeScriptCompileProcessPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const typescriptCompileProcessPath = Path.join(
   Root.root,
@@ -371,8 +371,8 @@ export const typescriptCompileProcessPath = ResolveBin.resolveBin('@lvce-editor/
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/FileSystemProcessPath/FileSystemProcessPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const fileSystemProcessPath = Path.join(
   Root.root,
@@ -392,8 +392,8 @@ export const fileSystemProcessPath = ResolveBin.resolveBin('@lvce-editor/file-sy
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/NetworkProcessPath/NetworkProcessPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const networkProcessPath = Path.join(
   Root.root,
@@ -413,8 +413,8 @@ export const networkProcessPath = ResolveBin.resolveBin('@lvce-editor/network-pr
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/PtyHostPath/PtyHostPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const ptyHostPath = Path.join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'pty-host', 'dist', 'ptyHostMain.js')
 `,
@@ -425,8 +425,8 @@ export const ptyHostPath = ResolveBin.resolveBin('@lvce-editor/pty-host')
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/ProcessExplorerPath/ProcessExplorerPath.js`,
-      occurrence: `import * as Path from '../Path/Path.ts'
-import * as Root from '../Root/Root.ts'
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 
 export const processExplorerPath = Path.join(
   Root.root,
