@@ -267,3 +267,36 @@ test('toggleSideBarView hides the current side bar view when the same item is cl
     }),
   })
 })
+
+test('toggleSideBarView preserves resized preview width when showing the side bar', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'SideBar', 1, true]])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewMinWidth: 100,
+    previewVisible: true,
+    previewWidth: 320,
+    sideBarMaxWidth: 9999999,
+    sideBarMinWidth: 170,
+    sideBarView: 'Explorer',
+    sideBarVisible: false,
+    sideBarWidth: 240,
+    statusBarHeight: 20,
+    titleBarHeight: 0,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.toggleSideBarView(state, 'SourceControl')
+
+  expect(result.newState).toMatchObject({
+    previewLeft: 880,
+    previewWidth: 320,
+    sideBarView: 'SourceControl',
+    sideBarVisible: true,
+  })
+})
