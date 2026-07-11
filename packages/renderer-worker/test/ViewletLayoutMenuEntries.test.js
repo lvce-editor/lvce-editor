@@ -38,3 +38,12 @@ test('getQuickPickMenuEntries includes GPU info command', () => {
     label: 'Developer: Show GPU Info',
   })
 })
+
+test('getQuickPickMenuEntries includes extension management worker latency command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Developer.measureExtensionManagementWorkerLatency',
+    label: 'Developer: Measure Extension Management Worker Latency',
+  })
+})
