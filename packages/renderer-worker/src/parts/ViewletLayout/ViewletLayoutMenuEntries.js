@@ -272,6 +272,10 @@ export const getQuickPickMenuEntries = () => {
       aliases: ['Select Color Theme', 'Switch Color Theme', 'Theme Color'],
     },
     {
+      id: 'Developer.measureExtensionManagementWorkerLatency',
+      label: 'Developer: Measure Extension Management Worker Latency',
+    },
+    {
       id: 'Developer.measureLatencyBetweenExtensionHostAndSharedProcess',
       label: 'Developer: Measure Latency Between Extension Host and Shared Process',
     },
