@@ -422,7 +422,7 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "created": "2022-06-16"
   }
 ]
