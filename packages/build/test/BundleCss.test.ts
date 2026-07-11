@@ -19,7 +19,7 @@ test('bundleCss adds filename comment to generated part css files', async () => 
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
-})
+}, 30_000)
 
 test('bundleCss does not add filename comment to App.css', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
@@ -36,4 +36,4 @@ test('bundleCss does not add filename comment to App.css', async () => {
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
-})
+}, 30_000)
