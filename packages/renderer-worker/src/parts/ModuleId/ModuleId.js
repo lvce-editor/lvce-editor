@@ -111,3 +111,4 @@ export const Document = 145
 export const Exec = 146
 export const OAuthServer = 147
 export const LaunchIsolatedExtensionHostWorker = 148
+export const ExtensionNodeRpc = 149
