@@ -83,6 +83,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostCode
     case 'ExtensionMeta':
       return ModuleId.ExtensionMeta
+    case 'ExtensionNodeRpc':
+      return ModuleId.ExtensionNodeRpc
     case 'Extensions':
       return ModuleId.Extensions
     case 'FilePicker':
