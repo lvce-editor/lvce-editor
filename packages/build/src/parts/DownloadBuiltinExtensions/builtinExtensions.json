@@ -152,7 +152,7 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.17.0",
+    "version": "1.18.0",
     "created": "2024-08-09"
   },
   {
