@@ -1,0 +1,84 @@
+import { spawn } from 'node:child_process'
+import { readFile } from 'node:fs/promises'
+
+const foregroundCommands = new Set(['install', 'link', 'list', 'unlink'])
+const electronDiagnosticPattern = /^\[\d+:\d+\/\d+\.\d+:(?:ERROR|WARNING):/
+
+const isVersionRequest = (args) => args.includes('--version') || args.includes('-v')
+
+const isForegroundRequest = (args) => {
+  if (args.some((arg) => ['--built-in-self-test', '--help', '--status', '--verbose', '--wait', '--web'].includes(arg))) {
+    return true
+  }
+  return args.some((arg) => foregroundCommands.has(arg))
+}
+
+const forwardElectronStderr = (stream) => {
+  let pending = ''
+  stream.setEncoding('utf8')
+  stream.on('data', (chunk) => {
+    pending += chunk
+    const lines = pending.split('\n')
+    pending = lines.pop() || ''
+    for (const line of lines) {
+      if (!electronDiagnosticPattern.test(line)) {
+        process.stderr.write(`${line}\n`)
+      }
+    }
+  })
+  stream.on('end', () => {
+    if (pending && !electronDiagnosticPattern.test(pending)) {
+      process.stderr.write(pending)
+    }
+  })
+}
+
+const launchElectron = async (args) => {
+  const env = { ...process.env }
+  delete env.ELECTRON_RUN_AS_NODE
+
+  const foreground = isForegroundRequest(args)
+  const verbose = args.includes('--verbose')
+  const child = spawn(process.execPath, args, {
+    detached: !foreground,
+    env,
+    stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore',
+  })
+
+  if (!foreground) {
+    await new Promise((resolve, reject) => {
+      child.once('error', reject)
+      child.once('spawn', resolve)
+    })
+    child.unref()
+    return 0
+  }
+
+  if (verbose) {
+    child.stderr.pipe(process.stderr)
+  } else {
+    forwardElectronStderr(child.stderr)
+  }
+
+  return new Promise((resolve, reject) => {
+    child.once('error', reject)
+    child.once('exit', (code) => resolve(code ?? 1))
+  })
+}
+
+const main = async () => {
+  const args = process.argv.slice(2)
+  if (isVersionRequest(args)) {
+    const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
+    console.log(packageJson.version)
+    return 0
+  }
+  return launchElectron(args)
+}
+
+try {
+  process.exitCode = await main()
+} catch (error) {
+  console.error(error instanceof Error ? error.message : error)
+  process.exitCode = 1
+}

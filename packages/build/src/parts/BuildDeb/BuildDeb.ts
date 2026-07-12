@@ -36,6 +36,15 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform, t
     from: `packages/build/.tmp/electron-bundle/${arch}`,
     to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
   })
+  await Template.write(
+    'linux_cli',
+    `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/bin/${product.applicationName}`,
+    {
+      '@@APPLICATION_NAME@@': product.applicationName,
+    },
+    755,
+  )
+  await Template.write('linux_cli_js', `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/bin/cli.js`, {})
   await Remove.remove(
     `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )
@@ -56,7 +65,7 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     '@@NAME_LONG@@': product.nameLong,
     '@@NAME_SHORT@@': product.nameShort,
     '@@NAME@@': product.applicationName,
-    '@@EXEC@@': `${product.applicationName} %U`,
+    '@@EXEC@@': `/usr/lib/${product.applicationName}/${product.applicationName} %U`,
     '@@ICON@@': product.applicationName,
     '@@URL_PROTOCOL@@': product.applicationName,
     '@@SUMMARY@@': product.linuxSummary,
@@ -103,7 +112,7 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
   await Remove.remove(`packages/build/.tmp/linux/deb/${debArch}/app/usr/bin`)
   await Mkdir.mkdir(`packages/build/.tmp/linux/deb/${debArch}/app/usr/bin`)
   await Symlink.symlink(
-    `../lib/${product.applicationName}/${product.applicationName}`,
+    `../lib/${product.applicationName}/resources/app/bin/${product.applicationName}`,
     Path.absolute(`packages/build/.tmp/linux/deb/${debArch}/app/usr/bin/${product.applicationName}`),
   )
 }
