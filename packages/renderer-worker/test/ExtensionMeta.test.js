@@ -4,6 +4,7 @@ import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/E
 
 beforeEach(() => {
   jest.resetAllMocks()
+  ExtensionMetaState.state.webExtensions = []
 })
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
@@ -18,10 +19,62 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
     error: jest.fn(() => {}),
   }
 })
+jest.unstable_mockModule('../src/parts/ExtensionHostWorker/ExtensionHostWorker.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const ExtensionMeta = await import('../src/parts/ExtensionMeta/ExtensionMeta.js')
 const Command = await import('../src/parts/Command/Command.js')
+const ExtensionHostWorker = await import('../src/parts/ExtensionHostWorker/ExtensionHostWorker.js')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const ExtensionMetaState = await import('../src/parts/ExtensionMetaState/ExtensionMetaState.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
+const commandExecute = /** @type {jest.Mock} */ (Command.execute)
+const extensionHostInvoke = /** @type {jest.Mock} */ (ExtensionHostWorker.invoke)
+const extensionManagementInvoke = /** @type {jest.Mock} */ (ExtensionManagementWorker.invoke)
+
+test('addWebExtension adds the manifest to extension management before notifying views', async () => {
+  const manifest = {
+    id: 'test.dynamic-extension',
+    name: 'Dynamic Extension',
+    path: 'https://example.com/dynamic-extension',
+  }
+  extensionHostInvoke.mockImplementation(async () => manifest)
+  extensionManagementInvoke.mockImplementation(async () => undefined)
+  commandExecute.mockImplementation(async () => undefined)
+
+  await ExtensionMeta.addWebExtension(manifest.path)
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.addExtension', manifest)
+  expect(Command.execute).toHaveBeenCalledWith('Layout.handleExtensionsChanged')
+  expect(extensionManagementInvoke.mock.invocationCallOrder[0]).toBeLessThan(commandExecute.mock.invocationCallOrder[0])
+  expect(ExtensionMetaState.state.webExtensions).toEqual([
+    {
+      ...manifest,
+      status: ExtensionManifestStatus.Resolved,
+    },
+  ])
+})
+
+test('addWebExtension does not notify views when no extension was added', async () => {
+  extensionHostInvoke.mockImplementation(async () => undefined)
+
+  await ExtensionMeta.addWebExtension('https://example.com/dynamic-extension')
+
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
+})
 
 test('organizeExtensions', () => {
   expect(
