@@ -196,6 +196,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.OffscreenCanvas
     case 'Languages':
       return ModuleId.Languages
+    case 'License':
+      return ModuleId.License
     case 'FileWatcher':
       return ModuleId.FileWatcher
     case 'ExtensionHostTypeDefinition':
