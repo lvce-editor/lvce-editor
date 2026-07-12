@@ -80,6 +80,8 @@ export const References = 'References'
 
 export const RunAndDebug = 'Run And Debug'
 
+export const RunningExtensions = 'RunningExtensions'
+
 export const ScreenCapture = 'ScreenCapture'
 
 export const Search = 'Search'

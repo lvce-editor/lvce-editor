@@ -21,3 +21,11 @@ test('process explorer uses worker-backed module', async () => {
   expect(typeof module.getCommands).toBe('function')
   expect(typeof module.getKeyBindings).toBe('function')
 })
+
+test('running extensions uses worker-backed module', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.RunningExtensions]()
+
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(typeof module.loadContent).toBe('function')
+  expect(typeof module.resize).toBe('function')
+})
