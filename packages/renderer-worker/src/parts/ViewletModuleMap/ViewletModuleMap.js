@@ -15,7 +15,6 @@ export const map = {
   [ViewletModuleId.DiffEditor]: () => import('../ViewletDiffEditor2/ViewletDiffEditor2.ipc.js'),
   [ViewletModuleId.E2eTest]: () => import('../ViewletE2eTest/ViewletE2eTest.ipc.ts'),
   [ViewletModuleId.LanguageModels]: () => import('../ViewletLanguageModels/ViewletLanguageModels.ipc.ts'),
-  [ViewletModuleId.RunningExtensions]: () => import('../ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts'),
   [ViewletModuleId.Preview]: () => import('../ViewletPreview/ViewletPreview.ipc.js'),
   [ViewletModuleId.Terminal2]: () => import('../ViewletTerminal2/ViewletTerminal2.ipc.ts'),
   [ViewletModuleId.E2eTests]: () => import('../ViewletE2eTests/ViewletE2eTests.ipc.ts'),
