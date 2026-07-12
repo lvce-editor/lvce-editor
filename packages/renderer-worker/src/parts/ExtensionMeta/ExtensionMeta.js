@@ -13,11 +13,12 @@ const notifyExtenionChanges = true
 
 export const addWebExtension = async (path) => {
   const manifest = await ExtensionHostWorker.invoke('Extensions.addWebExtension', path)
-  if (notifyExtenionChanges) {
-    await Command.execute(`Layout.handleExtensionsChanged`)
-  }
   if (!manifest) {
     return
+  }
+  await ExtensionManagementWorker.invoke('Extensions.addExtension', manifest)
+  if (notifyExtenionChanges) {
+    await Command.execute(`Layout.handleExtensionsChanged`)
   }
   // TODO avoid side effect here
   if (manifest.languages) {
