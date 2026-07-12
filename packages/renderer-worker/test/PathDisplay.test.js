@@ -8,3 +8,11 @@ test('getLabel - process explorer', () => {
 test('getFileIcon - process explorer', () => {
   expect(PathDisplay.getFileIcon('process-explorer://')).toBe('MaskIconDebugAlt2')
 })
+
+test('getLabel - running extensions', () => {
+  expect(PathDisplay.getLabel('running-extensions://')).toBe('Running Extensions')
+})
+
+test('getFileIcon - running extensions', () => {
+  expect(PathDisplay.getFileIcon('running-extensions://')).toBe('MaskIconExtensions')
+})

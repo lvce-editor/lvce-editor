@@ -146,6 +146,7 @@ export const commandMap = {
   'ExtensionManagement.getExtension': lazy('ExtensionManagement.getExtension'),
   'ExtensionManagement.getExtensions': lazy('ExtensionManagement.getExtensions'),
   'ExtensionManagement.getExtensionsEtag': lazy('ExtensionManagement.getExtensionsEtag'),
+  'ExtensionManagement.getRunningExtensions': lazy('ExtensionManagement.getRunningExtensions'),
   'ExtensionManagement.handleExtensionStatusUpdate': lazy('ExtensionManagement.handleExtensionStatusUpdate'),
   'ExtensionManagement.handleViewContextChange': lazy('ExtensionManagement.handleViewContextChange'),
   'ExtensionManagement.invalidateExtensionsCache': lazy('ExtensionManagement.invalidateExtensionsCache'),

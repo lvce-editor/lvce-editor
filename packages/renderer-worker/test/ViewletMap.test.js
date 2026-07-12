@@ -25,3 +25,7 @@ test('audio - opus', async () => {
 test('process explorer', async () => {
   expect(await ViewletMap.getModuleId('process-explorer://')).toBe(ViewletModuleId.ProcessExplorer)
 })
+
+test('running extensions', async () => {
+  expect(await ViewletMap.getModuleId('running-extensions://')).toBe(ViewletModuleId.RunningExtensions)
+})

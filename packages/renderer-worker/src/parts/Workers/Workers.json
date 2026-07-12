@@ -468,6 +468,15 @@
     "hotReloadCommand": ""
   },
   {
+    "id": "runningExtensionsView",
+    "fileName": "runningExtensionsViewMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/running-extensions-view/dist/runningExtensionsViewMain.js",
+    "productionPath": "/packages/running-extensions-view/dist/runningExtensionsViewMain.js",
+    "settingName": "develop.runningExtensionsViewPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "settingsView",
     "fileName": "settingsViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",

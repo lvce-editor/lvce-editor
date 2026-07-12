@@ -122,6 +122,8 @@ export const MarkDownPreview = 'MarkDownPreview'
 
 export const LanguageModels = 'LanguageModels'
 
+export const RunningExtensions = 'RunningExtensions'
+
 export const Confirm = 'Confirm'
 
 export const E2eTests = 'E2eTests'
