@@ -11,6 +11,7 @@ import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as CopyElectron from '../CopyElectron/CopyElectron.ts'
+import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
 import * as Hash from '../Hash/Hash.ts'
@@ -291,6 +292,10 @@ export const build = async ({
     version,
   })
   console.timeEnd('copyElectron')
+
+  console.time('copyLicense')
+  await CopyElectronLicense.copyElectronLicense({ resourcesPath })
+  console.timeEnd('copyLicense')
 
   if (shouldRemoveUnusedLocales) {
     console.time('removeUnusedLocales')
