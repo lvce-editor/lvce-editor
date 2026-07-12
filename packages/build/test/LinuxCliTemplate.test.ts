@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { execFile } from 'node:child_process'
-import { chmod, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
+import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
@@ -35,8 +35,9 @@ describe('linux cli templates', () => {
       await symlink(join(binPath, 'lvce'), commandPath)
 
       const { stdout } = await execFileAsync(commandPath, ['--version'])
+      const realAppRoot = await realpath(appRoot)
 
-      expect(stdout).toBe(`1|${join(appRoot, 'bin', 'cli.js')} --version\n`)
+      expect(stdout).toBe(`1|${join(realAppRoot, 'bin', 'cli.js')} --version\n`)
     } finally {
       await rm(root, { recursive: true })
     }
