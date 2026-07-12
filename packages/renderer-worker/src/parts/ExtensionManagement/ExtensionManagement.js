@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
@@ -122,4 +123,8 @@ export const getWorkingExtensions = async () => {
 export const getExtensionsEtag = async () => {
   const etag = await SharedProcess.invoke('ExtensionManagement.getExtensionsEtag')
   return etag
+}
+
+export const getRunningExtensions = async () => {
+  return ExtensionManagementWorker.invoke('Extensions.getRunningExtensions', AssetDir.assetDir, Platform.getPlatform())
 }

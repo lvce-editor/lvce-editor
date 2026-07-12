@@ -1,0 +1,38 @@
+.RunningExtensions {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  margin: 0;
+  overflow: auto;
+  padding: 16px;
+}
+
+.RunningExtension {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.RunningExtensionIcon {
+  flex: none;
+  height: 32px;
+  width: 32px;
+}
+
+.RunningExtensionDetails {
+  min-width: 0;
+}
+
+.RunningExtensionTitle {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+}
+
+.RunningExtensionId,
+.RunningExtensionActivationTime,
+.RunningExtensionsEmpty {
+  color: var(--DescriptionForeground, rgba(156, 162, 160, 0.7));
+}

@@ -1,0 +1,26 @@
+import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
+import type { RunningExtensionsState } from './ViewletRunningExtensionsTypes.ts'
+
+export const create = (uid: number, uri: string, x: number, y: number, width: number, height: number): RunningExtensionsState => {
+  return {
+    commands: [],
+    height,
+    uid,
+    uri,
+    width,
+    x,
+    y,
+  }
+}
+
+export const loadContent = async (state: RunningExtensionsState): Promise<RunningExtensionsState> => {
+  const { height, uid, uri, width, x, y } = state
+  await RunningExtensionsViewWorker.invoke('RunningExtensions.create', uid, uri, x, y, width, height)
+  await RunningExtensionsViewWorker.invoke('RunningExtensions.loadContent', uid)
+  const diffResult = await RunningExtensionsViewWorker.invoke('RunningExtensions.diff2', uid)
+  const commands = await RunningExtensionsViewWorker.invoke('RunningExtensions.render2', uid, diffResult)
+  return {
+    ...state,
+    commands,
+  }
+}

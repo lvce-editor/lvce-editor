@@ -9,6 +9,7 @@ export const Commands = {
   getExtension: ExtensionManagement.getExtension2,
   getExtensions: ExtensionManagement.getAllExtensions,
   getExtensionsEtag: ExtensionManagement.getExtensionsEtag,
+  getRunningExtensions: ExtensionManagement.getRunningExtensions,
   handleExtensionStatusUpdate: ExtensionManagement.handleExtensionStatusUpdate,
   handleViewContextChange: ExtensionManagement.handleViewContextChange,
   showViewContextMenu: ExtensionManagement.showViewContextMenu,
