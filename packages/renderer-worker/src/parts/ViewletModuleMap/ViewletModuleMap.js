@@ -42,6 +42,7 @@ export const map = {
   [ViewletModuleId.QuickPick]: () => import('../ViewletQuickPick/ViewletQuickPick.ipc.js'),
   [ViewletModuleId.References]: () => import('../ViewletReferences/ViewletReferences.ipc.js'),
   [ViewletModuleId.RunAndDebug]: () => import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js'),
+  [ViewletModuleId.RunningExtensions]: () => import('../ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts'),
   [ViewletModuleId.ScreenCapture]: () => import('../ViewletScreenCapture/ViewletScreenCapture.ipc.js'),
   [ViewletModuleId.Search]: () => import('../ViewletSearch/ViewletSearch.ipc.ts'),
   [ViewletModuleId.Settings]: () => import('../ViewletSettings/ViewletSettings.ipc.js'),

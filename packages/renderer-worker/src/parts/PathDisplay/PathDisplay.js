@@ -27,6 +27,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('process-explorer://')) {
     return 'Process Explorer'
   }
+  if (uri.startsWith('running-extensions://')) {
+    return 'Running Extensions'
+  }
   return Workspace.pathBaseName(uri)
 }
 
@@ -44,6 +47,9 @@ export const getFileIcon = (uri) => {
   }
   if (uri.startsWith('process-explorer://')) {
     return `MaskIcon${Icon.DebugAlt2}`
+  }
+  if (uri.startsWith('running-extensions://')) {
+    return `MaskIcon${Icon.Extensions}`
   }
   const baseName = Workspace.pathBaseName(uri)
   const icon = IconTheme.getFileIcon({ name: baseName })
