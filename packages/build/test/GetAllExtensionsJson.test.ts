@@ -13,3 +13,12 @@ test('marks bundled extensions as builtin', async () => {
     path: '/test-prefix/test-commit/extensions/builtin.theme-ayu',
   })
 })
+
+test('excludes extensions that are not web compatible', async () => {
+  const extensions = await getAllExtensionsJson({
+    commitHash: 'test-commit',
+    pathPrefix: '/test-prefix',
+  })
+
+  expect(extensions.some((item) => item.id === 'builtin.git')).toBe(false)
+})

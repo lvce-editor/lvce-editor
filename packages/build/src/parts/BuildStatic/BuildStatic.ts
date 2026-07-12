@@ -11,6 +11,7 @@ import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetAllExtensionsJson from '../GetAllExtensionsJson/GetAllExtensionsJson.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
+import { isWebCompatibleExtension } from '../IsWebCompatibleExtension/IsWebCompatibleExtension.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Mkdir from '../Mkdir/Mkdir.ts'
 import * as Path from '../Path/Path.ts'
@@ -374,6 +375,9 @@ const copyWebOtherExtensions = async ({ commitHash, pathPrefix }) => {
         continue
       }
       throw error
+    }
+    if (!isWebCompatibleExtension(manifest)) {
+      continue
     }
     const isLanguageBasics = extension.startsWith('builtin.language-basics')
     if (!manifest.browser && !isLanguageBasics) {

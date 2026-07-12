@@ -1,6 +1,7 @@
 import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
+import { isWebCompatibleExtension } from '../IsWebCompatibleExtension/IsWebCompatibleExtension.ts'
 import * as Path from '../Path/Path.ts'
 
 interface GetAllExtensionsJsonOptions {
@@ -15,6 +16,9 @@ export const getAllExtensionsJson = async ({ pathPrefix, commitHash }: GetAllExt
   for (const extension of extensions) {
     const absolutePath = join(extensionPath, extension, 'extension.json')
     const content = await JsonFile.readJson(absolutePath)
+    if (!isWebCompatibleExtension(content)) {
+      continue
+    }
     allContent.push({
       ...content,
       builtin: true,
