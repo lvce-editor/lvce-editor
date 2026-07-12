@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if command -v readlink >/dev/null 2>&1; then
+  CLI_PATH=$(readlink -f "$0")
+else
+  CLI_PATH=$0
+fi
+
+APP_ROOT=$(CDPATH= cd -- "$(dirname -- "$CLI_PATH")/.." && pwd)
+ELECTRON_ROOT=$(CDPATH= cd -- "$APP_ROOT/../.." && pwd)
+
+ELECTRON_RUN_AS_NODE=1 exec "$ELECTRON_ROOT/@@APPLICATION_NAME@@" "$APP_ROOT/bin/cli.js" "$@"
