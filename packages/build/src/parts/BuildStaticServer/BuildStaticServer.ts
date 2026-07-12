@@ -11,6 +11,10 @@ import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 
 const copyStaticFiles = async ({ commitHash }) => {
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: `packages/build/.tmp/server/static-server/static/${commitHash}/LICENSE`,
+  })
   await Copy.copy({
     from: 'static/config',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/config`,

@@ -8,4 +8,5 @@ test('getModule - not found', () => {
 
 test('getModule', () => {
   expect(ModuleMap.getModuleId('About.showAbout')).toBe(ModuleId.About)
+  expect(ModuleMap.getModuleId('License.openLicense')).toBe(ModuleId.License)
 })
