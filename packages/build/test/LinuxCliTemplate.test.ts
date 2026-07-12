@@ -6,6 +6,7 @@ import { join } from 'node:path'
 import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
+const testPosix = process.platform === 'win32' ? test.skip : test
 
 const readTemplate = async (name: string) => {
   const url = new URL(`../src/parts/Template/template_${name}.txt`, import.meta.url)
@@ -20,7 +21,7 @@ describe('linux cli templates', () => {
     expect(launcher).toContain('"$APP_ROOT/bin/cli.js" "$@"')
   })
 
-  test('resolves the native executable when invoked through a symlink', async () => {
+  testPosix('resolves the native executable when invoked through a symlink', async () => {
     const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-'))
     try {
       const appRoot = join(root, 'resources', 'app')
