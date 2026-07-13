@@ -35,6 +35,32 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const preferredPreviewWidth = previewWidth > 0 ? previewWidth : windowWidth / 2
   const availableWidth = previewVisible ? Math.max(0, windowWidth - Math.max(previewMinWidth, preferredPreviewWidth)) : windowWidth
 
+  if (source.sideBarFocusMode) {
+    const contentTop = titleBarVisible ? titleBarHeight : 0
+    const contentBottom = statusBarVisible ? windowHeight - statusBarHeight : windowHeight
+    return {
+      ...source,
+      activityBarSashVisible: false,
+      activityBarVisible: false,
+      activityBarWidth: 0,
+      mainVisible: false,
+      panelSashVisible: false,
+      panelVisible: false,
+      previewSashVisible: false,
+      previewVisible: false,
+      secondarySideBarVisible: false,
+      sideBarHeight: Math.max(0, contentBottom - contentTop),
+      sideBarLeft: 0,
+      sideBarSashVisible: false,
+      sideBarTop: contentTop,
+      sideBarVisible: true,
+      sideBarWidth: windowWidth,
+      statusBarTop: contentBottom,
+      statusBarWidth: windowWidth,
+      titleBarWidth: windowWidth,
+    }
+  }
+
   if (sideBarLocation === SideBarLocationType.Right) {
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0

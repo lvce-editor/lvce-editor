@@ -1,3 +1,17 @@
+export interface SideBarFocusModeLayoutStateSnapshot {
+  readonly activityBarSashVisible: boolean
+  readonly activityBarVisible: boolean
+  readonly mainVisible: boolean
+  readonly panelSashVisible: boolean
+  readonly panelVisible: boolean
+  readonly previewSashVisible: boolean
+  readonly previewVisible: boolean
+  readonly secondarySideBarVisible: boolean
+  readonly sideBarSashVisible: boolean
+  readonly sideBarVisible: boolean
+  readonly sideBarWidth: number
+}
+
 export interface LayoutState {
   readonly activityBarHeight: number
   readonly activityBarId: number
@@ -64,6 +78,8 @@ export interface LayoutState {
   readonly sideBarSashVisible: boolean
   readonly sideBarTop: number
   readonly sideBarView: string
+  readonly sideBarFocusMode: boolean
+  readonly sideBarFocusModeLayout: SideBarFocusModeLayoutStateSnapshot | undefined
   readonly sideBarVisible: boolean
   readonly sideBarWidth: number
   readonly secondarySideBarHeight: number
