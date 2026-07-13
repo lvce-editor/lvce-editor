@@ -36,3 +36,21 @@ export const loadContent = async (state: RunningExtensionsState): Promise<Runnin
     commands,
   }
 }
+
+export const menus = []
+
+export const getMenus = async () => {
+  try {
+    const ids = await RunningExtensionsViewWorker.invoke('RunningExtensions.getMenuEntryIds')
+    return ids.map((id) => {
+      return {
+        id,
+        async getMenuEntries(...args) {
+          return RunningExtensionsViewWorker.invoke('RunningExtensions.getMenuEntries', ...args)
+        },
+      }
+    })
+  } catch {
+    return []
+  }
+}
