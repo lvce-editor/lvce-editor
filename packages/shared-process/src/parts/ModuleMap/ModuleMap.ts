@@ -270,6 +270,7 @@ export const getModuleId = (commandId: any): any => {
     case 'Platform.getCacheUri':
     case 'Platform.getCommit':
     case 'Platform.getConfigDir':
+    case 'Platform.getConfigJsonPath':
     case 'Platform.getDataDir':
     case 'Platform.getDate':
     case 'Platform.getDisabledExtensionsPath':
