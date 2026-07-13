@@ -49,6 +49,7 @@ export interface LayoutState {
   readonly previewSashVisible: boolean
   readonly previewTop: number
   readonly previewUri: string
+  readonly previewViewletId: string
   readonly previewVisible: boolean
   readonly previewWidth: number
   readonly restore: boolean

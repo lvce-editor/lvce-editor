@@ -189,6 +189,7 @@ export const create = (id: number): LayoutState => {
     commands: [],
     sashId: SashType.None,
     previewUri: '',
+    previewViewletId: ViewletModuleId.Preview,
     panelView: ViewletModuleId.Problems,
     initial: true,
   }
@@ -200,6 +201,7 @@ export const saveState = (state: LayoutState) => {
     panelHeight,
     panelVisible,
     previewUri,
+    previewViewletId,
     previewVisible,
     previewWidth,
     sideBarLocation,
@@ -215,6 +217,7 @@ export const saveState = (state: LayoutState) => {
     panelHeight,
     panelVisible,
     previewUri,
+    previewViewletId,
     previewVisible,
     previewWidth,
     sideBarLocation,
@@ -283,6 +286,13 @@ const getSavedSecondarySideBarView = (savedState) => {
   return ViewletModuleId.Chat
 }
 
+const getSavedPreviewViewletId = (savedState) => {
+  if (savedState?.previewViewletId === ViewletModuleId.SimpleBrowser) {
+    return ViewletModuleId.SimpleBrowser
+  }
+  return ViewletModuleId.Preview
+}
+
 export const loadContent = (state: LayoutState, savedState: any): LayoutState => {
   const { Layout } = savedState
   const { bounds } = Layout
@@ -295,6 +305,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const savedView = getSavedSideBarView(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
   const previewUri = stateToRestore?.previewUri || ''
+  const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -332,6 +343,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     panelSashVisible: true,
     previewSashVisible: previewVisible,
     previewUri,
+    previewViewletId,
     restore,
     sideBarLocation,
     sideBarSashVisible: true,
@@ -364,6 +376,7 @@ const show = async (state: LayoutState, module, currentViewletId) => {
   const height = intermediateState[kHeight]
   const uid = state.uid
   const childUid = Id.create()
+  const viewletModuleId = module === LayoutModules.Preview ? state.previewViewletId : moduleId
   let uri = ''
   if (module === LayoutModules.Preview && state.previewUri) {
     uri = state.previewUri
@@ -372,7 +385,7 @@ const show = async (state: LayoutState, module, currentViewletId) => {
     disposed: false,
     getModule: ViewletModule.load,
     args: module === LayoutModules.SideBar && currentViewletId ? [currentViewletId] : [],
-    id: moduleId,
+    id: viewletModuleId,
     type: 0,
     // @ts-ignore
     uri,
@@ -477,15 +490,22 @@ export const showSideBar = async (state: LayoutState, moduleId = state.sideBarVi
 
 const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState; commands: any }> => {
   const { kVisible, moduleId } = module
+  const isPreview = module === LayoutModules.Preview
+  const instanceId = isPreview ? state.previewId : moduleId
+  const storageId = isPreview ? state.previewViewletId : moduleId
   const newState = getPoints({
     ...state,
     [kVisible]: false,
-    ...(module === LayoutModules.Preview ? { previewSashVisible: false } : {}),
+    ...(isPreview ? { previewId: -1, previewSashVisible: false } : {}),
   })
   // TODO save state to local storage after rending (in background)
-  await SaveState.saveViewletState(moduleId)
+  if (isPreview) {
+    await SaveState.saveViewletStateWithStorageId(instanceId, storageId)
+  } else {
+    await SaveState.saveViewletState(instanceId)
+  }
   // TODO also resize other viewlets if necessary
-  const commands = Viewlet.disposeFunctional(moduleId)
+  const commands = Viewlet.disposeFunctional(instanceId)
   const resizeCommands = await getResizeCommands(state, newState)
   commands.push(...resizeCommands)
 
@@ -690,15 +710,64 @@ export const toggleStatusBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.StatusBar)
 }
 
-export const showPreview = async (state: LayoutState, uri: string) => {
+const getPreviewViewletId = (uri: string) => {
+  if (uri.startsWith('simple-browser://')) {
+    return ViewletModuleId.SimpleBrowser
+  }
+  return ViewletModuleId.Preview
+}
+
+const replacePreview = async (state: LayoutState, uri: string, previewViewletId: string): Promise<LayoutStateResult> => {
+  await SaveState.saveViewletStateWithStorageId(state.previewId, state.previewViewletId)
+  const commands = Viewlet.disposeFunctional(state.previewId)
+  const childUid = Id.create()
+  const newState = {
+    ...state,
+    previewId: childUid,
+    previewUri: uri,
+    previewViewletId,
+  }
+  ViewletStates.setState(state.uid, newState)
+  const viewlet = {
+    disposed: false,
+    getModule: ViewletModule.load,
+    args: [],
+    id: previewViewletId,
+    type: 0,
+    uri,
+    show: false,
+    focus: false,
+    x: state.previewLeft,
+    y: state.previewTop,
+    width: state.previewWidth,
+    height: state.previewHeight,
+    parentUid: state.uid,
+    uid: childUid,
+  }
+  const loadCommands = await ViewletManager.load(viewlet, false, true, undefined)
+  commands.push(...loadCommands)
+  return {
+    newState,
+    commands,
+  }
+}
+
+export const showPreview = async (state: LayoutState, uri: string = state.previewUri) => {
   const { previewVisible, previewId, uid } = state
+  const previewViewletId = getPreviewViewletId(uri)
 
   if (previewVisible && previewId !== -1) {
-    await Command.execute('Preview.setUri', uri)
+    if (state.previewViewletId !== previewViewletId) {
+      return replacePreview(state, uri, previewViewletId)
+    }
+    if (previewViewletId === ViewletModuleId.Preview) {
+      await Command.execute('Preview.setUri', uri)
+    }
     return {
       newState: {
         ...state,
         previewUri: uri,
+        previewViewletId,
       },
       commands: [],
     }
@@ -706,6 +775,8 @@ export const showPreview = async (state: LayoutState, uri: string) => {
   const partialNewState = {
     ...state,
     previewUri: uri,
+    previewViewletId,
+    ...(previewVisible ? { previewVisible: false } : {}),
   }
   ViewletStates.setState(uid, partialNewState)
   // @ts-ignore
@@ -720,8 +791,11 @@ export const hidePreview = (state: LayoutState) => {
   return hide(state, LayoutModules.Preview)
 }
 
-export const togglePreview = (state: LayoutState, uri: string) => {
-  return toggle({ ...state, previewUri: uri }, LayoutModules.Preview)
+export const togglePreview = (state: LayoutState, uri: string = state.previewUri) => {
+  if (state.previewVisible) {
+    return hidePreview(state)
+  }
+  return showPreview(state, uri)
 }
 
 export const showTitleBar = (state: LayoutState) => {
@@ -853,6 +927,8 @@ const loadIfVisible = async (
 }> => {
   try {
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId, kReady } = module
+    const viewletModuleId = module === LayoutModules.Preview ? state.previewViewletId : moduleId
+    const uri = module === LayoutModules.Preview ? state.previewUri : ''
     const visible = state[kVisible]
     const x = state[kLeft]
     const y = state[kTop]
@@ -867,10 +943,10 @@ const loadIfVisible = async (
       commands = await ViewletManager.load(
         {
           getModule: ViewletModule.load,
-          id: moduleId,
+          id: viewletModuleId,
           type: 0,
           // @ts-ignore
-          uri: '',
+          uri,
           show: false,
           focus: false,
           x,
@@ -1210,7 +1286,8 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
   const individualCommands = await Promise.all(
     modules.map(async (module) => {
       const { kTop, kLeft, kWidth, kHeight, moduleId } = module
-      const instance = ViewletStates.getInstance(moduleId)
+      const instanceId = module === LayoutModules.Preview ? newState.previewId : moduleId
+      const instance = ViewletStates.getInstance(instanceId)
       if (!instance) {
         return []
       }
@@ -1279,11 +1356,12 @@ const getFocusChangeCommands = (isFocused) => {
   return commands
 }
 
-const showAsync = async (uid, points, module) => {
+const showAsync = async (uid, points, module, viewletUid) => {
   try {
     Assert.number(uid)
-    const { moduleId, kTop, kLeft, kWidth, kHeight } = module
-    const viewletUid = Id.create()
+    const { moduleId: defaultModuleId, kTop, kLeft, kWidth, kHeight } = module
+    const moduleId = module === LayoutModules.Preview ? points.previewViewletId : defaultModuleId
+    const uri = module === LayoutModules.Preview ? points.previewUri : ''
     const commands = await ViewletManager.load(
       {
         getModule: ViewletModule.load,
@@ -1291,8 +1369,7 @@ const showAsync = async (uid, points, module) => {
         // @ts-ignore
         uid: viewletUid,
         type: 0,
-        // @ts-ignore
-        uri: '',
+        uri,
         show: false,
         focus: false,
         x: points[kLeft],
@@ -1318,7 +1395,8 @@ const showAsync = async (uid, points, module) => {
 
 const showPlaceholder = (uid, points, module) => {
   Assert.number(uid)
-  const { moduleId, kTop, kLeft, kWidth, kHeight } = module
+  const { moduleId: defaultModuleId, kTop, kLeft, kWidth, kHeight } = module
+  const moduleId = module === LayoutModules.Preview ? points.previewViewletId : defaultModuleId
   return [
     'Viewlet.createPlaceholder',
     /* id */ moduleId,
@@ -1343,25 +1421,34 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
     const { kVisible, moduleId } = module
     if (state[kVisible] !== newState[kVisible]) {
       if (newState[kVisible]) {
-        showAsync(uid, newState, module) // TODO avoid side effect
+        const viewletUid = Id.create()
+        showAsync(uid, newState, module, viewletUid) // TODO avoid side effect
         const commands = showPlaceholder(uid, newState, module)
         // @ts-ignore
         allCommands.push(commands)
         if (moduleId === ViewletModuleId.Preview) {
           newState = {
             ...newState,
+            previewId: viewletUid,
             previewVisible: true,
             previewSashVisible: true,
           }
         }
       } else {
-        await SaveState.saveViewletState(moduleId)
-        const commands = Viewlet.disposeFunctional(moduleId)
+        const instanceId = module === LayoutModules.Preview ? state.previewId : moduleId
+        const storageId = module === LayoutModules.Preview ? state.previewViewletId : moduleId
+        if (module === LayoutModules.Preview) {
+          await SaveState.saveViewletStateWithStorageId(instanceId, storageId)
+        } else {
+          await SaveState.saveViewletState(instanceId)
+        }
+        const commands = Viewlet.disposeFunctional(instanceId)
         // @ts-ignore
         allCommands.push(...commands)
         if (moduleId === ViewletModuleId.Preview) {
           newState = {
             ...newState,
+            previewId: -1,
             previewVisible: false,
             previewSashVisible: false,
           }
