@@ -29,6 +29,7 @@ export interface ExtensionView {
   readonly iframe?: ExtensionViewIframe
   readonly kind?: string
   readonly name?: string
+  readonly showSideBarHeader?: boolean
   readonly title: string
 }
 

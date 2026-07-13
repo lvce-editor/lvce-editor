@@ -8,6 +8,12 @@ jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', () => {
+  return {
+    getExtensionView: jest.fn(() => undefined),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
     invoke: jest.fn(() => {

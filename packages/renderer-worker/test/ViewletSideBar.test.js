@@ -14,6 +14,12 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', () => {
+  return {
+    getExtensionView: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
   return {
     saveViewletState: jest.fn(() => undefined),
@@ -27,6 +33,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
 })
 
 const Command = await import('../src/parts/Command/Command.js')
+const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
@@ -40,6 +47,7 @@ beforeEach(() => {
   RendererProcess.invoke.mockResolvedValue(undefined)
   SaveState.saveViewletState.mockResolvedValue(undefined)
   ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'Explorer', 2, true]])
+  GetExtensionViews.getExtensionView.mockResolvedValue(undefined)
 })
 
 test.skip('openViewlet', async () => {
@@ -144,6 +152,37 @@ test('handleSideBarViewletChange uses child title', async () => {
   expect(newState).toMatchObject({
     currentViewletId: 'Explorer',
     title: 'workspace-name',
+  })
+})
+
+test('handleSideBarViewletChange gives an opted-out extension view the full sidebar', async () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+  GetExtensionViews.getExtensionView.mockResolvedValue({
+    id: 'chat2.views.chat',
+    showSideBarHeader: false,
+  })
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.createFunctionalRoot', 'ExtensionView', 2, true],
+    ['Viewlet.send', 1, 'setActionsDom', ['chat-actions']],
+  ])
+
+  const newState = await ViewletSideBar.handleSideBarViewletChange(state, 'chat2.views.chat')
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      height: 500,
+      id: 'ExtensionView',
+      uri: 'chat2.views.chat',
+      y: 0,
+    }),
+    false,
+    true,
+    undefined,
+  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.createFunctionalRoot', 'ExtensionView', 2, true]])
+  expect(newState).toMatchObject({
+    actionsUid: -1,
+    titleAreaHeight: 0,
   })
 })
 
