@@ -1,9 +1,20 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+let shouldFail = false
+
 jest.unstable_mockModule('../src/parts/RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts', () => ({
   invoke: jest.fn(async (command) => {
+    if (shouldFail) {
+      throw new Error('Failed to load worker')
+    }
     if (command === 'RunningExtensions.diff2' || command === 'RunningExtensions.render2') {
       return []
+    }
+    if (command === 'RunningExtensions.getMenuEntryIds') {
+      return [32]
+    }
+    if (command === 'RunningExtensions.getMenuEntries') {
+      return [{ command: 'RunningExtensions.copyId', id: 'copy-id', label: 'Copy id (test.extension)' }]
     }
     return undefined
   }),
@@ -22,6 +33,7 @@ const ViewletRunningExtensions = await import('../src/parts/ViewletRunningExtens
 
 beforeEach(() => {
   jest.clearAllMocks()
+  shouldFail = false
 })
 
 test('loadContent passes the platform and asset directory to the view worker', async () => {
@@ -41,4 +53,21 @@ test('loadContent passes the platform and asset directory to the view worker', a
     2,
     '/test-assets',
   )
+})
+
+test('getMenus provides running extensions menu entries', async () => {
+  const menus = await ViewletRunningExtensions.getMenus()
+
+  expect(menus).toHaveLength(1)
+  expect(menus[0].id).toBe(32)
+
+  const entries = await menus[0].getMenuEntries(0)
+  expect(entries).toEqual([{ command: 'RunningExtensions.copyId', id: 'copy-id', label: 'Copy id (test.extension)' }])
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenLastCalledWith('RunningExtensions.getMenuEntries', 0)
+})
+
+test('getMenus returns an empty array when the view worker is unavailable', async () => {
+  shouldFail = true
+
+  await expect(ViewletRunningExtensions.getMenus()).resolves.toEqual([])
 })
