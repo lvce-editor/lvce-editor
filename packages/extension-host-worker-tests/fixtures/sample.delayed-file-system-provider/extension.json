@@ -1,0 +1,9 @@
+{
+  "browser": "main.js",
+  "activation": ["onFileSystem:delayed-files"],
+  "fileSystems": [
+    {
+      "scheme": "delayed-files"
+    }
+  ]
+}

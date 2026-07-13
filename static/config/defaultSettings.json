@@ -50,6 +50,7 @@
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",
   "workbench.activityBar.visible": true,
+  "workbench.editor.showTabsWhileLoading": false,
   "workbench.sideBar.visible": true,
   "workbench.sideBarLocation": "right",
   "workbench.saveStateOnVisibilityChange": true,
