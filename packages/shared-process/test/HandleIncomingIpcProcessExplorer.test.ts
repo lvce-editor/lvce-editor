@@ -1,10 +1,11 @@
-import { expect, jest, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as IpcId from '../src/parts/IpcId/IpcId.js'
 
 const error = new Error('Transfer failed')
 const applyIncomingIpcResponse = jest.fn(async () => error)
 const decreaseRefCount = jest.fn()
 const getModule = jest.fn(() => ({}))
+const isSocket = jest.fn(() => true)
 const handleIncomingIpcWebSocket = jest.fn(async () => ({
   response: {
     method: 'HandleWebSocket.handleWebSocket',
@@ -31,7 +32,7 @@ jest.unstable_mockModule('../src/parts/IsMessagePortMain/IsMessagePortMain.js', 
 }))
 
 jest.unstable_mockModule('../src/parts/IsSocket/IsSocket.js', () => ({
-  isSocket: (): any => true,
+  isSocket,
 }))
 
 jest.unstable_mockModule('../src/parts/ProcessExplorer/ProcessExplorer.js', () => ({
@@ -40,6 +41,10 @@ jest.unstable_mockModule('../src/parts/ProcessExplorer/ProcessExplorer.js', () =
 
 const HandleIncomingIpc = await import('../src/parts/HandleIncomingIpc/HandleIncomingIpc.js')
 
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
 test('handleIncomingIpc - logs forwarding error and decrements process explorer ref count', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
@@ -47,5 +52,24 @@ test('handleIncomingIpc - logs forwarding error and decrements process explorer 
 
   expect(decreaseRefCount).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(error)
+  spy.mockRestore()
+})
+
+test('handleIncomingIpc - ignores an empty object handle', async () => {
+  isSocket.mockReturnValueOnce(false)
+
+  await expect(HandleIncomingIpc.handleIncomingIpc(IpcId.SharedProcess, {}, {})).resolves.toBeUndefined()
+
+  expect(applyIncomingIpcResponse).not.toHaveBeenCalled()
+})
+
+test('handleIncomingIpc - rejects other unexpected handles', async () => {
+  const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  isSocket.mockReturnValueOnce(false)
+
+  await expect(HandleIncomingIpc.handleIncomingIpc(IpcId.SharedProcess, { unexpected: true }, {})).rejects.toThrow(
+    'Unexpected ipc handle: Object',
+  )
+
   spy.mockRestore()
 })
