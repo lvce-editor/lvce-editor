@@ -26,13 +26,20 @@ const getIpcAndResponse = (module: any, handle: any, message: any): any => {
   if (IsSocket.isSocket(handle)) {
     return HandleIncomingIpcWebSocket.handleIncomingIpcWebSocket(module, handle, message)
   }
+  if (handle?.constructor === Object && Object.keys(handle).length === 0) {
+    return undefined
+  }
   throw new Error(`Unexpected ipc handle: ${strinfyHandle(handle)}`)
 }
 
 export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): Promise<any> => {
   Assert.number(ipcId)
   const module = HandleIpcModule.getModule(ipcId)
-  const { response, target } = await getIpcAndResponse(module, handle, message)
+  const ipcAndResponse = await getIpcAndResponse(module, handle, message)
+  if (!ipcAndResponse) {
+    return
+  }
+  const { response, target } = ipcAndResponse
   const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
   if (!error) {
     return
