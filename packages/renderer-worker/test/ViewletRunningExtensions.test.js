@@ -30,10 +30,19 @@ jest.unstable_mockModule('../src/parts/AssetDir/AssetDir.js', () => ({
 
 const RunningExtensionsViewWorker = await import('../src/parts/RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts')
 const ViewletRunningExtensions = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ts')
+const ViewletRunningExtensionsName = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsName.ts')
+const ViewletRunningExtensionsRenderTitle = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsRenderTitle.ts')
 
 beforeEach(() => {
   jest.clearAllMocks()
   shouldFail = false
+})
+
+test('provides the side bar name and title', () => {
+  const state = ViewletRunningExtensions.create(1, 'RunningExtensions', 10, 20, 800, 600)
+
+  expect(ViewletRunningExtensionsName.name).toBe('RunningExtensions')
+  expect(ViewletRunningExtensionsRenderTitle.renderTitle.apply(state, state)).toBe('Running Extensions')
 })
 
 test('loadContent passes the platform and asset directory to the view worker', async () => {

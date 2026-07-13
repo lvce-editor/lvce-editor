@@ -1,4 +1,6 @@
 export * from './ViewletRunningExtensions.ts'
 export * from './ViewletRunningExtensionsCommands.ts'
 export * from './ViewletRunningExtensionsCss.ts'
+export * from './ViewletRunningExtensionsName.ts'
 export * from './ViewletRunningExtensionsRender.ts'
+export * from './ViewletRunningExtensionsRenderTitle.ts'
