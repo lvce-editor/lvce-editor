@@ -37,3 +37,22 @@ test('bundleCss does not add filename comment to App.css', async () => {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
+
+test('bundleCss preserves the simple browser preview width', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.ContentArea > .SimpleBrowser {
+  flex: 0 0 var(--PreviewWidth);
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
