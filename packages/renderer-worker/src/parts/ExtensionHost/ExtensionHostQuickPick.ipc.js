@@ -5,4 +5,5 @@ export const name = 'ExtensionHostQuickPick'
 // prettier-ignore
 export const Commands = {
   show: ExtensionHostQuickPick.show,
+  showQuickPick: ExtensionHostQuickPick.showQuickPick,
 }
