@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+.ContentArea > .SimpleBrowser {
+  flex: 0 0 var(--PreviewWidth);
+}
+
 .SimpleBrowserHeader {
   height: 30px;
   width: 100%;
