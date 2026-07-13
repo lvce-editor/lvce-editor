@@ -21,7 +21,7 @@ beforeEach(() => {
 const createDeferred = () => {
   let resolve = () => {}
   const promise = new Promise((resolvePromise) => {
-    resolve = resolvePromise
+    resolve = () => resolvePromise(undefined)
   })
   return {
     promise,
