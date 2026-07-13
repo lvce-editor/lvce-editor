@@ -35,9 +35,16 @@ jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
     },
   }
 })
+jest.unstable_mockModule('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js', () => {
+  return {
+    hide: jest.fn(),
+    show: jest.fn(),
+  }
+})
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 test.skip('focus', () => {
@@ -64,6 +71,7 @@ test('openWidget - once', async () => {
     return []
   })
   await Viewlet.openWidget('QuickPick', ['everything'])
+  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('quick-pick')
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   expect(ViewletManager.load).toHaveBeenCalledWith({
     // @ts-ignore
@@ -76,6 +84,21 @@ test('openWidget - once', async () => {
     uri: 'quickPick://everything',
     args: [['everything']],
   })
+})
+
+test('closeWidget restores Simple Browser after closing Quick Pick', async () => {
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'QuickPick',
+    factory: {},
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+
+  await Viewlet.closeWidget(2)
+
+  expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('quick-pick')
 })
 
 test('openWidget - should not open again when already open', async () => {

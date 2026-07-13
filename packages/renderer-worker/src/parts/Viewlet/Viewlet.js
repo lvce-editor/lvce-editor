@@ -5,6 +5,7 @@ import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -369,7 +370,18 @@ export const openWidget = async (moduleId, ...args) => {
   // TODO send focus changes to renderer process together with other message
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   commands.push(['Viewlet.focus', childUid])
-  await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  const hasSimpleBrowserOverlay = moduleId === ViewletModuleId.QuickPick
+  if (hasSimpleBrowserOverlay) {
+    await SimpleBrowserOverlay.show('quick-pick')
+  }
+  try {
+    await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  } catch (error) {
+    if (hasSimpleBrowserOverlay) {
+      await SimpleBrowserOverlay.hide('quick-pick')
+    }
+    throw error
+  }
 }
 
 export const closeWidget = async (id) => {
@@ -381,10 +393,17 @@ export const closeWidget = async (id) => {
     if (!childInstance) {
       return
     }
+    const hasSimpleBrowserOverlay = childInstance.moduleId === ViewletModuleId.QuickPick
     const child = childInstance.state
     const childUid = child.uid
     const commands = disposeFunctional(childUid)
-    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
+    try {
+      await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
+    } finally {
+      if (hasSimpleBrowserOverlay) {
+        await SimpleBrowserOverlay.hide('quick-pick')
+      }
+    }
     // TODO restore focus
   } catch (error) {
     throw new VError(error, `Failed to close widget ${id}`)

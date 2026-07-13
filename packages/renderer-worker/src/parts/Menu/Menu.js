@@ -1,11 +1,24 @@
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
+import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 
 export const show = async (x, y, menuId, ...args) => {
-  await MenuWorker.invoke('Menu.show', menuId, x, y, ...args)
+  await SimpleBrowserOverlay.show('menu')
+  try {
+    await MenuWorker.invoke('Menu.show', menuId, x, y, ...args)
+  } catch (error) {
+    await SimpleBrowserOverlay.hide('menu')
+    throw error
+  }
 }
 
 export const show2 = async (uid, menuId, x, y, ...args) => {
-  await MenuWorker.invoke('Menu.show2', uid, menuId, x, y, ...args)
+  await SimpleBrowserOverlay.show('menu')
+  try {
+    await MenuWorker.invoke('Menu.show2', uid, menuId, x, y, ...args)
+  } catch (error) {
+    await SimpleBrowserOverlay.hide('menu')
+    throw error
+  }
 }
 
 export const closeSubMenu = async () => {
@@ -29,7 +42,11 @@ export const selectCurrent = async (level) => {
 }
 
 export const hide = async (restoreFocus = true) => {
-  await MenuWorker.invoke('Menu.hide', restoreFocus)
+  try {
+    await MenuWorker.invoke('Menu.hide', restoreFocus)
+  } finally {
+    await SimpleBrowserOverlay.hide('menu')
+  }
 }
 
 // TODO difference between focusing with mouse or keyboard

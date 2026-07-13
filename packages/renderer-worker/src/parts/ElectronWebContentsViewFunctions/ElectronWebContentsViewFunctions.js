@@ -38,6 +38,10 @@ export const cancelNavigation = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.cancelNavigation', id)
 }
 
+export const capturePage = (id) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.capturePage', id)
+}
+
 export const show = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.show', id)
 }

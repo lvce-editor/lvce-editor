@@ -30,6 +30,8 @@ export const create = (id, uri, x, y, width, height) => {
     canGoBack: true,
     isLoading: false,
     hasSuggestionsOverlay: false,
+    overlayIds: [],
+    snapshot: '',
     suggestionsEnabled: false,
     shortcuts: [],
   }
@@ -137,6 +139,54 @@ export const show = async (state) => {
 export const hide = async (state) => {
   const { browserViewId } = state
   await ElectronWebContentsViewFunctions.hide(browserViewId)
+}
+
+export const showOverlay = async (state, overlayId) => {
+  if (state.overlayIds.includes(overlayId)) {
+    return state
+  }
+  const overlayIds = [...state.overlayIds, overlayId]
+  if (state.snapshot) {
+    return {
+      ...state,
+      overlayIds,
+    }
+  }
+  try {
+    const snapshot = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
+    await ElectronWebContentsViewFunctions.hide(state.browserViewId)
+    return {
+      ...state,
+      overlayIds,
+      snapshot,
+    }
+  } catch (error) {
+    console.error('[renderer-worker] Failed to capture Simple Browser page', error)
+    return state
+  }
+}
+
+export const hideOverlay = async (state, overlayId) => {
+  if (!state.overlayIds.includes(overlayId)) {
+    return state
+  }
+  const overlayIds = state.overlayIds.filter((id) => id !== overlayId)
+  if (overlayIds.length > 0) {
+    return {
+      ...state,
+      overlayIds,
+    }
+  }
+  try {
+    await ElectronWebContentsViewFunctions.show(state.browserViewId)
+  } catch (error) {
+    console.error('[renderer-worker] Failed to restore Simple Browser page', error)
+  }
+  return {
+    ...state,
+    overlayIds,
+    snapshot: '',
+  }
 }
 
 export const handleInput = async (state, value) => {
