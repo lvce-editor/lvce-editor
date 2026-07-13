@@ -26,3 +26,13 @@
   height: 100%;
   contain: strict;
 }
+
+.SimpleBrowserSnapshot {
+  contain: strict;
+  flex: 1;
+  filter: brightness(0.8);
+  min-height: 0;
+  object-fit: fill;
+  pointer-events: none;
+  width: 100%;
+}
