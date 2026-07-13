@@ -12,17 +12,25 @@ const getStorageKey = (viewletId) => {
   return GetViewletStorageKey.getViewletStorageKey(viewletId, Workspace.getWorkspacePath())
 }
 
-export const saveViewletState = async (id) => {
-  const instance = ViewletStates.getInstance(id)
+const saveViewletStateAs = async (instanceId, storageId) => {
+  const instance = ViewletStates.getInstance(instanceId)
   const savedState = await SerializeViewlet.serializeInstance(instance)
   if (savedState === undefined) {
     return
   }
-  await InstanceStorage.setJson(getStorageKey(id), savedState)
+  await InstanceStorage.setJson(getStorageKey(storageId), savedState)
   if (instance && instance.factory.saveChildState) {
     const childIds = instance.factory.saveChildState(instance.state)
     await Promise.all(childIds.map(saveViewletState))
   }
+}
+
+export const saveViewletState = async (id) => {
+  return saveViewletStateAs(id, id)
+}
+
+export const saveViewletStateWithStorageId = async (instanceId, storageId) => {
+  return saveViewletStateAs(instanceId, storageId)
 }
 
 export const hydrate = async () => {

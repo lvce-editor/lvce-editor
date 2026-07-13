@@ -37,6 +37,12 @@ test('saves layout state under its global key', async () => {
   expect(InstanceStorage.setJson).toHaveBeenCalledWith('Layout', { value: 1 })
 })
 
+test('saves an instance under a different storage id', async () => {
+  await SaveState.saveViewletStateWithStorageId(7, 'SimpleBrowser')
+
+  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:%2Fworkspace:SimpleBrowser', { value: 1 })
+})
+
 test('loads viewlet state from the current workspace key', async () => {
   await SaveState.getSavedViewletState('Main')
 

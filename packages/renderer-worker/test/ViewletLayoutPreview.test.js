@@ -3,6 +3,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
   return {
     saveViewletState: jest.fn(() => undefined),
+    saveViewletStateWithStorageId: jest.fn(() => undefined),
   }
 })
 
@@ -39,6 +40,8 @@ beforeEach(() => {
   // @ts-ignore
   SaveState.saveViewletState.mockResolvedValue(undefined)
   // @ts-ignore
+  SaveState.saveViewletStateWithStorageId.mockResolvedValue(undefined)
+  // @ts-ignore
   Viewlet.disposeFunctional.mockReturnValue([])
   // @ts-ignore
   Viewlet.resize.mockResolvedValue([])
@@ -69,7 +72,37 @@ test('loadContent enables preview sash when preview is restored', () => {
   expect(result).toMatchObject({
     previewVisible: true,
     previewSashVisible: true,
+    previewViewletId: 'Preview',
   })
+})
+
+test('loadPreviewIfVisible restores the simple browser preview', async () => {
+  const state = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 400,
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockReturnValue(state)
+
+  await ViewletLayout.loadPreviewIfVisible(state)
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'SimpleBrowser',
+      uri: 'simple-browser://',
+    }),
+    false,
+    true,
+    undefined,
+  )
 })
 
 test('loadContent ignores saved layout when restore is disabled', () => {
@@ -116,6 +149,73 @@ test('showPreview enables preview sash', async () => {
     previewVisible: true,
     previewSashVisible: true,
     previewUri: 'file:///test.html',
+    previewViewletId: 'Preview',
+  })
+})
+
+test('showPreview opens the simple browser in the preview area', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.showPreview(state, 'simple-browser://')
+
+  expect(result.newState).toMatchObject({
+    previewVisible: true,
+    previewSashVisible: true,
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+  })
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'SimpleBrowser',
+      uri: 'simple-browser://',
+    }),
+    false,
+    true,
+    undefined,
+  )
+})
+
+test('showPreview replaces an open file preview with the simple browser', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    previewHeight: 600,
+    previewId: 7,
+    previewLeft: 600,
+    previewTop: 35,
+    previewUri: 'file:///test.html',
+    previewVisible: true,
+    previewWidth: 600,
+  }
+
+  const result = await ViewletLayout.showPreview(state, 'simple-browser://')
+
+  expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(7, 'Preview')
+  expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(7)
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'SimpleBrowser',
+      uri: 'simple-browser://',
+      x: 600,
+      y: 35,
+      width: 600,
+      height: 600,
+    }),
+    false,
+    true,
+    undefined,
+  )
+  expect(result.newState).toMatchObject({
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
   })
 })
 
@@ -136,7 +236,10 @@ test('hidePreview disables preview sash', async () => {
   const result = await ViewletLayout.hidePreview(state)
 
   expect(result.newState).toMatchObject({
+    previewId: -1,
     previewVisible: false,
     previewSashVisible: false,
   })
+  expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(7, 'Preview')
+  expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(7)
 })

@@ -57,3 +57,13 @@ test('getQuickPickMenuEntries includes extension management worker latency comma
     label: 'Developer: Measure Extension Management Worker Latency',
   })
 })
+
+test('getQuickPickMenuEntries includes simple browser preview command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Layout.showPreview',
+    label: 'Simple Browser: Open in Preview Area',
+    args: ['simple-browser://'],
+  })
+})

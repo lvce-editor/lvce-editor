@@ -451,6 +451,11 @@ export const getQuickPickMenuEntries = () => {
       args: ['simple-browser://'],
     },
     {
+      id: 'Layout.showPreview',
+      label: 'Simple Browser: Open in Preview Area',
+      args: ['simple-browser://'],
+    },
+    {
       id: 'SimpleBrowser.openDevtools',
       label: 'Simple Browser: Open Dev Devtools',
     },
