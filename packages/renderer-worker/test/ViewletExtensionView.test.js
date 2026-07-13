@@ -127,6 +127,27 @@ test('sidebar dom uses custom view title instead of id', () => {
   })
 })
 
+test('sidebar dom omits the header when the view opts out', () => {
+  const dom = GetSideBarDom.getSideBarDom({
+    childUid: 2,
+    currentViewletId: 'chat2.views.chat',
+    title: 'Chat 2',
+    titleAreaHeight: 0,
+  })
+
+  expect(dom).toEqual([
+    {
+      childCount: 1,
+      className: 'SideBar',
+      type: 4,
+    },
+    {
+      type: 100,
+      uid: 2,
+    },
+  ])
+})
+
 test('rerender requests virtual dom patches from extension management worker', async () => {
   const patches = [['setText', 0, 'updated']]
   const invoke = /** @type {any} */ (ExtensionManagementWorker.invoke)

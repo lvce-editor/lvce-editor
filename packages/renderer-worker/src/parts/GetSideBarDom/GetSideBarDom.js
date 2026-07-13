@@ -41,13 +41,14 @@ const getTitleAreaDom = (newState) => {
 
 export const getSideBarDom = (newState) => {
   const { childUid } = newState
+  const showHeader = newState.titleAreaHeight !== 0
   return [
     {
       type: VirtualDomElements.Div,
       className: 'SideBar',
-      childCount: 2,
+      childCount: showHeader ? 2 : 1,
     },
-    ...getTitleAreaDom(newState),
+    ...(showHeader ? getTitleAreaDom(newState) : []),
     {
       type: VirtualDomElements.Reference,
       uid: childUid,

@@ -1,5 +1,6 @@
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -10,6 +11,8 @@ import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Id from '../Id/Id.js'
 
+const defaultTitleAreaHeight = 35
+
 export const create = (id, uri, x, y, width, height) => {
   return {
     uid: id,
@@ -19,7 +22,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
-    titleAreaHeight: 35,
+    titleAreaHeight: defaultTitleAreaHeight,
     actions: [],
     title: Character.EmptyString,
     childUid: -1,
@@ -91,6 +94,11 @@ const getChildModuleId = (moduleId) => {
   return ViewletModuleId.ExtensionView
 }
 
+const getExtensionViewTitleAreaHeight = async (moduleId) => {
+  const view = await GetExtensionViews.getExtensionView(moduleId)
+  return view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight
+}
+
 // TODO
 // export const getChildren = (state) => {
 //   const { titleAreaHeight, currentViewletId } = state
@@ -116,17 +124,23 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     return state
   }
   // TODO set it in layout
-  const { currentViewletId, titleAreaHeight } = state
+  const { currentViewletId } = state
   const requestId = state.currentViewletRequestId + 1
   const savePromise = SaveState.saveViewletState(currentViewletId)
   state.currentViewletRequestId = requestId
   state.currentViewletId = moduleId
 
-  const childDimensions = getContentDimensions(state, titleAreaHeight)
   const uid = state.uid
 
-  const childUid = Id.create()
   const childModuleId = getChildModuleId(moduleId)
+  const titleAreaHeight =
+    childModuleId === ViewletModuleId.ExtensionView ? await getExtensionViewTitleAreaHeight(moduleId) : defaultTitleAreaHeight
+  if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
+    await savePromise
+    return state
+  }
+  const childDimensions = getContentDimensions(state, titleAreaHeight)
+  const childUid = Id.create()
 
   const commands = await ViewletManager.load(
     {
@@ -177,7 +191,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
       title = childInstance?.state?.title || Character.EmptyString
     }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
-    if (actionsDom.length > 0) {
+    if (titleAreaHeight > 0 && actionsDom.length > 0) {
       const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []
       actionsUid = Id.create()
       commands.push(
@@ -204,6 +218,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     currentViewletId: moduleId,
     childUid,
     actionsUid,
+    titleAreaHeight,
     title,
   }
 }
