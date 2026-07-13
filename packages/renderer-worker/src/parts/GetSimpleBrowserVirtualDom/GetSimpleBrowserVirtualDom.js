@@ -3,12 +3,13 @@ import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
-export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, value) => {
-  return [
+export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, value, snapshot = '') => {
+  /** @type {any[]} */
+  const dom = [
     {
       type: VirtualDomElements.Div,
       className: 'Viewlet SimpleBrowser',
-      childCount: 1,
+      childCount: snapshot ? 2 : 1,
     },
     {
       type: VirtualDomElements.Div,
@@ -74,4 +75,14 @@ export const getSimpleBrowserVirtualDom = (canGoBack, canGoForward, isLoading, v
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
   ]
+  if (snapshot) {
+    dom.push({
+      type: VirtualDomElements.Img,
+      className: 'SimpleBrowserSnapshot',
+      src: snapshot,
+      draggable: false,
+      childCount: 0,
+    })
+  }
+  return dom
 }

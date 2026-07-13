@@ -11,7 +11,8 @@ const renderDom = {
       oldState.iframeSrc === newState.iframeSrc &&
       oldState.canGoBack === newState.canGoBack &&
       oldState.canGoForward === newState.canGoForward &&
-      oldState.isLoading === newState.isLoading
+      oldState.isLoading === newState.isLoading &&
+      oldState.snapshot === newState.snapshot
     )
   },
   apply(oldState, newState) {
@@ -20,6 +21,7 @@ const renderDom = {
       newState.canGoForward,
       newState.isLoading,
       newState.iframeSrc,
+      newState.snapshot,
     )
     return ['Viewlet.setDom2', dom]
   },

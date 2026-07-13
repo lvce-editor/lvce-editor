@@ -12,9 +12,11 @@ export const Commands = {
   handleKeyBinding: SimpleBrowser.handleKeyBinding,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
+  hideOverlay: SimpleBrowser.hideOverlay,
   insertCss: ViewletSimpleBrowserInsertCss.insertCss,
   insertJavaScript: ViewletSimpleBrowserInsertJavaScript.insertJavaScript,
   setUrl: SimpleBrowser.setUrl,
+  showOverlay: SimpleBrowser.showOverlay,
 }
 
 export const LazyCommands = {

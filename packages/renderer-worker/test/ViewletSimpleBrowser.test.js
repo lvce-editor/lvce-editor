@@ -6,6 +6,12 @@ beforeEach(() => {
 
 jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => {
   return {
+    capturePage: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    hide: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     reload: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -25,6 +31,9 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/Electron
       throw new Error('not implemented')
     }),
     setFallthroughKeyBindings: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    show: jest.fn(() => {
       throw new Error('not implemented')
     }),
     getStats() {
@@ -134,5 +143,45 @@ test('handleDidNavigate', () => {
   // @ts-ignore
   expect(ViewletSimpleBrowser.handleDidNavigate(state, 'https://example.com', false, false)).toMatchObject({
     isLoading: false,
+  })
+})
+
+test('showOverlay captures and hides the WebContentsView', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+
+  const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+
+  expect(newState).toMatchObject({
+    overlayIds: ['quick-pick'],
+    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+  })
+  expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+})
+
+test('overlays share one snapshot and restore after the last overlay closes', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+
+  const withQuickPick = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+  const withBoth = await ViewletSimpleBrowser.showOverlay(withQuickPick, 'menu')
+  const withMenu = await ViewletSimpleBrowser.hideOverlay(withBoth, 'quick-pick')
+  const restored = await ViewletSimpleBrowser.hideOverlay(withMenu, 'menu')
+
+  expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledTimes(1)
+  expect(restored).toMatchObject({
+    overlayIds: [],
+    snapshot: '',
   })
 })
