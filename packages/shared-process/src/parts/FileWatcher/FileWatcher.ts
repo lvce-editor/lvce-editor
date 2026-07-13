@@ -13,7 +13,7 @@ const internalIdMap = Object.create(null)
 export const watch = async (ipc: any, id: any, { exclude, roots }: any): Promise<any> => {
   const internalId = Id.create()
   internalIdMap[internalId] = { id, ipc }
-  await FileWatcherProcess.invoke('FileWatcher.watchFolders', {
+  return FileWatcherProcess.invoke('FileWatcher.watchFolders', {
     exclude,
     id: internalId,
     roots,
