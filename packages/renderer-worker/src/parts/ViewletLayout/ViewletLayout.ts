@@ -33,7 +33,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { getPoints } from './LayoutPoints.ts'
-import type { LayoutState, LayoutStateResult } from './LayoutState.ts'
+import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
 
 const getInitialBackendUrl = () => {
   return Preferences.get('layout.backendUrl') || Product.getBackendUrl()
@@ -123,6 +123,8 @@ export const create = (id: number): LayoutState => {
     previewSashVisible: false,
     previewVisible: false,
     sideBarSashVisible: false,
+    sideBarFocusMode: false,
+    sideBarFocusModeLayout: undefined,
     sideBarVisible: false,
     secondarySideBarVisible: false,
     statusBarVisible: false,
@@ -196,6 +198,7 @@ export const create = (id: number): LayoutState => {
 }
 
 export const saveState = (state: LayoutState) => {
+  const stateToSave = state.sideBarFocusModeLayout ? { ...state, ...state.sideBarFocusModeLayout } : state
   const {
     activityBarVisible,
     panelHeight,
@@ -211,7 +214,7 @@ export const saveState = (state: LayoutState) => {
     secondarySideBarView,
     secondarySideBarVisible,
     secondarySideBarWidth,
-  } = state
+  } = stateToSave
   return {
     activityBarVisible,
     panelHeight,
@@ -347,6 +350,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     restore,
     sideBarLocation,
     sideBarSashVisible: true,
+    sideBarFocusMode: false,
+    sideBarFocusModeLayout: undefined,
     sideBarView: savedView,
     secondarySideBarView: savedSecondaryView,
     workbenchVisible: true,
@@ -358,6 +363,12 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 }
 
 const show = async (state: LayoutState, module, currentViewletId) => {
+  if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId, kId } = module
   if (state[kVisible]) {
     return {
@@ -459,6 +470,63 @@ const toggle = (state: LayoutState, module: LayoutModules.LayoutModule, moduleId
   return show(state, module, moduleId)
 }
 
+const getSideBarFocusModeLayoutSnapshot = (state: LayoutState): SideBarFocusModeLayoutStateSnapshot => {
+  return {
+    activityBarSashVisible: state.activityBarSashVisible,
+    activityBarVisible: state.activityBarVisible,
+    mainVisible: state.mainVisible,
+    panelSashVisible: state.panelSashVisible,
+    panelVisible: state.panelVisible,
+    previewSashVisible: state.previewSashVisible,
+    previewVisible: state.previewVisible,
+    secondarySideBarVisible: state.secondarySideBarVisible,
+    sideBarSashVisible: state.sideBarSashVisible,
+    sideBarVisible: state.sideBarVisible,
+    sideBarWidth: state.sideBarWidth,
+  }
+}
+
+export const getSideBarFocusMode = (state: LayoutState): boolean => {
+  return state.sideBarFocusMode
+}
+
+export const enterSideBarFocusMode = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (state.sideBarFocusMode || !state.sideBarVisible) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const newState = getPoints({
+    ...state,
+    sideBarFocusMode: true,
+    sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(state),
+  })
+  return {
+    newState,
+    commands: await getResizeCommands(state, newState),
+  }
+}
+
+export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.sideBarFocusMode || !state.sideBarFocusModeLayout) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const newState = getPoints({
+    ...state,
+    ...state.sideBarFocusModeLayout,
+    sideBarFocusMode: false,
+    sideBarFocusModeLayout: undefined,
+  })
+  return {
+    newState,
+    commands: await getResizeCommands(state, newState),
+  }
+}
+
 export const showSideBar = async (state: LayoutState, moduleId = state.sideBarView): Promise<LayoutStateResult> => {
   const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
   if (state.sideBarVisible) {
@@ -489,6 +557,12 @@ export const showSideBar = async (state: LayoutState, moduleId = state.sideBarVi
 }
 
 const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState; commands: any }> => {
+  if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   const { kVisible, moduleId } = module
   const isPreview = module === LayoutModules.Preview
   const instanceId = isPreview ? state.previewId : moduleId
@@ -520,7 +594,8 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
 }
 
 export const hideSideBar = async (state: LayoutState) => {
-  const { newState, commands } = await hide(state, LayoutModules.SideBar)
+  const focusResult = await leaveSideBarFocusMode(state)
+  const { newState, commands } = await hide(focusResult.newState, LayoutModules.SideBar)
   const { activityBarId } = newState
   const activityBarCommands = await renderSideBarActivityBarCommands(activityBarId, newState.sideBarView, false)
   return {
@@ -528,11 +603,14 @@ export const hideSideBar = async (state: LayoutState) => {
       ...newState,
       sideBarVisible: false,
     },
-    commands: [...commands, ...activityBarCommands],
+    commands: [...focusResult.commands, ...commands, ...activityBarCommands],
   }
 }
 
 export const toggleSideBar = (state: LayoutState) => {
+  if (state.sideBarFocusMode) {
+    return hideSideBar(state)
+  }
   // @ts-ignore
   return toggle(state, LayoutModules.SideBar)
 }
@@ -638,7 +716,7 @@ export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
 const mainMinHeight = 100
 
 export const maximizePanel = async (state: LayoutState): Promise<LayoutStateResult> => {
-  if (state.panelMaximized) {
+  if (state.panelMaximized || state.sideBarFocusMode) {
     return {
       newState: state,
       commands: [],
@@ -662,7 +740,7 @@ export const maximizePanel = async (state: LayoutState): Promise<LayoutStateResu
 }
 
 export const unmaximizePanel = async (state: LayoutState): Promise<LayoutStateResult> => {
-  if (!state.panelMaximized || !state.panelVisible) {
+  if (!state.panelMaximized || !state.panelVisible || state.sideBarFocusMode) {
     return {
       newState: state,
       commands: [],
