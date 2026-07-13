@@ -39,6 +39,16 @@ test('getQuickPickMenuEntries includes GPU info command', () => {
   })
 })
 
+test('getQuickPickMenuEntries includes running extensions command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Main.openUri',
+    label: 'Developer: Show Running Extensions',
+    args: ['running-extensions://'],
+  })
+})
+
 test('getQuickPickMenuEntries includes extension management worker latency command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 

@@ -369,6 +369,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Developer: Open Process Explorer',
     },
     {
+      id: 'Main.openUri',
+      label: 'Developer: Show Running Extensions',
+      args: ['running-extensions://'],
+    },
+    {
       id: 'Developer.showGpuInfo',
       label: 'Developer: Show GPU Info',
     },
