@@ -362,7 +362,8 @@ const maybeRegisterEvents = (module) => {
       if (!instance) {
         return
       }
-      const newState = await value(instance.state, ...params)
+      const savedState = await SaveState.getSavedViewletState(module.name)
+      const newState = await value(instance.state, ...params, savedState)
       if (!newState) {
         throw new Error('newState must be defined')
       }
