@@ -6,9 +6,9 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const getStateToSave = async () => {
   const instances = ViewletStates.getAllInstances()
   const savedInstances = await SerializeViewlet.serializeInstances(instances)
-  const workspacePath = Workspace.getWorkspacePath()
+  const workspaceUri = Workspace.getWorkspaceUri()
   return {
-    instances: GetWorkspaceScopedViewletStates.getWorkspaceScopedViewletStates(savedInstances, workspacePath),
+    instances: GetWorkspaceScopedViewletStates.getWorkspaceScopedViewletStates(savedInstances, workspaceUri),
     mainEditors: [],
     workspace: {
       path: Workspace.state.workspacePath,
