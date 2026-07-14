@@ -67,8 +67,11 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronPowerSaveBlocker.start':
     case 'ElectronPowerSaveBlocker.stop':
       return ModuleId.ElectronPowerSaveBlocker
+    case 'ElectronProcess.getArgv':
     case 'ElectronProcess.getChromeVersion':
     case 'ElectronProcess.getElectronVersion':
+    case 'ElectronProcess.writeStderr':
+    case 'ElectronProcess.writeStdout':
       return ModuleId.ElectronProcess
     case 'ElectronSafeStorage.decryptString':
     case 'ElectronSafeStorage.encryptString':

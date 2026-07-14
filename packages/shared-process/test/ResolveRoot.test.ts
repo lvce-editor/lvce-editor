@@ -41,3 +41,16 @@ test('resolveRoot - resolves dot from development electron arguments', async () 
     uri: pathToFileURL(process.cwd()).toString(),
   })
 })
+
+test('resolveRoot - uses cwd in prompt mode', async () => {
+  // @ts-ignore
+  MainProcess.invoke.mockResolvedValue(['/usr/lib/lvce-oss/lvce-oss', '--prompt', 'Fix the tests'])
+
+  const resolvedRoot = await ResolveRoot.resolveRoot()
+
+  expect(resolvedRoot).toMatchObject({
+    path: process.cwd(),
+    source: 'shared-process-cli-arg',
+    uri: pathToFileURL(process.cwd()).toString(),
+  })
+})
