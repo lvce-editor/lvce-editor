@@ -1,6 +1,3 @@
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-
 export const getQuickPickMenuEntries = () => {
   return [
     {
@@ -202,14 +199,6 @@ export const getQuickPickMenuEntries = () => {
       deprecated: true,
       TODO: 'add support for deprecated commands',
     },
-    ...(Platform.getPlatform() === PlatformType.Web
-      ? [
-          {
-            id: 'Extensions.installFromDisk',
-            label: 'Extensions: Install from Disk',
-          },
-        ]
-      : []),
     {
       id: 'Extensions.openCachedExtensionsFolder',
       label: 'Extensions: Open Cached Extensions Folder',
@@ -355,10 +344,6 @@ export const getQuickPickMenuEntries = () => {
     {
       id: 'audio.playBell',
       label: 'Audio: Play Bell',
-    },
-    {
-      id: 'serviceWorker.uninstall',
-      label: 'Service Worker: Uninstall',
     },
     {
       id: 'Developer.openLogsFolder',

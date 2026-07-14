@@ -20,8 +20,6 @@ afterAll(() => {
   delete globalThis.Response
 })
 
-// TODO how to test this? probably need mock server or mock service worker
-// TODO mock-service-worker does not support fetch, once it supports fetch, it should be possible to use mock service worker
 test('getJson', async () => {
   // Ajax.state.getJson = jest.fn(async () => {
   //   return {
@@ -32,7 +30,6 @@ test('getJson', async () => {
   // expect(Ajax.state.getJson).toHaveBeenCalledWith('https://example.com', {})
 })
 
-// TODO how to test this? probably need mock server or mock service worker
 test('getJson - error', async () => {
   // Ajax.state.getJson = jest.fn(() => {
   //   throw new SyntaxError('Unexpected token')

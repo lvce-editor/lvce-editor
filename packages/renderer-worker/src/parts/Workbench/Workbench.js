@@ -11,7 +11,6 @@ import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as HeadlessLayout from '../HeadlessLayout/HeadlessLayout.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
-import * as InstalledWebExtensions from '../InstalledWebExtensions/InstalledWebExtensions.js'
 import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
 import * as Languages from '../Languages/Languages.js'
@@ -165,7 +164,6 @@ export const startup = async (platform, assetDir) => {
   if (promptOptions !== undefined) {
     await HeadlessLayout.initialize(initData)
     await Command.execute('Layout.setAuthState', authState)
-    await InstalledWebExtensions.restore()
     await PromptMode.run(promptOptions)
     return
   }
@@ -213,8 +211,6 @@ export const startup = async (platform, assetDir) => {
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
-  await InstalledWebExtensions.restore()
-
   Performance.mark(PerformanceMarkerType.WillLoadLanguages)
   await Languages.hydrate(platform, assetDir)
   Performance.mark(PerformanceMarkerType.DidLoadLanguages)
@@ -238,8 +234,6 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.WillLoadRecentlyOpened)
   await RecentlyOpened.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
-
-  // TODO tree shake out service worker in electron build
 
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()
