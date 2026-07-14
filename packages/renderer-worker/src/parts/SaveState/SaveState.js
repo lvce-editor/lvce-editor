@@ -9,7 +9,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const getStorageKey = (viewletId) => {
-  return GetViewletStorageKey.getViewletStorageKey(viewletId, Workspace.getWorkspacePath())
+  return GetViewletStorageKey.getViewletStorageKey(viewletId, Workspace.getWorkspaceUri())
 }
 
 const saveViewletStateAs = async (instanceId, storageId) => {

@@ -8,11 +8,11 @@ test('namespaces viewlet states while preserving global layout state', () => {
     Main: { groups: [] },
   }
 
-  const result = GetWorkspaceScopedViewletStates.getWorkspaceScopedViewletStates(instances, '/workspace')
+  const result = GetWorkspaceScopedViewletStates.getWorkspaceScopedViewletStates(instances, 'file:///workspace')
 
   expect(result).toEqual({
-    'viewlet:%2Fworkspace:Explorer': instances.Explorer,
+    'viewlet:file:///workspace:Explorer': instances.Explorer,
     Layout: instances.Layout,
-    'viewlet:%2Fworkspace:Main': instances.Main,
+    'viewlet:file:///workspace:Main': instances.Main,
   })
 })

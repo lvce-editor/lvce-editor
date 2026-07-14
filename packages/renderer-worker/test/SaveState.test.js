@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => ({
-  getWorkspacePath: jest.fn(() => '/workspace'),
+  getWorkspaceUri: jest.fn(() => 'file:///workspace'),
   isTest: jest.fn(() => false),
 }))
 
@@ -28,7 +28,7 @@ beforeEach(() => {
 test('saves viewlet state under the current workspace key', async () => {
   await SaveState.saveViewletState('Explorer')
 
-  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:%2Fworkspace:Explorer', { value: 1 })
+  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:file:///workspace:Explorer', { value: 1 })
 })
 
 test('saves layout state under its global key', async () => {
@@ -40,11 +40,11 @@ test('saves layout state under its global key', async () => {
 test('saves an instance under a different storage id', async () => {
   await SaveState.saveViewletStateWithStorageId(7, 'SimpleBrowser')
 
-  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:%2Fworkspace:SimpleBrowser', { value: 1 })
+  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:file:///workspace:SimpleBrowser', { value: 1 })
 })
 
 test('loads viewlet state from the current workspace key', async () => {
   await SaveState.getSavedViewletState('Main')
 
-  expect(InstanceStorage.getJson).toHaveBeenCalledWith('viewlet:%2Fworkspace:Main')
+  expect(InstanceStorage.getJson).toHaveBeenCalledWith('viewlet:file:///workspace:Main')
 })
