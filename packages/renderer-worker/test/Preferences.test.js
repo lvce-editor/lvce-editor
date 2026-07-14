@@ -140,6 +140,12 @@ test('get', () => {
   expect(Preferences.get('x')).toBe(42)
 })
 
+test('set - does not persist preferences in test mode', async () => {
+  await Preferences.set('x', 42)
+
+  expect(Preferences.state.x).toBe(42)
+})
+
 test('toggleAutoSave - turns auto save on', async () => {
   Object.assign(Preferences.state, { 'files.autoSave': 'off' })
 
