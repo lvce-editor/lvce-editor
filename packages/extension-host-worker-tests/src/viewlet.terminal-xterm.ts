@@ -14,7 +14,6 @@ const runCommand = async (KeyBoard, command) => {
 export const test = async ({ Command, KeyBoard, Locator, Settings, expect }) => {
   await Settings.update({
     'terminal.backend': 'mock',
-    'terminal.renderer': 'xterm',
   })
 
   await Command.execute('Layout.showPanel', 'Terminals')
