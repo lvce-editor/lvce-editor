@@ -1,4 +1,5 @@
 import * as ViewletLayout from './ViewletLayout.ts'
+import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 
 // prettier-ignore
 export const Commands = {
@@ -39,6 +40,7 @@ export const CommandsWithSideEffects = {
   handleSashPointerUp: ViewletLayout.handleSashPointerUp,
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,
   refreshSourceControlBadgeCount: ViewletLayout.refreshSourceControlBadgeCount,
+  reset: ResetLayout.reset,
   closeChat: ViewletLayout.closeChat,
   enterSideBarFocusMode: ViewletLayout.enterSideBarFocusMode,
   hideActivityBar: ViewletLayout.hideActivityBar,
