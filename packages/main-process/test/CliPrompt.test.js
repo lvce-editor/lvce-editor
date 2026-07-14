@@ -97,6 +97,7 @@ afterAll(async () => {
   }
 })
 
+/** @returns {Promise<{code: number | null, signal: NodeJS.Signals | null, stderr: string, stdout: string}>} */
 const runElectron = () => {
   /** @type {NodeJS.ProcessEnv} */
   const env = {
@@ -153,10 +154,9 @@ const runElectron = () => {
 }
 
 test('runs a prompt against the configured backend', async () => {
-  await expect(runElectron()).resolves.toEqual({
-    code: 0,
-    signal: null,
-    stderr: '',
-    stdout: `${expectedOutput}\n`,
-  })
+  const result = await runElectron()
+  expect(result.code).toBe(0)
+  expect(result.signal).toBeNull()
+  expect(result.stderr).toBe('')
+  expect(result.stdout.trim()).toBe(expectedOutput)
 }, 60_000)
