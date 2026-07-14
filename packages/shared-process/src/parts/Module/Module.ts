@@ -110,6 +110,8 @@ export const load = (moduleId: any): any => {
       return import('../InstallExtension/InstallExtension.ipc.ts')
     case ModuleId.IsAutoUpdateSupported:
       return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.ts')
+    case ModuleId.LanguageServer:
+      return import('../LanguageServer/LanguageServer.ipc.ts')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.ts')
     case ModuleId.OpenNativeFolder:
