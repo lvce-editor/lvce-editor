@@ -127,7 +127,7 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-const copyStaticServerFiles = async ({ commitHash, product, version }) => {
+const copyStaticServerFiles = async ({ commitHash, product, version, date }) => {
   const etag = `W/"${commitHash}"`
   await Copy.copy({
     from: 'packages/static-server',
@@ -166,6 +166,7 @@ const copyStaticServerFiles = async ({ commitHash, product, version }) => {
     productName: product.nameLong,
     version,
     commitHash,
+    date,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/static-server/src/parts/GetResponseInfo/GetResponseInfo.ts',
@@ -512,7 +513,7 @@ export const buildStaticServer = async ({ product, commitHash, version, date }) 
   console.timeEnd('copyStaticFiles')
 
   console.time('copyStaticServerFiles')
-  await copyStaticServerFiles({ commitHash, product, version })
+  await copyStaticServerFiles({ commitHash, product, version, date })
   console.timeEnd('copyStaticServerFiles')
 
   console.time('bundleStaticServer')

@@ -1,5 +1,4 @@
 import { existsSync } from 'node:fs'
-import * as AdjustWorkers from '../AdjustWorkers/AdjustWorkers.ts'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.ts'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
@@ -84,13 +83,6 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   })
 
   await copyWorkers({ toRoot })
-
-  await AdjustWorkers.adjustWorkers({
-    toRoot,
-    commitHash,
-    date,
-    version,
-  })
 
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
