@@ -48,10 +48,21 @@ test('getPrompt - reads the Electron argv', async () => {
   await expect(PromptMode.getPrompt()).resolves.toBe('Fix the tests')
 })
 
-test('parsePromptOptions - reads workspace sandbox flags', () => {
-  expect(PromptMode.parsePromptOptions(['/usr/bin/lvce', '--prompt=Fix the tests', '--allow-read', '.', '--allow-write=.'])).toEqual({
+test('parsePromptOptions - reads workspace sandbox and backend flags', () => {
+  expect(
+    PromptMode.parsePromptOptions([
+      '/usr/bin/lvce',
+      '--prompt=Fix the tests',
+      '--allow-read',
+      '.',
+      '--allow-write=.',
+      '--backend-url',
+      'http://localhost:3000',
+    ]),
+  ).toEqual({
     allowReadRoot: '.',
     allowWriteRoot: '.',
+    backendUrl: 'http://localhost:3000',
     prompt: 'Fix the tests',
   })
 })
@@ -85,7 +96,7 @@ test('run - executes the headless chat and exits successfully', async () => {
 
   expect(Command.execute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'chat2.runPrompt', 'Fix the tests')
   expect(Process.writeStdout).toHaveBeenCalledWith('Done\n')
-  expect(Process.writeStderr).toHaveBeenCalledWith('Trace: /workspace/.agent-logs/trace-trace-1.json\n')
+  expect(Process.writeStderr).not.toHaveBeenCalled()
   expect(PromptTrace.write).toHaveBeenCalledWith({ id: 'trace-1' })
   expect(Exit.exit).toHaveBeenCalledWith(0)
 })

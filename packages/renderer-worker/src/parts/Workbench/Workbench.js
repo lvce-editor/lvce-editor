@@ -23,6 +23,7 @@ import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as PreferencesState from '../PreferencesState/PreferencesState.js'
 import * as PromptMode from '../PromptMode/PromptMode.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -140,6 +141,9 @@ export const startup = async (platform, assetDir) => {
 
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()
+  if (promptOptions?.backendUrl) {
+    PreferencesState.set('layout.backendUrl', promptOptions.backendUrl)
+  }
   Performance.mark(PerformanceMarkerType.DidLoadPreferences)
 
   // TODO only load this if session replay is enabled in preferences

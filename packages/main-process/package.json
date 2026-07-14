@@ -7,6 +7,8 @@
   "main": "src/mainProcessMain.js",
   "type": "module",
   "scripts": {
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
     "type-check": "tsc"
   },
   "keywords": [],
@@ -20,7 +22,14 @@
   "engines": {
     "node": ">=24"
   },
+  "jest": {
+    "injectGlobals": false,
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "@lvce-editor/main-process": "^6.9.0"
+  },
+  "devDependencies": {
+    "electron": "43.1.0"
   }
 }
