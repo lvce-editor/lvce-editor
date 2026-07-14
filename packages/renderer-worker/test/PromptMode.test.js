@@ -48,6 +48,24 @@ test('getPrompt - reads the Electron argv', async () => {
   await expect(PromptMode.getPrompt()).resolves.toBe('Fix the tests')
 })
 
+test('parsePromptOptions - reads workspace sandbox flags', () => {
+  expect(PromptMode.parsePromptOptions(['/usr/bin/lvce', '--prompt=Fix the tests', '--allow-read', '.', '--allow-write=.'])).toEqual({
+    allowReadRoot: '.',
+    allowWriteRoot: '.',
+    prompt: 'Fix the tests',
+  })
+})
+
+test('getPromptOptions - reads prompt mode options from the Electron argv', async () => {
+  // @ts-ignore
+  Process.getArgv.mockResolvedValue(['/usr/bin/lvce', '--prompt', 'Inspect files', '--allow-read', '.'])
+
+  await expect(PromptMode.getPromptOptions()).resolves.toEqual({
+    allowReadRoot: '.',
+    prompt: 'Inspect files',
+  })
+})
+
 test('run - executes the headless chat and exits successfully', async () => {
   // @ts-ignore
   Command.execute.mockResolvedValueOnce({
@@ -70,6 +88,53 @@ test('run - executes the headless chat and exits successfully', async () => {
   expect(Process.writeStderr).toHaveBeenCalledWith('Trace: /workspace/.agent-logs/trace-trace-1.json\n')
   expect(PromptTrace.write).toHaveBeenCalledWith({ id: 'trace-1' })
   expect(Exit.exit).toHaveBeenCalledWith(0)
+})
+
+test('run - passes a read-only workspace sandbox to headless chat', async () => {
+  // @ts-ignore
+  Command.execute.mockResolvedValueOnce({
+    sessionId: 'session-1',
+    status: 'completed',
+    task: { events: [] },
+    trace: [],
+  })
+
+  await PromptMode.run({ allowReadRoot: '.', prompt: 'Inspect the tests' })
+
+  const fileSystemAccess = {
+    allowRead: true,
+    allowWrite: false,
+    root: '.',
+  }
+  expect(Command.execute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'chat2.runPrompt', 'Inspect the tests', undefined, fileSystemAccess)
+  expect(PromptTrace.create).toHaveBeenCalledWith(expect.objectContaining({ fileSystemAccess }))
+  expect(Exit.exit).toHaveBeenCalledWith(0)
+})
+
+test('run - makes workspace write access imply read access', async () => {
+  // @ts-ignore
+  Command.execute.mockResolvedValueOnce({
+    sessionId: 'session-1',
+    status: 'completed',
+    task: { events: [] },
+    trace: [],
+  })
+
+  await PromptMode.run({ allowWriteRoot: '.', prompt: 'Fix the tests' })
+
+  expect(Command.execute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'chat2.runPrompt', 'Fix the tests', undefined, {
+    allowRead: true,
+    allowWrite: true,
+    root: '.',
+  })
+})
+
+test('run - rejects sandbox roots outside the workspace', async () => {
+  await PromptMode.run({ allowReadRoot: '/tmp', prompt: 'Inspect files' })
+
+  expect(Command.execute).not.toHaveBeenCalled()
+  expect(Process.writeStderr).toHaveBeenCalledWith('--allow-read currently only supports the workspace root "."\n')
+  expect(Exit.exit).toHaveBeenCalledWith(1)
 })
 
 test('run - reports failures and exits unsuccessfully', async () => {
