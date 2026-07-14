@@ -27,6 +27,11 @@ test('create - creates a Pi-inspired completed trace object', () => {
     error: '',
     finishedAt: '2026-07-14T00:01:00.000Z',
     id: 'trace-id',
+    fileSystemAccess: {
+      allowRead: true,
+      allowWrite: false,
+      root: '.',
+    },
     prompt: 'Fix the tests',
     result: {
       sessionId: 'session-1',
@@ -42,6 +47,13 @@ test('create - creates a Pi-inspired completed trace object', () => {
     id: 'trace-id',
     messages: [{ content: 'Fix the tests', role: 'user', timestamp: 1 }],
     prompt: 'Fix the tests',
+    sandbox: {
+      fileSystem: {
+        allowRead: true,
+        allowWrite: false,
+        root: '.',
+      },
+    },
     sessionId: 'session-1',
     status: 'completed',
     task: { id: 'task-1' },
@@ -56,8 +68,5 @@ test('write - writes formatted JSON below the workspace', async () => {
 
   await expect(PromptTrace.write(trace)).resolves.toBe('/workspace/.agent-logs/trace-trace-id.json')
   expect(FileSystemDisk.mkdir).toHaveBeenCalledWith('/workspace/.agent-logs')
-  expect(FileSystemDisk.writeFile).toHaveBeenCalledWith(
-    '/workspace/.agent-logs/trace-trace-id.json',
-    JSON.stringify(trace, null, 2),
-  )
+  expect(FileSystemDisk.writeFile).toHaveBeenCalledWith('/workspace/.agent-logs/trace-trace-id.json', JSON.stringify(trace, null, 2))
 })

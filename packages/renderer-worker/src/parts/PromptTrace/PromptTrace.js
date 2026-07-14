@@ -5,7 +5,7 @@ const join = (separator, left, right) => {
   return left.endsWith(separator) ? `${left}${right}` : `${left}${separator}${right}`
 }
 
-export const create = ({ error, finishedAt, id, prompt, result, startedAt }) => {
+export const create = ({ error, fileSystemAccess, finishedAt, id, prompt, result, startedAt }) => {
   return {
     cwd: Workspace.getPath(),
     ...(error && { error }),
@@ -14,6 +14,7 @@ export const create = ({ error, finishedAt, id, prompt, result, startedAt }) => 
     messages: Array.isArray(result?.trace) ? result.trace : [],
     prompt,
     sessionId: typeof result?.sessionId === 'string' ? result.sessionId : '',
+    ...(fileSystemAccess && { sandbox: { fileSystem: fileSystemAccess } }),
     status: error ? 'failed' : 'completed',
     task: result?.task || null,
     timestamp: startedAt,
