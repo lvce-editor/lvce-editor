@@ -391,6 +391,7 @@ export const build = async ({
     version,
     electronVersion,
     commitHash,
+    date,
   })
 
   console.time('addRootPackageJson')

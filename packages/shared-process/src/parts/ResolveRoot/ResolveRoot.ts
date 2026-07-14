@@ -5,6 +5,7 @@ import * as Env from '../Env/Env.ts'
 import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.ts'
 import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.ts'
 import * as IsElectron from '../IsElectron/IsElectron.ts'
+import * as IsPromptMode from '../IsPromptMode/IsPromptMode.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
@@ -33,7 +34,7 @@ export const resolveRoot = async (): Promise<any> => {
     const argv = await ParentIpc.invoke('Process.getArgv')
     const relevantArgv = argv.slice(1)
     const last = relevantArgv.at(-1)
-    if (last && last === '.') {
+    if (IsPromptMode.isPromptMode(relevantArgv) || (last && last === '.')) {
       const actual = process.cwd()
       return {
         homeDir: PlatformPaths.getHomeDir(),

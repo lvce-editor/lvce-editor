@@ -47,3 +47,15 @@ export const getDate = () => {
 export const getArch = () => {
   return SharedProcess.invoke('Process.getArch')
 }
+
+export const getArgv = () => {
+  return SharedProcess.invoke('ElectronProcess.getArgv')
+}
+
+export const writeStderr = (value) => {
+  return SharedProcess.invoke('ElectronProcess.writeStderr', value)
+}
+
+export const writeStdout = (value) => {
+  return SharedProcess.invoke('ElectronProcess.writeStdout', value)
+}

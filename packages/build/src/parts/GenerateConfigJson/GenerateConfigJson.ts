@@ -49,6 +49,7 @@ export const generateConfigJson = async ({
   version,
   electronVersion,
   commitHash,
+  date,
 }) => {
   const staticFolder = Path.absolute(`${staticRoot}/static`)
   const dirents = await readdir(staticFolder, { recursive: true, withFileTypes: true })
@@ -81,6 +82,7 @@ export const generateConfigJson = async ({
       version,
       electronVersion,
       commit: commitHash,
+      date,
       etag,
       headers: uniqueHeaders.ours,
       files: map,
