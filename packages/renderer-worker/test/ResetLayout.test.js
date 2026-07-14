@@ -45,7 +45,7 @@ test('reset restores the initial application state', async () => {
     newState: state,
   })
 
-  expect(Command.execute).toHaveBeenCalledTimes(14)
+  expect(Command.execute).toHaveBeenCalledTimes(15)
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'Menu.hide', false)
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'Viewlet.closeWidget', 'QuickPick')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Viewlet.closeWidget', 'Dialog')
@@ -59,12 +59,8 @@ test('reset restores the initial application state', async () => {
   expect(Command.execute).toHaveBeenNthCalledWith(11, 'Layout.showSideBar', 'Explorer')
   expect(Command.execute).toHaveBeenNthCalledWith(12, 'Layout.unmaximizePanel')
   expect(Command.execute).toHaveBeenNthCalledWith(13, 'Layout.hidePanel')
-  expect(Command.execute).toHaveBeenNthCalledWith(14, 'ActivityBar.reset', {
-    height: 718,
-    width: 48,
-    x: 976,
-    y: 30,
-  })
+  expect(Command.execute).toHaveBeenNthCalledWith(14, 'ActivityBar.create', '', 976, 30, 48, 718, null, null, -1)
+  expect(Command.execute).toHaveBeenNthCalledWith(15, 'ActivityBar.loadContent', {})
 })
 
 test('reset leaves an initial layout in place', async () => {
@@ -88,5 +84,5 @@ test('reset leaves an initial layout in place', async () => {
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.showSideBar', 'Explorer')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.unmaximizePanel')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.hidePanel')
-  expect(Command.execute).toHaveBeenLastCalledWith('ActivityBar.reset', expect.any(Object))
+  expect(Command.execute).toHaveBeenLastCalledWith('ActivityBar.loadContent', {})
 })
