@@ -62,27 +62,30 @@ export const watch = async (id) => {
 }
 
 const getPreferredColorTheme = () => {
-  const preferredColorTheme = Preferences.get('workbench.colorTheme')
-  return preferredColorTheme
+  return Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
+}
+
+const applyPreferredColorTheme = async () => {
+  const colorThemeId = getPreferredColorTheme()
+  const error = await applyColorTheme(colorThemeId)
+  if (!error) {
+    return
+  }
+  if (colorThemeId === FALLBACK_COLOR_THEME_ID) {
+    throw error
+  }
+  await ErrorHandling.handleError(error)
+  const fallbackError = await applyColorTheme(FALLBACK_COLOR_THEME_ID)
+  if (fallbackError) {
+    throw fallbackError
+  }
 }
 
 export const reload = async () => {
-  const colorThemeId = getPreferredColorTheme()
-  await applyColorTheme(colorThemeId)
+  await applyPreferredColorTheme()
 }
 
-// TODO test this, and also the error case
 // TODO have icon theme, color theme together (maybe)
 export const hydrate = async () => {
-  const preferredColorTheme = getPreferredColorTheme()
-  const colorThemeId = preferredColorTheme || FALLBACK_COLOR_THEME_ID
-  try {
-    await applyColorTheme(colorThemeId)
-  } catch (error) {
-    if (colorThemeId === FALLBACK_COLOR_THEME_ID) {
-      throw error
-    }
-    ErrorHandling.handleError(error)
-    await applyColorTheme(FALLBACK_COLOR_THEME_ID)
-  }
+  await applyPreferredColorTheme()
 }
