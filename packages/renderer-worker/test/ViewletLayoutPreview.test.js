@@ -219,6 +219,32 @@ test('showPreview replaces an open file preview with the simple browser', async 
   })
 })
 
+test('resizing the preview preserves its vertical position', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    previewHeight: 745,
+    previewId: 7,
+    previewLeft: 800,
+    previewTop: 35,
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 400,
+    sashId: 'Preview',
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.handleSashPointerMove(state, 700, 400)
+
+  expect(result.newState).toMatchObject({
+    previewHeight: 745,
+    previewLeft: 700,
+    previewTop: 35,
+    previewWidth: 500,
+  })
+})
+
 test('hidePreview disables preview sash', async () => {
   const state = {
     ...ViewletLayout.create(1),
