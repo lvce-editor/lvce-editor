@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals'
 import electronPath from 'electron'
-import { spawn } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
@@ -14,8 +14,28 @@ const mainProcessPath = join(root, 'packages', 'main-process')
 const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
 
 let backendUrl = ''
+let dbusAddress = ''
+let dbusPid = 0
 let server
 let temporaryDirectory = ''
+
+const startDbus = () => {
+  if (process.platform !== 'linux') {
+    return
+  }
+  const result = spawnSync('dbus-daemon', ['--session', '--fork', '--print-address=1', '--print-pid=1', '--syslog-only'], {
+    encoding: 'utf8',
+  })
+  if (result.status !== 0) {
+    throw new Error(`Failed to start D-Bus: ${result.stderr}`)
+  }
+  const [address, pid] = result.stdout.trim().split(/\r?\n/)
+  dbusAddress = address
+  dbusPid = Number(pid)
+  if (!dbusAddress || !Number.isInteger(dbusPid)) {
+    throw new Error('D-Bus did not return a valid address and process id')
+  }
+}
 
 const setCorsHeaders = (request, response) => {
   response.setHeader('Access-Control-Allow-Credentials', 'true')
@@ -54,6 +74,7 @@ const handleRequest = (request, response) => {
 
 beforeAll(async () => {
   temporaryDirectory = await mkdtemp(join(tmpdir(), 'lvce-cli-prompt-'))
+  startDbus()
   server = createServer(handleRequest)
   await new Promise((resolve, reject) => {
     server.once('error', reject)
@@ -71,6 +92,9 @@ afterAll(async () => {
     server.close((error) => (error ? reject(error) : resolve(undefined)))
   })
   await rm(temporaryDirectory, { force: true, recursive: true })
+  if (dbusPid) {
+    process.kill(dbusPid)
+  }
 })
 
 const runElectron = () => {
@@ -78,8 +102,10 @@ const runElectron = () => {
   const env = {
     ...process.env,
     HOME: temporaryDirectory,
+    ...(dbusAddress && { DBUS_SESSION_BUS_ADDRESS: dbusAddress }),
     LVCE_ROOT: root,
     LVCE_SHARED_PROCESS_PATH: sharedProcessPath,
+    NO_AT_BRIDGE: '1',
     XDG_CACHE_HOME: join(temporaryDirectory, 'cache'),
   }
   delete env.ELECTRON_RUN_AS_NODE
