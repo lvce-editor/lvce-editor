@@ -94,6 +94,8 @@ export const load = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.KeyBindingsInitial:
       return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
+    case ModuleId.Layout:
+      return import('../Layout/Layout.ipc.js')
     case ModuleId.License:
       return import('../License/License.ipc.js')
     case ModuleId.LaunchIsolatedExtensionHostWorker:

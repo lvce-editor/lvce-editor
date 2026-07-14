@@ -107,6 +107,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.KeyBindings
     case 'KeyBindingsInitial':
       return ModuleId.KeyBindingsInitial
+    case 'Layout':
+      return ModuleId.Layout
     case 'LaunchIsolatedExtensionHostWorker':
       return ModuleId.LaunchIsolatedExtensionHostWorker
     case 3444:
