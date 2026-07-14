@@ -43,7 +43,7 @@
   "dependencies": {
     "@lvce-editor/about-view": "^7.6.0",
     "@lvce-editor/activity-bar-worker": "^7.9.0",
-    "@lvce-editor/auth-worker": "^3.2.0",
+    "@lvce-editor/auth-worker": "^3.4.0",
     "@lvce-editor/chat-coordinator-worker": "^5.2.0",
     "@lvce-editor/chat-debug-view": "^11.5.0",
     "@lvce-editor/chat-math-worker": "^1.1.0",
