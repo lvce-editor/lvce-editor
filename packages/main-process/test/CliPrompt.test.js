@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url'
 
 const expectedOutput = 'Mock response'
 const electronExecutable = String(electronPath)
+const macOsTaskPolicyError =
+  /^\[\d+:\d+\/\d+\.\d+:ERROR:base\/process\/process_mac\.cc:(?:53|98)\] task_policy_set TASK_(?:CATEGORY|SUPPRESSION)_POLICY: \(os\/kern\) invalid argument \(4\)$/
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const mainProcessPath = join(root, 'packages', 'main-process')
 const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
@@ -35,6 +37,13 @@ const startDbus = () => {
   if (!dbusAddress || !Number.isInteger(dbusPid)) {
     throw new Error('D-Bus did not return a valid address and process id')
   }
+}
+
+const getApplicationStderr = (stderr) => {
+  return stderr
+    .split(/\r?\n/)
+    .filter((line) => !macOsTaskPolicyError.test(line))
+    .join('\n')
 }
 
 const setCorsHeaders = (request, response) => {
@@ -157,6 +166,6 @@ test('runs a prompt against the configured backend', async () => {
   const result = await runElectron()
   expect(result.code).toBe(0)
   expect(result.signal).toBeNull()
-  expect(result.stderr).toBe('')
+  expect(getApplicationStderr(result.stderr)).toBe('')
   expect(result.stdout.trim()).toBe(expectedOutput)
 }, 60_000)
