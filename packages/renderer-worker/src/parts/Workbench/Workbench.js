@@ -8,6 +8,7 @@ import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
 import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
+import * as HeadlessLayout from '../HeadlessLayout/HeadlessLayout.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InstalledWebExtensions from '../InstalledWebExtensions/InstalledWebExtensions.js'
@@ -162,6 +163,7 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   if (prompt !== undefined) {
+    HeadlessLayout.initialize()
     await InstalledWebExtensions.restore()
     await PromptMode.run(prompt)
     return
