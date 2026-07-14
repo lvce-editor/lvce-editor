@@ -1,5 +1,7 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as GetColorThemeNames from '../GetColorThemeNames/GetColorThemeNames.js'
+import * as Platform from '../Platform/Platform.js'
 import * as QuickPickColorThemeUiStrings from '../QuickPickColorThemeUiStrings/QuickPickColorThemeUiStrings.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 
@@ -16,7 +18,7 @@ export const getLabel = () => {
 }
 
 export const getPicks = async (searchValue) => {
-  const colorThemeNames = await GetColorThemeNames.getColorThemeNames()
+  const colorThemeNames = await GetColorThemeNames.getColorThemeNames(AssetDir.assetDir, Platform.getPlatform())
   return colorThemeNames
 }
 
