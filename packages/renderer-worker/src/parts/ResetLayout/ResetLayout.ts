@@ -22,6 +22,12 @@ const getActivityBarBounds = (): { readonly height: number; readonly width: numb
   }
 }
 
+const resetActivityBar = async (): Promise<void> => {
+  const { height, width, x, y } = getActivityBarBounds()
+  await Command.execute('ActivityBar.create', '', x, y, width, height, null, null, -1)
+  await Command.execute('ActivityBar.loadContent', {})
+}
+
 export const reset = async (state: LayoutState): Promise<LayoutStateResult> => {
   await Command.execute('Menu.hide', false)
   await closeWidgets()
@@ -46,7 +52,7 @@ export const reset = async (state: LayoutState): Promise<LayoutStateResult> => {
     }
     await Command.execute('Layout.hidePanel')
   }
-  await Command.execute('ActivityBar.reset', getActivityBarBounds())
+  await resetActivityBar()
   return {
     commands: [],
     newState: state,
