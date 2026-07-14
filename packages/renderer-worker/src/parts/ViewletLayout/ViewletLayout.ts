@@ -1301,16 +1301,13 @@ const getNewStatePointerMovePanel = async (state: LayoutState, x: number, y: num
   }
 }
 
-const getNewStatePointerMovePreview = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
-  const windowHeight = state.windowHeight
+const getNewStatePointerMovePreview = async (state: LayoutState, x: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const windowWidth = state.windowWidth
   return {
     newState: {
       ...state,
       previewLeft: x,
-      previewTop: y,
       previewWidth: windowWidth - x,
-      previewHeight: windowHeight - y,
     },
     commands: [],
   }
@@ -1330,7 +1327,7 @@ const getNewStatePointerMove = async (
     case SashType.Panel:
       return getNewStatePointerMovePanel(state, x, y)
     case SashType.Preview:
-      return getNewStatePointerMovePreview(state, x, y)
+      return getNewStatePointerMovePreview(state, x)
     case SashType.ActivityBar:
       return getNewStatePointerMoveActivityBar(state, x, y)
     default:
