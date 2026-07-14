@@ -7,6 +7,7 @@ const promptFlag = '--prompt'
 const promptWithValuePrefix = `${promptFlag}=`
 const allowReadFlag = '--allow-read'
 const allowWriteFlag = '--allow-write'
+const backendUrlFlag = '--backend-url'
 
 const parseFlagValue = (argv, flag) => {
   const prefix = `${flag}=`
@@ -47,9 +48,11 @@ export const parsePromptOptions = (argv) => {
   }
   const allowReadRoot = parseFlagValue(argv, allowReadFlag)
   const allowWriteRoot = parseFlagValue(argv, allowWriteFlag)
+  const backendUrl = parseFlagValue(argv, backendUrlFlag)
   return {
     ...(allowReadRoot !== undefined && { allowReadRoot }),
     ...(allowWriteRoot !== undefined && { allowWriteRoot }),
+    ...(backendUrl !== undefined && { backendUrl }),
     prompt,
   }
 }
@@ -134,7 +137,9 @@ export const run = async (promptOrOptions) => {
       startedAt,
     })
     const tracePath = await PromptTrace.write(trace)
-    await Process.writeStderr(`Trace: ${tracePath}\n`)
+    if (errorMessage) {
+      await Process.writeStderr(`Trace: ${tracePath}\n`)
+    }
   } catch (error) {
     errorMessage ||= getErrorMessage(error)
     await Process.writeStderr(`Failed to write agent trace: ${getErrorMessage(error)}\n`)
