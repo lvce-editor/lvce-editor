@@ -2,6 +2,10 @@ import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { LanguageServerMessageParser } from '../LanguageServerMessageParser/LanguageServerMessageParser.ts'
+import {
+  executeMarkdownLanguageServerRequest,
+  isMarkdownLanguageServerRequest,
+} from '../MarkdownLanguageServerRequest/MarkdownLanguageServerRequest.ts'
 
 interface JsonRpcMessage {
   readonly error?: {
@@ -62,6 +66,7 @@ export class LanguageServerConnection {
   private readonly pendingRequests = new Map<number | string, PendingRequest>()
   private readonly ready: Promise<void>
   private readonly rootUri: string
+  private markdownConfigured = false
   private nextRequestId = 1
   private running = true
   private stderr = ''
@@ -103,6 +108,7 @@ export class LanguageServerConnection {
 
   async complete(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
     await this.ready
+    this.configureMarkdown(textDocument.languageId)
     this.syncDocument(textDocument)
     const result = await this.sendRequest('textDocument/completion', {
       context: {
@@ -120,6 +126,35 @@ export class LanguageServerConnection {
       return (result as { readonly items: readonly unknown[] }).items
     }
     return []
+  }
+
+  private configureMarkdown(languageId: string): void {
+    if (languageId !== 'markdown' || this.markdownConfigured) {
+      return
+    }
+    this.markdownConfigured = true
+    this.sendNotification('workspace/didChangeConfiguration', {
+      settings: {
+        markdown: {
+          occurrencesHighlight: {
+            enabled: true,
+          },
+          preferredMdPathExtensionStyle: 'auto',
+          server: {
+            log: 'off',
+          },
+          suggest: {
+            paths: {
+              enabled: true,
+              includeWorkspaceHeaderCompletions: 'never',
+            },
+          },
+          validate: {
+            enabled: false,
+          },
+        },
+      },
+    })
   }
 
   private async initialize(): Promise<void> {
@@ -217,7 +252,7 @@ export class LanguageServerConnection {
 
   private handleMessage(message: JsonRpcMessage): void {
     if (message.method && message.id !== undefined && message.id !== null) {
-      this.handleServerRequest(message)
+      void this.handleServerRequest(message)
       return
     }
     if (message.id === undefined || message.id === null) {
@@ -235,24 +270,40 @@ export class LanguageServerConnection {
     pending.resolve(message.result)
   }
 
-  private handleServerRequest(message: JsonRpcMessage): void {
-    let result: unknown = null
-    if (message.method === 'workspace/configuration') {
-      const itemCount = Array.isArray(message.params?.items) ? message.params.items.length : 0
-      result = Array.from({ length: itemCount }).fill(null)
-    } else if (message.method === 'workspace/workspaceFolders') {
-      result = [
-        {
-          name: getWorkspaceName(this.rootUri),
-          uri: this.rootUri,
+  private async handleServerRequest(message: JsonRpcMessage): Promise<void> {
+    try {
+      let result: unknown = null
+      if (message.method === 'workspace/configuration') {
+        const itemCount = Array.isArray(message.params?.items) ? message.params.items.length : 0
+        result = Array.from({ length: itemCount }).fill(null)
+      } else if (message.method === 'workspace/workspaceFolders') {
+        result = [
+          {
+            name: getWorkspaceName(this.rootUri),
+            uri: this.rootUri,
+          },
+        ]
+      } else if (isMarkdownLanguageServerRequest(message.method || '')) {
+        result = await executeMarkdownLanguageServerRequest(message.method || '', message.params || {}, {
+          documents: this.documents,
+          rootUri: this.rootUri,
+        })
+      }
+      this.sendMessage({
+        id: message.id,
+        jsonrpc: '2.0',
+        result,
+      })
+    } catch (error) {
+      this.sendMessage({
+        error: {
+          code: -32_603,
+          message: error instanceof Error ? error.message : String(error),
         },
-      ]
+        id: message.id,
+        jsonrpc: '2.0',
+      })
     }
-    this.sendMessage({
-      id: message.id,
-      jsonrpc: '2.0',
-      result,
-    })
   }
 
   private handleExit(error: Error): void {
