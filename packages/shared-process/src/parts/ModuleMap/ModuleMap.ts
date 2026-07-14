@@ -247,6 +247,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
+    case 'LanguageServer.complete':
+      return ModuleId.LanguageServer
     case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
       return ModuleId.ListProcessesWithMemoryUsage
     case 'Native.openFolder':
