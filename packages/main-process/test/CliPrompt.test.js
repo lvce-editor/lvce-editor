@@ -6,6 +6,7 @@ import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { WebSocketServer } from 'ws'
 
 const expectedOutput = 'Mock response'
 const electronExecutable = String(electronPath)
@@ -20,6 +21,7 @@ let dbusAddress = ''
 let dbusPid = 0
 let server
 let temporaryDirectory = ''
+let webSocketServer
 
 const startDbus = () => {
   if (process.platform !== 'linux') {
@@ -85,6 +87,13 @@ beforeAll(async () => {
   temporaryDirectory = await mkdtemp(join(tmpdir(), 'lvce-cli-prompt-'))
   startDbus()
   server = createServer(handleRequest)
+  webSocketServer = new WebSocketServer({ server })
+  webSocketServer.on('connection', (socket) => {
+    socket.once('message', () => {
+      socket.send(JSON.stringify({ delta: expectedOutput, type: 'response.output_text.delta' }))
+      socket.send(JSON.stringify({ response: { id: 'response-1' }, type: 'response.completed' }))
+    })
+  })
   await new Promise((resolve, reject) => {
     server.once('error', reject)
     server.listen(0, 'localhost', () => resolve(undefined))
@@ -97,6 +106,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+  await new Promise((resolve) => webSocketServer.close(resolve))
   await new Promise((resolve, reject) => {
     server.close((error) => (error ? reject(error) : resolve(undefined)))
   })
