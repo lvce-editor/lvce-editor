@@ -68,6 +68,9 @@ export const getAll = () => {
 
 export const set = async (key, value) => {
   PreferencesState.set(key, value)
+  if (isTest()) {
+    return
+  }
   if (Platform.getPlatform() === PlatformType.Web) {
     const preferences = { ...PreferencesState.getAll(), [key]: value }
     await Command.execute(/* LocalStorage.setJson */ 'LocalStorage.setJson', /* key */ 'preferences', /* value */ preferences)
