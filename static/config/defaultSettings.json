@@ -35,8 +35,6 @@
 
   "sessionReplay.enabled": false,
 
-  "serviceWorker.enabled": false,
-
   "simpleBrowser.suggestions": false,
 
   "terminal.backend": "real",
