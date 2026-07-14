@@ -38,7 +38,7 @@
   "simpleBrowser.suggestions": false,
 
   "terminal.backend": "real",
-  "terminal.renderer": "termterm",
+  "terminal.renderer": "xterm",
   "terminal.separateConnection": false,
 
   "window.titleBarStyle": "custom",
