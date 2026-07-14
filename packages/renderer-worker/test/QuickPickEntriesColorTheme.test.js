@@ -1,5 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     }),
   }
 })
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
     invoke: jest.fn(() => {
       throw new Error('not implemented')
@@ -22,17 +22,19 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 })
 
 const QuickPickEntriesColorTheme = await import('../src/parts/QuickPickEntriesColorTheme/QuickPickEntriesColorTheme.js')
-const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 
 test('getPlaceholder', () => {
   expect(QuickPickEntriesColorTheme.getPlaceholder()).toBe('Select Color Theme')
 })
 
-test.skip('getPicks', async () => {
+test('getPicks', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  ExtensionManagementWorker.invoke.mockImplementation((method, assetDir, platform) => {
+    expect(assetDir).toBe('')
+    expect(platform).toBe(PlatformType.Test)
     switch (method) {
-      case 'ExtensionHost.getColorThemeNames':
+      case 'Extensions.getColorThemeNames':
         return ['monokai', 'shades-of-purple', 'slime']
       default:
         throw new Error('unexpected message')
@@ -41,29 +43,11 @@ test.skip('getPicks', async () => {
   expect(await QuickPickEntriesColorTheme.getPicks()).toEqual(['monokai', 'shades-of-purple', 'slime'])
 })
 
-test.skip('getPicks - error', async () => {
+test('getPicks - error', async () => {
+  const error = new Error('Failed to get color theme names')
   // @ts-ignore
-  SharedProcess.state.send = jest.fn((message) => {
-    // @ts-ignore
-    switch (message.method) {
-      case 'ExtensionHost.getColorThemeNames':
-        // @ts-ignore
-        SharedProcess.state.receive({
-          jsonrpc: JsonRpcVersion.Two,
-          // @ts-ignore
-          id: message.id,
-          error: {
-            code: -32000,
-            message: 'Color theme "undefined" not found in extensions folder',
-            data: {},
-          },
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrow(new Error('Color theme "undefined" not found in extensions folder'))
+  ExtensionManagementWorker.invoke.mockRejectedValue(error)
+  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrow(error)
 })
 
 test.skip('selectPick', () => {
