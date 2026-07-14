@@ -1,31 +1,46 @@
 import { expect, jest, test } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
-  register: jest.fn(),
+jest.unstable_mockModule('../src/parts/Id/Id.js', () => ({
+  create: jest.fn(() => 42),
 }))
 
-jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
-  get: jest.fn(),
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({
+  load: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/Product/Product.js', () => ({
-  getBackendUrl: jest.fn(),
+jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({
+  load: jest.fn(),
 }))
 
-const Command = await import('../src/parts/Command/Command.js')
 const HeadlessLayout = await import('../src/parts/HeadlessLayout/HeadlessLayout.js')
-const Preferences = await import('../src/parts/Preferences/Preferences.js')
-const Product = await import('../src/parts/Product/Product.js')
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const ViewletModule = await import('../src/parts/ViewletModule/ViewletModule.js')
 
-test('initialize - registers the backend URL command without loading Layout', () => {
+test('initialize - creates Layout without rendering child components', async () => {
+  const initData = {
+    Layout: {
+      bounds: {
+        windowHeight: 768,
+        windowWidth: 1024,
+      },
+    },
+  }
+
+  await HeadlessLayout.initialize(initData)
+
+  const expectedViewlet = {
+    disposed: false,
+    focus: false,
+    getModule: ViewletModule.load,
+    id: 'Layout',
+    render: false,
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 42,
+    uri: '',
+  }
+  expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   // @ts-ignore
-  Preferences.get.mockReturnValue('https://configured.example')
-
-  HeadlessLayout.initialize()
-
-  expect(Command.register).toHaveBeenCalledWith('Layout.getBackendUrl', expect.any(Function))
-  // @ts-ignore
-  const getBackendUrl = Command.register.mock.calls[0][1]
-  expect(getBackendUrl()).toBe('https://configured.example')
-  expect(Product.getBackendUrl).not.toHaveBeenCalled()
+  expect(ViewletManager.load.mock.calls[0]).toEqual([expectedViewlet, false, false, { ...initData, restore: false }])
 })

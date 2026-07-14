@@ -163,7 +163,8 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   if (prompt !== undefined) {
-    HeadlessLayout.initialize()
+    await HeadlessLayout.initialize(initData)
+    await Command.execute('Layout.setAuthState', authState)
     await InstalledWebExtensions.restore()
     await PromptMode.run(prompt)
     return
