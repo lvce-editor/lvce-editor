@@ -280,6 +280,7 @@ export const commandMap = {
   'PersistentFileHandle.removeHandle': lazy('PersistentFileHandle.removeHandle'),
   'PlatformPaths.getCachePath': lazy('PlatformPaths.getCachePath'),
   'PlatformPaths.getCacheUri': lazy('PlatformPaths.getCacheUri'),
+  'PlatformPaths.getBuiltinExtensionsPath': lazy('PlatformPaths.getBuiltinExtensionsPath'),
   'PlatformPaths.getDisabledExtensionsJsonPath': lazy('PlatformPaths.getDisabledExtensionsJsonPath'),
   'PlatformPaths.getLogsDir': lazy('PlatformPaths.getLogsDir'),
   'PlatformPaths.getConfigJsonPath': lazy('PlatformPaths.getConfigJsonPath'),
