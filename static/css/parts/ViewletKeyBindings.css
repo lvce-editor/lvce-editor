@@ -1,5 +1,5 @@
 :root {
-  --KeyBindingsEditorColor: #e1e2de;
+  --KeyBindingsEditorColor: var(--WorkbenchForeground, #e1e2de);
 }
 
 .KeyBindings {
