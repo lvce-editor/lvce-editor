@@ -29,6 +29,10 @@ const addAllContexts = () => {
   }
 }
 
+export const restore = () => {
+  addAllContexts()
+}
+
 export const handleViewContextChange = (uid, viewId, context) => {
   const oldKeys = getAllKeys()
   removeKeys(oldKeys)

@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
+import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
@@ -15,6 +16,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => {
   Assert.number(focusKey)
   Context.reset()
+  ExtensionViewContext.restore()
   FocusState.set(focusKey)
   Context.set(FocusState.get(), true)
   if (additionalFocusKey) {
