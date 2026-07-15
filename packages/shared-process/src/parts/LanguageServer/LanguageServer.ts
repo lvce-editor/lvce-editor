@@ -16,6 +16,13 @@ export interface CompleteOptions {
   readonly uri: string
 }
 
+export interface DiagnosticOptions {
+  readonly argv: readonly string[]
+  readonly id: string
+  readonly textDocument: TextDocument
+  readonly uri: string
+}
+
 interface ConnectionState {
   readonly argv: readonly string[]
   readonly connection: LanguageServerConnection
@@ -68,6 +75,16 @@ export const complete = async ({ argv, id, offset, textDocument, uri }: Complete
   const rootUri = getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${rootUri}`, uri, argv, rootUri)
   return connection.complete(normalizedDocument, offset)
+}
+
+export const diagnostic = async ({ argv, id, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
+  const normalizedDocument = {
+    ...textDocument,
+    uri: normalizeDocumentUri(textDocument.uri),
+  }
+  const rootUri = getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${rootUri}`, uri, argv, rootUri)
+  return connection.diagnostic(normalizedDocument)
 }
 
 export const disposeAll = (): void => {

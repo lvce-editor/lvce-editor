@@ -14,7 +14,14 @@ const context = {
 
 test('recognizes Markdown language server requests', () => {
   expect(isMarkdownLanguageServerRequest('markdown/parse')).toBe(true)
+  expect(isMarkdownLanguageServerRequest('markdown/fs/watcher/create')).toBe(true)
+  expect(isMarkdownLanguageServerRequest('markdown/fs/watcher/delete')).toBe(true)
   expect(isMarkdownLanguageServerRequest('workspace/configuration')).toBe(false)
+})
+
+test('acknowledges Markdown file watcher requests', async () => {
+  await expect(executeMarkdownLanguageServerRequest('markdown/fs/watcher/create', {}, context)).resolves.toBeNull()
+  await expect(executeMarkdownLanguageServerRequest('markdown/fs/watcher/delete', {}, context)).resolves.toBeNull()
 })
 
 test('parses the current in-memory Markdown document', async () => {

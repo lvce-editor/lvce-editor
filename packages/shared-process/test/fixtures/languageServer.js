@@ -31,6 +31,27 @@ const handleMessage = (message) => {
         items: [{ insertText: 'fixtureCompletion', kind: 6, label: `fixtureCompletion:${text}` }],
       },
     })
+    return
+  }
+  if (message.method === 'textDocument/diagnostic') {
+    const text = documents.get(message.params.textDocument.uri)
+    send({
+      id: message.id,
+      jsonrpc: '2.0',
+      result: {
+        items: [
+          {
+            message: `fixtureDiagnostic:${text}`,
+            range: {
+              end: { character: 3, line: 0 },
+              start: { character: 0, line: 0 },
+            },
+            severity: 2,
+          },
+        ],
+        kind: 'full',
+      },
+    })
   }
 }
 

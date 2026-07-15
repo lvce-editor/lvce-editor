@@ -27,6 +27,8 @@ export const isMarkdownLanguageServerRequest = (method: string): boolean => {
     method === 'markdown/fs/readFile' ||
     method === 'markdown/fs/readDirectory' ||
     method === 'markdown/fs/stat' ||
+    method === 'markdown/fs/watcher/create' ||
+    method === 'markdown/fs/watcher/delete' ||
     method === 'markdown/findMarkdownFilesInWorkspace'
   )
 }
@@ -92,6 +94,9 @@ export const executeMarkdownLanguageServerRequest = async (
   }
   if (method === 'markdown/findMarkdownFilesInWorkspace') {
     return findMarkdownFiles(getWorkspacePath(context.rootUri, context.rootUri))
+  }
+  if (method === 'markdown/fs/watcher/create' || method === 'markdown/fs/watcher/delete') {
+    return null
   }
   if (!params.uri) {
     throw new Error(`Markdown file request is missing a uri`)
