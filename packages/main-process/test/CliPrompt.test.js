@@ -174,6 +174,10 @@ const runElectron = () => {
 
 test('runs a prompt against the configured backend', async () => {
   const result = await runElectron()
+  if (result.code !== 0) {
+    console.error(`stdout:\n${result.stdout}`)
+    console.error(`stderr:\n${result.stderr}`)
+  }
   expect(result.code).toBe(0)
   expect(result.signal).toBeNull()
   expect(getApplicationStderr(result.stderr)).toBe('')
