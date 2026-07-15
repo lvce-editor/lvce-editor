@@ -18,6 +18,14 @@ const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
 }
 
+export const getTitle = (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || typeof instance.factory.getTitle !== 'function') {
+    return undefined
+  }
+  return instance.factory.getTitle(instance.state.uid)
+}
+
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {

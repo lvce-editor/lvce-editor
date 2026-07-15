@@ -81,4 +81,8 @@ export const saveState = async (state) => {
   return savedState
 }
 
+export const getTitle = async (uid) => {
+  return ExtensionDetailViewWorker.invoke('ExtensionDetail.renderTitle', uid)
+}
+
 export const hasFunctionalResize = true

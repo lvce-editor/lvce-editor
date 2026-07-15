@@ -420,6 +420,7 @@ export const commandMap = {
   'Viewlet.focus': lazy('Viewlet.focus'),
   'Viewlet.resize': lazy('Viewlet.resize'),
   'Viewlet.getAllStates': lazy('Viewlet.getAllStates'),
+  'Viewlet.getTitle': lazy('Viewlet.getTitle'),
   'Viewlet.openWidget': lazy('Viewlet.openWidget'),
   'Viewlet.send': lazy('Viewlet.send'),
   'ViewletDebugConsole.clear': lazy('ViewletDebugConsole.clear'),

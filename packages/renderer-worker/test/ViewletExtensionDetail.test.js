@@ -22,6 +22,17 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.j
   }
 })
 
+jest.unstable_mockModule('../src/parts/ExtensionDetailViewWorker/ExtensionDetailViewWorker.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    restart: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
   return {
     getExtension: jest.fn(() => {
@@ -38,6 +49,7 @@ class NodeError extends Error {
 }
 
 const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.ts')
+const ExtensionDetailViewWorker = await import('../src/parts/ExtensionDetailViewWorker/ExtensionDetailViewWorker.js')
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
@@ -45,6 +57,14 @@ test('create', () => {
   // @ts-ignore
   const state = ViewletExtensionDetail.create()
   expect(state).toBeDefined()
+})
+
+test('getTitle', async () => {
+  // @ts-ignore
+  ExtensionDetailViewWorker.invoke.mockResolvedValue('Test Extension')
+  await expect(ViewletExtensionDetail.getTitle(42)).resolves.toBe('Test Extension')
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenCalledWith('ExtensionDetail.renderTitle', 42)
 })
 
 test.skip('loadContent', async () => {
