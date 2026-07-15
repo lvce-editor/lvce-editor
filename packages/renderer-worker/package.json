@@ -101,7 +101,7 @@
     "@lvce-editor/terminal-worker": "^1.2.0",
     "@lvce-editor/test-worker": "^17.2.0",
     "@lvce-editor/text-measurement-worker": "^1.15.0",
-    "@lvce-editor/text-search-worker": "^7.2.0",
+    "@lvce-editor/text-search-worker": "^7.2.1",
     "@lvce-editor/title-bar-worker": "^4.8.1",
     "@lvce-editor/update-worker": "^2.7.0"
   },
