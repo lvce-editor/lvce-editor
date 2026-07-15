@@ -65,6 +65,30 @@ test.skip('setState - shouldApplyNewState returns false', () => {
   // }
 })
 
+test('getTitle - no instance', () => {
+  expect(Viewlet.getTitle(2)).toBeUndefined()
+})
+
+test('getTitle - provider has no getTitle function', () => {
+  expect(Viewlet.getTitle(1)).toBeUndefined()
+})
+
+test('getTitle', async () => {
+  const getTitle = jest.fn(async (_uid = 0) => 'Test Title')
+  const state = { uid: 1 }
+  ViewletStates.set(1, {
+    state,
+    renderedState: state,
+    moduleId: 'Layout',
+    factory: {
+      getTitle,
+    },
+  })
+  await expect(Viewlet.getTitle(1)).resolves.toBe('Test Title')
+  expect(getTitle).toHaveBeenCalledTimes(1)
+  expect(getTitle).toHaveBeenCalledWith(1)
+})
+
 test('openWidget - once', async () => {
   // @ts-ignore
   ViewletManager.load.mockImplementation(() => {
