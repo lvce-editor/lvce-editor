@@ -124,7 +124,7 @@ test('setExplicitBounds enables explicit bounds and resizes layout', async () =>
     windowHeight: 320,
     mainLeft: 0,
     mainTop: 35,
-    mainWidth: 300,
+    mainWidth: 262,
     mainHeight: 265,
   })
   expect(result.commands).toEqual([['Viewlet.setBounds', 88, 432, 35, 48, 265]])

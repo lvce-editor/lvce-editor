@@ -35,6 +35,8 @@ import * as Workspace from '../Workspace/Workspace.js'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
 
+const mainMinWidth = 100
+
 const getInitialBackendUrl = () => {
   return Preferences.get('layout.backendUrl') || Product.getBackendUrl()
 }
@@ -1148,7 +1150,6 @@ export const handleSashPointerUp = (state: LayoutState, sashId: string) => {
 
 const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const { activityBarWidth, previewWidth, sideBarLocation, sideBarMinWidth, windowWidth } = state
-  const mainMinWidth = 300
   const newSideBarWidth = sideBarLocation === SideBarLocationType.Left ? x - activityBarWidth : windowWidth - activityBarWidth - x - previewWidth
   const availableWidth = Math.max(0, windowWidth - previewWidth)
   const sideBarMaxWidthForMain = Math.max(0, availableWidth - activityBarWidth - mainMinWidth)
@@ -1185,7 +1186,6 @@ const getNewStatePointerMoveSideBar = async (state: LayoutState, x: number, y: n
 
 const getNewStatePointerMoveSecondarySideBar = async (state: LayoutState, x: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const { sideBarLocation, secondarySideBarMinWidth, sideBarLeft, sideBarWidth, windowWidth, previewVisible, previewLeft } = state
-  const mainMinWidth = 300
   const secondarySideBarRight = previewVisible ? previewLeft : windowWidth
   const mainLeft = sideBarLocation === SideBarLocationType.Left ? sideBarLeft + sideBarWidth : 0
   const maxSecondarySideBarWidth = Math.max(0, secondarySideBarRight - mainLeft - mainMinWidth)
@@ -1221,7 +1221,6 @@ const getNewStatePointerMoveSecondarySideBar = async (state: LayoutState, x: num
 const getNewStatePointerMoveActivityBar = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const windowWidth = state[LayoutKeys.WindowWidth]
   const previewMinWidth = 200 // TODO: make configurable
-  const mainMinWidth = 100 // TODO: make configurable
   const newPreviewWidth = windowWidth - x
 
   if (newPreviewWidth < previewMinWidth / 2) {

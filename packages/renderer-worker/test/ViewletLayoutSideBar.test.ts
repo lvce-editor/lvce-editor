@@ -41,6 +41,7 @@ const ActivityBarWorker = await import('../src/parts/ActivityBarWorker/ActivityB
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
@@ -298,5 +299,54 @@ test('toggleSideBarView preserves resized preview width when showing the side ba
     previewWidth: 320,
     sideBarView: 'SourceControl',
     sideBarVisible: true,
+  })
+})
+
+test('layout allows the side bar to grow when the preview uses half the window', () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewMinWidth: 100,
+    previewVisible: true,
+    previewWidth: 900,
+    sideBarMaxWidth: 9_999_999,
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 700,
+    windowHeight: 800,
+    windowWidth: 1800,
+  })
+
+  expect(state).toMatchObject({
+    mainWidth: 152,
+    previewWidth: 900,
+    sideBarWidth: 700,
+  })
+})
+
+test('resizing the side bar preserves a 100px main area', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewMinWidth: 100,
+    previewVisible: true,
+    previewWidth: 600,
+    sashId: 'SideBar',
+    sideBarMaxWidth: 9_999_999,
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 240,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.handleSashPointerMove(state, 0, 400)
+
+  expect(result.newState).toMatchObject({
+    mainWidth: 100,
+    previewWidth: 600,
+    sideBarWidth: 452,
   })
 })

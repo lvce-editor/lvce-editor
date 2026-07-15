@@ -4,8 +4,9 @@ import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import type { LayoutState } from './LayoutState.ts'
 
+const mainMinWidth = 100
+
 export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocationType.Right): LayoutState => {
-  const mainMinWidth = 300
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
   const panelVisible = source[LayoutKeys.PanelVisible]
   const sideBarVisible = source[LayoutKeys.SideBarVisible]
@@ -99,7 +100,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     // Calculate sidebar width for left section
     const maxSideBarWidth = Math.max(0, availableWidth - 48 - mainMinWidth)
-    const adjustedSideBarWidth = previewVisible ? Math.min(newSideBarWidth, maxSideBarWidth * 0.3) : Math.min(newSideBarWidth, maxSideBarWidth)
+    const adjustedSideBarWidth = Math.min(newSideBarWidth, maxSideBarWidth)
     let p7 = p8 - adjustedSideBarWidth
     if (sideBarVisible && p7 < 0) {
       p7 = 0
