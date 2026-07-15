@@ -1,6 +1,7 @@
 import { dirname } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { LanguageServerConnection } from '../LanguageServerConnection/LanguageServerConnection.ts'
+import { normalizeLanguageServerDocumentUri } from '../NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
 interface TextDocument {
   readonly languageId: string
@@ -30,13 +31,6 @@ interface ConnectionState {
 }
 
 const connections = new Map<string, ConnectionState>()
-
-const normalizeDocumentUri = (uri: string): string => {
-  if (uri.startsWith('/')) {
-    return pathToFileURL(uri).href
-  }
-  return uri
-}
 
 const getRootUri = (documentUri: string): string => {
   if (documentUri.startsWith('file:')) {
@@ -70,7 +64,7 @@ const getConnection = (id: string, uri: string, argv: readonly string[], rootUri
 export const complete = async ({ argv, id, offset, textDocument, uri }: CompleteOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
-    uri: normalizeDocumentUri(textDocument.uri),
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const rootUri = getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${rootUri}`, uri, argv, rootUri)
@@ -80,7 +74,7 @@ export const complete = async ({ argv, id, offset, textDocument, uri }: Complete
 export const diagnostic = async ({ argv, id, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
-    uri: normalizeDocumentUri(textDocument.uri),
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const rootUri = getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${rootUri}`, uri, argv, rootUri)
