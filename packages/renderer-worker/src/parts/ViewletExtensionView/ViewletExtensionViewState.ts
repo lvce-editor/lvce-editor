@@ -18,6 +18,7 @@ export interface ViewletExtensionViewState {
   readonly title: string
   readonly uid: number
   readonly uri: string
+  readonly viewId: string
   readonly width: number
   readonly x: number
   readonly y: number

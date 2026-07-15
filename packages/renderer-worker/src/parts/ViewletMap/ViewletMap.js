@@ -1,5 +1,6 @@
 import * as Path from '../Path/Path.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
 // TODO move this all to extensions
@@ -68,6 +69,11 @@ export const getModuleId = async (uri, opener) => {
   }
   if (uri.endsWith('.css') || uri.endsWith('.json') || uri.endsWith('.js') || uri.endsWith('.ts')) {
     return ViewletModuleId.EditorText
+  }
+
+  const extensionViews = await GetExtensionViews.getExtensionViews()
+  if ((opener && GetExtensionViews.findExtensionView(extensionViews, opener)) || GetExtensionViews.findExtensionView(extensionViews, uri)) {
+    return ViewletModuleId.ExtensionView
   }
 
   // TODO only request webviews once

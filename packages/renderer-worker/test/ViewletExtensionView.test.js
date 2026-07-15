@@ -34,6 +34,7 @@ const createState = () => {
     title: 'Testing',
     uid: 1,
     uri: 'sample.views.testing',
+    viewId: 'sample.views.testing',
     width: 100,
     x: 0,
     y: 0,

@@ -58,7 +58,8 @@ const createContext = (state: ViewletExtensionViewState, savedState: unknown): u
   return {
     state: savedState,
     uid: state.uid,
-    viewId: state.uri,
+    uri: state.uri,
+    viewId: state.viewId,
   }
 }
 
@@ -92,7 +93,7 @@ const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly
   }
   const actions = (await ExtensionManagementWorker.invoke(
     'Extensions.getViewActions',
-    state.uri,
+    state.viewId,
     state.uid,
     assetDir,
     getPlatform(),
@@ -139,6 +140,7 @@ export const create = (
     title: '',
     uid: id,
     uri,
+    viewId: uri,
     width,
     x,
     y,
@@ -154,19 +156,23 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   const css = await loadCss(view)
   const cssId = css ? getCssId(view) : ''
   const eventListeners = view.eventListeners || []
+  const stateWithViewId = {
+    ...state,
+    viewId: view.id,
+  }
   if (view.kind === 'virtualDom') {
     const result = await ExtensionManagementWorker.invoke(
       'Extensions.createViewInstance',
-      state.uri,
+      view.id,
       state.uid,
-      createContext(state, savedState),
+      createContext(stateWithViewId, savedState),
       assetDir,
       getPlatform(),
     )
     const createResult = result as CreateViewInstanceResult
     if (createResult.ok === false) {
       return {
-        ...state,
+        ...stateWithViewId,
         actionsDom: [],
         commands: [],
         css,
@@ -180,7 +186,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
     const initialState = {
-      ...state,
+      ...stateWithViewId,
       title,
     }
     const newState = {
@@ -199,7 +205,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     throw new Error(`view ${state.uri} is missing iframe contribution`)
   }
   return {
-    ...state,
+    ...stateWithViewId,
     actionsDom: [],
     css,
     cssId,
@@ -226,7 +232,7 @@ const dispatchEvent = async (state: ViewletExtensionViewState, event: unknown): 
   if (state.kind !== 'virtualDom') {
     return state
   }
-  const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.uri, state.uid, event, assetDir, getPlatform())
+  const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.viewId, state.uid, event, assetDir, getPlatform())
   const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
   return {
     ...newState,
@@ -251,7 +257,7 @@ export const rerender = async (state: ViewletExtensionViewState): Promise<Viewle
   if (state.kind !== 'virtualDom') {
     return state
   }
-  const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.uri, state.uid, assetDir, getPlatform())
+  const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.viewId, state.uid, assetDir, getPlatform())
   const newState = renderVirtualDomResult(state, result as ViewRenderResult)
   return {
     ...newState,
@@ -310,12 +316,12 @@ export const dispose = async (state: ViewletExtensionViewState): Promise<void> =
   if (state.kind !== 'virtualDom') {
     return
   }
-  await ExtensionManagementWorker.invoke('Extensions.disposeViewInstance', state.uri, state.uid, assetDir, getPlatform())
+  await ExtensionManagementWorker.invoke('Extensions.disposeViewInstance', state.viewId, state.uid, assetDir, getPlatform())
 }
 
 export const saveState = async (state: ViewletExtensionViewState): Promise<unknown> => {
   if (state.kind !== 'virtualDom') {
     return undefined
   }
-  return ExtensionManagementWorker.invoke('Extensions.saveViewInstanceState', state.uri, state.uid, assetDir, getPlatform())
+  return ExtensionManagementWorker.invoke('Extensions.saveViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
 }

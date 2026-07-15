@@ -122,6 +122,28 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   expect(newState.patches).toEqual([])
 })
 
+test('loadContent opens a document view with its contributed id and resource uri', async () => {
+  const state = ViewletExtensionView.create(1, 'file:///workspace/image.png', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.createViewInstance',
+    'sample.views.testing',
+    1,
+    {
+      state: undefined,
+      uid: 1,
+      uri: 'file:///workspace/image.png',
+      viewId: 'sample.views.testing',
+    },
+    '',
+    4,
+  )
+  expect(newState.uri).toBe('file:///workspace/image.png')
+  expect(newState.viewId).toBe('sample.views.testing')
+})
+
 test('renderEventListeners includes extension view listeners', () => {
   const state = {
     ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
