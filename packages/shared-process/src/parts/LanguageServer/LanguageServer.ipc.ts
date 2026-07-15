@@ -4,4 +4,5 @@ export const name = 'LanguageServer'
 
 export const Commands = {
   complete: LanguageServer.complete,
+  diagnostic: LanguageServer.diagnostic,
 }

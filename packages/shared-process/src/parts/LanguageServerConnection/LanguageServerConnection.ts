@@ -144,6 +144,21 @@ export class LanguageServerConnection {
     return []
   }
 
+  async diagnostic(textDocument: TextDocument): Promise<readonly unknown[]> {
+    await this.ready
+    this.configureMarkdown(textDocument.languageId)
+    this.syncDocument(textDocument)
+    const result = await this.sendRequest('textDocument/diagnostic', {
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+    if (result && typeof result === 'object' && Array.isArray((result as { readonly items?: unknown }).items)) {
+      return (result as { readonly items: readonly unknown[] }).items
+    }
+    return []
+  }
+
   private configureMarkdown(languageId: string): void {
     if (languageId !== 'markdown' || this.markdownConfigured) {
       return
@@ -166,7 +181,24 @@ export class LanguageServerConnection {
             },
           },
           validate: {
-            enabled: false,
+            duplicateLinkDefinitions: {
+              enabled: 'warning',
+            },
+            enabled: true,
+            fileLinks: {
+              enabled: 'warning',
+              markdownFragmentLinks: 'inherit',
+            },
+            fragmentLinks: {
+              enabled: 'warning',
+            },
+            ignoredLinks: [],
+            referenceLinks: {
+              enabled: 'warning',
+            },
+            unusedLinkDefinitions: {
+              enabled: 'warning',
+            },
           },
         },
       },
@@ -181,6 +213,10 @@ export class LanguageServerConnection {
             completionItem: {
               snippetSupport: true,
             },
+          },
+          diagnostic: {
+            dynamicRegistration: false,
+            relatedDocumentSupport: false,
           },
           synchronization: {
             didSave: true,
