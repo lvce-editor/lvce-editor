@@ -1,6 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const editorWorkerInvoke = jest.fn()
+const rendererProcessInvoke = jest.fn()
+const tokenizerRemoveConnectedEditor = jest.fn()
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -20,7 +22,27 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invoke: rendererProcessInvoke,
+}))
+
+jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
+  getTokenizer: jest.fn(),
+  removeConnectedEditor: tokenizerRemoveConnectedEditor,
+}))
+
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+
+test('dispose', async () => {
+  const commands = [['Viewlet.dispose', 2]]
+  editorWorkerInvoke.mockImplementation(() => commands)
+
+  await ViewletEditorText.dispose({ id: 1 })
+
+  expect(tokenizerRemoveConnectedEditor).toHaveBeenCalledWith(1)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.dispose', 1)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', commands)
+})
 
 test('resize - increase height', async () => {
   editorWorkerInvoke.mockImplementation((method) => {
