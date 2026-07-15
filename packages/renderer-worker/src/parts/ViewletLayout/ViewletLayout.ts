@@ -1809,6 +1809,12 @@ export const setAuthState = async (state: LayoutState, authState): Promise<Layou
   }
 }
 
+export const refreshAuthState = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const href = await Location.getHref()
+  const authState = await AuthWorker.initialize(state.backendUrl, state.platform, href)
+  return setAuthState(state, authState)
+}
+
 export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
   const { platform, backendUrl } = state
   const authState = await AuthWorker.signIn(backendUrl, platform)
