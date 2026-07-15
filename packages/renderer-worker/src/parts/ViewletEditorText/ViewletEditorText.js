@@ -12,6 +12,7 @@ import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as UnquoteString from '../UnquoteString/UnquoteString.js'
@@ -273,8 +274,10 @@ export const resize = async (state, dimensions) => {
   return rerender(newState)
 }
 
-export const dispose = (state) => {
+export const dispose = async (state) => {
   Tokenizer.removeConnectedEditor(state.id)
+  const commands = await EditorWorker.invoke('Editor.dispose', state.id)
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
 
 export const hasFunctionalRender = true
