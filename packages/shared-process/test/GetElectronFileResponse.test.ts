@@ -10,6 +10,12 @@ jest.unstable_mockModule('../src/parts/GetElectronFileResponseContent/GetElectro
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath', () => {
+  return {
+    getElectronFileResponseAbsolutePath: jest.fn(() => '/test.ts'),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/Logger/Logger', () => {
   return {
     error: jest.fn(),
