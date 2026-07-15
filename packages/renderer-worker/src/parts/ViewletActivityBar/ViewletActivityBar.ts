@@ -31,7 +31,7 @@ export const create = (id, uri, x, y, width, height): ActivityBarState => {
 
 export const loadContent = async (state: ActivityBarState): Promise<ActivityBarState> => {
   const savedState = {}
-  await ActivityBarWorker.invoke('ActivityBar.create', state.uid, '', state.x, state.y, state.width, state.height, null, null, -1, state.platform)
+  await ActivityBarWorker.invoke('ActivityBar.create', state.uid, '', state.x, state.y, state.width, state.height, null, null, state.platform)
   await ActivityBarWorker.invoke('ActivityBar.loadContent', state.uid, savedState)
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
   const commands = await ActivityBarWorker.invoke('ActivityBar.render2', state.uid, diffResult)
@@ -51,7 +51,7 @@ export const hotReload = async (state) => {
   // there could still be pending promises when the worker is disposed
   const savedState = await ActivityBarWorker.invoke('ActivityBar.saveState', state.uid)
   await ActivityBarWorker.restart('ActivityBar.terminate')
-  await ActivityBarWorker.invoke('ActivityBar.create', state.uid, '', state.x, state.y, state.width, state.height, null, null, -1, state.platform)
+  await ActivityBarWorker.invoke('ActivityBar.create', state.uid, '', state.x, state.y, state.width, state.height, null, null, state.platform)
   await ActivityBarWorker.invoke('ActivityBar.loadContent', state.uid, savedState)
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
   const commands = await ActivityBarWorker.invoke('ActivityBar.render2', state.uid, diffResult)
