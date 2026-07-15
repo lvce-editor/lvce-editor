@@ -52,6 +52,29 @@
   padding-top: 10px;
 }
 
+.ExtensionDetailMetadata {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  display: flex;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.ExtensionDetailStatistic {
+  align-items: center;
+  display: inline-flex;
+  font-size: 12px;
+  gap: 4px;
+}
+
+.ExtensionDetailDownloadCount::before {
+  content: '↓';
+}
+
+.ExtensionDetailRating::before {
+  color: var(--ExtensionIconStarForeground, #ffcc00);
+  content: '★';
+}
+
 .ExtensionDetailIcon {
   width: 140px;
   height: 140px;

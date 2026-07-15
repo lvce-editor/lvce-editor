@@ -142,7 +142,8 @@
 
 .ExtensionListItemFooter {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   contain: content;
 }
 
@@ -155,6 +156,34 @@
   /* color: #909593; */
   font-size: 90%;
   font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ExtensionListItemMetadata {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.ExtensionListItemStatistic {
+  align-items: center;
+  display: inline-flex;
+  font-size: 11px;
+  gap: 2px;
+}
+
+.ExtensionListItemDownloadCount::before {
+  content: '↓';
+}
+
+.ExtensionListItemRating::before {
+  color: var(--ExtensionIconStarForeground, #ffcc00);
+  content: '★';
 }
 
 .ExtensionListItemActionInstall {
