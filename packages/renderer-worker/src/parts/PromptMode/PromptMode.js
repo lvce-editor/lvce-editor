@@ -8,6 +8,7 @@ const promptWithValuePrefix = `${promptFlag}=`
 const allowReadFlag = '--allow-read'
 const allowWriteFlag = '--allow-write'
 const backendUrlFlag = '--backend-url'
+const unknownErrorCode = 'E_UNKNOWN'
 
 const parseFlagValue = (argv, flag) => {
   const prefix = `${flag}=`
@@ -99,11 +100,37 @@ const getErrorMessage = (error) => {
   return String(error)
 }
 
-export const run = async (promptOrOptions) => {
+const getErrorCode = (error) => {
+  if (!error || typeof error !== 'object') {
+    return unknownErrorCode
+  }
+  return typeof error.code === 'string' && error.code ? error.code : unknownErrorCode
+}
+
+const getAccessToken = (authState) => {
+  if (typeof authState?.authAccessToken === 'string') {
+    return authState.authAccessToken
+  }
+  return typeof authState?.accessToken === 'string' ? authState.accessToken : ''
+}
+
+const getCommandArguments = (prompt, fileSystemAccess, accessToken) => {
+  if (accessToken) {
+    return [prompt, undefined, fileSystemAccess, accessToken]
+  }
+  if (fileSystemAccess) {
+    return [prompt, undefined, fileSystemAccess]
+  }
+  return [prompt]
+}
+
+export const run = async (promptOrOptions, authState) => {
   const options = typeof promptOrOptions === 'string' ? { prompt: promptOrOptions } : promptOrOptions
   const prompt = options?.prompt
+  const accessToken = getAccessToken(authState)
   const id = PromptTrace.createId()
   const startedAt = new Date().toISOString()
+  let errorCode = ''
   let errorMessage = ''
   let fileSystemAccess
   let result
@@ -112,9 +139,8 @@ export const run = async (promptOrOptions) => {
       throw new TypeError('Prompt must be a non-empty string')
     }
     fileSystemAccess = getFileSystemAccess(options)
-    result = fileSystemAccess
-      ? await Command.execute('ExtensionHost.executeCommand', 'chat2.runPrompt', prompt, undefined, fileSystemAccess)
-      : await Command.execute('ExtensionHost.executeCommand', 'chat2.runPrompt', prompt)
+    const commandArguments = getCommandArguments(prompt, fileSystemAccess, accessToken)
+    result = await Command.execute('ExtensionHost.executeCommand', 'chat2.runPrompt', ...commandArguments)
     if (result?.status !== 'completed') {
       throw new Error(result?.error || 'Chat task failed without an error message')
     }
@@ -123,12 +149,14 @@ export const run = async (promptOrOptions) => {
       await Process.writeStdout(`${finalMessage}\n`)
     }
   } catch (error) {
+    errorCode = typeof result?.errorCode === 'string' && result.errorCode ? result.errorCode : getErrorCode(error)
     errorMessage = getErrorMessage(error)
     await Process.writeStderr(`${errorMessage}\n`)
   }
   try {
     const trace = PromptTrace.create({
       error: errorMessage,
+      errorCode,
       finishedAt: new Date().toISOString(),
       fileSystemAccess,
       id,
@@ -141,6 +169,7 @@ export const run = async (promptOrOptions) => {
       await Process.writeStderr(`Trace: ${tracePath}\n`)
     }
   } catch (error) {
+    errorCode ||= getErrorCode(error)
     errorMessage ||= getErrorMessage(error)
     await Process.writeStderr(`Failed to write agent trace: ${getErrorMessage(error)}\n`)
   }

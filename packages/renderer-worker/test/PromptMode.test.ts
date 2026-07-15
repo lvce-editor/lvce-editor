@@ -122,6 +122,28 @@ test('run - passes a read-only workspace sandbox to headless chat', async () => 
   expect(Exit.exit).toHaveBeenCalledWith(0)
 })
 
+test('run - passes the restored startup access token to headless chat', async () => {
+  // @ts-ignore
+  Command.execute.mockResolvedValueOnce({
+    sessionId: 'session-1',
+    status: 'completed',
+    task: { events: [] },
+    trace: [],
+  })
+
+  await PromptMode.run('Fix the tests', { authAccessToken: 'access-token-1' })
+
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ExtensionHost.executeCommand',
+    'chat2.runPrompt',
+    'Fix the tests',
+    undefined,
+    undefined,
+    'access-token-1',
+  )
+  expect(Exit.exit).toHaveBeenCalledWith(0)
+})
+
 test('run - makes workspace write access imply read access', async () => {
   // @ts-ignore
   Command.execute.mockResolvedValueOnce({
@@ -152,6 +174,7 @@ test('run - reports failures and exits unsuccessfully', async () => {
   // @ts-ignore
   Command.execute.mockResolvedValue({
     error: 'Model request failed',
+    errorCode: 'E_MODEL_REQUEST_FAILED',
     sessionId: 'session-1',
     status: 'failed',
     trace: [],
@@ -162,6 +185,12 @@ test('run - reports failures and exits unsuccessfully', async () => {
   expect(Process.writeStderr).toHaveBeenCalledWith('Model request failed\n')
   expect(Process.writeStderr).toHaveBeenCalledWith('Trace: /workspace/.agent-logs/trace-trace-1.json\n')
   expect(Process.writeStdout).not.toHaveBeenCalled()
+  expect(PromptTrace.create).toHaveBeenCalledWith(
+    expect.objectContaining({
+      error: 'Model request failed',
+      errorCode: 'E_MODEL_REQUEST_FAILED',
+    }),
+  )
   expect(Exit.exit).toHaveBeenCalledWith(1)
 })
 
