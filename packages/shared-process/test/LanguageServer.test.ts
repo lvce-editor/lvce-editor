@@ -33,3 +33,19 @@ test('complete starts a stdio language server and synchronizes documents', async
     }),
   ).resolves.toEqual([{ insertText: 'fixtureCompletion', kind: 6, label: 'fixtureCompletion:console' }])
 })
+
+test('complete starts a JavaScript language server', async () => {
+  const options = {
+    argv: [],
+    id: 'sample.javascript-fixture',
+    offset: 3,
+    textDocument: {
+      languageId: 'typescript',
+      text: 'con',
+      uri: '/tmp/sample.ts',
+    },
+    uri: pathToFileURL(serverScript).href,
+  }
+
+  await expect(complete(options)).resolves.toEqual([{ insertText: 'fixtureCompletion', kind: 6, label: 'fixtureCompletion:con' }])
+})

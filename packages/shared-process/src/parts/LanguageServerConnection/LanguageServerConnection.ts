@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
-import { basename } from 'node:path'
+import { basename, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { LanguageServerMessageParser } from '../LanguageServerMessageParser/LanguageServerMessageParser.ts'
 import {
@@ -41,6 +41,21 @@ export interface LanguageServerConnectionOptions {
   readonly uri: string
 }
 
+const getSpawnOptions = (uri: string, argv: readonly string[]): { readonly args: readonly string[]; readonly command: string } => {
+  const executablePath = fileURLToPath(uri)
+  const extension = extname(executablePath).toLowerCase()
+  if (extension === '.js' || extension === '.mjs' || extension === '.cjs') {
+    return {
+      args: [executablePath, ...argv],
+      command: process.execPath,
+    }
+  }
+  return {
+    args: argv,
+    command: executablePath,
+  }
+}
+
 const getPosition = (text: string, offset: number): { readonly character: number; readonly line: number } => {
   const safeOffset = Math.max(0, Math.min(offset, text.length))
   const before = text.slice(0, safeOffset)
@@ -73,7 +88,8 @@ export class LanguageServerConnection {
 
   constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
-    this.child = spawn(fileURLToPath(uri), [...argv], {
+    const { args, command } = getSpawnOptions(uri, argv)
+    this.child = spawn(command, [...args], {
       stdio: ['pipe', 'pipe', 'pipe'],
     })
     this.child.stdout.on('data', (chunk: Buffer) => {
