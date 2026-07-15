@@ -37,6 +37,7 @@ test('reset restores the initial application state', async () => {
     sideBarFocusMode: true,
     sideBarView: 'Search',
     sideBarVisible: false,
+    titleBarWidth: 1024,
   } as any
 
   await expect(ResetLayout.reset(state)).resolves.toEqual({
@@ -44,22 +45,25 @@ test('reset restores the initial application state', async () => {
     newState: state,
   })
 
-  expect(Command.execute).toHaveBeenCalledTimes(15)
+  expect(Command.execute).toHaveBeenCalledTimes(18)
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'Menu.hide', false)
-  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Viewlet.closeWidget', 'QuickPick')
-  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Viewlet.closeWidget', 'Dialog')
-  expect(Command.execute).toHaveBeenNthCalledWith(4, 'Viewlet.closeWidget', 'Confirm')
-  expect(Command.execute).toHaveBeenNthCalledWith(5, 'ColorTheme.setColorTheme', 'slime')
-  expect(Command.execute).toHaveBeenNthCalledWith(6, 'Main.closeAllEditors')
-  expect(Command.execute).toHaveBeenNthCalledWith(7, 'Workspace.getPath')
-  expect(Command.execute).toHaveBeenNthCalledWith(8, 'Workspace.close')
-  expect(Command.execute).toHaveBeenNthCalledWith(9, 'Layout.leaveSideBarFocusMode')
-  expect(Command.execute).toHaveBeenNthCalledWith(10, 'Layout.moveSideBarRight')
-  expect(Command.execute).toHaveBeenNthCalledWith(11, 'Layout.showSideBar', 'Explorer')
-  expect(Command.execute).toHaveBeenNthCalledWith(12, 'Layout.unmaximizePanel')
-  expect(Command.execute).toHaveBeenNthCalledWith(13, 'Layout.hidePanel')
-  expect(Command.execute).toHaveBeenNthCalledWith(14, 'ActivityBar.create', '', 976, 30, 48, 718, null, null, -1)
-  expect(Command.execute).toHaveBeenNthCalledWith(15, 'ActivityBar.loadContent', {})
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'TitleBar.closeMenu')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'TitleBar.setTitleTemplate', '${folderName}')
+  expect(Command.execute).toHaveBeenNthCalledWith(4, 'TitleBar.setWidth', 1024)
+  expect(Command.execute).toHaveBeenNthCalledWith(5, 'Viewlet.closeWidget', 'QuickPick')
+  expect(Command.execute).toHaveBeenNthCalledWith(6, 'Viewlet.closeWidget', 'Dialog')
+  expect(Command.execute).toHaveBeenNthCalledWith(7, 'Viewlet.closeWidget', 'Confirm')
+  expect(Command.execute).toHaveBeenNthCalledWith(8, 'ColorTheme.setColorTheme', 'slime')
+  expect(Command.execute).toHaveBeenNthCalledWith(9, 'Main.closeAllEditors')
+  expect(Command.execute).toHaveBeenNthCalledWith(10, 'Workspace.getPath')
+  expect(Command.execute).toHaveBeenNthCalledWith(11, 'Workspace.close')
+  expect(Command.execute).toHaveBeenNthCalledWith(12, 'Layout.leaveSideBarFocusMode')
+  expect(Command.execute).toHaveBeenNthCalledWith(13, 'Layout.moveSideBarRight')
+  expect(Command.execute).toHaveBeenNthCalledWith(14, 'Layout.showSideBar', 'Explorer')
+  expect(Command.execute).toHaveBeenNthCalledWith(15, 'Layout.unmaximizePanel')
+  expect(Command.execute).toHaveBeenNthCalledWith(16, 'Layout.hidePanel')
+  expect(Command.execute).toHaveBeenNthCalledWith(17, 'ActivityBar.create', '', 976, 30, 48, 718, null, null, -1)
+  expect(Command.execute).toHaveBeenNthCalledWith(18, 'ActivityBar.loadContent', {})
 })
 
 test('reset leaves an initial layout in place', async () => {
@@ -70,6 +74,7 @@ test('reset leaves an initial layout in place', async () => {
     sideBarFocusMode: false,
     sideBarView: 'Explorer',
     sideBarVisible: true,
+    titleBarWidth: 1024,
   } as any
 
   jest.spyOn(Command, 'execute').mockResolvedValue(undefined)
