@@ -5,6 +5,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const defaultColorTheme = 'slime'
+const defaultTitleTemplate = '${folderName}'
 
 const closeWidgets = async (): Promise<void> => {
   await Command.execute('Viewlet.closeWidget', ViewletModuleId.QuickPick)
@@ -30,6 +31,9 @@ const resetActivityBar = async (): Promise<void> => {
 
 export const reset = async (state: LayoutState): Promise<LayoutStateResult> => {
   await Command.execute('Menu.hide', false)
+  await Command.execute('TitleBar.closeMenu')
+  await Command.execute('TitleBar.setTitleTemplate', defaultTitleTemplate)
+  await Command.execute('TitleBar.setWidth', state.titleBarWidth)
   await closeWidgets()
   await Command.execute('ColorTheme.setColorTheme', defaultColorTheme)
   await Command.execute('Main.closeAllEditors')
