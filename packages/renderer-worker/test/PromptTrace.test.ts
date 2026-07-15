@@ -63,6 +63,35 @@ test('create - creates a Pi-inspired completed trace object', () => {
   })
 })
 
+test('create - includes a machine-readable code in failed traces', () => {
+  const trace = PromptTrace.create({
+    error: 'No token provided',
+    errorCode: 'E_NO_ACCESS_TOKEN_PROVIDED',
+    fileSystemAccess: undefined,
+    finishedAt: '2026-07-14T00:01:00.000Z',
+    id: 'trace-id',
+    prompt: 'Fix the tests',
+    result: undefined,
+    startedAt: '2026-07-14T00:00:00.000Z',
+  })
+
+  expect(trace).toEqual({
+    cwd: '/workspace',
+    error: 'No token provided',
+    errorCode: 'E_NO_ACCESS_TOKEN_PROVIDED',
+    finishedAt: '2026-07-14T00:01:00.000Z',
+    id: 'trace-id',
+    messages: [],
+    prompt: 'Fix the tests',
+    sessionId: '',
+    status: 'failed',
+    task: null,
+    timestamp: '2026-07-14T00:00:00.000Z',
+    type: 'agent-trace',
+    version: 1,
+  })
+})
+
 test('write - writes formatted JSON below the workspace', async () => {
   const trace = { cwd: '/workspace', id: 'trace-id' }
 

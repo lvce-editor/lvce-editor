@@ -169,7 +169,7 @@ export const startup = async (platform, assetDir) => {
   if (promptOptions !== undefined) {
     await HeadlessLayout.initialize(initData)
     await Command.execute('Layout.setAuthState', authState)
-    await PromptMode.run(promptOptions)
+    await PromptMode.run(promptOptions, authState)
     return
   }
 
