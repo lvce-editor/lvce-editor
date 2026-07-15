@@ -12,6 +12,7 @@ interface ViewRenderResult {
   readonly dom?: readonly unknown[]
   readonly focusSelector?: string
   readonly patches?: readonly unknown[]
+  readonly scrollPosition?: readonly [selector: string, scrollTop: number]
   readonly title?: string
   readonly type: string
 }
@@ -63,6 +64,14 @@ const createContext = (state: ViewletExtensionViewState, savedState: unknown): u
   }
 }
 
+const getScrollPositionCommands = (state: ViewletExtensionViewState, result: ViewRenderResult): readonly (readonly unknown[])[] => {
+  if (!result.scrollPosition) {
+    return []
+  }
+  const [selector, scrollTop] = result.scrollPosition
+  return [['Viewlet.setProperty', state.uid, selector, 'scrollTop', scrollTop]]
+}
+
 const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRenderResult | undefined): ViewletExtensionViewState => {
   if (!result) {
     return {
@@ -74,7 +83,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
   }
   return {
     ...state,
-    commands: [],
+    commands: getScrollPositionCommands(state, result),
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     error: undefined,
     focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',

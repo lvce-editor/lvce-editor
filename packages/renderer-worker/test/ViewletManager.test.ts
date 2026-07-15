@@ -59,6 +59,36 @@ test('extension view render supports functional events', () => {
   expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
 })
 
+test('extension view applies scroll position after patches', () => {
+  const actionsDom: readonly unknown[] = []
+  const dom: readonly unknown[] = []
+  const oldState = {
+    actionsDom,
+    commands: [],
+    css: '',
+    cssId: '',
+    dom,
+    focusSelector: '',
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+    uid: 1,
+  }
+  const patches = [{ type: 1 }]
+  const newState = {
+    ...oldState,
+    commands: [['Viewlet.setProperty', 1, '.Messages', 'scrollTop', 9_999_999]],
+    patches,
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1)
+
+  expect(commands).toEqual([
+    ['Viewlet.setPatches', 1, patches],
+    ['Viewlet.setProperty', 1, '.Messages', 'scrollTop', 9_999_999],
+  ])
+})
+
 test('concurrent side effect commands preserve completed state changes', async () => {
   const createDeferred = () => {
     let resolve: () => void = () => {}

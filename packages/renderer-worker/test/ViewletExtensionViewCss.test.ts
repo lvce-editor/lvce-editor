@@ -172,6 +172,23 @@ test('handleClick stores patches without duplicate commands', async () => {
   expect(newState.patches).toBe(patches)
 })
 
+test('handleClick forwards rendered scroll position as a renderer process command', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    patches: [],
+    scrollPosition: ['.Messages', 9_999_999],
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'virtualDom',
+  }
+
+  const newState = await ViewletExtensionView.handleClick(state, 'connect')
+
+  expect(newState.commands).toEqual([['Viewlet.setProperty', 1, '.Messages', 'scrollTop', 9_999_999]])
+})
+
 test('loadContent stores rendered sidebar actions', async () => {
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
