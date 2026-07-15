@@ -30,6 +30,7 @@ import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
+import { shouldInitializeAuth } from '../ShouldInitializeAuth/ShouldInitializeAuth.ts'
 import * as StartupAuth from '../StartupAuth/StartupAuth.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -154,11 +155,13 @@ export const startup = async (platform, assetDir) => {
     Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
   }
 
-  let authState
-  if (HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)) {
+  const hasAuthCallback = HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)
+  if (hasAuthCallback) {
     await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
   }
-  authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+  const authState = shouldInitializeAuth(hasAuthCallback, promptOptions !== undefined)
+    ? await StartupAuth.initializeAuth(platform, initData.Location.href)
+    : undefined
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
@@ -213,7 +216,9 @@ export const startup = async (platform, assetDir) => {
   // commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', layout.uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  await Command.execute('Layout.setAuthState', authState)
+  if (authState) {
+    await Command.execute('Layout.setAuthState', authState)
+  }
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 

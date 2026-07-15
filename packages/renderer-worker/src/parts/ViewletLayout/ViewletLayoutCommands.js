@@ -67,6 +67,7 @@ export const CommandsWithSideEffects = {
   openSideBarViewlet: ViewletLayout.openSideBarView,
   openSecondarySideBarViewlet: ViewletLayout.openSecondarySideBarView,
   openPanelViewlet: ViewletLayout.openPanelView,
+  refreshAuthState: ViewletLayout.refreshAuthState,
   setBadgeCount: ViewletLayout.setBadgeCount,
   setAuthState: ViewletLayout.setAuthState,
   setExplicitBounds: ViewletLayout.setExplicitBounds,
