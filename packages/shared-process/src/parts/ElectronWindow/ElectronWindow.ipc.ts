@@ -12,6 +12,7 @@ export const Commands = {
   openNewWithUri: ElectronWindow.openNewWithUri,
   reload: ElectronWindow.reload,
   toggleDevtools: ElectronWindow.toggleDevtools,
+  toggleFullScreen: ElectronWindow.toggleFullScreen,
   unmaximize: ElectronWindow.unmaximize,
   zoomIn: ElectronWindow.zoomIn,
   zoomOut: ElectronWindow.zoomOut,

@@ -22,6 +22,11 @@ export const toggleDevtools = (windowId: any): any => {
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'toggleDevtools')
 }
 
+export const toggleFullScreen = (windowId: any): any => {
+  Assert.number(windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'toggleFullScreen')
+}
+
 export const maximize = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'maximize')

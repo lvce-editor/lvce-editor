@@ -86,6 +86,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronWindow.openNewWithUri':
     case 'ElectronWindow.reload':
     case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.toggleFullScreen':
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':
