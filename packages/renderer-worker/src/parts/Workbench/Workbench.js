@@ -13,6 +13,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
@@ -175,6 +176,7 @@ export const startup = async (platform, assetDir) => {
   const isTestRun = Workspace.isTest() || initData.Location.href.includes('/tests/')
 
   await Focus.hydrate()
+  await KeyBindings.hydrate()
 
   LifeCycle.mark(LifeCyclePhase.Three)
 

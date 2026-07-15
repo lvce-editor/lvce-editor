@@ -12,6 +12,14 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ExtensionKeyBindings/ExtensionKeyBindings.js', () => {
+  return {
+    getKeyBindings: jest.fn(() => []),
+  }
+})
+
+const ExtensionKeyBindings = await import('../src/parts/ExtensionKeyBindings/ExtensionKeyBindings.js')
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
@@ -65,4 +73,19 @@ test('removeKeyBindings unregisters keybinding set after last reference is remov
   expect(KeyBindingsState.state.keyBindingSetCounts.Editor).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith('KeyBindings.setIdentifiers', new Uint32Array())
+})
+
+test('hydrate registers extension keybindings', async () => {
+  const keyBindings = [
+    {
+      command: 'ExtensionHost.executeCommand',
+      key: 3,
+      when: 'chat2.composerFocus',
+    },
+  ]
+  jest.mocked(ExtensionKeyBindings.getKeyBindings).mockResolvedValue(keyBindings)
+
+  await KeyBindings.hydrate()
+
+  expect(KeyBindingsState.state.keyBindingSets.extensions).toBe(keyBindings)
 })
