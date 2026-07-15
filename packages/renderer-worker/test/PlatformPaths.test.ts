@@ -16,6 +16,23 @@ const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js'
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
+const PlatformPathsIpc = await import('../src/parts/PlatformPaths/PlatformPaths.ipc.js')
+
+test('exposes getBuiltinExtensionsPath over ipc', () => {
+  expect(PlatformPathsIpc.Commands.getBuiltinExtensionsPath).toBe(PlatformPaths.getBuiltinExtensionsPath)
+})
+
+test('getBuiltinExtensionsPath', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method) => {
+    if (method === 'Platform.getBuiltinExtensionsPath') {
+      return '/test/extensions'
+    }
+    throw new Error('unexpected message')
+  })
+  expect(await PlatformPaths.getBuiltinExtensionsPath()).toBe('/test/extensions')
+})
+
 test('getLogsDir', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
