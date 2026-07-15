@@ -1,8 +1,9 @@
 import { expect, test } from '@jest/globals'
+import { pathToFileURL } from 'node:url'
 import { normalizeLanguageServerDocumentUri } from '../src/parts/NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
 test('normalizes an absolute path', () => {
-  expect(normalizeLanguageServerDocumentUri('/tmp/README.md')).toBe('file:///tmp/README.md')
+  expect(normalizeLanguageServerDocumentUri('/tmp/README.md')).toBe(pathToFileURL('/tmp/README.md').href)
 })
 
 test('normalizes a Windows file URI', () => {
