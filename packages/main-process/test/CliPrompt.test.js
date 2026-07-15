@@ -110,7 +110,7 @@ afterAll(async () => {
   await new Promise((resolve, reject) => {
     server.close((error) => (error ? reject(error) : resolve(undefined)))
   })
-  await rm(temporaryDirectory, { force: true, recursive: true })
+  await rm(temporaryDirectory, { force: true, maxRetries: 1, recursive: true, retryDelay: 100 })
   if (dbusPid) {
     process.kill(dbusPid)
   }
