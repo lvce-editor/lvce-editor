@@ -7,8 +7,10 @@ import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse
 import * as GetNotModifiedResponse from '../GetNotModifiedResponse/GetNotModifiedResponse.ts'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.ts'
+import * as GetTypeScriptSyntaxErrorResponse from '../GetTypeScriptSyntaxErrorResponse/GetTypeScriptSyntaxErrorResponse.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
+import * as IsTypeScriptSyntaxError from '../IsTypeScriptSyntaxError/IsTypeScriptSyntaxError.ts'
 import * as Logger from '../Logger/Logger.ts'
 
 // TODO maybe handle app responses and webview responses separately
@@ -48,6 +50,9 @@ export const getElectronFileResponse = async (url: any, request: any): Promise<a
       return GetNotFoundResponse.getNotFoundResponse()
     }
     Logger.error(error)
+    if (IsTypeScriptSyntaxError.isTypeScriptSyntaxError(error)) {
+      return GetTypeScriptSyntaxErrorResponse.getTypeScriptSyntaxErrorResponse()
+    }
     return GetServerErrorResponse.getServerErrorResponse()
   }
 }
