@@ -16,9 +16,16 @@ export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
 }
 
-export const invalidateExtensionsCache = async () => {
+export const doInvalidateExtensionsCache = async () => {
   try {
     await ExtensionManagementWorker.invoke('Extensions.invalidateExtensionsCache')
+  } catch {
+    // ignore
+  }
+}
+
+export const handleExtensionsCacheInvalidated = async () => {
+  try {
     await Command.execute('KeyBindings.hydrate')
     await Command.execute('Layout.handleExtensionsChanged')
   } catch {
@@ -39,12 +46,12 @@ export const showViewContextMenu = async (uid, viewId, menuId, x, y) => {
 
 export const install = async (id) => {
   await InstallExtension.install(id)
-  invalidateExtensionsCache()
+  doInvalidateExtensionsCache()
 }
 
 export const uninstall = async (id) => {
   await SharedProcess.invoke(/* ExtensionManagement.uninstall */ 'ExtensionManagement.uninstall', /* id */ id)
-  invalidateExtensionsCache()
+  doInvalidateExtensionsCache()
 }
 
 export const disable = async (id) => {
@@ -54,7 +61,7 @@ export const disable = async (id) => {
     } else {
       await SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
     }
-    await invalidateExtensionsCache()
+    await doInvalidateExtensionsCache()
     return undefined
   } catch (error) {
     return error
@@ -68,7 +75,7 @@ export const enable = async (id) => {
     } else {
       await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
     }
-    await invalidateExtensionsCache()
+    await doInvalidateExtensionsCache()
     return undefined
   } catch (error) {
     return error
