@@ -31,9 +31,45 @@ jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
+  return {
+    invoke: jest.fn(),
+  }
+})
+
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
+const ExtensionManagementIpc = await import('../src/parts/ExtensionManagement/ExtensionManagement.ipc.js')
+const Command = await import('../src/parts/Command/Command.js')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+
+test('doInvalidateExtensionsCache asks the extension management worker to invalidate', async () => {
+  await ExtensionManagement.doInvalidateExtensionsCache()
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.invalidateExtensionsCache')
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('handleExtensionsCacheInvalidated refreshes renderer state without invalidating again', async () => {
+  await ExtensionManagement.handleExtensionsCacheInvalidated()
+
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Layout.handleExtensionsChanged')
+})
+
+test('cache invalidation commands handle notifications without invalidating again', () => {
+  expect(ExtensionManagementIpc.Commands.handleExtensionsCacheInvalidated).toBe(ExtensionManagement.handleExtensionsCacheInvalidated)
+  expect(ExtensionManagementIpc.Commands.invalidateExtensionsCache).toBe(ExtensionManagement.handleExtensionsCacheInvalidated)
+})
 
 test.skip('install', async () => {
   // @ts-ignore
