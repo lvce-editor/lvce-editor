@@ -14,7 +14,8 @@ const getMenuEntries = async (uid: number, props: ContextMenuProps = {}): Promis
   if (!state || typeof state.uri !== 'string' || typeof props.menuId !== 'string') {
     return []
   }
-  return ExtensionManagementWorker.invoke('Extensions.getViewMenuEntries', state.uri, uid, props.menuId, assetDir, getPlatform()) as Promise<
+  const viewId = typeof state.viewId === 'string' ? state.viewId : state.uri
+  return ExtensionManagementWorker.invoke('Extensions.getViewMenuEntries', viewId, uid, props.menuId, assetDir, getPlatform()) as Promise<
     readonly unknown[]
   >
 }

@@ -1,6 +1,12 @@
-import { expect, test } from '@jest/globals'
-import * as ViewletMap from '../src/parts/ViewletMap/ViewletMap.js'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import { expect, jest, test } from '@jest/globals'
+
+jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', () => ({
+  findExtensionView: jest.fn(() => undefined),
+  getExtensionViews: jest.fn(async () => []),
+}))
+
+const ViewletMap = await import('../src/parts/ViewletMap/ViewletMap.js')
+const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 
 test('audio - ogg', async () => {
   expect(await ViewletMap.getModuleId('/test/file.ogg')).toBe(ViewletModuleId.Audio)

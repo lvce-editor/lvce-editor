@@ -29,8 +29,10 @@ export interface ExtensionView {
   readonly iframe?: ExtensionViewIframe
   readonly kind?: string
   readonly name?: string
+  readonly selector?: readonly string[]
   readonly showSideBarHeader?: boolean
   readonly title: string
+  readonly type?: string
 }
 
 interface ManifestView {
@@ -100,7 +102,15 @@ export const getExtensionViews = async (): Promise<readonly ExtensionView[]> => 
   return mergeCss(views, extensions)
 }
 
-export const getExtensionView = async (id: string): Promise<ExtensionView | undefined> => {
+export const findExtensionView = (views: readonly ExtensionView[], idOrUri: string): ExtensionView | undefined => {
+  const exactMatch = views.find((view) => view.id === idOrUri)
+  if (exactMatch) {
+    return exactMatch
+  }
+  return views.find((view) => view.type === 'preview' && view.selector?.some((selector) => idOrUri.endsWith(selector)))
+}
+
+export const getExtensionView = async (idOrUri: string): Promise<ExtensionView | undefined> => {
   const views = await getExtensionViews()
-  return views.find((view) => view.id === id)
+  return findExtensionView(views, idOrUri)
 }
