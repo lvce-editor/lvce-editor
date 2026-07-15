@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
   invoke: jest.fn(() => {}),
@@ -13,10 +13,20 @@ const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
 const ParentIpc = await import('../src/parts/MainProcess/MainProcess.js')
 
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
 test('toggleDevtools', async () => {
   await ElectronWindow.toggleDevtools(1)
   expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
   expect(ParentIpc.invoke).toHaveBeenCalledWith('ElectronWindow.executeWindowFunction', 1, 'toggleDevtools')
+})
+
+test('toggleFullScreen', async () => {
+  await ElectronWindow.toggleFullScreen(1)
+  expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('ElectronWindow.executeWindowFunction', 1, 'toggleFullScreen')
 })
 
 test('openNewWithUri', async () => {
