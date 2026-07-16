@@ -1843,13 +1843,18 @@ export const setUpdateState = async (state, updateState) => {
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
-export const handleWorkspaceRefresh = async (state: LayoutState) => {
-  return callGlobalEvent(state, 'handleWorkspaceRefresh')
+export const handleWorkspaceRefresh = async (state: LayoutState, deletedUris: readonly string[] = []) => {
+  return callGlobalEvent(state, 'handleWorkspaceRefresh', deletedUris)
 }
 
 export const refreshSourceControlBadgeCount = async (state: LayoutState): Promise<LayoutStateResult> => {
   try {
-    const badgeCount = await SourceControlWorker.invoke('SourceControl.getWorkspaceBadgeCount', Workspace.state.workspacePath, assetDir, Platform.platform)
+    const badgeCount = await SourceControlWorker.invoke(
+      'SourceControl.getWorkspaceBadgeCount',
+      Workspace.state.workspacePath,
+      assetDir,
+      Platform.platform,
+    )
     return setBadgeCount(state, ViewletModuleId.SourceControl, badgeCount)
   } catch {
     return {

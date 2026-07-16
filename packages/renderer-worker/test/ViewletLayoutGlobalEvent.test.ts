@@ -47,12 +47,14 @@ const createInstance = (uid, eventName, handler) => {
 
 test('handleWorkspaceRefresh runs global event handlers in parallel', async () => {
   const calls: string[] = []
+  const deletedUris = ['/workspace/deleted.ts']
   const first = createDeferred()
   const second = createDeferred()
   ViewletStates.set(
     'first',
-    createInstance(1, 'handleWorkspaceRefresh', async (state) => {
+    createInstance(1, 'handleWorkspaceRefresh', async (state, receivedDeletedUris) => {
       calls.push('first:start')
+      expect(receivedDeletedUris).toBe(deletedUris)
       await first.promise
       calls.push('first:end')
       return {
@@ -63,8 +65,9 @@ test('handleWorkspaceRefresh runs global event handlers in parallel', async () =
   )
   ViewletStates.set(
     'second',
-    createInstance(2, 'handleWorkspaceRefresh', async (state) => {
+    createInstance(2, 'handleWorkspaceRefresh', async (state, receivedDeletedUris) => {
       calls.push('second:start')
+      expect(receivedDeletedUris).toBe(deletedUris)
       await second.promise
       calls.push('second:end')
       return {
@@ -75,7 +78,7 @@ test('handleWorkspaceRefresh runs global event handlers in parallel', async () =
   )
 
   const state = ViewletLayout.create(1)
-  const resultPromise = ViewletLayout.handleWorkspaceRefresh(state)
+  const resultPromise = ViewletLayout.handleWorkspaceRefresh(state, deletedUris)
 
   expect(calls).toEqual(['first:start', 'second:start'])
 
