@@ -15,6 +15,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
   'ElectronBrowserView.createBrowserView',
   'ElectronWebContentsView.createWebContentsView',
+  'FileWatcher.dispose',
   'FileWatcher.watch',
   'FileWatcher.watchFile2',
 ])
