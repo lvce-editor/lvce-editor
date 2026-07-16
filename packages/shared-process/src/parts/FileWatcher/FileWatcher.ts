@@ -10,9 +10,31 @@ const handleEvents = (id: any, ipc: any, event: any): any => {
 // TODO remove ipc and dispose file watcher when socket / messageport closes
 const internalIdMap = Object.create(null)
 
+const addCloseListener = (ipc: any, listener: any): void => {
+  if (ipc.addEventListener) {
+    ipc.addEventListener('close', listener)
+  } else {
+    ipc.on('close', listener)
+  }
+}
+
+const removeCloseListener = (ipc: any, listener: any): void => {
+  if (ipc.removeEventListener) {
+    ipc.removeEventListener('close', listener)
+  } else {
+    ipc.off('close', listener)
+  }
+}
+
 export const watch = async (ipc: any, id: any, { exclude, roots }: any): Promise<any> => {
   const internalId = Id.create()
-  internalIdMap[internalId] = { id, ipc }
+  const handleClose = async (): Promise<void> => {
+    removeCloseListener(ipc, handleClose)
+    delete internalIdMap[internalId]
+    await disposeFileWatcher(internalId)
+  }
+  addCloseListener(ipc, handleClose)
+  internalIdMap[internalId] = { handleClose, id, ipc }
   return FileWatcherProcess.invoke('FileWatcher.watchFolders', {
     exclude,
     id: internalId,
@@ -28,19 +50,34 @@ const disposeFileWatcher = async (internalId: any): Promise<any> => {
   }
 }
 
+export const dispose = async (ipc: any, id: any): Promise<void> => {
+  for (const [internalId, ref] of Object.entries(internalIdMap)) {
+    if ((ref as any).id === id && (ref as any).ipc === ipc) {
+      removeCloseListener(ipc, (ref as any).handleClose)
+      delete internalIdMap[internalId]
+      await disposeFileWatcher(Number(internalId))
+      return
+    }
+  }
+}
+
 export const watchFile2 = async (ipc: any, id: any, uri: any): Promise<any> => {
   const internalId = Id.create()
   const handleClose = async (): Promise<any> => {
-    ipc.off('close', handleClose)
+    removeCloseListener(ipc, handleClose)
+    delete internalIdMap[internalId]
     await disposeFileWatcher(internalId)
   }
-  ipc.on('close', handleClose)
-  internalIdMap[internalId] = { id, ipc }
+  addCloseListener(ipc, handleClose)
+  internalIdMap[internalId] = { handleClose, id, ipc }
   // TODO promise never resolves, should resolve as soon as watcher has been set up
   await FileWatcherProcess.invoke('FileWatcher.watchFile2', internalId, uri)
 }
 
 export const handleChange = (event: any): any => {
   const ref = internalIdMap[event.id]
+  if (!ref) {
+    return
+  }
   handleEvents(ref.id, ref.ipc, event)
 }

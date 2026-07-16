@@ -40,6 +40,7 @@ import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleIn
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as WatchFilesForHotReload from '../WatchFilesForHotReload/WatchFilesForHotReload.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as WorkspaceFileWatcher from '../WorkspaceFileWatcher/WorkspaceFileWatcher.js'
 
 const actions = [
   async () => {
@@ -250,7 +251,11 @@ export const startup = async (platform, assetDir) => {
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  const watcherPromises = Promise.all([DevelopFileWatcher.hydrate(), WatchFilesForHotReload.watchFilesForHotReload()])
+  const watcherPromises = Promise.all([
+    DevelopFileWatcher.hydrate(),
+    WatchFilesForHotReload.watchFilesForHotReload(),
+    WorkspaceFileWatcher.hydrate(),
+  ])
 
   Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
   Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
