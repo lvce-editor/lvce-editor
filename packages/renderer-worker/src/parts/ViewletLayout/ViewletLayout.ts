@@ -622,7 +622,12 @@ export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<L
   if (state.sideBarVisible && state.sideBarView === sideBarView) {
     return hideSideBar(state)
   }
-  return showSideBar(state, sideBarView)
+  const result = await showSideBar(state, sideBarView)
+  const focusCommands = await Viewlet.getFocusCommands(sideBarView)
+  return {
+    newState: result.newState,
+    commands: [...result.commands, ...focusCommands],
+  }
 }
 
 export const showSecondarySideBar = (state: LayoutState) => {
