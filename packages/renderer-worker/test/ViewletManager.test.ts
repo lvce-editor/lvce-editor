@@ -184,6 +184,39 @@ test('concurrent side effect commands preserve completed state changes', async (
   })
 })
 
+test('functional getStatusBarVisible command returns its boolean value', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const mockModule = {
+    Commands: {
+      getStatusBarVisible: (state) => state.statusBarVisible,
+    },
+    create: jest.fn(() => ({
+      statusBarVisible: false,
+      uid: 8,
+    })),
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [],
+  }
+  const getModule = async () => mockModule
+  const viewlet = {
+    disposed: false,
+    focus: false,
+    getModule,
+    id: 'StatusBarQueryTest',
+    show: false,
+    type: 0,
+    uid: 8,
+    uri: '',
+  }
+
+  await ViewletManager.load(viewlet)
+
+  await expect(Command.execute('StatusBarQueryTest.getStatusBarVisible')).resolves.toBe(false)
+})
+
 test('extension view render sends a dynamic title to its parent', () => {
   const dom = []
   const oldState = {
