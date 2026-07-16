@@ -42,6 +42,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands.type).toBeDefined()
   expect(commands['FindWidget.close']).toBeDefined()
   expect(commands['ColorPicker.handleSliderPointerDown']).toBeDefined()
+  expect(commands.handleUriChange).toBeDefined()
   expect(commands.showOverlayMessage).toBeDefined()
   expect(commands.hotReload).toBeDefined()
 })
@@ -76,5 +77,32 @@ test('worker command wrapper invokes editor command, diff, and render', async ()
   expect(result).toEqual({
     ...editor,
     commands: [['Viewlet.send', 42, 'setDeltaY', 0]],
+  })
+})
+
+test('handleUriChange skips the duplicated viewlet uid and updates the renderer editor uri', async () => {
+  const editor = {
+    uid: 42,
+    uri: '/test/original.txt',
+  }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['handleUriChange']
+      case 'Editor.handleUriChange':
+        return undefined
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.handleUriChange(editor, 42, '/test/renamed.txt')
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.getCommandIds')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.handleUriChange', 42, '/test/renamed.txt')
+  expect(result).toEqual({
+    ...editor,
+    uri: '/test/renamed.txt',
   })
 })

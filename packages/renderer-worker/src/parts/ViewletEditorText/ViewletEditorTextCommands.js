@@ -94,9 +94,19 @@ const hotReload = async (state, editor, ...args) => {
   return state
 }
 
+const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
+  const newUri = maybeNewUri ?? editorUidOrNewUri
+  await EditorWorker.invoke('Editor.handleUriChange', editor.uid, newUri)
+  return {
+    ...editor,
+    uri: newUri,
+  }
+}
+
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
+    handleUriChange,
     showOverlayMessage,
     hotReload,
   })
