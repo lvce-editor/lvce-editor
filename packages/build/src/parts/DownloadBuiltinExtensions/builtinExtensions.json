@@ -308,7 +308,7 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "created": "2022-08-20"
   },
   {
