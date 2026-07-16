@@ -65,6 +65,7 @@ const runFn = async (instance, id, key, fn, args) => {
       key === 'getProductNameLong' ||
       key === 'getSideBarPosition' ||
       key === 'getSideBarVisible' ||
+      key === 'getStatusBarVisible' ||
       key === 'getUserInfo' ||
       key === 'getPayload' ||
       key === 'getResponse' ||
