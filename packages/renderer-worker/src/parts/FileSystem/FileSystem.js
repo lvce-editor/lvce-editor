@@ -4,8 +4,8 @@ import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as GetFileSystem from '../GetFileSystem/GetFileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
-const notifyWorkspaceChanged = async () => {
-  await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh'), Command.execute('Layout.refreshSourceControlBadgeCount')])
+const notifyWorkspaceChanged = async (deletedUris = []) => {
+  await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh', deletedUris), Command.execute('Layout.refreshSourceControlBadgeCount')])
 }
 
 export const readFile = async (uri, encoding = EncodingType.Utf8) => {
@@ -27,7 +27,7 @@ export const remove = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.remove(uri)
-  await notifyWorkspaceChanged()
+  await notifyWorkspaceChanged([uri])
 }
 
 export const rename = async (oldUri, newUri) => {
