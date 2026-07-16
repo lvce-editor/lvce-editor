@@ -90,8 +90,9 @@ export const getPathSeparator = () => {
   return FileSystemWorker.invoke('FileSystem.getPathSeparator')
 }
 
-export const isReadonly = () => {
-  return false
+export const isReadonly = (path) => {
+  path = toUri(path)
+  return FileSystemWorker.invoke('FileSystem.isReadonly', /* path */ path)
 }
 
 export const getRealPath = (path) => {
