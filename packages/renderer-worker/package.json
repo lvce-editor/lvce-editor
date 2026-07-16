@@ -103,7 +103,7 @@
     "@lvce-editor/text-measurement-worker": "^1.15.0",
     "@lvce-editor/text-search-worker": "^7.2.1",
     "@lvce-editor/title-bar-worker": "^4.8.1",
-    "@lvce-editor/update-worker": "^2.7.0"
+    "@lvce-editor/update-worker": "^2.8.0"
   },
   "devDependencies": {
     "@lvce-editor/blob-worker": "^1.5.0",
