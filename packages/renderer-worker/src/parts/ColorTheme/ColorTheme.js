@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetColorThemeCss from '../GetColorThemeCss/GetColorThemeCss.js'
@@ -50,6 +51,7 @@ export const setColorTheme = async (colorThemeId) => {
   }
   // TODO should preferences throw errors or should it call handleError directly?
   await Preferences.set('workbench.colorTheme', colorThemeId)
+  await Command.execute('Layout.handleColorThemeChanged', colorThemeId)
   return undefined
 }
 

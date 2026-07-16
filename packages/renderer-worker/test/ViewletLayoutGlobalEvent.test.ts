@@ -29,14 +29,14 @@ const createDeferred = () => {
   }
 }
 
-const createInstance = (uid, handler) => {
+const createInstance = (uid, eventName, handler) => {
   const state = {
     uid,
   }
   return {
     factory: {
       Commands: {
-        handleWorkspaceRefresh: handler,
+        [eventName]: handler,
       },
     },
     moduleId: `Test${uid}`,
@@ -51,7 +51,7 @@ test('handleWorkspaceRefresh runs global event handlers in parallel', async () =
   const second = createDeferred()
   ViewletStates.set(
     'first',
-    createInstance(1, async (state) => {
+    createInstance(1, 'handleWorkspaceRefresh', async (state) => {
       calls.push('first:start')
       await first.promise
       calls.push('first:end')
@@ -63,7 +63,7 @@ test('handleWorkspaceRefresh runs global event handlers in parallel', async () =
   )
   ViewletStates.set(
     'second',
-    createInstance(2, async (state) => {
+    createInstance(2, 'handleWorkspaceRefresh', async (state) => {
       calls.push('second:start')
       await second.promise
       calls.push('second:end')
@@ -90,6 +90,28 @@ test('handleWorkspaceRefresh runs global event handlers in parallel', async () =
   expect(ViewletManager.render).toHaveBeenCalledTimes(2)
   expect(result).toEqual({
     commands: [['render.1'], ['render.2']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
+test('handleColorThemeChanged forwards the color theme id to viewlets', async () => {
+  const handler = jest.fn((state: { uid: number }, colorThemeId: string) => {
+    return {
+      ...state,
+      colorThemeId,
+    }
+  })
+  ViewletStates.set('extension-detail', createInstance(1, 'handleColorThemeChanged', handler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleColorThemeChanged(state, 'slime')
+
+  expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'slime')
+  expect(ViewletManager.render).toHaveBeenCalledTimes(1)
+  expect(result).toEqual({
+    commands: [['render.1']],
     newState: {
       ...state,
     },
