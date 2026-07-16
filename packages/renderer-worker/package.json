@@ -92,7 +92,7 @@
     "@lvce-editor/renderer-process": "^30.8.0",
     "@lvce-editor/running-extensions-view": "^1.4.0",
     "@lvce-editor/settings-view": "^2.13.0",
-    "@lvce-editor/settings-worker": "^1.4.0",
+    "@lvce-editor/settings-worker": "^1.5.0",
     "@lvce-editor/simple-browser-view": "^2.3.0",
     "@lvce-editor/source-action-worker": "^1.8.0",
     "@lvce-editor/source-control-worker": "^3.4.1",
