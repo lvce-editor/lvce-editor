@@ -58,7 +58,7 @@
     "@lvce-editor/debug-worker": "^4.7.0",
     "@lvce-editor/diff-view": "^3.26.0",
     "@lvce-editor/diff-worker": "^3.3.0",
-    "@lvce-editor/editor-worker": "^19.18.1",
+    "@lvce-editor/editor-worker": "^19.19.0",
     "@lvce-editor/embeds-worker": "^4.4.0",
     "@lvce-editor/error-worker": "^3.5.0",
     "@lvce-editor/explorer-view": "^7.9.0",
