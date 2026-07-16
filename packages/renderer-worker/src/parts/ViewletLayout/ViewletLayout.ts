@@ -1923,6 +1923,10 @@ export const getSecondarySideBarVisible = (state: LayoutState): boolean => {
   return state.secondarySideBarVisible
 }
 
+export const getStatusBarVisible = (state: LayoutState): boolean => {
+  return state.statusBarVisible
+}
+
 export const getSideBarPosition = (state: LayoutState) => {
   return state.sideBarLocation
 }
