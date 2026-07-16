@@ -50,9 +50,13 @@ export const reset = async (state: LayoutState): Promise<LayoutStateResult> => {
   if (!state.sideBarVisible || state.sideBarView !== ViewletModuleId.Explorer) {
     await Command.execute('Layout.showSideBar', ViewletModuleId.Explorer)
   }
-  if (state.panelVisible) {
+  const panelViewNeedsReset = state.panelView !== ViewletModuleId.Problems
+  if (state.panelVisible || panelViewNeedsReset) {
     if (state.panelMaximized) {
       await Command.execute('Layout.unmaximizePanel')
+    }
+    if (panelViewNeedsReset) {
+      await Command.execute('Layout.showPanel', ViewletModuleId.Problems)
     }
     await Command.execute('Layout.hidePanel')
   }

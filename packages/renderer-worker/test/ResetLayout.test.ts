@@ -33,6 +33,7 @@ test('reset restores the initial application state', async () => {
   const state = {
     panelVisible: true,
     panelMaximized: true,
+    panelView: 'Output',
     sideBarLocation: SideBarLocationType.Left,
     sideBarFocusMode: true,
     sideBarView: 'Search',
@@ -45,7 +46,7 @@ test('reset restores the initial application state', async () => {
     newState: state,
   })
 
-  expect(Command.execute).toHaveBeenCalledTimes(18)
+  expect(Command.execute).toHaveBeenCalledTimes(19)
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'Menu.hide', false)
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'TitleBar.closeMenu')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'TitleBar.setTitleTemplate', '${folderName}')
@@ -61,14 +62,16 @@ test('reset restores the initial application state', async () => {
   expect(Command.execute).toHaveBeenNthCalledWith(13, 'Layout.moveSideBarRight')
   expect(Command.execute).toHaveBeenNthCalledWith(14, 'Layout.showSideBar', 'Explorer')
   expect(Command.execute).toHaveBeenNthCalledWith(15, 'Layout.unmaximizePanel')
-  expect(Command.execute).toHaveBeenNthCalledWith(16, 'Layout.hidePanel')
-  expect(Command.execute).toHaveBeenNthCalledWith(17, 'ActivityBar.create', '', 976, 30, 48, 718, null, null, -1)
-  expect(Command.execute).toHaveBeenNthCalledWith(18, 'ActivityBar.loadContent', {})
+  expect(Command.execute).toHaveBeenNthCalledWith(16, 'Layout.showPanel', 'Problems')
+  expect(Command.execute).toHaveBeenNthCalledWith(17, 'Layout.hidePanel')
+  expect(Command.execute).toHaveBeenNthCalledWith(18, 'ActivityBar.create', '', 976, 30, 48, 718, null, null, -1)
+  expect(Command.execute).toHaveBeenNthCalledWith(19, 'ActivityBar.loadContent', {})
 })
 
 test('reset leaves an initial layout in place', async () => {
   const state = {
     panelMaximized: false,
+    panelView: 'Problems',
     panelVisible: false,
     sideBarLocation: SideBarLocationType.Right,
     sideBarFocusMode: false,
@@ -86,6 +89,7 @@ test('reset leaves an initial layout in place', async () => {
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.moveSideBarRight')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.showSideBar', 'Explorer')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.unmaximizePanel')
+  expect(Command.execute).not.toHaveBeenCalledWith('Layout.showPanel', 'Problems')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.hidePanel')
   expect(Command.execute).toHaveBeenLastCalledWith('ActivityBar.loadContent', {})
 })
