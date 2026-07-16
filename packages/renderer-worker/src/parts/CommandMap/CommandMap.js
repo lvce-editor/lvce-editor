@@ -512,6 +512,7 @@ export const commandMap = {
   'Layout.handleSashPointerDown': lazy('Layout.handleSashPointerDown'),
   'Layout.handleSashPointerMove': lazy('Layout.handleSashPointerMove'),
   'Layout.handleSashPointerUp': lazy('Layout.handleSashPointerUp'),
+  'Layout.handleSettingsChanged': lazy('Layout.handleSettingsChanged'),
   'Layout.handleWorkspaceRefresh': lazy('Layout.handleWorkspaceRefresh'),
   'Layout.refreshSourceControlBadgeCount': lazy('Layout.refreshSourceControlBadgeCount'),
   'Layout.reset': lazy('Layout.reset'),

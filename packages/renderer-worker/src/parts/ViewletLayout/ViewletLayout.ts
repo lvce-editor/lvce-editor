@@ -1742,6 +1742,10 @@ const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<
       const commands = ViewletManager.render(value.factory, value.renderedState, newState)
       // @ts-ignore
       allCommands.push(...commands)
+      // @ts-ignore
+      value.state = newState
+      // @ts-ignore
+      value.renderedState = newState
     }
   }
   return {
@@ -1845,6 +1849,11 @@ export const setUpdateState = async (state, updateState) => {
 
 export const handleWorkspaceRefresh = async (state: LayoutState, deletedUris: readonly string[] = []) => {
   return callGlobalEvent(state, 'handleWorkspaceRefresh', deletedUris)
+}
+
+export const handleSettingsChanged = async (state: LayoutState) => {
+  await Preferences.hydrate()
+  return callGlobalEvent(state, 'handleSettingsChanged')
 }
 
 export const refreshSourceControlBadgeCount = async (state: LayoutState): Promise<LayoutStateResult> => {

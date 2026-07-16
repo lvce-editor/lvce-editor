@@ -1,5 +1,15 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+const hydratePreferences = jest.fn()
+
+jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
+  return {
+    get: jest.fn(),
+    hydrate: hydratePreferences,
+    update: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => {
   return {
     render: jest.fn((factory, renderedState, newState) => {
@@ -113,6 +123,36 @@ test('handleColorThemeChanged forwards the color theme id to viewlets', async ()
 
   expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'slime')
   expect(ViewletManager.render).toHaveBeenCalledTimes(1)
+  expect(result).toEqual({
+    commands: [['render.1']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
+test('handleSettingsChanged hydrates preferences and updates viewlet state', async () => {
+  const calls: string[] = []
+  hydratePreferences.mockImplementation(async () => {
+    calls.push('hydrate')
+  })
+  const handler = jest.fn((state: { uid: number }) => {
+    calls.push('handleSettingsChanged')
+    return {
+      ...state,
+      lineNumbers: false,
+    }
+  })
+  ViewletStates.set('editor', createInstance(1, 'handleSettingsChanged', handler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleSettingsChanged(state)
+
+  expect(calls).toEqual(['hydrate', 'handleSettingsChanged'])
+  expect(ViewletStates.getInstance('editor').state).toEqual({
+    lineNumbers: false,
+    uid: 1,
+  })
   expect(result).toEqual({
     commands: [['render.1']],
     newState: {
