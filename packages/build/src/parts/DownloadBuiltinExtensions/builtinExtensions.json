@@ -104,7 +104,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "created": "2022-06-16"
   },
   {
