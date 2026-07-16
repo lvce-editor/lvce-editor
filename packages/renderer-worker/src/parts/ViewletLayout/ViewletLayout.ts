@@ -1894,6 +1894,10 @@ export const handleExtensionsChanged = async (state: LayoutState) => {
   return callGlobalEvent(state, 'handleExtensionsChanged')
 }
 
+export const handleColorThemeChanged = async (state: LayoutState, colorThemeId: string) => {
+  return callGlobalEvent(state, 'handleColorThemeChanged', colorThemeId)
+}
+
 export const getActiveSideBarView = (state: LayoutState) => {
   return state.sideBarView
 }
