@@ -222,7 +222,7 @@
     "productionPath": "/packages/extension-detail-view-worker/dist/extensionDetailViewWorkerMain.js",
     "settingName": "develop.extensionDetailViewWorkerPath",
     "hotReloadCommand": "ExtensionDetail.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://api.github.com"]
   },
   {
     "id": "extensionHostSubWorker",
