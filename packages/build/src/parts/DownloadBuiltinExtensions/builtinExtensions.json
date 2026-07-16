@@ -296,7 +296,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "created": "2022-06-16"
   },
   {
