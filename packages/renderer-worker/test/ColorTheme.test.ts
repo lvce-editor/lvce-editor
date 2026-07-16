@@ -2,11 +2,16 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.clearAllMocks()
+  IsTest.state.isTest = true
   for (const key in Preferences.state) {
     delete Preferences.state[key]
   }
   ColorTheme.state.watchedTheme = ''
 })
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn(),
+}))
 
 jest.unstable_mockModule('../src/parts/Css/Css.js', () => ({
   addCssStyleSheet: jest.fn(),
@@ -26,9 +31,11 @@ jest.unstable_mockModule('../src/parts/GetColorThemeCss/GetColorThemeCss.js', ()
 }))
 
 const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
+const Command = await import('../src/parts/Command/Command.js')
 const Css = await import('../src/parts/Css/Css.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const GetColorThemeCss = await import('../src/parts/GetColorThemeCss/GetColorThemeCss.js')
+const IsTest = await import('../src/parts/IsTest/IsTest.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
 test('reload applies slime when no color theme is selected', async () => {
@@ -47,4 +54,17 @@ test('hydrate falls back to slime when the selected color theme cannot be loaded
   expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(2, 'slime')
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
+})
+
+test('setColorTheme notifies viewlets when the color theme changes', async () => {
+  await ColorTheme.setColorTheme('cobalt2')
+
+  expect(Preferences.state['workbench.colorTheme']).toBe('cobalt2')
+  expect(Command.execute).toHaveBeenCalledWith('Layout.handleColorThemeChanged', 'cobalt2')
+})
+
+test('setColorTheme does not notify viewlets when applying the color theme fails', async () => {
+  await ColorTheme.setColorTheme('missing-theme')
+
+  expect(Command.execute).not.toHaveBeenCalled()
 })
