@@ -428,6 +428,15 @@ const getLazyImport = (module, fnName) => {
   return undefined
 }
 
+const hasFn = (module, fnName) => {
+  return Boolean(
+    module.Commands?.[fnName] ||
+    module.CommandsWithSideEffects?.[fnName] ||
+    module.LazyCommands?.[fnName] ||
+    module.CommandsWithSideEffectsLazy?.[fnName],
+  )
+}
+
 const getFn = async (module, fnName) => {
   if (module.Commands && module.Commands[fnName]) {
     return module.Commands[fnName]
@@ -445,6 +454,22 @@ const getFn = async (module, fnName) => {
     throw new Error(`Command not found ${module.name}.${fnName}`)
   }
   return lazyFn
+}
+
+export const getFocusCommands = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || !hasFn(instance.factory, 'focus')) {
+    return []
+  }
+  const focus = await getFn(instance.factory, 'focus')
+  const oldState = instance.state
+  const newState = await focus(oldState)
+  if (oldState === newState) {
+    return []
+  }
+  const commands = ViewletManager.render(instance.factory, instance.renderedState, newState)
+  ViewletStates.setRenderedState(id, newState)
+  return commands
 }
 
 export const executeViewletCommand = async (uid, fnName, ...args) => {

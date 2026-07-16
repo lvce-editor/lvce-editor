@@ -26,6 +26,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
     load: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    render: jest.fn(() => []),
   }
 })
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
@@ -87,6 +88,44 @@ test('getTitle', async () => {
   await expect(Viewlet.getTitle(1)).resolves.toBe('Test Title')
   expect(getTitle).toHaveBeenCalledTimes(1)
   expect(getTitle).toHaveBeenCalledWith(1)
+})
+
+test('getFocusCommands returns focus render commands without sending them', async () => {
+  const oldState = { uid: 2 }
+  const newState = { focus: 1, uid: 2 }
+  const focus = jest.fn(async (_state: typeof oldState) => newState)
+  ViewletStates.set('Search', {
+    state: oldState,
+    renderedState: oldState,
+    moduleId: 'Search',
+    factory: {
+      Commands: { focus },
+    },
+  })
+  // @ts-ignore
+  ViewletManager.render.mockReturnValue([['Viewlet.focusElementByName', 2, 'SearchValue']])
+
+  const commands = await Viewlet.getFocusCommands('Search')
+
+  expect(focus).toHaveBeenCalledWith(oldState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(expect.anything(), oldState, newState)
+  expect(commands).toEqual([['Viewlet.focusElementByName', 2, 'SearchValue']])
+  expect(ViewletStates.getState('Search')).toBe(newState)
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('getFocusCommands returns no commands when the view has no focus command', async () => {
+  ViewletStates.set('CustomView', {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'CustomView',
+    factory: {
+      Commands: {},
+    },
+  })
+
+  await expect(Viewlet.getFocusCommands('CustomView')).resolves.toEqual([])
+  expect(ViewletManager.render).not.toHaveBeenCalled()
 })
 
 test('dispose - waits for factory disposal before disposing the rendered viewlet', async () => {

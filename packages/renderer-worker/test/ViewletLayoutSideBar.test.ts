@@ -25,6 +25,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
     disposeFunctional: jest.fn(() => []),
+    getFocusCommands: jest.fn(() => []),
     resize: jest.fn(() => []),
   }
 })
@@ -54,6 +55,8 @@ beforeEach(() => {
   SaveState.saveViewletState.mockResolvedValue(undefined)
   // @ts-ignore
   Viewlet.disposeFunctional.mockReturnValue([])
+  // @ts-ignore
+  Viewlet.getFocusCommands.mockResolvedValue([])
   // @ts-ignore
   Viewlet.resize.mockResolvedValue([])
   // @ts-ignore
@@ -300,6 +303,23 @@ test('toggleSideBarView preserves resized preview width when showing the side ba
     sideBarView: 'SourceControl',
     sideBarVisible: true,
   })
+})
+
+test('toggleSideBarView appends focus commands after showing the requested view', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusElementByName', 12, 'SearchValue']])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+  }
+
+  const result = await ViewletLayout.toggleSideBarView(state, 'Search')
+
+  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Search')
+  expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusElementByName', 12, 'SearchValue']])
 })
 
 test('layout allows the side bar to grow when the preview uses half the window', () => {
