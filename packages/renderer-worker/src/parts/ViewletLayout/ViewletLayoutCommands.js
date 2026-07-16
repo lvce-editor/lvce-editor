@@ -9,6 +9,7 @@ export const Commands = {
   getActivePanelView: ViewletLayout.getActivePanelView,
   getSideBarVisible: ViewletLayout.getSideBarVisible,
   getSecondarySideBarVisible: ViewletLayout.getSecondarySideBarVisible,
+  getStatusBarVisible: ViewletLayout.getStatusBarVisible,
   getSideBarPosition: ViewletLayout.getSideBarPosition,
   getSideBarFocusMode: ViewletLayout.getSideBarFocusMode,
   getCommit: ViewletLayout.getCommit,

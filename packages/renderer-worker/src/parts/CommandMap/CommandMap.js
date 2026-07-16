@@ -491,6 +491,7 @@ export const commandMap = {
   'Layout.getActiveSideBarView': lazy('Layout.getActiveSideBarView'),
   'Layout.getActiveSecondarySideBarView': lazy('Layout.getActiveSecondarySideBarView'),
   'Layout.getSecondarySideBarVisible': lazy('Layout.getSecondarySideBarVisible'),
+  'Layout.getStatusBarVisible': lazy('Layout.getStatusBarVisible'),
   'Layout.getSideBarFocusMode': lazy('Layout.getSideBarFocusMode'),
   'Layout.getAssetDir': lazy('Layout.getAssetDir'),
   'Layout.getAuthState': lazy('Layout.getAuthState'),
