@@ -128,7 +128,7 @@ export const dispose = async (id) => {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
     }
-    instance.factory.dispose(instance.state)
+    await instance.factory.dispose(instance.state)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, instanceUid))
