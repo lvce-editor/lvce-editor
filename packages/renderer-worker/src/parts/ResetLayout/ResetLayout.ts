@@ -9,6 +9,7 @@ const defaultTitleTemplate = '${folderName}'
 
 const closeWidgets = async (): Promise<void> => {
   await Command.execute('Viewlet.closeWidget', ViewletModuleId.QuickPick)
+  await Command.execute('Viewlet.closeWidget', ViewletModuleId.About)
   await Command.execute('Viewlet.closeWidget', ViewletModuleId.Dialog)
   await Command.execute('Viewlet.closeWidget', ViewletModuleId.Confirm)
 }
