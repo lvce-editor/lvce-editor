@@ -7,6 +7,7 @@ export interface SideBarFocusModeLayoutStateSnapshot {
   readonly previewSashVisible: boolean
   readonly previewVisible: boolean
   readonly secondarySideBarVisible: boolean
+  readonly secondarySideBarWidth: number
   readonly sideBarSashVisible: boolean
   readonly sideBarVisible: boolean
   readonly sideBarWidth: number
@@ -80,6 +81,7 @@ export interface LayoutState {
   readonly sideBarView: string
   readonly sideBarFocusMode: boolean
   readonly sideBarFocusModeLayout: SideBarFocusModeLayoutStateSnapshot | undefined
+  readonly sideBarFocusModeTarget: 'primary' | 'secondary'
   readonly sideBarVisible: boolean
   readonly sideBarWidth: number
   readonly secondarySideBarHeight: number

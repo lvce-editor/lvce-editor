@@ -127,6 +127,7 @@ export const create = (id: number): LayoutState => {
     sideBarSashVisible: false,
     sideBarFocusMode: false,
     sideBarFocusModeLayout: undefined,
+    sideBarFocusModeTarget: 'primary',
     sideBarVisible: false,
     secondarySideBarVisible: false,
     statusBarVisible: false,
@@ -354,6 +355,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     sideBarSashVisible: true,
     sideBarFocusMode: false,
     sideBarFocusModeLayout: undefined,
+    sideBarFocusModeTarget: 'primary',
     sideBarView: savedView,
     secondarySideBarView: savedSecondaryView,
     workbenchVisible: true,
@@ -482,6 +484,7 @@ const getSideBarFocusModeLayoutSnapshot = (state: LayoutState): SideBarFocusMode
     previewSashVisible: state.previewSashVisible,
     previewVisible: state.previewVisible,
     secondarySideBarVisible: state.secondarySideBarVisible,
+    secondarySideBarWidth: state.secondarySideBarWidth,
     sideBarSashVisible: state.sideBarSashVisible,
     sideBarVisible: state.sideBarVisible,
     sideBarWidth: state.sideBarWidth,
@@ -492,8 +495,9 @@ export const getSideBarFocusMode = (state: LayoutState): boolean => {
   return state.sideBarFocusMode
 }
 
-export const enterSideBarFocusMode = async (state: LayoutState): Promise<LayoutStateResult> => {
-  if (state.sideBarFocusMode || !state.sideBarVisible) {
+export const enterSideBarFocusMode = async (state: LayoutState, target: 'primary' | 'secondary' = 'primary'): Promise<LayoutStateResult> => {
+  const targetVisible = target === 'secondary' ? state.secondarySideBarVisible : state.sideBarVisible
+  if (state.sideBarFocusMode || !targetVisible) {
     return {
       newState: state,
       commands: [],
@@ -503,6 +507,7 @@ export const enterSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
     ...state,
     sideBarFocusMode: true,
     sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(state),
+    sideBarFocusModeTarget: target,
   })
   return {
     newState,
@@ -522,6 +527,7 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
     ...state.sideBarFocusModeLayout,
     sideBarFocusMode: false,
     sideBarFocusModeLayout: undefined,
+    sideBarFocusModeTarget: 'primary',
   })
   return {
     newState,
