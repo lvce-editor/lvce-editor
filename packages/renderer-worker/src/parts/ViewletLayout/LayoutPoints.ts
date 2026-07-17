@@ -39,6 +39,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   if (source.sideBarFocusMode) {
     const contentTop = titleBarVisible ? titleBarHeight : 0
     const contentBottom = statusBarVisible ? windowHeight - statusBarHeight : windowHeight
+    const focusSecondarySideBar = source.sideBarFocusModeTarget === 'secondary'
     return {
       ...source,
       activityBarSashVisible: false,
@@ -49,13 +50,17 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       panelVisible: false,
       previewSashVisible: false,
       previewVisible: false,
-      secondarySideBarVisible: false,
+      secondarySideBarHeight: Math.max(0, contentBottom - contentTop),
+      secondarySideBarLeft: 0,
+      secondarySideBarTop: contentTop,
+      secondarySideBarVisible: focusSecondarySideBar,
+      secondarySideBarWidth: focusSecondarySideBar ? windowWidth : secondarySideBarWidth,
       sideBarHeight: Math.max(0, contentBottom - contentTop),
       sideBarLeft: 0,
       sideBarSashVisible: false,
       sideBarTop: contentTop,
-      sideBarVisible: true,
-      sideBarWidth: windowWidth,
+      sideBarVisible: !focusSecondarySideBar,
+      sideBarWidth: focusSecondarySideBar ? sideBarWidth : windowWidth,
       statusBarTop: contentBottom,
       statusBarWidth: windowWidth,
       titleBarWidth: windowWidth,
