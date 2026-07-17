@@ -1,7 +1,12 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const wrapActivityBarCommand = (key: string) => {
   const fn = async (state, ...args) => {
+    if (key === 'handleFocus') {
+      Focus.setFocus(FocusKey.ActivityBar)
+    }
     await ActivityBarWorker.invoke(`ActivityBar.${key}`, state.uid, ...args)
     const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
     if (diffResult.length === 0) {
