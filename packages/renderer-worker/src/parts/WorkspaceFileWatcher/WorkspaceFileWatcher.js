@@ -18,7 +18,9 @@ const refresh = async () => {
   const deleted = [...deletedUris]
   deletedUris.clear()
   await Promise.allSettled([
-    Command.execute('Layout.handleWorkspaceRefresh', deleted),
+    Command.execute('Layout.handleWorkspaceRefresh', {
+      deleted,
+    }),
     Command.execute('Layout.refreshSourceControlBadgeCount'),
   ])
 }

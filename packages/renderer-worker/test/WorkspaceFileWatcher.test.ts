@@ -92,7 +92,9 @@ test('watcher events - debounce refresh and forward deleted uris', async () => {
   await jest.runAllTimersAsync()
 
   expect(Command.execute).toHaveBeenCalledTimes(2)
-  expect(Command.execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', ['file:///workspace/deleted.txt'])
+  expect(Command.execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
+    deleted: ['file:///workspace/deleted.txt'],
+  })
   expect(Command.execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
 

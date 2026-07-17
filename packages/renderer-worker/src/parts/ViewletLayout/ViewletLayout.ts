@@ -32,6 +32,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import type { WorkspaceRefresh } from '../WorkspaceChanges/WorkspaceChanges.ts'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
 
@@ -1872,8 +1873,8 @@ export const setUpdateState = async (state, updateState) => {
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
-export const handleWorkspaceRefresh = async (state: LayoutState, deletedUris: readonly string[] = []) => {
-  return callGlobalEvent(state, 'handleWorkspaceRefresh', deletedUris)
+export const handleWorkspaceRefresh = async (state: LayoutState, refresh: WorkspaceRefresh = {}) => {
+  return callGlobalEvent(state, 'handleWorkspaceRefresh', refresh)
 }
 
 export const handleSettingsChanged = async (state: LayoutState) => {
