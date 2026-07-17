@@ -5,6 +5,7 @@ import * as ConfirmPromptStrings from '../ConfirmPromptStrings/ConfirmPromptStri
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as TestWorker from '../TestWorker/TestWorker.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as SavePromptResult from '../SavePromptResult/SavePromptResult.js'
 
 let _mockId = 0
 
@@ -32,6 +33,37 @@ export const prompt = async (
     return ConfirmPromptElectron.prompt(message, confirmMessage, title, cancelMessage)
   }
   return ConfirmPromptWeb.prompt(message, confirmMessage, title)
+}
+
+const showMockSavePrompt = async (message, options) => {
+  const result = await showMockConfirmPrompt(message, options)
+  if (result === true) {
+    return SavePromptResult.Save
+  }
+  if (result === false) {
+    return SavePromptResult.Cancel
+  }
+  return result
+}
+
+export const promptSave = async (
+  message,
+  {
+    platform = Platform.getPlatform(),
+    title = 'Save Changes',
+    saveMessage = 'Save',
+    discardMessage = "Don't Save",
+    cancelMessage = ConfirmPromptStrings.cancel(),
+  } = {},
+) => {
+  const options = { cancelMessage, discardMessage, saveMessage, title }
+  if (_mockId) {
+    return showMockSavePrompt(message, options)
+  }
+  if (platform === PlatformType.Electron) {
+    return ConfirmPromptElectron.promptSave(message, options)
+  }
+  return ConfirmPromptWeb.promptSave(message)
 }
 
 export const showErrorMessage = ({ message, platform = Platform.getPlatform(), confirmMessage = ConfirmPromptStrings.ok(), title = '' }) => {

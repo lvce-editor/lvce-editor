@@ -47,6 +47,7 @@ export const commandMap = {
   'ColorTheme.setColorTheme': lazy('ColorTheme.setColorTheme'),
   'ConfirmPrompt.mock': lazy('ConfirmPrompt.mock'),
   'ConfirmPrompt.prompt': lazy('ConfirmPrompt.prompt'),
+  'ConfirmPrompt.promptSave': lazy('ConfirmPrompt.promptSave'),
   'ConfirmPrompt.showErrorMessage': lazy('ConfirmPrompt.showErrorMessage'),
   'ContentTracing.start': lazy('ContentTracing.start'),
   'ContentTracing.stop': lazy('ContentTracing.stop'),
