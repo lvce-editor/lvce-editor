@@ -326,7 +326,7 @@ export const getQuickPickMenuEntries = () => {
       label: 'Main: Close Editor',
     },
     {
-      id: 'Main.CloseAllEditors',
+      id: 'Main.closeAllEditors',
       label: 'Main: Close all Editors',
     },
     {

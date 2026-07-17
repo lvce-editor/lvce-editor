@@ -67,3 +67,12 @@ test('getQuickPickMenuEntries includes simple browser preview command', () => {
     args: ['simple-browser://'],
   })
 })
+
+test('getQuickPickMenuEntries includes close all editors command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Main.closeAllEditors',
+    label: 'Main: Close all Editors',
+  })
+})
