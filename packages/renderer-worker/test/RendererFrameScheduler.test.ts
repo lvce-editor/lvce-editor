@@ -1,11 +1,16 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const frameCallbacks: Array<(timestamp: number) => void> = []
+let currentTime = 0
 
 jest.unstable_mockModule('../src/parts/RequestAnimationFrame/RequestAnimationFrame.js', () => ({
   requestAnimationFrame: jest.fn((callback: (timestamp: number) => void) => {
     frameCallbacks.push(callback)
   }),
+}))
+
+jest.unstable_mockModule('../src/parts/Timestamp/Timestamp.js', () => ({
+  now: jest.fn(() => currentTime),
 }))
 
 const NormalizeRendererCommands = await import('../src/parts/NormalizeRendererCommands/NormalizeRendererCommands.js')
@@ -25,12 +30,14 @@ const flushMicrotasks = async () => {
 const runAnimationFrame = async (timestamp: number) => {
   const callback = frameCallbacks.shift()
   expect(callback).toBeDefined()
+  currentTime = timestamp
   callback!(timestamp)
   await flushMicrotasks()
 }
 
 beforeEach(() => {
   frameCallbacks.length = 0
+  currentTime = 0
   jest.clearAllMocks()
   rpc.invoke.mockResolvedValue(undefined)
   rpc.invokeAndTransfer.mockResolvedValue(undefined)
@@ -101,6 +108,34 @@ test('enforces 16ms spacing on high refresh displays', async () => {
   await second
   expect(rpc.invoke).toHaveBeenCalledTimes(2)
   expect(RendererFrameScheduler.state.frameCount).toBe(2)
+})
+
+test('starts frame spacing after the previous RPC completes', async () => {
+  let resolveFirst: (() => void) | undefined
+  rpc.invoke.mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        resolveFirst = resolve
+      }),
+  )
+  const first = RendererFrameScheduler.sendMultiple([['Viewlet.send', 1, 'first']])
+  await flushMicrotasks()
+  await runAnimationFrame(0)
+
+  currentTime = 10
+  resolveFirst!()
+  await first
+
+  const second = RendererFrameScheduler.sendMultiple([['Viewlet.send', 1, 'second']])
+  await flushMicrotasks()
+  await runAnimationFrame(16)
+
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  expect(frameCallbacks).toHaveLength(1)
+
+  await runAnimationFrame(26)
+  await second
+  expect(rpc.invoke).toHaveBeenCalledTimes(2)
 })
 
 test('resolves every caller only after its shared frame succeeds', async () => {
