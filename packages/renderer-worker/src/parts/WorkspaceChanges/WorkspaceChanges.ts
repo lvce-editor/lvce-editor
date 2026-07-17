@@ -1,4 +1,4 @@
-export type UriRename = readonly [oldUri: string, newUri: string]
+type UriRename = readonly [oldUri: string, newUri: string]
 
 export interface WorkspaceChanges {
   readonly deleted?: readonly string[]
