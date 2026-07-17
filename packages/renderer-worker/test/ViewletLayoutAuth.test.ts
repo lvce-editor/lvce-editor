@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
@@ -295,6 +296,57 @@ test('signIn merges auth worker state into layout state', async () => {
       userUsedTokens: 42,
     },
   })
+})
+
+test('signIn immediately explains the external browser flow on Electron', async () => {
+  const authResult = Promise.withResolvers<any>()
+  // @ts-ignore
+  AuthWorker.signIn.mockReturnValue(authResult.promise)
+  // @ts-ignore
+  Command.execute.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletLayout.create(1),
+    backendUrl: 'https://example.com/',
+    platform: PlatformType.Electron,
+  }
+
+  const signInPromise = ViewletLayout.signIn(state)
+  await Promise.resolve()
+  await Promise.resolve()
+
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Notification.create',
+    'info',
+    'Continue signing in in your browser. If it did not open, check your system default browser settings.',
+  )
+  expect(AuthWorker.signIn).toHaveBeenCalledWith('https://example.com/', PlatformType.Electron)
+
+  authResult.resolve({
+    authErrorMessage: '',
+    userState: 'loggedOut',
+  })
+  await signInPromise
+})
+
+test('signIn shows an auth worker error', async () => {
+  // @ts-ignore
+  AuthWorker.signIn.mockResolvedValue({
+    authErrorMessage: 'Could not open the browser.',
+    userState: 'loggedOut',
+  })
+  // @ts-ignore
+  Command.execute.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletLayout.create(1),
+    backendUrl: 'https://example.com/',
+    platform: PlatformType.Web,
+  }
+
+  await ViewletLayout.signIn(state)
+
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Notification.create', 'error', 'Could not open the browser.')
 })
 
 test('signOut merges logged out auth state into layout state', async () => {

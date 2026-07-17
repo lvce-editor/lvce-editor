@@ -1823,10 +1823,24 @@ export const refreshAuthState = async (state: LayoutState): Promise<LayoutStateR
   return setAuthState(state, authState)
 }
 
+const showAuthNotification = async (type: string, message: string): Promise<void> => {
+  try {
+    await Command.execute('Notification.create', type, message)
+  } catch {
+    // Authentication should continue when notifications are unavailable.
+  }
+}
+
 export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
   const { platform, backendUrl } = state
+  if (platform === PlatformType.Electron) {
+    await showAuthNotification('info', 'Continue signing in in your browser. If it did not open, check your system default browser settings.')
+  }
   const authState = await AuthWorker.signIn(backendUrl, platform)
   const newState = mergeAuthState(state, authState)
+  if (newState.authErrorMessage) {
+    await showAuthNotification('error', newState.authErrorMessage)
+  }
   return {
     newState,
     commands: await getAuthFanoutCommands(newState),
