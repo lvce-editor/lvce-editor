@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -72,7 +73,12 @@ test('getUserSettingsPath', async () => {
   expect(await PlatformPaths.getUserSettingsPath()).toBe('~/.config/app/settings.json')
 })
 
-test('getConfigJsonPath', async () => {
+test('getConfigJsonPath - web', async () => {
+  expect(await PlatformPaths.getConfigJsonPath(PlatformType.Web, '/test/commit-hash')).toBe('/test/commit-hash/config.json')
+  expect(SharedProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('getConfigJsonPath - electron', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -82,7 +88,7 @@ test('getConfigJsonPath', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await PlatformPaths.getConfigJsonPath()).toBe('file:///test/config.json')
+  expect(await PlatformPaths.getConfigJsonPath(PlatformType.Electron)).toBe('file:///test/config.json')
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Platform.getConfigJsonPath')
 })
 
