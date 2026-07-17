@@ -69,7 +69,7 @@
     "@lvce-editor/extension-search-view": "^7.8.0",
     "@lvce-editor/file-search-worker": "^8.4.0",
     "@lvce-editor/file-system-worker": "^5.8.1",
-    "@lvce-editor/find-widget-worker": "^3.7.4",
+    "@lvce-editor/find-widget-worker": "^3.7.5",
     "@lvce-editor/hover-worker": "^2.5.0",
     "@lvce-editor/icon-theme-worker": "^2.13.0",
     "@lvce-editor/iframe-inspector": "^2.4.0",
