@@ -24,7 +24,10 @@ export const getDisabledExtensionsJsonPath = () => {
   return SharedProcess.invoke(/* Platform.getDisabledExtensionsJsonPath */ 'Platform.getDisabledExtensionsJsonPath')
 }
 
-export const getConfigJsonPath = () => {
+export const getConfigJsonPath = (platform = Platform.getPlatform(), assetDir = AssetDir.assetDir) => {
+  if (platform === PlatformType.Web) {
+    return `${assetDir}/config.json`
+  }
   return SharedProcess.invoke(/* Platform.getConfigJsonPath */ 'Platform.getConfigJsonPath')
 }
 
