@@ -1,8 +1,9 @@
 export const name = 'viewlet.activity-bar-keyboard-navigation'
 
-export const test = async ({ ActivityBar, KeyBoard, Locator, expect }) => {
+export const test = async ({ KeyBoard, Locator, expect }) => {
   // act
-  await ActivityBar.focus()
+  const activityBar = Locator('#ActivityBar')
+  await activityBar.click()
 
   // assert
   const activityBarItemExplorer = Locator('.ActivityBarItem[title="Explorer"]')
@@ -44,7 +45,7 @@ export const test = async ({ ActivityBar, KeyBoard, Locator, expect }) => {
   await expect(sideBarHeaderTitle).toHaveText('Search')
 
   // act
-  await ActivityBar.focus()
+  await activityBar.click()
   await expect(activityBarItemSearch).toHaveClass('FocusOutline')
   await KeyBoard.press('End')
   await expect(activityBarItemSettings).toHaveClass('FocusOutline')
