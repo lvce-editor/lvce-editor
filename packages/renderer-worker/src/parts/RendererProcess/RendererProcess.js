@@ -1,6 +1,7 @@
 // @ts-ignore
 import { WebWorkerRpcClient2 } from '../../../../../static/js/lvce-editor-rpc.js'
 import * as CommandMapRef from '../CommandMapRef/CommandMapRef.js'
+import * as RendererFrameScheduler from '../RendererFrameScheduler/RendererFrameScheduler.js'
 
 export const state = {
   pendingMessages: [],
@@ -23,6 +24,7 @@ export const listen = async () => {
   console.assert(state.pendingMessages.length === 0)
   const rpc = await getRpc()
   state.rpc = rpc
+  RendererFrameScheduler.reset(rpc)
 }
 
 /**
@@ -34,11 +36,11 @@ export const send = (message) => {
 }
 
 export const invoke = (method, ...params) => {
-  return state.rpc.invoke(method, ...params)
+  return RendererFrameScheduler.invoke(method, ...params)
 }
 
 export const invokeAndTransfer = (method, ...params) => {
-  return state.rpc.invokeAndTransfer(method, ...params)
+  return RendererFrameScheduler.invokeAndTransfer(method, ...params)
 }
 
 export const sendAndTransfer = (message, transferables) => {
