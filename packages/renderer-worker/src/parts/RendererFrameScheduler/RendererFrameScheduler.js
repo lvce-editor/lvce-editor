@@ -1,5 +1,6 @@
 import * as NormalizeRendererCommands from '../NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.js'
+import * as Timestamp from '../Timestamp/Timestamp.js'
 
 const kAddCssStyleSheet = 'Css.addCssStyleSheet'
 const kDispose = 'Viewlet.dispose'
@@ -56,8 +57,11 @@ const runFrame = async (frame) => {
     return
   }
   state.frameCount++
-  state.lastFrameTime = timestamp
-  return invokeWithCacheRecovery(kSendMultiple, commands)
+  try {
+    return await invokeWithCacheRecovery(kSendMultiple, commands)
+  } finally {
+    state.lastFrameTime = Math.max(timestamp, Timestamp.now())
+  }
 }
 
 const sealPendingFrame = () => {
