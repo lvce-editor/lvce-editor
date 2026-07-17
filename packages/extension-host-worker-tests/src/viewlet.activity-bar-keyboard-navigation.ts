@@ -1,8 +1,6 @@
 export const name = 'viewlet.activity-bar-keyboard-navigation'
 
-export const skip = 1
-
-export const test = async ({ ActivityBar, Locator, expect }) => {
+export const test = async ({ ActivityBar, KeyBoard, Locator, expect }) => {
   // act
   await ActivityBar.focus()
 
@@ -13,53 +11,46 @@ export const test = async ({ ActivityBar, Locator, expect }) => {
   await expect(sideBarHeaderTitle).toHaveText('Explorer')
 
   // act
-  await ActivityBar.focusNext()
+  await KeyBoard.press('ArrowDown')
 
   // assert
   const activityBarItemSearch = Locator('.ActivityBarItem[title="Search"]')
   await expect(activityBarItemSearch).toHaveClass('FocusOutline')
 
   // act
-  await ActivityBar.selectCurrent()
+  await KeyBoard.press('ArrowUp')
 
   // assert
-  await expect(sideBarHeaderTitle).toHaveText('Search')
-  // TODO search input should be focused
+  await expect(activityBarItemExplorer).toHaveClass('FocusOutline')
 
   // act
-  await ActivityBar.focusLast()
+  await KeyBoard.press('End')
 
   // assert
   const activityBarItemSettings = Locator('.ActivityBarItem[title="Settings"]')
   await expect(activityBarItemSettings).toHaveClass('FocusOutline')
 
   // act
-  await ActivityBar.selectCurrent()
-
-  // assert
-  const menu = Locator(`#Menu-0`)
-  await expect(menu).toBeFocused()
-
-  // TODO close menu with escape
-
-  // act
-  await ActivityBar.focusPrevious()
-
-  // assert
-  const activityBarItemExtensions = Locator('.ActivityBarItem[title="Extensions"]')
-  await expect(activityBarItemExtensions).toHaveClass('FocusOutline')
-
-  // act
-  await ActivityBar.focusFirst()
+  await KeyBoard.press('Home')
 
   // assert
   await expect(activityBarItemExplorer).toHaveClass('FocusOutline')
 
   // act
-  await ActivityBar.selectCurrent()
+  await KeyBoard.press('ArrowDown')
+  await KeyBoard.press('Enter')
 
   // assert
-  await expect(sideBarHeaderTitle).toHaveText('Explorer')
+  await expect(sideBarHeaderTitle).toHaveText('Search')
 
-  // TODO explorer should be focused
+  // act
+  await ActivityBar.focus()
+  await expect(activityBarItemSearch).toHaveClass('FocusOutline')
+  await KeyBoard.press('End')
+  await expect(activityBarItemSettings).toHaveClass('FocusOutline')
+  await KeyBoard.press('Space')
+
+  // assert
+  const menu = Locator('#Menu-0')
+  await expect(menu).toBeFocused()
 }
