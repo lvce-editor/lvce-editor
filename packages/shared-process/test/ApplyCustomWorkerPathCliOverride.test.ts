@@ -19,10 +19,10 @@ test('applyCustomWorkerPathCliOverride - removes custom worker paths when disabl
   process.argv = [...originalArgv, '--disable-custom-worker-paths']
   const preferences = {
     'develop.editorWorkerPath': '/test/editor-worker',
-    'developer.syntaxHighlightingWorkerPath': '/test/syntax-highlighting-worker',
     'develop.languageModelsViewPath': '/test/language-models-view-worker',
-    'develop.runningExtensionsViewPath': '/test/running-extensions-view-worker',
     'develop.rendererProcessPath': '/test/renderer-process',
+    'develop.runningExtensionsViewPath': '/test/running-extensions-view-worker',
+    'developer.syntaxHighlightingWorkerPath': '/test/syntax-highlighting-worker',
     'workbench.colorTheme': 'test-theme',
   }
 
