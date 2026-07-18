@@ -42,6 +42,7 @@ test('provides the side bar name and title', () => {
   const state = ViewletRunningExtensions.create(1, 'RunningExtensions', 10, 20, 800, 600)
 
   expect(ViewletRunningExtensionsName.name).toBe('RunningExtensions')
+  expect(ViewletRunningExtensions.getTitle()).toBe('Running Extensions')
   expect(ViewletRunningExtensionsRenderTitle.renderTitle.apply(state, state)).toBe('Running Extensions')
 })
 

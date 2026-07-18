@@ -3,11 +3,13 @@ import * as Platform from '../Platform/Platform.js'
 import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
 import type { RunningExtensionsState } from './ViewletRunningExtensionsTypes.ts'
 
+const title = 'Running Extensions'
+
 export const create = (uid: number, uri: string, x: number, y: number, width: number, height: number): RunningExtensionsState => {
   return {
     commands: [],
     height,
-    title: 'Running Extensions',
+    title,
     uid,
     uri,
     width,
@@ -26,6 +28,10 @@ export const loadContent = async (state: RunningExtensionsState): Promise<Runnin
     ...state,
     commands,
   }
+}
+
+export const getTitle = (): string => {
+  return title
 }
 
 export const menus = []
