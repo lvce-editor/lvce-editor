@@ -35,3 +35,7 @@ test('process explorer', async () => {
 test('running extensions', async () => {
   expect(await ViewletMap.getModuleId('running-extensions://')).toBe(ViewletModuleId.RunningExtensions)
 })
+
+test('inline diff uses the external diff editor', async () => {
+  expect(await ViewletMap.getModuleId('inline-diff://data://before<->/test/file.ts')).toBe(ViewletModuleId.DiffEditor)
+})
