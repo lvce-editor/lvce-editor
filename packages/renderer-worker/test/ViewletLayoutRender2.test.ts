@@ -125,3 +125,13 @@ test('renderEventListeners registers context menu handler', () => {
     }),
   )
 })
+
+test('renderEventListeners registers preview close handler', () => {
+  const listeners = ViewletLayoutRender2.renderEventListeners()
+  const closeListener = listeners.find((listener) => listener.name === 'handleClickClose')
+
+  expect(closeListener).toEqual({
+    name: 'handleClickClose',
+    params: ['hidePreview'],
+  })
+})
