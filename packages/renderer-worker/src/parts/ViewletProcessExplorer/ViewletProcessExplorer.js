@@ -39,7 +39,9 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const dispose = () => {}
+export const dispose = async (state) => {
+  await ProcessExplorerWorker.invoke('ProcessExplorer.dispose', state.uid)
+}
 
 export const hotReload = async (state) => {
   if (state.isHotReloading) {
