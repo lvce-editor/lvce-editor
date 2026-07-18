@@ -16,3 +16,15 @@ test('getLabel - running extensions', () => {
 test('getFileIcon - running extensions', () => {
   expect(PathDisplay.getFileIcon('running-extensions://')).toBe('MaskIconExtensions')
 })
+
+test('getLabel - diff editor', () => {
+  expect(PathDisplay.getLabel('diff://data://const value = 1<->/workspace/src/example.ts')).toBe('example.ts')
+})
+
+test('getLabel - inline diff editor', () => {
+  expect(PathDisplay.getLabel('inline-diff://data://const value = 1<->/workspace/src/example.ts')).toBe('example.ts')
+})
+
+test('getTitle - diff editor', () => {
+  expect(PathDisplay.getTitle('diff://data://const value = 1<->/workspace/src/example.ts')).toBe('/workspace/src/example.ts')
+})

@@ -50,7 +50,7 @@ export const getModuleId = async (uri, opener) => {
     return ViewletModuleId.DiffEditor
   }
   if (uri.startsWith('inline-diff://')) {
-    return ViewletModuleId.InlineDiffEditor
+    return ViewletModuleId.DiffEditor
   }
   if (uri.startsWith('browser-view-overview://')) {
     return ViewletModuleId.BrowserViewOverview

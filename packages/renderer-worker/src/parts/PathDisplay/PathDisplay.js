@@ -2,10 +2,19 @@ import * as Icon from '../Icon/Icon.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
+const getDisplayUri = (uri) => {
+  if (!uri.startsWith('diff://') && !uri.startsWith('inline-diff://')) {
+    return uri
+  }
+  const separatorIndex = uri.indexOf('<->')
+  return separatorIndex === -1 ? uri : uri.slice(separatorIndex + 3)
+}
+
 export const getTitle = (uri) => {
   if (!uri) {
     return ''
   }
+  uri = getDisplayUri(uri)
   const homeDir = Workspace.getHomeDir()
   // TODO tree shake this out in web
   if (homeDir && uri.startsWith(homeDir)) {
@@ -30,7 +39,7 @@ export const getLabel = (uri) => {
   if (uri.startsWith('running-extensions://')) {
     return 'Running Extensions'
   }
-  return Workspace.pathBaseName(uri)
+  return Workspace.pathBaseName(getDisplayUri(uri))
 }
 
 /**
@@ -51,7 +60,7 @@ export const getFileIcon = (uri) => {
   if (uri.startsWith('running-extensions://')) {
     return `MaskIcon${Icon.Extensions}`
   }
-  const baseName = Workspace.pathBaseName(uri)
+  const baseName = Workspace.pathBaseName(getDisplayUri(uri))
   const icon = IconTheme.getFileIcon({ name: baseName })
   return icon
 }

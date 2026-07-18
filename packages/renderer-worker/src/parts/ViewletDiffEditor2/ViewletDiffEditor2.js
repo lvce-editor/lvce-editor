@@ -34,6 +34,9 @@ export const loadContent = async (state, savedState) => {
     state.assetDir,
   )
   await DiffViewWorker.invoke('DiffView.loadContent', state.uid, savedState)
+  if (state.uri.startsWith('inline-diff://')) {
+    await DiffViewWorker.invoke('DiffView.setDiffMode', state.uid, 'inline')
+  }
   const diffResult = await DiffViewWorker.invoke('DiffView.diff2', state.uid)
   const commands = await DiffViewWorker.invoke('DiffView.render2', state.uid, diffResult)
   return {
