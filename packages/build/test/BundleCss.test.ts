@@ -56,3 +56,24 @@ test('bundleCss preserves the simple browser preview width', async () => {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
+
+test('bundleCss preserves the locations flex growth', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletReferences.css'), 'utf8')
+
+    expect(css).toContain(`.Locations {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
