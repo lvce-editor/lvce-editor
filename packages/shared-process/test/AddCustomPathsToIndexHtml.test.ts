@@ -1,4 +1,5 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
+import * as GetRemoteUrl from '../src/parts/GetRemoteUrl/GetRemoteUrl.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   isProduction: false,
@@ -29,11 +30,12 @@ test('addCustomPathsToIndexHtml - excludes custom worker paths when disabled fro
   })
   const content =
     '<title>Test</title><script src="/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js"></script>'
+  const rendererProcessUrl = GetRemoteUrl.getRemoteUrl('/test/renderer-process')
 
   const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
 
-  expect(result).toContain('<script src="/remote/test/renderer-process"></script>')
-  expect(result).toContain('"rendererProcessPath": "/remote/test/renderer-process"')
+  expect(result).toContain(`<script src="${rendererProcessUrl}"></script>`)
+  expect(result).toContain(`"rendererProcessPath": "${rendererProcessUrl}"`)
   expect(result).not.toContain('editorWorkerUrl')
   expect(result).not.toContain('extensionHostWorkerUrl')
 })
