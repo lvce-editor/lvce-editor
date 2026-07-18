@@ -11,7 +11,7 @@ import { WebSocketServer } from 'ws'
 const expectedOutput = 'Mock response'
 const electronExecutable = String(electronPath)
 const macOsTaskPolicyError =
-  /^\[\d+:\d+\/\d+\.\d+:ERROR:base\/process\/process_mac\.cc:(?:53|98)\] task_policy_set TASK_(?:CATEGORY|SUPPRESSION)_POLICY: \(os\/kern\) invalid argument \(4\)$/
+  /^\[\d+:\d+\/\d+\.\d+:ERROR:base\/process\/process_mac\.cc:(?:53|98)\] task_policy_set TASK_(?:CATEGORY|SUPPRESSION)_POLICY: (?:\(os\/kern\) invalid argument \(4\)|\(ipc\/send\) invalid destination port \(0x[\da-f]+\))$/
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const mainProcessPath = join(root, 'packages', 'main-process')
 const sharedProcessPath = join(root, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
