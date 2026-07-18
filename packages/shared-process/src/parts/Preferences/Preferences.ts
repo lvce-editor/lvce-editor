@@ -1,3 +1,4 @@
+import * as ApplyCustomWorkerPathCliOverride from '../ApplyCustomWorkerPathCliOverride/ApplyCustomWorkerPathCliOverride.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as JsoncFile from '../JsoncFile/JsoncFile.ts'
 import * as Logger from '../Logger/Logger.ts'
@@ -81,7 +82,7 @@ export const getAll = async (): Promise<any> => {
     // } catch {
     //   // ignore
     // }
-    return preferences
+    return ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(preferences)
   } catch (error) {
     throw new VError(error, 'Failed to get all preferences')
   }
