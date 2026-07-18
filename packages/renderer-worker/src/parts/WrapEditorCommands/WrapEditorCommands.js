@@ -1,5 +1,7 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
+const queues = new Map()
+
 export const wrapEditorCommand = (id) => {
   return async (...args) => {
     if (args.length === 0) {
@@ -8,13 +10,26 @@ export const wrapEditorCommand = (id) => {
     const editor = args[0]
     const restArgs = args.slice(1)
     const fullId = id.includes('.') ? id : `Editor.${id}`
+    const previous = queues.get(editor.uid)
+    const { promise: next, resolve } = Promise.withResolvers()
+    queues.set(editor.uid, next)
 
-    await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-    const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
-    const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
-    return {
-      ...editor,
-      commands,
+    if (previous) {
+      await previous
+    }
+    try {
+      await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
+      const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
+      const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
+      return {
+        ...editor,
+        commands,
+      }
+    } finally {
+      resolve(undefined)
+      if (queues.get(editor.uid) === next) {
+        queues.delete(editor.uid)
+      }
     }
   }
 }
