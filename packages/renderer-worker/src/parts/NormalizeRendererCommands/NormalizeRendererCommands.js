@@ -1,33 +1,10 @@
 const kDispose = 'Viewlet.dispose'
-const kPatchCss = 'Viewlet.patchCss'
 const kSetCss = 'Viewlet.setCss'
 const kSetPatches = 'Viewlet.setPatches'
 
 export const state = {
   /** @type {Map<string | number, string>} */
   cssTexts: new Map(),
-}
-
-const getJsonByteLength = (value) => {
-  return new TextEncoder().encode(JSON.stringify(value)).byteLength
-}
-
-const getCommonPrefixLength = (oldText, newText) => {
-  const limit = Math.min(oldText.length, newText.length)
-  let index = 0
-  while (index < limit && oldText[index] === newText[index]) {
-    index++
-  }
-  return index
-}
-
-const getCommonSuffixLength = (oldText, newText, prefixLength) => {
-  const limit = Math.min(oldText.length, newText.length) - prefixLength
-  let length = 0
-  while (length < limit && oldText[oldText.length - length - 1] === newText[newText.length - length - 1]) {
-    length++
-  }
-  return length
 }
 
 const normalizeSetCss = (command) => {
@@ -41,17 +18,6 @@ const normalizeSetCss = (command) => {
     return undefined
   }
   state.cssTexts.set(id, newText)
-  if (oldText === undefined) {
-    return command
-  }
-  const start = getCommonPrefixLength(oldText, newText)
-  const suffixLength = getCommonSuffixLength(oldText, newText, start)
-  const deleteCount = oldText.length - start - suffixLength
-  const replacement = newText.slice(start, newText.length - suffixLength)
-  const patchCommand = [kPatchCss, id, start, deleteCount, replacement]
-  if (getJsonByteLength(patchCommand) < getJsonByteLength(command)) {
-    return patchCommand
-  }
   return command
 }
 
