@@ -1,32 +1,36 @@
-const getContent = () => {
-  let content = ''
-  for (let i = 97; i < 160; i++) {
-    content += String.fromCharCode(i) + '\n'
+const getContent = (bottomLine: string) => {
+  const lines: string[] = []
+  for (let index = 1; index <= 1800; index++) {
+    lines.push(`shared line ${index}`)
   }
-  return content
+  lines.push(bottomLine)
+  return lines.join('\n')
 }
 
-export const name = 'sample.diff-editor-insertion'
+export const name = 'viewlet.diff-editor-scrolling'
 
-export const skip = true
-
-export const test = async () => {
-  // arrange
+export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  await FileSystem.writeFile(`${tmpDir}/file-1.txt`, ``)
-  await FileSystem.writeFile(`${tmpDir}/file-2.txt`, getContent())
+  await FileSystem.writeFile(`${tmpDir}/file-1.txt`, getContent('bottom change before'))
+  await FileSystem.writeFile(`${tmpDir}/file-2.txt`, getContent('bottom change after'))
   await Workspace.setPath(tmpDir)
 
-  // act
   await Main.openUri(`diff://${tmpDir}/file-1.txt<->${tmpDir}/file-2.txt`)
 
-  // assert
-  const contentLeft = Locator('.DiffEditorContentLeft')
+  const line1 = Locator('.DiffEditorContentLeft .DiffEditorLineNumber', {
+    hasText: '1',
+  })
+  await expect(line1).toBeVisible()
+
   const contentRight = Locator('.DiffEditorContentRight')
-  // await expect(contentLeft).toHaveText('')
-  // await expect(contentRight).toHaveText('def')
-  // const rowLeft = contentLeft.locator('.EditorRow')
-  // await expect(rowLeft).toHaveClass('Deletion')
-  // const rowRight = contentRight.locator('.EditorRow')
-  // await expect(rowRight).toHaveClass('Insertion')
+  await contentRight.dispatchEvent('wheel', {
+    bubbles: true,
+    deltaMode: 0,
+    deltaY: 9_999_999,
+  } as unknown as string)
+
+  const line1800 = Locator('.DiffEditorContentLeft .DiffEditorLineNumber', {
+    hasText: '1800',
+  })
+  await expect(line1800).toBeVisible()
 }
