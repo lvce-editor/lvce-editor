@@ -80,6 +80,46 @@ test('worker command wrapper invokes editor command, diff, and render', async ()
   })
 })
 
+test('worker command wrapper serializes command, diff, and render per editor', async () => {
+  const editor = {
+    commands: [],
+    uid: 42,
+  }
+  const { promise: firstCommand, resolve: resolveFirstCommand } = Promise.withResolvers<void>()
+  let diffCount = 0
+  editorWorkerInvoke.mockImplementation(async (method, uid, argument) => {
+    switch (method) {
+      case 'Editor.diff2':
+        return [++diffCount]
+      case 'Editor.getCommandIds':
+        return ['handleWheel']
+      case 'Editor.handleWheel':
+        return argument === 'first' ? firstCommand : undefined
+      case 'Editor.render2':
+        return [[method, uid, argument]]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const first = commands.handleWheel(editor, 'first')
+  const second = commands.handleWheel(editor, 'second')
+
+  await Promise.resolve()
+  expect(editorWorkerInvoke).toHaveBeenCalledTimes(2)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.handleWheel', 42, 'first')
+
+  resolveFirstCommand()
+  await Promise.all([first, second])
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(5, 'Editor.handleWheel', 42, 'second')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(6, 'Editor.diff2', 42)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(7, 'Editor.render2', 42, [2])
+})
+
 test('handleUriChange skips the duplicated viewlet uid and updates the renderer editor uri', async () => {
   const editor = {
     uid: 42,
