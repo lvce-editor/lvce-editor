@@ -193,6 +193,10 @@ const renderCss = {
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenersFunctions.HandleClickClose,
+      params: ['hidePreview'],
+    },
+    {
       name: DomEventListenersFunctions.HandleContextMenu,
       params: ['handleContextMenu'],
     },

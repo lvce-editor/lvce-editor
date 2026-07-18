@@ -10,10 +10,12 @@
 }
 
 .SimpleBrowserHeader {
+  box-sizing: border-box;
   height: 30px;
   width: 100%;
   contain: strict;
   display: flex;
+  padding-right: 30px;
 }
 
 .SimpleBrowserHeader .InputBox {

@@ -164,6 +164,24 @@ const getPreviewDom = (previewId: number) => {
   }
 }
 
+const getPreviewCloseButtonDom = () => {
+  return [
+    {
+      ariaLabel: 'Close Preview',
+      childCount: 1,
+      className: 'IconButton PreviewCloseButton',
+      onClick: DomEventListenerFunctions.HandleClickClose,
+      title: 'Close Preview',
+      type: VirtualDomElements.Button,
+    },
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconClose',
+      type: VirtualDomElements.Div,
+    },
+  ]
+}
+
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   const {
     activityBarVisible,
@@ -212,6 +230,8 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
 
   if (previewVisible) {
     children.push(getPreviewDom(previewId))
+    children.push(...getPreviewCloseButtonDom())
+    delta--
   }
 
   return [
@@ -264,6 +284,8 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   }
   if (previewVisible) {
     children.push(getPreviewDom(previewId))
+    children.push(...getPreviewCloseButtonDom())
+    delta--
   }
 
   return [

@@ -12,7 +12,17 @@
   flex: 1;
   display: flex;
   contain: strict;
+  position: relative;
   /* flex-direction: column; */
+}
+
+.PreviewCloseButton {
+  background: var(--TitleBarBackground, rgb(40, 46, 47));
+  color: var(--TitleBarForeground, #c5c5c5);
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  z-index: 1;
 }
 
 .ActivityBar {
