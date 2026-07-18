@@ -224,6 +224,7 @@ export const commandMap = {
   'Main.handleTabContextMenu': lazy('Main.handleTabContextMenu'),
   'Main.openBackgroundTab': lazy('Main.openBackgroundTab'),
   'Main.openKeyBindings': lazy('Main.openKeyBindings'),
+  'Main.openUri': lazy('Main.openUri'),
   'Main.reopenEditorWith': lazy('Main.reopenEditorWith'),
   'Main.save': lazy('Main.save'),
   'Markdown.getVirtualDom': lazy('Markdown.getVirtualDom'),

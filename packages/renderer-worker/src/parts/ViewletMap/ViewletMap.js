@@ -37,6 +37,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('running-extensions://')) {
     return ViewletModuleId.RunningExtensions
   }
+  if (uri.startsWith('search-editor://')) {
+    return ViewletModuleId.Search
+  }
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }
