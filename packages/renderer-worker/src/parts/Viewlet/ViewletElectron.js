@@ -1,6 +1,7 @@
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as ElectronBrowserViewQuickPick from '../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as GetQuickPickKeyBindings from '../GetQuickPickKeyBindings/GetQuickPickKeyBindings.ts'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
@@ -13,14 +14,6 @@ import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   isQuickPickOpen: false,
-}
-
-const isQuickPickKeyBinding = (keyBinding) => {
-  return keyBinding.when === 'focus.quickPickInput'
-}
-
-const getQuickPickKeyBindings = (keyBindings) => {
-  return keyBindings.filter(isQuickPickKeyBinding)
 }
 
 export const isQuickPickOpen = () => {
@@ -39,7 +32,7 @@ export const openElectronQuickPick = async (...args) => {
   const y = 50
   // @ts-ignore
   const keyBindings = await KeyBindings.getKeyBindings()
-  const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
+  const quickPickKeyBindings = GetQuickPickKeyBindings.getQuickPickKeyBindings(keyBindings)
   await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(x, y, width, height)
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronMessagePort,
