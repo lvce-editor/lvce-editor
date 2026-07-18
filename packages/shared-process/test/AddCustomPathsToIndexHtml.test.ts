@@ -22,7 +22,7 @@ afterEach(() => {
 
 test('addCustomPathsToIndexHtml - excludes custom worker paths when disabled from the command line', async () => {
   process.argv = [...originalArgv, '--disable-custom-worker-paths']
-  Preferences.getUserPreferences.mockResolvedValue({
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({
     'develop.editorWorkerPath': '/test/editor-worker',
     'develop.extensionHostWorkerPath': '/test/extension-host-worker',
     'develop.rendererProcessPath': '/test/renderer-process',
