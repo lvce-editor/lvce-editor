@@ -49,7 +49,7 @@ export const reset = async (state: LayoutState): Promise<LayoutStateResult> => {
     await Command.execute('Layout.moveSideBarRight')
   }
   if (!state.sideBarVisible || state.sideBarView !== ViewletModuleId.Explorer) {
-    await Command.execute('Layout.showSideBar', ViewletModuleId.Explorer)
+    await Command.execute('Layout.showSideBar', ViewletModuleId.Explorer, false)
   }
   const panelViewNeedsReset = state.panelView !== ViewletModuleId.Problems
   if (state.panelVisible || panelViewNeedsReset) {

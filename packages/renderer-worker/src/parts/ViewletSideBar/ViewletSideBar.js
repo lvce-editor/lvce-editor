@@ -126,7 +126,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   // TODO set it in layout
   const { currentViewletId } = state
   const requestId = state.currentViewletRequestId + 1
-  const savePromise = SaveState.saveViewletState(currentViewletId)
+  const savePromise = restore ? SaveState.saveViewletState(currentViewletId) : undefined
   state.currentViewletRequestId = requestId
   state.currentViewletId = moduleId
 

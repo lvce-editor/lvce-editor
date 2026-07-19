@@ -128,6 +128,37 @@ test('showSideBar shows hidden side bar with requested viewlet', async () => {
   })
 })
 
+test('showSideBar disables restore when the layout disables restore', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'SideBar', 1, true]])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    restore: false,
+    sideBarView: 'Explorer',
+    sideBarVisible: false,
+    statusBarHeight: 20,
+    titleBarHeight: 0,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  await ViewletLayout.showSideBar(state, 'Explorer')
+
+  expect(viewletManagerLoadMock.mock.calls[0]).toEqual([
+    expect.objectContaining({
+      args: ['Explorer'],
+      id: 'SideBar',
+    }),
+    false,
+    false,
+    { restore: false },
+  ])
+})
+
 test('showSideBar switches visible side bar to requested viewlet', async () => {
   mockActivityBarRender()
   const state = {
@@ -153,6 +184,35 @@ test('showSideBar switches visible side bar to requested viewlet', async () => {
       sideBarVisible: true,
     },
   })
+})
+
+test('showSideBar propagates disabled restore when switching a visible side bar', async () => {
+  mockActivityBarRender()
+  const handleSideBarViewletChange = jest.fn((state: any, _moduleId: string, _restore: boolean) => state)
+  const sideBarState = {}
+  // @ts-ignore
+  ViewletStates.getAllInstances.mockReturnValue({
+    12: {
+      factory: {
+        Commands: {
+          handleSideBarViewletChange,
+        },
+      },
+      renderedState: sideBarState,
+      state: sideBarState,
+    },
+  })
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    restore: false,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+  }
+
+  await ViewletLayout.showSideBar(state, 'SourceControl')
+
+  expect(handleSideBarViewletChange.mock.calls[0]).toEqual([sideBarState, 'SourceControl', false])
 })
 
 test('hideSideBar updates activity bar through shared sidebar render helper', async () => {
