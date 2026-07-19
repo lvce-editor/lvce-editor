@@ -11,6 +11,7 @@
 
 .RunningExtension {
   align-items: center;
+  cursor: pointer;
   display: flex;
   gap: 12px;
 }
