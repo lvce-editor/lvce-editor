@@ -978,12 +978,11 @@ export const createPanelViewlet = async (
   }
   const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
   const events = eventsIndex === -1 ? [] : commands[eventsIndex][2]
-  commands.push(
-    ['Viewlet.createFunctionalRoot', viewletModuleId, actionsUid, true],
-    ['Viewlet.registerEventListeners', actionsUid, events],
-    ['Viewlet.setDom2', actionsUid, actionsDom],
-    ['Viewlet.setUid', actionsUid, editorUid],
-  )
+  commands.push(['Viewlet.createFunctionalRoot', viewletModuleId, actionsUid, true])
+  if (events.length > 0) {
+    commands.push(['Viewlet.registerEventListeners', actionsUid, events])
+  }
+  commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, editorUid])
   return {
     newState: state,
     commands,

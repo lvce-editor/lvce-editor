@@ -559,10 +559,12 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
       const eventListeners = await module.renderEventListeners(newState)
-      if (shouldRenderEvents === false) {
-        commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
-      } else {
-        await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
+      if (eventListeners.length > 0) {
+        if (shouldRenderEvents === false) {
+          commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
+        } else {
+          await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
+        }
       }
     }
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
