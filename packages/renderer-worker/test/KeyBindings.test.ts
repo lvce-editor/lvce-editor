@@ -33,6 +33,74 @@ beforeEach(() => {
   KeyBindingsState.state.matchingKeyBindings = []
 })
 
+test('update does not send equal empty identifiers', () => {
+  KeyBindingsState.update()
+
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(KeyBindingsState.state.keyBindingIdentifiers).toEqual(new Uint32Array())
+  expect(KeyBindingsState.state.matchingKeyBindings).toEqual([])
+})
+
+test('update refreshes matching keybindings without sending equal identifiers', () => {
+  const previousKeyBinding = {
+    key: 1,
+    command: 'test.previous',
+  }
+  const currentKeyBinding = {
+    key: 1,
+    command: 'test.current',
+  }
+  KeyBindingsState.state.keyBindingIdentifiers = new Uint32Array([1])
+  KeyBindingsState.state.matchingKeyBindings = [previousKeyBinding]
+  KeyBindingsState.state.keyBindingSets.Editor = [currentKeyBinding]
+
+  KeyBindingsState.update()
+
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(KeyBindingsState.state.keyBindingIdentifiers).toEqual(new Uint32Array([1]))
+  expect(KeyBindingsState.state.matchingKeyBindings).toEqual([currentKeyBinding])
+  expect(KeyBindingsState.getKeyBinding(1)).toBe(currentKeyBinding)
+})
+
+test.each([
+  {
+    name: 'added',
+    previous: [],
+    keyBindings: [{ key: 1, command: 'test.one' }],
+    expected: [1],
+  },
+  {
+    name: 'removed',
+    previous: [1],
+    keyBindings: [],
+    expected: [],
+  },
+  {
+    name: 'changed',
+    previous: [1],
+    keyBindings: [{ key: 2, command: 'test.two' }],
+    expected: [2],
+  },
+  {
+    name: 'reordered',
+    previous: [1, 2],
+    keyBindings: [
+      { key: 2, command: 'test.two' },
+      { key: 1, command: 'test.one' },
+    ],
+    expected: [2, 1],
+  },
+])('update sends $name identifiers', ({ previous, keyBindings, expected }) => {
+  KeyBindingsState.state.keyBindingIdentifiers = new Uint32Array(previous)
+  KeyBindingsState.state.keyBindingSets.Editor = keyBindings
+
+  KeyBindingsState.update()
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('KeyBindings.setIdentifiers', new Uint32Array(expected))
+  expect(KeyBindingsState.state.keyBindingIdentifiers).toEqual(new Uint32Array(expected))
+})
+
 test('addKeyBindings increments refcount when keybinding set is already registered', () => {
   const keyBindings = [
     {
