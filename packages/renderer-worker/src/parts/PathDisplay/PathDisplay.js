@@ -10,14 +10,25 @@ const getDisplayUri = (uri) => {
   return separatorIndex === -1 ? uri : uri.slice(separatorIndex + 3)
 }
 
+const getDisplayPath = (uri) => {
+  if (!uri.startsWith('file://')) {
+    return uri
+  }
+  try {
+    return decodeURIComponent(new URL(uri).pathname)
+  } catch {
+    return uri
+  }
+}
+
 export const getTitle = (uri) => {
   if (!uri) {
     return ''
   }
-  uri = getDisplayUri(uri)
+  uri = getDisplayPath(getDisplayUri(uri))
   const homeDir = Workspace.getHomeDir()
   // TODO tree shake this out in web
-  if (homeDir && uri.startsWith(homeDir)) {
+  if (homeDir && (uri === homeDir || uri.startsWith(`${homeDir}/`))) {
     return `~${uri.slice(homeDir.length)}`
   }
   return uri

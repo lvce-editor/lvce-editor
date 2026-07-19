@@ -18,7 +18,7 @@ const getIconDom = (icon) => {
 }
 
 export const getTabDom = (tab) => {
-  const { icon, tabWidth, uri, flags, uid, isActive, fixedWidth, label } = tab
+  const { icon, tabWidth, uri, flags, uid, isActive, fixedWidth, label, title } = tab
   let tabClassName = ClassNames.MainTab
   if (isActive) {
     tabClassName += ' ' + ClassNames.MainTabSelected
@@ -34,7 +34,7 @@ export const getTabDom = (tab) => {
     draggable: true,
     width: actualTabWidth,
     ariaSelected: isActive,
-    title: uri,
+    title,
     childCount: 2,
     'data-dragUid': uid,
   }
