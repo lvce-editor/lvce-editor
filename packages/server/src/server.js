@@ -269,6 +269,9 @@ const handleSocketError = (error) => {
 
 const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   request.on('error', handleRequestError)
+  if (!socket) {
+    return
+  }
   socket.on('error', handleSocketUpgradeError)
   const sharedProcess = await getOrCreateSharedProcess()
   sharedProcess.send(
