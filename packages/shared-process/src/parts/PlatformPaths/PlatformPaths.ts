@@ -2,11 +2,14 @@ import { homedir, tmpdir } from 'node:os'
 import { isAbsolute, join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
+import * as GetConfigJsonPath from '../GetConfigJsonPath/GetConfigJsonPath.ts'
 import * as GetResolvedTestPath from '../GetResolvedTestPath/GetResolvedTestPath.ts'
+import * as IsBuiltServer from '../IsBuiltServer/IsBuiltServer.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as Process from '../Process/Process.ts'
 import * as Root from '../Root/Root.ts'
+import * as StaticPath from '../StaticPath/StaticPath.ts'
 
 const { env } = process
 
@@ -143,10 +146,12 @@ export const getConfigDir = (): any => {
 }
 
 export const getConfigJsonPath = (): any => {
-  if (Platform.isProduction) {
-    return pathToFileURL(Path.join(Root.root, 'config.json')).toString()
-  }
-  return pathToFileURL(Path.join(Root.root, 'static', 'config.json')).toString()
+  return GetConfigJsonPath.getConfigJsonPath({
+    getStaticPath: StaticPath.getStaticPath,
+    isBuiltServer: IsBuiltServer.isBuiltServer,
+    isProduction: Platform.isProduction,
+    root: Root.root,
+  })
 }
 
 export const getDataDir = (): any => {
