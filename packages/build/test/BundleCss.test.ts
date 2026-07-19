@@ -77,3 +77,27 @@ test('bundleCss preserves the locations flex growth', async () => {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
+
+test('bundleCss preserves the running extensions hover styles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletRunningExtensions.css'), 'utf8')
+
+    expect(css).toContain(`.RunningExtension:where(:hover) {
+  background: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent));
+  color: var(--ListHoverForeground, var(--WorkbenchForeground));
+}`)
+    expect(css).toContain(`.RunningExtension:where(:hover) .RunningExtensionId,
+.RunningExtension:where(:hover) .RunningExtensionActivationTime {
+  color: inherit;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
