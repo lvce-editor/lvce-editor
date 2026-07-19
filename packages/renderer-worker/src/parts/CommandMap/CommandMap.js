@@ -81,6 +81,7 @@ export const commandMap = {
   'Developer.showMemoryUsage': lazy('Developer.showMemoryUsage'),
   'Developer.showStartupPerformance': lazy('Developer.showStartupPerformance'),
   'Developer.startupPerformance': lazy('Developer.startupPerformance'),
+  'Developer.takeWorkerHeapSnapshot': lazy('Developer.takeWorkerHeapSnapshot'),
   'Developer.toggleDeveloperTools': lazy('Developer.toggleDeveloperTools'),
   'Dialog.close': lazy('Dialog.close'),
   'Dialog.handleClick': lazy('Dialog.handleClick'),
