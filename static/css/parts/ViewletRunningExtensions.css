@@ -7,6 +7,19 @@
   overflow: auto;
 }
 
+.RunningExtensions:has(> .RunningExtensionsEmpty) {
+  align-items: center;
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--WorkbenchForeground) 20%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle, color-mix(in srgb, var(--WorkbenchForeground) 12%, transparent) 0 1px, transparent 1.5px);
+  background-position:
+    0 0,
+    36px 28px;
+  background-size:
+    92px 92px,
+    137px 137px;
+}
+
 .RunningExtension {
   align-items: center;
   cursor: pointer;
@@ -56,12 +69,65 @@
 }
 
 .RunningExtensionsEmpty {
-  padding: 16px 20px;
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--WorkbenchForeground);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.4;
+  min-height: 320px;
+  padding: 32px 24px 80px;
+  position: relative;
+  text-align: center;
+  text-wrap: balance;
+  width: 100%;
+}
+
+.RunningExtensionsEmpty::before {
+  background: linear-gradient(135deg, var(--ActivityBarBadgeBackground, #0078d4), color-mix(in srgb, var(--FocusBorder, #007fd4) 55%, #c586c0));
+  content: '';
+  filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--FocusBorder, #007fd4) 20%, transparent))
+    drop-shadow(0 0 34px color-mix(in srgb, var(--ActivityBarBadgeBackground, #0078d4) 18%, transparent));
+  flex: none;
+  height: 112px;
+  margin-bottom: 26px;
+  mask: url(/icons/extensions.svg) 50% 50% / contain no-repeat;
+  width: 112px;
+}
+
+.RunningExtensionsEmpty::after {
+  color: var(--DescriptionForeground, rgba(156, 162, 160, 0.9));
+  content: 'Extensions will appear here once they start.';
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 8px;
+  max-width: 320px;
 }
 
 .RunningExtensionId,
 .RunningExtensionActivationReason,
-.RunningExtensionActivationTime,
-.RunningExtensionsEmpty {
+.RunningExtensionActivationTime {
   color: var(--DescriptionForeground, rgba(156, 162, 160, 0.7));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .RunningExtensionsEmpty::before {
+    animation: RunningExtensionsEmptyFloat 6s ease-in-out infinite;
+  }
+}
+
+@keyframes RunningExtensionsEmptyFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
 }
