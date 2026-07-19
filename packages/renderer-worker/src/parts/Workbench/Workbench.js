@@ -124,6 +124,7 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.One)
 
   const initData = await InitData.getInitData()
+  Location.initialize(initData.Location.href)
 
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
 
