@@ -134,3 +134,32 @@ test('bundleCss preserves the running extensions row layout', async () => {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
+
+test('bundleCss preserves the running extensions empty state artwork', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletRunningExtensions.css'), 'utf8')
+
+    expect(css).toContain(`.RunningExtensions:has(> .RunningExtensionsEmpty) {
+  align-items: center;`)
+    expect(css).toContain(`.RunningExtensionsEmpty::before {
+  background: linear-gradient(`)
+    expect(css).toContain(`mask: url(/icons/extensions.svg) 50% 50% / contain no-repeat;`)
+    expect(css).toContain(`.RunningExtensionsEmpty::after {
+  color: var(--DescriptionForeground, rgba(156, 162, 160, 0.9));
+  content: 'Extensions will appear here once they start.';`)
+    expect(css).toContain(`@media (prefers-reduced-motion: no-preference) {
+  .RunningExtensionsEmpty::before {
+    animation: RunningExtensionsEmptyFloat 6s ease-in-out infinite;
+  }
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
