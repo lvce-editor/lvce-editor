@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Context from '../Context/Context.js'
+import { isEqualUint32Array } from '../IsEqualUint32Array/IsEqualUint32Array.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
@@ -46,10 +47,14 @@ const getAvailableKeyBindings = (keyBindings) => {
 }
 
 export const update = () => {
-  const matchingKeyBindings = getMatchingKeyBindings(state.keyBindingSets)
+  const { keyBindingIdentifiers: oldKeyBindingIdentifiers, keyBindingSets } = state
+  const matchingKeyBindings = getMatchingKeyBindings(keyBindingSets)
   const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
-  RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
   state.matchingKeyBindings = matchingKeyBindings
+  if (isEqualUint32Array(oldKeyBindingIdentifiers, keyBindingIdentifiers)) {
+    return
+  }
+  RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
   state.keyBindingIdentifiers = keyBindingIdentifiers
 }
 
