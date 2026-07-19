@@ -15,6 +15,16 @@
   gap: 12px;
 }
 
+.RunningExtension:where(:hover) {
+  background: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent));
+  color: var(--ListHoverForeground, var(--WorkbenchForeground));
+}
+
+.RunningExtension:where(:hover) .RunningExtensionId,
+.RunningExtension:where(:hover) .RunningExtensionActivationTime {
+  color: inherit;
+}
+
 .RunningExtensionIcon {
   flex: none;
   height: 32px;
