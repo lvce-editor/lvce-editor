@@ -101,3 +101,36 @@ test('bundleCss preserves the running extensions hover styles', async () => {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
+
+test('bundleCss preserves the running extensions row layout', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletRunningExtensions.css'), 'utf8')
+
+    expect(css).toContain(`.RunningExtension {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  gap: 16px;
+  height: 70px;
+  padding: 0 20px;
+}`)
+    expect(css).toContain(`.RunningExtension:nth-child(even) {
+  background: color-mix(in srgb, var(--WorkbenchForeground) 4%, transparent);
+}`)
+    expect(css).toContain(`.RunningExtensionActivationTime {
+  flex: none;
+  margin-left: auto;
+  text-align: right;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)

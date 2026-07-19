@@ -2,18 +2,23 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   height: 100%;
   margin: 0;
   overflow: auto;
-  padding: 16px;
 }
 
 .RunningExtension {
   align-items: center;
   cursor: pointer;
   display: flex;
-  gap: 12px;
+  flex-shrink: 0;
+  gap: 16px;
+  height: 70px;
+  padding: 0 20px;
+}
+
+.RunningExtension:nth-child(even) {
+  background: color-mix(in srgb, var(--WorkbenchForeground) 4%, transparent);
 }
 
 .RunningExtension:where(:hover) {
@@ -28,18 +33,30 @@
 
 .RunningExtensionIcon {
   flex: none;
-  height: 32px;
-  width: 32px;
+  height: 36px;
+  width: 36px;
 }
 
 .RunningExtensionDetails {
+  flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .RunningExtensionTitle {
   align-items: baseline;
   display: flex;
   gap: 8px;
+}
+
+.RunningExtensionActivationTime {
+  flex: none;
+  margin-left: auto;
+  text-align: right;
+}
+
+.RunningExtensionsEmpty {
+  padding: 16px 20px;
 }
 
 .RunningExtensionId,
