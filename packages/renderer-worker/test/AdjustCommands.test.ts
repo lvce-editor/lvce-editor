@@ -28,3 +28,16 @@ test('preserves a targeted focus context command', () => {
   ])
   expect(newState.commands).toEqual([])
 })
+
+test('preserves an explicit empty event listener registration for an existing root', () => {
+  const oldState = {}
+  const newState = {
+    commands: [['Viewlet.registerEventListeners', 20, []]],
+    uid: 30,
+  }
+
+  expect(AdjustCommands.apply(oldState, newState)).toEqual([
+    ['Viewlet.registerEventListeners', 20, []],
+  ])
+  expect(newState.commands).toEqual([])
+})

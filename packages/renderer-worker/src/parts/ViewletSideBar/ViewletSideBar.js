@@ -194,12 +194,11 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     if (titleAreaHeight > 0 && actionsDom.length > 0) {
       const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []
       actionsUid = Id.create()
-      commands.push(
-        ['Viewlet.createFunctionalRoot', moduleId, actionsUid, true],
-        ['Viewlet.registerEventListeners', actionsUid, events],
-        ['Viewlet.setDom2', actionsUid, actionsDom],
-        ['Viewlet.setUid', actionsUid, childUid],
-      )
+      commands.push(['Viewlet.createFunctionalRoot', moduleId, actionsUid, true])
+      if (events.length > 0) {
+        commands.push(['Viewlet.registerEventListeners', actionsUid, events])
+      }
+      commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
     }
     if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
       Viewlet.disposeFunctional(childUid)

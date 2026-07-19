@@ -76,6 +76,93 @@ test('render adds uid to setPatches command', () => {
   expect(commands).toEqual([['Viewlet.setPatches', 42, patches]])
 })
 
+test('load omits empty event listener registration for a new root', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const mockModule = {
+    create: jest.fn(() => ({ uid: 9 })),
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [],
+    renderEventListeners: jest.fn(() => []),
+  }
+
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'EmptyListenerTest',
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 9,
+    uri: '',
+  }
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands).toEqual([['Viewlet.createFunctionalRoot', 'EmptyListenerTest', 9, true]])
+})
+
+test('load does not invoke the renderer for empty event listeners on a new root', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const mockModule = {
+    create: jest.fn(() => ({ uid: 10 })),
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [],
+    renderEventListeners: jest.fn(() => []),
+  }
+
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'DirectEmptyListenerTest',
+    show: false,
+    type: 0,
+    uid: 10,
+    uri: '',
+  }
+  await ViewletManager.load(viewlet)
+
+  expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.registerEventListeners', 10, [])
+})
+
+test('load retains non-empty event listener registration for a new root', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const eventListeners = [{ name: 'click', params: ['handleClick'] }]
+  const mockModule = {
+    create: jest.fn(() => ({ uid: 11 })),
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [],
+    renderEventListeners: jest.fn(() => eventListeners),
+  }
+
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'NonEmptyListenerTest',
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 11,
+    uri: '',
+  }
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands).toEqual([
+    ['Viewlet.registerEventListeners', 11, eventListeners],
+    ['Viewlet.createFunctionalRoot', 'NonEmptyListenerTest', 11, true],
+  ])
+})
+
 test('extension view render supports functional events', () => {
   expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
 })

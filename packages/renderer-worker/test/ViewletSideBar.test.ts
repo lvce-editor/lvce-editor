@@ -190,6 +190,25 @@ test('handleSideBarViewletChange gives an opted-out extension view the full side
   })
 })
 
+test('handleSideBarViewletChange omits empty listener registration for its new actions root', async () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.createFunctionalRoot', 'Explorer', 2, true],
+    ['Viewlet.send', 1, 'setActionsDom', ['explorer-actions']],
+  ])
+
+  const newState = await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.createFunctionalRoot', 'Explorer', 2, true],
+    ['Viewlet.createFunctionalRoot', 'Explorer', newState.actionsUid, true],
+    ['Viewlet.setDom2', newState.actionsUid, ['explorer-actions']],
+    ['Viewlet.setUid', newState.actionsUid, newState.childUid],
+  ])
+  expect(RendererProcess.invoke.mock.calls[0][1]).not.toContainEqual(['Viewlet.registerEventListeners', expect.any(Number), []])
+  expect(newState.actionsUid).not.toBe(-1)
+})
+
 test('setTitle', () => {
   const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
 

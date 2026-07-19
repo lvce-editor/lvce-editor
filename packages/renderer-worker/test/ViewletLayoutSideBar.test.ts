@@ -306,6 +306,38 @@ test('createPanelViewlet creates a linked actions root for child-contributed act
   })
 })
 
+test('createPanelViewlet omits empty event listener registration for its new actions root', async () => {
+  const state = ViewletLayout.create(1)
+  const actionsDom = [{ type: 'Button', childCount: 0 }]
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.create', 'Output', 11],
+    ['Viewlet.send', -1, 'setActionsDom', actionsDom, 11],
+  ])
+
+  const result = await ViewletLayout.createPanelViewlet(
+    state,
+    'Output',
+    11,
+    22,
+    33,
+    {
+      x: 0,
+      y: 35,
+      width: 400,
+      height: 200,
+    },
+    '',
+  )
+
+  expect(result.commands).toEqual([
+    ['Viewlet.create', 'Output', 11],
+    ['Viewlet.createFunctionalRoot', 'Output', 33, true],
+    ['Viewlet.setDom2', 33, actionsDom],
+    ['Viewlet.setUid', 33, 11],
+  ])
+})
+
 test('toggleSideBarView hides the current side bar view when the same item is clicked', async () => {
   mockActivityBarRender()
   const state = {
