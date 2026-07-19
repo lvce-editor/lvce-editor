@@ -35,6 +35,27 @@ const Command = await import('../src/parts/Command/Command.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 
+test('runLoadContentLater starts deferred loading once', async () => {
+  const loadContentLater = jest.fn(async (_state: unknown) => {})
+  const viewletState = { uid: 42 }
+  ViewletStates.set(42, {
+    factory: {
+      Commands: {
+        loadContentLater,
+      },
+    },
+    renderedState: viewletState,
+    state: viewletState,
+  })
+
+  ViewletManager.runLoadContentLater(42)
+  ViewletManager.runLoadContentLater(42)
+  await Promise.resolve()
+
+  expect(loadContentLater).toHaveBeenCalledTimes(1)
+  expect(loadContentLater).toHaveBeenCalledWith(viewletState)
+})
+
 test('render adds uid to setPatches command', () => {
   const patches = [{ type: 1 }]
   const mockModule = {

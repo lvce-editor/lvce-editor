@@ -207,6 +207,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
       return state
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    ViewletManager.runLoadContentLater(childUid)
   }
 
   // TODO race condition (check if disposed after created)
