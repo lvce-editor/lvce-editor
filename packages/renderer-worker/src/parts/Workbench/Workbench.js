@@ -16,6 +16,7 @@ import * as IpcState from '../IpcState/IpcState.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
+import * as LaunchTestWorker from '../LaunchTestWorker/LaunchTestWorker.ts'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
@@ -149,6 +150,8 @@ export const startup = async (platform, assetDir) => {
     PreferencesState.set('layout.backendUrl', promptOptions.backendUrl)
   }
   Performance.mark(PerformanceMarkerType.DidLoadPreferences)
+
+  LaunchTestWorker.preloadTestWorker(initData.Location.href, promptOptions !== undefined)
 
   // TODO only load this if session replay is enabled in preferences
   if (promptOptions === undefined && Preferences.get('sessionReplay.enabled')) {
