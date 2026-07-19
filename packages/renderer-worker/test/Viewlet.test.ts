@@ -160,6 +160,22 @@ test('dispose - waits for factory disposal before disposing the rendered viewlet
   expect(didDispose).toBe(true)
 })
 
+test('dispose - disposes the rendered viewlet when the factory has no dispose function', async () => {
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'ActivityBar',
+    factory: {},
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {})
+
+  await Viewlet.dispose(2)
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.dispose', 2)
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+})
+
 test('openWidget - once', async () => {
   // @ts-ignore
   ViewletManager.load.mockImplementation(() => {
