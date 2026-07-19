@@ -7,6 +7,7 @@ const disableConfiguredRules = (prefix) => {
 
 export default [
   ...config.default,
+  ...config.recommendedVirtualDom,
   ...config.recommendedTsconfig,
   ...config.recommendedActions,
   ...config.recommendedRegex,
@@ -32,6 +33,8 @@ export default [
       'prefer-destructuring': 'off',
       'prefer-const': 'off',
       'regex/hoist-regex': 'error',
+      'virtual-dom/no-object-attribute-values': 'off',
+      'virtual-dom/prefer-state-destructuring': 'off',
     },
   },
 ]
