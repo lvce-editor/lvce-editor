@@ -136,6 +136,7 @@ test('loadContent opens explorer when restore is disabled', async () => {
     false,
     { restore: false },
   )
+  expect(SaveState.saveViewletState).not.toHaveBeenCalled()
   expect(newState).toMatchObject({
     currentViewletId: 'Explorer',
   })

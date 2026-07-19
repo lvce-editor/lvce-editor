@@ -367,7 +367,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   return newState
 }
 
-const show = async (state: LayoutState, module, currentViewletId) => {
+const show = async (state: LayoutState, module, currentViewletId, restore?: boolean) => {
   if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
     return {
       newState: state,
@@ -381,6 +381,8 @@ const show = async (state: LayoutState, module, currentViewletId) => {
       commands: [],
     }
   }
+  const { restore: defaultRestore } = state
+  const shouldRestore = restore ?? defaultRestore
   const intermediateState: LayoutState = getPoints({
     ...state,
     [kVisible]: true,
@@ -414,7 +416,8 @@ const show = async (state: LayoutState, module, currentViewletId) => {
     parentUid: uid,
     uid: childUid,
   }
-  const commands = await ViewletManager.load(viewlet, false, true, undefined)
+  const restoreState: any = shouldRestore ? undefined : { restore: false }
+  const commands = await ViewletManager.load(viewlet, false, shouldRestore, restoreState)
   if (commands) {
     // commands.push(['Viewlet.append', uid, childUid])
   }
@@ -536,11 +539,15 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
   }
 }
 
-export const showSideBar = async (state: LayoutState, moduleId = state.sideBarView): Promise<LayoutStateResult> => {
-  const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
+export const showSideBar = async (state: LayoutState, moduleId?: string, restore?: boolean): Promise<LayoutStateResult> => {
+  const { restore: defaultRestore, sideBarView: currentSideBarView } = state
+  const shouldRestore = restore ?? defaultRestore
+  const sideBarView = moduleId || currentSideBarView || ViewletModuleId.Explorer
   if (state.sideBarVisible) {
     const switchResult =
-      state.sideBarView === sideBarView ? { newState: state, commands: [] } : await callGlobalEvent(state, 'handleSideBarViewletChange', sideBarView)
+      state.sideBarView === sideBarView
+        ? { newState: state, commands: [] }
+        : await callGlobalEvent(state, 'handleSideBarViewletChange', sideBarView, shouldRestore)
     const newState = {
       ...switchResult.newState,
       sideBarView,
@@ -553,7 +560,7 @@ export const showSideBar = async (state: LayoutState, moduleId = state.sideBarVi
     }
   }
   const sideBarState = sideBarView === state.sideBarView ? state : { ...state, sideBarView }
-  const { newState, commands } = await show(sideBarState, LayoutModules.SideBar, sideBarView)
+  const { newState, commands } = await show(sideBarState, LayoutModules.SideBar, sideBarView, shouldRestore)
   const activityBarCommands = await renderSideBarActivityBarCommands(newState.activityBarId, sideBarView, true)
   return {
     newState: {

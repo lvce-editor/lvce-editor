@@ -61,7 +61,7 @@ test('reset restores the initial application state', async () => {
   expect(Command.execute).toHaveBeenNthCalledWith(12, 'Workspace.close')
   expect(Command.execute).toHaveBeenNthCalledWith(13, 'Layout.leaveSideBarFocusMode')
   expect(Command.execute).toHaveBeenNthCalledWith(14, 'Layout.moveSideBarRight')
-  expect(Command.execute).toHaveBeenNthCalledWith(15, 'Layout.showSideBar', 'Explorer')
+  expect(Command.execute).toHaveBeenNthCalledWith(15, 'Layout.showSideBar', 'Explorer', false)
   expect(Command.execute).toHaveBeenNthCalledWith(16, 'Layout.unmaximizePanel')
   expect(Command.execute).toHaveBeenNthCalledWith(17, 'Layout.showPanel', 'Problems')
   expect(Command.execute).toHaveBeenNthCalledWith(18, 'Layout.hidePanel')
