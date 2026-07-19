@@ -51,7 +51,6 @@ export const loadContent = async (state, savedState) => {
     platform,
     assetDir,
   )
-  await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
@@ -62,7 +61,12 @@ export const loadContent = async (state, savedState) => {
     commands,
     actionsDom,
     badgeCount,
+    savedState,
   }
+}
+
+export const loadContentLater = async (state) => {
+  await Command.execute('Viewlet.executeViewletCommand', state.uid, 'loadContent', state.savedState)
 }
 
 export const dispose = (state) => {
@@ -120,8 +124,20 @@ export const handleMouseOver = async (state, index) => {
   }
 }
 
-export const handleWorkspaceChange = (state) => {
-  return loadContent(state)
+export const handleWorkspaceChange = async (state) => {
+  const loadingState = await loadContent(state)
+  await SourceControlWorker.invoke('SourceControl.loadContent', state.uid)
+  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
+  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  return {
+    ...loadingState,
+    actionsDom,
+    badgeCount,
+    commands,
+  }
 }
 
 export const handleMouseOut = (state, index) => {

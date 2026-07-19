@@ -43,6 +43,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
     load: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    runLoadContentLater: jest.fn(),
   }
 })
 

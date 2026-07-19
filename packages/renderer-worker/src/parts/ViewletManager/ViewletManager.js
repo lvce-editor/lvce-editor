@@ -1,6 +1,7 @@
 // @ts-nocheck
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
@@ -19,6 +20,28 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
   pendingModules: Object.create(null),
+}
+
+const runLoadContentLaterWithErrorHandling = async (loadContentLater, viewletState) => {
+  try {
+    await loadContentLater(viewletState)
+  } catch (error) {
+    try {
+      await ErrorHandling.handleError(error)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+export const runLoadContentLater = (uid) => {
+  const instance = ViewletStates.getInstance(uid)
+  const loadContentLater = instance?.factory?.Commands?.loadContentLater
+  if (!loadContentLater || instance.loadContentLaterStarted) {
+    return
+  }
+  instance.loadContentLaterStarted = true
+  void runLoadContentLaterWithErrorHandling(loadContentLater, instance.state)
 }
 
 const ViewletState = {
@@ -645,10 +668,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push(...additionalExtraCommands)
     }
 
-    if (module.Commands && module.Commands['loadContentLater']) {
-      const commands = await module.Commands['loadContentLater'](newState)
-    }
-
     const instanceNow = ViewletStates.getInstance(viewletUid)
     viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender && shouldRender) {
@@ -682,6 +701,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push(...extraCommands)
       updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+      runLoadContentLater(viewletUid)
     } else if (!module.hasFunctionalEvents && shouldRender) {
       const allCommands = [
         ...commands,

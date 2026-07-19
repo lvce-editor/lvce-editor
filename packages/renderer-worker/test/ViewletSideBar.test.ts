@@ -29,6 +29,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => {
   return {
     load: jest.fn(() => []),
+    runLoadContentLater: jest.fn(),
   }
 })
 
@@ -47,6 +48,7 @@ beforeEach(() => {
   RendererProcess.invoke.mockResolvedValue(undefined)
   SaveState.saveViewletState.mockResolvedValue(undefined)
   ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'Explorer', 2, true]])
+  ViewletManager.runLoadContentLater.mockReturnValue(undefined)
   GetExtensionViews.getExtensionView.mockResolvedValue(undefined)
 })
 
@@ -149,6 +151,7 @@ test('handleSideBarViewletChange uses child title', async () => {
   const newState = await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
 
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.createFunctionalRoot', 'Explorer', 2, true]])
+  expect(ViewletManager.runLoadContentLater).toHaveBeenCalledWith(expect.any(Number))
   expect(newState).toMatchObject({
     currentViewletId: 'Explorer',
     title: 'workspace-name',
