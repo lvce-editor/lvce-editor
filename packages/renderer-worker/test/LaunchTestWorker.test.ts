@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-restricted-jest-methods -- Worker launch tests use ESM module mocks for transport dependencies. */
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
 
@@ -23,6 +24,18 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/TestWorker/TestWorker.js', () => {
   return {
     set: jest.fn(),
@@ -32,22 +45,51 @@ jest.unstable_mockModule('../src/parts/TestWorker/TestWorker.js', () => {
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
+const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchTestWorker = await import('../src/parts/LaunchTestWorker/LaunchTestWorker.ts')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const TestWorker = await import('../src/parts/TestWorker/TestWorker.js')
+const jsonRpcInvokeAndTransfer = jest.mocked(JsonRpc.invokeAndTransfer)
+const rendererProcessInvokeAndTransfer = jest.mocked(RendererProcess.invokeAndTransfer)
 
 beforeEach(() => {
   jest.resetAllMocks()
   LaunchTestWorker.reset()
 })
 
+test('launchTestWorker connects the test worker directly to the renderer process', async () => {
+  const ipc = {
+    send(): void {},
+  }
+  // @ts-ignore
+  GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///test-worker.js')
+  // @ts-ignore
+  IpcParent.create.mockResolvedValue(ipc)
+
+  const result = await LaunchTestWorker.launchTestWorker()
+
+  expect(IpcParent.create).toHaveBeenCalledTimes(1)
+  expect(IpcParent.create).toHaveBeenCalledWith({
+    method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
+    name: 'Test Worker',
+    url: 'file:///test-worker.js',
+  })
+  expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
+  expect(TestWorker.set).toHaveBeenCalledWith(ipc)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('TestWorkerRpc.initialize', expect.any(MessagePort))
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'RendererProcess.initialize', expect.any(MessagePort))
+  expect(rendererProcessInvokeAndTransfer.mock.calls[0][1]).not.toBe(jsonRpcInvokeAndTransfer.mock.calls[0][2])
+  expect(rendererProcessInvokeAndTransfer.mock.invocationCallOrder[0]).toBeLessThan(jsonRpcInvokeAndTransfer.mock.invocationCallOrder[0])
+  expect(result).toBe(ipc)
+})
+
 test('preload starts the configured Test Worker once and execution reuses it', async () => {
   const ipc = {
-    send() {},
+    send(): void {},
   }
-  let resolveWorker: (value: typeof ipc) => void = () => {}
-  const workerPromise = new Promise<typeof ipc>((resolve) => {
-    resolveWorker = resolve
-  })
+  const { promise: workerPromise, resolve: resolveWorker } = Promise.withResolvers<typeof ipc>()
   // @ts-ignore
   GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///configured-test-worker.js')
   // @ts-ignore
@@ -90,7 +132,7 @@ test.each([
 test('preload handles rejection, execution reports it, and a later retry relaunches', async () => {
   const launchError = new Error('failed to launch Test Worker')
   const ipc = {
-    send() {},
+    send(): void {},
   }
   // @ts-ignore
   GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///test-worker.js')
