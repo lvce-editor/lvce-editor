@@ -362,13 +362,13 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.7.0",
+    "version": "5.8.0",
     "created": "2022-06-16"
   },
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.11.0",
+    "version": "2.12.0",
     "created": "2022-06-16"
   },
   {
