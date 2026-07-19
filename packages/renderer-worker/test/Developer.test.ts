@@ -344,6 +344,37 @@ test.skip('monitorPerformance', async () => {
   delete globalThis.performance
 })
 
+test('takeWorkerHeapSnapshot returns the snapshot uri', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockResolvedValue('/home/test/Downloads/sample.heapsnapshot')
+
+  await expect(Developer.takeWorkerHeapSnapshot(7, 'Sample Extension Worker')).resolves.toEqual({
+    ok: true,
+    uri: '/home/test/Downloads/sample.heapsnapshot',
+  })
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ElectronDeveloper.takeWorkerHeapSnapshot', 7, 'Sample Extension Worker')
+})
+
+test('takeWorkerHeapSnapshot returns an error result', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockRejectedValue(new Error('Worker not found: Sample Extension Worker'))
+
+  await expect(Developer.takeWorkerHeapSnapshot(7, 'Sample Extension Worker')).resolves.toEqual({
+    error: 'Worker not found: Sample Extension Worker',
+    ok: false,
+  })
+})
+
+test('takeWorkerHeapSnapshot handles non-error failures', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockRejectedValue('Snapshot failed')
+
+  await expect(Developer.takeWorkerHeapSnapshot(7, 'Sample Extension Worker')).resolves.toEqual({
+    error: 'Snapshot failed',
+    ok: false,
+  })
+})
+
 // TODO test createSharedProcessHeapSnapshot error
 
 test('createSharedProcessHeapSnapshot', async () => {

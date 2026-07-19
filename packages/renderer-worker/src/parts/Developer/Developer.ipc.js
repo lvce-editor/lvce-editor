@@ -35,5 +35,6 @@ export const Commands = {
   showMemoryUsage: Developer.showMemoryUsage,
   showStartupPerformance: Developer.showStartupPerformance,
   startupPerformance: Developer.showStartupPerformance,
+  takeWorkerHeapSnapshot: Developer.takeWorkerHeapSnapshot,
   toggleDeveloperTools: Devtools.toggleDeveloperTools,
 }
