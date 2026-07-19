@@ -43,6 +43,7 @@
 }
 
 .RunningExtensionId,
+.RunningExtensionActivationReason,
 .RunningExtensionActivationTime,
 .RunningExtensionsEmpty {
   color: var(--DescriptionForeground, rgba(156, 162, 160, 0.7));
