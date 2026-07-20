@@ -6,6 +6,7 @@ import * as Copy from '../Copy/Copy.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
+import * as ValidateRendererProcessArtifacts from '../ValidateRendererProcessArtifacts/ValidateRendererProcessArtifacts.ts'
 
 const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
 
@@ -57,6 +58,9 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: rendererProcessCachePath,
     to: `${toRoot}/packages/renderer-process`,
     ignore: ['static'],
+  })
+  ValidateRendererProcessArtifacts.validateRendererProcessArtifacts({
+    rendererProcessPath: `${toRoot}/packages/renderer-process`,
   })
   const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
     commitHash,
