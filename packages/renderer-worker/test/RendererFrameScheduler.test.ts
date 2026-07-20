@@ -14,6 +14,7 @@ jest.unstable_mockModule('../src/parts/Timestamp/Timestamp.js', () => ({
 }))
 
 const NormalizeRendererCommands = await import('../src/parts/NormalizeRendererCommands/NormalizeRendererCommands.js')
+const IsTest = await import('../src/parts/IsTest/IsTest.js')
 const RendererFrameScheduler = await import('../src/parts/RendererFrameScheduler/RendererFrameScheduler.js')
 
 const rpc = {
@@ -38,10 +39,20 @@ const runAnimationFrame = async (timestamp: number) => {
 beforeEach(() => {
   frameCallbacks.length = 0
   currentTime = 0
+  IsTest.state.isTest = false
   jest.clearAllMocks()
   rpc.invoke.mockResolvedValue(undefined)
   rpc.invokeAndTransfer.mockResolvedValue(undefined)
   RendererFrameScheduler.reset(rpc)
+})
+
+test('sends render batches without waiting for an animation frame in tests', async () => {
+  IsTest.state.isTest = true
+
+  await RendererFrameScheduler.sendMultiple([['Viewlet.send', 1, 'test']])
+
+  expect(frameCallbacks).toHaveLength(0)
+  expect(rpc.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.send', 1, 'test']])
 })
 
 test('coalesces consecutive render batches in arrival order', async () => {
