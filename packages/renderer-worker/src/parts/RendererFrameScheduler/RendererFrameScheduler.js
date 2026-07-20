@@ -1,3 +1,4 @@
+import * as IsTest from '../IsTest/IsTest.js'
 import * as NormalizeRendererCommands from '../NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
@@ -26,6 +27,9 @@ const enqueue = (operation) => {
 }
 
 const waitForEligibleFrame = () => {
+  if (IsTest.isTest()) {
+    return Promise.resolve(Timestamp.now())
+  }
   return new Promise((resolve) => {
     const handleFrame = (timestamp) => {
       if (timestamp - state.lastFrameTime < minimumFrameDuration) {
