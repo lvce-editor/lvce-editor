@@ -192,21 +192,6 @@ export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
-export const takeWorkerHeapSnapshot = async (windowId, workerName) => {
-  try {
-    const uri = await ElectronDeveloper.takeWorkerHeapSnapshot(windowId, workerName)
-    return {
-      ok: true,
-      uri,
-    }
-  } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : String(error),
-      ok: false,
-    }
-  }
-}
-
 export const reloadIconTheme = async (platform, assetDir) => {
   await IconTheme.hydrate(platform, assetDir)
 }

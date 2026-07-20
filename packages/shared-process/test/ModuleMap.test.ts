@@ -5,7 +5,3 @@ import * as ModuleMap from '../src/parts/ModuleMap/ModuleMap.js'
 test('getModuleId - Platform.getConfigJsonPath', () => {
   expect(ModuleMap.getModuleId('Platform.getConfigJsonPath')).toBe(ModuleId.Platform)
 })
-
-test('getModuleId - ElectronDeveloper.takeWorkerHeapSnapshot', () => {
-  expect(ModuleMap.getModuleId('ElectronDeveloper.takeWorkerHeapSnapshot')).toBe(ModuleId.ElectronDeveloper)
-})

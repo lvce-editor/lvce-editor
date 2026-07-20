@@ -52,7 +52,6 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronContextMenu.openContextMenu':
       return ModuleId.ElectronContextMenu
     case 'ElectronDeveloper.getPerformanceEntries':
-    case 'ElectronDeveloper.takeWorkerHeapSnapshot':
       return ModuleId.ElectronDeveloper
     case 'ElectronDialog.showMessageBox':
     case 'ElectronDialog.showOpenDialog':
