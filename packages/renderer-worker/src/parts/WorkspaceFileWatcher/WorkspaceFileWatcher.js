@@ -63,6 +63,7 @@ export const watchWorkspace = async (workspaceUri) => {
 
 const handleWorkspaceChange = async () => {
   await watchWorkspace(Workspace.getWorkspaceUri())
+  await Command.execute('Layout.refreshSourceControlBadgeCount')
 }
 
 export const hydrate = async () => {

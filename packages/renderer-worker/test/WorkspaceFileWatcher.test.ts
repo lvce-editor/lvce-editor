@@ -60,7 +60,7 @@ test('watchWorkspace - replaces the previous watcher', async () => {
   })
 })
 
-test('workspace change - watches the new workspace uri', async () => {
+test('workspace change - watches the new workspace uri and refreshes the source control badge count', async () => {
   await WorkspaceFileWatcher.hydrate()
   getWorkspaceUri.mockReturnValue('file:///other')
   const handleWorkspaceChange = GlobalEventBus.state.listenerMap['workspace.change'][0]
@@ -71,6 +71,7 @@ test('workspace change - watches the new workspace uri', async () => {
     exclude: ['.git', 'node_modules'],
     roots: ['file:///other'],
   })
+  expect(Command.execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
 
 test('watcher events - debounce refresh and forward deleted uris', async () => {
