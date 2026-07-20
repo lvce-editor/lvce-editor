@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@lerna/legacy-package-management": "^8.2.4",
-    "@lvce-editor/eslint-config": "^16.5.0",
+    "@lvce-editor/eslint-config": "^17.0.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
     "eslint": "^10.7.0",
