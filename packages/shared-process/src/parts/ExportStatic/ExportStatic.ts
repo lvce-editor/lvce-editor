@@ -126,6 +126,16 @@ const copyStaticFiles = async (root: any, serverStaticPath: any): Promise<any> =
   await FileSystem.copy(serverStaticPath, Path.join(root, 'dist'))
 }
 
+export const validateRendererProcessArtifacts = ({ commitHash, root }: any): any => {
+  const rendererProcessDistPath = Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist')
+  for (const artifactName of ['rendererProcessMain.js', 'xterm.js']) {
+    const artifactPath = Path.join(rendererProcessDistPath, artifactName)
+    if (!existsSync(artifactPath)) {
+      throw new Error(`renderer process artifact not found: ${artifactPath}`)
+    }
+  }
+}
+
 const applyOverridesRendererProcess = async ({ commitHash, pathPrefix, root }: any): Promise<any> => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
@@ -720,6 +730,7 @@ export const exportStatic = async ({
   console.time('copyStaticFiles')
   await copyStaticFiles(root, serverStaticPath)
   console.timeEnd('copyStaticFiles')
+  validateRendererProcessArtifacts({ commitHash, root })
 
   console.time('applyOverrides')
   await applyOverrides({
