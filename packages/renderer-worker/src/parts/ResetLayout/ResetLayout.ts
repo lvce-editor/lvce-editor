@@ -2,7 +2,6 @@ import * as Command from '../Command/Command.js'
 import type { LayoutState, LayoutStateResult } from '../ViewletLayout/LayoutState.ts'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const defaultColorTheme = 'slime'
 const defaultTitleTemplate = '${folderName}'
@@ -14,20 +13,8 @@ const closeWidgets = async (): Promise<void> => {
   await Command.execute('Viewlet.closeWidget', ViewletModuleId.Confirm)
 }
 
-const getActivityBarBounds = (): { readonly height: number; readonly width: number; readonly x: number; readonly y: number } => {
-  const state: LayoutState = ViewletStates.getState(ViewletModuleId.Layout)
-  return {
-    height: state.activityBarHeight,
-    width: state.activityBarWidth,
-    x: state.activityBarLeft,
-    y: state.activityBarTop,
-  }
-}
-
 const resetActivityBar = async (): Promise<void> => {
-  const { height, width, x, y } = getActivityBarBounds()
-  await Command.execute('ActivityBar.create', '', x, y, width, height, null, null, -1)
-  await Command.execute('ActivityBar.loadContent', {})
+  await Command.execute('ActivityBar.reset')
 }
 
 export const reset = async (state: LayoutState): Promise<LayoutStateResult> => {

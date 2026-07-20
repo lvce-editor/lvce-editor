@@ -5,13 +5,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
-  getState: jest.fn(),
-}))
-
 const Command = await import('../src/parts/Command/Command.js')
 const ResetLayout = await import('../src/parts/ResetLayout/ResetLayout.ts')
-const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -20,12 +15,6 @@ beforeEach(() => {
       return '/test'
     }
     return undefined
-  })
-  jest.spyOn(ViewletStates, 'getState').mockReturnValue({
-    activityBarHeight: 718,
-    activityBarLeft: 976,
-    activityBarTop: 30,
-    activityBarWidth: 48,
   })
 })
 
@@ -46,7 +35,7 @@ test('reset restores the initial application state', async () => {
     newState: state,
   })
 
-  expect(Command.execute).toHaveBeenCalledTimes(20)
+  expect(Command.execute).toHaveBeenCalledTimes(19)
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'Menu.hide', false)
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'TitleBar.closeMenu')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'TitleBar.setTitleTemplate', '${folderName}')
@@ -65,8 +54,7 @@ test('reset restores the initial application state', async () => {
   expect(Command.execute).toHaveBeenNthCalledWith(16, 'Layout.unmaximizePanel')
   expect(Command.execute).toHaveBeenNthCalledWith(17, 'Layout.showPanel', 'Problems')
   expect(Command.execute).toHaveBeenNthCalledWith(18, 'Layout.hidePanel')
-  expect(Command.execute).toHaveBeenNthCalledWith(19, 'ActivityBar.create', '', 976, 30, 48, 718, null, null, -1)
-  expect(Command.execute).toHaveBeenNthCalledWith(20, 'ActivityBar.loadContent', {})
+  expect(Command.execute).toHaveBeenNthCalledWith(19, 'ActivityBar.reset')
 })
 
 test('reset leaves an initial layout in place', async () => {
@@ -92,5 +80,5 @@ test('reset leaves an initial layout in place', async () => {
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.unmaximizePanel')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.showPanel', 'Problems')
   expect(Command.execute).not.toHaveBeenCalledWith('Layout.hidePanel')
-  expect(Command.execute).toHaveBeenLastCalledWith('ActivityBar.loadContent', {})
+  expect(Command.execute).toHaveBeenLastCalledWith('ActivityBar.reset')
 })
