@@ -4,5 +4,4 @@ export const name = 'ElectronDeveloper'
 
 export const Commands = {
   getPerformanceEntries: ElectronDeveloper.getPerformanceEntries,
-  takeWorkerHeapSnapshot: ElectronDeveloper.takeWorkerHeapSnapshot,
 }
