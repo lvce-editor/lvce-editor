@@ -3,7 +3,6 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TestWorker from '../TestWorker/TestWorker.js'
 import * as TestWorkerUrl from '../TestWorkerUrl/TestWorkerUrl.js'
 
@@ -16,9 +15,7 @@ const createTestWorker = async (): Promise<any> => {
   })
   HandleIpc.handleIpc(ipc)
   TestWorker.set(ipc)
-  const { port1, port2 } = new MessageChannel()
-  await RendererProcess.invokeAndTransfer('TestWorkerRpc.initialize', port1)
-  await JsonRpc.invokeAndTransfer(ipc, 'RendererProcess.initialize', port2)
+  await JsonRpc.invoke(ipc, 'RendererProcess.initialize')
   return ipc
 }
 
