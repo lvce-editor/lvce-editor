@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { join } from 'node:path'
 
 jest.unstable_mockModule('node:fs/promises', () => ({
   access: jest.fn(),
@@ -17,6 +18,7 @@ const fs = await import('node:fs/promises')
 const ExtensionUninstall = await import('../src/parts/ExtensionUninstall/ExtensionUninstall.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const Trash = await import('../src/parts/Trash/Trash.js')
+const extensionPath = join('/test/extensions', 'test-author.test-extension')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -29,7 +31,7 @@ beforeEach(() => {
 test('moves extension to trash', async () => {
   await ExtensionUninstall.uninstall('test-author.test-extension')
 
-  expect(Trash.trash).toHaveBeenCalledWith('/test/extensions/test-author.test-extension')
+  expect(Trash.trash).toHaveBeenCalledWith(extensionPath)
   expect(fs.rm).not.toHaveBeenCalled()
 })
 
@@ -38,7 +40,7 @@ test('permanently deletes extension when moving to trash fails', async () => {
 
   await ExtensionUninstall.uninstall('test-author.test-extension')
 
-  expect(fs.rm).toHaveBeenCalledWith('/test/extensions/test-author.test-extension', {
+  expect(fs.rm).toHaveBeenCalledWith(extensionPath, {
     recursive: true,
   })
 })
