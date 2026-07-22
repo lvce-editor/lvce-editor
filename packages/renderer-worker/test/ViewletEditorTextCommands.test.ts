@@ -54,7 +54,12 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
 })
 
 test('loadContentLater requests diagnostics after the initial render', async () => {
-  editorWorkerInvoke.mockResolvedValue([])
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
   const commands = await ViewletEditorTextCommands.getCommands()
 
   await commands.loadContentLater({ uid: 42 })
