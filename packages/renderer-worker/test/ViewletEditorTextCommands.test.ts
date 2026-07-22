@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+const commandExecute = jest.fn()
 const editorWorkerInvoke = jest.fn()
 const rendererProcessInvoke = jest.fn()
 
@@ -8,6 +9,10 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
     invoke: editorWorkerInvoke,
   }
 })
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: commandExecute,
+}))
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
@@ -43,8 +48,18 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands['FindWidget.close']).toBeDefined()
   expect(commands['ColorPicker.handleSliderPointerDown']).toBeDefined()
   expect(commands.handleUriChange).toBeDefined()
+  expect(commands.loadContentLater).toBeDefined()
   expect(commands.showOverlayMessage).toBeDefined()
   expect(commands.hotReload).toBeDefined()
+})
+
+test('loadContentLater requests diagnostics after the initial render', async () => {
+  editorWorkerInvoke.mockResolvedValue([])
+  const commands = await ViewletEditorTextCommands.getCommands()
+
+  await commands.loadContentLater({ uid: 42 })
+
+  expect(commandExecute).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'updateDiagnostics')
 })
 
 test('worker command wrapper invokes editor command, diff, and render', async () => {
