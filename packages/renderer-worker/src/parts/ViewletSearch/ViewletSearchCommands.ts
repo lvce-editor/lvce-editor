@@ -1,11 +1,11 @@
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import * as WrapTextSearchCommand from './WrapTextSearchCommand.ts'
 import * as ViewletSearch from './ViewletSearch.ts'
 
 export const Commands = {}
 
 export const getCommands = async () => {
-  const commands = await TextSearchWorker.invoke('TextSearch.getCommandIds')
+  const commands = await TextSearchViewWorker.invoke('TextSearch.getCommandIds')
   for (const command of commands) {
     Commands[command] = WrapTextSearchCommand.wrapTextSearchCommand(command)
   }
@@ -15,5 +15,5 @@ export const getCommands = async () => {
 }
 
 export const saveState = (state) => {
-  return TextSearchWorker.invoke(`TextSearch.saveState`, state.uid)
+  return TextSearchViewWorker.invoke(`TextSearch.saveState`, state.uid)
 }
