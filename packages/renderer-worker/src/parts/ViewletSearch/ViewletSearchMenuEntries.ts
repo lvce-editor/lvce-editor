@@ -1,15 +1,15 @@
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 
 export const menus = []
 
 export const getMenus = async () => {
   try {
-    const ids = await TextSearchWorker.invoke('TextSearch.getMenuEntryIds')
+    const ids = await TextSearchViewWorker.invoke('TextSearch.getMenuEntryIds')
     const adjusted = ids.map((id) => {
       return {
         id,
         async getMenuEntries(...args) {
-          const entries = await TextSearchWorker.invoke('TextSearch.getMenuEntries', ...args)
+          const entries = await TextSearchViewWorker.invoke('TextSearch.getMenuEntries', ...args)
           return entries
         },
       }

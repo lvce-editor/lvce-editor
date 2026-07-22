@@ -1,6 +1,6 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Platform from '../Platform/Platform.js'
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
 
@@ -22,7 +22,7 @@ const doCreate = async (state: any): Promise<void> => {
   const itemHeight = 22
   const value = ''
   const replacement = ''
-  await TextSearchWorker.invoke(
+  await TextSearchViewWorker.invoke(
     'TextSearch.create',
     state.uid,
     state.x,
@@ -40,10 +40,10 @@ const doCreate = async (state: any): Promise<void> => {
 
 export const loadContent = async (state: SearchState, savedState: any): Promise<SearchState> => {
   await doCreate(state)
-  await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
-  const diffResult = await TextSearchWorker.invoke('TextSearch.diff2', state.uid)
-  const commands = await TextSearchWorker.invoke('TextSearch.render2', state.uid, diffResult)
-  const actionsDom = await TextSearchWorker.invoke('TextSearch.renderActions', state.uid)
+  await TextSearchViewWorker.invoke('TextSearch.loadContent', state.uid, savedState)
+  const diffResult = await TextSearchViewWorker.invoke('TextSearch.diff2', state.uid)
+  const commands = await TextSearchViewWorker.invoke('TextSearch.render2', state.uid, diffResult)
+  const actionsDom = await TextSearchViewWorker.invoke('TextSearch.renderActions', state.uid)
 
   return {
     ...state,
@@ -66,12 +66,12 @@ export const hotReload = async (state) => {
   state.isHotReloading = true
   // possible TODO race condition during hot reload
   // there could still be pending promises when the worker is disposed
-  const savedState = await TextSearchWorker.invoke('TextSearch.saveState', state.uid)
-  await TextSearchWorker.restart('TextSearch.terminate')
+  const savedState = await TextSearchViewWorker.invoke('TextSearch.saveState', state.uid)
+  await TextSearchViewWorker.restart('TextSearch.terminate')
   await doCreate(state)
-  await TextSearchWorker.invoke('TextSearch.loadContent', state.uid, savedState)
-  const diffResult = await TextSearchWorker.invoke('TextSearch.diff2', state.uid)
-  const commands = await TextSearchWorker.invoke('TextSearch.render2', state.uid, diffResult)
+  await TextSearchViewWorker.invoke('TextSearch.loadContent', state.uid, savedState)
+  const diffResult = await TextSearchViewWorker.invoke('TextSearch.diff2', state.uid)
+  const commands = await TextSearchViewWorker.invoke('TextSearch.render2', state.uid, diffResult)
   state.commands = commands
   state.isHotReloading = false
   return {

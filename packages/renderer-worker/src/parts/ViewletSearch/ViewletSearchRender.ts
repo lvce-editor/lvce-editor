@@ -1,4 +1,4 @@
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import type { SearchState } from './ViewletSearchTypes.ts'
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 
@@ -19,6 +19,6 @@ const renderItems = {
 export const render = [renderItems]
 
 export const renderEventListeners = async () => {
-  const listeners = await TextSearchWorker.invoke('TextSearch.renderEventListeners')
+  const listeners = await TextSearchViewWorker.invoke('TextSearch.renderEventListeners')
   return listeners
 }
