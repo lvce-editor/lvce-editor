@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.12.0",
+    "version": "5.12.1",
     "created": "2022-07-02"
   },
   {
