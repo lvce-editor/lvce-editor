@@ -133,6 +133,42 @@ test('handleColorThemeChanged forwards the color theme id to viewlets', async ()
   })
 })
 
+test('handleActiveEditorChange forwards the active uri to loaded viewlets', async () => {
+  const handler = jest.fn((state: { uid: number }, activeUri: string) => {
+    return {
+      ...state,
+      activeUri,
+    }
+  })
+  ViewletStates.set('problems', createInstance(1, 'handleActiveEditorChange', handler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
+
+  expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
+  expect(ViewletManager.render).toHaveBeenCalledTimes(1)
+  expect(result).toEqual({
+    commands: [['render.1']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
+test('handleActiveEditorChange ignores viewlets that are not loaded', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
+
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(result).toEqual({
+    commands: [],
+    newState: {
+      ...state,
+    },
+  })
+})
+
 test('handleSettingsChanged hydrates preferences and updates viewlet state', async () => {
   const calls: string[] = []
   hydratePreferences.mockImplementation(async () => {

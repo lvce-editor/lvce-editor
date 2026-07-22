@@ -1883,6 +1883,10 @@ export const handleWorkspaceRefresh = async (state: LayoutState, refresh: Worksp
   return callGlobalEvent(state, 'handleWorkspaceRefresh', refresh)
 }
 
+export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
+  return callGlobalEvent(state, 'handleActiveEditorChange', activeUri)
+}
+
 export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
   return callGlobalEvent(state, 'handleSettingsChanged')

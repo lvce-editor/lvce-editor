@@ -502,6 +502,7 @@ export const commandMap = {
   'Layout.getModuleId': lazy('Layout.getModuleId'),
   'Layout.getPlatform': lazy('Layout.getPlatform'),
   'Layout.getUserInfo': lazy('Layout.getUserInfo'),
+  'Layout.handleActiveEditorChange': lazy('Layout.handleActiveEditorChange'),
   'Layout.handleBadgeCountChange': lazy('Layout.handleBadgeCountChange'),
   'Layout.handleBlur': lazy('Layout.handleBlur'),
   'Layout.handleColorThemeChanged': lazy('Layout.handleColorThemeChanged'),
