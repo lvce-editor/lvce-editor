@@ -57,7 +57,10 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   const newState = await ViewletEditorText.loadContent(state, { selections: [0, 0, 0, 0] }, { selections })
 
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
-  expect(editorWorkerInvoke.mock.calls.map(([method]) => method).filter((method) => method.startsWith('Editor.'))).toEqual([
+  const editorMethods = editorWorkerInvoke.mock.calls
+    .map(([method]) => method)
+    .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
+  expect(editorMethods).toEqual([
     'Editor.create2',
     'Editor.loadContent',
     'Editor.diff2',
