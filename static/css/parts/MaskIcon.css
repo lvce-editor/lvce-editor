@@ -152,6 +152,11 @@
   mask-image: url(/icons/refresh.svg);
 }
 
+.MaskIconSync,
+.IconSync {
+  mask-image: url(/icons/sync.svg);
+}
+
 .MaskIconClearAll,
 .IconClearAll {
   mask-image: url(/icons/clear-all.svg);
