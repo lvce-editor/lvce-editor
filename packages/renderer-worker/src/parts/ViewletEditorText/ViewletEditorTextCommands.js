@@ -1,3 +1,4 @@
+import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
@@ -103,10 +104,15 @@ const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
   }
 }
 
+const loadContentLater = async (editor) => {
+  await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'updateDiagnostics')
+}
+
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
     handleUriChange,
+    loadContentLater,
     showOverlayMessage,
     hotReload,
   })

@@ -56,6 +56,26 @@ test('runLoadContentLater starts deferred loading once', async () => {
   expect(loadContentLater).toHaveBeenCalledWith(viewletState)
 })
 
+test('runLoadContentLaterForCreatedViewlets starts deferred loading for newly rendered viewlets', async () => {
+  const loadContentLater = jest.fn(async (_state: unknown) => {})
+  const viewletState = { uid: 42 }
+  ViewletStates.set(42, {
+    factory: {
+      Commands: {
+        loadContentLater,
+      },
+    },
+    renderedState: viewletState,
+    state: viewletState,
+  })
+
+  ViewletManager.runLoadContentLaterForCreatedViewlets([['Viewlet.createFunctionalRoot', 'EditorText', 42, true]])
+  await Promise.resolve()
+
+  expect(loadContentLater).toHaveBeenCalledTimes(1)
+  expect(loadContentLater).toHaveBeenCalledWith(viewletState)
+})
+
 test('render adds uid to setPatches command', () => {
   const patches = [{ type: 1 }]
   const mockModule = {
