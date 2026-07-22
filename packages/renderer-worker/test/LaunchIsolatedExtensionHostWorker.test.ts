@@ -12,6 +12,12 @@ jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ContentSecurityPolicy/ContentSecurityPolicy.js', () => {
+  return {
+    set: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
     invokeAndTransfer: jest.fn(),
@@ -24,6 +30,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
+const ContentSecurityPolicy = await import('../src/parts/ContentSecurityPolicy/ContentSecurityPolicy.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const LaunchIsolatedExtensionHostWorker = await import('../src/parts/LaunchIsolatedExtensionHostWorker/LaunchIsolatedExtensionHostWorker.js')
 
@@ -74,4 +81,27 @@ test('launchIsolatedExtensionHostWorker - uses custom worker name', async () => 
       url: '/test/trello/packages/extension/dist/trelloMain.js',
     }),
   )
+})
+
+test('launchIsolatedExtensionHostWorker - applies the extension content security policy before launch', async () => {
+  const port = {}
+  // @ts-ignore
+  ContentSecurityPolicy.set.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
+
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(
+    port,
+    'builtin.language-features-nvmrc',
+    'http://localhost:3000/remote/extensions/builtin.language-features-nvmrc/dist/languageFeaturesNvmrcMain.js',
+    '',
+    `default-src 'none'; connect-src https://nodejs.org; script-src 'self';`,
+  )
+
+  expect(ContentSecurityPolicy.set).toHaveBeenCalledWith(
+    '/remote/extensions/builtin.language-features-nvmrc/dist/languageFeaturesNvmrcMain.js',
+    `default-src 'none'; connect-src https://nodejs.org; script-src 'self';`,
+  )
+  // @ts-ignore
+  expect(ContentSecurityPolicy.set.mock.invocationCallOrder[0]).toBeLessThan(RendererProcess.invokeAndTransfer.mock.invocationCallOrder[0])
 })
