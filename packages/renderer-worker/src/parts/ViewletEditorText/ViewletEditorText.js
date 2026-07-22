@@ -63,7 +63,10 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-const getSavedSelections = (savedState) => {
+const getSavedSelections = (savedState, context) => {
+  if (context?.selections) {
+    return new Uint32Array(context.selections)
+  }
   if (savedState && savedState.selections) {
     return new Uint32Array(savedState.selections)
   }
@@ -114,7 +117,7 @@ export const loadContent = async (state, savedState, context) => {
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)
-  let savedSelections = getSavedSelections(savedState)
+  const savedSelections = getSavedSelections(savedState, context)
   const savedDeltaY = getSavedDeltaY(savedState)
   state.languageId = languageId
   let newState2 = Editor.setDeltaYFixedValue(state, savedDeltaY)
@@ -132,6 +135,7 @@ export const loadContent = async (state, savedState, context) => {
   if (useFunctionalRendering) {
     await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir)
     await EditorWorker.invoke('Editor.loadContent', id)
+    await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
   } else {
     await EditorWorker.invoke('Editor.create', {
       assetDir,
