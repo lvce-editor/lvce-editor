@@ -113,3 +113,4 @@ export const OAuthServer = 147
 export const LaunchIsolatedExtensionHostWorker = 148
 export const ExtensionNodeRpc = 149
 export const License = 150
+export const SendMessagePortToMainProcess = 151

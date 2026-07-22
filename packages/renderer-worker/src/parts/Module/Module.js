@@ -166,6 +166,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostWorkerContentSecurityPolicy.ipc.js')
     case ModuleId.SendMessagePortToElectron:
       return import('../SendMessagePortToElectron/SendMessagePortToElectron.ipc.js')
+    case ModuleId.SendMessagePortToMainProcess:
+      return import('../SendMessagePortToMainProcess/SendMessagePortToMainProcess.ipc.js')
     case ModuleId.OffscreenCanvas:
       return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
     case ModuleId.Timeout:
