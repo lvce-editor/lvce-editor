@@ -1,0 +1,99 @@
+.Changelog {
+  --ChangelogBorder: var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 22%, transparent));
+  --ChangelogMutedForeground: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 72%, transparent));
+  --ChangelogSurface: color-mix(in srgb, var(--WorkbenchForeground) 7%, transparent);
+}
+
+.Changelog .Markdown {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 880px;
+  padding: clamp(24px, 3vw, 36px) clamp(20px, 4vw, 48px) 64px;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
+  width: 100%;
+}
+
+.Changelog .Markdown h1 {
+  border: 0;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 40px 0 8px;
+  padding: 0;
+}
+
+.Changelog .Markdown > h1:first-of-type {
+  margin-top: 0;
+}
+
+.Changelog .Markdown h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.Changelog .Markdown h1 a:hover {
+  color: var(--LinkForeground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.Changelog .Markdown h1 + p {
+  color: var(--ChangelogMutedForeground);
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.Changelog .Markdown h1 + p > div {
+  display: inline;
+}
+
+.Changelog .Markdown h2 {
+  border: 0;
+  font-size: 20px;
+  margin: 28px 0 12px;
+  padding: 0;
+}
+
+.Changelog .Markdown h3 {
+  font-size: 16px;
+  margin: 24px 0 10px;
+}
+
+.Changelog .Markdown p,
+.Changelog .Markdown li {
+  line-height: 1.6;
+}
+
+.Changelog .Markdown li + li {
+  margin-top: 4px;
+}
+
+.Changelog .Markdown blockquote {
+  border-left-color: var(--ChangelogBorder);
+  color: var(--ChangelogMutedForeground);
+}
+
+.Changelog .Markdown code {
+  background: var(--ChangelogSurface);
+}
+
+.Changelog .Markdown pre {
+  background: var(--ChangelogSurface);
+  border: 1px solid var(--ChangelogBorder);
+}
+
+.Changelog .Markdown pre code {
+  background: transparent;
+}
+
+.Changelog .Markdown hr {
+  background: var(--ChangelogBorder);
+  height: 1px;
+  margin: 40px 0;
+  padding: 0;
+}
+
+.Changelog .Markdown em {
+  color: var(--ChangelogMutedForeground);
+}

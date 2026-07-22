@@ -3,6 +3,7 @@ export const Css = [
   '/css/parts/BrowserScrollBar.css',
   '/css/parts/Button.css',
   '/css/parts/Category.css',
+  '/css/parts/Changelog.css',
   '/css/parts/FeatureContent.css',
   '/css/parts/Features.css',
   '/css/parts/Markdown.css',
