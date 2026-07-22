@@ -22,6 +22,10 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetTextEditorContent/GetTextEditorContent.js', () => ({
+  getTextEditorContent: jest.fn(() => 'first line\nsecond line'),
+}))
+
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
   invoke: rendererProcessInvoke,
 }))
@@ -32,6 +36,24 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
 }))
 
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+
+test('loadContent - restores the selection supplied by the opener', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+  const selections = new Uint32Array([1, 2, 1, 8])
+
+  await ViewletEditorText.loadContent(state, { selections: [0, 0, 0, 0] }, { selections })
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
+})
 
 test('dispose', async () => {
   const commands = [['Viewlet.dispose', 2]]
