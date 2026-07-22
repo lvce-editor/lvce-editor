@@ -7,5 +7,6 @@ export interface SearchState {
   readonly height: number
   readonly actionsDom: readonly any[]
   readonly assetDir: string
+  readonly isSearchEditor: boolean
   readonly platform: number
 }
