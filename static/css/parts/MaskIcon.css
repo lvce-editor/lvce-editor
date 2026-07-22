@@ -405,6 +405,10 @@
   mask-image: url(/icons/list-tree.svg);
 }
 
+.MaskIconListSelection {
+  mask-image: url(/icons/list-selection.svg);
+}
+
 .MaskIconProgress {
   mask-image: url(/icons/progress.svg);
 }

@@ -14,6 +14,7 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     commands: [],
     actionsDom: [],
     assetDir: AssetDir.assetDir,
+    isSearchEditor: uri.startsWith('search-editor://'),
     platform: Platform.getPlatform(),
   }
 }
@@ -35,6 +36,7 @@ const doCreate = async (state: any): Promise<void> => {
     value,
     replacement,
     state.platform,
+    state.isSearchEditor,
   )
 }
 

@@ -11,6 +11,11 @@
   flex: 1;
 }
 
+.SearchEditorContextLinesInput {
+  flex: 0 0 50px;
+  width: 50px;
+}
+
 .SearchField {
   display: flex;
   border: 1px solid var(--InputBoxBorder, rgb(55, 65, 63));
