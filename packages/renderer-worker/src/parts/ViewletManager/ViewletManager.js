@@ -44,6 +44,14 @@ export const runLoadContentLater = (uid) => {
   void runLoadContentLaterWithErrorHandling(loadContentLater, instance.state)
 }
 
+export const runLoadContentLaterForCreatedViewlets = (commands) => {
+  for (const command of commands) {
+    if (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') {
+      runLoadContentLater(command[2])
+    }
+  }
+}
+
 const ViewletState = {
   Default: 0,
   ModuleLoaded: 1,
@@ -109,6 +117,7 @@ const runFn = async (instance, id, key, fn, args) => {
     updateDynamicFocusContext(commands)
     ViewletStates.setRenderedState(id, newState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+    runLoadContentLaterForCreatedViewlets(commands)
   } else {
     return fn(instance.state, ...args)
   }
@@ -135,6 +144,7 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   }
   updateDynamicFocusContext(commands)
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+  runLoadContentLaterForCreatedViewlets(commands)
 }
 
 // TODO maybe wrapViewletCommand should accept module instead of id string
@@ -703,7 +713,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push(...extraCommands)
       updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
-      runLoadContentLater(viewletUid)
+      runLoadContentLaterForCreatedViewlets(commands)
     } else if (!module.hasFunctionalEvents && shouldRender) {
       const allCommands = [
         ...commands,
