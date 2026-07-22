@@ -79,3 +79,4 @@ export const Exec = 83
 export const PlatformPaths = 84
 export const HandleMessagePortForAuthProcess = 86
 export const LanguageServer = 87
+export const SendMessagePortToMainProcess = 88

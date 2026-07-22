@@ -11,6 +11,7 @@ test('getModule - not found', () => {
 test('getModule', () => {
   expect(ModuleMap.getModuleId('About.showAbout')).toBe(ModuleId.About)
   expect(ModuleMap.getModuleId('License.openLicense')).toBe(ModuleId.License)
+  expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
 })
 
 test('getModule - layout runtime context', async () => {

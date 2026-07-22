@@ -320,6 +320,8 @@ export const getModuleId = (commandId: any): any => {
     case 'Screen.getHeight':
     case 'Screen.getWidth':
       return ModuleId.Screen
+    case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':
+      return ModuleId.SendMessagePortToMainProcess
     case 'TemporaryMessagePort.getPortTuple2':
     case 'TemporaryMessagePort.getPortTuple3':
     case 'TemporaryMessagePort.handlePorts':
