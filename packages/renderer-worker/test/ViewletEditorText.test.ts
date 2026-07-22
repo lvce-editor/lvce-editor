@@ -38,11 +38,15 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
 
 test('loadContent - restores the selection supplied by the opener', async () => {
+  const initialCommands = [['Viewlet.setDom2']]
+  const selectionCommands = [['Viewlet.setPatches']]
+  let renderCount = 0
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
       case 'Editor.diff2':
-      case 'Editor.render2':
         return []
+      case 'Editor.render2':
+        return renderCount++ === 0 ? initialCommands : selectionCommands
       default:
         return undefined
     }
@@ -50,9 +54,19 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
   const selections = new Uint32Array([1, 2, 1, 8])
 
-  await ViewletEditorText.loadContent(state, { selections: [0, 0, 0, 0] }, { selections })
+  const newState = await ViewletEditorText.loadContent(state, { selections: [0, 0, 0, 0] }, { selections })
 
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
+  expect(editorWorkerInvoke.mock.calls.map(([method]) => method).filter((method) => method.startsWith('Editor.'))).toEqual([
+    'Editor.create2',
+    'Editor.loadContent',
+    'Editor.diff2',
+    'Editor.render2',
+    'Editor.setSelections2',
+    'Editor.diff2',
+    'Editor.render2',
+  ])
+  expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
 })
 
 test('dispose', async () => {
