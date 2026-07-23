@@ -78,6 +78,32 @@ test('bundleCss preserves the locations flex growth', async () => {
   }
 }, 30_000)
 
+test('bundleCss preserves readable table links and invalid cell squiggles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'Table.css'), 'utf8')
+
+    expect(css).toContain(`.Table .Link {
+  color: var(--LinkForeground, #3794ff);
+}`)
+    expect(css).toContain(`.TableCellInvalid {
+  text-decoration-color: var(--EditorErrorForeground, #f14c4c);
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves the running extensions hover styles', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 

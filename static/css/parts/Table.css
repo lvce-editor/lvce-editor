@@ -65,8 +65,15 @@
   padding-left: 10px;
 }
 
+.Table .Link {
+  color: var(--LinkForeground, #3794ff);
+}
+
 .TableCellInvalid {
-  text-decoration: 1px solid red underline;
+  text-decoration-color: var(--EditorErrorForeground, #f14c4c);
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
