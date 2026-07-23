@@ -22,12 +22,12 @@
   color: var(--ActivityBarActiveForeground);
 }
 
-.ActivityBarItemSelected {
-  background: var(--ActivityBarActiveBackground);
-}
-
 .ActivityBarItemNested {
   background: var(--ActivityBarBackground);
+}
+
+.ActivityBarItemSelected {
+  background: var(--ActivityBarActiveBackground);
 }
 
 .ActivityBarItem:focus-visible {
