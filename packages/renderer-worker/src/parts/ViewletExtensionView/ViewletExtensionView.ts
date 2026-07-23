@@ -9,6 +9,7 @@ import { getPlatform } from '../Platform/Platform.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
 interface ViewRenderResult {
+  readonly css?: string
   readonly dom?: readonly unknown[]
   readonly focusSelector?: string
   readonly patches?: readonly unknown[]
@@ -72,6 +73,13 @@ const getScrollPositionCommands = (state: ViewletExtensionViewState, result: Vie
   return [['Viewlet.setProperty', state.uid, selector, 'scrollTop', scrollTop]]
 }
 
+const getCssCommands = (state: ViewletExtensionViewState, result: ViewRenderResult): readonly (readonly unknown[])[] => {
+  if (typeof result.css !== 'string') {
+    return []
+  }
+  return [['Viewlet.setCss', state.uid, result.css]]
+}
+
 const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRenderResult | undefined): ViewletExtensionViewState => {
   if (!result) {
     return {
@@ -83,7 +91,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
   }
   return {
     ...state,
-    commands: getScrollPositionCommands(state, result),
+    commands: [...getScrollPositionCommands(state, result), ...getCssCommands(state, result)],
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     error: undefined,
     focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
