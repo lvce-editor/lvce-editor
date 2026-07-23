@@ -81,3 +81,9 @@
   contain: content;
   margin: 0;
 }
+
+.MoreInfoEntryValue.Link {
+  color: var(--vscode-textLink-foreground, #3794ff);
+  cursor: pointer;
+  text-decoration: none;
+}
