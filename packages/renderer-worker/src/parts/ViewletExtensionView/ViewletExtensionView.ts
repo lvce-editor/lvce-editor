@@ -270,6 +270,18 @@ export const handleViewEvent = (
   })
 }
 
+export const handleViewCommand = (
+  state: ViewletExtensionViewState,
+  handler: string,
+  ...args: readonly unknown[]
+): Promise<ViewletExtensionViewState> => {
+  return dispatchEvent(state, {
+    args,
+    handler,
+    type: 'command',
+  })
+}
+
 export const rerender = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
   if (state.kind !== 'virtualDom') {
     return state
@@ -325,6 +337,7 @@ export const Commands = {
   handleFocus,
   handleInput,
   handleSubmit,
+  handleViewCommand,
   handleViewEvent,
   rerender,
 }

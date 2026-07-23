@@ -139,6 +139,28 @@ const defaultEventListeners = [
   },
 ]
 
+const rendererEventCommands = new Set([
+  'handleBlur',
+  'handleClick',
+  'handleContextMenu',
+  'handleFocus',
+  'handleInput',
+  'handleSubmit',
+  'handleViewEvent',
+])
+
+const wrapExtensionEventListener = (listener: any): any => {
+  const [handler, ...params] = listener.params
+  if (!handler || rendererEventCommands.has(handler)) {
+    return listener
+  }
+  return {
+    ...listener,
+    params: ['handleViewCommand', handler, ...params],
+  }
+}
+
 export const renderEventListeners = (state?: ViewletExtensionViewState): readonly any[] => {
-  return [...defaultEventListeners, ...(state?.eventListeners || [])]
+  const { eventListeners = [] } = state || {}
+  return [...defaultEventListeners, ...eventListeners.map(wrapExtensionEventListener)]
 }
