@@ -141,8 +141,16 @@ test('handleWillNavigate', () => {
 test('handleDidNavigate', () => {
   const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
   // @ts-ignore
-  expect(ViewletSimpleBrowser.handleDidNavigate(state, 'https://example.com', false, false)).toMatchObject({
+  const newState = ViewletSimpleBrowser.handleDidNavigate(state, 'https://example.com/one', false, false)
+  expect(newState).toMatchObject({
+    iframeSrc: 'https://example.com/one',
+    inputValue: 'https://example.com/one',
     isLoading: false,
+  })
+  // @ts-ignore
+  expect(ViewletSimpleBrowser.handleDidNavigate(newState, 'https://example.com/two', false, false)).toMatchObject({
+    iframeSrc: 'https://example.com/two',
+    inputValue: 'https://example.com/two',
   })
 })
 

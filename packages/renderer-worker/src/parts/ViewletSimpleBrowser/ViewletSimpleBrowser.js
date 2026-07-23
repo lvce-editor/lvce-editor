@@ -255,6 +255,7 @@ export const handleDidNavigate = (state, url) => {
   return {
     ...state,
     iframeSrc: url,
+    inputValue: url,
     isLoading: false,
   }
 }
