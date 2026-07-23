@@ -6,7 +6,7 @@ const extensionViews = {
     eventListeners: [
       {
         name: 'handleDragStart',
-        params: ['handleViewEvent', 'dragstart', 'event.target.name'],
+        params: ['handleDragStart', 'event.target.name'],
       },
     ],
     extensionId: 'sample.extension',
@@ -79,6 +79,7 @@ test('exports virtual dom event commands', () => {
   expect(ViewletExtensionView.Commands.handleClick).toBe(ViewletExtensionView.handleClick)
   expect(ViewletExtensionView.Commands.handleClickAction).toBe(ViewletExtensionView.handleClickAction)
   expect(ViewletExtensionView.Commands.handleContextMenu).toBe(ViewletExtensionView.handleContextMenu)
+  expect(ViewletExtensionView.Commands.handleViewCommand).toBe(ViewletExtensionView.handleViewCommand)
   expect(ViewletExtensionView.Commands.handleViewEvent).toBe(ViewletExtensionView.handleViewEvent)
   expect(ViewletExtensionView.Commands.rerender).toBe(ViewletExtensionView.rerender)
 })
@@ -150,8 +151,24 @@ test('renderEventListeners includes extension view listeners', () => {
 
   expect(ViewletExtensionViewRender.renderEventListeners(state)).toEqual([
     ...ViewletExtensionViewRender.renderEventListeners(),
-    ...extensionViews.view.eventListeners,
+    {
+      name: 'handleDragStart',
+      params: ['handleViewCommand', 'handleDragStart', 'event.target.name'],
+    },
   ])
+})
+
+test('renderEventListeners preserves legacy handleViewEvent listeners', () => {
+  const eventListener = {
+    name: 'handleDrop',
+    params: ['handleViewEvent', 'drop', 'event.target.name'],
+  }
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    eventListeners: [eventListener],
+  }
+
+  expect(ViewletExtensionViewRender.renderEventListeners(state)).toEqual([...ViewletExtensionViewRender.renderEventListeners(), eventListener])
 })
 
 test('handleClick stores patches without duplicate commands', async () => {
@@ -371,6 +388,33 @@ test('handleContextMenu dispatches coordinates to extension view', async () => {
       type: 'contextmenu',
       x: 10,
       y: 20,
+    },
+    '',
+    4,
+  )
+})
+
+test('handleViewCommand dispatches a direct handler to the extension view', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    patches: [],
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'virtualDom',
+  }
+
+  await ViewletExtensionView.handleViewCommand(state, 'handleDrop', 'list:list-1')
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.dispatchViewEvent',
+    'sample.views.testing',
+    1,
+    {
+      args: ['list:list-1'],
+      handler: 'handleDrop',
+      type: 'command',
     },
     '',
     4,
