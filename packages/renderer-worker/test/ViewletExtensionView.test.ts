@@ -69,6 +69,9 @@ test('loadContent uses displayName as title for virtual dom views', async () => 
         type: 'setDom',
       }
     }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
     if (method === 'Extensions.getViewActions') {
       return []
     }
@@ -101,6 +104,9 @@ test('loadContent uses rendered title for virtual dom views', async () => {
         title: 'Testing: Dynamic',
         type: 'setDom',
       }
+    }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
     }
     if (method === 'Extensions.getViewActions') {
       return []
@@ -159,6 +165,9 @@ test('rerender requests virtual dom patches from extension management worker', a
         type: 'setPatches',
       }
     }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
     if (method === 'Extensions.getViewActions') {
       return []
     }
@@ -182,6 +191,9 @@ test('rerender updates the title rendered by the parent sidebar', async () => {
         title: 'Testing: Updated',
         type: 'setPatches',
       }
+    }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
     }
     if (method === 'Extensions.getViewActions') {
       return []

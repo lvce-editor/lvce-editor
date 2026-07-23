@@ -108,6 +108,11 @@ const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly
   if (state.kind !== 'virtualDom') {
     return []
   }
+  const actionsDom = (await ExtensionManagementWorker.invoke('Extensions.getViewActionsDom', state.viewId, state.uid, assetDir, getPlatform())) as
+    readonly unknown[] | undefined
+  if (actionsDom !== undefined) {
+    return actionsDom
+  }
   const actions = (await ExtensionManagementWorker.invoke(
     'Extensions.getViewActions',
     state.viewId,
