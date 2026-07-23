@@ -21,6 +21,9 @@ beforeEach(() => {
   jest.clearAllMocks()
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
     if (method === 'Extensions.getViewActions') {
       return []
     }
@@ -46,6 +49,9 @@ jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', 
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
     invoke: jest.fn(async (method) => {
+      if (method === 'Extensions.getViewActionsDom') {
+        return undefined
+      }
       if (method === 'Extensions.getViewActions') {
         return []
       }
@@ -242,6 +248,9 @@ test('handleClick forwards updated dynamic css', async () => {
 test('loadContent stores rendered sidebar actions', async () => {
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
     if (method === 'Extensions.getViewActions') {
       return [
         {
@@ -282,6 +291,65 @@ test('loadContent stores rendered sidebar actions', async () => {
     },
   ])
   expect(ViewletExtensionViewRender.renderActions.apply(state, newState)).toBe(newState.actionsDom)
+})
+
+test('loadContent uses custom sidebar actions dom', async () => {
+  const actionsDom = [
+    {
+      childCount: 1,
+      className: 'Actions',
+      role: 'toolbar',
+      type: 4,
+    },
+    {
+      childCount: 0,
+      className: 'CustomAction',
+      type: 1,
+    },
+  ]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'Extensions.getViewActionsDom') {
+      return actionsDom
+    }
+    return {
+      dom: [],
+      type: 'setDom',
+    }
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState.actionsDom).toBe(actionsDom)
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalledWith(
+    'Extensions.getViewActions',
+    expect.anything(),
+    expect.anything(),
+    expect.anything(),
+    expect.anything(),
+  )
+})
+
+test('loadContent preserves an explicit empty custom sidebar actions dom', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'Extensions.getViewActionsDom') {
+      return []
+    }
+    if (method === 'Extensions.getViewActions') {
+      throw new Error('legacy actions should not be requested')
+    }
+    return {
+      dom: [],
+      type: 'setDom',
+    }
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState.actionsDom).toEqual([])
 })
 
 test('handleClick stores focus selector from render result', async () => {
