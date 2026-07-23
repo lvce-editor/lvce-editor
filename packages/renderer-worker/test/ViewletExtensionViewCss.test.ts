@@ -189,6 +189,39 @@ test('handleClick forwards rendered scroll position as a renderer process comman
   expect(newState.commands).toEqual([['Viewlet.setProperty', 1, '.Messages', 'scrollTop', 9_999_999]])
 })
 
+test('loadContent forwards dynamic css without replacing contributed css', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    css: '.Testing { --DetailWidth: 360px; }',
+    dom: [],
+    type: 'setDom',
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState.css).toBe('.Testing { color: red; }')
+  expect(newState.cssId).toBe('ExtensionView:sample.views.testing')
+  expect(newState.commands).toEqual([['Viewlet.setCss', 1, '.Testing { --DetailWidth: 360px; }']])
+})
+
+test('handleClick forwards updated dynamic css', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    css: '.Testing { --DetailWidth: 400px; }',
+    patches: [],
+    type: 'setPatches',
+  })
+  const state = {
+    ...ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100),
+    kind: 'virtualDom',
+  }
+
+  const newState = await ViewletExtensionView.handleClick(state, 'resize')
+
+  expect(newState.commands).toEqual([['Viewlet.setCss', 1, '.Testing { --DetailWidth: 400px; }']])
+})
+
 test('loadContent stores rendered sidebar actions', async () => {
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
