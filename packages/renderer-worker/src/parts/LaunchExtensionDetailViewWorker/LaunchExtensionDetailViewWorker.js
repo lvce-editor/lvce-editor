@@ -4,6 +4,7 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 export const launchExtensionDetailViewWorker = async () => {
   const name = 'Extension Detail View Worker'
@@ -16,6 +17,7 @@ export const launchExtensionDetailViewWorker = async () => {
     ),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'ExtensionDetail.initialize')
+  const applicationName = await PlatformPaths.getApplicationName()
+  await JsonRpc.invoke(ipc, 'ExtensionDetail.initialize', applicationName)
   return ipc
 }
