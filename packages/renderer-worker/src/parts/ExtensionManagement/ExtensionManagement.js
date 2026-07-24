@@ -27,6 +27,7 @@ export const doInvalidateExtensionsCache = async () => {
 export const handleExtensionsCacheInvalidated = async () => {
   try {
     await Command.execute('KeyBindings.hydrate')
+    await Command.execute('ColorTheme.reload')
     await Command.execute('Layout.handleExtensionsChanged')
   } catch {
     // ignore
