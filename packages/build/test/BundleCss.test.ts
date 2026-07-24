@@ -104,6 +104,27 @@ test('bundleCss preserves readable table links and invalid cell squiggles', asyn
   }
 }, 30_000)
 
+test('bundleCss preserves the builtin extension label style', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetailHeader.css'), 'utf8')
+
+    expect(css).toContain(`.ExtensionDetailNameBadge {
+  font-size: 10px;
+  font-style: italic;
+  margin-left: 10px;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves the running extensions hover styles', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
