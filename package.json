@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@lerna/legacy-package-management": "^8.2.4",
-    "@lvce-editor/eslint-config": "^17.0.3",
+    "@lvce-editor/eslint-config": "^17.4.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
     "eslint": "^10.7.0",
@@ -49,8 +49,8 @@
     "jest-environment-jsdom": "^30.2.0",
     "lerna": "^8.2.4",
     "nodemon": "^3.1.14",
-    "prettier": "^3.9.5",
-    "ts-jest": "^29.4.11",
+    "prettier": "^3.9.6",
+    "ts-jest": "^29.4.12",
     "typescript": "^6.0.3"
   },
   "prettier": {

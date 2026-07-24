@@ -27,7 +27,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^6.10.1"
+    "@lvce-editor/main-process": "^6.11.1"
   },
   "devDependencies": {
     "electron": "43.1.0",
