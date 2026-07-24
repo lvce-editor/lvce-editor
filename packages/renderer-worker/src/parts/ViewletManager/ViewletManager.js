@@ -4,6 +4,7 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as GetViewletErrorMessage from '../GetViewletErrorMessage/GetViewletErrorMessage.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
@@ -780,7 +781,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         // TODO
         // const errorCommands=
       } else {
-        commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', /* message */ `${error}`])
+        const message = GetViewletErrorMessage.getViewletErrorMessage(prettyError)
+        commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', message])
         // @ts-ignore
         if (viewlet.append) {
           commands.push([kAppend, parentUid, viewletUid])
