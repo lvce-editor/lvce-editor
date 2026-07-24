@@ -230,3 +230,21 @@ test('bundleCss preserves the running extensions empty state artwork', async () 
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
+
+test('bundleCss rewrites icon urls in lazy-loaded css', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '/abc1234',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletMainWaterMark.css'), 'utf8')
+
+    expect(css).toContain(`mask-image: url(/abc1234/icons/icon.svg);`)
+    expect(css).not.toContain(`url(/icons/`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)

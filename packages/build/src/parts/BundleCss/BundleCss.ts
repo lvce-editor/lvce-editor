@@ -4,8 +4,8 @@ import * as Copy from '../Copy/Copy.ts'
 import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.ts'
 import * as EncodingType from '../EncodingType/EncodingType.ts'
 import * as Path from '../Path/Path.ts'
-import * as Replace from '../Replace/Replace.ts'
 import * as Root from '../Root/Root.ts'
+import * as RewriteCssAssetUrls from '../RewriteCssAssetUrls/RewriteCssAssetUrls.ts'
 import * as SplitLines from '../SplitLines/SplitLines.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 
@@ -67,6 +67,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
         if (shouldPrependFileNameComment(dirent)) {
           await prependFileNameComment(outPath, dirent)
         }
+        await RewriteCssAssetUrls.rewriteCssAssetUrlsInFile(outPath, assetDir)
       }
     }
 
@@ -77,14 +78,6 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += `/* ${part} */\n`
       css += `/*************/\n`
       css += content
-    }
-
-    for (const file of ['MaskIcon', 'Symbol', 'ProblemsIcon']) {
-      await Replace.replace({
-        path: Path.join(outDir, 'parts', `${file}.css`),
-        occurrence: `url(/icons/`,
-        replacement: `url(${assetDir}/icons/`,
-      })
     }
 
     for (const part of EagerLoadedCss.eagerLoadedCss) {
@@ -102,19 +95,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
 
     await WriteFile.writeFile({
       to: appCssPath,
-      content: css,
-    })
-
-    await Replace.replace({
-      path: appCssPath,
-      occurrence: `url(/icons/`,
-      replacement: `url(${assetDir}/icons/`,
-    })
-
-    await Replace.replace({
-      path: appCssPath,
-      occurrence: `url(/fonts/`,
-      replacement: `url(${assetDir}/fonts/`,
+      content: RewriteCssAssetUrls.rewriteCssAssetUrls(css, assetDir),
     })
   } catch (error) {
     throw new VError(error, `Failed to bundle css`)
