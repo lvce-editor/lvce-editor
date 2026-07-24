@@ -127,6 +127,27 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   expect(newState.patches).toEqual([])
 })
 
+test('loadContent rejects when virtual dom creation fails', async () => {
+  const stack = `Error: create failed
+    at Object.create (main.ts:5:13)`
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    error: {
+      message: 'create failed',
+      name: 'Error',
+      stack,
+    },
+    ok: false,
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  await expect(ViewletExtensionView.loadContent(state, undefined)).rejects.toMatchObject({
+    message: 'create failed',
+    name: 'Error',
+    stack,
+  })
+})
+
 test('loadContent opens a document view with its contributed id and resource uri', async () => {
   const state = ViewletExtensionView.create(1, 'file:///workspace/image.png', 0, 0, 100, 100)
 

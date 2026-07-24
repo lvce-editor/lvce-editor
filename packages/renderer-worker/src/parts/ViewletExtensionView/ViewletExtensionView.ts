@@ -24,7 +24,11 @@ interface CreateViewInstanceSuccess {
 }
 
 interface CreateViewInstanceError {
-  readonly error: unknown
+  readonly error: {
+    readonly message: string
+    readonly name: string
+    readonly stack?: string
+  }
   readonly ok: false
 }
 
@@ -34,6 +38,15 @@ interface ViewAction {
   readonly command: string
   readonly icon: string
   readonly title: string
+}
+
+const restoreError = (serializedError: CreateViewInstanceError['error']): Error => {
+  const error = new Error(serializedError.message)
+  error.name = serializedError.name
+  if (serializedError.stack) {
+    error.stack = serializedError.stack
+  }
+  return error
 }
 
 const getCssId = (view: ExtensionView): string => {
@@ -93,7 +106,6 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     ...state,
     commands: [...getScrollPositionCommands(state, result), ...getCssCommands(state, result)],
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
-    error: undefined,
     focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
     patches: result.type === 'setPatches' ? result.patches || [] : [],
     title: typeof result.title === 'string' ? result.title : state.title,
@@ -193,18 +205,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     )
     const createResult = result as CreateViewInstanceResult
     if (createResult.ok === false) {
-      return {
-        ...stateWithViewId,
-        actionsDom: [],
-        commands: [],
-        css,
-        cssId,
-        error: createResult.error,
-        eventListeners,
-        kind: view.kind,
-        patches: [],
-        title,
-      }
+      throw restoreError(createResult.error)
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
     const initialState = {

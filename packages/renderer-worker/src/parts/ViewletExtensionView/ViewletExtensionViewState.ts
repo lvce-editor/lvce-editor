@@ -6,7 +6,6 @@ export interface ViewletExtensionViewState {
   readonly csp: string
   readonly credentialless: boolean
   readonly dom: readonly unknown[]
-  readonly error?: unknown
   readonly eventListeners: readonly unknown[]
   readonly focusSelector: string
   readonly height: number
