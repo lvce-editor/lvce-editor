@@ -1,0 +1,21 @@
+{
+  "id": "sample.extension-disable-lifecycle",
+  "name": "Extension Lifecycle",
+  "description": "Exercises extension disable and enable lifecycle updates",
+  "version": "0.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onStatusBarItem"],
+  "statusBarItems": [
+    {
+      "id": "extension-lifecycle"
+    }
+  ],
+  "views": [
+    {
+      "id": "sample.extension-disable-lifecycle-view",
+      "title": "Extension Lifecycle",
+      "icon": "symbol-beaker"
+    }
+  ]
+}

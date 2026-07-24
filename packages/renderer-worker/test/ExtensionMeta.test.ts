@@ -235,3 +235,17 @@ test('filterByMatchingEvent', () => {
     },
   ])
 })
+
+test('filterByMatchingEvent ignores disabled extensions', () => {
+  expect(
+    ExtensionMeta.filterByMatchingEvent(
+      [
+        {
+          activation: ['onCommand:xyz'],
+          disabled: true,
+        },
+      ],
+      'onCommand:xyz',
+    ),
+  ).toEqual([])
+})

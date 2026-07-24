@@ -4,6 +4,9 @@ import * as RendererProcessIpcParentType from '../src/parts/RendererProcessIpcPa
 
 beforeEach(() => {
   jest.resetAllMocks()
+  // @ts-ignore
+  Id.create.mockReturnValue(42)
+  LaunchIsolatedExtensionHostWorker.clear()
 })
 
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
@@ -20,6 +23,7 @@ jest.unstable_mockModule('../src/parts/ContentSecurityPolicy/ContentSecurityPoli
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
+    invoke: jest.fn(),
     invokeAndTransfer: jest.fn(),
   }
 })
@@ -31,6 +35,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 })
 
 const ContentSecurityPolicy = await import('../src/parts/ContentSecurityPolicy/ContentSecurityPolicy.js')
+const Id = await import('../src/parts/Id/Id.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const LaunchIsolatedExtensionHostWorker = await import('../src/parts/LaunchIsolatedExtensionHostWorker/LaunchIsolatedExtensionHostWorker.js')
 
@@ -104,4 +109,39 @@ test('launchIsolatedExtensionHostWorker - applies the extension content security
   )
   // @ts-ignore
   expect(ContentSecurityPolicy.set.mock.invocationCallOrder[0]).toBeLessThan(RendererProcess.invokeAndTransfer.mock.invocationCallOrder[0])
+})
+
+test('disposeIsolatedExtensionHostWorker terminates the renderer process worker', async () => {
+  const port = {}
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(
+    port,
+    'sample.extension',
+    '/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
+  )
+
+  await LaunchIsolatedExtensionHostWorker.disposeIsolatedExtensionHostWorker('sample.extension')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('IpcParent.dispose', 42)
+})
+
+test('disposeIsolatedExtensionHostWorker only disposes a worker once', async () => {
+  const port = {}
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(
+    port,
+    'sample.extension',
+    '/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
+  )
+
+  await LaunchIsolatedExtensionHostWorker.disposeIsolatedExtensionHostWorker('sample.extension')
+  await LaunchIsolatedExtensionHostWorker.disposeIsolatedExtensionHostWorker('sample.extension')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
 })

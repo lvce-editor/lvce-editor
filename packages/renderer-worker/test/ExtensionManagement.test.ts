@@ -48,6 +48,7 @@ const ExtensionManagementIpc = await import('../src/parts/ExtensionManagement/Ex
 const Command = await import('../src/parts/Command/Command.js')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const ExtensionHostManagement = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagement.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('doInvalidateExtensionsCache asks the extension management worker to invalidate', async () => {
@@ -62,6 +63,17 @@ test('handleExtensionsCacheInvalidated refreshes renderer state without invalida
   await ExtensionManagement.handleExtensionsCacheInvalidated()
 
   expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
+})
+
+test('handleExtensionsCacheInvalidated applies the disabled extension state', async () => {
+  ExtensionHostManagement.state.runningExtensions['sample.extension'] = true
+
+  await ExtensionManagement.handleExtensionsCacheInvalidated('sample.extension', true)
+
+  expect(ExtensionHostManagement.state.runningExtensions['sample.extension']).toBeUndefined()
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
