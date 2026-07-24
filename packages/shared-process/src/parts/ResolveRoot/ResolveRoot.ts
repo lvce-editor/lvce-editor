@@ -5,6 +5,7 @@ import * as Env from '../Env/Env.ts'
 import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.ts'
 import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.ts'
 import * as IsElectron from '../IsElectron/IsElectron.ts'
+import * as IsProduction from '../IsProduction/IsProduction.ts'
 import * as IsPromptMode from '../IsPromptMode/IsPromptMode.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
 import * as Platform from '../Platform/Platform.ts'
@@ -62,14 +63,14 @@ export const resolveRoot = async (): Promise<any> => {
   // TODO shared process should have no logic, this should probably be somewhere else
   const folder = Env.getFolder()
   if (!folder) {
-    const path = join(Root.root, 'playground')
+    const path = IsElectron.isElectron && IsProduction.isProduction ? '' : join(Root.root, 'playground')
     return {
       homeDir: PlatformPaths.getHomeDir(),
       homeDirUri: toUri(PlatformPaths.getHomeDir()),
       path,
       pathSeparator: Platform.getPathSeparator(),
       source: WorkspaceSource.SharedProcessEnv,
-      uri: toUri(path),
+      uri: path ? toUri(path) : '',
       workspaceId: GetWorkspaceId.getWorkspaceId(path),
     }
   }

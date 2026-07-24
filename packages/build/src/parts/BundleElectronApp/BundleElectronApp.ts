@@ -82,28 +82,6 @@ const copyDependencies = async ({ cachePath, resourcesPath }) => {
   })
 }
 
-const copyPlaygroundFiles = async ({ arch, resourcesPath }) => {
-  await WriteFile.writeFile({
-    to: `${resourcesPath}/app/playground/index.html`,
-    content: `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="index.css" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>hello world</h1>
-  </body>
-</html>
-`,
-  })
-  await WriteFile.writeFile({
-    to: `${resourcesPath}/app/playground/index.css`,
-    content: `h1 { color: dodgerblue; }`,
-  })
-}
-
 const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process/src',
@@ -369,10 +347,6 @@ export const build = async ({
     toRoot,
     product,
   })
-
-  console.time('copyPlaygroundFiles')
-  await copyPlaygroundFiles({ arch, resourcesPath })
-  console.timeEnd('copyPlaygroundFiles')
 
   const etag = `W/"${commitHash}"`
 
