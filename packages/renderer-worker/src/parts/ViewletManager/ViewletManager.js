@@ -276,6 +276,11 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   if (module.renderTitle && !module.renderTitle.isEqual(oldState, newState)) {
     const title = module.renderTitle.apply(oldState, newState)
     if (parentId) {
+      const parentInstance = ViewletStates.getInstance(parentId)
+      if (parentInstance?.factory?.setTitle) {
+        parentInstance.state = parentInstance.factory.setTitle(parentInstance.state, title)
+        parentInstance.renderedState = parentInstance.factory.setTitle(parentInstance.renderedState, title)
+      }
       commands.push(['Viewlet.send', parentId, 'setTitle', title])
     }
   }

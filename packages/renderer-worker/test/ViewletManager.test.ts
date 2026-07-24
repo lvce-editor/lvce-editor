@@ -364,6 +364,55 @@ test('extension view render sends a dynamic title to its parent', () => {
   expect(commands).toEqual([['Viewlet.send', 2, 'setTitle', 'Testing: Updated']])
 })
 
+test('extension view render keeps the parent title state in sync', () => {
+  const parentRenderedState = {
+    pending: false,
+    title: 'Testing',
+    uid: 2,
+  }
+  const parentState = {
+    ...parentRenderedState,
+    pending: true,
+  }
+  ViewletStates.set(2, {
+    factory: {
+      setTitle(state, title) {
+        return {
+          ...state,
+          title,
+        }
+      },
+    },
+    renderedState: parentRenderedState,
+    state: parentState,
+  })
+  const dom = []
+  const oldState = {
+    commands: [],
+    dom,
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    title: 'Testing: Updated',
+  }
+
+  ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+
+  expect(ViewletStates.getState(2)).toEqual({
+    pending: true,
+    title: 'Testing: Updated',
+    uid: 2,
+  })
+  expect(ViewletStates.getInstance(2).renderedState).toEqual({
+    pending: false,
+    title: 'Testing: Updated',
+    uid: 2,
+  })
+})
+
 test.skip('load', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
