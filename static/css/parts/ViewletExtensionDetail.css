@@ -123,5 +123,6 @@
 
 /* TODO change this maybe */
 .ExtensionDetail .Sash {
+  border-left: 1px solid var(--SashBorder, gray);
   position: relative;
 }
