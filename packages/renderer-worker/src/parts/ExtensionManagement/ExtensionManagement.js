@@ -2,6 +2,7 @@ import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
@@ -24,8 +25,11 @@ export const doInvalidateExtensionsCache = async () => {
   }
 }
 
-export const handleExtensionsCacheInvalidated = async () => {
+export const handleExtensionsCacheInvalidated = async (extensionId, disabled) => {
   try {
+    if (typeof extensionId === 'string' && typeof disabled === 'boolean') {
+      ExtensionHostManagement.handleExtensionStateChanged(extensionId, disabled)
+    }
     await Command.execute('KeyBindings.hydrate')
     await Command.execute('ColorTheme.reload')
     await Command.execute('Layout.handleExtensionsChanged')

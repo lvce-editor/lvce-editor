@@ -16,6 +16,9 @@ jest.unstable_mockModule('../src/parts/RunningExtensionsViewWorker/RunningExtens
     if (command === 'RunningExtensions.getMenuEntries') {
       return [{ command: 'RunningExtensions.copyId', id: 'copy-id', label: 'Copy id (test.extension)' }]
     }
+    if (command === 'RunningExtensions.getCommandIds') {
+      return ['copyId']
+    }
     return undefined
   }),
 }))
@@ -30,6 +33,7 @@ jest.unstable_mockModule('../src/parts/AssetDir/AssetDir.js', () => ({
 
 const RunningExtensionsViewWorker = await import('../src/parts/RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts')
 const ViewletRunningExtensions = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ts')
+const ViewletRunningExtensionsCommands = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsCommands.ts')
 const ViewletRunningExtensionsName = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsName.ts')
 const ViewletRunningExtensionsRenderTitle = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsRenderTitle.ts')
 
@@ -63,6 +67,26 @@ test('loadContent passes the platform and asset directory to the view worker', a
     2,
     '/test-assets',
   )
+})
+
+test('handleExtensionsChanged reloads and renders running extensions', async () => {
+  const state = ViewletRunningExtensions.create(1, 'running-extensions://', 10, 20, 800, 600)
+
+  const result = await ViewletRunningExtensions.handleExtensionsChanged(state)
+
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(1, 'RunningExtensions.loadContent', 1)
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(2, 'RunningExtensions.diff2', 1)
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(3, 'RunningExtensions.render2', 1, [])
+  expect(result).toEqual({
+    ...state,
+    commands: [],
+  })
+})
+
+test('getCommands includes the extension change handler', async () => {
+  await ViewletRunningExtensionsCommands.getCommands()
+
+  expect(ViewletRunningExtensionsCommands.Commands['handleExtensionsChanged']).toBe(ViewletRunningExtensions.handleExtensionsChanged)
 })
 
 test('getMenus provides running extensions menu entries', async () => {

@@ -85,3 +85,19 @@ export const activateByEvent = async (event, assetDir, platform) => {
 export const getStatusBarItems = async () => {
   return ExtensionManagementWorker.invoke('Extensions.getStatusBarItems')
 }
+
+export const handleExtensionStateChanged = (extensionId, disabled) => {
+  if (disabled) {
+    delete state.activatingExtensions[extensionId]
+    delete state.runningExtensions[extensionId]
+  }
+  ExtensionMetaState.state.webExtensions = ExtensionMetaState.state.webExtensions.map((extension) => {
+    if (extension.id !== extensionId) {
+      return extension
+    }
+    return {
+      ...extension,
+      disabled,
+    }
+  })
+}

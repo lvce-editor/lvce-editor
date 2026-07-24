@@ -96,7 +96,7 @@ export const filterByMatchingEvent = (extensions, event) => {
       console.warn(warning)
     }
     // TODO handle error when extension.activation is not of type array (null or number or ...)
-    if (extension.activation && extension.activation.includes(event)) {
+    if (!extension.disabled && extension.activation && extension.activation.includes(event)) {
       extensionsToActivate.push(extension)
     }
   }

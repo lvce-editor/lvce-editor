@@ -133,3 +133,56 @@ test('activateByEvent none waits for inflight activations', async () => {
   await expect(waitForNone).resolves.toEqual([undefined])
   await pendingActivation
 })
+
+test('handleExtensionStateChanged disables a dynamic extension and forgets its activation state', () => {
+  ExtensionHostManagement.state.activatingExtensions['sample.extension'] = Promise.resolve()
+  ExtensionHostManagement.state.runningExtensions['sample.extension'] = true
+  ExtensionHostManagement.state.runningExtensions['sample.other'] = true
+  ExtensionMetaState.state.webExtensions = [{ id: 'sample.extension' }, { id: 'sample.other' }]
+
+  ExtensionHostManagement.handleExtensionStateChanged('sample.extension', true)
+
+  expect(ExtensionHostManagement.state.activatingExtensions['sample.extension']).toBeUndefined()
+  expect(ExtensionHostManagement.state.runningExtensions['sample.extension']).toBeUndefined()
+  expect(ExtensionHostManagement.state.runningExtensions['sample.other']).toBe(true)
+  expect(ExtensionMetaState.state.webExtensions).toEqual([{ disabled: true, id: 'sample.extension' }, { id: 'sample.other' }])
+})
+
+test('handleExtensionStateChanged re-enables a dynamic extension', () => {
+  ExtensionMetaState.state.webExtensions = [{ disabled: true, id: 'sample.extension' }]
+
+  ExtensionHostManagement.handleExtensionStateChanged('sample.extension', false)
+
+  expect(ExtensionMetaState.state.webExtensions).toEqual([{ disabled: false, id: 'sample.extension' }])
+})
+
+test('disabled dynamic extension can activate again after it is re-enabled', async () => {
+  const extension = {
+    activation: ['onStatusBarItem'],
+    browser: 'main.js',
+    builtin: false,
+    id: 'sample.extension',
+    isWeb: true,
+    path: '/dynamic/sample.extension',
+    status: 'resolved',
+  }
+  ExtensionMetaState.state.webExtensions = [extension]
+  // @ts-ignore
+  invokeMock.mockImplementation(async (method) => {
+    if (method === 'Extensions.getAllExtensions') {
+      return []
+    }
+    if (method === 'Extensions.activate3') {
+      return undefined
+    }
+    throw new Error(`unexpected method: ${method}`)
+  })
+
+  await ExtensionHostManagement.activateByEvent('onStatusBarItem', '/asset', 'test-platform')
+  ExtensionHostManagement.handleExtensionStateChanged('sample.extension', true)
+  await ExtensionHostManagement.activateByEvent('onStatusBarItem', '/asset', 'test-platform')
+  ExtensionHostManagement.handleExtensionStateChanged('sample.extension', false)
+  await ExtensionHostManagement.activateByEvent('onStatusBarItem', '/asset', 'test-platform')
+
+  expect(invokeMock.mock.calls.filter(([method]) => method === 'Extensions.activate3')).toHaveLength(2)
+})

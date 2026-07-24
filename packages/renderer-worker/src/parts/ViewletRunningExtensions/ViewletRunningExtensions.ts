@@ -30,6 +30,16 @@ export const loadContent = async (state: RunningExtensionsState): Promise<Runnin
   }
 }
 
+export const handleExtensionsChanged = async (state: RunningExtensionsState): Promise<RunningExtensionsState> => {
+  await RunningExtensionsViewWorker.invoke('RunningExtensions.loadContent', state.uid)
+  const diffResult = await RunningExtensionsViewWorker.invoke('RunningExtensions.diff2', state.uid)
+  const commands = await RunningExtensionsViewWorker.invoke('RunningExtensions.render2', state.uid, diffResult)
+  return {
+    ...state,
+    commands,
+  }
+}
+
 export const getTitle = (): string => {
   return title
 }
