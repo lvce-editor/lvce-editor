@@ -1,5 +1,4 @@
 import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
 import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
@@ -8,9 +7,9 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
-import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as CopyElectron from '../CopyElectron/CopyElectron.ts'
+import * as CopyElectronIcons from '../CopyElectronIcons/CopyElectronIcons.ts'
 import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
@@ -19,6 +18,7 @@ import * as Rename from '../Rename/Rename.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
+import * as PrepareElectronCss from '../PrepareElectronCss/PrepareElectronCss.ts'
 import * as ReadFile from '../ReadFile/ReadFile.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
@@ -136,29 +136,13 @@ const copyExtensions = async ({ resourcesPath, commitHash }) => {
   // })
 }
 
-const copyIcons = async ({ resourcesPath, commitHash }) => {
-  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
-  for (const iconPath of [`${resourcesPath}/app/static/${commitHash}/icons`, `${resourcesPath}/app/static/icons`]) {
-    await Copy.copy({
-      from: CodiconsPath.codiconsIconsPath,
-      to: iconPath,
-    })
-    await Copy.copy({
-      from: 'static/icons',
-      to: iconPath,
-      ignore: codiconNames,
-    })
-  }
-}
-
 const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'static',
     to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['css'],
   })
-  await copyIcons({ resourcesPath, commitHash })
-  await Remove.remove(`${resourcesPath}/app/static/icons/pwa-icon-512.png`)
+  await CopyElectronIcons.copyElectronIcons({ resourcesPath, commitHash })
   await Rename.rename({
     from: `${resourcesPath}/app/static/${commitHash}/index.html`,
     to: `${resourcesPath}/app/static/index.html`,
@@ -348,6 +332,10 @@ export const build = async ({
   console.time('copyExtensions')
   await copyExtensions({ resourcesPath, commitHash })
   console.timeEnd('copyExtensions')
+
+  console.time('prepareElectronCss')
+  await PrepareElectronCss.prepareElectronCss({ resourcesPath, commitHash })
+  console.timeEnd('prepareElectronCss')
 
   console.time('copyStaticFiles')
   await copyStaticFiles({ resourcesPath, commitHash })
