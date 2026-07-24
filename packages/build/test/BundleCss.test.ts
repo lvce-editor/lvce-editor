@@ -78,6 +78,26 @@ test('bundleCss preserves the locations flex growth', async () => {
   }
 }, 30_000)
 
+test('bundleCss preserves the extension detail sash divider', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetail.css'), 'utf8')
+
+    expect(css).toContain(`.ExtensionDetail .Sash {
+  border-left: 1px solid var(--SashBorder, gray);
+  position: relative;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves readable table links and invalid cell squiggles', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
