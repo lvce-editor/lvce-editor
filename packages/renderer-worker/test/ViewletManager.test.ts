@@ -366,6 +366,7 @@ test('extension view render sends a dynamic title to its parent', () => {
 
 test('extension view render keeps the parent title state in sync', () => {
   const parentRenderedState = {
+    childUid: 1,
     pending: false,
     title: 'Testing',
     uid: 2,
@@ -376,6 +377,16 @@ test('extension view render keeps the parent title state in sync', () => {
   }
   ViewletStates.set(2, {
     factory: {
+      render: [
+        {
+          apply(_oldState, newState) {
+            return ['Viewlet.setDom2', [newState.title]]
+          },
+          isEqual(oldState, newState) {
+            return oldState.title === newState.title
+          },
+        },
+      ],
       setTitle(state, title) {
         return {
           ...state,
@@ -399,18 +410,58 @@ test('extension view render keeps the parent title state in sync', () => {
     title: 'Testing: Updated',
   }
 
-  ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
 
+  expect(commands).toEqual([['Viewlet.setDom2', 2, ['Testing: Updated']]])
   expect(ViewletStates.getState(2)).toEqual({
+    childUid: 1,
     pending: true,
     title: 'Testing: Updated',
     uid: 2,
   })
   expect(ViewletStates.getInstance(2).renderedState).toEqual({
+    childUid: 1,
     pending: false,
     title: 'Testing: Updated',
     uid: 2,
   })
+})
+
+test('extension view render sends a title command while loading a new child', () => {
+  const parentState = {
+    childUid: 3,
+    title: 'Search',
+    uid: 2,
+  }
+  ViewletStates.set(2, {
+    factory: {
+      setTitle(state, title) {
+        return {
+          ...state,
+          title,
+        }
+      },
+    },
+    renderedState: parentState,
+    state: parentState,
+  })
+  const dom = []
+  const oldState = {
+    commands: [],
+    dom,
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    title: 'Testing: Updated',
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+
+  expect(commands).toEqual([['Viewlet.send', 2, 'setTitle', 'Testing: Updated']])
+  expect(ViewletStates.getState(2)).toBe(parentState)
 })
 
 test.skip('load', async () => {
