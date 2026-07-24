@@ -63,7 +63,8 @@ test('handleExtensionsCacheInvalidated refreshes renderer state without invalida
 
   expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
-  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Layout.handleExtensionsChanged')
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
 })
 
 test('cache invalidation commands handle notifications without invalidating again', () => {

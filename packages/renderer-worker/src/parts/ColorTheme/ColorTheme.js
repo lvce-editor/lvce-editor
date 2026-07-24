@@ -1,8 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetColorThemeCss from '../GetColorThemeCss/GetColorThemeCss.js'
+import * as GetColorThemeNames from '../GetColorThemeNames/GetColorThemeNames.js'
 import * as GetMetaThemeColor from '../GetMetaThemeColor/GetMetaThemeColor.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
@@ -84,6 +86,17 @@ const applyPreferredColorTheme = async () => {
 }
 
 export const reload = async () => {
+  const colorThemeId = getPreferredColorTheme()
+  if (colorThemeId !== FALLBACK_COLOR_THEME_ID) {
+    const colorThemeNames = await GetColorThemeNames.getColorThemeNames(AssetDir.assetDir, Platform.getPlatform())
+    if (!colorThemeNames.includes(colorThemeId)) {
+      const error = await setColorTheme(FALLBACK_COLOR_THEME_ID)
+      if (error) {
+        throw error
+      }
+      return
+    }
+  }
   await applyPreferredColorTheme()
 }
 
