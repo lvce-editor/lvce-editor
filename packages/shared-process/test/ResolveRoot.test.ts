@@ -9,6 +9,10 @@ jest.unstable_mockModule('../src/parts/MainProcess/MainProcess.js', () => ({
   invoke: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/IsProduction/IsProduction.js', () => ({
+  isProduction: true,
+}))
+
 const MainProcess = await import('../src/parts/MainProcess/MainProcess.js')
 const ResolveRoot = await import('../src/parts/ResolveRoot/ResolveRoot.js')
 
@@ -52,5 +56,18 @@ test('resolveRoot - uses cwd in prompt mode', async () => {
     path: process.cwd(),
     source: 'shared-process-cli-arg',
     uri: pathToFileURL(process.cwd()).toString(),
+  })
+})
+
+test('resolveRoot - starts with an empty workspace in production electron', async () => {
+  // @ts-ignore
+  MainProcess.invoke.mockResolvedValue(['/usr/lib/lvce-oss/lvce-oss'])
+
+  const resolvedRoot = await ResolveRoot.resolveRoot()
+
+  expect(resolvedRoot).toMatchObject({
+    path: '',
+    source: 'shared-process-env',
+    uri: '',
   })
 })
