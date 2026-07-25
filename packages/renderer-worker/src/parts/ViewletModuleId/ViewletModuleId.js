@@ -96,8 +96,6 @@ export const StatusBar = 'StatusBar'
 
 export const Storage = 'Storage'
 
-export const Terminal = 'Terminal'
-
 export const Terminals = 'Terminals'
 
 export const TitleBar = 'TitleBar'

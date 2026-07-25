@@ -7,7 +7,6 @@ import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-const renderer = 'xterm'
 const defaultBackend = 'real'
 
 const getBackend = () => {
@@ -35,7 +34,6 @@ export const loadContent = async (state) => {
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   await TerminalWorker.invoke('Terminal.create', uid, Workspace.state.workspacePath, command, args, {
     backend: getBackend(),
-    renderer,
   })
   return {
     ...state,
