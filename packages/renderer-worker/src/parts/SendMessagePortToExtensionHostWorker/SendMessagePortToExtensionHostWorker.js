@@ -5,6 +5,7 @@ import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
 import * as ChatMessageParsingWorker from '../ChatMessageParsingWorker/ChatMessageParsingWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as DiffWorker from '../DiffWorker/DiffWorker.js'
+import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
 import * as ChatViewModelWorker from '../ChatViewModelWorker/ChatViewModelWorker.js'
@@ -55,6 +56,13 @@ export const sendMessagePortToErrorWorker = async (port, initialCommand, rpcId) 
   Assert.string(initialCommand)
   await ErrorWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
+
+export const sendMessagePortToDialogWorker = async (port, initialCommand) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await DialogWorker.invokeAndTransfer(initialCommand, port)
+}
+
 export const sendMessagePortToAuthWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
