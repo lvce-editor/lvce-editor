@@ -26,6 +26,9 @@ export const signal = (port: any): any => {
 
 const getActualData = (event: any): any => {
   const { data, ports } = event
+  if (!data) {
+    return data
+  }
   if (ports.length > 0) {
     return {
       ...data,
@@ -62,8 +65,12 @@ export const wrap = (port: any): any => {
         case 'message':
           // @ts-ignore
           this.wrappedListener = (event: any): void => {
+            const data = getActualData(event)
+            if (!data) {
+              return
+            }
             const syntheticEvent = {
-              data: getActualData(event),
+              data,
               target: this,
             }
             listener(syntheticEvent)
