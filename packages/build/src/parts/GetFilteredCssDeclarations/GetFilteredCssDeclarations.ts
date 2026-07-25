@@ -6,9 +6,6 @@ const isEagerLoaded = (cssDeclaration) => {
       return true
     }
   }
-  if (cssDeclaration === '/static/lib-css/termterm.css') {
-    return true
-  }
   return false
 }
 

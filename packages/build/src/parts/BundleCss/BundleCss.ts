@@ -45,10 +45,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += additionalCss
       css += '\n\n'
     }
-    const cssLibTermTerm = Path.join(Root.root, 'static', 'lib-css', 'termterm.css')
     css += await readFile(cssLibNormalize, EncodingType.Utf8)
-    css += '\n'
-    css += await readFile(cssLibTermTerm, EncodingType.Utf8)
     css += '\n'
     const appCss = await readFile(Path.join(Root.root, 'static', 'css', 'App.css'), EncodingType.Utf8)
     const parts = getParts(appCss)
