@@ -134,7 +134,8 @@ export const loadContent = async (state, savedState, context) => {
 
   if (useFunctionalRendering) {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
-    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath)
+    const useCache = Preferences.get('editor.cache') ?? true
+    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath, useCache)
     await EditorWorker.invoke('Editor.loadContent', id)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
