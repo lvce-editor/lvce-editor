@@ -133,7 +133,8 @@ export const loadContent = async (state, savedState, context) => {
   const columnToReveal = context?.columnIndex || 0
 
   if (useFunctionalRendering) {
-    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir)
+    const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
+    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath)
     await EditorWorker.invoke('Editor.loadContent', id)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
