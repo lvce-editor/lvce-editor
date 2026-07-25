@@ -8,6 +8,7 @@ import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleS
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyElectronFileIcons from '../CopyElectronFileIcons/CopyElectronFileIcons.ts'
 import * as CopyElectron from '../CopyElectron/CopyElectron.ts'
 import * as CopyElectronIcons from '../CopyElectronIcons/CopyElectronIcons.ts'
 import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense.ts'
@@ -102,16 +103,7 @@ const copyExtensions = async ({ resourcesPath, commitHash }) => {
     occurrence: '../../../../typescript/lib/typescript-esm.js',
     replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
   })
-  // await Copy.copy({
-  //   from: `${resourcesPath}/app/extensions/builtin.vscode-icons/icons`,
-  //   to: `${resourcesPath}/app/static/file-icons`,
-  // })
-  // await Remove.remove(`${resourcesPath}/app/extensions/builtin.vscode-icons/icons`)
-  // await Replace.replace({
-  //   path: `${resourcesPath}/app/extensions/builtin.vscode-icons/icon-theme.json`,
-  //   occurrence: '/icons',
-  //   replacement: '/file-icons',
-  // })
+  await CopyElectronFileIcons.copyElectronFileIcons({ resourcesPath, commitHash })
 }
 
 const copyStaticFiles = async ({ resourcesPath, commitHash }) => {

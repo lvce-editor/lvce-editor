@@ -7,7 +7,6 @@ import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFi
 import * as Path from '../Path/Path.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Remove from '../Remove/Remove.ts'
-import * as WriteFile from '../WriteFile/WriteFile.ts'
 
 const getNewCssDeclarationFile = (content, filteredCss) => {
   const lines = content.split('\n')
@@ -237,17 +236,6 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       path: `${cachePath}/src/parts/Process/Process.js`,
       occurrence: `productNameLong = 'Lvce Editor - OSS'`,
       replacement: `productNameLong = '${product.nameLong}'`,
-    })
-
-    await WriteFile.writeFile({
-      to: `${cachePath}/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
-      content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
-
-export const getAbsoluteIconPath = (iconTheme, icon) => {
-  const result = iconTheme.iconDefinitions[icon]
-  return \`\${AssetDir.assetDir}/file-icons/\${result.slice(12)}\`
-}`, // TODO should adjust vscode-icons.json instead
     })
 
     if (platform === 'electron') {
