@@ -82,3 +82,13 @@
   height: 19px;
   contain: strict;
 }
+
+@keyframes statusBarItemSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.Spinning {
+  animation: statusBarItemSpin 2s linear infinite;
+}
