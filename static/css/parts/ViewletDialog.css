@@ -1,3 +1,13 @@
+.DialogOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  place-items: center;
+  place-content: center;
+  z-index: 1;
+}
+
 .DialogContent {
   width: 520px;
   height: 280px;
@@ -40,6 +50,11 @@
   contain: strict;
   cursor: pointer;
   border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: var(--WidgetForeground, #cccccc);
+  display: flex;
+  padding: 0;
   --MaskIconSize: 16px;
 }
 
@@ -63,7 +78,15 @@
 }
 
 .DialogInfoIcon {
-  background: var(--InfoIconForeground, #3794ff);
+  color: var(--InfoIconForeground, #3794ff);
+}
+
+.DialogWarningIcon {
+  color: var(--NotificationsWarningIconForeground, #cca700);
+}
+
+.DialogErrorIcon {
+  color: var(--NotificationsErrorIconForeground, #f48771);
 }
 
 .DialogHeading {

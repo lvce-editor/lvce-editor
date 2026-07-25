@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  FilePicker.setOpenFolderSupported(true)
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -37,6 +38,13 @@ test('showDirectoryPicker - error - not supported', async () => {
     throw new Error('window.showDirectoryPicker is not a function')
   })
   await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new Error('showDirectoryPicker not supported on this browser'))
+})
+
+test('showDirectoryPicker - mocked as not supported', async () => {
+  FilePicker.setOpenFolderSupported(false)
+
+  await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new Error('showDirectoryPicker not supported on this browser'))
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('showFilePicker - error', async () => {
