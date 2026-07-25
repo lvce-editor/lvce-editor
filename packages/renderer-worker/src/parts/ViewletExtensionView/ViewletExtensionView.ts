@@ -19,6 +19,7 @@ interface ViewRenderResult {
 }
 
 interface CreateViewInstanceSuccess {
+  readonly eventListeners?: readonly unknown[]
   readonly ok: true
   readonly result: ViewRenderResult
 }
@@ -189,7 +190,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
   const title = getViewTitle(view)
   const css = await loadCss(view)
   const cssId = css ? getCssId(view) : ''
-  const eventListeners = view.eventListeners || []
+  const contributedEventListeners = view.eventListeners || []
   const stateWithViewId = {
     ...state,
     viewId: view.id,
@@ -208,6 +209,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
       throw restoreError(createResult.error)
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
+    const eventListeners = createResult.ok === true ? createResult.eventListeners || contributedEventListeners : contributedEventListeners
     const initialState = {
       ...stateWithViewId,
       title,
@@ -234,7 +236,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
     cssId,
     csp: view.iframe.csp,
     credentialless: view.iframe.credentialless,
-    eventListeners,
+    eventListeners: contributedEventListeners,
     iframeSandbox: view.iframe.sandbox,
     iframeSrc: view.iframe.src,
     kind: 'iframe',

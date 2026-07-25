@@ -127,6 +127,29 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   expect(newState.patches).toEqual([])
 })
 
+test('loadContent prefers event listeners registered through the isolated extension api', async () => {
+  const eventListeners = [
+    {
+      name: 'handleVideoError',
+      params: ['handleError', 'event.target.error.code', 'event.target.error.message'],
+    },
+  ]
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce({
+    eventListeners,
+    ok: true,
+    result: {
+      dom: [],
+      type: 'setDom',
+    },
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState.eventListeners).toBe(eventListeners)
+})
+
 test('loadContent rejects when virtual dom creation fails', async () => {
   const stack = `Error: create failed
     at Object.create (main.ts:5:13)`
