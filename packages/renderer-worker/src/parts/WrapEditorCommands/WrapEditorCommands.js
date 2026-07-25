@@ -2,6 +2,16 @@ import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
 const queues = new Map()
 
+const runEditorCommand = async (editor, fullId, restArgs) => {
+  await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
+  const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
+  const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
+  return {
+    ...editor,
+    commands,
+  }
+}
+
 export const wrapEditorCommand = (id) => {
   return async (...args) => {
     if (args.length === 0) {
@@ -10,6 +20,9 @@ export const wrapEditorCommand = (id) => {
     const editor = args[0]
     const restArgs = args.slice(1)
     const fullId = id.includes('.') ? id : `Editor.${id}`
+    if (fullId === 'Editor.openFind' || fullId === 'Editor.openFind2' || fullId === 'Editor.closeFind') {
+      return runEditorCommand(editor, fullId, restArgs)
+    }
     const previous = queues.get(editor.uid)
     const { promise: next, resolve } = Promise.withResolvers()
     queues.set(editor.uid, next)
@@ -18,13 +31,7 @@ export const wrapEditorCommand = (id) => {
       await previous
     }
     try {
-      await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-      const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
-      const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
-      return {
-        ...editor,
-        commands,
-      }
+      return await runEditorCommand(editor, fullId, restArgs)
     } finally {
       resolve(undefined)
       if (queues.get(editor.uid) === next) {
