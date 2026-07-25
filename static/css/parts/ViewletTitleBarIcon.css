@@ -1,4 +1,6 @@
 .TitleBarIcon {
+  -webkit-app-region: drag;
+  app-region: drag;
   contain: strict;
   flex-basis: 30px !important;
   flex-grow: 0 !important;
