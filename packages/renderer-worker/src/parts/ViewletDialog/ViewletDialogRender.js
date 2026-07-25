@@ -1,48 +1,22 @@
+import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as DialogWorker from '../DialogWorker/DialogWorker.js'
+
 export const hasFunctionalRender = true
 
-const renderHeader = {
+export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
+
+export const renderDialog = {
   isEqual(oldState, newState) {
-    return oldState.header === newState.header
+    return false
   },
-  apply(oldState, newState) {
-    return [/* method */ 'setHeader', newState.header]
-  },
+  apply: AdjustCommands.apply,
+  multiple: true,
 }
 
-const renderButtons = {
-  isEqual(oldState, newState) {
-    return oldState.buttons === newState.buttons
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setButtons', newState.buttons]
-  },
-}
+export const render = [renderDialog]
 
-const renderCodeFrame = {
-  isEqual(oldState, newState) {
-    return oldState.codeFrame === newState.codeFrame
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setCodeFrame', newState.codeFrame]
-  },
+export const renderEventListeners = async () => {
+  return DialogWorker.invoke('Dialog.renderEventListeners')
 }
-
-const renderMessage = {
-  isEqual(oldState, newState) {
-    return oldState.message === newState.message
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setErrorMessage', newState.message]
-  },
-}
-
-const renderStack = {
-  isEqual(oldState, newState) {
-    return oldState.stack === newState.stack
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setErrorStack', newState.stack]
-  },
-}
-
-export const render = [renderHeader, renderButtons, renderCodeFrame, renderMessage, renderStack]

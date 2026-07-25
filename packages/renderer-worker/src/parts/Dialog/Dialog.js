@@ -2,6 +2,7 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
+import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -99,4 +100,12 @@ export const showMessage = async (message, options) => {
   } else {
     await Viewlet.openWidget(ViewletModuleId.Dialog, message, options)
   }
+}
+
+export const show = async (options) => {
+  await DialogWorker.invoke('Dialog.show', options)
+}
+
+export const showWarning = async (options) => {
+  await DialogWorker.invoke('Dialog.showWarning', options)
 }
