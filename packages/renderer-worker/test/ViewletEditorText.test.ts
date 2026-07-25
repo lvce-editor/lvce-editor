@@ -42,6 +42,11 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
 }))
 
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+const Preferences = await import('../src/parts/Preferences/Preferences.js')
+
+beforeEach(() => {
+  delete Preferences.state['editor.cache']
+})
 
 test('loadContent - restores the selection supplied by the opener', async () => {
   const initialCommands = [['Viewlet.setDom2']]
@@ -74,6 +79,7 @@ test('loadContent - restores the selection supplied by the opener', async () => 
     expect.any(String),
     'typescript',
     '/tokenize-typescript.js',
+    true,
   )
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
   const editorMethods = editorWorkerInvoke.mock.calls
@@ -88,7 +94,28 @@ test('loadContent - restores the selection supplied by the opener', async () => 
     'Editor.diff2',
     'Editor.render2',
   ])
+  const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
+  expect(createCall?.at(-1)).toBe(true)
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
+})
+
+test('loadContent - disables the editor file cache through preferences', async () => {
+  Preferences.state['editor.cache'] = false
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, {}, {})
+
+  const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
+  expect(createCall?.at(-1)).toBe(false)
 })
 
 test('dispose', async () => {
