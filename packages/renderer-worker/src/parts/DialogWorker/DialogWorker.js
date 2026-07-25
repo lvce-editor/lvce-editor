@@ -1,8 +1,6 @@
-import { createLazyRpc, RpcId } from '@lvce-editor/rpc-registry'
+import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import { launchDialogWorker } from '../LaunchDialogWorker/LaunchDialogWorker.js'
 
-const rpc = createLazyRpc(RpcId.DialogWorker)
+const { invoke, invokeAndTransfer } = GetOrCreateWorker.getOrCreateWorker(launchDialogWorker)
 
-rpc.setFactory(launchDialogWorker)
-
-export const { invoke, invokeAndTransfer } = rpc
+export { invoke, invokeAndTransfer }
