@@ -1,11 +1,13 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const editorWorkerInvoke = jest.fn()
+const getTokenizePath = jest.fn<(languageId: string) => string>()
 const rendererProcessInvoke = jest.fn()
 const tokenizerRemoveConnectedEditor = jest.fn()
 
 beforeEach(() => {
   jest.resetAllMocks()
+  getTokenizePath.mockImplementation((languageId: string): string => `/tokenize-${languageId}.js`)
 })
 
 jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
@@ -24,6 +26,10 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
 
 jest.unstable_mockModule('../src/parts/GetTextEditorContent/GetTextEditorContent.js', () => ({
   getTextEditorContent: jest.fn(() => 'first line\nsecond line'),
+}))
+
+jest.unstable_mockModule('../src/parts/GetTokenizePath/GetTokenizePath.js', () => ({
+  getTokenizePath,
 }))
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
@@ -54,8 +60,21 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
   const selections = new Uint32Array([1, 2, 1, 8])
 
-  const newState = await ViewletEditorText.loadContent(state, { selections: [0, 0, 0, 0] }, { selections })
+  const newState = await ViewletEditorText.loadContent(state, { selections: [0, 0, 0, 0] }, { languageId: 'typescript', selections })
 
+  expect(editorWorkerInvoke).toHaveBeenCalledWith(
+    'Editor.create2',
+    1,
+    '/test/file.txt',
+    0,
+    0,
+    800,
+    600,
+    expect.any(Number),
+    expect.any(String),
+    'typescript',
+    '/tokenize-typescript.js',
+  )
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
