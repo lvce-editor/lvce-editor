@@ -16,6 +16,7 @@
   "editor.autoClosingBrackets": true,
   "editor.autoClosingQuotes": true,
   "editor.cache": true,
+  "editor.diagnostics": true,
   "editor.quickSuggestions": false,
 
   "extensions.autoUpdate": true,
