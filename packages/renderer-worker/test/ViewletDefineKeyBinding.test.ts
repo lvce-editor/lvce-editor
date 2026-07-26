@@ -16,13 +16,28 @@ test('create - stores the parent keybindings view uid', () => {
   })
 })
 
-test('handleKeyDown - Enter submits the recorded keybinding', () => {
+test('handleKeyDown - Enter waits for the recorded keybinding to be submitted', async () => {
   const state = {
     uid: 42,
     value: 'Ctrl+Alt+9',
   }
+  let resolveDispose = () => {}
+  const disposePromise = new Promise<undefined>((resolve) => {
+    resolveDispose = () => resolve(undefined)
+  })
+  jest.mocked(Viewlet.disposeWidgetWithValue).mockReturnValue(disposePromise)
 
-  ViewletDefineKeyBinding.handleKeyDown(state, 'Enter', false, false, false, false)
+  let completed = false
+  const resultPromise = ViewletDefineKeyBinding.handleKeyDown(state, 'Enter', false, false, false, false).then((result) => {
+    completed = true
+    return result
+  })
 
   expect(Viewlet.disposeWidgetWithValue).toHaveBeenCalledWith(42, 'Ctrl+Alt+9')
+  expect(completed).toBe(false)
+
+  resolveDispose()
+
+  await expect(resultPromise).resolves.toBe(state)
+  expect(completed).toBe(true)
 })
