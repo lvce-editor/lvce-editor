@@ -522,7 +522,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
-    const uid = instance.state.uid
+    const { parentUid, uid } = instance.state
     Assert.number(uid)
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
     if (instance.factory.getKeyBindings) {
@@ -541,7 +541,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     ViewletStates.remove(uid)
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // return commands
-    const parentInstance = ViewletStates.getInstance(ViewletModuleId.KeyBindings)
+    const parentInstance = ViewletStates.getInstance(parentUid) || ViewletStates.getInstance(ViewletModuleId.KeyBindings)
     if (!parentInstance) {
       return
     }
