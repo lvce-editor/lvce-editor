@@ -26,7 +26,13 @@
   flex: 1;
   user-select: text;
   margin: 0;
-  padding: 0;
+  padding: 0 24px 0 0;
+}
+
+.NotificationCloseButton {
+  position: absolute;
+  top: 4px;
+  right: 4px;
 }
 
 .NotificationOption {
