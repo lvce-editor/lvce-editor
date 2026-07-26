@@ -35,4 +35,10 @@ describe('linux desktop template', () => {
 
     expect(desktopFile).toContain('Exec=/usr/lib/lvce/lvce %U')
   })
+
+  test('registers as a folder handler', async () => {
+    const desktopFile = await renderTemplate('linux_desktop')
+
+    expect(desktopFile).toContain('MimeType=inode/directory;')
+  })
 })

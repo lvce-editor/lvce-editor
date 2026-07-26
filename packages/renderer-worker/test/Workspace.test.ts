@@ -62,7 +62,7 @@ test('hydrate', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Workspace.hydrate({ href: 'http://localhost:3000' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'WindowTitle.set', '/tmp/some-folder')
 })
@@ -97,7 +97,7 @@ test.skip('hydrate - path changed in the meantime', async () => {
   await promise1
   expect(Workspace.state.workspacePath).toBe('/test')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
 })
 

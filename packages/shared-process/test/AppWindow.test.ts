@@ -64,3 +64,24 @@ test('openNewWithUri', async () => {
   expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
   expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, [], '', [], 'lvce-oss://-/?openUri=%2Fworkspace%2Ffile.txt')
 })
+
+test.each([
+  ['dot path', '.', '/test/workspace', 'file:///test/workspace'],
+  ['relative path', 'folder', '/test/workspace', 'file:///test/workspace/folder'],
+  ['absolute path', '/test/workspace', '/other', 'file:///test/workspace'],
+  ['file url', 'file:///test/workspace', '/other', 'file:///test/workspace'],
+])('createAppWindow adds workspace from %s', async (_name, argument, workingDirectory, workspaceUri) => {
+  const url = new URL('lvce-oss://-/')
+  url.searchParams.set('workspace', workspaceUri)
+  const parsedArgs = { _: [argument] }
+
+  await AppWindow.createAppWindow({
+    parsedArgs,
+    preferences: {},
+    preloadUrl: 'file:///preload.js',
+    workingDirectory,
+  })
+
+  expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, parsedArgs, workingDirectory, [], url.toString())
+})

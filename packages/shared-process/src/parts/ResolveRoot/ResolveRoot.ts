@@ -1,6 +1,6 @@
 import { homedir } from 'node:os'
 import { isAbsolute, join, resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.ts'
 import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.ts'
 import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.ts'
@@ -30,8 +30,31 @@ const toUri = (path: any): any => {
   return pathToFileURL(path).toString()
 }
 
-export const resolveRoot = async (): Promise<any> => {
+const getWindowWorkspacePath = (href: string): string => {
+  if (!href) {
+    return ''
+  }
+  const workspaceUri = new URL(href).searchParams.get('workspace')
+  if (!workspaceUri) {
+    return ''
+  }
+  return fileURLToPath(workspaceUri)
+}
+
+export const resolveRoot = async (href = ''): Promise<any> => {
   if (IsElectron.isElectron) {
+    const windowWorkspacePath = getWindowWorkspacePath(href)
+    if (windowWorkspacePath) {
+      return {
+        homeDir: PlatformPaths.getHomeDir(),
+        homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        path: windowWorkspacePath,
+        pathSeparator: Platform.getPathSeparator(),
+        source: WorkspaceSource.SharedProcessCliArg,
+        uri: toUri(windowWorkspacePath),
+        workspaceId: GetWorkspaceId.getWorkspaceId(windowWorkspacePath),
+      }
+    }
     const argv = await ParentIpc.invoke('Process.getArgv')
     const relevantArgv = argv.slice(1)
     const last = relevantArgv.at(-1)

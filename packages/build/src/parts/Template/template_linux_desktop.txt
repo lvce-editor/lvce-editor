@@ -10,6 +10,7 @@ StartupNotify=false
 StartupWMClass=@@APPLICATION_NAME@@
 X-GNOME-WMClass=@@APPLICATION_NAME@@
 Categories=Utility;TextEditor;Development;IDE;
+MimeType=inode/directory;
 Actions=new-empty-window;
 Keywords=@@KEYWORDS@@
 

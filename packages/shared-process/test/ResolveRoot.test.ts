@@ -46,6 +46,20 @@ test('resolveRoot - resolves dot from development electron arguments', async () 
   })
 })
 
+test('resolveRoot - resolves the workspace for a second window', async () => {
+  const url = new URL('lvce-oss://-/')
+  url.searchParams.set('workspace', 'file:///test/second-workspace')
+
+  const resolvedRoot = await ResolveRoot.resolveRoot(url.toString())
+
+  expect(resolvedRoot).toMatchObject({
+    path: '/test/second-workspace',
+    source: 'shared-process-cli-arg',
+    uri: 'file:///test/second-workspace',
+  })
+  expect(MainProcess.invoke).not.toHaveBeenCalled()
+})
+
 test('resolveRoot - uses cwd in prompt mode', async () => {
   // @ts-ignore
   MainProcess.invoke.mockResolvedValue(['/usr/lib/lvce-oss/lvce-oss', '--prompt', 'Fix the tests'])

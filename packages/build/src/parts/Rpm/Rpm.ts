@@ -26,7 +26,7 @@ const copyMetaFiles = async ({ arch, product }) => {
       '@@NAME_LONG@@': product.nameLong,
       '@@NAME_SHORT@@': product.nameShort,
       '@@NAME@@': product.applicationName,
-      '@@EXEC@@': product.applicationName,
+      '@@EXEC@@': `${product.applicationName} %U`,
       '@@ICON@@': product.applicationName,
       '@@URLPROTOCOL@@': product.applicationName,
       '@@SUMMARY@@': product.linuxSummary,

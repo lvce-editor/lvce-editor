@@ -16,6 +16,7 @@
     "linux": {
       "executableName": "@@NAME@@",
       "category": "Utility;TextEditor;Development;IDE;",
+      "mimeTypes": ["inode/directory"],
       "target": [
         {
           "target": "snap"
