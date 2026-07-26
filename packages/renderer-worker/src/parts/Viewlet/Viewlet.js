@@ -487,7 +487,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if (oldState === actualNewState) {
     return
   }
-  if (!ViewletStates.hasInstance(uid)) {
+  if (!ViewletStates.getByUid(uid) && !ViewletStates.hasInstance(uid)) {
     return
   }
   const commands = ViewletManager.render(instance.factory, instance.renderedState, actualNewState)
@@ -541,7 +541,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     ViewletStates.remove(uid)
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // return commands
-    const parentInstance = ViewletStates.getInstance(parentUid) || ViewletStates.getInstance(ViewletModuleId.KeyBindings)
+    const parentInstance = ViewletStates.getByUid(parentUid) || ViewletStates.getInstance(ViewletModuleId.KeyBindings)
     if (!parentInstance) {
       return
     }
