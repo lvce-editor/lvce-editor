@@ -217,6 +217,7 @@ test('bundleCss preserves the running extensions row layout', async () => {
 
     expect(css).toContain(`.RunningExtension {
   align-items: center;
+  contain: strict;
   cursor: pointer;
   display: flex;
   flex-shrink: 0;
@@ -228,10 +229,54 @@ test('bundleCss preserves the running extensions row layout', async () => {
   background: color-mix(in srgb, var(--WorkbenchForeground) 4%, transparent);
 }`)
     expect(css).toContain(`.RunningExtensionActivationTime {
+  contain: content;
   flex: none;
   margin-left: auto;
   text-align: right;
 }`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss preserves the running extensions containment', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletRunningExtensions.css'), 'utf8')
+
+    expect(css).toContain(`.RunningExtensions {
+  box-sizing: border-box;
+  contain: strict;`)
+    expect(css).toContain(`.RunningExtension {
+  align-items: center;
+  contain: strict;`)
+    expect(css).toContain(`.RunningExtensionIcon {
+  contain: strict;`)
+    expect(css).toContain(`.RunningExtensionsEmpty {
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--WorkbenchForeground);
+  contain: content;`)
+    expect(css).toContain(`.RunningExtensionDetails {
+  contain: content;`)
+    expect(css).toContain(`.RunningExtensionTitle {
+  align-items: baseline;
+  contain: content;`)
+    expect(css).toContain(`.RunningExtensionName,
+.RunningExtensionVersion,
+.RunningExtensionId,
+.RunningExtensionActivationDetails,
+.RunningExtensionActivationReason {
+  contain: content;
+}`)
+    expect(css).toContain(`.RunningExtensionActivationTime {
+  contain: content;`)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
