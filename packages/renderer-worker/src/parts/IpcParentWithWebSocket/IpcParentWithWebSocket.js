@@ -12,7 +12,10 @@ export const create = async ({ type }) => {
   const host = Location.getHost()
   const wsUrl = GetWebSocketUrl.getWebSocketUrl(type, host)
   const webSocket = ReconnectingWebSocket.create(wsUrl)
-  const firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  let firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {
+    firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  }
   if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {
     throw new IpcError('Websocket connection was immediately closed')
   }
