@@ -29,6 +29,19 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => {
+  return {
+    prepare: async (error: any) => ({
+      codeFrame: error.codeFrame || '',
+      message: error.message,
+      stack: '    at treeToArray (editorWorkerMain.js:10:8)',
+      type: error.name,
+    }),
+    getMessage: (error: any) => `${error.type}: ${error.message}`,
+    print: async () => {},
+  }
+})
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 const Command = await import('../src/parts/Command/Command.js')
@@ -561,6 +574,64 @@ test('load should mark the loaded instance as focused for its module type', asyn
   await ViewletManager.load(state)
 
   expect(ViewletStates.getFocusedInstanceByType('ChatDebug')).toBe(1)
+})
+
+test('load - custom error renderer preserves the original error and does not append a detached viewlet', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const error = new RangeError('Maximum call stack size exceeded')
+  // @ts-ignore
+  error.codeFrame = `  10 | result.push(...treeToArray(child))
+     |        ^`
+  const errorDom = [{ childCount: 0, type: 1 }]
+  const renderError = jest.fn((_error: unknown, _message: string) => errorDom)
+  const getModule = async (id?: string) => {
+    if (id === 'EditorTextError') {
+      return {
+        render: renderError,
+      }
+    }
+    return {
+      create() {
+        return {
+          uid: 42,
+        }
+      },
+      customErrorRenderer: 'EditorTextError',
+      loadContent() {
+        throw error
+      },
+    }
+  }
+  const viewlet = {
+    append: false,
+    disposed: false,
+    getModule,
+    id: 'EditorText',
+    parentUid: -1,
+    setBounds: false,
+    show: false,
+    type: 0,
+    uid: 42,
+    uri: '/tmp/large.heapsnapshot',
+  }
+
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(renderError).toHaveBeenCalledWith(
+    error,
+    `RangeError: Maximum call stack size exceeded
+
+  10 | result.push(...treeToArray(child))
+     |        ^
+
+    at treeToArray (editorWorkerMain.js:10:8)`,
+  )
+  expect(commands).toEqual([
+    ['Viewlet.create', 'Error', 42],
+    ['Viewlet.create', 'EditorTextError', 42],
+    ['Viewlet.setDom2', 42, errorDom],
+  ])
 })
 
 test.skip('load - error - no create method', async () => {
