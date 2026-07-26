@@ -1,4 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 jest.unstable_mockModule('../src/parts/GetAppWindowOptions/GetAppWindowOptions.js', () => ({
   getAppWindowOptions: jest.fn(() => ({})),
@@ -26,6 +28,10 @@ jest.unstable_mockModule('../src/parts/Screen/Screen.js', () => ({
 
 const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 const ParentIpc = await import('../src/parts/MainProcess/MainProcess.js')
+
+const otherPath = resolve('test', 'other')
+const workspacePath = resolve('test', 'workspace')
+const workspaceUri = pathToFileURL(workspacePath).toString()
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -63,4 +69,25 @@ test('openNewWithUri', async () => {
 
   expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
   expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, [], '', [], 'lvce-oss://-/?openUri=%2Fworkspace%2Ffile.txt')
+})
+
+test.each([
+  ['dot path', '.', workspacePath, workspaceUri],
+  ['relative path', 'folder', workspacePath, pathToFileURL(resolve(workspacePath, 'folder')).toString()],
+  ['absolute path', workspacePath, otherPath, workspaceUri],
+  ['file url', workspaceUri, otherPath, workspaceUri],
+])('createAppWindow adds workspace from %s', async (_name, argument, workingDirectory, expectedWorkspaceUri) => {
+  const url = new URL('lvce-oss://-/')
+  url.searchParams.set('workspace', expectedWorkspaceUri)
+  const parsedArgs = { _: [argument] }
+
+  await AppWindow.createAppWindow({
+    parsedArgs,
+    preferences: {},
+    preloadUrl: 'file:///preload.js',
+    workingDirectory,
+  })
+
+  expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, parsedArgs, workingDirectory, [], url.toString())
 })

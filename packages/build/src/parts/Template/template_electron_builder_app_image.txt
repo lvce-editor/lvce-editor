@@ -16,6 +16,7 @@
     "linux": {
       "executableName": "@@NAME@@",
       "category": "Utility;TextEditor;Development;IDE;",
+      "mimeTypes": ["inode/directory"],
       "synopsis": "A very short description, like a slogan",
       "description": "A description of the application on what it does.",
       "target": [
