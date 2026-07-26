@@ -22,17 +22,17 @@ export const loadContent = (state) => {
   }
 }
 
-const dispose = (state, value) => {
+const dispose = async (state, value) => {
   const { uid } = state
-  Viewlet.disposeWidgetWithValue(uid, value)
+  await Viewlet.disposeWidgetWithValue(uid, value)
   return state
 }
 
-export const handleBlur = (state) => {
+export const handleBlur = async (state) => {
   return dispose(state, '')
 }
 
-export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
+export const handleKeyDown = async (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
   // TODO handle with keybindings?
   if (key === BrowserKey.Control || key === BrowserKey.Shift || key === BrowserKey.Alt) {
     return state
