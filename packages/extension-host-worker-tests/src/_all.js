@@ -28,7 +28,11 @@ const getRelativePath = (testFile) => {
 const getPaths = async () => {
   const testsPath = join(root, 'packages', 'extension-host-worker-tests', 'src')
   const dirents = await readdir(testsPath)
-  const testFiles = dirents.filter(isTestFile)
+  const testNamePrefixArgument = process.argv.find((argument) => argument.startsWith('--test-name-prefix='))
+  const testNamePrefix = testNamePrefixArgument ? testNamePrefixArgument.slice('--test-name-prefix='.length) : ''
+  const testFiles = dirents.filter((dirent) => {
+    return isTestFile(dirent) && dirent.startsWith(testNamePrefix)
+  })
   return testFiles
 }
 

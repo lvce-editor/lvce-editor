@@ -16,5 +16,11 @@
     "noImplicitAny": false,
     "composite": true
   },
-  "include": ["src", "test", "typings", "fixtures/sample.extension-disable-lifecycle/test.js"]
+  "include": [
+    "src",
+    "test",
+    "typings",
+    "fixtures/sample.extension-disable-lifecycle/test.js",
+    "fixtures/sample.running-extensions-live-view/test.js"
+  ]
 }

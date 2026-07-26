@@ -12,8 +12,8 @@ export const name = 'extension.enable-restores-running-extension'
 export const test: Test = async ({ expect, ExtensionDetail, Locator, RunningExtensions, ...api }) => {
   await addLifecycleExtension(api)
   await RunningExtensions.show()
-  const runningExtension = Locator(runningExtensionSelector)
-  await expect(runningExtension.locator('.RunningExtensionId')).toHaveText(extensionId)
+  const runningExtension = Locator(runningExtensionSelector, { hasText: extensionId })
+  await expect(runningExtension).toHaveText(extensionId)
   await disableLifecycleExtension({ ExtensionDetail })
   await RunningExtensions.show()
   await expect(runningExtension).toBeHidden()
@@ -23,5 +23,5 @@ export const test: Test = async ({ expect, ExtensionDetail, Locator, RunningExte
   await RunningExtensions.show()
 
   await expect(runningExtension).toBeVisible()
-  await expect(runningExtension.locator('.RunningExtensionId')).toHaveText(extensionId)
+  await expect(runningExtension).toHaveText(extensionId)
 }

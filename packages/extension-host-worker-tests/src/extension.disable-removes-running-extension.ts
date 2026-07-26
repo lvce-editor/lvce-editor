@@ -11,9 +11,9 @@ export const name = 'extension.disable-removes-running-extension'
 export const test: Test = async ({ expect, Locator, RunningExtensions, ...api }) => {
   await addLifecycleExtension(api)
   await RunningExtensions.show()
-  const runningExtension = Locator(runningExtensionSelector)
+  const runningExtension = Locator(runningExtensionSelector, { hasText: extensionId })
   await expect(runningExtension).toBeVisible()
-  await expect(runningExtension.locator('.RunningExtensionId')).toHaveText(extensionId)
+  await expect(runningExtension).toHaveText(extensionId)
 
   await disableLifecycleExtension(api)
   await RunningExtensions.show()
