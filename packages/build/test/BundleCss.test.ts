@@ -228,6 +228,17 @@ test('bundleCss preserves the running extensions row layout', async () => {
     expect(css).toContain(`.RunningExtension:nth-child(even) {
   background: color-mix(in srgb, var(--WorkbenchForeground) 4%, transparent);
 }`)
+    expect(css).toContain(`.RunningExtensionDetails {
+  contain: content;
+  flex: none;
+  min-width: 0;
+  overflow: hidden;
+}`)
+    expect(css).toContain(`.RunningExtensionActivationDetails {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}`)
     expect(css).toContain(`.RunningExtensionActivationTime {
   contain: content;
   flex: none;
