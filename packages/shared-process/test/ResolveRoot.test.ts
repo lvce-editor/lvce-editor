@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 jest.unstable_mockModule('../src/parts/IsElectron/IsElectron.js', () => ({
@@ -47,15 +48,17 @@ test('resolveRoot - resolves dot from development electron arguments', async () 
 })
 
 test('resolveRoot - resolves the workspace for a second window', async () => {
+  const workspacePath = resolve('test', 'second-workspace')
+  const workspaceUri = pathToFileURL(workspacePath).toString()
   const url = new URL('lvce-oss://-/')
-  url.searchParams.set('workspace', 'file:///test/second-workspace')
+  url.searchParams.set('workspace', workspaceUri)
 
   const resolvedRoot = await ResolveRoot.resolveRoot(url.toString())
 
   expect(resolvedRoot).toMatchObject({
-    path: '/test/second-workspace',
+    path: workspacePath,
     source: 'shared-process-cli-arg',
-    uri: 'file:///test/second-workspace',
+    uri: workspaceUri,
   })
   expect(MainProcess.invoke).not.toHaveBeenCalled()
 })
