@@ -110,7 +110,7 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
     from: 'static',
     to: `${resourcesPath}/app/static/${commitHash}`,
-    ignore: ['css'],
+    ignore: ['config.json', 'css'],
   })
   await CopyElectronIcons.copyElectronIcons({ resourcesPath, commitHash })
   await Rename.rename({
