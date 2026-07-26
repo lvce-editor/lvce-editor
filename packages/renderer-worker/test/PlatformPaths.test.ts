@@ -13,6 +13,13 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+Object.defineProperty(globalThis, 'location', {
+  configurable: true,
+  value: {
+    origin: 'https://lvce-editor.github.io',
+  },
+})
+
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
@@ -74,7 +81,9 @@ test('getUserSettingsPath', async () => {
 })
 
 test('getConfigJsonPath - web', async () => {
-  expect(await PlatformPaths.getConfigJsonPath(PlatformType.Web, '/test/commit-hash')).toBe('/test/commit-hash/config.json')
+  expect(await PlatformPaths.getConfigJsonPath(PlatformType.Web, '/lvce-editor/commit-hash')).toBe(
+    'https://lvce-editor.github.io/lvce-editor/commit-hash/config.json',
+  )
   expect(SharedProcess.invoke).not.toHaveBeenCalled()
 })
 

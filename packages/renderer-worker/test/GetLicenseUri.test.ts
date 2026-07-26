@@ -7,6 +7,13 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
   }),
 }))
 
+Object.defineProperty(globalThis, 'location', {
+  configurable: true,
+  value: {
+    origin: 'https://lvce-editor.github.io',
+  },
+})
+
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const GetLicenseUri = await import('../src/parts/GetLicenseUri/GetLicenseUri.js')
 
@@ -15,8 +22,8 @@ beforeEach(() => {
 })
 
 test('web', async () => {
-  const uri = await GetLicenseUri.getLicenseUri(PlatformType.Web, '/abc123')
-  expect(uri).toBe('/abc123/LICENSE')
+  const uri = await GetLicenseUri.getLicenseUri(PlatformType.Web, '/lvce-editor/abc123')
+  expect(uri).toBe('https://lvce-editor.github.io/lvce-editor/abc123/LICENSE')
   expect(SharedProcess.invoke).not.toHaveBeenCalled()
 })
 
