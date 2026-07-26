@@ -18,6 +18,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     childUid: -1,
+    focusVersion: 0,
     selectedIndex: -1,
   }
 }
@@ -121,6 +122,13 @@ export const focusIndex = async (state, index) => {
 
 export const handleClickTab = (state, index) => {
   return focusIndex(state, index)
+}
+
+export const focus = (state) => {
+  return {
+    ...state,
+    focusVersion: state.focusVersion + 1,
+  }
 }
 
 export const resize = async (state, dimensions) => {

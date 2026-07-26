@@ -16,14 +16,16 @@ export const test = async ({ Command, KeyBoard, Locator, Settings, expect }) => 
     'terminal.backend': 'mock',
   })
 
-  await Command.execute('Layout.showPanel', 'Terminals')
-  await Command.execute('Panel.selectIndex', 3)
+  await Command.execute('Layout.showPanel', 'Problems')
+  const terminalsTab = Locator('.PanelTab[name="Terminals"]')
+  await terminalsTab.click()
 
   const terminal = Locator('.XtermTerminal')
   await expect(terminal).toBeVisible()
   const terminalViewport = terminal.locator('.xterm-viewport')
   await expect(terminalViewport).toHaveCSS('scrollbar-color', 'rgba(57, 71, 71, 0.6) rgba(0, 0, 0, 0)')
-  await terminal.click()
+  const terminalInput = terminal.locator('.xterm-helper-textarea')
+  await expect(terminalInput).toBeFocused()
 
   await runCommand(KeyBoard, 'echo hello > file.txt')
   await runCommand(KeyBoard, 'cat file.txt')

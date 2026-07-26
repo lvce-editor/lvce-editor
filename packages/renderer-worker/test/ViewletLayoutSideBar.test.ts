@@ -338,6 +338,38 @@ test('createPanelViewlet omits empty event listener registration for its new act
   ])
 })
 
+test('createPanelViewlet forwards focus to the loaded panel view', async () => {
+  const state = ViewletLayout.create(1)
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+
+  await ViewletLayout.createPanelViewlet(
+    state,
+    'Terminals',
+    11,
+    22,
+    33,
+    {
+      x: 0,
+      y: 35,
+      width: 400,
+      height: 200,
+    },
+    '',
+    true,
+  )
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      focus: true,
+      id: 'Terminals',
+      uid: 11,
+    }),
+    false,
+    true,
+  )
+})
+
 test('toggleSideBarView hides the current side bar view when the same item is clicked', async () => {
   mockActivityBarRender()
   const state = {

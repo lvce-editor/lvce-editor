@@ -948,6 +948,7 @@ export const createPanelViewlet = async (
   actionsUid: number,
   bounds: any,
   uri: string,
+  focus = false,
 ) => {
   const commands = await ViewletManager.load(
     {
@@ -958,7 +959,7 @@ export const createPanelViewlet = async (
       uri,
       uid: editorUid,
       show: false,
-      focus: false,
+      focus,
       setBounds: false,
       x: bounds.x,
       y: bounds.y,
