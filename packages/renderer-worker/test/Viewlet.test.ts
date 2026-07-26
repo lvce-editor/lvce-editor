@@ -176,6 +176,43 @@ test('dispose - disposes the rendered viewlet when the factory has no dispose fu
   expect(ViewletStates.getInstance(2)).toBeUndefined()
 })
 
+test('disposeWidgetWithValue - dispatches the captured value to the keybindings view', async () => {
+  const widgetState = { uid: 42 }
+  const keyBindingsState = { uid: 7, value: '' }
+  const updatedKeyBindingsState = { uid: 7, value: 'Ctrl+Alt+9' }
+  const handleDefineKeyBindingDisposed = jest.fn((_state: typeof keyBindingsState, _value: string) => updatedKeyBindingsState)
+  const keyBindingsFactory = {
+    Commands: {
+      handleDefineKeyBindingDisposed,
+    },
+  }
+  ViewletStates.set(42, {
+    state: widgetState,
+    renderedState: widgetState,
+    moduleId: 'DefineKeyBinding',
+    factory: {},
+  })
+  ViewletStates.set(7, {
+    state: keyBindingsState,
+    renderedState: keyBindingsState,
+    moduleId: 'KeyBindings',
+    factory: keyBindingsFactory,
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {})
+  // @ts-ignore
+  ViewletManager.render.mockReturnValue([['Viewlet.setValueByName', 7, 'KeyBindingsFilter', 'Ctrl+Alt+9']])
+
+  await Viewlet.disposeWidgetWithValue(42, 'Ctrl+Alt+9')
+
+  expect(handleDefineKeyBindingDisposed).toHaveBeenCalledWith(keyBindingsState, 'Ctrl+Alt+9')
+  expect(ViewletManager.render).toHaveBeenCalledWith(keyBindingsFactory, keyBindingsState, updatedKeyBindingsState)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [['Viewlet.dispose', 42]])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.sendMultiple', [
+    ['Viewlet.setValueByName', 7, 'KeyBindingsFilter', 'Ctrl+Alt+9'],
+  ])
+})
+
 test('openWidget - once', async () => {
   // @ts-ignore
   ViewletManager.load.mockImplementation(() => {
