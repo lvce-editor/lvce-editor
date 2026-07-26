@@ -231,6 +231,28 @@ test('bundleCss preserves the running extensions empty state artwork', async () 
   }
 }, 30_000)
 
+test('bundleCss preserves the panel background for xterm', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletTerminal.css'), 'utf8')
+
+    expect(css).toContain(`.XtermTerminal {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--PanelBackground);
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss rewrites icon urls in lazy-loaded css', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
