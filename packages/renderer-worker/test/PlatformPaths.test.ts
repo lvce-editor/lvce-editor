@@ -101,6 +101,23 @@ test('getConfigJsonPath - electron', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Platform.getConfigJsonPath')
 })
 
+test('getApplicationName - web', () => {
+  expect(PlatformPaths.getApplicationName(PlatformType.Web)).toBe('lvce-oss')
+  expect(SharedProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('getApplicationName - electron', () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method) => {
+    if (method === 'Platform.getApplicationName') {
+      return 'test-app'
+    }
+    throw new Error('unexpected message')
+  })
+  expect(PlatformPaths.getApplicationName(PlatformType.Electron)).toBe('test-app')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Platform.getApplicationName')
+})
+
 test('getUserSettingsPath - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {

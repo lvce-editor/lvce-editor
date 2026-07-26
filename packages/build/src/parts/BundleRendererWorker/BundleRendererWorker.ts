@@ -213,6 +213,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/Product/Product.js`,
+      occurrence: `applicationName = 'lvce-oss'`,
+      replacement: `applicationName = '${product.applicationName}'`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Product/Product.js`,
       occurrence: `productNameLong = 'Lvce Editor - OSS'`,
       replacement: `productNameLong = '${product.nameLong}'`,
     })

@@ -2,6 +2,7 @@ import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as GetWebAssetUrl from '../GetWebAssetUrl/GetWebAssetUrl.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Product from '../Product/Product.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 /* istanbul ignore file */
 
@@ -137,6 +138,9 @@ export const getRepository = () => {
   return SharedProcess.invoke('Platform.getRepository')
 }
 
-export const getApplicationName = () => {
+export const getApplicationName = (platform = Platform.getPlatform()) => {
+  if (platform === PlatformType.Web) {
+    return Product.getApplicationName()
+  }
   return SharedProcess.invoke('Platform.getApplicationName')
 }
