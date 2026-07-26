@@ -1,5 +1,6 @@
 .RunningExtensions {
   box-sizing: border-box;
+  contain: strict;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -22,6 +23,7 @@
 
 .RunningExtension {
   align-items: center;
+  contain: strict;
   cursor: pointer;
   display: flex;
   flex-shrink: 0;
@@ -45,12 +47,14 @@
 }
 
 .RunningExtensionIcon {
+  contain: strict;
   flex: none;
   height: 36px;
   width: 36px;
 }
 
 .RunningExtensionDetails {
+  contain: content;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -58,11 +62,13 @@
 
 .RunningExtensionTitle {
   align-items: baseline;
+  contain: content;
   display: flex;
   gap: 8px;
 }
 
 .RunningExtensionActivationTime {
+  contain: content;
   flex: none;
   margin-left: auto;
   text-align: right;
@@ -72,6 +78,7 @@
   align-items: center;
   box-sizing: border-box;
   color: var(--WorkbenchForeground);
+  contain: content;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -113,6 +120,14 @@
 .RunningExtensionActivationReason,
 .RunningExtensionActivationTime {
   color: var(--DescriptionForeground, rgba(156, 162, 160, 0.7));
+}
+
+.RunningExtensionName,
+.RunningExtensionVersion,
+.RunningExtensionId,
+.RunningExtensionActivationDetails,
+.RunningExtensionActivationReason {
+  contain: content;
 }
 
 @media (prefers-reduced-motion: no-preference) {
