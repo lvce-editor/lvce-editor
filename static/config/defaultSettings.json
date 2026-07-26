@@ -45,6 +45,8 @@
   "window.zoomLevel": 0,
   "window.controlsOverlay.enabled": true,
 
+  "Workers.cleanUpAfterLoad": false,
+
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",
   "workbench.activityBar.visible": true,
