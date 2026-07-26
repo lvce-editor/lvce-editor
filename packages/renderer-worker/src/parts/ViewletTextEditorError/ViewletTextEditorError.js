@@ -15,8 +15,8 @@ export const loadContent = (state) => {
   return state
 }
 
-export const render = (error) => {
-  const info = GetEditorErrorinfo.getEditorErrorInfo(error)
+export const render = (error, message) => {
+  const info = GetEditorErrorinfo.getEditorErrorInfo(error, message)
   return RenderTextEditorError.renderTextEditorError(info)
 }
 

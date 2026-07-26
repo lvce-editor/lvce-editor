@@ -20,6 +20,10 @@
   user-select: text;
 }
 
+.TextEditorErrorMessage {
+  white-space: pre-wrap;
+}
+
 .EditorTextIcon {
   width: 48px;
   height: 48px;
