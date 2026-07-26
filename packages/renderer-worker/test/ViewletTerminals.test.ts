@@ -29,6 +29,7 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
 
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 const ViewletTerminals = await import('../src/parts/ViewletTerminals/ViewletTerminals.js')
+const ViewletTerminalsRender = await import('../src/parts/ViewletTerminals/ViewletTerminalsRender.js')
 
 test('loadContent always creates the xterm terminal view', async () => {
   const state = ViewletTerminals.create(1, '', 10, 20, 800, 400)
@@ -52,4 +53,17 @@ test('loadContent always creates the xterm terminal view', async () => {
     selectedIndex: 0,
     terminalTabsEnabled: true,
   })
+})
+
+test('focus eventually focuses the mounted xterm child', () => {
+  const state = {
+    ...ViewletTerminals.create(1, '', 10, 20, 800, 400),
+    childUid: 42,
+  }
+
+  const newState = ViewletTerminals.focus(state)
+
+  expect(newState.focusVersion).toBe(1)
+  expect(ViewletTerminalsRender.renderFocus.isEqual(state, newState)).toBe(false)
+  expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', 42]])
 })

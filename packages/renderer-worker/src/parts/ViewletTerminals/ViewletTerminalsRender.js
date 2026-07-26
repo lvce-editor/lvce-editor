@@ -14,4 +14,14 @@ const renderDom = {
   },
 }
 
-export const render = [renderDom]
+export const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focusVersion === newState.focusVersion
+  },
+  apply(oldState, newState) {
+    return [['Viewlet.focus', newState.childUid]]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderFocus]
