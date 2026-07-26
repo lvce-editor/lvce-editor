@@ -6,7 +6,7 @@ const isFileNotFoundError = (error: any) => {
   return error && error.code === ErrorCodes.ENOENT
 }
 
-export const getEditorErrorInfo = (error: any): EditorErrorInfo => {
+export const getEditorErrorInfo = (error: any, preparedMessage = ''): EditorErrorInfo => {
   if (isFileNotFoundError(error)) {
     return {
       type: EditorErrorType.Error,
@@ -20,7 +20,7 @@ export const getEditorErrorInfo = (error: any): EditorErrorInfo => {
   }
   return {
     type: EditorErrorType.Error,
-    message: `${error}`,
+    message: preparedMessage || `${error}`,
     actions: [],
   }
 }
