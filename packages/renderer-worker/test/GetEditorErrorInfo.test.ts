@@ -28,3 +28,19 @@ test('error - other', () => {
     actions: [],
   })
 })
+
+test('error - prepared message', () => {
+  const error = new RangeError('Maximum call stack size exceeded')
+  const preparedMessage = `RangeError: Maximum call stack size exceeded
+
+  10 | result.push(...treeToArray(child))
+     |        ^
+
+    at treeToArray (editorWorkerMain.js:10:8)`
+  const info = GetEditorErrorInfo.getEditorErrorInfo(error, preparedMessage)
+  expect(info).toEqual({
+    type: EditorErrorType.Error,
+    message: preparedMessage,
+    actions: [],
+  })
+})
