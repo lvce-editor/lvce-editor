@@ -2000,8 +2000,8 @@ export const getBadgeCounts = (state: LayoutState) => {
   return state.badgeCounts
 }
 
-export const getModuleId = (state: LayoutState, uri: string) => {
-  return ViewletMap.getModuleId(uri)
+export const getModuleId = (state: LayoutState, uri: string, opener?: string) => {
+  return ViewletMap.getModuleId(uri, opener)
 }
 
 export const getHref = (state: LayoutState) => {
