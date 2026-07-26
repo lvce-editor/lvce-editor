@@ -21,6 +21,8 @@ export const test = async ({ Command, KeyBoard, Locator, Settings, expect }) => 
 
   const terminal = Locator('.XtermTerminal')
   await expect(terminal).toBeVisible()
+  const terminalViewport = terminal.locator('.xterm-viewport')
+  await expect(terminalViewport).toHaveCSS('scrollbar-color', 'rgba(57, 71, 71, 0.6) rgba(0, 0, 0, 0)')
   await terminal.click()
 
   await runCommand(KeyBoard, 'echo hello > file.txt')
