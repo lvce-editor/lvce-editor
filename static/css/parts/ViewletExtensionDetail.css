@@ -97,8 +97,25 @@
 }
 
 .RuntimeStatusDefinitionList {
+  align-items: baseline;
+  column-gap: 24px;
   contain: content;
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}
+
+.RuntimeStatusDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}
+
+.RuntimeStatusDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .Resource {

@@ -98,6 +98,41 @@ test('bundleCss preserves the extension detail sash divider', async () => {
   }
 }, 30_000)
 
+test('bundleCss preserves the extension runtime status layout', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetail.css'), 'utf8')
+
+    expect(css).toContain(`.RuntimeStatusDefinitionList {
+  align-items: baseline;
+  column-gap: 24px;
+  contain: content;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}`)
+    expect(css).toContain(`.RuntimeStatusDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}`)
+    expect(css).toContain(`.RuntimeStatusDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves readable table links and invalid cell squiggles', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
