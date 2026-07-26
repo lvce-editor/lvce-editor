@@ -181,3 +181,25 @@ test('writeFile - settings - error parent folder does not exist', async () => {
   expect(FileSystem.mkdir).toHaveBeenCalledTimes(1)
   expect(FileSystem.mkdir).toHaveBeenCalledWith('~/.config/app')
 })
+
+test('writeFile - settings - creates windows parent folder', async () => {
+  const settingsPath = String.raw`C:\Users\test\.config\lvce-oss\settings.json`
+  // @ts-ignore
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => {
+    return settingsPath
+  })
+  // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
+  let attempt = 0
+  // @ts-ignore
+  FileSystem.writeFile.mockImplementation(() => {
+    if (attempt++ === 0) {
+      throw new NodeError(FileSytemErrorCodes.ENOENT)
+    }
+  })
+
+  await FileSystemApp.writeFile('settings.json', '{}')
+
+  expect(FileSystem.mkdir).toHaveBeenCalledWith(String.raw`C:\Users\test\.config\lvce-oss`)
+  expect(FileSystem.writeFile).toHaveBeenLastCalledWith(settingsPath, '{}')
+})

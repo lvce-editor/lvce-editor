@@ -1,11 +1,11 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as GetPathDirName from '../GetPathDirName/GetPathDirName.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import { VError } from '../VError/VError.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as FileSystem from './FileSystem.js'
 
 const isEnoentError = (error) => {
@@ -44,7 +44,7 @@ const readFileNode = async (path, defaultContent) => {
   } catch (error) {
     if (isEnoentError(error)) {
       try {
-        const dirname = Workspace.pathDirName(path)
+        const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, defaultContent)
         return defaultContent
@@ -64,7 +64,7 @@ const readJsonNode = async (path, defaultContent) => {
   } catch (error) {
     if (isEnoentError(error)) {
       try {
-        const dirname = Workspace.pathDirName(path)
+        const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, defaultContent)
         return defaultContent
@@ -111,7 +111,7 @@ const writeFileNode = async (path, content) => {
 
     if (isEnoentError(error)) {
       try {
-        const dirname = Workspace.pathDirName(path)
+        const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, content)
         return
