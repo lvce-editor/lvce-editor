@@ -1,0 +1,17 @@
+{
+  "id": "sample.running-extensions-live-view",
+  "name": "Running Extensions Live View",
+  "description": "Activates while the Running Extensions view is open",
+  "version": "1.2.3",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onView:sample.running-extensions-live-view"],
+  "views": [
+    {
+      "id": "sample.running-extensions-live-view",
+      "title": "Running Extensions Live View",
+      "icon": "symbol-play",
+      "kind": "virtualDom"
+    }
+  ]
+}

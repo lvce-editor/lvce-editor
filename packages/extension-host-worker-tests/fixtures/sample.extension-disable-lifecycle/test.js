@@ -4,15 +4,12 @@ export const activityBarItemSelector = '.ActivityBarItem[title="Extension Lifecy
 
 export const statusBarItemSelector = '.StatusBarItem[name="extension-lifecycle"]'
 
-export const runningExtensionSelector = `.RunningExtension:has-text("${extensionId}")`
+export const runningExtensionSelector = '.RunningExtensionId'
 
-export const addLifecycleExtension = async ({ ActivityBar, Extension, Settings, StatusBar }) => {
-  await Settings.update({
-    'statusBar.itemsVisible': true,
-  })
-  await Extension.addWebExtension(import.meta.resolve('.'))
-  await StatusBar.update()
+export const addLifecycleExtension = async ({ ActivityBar, Extension }) => {
+  await Extension.addWebExtension(new URL('.', import.meta.url).toString())
   await ActivityBar.handleExtensionsChanged()
+  await Extension.activateByEvent('onStatusBarItem', '', 0)
 }
 
 export const disableLifecycleExtension = async ({ ExtensionDetail }) => {
