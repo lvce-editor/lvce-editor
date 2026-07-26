@@ -51,6 +51,7 @@ export const resize = async (state, dimensions) => {
     newState: {
       ...state,
       ...dimensions,
+      groups: newGroups,
     },
     commands,
   }
