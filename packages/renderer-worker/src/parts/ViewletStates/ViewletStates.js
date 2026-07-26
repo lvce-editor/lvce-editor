@@ -62,6 +62,12 @@ export const getInstance = (key) => {
   if (fast) {
     return fast
   }
+  if (typeof key === 'number') {
+    const byUid = getByUid(key)
+    if (byUid) {
+      return byUid
+    }
+  }
   const normalizedKey = normalizeModuleId(key)
   if (normalizedKey !== key) {
     const normalizedFast = state.instances[normalizedKey]

@@ -192,7 +192,7 @@ test('disposeWidgetWithValue - dispatches the captured value to the parent keybi
     moduleId: 'DefineKeyBinding',
     factory: {},
   })
-  ViewletStates.set(7, {
+  ViewletStates.set('external-keybindings-view', {
     state: keyBindingsState,
     renderedState: keyBindingsState,
     moduleId: 'KeyBindings',
