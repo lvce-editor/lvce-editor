@@ -1,0 +1,7 @@
+{
+  "id": "sample.running-extensions-missing-icon",
+  "name": "Missing Icon",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "activation": ["onCommand:runningExtensions.missingIcon"]
+}

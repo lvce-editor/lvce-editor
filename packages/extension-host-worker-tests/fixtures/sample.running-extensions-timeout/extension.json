@@ -1,0 +1,7 @@
+{
+  "id": "sample.running-extensions-timeout",
+  "name": "Activation Timeout",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "activation": ["onCommand:runningExtensions.timeout"]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "sample.running-extensions-reject-string",
+  "name": "String Rejection",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "activation": ["onCommand:runningExtensions.rejectString"]
+}

@@ -1,4 +1,7 @@
 {
+  "id": "sample.error-clone",
+  "name": "Data Clone Error",
+  "version": "1.0.0",
   "browser": "main.js",
   "activation": "onCommand:xyz.sampleCommand",
   "commands": [

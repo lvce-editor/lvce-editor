@@ -1,4 +1,7 @@
 {
+  "id": "sample.error-dynamic-import-not-found",
+  "name": "Missing Dynamic Import",
+  "version": "1.0.0",
   "browser": "main.js",
   "activation": "onCommand:xyz.sampleCommand",
   "commands": [

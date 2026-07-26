@@ -80,6 +80,25 @@
   overflow: hidden;
 }
 
+.RunningExtensionStatus {
+  flex: none;
+  font-weight: 600;
+  margin-left: auto;
+  max-width: min(42%, 440px);
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.RunningExtensionStatusError {
+  color: var(--InputValidationErrorForeground, #f48771);
+}
+
+.RunningExtensionStatusTerminated {
+  color: var(--EditorWarningForeground, #cca700);
+}
+
 .RunningExtensionsEmpty {
   align-items: center;
   box-sizing: border-box;

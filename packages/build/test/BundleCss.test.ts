@@ -245,6 +245,15 @@ test('bundleCss preserves the running extensions row layout', async () => {
   margin-left: auto;
   text-align: right;
 }`)
+    expect(css).toContain(`.RunningExtensionStatus {
+  flex: none;
+  font-weight: 600;`)
+    expect(css).toContain(`.RunningExtensionStatusError {
+  color: var(--InputValidationErrorForeground, #f48771);
+}`)
+    expect(css).toContain(`.RunningExtensionStatusTerminated {
+  color: var(--EditorWarningForeground, #cca700);
+}`)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

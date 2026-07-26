@@ -1,0 +1,7 @@
+{
+  "id": "sample.running-extensions-long-name",
+  "name": "A deliberately very long extension display name that verifies the running extensions view remains stable when metadata is much wider than the available editor area",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "activation": ["onCommand:runningExtensions.longName"]
+}
