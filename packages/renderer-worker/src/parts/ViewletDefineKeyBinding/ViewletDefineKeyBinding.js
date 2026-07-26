@@ -3,10 +3,11 @@ import * as GetKeyBindingsString from '../GetKeyBindingsString/GetKeyBindingsStr
 import * as KeyBindingsStrings from '../KeyBindingStrings/KeyBindingStrings.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, args = []) => {
   return {
     id,
     uri,
+    parentUid: args[0],
     value: '',
     focused: false,
     message: '',

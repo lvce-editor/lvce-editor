@@ -9,6 +9,13 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletDefineKeyBinding = await import('../src/parts/ViewletDefineKeyBinding/ViewletDefineKeyBinding.js')
 
+test('create - stores the parent keybindings view uid', () => {
+  expect(ViewletDefineKeyBinding.create(42, '', 0, 0, 100, 100, [7])).toMatchObject({
+    id: 42,
+    parentUid: 7,
+  })
+})
+
 test('handleKeyDown - Enter submits the recorded keybinding', () => {
   const state = {
     uid: 42,

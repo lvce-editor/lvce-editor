@@ -176,8 +176,8 @@ test('dispose - disposes the rendered viewlet when the factory has no dispose fu
   expect(ViewletStates.getInstance(2)).toBeUndefined()
 })
 
-test('disposeWidgetWithValue - dispatches the captured value to the keybindings view', async () => {
-  const widgetState = { uid: 42 }
+test('disposeWidgetWithValue - dispatches the captured value to the parent keybindings view', async () => {
+  const widgetState = { parentUid: 7, uid: 42 }
   const keyBindingsState = { uid: 7, value: '' }
   const updatedKeyBindingsState = { uid: 7, value: 'Ctrl+Alt+9' }
   const handleDefineKeyBindingDisposed = jest.fn((_state: typeof keyBindingsState, _value: string) => updatedKeyBindingsState)
