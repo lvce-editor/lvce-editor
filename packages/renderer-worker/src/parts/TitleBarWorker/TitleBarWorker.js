@@ -1,6 +1,10 @@
-import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
+import * as GetOrCreateWorkerWithSleep from '../GetOrCreateWorkerWithSleep/GetOrCreateWorkerWithSleep.js'
 import * as LaunchTitleBarWorker from '../LaunchTitleBarWorker/LaunchTitleBarWorker.js'
 
-const { invoke, restart } = GetOrCreateWorker.getOrCreateWorker(LaunchTitleBarWorker.launchTitleBarWorker)
+const { invoke, restart, sleep } = GetOrCreateWorkerWithSleep.getOrCreateWorkerWithSleep(
+  LaunchTitleBarWorker.launchTitleBarWorker,
+  'TitleBar.sleep',
+  'TitleBar.wakeUp',
+)
 
-export { invoke, restart }
+export { invoke, restart, sleep }

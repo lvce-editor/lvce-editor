@@ -2,6 +2,7 @@ import * as Bounds from '../Bounds/Bounds.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
+import * as CleanUpWorkersAfterLoad from '../CleanUpWorkersAfterLoad/CleanUpWorkersAfterLoad.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
@@ -234,6 +235,7 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.Five)
 
   await Promise.all(actions.map((action) => action(platform, assetDir)))
+  await CleanUpWorkersAfterLoad.cleanUpWorkersAfterLoad()
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
