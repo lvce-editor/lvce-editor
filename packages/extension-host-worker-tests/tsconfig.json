@@ -20,6 +20,7 @@
     "src",
     "test",
     "typings",
+    "fixtures/running-extensions-test-helpers.js",
     "fixtures/sample.extension-disable-lifecycle/test.js",
     "fixtures/sample.running-extensions-live-view/test.js"
   ]

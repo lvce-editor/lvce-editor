@@ -1,4 +1,7 @@
 {
+  "id": "sample.error-unexpected-token",
+  "name": "Syntax Error",
+  "version": "1.0.0",
   "browser": "main.js",
   "activation": "onCommand:xyz.sampleCommand",
   "commands": [

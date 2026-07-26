@@ -1,0 +1,10 @@
+{
+  "id": "sample.running-extensions-rich",
+  "name": "扩展 Runtime 🚀",
+  "description": "A metadata-rich running extension fixture",
+  "version": "2.3.4-beta.5",
+  "browser": "main.js",
+  "icon": "icon.svg",
+  "repository": "https://github.com/lvce-editor/lvce-editor",
+  "activation": ["onCommand:runningExtensions.rich"]
+}

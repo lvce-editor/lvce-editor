@@ -1,4 +1,7 @@
 {
+  "id": "sample.error-cannot-read-properties-of-null-reading-value",
+  "name": "Runtime Type Error",
+  "version": "1.0.0",
   "browser": "main.js",
   "activation": "onCommand:xyz.sampleCommand",
   "commands": [

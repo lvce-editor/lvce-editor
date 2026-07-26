@@ -1,4 +1,7 @@
 {
+  "id": "sample.error-dependency-module-not-found",
+  "name": "Missing Dependency",
+  "version": "1.0.0",
   "browser": "main.js",
   "activation": "onCommand:xyz.sampleCommand",
   "commands": [

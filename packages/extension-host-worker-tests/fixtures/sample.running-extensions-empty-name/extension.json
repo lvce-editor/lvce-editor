@@ -1,0 +1,7 @@
+{
+  "id": "sample.running-extensions-empty-name",
+  "name": "",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "activation": ["onCommand:runningExtensions.emptyName"]
+}
