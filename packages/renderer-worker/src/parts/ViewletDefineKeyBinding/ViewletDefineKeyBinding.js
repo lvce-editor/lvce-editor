@@ -37,7 +37,7 @@ export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) =>
     return state
   }
   if (key === BrowserKey.Enter) {
-    return dispose(state, key)
+    return dispose(state, state.value)
   }
   if (key === BrowserKey.Escape) {
     return dispose(state, '')

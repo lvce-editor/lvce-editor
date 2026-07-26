@@ -545,8 +545,10 @@ export const disposeWidgetWithValue = async (id, value) => {
     if (!parentInstance) {
       return
     }
-    // @ts-ignore
-    const newState = parentInstance.factory.handleDefineKeyBindingDisposed(parentInstance.state, value)
+    if (!hasFn(parentInstance.factory, 'handleDefineKeyBindingDisposed')) {
+      return
+    }
+    await executeViewletCommand(parentInstance.state.uid, 'handleDefineKeyBindingDisposed', value)
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
