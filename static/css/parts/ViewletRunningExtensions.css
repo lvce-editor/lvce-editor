@@ -55,7 +55,7 @@
 
 .RunningExtensionDetails {
   contain: content;
-  flex: 1;
+  flex: none;
   min-width: 0;
   overflow: hidden;
 }
@@ -72,6 +72,12 @@
   flex: none;
   margin-left: auto;
   text-align: right;
+}
+
+.RunningExtensionActivationDetails {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .RunningExtensionsEmpty {
