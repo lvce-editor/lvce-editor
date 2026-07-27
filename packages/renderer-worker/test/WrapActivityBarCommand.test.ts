@@ -10,6 +10,7 @@ jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', 
 }))
 
 jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({
+  clearFocus: jest.fn(),
   setFocus: jest.fn(),
 }))
 
@@ -28,7 +29,18 @@ test('handleFocus sets the activity bar keyboard context', async () => {
   await wrapActivityBarCommand('handleFocus')(state)
 
   expect(Focus.setFocus).toHaveBeenCalledWith(FocusKey.ActivityBar)
+  expect(Focus.clearFocus).not.toHaveBeenCalled()
   expect(ActivityBarWorker.invoke).toHaveBeenNthCalledWith(1, 'ActivityBar.handleFocus', 7)
+})
+
+test('handleBlur clears the activity bar keyboard context', async () => {
+  const state = { uid: 7 }
+
+  await wrapActivityBarCommand('handleBlur')(state)
+
+  expect(Focus.clearFocus).toHaveBeenCalledWith(FocusKey.ActivityBar)
+  expect(Focus.setFocus).not.toHaveBeenCalled()
+  expect(ActivityBarWorker.invoke).toHaveBeenNthCalledWith(1, 'ActivityBar.handleBlur', 7)
 })
 
 test('other activity bar commands do not change the keyboard context', async () => {
@@ -36,5 +48,6 @@ test('other activity bar commands do not change the keyboard context', async () 
 
   await wrapActivityBarCommand('focusNext')(state)
 
+  expect(Focus.clearFocus).not.toHaveBeenCalled()
   expect(Focus.setFocus).not.toHaveBeenCalled()
 })

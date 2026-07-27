@@ -32,6 +32,19 @@ export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => 
 }
 
 /**
+ * @param {number} focusKey
+ */
+export const clearFocus = (focusKey) => {
+  Assert.number(focusKey)
+  if (FocusState.get() !== focusKey) {
+    return
+  }
+  Context.remove(focusKey)
+  FocusState.set(WhenExpression.Empty)
+  KeyBindingsState.update()
+}
+
+/**
  * @param {number} key
  * @param {number=} uid - Optional: UID of the viewlet instance
  * @param {string=} viewletModuleId - Optional: Module ID of the viewlet instance
