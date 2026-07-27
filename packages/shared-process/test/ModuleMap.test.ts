@@ -9,3 +9,7 @@ test('getModuleId - Platform.getConfigJsonPath', () => {
 test('getModuleId - SendMessagePortToMainProcess.sendMessagePortToMainProcess', () => {
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
 })
+
+test('getModuleId - SecretStorage.get', () => {
+  expect(ModuleMap.getModuleId('SecretStorage.get')).toBe(ModuleId.SecretStorage)
+})
