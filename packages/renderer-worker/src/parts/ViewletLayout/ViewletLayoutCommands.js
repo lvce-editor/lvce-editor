@@ -45,6 +45,7 @@ export const CommandsWithSideEffects = {
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,
   refreshSourceControlBadgeCount: ViewletLayout.refreshSourceControlBadgeCount,
   reset: ResetLayout.reset,
+  resetViewLocations: ResetLayout.resetViewLocations,
   closeChat: ViewletLayout.closeChat,
   enterSideBarFocusMode: ViewletLayout.enterSideBarFocusMode,
   hideActivityBar: ViewletLayout.hideActivityBar,

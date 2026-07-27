@@ -59,6 +59,39 @@ const resetActivityBar = async (): Promise<void> => {
   await Command.execute('ActivityBar.reset')
 }
 
+const resetVisibility = async (state: Readonly<LayoutState>): Promise<void> => {
+  if (state.secondarySideBarVisible) {
+    await Command.execute('Layout.hideSecondarySideBar')
+  }
+  if (state.previewVisible) {
+    await Command.execute('Layout.hidePreview')
+  }
+  if (!state.mainVisible) {
+    await Command.execute('Layout.showMain')
+  }
+  if (!state.activityBarVisible) {
+    await Command.execute('Layout.showActivityBar')
+  }
+  if (!state.statusBarVisible) {
+    await Command.execute('Layout.showStatusBar')
+  }
+  if (!state.titleBarVisible) {
+    await Command.execute('Layout.showTitleBar')
+  }
+}
+
+export const resetViewLocations = async (state: Readonly<LayoutState>): Promise<LayoutStateResult> => {
+  const { panelMaximized, panelView, panelVisible, sideBarFocusMode, sideBarLocation, sideBarView, sideBarVisible } = state
+  await resetSideBar(sideBarFocusMode, sideBarLocation, sideBarView, sideBarVisible)
+  await resetPanel(panelMaximized, panelView, panelVisible)
+  await resetVisibility(state)
+  await resetActivityBar()
+  return {
+    commands: [],
+    newState: state,
+  }
+}
+
 export const reset = async (state: Readonly<LayoutState>): Promise<LayoutStateResult> => {
   const { panelMaximized, panelView, panelVisible, sideBarFocusMode, sideBarLocation, sideBarView, sideBarVisible, titleBarWidth } = state
   await Promise.all([
