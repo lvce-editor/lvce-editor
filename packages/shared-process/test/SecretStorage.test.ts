@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { join } from 'node:path'
 import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundError.js'
 
 jest.unstable_mockModule('../src/parts/ElectronSafeStorage/ElectronSafeStorage.js', () => ({
@@ -18,13 +19,14 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
 const ElectronSafeStorage = await import('../src/parts/ElectronSafeStorage/ElectronSafeStorage.js')
 const JsonFile = await import('../src/parts/JsonFile/JsonFile.js')
 const SecretStorage = await import('../src/parts/SecretStorage/SecretStorage.js')
+const storagePath = join('/test/config', 'secrets.json')
 
 beforeEach(() => {
   jest.clearAllMocks()
 })
 
 test('get returns undefined when the secret file does not exist', async () => {
-  jest.mocked(JsonFile.readJson).mockRejectedValue(new FileNotFoundError('/test/config/secrets.json'))
+  jest.mocked(JsonFile.readJson).mockRejectedValue(new FileNotFoundError(storagePath))
 
   await expect(SecretStorage.get('sample.extension', 'token')).resolves.toBeUndefined()
   expect(ElectronSafeStorage.decryptString).not.toHaveBeenCalled()
@@ -56,7 +58,7 @@ test('store encrypts values before persisting them outside the browser cache', a
   await SecretStorage.store('sample.extension', 'token', 'plain-text')
 
   expect(ElectronSafeStorage.encryptString).toHaveBeenCalledWith('plain-text')
-  expect(JsonFile.writeJson).toHaveBeenCalledWith('/test/config/secrets.json', {
+  expect(JsonFile.writeJson).toHaveBeenCalledWith(storagePath, {
     'sample.extension': {
       existing: 'existing-encrypted',
       token: 'new-encrypted',
@@ -76,7 +78,7 @@ test('delete removes only the selected extension secret', async () => {
 
   await SecretStorage.deleteSecret('sample.extension', 'token')
 
-  expect(JsonFile.writeJson).toHaveBeenCalledWith('/test/config/secrets.json', {
+  expect(JsonFile.writeJson).toHaveBeenCalledWith(storagePath, {
     'other.extension': {
       token: 'other-encrypted',
     },
