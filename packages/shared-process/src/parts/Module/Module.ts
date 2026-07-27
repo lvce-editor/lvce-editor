@@ -140,6 +140,8 @@ export const load = (moduleId: any): any => {
       return import('../RecentlyOpened/RecentlyOpened.ipc.ts')
     case ModuleId.Screen:
       return import('../Screen/Screen.ipc.ts')
+    case ModuleId.SecretStorage:
+      return import('../SecretStorage/SecretStorage.ipc.ts')
     case ModuleId.SendMessagePortToMainProcess:
       return import('../SendMessagePortToMainProcess/SendMessagePortToMainProcess.ipc.ts')
     case ModuleId.TemporaryMessagePort:
