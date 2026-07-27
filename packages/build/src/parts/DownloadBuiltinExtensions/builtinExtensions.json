@@ -44,7 +44,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "1.9.0",
+    "version": "1.10.0",
     "created": "2022-12-15"
   },
   {
@@ -164,25 +164,25 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.16.1",
+    "version": "1.17.0",
     "created": "2024-09-26"
   },
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.2.1",
+    "version": "2.3.0",
     "created": "2024-09-07"
   },
   {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
-    "version": "0.12.0",
+    "version": "0.13.0",
     "created": "2022-06-16"
   },
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.9.0",
+    "version": "1.10.0",
     "created": "2022-06-16"
   },
   {
