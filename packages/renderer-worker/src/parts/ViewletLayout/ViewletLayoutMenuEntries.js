@@ -450,6 +450,10 @@ export const getQuickPickMenuEntries = () => {
       label: 'Simple Browser: Open Dev Devtools',
     },
     {
+      id: 'SimpleBrowser.importChromeCookies',
+      label: 'Simple Browser: Import Cookies from Chrome',
+    },
+    {
       id: 'Workspace.close',
       label: 'Workspace: Close',
     },
