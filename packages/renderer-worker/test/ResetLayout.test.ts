@@ -7,6 +7,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
 
 const Command = await import('../src/parts/Command/Command.js')
 const ResetLayout = await import('../src/parts/ResetLayout/ResetLayout.ts')
+const execute = jest.mocked(Command.execute)
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -122,4 +123,65 @@ test('resets independent components in parallel', async () => {
     resolve()
   }
   await resetPromise
+})
+
+test('resetViewLocations restores the initial view arrangement', async () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: false,
+    panelMaximized: true,
+    panelView: 'Output',
+    panelVisible: true,
+    previewVisible: true,
+    secondarySideBarVisible: true,
+    sideBarFocusMode: true,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarView: 'Search',
+    sideBarVisible: false,
+    statusBarVisible: false,
+    titleBarVisible: false,
+  } as any
+
+  await expect(ResetLayout.resetViewLocations(state)).resolves.toEqual({
+    commands: [],
+    newState: state,
+  })
+
+  expect(execute.mock.calls).toEqual([
+    ['Layout.leaveSideBarFocusMode'],
+    ['Layout.moveSideBarRight'],
+    ['Layout.showSideBar', 'Explorer', false],
+    ['Layout.unmaximizePanel'],
+    ['Layout.showPanel', 'Problems'],
+    ['Layout.hidePanel'],
+    ['Layout.hideSecondarySideBar'],
+    ['Layout.hidePreview'],
+    ['Layout.showMain'],
+    ['Layout.showActivityBar'],
+    ['Layout.showStatusBar'],
+    ['Layout.showTitleBar'],
+    ['ActivityBar.reset'],
+  ])
+})
+
+test('resetViewLocations leaves the initial view arrangement in place', async () => {
+  const state = {
+    activityBarVisible: true,
+    mainVisible: true,
+    panelMaximized: false,
+    panelView: 'Problems',
+    panelVisible: false,
+    previewVisible: false,
+    secondarySideBarVisible: false,
+    sideBarFocusMode: false,
+    sideBarLocation: SideBarLocationType.Right,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+    statusBarVisible: true,
+    titleBarVisible: true,
+  } as any
+
+  await ResetLayout.resetViewLocations(state)
+
+  expect(execute.mock.calls).toEqual([['ActivityBar.reset']])
 })

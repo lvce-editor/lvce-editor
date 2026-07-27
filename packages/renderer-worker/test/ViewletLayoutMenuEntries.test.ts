@@ -30,6 +30,16 @@ test('getQuickPickMenuEntries includes chat commands', () => {
   )
 })
 
+test('getQuickPickMenuEntries includes reset view locations command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Layout.resetViewLocations',
+    label: 'Layout: Reset View Locations',
+    aliases: ['View: Reset View Locations'],
+  })
+})
+
 test('getQuickPickMenuEntries includes GPU info command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
