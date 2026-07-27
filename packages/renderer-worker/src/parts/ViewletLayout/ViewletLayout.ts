@@ -968,6 +968,7 @@ export const createPanelViewlet = async (
       parentUid: -1,
       append: false,
       args: [],
+      shouldRenderEvents: false,
     },
     false,
     true,
