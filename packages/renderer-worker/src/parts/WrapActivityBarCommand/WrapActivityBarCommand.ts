@@ -6,6 +6,8 @@ export const wrapActivityBarCommand = (key: string) => {
   const fn = async (state, ...args) => {
     if (key === 'handleFocus') {
       Focus.setFocus(FocusKey.ActivityBar)
+    } else if (key === 'handleBlur') {
+      Focus.clearFocus(FocusKey.ActivityBar)
     }
     await ActivityBarWorker.invoke(`ActivityBar.${key}`, state.uid, ...args)
     const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', state.uid)
