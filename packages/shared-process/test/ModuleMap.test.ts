@@ -13,3 +13,7 @@ test('getModuleId - SendMessagePortToMainProcess.sendMessagePortToMainProcess', 
 test('getModuleId - SecretStorage.get', () => {
   expect(ModuleMap.getModuleId('SecretStorage.get')).toBe(ModuleId.SecretStorage)
 })
+
+test('getModuleId - ChromeCookieImport.importCookies', () => {
+  expect(ModuleMap.getModuleId('ChromeCookieImport.importCookies')).toBe(ModuleId.ChromeCookieImport)
+})
