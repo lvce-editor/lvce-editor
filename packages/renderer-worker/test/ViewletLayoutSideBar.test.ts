@@ -271,9 +271,9 @@ test('createPanelViewlet creates a linked actions root for child-contributed act
   const events = [{ name: 'handleClickAction', params: ['run'] }]
   const actionsDom = [{ type: 'Button', childCount: 0 }]
   // @ts-ignore
-  ViewletManager.load.mockResolvedValue([
+  ViewletManager.load.mockImplementation(async (viewlet) => [
     ['Viewlet.create', 'Output', 11],
-    ['Viewlet.registerEventListeners', 11, events],
+    ...(viewlet.shouldRenderEvents === false ? [['Viewlet.registerEventListeners', 11, events]] : []),
     ['Viewlet.send', -1, 'setActionsDom', actionsDom, 11],
   ])
 
