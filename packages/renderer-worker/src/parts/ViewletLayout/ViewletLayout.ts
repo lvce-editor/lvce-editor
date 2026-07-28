@@ -1986,8 +1986,24 @@ export const setBadgeCount = async (state: LayoutState, moduleId: string, badgeC
   }
 }
 
-export const handleExtensionsChanged = async (state: LayoutState) => {
-  return callGlobalEvent(state, 'handleExtensionsChanged')
+const getActiveSideBarExtensionId = (state: LayoutState): string => {
+  if (!state.sideBarVisible) {
+    return ''
+  }
+  const sideBarInstance = ViewletStates.getInstance(state.sideBarId)
+  return sideBarInstance?.state?.currentExtensionId || ''
+}
+
+export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
+  const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  if (!disabled || !extensionId || getActiveSideBarExtensionId(state) !== extensionId) {
+    return globalEventResult
+  }
+  const fallbackResult = await showSideBar(globalEventResult.newState, ViewletModuleId.Explorer, false)
+  return {
+    newState: fallbackResult.newState,
+    commands: [...globalEventResult.commands, ...fallbackResult.commands],
+  }
 }
 
 export const handleColorThemeChanged = async (state: LayoutState, colorThemeId: string) => {

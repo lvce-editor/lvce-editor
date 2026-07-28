@@ -27,12 +27,17 @@ export const doInvalidateExtensionsCache = async () => {
 
 export const handleExtensionsCacheInvalidated = async (extensionId, disabled) => {
   try {
-    if (typeof extensionId === 'string' && typeof disabled === 'boolean') {
+    const hasExtensionState = typeof extensionId === 'string' && typeof disabled === 'boolean'
+    if (hasExtensionState) {
       ExtensionHostManagement.handleExtensionStateChanged(extensionId, disabled)
     }
     await Command.execute('KeyBindings.hydrate')
     await Command.execute('ColorTheme.reload')
-    await Command.execute('Layout.handleExtensionsChanged')
+    if (hasExtensionState) {
+      await Command.execute('Layout.handleExtensionsChanged', extensionId, disabled)
+    } else {
+      await Command.execute('Layout.handleExtensionsChanged')
+    }
   } catch {
     // ignore
   }

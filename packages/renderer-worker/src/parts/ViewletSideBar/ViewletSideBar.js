@@ -16,6 +16,7 @@ const defaultTitleAreaHeight = 35
 export const create = (id, uri, x, y, width, height) => {
   return {
     uid: id,
+    currentExtensionId: '',
     currentViewletId: '',
     currentViewletRequestId: 0,
     x,
@@ -94,9 +95,12 @@ const getChildModuleId = (moduleId) => {
   return ViewletModuleId.ExtensionView
 }
 
-const getExtensionViewTitleAreaHeight = async (moduleId) => {
+const getExtensionViewMetadata = async (moduleId) => {
   const view = await GetExtensionViews.getExtensionView(moduleId)
-  return view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight
+  return {
+    extensionId: view?.extensionId || '',
+    titleAreaHeight: view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight,
+  }
 }
 
 // TODO
@@ -133,8 +137,14 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   const uid = state.uid
 
   const childModuleId = getChildModuleId(moduleId)
-  const titleAreaHeight =
-    childModuleId === ViewletModuleId.ExtensionView ? await getExtensionViewTitleAreaHeight(moduleId) : defaultTitleAreaHeight
+  const extensionViewMetadata =
+    childModuleId === ViewletModuleId.ExtensionView
+      ? await getExtensionViewMetadata(moduleId)
+      : {
+          extensionId: '',
+          titleAreaHeight: defaultTitleAreaHeight,
+        }
+  const { extensionId, titleAreaHeight } = extensionViewMetadata
   if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
     await savePromise
     return state
@@ -214,6 +224,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   await savePromise
   return {
     ...state,
+    currentExtensionId: extensionId,
     currentViewletRequestId: requestId,
     currentViewletId: moduleId,
     childUid,

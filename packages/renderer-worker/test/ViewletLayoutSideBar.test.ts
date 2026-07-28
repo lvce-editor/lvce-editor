@@ -141,6 +141,59 @@ test('showSideBar shows hidden side bar with requested viewlet', async () => {
   })
 })
 
+test('handleExtensionsChanged switches away from a view contributed by the disabled extension', async () => {
+  mockActivityBarRender()
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    sideBarId: 12,
+    sideBarView: 'sample.views.testing',
+    sideBarVisible: true,
+  }
+  // @ts-ignore
+  ViewletStates.getInstance.mockReturnValue({
+    state: {
+      currentExtensionId: 'sample.extension',
+    },
+  })
+
+  const result = await ViewletLayout.handleExtensionsChanged(state, 'sample.extension', true)
+
+  expect(result).toEqual({
+    commands: [['activity-bar.render2']],
+    newState: expect.objectContaining({
+      sideBarView: 'Explorer',
+      sideBarVisible: true,
+    }),
+  })
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleSideBarStateChange', 7, 'Explorer', true],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
+})
+
+test('handleExtensionsChanged preserves the active sidebar view when another extension is disabled', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    sideBarId: 12,
+    sideBarView: 'sample.views.testing',
+    sideBarVisible: true,
+  }
+  // @ts-ignore
+  ViewletStates.getInstance.mockReturnValue({
+    state: {
+      currentExtensionId: 'sample.extension',
+    },
+  })
+
+  const result = await ViewletLayout.handleExtensionsChanged(state, 'sample.other-extension', true)
+
+  expect(result.newState.sideBarView).toBe('sample.views.testing')
+  expect(ActivityBarWorker.invoke).not.toHaveBeenCalled()
+})
+
 test('showSideBar disables restore when the layout disables restore', async () => {
   mockActivityBarRender()
   // @ts-ignore
