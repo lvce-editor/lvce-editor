@@ -18,6 +18,7 @@ const ActivityBarWorker = await import('../src/parts/ActivityBarWorker/ActivityB
 const Focus = await import('../src/parts/Focus/Focus.js')
 const FocusKey = await import('../src/parts/FocusKey/FocusKey.js')
 const { wrapActivityBarCommand } = await import('../src/parts/WrapActivityBarCommand/WrapActivityBarCommand.ts')
+const invoke = jest.mocked(ActivityBarWorker.invoke)
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -50,4 +51,36 @@ test('other activity bar commands do not change the keyboard context', async () 
 
   expect(Focus.clearFocus).not.toHaveBeenCalled()
   expect(Focus.setFocus).not.toHaveBeenCalled()
+})
+
+test('serializes activity bar click intents', async () => {
+  const firstClick = Promise.withResolvers<void>()
+  let clickCount = 0
+  invoke.mockImplementation(async (command: string) => {
+    if (command === 'ActivityBar.handleClick') {
+      clickCount++
+      if (clickCount === 1) {
+        await firstClick.promise
+      }
+      return undefined
+    }
+    if (command === 'ActivityBar.diff2' || command === 'ActivityBar.render2') {
+      return []
+    }
+    return undefined
+  })
+  const state = { uid: 7 }
+  const handleClick = wrapActivityBarCommand('handleClick')
+
+  const first = handleClick(state)
+  await Promise.resolve()
+  const second = handleClick(state)
+  await Promise.resolve()
+
+  expect(invoke.mock.calls.filter((call) => call[0] === 'ActivityBar.handleClick')).toHaveLength(1)
+
+  firstClick.resolve()
+  await Promise.all([first, second])
+
+  expect(invoke.mock.calls.filter((call) => call[0] === 'ActivityBar.handleClick')).toHaveLength(2)
 })
