@@ -76,7 +76,7 @@ test('handleExtensionsCacheInvalidated applies the disabled extension state', as
   expect(ExtensionHostManagement.state.runningExtensions['sample.extension']).toBeUndefined()
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
-  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged', 'sample.extension', true)
 })
 
 test('cache invalidation commands handle notifications without invalidating again', () => {

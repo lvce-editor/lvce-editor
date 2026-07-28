@@ -162,6 +162,7 @@ test('handleSideBarViewletChange uses child title', async () => {
 test('handleSideBarViewletChange gives an opted-out extension view the full sidebar', async () => {
   const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
   GetExtensionViews.getExtensionView.mockResolvedValue({
+    extensionId: 'builtin.chat-view-2',
     id: 'chat2.views.chat',
     showSideBarHeader: false,
   })
@@ -186,8 +187,20 @@ test('handleSideBarViewletChange gives an opted-out extension view the full side
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.createFunctionalRoot', 'ExtensionView', 2, true]])
   expect(newState).toMatchObject({
     actionsUid: -1,
+    currentExtensionId: 'builtin.chat-view-2',
     titleAreaHeight: 0,
   })
+})
+
+test('handleSideBarViewletChange clears the extension id when opening a built-in view', async () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    currentExtensionId: 'sample.extension',
+  }
+
+  const newState = await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
+
+  expect(newState.currentExtensionId).toBe('')
 })
 
 test('handleSideBarViewletChange omits empty listener registration for its new actions root', async () => {

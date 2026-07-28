@@ -1,5 +1,7 @@
 export const extensionId = 'sample.extension-disable-lifecycle'
 
+export const viewId = 'sample.extension-disable-lifecycle-view'
+
 export const activityBarItemSelector = '.ActivityBarItem[title="Extension Lifecycle"]'
 
 export const statusBarItemSelector = '.StatusBarItem[name="extension-lifecycle"]'
