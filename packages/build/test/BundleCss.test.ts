@@ -86,6 +86,27 @@ test('bundleCss keeps the preview sash transparent', async () => {
   }
 }, 30_000)
 
+test('bundleCss keeps the panel sash within the non-preview area', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+
+    expect(css).toContain('contain: size layout style;')
+    expect(css).toContain(`.SashPanel {
+  top: var(--SashPanelTop);
+  width: var(--PanelWidth);
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss centers quick pick in the non-preview area', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 

@@ -8,6 +8,7 @@ test('renderCss throws for invalid layout bounds', () => {
     uid: 1,
     activityBarWidth: undefined,
     panelHeight: Number.NaN,
+    panelWidth: Number.NaN,
     sideBarWidth: undefined,
     secondarySideBarWidth: Number.NaN,
     titleBarHeight: undefined,
@@ -26,6 +27,7 @@ test('renderCss serializes valid layout bounds', () => {
     uid: 1,
     activityBarWidth: 48,
     panelHeight: 200,
+    panelWidth: 800,
     sideBarWidth: 240.2,
     secondarySideBarWidth: 299.6,
     titleBarHeight: 35,
@@ -47,6 +49,7 @@ test('renderCss serializes valid layout bounds', () => {
   --AppHeight: 100%;
   --ActivityBarWidth: 48px;
   --PanelHeight: 200px;
+  --PanelWidth: 800px;
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;
@@ -69,6 +72,7 @@ test('renderCss serializes explicit application bounds', () => {
     windowHeight: 320,
     activityBarWidth: 48,
     panelHeight: 200,
+    panelWidth: 800,
     sideBarWidth: 240.2,
     secondarySideBarWidth: 299.6,
     titleBarHeight: 35,
@@ -90,6 +94,7 @@ test('renderCss serializes explicit application bounds', () => {
   --AppHeight: 320px;
   --ActivityBarWidth: 48px;
   --PanelHeight: 200px;
+  --PanelWidth: 800px;
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;

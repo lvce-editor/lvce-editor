@@ -255,6 +255,42 @@ test.each([
   })
 })
 
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('panel ends at the preview and preview uses the space beside it with the side bar on the %s', (_name, sideBarLocation) => {
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      panelHeight: 200,
+      panelMaxHeight: 600,
+      panelMinHeight: 150,
+      panelVisible: true,
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      statusBarHeight: 20,
+      statusBarVisible: true,
+      titleBarHeight: 35,
+      titleBarVisible: true,
+      windowHeight: 800,
+      windowWidth: 1200,
+    },
+    sideBarLocation,
+  )
+
+  expect(state).toMatchObject({
+    panelHeight: 200,
+    panelLeft: 0,
+    panelTop: 580,
+    panelWidth: 800,
+    previewHeight: 765,
+    previewLeft: 800,
+    previewTop: 35,
+    previewWidth: 400,
+  })
+})
+
 test('showPreview replaces an open file preview with the simple browser', async () => {
   const state = {
     ...ViewletLayout.create(1),
