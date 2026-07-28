@@ -40,6 +40,10 @@
   white-space: nowrap;
 }
 
+.ProblemLabel {
+  white-space: nowrap;
+}
+
 .ProblemsLabel {
   flex: initial;
   display: flex;
