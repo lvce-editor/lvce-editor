@@ -57,6 +57,35 @@ test('bundleCss preserves the simple browser preview width', async () => {
   }
 }, 30_000)
 
+test('bundleCss keeps the preview sash transparent', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+
+    expect(css).toContain(`.Sash {
+  position: absolute;
+  contain: strict;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  z-index: 1;
+  background: transparent;
+  display: flex;
+}`)
+    expect(css).toContain(`.SashPreview {
+  left: var(--SashPreviewLeft);
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss centers quick pick in the non-preview area', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
