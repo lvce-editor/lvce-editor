@@ -141,7 +141,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     const destinationStatusBarLeft = p1
     const destinationStatusBarTop = p4
-    const destinationStatusBarWidth = windowWidth
+    const destinationStatusBarWidth = availableWidth
     const destinationStatusBarHeight = 20
     const destinationStatusBarVisible = statusBarVisible
 
@@ -159,7 +159,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationPreviewLeft = previewVisible ? availableWidth : 0
     const destinationPreviewTop = p2
     const destinationPreviewWidth = previewVisible ? windowWidth - availableWidth : 0
-    const destinationPreviewHeight = p3 - p2
+    const destinationPreviewHeight = p3 - p2 + (previewVisible && statusBarVisible ? statusBarHeight : 0)
     const destinationPreviewVisible = previewVisible
     return {
       ...source,
@@ -276,7 +276,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     const destinationStatusBarLeft = p1
     const destinationStatusBarTop = p4
-    const destinationStatusBarWidth = windowWidth
+    const destinationStatusBarWidth = availableWidth
     const destinationStatusBarHeight = 20
     const destinationStatusBarVisible = statusBarVisible
 
@@ -289,7 +289,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationPreviewLeft = previewVisible ? availableWidth : 0
     const destinationPreviewTop = p2
     const destinationPreviewWidth = previewVisible ? windowWidth - availableWidth : 0
-    const destinationPreviewHeight = p3 - p2
+    const destinationPreviewHeight = p3 - p2 + (previewVisible && statusBarVisible ? statusBarHeight : 0)
     const destinationPreviewVisible = previewVisible
     return {
       ...source,

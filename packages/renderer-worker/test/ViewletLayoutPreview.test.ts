@@ -32,6 +32,8 @@ jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => {
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const SideBarLocationType = await import('../src/parts/SideBarLocationType/SideBarLocationType.js')
+const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
@@ -181,6 +183,35 @@ test('showPreview opens the simple browser in the preview area', async () => {
     true,
     undefined,
   )
+})
+
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('preview uses the space below the shortened status bar with the side bar on the %s', (_name, sideBarLocation) => {
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      statusBarHeight: 20,
+      statusBarVisible: true,
+      titleBarHeight: 35,
+      titleBarVisible: true,
+      windowHeight: 800,
+      windowWidth: 1200,
+    },
+    sideBarLocation,
+  )
+
+  expect(state).toMatchObject({
+    previewHeight: 765,
+    previewLeft: 800,
+    previewTop: 35,
+    previewWidth: 400,
+    statusBarWidth: 800,
+  })
 })
 
 test('showPreview replaces an open file preview with the simple browser', async () => {
