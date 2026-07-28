@@ -85,7 +85,7 @@
     "@lvce-editor/panel-worker": "^2.3.1",
     "@lvce-editor/preview-sandbox-worker": "^4.7.0",
     "@lvce-editor/preview-worker": "^6.9.0",
-    "@lvce-editor/problems-view": "^1.25.3",
+    "@lvce-editor/problems-view": "^1.25.4",
     "@lvce-editor/process-explorer-worker": "^3.12.1",
     "@lvce-editor/quick-pick-worker": "^4.5.2",
     "@lvce-editor/references-view": "^2.11.0",
