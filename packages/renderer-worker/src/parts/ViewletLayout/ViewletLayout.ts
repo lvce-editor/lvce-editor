@@ -1160,7 +1160,7 @@ const loadIfVisible = async (
     const y = state[kTop]
     const width = state[kWidth]
     const height = state[kHeight]
-    let commands = []
+    let commands: any[] = []
     let childUid = -1
     if (visible) {
       childUid = Id.create()
@@ -1187,8 +1187,17 @@ const loadIfVisible = async (
         restoreState,
       )
     }
-    const orderedCommands = reorderCommands(commands)
     const latestState = ViewletStates.getState(ViewletModuleId.Layout)
+    if (visible && !isEqual(state, latestState, kTop, kLeft, kWidth, kHeight)) {
+      const resizeCommands = await Viewlet.resize(childUid, {
+        x: latestState[kLeft],
+        y: latestState[kTop],
+        width: latestState[kWidth],
+        height: latestState[kHeight],
+      })
+      commands.push(...resizeCommands)
+    }
+    const orderedCommands = reorderCommands(commands)
     return {
       newState: {
         ...latestState,
