@@ -728,7 +728,7 @@ export const openCommandPalette = async (state: LayoutState): Promise<LayoutStat
   }
 }
 
-const getPanelViewChangeCommands = async (moduleId: string) => {
+const getPanelViewChangeCommands = async (moduleId: string, uri = '') => {
   if (!moduleId) {
     return []
   }
@@ -737,7 +737,7 @@ const getPanelViewChangeCommands = async (moduleId: string) => {
     return []
   }
   const panelUid = instance.state.uid
-  await PanelWorker.invoke('Panel.toggleView', panelUid, moduleId)
+  await PanelWorker.invoke('Panel.toggleView', panelUid, moduleId, uri)
   const diffResult = await PanelWorker.invoke('Panel.diff2', panelUid)
   if (diffResult.length === 0) {
     return []
@@ -745,9 +745,9 @@ const getPanelViewChangeCommands = async (moduleId: string) => {
   return PanelWorker.invoke('Panel.render2', panelUid, diffResult)
 }
 
-export const showPanel = async (state: LayoutState, moduleId = state.panelView) => {
+export const showPanel = async (state: LayoutState, moduleId = state.panelView, uri = '') => {
   if (state.panelVisible) {
-    const commands = await getPanelViewChangeCommands(moduleId)
+    const commands = await getPanelViewChangeCommands(moduleId, uri)
     return {
       newState: {
         ...state,
@@ -758,7 +758,7 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView) 
   }
   // @ts-ignore
   const { newState, commands } = await show(state, LayoutModules.Panel)
-  const panelViewCommands = await getPanelViewChangeCommands(moduleId)
+  const panelViewCommands = await getPanelViewChangeCommands(moduleId, uri)
   return {
     newState: {
       ...newState,
@@ -766,6 +766,15 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView) 
     },
     commands: [...commands, ...panelViewCommands],
   }
+}
+
+export const openIntegratedTerminal = async (state: LayoutState, cwd: string): Promise<LayoutStateResult> => {
+  const terminalsActive = state.panelView === ViewletModuleId.Terminals && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
+  const result = await showPanel(state, ViewletModuleId.Terminals, terminalsActive ? '' : cwd)
+  if (terminalsActive) {
+    await Command.execute('Terminals.addTerminal', cwd)
+  }
+  return result
 }
 
 export const hidePanel = (state: LayoutState) => {
@@ -1096,7 +1105,7 @@ export const createPanelViewlet = async (
       args: [],
       shouldRenderEvents: false,
     },
-    false,
+    focus,
     true,
   )
   const actionsDomIndex = commands.findIndex((command) => command[0] === 'Viewlet.send' && command[2] === 'setActionsDom')

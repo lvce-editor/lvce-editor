@@ -167,12 +167,12 @@ test('showPanel selects requested panel view when panel is visible', async () =>
     panelView: 'Problems',
   }
 
-  const result = await ViewletLayout.showPanel(state, 'Terminals')
+  const result = await ViewletLayout.showPanel(state, 'Terminals', 'file:///workspace/folder')
 
   expect(result.newState.panelView).toBe('Terminals')
   expect(result.commands).toEqual([['Viewlet.setPatches', 77, []]])
   expect(panelWorkerInvocations).toEqual([
-    ['Panel.toggleView', 77, 'Terminals'],
+    ['Panel.toggleView', 77, 'Terminals', 'file:///workspace/folder'],
     ['Panel.diff2', 77],
     ['Panel.render2', 77, [11]],
   ])

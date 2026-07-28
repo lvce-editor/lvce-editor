@@ -69,6 +69,7 @@ export const CommandsWithSideEffects = {
   moveSideBarRight: ViewletLayout.moveSideBarRight,
   openChat: ViewletLayout.openChat,
   openCommandPalette: ViewletLayout.openCommandPalette,
+  openIntegratedTerminal: ViewletLayout.openIntegratedTerminal,
   openSideBarViewlet: ViewletLayout.openSideBarView,
   openSecondarySideBarViewlet: ViewletLayout.openSecondarySideBarView,
   openPanelViewlet: ViewletLayout.openPanelView,
