@@ -28,7 +28,7 @@ export const setPath = async (path) => {
 }
 
 export const setUri = async (uri) => {
-  const path = uri.slice('file://'.length)
+  const path = decodeURIComponent(uri.slice('file://'.length))
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
