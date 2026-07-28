@@ -39,6 +39,10 @@
   opacity: 0.7;
 }
 
+.ProblemLabel {
+  white-space: nowrap;
+}
+
 .ProblemsLabel {
   flex: initial;
   display: flex;
