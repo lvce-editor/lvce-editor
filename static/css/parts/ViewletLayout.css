@@ -11,7 +11,7 @@
 .ContentArea {
   flex: 1;
   display: flex;
-  contain: strict;
+  contain: size layout style;
   position: relative;
   /* flex-direction: column; */
 }

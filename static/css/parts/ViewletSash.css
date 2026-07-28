@@ -67,6 +67,7 @@
 
 .SashPanel {
   top: var(--SashPanelTop);
+  width: var(--PanelWidth);
 }
 
 .SashBorder {

@@ -138,6 +138,7 @@ const getCss = (newState: LayoutState) => {
   const sideBarWidth = newState.sideBarWidth
   const activityBarWidth = newState.activityBarWidth
   const panelHeight = newState.panelHeight
+  const panelWidth = newState.panelWidth
   const secondarySideBarWidth = newState.secondarySideBarWidth
   const titleBarHeight = newState.titleBarHeight
   const previewLeft = newState.previewLeft
@@ -147,6 +148,7 @@ const getCss = (newState: LayoutState) => {
   const sashPanelTop = newState.panelTop
   Assert.number(activityBarWidth)
   Assert.number(panelHeight)
+  Assert.number(panelWidth)
   Assert.number(sideBarWidth)
   Assert.number(secondarySideBarWidth)
   Assert.number(titleBarHeight)
@@ -168,6 +170,7 @@ const getCss = (newState: LayoutState) => {
   --AppHeight: ${appHeight};
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
   --PanelHeight: ${getPixelValue(panelHeight)};
+  --PanelWidth: ${getPixelValue(panelWidth)};
   --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};
   --SecondarySideBarWidth: ${getRoundedPixelValue(secondarySideBarWidth)};
   --TitleBarHeight: ${getPixelValue(titleBarHeight)};
