@@ -116,6 +116,8 @@ export const create = (id: number): LayoutState => {
     statusBarId: -1,
     titleBarId: -1,
     workbenchId: -1,
+    previewActionsEventListeners: [],
+    previewActionsUid: -1,
     previewId: -1,
     previewSashId: -1,
     activityBarVisible: false,
@@ -395,6 +397,14 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   const height = intermediateState[kHeight]
   const uid = state.uid
   const childUid = Id.create()
+  if (module === LayoutModules.Preview) {
+    ViewletStates.setState(uid, {
+      ...intermediateState,
+      previewActionsEventListeners: [],
+      previewActionsUid: -1,
+      previewId: childUid,
+    })
+  }
   const viewletModuleId = module === LayoutModules.Preview ? state.previewViewletId : moduleId
   let uri = ''
   if (module === LayoutModules.Preview && state.previewUri) {
@@ -426,9 +436,11 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   // TODO component might already be hidden again at this point
   const resizeCommands = await getResizeCommands(state, intermediateState)
   commands.push(...resizeCommands)
+  const latestState = module === LayoutModules.Preview ? ViewletStates.getState(uid) : intermediateState
   return {
     newState: {
       ...intermediateState,
+      ...latestState,
       [kId]: childUid,
     },
     commands,
@@ -587,7 +599,14 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   const newState = getPoints({
     ...state,
     [kVisible]: false,
-    ...(isPreview ? { previewId: -1, previewSashVisible: false } : {}),
+    ...(isPreview
+      ? {
+          previewActionsEventListeners: [],
+          previewActionsUid: -1,
+          previewId: -1,
+          previewSashVisible: false,
+        }
+      : {}),
   })
   // TODO save state to local storage after rending (in background)
   if (isPreview) {
@@ -597,6 +616,9 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   }
   // TODO also resize other viewlets if necessary
   const commands = Viewlet.disposeFunctional(instanceId)
+  if (isPreview && state.previewActionsUid !== -1) {
+    commands.push(...Viewlet.disposeFunctional(state.previewActionsUid))
+  }
   const resizeCommands = await getResizeCommands(state, newState)
   commands.push(...resizeCommands)
 
@@ -864,9 +886,14 @@ const getPreviewViewletId = (uri: string) => {
 const replacePreview = async (state: LayoutState, uri: string, previewViewletId: string): Promise<LayoutStateResult> => {
   await SaveState.saveViewletStateWithStorageId(state.previewId, state.previewViewletId)
   const commands = Viewlet.disposeFunctional(state.previewId)
+  if (state.previewActionsUid !== -1) {
+    commands.push(...Viewlet.disposeFunctional(state.previewActionsUid))
+  }
   const childUid = Id.create()
   const newState = {
     ...state,
+    previewActionsEventListeners: [],
+    previewActionsUid: -1,
     previewId: childUid,
     previewUri: uri,
     previewViewletId,
@@ -890,8 +917,12 @@ const replacePreview = async (state: LayoutState, uri: string, previewViewletId:
   }
   const loadCommands = await ViewletManager.load(viewlet, false, true, undefined)
   commands.push(...loadCommands)
+  const latestState = ViewletStates.getState(state.uid)
   return {
-    newState,
+    newState: {
+      ...newState,
+      ...latestState,
+    },
     commands,
   }
 }
@@ -953,6 +984,57 @@ export const hideTitleBar = (state: LayoutState) => {
 export const toggleTitleBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.TitleBar)
+}
+
+export const setActionsDom = (
+  state: LayoutState,
+  actionsDom: readonly unknown[],
+  childUid: number,
+  eventListeners: readonly unknown[] = state.previewActionsEventListeners,
+) => {
+  if (state.previewId !== childUid) {
+    return {
+      commands: [],
+      handled: false,
+      renderParent: false,
+      statePatch: {},
+    }
+  }
+  if (state.previewActionsUid !== -1) {
+    return {
+      commands: [['Viewlet.setDom2', state.previewActionsUid, actionsDom]],
+      handled: true,
+      renderParent: false,
+      statePatch: {
+        previewActionsEventListeners: eventListeners,
+      },
+    }
+  }
+  if (actionsDom.length === 0) {
+    return {
+      commands: [],
+      handled: true,
+      renderParent: false,
+      statePatch: {
+        previewActionsEventListeners: eventListeners,
+      },
+    }
+  }
+  const previewActionsUid = Id.create()
+  const commands: any[] = [['Viewlet.createFunctionalRoot', state.previewViewletId, previewActionsUid, true]]
+  if (eventListeners.length > 0) {
+    commands.push(['Viewlet.registerEventListeners', previewActionsUid, eventListeners])
+  }
+  commands.push(['Viewlet.setDom2', previewActionsUid, actionsDom], ['Viewlet.setUid', previewActionsUid, childUid])
+  return {
+    commands,
+    handled: true,
+    renderParent: true,
+    statePatch: {
+      previewActionsEventListeners: eventListeners,
+      previewActionsUid,
+    },
+  }
 }
 
 export const createViewlet = async (state: LayoutState, viewletModuleId: string, editorUid: number, tabId: number, bounds: any, uri: string) => {

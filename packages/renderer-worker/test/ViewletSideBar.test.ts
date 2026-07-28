@@ -230,3 +230,57 @@ test('setTitle', () => {
     title: 'workspace-name',
   })
 })
+
+test('setActionsDom updates an existing actions root', () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    actionsUid: 3,
+    childUid: 2,
+  }
+
+  const result = ViewletSideBar.setActionsDom(state, ['updated-actions'], 2)
+
+  expect(result).toEqual({
+    commands: [['Viewlet.setDom2', 3, ['updated-actions']]],
+    handled: true,
+    renderParent: false,
+    statePatch: {
+      actionsEventListeners: [],
+    },
+  })
+})
+
+test('setActionsDom creates an actions root when actions become available', () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    actionsEventListeners: ['click'],
+    childUid: 2,
+    currentViewletId: 'sample.views.main',
+  }
+
+  const result = ViewletSideBar.setActionsDom(state, ['new-actions'], 2)
+
+  expect(result.commands).toEqual([
+    ['Viewlet.createFunctionalRoot', 'sample.views.main', result.statePatch.actionsUid, true],
+    ['Viewlet.registerEventListeners', result.statePatch.actionsUid, ['click']],
+    ['Viewlet.setDom2', result.statePatch.actionsUid, ['new-actions']],
+    ['Viewlet.setUid', result.statePatch.actionsUid, 2],
+  ])
+  expect(result.statePatch.actionsUid).not.toBe(-1)
+})
+
+test('setActionsDom ignores updates from a stale child', () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    childUid: 2,
+  }
+
+  const result = ViewletSideBar.setActionsDom(state, ['stale-actions'], 3)
+
+  expect(result).toEqual({
+    commands: [],
+    handled: false,
+    renderParent: false,
+    statePatch: {},
+  })
+})

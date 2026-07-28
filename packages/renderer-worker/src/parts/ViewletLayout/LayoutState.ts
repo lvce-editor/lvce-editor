@@ -53,6 +53,8 @@ export interface LayoutState {
   readonly panelVisible: boolean
   readonly panelWidth: number
   readonly platform: number
+  readonly previewActionsEventListeners: readonly unknown[]
+  readonly previewActionsUid: number
   readonly previewHeight: number
   readonly previewId: number
   readonly previewLeft: number

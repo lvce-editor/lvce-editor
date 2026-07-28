@@ -164,6 +164,13 @@ const getPreviewDom = (previewId: number) => {
   }
 }
 
+const getPreviewActionsDom = (previewActionsUid: number) => {
+  return {
+    type: VirtualDomElements.Reference,
+    uid: previewActionsUid,
+  }
+}
+
 const getPreviewCloseButtonDom = () => {
   return [
     {
@@ -193,6 +200,7 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     mainId,
     secondarySideBarVisible,
     secondarySideBarId,
+    previewActionsUid,
     previewSashVisible,
     previewVisible,
     previewId,
@@ -230,6 +238,9 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
 
   if (previewVisible) {
     children.push(getPreviewDom(previewId))
+    if (typeof previewActionsUid === 'number' && previewActionsUid !== -1) {
+      children.push(getPreviewActionsDom(previewActionsUid))
+    }
     children.push(...getPreviewCloseButtonDom())
     delta--
   }
@@ -255,6 +266,7 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     sideBarId,
     activityBarVisible,
     activityBarId,
+    previewActionsUid,
     previewSashVisible,
     previewVisible,
     previewId,
@@ -284,6 +296,9 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   }
   if (previewVisible) {
     children.push(getPreviewDom(previewId))
+    if (typeof previewActionsUid === 'number' && previewActionsUid !== -1) {
+      children.push(getPreviewActionsDom(previewActionsUid))
+    }
     children.push(...getPreviewCloseButtonDom())
     delta--
   }

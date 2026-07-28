@@ -112,6 +112,7 @@ const renderDom = {
       oldState.previewVisible === newState.previewVisible &&
       oldState.previewSashVisible === newState.previewSashVisible &&
       oldState.previewId === newState.previewId &&
+      oldState.previewActionsUid === newState.previewActionsUid &&
       oldState.secondarySideBarVisible === newState.secondarySideBarVisible
     )
   },

@@ -80,6 +80,45 @@ beforeEach(() => {
   ViewletStates.getState.mockReturnValue({ uid: 12 })
 })
 
+test('setActionsDom creates preview actions with the child event listeners', () => {
+  const state = {
+    ...ViewletLayout.create(12),
+    previewId: 7,
+    previewViewletId: 'ExtensionView',
+  }
+
+  const result = ViewletLayout.setActionsDom(state, ['preview-actions'], 7, ['click'])
+
+  expect(result.handled).toBe(true)
+  expect(result.renderParent).toBe(true)
+  expect(result.statePatch.previewActionsUid).not.toBe(-1)
+  expect(result.commands).toEqual([
+    ['Viewlet.createFunctionalRoot', 'ExtensionView', result.statePatch.previewActionsUid, true],
+    ['Viewlet.registerEventListeners', result.statePatch.previewActionsUid, ['click']],
+    ['Viewlet.setDom2', result.statePatch.previewActionsUid, ['preview-actions']],
+    ['Viewlet.setUid', result.statePatch.previewActionsUid, 7],
+  ])
+})
+
+test('setActionsDom updates existing preview actions', () => {
+  const state = {
+    ...ViewletLayout.create(12),
+    previewActionsUid: 8,
+    previewId: 7,
+  }
+
+  const result = ViewletLayout.setActionsDom(state, ['updated-actions'], 7)
+
+  expect(result).toEqual({
+    commands: [['Viewlet.setDom2', 8, ['updated-actions']]],
+    handled: true,
+    renderParent: false,
+    statePatch: {
+      previewActionsEventListeners: [],
+    },
+  })
+})
+
 const mockActivityBarRender = () => {
   // @ts-ignore
   ActivityBarWorker.invoke.mockImplementation(async (method, ...args) => {

@@ -47,6 +47,7 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 const Command = await import('../src/parts/Command/Command.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
+const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
 
 test('runLoadContentLater starts deferred loading once', async () => {
   const loadContentLater = jest.fn(async (_state: unknown) => {})
@@ -375,6 +376,92 @@ test('extension view render sends a dynamic title to its parent', () => {
   const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
 
   expect(commands).toEqual([['Viewlet.send', 2, 'setTitle', 'Testing: Updated']])
+})
+
+test('extension view render keeps the parent actions state in sync', () => {
+  const parentState = {
+    actionsUid: 3,
+    childUid: 1,
+    pending: true,
+    uid: 2,
+  }
+  const parentRenderedState = {
+    ...parentState,
+    pending: false,
+  }
+  ViewletStates.set(2, {
+    factory: {
+      setActionsDom(state, actionsDom) {
+        return {
+          commands: [['Viewlet.setDom2', state.actionsUid, actionsDom]],
+          handled: true,
+          renderParent: false,
+          statePatch: {},
+        }
+      },
+    },
+    renderedState: parentRenderedState,
+    state: parentState,
+  })
+  const dom = []
+  const oldState = {
+    actionsDom: ['old-actions'],
+    commands: [],
+    dom,
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    actionsDom: ['new-actions'],
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+
+  expect(commands).toEqual([['Viewlet.setDom2', 3, ['new-actions']]])
+  expect(ViewletStates.getState(2)).toEqual(parentState)
+  expect(ViewletStates.getInstance(2).renderedState).toEqual(parentRenderedState)
+})
+
+test('extension view render creates preview actions and adds them to the layout', () => {
+  const parentState = {
+    ...ViewletLayout.create(2),
+    previewActionsEventListeners: ['click'],
+    previewId: 7,
+    previewViewletId: 'ExtensionView',
+    previewVisible: true,
+  }
+  ViewletStates.set(2, {
+    factory: ViewletLayout,
+    renderedState: parentState,
+    state: parentState,
+  })
+  const dom = []
+  const oldState = {
+    actionsDom: [],
+    commands: [],
+    dom,
+    kind: 'virtualDom',
+    parentUid: 2,
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    actionsDom: ['new-actions'],
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 7, 2)
+
+  expect(commands.slice(0, 4)).toEqual([
+    ['Viewlet.createFunctionalRoot', 'ExtensionView', 1, true],
+    ['Viewlet.registerEventListeners', 1, ['click']],
+    ['Viewlet.setDom2', 1, ['new-actions']],
+    ['Viewlet.setUid', 1, 7],
+  ])
+  expect(commands[4][0]).toBe('Viewlet.setDom2')
+  expect(ViewletStates.getState(2).previewActionsUid).toBe(1)
 })
 
 test('extension view render keeps the parent title state in sync', () => {
