@@ -486,13 +486,13 @@ const maybeRegisterEvents = (module) => {
   }
 }
 
-const maybeRegisterMenuEntries = async (module) => {
+const maybeRegisterMenuEntries = async (id, module) => {
   if (module.menus) {
     for (const menu of module.menus) {
       if (!menu.id) {
         throw new Error('missing menu id')
       }
-      MenuEntriesRegistryState.register(menu.id, menu)
+      MenuEntriesRegistryState.register(menu.id, menu, id)
     }
   }
   if (module.getMenus) {
@@ -501,7 +501,7 @@ const maybeRegisterMenuEntries = async (module) => {
       if (!menu.id) {
         throw new Error('missing menu id')
       }
-      MenuEntriesRegistryState.register(menu.id, menu)
+      MenuEntriesRegistryState.register(menu.id, menu, id)
     }
   }
 }
@@ -517,7 +517,7 @@ const actuallyLoadModule = async (getModule, id) => {
   await ViewletManagerVisitor.loadModule(id, module)
   await maybeRegisterWrappedCommands(id, module)
   maybeRegisterEvents(module)
-  await maybeRegisterMenuEntries(module)
+  await maybeRegisterMenuEntries(id, module)
   return module
 }
 
