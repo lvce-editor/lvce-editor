@@ -135,3 +135,14 @@ test('renderEventListeners registers preview close handler', () => {
     params: ['hidePreview'],
   })
 })
+
+test('renderDom detects changed preview actions', () => {
+  const oldState = {
+    previewActionsUid: -1,
+  } as any
+  const newState = {
+    previewActionsUid: 8,
+  } as any
+
+  expect(ViewletLayoutRender2.render[0].isEqual(oldState, newState)).toBe(false)
+})

@@ -12,6 +12,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
     panelVisible: true,
     panelId: 2,
     previewSashVisible: true,
+    previewActionsUid: 6,
     previewVisible: true,
     previewId: 3,
     secondarySideBarVisible: true,
@@ -30,6 +31,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
   const dom = getLayoutVirtualDom(state)
   const sashes = dom.filter((node) => node.className?.includes('Sash'))
   const previewCloseButton = dom.find((node) => node.className?.includes('PreviewCloseButton'))
+  const previewActions = dom.find((node) => node.uid === 6)
 
   expect(sashes).toHaveLength(4)
   expect(sashes).toEqual(
@@ -63,6 +65,10 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
       title: 'Close Preview',
     }),
   )
+  expect(previewActions).toEqual({
+    type: 100,
+    uid: 6,
+  })
 })
 
 test('getLayoutVirtualDom does not render the preview close button when preview is hidden', () => {

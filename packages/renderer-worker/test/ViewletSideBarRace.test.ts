@@ -84,6 +84,7 @@ test('handleSideBarViewletChange does not create title actions root without acti
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.registerEventListeners', 201, events]])
   expect(result).toEqual({
     ...state,
+    actionsEventListeners: events,
     actionsUid: -1,
     childUid: 201,
     currentViewletId: 'trello.views.boards',
@@ -140,6 +141,7 @@ test('handleSideBarViewletChange ignores stale loads', async () => {
   expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(101)
   expect(sourceControlResult).toEqual({
     ...state,
+    actionsEventListeners: ['click'],
     actionsUid: 102,
     childUid: 201,
     currentViewletId: 'SourceControl',

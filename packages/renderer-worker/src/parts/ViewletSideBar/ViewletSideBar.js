@@ -25,8 +25,10 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     titleAreaHeight: defaultTitleAreaHeight,
     actions: [],
+    actionsEventListeners: [],
     title: Character.EmptyString,
     childUid: -1,
+    actionsUid: -1,
   }
 }
 
@@ -182,6 +184,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     return state
   }
   let actionsDom = []
+  let actionsEventListeners = []
   let actionsUid = -1
   let title = Character.EmptyString
   if (commands) {
@@ -201,12 +204,12 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
       title = childInstance?.state?.title || Character.EmptyString
     }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
+    actionsEventListeners = eventsIndex >= 0 ? commands[eventsIndex][2] : []
     if (titleAreaHeight > 0 && actionsDom.length > 0) {
-      const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []
       actionsUid = Id.create()
       commands.push(['Viewlet.createFunctionalRoot', moduleId, actionsUid, true])
-      if (events.length > 0) {
-        commands.push(['Viewlet.registerEventListeners', actionsUid, events])
+      if (actionsEventListeners.length > 0) {
+        commands.push(['Viewlet.registerEventListeners', actionsUid, actionsEventListeners])
       }
       commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
     }
@@ -228,9 +231,56 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     currentViewletRequestId: requestId,
     currentViewletId: moduleId,
     childUid,
+    actionsEventListeners,
     actionsUid,
     titleAreaHeight,
     title,
+  }
+}
+
+export const setActionsDom = (state, actionsDom, childUid, eventListeners = state.actionsEventListeners) => {
+  if (state.childUid !== childUid || state.titleAreaHeight === 0) {
+    return {
+      commands: [],
+      handled: false,
+      renderParent: false,
+      statePatch: {},
+    }
+  }
+  if (state.actionsUid !== -1) {
+    return {
+      commands: [['Viewlet.setDom2', state.actionsUid, actionsDom]],
+      handled: true,
+      renderParent: false,
+      statePatch: {
+        actionsEventListeners: eventListeners,
+      },
+    }
+  }
+  if (actionsDom.length === 0) {
+    return {
+      commands: [],
+      handled: true,
+      renderParent: false,
+      statePatch: {
+        actionsEventListeners: eventListeners,
+      },
+    }
+  }
+  const actionsUid = Id.create()
+  const commands = [['Viewlet.createFunctionalRoot', state.currentViewletId, actionsUid, true]]
+  if (state.actionsEventListeners.length > 0) {
+    commands.push(['Viewlet.registerEventListeners', actionsUid, state.actionsEventListeners])
+  }
+  commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
+  return {
+    commands,
+    handled: true,
+    renderParent: false,
+    statePatch: {
+      actionsEventListeners: eventListeners,
+      actionsUid,
+    },
   }
 }
 

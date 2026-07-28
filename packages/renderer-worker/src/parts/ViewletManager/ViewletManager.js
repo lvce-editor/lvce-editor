@@ -261,12 +261,36 @@ export const create = (getModule, id, parentUid, uri, x, y, width, height) => {
   }
 }
 
-const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name, parentId) => {
+const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name, parentId, eventListeners) => {
   const commands = []
   if (module.renderActions && !module.renderActions.isEqual(oldState, newState)) {
     const actionsCommands = module.renderActions.apply(oldState, newState)
     if (parentId) {
-      commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
+      const parentInstance = ViewletStates.getInstance(parentId)
+      if (parentInstance?.factory?.setActionsDom) {
+        const result = parentInstance.factory.setActionsDom(parentInstance.state, actionsCommands, uid, eventListeners)
+        if (result.handled) {
+          const oldParentRenderedState = parentInstance.renderedState
+          const newParentState = {
+            ...parentInstance.state,
+            ...result.statePatch,
+          }
+          const newParentRenderedState = {
+            ...oldParentRenderedState,
+            ...result.statePatch,
+          }
+          parentInstance.state = newParentState
+          parentInstance.renderedState = newParentRenderedState
+          commands.push(...result.commands)
+          if (result.renderParent) {
+            commands.push(...getRenderCommands(parentInstance.factory, oldParentRenderedState, newParentRenderedState, parentId))
+          }
+        } else {
+          commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
+        }
+      } else {
+        commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
+      }
     } else {
       // TODO
       // console.warn('parent id not found')
@@ -584,9 +608,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     const commands = []
 
+    let eventListeners = []
     if (module.renderEventListeners) {
       // TODO reuse event listeners between components
-      const eventListeners = await module.renderEventListeners(newState)
+      eventListeners = await module.renderEventListeners(newState)
       if (eventListeners.length > 0) {
         if (shouldRenderEvents === false) {
           commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
@@ -701,7 +726,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     const instanceNow = ViewletStates.getInstance(viewletUid)
     viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender && shouldRender) {
-      const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid, parentUid)
+      const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid, parentUid, eventListeners)
       ViewletStates.setRenderedState(viewletUid, newState)
       commands.push(...renderCommands)
       if (viewlet.show === false) {
