@@ -65,14 +65,20 @@ export const dispose = (state) => {}
 
 export const hasFunctionalResize = true
 
-export const resize = (state, dimensions) => {
-  const { minLineY, itemHeight } = state
-  const maxLineY = minLineY + Math.round(dimensions.height / itemHeight)
+export const resizeWithDependencies = async (state, dimensions, invoke) => {
+  const { uid } = state
+  await invoke('Explorer.handleResize', uid, dimensions)
+  const diffResult = await invoke('Explorer.diff2', uid)
+  const commands = diffResult.length === 0 ? [] : await invoke('Explorer.render2', uid, diffResult)
   return {
     ...state,
     ...dimensions,
-    maxLineY,
+    commands,
   }
+}
+
+export const resize = (state, dimensions) => {
+  return resizeWithDependencies(state, dimensions, ExplorerViewWorker.invoke)
 }
 
 export const getMouseActions = async () => {
