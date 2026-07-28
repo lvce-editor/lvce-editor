@@ -8,6 +8,7 @@ import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as Id from '../Id/Id.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
@@ -633,14 +634,33 @@ export const toggleSideBar = (state: LayoutState) => {
 
 export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<LayoutStateResult> => {
   const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
-  if (state.sideBarVisible && state.sideBarView === sideBarView) {
-    return hideSideBar(state)
+  const preferredLocation = await getPreferredViewLocation(sideBarView)
+  if (preferredLocation === 'preview') {
+    if (state.previewVisible && state.previewUri === sideBarView) {
+      return hidePreview(state)
+    }
+    const sideBarResult = state.sideBarVisible ? await hideSideBar(state) : { newState: state, commands: [] }
+    const previewResult = await showPreview(sideBarResult.newState, sideBarView, ViewletModuleId.ExtensionView)
+    const focusCommands = await Viewlet.getFocusCommands(sideBarView)
+    return {
+      newState: previewResult.newState,
+      commands: [...sideBarResult.commands, ...previewResult.commands, ...focusCommands],
+    }
   }
-  const result = await showSideBar(state, sideBarView)
+  const previewResult = await hidePreferredLocationPreview(state)
+  const activeState = previewResult.newState
+  if (activeState.sideBarVisible && activeState.sideBarView === sideBarView) {
+    const result = await hideSideBar(activeState)
+    return {
+      newState: result.newState,
+      commands: [...previewResult.commands, ...result.commands],
+    }
+  }
+  const result = await showSideBar(activeState, sideBarView)
   const focusCommands = await Viewlet.getFocusCommands(sideBarView)
   return {
     newState: result.newState,
-    commands: [...result.commands, ...focusCommands],
+    commands: [...previewResult.commands, ...result.commands, ...focusCommands],
   }
 }
 
@@ -795,6 +815,31 @@ export const toggleActivityBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.ActivityBar)
 }
 
+const getPreferredViewLocation = async (viewId: string): Promise<'preview' | 'sideBar'> => {
+  if (!viewId.includes('.')) {
+    return 'sideBar'
+  }
+  const view = await GetExtensionViews.getExtensionView(viewId)
+  return view?.preferredLocation === 'preview' ? 'preview' : 'sideBar'
+}
+
+const hidePreferredLocationPreview = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.previewVisible || state.previewViewletId !== ViewletModuleId.ExtensionView) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const preferredLocation = await getPreferredViewLocation(state.previewUri)
+  if (preferredLocation !== 'preview') {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  return hidePreview(state)
+}
+
 export const showStatusBar = (state: LayoutState) => {
   // @ts-ignore
   return show(state, LayoutModules.StatusBar)
@@ -851,12 +896,11 @@ const replacePreview = async (state: LayoutState, uri: string, previewViewletId:
   }
 }
 
-export const showPreview = async (state: LayoutState, uri: string = state.previewUri) => {
+export const showPreview = async (state: LayoutState, uri: string = state.previewUri, previewViewletId: string = getPreviewViewletId(uri)) => {
   const { previewVisible, previewId, uid } = state
-  const previewViewletId = getPreviewViewletId(uri)
 
   if (previewVisible && previewId !== -1) {
-    if (state.previewViewletId !== previewViewletId) {
+    if (state.previewViewletId !== previewViewletId || (previewViewletId === ViewletModuleId.ExtensionView && state.previewUri !== uri)) {
       return replacePreview(state, uri, previewViewletId)
     }
     if (previewViewletId === ViewletModuleId.Preview) {
