@@ -7,6 +7,7 @@ const RefreshDelay = 100
 
 let watcher
 let refreshTimeout
+const changedUris = new Set()
 const deletedUris = new Set()
 
 const isDeleteEvent = (eventName) => {
@@ -15,19 +16,27 @@ const isDeleteEvent = (eventName) => {
 
 const refresh = async () => {
   refreshTimeout = undefined
+  const changed = [...changedUris]
   const deleted = [...deletedUris]
+  changedUris.clear()
   deletedUris.clear()
-  await Promise.allSettled([
-    Command.execute('Layout.handleWorkspaceRefresh', {
-      deleted,
-    }),
-    Command.execute('Layout.refreshSourceControlBadgeCount'),
-  ])
+  const changes = {}
+  if (changed.length > 0) {
+    changes.changed = changed
+  }
+  if (deleted.length > 0) {
+    changes.deleted = deleted
+  }
+  await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh', changes), Command.execute('Layout.refreshSourceControlBadgeCount')])
 }
 
 const scheduleRefresh = (event) => {
   if (isDeleteEvent(event.eventName)) {
     deletedUris.add(event.uri)
+    changedUris.delete(event.uri)
+  } else {
+    changedUris.add(event.uri)
+    deletedUris.delete(event.uri)
   }
   if (refreshTimeout !== undefined) {
     clearTimeout(refreshTimeout)
@@ -77,6 +86,7 @@ export const dispose = async () => {
     clearTimeout(refreshTimeout)
     refreshTimeout = undefined
   }
+  changedUris.clear()
   deletedUris.clear()
   await disposeWatcher()
 }

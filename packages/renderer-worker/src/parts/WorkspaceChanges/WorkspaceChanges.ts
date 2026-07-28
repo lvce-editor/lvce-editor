@@ -1,6 +1,7 @@
 type UriRename = readonly [oldUri: string, newUri: string]
 
 export interface WorkspaceChanges {
+  readonly changed?: readonly string[]
   readonly deleted?: readonly string[]
   readonly renamed?: readonly UriRename[]
 }
