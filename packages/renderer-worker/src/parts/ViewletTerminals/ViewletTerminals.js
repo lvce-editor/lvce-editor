@@ -18,6 +18,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     childUid: -1,
+    cwd: uri,
     focusVersion: 0,
     selectedIndex: -1,
   }
@@ -45,9 +46,9 @@ const getChildBounds = (state) => {
   }
 }
 
-const createViewlet = async (state, childUid) => {
+const createViewlet = async (state, childUid, cwd = '') => {
   const bounds = getChildBounds(state)
-  await Command.execute('Layout.createViewlet', ViewletModuleId.Terminal2, childUid, 0, bounds, '')
+  await Command.execute('Layout.createViewlet', ViewletModuleId.Terminal2, childUid, 0, bounds, cwd)
 }
 
 export const loadContent = async (state) => {
@@ -59,6 +60,7 @@ export const loadContent = async (state) => {
       terminalTabsEnabled,
     },
     childUid,
+    state.cwd,
   )
 
   return {
@@ -76,7 +78,7 @@ export const loadContent = async (state) => {
   }
 }
 
-export const addTerminal = async (state) => {
+export const addTerminal = async (state, cwd = '') => {
   const { tabs, childUid: oldChildUid } = state
   const childUid = Id.create()
   const newTab = {
@@ -86,7 +88,7 @@ export const addTerminal = async (state) => {
   }
   const newTabs = [...tabs, newTab]
   const newSelectedIndex = newTabs.length - 1
-  await createViewlet(state, childUid)
+  await createViewlet(state, childUid, cwd)
   if (oldChildUid !== -1) {
     const disposeCommands = Viewlet.disposeFunctional(oldChildUid)
     await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
@@ -95,6 +97,7 @@ export const addTerminal = async (state) => {
     ...state,
     tabs: newTabs,
     childUid,
+    focusVersion: state.focusVersion + 1,
     selectedIndex: newSelectedIndex,
   }
 }

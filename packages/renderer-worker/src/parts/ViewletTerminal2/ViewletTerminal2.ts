@@ -13,7 +13,7 @@ const getBackend = () => {
   return Preferences.get('terminal.backend') || defaultBackend
 }
 
-export const create = (id) => {
+export const create = (id, cwd = '') => {
   Assert.number(id)
   return {
     disposed: false,
@@ -24,15 +24,16 @@ export const create = (id) => {
     args: [],
     setBounds: false,
     columns: 80,
+    cwd,
     rows: 24,
     xtermMounted: false,
   }
 }
 
 export const loadContent = async (state) => {
-  const { uid } = state
+  const { cwd, uid } = state
   const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
-  await TerminalWorker.invoke('Terminal.create', uid, Workspace.state.workspacePath, command, args, {
+  await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
     backend: getBackend(),
   })
   return {

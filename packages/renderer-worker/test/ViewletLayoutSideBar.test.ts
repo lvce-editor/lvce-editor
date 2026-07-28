@@ -470,7 +470,7 @@ test('createPanelViewlet forwards focus to the loaded panel view', async () => {
       id: 'Terminals',
       uid: 11,
     }),
-    false,
+    true,
     true,
   )
 })

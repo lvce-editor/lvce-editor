@@ -84,6 +84,15 @@ test('loadContent starts the terminal transport', async () => {
   })
 })
 
+test('loadContent starts the terminal transport in the requested cwd', async () => {
+  const state = ViewletTerminal2.create(2, 'file:///workspace/folder')
+  await ViewletTerminal2.loadContent(state)
+
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 2, 'file:///workspace/folder', 'bash', ['-i'], {
+    backend: 'mock',
+  })
+})
+
 test('handleInput forwards xterm input to the terminal worker', async () => {
   const state = ViewletTerminal2.create(3)
   await expect(ViewletTerminal2.handleInput(state, 'echo hello\r')).resolves.toBe(state)
