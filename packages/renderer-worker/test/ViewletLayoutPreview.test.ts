@@ -105,6 +105,47 @@ test('loadPreviewIfVisible restores the simple browser preview', async () => {
     true,
     undefined,
   )
+  expect(Viewlet.resize).not.toHaveBeenCalled()
+})
+
+test('loadPreviewIfVisible uses the latest preview bounds when the window is resized during restore', async () => {
+  const state = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 400,
+  })
+  const latestState = LayoutPoints.getPoints({
+    ...state,
+    windowWidth: 1600,
+    windowHeight: 900,
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockReturnValue(latestState)
+
+  const result = await ViewletLayout.loadPreviewIfVisible(state)
+  // @ts-ignore
+  const loadedViewlet = ViewletManager.load.mock.calls[0][0]
+  const latestBounds = {
+    x: latestState.previewLeft,
+    y: latestState.previewTop,
+    width: latestState.previewWidth,
+    height: latestState.previewHeight,
+  }
+
+  expect(Viewlet.resize).toHaveBeenCalledWith(loadedViewlet.uid, latestBounds)
+  expect(result.newState).toMatchObject({
+    previewHeight: latestBounds.height,
+    previewLeft: latestBounds.x,
+    previewTop: latestBounds.y,
+    previewWidth: latestBounds.width,
+  })
 })
 
 test('loadContent ignores saved layout when restore is disabled', () => {
