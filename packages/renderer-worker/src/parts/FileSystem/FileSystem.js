@@ -51,7 +51,9 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.writeFile(uri, content, encoding)
-  await notifyWorkspaceChanged()
+  await notifyWorkspaceChanged({
+    changed: [uri],
+  })
 }
 
 export const writeBlob = async (uri, blob) => {

@@ -2,6 +2,8 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const execute = jest.fn()
 const remove = jest.fn()
+const rename = jest.fn()
+const writeFile = jest.fn()
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
@@ -16,6 +18,8 @@ FileSystemState.registerAll({
   test() {
     return {
       remove,
+      rename,
+      writeFile,
     }
   },
 })
@@ -35,20 +39,21 @@ test('remove notifies workspace views with the deleted uri', async () => {
 })
 
 test('rename notifies workspace views with the old and new uris', async () => {
-  const rename = jest.fn()
-  FileSystemState.registerAll({
-    test() {
-      return {
-        rename,
-      }
-    },
-  })
-
   await FileSystem.rename('test://old-folder', 'test://new-folder')
 
   expect(rename).toHaveBeenCalledWith('test://old-folder', 'test://new-folder')
   expect(execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
     renamed: [['test://old-folder', 'test://new-folder']],
+  })
+  expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
+})
+
+test('writeFile notifies workspace views with the changed uri', async () => {
+  await FileSystem.writeFile('test://some-file.txt', 'updated')
+
+  expect(writeFile).toHaveBeenCalledWith('test://some-file.txt', 'updated', 'utf8')
+  expect(execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
+    changed: ['test://some-file.txt'],
   })
   expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })

@@ -6,6 +6,7 @@ import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
@@ -2025,8 +2026,17 @@ export const setUpdateState = async (state, updateState) => {
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
+const handleExtensionFileChanges = async (refresh: WorkspaceRefresh): Promise<void> => {
+  try {
+    await ExtensionManagementWorker.invoke('Extensions.handleFileChanges', refresh)
+  } catch {
+    // Older extension management workers do not support file change listeners.
+  }
+}
+
 export const handleWorkspaceRefresh = async (state: LayoutState, refresh: WorkspaceRefresh = {}) => {
-  return callGlobalEvent(state, 'handleWorkspaceRefresh', refresh)
+  const [result] = await Promise.all([callGlobalEvent(state, 'handleWorkspaceRefresh', refresh), handleExtensionFileChanges(refresh)])
+  return result
 }
 
 export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {

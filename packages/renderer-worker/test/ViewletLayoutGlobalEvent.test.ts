@@ -1,12 +1,19 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const hydratePreferences = jest.fn()
+const extensionManagementInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
   return {
     get: jest.fn(),
     hydrate: hydratePreferences,
     update: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
+  return {
+    invoke: extensionManagementInvoke,
   }
 })
 
@@ -102,6 +109,7 @@ test('handleWorkspaceRefresh runs global event handlers in parallel', async () =
   const result = await resultPromise
 
   expect(calls).toEqual(['first:start', 'second:start', 'second:end', 'first:end'])
+  expect(extensionManagementInvoke).toHaveBeenCalledWith('Extensions.handleFileChanges', workspaceChanges)
   expect(ViewletManager.render).toHaveBeenCalledTimes(2)
   expect(result).toEqual({
     commands: [['render.1'], ['render.2']],
