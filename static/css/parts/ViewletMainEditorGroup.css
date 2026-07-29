@@ -28,7 +28,7 @@
   outline: none;
 }
 
-.EditorGroup:has(.EmptyGroupCloseButton) {
+.EditorGroupEmpty {
   opacity: var(--EmptyGroupOpacity);
 }
 
