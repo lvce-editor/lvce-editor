@@ -19,3 +19,35 @@
   cursor: text;
   overflow-y: auto;
 }
+
+.ViewletOutput .Line {
+  display: flex;
+  min-width: max-content;
+  padding-inline: 4px;
+}
+
+.ViewletOutput .Line.error {
+  color: var(--vscode-errorForeground, #f48771);
+  background: color-mix(in srgb, var(--vscode-errorForeground, #f48771) 12%, transparent);
+}
+
+.ViewletOutput .Line.warning {
+  color: var(--vscode-editorWarning-foreground, #cca700);
+  background: color-mix(in srgb, var(--vscode-editorWarning-foreground, #cca700) 12%, transparent);
+}
+
+.OutputRepeatCount {
+  min-width: 16px;
+  height: 16px;
+  margin-inline-end: 4px;
+  border-radius: 8px;
+  color: var(--vscode-badge-foreground, #ffffff);
+  background: var(--vscode-badge-background, #4d4d4d);
+  line-height: 16px;
+  text-align: center;
+}
+
+.OutputSourceLink {
+  margin-inline-start: auto;
+  padding-inline-start: 12px;
+}
