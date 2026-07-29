@@ -1,12 +1,14 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const editorWorkerInvoke = jest.fn()
+const getTextEditorContent = jest.fn<() => string>()
 const getTokenizePath = jest.fn<(languageId: string) => string>()
 const rendererProcessInvoke = jest.fn()
 const tokenizerRemoveConnectedEditor = jest.fn()
 
 beforeEach(() => {
   jest.resetAllMocks()
+  getTextEditorContent.mockReturnValue('first line\nsecond line')
   getTokenizePath.mockImplementation((languageId: string): string => `/tokenize-${languageId}.js`)
 })
 
@@ -25,7 +27,7 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
 })
 
 jest.unstable_mockModule('../src/parts/GetTextEditorContent/GetTextEditorContent.js', () => ({
-  getTextEditorContent: jest.fn(() => 'first line\nsecond line'),
+  getTextEditorContent,
 }))
 
 jest.unstable_mockModule('../src/parts/GetTokenizePath/GetTokenizePath.js', () => ({
@@ -42,6 +44,7 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
 }))
 
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+const Languages = await import('../src/parts/Languages/Languages.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
 beforeEach(() => {
@@ -116,6 +119,41 @@ test('loadContent - disables the editor file cache through preferences', async (
 
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
   expect(createCall?.at(-1)).toBe(false)
+})
+
+test('loadContent - detects the language from the first line for an extensionless file', async () => {
+  Languages.addLanguage({
+    id: 'javascript',
+    firstLine: '^#!.*\\bnode',
+  })
+  getTextEditorContent.mockReturnValue('#!/usr/bin/env node\n"use strict"')
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/acorn', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, {}, {})
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith(
+    'Editor.create2',
+    1,
+    '/test/acorn',
+    0,
+    0,
+    800,
+    600,
+    expect.any(Number),
+    expect.any(String),
+    'javascript',
+    '/tokenize-javascript.js',
+    true,
+  )
 })
 
 test('dispose', async () => {
