@@ -6,7 +6,7 @@ const normalizeRemoteFileUrl = (uri: string): string | undefined => {
   try {
     const url = new URL(uri)
     if ((url.protocol === 'http:' || url.protocol === 'https:') && url.pathname.startsWith('/remote/')) {
-      return pathToFileURL(decodeURIComponent(url.pathname.slice('/remote'.length))).href
+      return `file://${url.pathname.slice('/remote'.length)}`
     }
   } catch {
     return undefined
