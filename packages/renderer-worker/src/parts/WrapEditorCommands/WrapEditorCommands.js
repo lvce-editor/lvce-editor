@@ -1,11 +1,40 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const queues = new Map()
 
+const getEditorUids = (editor) => {
+  const uids = new Set([editor.uid])
+  for (const instance of Object.values(ViewletStates.getAllInstances())) {
+    const state = instance?.state
+    if (instance?.moduleId === 'EditorText' && state?.uri === editor.uri && typeof state.uid === 'number') {
+      uids.add(state.uid)
+    }
+  }
+  return uids
+}
+
+const adjustCommands = (commands, uid) => {
+  return commands.map((command) => {
+    if (typeof command[0] === 'string' && command[0].startsWith('Viewlet.')) {
+      return command
+    }
+    return ['Viewlet.send', uid, ...command]
+  })
+}
+
 const runEditorCommand = async (editor, fullId, restArgs) => {
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-  const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
-  const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
+  const commands = []
+  for (const uid of getEditorUids(editor)) {
+    const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
+    const editorCommands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
+    if (uid === editor.uid) {
+      commands.push(...editorCommands)
+    } else {
+      commands.push(...adjustCommands(editorCommands, uid))
+    }
+  }
   return {
     ...editor,
     commands,
@@ -23,9 +52,10 @@ export const wrapEditorCommand = (id) => {
     if (fullId === 'Editor.openFind' || fullId === 'Editor.openFind2' || fullId === 'Editor.closeFind') {
       return runEditorCommand(editor, fullId, restArgs)
     }
-    const previous = queues.get(editor.uid)
+    const queueKey = editor.uri || editor.uid
+    const previous = queues.get(queueKey)
     const { promise: next, resolve } = Promise.withResolvers()
-    queues.set(editor.uid, next)
+    queues.set(queueKey, next)
 
     if (previous) {
       await previous
@@ -34,8 +64,8 @@ export const wrapEditorCommand = (id) => {
       return await runEditorCommand(editor, fullId, restArgs)
     } finally {
       resolve(undefined)
-      if (queues.get(editor.uid) === next) {
-        queues.delete(editor.uid)
+      if (queues.get(queueKey) === next) {
+        queues.delete(queueKey)
       }
     }
   }
