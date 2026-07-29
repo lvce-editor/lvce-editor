@@ -1,0 +1,31 @@
+.TitleBarCommandCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 1 600px;
+  height: 22px;
+  margin: 4px auto;
+  padding: 0 12px;
+  overflow: hidden;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  contain: content;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.TitleBarCommandCenter:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.TitleBarCommandCenter:focus-visible {
+  outline: 1px solid var(--FocusBorder, #007fd4);
+  outline-offset: -1px;
+}
