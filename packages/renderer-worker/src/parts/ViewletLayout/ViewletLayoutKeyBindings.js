@@ -12,12 +12,12 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyCode.Enter,
-      command: 'EditorRename.finish',
+      command: 'EditorRename.accept',
       when: WhenExpression.FocusEditorRename,
     },
     {
       key: KeyCode.Escape,
-      command: 'EditorRename.abort',
+      command: 'EditorRename.close',
       when: WhenExpression.FocusEditorRename,
     },
     {
