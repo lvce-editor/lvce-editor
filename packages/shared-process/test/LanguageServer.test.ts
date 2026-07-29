@@ -3,6 +3,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { complete, diagnostic, disposeAll } from '../src/parts/LanguageServer/LanguageServer.ts'
 
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
+const completionOnlyServerScript = fileURLToPath(new URL('./fixtures/languageServerCompletionOnly.js', import.meta.url))
 const pushDiagnosticsServerScript = fileURLToPath(new URL('./fixtures/languageServerPushDiagnostics.js', import.meta.url))
 
 afterEach(() => {
@@ -108,3 +109,22 @@ test('diagnostic supports published diagnostics and uses the provided workspace 
     }),
   ).resolves.toEqual([])
 })
+
+test(
+  'diagnostic resolves when a completion-only server does not publish diagnostics',
+  async () => {
+    const options = {
+      argv: [completionOnlyServerScript],
+      id: 'sample.completion-only-fixture',
+      textDocument: {
+        languageId: 'typescript',
+        text: 'const value = 1',
+        uri: '/tmp/sample.ts',
+      },
+      uri: pathToFileURL(process.execPath).href,
+    }
+
+    await expect(diagnostic(options)).resolves.toEqual([])
+  },
+  2000,
+)

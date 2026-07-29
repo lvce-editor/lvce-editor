@@ -104,6 +104,8 @@ const wait = (duration: number): Promise<void> => {
   })
 }
 
+const PublishDiagnosticsTimeout = 1_000
+
 export class LanguageServerConnection {
   private readonly child: ChildProcessWithoutNullStreams
   private readonly configurationHandled = createDeferred()
@@ -514,7 +516,25 @@ export class LanguageServerConnection {
   private waitForPublishedDiagnostics(uri: string): Promise<readonly unknown[]> {
     return new Promise<readonly unknown[]>((resolve, reject) => {
       const waiters = this.diagnosticWaiters.get(uri) || new Set()
-      waiters.add({ reject, resolve })
+      let timeout: ReturnType<typeof setTimeout>
+      const waiter = {
+        reject(error: Error): void {
+          clearTimeout(timeout)
+          reject(error)
+        },
+        resolve(value: readonly unknown[]): void {
+          clearTimeout(timeout)
+          resolve(value)
+        },
+      }
+      timeout = setTimeout(() => {
+        waiters.delete(waiter)
+        if (waiters.size === 0) {
+          this.diagnosticWaiters.delete(uri)
+        }
+        resolve(this.publishedDiagnostics.get(uri) || [])
+      }, PublishDiagnosticsTimeout)
+      waiters.add(waiter)
       this.diagnosticWaiters.set(uri, waiters)
     })
   }

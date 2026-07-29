@@ -18,6 +18,12 @@ test('preserves a normalized file URI', () => {
   expect(normalizeLanguageServerDocumentUri('file:///tmp/README.md')).toBe('file:///tmp/README.md')
 })
 
+test('normalizes a remote file URL', () => {
+  expect(normalizeLanguageServerDocumentUri('http://localhost:41283/remote/C:/My%20Project/src/Main.elm')).toBe(
+    'file:///c%3A/My%20Project/src/Main.elm',
+  )
+})
+
 test('preserves a non-file URI', () => {
   expect(normalizeLanguageServerDocumentUri('memfs:///workspace/README.md')).toBe('memfs:///workspace/README.md')
 })
