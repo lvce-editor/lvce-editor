@@ -1,4 +1,5 @@
 import * as Focus from '../Focus/Focus.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const updateDynamic = (commands, key, fn) => {
   const matchingCommands = []
@@ -11,18 +12,30 @@ const updateDynamic = (commands, key, fn) => {
   }
   // TODO send focus changes to renderer process together with other message
   for (let i = matchingCommands.length - 1; i >= 0; i--) {
-    fn(...matchingCommands[i].slice(2))
+    fn(matchingCommands[i])
   }
 }
 
+const getModuleId = (uid) => {
+  return ViewletStates.getByUid(uid)?.moduleId
+}
+
 export const updateDynamicFocusContext = (commands) => {
-  updateDynamic(commands, 'Viewlet.setFocusContext', Focus.setFocus)
-  updateDynamic(commands, 'Viewlet.setAdditionalFocus', Focus.setAdditionalFocus)
-  updateDynamic(commands, 'Viewlet.unsetAdditionalFocus', Focus.removeAdditionalFocus)
+  updateDynamic(commands, 'Viewlet.setFocusContext', (command) => {
+    const [, uid, focusKey, additionalFocusKey] = command
+    Focus.setFocus(focusKey, additionalFocusKey, uid, getModuleId(uid))
+  })
+  updateDynamic(commands, 'Viewlet.setAdditionalFocus', (command) => {
+    const [, uid, focusKey] = command
+    Focus.setAdditionalFocus(focusKey, uid, getModuleId(uid))
+  })
+  updateDynamic(commands, 'Viewlet.unsetAdditionalFocus', (command) => {
+    Focus.removeAdditionalFocus(command[2])
+  })
 }
 
 export const updateDynamicKeyBindings = (commands) => {
-  updateDynamic(commands, 'Viewlet.setKeyBindings', (keyBindings) => {
+  updateDynamic(commands, 'Viewlet.setKeyBindings', (command) => {
     // TODO
   })
 }
