@@ -19,8 +19,8 @@ test('preserves a normalized file URI', () => {
 })
 
 test('normalizes a remote file URL', () => {
-  expect(normalizeLanguageServerDocumentUri('http://localhost:41283/remote/tmp/My%20Project/src/Main.elm')).toBe(
-    pathToFileURL('/tmp/My Project/src/Main.elm').href,
+  expect(normalizeLanguageServerDocumentUri('http://localhost:41283/remote/C:/My%20Project/src/Main.elm')).toBe(
+    'file:///c%3A/My%20Project/src/Main.elm',
   )
 })
 
