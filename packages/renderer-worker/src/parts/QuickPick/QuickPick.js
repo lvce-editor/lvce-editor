@@ -16,6 +16,10 @@ export const showRecent = () => {
   return show('recent')
 }
 
+export const openGoToLine = () => {
+  return show('go-to-line')
+}
+
 export const showEveryThing = () => {
   return show('everything')
 }
