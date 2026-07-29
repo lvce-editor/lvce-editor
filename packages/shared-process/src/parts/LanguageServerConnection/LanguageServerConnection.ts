@@ -23,6 +23,22 @@ interface PendingRequest {
   readonly resolve: (value: unknown) => void
 }
 
+interface PendingDiagnostics {
+  readonly reject: (error: Error) => void
+  readonly resolve: (value: readonly unknown[]) => void
+}
+
+interface InitializeResult {
+  readonly capabilities?: {
+    readonly diagnosticProvider?: unknown
+  }
+}
+
+interface Deferred {
+  readonly promise: Promise<void>
+  readonly resolve: () => void
+}
+
 interface TextDocument {
   readonly languageId: string
   readonly text: string
@@ -74,17 +90,38 @@ const getWorkspaceName = (rootUri: string): string => {
   }
 }
 
+const createDeferred = (): Deferred => {
+  let resolve = (): void => {}
+  const promise = new Promise<void>((resolvePromise) => {
+    resolve = resolvePromise
+  })
+  return { promise, resolve }
+}
+
+const wait = (duration: number): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration)
+  })
+}
+
 export class LanguageServerConnection {
   private readonly child: ChildProcessWithoutNullStreams
+  private readonly configurationHandled = createDeferred()
+  private readonly diagnosticWaiters = new Map<string, Set<PendingDiagnostics>>()
   private readonly documents = new Map<string, DocumentState>()
+  private readonly initializationProgressEnded = createDeferred()
+  private readonly initializationProgressStarted = createDeferred()
   private readonly parser = new LanguageServerMessageParser()
   private readonly pendingRequests = new Map<number | string, PendingRequest>()
+  private readonly publishedDiagnostics = new Map<string, readonly unknown[]>()
   private readonly ready: Promise<void>
   private readonly rootUri: string
+  private initializationProgressWasStarted = false
   private markdownConfigured = false
   private nextRequestId = 1
   private running = true
   private stderr = ''
+  private supportsPullDiagnostics = false
 
   constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
@@ -147,16 +184,29 @@ export class LanguageServerConnection {
   async diagnostic(textDocument: TextDocument): Promise<readonly unknown[]> {
     await this.ready
     this.configureMarkdown(textDocument.languageId)
-    this.syncDocument(textDocument)
-    const result = await this.sendRequest('textDocument/diagnostic', {
-      textDocument: {
-        uri: textDocument.uri,
-      },
-    })
-    if (result && typeof result === 'object' && Array.isArray((result as { readonly items?: unknown }).items)) {
-      return (result as { readonly items: readonly unknown[] }).items
+    if (this.supportsPullDiagnostics) {
+      this.syncDocument(textDocument)
+      const result = await this.sendRequest('textDocument/diagnostic', {
+        textDocument: {
+          uri: textDocument.uri,
+        },
+      })
+      if (result && typeof result === 'object' && Array.isArray((result as { readonly items?: unknown }).items)) {
+        return (result as { readonly items: readonly unknown[] }).items
+      }
+      return []
     }
-    return []
+    const previous = this.documents.get(textDocument.uri)
+    const documentChanged = !previous || previous.languageId !== textDocument.languageId || previous.text !== textDocument.text
+    const cached = this.publishedDiagnostics.get(textDocument.uri)
+    if (!documentChanged && cached) {
+      return cached
+    }
+    const diagnostics = this.waitForPublishedDiagnostics(textDocument.uri)
+    if (documentChanged) {
+      this.syncDocument(textDocument)
+    }
+    return diagnostics
   }
 
   private configureMarkdown(languageId: string): void {
@@ -206,7 +256,7 @@ export class LanguageServerConnection {
   }
 
   private async initialize(): Promise<void> {
-    await this.sendRequest('initialize', {
+    const result = (await this.sendRequest('initialize', {
       capabilities: {
         textDocument: {
           completion: {
@@ -218,10 +268,16 @@ export class LanguageServerConnection {
             dynamicRegistration: false,
             relatedDocumentSupport: false,
           },
+          publishDiagnostics: {
+            relatedInformation: true,
+          },
           synchronization: {
             didSave: true,
             dynamicRegistration: false,
           },
+        },
+        window: {
+          workDoneProgress: true,
         },
         workspace: {
           configuration: true,
@@ -239,8 +295,15 @@ export class LanguageServerConnection {
           uri: this.rootUri,
         },
       ],
-    })
+    })) as InitializeResult
+    this.supportsPullDiagnostics = Boolean(result?.capabilities?.diagnosticProvider)
     this.sendNotification('initialized', {})
+    await Promise.race([this.initializationProgressStarted.promise, wait(100)])
+    if (this.initializationProgressWasStarted) {
+      await Promise.race([this.initializationProgressEnded.promise, wait(30_000)])
+    }
+    await Promise.race([this.configurationHandled.promise, wait(100)])
+    await wait(0)
   }
 
   private syncDocument(textDocument: TextDocument): void {
@@ -303,6 +366,14 @@ export class LanguageServerConnection {
   }
 
   private handleMessage(message: JsonRpcMessage): void {
+    if (message.method === 'textDocument/publishDiagnostics') {
+      this.handlePublishedDiagnostics(message.params)
+      return
+    }
+    if (message.method === '$/progress') {
+      this.handleProgress(message.params)
+      return
+    }
     if (message.method && message.id !== undefined && message.id !== null) {
       void this.handleServerRequest(message)
       return
@@ -322,12 +393,45 @@ export class LanguageServerConnection {
     pending.resolve(message.result)
   }
 
+  private handlePublishedDiagnostics(params: unknown): void {
+    if (!params || typeof params !== 'object') {
+      return
+    }
+    const { diagnostics, uri } = params as { readonly diagnostics?: unknown; readonly uri?: unknown }
+    if (typeof uri !== 'string' || !Array.isArray(diagnostics)) {
+      return
+    }
+    this.publishedDiagnostics.set(uri, diagnostics)
+    const waiters = this.diagnosticWaiters.get(uri)
+    if (!waiters) {
+      return
+    }
+    this.diagnosticWaiters.delete(uri)
+    for (const waiter of waiters) {
+      waiter.resolve(diagnostics)
+    }
+  }
+
+  private handleProgress(params: unknown): void {
+    if (!params || typeof params !== 'object') {
+      return
+    }
+    const { value } = params as { readonly value?: unknown }
+    if (!value || typeof value !== 'object' || (value as { readonly kind?: unknown }).kind !== 'end') {
+      return
+    }
+    this.initializationProgressEnded.resolve()
+  }
+
   private async handleServerRequest(message: JsonRpcMessage): Promise<void> {
     try {
       let result: unknown = null
       if (message.method === 'workspace/configuration') {
         const itemCount = Array.isArray(message.params?.items) ? message.params.items.length : 0
         result = Array.from({ length: itemCount }).fill(null)
+      } else if (message.method === 'window/workDoneProgress/create') {
+        this.initializationProgressWasStarted = true
+        this.initializationProgressStarted.resolve()
       } else if (message.method === 'workspace/workspaceFolders') {
         result = [
           {
@@ -346,6 +450,9 @@ export class LanguageServerConnection {
         jsonrpc: '2.0',
         result,
       })
+      if (message.method === 'workspace/configuration') {
+        this.configurationHandled.resolve()
+      }
     } catch (error) {
       this.sendMessage({
         error: {
@@ -371,6 +478,12 @@ export class LanguageServerConnection {
       pending.reject(error)
     }
     this.pendingRequests.clear()
+    for (const waiters of this.diagnosticWaiters.values()) {
+      for (const waiter of waiters) {
+        waiter.reject(error)
+      }
+    }
+    this.diagnosticWaiters.clear()
   }
 
   private sendNotification(method: string, params: unknown): void {
@@ -396,6 +509,14 @@ export class LanguageServerConnection {
       params,
     })
     return promise
+  }
+
+  private waitForPublishedDiagnostics(uri: string): Promise<readonly unknown[]> {
+    return new Promise<readonly unknown[]>((resolve, reject) => {
+      const waiters = this.diagnosticWaiters.get(uri) || new Set()
+      waiters.add({ reject, resolve })
+      this.diagnosticWaiters.set(uri, waiters)
+    })
   }
 
   private sendMessage(message: unknown): void {

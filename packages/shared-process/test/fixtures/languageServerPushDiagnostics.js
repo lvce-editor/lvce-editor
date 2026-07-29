@@ -1,6 +1,6 @@
 const headerSeparator = Buffer.from('\r\n\r\n')
 let buffer = Buffer.alloc(0)
-const documents = new Map()
+let rootUri = ''
 
 /** @param {any} message */
 const send = (message) => {
@@ -8,63 +8,44 @@ const send = (message) => {
   process.stdout.write(`Content-Length: ${Buffer.byteLength(content)}\r\n\r\n${content}`)
 }
 
-/** @param {any} message */
-const handleMessage = (message) => {
-  if (message.method === 'initialize') {
-    send({
-      id: message.id,
-      jsonrpc: '2.0',
-      result: {
-        capabilities: {
-          completionProvider: {},
-          diagnosticProvider: {
-            interFileDependencies: false,
-            workspaceDiagnostics: false,
-          },
-          textDocumentSync: 1,
-        },
-      },
-    })
-    return
-  }
-  if (message.method === 'textDocument/didOpen') {
-    documents.set(message.params.textDocument.uri, message.params.textDocument.text)
-    return
-  }
-  if (message.method === 'textDocument/didChange') {
-    documents.set(message.params.textDocument.uri, message.params.contentChanges[0].text)
-    return
-  }
-  if (message.method === 'textDocument/completion') {
-    const text = documents.get(message.params.textDocument.uri)
-    send({
-      id: message.id,
-      jsonrpc: '2.0',
-      result: {
-        items: [{ insertText: 'fixtureCompletion', kind: 6, label: `fixtureCompletion:${text}` }],
-      },
-    })
-    return
-  }
-  if (message.method === 'textDocument/diagnostic') {
-    const text = documents.get(message.params.textDocument.uri)
-    send({
-      id: message.id,
-      jsonrpc: '2.0',
-      result: {
-        items: [
+/** @param {string} uri @param {string} text */
+const publishDiagnostics = (uri, text) => {
+  const diagnostics =
+    text === 'valid'
+      ? []
+      : [
           {
-            message: `fixtureDiagnostic:${text}`,
+            message: `fixtureDiagnostic:${text}:${rootUri}`,
             range: {
               end: { character: 3, line: 0 },
               start: { character: 0, line: 0 },
             },
             severity: 2,
           },
-        ],
-        kind: 'full',
-      },
-    })
+        ]
+  send({
+    jsonrpc: '2.0',
+    method: 'textDocument/publishDiagnostics',
+    params: {
+      diagnostics,
+      uri,
+    },
+  })
+}
+
+/** @param {any} message */
+const handleMessage = (message) => {
+  if (message.method === 'initialize') {
+    rootUri = message.params.rootUri
+    send({ id: message.id, jsonrpc: '2.0', result: { capabilities: { textDocumentSync: 1 } } })
+    return
+  }
+  if (message.method === 'textDocument/didOpen') {
+    publishDiagnostics(message.params.textDocument.uri, message.params.textDocument.text)
+    return
+  }
+  if (message.method === 'textDocument/didChange') {
+    publishDiagnostics(message.params.textDocument.uri, message.params.contentChanges[0].text)
   }
 }
 

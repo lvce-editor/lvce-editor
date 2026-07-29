@@ -3,6 +3,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { complete, diagnostic, disposeAll } from '../src/parts/LanguageServer/LanguageServer.ts'
 
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
+const pushDiagnosticsServerScript = fileURLToPath(new URL('./fixtures/languageServerPushDiagnostics.js', import.meta.url))
 
 afterEach(() => {
   disposeAll()
@@ -72,4 +73,38 @@ test('diagnostic starts a stdio language server and synchronizes documents', asy
       severity: 2,
     },
   ])
+})
+
+test('diagnostic supports published diagnostics and uses the provided workspace root', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript],
+    id: 'sample.push-diagnostics-fixture',
+    rootUri: 'file:///tmp/sample-workspace',
+    textDocument: {
+      languageId: 'elm',
+      text: 'invalid',
+      uri: '/tmp/sample-workspace/src/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+
+  await expect(diagnostic(options)).resolves.toEqual([
+    {
+      message: 'fixtureDiagnostic:invalid:file:///tmp/sample-workspace',
+      range: {
+        end: { character: 3, line: 0 },
+        start: { character: 0, line: 0 },
+      },
+      severity: 2,
+    },
+  ])
+  await expect(
+    diagnostic({
+      ...options,
+      textDocument: {
+        ...options.textDocument,
+        text: 'valid',
+      },
+    }),
+  ).resolves.toEqual([])
 })
