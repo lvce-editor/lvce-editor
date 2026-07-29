@@ -13,6 +13,7 @@ export interface CompleteOptions {
   readonly argv: readonly string[]
   readonly id: string
   readonly offset: number
+  readonly rootUri?: string
   readonly textDocument: TextDocument
   readonly uri: string
 }
@@ -20,6 +21,7 @@ export interface CompleteOptions {
 export interface DiagnosticOptions {
   readonly argv: readonly string[]
   readonly id: string
+  readonly rootUri?: string
   readonly textDocument: TextDocument
   readonly uri: string
 }
@@ -61,23 +63,23 @@ const getConnection = (id: string, uri: string, argv: readonly string[], rootUri
   return connection
 }
 
-export const complete = async ({ argv, id, offset, textDocument, uri }: CompleteOptions): Promise<readonly unknown[]> => {
+export const complete = async ({ argv, id, offset, rootUri, textDocument, uri }: CompleteOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
-  const rootUri = getRootUri(normalizedDocument.uri)
-  const connection = getConnection(`${id}:${rootUri}`, uri, argv, rootUri)
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
   return connection.complete(normalizedDocument, offset)
 }
 
-export const diagnostic = async ({ argv, id, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
+export const diagnostic = async ({ argv, id, rootUri, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
-  const rootUri = getRootUri(normalizedDocument.uri)
-  const connection = getConnection(`${id}:${rootUri}`, uri, argv, rootUri)
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
   return connection.diagnostic(normalizedDocument)
 }
 
