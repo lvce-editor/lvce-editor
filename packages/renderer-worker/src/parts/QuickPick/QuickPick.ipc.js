@@ -3,6 +3,7 @@ import * as QuickPick from './QuickPick.js'
 export const name = 'QuickPick'
 
 export const Commands = {
+  openGoToLine: QuickPick.openGoToLine,
   show: QuickPick.show,
   showColorTheme: QuickPick.showColorTheme,
   showCommands: QuickPick.showCommands,

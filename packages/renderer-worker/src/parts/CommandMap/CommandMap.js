@@ -306,6 +306,7 @@ export const commandMap = {
   'Process.getV8Version': lazy('Process.getV8Version'),
   'Prompt.prompt': lazy('Prompt.prompt'),
   'QuickPick.executeCallback': lazy('QuickPick.executeCallback'),
+  'QuickPick.openGoToLine': lazy('QuickPick.openGoToLine'),
   'QuickPick.show': lazy('QuickPick.show'),
   'QuickPick.showColorTheme': lazy('QuickPick.showColorTheme'),
   'QuickPick.showCommands': lazy('QuickPick.showCommands'),
