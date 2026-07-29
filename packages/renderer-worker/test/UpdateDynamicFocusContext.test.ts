@@ -8,6 +8,16 @@ jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => {
+  return {
+    getByUid: jest.fn((uid: number) => {
+      return {
+        moduleId: uid === 1 ? 'EditorText' : 'Unknown',
+      }
+    }),
+  }
+})
+
 const Focus = await import('../src/parts/Focus/Focus.js')
 const UpdateDynamicFocusContext = await import('../src/parts/UpdateDynamicFocusContext/UpdateDynamicFocusContext.js')
 const mockRemoveAdditionalFocus = jest.mocked(Focus.removeAdditionalFocus)
@@ -32,7 +42,13 @@ test('removes and applies all dynamic focus commands', () => {
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
 
   expect(commands).toEqual([['Viewlet.setDom2', 1, []]])
-  expect(mockSetFocus.mock.calls).toEqual([[10], [20]])
-  expect(mockSetAdditionalFocus.mock.calls).toEqual([[30], [40]])
+  expect(mockSetFocus.mock.calls).toEqual([
+    [10, undefined, 1, 'EditorText'],
+    [20, undefined, 1, 'EditorText'],
+  ])
+  expect(mockSetAdditionalFocus.mock.calls).toEqual([
+    [30, 1, 'EditorText'],
+    [40, 1, 'EditorText'],
+  ])
   expect(mockRemoveAdditionalFocus.mock.calls).toEqual([[50], [60]])
 })
