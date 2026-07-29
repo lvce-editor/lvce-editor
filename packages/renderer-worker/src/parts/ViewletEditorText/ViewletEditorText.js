@@ -80,15 +80,21 @@ const getSavedDeltaY = (savedState) => {
   return 0
 }
 
-const getLanguageId = (state) => {
+const getFirstLine = (content) => {
+  const lineFeedIndex = content.indexOf('\n')
+  const lineEndIndex = lineFeedIndex === -1 ? content.length : lineFeedIndex
+  const hasCarriageReturn = lineEndIndex > 0 && content.charCodeAt(lineEndIndex - 1) === 13
+  return content.slice(0, hasCarriageReturn ? lineEndIndex - 1 : lineEndIndex)
+}
+
+const getLanguageId = (state, content) => {
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   if (languageId === 'unknown') {
-    if (state.languageId) {
+    if (state.languageId && state.languageId !== 'unknown') {
       return state.languageId
     }
-    console.log('try to get language from content', state)
-    const firstLine = state.lines[0] || ''
+    const firstLine = getFirstLine(content)
     const languageIdFromContent = Languages.getLanguageIdByFirstLine(firstLine)
     return languageIdFromContent
   }
@@ -113,7 +119,7 @@ export const loadContent = async (state, savedState, context) => {
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
   const content = await GetTextEditorContent.getTextEditorContent(uri)
-  const languageId = context?.languageId || getLanguageId(state)
+  const languageId = context?.languageId || getLanguageId(state, content)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)
