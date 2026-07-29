@@ -57,4 +57,5 @@
 .Panel {
   background: var(--PanelBackground);
   height: var(--PanelHeight);
+  width: var(--PanelWidth);
 }
