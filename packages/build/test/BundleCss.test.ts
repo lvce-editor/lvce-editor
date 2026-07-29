@@ -86,7 +86,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
   }
 }, 30_000)
 
-test('bundleCss keeps the panel sash within the non-preview area', async () => {
+test('bundleCss keeps the panel and panel sash within the non-preview area', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -98,6 +98,11 @@ test('bundleCss keeps the panel sash within the non-preview area', async () => {
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
     expect(css).toContain('contain: size layout style;')
+    expect(css).toContain(`.Panel {
+  background: var(--PanelBackground);
+  height: var(--PanelHeight);
+  width: var(--PanelWidth);
+}`)
     expect(css).toContain(`.SashPanel {
   top: var(--SashPanelTop);
   width: var(--PanelWidth);
