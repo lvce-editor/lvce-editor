@@ -41,7 +41,7 @@ export const getFontSize = () => {
 }
 
 export const getHoverEnabled = () => {
-  return Preferences.get(kHover) ?? false
+  return Preferences.get(kHover) ?? true
 }
 
 export const getFontFamily = () => {

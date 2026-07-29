@@ -11,7 +11,7 @@
   "editor.fontLigatures": true,
   "editor.links": true,
   "editor.tabSize": 2,
-  "editor.hover": false,
+  "editor.hover": true,
 
   "editor.autoClosingBrackets": true,
   "editor.autoClosingQuotes": true,

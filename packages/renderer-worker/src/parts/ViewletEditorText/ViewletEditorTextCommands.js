@@ -108,11 +108,21 @@ const loadContentLater = async (editor) => {
   await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'updateDiagnostics')
 }
 
+const renderPending = async (editor) => {
+  const diffResult = await EditorWorker.invoke('Editor.diff2', editor.uid)
+  const commands = await EditorWorker.invoke('Editor.render2', editor.uid, diffResult)
+  return {
+    ...editor,
+    commands,
+  }
+}
+
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
     handleUriChange,
     loadContentLater,
+    renderPending,
     showOverlayMessage,
     hotReload,
   })

@@ -49,6 +49,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands['ColorPicker.handleSliderPointerDown']).toBeDefined()
   expect(commands.handleUriChange).toBeDefined()
   expect(commands.loadContentLater).toBeDefined()
+  expect(commands.renderPending).toBeDefined()
   expect(commands.showOverlayMessage).toBeDefined()
   expect(commands.hotReload).toBeDefined()
 })
@@ -67,19 +68,48 @@ test('loadContentLater requests diagnostics after the initial render', async () 
   expect(commandExecute).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'updateDiagnostics')
 })
 
-test('worker command wrapper invokes editor command, diff, and render', async () => {
+test('renderPending renders editor-worker state changed by an asynchronous effect', async () => {
   const editor = {
-    uid: 42,
     commands: [],
+    uid: 42,
   }
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
+      case 'Editor.diff2':
+        return [1]
       case 'Editor.getCommandIds':
-        return ['cursorLeft']
+        return []
+      case 'Editor.render2':
+        return [['Viewlet.createFunctionalRoot', 'EditorCompletion', 99, true]]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.renderPending(editor)
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 42)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [1])
+  expect(result).toEqual({
+    ...editor,
+    commands: [['Viewlet.createFunctionalRoot', 'EditorCompletion', 99, true]],
+  })
+})
+
+test('worker command wrapper invokes editor command, diff, and render', async () => {
+  const editor = {
+    commands: [],
+    uid: 42,
+  }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
       case 'Editor.cursorLeft':
         return undefined
       case 'Editor.diff2':
         return [1]
+      case 'Editor.getCommandIds':
+        return ['cursorLeft']
       case 'Editor.render2':
         return [['Viewlet.send', 42, 'setDeltaY', 0]]
       default:
