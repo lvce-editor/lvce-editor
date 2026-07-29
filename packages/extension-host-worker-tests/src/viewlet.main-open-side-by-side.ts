@@ -1,5 +1,3 @@
-export const skip = true
-
 export const name = 'viewlet.main-open-side-by-side'
 
 export const test = async ({ FileSystem, Workspace, Main, Locator, expect, SideBar }) => {
