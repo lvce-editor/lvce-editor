@@ -1,5 +1,7 @@
 .TitleBar {
   display: flex;
+  box-sizing: border-box;
+  padding-left: env(titlebar-area-x, 0px);
   color: var(--TitleBarForeground, rgba(204, 204, 204, 0.6));
   -webkit-app-region: no-drag;
   app-region: no-drag;
