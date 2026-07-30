@@ -44,7 +44,13 @@
       "project": ["index.js", "bin/**/*.js", "src/**/*.js"]
     },
     "packages/shared-process": {
-      "entry": ["bin/sharedProcess.ts", "src/sharedProcessMain.ts", "test/**/*.test.ts"],
+      "entry": [
+        "bin/sharedProcess.ts",
+        "src/sharedProcessMain.ts",
+        "src/parts/GetHeadersDefault/GetHeadersDefault.ts",
+        "src/parts/GetHeadersOtherWorker/GetHeadersOtherWorker.ts",
+        "test/**/*.test.ts"
+      ],
       "project": ["bin/**/*.ts", "src/**/*.ts", "test/**/*.ts"],
       "ignoreDependencies": ["@lvce-editor/static-server"]
     },
