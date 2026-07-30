@@ -96,7 +96,7 @@
     "@lvce-editor/settings-worker": "^1.8.0",
     "@lvce-editor/simple-browser-view": "^2.8.0",
     "@lvce-editor/source-action-worker": "^1.12.0",
-    "@lvce-editor/source-control-worker": "^3.7.0",
+    "@lvce-editor/source-control-worker": "^3.8.0",
     "@lvce-editor/status-bar-worker": "^3.9.2",
     "@lvce-editor/syntax-highlighting-worker": "^2.4.3",
     "@lvce-editor/terminal-worker": "^2.4.0",
