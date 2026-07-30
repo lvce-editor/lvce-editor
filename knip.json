@@ -49,7 +49,11 @@
       "ignoreDependencies": ["@lvce-editor/static-server"]
     },
     "packages/static-server": {
-      "entry": ["src/static-server.ts", "test/**/*.test.ts"],
+      "entry": [
+        "src/static-server.ts",
+        "src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.ts",
+        "test/**/*.test.ts"
+      ],
       "project": ["src/**/*.ts", "test/**/*.ts"]
     }
   }
