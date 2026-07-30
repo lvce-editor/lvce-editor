@@ -1,5 +1,6 @@
 import { app } from 'electron'
 import { join } from 'node:path'
+import { handleMacOsSaveShortcut } from './handleMacOsSaveShortcut.js'
 
 const root = process.env.LVCE_ROOT || process.cwd()
 const iconPath = join(root, 'packages', 'build', 'files', 'icon.png')
@@ -13,6 +14,9 @@ if (isPromptMode) {
 app.setName('Lvce Editor')
 app.on('browser-window-created', (_event, window) => {
   window.setIcon(iconPath)
+  window.webContents.on('before-input-event', (event, input) => {
+    handleMacOsSaveShortcut(event, input, window.webContents)
+  })
 })
 
 await import('@lvce-editor/main-process')
