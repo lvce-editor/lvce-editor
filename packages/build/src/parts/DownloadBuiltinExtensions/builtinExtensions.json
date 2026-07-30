@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.15.1",
+    "version": "5.16.0",
     "created": "2022-07-02"
   },
   {
@@ -20,7 +20,7 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "created": "2026-07-14"
   },
   {
@@ -92,7 +92,7 @@
   {
     "name": "builtin.language-basics-cobol",
     "repository": "github.com/lvce-editor/language-basics-cobol",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "created": "2026-05-18"
   },
   {
@@ -158,13 +158,13 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.20.1",
+    "version": "1.21.0",
     "created": "2024-08-09"
   },
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.17.0",
+    "version": "1.18.0",
     "created": "2024-09-26"
   },
   {
@@ -362,13 +362,13 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.12.0",
+    "version": "5.13.0",
     "created": "2022-06-16"
   },
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.16.0",
+    "version": "2.17.0",
     "created": "2022-06-16"
   },
   {
