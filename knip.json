@@ -1,0 +1,56 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "exclude": ["exports", "types"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.js"],
+      "project": ["eslint.config.js", "scripts/**/*.js"],
+      "ignoreDependencies": ["@lerna/legacy-package-management", "prettier"],
+      "ignoreUnresolved": ["../build/src/parts/Format/Format.js"]
+    },
+    "packages/build": {
+      "entry": ["bin/build.ts", "test/**/*.test.js", "test/**/*.test.ts"],
+      "project": ["bin/**/*.ts", "src/**/*.js", "src/**/*.ts", "test/**/*.js", "test/**/*.ts"],
+      "ignoreBinaries": ["microbundle"]
+    },
+    "packages/extension-host-helper-process": {
+      "entry": ["index.js", "src/extensionHostHelperProcessMain.js"],
+      "project": ["**/*.js"]
+    },
+    "packages/extension-host": {
+      "entry": ["index.js", "bin/*.js", "src/extensionHostMain.js"],
+      "project": ["**/*.js"],
+      "ignoreBinaries": ["microbundle"]
+    },
+    "packages/extension-host-worker-tests": {
+      "entry": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts"],
+      "project": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts", "typings/**/*.d.ts"],
+      "ignoreDependencies": ["data"],
+      "ignoreUnresolved": ["./add.js", "./not-found.js", "./parts/math.js"]
+    },
+    "packages/main-process": {
+      "entry": ["src/mainProcessMain.js", "test/**/*.test.js"],
+      "project": ["src/**/*.js", "test/**/*.js"],
+      "ignoreBinaries": ["dbus-daemon"]
+    },
+    "packages/renderer-worker": {
+      "entry": ["src/rendererWorkerMain.ts", "test/**/*.test.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+      "ignoreBinaries": ["microbundle"],
+      "ignoreDependencies": ["@lvce-editor/*", "@vscode/codicons"]
+    },
+    "packages/server": {
+      "entry": ["index.js", "bin/server.js"],
+      "project": ["index.js", "bin/**/*.js", "src/**/*.js"]
+    },
+    "packages/shared-process": {
+      "entry": ["bin/sharedProcess.ts", "src/sharedProcessMain.ts", "test/**/*.test.ts"],
+      "project": ["bin/**/*.ts", "src/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": ["@lvce-editor/static-server"]
+    },
+    "packages/static-server": {
+      "entry": ["src/static-server.ts", "test/**/*.test.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"]
+    }
+  }
+}
