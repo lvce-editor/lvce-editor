@@ -366,7 +366,17 @@ const getContentAreaVirtualDom = (state: LayoutState) => {
 }
 
 export const getLayoutVirtualDom = (state: LayoutState) => {
-  const { titleBarVisible, titleBarId, statusBarVisible, statusBarId, panelSashVisible, panelVisible, panelId } = state
+  const {
+    titleBarVisible,
+    titleBarId,
+    statusBarVisible,
+    statusBarId,
+    panelSashVisible,
+    panelVisible,
+    panelId,
+    widgetReferences = [],
+    mountedViewletsBySource = {},
+  } = state
   const dom: any[] = []
   let workbenchChildCount = 0
 
@@ -399,6 +409,19 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   if (statusBarVisible) {
     workbenchChildCount++
     dom.push(getStatusBarDom(statusBarId))
+  }
+
+  const mountedSources = Object.values(mountedViewletsBySource)
+  const mountedViewlets = new Set(mountedSources.flat())
+  const showAllWidgets = mountedSources.length === 0
+  for (const widget of widgetReferences) {
+    if (showAllWidgets || mountedViewlets.has(widget.parentUid)) {
+      workbenchChildCount++
+      dom.push({
+        type: VirtualDomElements.Reference,
+        uid: widget.uid,
+      })
+    }
   }
 
   // Update workbench childCount

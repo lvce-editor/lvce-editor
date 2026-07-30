@@ -113,7 +113,9 @@ const renderDom = {
       oldState.previewSashVisible === newState.previewSashVisible &&
       oldState.previewId === newState.previewId &&
       oldState.previewActionsUid === newState.previewActionsUid &&
-      oldState.secondarySideBarVisible === newState.secondarySideBarVisible
+      oldState.secondarySideBarVisible === newState.secondarySideBarVisible &&
+      oldState.widgetReferences === newState.widgetReferences &&
+      oldState.mountedViewletsBySource === newState.mountedViewletsBySource
     )
   },
   apply(oldState: LayoutState, newState: LayoutState) {

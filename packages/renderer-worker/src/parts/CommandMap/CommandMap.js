@@ -1,5 +1,4 @@
 import { execute, loadCommand } from '../Command/Command.js'
-import * as WidgetLifecycle from '../WidgetLifecycle/WidgetLifecycle.js'
 
 const lazy =
   (key) =>
@@ -572,9 +571,4 @@ export const commandMap = {
   'Layout.toggleSideBarPosition': lazy('Layout.toggleSideBarPosition'),
   'Layout.toggleStatusBar': lazy('Layout.toggleStatusBar'),
   'Layout.toggleTitleBar': lazy('Layout.toggleTitleBar'),
-  'WidgetLifecycle.allocateRendererId': WidgetLifecycle.allocateRendererId,
-  'WidgetLifecycle.attach': WidgetLifecycle.attach,
-  'WidgetLifecycle.remove': WidgetLifecycle.remove,
-  'WidgetLifecycle.removeMany': WidgetLifecycle.removeMany,
-  'WidgetLifecycle.update': WidgetLifecycle.update,
 }

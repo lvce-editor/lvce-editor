@@ -13,6 +13,11 @@ export interface SideBarFocusModeLayoutStateSnapshot {
   readonly sideBarWidth: number
 }
 
+export interface WidgetReference {
+  readonly parentUid: number
+  readonly uid: number
+}
+
 export interface LayoutState {
   readonly activityBarHeight: number
   readonly activityBarId: number
@@ -39,6 +44,7 @@ export interface LayoutState {
   readonly mainTop: number
   readonly mainVisible: boolean
   readonly mainWidth: number
+  readonly mountedViewletsBySource: Readonly<Record<number, readonly number[]>>
   readonly panelHeight: number
   readonly panelId: number
   readonly panelLeft: number
@@ -119,6 +125,8 @@ export interface LayoutState {
   readonly windowWidth: number
   readonly workbenchId: number
   readonly workbenchVisible: boolean
+  readonly widgetReferences: readonly WidgetReference[]
+  readonly widgetRevisions: Readonly<Record<number, number>>
 }
 
 export interface LayoutStateResult {
