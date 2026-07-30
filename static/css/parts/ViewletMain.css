@@ -4,6 +4,7 @@
   flex-direction: column;
   flex: 1;
   contain: strict;
+  position: relative;
 }
 
 .TextEditor {
