@@ -21,6 +21,7 @@
     "@babel/preset-typescript": "^7.20.1",
     "@electron/get": "^5.1.0",
     "@electron/rebuild": "^4.2.0",
+    "@jest/globals": "^30.4.1",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -28,11 +29,11 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.0.1",
     "@types/tar-fs": "^2.0.4",
+    "cpy": "^13.2.2",
     "electron-builder": "^26.15.3",
     "execa": "^9.6.1",
     "extract-zip": "^2.0.1",
-    "glob": "^13.0.6",
-    "xdg-basedir": "^5.1.0"
+    "glob": "^13.0.6"
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.7.0",
@@ -46,8 +47,7 @@
     "p-map": "^7.0.6",
     "pretty-bytes": "^7.1.1",
     "rollup": "^4.53.3",
-    "tar-fs": "^3.1.3",
-    "verdaccio": "6.9.0"
+    "tar-fs": "^3.1.3"
   },
   "xo": {
     "rules": {
