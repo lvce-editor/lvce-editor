@@ -8,7 +8,7 @@ node bin/build.js --target=electron-builder-mac
 
 ## Code signing and notarization
 
-Release DMGs are signed and notarized by the GitHub Actions release workflow when the macOS signing secrets are present. PR and normal CI builds do not receive these secrets.
+Release DMGs and builds from the trusted `main` CI workflow are signed and notarized when the macOS signing secrets are present. The CI workflow verifies the signature and notarization ticket before uploading the arm64 DMG as an artifact. Pull-request builds intentionally remain unsigned because repository secrets are not exposed to untrusted pull-request code.
 
 ### Apple setup
 
