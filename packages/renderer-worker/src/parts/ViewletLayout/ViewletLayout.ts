@@ -147,6 +147,7 @@ export const create = (id: number): LayoutState => {
     mainLeft: 0,
     mainTop: 0,
     mainWidth: 0,
+    mountedViewletsBySource: Object.create(null),
     panelHeight: 0,
     panelLeft: 0,
     panelTop: 0,
@@ -202,6 +203,23 @@ export const create = (id: number): LayoutState => {
     previewViewletId: ViewletModuleId.Preview,
     panelView: ViewletModuleId.Problems,
     initial: true,
+    widgetReferences: [],
+    widgetRevisions: Object.create(null),
+  }
+}
+
+export const setMountedViewlets = (state: LayoutState, sourceUid: number, viewletUids: readonly number[]): LayoutStateResult => {
+  Assert.number(sourceUid)
+  Assert.array(viewletUids)
+  return {
+    newState: {
+      ...state,
+      mountedViewletsBySource: {
+        ...state.mountedViewletsBySource,
+        [sourceUid]: [...viewletUids],
+      },
+    },
+    commands: [],
   }
 }
 

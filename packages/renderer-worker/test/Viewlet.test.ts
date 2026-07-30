@@ -176,6 +176,39 @@ test('dispose - disposes the rendered viewlet when the factory has no dispose fu
   expect(ViewletStates.getInstance(2)).toBeUndefined()
 })
 
+test('dispose - removes Layout references before recursively disposing owned widgets', async () => {
+  const layoutState = {
+    ...ViewletStates.getState('Layout'),
+    mountedViewletsBySource: {},
+    widgetReferences: [
+      { parentUid: 2, uid: 3 },
+      { parentUid: 3, uid: 4 },
+    ],
+    widgetRevisions: { 2: 1, 3: 1 },
+  }
+  ViewletStates.setState('Layout', layoutState)
+  ViewletStates.setRenderedState('Layout', layoutState)
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'EditorText',
+    factory: {},
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {})
+
+  await Viewlet.dispose(2)
+
+  const commands = jest.mocked(RendererProcess.invoke).mock.calls[0][1]
+  expect(commands.map((command: any[]) => command[0])).toEqual(['Viewlet.setDom2', 'Viewlet.dispose', 'Viewlet.dispose', 'Viewlet.dispose'])
+  expect(commands.slice(1)).toEqual([
+    ['Viewlet.dispose', 3],
+    ['Viewlet.dispose', 4],
+    ['Viewlet.dispose', 2],
+  ])
+  expect(ViewletStates.getState('Layout').widgetReferences).toEqual([])
+})
+
 test('disposeWidgetWithValue - dispatches the captured value to the parent keybindings view', async () => {
   const widgetState = { parentUid: 7, uid: 42 }
   const keyBindingsState = { uid: 7, value: '' }
@@ -232,6 +265,36 @@ test('openWidget - once', async () => {
     uri: 'quickPick://everything',
     args: [['everything']],
   })
+})
+
+test('openWidget - declares DefineKeyBinding as an owned widget', async () => {
+  const layoutState = {
+    ...ViewletStates.getState('Layout'),
+    mountedViewletsBySource: {},
+    widgetReferences: [],
+    widgetRevisions: {},
+  }
+  ViewletStates.setState('Layout', layoutState)
+  ViewletStates.setRenderedState('Layout', layoutState)
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.createFunctionalRoot', 'DefineKeyBinding', 2, true],
+    ['Viewlet.focusElementByName', 2, 'KeyBinding'],
+  ])
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {})
+
+  await Viewlet.openWidget('DefineKeyBinding', 7)
+
+  const commands = jest.mocked(RendererProcess.invoke).mock.calls[0][1]
+  expect(commands.some((command: any[]) => command[0] === 'Viewlet.append')).toBe(false)
+  expect(commands.map((command: any[]) => command[0])).toEqual([
+    'Viewlet.createFunctionalRoot',
+    'Viewlet.setDom2',
+    'Viewlet.focusElementByName',
+    'Viewlet.focus',
+  ])
+  expect(ViewletStates.getState('Layout').widgetReferences).toEqual([{ parentUid: 7, uid: 2 }])
 })
 
 test('closeWidget restores Simple Browser after closing Quick Pick', async () => {

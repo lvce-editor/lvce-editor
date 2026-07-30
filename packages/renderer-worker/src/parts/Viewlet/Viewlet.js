@@ -3,6 +3,7 @@ import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
@@ -128,10 +129,15 @@ export const dispose = async (id) => {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
     }
+    const widgetDisposeCommands = LayoutWidgets.removeOwnedWidgets(instanceUid)
     if (instance.factory.dispose) {
       await instance.factory.dispose(instance.state)
     }
-    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
+    if (widgetDisposeCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid]])
+    } else {
+      await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
+    }
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, instanceUid))
     }
@@ -166,7 +172,7 @@ export const disposeFunctional = (id) => {
     }
     const uid = instance.state.uid
     Assert.number(uid)
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [...LayoutWidgets.removeOwnedWidgets(uid), [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
@@ -230,7 +236,7 @@ export const hideFunctional = (id) => {
     }
     const uid = instance.state.uid
     Assert.number(uid)
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [...LayoutWidgets.removeOwnedWidgets(uid), [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
@@ -280,7 +286,7 @@ export const resize = async (id, dimensions) => {
       // TODO handle promise rejection gracefully
       instance.factory.resizeEffect(newState)
     }
-    commands = ViewletManager.render(instance.factory, instance.state, newState)
+    commands = [...ViewletManager.render(instance.factory, instance.state, newState)]
   } else if (typeof instance.factory.resize === 'function') {
     // deprecated
     const result = await instance.factory.resize(oldState, dimensions)
@@ -364,17 +370,22 @@ export const openWidget = async (moduleId, ...args) => {
     throw new Error('expected commands to be of type array')
   }
 
-  if (hasInstance) {
+  const isOwnedWidget = moduleId === ViewletModuleId.DefineKeyBinding && typeof args[0] === 'number'
+  if (hasInstance && !isOwnedWidget) {
     commands.unshift(['Viewlet.dispose', moduleId])
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
   const focusByNameIndex = commands.findIndex((command) => command[0] === 'Viewlet.focusElementByName')
 
-  const append = ['Viewlet.append', layout.uid, childUid]
-  if (focusByNameIndex !== -1) {
-    commands.splice(focusByNameIndex, 0, append)
+  if (isOwnedWidget) {
+    commands.splice(0, commands.length, ...LayoutWidgets.declareWidget(args[0], childUid, commands))
   } else {
-    commands.push(['Viewlet.append', layout.uid, childUid])
+    const append = ['Viewlet.append', layout.uid, childUid]
+    if (focusByNameIndex !== -1) {
+      commands.splice(focusByNameIndex, 0, append)
+    } else {
+      commands.push(['Viewlet.append', layout.uid, childUid])
+    }
   }
 
   // TODO send focus changes to renderer process together with other message
@@ -490,7 +501,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if (!ViewletStates.getByUid(uid) && !ViewletStates.hasInstance(uid)) {
     return
   }
-  const commands = ViewletManager.render(instance.factory, instance.renderedState, actualNewState)
+  const commands = [...ViewletManager.render(instance.factory, instance.renderedState, actualNewState)]
   if ('newState' in newState) {
     commands.push(...newState.commands)
   }
@@ -524,7 +535,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     }
     const { parentUid, uid } = instance.state
     Assert.number(uid)
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [...LayoutWidgets.removeWidget(uid)]
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, uid))
     }

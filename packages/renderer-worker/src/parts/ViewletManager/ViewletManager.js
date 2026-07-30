@@ -7,6 +7,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetViewletErrorMessage from '../GetViewletErrorMessage/GetViewletErrorMessage.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
 import * as MouseActions from '../MouseActions/MouseActions.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
@@ -859,7 +860,7 @@ export const mutate = async (id, fn) => {
 
 export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid = newState.parentUid) => {
   const commands = getRenderCommands(module, oldState, newState, uid, parentUid)
-  return commands
+  return LayoutWidgets.reconcile(commands)
 }
 
 export const renderActions = (module, oldState, newState, uid = newState.uid || module.name) => {
