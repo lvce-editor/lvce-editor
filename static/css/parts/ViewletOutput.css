@@ -1,5 +1,9 @@
 .Output {
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  min-width: 0;
+  min-height: 0;
 }
 
 .Output:focus {
@@ -14,10 +18,13 @@
 }
 
 .OutputContent {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   white-space: pre;
   user-select: text;
   cursor: text;
-  overflow-y: auto;
+  overflow: auto;
 }
 
 .ViewletOutput .Line {
