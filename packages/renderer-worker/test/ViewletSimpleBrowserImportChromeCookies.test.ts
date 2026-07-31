@@ -4,12 +4,12 @@ jest.unstable_mockModule('../src/parts/ConfirmPrompt/ConfirmPrompt.js', () => ({
   prompt: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js', () => ({
-  reload: jest.fn(),
+jest.unstable_mockModule('../src/parts/Dialog/Dialog.js', () => ({
+  show: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => ({
-  create: jest.fn(),
+jest.unstable_mockModule('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js', () => ({
+  reload: jest.fn(),
 }))
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
@@ -17,8 +17,8 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
 }))
 
 const ConfirmPrompt = await import('../src/parts/ConfirmPrompt/ConfirmPrompt.js')
+const Dialog = await import('../src/parts/Dialog/Dialog.js')
 const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js')
-const Notification = await import('../src/parts/Notification/Notification.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ViewletSimpleBrowserImportChromeCookies = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserImportChromeCookies.js')
 
@@ -61,7 +61,11 @@ test('asks for confirmation and imports Chrome cookies', async () => {
   expect(SharedProcess.invoke).toHaveBeenNthCalledWith(1, 'ChromeCookieImport.getInfo')
   expect(SharedProcess.invoke).toHaveBeenNthCalledWith(2, 'ChromeCookieImport.importCookies')
   expect(ElectronBrowserViewFunctions.reload).toHaveBeenCalledWith(12)
-  expect(Notification.create).toHaveBeenCalledWith('info', 'Imported 10 Chrome cookies (2 skipped, 0 failed).')
+  expect(Dialog.show).toHaveBeenCalledWith({
+    message: 'Imported 10 Chrome cookies (2 skipped, 0 failed).',
+    title: 'Chrome Cookies Imported',
+    type: 'info',
+  })
 })
 
 test('does not import when confirmation is canceled', async () => {
@@ -84,7 +88,7 @@ test('does not import when confirmation is canceled', async () => {
   )
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.reload).not.toHaveBeenCalled()
-  expect(Notification.create).not.toHaveBeenCalled()
+  expect(Dialog.show).not.toHaveBeenCalled()
 })
 
 test('shows an actionable import error', async () => {
@@ -92,9 +96,10 @@ test('shows an actionable import error', async () => {
   SharedProcess.invoke.mockRejectedValue(new Error('Chrome cookie database is busy. Close Chrome and try again.'))
 
   await expect(ViewletSimpleBrowserImportChromeCookies.importChromeCookies(state)).resolves.toBe(state)
-  expect(Notification.create).toHaveBeenCalledWith(
-    'error',
-    'Failed to import Chrome cookies: Chrome cookie database is busy. Close Chrome and try again.',
-  )
+  expect(Dialog.show).toHaveBeenCalledWith({
+    message: 'Failed to import Chrome cookies: Chrome cookie database is busy. Close Chrome and try again.',
+    title: 'Chrome Cookie Import Failed',
+    type: 'error',
+  })
   expect(ElectronBrowserViewFunctions.reload).not.toHaveBeenCalled()
 })
