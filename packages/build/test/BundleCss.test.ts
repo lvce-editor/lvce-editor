@@ -425,6 +425,26 @@ test('bundleCss preserves the panel background for xterm', async () => {
   }
 }, 30_000)
 
+test('bundleCss preserves readable native select options', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+
+    expect(css).toContain(`.Select > option {
+  background-color: var(--DropDownBackground, #3c3c3c);
+  color: var(--DropDownForeground, #f0f0f0);
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss rewrites icon urls in lazy-loaded css', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
