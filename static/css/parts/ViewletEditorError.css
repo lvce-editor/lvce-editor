@@ -21,7 +21,10 @@
 }
 
 .TextEditorErrorMessage {
-  white-space: pre-wrap;
+  max-width: 100%;
+  overflow: auto;
+  font-family: var(--EditorFontFamily);
+  white-space: pre;
 }
 
 .EditorTextIcon {
