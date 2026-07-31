@@ -189,6 +189,12 @@ export const disposeFunctional = (id) => {
         }
       }
     }
+    if (instance.factory.getOwnedViewletIds) {
+      const ownedViewletIds = instance.factory.getOwnedViewletIds(instance.state)
+      for (const ownedViewletId of ownedViewletIds) {
+        commands.push(...disposeFunctional(ownedViewletId))
+      }
+    }
     instance.status = 'disposed'
     ViewletStates.remove(id)
     ViewletStates.remove(uid)
@@ -251,6 +257,12 @@ export const hideFunctional = (id) => {
         if (child.id) {
           commands.push(...disposeFunctional(child.id))
         }
+      }
+    }
+    if (instance.factory.getOwnedViewletIds) {
+      const ownedViewletIds = instance.factory.getOwnedViewletIds(instance.state)
+      for (const ownedViewletId of ownedViewletIds) {
+        commands.push(...disposeFunctional(ownedViewletId))
       }
     }
     instance.status = 'disposed'
@@ -549,6 +561,12 @@ export const disposeWidgetWithValue = async (id, value) => {
         if (child.id) {
           commands.push(...disposeFunctional(child.id))
         }
+      }
+    }
+    if (instance.factory.getOwnedViewletIds) {
+      const ownedViewletIds = instance.factory.getOwnedViewletIds(instance.state)
+      for (const ownedViewletId of ownedViewletIds) {
+        commands.push(...disposeFunctional(ownedViewletId))
       }
     }
     instance.status = 'disposed'

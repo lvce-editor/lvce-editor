@@ -6,7 +6,12 @@ export const hasFunctionalRootRender = true
 
 const renderDom = {
   isEqual(oldState, newState) {
-    return false
+    return (
+      oldState.tabs === newState.tabs &&
+      oldState.childUids === newState.childUids &&
+      oldState.selectedIndex === newState.selectedIndex &&
+      oldState.terminalTabsEnabled === newState.terminalTabsEnabled
+    )
   },
   apply(oldState, newState) {
     const dom = GetTerminalsDom.getTerminalsDom(newState)
@@ -19,6 +24,9 @@ export const renderFocus = {
     return oldState.focusVersion === newState.focusVersion
   },
   apply(oldState, newState) {
+    if (newState.childUid === -1) {
+      return []
+    }
     return [['Viewlet.focus', newState.childUid]]
   },
   multiple: true,

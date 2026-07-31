@@ -106,6 +106,41 @@ test('getDragData', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getDragData')
 })
 
+test('disposeFunctional disposes owned runtime viewlets', () => {
+  const childFactory = {}
+  ViewletStates.set(11, {
+    state: { uid: 11 },
+    renderedState: { uid: 11 },
+    moduleId: 'Terminal2',
+    factory: childFactory,
+  })
+  ViewletStates.set(12, {
+    state: { uid: 12 },
+    renderedState: { uid: 12 },
+    moduleId: 'Terminal2',
+    factory: childFactory,
+  })
+  ViewletStates.set(10, {
+    state: { uid: 10 },
+    renderedState: { uid: 10 },
+    moduleId: 'Terminals',
+    factory: {
+      getOwnedViewletIds() {
+        return [11, 12]
+      },
+    },
+  })
+
+  expect(Viewlet.disposeFunctional(10)).toEqual([
+    ['Viewlet.dispose', 10],
+    ['Viewlet.dispose', 11],
+    ['Viewlet.dispose', 12],
+  ])
+  expect(ViewletStates.getInstance(10)).toBeUndefined()
+  expect(ViewletStates.getInstance(11)).toBeUndefined()
+  expect(ViewletStates.getInstance(12)).toBeUndefined()
+})
+
 test('getFocusCommands returns focus render commands without sending them', async () => {
   const oldState = { uid: 2 }
   const newState = { focus: 1, uid: 2 }
