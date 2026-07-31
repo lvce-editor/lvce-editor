@@ -360,6 +360,12 @@
     "created": "2024-02-28"
   },
   {
+    "name": "builtin.language-features-nvmrc",
+    "repository": "github.com/lvce-editor/language-features-nvmrc",
+    "version": "1.4.0",
+    "created": "2026-07-09"
+  },
+  {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
     "version": "5.14.0",
