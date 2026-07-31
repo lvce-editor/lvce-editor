@@ -47,7 +47,7 @@ const copyWorkers = async ({ toRoot }) => {
   }
 }
 
-export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot }) => {
+export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot, iconThemeEtag }) => {
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
     commitHash,
     platform,
@@ -68,6 +68,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     version,
     date,
     product,
+    iconThemeEtag,
   })
   await Copy.copy({
     from: rendererWorkerCachePath,

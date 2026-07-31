@@ -117,7 +117,7 @@ const replaceWorkerPaths = async (cachePath) => {
   }
 }
 
-export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date, product }) => {
+export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date, product, iconThemeEtag }) => {
   try {
     await Copy.copy({
       from: 'packages/renderer-worker/src',
@@ -156,6 +156,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       path: `${cachePath}/src/parts/Commit/Commit.js`,
       occurrence: `const commit = 'unknown commit'`,
       replacement: `const commit = '${commitHash}'`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/IconThemeEtag/IconThemeEtag.js`,
+      occurrence: `etag = ''`,
+      replacement: `etag = ${JSON.stringify(iconThemeEtag)}`,
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
