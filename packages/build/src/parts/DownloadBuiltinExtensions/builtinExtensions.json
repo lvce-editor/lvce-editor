@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.16.0",
+    "version": "5.17.0",
     "created": "2022-07-02"
   },
   {
@@ -44,7 +44,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "1.12.0",
+    "version": "1.13.0",
     "created": "2022-12-15"
   },
   {
@@ -152,7 +152,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "created": "2022-06-16"
   },
   {
@@ -164,13 +164,13 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.18.0",
+    "version": "1.19.0",
     "created": "2024-09-26"
   },
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "created": "2024-09-07"
   },
   {
@@ -182,13 +182,13 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.11.0",
+    "version": "1.12.0",
     "created": "2022-06-16"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "2.6.0",
+    "version": "2.7.0",
     "created": "2022-06-16"
   },
   {
@@ -356,13 +356,13 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.11.0",
+    "version": "1.12.0",
     "created": "2024-02-28"
   },
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.13.0",
+    "version": "5.14.0",
     "created": "2022-06-16"
   },
   {
@@ -386,7 +386,7 @@
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "created": "2022-06-16"
   },
   {
