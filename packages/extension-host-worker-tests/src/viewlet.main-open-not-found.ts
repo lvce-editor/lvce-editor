@@ -14,5 +14,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, expect, SideB
   await expect(errorEditor).toHaveCSS('flex-grow', '1')
   const errorMessage = Locator('.TextEditorErrorMessage')
   await expect(errorMessage).toBeVisible()
+  await expect(errorMessage).toHaveCSS('overflow-x', 'auto')
+  await expect(errorMessage).toHaveCSS('white-space', 'pre')
   await expect(errorMessage).toHaveText('The editor could not be opened because the file was not found')
 }
