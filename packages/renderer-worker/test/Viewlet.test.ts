@@ -100,7 +100,7 @@ test('getDragData', async () => {
     ],
     label: '1',
   }
-  RendererProcess.invoke.mockResolvedValue(dragData)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(dragData)
 
   await expect(Viewlet.getDragData()).resolves.toBe(dragData)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getDragData')
