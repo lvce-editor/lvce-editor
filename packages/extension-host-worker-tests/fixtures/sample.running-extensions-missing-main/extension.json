@@ -1,7 +1,0 @@
-{
-  "id": "sample.running-extensions-missing-main",
-  "name": "Missing Main Entry",
-  "version": "1.0.0",
-  "browser": "not-found.js",
-  "activation": ["onCommand:runningExtensions.missingMain"]
-}

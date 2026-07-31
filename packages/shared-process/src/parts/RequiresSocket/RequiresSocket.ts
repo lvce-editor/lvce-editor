@@ -5,8 +5,6 @@
 // TODO remove all of these
 const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'OutputChannel.open',
-  'ExtensionHost.start',
-  'ExtensionHost.send',
   'ExtensionHost.watchColorTheme',
   'ExtensionHost.watchForHotReload',
   'Terminal.create',

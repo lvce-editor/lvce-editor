@@ -1,5 +1,4 @@
 // @ts-nocheck
-import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.ts'
 import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.ts'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.ts'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts'
@@ -8,13 +7,6 @@ const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
   await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
     to: `${cachePath}/extension-host-helper-process`,
     exclude: ['ws', '@lvce-editor/web-socket-server'],
-  })
-}
-
-// @ts-ignore
-const copyExtensionHostFiles = async ({ cachePath }) => {
-  await BundleExtensionHostDependencies.bundleExtensionHostDependencies({
-    to: `${cachePath}/extension-host`,
   })
 }
 

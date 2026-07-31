@@ -1,28 +1,35 @@
-import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
-import * as Platform from '../Platform/Platform.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 
-export const executeProviders = async ({
-  event,
-  method,
-  params,
-  noProviderFoundMessage = 'No provider found',
-  noProviderFoundResult,
-  combineResults,
-  assetDir,
-  platform,
-}) => {
-  await ExtensionHostManagement.activateByEvent(event, assetDir, platform)
-  const result = await ExtensionHostWorker.invoke(method, ...params)
-  return result
+const getNoProviderResult = (noProviderFoundMessage, noProviderFoundResult) => {
+  if (noProviderFoundResult !== undefined) {
+    return noProviderFoundResult
+  }
+  throw new Error(noProviderFoundMessage)
 }
 
-export const executeProvider = async ({ event, method, params, noProviderFoundMessage, assetDir = '', platform = Platform.getPlatform() }) => {
-  await ExtensionHostManagement.activateByEvent(event, assetDir, platform)
-  const result = ExtensionHostWorker.invoke(method, ...params)
-  return result
+/**
+ * @param {any} options
+ */
+export const executeProviders = async (options) => {
+  const { event, method, params, noProviderFoundMessage = 'No provider found', noProviderFoundResult, combineResults } = options
+  const results = await ExtensionManagementWorker.invoke('Extensions.executeProvidersByEvent', event, method, ...params)
+  if (results.length === 0) {
+    return getNoProviderResult(noProviderFoundMessage, noProviderFoundResult)
+  }
+  if (combineResults) {
+    return combineResults(results)
+  }
+  return results
 }
 
-export const execute = async ({ method, params }) => {
-  await ExtensionHostWorker.invoke(method, ...params)
+/**
+ * @param {any} options
+ */
+export const executeProvider = async (options) => {
+  const { event, method, params, noProviderFoundMessage } = options
+  const results = await ExtensionManagementWorker.invoke('Extensions.executeProvidersByEvent', event, method, ...params)
+  if (results.length === 0) {
+    return getNoProviderResult(noProviderFoundMessage)
+  }
+  return results[0]
 }

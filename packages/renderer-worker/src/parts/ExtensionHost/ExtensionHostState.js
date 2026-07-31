@@ -1,9 +1,8 @@
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionStateStorage from '../ExtensionStateStorage/ExtensionStateStorage.js'
+import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 
 export const saveState = async () => {
-  const state = await ExtensionHostWorker.invoke('SaveState.saveState')
-  return state
+  return IframeWorker.invoke('WebView.saveState')
 }
 
 export const getSavedState = async () => {

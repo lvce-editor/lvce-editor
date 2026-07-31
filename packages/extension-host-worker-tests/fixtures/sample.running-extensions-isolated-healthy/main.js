@@ -4,6 +4,9 @@ const { WebWorkerRpcClient } = await import(`${assetDir}/js/lvce-editor-rpc.js`)
 
 await WebWorkerRpcClient.create({
   commandMap: {
+    'ExtensionApi.executeCommand'() {
+      return true
+    },
     'ExtensionApi.ping'() {
       return true
     },

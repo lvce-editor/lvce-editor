@@ -8,10 +8,16 @@ export const statusBarItemSelector = '.StatusBarItem[name="extension-lifecycle"]
 
 export const runningExtensionSelector = '.RunningExtensionId'
 
-export const addLifecycleExtension = async ({ ActivityBar, Extension }) => {
-  await Extension.addWebExtension(new URL('.', import.meta.url).toString())
+export const addLifecycleExtension = async ({ ActivityBar, Command, Extension }) => {
+  const uri = new URL('.', import.meta.url).toString().replace(/\/$/, '')
+  await Extension.addWebExtension(uri)
+  await Extension.enableWorkspace(extensionId)
   await ActivityBar.handleExtensionsChanged()
-  await Extension.activateByEvent('onStatusBarItem', '', 0)
+  const activationResult = await Command.execute('ExtensionManagement.activateByEvent', 'onStatusBarItem', '', 0)
+  if (activationResult.error) {
+    throw activationResult.error
+  }
+  await Command.execute('Layout.handleExtensionsChanged')
 }
 
 export const disableLifecycleExtension = async ({ ExtensionDetail }) => {
@@ -19,6 +25,13 @@ export const disableLifecycleExtension = async ({ ExtensionDetail }) => {
   await ExtensionDetail.handleClickDisable()
 }
 
-export const enableLifecycleExtension = async ({ ExtensionDetail }) => {
+export const enableLifecycleExtension = async ({ Command, ExtensionDetail }) => {
   await ExtensionDetail.handleClickEnable()
+  if (Command) {
+    const activationResult = await Command.execute('ExtensionManagement.activateByEvent', 'onStatusBarItem', '', 0)
+    if (activationResult.error) {
+      throw activationResult.error
+    }
+    await Command.execute('Layout.handleExtensionsChanged')
+  }
 }

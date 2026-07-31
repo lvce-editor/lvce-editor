@@ -1,6 +1,0 @@
-{
-  "id": "sample.running-extensions-missing-name",
-  "version": "1.0.0",
-  "browser": "main.js",
-  "activation": ["onCommand:runningExtensions.missingName"]
-}

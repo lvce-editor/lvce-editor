@@ -119,18 +119,6 @@ const copyServerFiles = async ({ commitHash }) => {
   })
 }
 
-const copyExtensionHostFiles = async () => {
-  await Copy.copy({
-    from: 'packages/extension-host',
-    to: 'packages/build/.tmp/server/extension-host',
-    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
-  })
-  await Copy.copyFile({
-    from: 'LICENSE',
-    to: 'packages/build/.tmp/server/extension-host/LICENSE',
-  })
-}
-
 const copyExtensionHostHelperProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process',
@@ -149,7 +137,6 @@ const sortObject = (object) => {
 
 const serverPackageJsonFiles = [
   'packages/build/.tmp/server/extension-host-helper-process/package.json',
-  'packages/build/.tmp/server/extension-host/package.json',
   'packages/build/.tmp/server/server/package.json',
   'packages/build/.tmp/server/shared-process/package.json',
   'packages/build/.tmp/server/static-server/package.json',
@@ -183,9 +170,6 @@ export const setVersionsAndDependencies = async ({ version, files = serverPackag
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
-    }
-    if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
-      json.dependencies['@lvce-editor/extension-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
@@ -242,10 +226,6 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
-
-  console.time('copyExtensionHostFiles')
-  await copyExtensionHostFiles()
-  console.timeEnd('copyExtensionHostFiles')
 
   console.time('copyExtensionHostHelperProcessFiles')
   await copyExtensionHostHelperProcessFiles()

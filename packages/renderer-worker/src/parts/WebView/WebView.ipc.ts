@@ -14,6 +14,8 @@ export const Commands = {
   getWebViews: WebView.compat.getWebViews,
   setPort: WebView.setPort,
   getSecret: WebView.getSecret,
+  getRpcInfo: WebView.getRpcInfo,
+  createWebViewWorkerRpc2: WebView.createWebViewWorkerRpc2,
   registerInterceptor: WebView.registerInterceptor,
   unregisterInterceptor: WebView.unregisterInterceptor,
 }

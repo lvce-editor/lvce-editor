@@ -1,7 +1,0 @@
-{
-  "id": "sample.running-extensions-throw",
-  "name": "Throwing Activation",
-  "version": "1.0.0",
-  "browser": "main.js",
-  "activation": ["onCommand:runningExtensions.throw"]
-}

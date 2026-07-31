@@ -19,7 +19,7 @@ export const test: Test = async ({ expect, ExtensionDetail, Locator, RunningExte
   await expect(runningExtension).toBeHidden()
 
   await ExtensionDetail.open(extensionId)
-  await enableLifecycleExtension({ ExtensionDetail })
+  await enableLifecycleExtension({ ExtensionDetail, ...api })
   await RunningExtensions.show()
 
   await expect(runningExtension).toBeVisible()

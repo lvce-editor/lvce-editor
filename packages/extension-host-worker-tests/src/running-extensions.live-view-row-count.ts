@@ -7,9 +7,9 @@ export const test: Test = async ({ expect, Locator, RunningExtensions, ...api })
   await addLiveViewExtension(api)
   await RunningExtensions.show()
   const rows = Locator('.RunningExtension')
-  await expect(rows).toHaveCount(1)
+  await expect(rows).toHaveCount(0)
 
   await activateLiveViewExtension({ expect, Locator, ...api })
 
-  await expect(rows).toHaveCount(2)
+  await expect(rows).toHaveCount(1)
 }

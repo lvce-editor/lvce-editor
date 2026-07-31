@@ -1,5 +1,4 @@
 import { existsSync } from 'node:fs'
-import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.ts'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
 import * as Copy from '../Copy/Copy.ts'
@@ -29,7 +28,7 @@ const getWorkerSourcePath = (defaultPath) => {
 const copyWorkers = async ({ toRoot }) => {
   const workers = await JsonFile.readJson(workersJsonPath)
   for (const worker of workers) {
-    if (worker.id === 'rendererWorker' || worker.id === 'extensionHostWorker') {
+    if (worker.id === 'rendererWorker') {
       continue
     }
     const { defaultPath, productionPath } = worker
@@ -74,16 +73,6 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     from: rendererWorkerCachePath,
     to: `${toRoot}/packages/renderer-worker`,
     ignore: ['static'],
-  })
-
-  const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
-    commitHash,
-    platform,
-    assetDir,
-  })
-  await Copy.copy({
-    from: extensionHostWorkerCachePath,
-    to: `${toRoot}/packages/extension-host-worker`,
   })
 
   await copyWorkers({ toRoot })

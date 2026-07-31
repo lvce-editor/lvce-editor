@@ -15,11 +15,10 @@ export const launchStatusBarWorker = async () => {
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.statusBarWorkerPath', StatusBarWorkerUrl.statusBarWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'StatusBar.initialize')
   const { port1, port2 } = new MessageChannel()
-  void Promise.all([
+  await Promise.all([
     ExtensionManagementWorker.invokeAndTransfer('Extensions.handleMessagePort', port1, ExtensionManagementRpcId.StatusBarWorker),
     JsonRpc.invokeAndTransfer(ipc, 'StatusBar.handleExtensionManagementMessagePort', port2),
-  ]).catch(console.error)
+  ])
   return ipc
 }

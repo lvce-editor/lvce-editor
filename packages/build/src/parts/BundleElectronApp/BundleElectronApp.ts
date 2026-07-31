@@ -35,7 +35,6 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/extension-host-helper-process/package-lock.json',
     'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
-    'packages/build/src/parts/BundleExtensionHostDependencies/BundleExtensionHostDependencies.ts',
     'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',

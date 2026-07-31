@@ -1,7 +1,0 @@
-{
-  "id": "sample.running-extensions-missing-activate",
-  "name": "Missing Activate Export",
-  "version": "1.0.0",
-  "browser": "main.js",
-  "activation": ["onCommand:runningExtensions.missingActivate"]
-}

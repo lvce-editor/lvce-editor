@@ -48,8 +48,15 @@ const ExtensionManagementIpc = await import('../src/parts/ExtensionManagement/Ex
 const Command = await import('../src/parts/Command/Command.js')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
-const ExtensionHostManagement = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagement.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+
+test('activateByEvent delegates to the isolated extension management worker', async () => {
+  await ExtensionManagement.activateByEvent('onStatusBarItem', '/asset', 1)
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.activateByEvent', 'onStatusBarItem', '/asset', 1)
+  expect(ExtensionManagementIpc.Commands.activateByEvent).toBe(ExtensionManagement.activateByEvent)
+  expect(ExtensionManagementIpc.Commands['ExtensionHostManagement.activateByEvent']).toBe(ExtensionManagement.activateByEvent)
+})
 
 test('doInvalidateExtensionsCache asks the extension management worker to invalidate', async () => {
   await ExtensionManagement.doInvalidateExtensionsCache()
@@ -68,12 +75,9 @@ test('handleExtensionsCacheInvalidated refreshes renderer state without invalida
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
 })
 
-test('handleExtensionsCacheInvalidated applies the disabled extension state', async () => {
-  ExtensionHostManagement.state.runningExtensions['sample.extension'] = true
-
+test('handleExtensionsCacheInvalidated forwards the disabled extension state', async () => {
   await ExtensionManagement.handleExtensionsCacheInvalidated('sample.extension', true)
 
-  expect(ExtensionHostManagement.state.runningExtensions['sample.extension']).toBeUndefined()
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged', 'sample.extension', true)

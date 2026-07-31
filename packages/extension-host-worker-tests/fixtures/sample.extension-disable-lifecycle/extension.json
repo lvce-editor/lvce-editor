@@ -15,7 +15,8 @@
     {
       "id": "sample.extension-disable-lifecycle-view",
       "title": "Extension Lifecycle",
-      "icon": "symbol-beaker"
+      "icon": "symbol-beaker",
+      "kind": "virtualDom"
     }
   ]
 }

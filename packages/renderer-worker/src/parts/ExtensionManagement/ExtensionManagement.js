@@ -1,8 +1,6 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ContextMenu from '../ContextMenu/ContextMenu.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
-import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
@@ -17,6 +15,10 @@ export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
 }
 
+export const activateByEvent = (event, assetDir = AssetDir.assetDir, platform = Platform.getPlatform()) => {
+  return ExtensionManagementWorker.invoke('Extensions.activateByEvent', event, assetDir, platform)
+}
+
 export const doInvalidateExtensionsCache = async () => {
   try {
     await ExtensionManagementWorker.invoke('Extensions.invalidateExtensionsCache')
@@ -28,9 +30,6 @@ export const doInvalidateExtensionsCache = async () => {
 export const handleExtensionsCacheInvalidated = async (extensionId, disabled) => {
   try {
     const hasExtensionState = typeof extensionId === 'string' && typeof disabled === 'boolean'
-    if (hasExtensionState) {
-      ExtensionHostManagement.handleExtensionStateChanged(extensionId, disabled)
-    }
     await Command.execute('KeyBindings.hydrate')
     await Command.execute('ColorTheme.reload')
     if (hasExtensionState) {
@@ -112,7 +111,7 @@ export const getExtension = async (id) => {
 let disabledIds = []
 
 export const getExtension2 = async (id) => {
-  const extension = await ExtensionHostWorker.invoke('Extensions.getExtension', id)
+  const extension = await ExtensionManagementWorker.invoke('Extensions.getExtension', id, AssetDir.assetDir, Platform.getPlatform())
   if (disabledIds.includes(id)) {
     return {
       ...extension,

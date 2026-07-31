@@ -47,7 +47,7 @@ export const getRendererWorkerCachePath = async (extraContents) => {
   return rendererWorkerCachePath
 }
 
-const getExtensionHostWorkerCacheHash = async (extraContents) => {
+const getWorkerCacheHash = async (extraContents) => {
   const hash = await Hash.computeFolderHash(
     'packages/build/src',
     [
@@ -63,145 +63,136 @@ const getExtensionHostWorkerCacheHash = async (extraContents) => {
   return hash
 }
 
-export const getExtensionHostWorkerCachePath = async (extraContents) => {
-  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
-  const extensionHostWorkerCachePath = Path.join(
-    Path.absolute('packages/build/.tmp/cachedSources/extension-host-worker'),
-    extensionHostWorkerCacheHash,
-  )
-  return extensionHostWorkerCachePath
-}
-
 export const getTerminalWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/terminal-worker'), hash)
   return cachePath
 }
 
 export const getKeyBindingsViewWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/keybindings-view-worker'), hash)
   return cachePath
 }
 
 export const getAboutViewWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/about-view-worker'), hash)
   return cachePath
 }
 
 export const getTitleBarWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/title-bar-worker'), hash)
   return cachePath
 }
 
 export const getMarkdownWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/markdown-worker'), hash)
   return cachePath
 }
 
 export const getSearchWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/search-worker'), hash)
   return cachePath
 }
 
 export const getSyntaxHighlightingWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/syntax-highlighting-worker'), hash)
   return cachePath
 }
 
 export const getIframeWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/iframe-worker'), hash)
   return cachePath
 }
 
 export const getRenameWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/rename-worker'), hash)
   return cachePath
 }
 
 export const getColorPickerWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/color-picker-worker'), hash)
   return cachePath
 }
 export const getSourceControlWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/source-control-worker'), hash)
   return cachePath
 }
 
 export const getDebugWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/debug-worker'), hash)
   return cachePath
 }
 
 export const getFileSearchWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/file-search-worker'), hash)
   return cachePath
 }
 
 export const getIframeInspectorWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/iframe-inspector'), hash)
   return cachePath
 }
 
 export const getTextSearchWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/text-search-worker'), hash)
   return cachePath
 }
 
 export const getExtensionSearchViewWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/extension-search-view-worker'), hash)
   return cachePath
 }
 
 export const getExtensionDetailViewWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/extension-detail-view-worker'), hash)
   return cachePath
 }
 
 export const getEmbedsWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/embeds-worker'), hash)
   return cachePath
 }
 
 export const getEditorWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/editor-worker'), hash)
   return cachePath
 }
 
 export const getErrorWorkerCachePath = async (extraContents) => {
-  const hash = await getExtensionHostWorkerCacheHash(extraContents)
+  const hash = await getWorkerCacheHash(extraContents)
   const cachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/error-worker'), hash)
   return cachePath
 }
 
 export const getExtensionHostSubWorkerCachePath = async (extraContents) => {
-  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
-  const extensionHostWorkerCachePath = Path.join(
+  const extensionHostSubWorkerCacheHash = await getWorkerCacheHash(extraContents)
+  const extensionHostSubWorkerCachePath = Path.join(
     Path.absolute('packages/build/.tmp/cachedSources/extension-host-sub-worker'),
-    extensionHostWorkerCacheHash,
+    extensionHostSubWorkerCacheHash,
   )
-  return extensionHostWorkerCachePath
+  return extensionHostSubWorkerCachePath
 }
 
 export const getTestWorkerCachePath = async (extraContents) => {
-  const testWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
+  const testWorkerCacheHash = await getWorkerCacheHash(extraContents)
   const testWorkerCachePath = Path.join(Path.absolute('packages/build/.tmp/cachedSources/test-worker'), testWorkerCacheHash)
   return testWorkerCachePath
 }

@@ -1,6 +1,5 @@
 export const ClipBoard = 1
 export const Developer = 2
-export const ExtensionHost = 3
 export const ExtensionManagement = 4
 export const FileSystem = 5
 export const OpenNativeFolder = 6
