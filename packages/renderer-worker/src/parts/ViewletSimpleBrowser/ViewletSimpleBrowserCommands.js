@@ -28,6 +28,7 @@ export const LazyCommands = {
   backward: () => import('./ViewletSimpleBrowserBackward.js'),
   forward: () => import('./ViewletSimpleBrowserForward.js'),
   importChromeCookies: () => import('./ViewletSimpleBrowserImportChromeCookies.js'),
+  importFirefoxCookies: () => import('./ViewletSimpleBrowserImportFirefoxCookies.js'),
   openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
   reload: () => import('./ViewletSimpleBrowserReload.js'),
   cancelNavigation: () => import('./ViewletSimpleBrowserCancelNavigation.js'),
