@@ -19,6 +19,7 @@ export const test: Test = async (api) => {
   await api.Locator('.PanelTab[name="Terminals"]').click()
   const terminals = api.Locator('.XtermTerminal')
   await api.expect(terminals).toHaveCount(1)
+  await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
 
   await api.Locator('#Panel .IconButton[title="New Terminal"]').click()
   await api.expect(api.Locator('.TerminalTab')).toHaveCount(2)
@@ -32,6 +33,7 @@ export const test: Test = async (api) => {
   await api.expect(terminals.nth(1)).toContainText('right-terminal')
 
   await terminals.nth(0).click()
+  await api.expect(terminals.nth(0).locator('.xterm-helper-textarea')).toBeFocused()
   await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals).toContainText('right-terminal')
