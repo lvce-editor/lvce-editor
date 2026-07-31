@@ -1,6 +1,6 @@
 import * as ConfirmPrompt from '../ConfirmPrompt/ConfirmPrompt.js'
+import * as Dialog from '../Dialog/Dialog.js'
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
-import * as Notification from '../Notification/Notification.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const getConfirmationMessage = ({ cookieCount, profileDirectory, profileName }) => {
@@ -28,14 +28,21 @@ export const importChromeCookies = async (state) => {
     }
     const result = await SharedProcess.invoke('ChromeCookieImport.importCookies')
     await ElectronBrowserViewFunctions.reload(state.browserViewId)
-    const notificationType = result.failed > 0 ? 'warning' : 'info'
-    await Notification.create(notificationType, getResultMessage(result))
+    await Dialog.show({
+      message: getResultMessage(result),
+      title: 'Chrome Cookies Imported',
+      type: 'info',
+    })
     return {
       ...state,
       isLoading: true,
     }
   } catch (error) {
-    await Notification.create('error', `Failed to import Chrome cookies: ${getErrorMessage(error)}`)
+    await Dialog.show({
+      message: `Failed to import Chrome cookies: ${getErrorMessage(error)}`,
+      title: 'Chrome Cookie Import Failed',
+      type: 'error',
+    })
     return state
   }
 }
