@@ -12,7 +12,7 @@ import * as ChatViewModelWorker from '../ChatViewModelWorker/ChatViewModelWorker
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
@@ -31,7 +31,8 @@ import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  await ExtensionHostWorker.invokeAndTransfer(initialCommand, port, rpcId)
+  HandleIpc.handleIpc(port)
+  port.start?.()
 }
 
 export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId) => {

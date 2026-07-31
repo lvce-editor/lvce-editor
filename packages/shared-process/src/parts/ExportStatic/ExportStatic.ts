@@ -150,7 +150,6 @@ const applyOverridesRendererProcess = async ({ commitHash, pathPrefix, root }: a
 }
 
 const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
-  const extensionHostWorkerDistPath = getWorkerDistPath(root, commitHash, 'extensionHostWorker')
   await applyOverridesRendererProcess({ commitHash, pathPrefix, root })
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
@@ -162,19 +161,6 @@ const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`,
   )
-  await replace(
-    extensionHostWorkerDistPath,
-    `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-    `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
-  )
-  await replace(extensionHostWorkerDistPath, `/${commitHash}`, `${pathPrefix}/${commitHash}`)
-  await replace(extensionHostWorkerDistPath, `const platform = Remote`, `const platform = Web`)
-  // await replace(
-  //   Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
-  //   `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
-  //   `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
-  // )
-
   const extensionDirents = await FileSystem.readDir(Path.join(serverStaticPath, commitHash, 'extensions'))
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)

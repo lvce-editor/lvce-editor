@@ -91,6 +91,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.FilePicker
     case 'FileSystem':
       return ModuleId.FileSystem
+    case 'FileSystemMemory':
+      return ModuleId.FileSystemMemory
     case 'Format':
       return ModuleId.Format
     case 'Focus':
@@ -222,8 +224,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.SendMessagePortToExtensionHostWorker
     case 'SendMessagePortToSyntaxHighlightingWorker':
       return ModuleId.SendMessagePortToSyntaxHighlightingWorker
-    case 'ExtensionHostManagement':
-      return ModuleId.ExtensionHostManagement
     case 'Transferrable':
       return ModuleId.Transferrable
     case 'WebView':
@@ -242,8 +242,12 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronDialog
     case 'Process':
       return ModuleId.Process
+    case 'ExtensionHostManagement':
+    case 'ExtensionHostSourceControl':
     case 'ExtensionManagement':
       return ModuleId.ExtensionManagement
+    case 'ExtensionHostTextDocument':
+      return ModuleId.ExtensionHostCode
     case 'Markdown':
       return ModuleId.Markdown
     case 'MeasureTextHeight':

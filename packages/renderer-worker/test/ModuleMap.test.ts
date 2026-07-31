@@ -10,8 +10,20 @@ test('getModule - not found', () => {
 
 test('getModule', () => {
   expect(ModuleMap.getModuleId('About.showAbout')).toBe(ModuleId.About)
+  expect(ModuleMap.getModuleId('ExtensionHostManagement.activateByEvent')).toBe(ModuleId.ExtensionManagement)
+  expect(ModuleMap.getModuleId('ExtensionHostSourceControl.getChangedFiles')).toBe(ModuleId.ExtensionManagement)
+  expect(ModuleMap.getModuleId('ExtensionHostTextDocument.syncFull')).toBe(ModuleId.ExtensionHostCode)
   expect(ModuleMap.getModuleId('License.openLicense')).toBe(ModuleId.License)
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
+})
+
+test('legacy text document synchronization commands are isolated-host compatibility no-ops', async () => {
+  const loadedModule = await Module.load(ModuleMap.getModuleId('ExtensionHostTextDocument.syncFull'))
+  const commands = (loadedModule as { Commands: Record<string, (...args: readonly unknown[]) => unknown> }).Commands
+
+  expect(commands['ExtensionHostTextDocument.syncFull']('file:///test.txt', 1, 'text', 'content')).toBeUndefined()
+  expect(commands['ExtensionHostTextDocument.syncIncremental'](1, [])).toBeUndefined()
+  expect(commands['ExtensionHostTextDocument.setLanguageId'](1, 'javascript')).toBeUndefined()
 })
 
 test('getModule - layout runtime context', async () => {

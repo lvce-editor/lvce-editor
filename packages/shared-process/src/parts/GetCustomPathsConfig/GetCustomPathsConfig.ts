@@ -5,9 +5,6 @@ export const getCustomPathsConfig = (preferences: any): any => {
   if (preferences['develop.rendererProcessPath']) {
     config.rendererProcessPath = GetRemoteUrl.getRemoteUrl(preferences['develop.rendererProcessPath'])
   }
-  if (preferences['develop.extensionHostWorkerPath']) {
-    config.extensionHostWorkerUrl = GetRemoteUrl.getRemoteUrl(preferences['develop.extensionHostWorkerPath'])
-  }
   if (preferences['develop.editorWorkerPath']) {
     config.editorWorkerUrl = GetRemoteUrl.getRemoteUrl(preferences['develop.editorWorkerPath'])
   }

@@ -1,8 +1,0 @@
-{
-  "id": "sample.running-extensions-invalid-icon",
-  "name": "Invalid Icon",
-  "version": "1.0.0",
-  "browser": "main.js",
-  "icon": "missing.svg",
-  "activation": ["onCommand:runningExtensions.invalidIcon"]
-}

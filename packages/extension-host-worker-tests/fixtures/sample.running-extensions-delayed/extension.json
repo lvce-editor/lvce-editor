@@ -1,7 +1,0 @@
-{
-  "id": "sample.running-extensions-delayed",
-  "name": "Delayed Activation",
-  "version": "1.0.0",
-  "browser": "main.js",
-  "activation": ["onCommand:runningExtensions.delayed"]
-}

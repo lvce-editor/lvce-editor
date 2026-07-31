@@ -1,73 +1,122 @@
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as DirentType from '../DirentType/DirentType.js'
+import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const name = 'Memory'
 
+const files = Object.create(null)
 const memfsPrefix = 'memfs://'
 
-const getPath = (uri) => {
-  if (uri.startsWith(memfsPrefix)) {
-    return uri.slice(memfsPrefix.length)
+const getPath = (uri) => (uri.startsWith(memfsPrefix) ? uri.slice(memfsPrefix.length) : uri)
+
+const getDirent = (uri) => files[getPath(uri)] || files[`${getPath(uri)}/`]
+
+const ensureParentDirs = (uri) => {
+  let endIndex = uri.indexOf(PathSeparatorType.Slash)
+  while (endIndex >= 0) {
+    files[uri.slice(0, endIndex + 1)] ||= { content: '', type: DirentType.Directory }
+    endIndex = uri.indexOf(PathSeparatorType.Slash, endIndex + 1)
   }
-  return uri
 }
 
 export const readFile = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.readFile', getPath(uri))
+  const path = getPath(uri)
+  const dirent = files[path]
+  if (!dirent) {
+    throw new FileNotFoundError(path)
+  }
+  if (dirent.type !== DirentType.File) {
+    throw new Error('file is a directory')
+  }
+  return dirent.content
 }
 
-export const exists = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.exists', getPath(uri))
-}
+export const exists = (uri) => Boolean(getDirent(uri))
 
 export const writeFile = (uri, content) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.writeFile', getPath(uri), content)
+  const path = getPath(uri)
+  ensureParentDirs(path)
+  files[path] = { content, type: DirentType.File }
 }
+
+export const createFile = (uri) => writeFile(uri, '')
 
 export const mkdir = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.mkdir', getPath(uri))
+  let path = getPath(uri)
+  if (!path.endsWith(PathSeparatorType.Slash)) {
+    path += PathSeparatorType.Slash
+  }
+  ensureParentDirs(path)
+  files[path] = { content: '', type: DirentType.Directory }
 }
 
-export const getPathSeparator = () => {
-  return PathSeparatorType.Slash
-}
+export const getPathSeparator = () => PathSeparatorType.Slash
 
-export const isReadonly = () => {
-  return false
-}
+export const isReadonly = () => false
 
 export const remove = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.remove', getPath(uri))
+  const path = getPath(uri)
+  for (const key of Object.keys(files)) {
+    if (key === path || key === `${path}/` || key.startsWith(`${path}/`)) {
+      delete files[key]
+    }
+  }
 }
 
 export const readDirWithFileTypes = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.readDirWithFileTypes', getPath(uri))
+  let path = getPath(uri)
+  if (path && !path.endsWith(PathSeparatorType.Slash)) {
+    path += PathSeparatorType.Slash
+  }
+  const entries = new Map()
+  for (const [key, value] of Object.entries(files)) {
+    if (!key.startsWith(path) || key === path) {
+      continue
+    }
+    const rest = key.slice(path.length)
+    const slashIndex = rest.indexOf(PathSeparatorType.Slash)
+    if (slashIndex >= 0) {
+      entries.set(rest.slice(0, slashIndex), DirentType.Directory)
+    } else {
+      entries.set(rest, value.type)
+    }
+  }
+  return [...entries].map(([entryName, type]) => ({ name: entryName, type }))
 }
 
-export const getBlobUrl = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.getBlobUrl', getPath(uri))
+export const getBlob = (uri, type = '') => new Blob([readFile(uri)], { type })
+
+export const getBlobUrl = (uri, type = '') => URL.createObjectURL(getBlob(uri, type))
+
+export const chmod = () => {
+  throw new Error('[memfs] chmod not implemented')
 }
 
-export const getBlob = async (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.getBlob', getPath(uri))
-}
+export const copy = (oldUri, newUri) => writeFile(newUri, readFile(oldUri))
 
-export const chmod = (path, permissions) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.chmod', getPath(path), permissions)
-}
-
-export const rename = (oldPath, newPath) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.rename', getPath(oldPath), getPath(newPath))
-}
-
-export const copy = (oldPath, newPath) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.copy', getPath(oldPath), getPath(newPath))
+export const rename = (oldUri, newUri) => {
+  const oldPath = getPath(oldUri)
+  const newPath = getPath(newUri)
+  const dirent = getDirent(oldPath)
+  if (!dirent) {
+    throw new FileNotFoundError(oldPath)
+  }
+  if (dirent.type === DirentType.File) {
+    copy(oldPath, newPath)
+    remove(oldPath)
+    return
+  }
+  for (const [key, value] of Object.entries({ ...files })) {
+    if (key === `${oldPath}/` || key.startsWith(`${oldPath}/`)) {
+      files[key.replace(oldPath, newPath)] = value
+    }
+  }
+  remove(oldPath)
 }
 
 export const stat = (uri) => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.stat', getPath(uri))
+  const dirent = getDirent(uri)
+  return dirent ? { exists: true, type: dirent.type } : { exists: false, size: 0 }
 }
 
-export const getFiles = () => {
-  return ExtensionHostWorker.invoke('FileSystemMemory.getFiles')
-}
+export const getFiles = () => files

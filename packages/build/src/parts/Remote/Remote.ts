@@ -9,8 +9,6 @@ import execa from 'execa'
 import { getTmpDir, root } from '../Shared/Shared.ts'
 
 // @ts-ignore
-const PACKAGE_EXTENSION_HOST = join(root, 'packages', 'extension-host')
-// @ts-ignore
 const PACKAGE_MAIN_PROCESS = join(root, 'packages', 'main-process')
 // @ts-ignore
 const PACKAGE_RENDERER_PROCESS = join(root, 'packages', 'renderer-process')
@@ -22,23 +20,6 @@ const PACKAGE_SHARED_PROCESS = join(root, 'packages', 'shared-process')
 const PACKAGE_WEB = join(root, 'packages', 'web')
 
 const TO_COPY = [
-  // extension host
-  {
-    from: 'packages/extension-host/bin',
-    to: 'packages/build/.tmp/packages/extension-host/bin',
-  },
-  {
-    from: 'packages/extension-host/src',
-    to: 'packages/build/.tmp/packages/extension-host/src',
-  },
-  {
-    from: 'packages/extension-host/package.json',
-    to: 'packages/build/.tmp/packages/extension-host',
-  },
-  {
-    from: 'packages/extension-host/package-lock.json',
-    to: 'packages/build/.tmp/packages/extension-host',
-  },
   // renderer worker
   {
     from: 'packages/renderer-worker/src',
@@ -94,7 +75,7 @@ const copySources = async () => {
   await mkdir(join(root, 'packages/build/.tmp/playground'))
 }
 
-const TO_INSTALL_DEPENDENCIES = ['packages/build/.tmp/packages/extension-host', 'packages/build/.tmp/packages/shared-process']
+const TO_INSTALL_DEPENDENCIES = ['packages/build/.tmp/packages/shared-process']
 
 const installDependencies = async () => {
   for (const to of TO_INSTALL_DEPENDENCIES) {

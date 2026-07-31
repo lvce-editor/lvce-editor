@@ -2,7 +2,11 @@ export const activateFixture = async ({ Command, Extension }, fixtureName, activ
   const uri = new URL(`./${fixtureName}`, import.meta.url).toString()
   await Extension.addWebExtension(uri)
   try {
-    await Command.execute('ExtensionHostManagement.activateByEvent', activationEvent, '', 1)
+    const commandPrefix = 'onCommand:'
+    if (!activationEvent.startsWith(commandPrefix)) {
+      throw new Error(`Unsupported activation event: ${activationEvent}`)
+    }
+    await Command.execute('ExtensionHost.executeCommand', activationEvent.slice(commandPrefix.length))
   } catch {
     // Activation failures are the state under test.
   }

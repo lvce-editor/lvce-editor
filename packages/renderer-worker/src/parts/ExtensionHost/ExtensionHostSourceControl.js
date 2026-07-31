@@ -1,65 +1,55 @@
-import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+
+const executeProvider = async (providerId, methodName, ...args) => {
+  const { found, result } = await ExtensionManagementWorker.invoke('Extensions.executeSourceControlProvider', providerId, methodName, ...args)
+  if (!found) {
+    throw new Error('No source control provider found')
+  }
+  return result
+}
 
 export const acceptInput = async (providerId, text) => {
-  return ExtensionHostShared.executeProvider({
-    event: 'none',
-    method: ExtensionHostCommandType.SourceControlAcceptInput,
-    params: [providerId, text],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return executeProvider(providerId, 'executeSourceControlAcceptInput', text)
 }
 
 export const getChangedFiles = (providerId) => {
-  return ExtensionHostShared.executeProvider({
-    event: 'none',
-    method: ExtensionHostCommandType.SourceControlGetChangedFiles,
-    params: [providerId],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return executeProvider(providerId, 'executeSourceControlGetChangedFiles')
+}
+
+export const generateCommitMessage = (providerId) => {
+  return executeProvider(providerId, 'executeSourceControlGenerateCommitMessage')
+}
+
+export const getBadgeCount = (providerId) => {
+  return executeProvider(providerId, 'executeSourceControlGetBadgeCount')
+}
+
+export const getFeatures = (providerId) => {
+  return executeProvider(providerId, 'executeSourceControlGetFeatures')
 }
 
 export const getFileBefore = (providerId, path) => {
-  return ExtensionHostShared.executeProvider({
-    event: 'none',
-    method: ExtensionHostCommandType.SourceControlGetFileBefore,
-    params: [providerId, path],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return executeProvider(providerId, 'executeSourceControlGetFileBefore', path)
+}
+
+export const getFileDecorations = (providerId, uris) => {
+  return executeProvider(providerId, 'executeSourceControlGetFileDecorations', uris)
 }
 
 export const getGroups = (providerId, path) => {
-  return ExtensionHostShared.executeProvider({
-    event: 'none',
-    method: ExtensionHostCommandType.SourceControlGetGroups,
-    params: [providerId, path],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return executeProvider(providerId, 'executeSourceControlGetGroups', path)
 }
 
 export const add = (providerId, path) => {
-  return ExtensionHostShared.executeProvider({
-    event: 'none',
-    method: ExtensionHostCommandType.SourceControlAdd,
-    params: [providerId, path],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return executeProvider(providerId, 'executeSourceControlAdd', path)
 }
 
 export const discard = (providerId, path) => {
-  return ExtensionHostShared.executeProvider({
-    event: 'none',
-    method: ExtensionHostCommandType.SourceControlDiscard,
-    params: [providerId, path],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return executeProvider(providerId, 'executeSourceControlDiscard', path)
 }
 
 export const getEnabledProviderIds = (scheme, root) => {
-  return ExtensionHostShared.executeProvider({
-    event: `onSourceControl:${scheme}`,
-    method: ExtensionHostCommandType.SourceControlGetEnabledProviderIds,
-    params: [scheme, root],
-    noProviderFoundMessage: 'No source control provider found',
-  })
+  return ExtensionManagementWorker.invoke('Extensions.getEnabledSourceControlProviderIds', scheme, root)
 }
+
+export const getIconDefinitions = () => []

@@ -17,11 +17,6 @@
       "entry": ["index.js", "src/extensionHostHelperProcessMain.js"],
       "project": ["**/*.js"]
     },
-    "packages/extension-host": {
-      "entry": ["index.js", "bin/*.js", "src/extensionHostMain.js"],
-      "project": ["**/*.js"],
-      "ignoreBinaries": ["microbundle"]
-    },
     "packages/extension-host-worker-tests": {
       "entry": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts"],
       "project": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts", "typings/**/*.d.ts"],

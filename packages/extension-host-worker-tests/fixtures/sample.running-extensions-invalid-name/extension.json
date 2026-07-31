@@ -1,7 +1,0 @@
-{
-  "id": "sample.running-extensions-invalid-name",
-  "name": 42,
-  "version": "1.0.0",
-  "browser": "main.js",
-  "activation": ["onCommand:runningExtensions.invalidName"]
-}

@@ -103,51 +103,6 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.Exec
     case 'Exit.exit':
       return ModuleId.Exit
-    case 'ExtensionHost.dispose':
-    case 'ExtensionHost.enableExtension':
-    case 'ExtensionHost.executeCommand':
-    case 'ExtensionHost.executeTabCompletionProvider':
-    case 'ExtensionHost.format':
-    case 'ExtensionHost.getMemoryUsage':
-    case 'ExtensionHost.getSourceControlBadgeCount':
-    case 'ExtensionHost.getStatusBarItems':
-    case 'ExtensionHost.registerChangeListener':
-    case 'ExtensionHost.setWorkspacePath':
-    case 'ExtensionHost.sourceControlGetChangedFiles':
-    case 'ExtensionHost.start':
-    case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
-    case 'ExtensionHostClosingTag.execute':
-    case 'ExtensionHostClosingTag.executeClosingTagProvider':
-    case 'ExtensionHostClosingTag.executeTypeDefinitionProvider':
-    case 'ExtensionHostCompletion.execute':
-    case 'ExtensionHostDefinition.executeDefinitionProvider':
-    case 'ExtensionHostDiagnostic.execute':
-    case 'ExtensionHostFileSystem.getPathSeparator':
-    case 'ExtensionHostFileSystem.readDirWithFileTypes':
-    case 'ExtensionHostFileSystem.readFile':
-    case 'ExtensionHostFileSystem.remove':
-    case 'ExtensionHostFileSystem.rename':
-    case 'ExtensionHostFileSystem.writeFile':
-    case 'ExtensionHostHover.execute':
-    case 'ExtensionHostImplementation.executeImplementationProvider':
-    case 'ExtensionHostKeyBindings.getKeyBindings':
-    case 'ExtensionHostLanguages.getLanguages':
-    case 'ExtensionHostManagement.activateAll':
-    case 'ExtensionHostManagement.enableExtensions':
-    case 'ExtensionHostOutput.getOutputChannels':
-    case 'ExtensionHostQuickPick.handleQuickPickResult':
-    case 'ExtensionHostReferences.executeReferenceProvider':
-    case 'EXtensionHostRename.executePrepareRename':
-    case 'ExtensionHostRename.executeRename':
-    case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
-    case 'ExtensionHostSourceControl.acceptInput':
-    case 'ExtensionHostTextDocument':
-    case 'ExtensionHostTextDocument.setLanguageId':
-    case 'ExtensionHostTextDocument.syncFull':
-    case 'ExtensionHostTextDocument.syncIncremental':
-    case 'ExtensionHostTextDocument.syncInitial':
-    case 'ExtensionHostWorkspace.setWorkspacePath':
-      return ModuleId.ExtensionHost
     case 'ExtensionHost.getColorThemeJson':
     case 'ExtensionHost.getColorThemeNames':
     case 'ExtensionHost.getColorThemes':

@@ -1,4 +1,3 @@
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
@@ -29,7 +28,7 @@ export const readFile = async (uri) => {
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystemFetch.readFile', uri)
   }
-  return ExtensionHostWorker.invoke('FileSystemFetch.readFile', uri)
+  return FileSystemWorker.invoke('FileSystem.readFile', uri)
 }
 
 export const exists = async (uri) => {
@@ -49,17 +48,17 @@ export const readJson = async (uri) => {
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystem.readJson', uri)
   }
-  return ExtensionHostWorker.invoke('FileSystemFetch.readJson', uri)
+  return FileSystemWorker.invoke('FileSystem.readJson', uri)
 }
 
 export const writeFile = (uri, content) => {
   uri = normalizeUri(uri)
-  return ExtensionHostWorker.invoke('FileSystemFetch.writeFile', uri)
+  throw new Error('Fetch file systems are readonly')
 }
 
 export const mkdir = (uri) => {
   uri = normalizeUri(uri)
-  return ExtensionHostWorker.invoke('FileSystemFetch.mkdir', uri)
+  throw new Error('Fetch file systems are readonly')
 }
 
 export const getPathSeparator = () => {
@@ -72,20 +71,20 @@ export const isReadonly = () => {
 
 export const remove = (uri) => {
   uri = normalizeUri(uri)
-  return ExtensionHostWorker.invoke('FileSystemFetch.remove', uri)
+  throw new Error('Fetch file systems are readonly')
 }
 
 export const readDirWithFileTypes = async (uri) => {
   uri = normalizeUri(uri)
-  return ExtensionHostWorker.invoke('FileSystemFetch.readDirWithFileTypes', uri)
+  return FileSystemWorker.invoke('FileSystem.readDirWithFileTypes', uri)
 }
 
 export const chmod = (path, permissions) => {
   path = normalizeUri(path)
-  return ExtensionHostWorker.invoke('FileSystemFetch.chmod', path, permissions)
+  throw new Error('Fetch file systems are readonly')
 }
 
 export const getBlob = async (uri, type) => {
   uri = normalizeUri(uri)
-  return ExtensionHostWorker.invoke('FileSystemFetch.getBlob', uri, type)
+  return FileSystemWorker.invoke('FileSystem.readFileAsBlob', uri, type)
 }

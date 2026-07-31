@@ -4,5 +4,6 @@
   "version": "1.0.0",
   "browser": "main.js",
   "isolated": true,
-  "activation": ["onCommand:runningExtensions.close1s"]
+  "activation": ["onCommand:runningExtensions.close1s"],
+  "commands": [{ "id": "runningExtensions.close1s" }]
 }
