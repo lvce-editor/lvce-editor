@@ -16,7 +16,14 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const SendMessagePortToExtensionHostWorker = await import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.js')
 
@@ -36,4 +43,13 @@ test('sendMessagePortToDialogWorker', async () => {
 
   expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port)
+})
+
+test('sendMessagePortToExtensionHostWorker forwards to extension management worker', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToExtensionHostWorker(port, 'HandleMessagePort.handleMessagePort2', 42)
+
+  expect(ExtensionManagementWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(ExtensionManagementWorker.invokeAndTransfer).toHaveBeenCalledWith('Extensions.handleMessagePort', port, 42)
 })
