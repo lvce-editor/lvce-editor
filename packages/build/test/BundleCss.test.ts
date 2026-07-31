@@ -104,7 +104,7 @@ test('bundleCss keeps the panel and panel sash within the non-preview area', asy
   width: var(--PanelWidth);
 }`)
     expect(css).toContain(`.SashPanel {
-  top: var(--SashPanelTop);
+  top: calc(var(--SashPanelTop) - 2px);
   width: var(--PanelWidth);
 }`)
   } finally {
