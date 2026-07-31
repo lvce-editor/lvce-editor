@@ -90,6 +90,22 @@ test('getTitle', async () => {
   expect(getTitle).toHaveBeenCalledWith(1)
 })
 
+test('getDragData', async () => {
+  const dragData = {
+    items: [
+      {
+        data: 'file:///workspace/file.txt',
+        type: 'text/uri-list',
+      },
+    ],
+    label: '1',
+  }
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(dragData)
+
+  await expect(Viewlet.getDragData()).resolves.toBe(dragData)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getDragData')
+})
+
 test('getFocusCommands returns focus render commands without sending them', async () => {
   const oldState = { uid: 2 }
   const newState = { focus: 1, uid: 2 }
