@@ -27,6 +27,10 @@ export const getTitle = (id) => {
   return instance.factory.getTitle(instance.state.uid)
 }
 
+export const getDragData = () => {
+  return RendererProcess.invoke('Viewlet.getDragData')
+}
+
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
