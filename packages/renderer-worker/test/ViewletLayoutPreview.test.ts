@@ -327,18 +327,30 @@ test('showPreview replaces an open file preview with the simple browser', async 
   })
 })
 
-test('resizing the preview preserves its vertical position', async () => {
+test('resizing the preview updates the adjoining layout and preserves its vertical position', async () => {
   const state = {
     ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    mainWidth: 752,
+    panelVisible: true,
+    panelWidth: 800,
     previewHeight: 745,
     previewId: 7,
     previewLeft: 800,
+    previewMinWidth: 100,
     previewTop: 35,
     previewUri: 'simple-browser://',
     previewViewletId: 'SimpleBrowser',
     previewVisible: true,
     previewWidth: 400,
     sashId: 'Preview',
+    sideBarVisible: false,
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    statusBarWidth: 800,
+    titleBarHeight: 35,
+    titleBarVisible: true,
     windowHeight: 800,
     windowWidth: 1200,
   }
@@ -346,10 +358,14 @@ test('resizing the preview preserves its vertical position', async () => {
   const result = await ViewletLayout.handleSashPointerMove(state, 700, 400)
 
   expect(result.newState).toMatchObject({
-    previewHeight: 745,
+    activityBarLeft: 652,
+    mainWidth: 652,
+    panelWidth: 700,
+    previewHeight: 765,
     previewLeft: 700,
     previewTop: 35,
     previewWidth: 500,
+    statusBarWidth: 700,
   })
 })
 

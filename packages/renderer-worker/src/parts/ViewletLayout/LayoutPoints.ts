@@ -105,7 +105,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     // Calculate sidebar width for left section
     const maxSideBarWidth = Math.max(0, availableWidth - 48 - mainMinWidth)
-    const adjustedSideBarWidth = Math.min(newSideBarWidth, maxSideBarWidth)
+    const adjustedSideBarWidth = sideBarVisible ? Math.min(newSideBarWidth, maxSideBarWidth) : 0
     let p7 = p8 - adjustedSideBarWidth
     if (sideBarVisible && p7 < 0) {
       p7 = 0
@@ -129,7 +129,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     const destinationSideBarLeft = p7
     const destinationSideBarTop = p2
-    const destinationSideBarWidth = adjustedSideBarWidth
+    const destinationSideBarWidth = sideBarVisible ? adjustedSideBarWidth : newSideBarWidth
     const destinationSideBarHeight = p3 - p2
     const destinationSideBarVisible = sideBarVisible
 
@@ -265,7 +265,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     const destinationSideBarLeft = p7
     const destinationSideBarTop = p2
-    const destinationSideBarWidth = p8 - p7
+    const destinationSideBarWidth = sideBarVisible ? p8 - p7 : newSideBarWidth
     const destinationSideBarHeight = p3 - p2
     const destinationSideBarVisible = sideBarVisible
 

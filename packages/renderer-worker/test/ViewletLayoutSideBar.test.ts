@@ -174,6 +174,7 @@ test('showSideBar shows hidden side bar with requested viewlet', async () => {
   expect(result).toEqual({
     commands: [['Viewlet.createFunctionalRoot', 'SideBar', 1, true], ['activity-bar.render2']],
     newState: expect.objectContaining({
+      sideBarSashVisible: true,
       sideBarView: 'SourceControl',
       sideBarVisible: true,
     }),
@@ -340,6 +341,7 @@ test('hideSideBar updates activity bar through shared sidebar render helper', as
   expect(result).toEqual({
     commands: [['activity-bar.render2']],
     newState: expect.objectContaining({
+      sideBarSashVisible: false,
       sideBarView: 'Explorer',
       sideBarVisible: false,
     }),
@@ -566,26 +568,36 @@ test('toggleSideBarView opens a preview-preferred extension view in the preview 
     activityBarVisible: true,
     activityBarWidth: 48,
     sideBarId: 12,
+    sideBarSashVisible: true,
     sideBarView: 'Explorer',
     sideBarVisible: true,
+    sideBarWidth: 240,
     statusBarHeight: 20,
     titleBarHeight: 0,
     windowHeight: 800,
     windowWidth: 1200,
+    previewMinWidth: 100,
+    previewWidth: 320,
   }
 
   const result = await ViewletLayout.toggleSideBarView(state, 'sample.views.preview')
 
   expect(result.newState).toMatchObject({
+    mainWidth: 552,
+    previewLeft: 600,
     previewUri: 'sample.views.preview',
     previewViewletId: 'ExtensionView',
     previewVisible: true,
+    previewWidth: 600,
+    sideBarSashVisible: false,
     sideBarVisible: false,
   })
   expect(ViewletManager.load).toHaveBeenCalledWith(
     expect.objectContaining({
       id: 'ExtensionView',
       uri: 'sample.views.preview',
+      width: 600,
+      x: 600,
     }),
     false,
     true,

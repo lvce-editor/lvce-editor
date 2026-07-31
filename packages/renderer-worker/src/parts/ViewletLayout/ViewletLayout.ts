@@ -375,7 +375,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     previewViewletId,
     restore,
     sideBarLocation,
-    sideBarSashVisible: true,
+    sideBarSashVisible: sideBarVisible,
     sideBarFocusMode: false,
     sideBarFocusModeLayout: undefined,
     sideBarFocusModeTarget: 'primary',
@@ -409,6 +409,7 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
     ...state,
     [kVisible]: true,
     ...(module === LayoutModules.Preview ? { previewSashVisible: true } : {}),
+    ...(module === LayoutModules.SideBar ? { sideBarSashVisible: true } : {}),
   })
   const x = intermediateState[kLeft]
   const y = intermediateState[kTop]
@@ -626,6 +627,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
           previewSashVisible: false,
         }
       : {}),
+    ...(module === LayoutModules.SideBar ? { sideBarSashVisible: false } : {}),
   })
   // TODO save state to local storage after rending (in background)
   if (isPreview) {
@@ -681,7 +683,14 @@ export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<L
       return hidePreview(state)
     }
     const sideBarResult = state.sideBarVisible ? await hideSideBar(state) : { newState: state, commands: [] }
-    const previewResult = await showPreview(sideBarResult.newState, sideBarView, ViewletModuleId.ExtensionView)
+    const previewState = getPoints(
+      {
+        ...sideBarResult.newState,
+        previewWidth: sideBarResult.newState.windowWidth / 2,
+      },
+      sideBarResult.newState.sideBarLocation,
+    )
+    const previewResult = await showPreview(previewState, sideBarView, ViewletModuleId.ExtensionView)
     const focusCommands = await Viewlet.getFocusCommands(sideBarView)
     return {
       newState: previewResult.newState,
@@ -1488,12 +1497,15 @@ const getNewStatePointerMovePanel = async (state: LayoutState, x: number, y: num
 
 const getNewStatePointerMovePreview = async (state: LayoutState, x: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const windowWidth = state.windowWidth
+  const previewWidth = Math.max(state.previewMinWidth, windowWidth - x)
   return {
-    newState: {
-      ...state,
-      previewLeft: x,
-      previewWidth: windowWidth - x,
-    },
+    newState: getPoints(
+      {
+        ...state,
+        previewWidth,
+      },
+      state.sideBarLocation,
+    ),
     commands: [],
   }
 }
