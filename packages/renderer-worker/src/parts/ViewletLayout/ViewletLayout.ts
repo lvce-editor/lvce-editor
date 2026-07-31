@@ -1446,38 +1446,41 @@ const getNewStatePointerMoveActivityBar = async (state: LayoutState, x: number, 
 const getNewStatePointerMovePanel = async (state: LayoutState, x: number, y: number): Promise<{ newState: LayoutState; commands: any[] }> => {
   const windowHeight = state[LayoutKeys.WindowHeight]
   const statusBarHeight = state[LayoutKeys.StatusBarHeight]
-  const titleBarHeight = state[LayoutKeys.TitleBarHeight]
-  const activityBarHeight = state[LayoutKeys.ActivityBarHeight]
   const panelMinHeight = state[LayoutKeys.PanelMinHeight]
   const newPanelHeight = windowHeight - statusBarHeight - y
   if (newPanelHeight < panelMinHeight / 2) {
     return {
-      newState: {
-        ...state,
-        panelVisible: false,
-        mainHeight: windowHeight - statusBarHeight - titleBarHeight,
-      },
+      newState: getPoints(
+        {
+          ...state,
+          panelVisible: false,
+        },
+        state.sideBarLocation,
+      ),
       commands: [],
     }
   } else if (newPanelHeight <= panelMinHeight) {
     return {
-      newState: {
-        ...state,
-        panelVisible: true,
-        panelHeight: panelMinHeight,
-        mainHeight: windowHeight - activityBarHeight - panelMinHeight,
-      },
+      newState: getPoints(
+        {
+          ...state,
+          panelVisible: true,
+          panelHeight: panelMinHeight,
+        },
+        state.sideBarLocation,
+      ),
       commands: [],
     }
   } else {
     return {
-      newState: {
-        ...state,
-        panelVisible: true,
-        mainHeight: y - titleBarHeight,
-        panelTop: y,
-        panelHeight: windowHeight - statusBarHeight - y,
-      },
+      newState: getPoints(
+        {
+          ...state,
+          panelVisible: true,
+          panelHeight: newPanelHeight,
+        },
+        state.sideBarLocation,
+      ),
       commands: [],
     }
   }

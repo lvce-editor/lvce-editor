@@ -25,6 +25,7 @@ jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
 })
 
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
+const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 beforeEach(() => {
@@ -134,6 +135,35 @@ test('create initializes panelHeightBeforeMaximize to 0', () => {
   const state = ViewletLayout.create(1)
 
   expect(state.panelHeightBeforeMaximize).toBe(0)
+})
+
+test('resizing the panel updates the activity bar height', async () => {
+  createActivityBarInstance()
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    panelHeight: 200,
+    panelMaxHeight: 600,
+    panelMinHeight: 150,
+    panelVisible: true,
+    sashId: 'Panel',
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    titleBarHeight: 0,
+    titleBarVisible: false,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const shrunken = await ViewletLayout.handleSashPointerMove(state, 0, 400)
+
+  expect(shrunken.newState.activityBarHeight).toBe(400)
+  expect(shrunken.commands).toContainEqual(['Viewlet.setBounds', 88, 1152, 0, 48, 400])
+
+  const expanded = await ViewletLayout.handleSashPointerMove(shrunken.newState, 0, 600)
+
+  expect(expanded.newState.activityBarHeight).toBe(600)
+  expect(expanded.commands).toContainEqual(['Viewlet.setBounds', 88, 1152, 0, 48, 600])
 })
 
 test('maximizePanel enlarges panel and sets panelMaximized to true', async () => {

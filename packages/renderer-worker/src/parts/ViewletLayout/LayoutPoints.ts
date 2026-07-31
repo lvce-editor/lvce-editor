@@ -100,7 +100,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationActivityBarLeft = p8
     const destinationActivityBarTop = p2
     const destinationActivityBarWidth = 48
-    const destinationActivityBarHeight = p4 - p2
+    const destinationActivityBarHeight = p3 - p2
     const destinationActivityBarVisible = activityBarVisible
 
     // Calculate sidebar width for left section
@@ -241,7 +241,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationActivityBarLeft = p6
     const destinationActivityBarTop = p2
     const destinationActivityBarWidth = 48
-    const destinationActivityBarHeight = p4 - p2
+    const destinationActivityBarHeight = p3 - p2
     const destinationActivityBarVisible = activityBarVisible
 
     const maxSecondarySideBarWidth = Math.max(0, availableWidth - p8 - mainMinWidth)
