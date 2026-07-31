@@ -10,6 +10,7 @@ import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetAllExtensionsJson from '../GetAllExtensionsJson/GetAllExtensionsJson.ts'
+import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import { isWebCompatibleExtension } from '../IsWebCompatibleExtension/IsWebCompatibleExtension.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
@@ -392,7 +393,7 @@ const copyIconThemes = async ({ commitHash }) => {
   })
 }
 
-const bundleJs = async ({ commitHash, platform, assetDir, version, date, product }) => {
+const bundleJs = async ({ commitHash, platform, assetDir, version, date, product, iconThemeEtag }) => {
   const toRoot = `packages/build/.tmp/dist/${commitHash}`
   await BundleWorkers.bundleWorkers({
     commitHash,
@@ -402,6 +403,7 @@ const bundleJs = async ({ commitHash, platform, assetDir, version, date, product
     version,
     date,
     toRoot,
+    iconThemeEtag,
   })
 }
 
@@ -554,6 +556,7 @@ export const build = async ({ product }) => {
   const assetDir = `${pathPrefix}/${commitHash}`
   const platform = 'web'
   const version = await Version.getVersion()
+  const iconThemeEtag = ignoreIconTheme ? '' : await GetIconThemeEtag.getIconThemeEtag({ iconPath: '/file-icons' })
 
   Console.time('clean')
   await Remove.remove('packages/build/.tmp/dist')
@@ -580,7 +583,7 @@ export const build = async ({ product }) => {
   Console.timeEnd('applyJsOverrides')
 
   Console.time('bundleJs')
-  await bundleJs({ commitHash, platform, assetDir, version, date, product })
+  await bundleJs({ commitHash, platform, assetDir, version, date, product, iconThemeEtag })
   Console.timeEnd('bundleJs')
 
   Console.time('copyColorThemes')

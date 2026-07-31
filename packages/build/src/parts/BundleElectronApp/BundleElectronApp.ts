@@ -14,6 +14,7 @@ import * as CopyElectronIcons from '../CopyElectronIcons/CopyElectronIcons.ts'
 import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
+import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
 import * as Hash from '../Hash/Hash.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Logger from '../Logger/Logger.ts'
@@ -316,6 +317,7 @@ export const build = async ({
 
   const assetDir = `/${commitHash}`
   const toRoot = `${resourcesPath}/app/static/${commitHash}`
+  const iconThemeEtag = await GetIconThemeEtag.getIconThemeEtag()
 
   await BundleWorkers.bundleWorkers({
     platform: 'electron',
@@ -325,6 +327,7 @@ export const build = async ({
     date,
     toRoot,
     product,
+    iconThemeEtag,
   })
 
   const etag = `W/"${commitHash}"`

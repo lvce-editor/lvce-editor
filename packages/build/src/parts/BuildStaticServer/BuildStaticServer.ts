@@ -8,6 +8,7 @@ import * as Remove from '../Remove/Remove.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.ts'
+import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 
 const copyStaticFiles = async ({ commitHash }) => {
@@ -362,7 +363,7 @@ const { files, headers } = config;`,
   await Remove.remove('packages/build/.tmp/server/static-server/node_modules')
 }
 
-const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product }) => {
+const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date, product, iconThemeEtag }) => {
   const assetDir = `/${commitHash}`
   const platform = 'remote'
   const toRoot = `packages/build/.tmp/server/static-server/static/${commitHash}`
@@ -374,6 +375,7 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, d
     date,
     product,
     toRoot,
+    iconThemeEtag,
   })
 }
 
@@ -492,8 +494,9 @@ const copyExtensions = async ({ commitHash }) => {
 }
 
 export const buildStaticServer = async ({ product, commitHash, version, date }) => {
+  const iconThemeEtag = await GetIconThemeEtag.getIconThemeEtag()
   console.time('bundleRendererWorkerAndRendererProcessJs')
-  await bundleRendererWorkerAndRendererProcessJs({ commitHash, version, date, product })
+  await bundleRendererWorkerAndRendererProcessJs({ commitHash, version, date, product, iconThemeEtag })
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
 
   console.time('copyExtensions')
