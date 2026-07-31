@@ -1,4 +1,6 @@
 import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getTabsDom = (state) => {
@@ -10,17 +12,18 @@ const getTabsDom = (state) => {
 }
 
 export const getTerminalsDom = (state) => {
-  const { childUid, terminalTabsEnabled } = state
+  const { childUids, terminalTabsEnabled } = state
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Viewlet Terminals',
-      childCount: terminalTabsEnabled ? 2 : 1,
+      className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
+      childCount: childUids.length + (terminalTabsEnabled ? 1 : 0),
+      onMouseDown: DomEventListenerFunctions.HandleMouseDown,
     },
     ...getTabsDom(state),
-    {
+    ...childUids.map((uid) => ({
       type: VirtualDomElements.Reference,
-      uid: childUid,
-    },
+      uid,
+    })),
   ]
 }
