@@ -17,3 +17,7 @@ test('getModuleId - SecretStorage.get', () => {
 test('getModuleId - ChromeCookieImport.importCookies', () => {
   expect(ModuleMap.getModuleId('ChromeCookieImport.importCookies')).toBe(ModuleId.ChromeCookieImport)
 })
+
+test('getModuleId - FirefoxCookieImport.importCookies', () => {
+  expect(ModuleMap.getModuleId('FirefoxCookieImport.importCookies')).toBe(ModuleId.FirefoxCookieImport)
+})

@@ -64,6 +64,8 @@ export const load = (moduleId: any): any => {
       return import('../FileSystemDisk/FileSystemDisk.ipc.ts')
     case ModuleId.FileWatcher:
       return import('../FileWatcher/FileWatcher.ipc.ts')
+    case ModuleId.FirefoxCookieImport:
+      return import('../FirefoxCookieImport/FirefoxCookieImport.ipc.ts')
     case ModuleId.GetElectronFileResponse:
       return import('../GetElectronFileResponse/GetElectronFileResponse.ipc.ts')
     case ModuleId.GetExtensions:

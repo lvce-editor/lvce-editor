@@ -87,6 +87,15 @@ test('getQuickPickMenuEntries includes Chrome cookie import command', () => {
   })
 })
 
+test('getQuickPickMenuEntries includes Firefox cookie import command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'SimpleBrowser.importFirefoxCookies',
+    label: 'Simple Browser: Import Cookies from Firefox',
+  })
+})
+
 test('getQuickPickMenuEntries includes close all editors command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 

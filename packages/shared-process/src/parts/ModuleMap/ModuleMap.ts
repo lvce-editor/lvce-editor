@@ -154,6 +154,9 @@ export const getModuleId = (commandId: any): any => {
     case 'FileWatcher.watch':
     case 'FileWatcher.watchFile2':
       return ModuleId.FileWatcher
+    case 'FirefoxCookieImport.getInfo':
+    case 'FirefoxCookieImport.importCookies':
+      return ModuleId.FirefoxCookieImport
     case 'GetElectronFileResponse.getElectronFileResponse':
       return ModuleId.GetElectronFileResponse
     case 'GetExtensions.getExtensions':
