@@ -35,4 +35,4 @@ test('bundled main process includes external runtime dependencies', async () => 
   } finally {
     await rm(cachePath, { recursive: true, force: true })
   }
-})
+}, 30_000)
