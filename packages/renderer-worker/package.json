@@ -98,7 +98,7 @@
     "@lvce-editor/source-control-worker": "^3.8.0",
     "@lvce-editor/status-bar-worker": "^3.11.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.4.3",
-    "@lvce-editor/terminal-worker": "^2.4.0",
+    "@lvce-editor/terminal-worker": "^2.6.0",
     "@lvce-editor/test-worker": "^17.10.0",
     "@lvce-editor/text-measurement-worker": "^1.19.0",
     "@lvce-editor/text-search-view": "^1.5.0",
