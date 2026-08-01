@@ -114,3 +114,4 @@ export const ExtensionNodeRpc = 149
 export const License = 150
 export const SendMessagePortToMainProcess = 151
 export const FileSystemMemory = 152
+export const WebSocketCapability = 153

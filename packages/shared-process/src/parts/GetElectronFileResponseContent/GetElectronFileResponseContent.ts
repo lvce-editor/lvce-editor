@@ -3,6 +3,7 @@ import * as AddCustomPathsToIndexHtml from '../AddCustomPathsToIndexHtml/AddCust
 import * as Platform from '../Platform/Platform.ts'
 import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldTranspileTypescript.ts'
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.ts'
+import * as WebSocketIssuerRegistry from '../WebSocketIssuerRegistry/WebSocketIssuerRegistry.ts'
 
 const useCache = false // TODO enable this
 
@@ -23,8 +24,11 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
     content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
   }
-  if (url === '/') {
-    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  if (url === '/' || url.startsWith('/?')) {
+    const fetchDestination = request?.headers?.['sec-fetch-dest']
+    const isDocumentNavigation = fetchDestination === 'document'
+    const additionalConfig = isDocumentNavigation ? { webSocketIssuer: WebSocketIssuerRegistry.create() } : {}
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, additionalConfig)
   }
   if (typeof content === 'string') {
     content = Buffer.from(content)
