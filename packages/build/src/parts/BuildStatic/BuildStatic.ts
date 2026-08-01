@@ -132,11 +132,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   })
   await Replace.replace({
     path: `packages/build/.tmp/dist/index.html`,
-    occurrence: '/js/unregister-service-workers.js',
-    replacement: `${pathPrefix}/${commitHash}/js/unregister-service-workers.js`,
-  })
-  await Replace.replace({
-    path: `packages/build/.tmp/dist/index.html`,
     occurrence: '/icons',
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
