@@ -8,6 +8,7 @@
     "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
     "test": "lerna run test",
     "dev": "nodemon",
+    "diagnose:gpu": "node scripts/diagnose-gpu-process.mjs",
     "e2e": "lerna run e2e",
     "lint": "eslint \"packages/shared-process/**/*.{ts,js}\" && knip --no-config-hints",
     "electron": "node packages/build/src/parts/RunElectron/RunElectron.ts",
@@ -27,6 +28,7 @@
     "build:electron:app-image": "node packages/build/bin/build.ts --target=electron-builder-app-image",
     "build:electron:app-image:x64": "node packages/build/bin/build.ts --target=electron-builder-app-image --arch=x64",
     "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.ts",
+    "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs",
     "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci"
   },
   "keywords": [],
