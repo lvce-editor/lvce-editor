@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import { resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 jest.unstable_mockModule('../src/parts/GetAppWindowOptions/GetAppWindowOptions.js', () => ({
   getAppWindowOptions: jest.fn(() => ({})),
@@ -90,4 +90,24 @@ test.each([
 
   expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
   expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, parsedArgs, workingDirectory, [], url.toString())
+})
+
+test('createAppWindow opens a file argument in its parent workspace', async () => {
+  const filePath = fileURLToPath(import.meta.url)
+  const fileUri = pathToFileURL(filePath).toString()
+  const workspaceUri = pathToFileURL(dirname(filePath)).toString()
+  const url = new URL('lvce-oss://-/')
+  url.searchParams.set('workspace', workspaceUri)
+  url.searchParams.set('openUri', fileUri)
+  const parsedArgs = { _: [filePath] }
+
+  await AppWindow.createAppWindow({
+    parsedArgs,
+    preferences: {},
+    preloadUrl: 'file:///preload.js',
+    workingDirectory: otherPath,
+  })
+
+  expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, parsedArgs, otherPath, [], url.toString())
 })

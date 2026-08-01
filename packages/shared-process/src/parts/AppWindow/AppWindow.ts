@@ -1,4 +1,5 @@
-import { isAbsolute, resolve } from 'node:path'
+import { stat } from 'node:fs/promises'
+import { dirname, isAbsolute, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as DefaultUrl from '../DefaultUrl/DefaultUrl.ts'
 import * as GetAppWindowOptions from '../GetAppWindowOptions/GetAppWindowOptions.ts'
@@ -25,29 +26,40 @@ const getValidatedAppUrl = (url: unknown): string => {
   return parsedUrl.toString()
 }
 
-const getWorkspaceUri = (parsedArgs: any, workingDirectory: any): string => {
+const getAbsolutePath = (parsedArgs: any, workingDirectory: any): string => {
   const path = parsedArgs?._?.at(-1)
   if (!path || typeof path !== 'string') {
     return ''
   }
   if (path.startsWith('file://')) {
-    return pathToFileURL(fileURLToPath(path)).toString()
+    return fileURLToPath(path)
   }
-  const absolutePath = isAbsolute(path) ? path : resolve(workingDirectory, path)
-  return pathToFileURL(absolutePath).toString()
+  return isAbsolute(path) ? path : resolve(workingDirectory, path)
 }
 
-const getAppWindowUrl = (url: unknown, parsedArgs: any, workingDirectory: any): string => {
+const getAppWindowUrl = async (url: unknown, parsedArgs: any, workingDirectory: any): Promise<string> => {
   const parsedUrl = new URL(getValidatedAppUrl(url))
-  const workspaceUri = getWorkspaceUri(parsedArgs, workingDirectory)
-  if (workspaceUri) {
-    parsedUrl.searchParams.set('workspace', workspaceUri)
+  const absolutePath = getAbsolutePath(parsedArgs, workingDirectory)
+  if (!absolutePath) {
+    return parsedUrl.toString()
   }
+  const uri = pathToFileURL(absolutePath).toString()
+  try {
+    const stats = await stat(absolutePath)
+    if (stats.isFile()) {
+      parsedUrl.searchParams.set('workspace', pathToFileURL(dirname(absolutePath)).toString())
+      parsedUrl.searchParams.set('openUri', uri)
+      return parsedUrl.toString()
+    }
+  } catch {
+    // Preserve the existing folder error for paths that do not exist.
+  }
+  parsedUrl.searchParams.set('workspace', uri)
   return parsedUrl.toString()
 }
 
 export const createAppWindow = async ({ parsedArgs, preferences, preloadUrl, url = DefaultUrl.defaultUrl, workingDirectory }: any): Promise<any> => {
-  const validatedUrl = getAppWindowUrl(url, parsedArgs, workingDirectory)
+  const validatedUrl = await getAppWindowUrl(url, parsedArgs, workingDirectory)
   const { height, width } = await Screen.getBounds()
   const windowOptions = await GetAppWindowOptions.getAppWindowOptions({
     preferences,
