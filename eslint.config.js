@@ -1,3 +1,4 @@
+import { defineConfig } from 'eslint/config'
 import * as config from '@lvce-editor/eslint-config'
 
 const disableConfiguredRules = (prefix) => {
@@ -5,7 +6,7 @@ const disableConfiguredRules = (prefix) => {
   return Object.fromEntries(entries.filter((rule) => rule.startsWith(prefix)).map((rule) => [rule, 'off']))
 }
 
-export default [
+export default defineConfig([
   ...config.default,
   ...config.recommendedVirtualDom,
   ...config.recommendedTsconfig,
@@ -37,4 +38,4 @@ export default [
       'virtual-dom/prefer-state-destructuring': 'off',
     },
   },
-]
+])
