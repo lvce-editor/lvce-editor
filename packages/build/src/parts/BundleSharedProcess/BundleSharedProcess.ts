@@ -151,8 +151,15 @@ export const getExtraHeaders = ({ pathName, fileExtension }) => {
   })
   await WriteFile.writeFile({
     to: `${cachePath}/src/parts/AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.js`,
-    content: `export const addCustomPathsToIndexHtml = async (content) => {
+    content: `export const addCustomPathsToIndexHtml = async (content, additionalConfig = {}) => {
+  if (Object.keys(additionalConfig).length === 0) {
     return content
+  }
+  const stringifiedConfig = JSON.stringify(additionalConfig, null, 2)
+  return content.toString().replace(
+    '</title>',
+    '</title>\\n    <script type="application/json" id="Config">' + stringifiedConfig + '</script>',
+  )
 }
 `,
   })

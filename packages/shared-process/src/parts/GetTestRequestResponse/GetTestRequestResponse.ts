@@ -13,13 +13,19 @@ import * as GetTestPath from '../GetTestPath/GetTestPath.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as Logger from '../Logger/Logger.ts'
+import * as WebSocketIssuerRegistry from '../WebSocketIssuerRegistry/WebSocketIssuerRegistry.ts'
+
+const getTestPageContent = async (indexHtmlPath: string): Promise<string> => {
+  const body = await readFile(indexHtmlPath, 'utf8')
+  const webSocketIssuer = WebSocketIssuerRegistry.create()
+  return AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body, { webSocketIssuer })
+}
 
 export const getTestRequestResponse = async (request: any, indexHtmlPath: any): Promise<any> => {
   try {
     const pathName = GetPathName.getPathName(request)
     if (pathName === '/tests/_all.html') {
-      const body = await readFile(indexHtmlPath, 'utf8')
-      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
+      const content = await getTestPageContent(indexHtmlPath)
       const headers = {
         [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
         [HttpHeader.ContentType]: 'text/html',
@@ -30,8 +36,7 @@ export const getTestRequestResponse = async (request: any, indexHtmlPath: any): 
       return GetContentResponse.getContentResponse(content, headers)
     }
     if (pathName.endsWith('.html')) {
-      const body = await readFile(indexHtmlPath, 'utf8')
-      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
+      const content = await getTestPageContent(indexHtmlPath)
       const headers = {
         [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
         [HttpHeader.ContentType]: 'text/html',
