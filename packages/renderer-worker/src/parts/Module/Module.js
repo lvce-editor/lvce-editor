@@ -74,6 +74,8 @@ export const load = (moduleId) => {
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
     case ModuleId.ExtensionNodeRpc:
       return import('../ExtensionNodeRpc/ExtensionNodeRpc.ipc.js')
+    case ModuleId.WebSocketCapability:
+      return import('../WebSocketCapability/WebSocketCapability.ipc.js')
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
     case ModuleId.FilePicker:

@@ -184,6 +184,7 @@ export const getModuleId = (commandId: any): any => {
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
       return ModuleId.HandleMessagePortForEmbedsProcess
     case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
+    case 'HandleMessagePortForExtensionHostHelperProcess.handlePreloadedMessagePortForExtensionHostHelperProcess':
       return ModuleId.HandleMessagePortForExtensionHostHelperProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
       return ModuleId.HandleMessagePortForFileSystemProcess
@@ -300,6 +301,10 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.Terminal
     case 'Transferrable.transfer':
       return ModuleId.Transferrable
+    case 'WebSocketCapability.create':
+    case 'WebSocketCapability.createExtensionNodeRpc':
+    case 'WebSocketCapability.createLegacyExtensionNodeRpc':
+      return ModuleId.WebSocketCapability
     case 'WebViewServer.create':
     case 'WebViewServer.registerProtocol':
     case 'WebViewServer.setHandler':

@@ -23,3 +23,22 @@ export const handleMessagePortForExtensionHostHelperProcess = async (rendererWor
   // }
   // rendererWorkerIpc.on('close', cleanup)
 }
+
+export const handlePreloadedMessagePortForExtensionHostHelperProcess = async (
+  port: any,
+  modulePath: string,
+): Promise<void> => {
+  Assert.object(port)
+  Assert.string(modulePath)
+  const ipc = await ExtensionHostHelperProcessIpc.create({
+    method: IpcParentType.ElectronUtilityProcess,
+  })
+  HandleIpc.handleIpc(ipc)
+  try {
+    await JsonRpc.invoke(ipc, 'LoadFile.loadFile', modulePath)
+    await JsonRpc.invokeAndTransfer(ipc, 'HandleElectronMessagePort.handleElectronMessagePort', port, IpcId.ExtensionHostWorker)
+  } catch (error) {
+    ipc.dispose()
+    throw error
+  }
+}

@@ -17,9 +17,13 @@ import * as Logger from '../Logger/Logger.ts'
 // maybe send webview requests directly to preview process
 export const getElectronFileResponse = async (url: any, request: any): Promise<any> => {
   try {
+    const fetchDestination = request?.headers?.['sec-fetch-dest']
+    const isRootDocument = url === '/' || url.startsWith('/?')
+    const isSecretDocument = isRootDocument && fetchDestination === 'document'
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag
+    let preparedContent
     let stats
     // TODO when is there no request?
     if (request) {
@@ -31,19 +35,19 @@ export const getElectronFileResponse = async (url: any, request: any): Promise<a
         // TODO since dynamic data is injected to the stat size is not accurate
         // which is why this workaround is needed
         // but it's a bit inefficient
-        const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
-        size = content.byteLength
+        preparedContent = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
+        size = preparedContent.byteLength
       }
-      if (request.headers[HttpHeader.IfNotMatch] === etag) {
+      if (!isSecretDocument && request.headers[HttpHeader.IfNotMatch] === etag) {
         const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url, size)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
     }
-    const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
+    const content = preparedContent || (await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url))
     const size = content.byteLength
     const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url, size)
 
-    headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
+    headers[HttpHeader.CacheControl] = isSecretDocument ? 'no-store' : 'public, max-age=0, must-revalidate'
     return GetContentResponse.getContentResponse(content, headers)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {

@@ -1,18 +1,24 @@
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 import * as IpcParentWithWebSocket from '../src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js'
 import * as ReconnectingWebSocket from '../src/parts/ReconnectingWebSocket/ReconnectingWebSocket.js'
+import * as WebSocketCapability from '../src/parts/WebSocketCapability/WebSocketCapability.js'
 
 const originalLocation = globalThis.location
 const originalWebSocket = globalThis.WebSocket
+const originalFetch = globalThis.fetch
 
 class MockWebSocket extends EventTarget {
   static instances: MockWebSocket[] = []
 
   onclose: ((event: Event) => void) | null = null
   onmessage: ((event: MessageEvent) => void) | null = null
+  readonly protocols: readonly string[] | undefined
+  readonly url: string | URL
 
-  constructor() {
+  constructor(url: string | URL, protocols?: string | string[]) {
     super()
+    this.url = url
+    this.protocols = typeof protocols === 'string' ? [protocols] : protocols
     MockWebSocket.instances.push(this)
   }
 
@@ -43,6 +49,18 @@ beforeEach(() => {
     configurable: true,
     value: MockWebSocket,
   })
+  let capabilityId = 0
+  globalThis.fetch = jest.fn(async () => {
+    capabilityId++
+    return {
+      json: async () => ({
+        protocols: ['lvce-rpc', `lvce-capability.token-${capabilityId}`],
+        url: '/websocket/capability',
+      }),
+      ok: true,
+    } as Response
+  }) as typeof fetch
+  WebSocketCapability.initialize('issuer')
 })
 
 afterEach(() => {
@@ -55,6 +73,7 @@ afterEach(() => {
     configurable: true,
     value: originalWebSocket,
   })
+  globalThis.fetch = originalFetch
 })
 
 test('preserves event listeners when reconnecting', async () => {
@@ -88,6 +107,8 @@ test('waits for the existing websocket to reconnect during startup', async () =>
     type: 'shared-process',
   })
 
+  await jest.advanceTimersByTimeAsync(0)
+
   MockWebSocket.instances[0].emitClose()
   await jest.advanceTimersByTimeAsync(2000)
   MockWebSocket.instances[1].emitOpen()
@@ -95,4 +116,7 @@ test('waits for the existing websocket to reconnect during startup', async () =>
   const webSocket = await ipcPromise
   expect(MockWebSocket.instances).toHaveLength(2)
   expect(webSocket.webSocket).toBe(MockWebSocket.instances[1])
+  expect(MockWebSocket.instances[0].protocols).toEqual(['lvce-rpc', 'lvce-capability.token-1'])
+  expect(MockWebSocket.instances[1].protocols).toEqual(['lvce-rpc', 'lvce-capability.token-2'])
+  expect(globalThis.fetch).toHaveBeenCalledTimes(2)
 })
