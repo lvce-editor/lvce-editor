@@ -727,7 +727,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     const instanceNow = ViewletStates.getInstance(viewletUid)
     viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender && shouldRender) {
-      const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid, parentUid, eventListeners)
+      const renderCommands = LayoutWidgets.reconcile(getRenderCommands(module, viewletState, newState, viewletUid, parentUid, eventListeners))
       ViewletStates.setRenderedState(viewletUid, newState)
       commands.push(...renderCommands)
       if (viewlet.show === false) {

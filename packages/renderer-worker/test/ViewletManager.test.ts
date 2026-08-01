@@ -197,6 +197,49 @@ test('load retains non-empty event listener registration for a new root', async 
   ])
 })
 
+test('load reconciles widget declarations before returning initial render commands', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const layoutState = ViewletLayout.create(1)
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'Layout',
+    renderedState: layoutState,
+    state: layoutState,
+  })
+  ViewletStates.set('Layout', ViewletStates.getInstance(1))
+  const mockModule = {
+    create: jest.fn(() => ({ uid: 9 })),
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [
+      {
+        apply: jest.fn(() => [['Viewlet.setWidgets', 9, 1, [20]]]),
+        isEqual: jest.fn(() => false),
+        multiple: true,
+      },
+    ],
+    renderEventListeners: jest.fn(() => []),
+  }
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'WidgetOwnerTest',
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 9,
+    uri: '',
+  }
+
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands.some((command) => command[0] === 'Viewlet.setWidgets')).toBe(false)
+  expect(ViewletStates.getState('Layout').widgetReferences).toEqual([{ parentUid: 9, uid: 20 }])
+})
+
 test('extension view render supports functional events', () => {
   expect(ViewletExtensionViewRender.hasFunctionalEvents).toBe(true)
 })
