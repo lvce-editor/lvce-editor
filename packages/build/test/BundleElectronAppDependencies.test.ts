@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, realpath, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, jest, test } from '@jest/globals'
@@ -29,8 +29,8 @@ test('bundled main process includes external runtime dependencies', async () => 
     })
 
     const packagedMainProcessPath = join(cachePath, 'main-process', 'dist', 'mainProcessMain.js')
-    expect(createRequire(packagedMainProcessPath).resolve('dbus-native')).toBe(
-      join(cachePath, 'main-process', 'node_modules', 'dbus-native', 'index.js'),
+    expect(await realpath(createRequire(packagedMainProcessPath).resolve('dbus-native'))).toBe(
+      await realpath(join(cachePath, 'main-process', 'node_modules', 'dbus-native', 'index.js')),
     )
   } finally {
     await rm(cachePath, { recursive: true, force: true })
