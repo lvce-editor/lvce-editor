@@ -3,6 +3,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+const webSocketIssuerRegex = /"webSocketIssuer": "[A-Za-z0-9_-]{43}"/
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -89,6 +91,32 @@ test('getTestRequestResponse - _all.html serves index html', async () => {
     },
   })
   expect(result.body).toContain('<title>Tests</title>')
+  expect(result.body).toMatch(webSocketIssuerRegex)
+})
+
+test('getTestRequestResponse - individual test serves index html with websocket issuer', async () => {
+  const tmpDir = await mkdtemp(join(tmpdir(), 'lvce-test-request-'))
+  temporaryDirectories.push(tmpDir)
+  const indexHtmlPath = join(tmpDir, 'index.html')
+  await writeFile(indexHtmlPath, '<!doctype html><title>Tests</title>')
+  const request = {
+    url: '/tests/example.html',
+  }
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests/example.html')
+
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
+
+  expect(result).toMatchObject({
+    init: {
+      headers: {
+        'Content-Security-Policy': expect.stringContaining(`style-src 'self' 'unsafe-inline'`),
+        'Content-Type': 'text/html',
+      },
+      status: 200,
+    },
+  })
+  expect(result.body).toContain('<title>Tests</title>')
+  expect(result.body).toMatch(webSocketIssuerRegex)
 })
 
 test('getTestRequestResponse - error in createTestOverview', async () => {
