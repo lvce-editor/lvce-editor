@@ -7,19 +7,25 @@ import * as Platform from '../Platform/Platform.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.ts'
 
-export const bundleMainProcessDependencies = async ({ to, arch, electronVersion, supportsAutoUpdate }) => {
+export const bundleMainProcessDependencies = async ({ to, arch, electronVersion, supportsAutoUpdate, bundleMainProcess }) => {
   const mainProcessPath = Path.absolute('packages/main-process')
-  const packageJson = await JsonFile.readJson('packages/main-process/package.json')
+  const packageJsonPath = bundleMainProcess
+    ? 'packages/main-process/node_modules/@lvce-editor/main-process/package.json'
+    : 'packages/main-process/package.json'
+  const packageJson = await JsonFile.readJson(packageJsonPath)
+  const dependencies = bundleMainProcess
+    ? Object.fromEntries(Object.entries(packageJson.dependencies).filter(([name]) => name !== 'electron'))
+    : packageJson.dependencies
   await JsonFile.writeJson({
     to: `${to}/package.json`,
     value: {
       name: packageJson.name,
       type: packageJson.type,
-      dependencies: packageJson.dependencies,
+      dependencies,
     },
   })
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson('packages/main-process')
-  const npmDependencies = FilterMainProcessDependencies.filterDependencies(npmDependenciesRaw, supportsAutoUpdate)
+  const npmDependencies = FilterMainProcessDependencies.filterDependencies(npmDependenciesRaw, supportsAutoUpdate, bundleMainProcess)
   await CopyDependencies.copyDependencies(mainProcessPath, to, npmDependencies)
   if (Platform.isWindows()) {
     const Rebuild = await import('../Rebuild/Rebuild.ts')

@@ -29,7 +29,7 @@ import * as Root from '../Root/Root.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
 
-const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage }) => {
+const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage, bundleMainProcess }) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
@@ -41,6 +41,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.ts',
     'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.ts',
+    'packages/build/src/parts/FilterMainProcessDependencies/FilterMainProcessDependencies.ts',
     'packages/build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.ts',
     'packages/build/src/parts/NpmDependencies/NpmDependencies.ts',
     'packages/build/src/parts/WalkDependencies/WalkDependencies.ts',
@@ -49,7 +50,14 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
   const hash = Hash.computeHash(
-    contents + electronVersion + arch + String(supportsAutoUpdate) + String(isMacos) + String(isArchLinux) + String(isAppImage),
+    contents +
+      electronVersion +
+      arch +
+      String(supportsAutoUpdate) +
+      String(isMacos) +
+      String(isArchLinux) +
+      String(isAppImage) +
+      String(bundleMainProcess),
   )
   return hash
 }
@@ -180,6 +188,7 @@ export const build = async ({
   Assert.object(product)
   Assert.string(version)
   const { electronVersion, isInstalled, installedArch, installedPlatform } = await GetElectronVersion.getElectronVersion()
+  const bundleMainProcess = BundleOptions.bundleMainProcess
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -187,12 +196,12 @@ export const build = async ({
     isMacos,
     isArchLinux,
     isAppImage,
+    bundleMainProcess,
   })
   const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
   const date = await GetCommitDate.getCommitDate(commitHash)
-  const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
   const isLinux = Platform.isLinux()
   // Language-basics extensions are now copied individually

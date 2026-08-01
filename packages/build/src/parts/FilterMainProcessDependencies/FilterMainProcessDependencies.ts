@@ -1,6 +1,6 @@
 import * as WalkDependencies from '../WalkDependencies/WalkDependencies.ts'
 
-export const filterDependencies = (rawDependencies, supportsAutoUpdate) => {
+export const filterDependencies = (rawDependencies, supportsAutoUpdate, bundleMainProcess) => {
   const dependencyPaths: any[] = []
   const handleDependency = (dependency) => {
     if (!dependency.path) {
@@ -16,6 +16,12 @@ export const filterDependencies = (rawDependencies, supportsAutoUpdate) => {
       return false
     }
     if (dependency.name === 'electron-unhandled') {
+      return false
+    }
+    if (bundleMainProcess && dependency.name === '@lvce-editor/main-process') {
+      return true
+    }
+    if (bundleMainProcess && dependency.name === 'electron') {
       return false
     }
     dependencyPaths.push(dependency.path)
