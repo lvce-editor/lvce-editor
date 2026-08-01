@@ -20,12 +20,13 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platfo
   })
 }
 
-const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supportsAutoUpdate }) => {
+const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supportsAutoUpdate, bundleMainProcess }) => {
   await BundleMainProcessDependencies.bundleMainProcessDependencies({
     electronVersion,
     arch,
     to: `${cachePath}/main-process`,
     supportsAutoUpdate,
+    bundleMainProcess,
   })
 }
 
@@ -54,14 +55,13 @@ export const bundleElectronAppDependencies = async ({
   })
   console.timeEnd('copySharedProcessFiles')
 
-  if (!bundleMainProcess) {
-    console.time('copyMainProcessFiles')
-    await copyMainProcessFiles({
-      arch,
-      electronVersion,
-      cachePath,
-      supportsAutoUpdate,
-    })
-    console.timeEnd('copyMainProcessFiles')
-  }
+  console.time('copyMainProcessFiles')
+  await copyMainProcessFiles({
+    arch,
+    electronVersion,
+    cachePath,
+    supportsAutoUpdate,
+    bundleMainProcess,
+  })
+  console.timeEnd('copyMainProcessFiles')
 }
