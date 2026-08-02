@@ -28,6 +28,10 @@ export const loadContent = async (state: any): Promise<any> => {
   }
 }
 
+export const saveState = (state: any): Promise<any> => {
+  return PanelWorker.invoke('Panel.saveState', state.uid)
+}
+
 export const hotReload = async (state) => {
   if (state.isHotReloading) {
     return state

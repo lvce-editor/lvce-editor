@@ -20,6 +20,7 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => ({
 
 const InstanceStorage = await import('../src/parts/InstanceStorage/InstanceStorage.js')
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
+const SaveStateIpc = await import('../src/parts/SaveState/SaveState.ipc.js')
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -41,6 +42,12 @@ test('saves an instance under a different storage id', async () => {
   await SaveState.saveViewletStateWithStorageId(7, 'SimpleBrowser')
 
   expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:file:///workspace:SimpleBrowser', { value: 1 })
+})
+
+test('exposes workspace-scoped instance saving over renderer rpc', async () => {
+  await SaveStateIpc.Commands.saveViewletStateWithStorageId(7, 'Problems')
+
+  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:file:///workspace:Problems', { value: 1 })
 })
 
 test('loads viewlet state from the current workspace key', async () => {

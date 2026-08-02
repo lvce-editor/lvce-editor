@@ -6,4 +6,5 @@ export const name = 'SaveState'
 export const Commands = {
   handleVisibilityChange: SaveState.handleVisibilityChange,
   hydrate: SaveState.hydrate,
+  saveViewletStateWithStorageId: SaveState.saveViewletStateWithStorageId,
 }
