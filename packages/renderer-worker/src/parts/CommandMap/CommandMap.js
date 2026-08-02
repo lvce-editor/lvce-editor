@@ -209,6 +209,7 @@ export const commandMap = {
   'Focus.setAdditionalFocus': lazy('Focus.setAdditionalFocus'),
   'Focus.setFocus': lazy('Focus.setFocus'),
   'GetActiveEditor.getActiveEditorId': lazy('GetActiveEditor.getActiveEditorId'),
+  'GetActiveEditor.updateDiagnostics': lazy('GetActiveEditor.updateDiagnostics'),
   'GetEditorSourceActions.getEditorSourceActions': lazy('GetEditorSourceActions.getEditorSourceActions'),
   'GetWindowId.getWindowId': lazy('GetWindowId.getWindowId'),
   'IconTheme.getFileIcon': lazy('IconTheme.getFileIcon'),
