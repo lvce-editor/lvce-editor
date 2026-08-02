@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -24,4 +25,12 @@ export const updateDiagnosticsWithCommand = async (executeCommand) => {
 
 export const updateDiagnostics = async () => {
   await updateDiagnosticsWithCommand(Command.execute)
+}
+
+export const updateAllDiagnosticsWithCommand = async (invoke) => {
+  await invoke('Editor.updateDiagnosticsAll')
+}
+
+export const updateAllDiagnostics = async () => {
+  await updateAllDiagnosticsWithCommand(EditorWorker.invoke)
 }
