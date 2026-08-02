@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -13,6 +14,19 @@ export const getActiveEditorId = () => {
     return -1
   }
   return instance.state.id
+}
+
+export const getOpenEditorUrisWithInvoke = async (invoke) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main)
+  if (!instance) {
+    return []
+  }
+  const savedState = await invoke('MainArea.saveState', instance.state.uid)
+  return savedState.layout.groups.flatMap((group) => group.tabs.map((tab) => tab.uri).filter((uri) => typeof uri === 'string'))
+}
+
+export const getOpenEditorUris = () => {
+  return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke)
 }
 
 export const updateDiagnosticsWithCommand = async (executeCommand) => {
