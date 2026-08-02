@@ -343,6 +343,7 @@ export const commandMap = {
   'SaveFileAs.saveFileAs': lazy('SaveFileAs.saveFileAs'),
   'SaveState.handleVisibilityChange': lazy('SaveState.handleVisibilityChange'),
   'SaveState.hydrate': lazy('SaveState.hydrate'),
+  'SaveState.saveViewletStateWithStorageId': lazy('SaveState.saveViewletStateWithStorageId'),
   'SearchProcess.invoke': lazy('SearchProcess.invoke'),
   'SendMessagePortToElectron.sendMessagePortToElectron': lazy('SendMessagePortToElectron.sendMessagePortToElectron'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker'),
