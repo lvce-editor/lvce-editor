@@ -36,3 +36,33 @@ test('updateAllDiagnostics refreshes diagnostics for every open editor', async (
 
   expect(executeCommand).toHaveBeenCalledWith('Editor.updateDiagnosticsAll')
 })
+
+test('getOpenEditorUris returns tabs from every editor group', async () => {
+  ViewletStates.set('Main', {
+    factory: {},
+    moduleId: 'Main',
+    renderedState: { uid: 1 },
+    state: { uid: 1 },
+  })
+  const invoke = jest.fn(async () => ({
+    layout: {
+      groups: [
+        { tabs: [{ uri: 'file:///workspace/src/app.ts' }, { uri: 'search-editor://1/Search' }] },
+        { tabs: [{ uri: 'file:///workspace/README.md' }, { label: 'untitled' }] },
+      ],
+    },
+  }))
+
+  await expect(GetActiveEditor.getOpenEditorUrisWithInvoke(invoke)).resolves.toEqual([
+    'file:///workspace/src/app.ts',
+    'search-editor://1/Search',
+    'file:///workspace/README.md',
+  ])
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 1)
+})
+
+test('getOpenEditorUris returns an empty array without a main area', async () => {
+  const invoke = jest.fn()
+  await expect(GetActiveEditor.getOpenEditorUrisWithInvoke(invoke)).resolves.toEqual([])
+  expect(invoke).not.toHaveBeenCalled()
+})
