@@ -5,10 +5,16 @@ export const name = 'viewlet.search-editor-new-each-time'
 export const test: Test = async ({ expect, Locator, Main }) => {
   await Main.closeAllEditors()
   await Locator('.ActivityBarItem[title="Search"]').click()
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
-  const searchEditorButton = Locator('#SideBar button[title="Open New Search Editor"]')
+  const searchEditorButton = Locator('button[title="Open New Search Editor"]')
+  await expect(searchEditorButton).toBeVisible()
   await searchEditorButton.click()
-  await searchEditorButton.click()
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  const searchEditorButtonAfterFirstOpen = Locator('button[title="Open New Search Editor"]')
+  await expect(searchEditorButtonAfterFirstOpen).toHaveCount(1)
+  await searchEditorButtonAfterFirstOpen.click()
+  await new Promise((resolve) => setTimeout(resolve, 50))
 
   const tabs = Locator('.MainTab')
   await expect(tabs).toHaveCount(2)
