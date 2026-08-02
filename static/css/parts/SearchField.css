@@ -31,6 +31,7 @@
   contain: content;
   display: flex;
   gap: 2px;
+  order: 1;
 }
 
 .SearchFieldButton {
