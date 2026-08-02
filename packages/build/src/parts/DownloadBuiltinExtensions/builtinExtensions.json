@@ -50,7 +50,7 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.0.4",
+    "version": "1.0.11",
     "created": "2026-08-01"
   },
   {
@@ -368,7 +368,7 @@
   {
     "name": "builtin.language-features-nvmrc",
     "repository": "github.com/lvce-editor/language-features-nvmrc",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "created": "2026-07-09"
   },
   {
