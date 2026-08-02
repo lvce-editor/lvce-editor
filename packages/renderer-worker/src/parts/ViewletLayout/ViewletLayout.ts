@@ -2076,6 +2076,10 @@ export const handleActiveEditorChange = async (state: LayoutState, activeUri: st
   return callGlobalEvent(state, 'handleActiveEditorChange', activeUri)
 }
 
+export const handleDiagnosticsChange = async (state: LayoutState, uri: string) => {
+  return callGlobalEvent(state, 'handleDiagnosticsChange', uri)
+}
+
 export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
   return callGlobalEvent(state, 'handleSettingsChanged')

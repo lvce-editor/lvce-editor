@@ -534,6 +534,7 @@ export const commandMap = {
   'Layout.handleBlur': lazy('Layout.handleBlur'),
   'Layout.handleColorThemeChanged': lazy('Layout.handleColorThemeChanged'),
   'Layout.handleContextMenu': lazy('Layout.handleContextMenu'),
+  'Layout.handleDiagnosticsChange': lazy('Layout.handleDiagnosticsChange'),
   'Layout.handleExtensionsChanged': lazy('Layout.handleExtensionsChanged'),
   'Layout.handleFocus': lazy('Layout.handleFocus'),
   'Layout.handleResize': lazy('Layout.handleResize'),
