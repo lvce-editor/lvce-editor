@@ -152,7 +152,7 @@
   {
     "name": "builtin.language-basics-graphql",
     "repository": "github.com/lvce-editor/language-basics-graphql",
-    "version": "0.9.0",
+    "version": "0.10.0",
     "created": "2022-10-07"
   },
   {
