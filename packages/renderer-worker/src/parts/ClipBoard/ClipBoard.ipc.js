@@ -12,6 +12,7 @@ export const Commands = {
   readNativeFiles: ClipBoard.readNativeFiles,
   readText: ClipBoard.readText,
   writeImage: ClipBoard.writeImage,
+  writeImageUrl: ClipBoard.writeImageUrl,
   writeNativeFiles: ClipBoard.writeNativeFiles,
   writeText: ClipBoard.writeText,
 }

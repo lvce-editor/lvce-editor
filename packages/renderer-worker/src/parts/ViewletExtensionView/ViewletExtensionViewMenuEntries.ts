@@ -6,15 +6,23 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 interface ContextMenuProps {
   readonly menuId?: string
+  readonly viewId?: string
 }
 
 const getMenuEntries = async (uid: number, props: ContextMenuProps = {}): Promise<readonly unknown[]> => {
-  const instance = ViewletStates.getByUid(uid)
-  const state = instance?.state
-  if (!state || typeof state.uri !== 'string' || typeof props.menuId !== 'string') {
+  if (typeof props.menuId !== 'string') {
     return []
   }
-  const viewId = typeof state.viewId === 'string' ? state.viewId : state.uri
+  const instance = ViewletStates.getByUid(uid)
+  const state = instance?.state
+  const { uri, viewId: stateViewId } = state || {}
+  let { viewId } = props
+  if (typeof viewId !== 'string') {
+    viewId = typeof stateViewId === 'string' ? stateViewId : uri
+  }
+  if (typeof viewId !== 'string') {
+    return []
+  }
   return ExtensionManagementWorker.invoke('Extensions.getViewMenuEntries', viewId, uid, props.menuId, assetDir, getPlatform()) as Promise<
     readonly unknown[]
   >

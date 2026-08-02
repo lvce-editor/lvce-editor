@@ -106,7 +106,7 @@ test.skip('install', async () => {
 test('showViewContextMenu opens extension view context menu', async () => {
   await ExtensionManagement.showViewContextMenu(1, 'sample.views.testing', 'sample.card', 10, 20)
 
-  expect(ContextMenu.show2).toHaveBeenCalledWith(1, 30, 10, 20, false, {
+  expect(ContextMenu.show2).toHaveBeenCalledWith(1, 30, 10, 20, {
     menuId: 'sample.card',
     viewId: 'sample.views.testing',
   })

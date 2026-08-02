@@ -46,6 +46,14 @@ export const writeImage = async (blob) => {
   }
 }
 
+export const writeImageUrl = async (url, fetchImage = globalThis.fetch) => {
+  const response = await fetchImage(url)
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+  return writeImage(await response.blob())
+}
+
 export const execCopy = async () => {
   try {
     return await RendererProcess.invoke('ClipBoard.execCopy')
