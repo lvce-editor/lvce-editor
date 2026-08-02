@@ -30,3 +30,9 @@ test('updateDiagnostics refreshes diagnostics for the active editor', async () =
 
   expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'updateDiagnostics')
 })
+
+test('updateAllDiagnostics refreshes diagnostics for every open editor', async () => {
+  await GetActiveEditor.updateAllDiagnosticsWithCommand(executeCommand)
+
+  expect(executeCommand).toHaveBeenCalledWith('Editor.updateDiagnosticsAll')
+})
