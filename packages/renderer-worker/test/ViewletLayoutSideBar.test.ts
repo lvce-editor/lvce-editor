@@ -725,3 +725,24 @@ test('resizing the side bar preserves a 100px main area', async () => {
     sideBarWidth: 452,
   })
 })
+
+test('double clicking the side bar sash resets the side bar width', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    sideBarMaxWidth: 9_999_999,
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 400,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.handleSashDoubleClick(state, 'SideBar')
+
+  expect(result.newState).toMatchObject({
+    mainWidth: 912,
+    sideBarWidth: 240,
+  })
+})

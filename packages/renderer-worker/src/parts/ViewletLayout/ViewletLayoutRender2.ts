@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as SashType from '../SashType/SashType.js'
 import type { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
@@ -205,6 +206,10 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleContextMenu,
       params: ['handleContextMenu'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashDoubleClick,
+      params: ['handleSashDoubleClick', SashType.SideBar],
     },
     {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,

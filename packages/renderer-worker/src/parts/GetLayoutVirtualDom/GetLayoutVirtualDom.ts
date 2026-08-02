@@ -42,6 +42,7 @@ const getSashSideBarDom = () => {
       className: 'Viewlet Sash SashVertical SashSideBar',
       tabIndex: -1,
       role: 'none',
+      onDblClick: DomEventListenerFunctions.HandleSashDoubleClick,
       onPointerDown: DomEventListenerFunctions.HandleSashSideBarPointerDown,
       onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       childCount: 1,
