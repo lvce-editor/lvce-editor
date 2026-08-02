@@ -177,6 +177,28 @@ test('handleActiveEditorChange ignores viewlets that are not loaded', async () =
   })
 })
 
+test('handleDiagnosticsChange forwards the changed uri to loaded viewlets', async () => {
+  const handler = jest.fn((state: { uid: number }, uri: string) => {
+    return {
+      ...state,
+      refreshedUri: uri,
+    }
+  })
+  ViewletStates.set('problems', createInstance(1, 'handleDiagnosticsChange', handler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleDiagnosticsChange(state, 'file:///test.ts')
+
+  expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
+  expect(ViewletManager.render).toHaveBeenCalledTimes(1)
+  expect(result).toEqual({
+    commands: [['render.1']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
 test('handleSettingsChanged hydrates preferences and updates viewlet state', async () => {
   const calls: string[] = []
   hydratePreferences.mockImplementation(async () => {
