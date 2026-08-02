@@ -567,6 +567,20 @@ test('extension view menu entries delegate to extension management worker', asyn
   ViewletStates.remove(1)
 })
 
+test('extension view menu entries use the supplied view id without a renderer viewlet instance', async () => {
+  // @ts-ignore
+  ExtensionManagementWorker.invoke.mockResolvedValueOnce([])
+
+  await expect(
+    ViewletExtensionViewMenuEntries.menus[0].getMenuEntries(1, {
+      menuId: 'sample.card',
+      viewId: 'sample.views.testing',
+    }),
+  ).resolves.toEqual([])
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.getViewMenuEntries', 'sample.views.testing', 1, 'sample.card', '', 4)
+})
+
 test('loadContent ignores css load errors', async () => {
   globalThis.fetch = jest.fn(async () => {
     throw new Error('not found')

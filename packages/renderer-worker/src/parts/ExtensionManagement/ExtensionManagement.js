@@ -47,7 +47,7 @@ export const handleViewContextChange = (uid, viewId, context) => {
 }
 
 export const showViewContextMenu = async (uid, viewId, menuId, x, y) => {
-  await ContextMenu.show2(uid, MenuEntryId.ExtensionView, x, y, false, {
+  await ContextMenu.show2(uid, MenuEntryId.ExtensionView, x, y, {
     menuId,
     viewId,
   })

@@ -170,6 +170,25 @@ test.skip('writeImage', async () => {
   })
 })
 
+test('writeImageUrl fetches and writes the image blob', async () => {
+  const blob = new Blob(['image'], { type: 'image/png' })
+  const fetchImage = jest.fn<typeof fetch>(async () => new Response(blob))
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+
+  await ClipBoard.writeImageUrl('https://example.com/image.png', fetchImage)
+
+  expect(fetchImage).toHaveBeenCalledWith('https://example.com/image.png')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.writeImage', blob)
+})
+
+test('writeImageUrl rejects unsuccessful responses', async () => {
+  const fetchImage = jest.fn<typeof fetch>(async () => new Response(null, { status: 404, statusText: 'Not Found' }))
+
+  await expect(ClipBoard.writeImageUrl('https://example.com/missing.png', fetchImage)).rejects.toThrow('Not Found')
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
 test.skip('execCopy - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {

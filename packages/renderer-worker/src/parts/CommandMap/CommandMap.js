@@ -38,6 +38,7 @@ export const commandMap = {
   'ClipBoard.readNativeFiles': lazy('ClipBoard.readNativeFiles'),
   'ClipBoard.readText': lazy('ClipBoard.readText'),
   'ClipBoard.writeImage': lazy('ClipBoard.writeImage'),
+  'ClipBoard.writeImageUrl': lazy('ClipBoard.writeImageUrl'),
   'ClipBoard.writeNativeFiles': lazy('ClipBoard.writeNativeFiles'),
   'ClipBoard.writeText': lazy('ClipBoard.writeText'),
   'ClipBoard.getSelectionText': lazy('ClipBoard.getSelectionText'),
