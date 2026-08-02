@@ -27,7 +27,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^6.19.6"
+    "@lvce-editor/main-process": "^6.20.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",
