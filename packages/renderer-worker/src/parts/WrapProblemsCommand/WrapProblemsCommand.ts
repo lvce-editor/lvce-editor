@@ -1,27 +1,56 @@
-import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const wrapProblemsCommand = (key: string) => {
-  const fn = async (state, ...args) => {
-    await ProblemsWorker.invoke(`Problems.${key}`, state.uid, ...args)
-    const diffResult = await ProblemsWorker.invoke('Problems.diff2', state.uid)
-    if (diffResult.length === 0) {
+interface ProblemsCommandDependencies {
+  readonly getState: () => ProblemsViewState
+  readonly invoke: (command: string, ...args: readonly unknown[]) => Promise<unknown>
+}
+
+interface ProblemsViewState {
+  readonly actionsDom?: readonly unknown[]
+  readonly [key: string]: unknown
+  readonly uid: number
+}
+
+type ProblemsCommand = (state: ProblemsViewState, ...args: readonly unknown[]) => Promise<ProblemsViewState>
+
+const defaultDependencies: ProblemsCommandDependencies = {
+  getState: () => ViewletStates.getState(ViewletModuleId.Problems) as ProblemsViewState,
+  invoke: ProblemsWorker.invoke,
+}
+
+const areActionsEqual = (oldActionsDom: readonly unknown[] | undefined, newActionsDom: readonly unknown[]): boolean => {
+  return JSON.stringify(oldActionsDom) === JSON.stringify(newActionsDom)
+}
+
+export const wrapProblemsCommandWithDependencies = (key: string, dependencies: ProblemsCommandDependencies): ProblemsCommand => {
+  const { getState, invoke } = dependencies
+  const fn: ProblemsCommand = async (state, ...args) => {
+    const { actionsDom: oldActionsDom, uid } = state
+    await invoke(`Problems.${key}`, uid, ...args)
+    const diffResult = (await invoke('Problems.diff2', uid)) as readonly unknown[]
+    const actionsDom = (await invoke('Problems.renderActions', uid)) as readonly unknown[]
+    const actionsChanged = !areActionsEqual(oldActionsDom, actionsDom)
+    if (diffResult.length === 0 && !actionsChanged) {
       return state
     }
-    const commands = await ProblemsWorker.invoke('Problems.render2', state.uid, diffResult)
-    const actionsDom = await ProblemsWorker.invoke('Problems.renderActions', state.uid)
-    if (commands.length === 0) {
+    const commands = diffResult.length === 0 ? [] : ((await invoke('Problems.render2', uid, diffResult)) as readonly unknown[])
+    if (commands.length === 0 && !actionsChanged) {
       return state
     }
-    const latest = ViewletStates.getState(ViewletModuleId.Problems)
+    const latest = getState()
     return {
       ...latest,
-      commands,
       actionsDom,
+      commands,
     }
   }
   NameAnonymousFunction.nameAnonymousFunction(fn, `Problems/${key}`)
   return fn
+}
+
+export const wrapProblemsCommand = (key: string): ProblemsCommand => {
+  return wrapProblemsCommandWithDependencies(key, defaultDependencies)
 }
