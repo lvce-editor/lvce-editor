@@ -60,6 +60,12 @@
     "created": "2024-09-24"
   },
   {
+    "name": "builtin.remote-ssh",
+    "repository": "github.com/lvce-editor/remote-ssh",
+    "version": "0.1.0",
+    "created": "2026-08-03"
+  },
+  {
     "name": "builtin.language-basics-coffeescript",
     "repository": "github.com/lvce-editor/language-basics-coffeescript",
     "version": "0.0.5",
