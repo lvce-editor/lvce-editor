@@ -11,3 +11,14 @@ export const show = async (picks) => {
 export const showQuickPick = (options) => {
   return QuickPickWorker.invoke('QuickPick.showQuickPick', options)
 }
+
+export const showQuickInput = async (options = {}) => {
+  const result = await QuickPickWorker.invoke('QuickPick.showQuickInput', {
+    initialValue: options.value,
+    placeholder: options.placeholder,
+  })
+  if (!result || result.canceled) {
+    return undefined
+  }
+  return result.inputValue
+}
