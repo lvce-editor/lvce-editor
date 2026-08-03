@@ -7,6 +7,7 @@ export const Commands = {
   closeWidget: Viewlet.closeWidget,
   executeViewletCommand: Viewlet.executeViewletCommand,
   focus: Viewlet.focus,
+  focusSelector: Viewlet.focusSelector,
   getAllStates: Viewlet.getAllStates,
   getDragData: Viewlet.getDragData,
   getTitle: Viewlet.getTitle,
