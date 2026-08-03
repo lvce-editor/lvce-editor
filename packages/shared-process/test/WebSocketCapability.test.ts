@@ -1,4 +1,5 @@
 import { afterEach, expect, test } from '@jest/globals'
+import * as WebSocketCapabilityIpc from '../src/parts/WebSocketCapability/WebSocketCapability.ipc.ts'
 import * as WebSocketCapability from '../src/parts/WebSocketCapability/WebSocketCapability.ts'
 import * as WebSocketCapabilityRegistry from '../src/parts/WebSocketCapabilityRegistry/WebSocketCapabilityRegistry.ts'
 
@@ -10,6 +11,14 @@ const consumeDescriptor = (descriptor: WebSocketCapability.WebSocketConnectionIn
   const tokenProtocol = descriptor.protocols.find((protocol) => protocol.startsWith(WebSocketCapabilityRegistry.capabilityProtocolPrefix)) || ''
   return WebSocketCapabilityRegistry.consume(tokenProtocol.slice(WebSocketCapabilityRegistry.capabilityProtocolPrefix.length))
 }
+
+test('exposes capability commands to the lazy command loader', () => {
+  expect(WebSocketCapabilityIpc.Commands).toEqual({
+    create: WebSocketCapability.create,
+    createExtensionNodeRpc: WebSocketCapability.createExtensionNodeRpc,
+    createLegacyExtensionNodeRpc: WebSocketCapability.createLegacyExtensionNodeRpc,
+  })
+})
 
 test('binds isolated node rpc identity and resolved module path into the capability', () => {
   const descriptor = WebSocketCapability.createExtensionNodeRpc('builtin.git', 'git-client', '/extensions/builtin.git/client.js')
