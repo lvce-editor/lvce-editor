@@ -235,8 +235,7 @@ export const handleClickTab = (state, index) => {
   return focusIndex(state, index)
 }
 
-export const handleClickAction = (state, index, command) => {
-  Assert.number(index)
+export const handleClickAction = (state, indexOrCommand, command = indexOrCommand) => {
   Assert.string(command)
   switch (command) {
     case 'addTerminal':
