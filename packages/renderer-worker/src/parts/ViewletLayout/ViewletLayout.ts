@@ -1039,7 +1039,10 @@ export const setActionsDom = (
   }
   if (state.previewActionsUid !== -1) {
     return {
-      commands: [['Viewlet.setDom2', state.previewActionsUid, actionsDom]],
+      commands: [
+        ['Viewlet.registerEventListeners', state.previewActionsUid, eventListeners],
+        ['Viewlet.setDom2', state.previewActionsUid, actionsDom],
+      ],
       handled: true,
       renderParent: false,
       statePatch: {
