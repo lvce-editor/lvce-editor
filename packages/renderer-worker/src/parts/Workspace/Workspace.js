@@ -3,6 +3,7 @@ import * as Character from '../Character/Character.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -28,12 +29,15 @@ export const setPath = async (path) => {
 }
 
 export const setUri = async (uri) => {
-  const path = decodeURIComponent(uri.slice('file://'.length))
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri
+  const pathSeparator = await FileSystem.getPathSeparator(uri)
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
   state.workspacePath = path
   state.workspaceUri = uri
+  state.pathSeparator = pathSeparator
   await onWorkspaceChange()
 }
 

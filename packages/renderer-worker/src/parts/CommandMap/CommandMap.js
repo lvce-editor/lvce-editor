@@ -129,6 +129,7 @@ export const commandMap = {
   'ExtensionHostHover.executeHoverProvider': lazy('ExtensionHostHover.executeHoverProvider'),
   'ExtensionHostOrganizeImports.organizeImports': lazy('ExtensionHostOrganizeImports.organizeImports'),
   'ExtensionHostQuickPick.show': lazy('ExtensionHostQuickPick.show'),
+  'ExtensionHostQuickPick.showQuickInput': lazy('ExtensionHostQuickPick.showQuickInput'),
   'ExtensionHostQuickPick.showQuickPick': lazy('ExtensionHostQuickPick.showQuickPick'),
   'ExtensionHostSelection.executeGrowSelection': lazy('ExtensionHostSelection.executeGrowSelection'),
   'ExtensionHostState.getSavedState': lazy('ExtensionHostState.getSavedState'),

@@ -1,43 +1,60 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-const getProviderProtocolAndPath = (uri) => {
+const getProviderProtocolPathAndUri = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   if (protocol !== FileSystemProtocol.ExtensionHost) {
     return {
-      protocol,
       path: GetProtocol.getPath(protocol, uri),
+      protocol,
+      uri,
     }
   }
   const providerUri = GetProtocol.getPath(protocol, uri)
   const providerProtocol = GetProtocol.getProtocol(providerUri)
   return {
-    protocol: providerProtocol,
     path: GetProtocol.getPath(providerProtocol, providerUri),
+    protocol: providerProtocol,
+    uri: providerUri,
   }
 }
 
-export const readFile = (uri) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  // TODO there shouldn't be multiple file system providers for the same protocol
+const executeProvider = async ({ isolatedMethod, isolatedParams, legacyMethod, legacyParams, protocol }) => {
+  const { found, result } = await ExtensionManagementWorker.invoke(isolatedMethod, protocol, ...isolatedParams)
+  if (found) {
+    return result
+  }
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemReadFile,
-    params: [protocol, path],
+    method: legacyMethod,
     noProviderFoundMessage: 'no file system provider found',
+    params: [protocol, ...legacyParams],
+  })
+}
+
+export const readFile = (uri) => {
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderReadFile',
+    isolatedParams: [providerUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemReadFile,
+    legacyParams: [path],
+    protocol,
   })
 }
 
 export const remove = (uri) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemRemove,
-    params: [protocol, path],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderRemove',
+    isolatedParams: [providerUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemRemove,
+    legacyParams: [path],
+    protocol,
   })
 }
 
@@ -47,84 +64,92 @@ export const remove = (uri) => {
  * @param {string} newUri
  */
 export const rename = (oldUri, newUri) => {
-  const { protocol, path: oldPath } = getProviderProtocolAndPath(oldUri)
-  const { path: newPath } = getProviderProtocolAndPath(newUri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemRename,
-    params: [protocol, oldPath, newPath],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path: oldPath, uri: providerOldUri } = getProviderProtocolPathAndUri(oldUri)
+  const { path: newPath, uri: providerNewUri } = getProviderProtocolPathAndUri(newUri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderRename',
+    isolatedParams: [providerOldUri, providerNewUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemRename,
+    legacyParams: [oldPath, newPath],
+    protocol,
   })
 }
 
 export const mkdir = (uri) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemMkdir,
-    params: [protocol, path],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderMkdir',
+    isolatedParams: [providerUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemMkdir,
+    legacyParams: [path],
+    protocol,
   })
 }
 
 export const createFile = (uri) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemWriteFile,
-    params: [protocol, path, ''],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderWriteFile',
+    isolatedParams: [providerUri, ''],
+    legacyMethod: ExtensionHostCommandType.FileSystemWriteFile,
+    legacyParams: [path, ''],
+    protocol,
   })
 }
 
 export const createFolder = (uri) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemCreateFolder,
-    params: [protocol, path],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderMkdir',
+    isolatedParams: [providerUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemCreateFolder,
+    legacyParams: [path],
+    protocol,
   })
 }
 
 export const writeFile = (uri, content) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemWriteFile,
-    params: [protocol, path, content],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderWriteFile',
+    isolatedParams: [providerUri, content],
+    legacyMethod: ExtensionHostCommandType.FileSystemWriteFile,
+    legacyParams: [path, content],
+    protocol,
   })
 }
 
 export const readDirWithFileTypes = (uri) => {
-  const { protocol, path } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemReadDirWithFileTypes,
-    params: [protocol, path],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderReadDirWithFileTypes',
+    isolatedParams: [providerUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemReadDirWithFileTypes,
+    legacyParams: [path],
+    protocol,
   })
 }
 
 export const getPathSeparator = async (uri) => {
-  const { protocol } = getProviderProtocolAndPath(uri)
-  const pathSeparator = await ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemGetPathSeparator,
-    params: [protocol],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol } = getProviderProtocolPathAndUri(uri)
+  const pathSeparator = await executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderGetPathSeparator',
+    isolatedParams: [],
+    legacyMethod: ExtensionHostCommandType.FileSystemGetPathSeparator,
+    legacyParams: [],
+    protocol,
   })
   Assert.string(pathSeparator)
   return pathSeparator
 }
 
 export const isReadonly = async (uri) => {
-  const { protocol } = getProviderProtocolAndPath(uri)
-  return ExtensionHostShared.executeProvider({
-    event: `onFileSystem:${protocol}`,
-    method: ExtensionHostCommandType.FileSystemIsReadonly,
-    params: [protocol],
-    noProviderFoundMessage: 'no file system provider found',
+  const { protocol } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderIsReadonly',
+    isolatedParams: [],
+    legacyMethod: ExtensionHostCommandType.FileSystemIsReadonly,
+    legacyParams: [],
+    protocol,
   })
 }
