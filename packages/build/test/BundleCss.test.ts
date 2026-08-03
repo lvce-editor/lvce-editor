@@ -170,6 +170,25 @@ test('bundleCss preserves the extension detail sash divider', async () => {
   }
 }, 30_000)
 
+test('bundleCss preserves the color theme link foreground', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'Features.css'), 'utf8')
+
+    expect(css).toContain(`.ColorThemeLink {
+  color: var(--LinkForeground, #3794ff);
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves the extension runtime status layout', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
