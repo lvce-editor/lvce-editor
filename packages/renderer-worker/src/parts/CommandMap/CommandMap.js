@@ -450,6 +450,7 @@ export const commandMap = {
   'Viewlet.dispose': lazy('Viewlet.dispose'),
   'Viewlet.executeViewletCommand': lazy('Viewlet.executeViewletCommand'),
   'Viewlet.focus': lazy('Viewlet.focus'),
+  'Viewlet.focusSelector': lazy('Viewlet.focusSelector'),
   'Viewlet.resize': lazy('Viewlet.resize'),
   'Viewlet.getAllStates': lazy('Viewlet.getAllStates'),
   'Viewlet.getDragData': lazy('Viewlet.getDragData'),
