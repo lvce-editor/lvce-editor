@@ -27,7 +27,7 @@
   overflow: auto;
 }
 
-.ViewletOutput .Line {
+.Output .Line {
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -37,11 +37,11 @@
   padding-inline: 6px;
 }
 
-.ViewletOutput .Line.error {
+.Output .Line.error {
   background: color-mix(in srgb, var(--vscode-errorForeground, #f48771) 18%, var(--vscode-editor-background, #1e1e1e));
 }
 
-.ViewletOutput .Line.warning {
+.Output .Line.warning {
   background: color-mix(in srgb, var(--vscode-editorWarning-foreground, #cca700) 18%, var(--vscode-editor-background, #1e1e1e));
 }
 
