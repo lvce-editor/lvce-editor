@@ -1,9 +1,16 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
+const invoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
+
 beforeEach(() => {
   jest.resetAllMocks()
+  invoke.mockResolvedValue({ found: false })
 })
+
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({
+  invoke,
+}))
 
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
   return {
@@ -215,4 +222,51 @@ test('isReadonly', async () => {
     noProviderFoundMessage: 'no file system provider found',
     params: ['xyz'],
   })
+})
+
+test('isolated provider dispatch uses full provider uris', async () => {
+  invoke.mockImplementation(async (method) => ({
+    found: true,
+    result: method,
+  }))
+
+  await expect(ExtensionHostFileSystem.readFile('remote-ssh:///test-folder/README.md')).resolves.toBe('Extensions.executeFileSystemProviderReadFile')
+  await expect(ExtensionHostFileSystem.readDirWithFileTypes('remote-ssh:///test-folder')).resolves.toBe(
+    'Extensions.executeFileSystemProviderReadDirWithFileTypes',
+  )
+  await expect(ExtensionHostFileSystem.mkdir('remote-ssh:///test-folder/new-folder')).resolves.toBe('Extensions.executeFileSystemProviderMkdir')
+  await expect(ExtensionHostFileSystem.writeFile('remote-ssh:///test-folder/new.txt', 'content')).resolves.toBe(
+    'Extensions.executeFileSystemProviderWriteFile',
+  )
+  await expect(ExtensionHostFileSystem.rename('remote-ssh:///test-folder/new.txt', 'remote-ssh:///test-folder/renamed.txt')).resolves.toBe(
+    'Extensions.executeFileSystemProviderRename',
+  )
+  await expect(ExtensionHostFileSystem.remove('remote-ssh:///test-folder/renamed.txt')).resolves.toBe('Extensions.executeFileSystemProviderRemove')
+  await expect(ExtensionHostFileSystem.getPathSeparator('remote-ssh:///test-folder')).resolves.toBe(
+    'Extensions.executeFileSystemProviderGetPathSeparator',
+  )
+  await expect(ExtensionHostFileSystem.isReadonly('remote-ssh:///test-folder')).resolves.toBe('Extensions.executeFileSystemProviderIsReadonly')
+
+  expect(invoke.mock.calls).toEqual([
+    ['Extensions.executeFileSystemProviderReadFile', 'remote-ssh', 'remote-ssh:///test-folder/README.md'],
+    ['Extensions.executeFileSystemProviderReadDirWithFileTypes', 'remote-ssh', 'remote-ssh:///test-folder'],
+    ['Extensions.executeFileSystemProviderMkdir', 'remote-ssh', 'remote-ssh:///test-folder/new-folder'],
+    ['Extensions.executeFileSystemProviderWriteFile', 'remote-ssh', 'remote-ssh:///test-folder/new.txt', 'content'],
+    ['Extensions.executeFileSystemProviderRename', 'remote-ssh', 'remote-ssh:///test-folder/new.txt', 'remote-ssh:///test-folder/renamed.txt'],
+    ['Extensions.executeFileSystemProviderRemove', 'remote-ssh', 'remote-ssh:///test-folder/renamed.txt'],
+    ['Extensions.executeFileSystemProviderGetPathSeparator', 'remote-ssh'],
+    ['Extensions.executeFileSystemProviderIsReadonly', 'remote-ssh'],
+  ])
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
+test('isolated provider dispatch unwraps extension host uris', async () => {
+  invoke.mockResolvedValue({
+    found: true,
+    result: 'content',
+  })
+
+  await expect(ExtensionHostFileSystem.readFile('extension-host://remote-ssh:///test-folder/README.md')).resolves.toBe('content')
+
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderReadFile', 'remote-ssh', 'remote-ssh:///test-folder/README.md')
 })
