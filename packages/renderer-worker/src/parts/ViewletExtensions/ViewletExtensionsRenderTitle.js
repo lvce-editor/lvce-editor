@@ -1,11 +1,8 @@
 export const renderTitle = {
   isEqual(oldState, newState) {
-    return oldState === newState
+    return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    const prefix = `Extensions`
-    const postfix = `Installed`
-    const title = `${prefix}: ${postfix}`
-    return title
+    return newState.title || 'Extensions: Installed'
   },
 }
