@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'node:url'
 import * as GetContentResponse from '../GetContentResponse/GetContentResponse.ts'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
 import * as GetElectronFileResponseContent from '../GetElectronFileResponseContent/GetElectronFileResponseContent.ts'
@@ -12,6 +13,12 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as IsTypeScriptSyntaxError from '../IsTypeScriptSyntaxError/IsTypeScriptSyntaxError.ts'
 import * as Logger from '../Logger/Logger.ts'
+
+export const resolveElectronFileUri = (url: string): string => {
+  const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
+  return pathToFileURL(absolutePath).toString()
+}
 
 // TODO maybe handle app responses and webview responses separately
 // maybe send webview requests directly to preview process

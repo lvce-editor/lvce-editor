@@ -21,3 +21,7 @@ test('getModuleId - ChromeCookieImport.importCookies', () => {
 test('getModuleId - FirefoxCookieImport.importCookies', () => {
   expect(ModuleMap.getModuleId('FirefoxCookieImport.importCookies')).toBe(ModuleId.FirefoxCookieImport)
 })
+
+test('getModuleId - GetElectronFileResponse.resolveElectronFileUri', () => {
+  expect(ModuleMap.getModuleId('GetElectronFileResponse.resolveElectronFileUri')).toBe(ModuleId.GetElectronFileResponse)
+})

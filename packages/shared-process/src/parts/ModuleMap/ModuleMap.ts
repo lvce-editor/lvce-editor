@@ -158,6 +158,7 @@ export const getModuleId = (commandId: any): any => {
     case 'FirefoxCookieImport.importCookies':
       return ModuleId.FirefoxCookieImport
     case 'GetElectronFileResponse.getElectronFileResponse':
+    case 'GetElectronFileResponse.resolveElectronFileUri':
       return ModuleId.GetElectronFileResponse
     case 'GetExtensions.getExtensions':
       return ModuleId.GetExtensions
