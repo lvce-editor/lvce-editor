@@ -31,6 +31,10 @@ export const getDragData = () => {
   return RendererProcess.invoke('Viewlet.getDragData')
 }
 
+export const focusSelector = (id, selector) => {
+  return RendererProcess.invoke('Viewlet.focusSelector', id, selector)
+}
+
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
@@ -366,7 +370,7 @@ export const openWidget = async (moduleId, ...args) => {
   if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
     if (hasInstance) {
-      await ViewletElectron.closeWidgetElectronQuickPick()
+      await ViewletElectron.closeWidgetElectronQuickPick(false)
     }
     return ViewletElectron.openElectronQuickPick(...args)
   }
@@ -441,7 +445,12 @@ export const closeWidget = async (id) => {
         await SimpleBrowserOverlay.hide('quick-pick')
       }
     }
-    // TODO restore focus
+    if (hasSimpleBrowserOverlay) {
+      const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main)
+      if (mainInstance) {
+        await executeViewletCommand(mainInstance.state.uid, 'focus')
+      }
+    }
   } catch (error) {
     throw new VError(error, `Failed to close widget ${id}`)
   }
