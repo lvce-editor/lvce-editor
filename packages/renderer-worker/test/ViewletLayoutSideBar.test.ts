@@ -100,21 +100,25 @@ test('setActionsDom creates preview actions with the child event listeners', () 
   ])
 })
 
-test('setActionsDom updates existing preview actions', () => {
+test('setActionsDom updates existing preview actions and event listeners', () => {
   const state = {
     ...ViewletLayout.create(12),
+    previewActionsEventListeners: ['old-click'],
     previewActionsUid: 8,
     previewId: 7,
   }
 
-  const result = ViewletLayout.setActionsDom(state, ['updated-actions'], 7)
+  const result = ViewletLayout.setActionsDom(state, ['updated-actions'], 7, ['new-click'])
 
   expect(result).toEqual({
-    commands: [['Viewlet.setDom2', 8, ['updated-actions']]],
+    commands: [
+      ['Viewlet.registerEventListeners', 8, ['new-click']],
+      ['Viewlet.setDom2', 8, ['updated-actions']],
+    ],
     handled: true,
     renderParent: false,
     statePatch: {
-      previewActionsEventListeners: [],
+      previewActionsEventListeners: ['new-click'],
     },
   })
 })
