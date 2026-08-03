@@ -52,6 +52,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 const ViewletTerminals = await import('../src/parts/ViewletTerminals/ViewletTerminals.js')
 const ViewletTerminalsRender = await import('../src/parts/ViewletTerminals/ViewletTerminalsRender.js')
+const ViewletTerminalsRenderActions = await import('../src/parts/ViewletTerminals/ViewletTerminalsRenderActions.js')
 
 const createLoadedState = () => {
   return {
@@ -126,6 +127,33 @@ test('handleClickAction routes the panel add action', async () => {
 
   expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.anything(), '')
   expect(newState.childUid).toBe(42)
+})
+
+test('renderActions wires terminal toolbar buttons to handleClickAction', () => {
+  const state = createLoadedState()
+
+  const dom = ViewletTerminalsRenderActions.renderActions.apply(state, state)
+
+  expect(dom).toContainEqual(expect.objectContaining({ 'data-command': 'splitTerminal', onClick: 'handleClickAction' }))
+})
+
+test('renderEventListeners routes terminal toolbar clicks and stops panel event delegation', () => {
+  expect(ViewletTerminalsRender.renderEventListeners()).toEqual([
+    {
+      name: 'handleClickAction',
+      params: ['handleClickAction', 'event.target.dataset.command'],
+      stopPropagation: true,
+    },
+  ])
+})
+
+test('handleClickAction routes a functional action-root split event', async () => {
+  const state = createLoadedState()
+
+  const newState = await ViewletTerminals.handleClickAction(state, 'splitTerminal')
+
+  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.anything(), '')
+  expect(newState.childUids).toEqual([41, 42])
 })
 
 test('splitTerminal opens a new terminal to the right of the active terminal', async () => {
