@@ -262,11 +262,13 @@ export const create = (getModule, id, parentUid, uri, x, y, width, height) => {
   }
 }
 
-const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name, parentId, eventListeners) => {
+const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name, parentId, eventListeners, actionsUid) => {
   const commands = []
   if (module.renderActions && !module.renderActions.isEqual(oldState, newState)) {
     const actionsCommands = module.renderActions.apply(oldState, newState)
-    if (parentId) {
+    if (typeof actionsUid === 'number' && actionsUid > 0) {
+      commands.push(['Viewlet.setDom2', actionsUid, actionsCommands])
+    } else if (parentId) {
       const parentInstance = ViewletStates.getInstance(parentId)
       if (parentInstance?.factory?.setActionsDom) {
         const result = parentInstance.factory.setActionsDom(parentInstance.state, actionsCommands, uid, eventListeners)
@@ -630,6 +632,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (viewlet.id === ViewletModuleId.Layout) {
       ViewletStates.set(viewletUid, {
+        actionsUid: viewlet.actionsUid,
         state: newState,
         renderedState: viewletState,
         factory: module,
@@ -701,6 +704,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
 
     const instance = {
+      actionsUid: viewlet.actionsUid,
       state: newState,
       renderedState: viewletState,
       factory: module,
@@ -860,7 +864,8 @@ export const mutate = async (id, fn) => {
 }
 
 export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid = newState.parentUid) => {
-  const commands = getRenderCommands(module, oldState, newState, uid, parentUid)
+  const actionsUid = ViewletStates.getInstance(uid)?.actionsUid
+  const commands = getRenderCommands(module, oldState, newState, uid, parentUid, undefined, actionsUid)
   return LayoutWidgets.reconcile(commands)
 }
 

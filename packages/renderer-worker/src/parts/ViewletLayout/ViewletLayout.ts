@@ -1124,6 +1124,7 @@ export const createPanelViewlet = async (
       // @ts-ignore
       uri,
       uid: editorUid,
+      actionsUid,
       show: false,
       focus,
       setBounds: false,

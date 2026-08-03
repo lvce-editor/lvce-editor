@@ -110,6 +110,38 @@ test('render adds uid to setPatches command', () => {
   expect(commands).toEqual([['Viewlet.setPatches', 42, patches]])
 })
 
+test('render sends action updates to a linked actions root', () => {
+  const oldState = {
+    uid: 42,
+    viewMode: 1,
+  }
+  const newState = {
+    ...oldState,
+    viewMode: 2,
+  }
+  const mockModule = {
+    render: [],
+    renderActions: {
+      apply() {
+        return ['updated-actions']
+      },
+      isEqual() {
+        return false
+      },
+    },
+  }
+  ViewletStates.set(42, {
+    actionsUid: 99,
+    factory: mockModule,
+    renderedState: oldState,
+    state: newState,
+  })
+
+  const commands = ViewletManager.render(mockModule, oldState, newState, 42, -1)
+
+  expect(commands).toEqual([['Viewlet.setDom2', 99, ['updated-actions']]])
+})
+
 test('load omits empty event listener registration for a new root', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)
