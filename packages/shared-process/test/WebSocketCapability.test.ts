@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from '@jest/globals'
-import * as WebSocketCapability from '../src/parts/WebSocketCapability/WebSocketCapability.ts'
 import * as WebSocketCapabilityIpc from '../src/parts/WebSocketCapability/WebSocketCapability.ipc.ts'
+import * as WebSocketCapability from '../src/parts/WebSocketCapability/WebSocketCapability.ts'
 import * as WebSocketCapabilityRegistry from '../src/parts/WebSocketCapabilityRegistry/WebSocketCapabilityRegistry.ts'
 
 afterEach(() => {
