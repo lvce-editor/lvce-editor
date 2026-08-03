@@ -16,12 +16,12 @@ export const getNewContent = (oldContent: string, changes: readonly TextEdit[]):
       newLineIndex = GetNewLineIndex.getNewLineIndex(oldContent, newLineIndex + 1)
       rowIndex++
     }
-    if (copiedContentIndex <= newLineIndex) {
-      newContent += oldContent.slice(copiedContentIndex, newLineIndex + 1)
-      copiedContentIndex = newLineIndex + 1
-    }
+    const lineStartIndex = newLineIndex + 1
+    const startContentIndex = lineStartIndex + startColumnIndex
+    const endContentIndex = lineStartIndex + endColumnIndex
+    newContent += oldContent.slice(copiedContentIndex, startContentIndex)
     newContent += text
-    copiedContentIndex += endColumnIndex - startColumnIndex
+    copiedContentIndex = endContentIndex
   }
-  return newContent
+  return newContent + oldContent.slice(copiedContentIndex)
 }
