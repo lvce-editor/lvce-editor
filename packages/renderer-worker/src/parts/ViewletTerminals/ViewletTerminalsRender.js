@@ -1,8 +1,19 @@
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetTerminalsDom from '../GetTerminalsDom/GetTerminalsDom.js'
 
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
+
+export const renderEventListeners = () => {
+  return [
+    {
+      name: DomEventListenerFunctions.HandleClickAction,
+      params: ['handleClickAction', 'event.target.dataset.command'],
+      stopPropagation: true,
+    },
+  ]
+}
 
 const renderDom = {
   isEqual(oldState, newState) {
