@@ -41,6 +41,10 @@
   color: var(--WorkbenchForeground);
 }
 
+.ColorThemeLink {
+  color: var(--LinkForeground, #3794ff);
+}
+
 .DefinitionListItemHeading {
   font-size: 12px;
   white-space: pre;
