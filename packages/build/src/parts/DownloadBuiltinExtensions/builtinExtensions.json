@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.18.1",
+    "version": "5.19.0",
     "created": "2022-07-02"
   },
   {
@@ -188,7 +188,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.12.0",
+    "version": "1.13.0",
     "created": "2022-06-16"
   },
   {
@@ -404,7 +404,7 @@
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "created": "2022-10-06"
   },
   {
@@ -422,7 +422,7 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "created": "2022-06-16"
   },
   {
