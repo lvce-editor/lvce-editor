@@ -404,6 +404,13 @@ test('createPanelViewlet creates a linked actions root for child-contributed act
   )
 
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      actionsUid: 33,
+    }),
+    false,
+    true,
+  )
   expect(result).toEqual({
     newState: state,
     commands: [
