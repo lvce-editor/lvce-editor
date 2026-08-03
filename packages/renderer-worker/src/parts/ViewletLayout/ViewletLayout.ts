@@ -797,12 +797,18 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView, 
 }
 
 export const openIntegratedTerminal = async (state: LayoutState, cwd: string): Promise<LayoutStateResult> => {
-  const terminalsActive = state.panelView === ViewletModuleId.Terminals && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
-  const result = await showPanel(state, ViewletModuleId.Terminals, terminalsActive ? '' : cwd)
+  const terminalsActive = state.panelVisible && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
   if (terminalsActive) {
     await Command.execute('Terminals.addTerminal', cwd)
+    return {
+      newState: {
+        ...state,
+        panelView: ViewletModuleId.Terminals,
+      },
+      commands: [],
+    }
   }
-  return result
+  return showPanel(state, ViewletModuleId.Terminals, cwd)
 }
 
 export const hidePanel = (state: LayoutState) => {
