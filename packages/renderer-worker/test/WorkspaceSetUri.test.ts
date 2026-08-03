@@ -40,3 +40,12 @@ test('setUri preserves a custom uri as the workspace path', async () => {
   expect(Workspace.state.pathSeparator).toBe('\\')
   expect(getPathSeparator).toHaveBeenCalledWith('remote-ssh:///test-folder')
 })
+
+test('setUri uses a provided provider path separator', async () => {
+  await Workspace.setUri('remote-ssh:///test-folder', '\\')
+
+  expect(Workspace.getWorkspacePath()).toBe('remote-ssh:///test-folder')
+  expect(Workspace.getWorkspaceUri()).toBe('remote-ssh:///test-folder')
+  expect(Workspace.state.pathSeparator).toBe('\\')
+  expect(getPathSeparator).not.toHaveBeenCalled()
+})
