@@ -23,6 +23,7 @@ jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', 
 jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
   return {
     saveViewletState: jest.fn(() => undefined),
+    saveViewletStateWithStorageId: jest.fn(() => undefined),
   }
 })
 
@@ -47,6 +48,7 @@ beforeEach(() => {
   Command.execute.mockResolvedValue('Search')
   RendererProcess.invoke.mockResolvedValue(undefined)
   SaveState.saveViewletState.mockResolvedValue(undefined)
+  SaveState.saveViewletStateWithStorageId.mockResolvedValue(undefined)
   ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'Explorer', 2, true]])
   ViewletManager.runLoadContentLater.mockReturnValue(undefined)
   GetExtensionViews.getExtensionView.mockResolvedValue(undefined)
@@ -157,6 +159,19 @@ test('handleSideBarViewletChange uses child title', async () => {
     currentViewletId: 'Explorer',
     title: 'workspace-name',
   })
+})
+
+test('handleSideBarViewletChange saves the concrete sidebar child under the viewlet storage id', async () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    childUid: 99,
+    currentViewletId: 'Search',
+  }
+
+  await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
+
+  expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(99, 'Search')
+  expect(SaveState.saveViewletState).not.toHaveBeenCalled()
 })
 
 test('handleSideBarViewletChange gives an opted-out extension view the full sidebar', async () => {

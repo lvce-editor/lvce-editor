@@ -197,6 +197,41 @@ test('load retains non-empty event listener registration for a new root', async 
   ])
 })
 
+test('load restores state from a viewlet instance storage key', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((command, _storageType, key) => {
+    if (command === 'WebStorage.getItem') {
+      expect(key).toBe('viewlet::search-editor://1/Search')
+      return JSON.stringify({ value: 'needle' })
+    }
+    return undefined
+  })
+  const mockModule = {
+    create: jest.fn(() => ({ uid: 12, uri: 'search-editor://1/Search' })),
+    getStorageKey: (state) => state.uri,
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state, _savedState) => state),
+    render: [],
+    renderEventListeners: jest.fn(() => []),
+  }
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'Search',
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 12,
+    uri: 'search-editor://1/Search',
+  }
+
+  await ViewletManager.load(viewlet, false, true)
+
+  expect(mockModule.loadContent).toHaveBeenCalledWith(expect.objectContaining({ uri: 'search-editor://1/Search' }), { value: 'needle' })
+})
+
 test('load reconciles widget declarations before returning initial render commands', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)
