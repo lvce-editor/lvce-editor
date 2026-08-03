@@ -7,6 +7,7 @@ import type { SearchState } from './ViewletSearchTypes.ts'
 export const create = (id: any, uri: string, x: number, y: number, width: number, height: number): SearchState => {
   return {
     uid: id,
+    uri,
     x,
     y,
     width,
@@ -17,6 +18,10 @@ export const create = (id: any, uri: string, x: number, y: number, width: number
     isSearchEditor: uri.startsWith('search-editor://'),
     platform: Platform.getPlatform(),
   }
+}
+
+export const getStorageKey = (state: SearchState): string => {
+  return state.uri
 }
 
 const doCreate = async (state: any): Promise<void> => {

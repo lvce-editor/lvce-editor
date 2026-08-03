@@ -35,12 +35,16 @@ test('create identifies sidebar search', () => {
   const state = ViewletSearch.create(1, 'Search', 10, 20, 800, 600)
 
   expect(state.isSearchEditor).toBe(false)
+  expect(state.uri).toBe('Search')
+  expect(ViewletSearch.getStorageKey(state)).toBe('Search')
 })
 
 test('create identifies search editors', () => {
   const state = ViewletSearch.create(1, 'search-editor://1/Search', 10, 20, 800, 600)
 
   expect(state.isSearchEditor).toBe(true)
+  expect(state.uri).toBe('search-editor://1/Search')
+  expect(ViewletSearch.getStorageKey(state)).toBe('search-editor://1/Search')
 })
 
 test('loadContent passes search editor mode to the text search view', async () => {
