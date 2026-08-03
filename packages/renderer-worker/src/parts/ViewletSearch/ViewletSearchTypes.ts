@@ -1,5 +1,6 @@
 export interface SearchState {
   readonly uid: number
+  readonly uri: string
   readonly commands: readonly any[]
   readonly x: number
   readonly y: number

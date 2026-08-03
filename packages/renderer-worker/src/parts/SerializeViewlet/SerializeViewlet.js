@@ -11,7 +11,7 @@ export const serializeInstances = async (instances) => {
   for (const value of Object.values(instances)) {
     const serializedInstance = await serializeInstance(value)
     if (serializedInstance) {
-      const storageKey = value.factory.StorageKey || value.moduleId
+      const storageKey = value.factory.getStorageKey ? value.factory.getStorageKey(value.state) : value.factory.StorageKey || value.moduleId
       serialized[storageKey] = serializedInstance
     }
   }
