@@ -41,6 +41,15 @@ test('injects an issuer only for a top-level document navigation', async () => {
   )
 })
 
+test('injects an issuer when a navigation omits the fetch destination', async () => {
+  await GetElectronFileResponseContent.getElectronFileResponseContent({ headers: { 'sec-fetch-mode': 'navigate' } }, '/index.html', '/')
+
+  expect(addCustomPathsToIndexHtml).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({ webSocketIssuer: expect.stringMatching(issuerRegex) }),
+  )
+})
+
 test('generates a fresh issuer for each navigation', async () => {
   const request = { headers: { 'sec-fetch-dest': 'document' } }
   await GetElectronFileResponseContent.getElectronFileResponseContent(request, '/index.html', '/')
@@ -52,7 +61,11 @@ test('generates a fresh issuer for each navigation', async () => {
 })
 
 test('does not expose an issuer when an extension fetches the application root', async () => {
-  await GetElectronFileResponseContent.getElectronFileResponseContent({ headers: { 'sec-fetch-dest': 'empty' } }, '/index.html', '/')
+  await GetElectronFileResponseContent.getElectronFileResponseContent(
+    { headers: { 'sec-fetch-dest': 'empty', 'sec-fetch-mode': 'cors' } },
+    '/index.html',
+    '/',
+  )
 
   expect(addCustomPathsToIndexHtml).toHaveBeenCalledWith(expect.anything(), {})
 })

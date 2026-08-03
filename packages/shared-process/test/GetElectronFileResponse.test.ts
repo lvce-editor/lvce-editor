@@ -78,3 +78,17 @@ test('getElectronFileResponse - secret document is never cached or returned as 3
   expect(response.init.status).toBe(200)
   expect(response.init.headers['Cache-Control']).toBe('no-store')
 })
+
+test('getElectronFileResponse - navigation without a fetch destination is never cached or returned as 304', async () => {
+  jest.mocked(GetElectronFileResponseContent.getElectronFileResponseContent).mockResolvedValue(Buffer.from('html'))
+
+  const response = await GetElectronFileResponse.getElectronFileResponse('/', {
+    headers: {
+      'if-none-match': 'etag',
+      'sec-fetch-mode': 'navigate',
+    },
+  })
+
+  expect(response.init.status).toBe(200)
+  expect(response.init.headers['Cache-Control']).toBe('no-store')
+})
