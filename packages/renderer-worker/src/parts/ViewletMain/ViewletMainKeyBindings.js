@@ -8,6 +8,10 @@ export const getKeyBindings = () => {
       command: 'Main.closeActiveEditor',
     },
     {
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT,
+      command: 'Main.restoreClosedTab',
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyCode.Tab,
       command: 'Main.focusNext',
     },
