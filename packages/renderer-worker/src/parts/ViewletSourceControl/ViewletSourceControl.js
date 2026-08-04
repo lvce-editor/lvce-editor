@@ -87,7 +87,7 @@ export const handleInput = (state, text) => {
 export const focus = (state) => {
   return {
     ...state,
-    commands: [['Viewlet.focusSelector', '.SourceControlHeader input']],
+    commands: [['Viewlet.focusSelector', '[name="SourceControlInput"]']],
   }
 }
 
