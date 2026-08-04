@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => ({
 }))
 
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
-const ViewletDialog = await import('../src/parts/ViewletDialog/ViewletDialog.js')
+const ViewletDialog = await import('../src/parts/ViewletDialog/ViewletDialog.ipc.js')
 
 beforeEach(() => {
   jest.clearAllMocks()

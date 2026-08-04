@@ -1,9 +1,34 @@
-export const name = 'Main'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletMain.js'
-export * from './ViewletMainCommands.js'
-export * from './ViewletMainCss.ts'
-export * from './ViewletMainKeyBindings.js'
-export * from './ViewletMainMenuEntries.js'
-export * from './ViewletMainRender.js'
-export * from './ViewletMainResize.js'
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  focus,
+  getCommands,
+  getKeyBindings,
+  getMenus,
+  getQuickPickMenuEntries,
+  getStorageKey,
+  getTitle,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  menus,
+  name,
+  openEditorWithType,
+  openKeyBindings,
+  render,
+  renderActions,
+  renderEventListeners,
+  renderTitle,
+  resize,
+  saveState,
+  saveWithoutFormatting,
+} = createWorkerViewlet({ workerId: 'mainArea' })

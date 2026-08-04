@@ -1,5 +1,4 @@
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
-import * as ViewletExplorer from '../ViewletExplorer/ViewletExplorer.js'
 
 interface ExplorerCommandDependencies {
   readonly getTitle: (uid: number) => Promise<string>
@@ -16,7 +15,13 @@ interface ExplorerViewState {
 type ExplorerCommand = (state: ExplorerViewState, ...args: readonly unknown[]) => Promise<ExplorerViewState>
 
 const defaultDependencies: ExplorerCommandDependencies = {
-  getTitle: ViewletExplorer.getTitle,
+  async getTitle(uid) {
+    try {
+      return (await ExplorerViewWorker.invoke('Explorer.getTitle', uid)) as string
+    } catch {
+      return 'Explorer'
+    }
+  },
   invoke: ExplorerViewWorker.invoke,
 }
 

@@ -13,7 +13,7 @@ jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
   }
 })
 
-const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/ViewletKeyBindings.js')
+const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/ViewletKeyBindings.ipc.js')
 const KeyBindingsInitial = await import('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js')
 
 test('create', () => {

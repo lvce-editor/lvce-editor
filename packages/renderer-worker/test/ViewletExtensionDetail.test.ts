@@ -50,7 +50,7 @@ class NodeError extends Error {
   }
 }
 
-const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.ts')
+const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.ipc.ts')
 const ExtensionDetailViewWorker = await import('../src/parts/ExtensionDetailViewWorker/ExtensionDetailViewWorker.js')
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')

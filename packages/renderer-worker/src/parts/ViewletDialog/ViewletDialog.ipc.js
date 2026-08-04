@@ -1,7 +1,25 @@
-export const name = 'Dialog'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletDialog.js'
-export * from './ViewletDialogCommands.js'
-export * from './ViewletDialogCss.js'
-export * from './ViewletDialogKeyBindings.js'
-export * from './ViewletDialogRender.js'
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getKeyBindings,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  menus,
+  name,
+  render,
+  renderDialog,
+  renderEventListeners,
+  resize,
+  saveState,
+} = createWorkerViewlet({ workerId: 'dialogWorker' })

@@ -6,7 +6,7 @@ jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => ({
 }))
 
 const PanelWorker = await import('../src/parts/PanelWorker/PanelWorker.js')
-const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.ts')
+const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.ipc.ts')
 
 test('saveState lets the panel worker save its active child', async () => {
   const result = await ViewletPanel.saveState({ uid: 13 })
