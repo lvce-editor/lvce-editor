@@ -45,6 +45,7 @@ export const CommandsWithSideEffects = {
   handleSettingsChanged: ViewletLayout.handleSettingsChanged,
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,
   refreshSourceControlBadgeCount: ViewletLayout.refreshSourceControlBadgeCount,
+  renderMainAreaPending: ViewletLayout.renderMainAreaPending,
   setMountedViewlets: ViewletLayout.setMountedViewlets,
   reset: ResetLayout.reset,
   resetViewLocations: ResetLayout.resetViewLocations,

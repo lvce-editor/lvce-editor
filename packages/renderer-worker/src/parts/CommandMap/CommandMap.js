@@ -522,6 +522,7 @@ export const commandMap = {
   'Layout.attachViewlet': lazy('Layout.attachViewlet'),
   'Layout.createPanelViewlet': lazy('Layout.createPanelViewlet'),
   'Layout.createViewlet': lazy('Layout.createViewlet'),
+  'Layout.renderMainAreaPending': lazy('Layout.renderMainAreaPending'),
   'Layout.getActiveSideBarView': lazy('Layout.getActiveSideBarView'),
   'Layout.getActiveSecondarySideBarView': lazy('Layout.getActiveSecondarySideBarView'),
   'Layout.getSecondarySideBarVisible': lazy('Layout.getSecondarySideBarVisible'),
