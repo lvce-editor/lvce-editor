@@ -70,6 +70,37 @@ test('runLoadContentLater starts deferred loading once', async () => {
   expect(loadContentLater).toHaveBeenCalledWith(viewletState)
 })
 
+test('waitForLoadContentLater waits for deferred loading to finish', async () => {
+  let finishLoading: () => void = () => {}
+  const loading = new Promise<void>((resolve) => {
+    finishLoading = resolve
+  })
+  const loadContentLater = jest.fn(() => loading)
+  const viewletState = { uid: 42 }
+  ViewletStates.set(42, {
+    factory: {
+      Commands: {
+        loadContentLater,
+      },
+    },
+    renderedState: viewletState,
+    state: viewletState,
+  })
+
+  ViewletManager.runLoadContentLater(42)
+  let finished = false
+  const waiting = ViewletManager.waitForLoadContentLater(42).then(() => {
+    finished = true
+  })
+  await Promise.resolve()
+  expect(finished).toBe(false)
+
+  finishLoading()
+  await waiting
+
+  expect(finished).toBe(true)
+})
+
 test('runLoadContentLaterForCreatedViewlets starts deferred loading for newly rendered viewlets', async () => {
   const loadContentLater = jest.fn(async (_state: unknown) => {})
   const viewletState = { uid: 42 }
