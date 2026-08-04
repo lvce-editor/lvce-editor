@@ -40,10 +40,17 @@ export const runLoadContentLater = (uid) => {
   const instance = ViewletStates.getInstance(uid)
   const loadContentLater = instance?.factory?.Commands?.loadContentLater
   if (!loadContentLater || instance.loadContentLaterStarted) {
-    return
+    return instance?.loadContentLaterPromise
   }
   instance.loadContentLaterStarted = true
-  void runLoadContentLaterWithErrorHandling(loadContentLater, instance.state)
+  instance.loadContentLaterPromise = runLoadContentLaterWithErrorHandling(loadContentLater, instance.state)
+  void instance.loadContentLaterPromise
+  return instance.loadContentLaterPromise
+}
+
+export const waitForLoadContentLater = async (uid) => {
+  const instance = ViewletStates.getInstance(uid)
+  await instance?.loadContentLaterPromise
 }
 
 export const runLoadContentLaterForCreatedViewlets = (commands) => {

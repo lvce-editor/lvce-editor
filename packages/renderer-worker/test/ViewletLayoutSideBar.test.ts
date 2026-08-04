@@ -19,6 +19,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
     load: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    waitForLoadContentLater: jest.fn(() => undefined),
   }
 })
 
@@ -32,6 +33,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
     disposeFunctional: jest.fn(() => []),
+    focus: jest.fn(() => undefined),
     getFocusCommands: jest.fn(() => []),
     resize: jest.fn(() => []),
   }
@@ -69,9 +71,13 @@ beforeEach(() => {
   // @ts-ignore
   Viewlet.disposeFunctional.mockReturnValue([])
   // @ts-ignore
+  Viewlet.focus.mockResolvedValue(undefined)
+  // @ts-ignore
   Viewlet.getFocusCommands.mockResolvedValue([])
   // @ts-ignore
   Viewlet.resize.mockResolvedValue([])
+  // @ts-ignore
+  ViewletManager.waitForLoadContentLater.mockResolvedValue(undefined)
   // @ts-ignore
   ViewletStates.getAllInstances.mockReturnValue({})
   // @ts-ignore
@@ -564,10 +570,8 @@ test('toggleSideBarView appends focus commands after showing the requested view'
   expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusElementByName', 12, 'SearchValue']])
 })
 
-test('openSideBarView appends focus commands when focus is requested', async () => {
+test('openSideBarView waits for deferred content and focuses the mounted view when requested', async () => {
   mockActivityBarRender()
-  // @ts-ignore
-  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="extensions"]']])
   const state = {
     ...ViewletLayout.create(1),
     activityBarId: 7,
@@ -577,8 +581,9 @@ test('openSideBarView appends focus commands when focus is requested', async () 
 
   const result = await ViewletLayout.openSideBarView(state, 'Extensions', true, undefined)
 
-  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Extensions')
-  expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusSelector', 12, '[name="extensions"]']])
+  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Extensions')
+  expect(Viewlet.focus).toHaveBeenCalledWith('Extensions')
+  expect(result.commands).toEqual([['activity-bar.render2']])
 })
 
 test('openSideBarView does not request focus by default', async () => {
@@ -592,12 +597,11 @@ test('openSideBarView does not request focus by default', async () => {
 
   await ViewletLayout.openSideBarView(state, 'Extensions', false, undefined)
 
-  expect(Viewlet.getFocusCommands).not.toHaveBeenCalled()
+  expect(ViewletManager.waitForLoadContentLater).not.toHaveBeenCalled()
+  expect(Viewlet.focus).not.toHaveBeenCalled()
 })
 
 test('openChat focuses an already open chat when requested', async () => {
-  // @ts-ignore
-  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="composer"]']])
   const state = {
     ...ViewletLayout.create(1),
     secondarySideBarView: 'Chat',
@@ -606,18 +610,17 @@ test('openChat focuses an already open chat when requested', async () => {
 
   const result = await ViewletLayout.openChat(state, true)
 
-  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Chat')
+  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Chat')
+  expect(Viewlet.focus).toHaveBeenCalledWith('Chat')
   expect(result).toEqual({
     newState: state,
-    commands: [['Viewlet.focusSelector', 12, '[name="composer"]']],
+    commands: [],
   })
 })
 
 test('openChat focuses chat after opening the secondary side bar', async () => {
   // @ts-ignore
   ViewletManager.load.mockResolvedValue([])
-  // @ts-ignore
-  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="composer"]']])
   const state = {
     ...ViewletLayout.create(1),
     secondarySideBarView: '',
@@ -626,12 +629,13 @@ test('openChat focuses chat after opening the secondary side bar', async () => {
 
   const result = await ViewletLayout.openChat(state, true)
 
-  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Chat')
+  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Chat')
+  expect(Viewlet.focus).toHaveBeenCalledWith('Chat')
   expect(result.newState).toMatchObject({
     secondarySideBarView: 'Chat',
     secondarySideBarVisible: true,
   })
-  expect(result.commands.at(-1)).toEqual(['Viewlet.focusSelector', 12, '[name="composer"]'])
+  expect(result.commands).toEqual([])
 })
 
 test('openChat leaves an already open chat unfocused by default', async () => {
@@ -643,7 +647,8 @@ test('openChat leaves an already open chat unfocused by default', async () => {
 
   const result = await ViewletLayout.openChat(state)
 
-  expect(Viewlet.getFocusCommands).not.toHaveBeenCalled()
+  expect(ViewletManager.waitForLoadContentLater).not.toHaveBeenCalled()
+  expect(Viewlet.focus).not.toHaveBeenCalled()
   expect(result).toEqual({ newState: state, commands: [] })
 })
 
