@@ -2,6 +2,7 @@ import { VError } from '@lvce-editor/verror'
 import { readFile, readdir, writeFile } from 'node:fs/promises'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as FilterWorkerViewletCss from '../FilterWorkerViewletCss/FilterWorkerViewletCss.ts'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.ts'
 import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.ts'
 import * as Path from '../Path/Path.ts'
@@ -83,6 +84,14 @@ const getWorkerPathReplacements = async (cachePath) => {
     })
 }
 
+const filterWorkerViewletCss = async (cachePath) => {
+  const workersJsonPath = Path.join(cachePath, 'src', 'parts', 'Workers', 'Workers.json')
+  const content = await readFile(workersJsonPath, 'utf8')
+  const workers = JSON.parse(content)
+  const filteredWorkers = FilterWorkerViewletCss.filterWorkerViewletCss(workers)
+  await writeFile(workersJsonPath, `${JSON.stringify(filteredWorkers, undefined, 2)}\n`)
+}
+
 const getSourceFiles = async (path) => {
   const entries = await readdir(path, { withFileTypes: true })
   const files: any[] = []
@@ -123,6 +132,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       from: 'packages/renderer-worker/src',
       to: Path.join(cachePath, 'src'),
     })
+    await filterWorkerViewletCss(cachePath)
     const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(cachePath)
     for (const file of cssDeclarationFiles) {
       const content = await readFile(file, 'utf8')
