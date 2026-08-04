@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import { resolveInternalSourceUri } from '../ResolveInternalSourceUri/ResolveInternalSourceUri.ts'
 
 const loadingDelay = 500
 const loadingTimeout = Symbol('loadingTimeout')
@@ -9,6 +10,26 @@ const commandsThatOpenEditors = new Set(['handleClickTab', 'openInput', 'openUri
 
 const shouldRenderLoadingState = (key: string): boolean => {
   return commandsThatOpenEditors.has(key) && Preferences.get('workbench.editor.showTabsWhileLoading') === true
+}
+
+const resolveOpenUriArgs = async (key: string, args: readonly any[]): Promise<readonly any[]> => {
+  if (key !== 'openUri' || args.length === 0) {
+    return args
+  }
+  const [options, ...rest] = args
+  if (typeof options === 'string') {
+    return [await resolveInternalSourceUri(options), ...rest]
+  }
+  if (typeof options?.uri === 'string') {
+    return [
+      {
+        ...options,
+        uri: await resolveInternalSourceUri(options.uri),
+      },
+      ...rest,
+    ]
+  }
+  return args
 }
 
 const renderPendingState = async (uid: number): Promise<void> => {
@@ -24,7 +45,8 @@ const renderPendingState = async (uid: number): Promise<void> => {
 }
 
 const invokeMainAreaCommand = async (key: string, uid: number, args: readonly any[]): Promise<void> => {
-  const commandPromise = MainAreaWorker.invoke(`MainArea.${key}`, uid, ...args)
+  const resolvedArgs = await resolveOpenUriArgs(key, args)
+  const commandPromise = MainAreaWorker.invoke(`MainArea.${key}`, uid, ...resolvedArgs)
   if (!shouldRenderLoadingState(key)) {
     await commandPromise
     return
