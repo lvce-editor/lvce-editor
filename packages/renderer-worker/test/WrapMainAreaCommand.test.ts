@@ -18,9 +18,16 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/ResolveInternalSourceUri/ResolveInternalSourceUri.ts', () => {
+  return {
+    resolveInternalSourceUri: jest.fn(async (uri: string) => uri),
+  }
+})
+
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const ResolveInternalSourceUri = await import('../src/parts/ResolveInternalSourceUri/ResolveInternalSourceUri.ts')
 const { wrapMainAreaCommand } = await import('../src/parts/WrapMainAreaCommand/WrapMainAreaCommand.ts')
 
 const state = {
@@ -34,6 +41,8 @@ beforeEach(() => {
   Preferences.get.mockReturnValue(false)
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)
+  // @ts-ignore
+  ResolveInternalSourceUri.resolveInternalSourceUri.mockImplementation(async (uri: string) => uri)
 })
 
 afterEach(() => {
@@ -63,6 +72,27 @@ test('returns final render commands for a fast open', async () => {
     commands: finalCommands,
   })
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('resolves an internal URI before opening it in the main area worker', async () => {
+  const options = {
+    focus: true,
+    uri: 'lvce://-/abc123/extensions/typescript/lib/lib.es5.d.ts',
+  }
+  // @ts-ignore
+  ResolveInternalSourceUri.resolveInternalSourceUri.mockResolvedValue(
+    'file:///usr/lib/lvce/resources/app/static/abc123/extensions/typescript/lib/lib.es5.d.ts',
+  )
+  // @ts-ignore
+  MainAreaWorker.invoke.mockResolvedValue([])
+
+  await wrapMainAreaCommand('openUri')(state, options)
+
+  expect(ResolveInternalSourceUri.resolveInternalSourceUri).toHaveBeenCalledWith(options.uri)
+  expect(MainAreaWorker.invoke).toHaveBeenNthCalledWith(1, 'MainArea.openUri', state.uid, {
+    ...options,
+    uri: 'file:///usr/lib/lvce/resources/app/static/abc123/extensions/typescript/lib/lib.es5.d.ts',
+  })
 })
 
 test('renders a pending loading state after 500ms and returns the final render', async () => {
