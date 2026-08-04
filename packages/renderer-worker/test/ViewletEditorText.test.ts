@@ -102,6 +102,33 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
 })
 
+test('loadContent - restores the definition range supplied by the opener', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/lib.es5.d.ts', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(
+    state,
+    { selections: [0, 0, 0, 0] },
+    {
+      endColumnIndex: 9,
+      endRowIndex: 592,
+      languageId: 'typescript',
+      startColumnIndex: 4,
+      startRowIndex: 592,
+    },
+  )
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([592, 4, 592, 9]))
+})
+
 test('loadContent - disables the editor file cache through preferences', async () => {
   Preferences.state['editor.cache'] = false
   editorWorkerInvoke.mockImplementation((method) => {

@@ -67,6 +67,14 @@ const getSavedSelections = (savedState, context) => {
   if (context?.selections) {
     return new Uint32Array(context.selections)
   }
+  if (
+    typeof context?.startRowIndex === 'number' &&
+    typeof context?.startColumnIndex === 'number' &&
+    typeof context?.endRowIndex === 'number' &&
+    typeof context?.endColumnIndex === 'number'
+  ) {
+    return new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+  }
   if (savedState && savedState.selections) {
     return new Uint32Array(savedState.selections)
   }
