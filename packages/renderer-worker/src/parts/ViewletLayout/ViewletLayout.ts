@@ -730,19 +730,25 @@ export const toggleSecondarySideBar = (state: LayoutState) => {
 
 export const openChat = async (state: LayoutState, focus = false): Promise<LayoutStateResult> => {
   if (state.secondarySideBarVisible && state.secondarySideBarView === ViewletModuleId.Chat) {
-    const focusCommands = focus ? await Viewlet.getFocusCommands(ViewletModuleId.Chat) : []
+    if (focus) {
+      await ViewletManager.waitForLoadContentLater(ViewletModuleId.Chat)
+      await Viewlet.focus(ViewletModuleId.Chat)
+    }
     return {
       newState: state,
-      commands: focusCommands,
+      commands: [],
     }
   }
   // @ts-ignore
   const openResult = await openSecondarySideBarView(state, ViewletModuleId.Chat)
   const showResult = await showSecondarySideBar(openResult.newState)
-  const focusCommands = focus ? await Viewlet.getFocusCommands(ViewletModuleId.Chat) : []
+  if (focus) {
+    await ViewletManager.waitForLoadContentLater(ViewletModuleId.Chat)
+    await Viewlet.focus(ViewletModuleId.Chat)
+  }
   return {
     newState: showResult.newState,
-    commands: [...openResult.commands, ...showResult.commands, ...focusCommands],
+    commands: [...openResult.commands, ...showResult.commands],
   }
 }
 
@@ -2202,11 +2208,9 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
   if (!focus) {
     return result
   }
-  const focusCommands = await Viewlet.getFocusCommands(moduleId)
-  return {
-    newState: result.newState,
-    commands: [...result.commands, ...focusCommands],
-  }
+  await ViewletManager.waitForLoadContentLater(moduleId)
+  await Viewlet.focus(moduleId)
+  return result
 }
 
 export const openSecondarySideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
