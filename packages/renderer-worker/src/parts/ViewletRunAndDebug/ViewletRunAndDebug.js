@@ -101,7 +101,7 @@ export const contentLoaded = async () => {
 export const focus = (state) => {
   return {
     ...state,
-    commands: [['Viewlet.focusSelector', '.RunAndDebug']],
+    commands: [['Viewlet.focus', state.uid]],
   }
 }
 
