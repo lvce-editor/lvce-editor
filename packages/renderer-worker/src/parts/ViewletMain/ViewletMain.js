@@ -1,7 +1,9 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
+import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -35,6 +37,8 @@ export const create = (id, uri, x, y, width, height) => {
     tabLetterSpacing: 0,
     tabFontWeight: 400,
     tabScrollBarVisible: false,
+    platform: Platform.getPlatform(),
+    assetDir: AssetDir.assetDir,
   }
 }
 
@@ -47,7 +51,7 @@ const mainAreaWorkerEnabled = true
 
 export const loadContent = async (state, savedState) => {
   if (mainAreaWorkerEnabled) {
-    await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, null)
+    await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, state.platform, state.assetDir)
     await MainAreaWorker.invoke('MainArea.loadContent', state.uid, savedState)
     const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
     const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
@@ -67,7 +71,7 @@ export const loadContent = async (state, savedState) => {
 }
 
 export const hotReload = async (state) => {
-  await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, null)
+  await MainAreaWorker.invoke('MainArea.create', state.uid, '', state.x, state.y, state.width, state.height, state.platform, state.assetDir)
   await MainAreaWorker.invoke('MainArea.loadContent', state.uid, {})
   const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
   const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
