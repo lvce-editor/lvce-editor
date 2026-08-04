@@ -1,8 +1,7 @@
-export * from './ViewletTitleBar.js'
-export * from './ViewletTitleBarCommands.js'
-export * from './ViewletTitleBarCss.ts'
-export * from './ViewletTitleBarMenuEntries.ts'
-export * from './ViewletTitleBarName.js'
-export * from './ViewletTitleBarRender.js'
-export * from './ViewletTitleBarResize.js'
-export * from './ViewletTitleBarKeyBindings.js'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands, Css, Events, Variables, create, dispose, getCommands, getKeyBindings, getMenus, getQuickPickMenuEntries, getStorageKey,
+  getTitle, handleFocusChange, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload,
+  loadContent, menus, name, render, renderActions, renderEventListeners, renderTitle, resize, saveState,
+} = createWorkerViewlet({ workerId: 'titleBar' })

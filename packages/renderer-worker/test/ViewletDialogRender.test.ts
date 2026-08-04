@@ -8,15 +8,15 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => ({
 
 const AdjustCommands = await import('../src/parts/AdjustCommands/AdjustCommands.js')
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
-const ViewletDialogRender = await import('../src/parts/ViewletDialog/ViewletDialogRender.js')
+const ViewletDialog = await import('../src/parts/ViewletDialog/ViewletDialog.ipc.js')
 
-test('renderDialog', () => {
-  expect(ViewletDialogRender.renderDialog.isEqual({}, {})).toBe(false)
-  expect(ViewletDialogRender.renderDialog.apply).toBe(AdjustCommands.apply)
-  expect(ViewletDialogRender.renderDialog.multiple).toBe(true)
+test('render', () => {
+  expect(ViewletDialog.render[0].isEqual({}, {})).toBe(false)
+  expect(ViewletDialog.render[0].apply).toBe(AdjustCommands.apply)
+  expect(ViewletDialog.render[0].multiple).toBe(true)
 })
 
 test('renderEventListeners', async () => {
-  await expect(ViewletDialogRender.renderEventListeners()).resolves.toBe(listeners)
+  await expect(ViewletDialog.renderEventListeners()).resolves.toBe(listeners)
   expect(DialogWorker.invoke).toHaveBeenCalledWith('Dialog.renderEventListeners')
 })

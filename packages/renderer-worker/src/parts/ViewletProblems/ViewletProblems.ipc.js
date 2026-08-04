@@ -1,11 +1,7 @@
-export const name = 'Problems'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletProblems.js'
-export * from './ViewletProblemsCommands.js'
-export * from './ViewletProblemsCss.js'
-export * from './ViewletProblemsKeyBindings.js'
-export * from './ViewletProblemsMenuEntries.js'
-export * from './ViewletProblemsRender.js'
-export * from './ViewletProblemsRenderActions.js'
-export * from './ViewletProblemsResize.js'
-export * from './ViewletProblemsSaveState.js'
+export const {
+  Commands, Css, Events, Variables, create, dispose, getBadgeCount, getCommands, getKeyBindings, getMenus, getQuickPickMenuEntries,
+  getStorageKey, getTitle, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload,
+  loadContent, menus, name, render, renderActions, renderEventListeners, renderTitle, resize, resizeWithDependencies, saveState,
+} = createWorkerViewlet({ workerId: 'problemsViewWorker' })

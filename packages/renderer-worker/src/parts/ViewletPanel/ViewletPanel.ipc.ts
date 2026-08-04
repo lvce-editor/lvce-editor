@@ -1,6 +1,24 @@
-export const name = 'Panel'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletPanel.ts'
-export * from './ViewletPanelCommands.ts'
-export * from './ViewletPanelCss.ts'
-export * from './ViewletPanelRender.ts'
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getKeyBindings,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  menus,
+  name,
+  render,
+  renderEventListeners,
+  resize,
+  saveState,
+} = createWorkerViewlet({ workerId: 'panel' })

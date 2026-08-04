@@ -4,20 +4,11 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => ({
   invoke: jest.fn(async () => ['handleClickButton', 'handleClickClose', 'handleFocusIn']),
 }))
 
-jest.unstable_mockModule('../src/parts/WrapDialogCommand/WrapDialogCommand.js', () => ({
-  wrapDialogCommand: jest.fn((command: string) => command),
-}))
-
-const ViewletDialogCommands = await import('../src/parts/ViewletDialog/ViewletDialogCommands.js')
-const WrapDialogCommand = await import('../src/parts/WrapDialogCommand/WrapDialogCommand.js')
+const ViewletDialog = await import('../src/parts/ViewletDialog/ViewletDialog.ipc.js')
 
 test('getCommands', async () => {
-  const commands = await ViewletDialogCommands.getCommands()
+  const commands = await ViewletDialog.getCommands()
 
-  expect(WrapDialogCommand.wrapDialogCommand).toHaveBeenCalledTimes(3)
-  expect(commands).toEqual({
-    handleClickButton: 'handleClickButton',
-    handleClickClose: 'handleClickClose',
-    handleFocusIn: 'handleFocusIn',
-  })
+  expect(Object.keys(commands)).toEqual(['handleClickButton', 'handleClickClose', 'handleFocusIn'])
+  expect(typeof commands.handleClickButton).toBe('function')
 })

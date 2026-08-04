@@ -1,6 +1,7 @@
-export * from './ViewletIframeInspector.ts'
-export * from './ViewletIframeInspectorCommands.ts'
-export * from './ViewletIframeInspectorCss.ts'
-export * from './ViewletIframeInspectorKeyBindings.ts'
-export * from './ViewletIframeInspectorName.ts'
-export * from './ViewletIframeInspectorRender.ts'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands, Css, Events, Variables, create, dispose, getCommands, getKeyBindings, getMenus, getTitle, hasFunctionalEvents,
+  hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload, loadContent, menus, name, render, renderContent, renderEventListeners,
+  renderTitle, resize, saveState,
+} = createWorkerViewlet({ workerId: 'iframeInspector' })

@@ -1,13 +1,8 @@
-export const Events = {}
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletExplorer.js'
-export * from './ViewletExplorerCommands.js'
-export * from './ViewletExplorerCss.js'
-export * from './ViewletExplorerKeyBindings.js'
-export * from './ViewletExplorerMenuEntries.js'
-export * from './ViewletExplorerName.js'
-export * from './ViewletExplorerRender.js'
-export * from './ViewletExplorerRenderActions.js'
-export * from './ViewletExplorerRenderTitle.js'
-export * from './ViewletExplorerRestoreState.js'
-export * from './ViewletExplorerSaveState.js'
+export const {
+  Commands, Css, Events, Variables, create, dispose, getCommands, getDisplayName, getKeyBindings, getMenus, getMouseActions,
+  getQuickPickMenuEntries, getStorageKey, getTitle, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize,
+  hasFunctionalRootRender, hotReload, loadContent, menus, name, render, renderActions, renderEventListeners, renderTitle, resize,
+  resizeWithDependencies, restoreState, saveState,
+} = createWorkerViewlet({ workerId: 'explorer' })

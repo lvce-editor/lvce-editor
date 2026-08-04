@@ -1,10 +1,7 @@
-export * from './ViewletExtensions.js'
-export * from './ViewletExtensionsCommands.js'
-export * from './ViewletExtensionsCss.js'
-export * from './ViewletExtensionsKeyBindings.js'
-export * from './ViewletExtensionsMenuEntries.js'
-export * from './ViewletExtensionsName.js'
-export * from './ViewletExtensionsRender.js'
-export * from './ViewletExtensionsRenderActions.js'
-export * from './ViewletExtensionsRenderTitle.js'
-export * from './ViewletExtensionsResize.js'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands, Css, Events, Variables, create, dispose, focus, getCommands, getKeyBindings, getMenus, getQuickPickMenuEntries,
+  getStorageKey, getTitle, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload,
+  loadContent, menus, name, render, renderActions, renderEventListeners, renderTitle, resize, saveState,
+} = createWorkerViewlet({ workerId: 'extensionSearch' })

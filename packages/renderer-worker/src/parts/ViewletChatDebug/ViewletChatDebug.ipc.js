@@ -1,9 +1,7 @@
-export const name = 'StatusBar'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletChatDebug.js'
-export * from './ViewletChatDebugCommands.js'
-export * from './ViewletChatDebugCss.js'
-export * from './ViewletChatDebugMenuEntries.js'
-export * from './ViewletChatDebugRender.js'
-export * from './ViewletChatDebugSaveState.js'
-export * from './ViewletChatDebugKeyBindings.js'
+export const {
+  Commands, Css, Events, Variables, create, dispose, getCommands, getKeyBindings, getMenus, getQuickPickMenuEntries, getStorageKey,
+  getTitle, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload, loadContent, menus,
+  name, render, renderActions, renderEventListeners, renderTitle, resize, saveState,
+} = createWorkerViewlet({ workerId: 'chatDebug' })

@@ -1,6 +1,25 @@
-export * from './ViewletAbout.ts'
-export * from './ViewletAboutCommands.ts'
-export * from './ViewletAboutCss.ts'
-export * from './ViewletAboutKeyBindings.ts'
-export * from './ViewletAboutName.ts'
-export * from './ViewletAboutRender.ts'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getKeyBindings,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  menus,
+  name,
+  render,
+  renderDialog,
+  renderEventListeners,
+  resize,
+  saveState,
+} = createWorkerViewlet({ workerId: 'aboutWorker' })

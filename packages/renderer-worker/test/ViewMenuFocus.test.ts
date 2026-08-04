@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as ViewletChat from '../src/parts/ViewletChat/ViewletChat.ts'
+import * as ViewletChat from '../src/parts/ViewletChat/ViewletChat.ipc.ts'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js'
 import * as ViewletSourceControl from '../src/parts/ViewletSourceControl/ViewletSourceControl.js'
