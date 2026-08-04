@@ -7,9 +7,9 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => ({
 }))
 
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
-const ViewletDialogKeyBindings = await import('../src/parts/ViewletDialog/ViewletDialogKeyBindings.js')
+const ViewletDialog = await import('../src/parts/ViewletDialog/ViewletDialog.ipc.js')
 
 test('getKeyBindings', async () => {
-  await expect(ViewletDialogKeyBindings.getKeyBindings()).resolves.toBe(keyBindings)
+  await expect(ViewletDialog.getKeyBindings()).resolves.toBe(keyBindings)
   expect(DialogWorker.invoke).toHaveBeenCalledWith('Dialog.getKeyBindings')
 })

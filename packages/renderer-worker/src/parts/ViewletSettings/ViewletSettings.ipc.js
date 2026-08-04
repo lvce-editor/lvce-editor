@@ -1,10 +1,7 @@
-export const name = 'Settings'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletSettings.js'
-export * from './ViewletSettingsCommands.js'
-export * from './ViewletSettingsCss.js'
-export * from './ViewletSettingsKeyBindings.js'
-export * from './ViewletSettingsMenuEntries.js'
-export * from './ViewletSettingsRender.js'
-export * from './ViewletSettingsResize.js'
-export * from './ViewletSettingsSaveState.js'
+export const {
+  Commands, Css, Events, Variables, create, dispose, focus, getCommands, getKeyBindings, getMenus, getQuickPickMenuEntries,
+  getStorageKey, getTitle, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload,
+  loadContent, menus, name, render, renderActions, renderEventListeners, renderTitle, resize, saveState,
+} = createWorkerViewlet({ workerId: 'settingsView' })

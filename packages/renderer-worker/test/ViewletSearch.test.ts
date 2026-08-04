@@ -25,7 +25,7 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => ({
 }))
 
 const TextSearchViewWorker = await import('../src/parts/TextSearchViewWorker/TextSearchViewWorker.js')
-const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.ts')
+const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.ipc.ts')
 
 beforeEach(() => {
   jest.clearAllMocks()

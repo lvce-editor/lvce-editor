@@ -1,6 +1,7 @@
-export * from './ViewletRunningExtensions.ts'
-export * from './ViewletRunningExtensionsCommands.ts'
-export * from './ViewletRunningExtensionsCss.ts'
-export * from './ViewletRunningExtensionsName.ts'
-export * from './ViewletRunningExtensionsRender.ts'
-export * from './ViewletRunningExtensionsRenderTitle.ts'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands, Css, Events, Variables, create, dispose, getCommands, getKeyBindings, getMenus, getTitle, handleExtensionsChanged, hasFunctionalEvents,
+  hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload, loadContent, menus, name, render, renderEventListeners,
+  renderTitle, resize, saveState,
+} = createWorkerViewlet({ workerId: 'runningExtensionsView' })

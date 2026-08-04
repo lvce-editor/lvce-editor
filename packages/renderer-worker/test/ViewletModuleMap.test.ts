@@ -29,3 +29,40 @@ test('running extensions uses worker-backed module', async () => {
   expect(typeof module.loadContent).toBe('function')
   expect(typeof module.getCommands).toBe('function')
 })
+
+const genericWorkerViewlets = [
+  ViewletModuleId.About,
+  ViewletModuleId.ActivityBar,
+  ViewletModuleId.Chat,
+  ViewletModuleId.ChatDebug,
+  ViewletModuleId.Dialog,
+  ViewletModuleId.DiffEditor,
+  ViewletModuleId.Explorer,
+  ViewletModuleId.ExtensionDetail,
+  ViewletModuleId.Extensions,
+  ViewletModuleId.IframeInspector,
+  ViewletModuleId.KeyBindings,
+  ViewletModuleId.LanguageModels,
+  ViewletModuleId.Main,
+  ViewletModuleId.Output,
+  ViewletModuleId.Panel,
+  ViewletModuleId.Preview,
+  ViewletModuleId.Problems,
+  ViewletModuleId.ProcessExplorer,
+  ViewletModuleId.QuickPick,
+  ViewletModuleId.RunningExtensions,
+  ViewletModuleId.Search,
+  ViewletModuleId.Settings,
+  ViewletModuleId.StatusBar,
+  ViewletModuleId.TitleBar,
+]
+
+test.each(genericWorkerViewlets)('generic worker viewlet %s exposes the common interface', async (moduleId) => {
+  const module = await ViewletModuleMap.map[moduleId]()
+
+  expect(typeof module.name).toBe('string')
+  expect(typeof module.create).toBe('function')
+  expect(typeof module.loadContent).toBe('function')
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(Array.isArray(module.render)).toBe(true)
+})

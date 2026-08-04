@@ -6,7 +6,28 @@
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/aboutWorkerMain.js",
     "productionPath": "/packages/about-view-worker/dist/aboutWorkerMain.js",
     "settingName": "develop.aboutViewWorkerPath",
-    "hotReloadCommand": ""
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "About",
+      "css": ["/css/parts/ViewletAbout.css", "/css/parts/Button.css", "/css/parts/ViewletDialog.css"],
+      "state": { "idKey": "id" },
+      "commandPrefix": "About",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": { "name": "About.create", "parameters": [{ "source": "state", "name": "id" }] },
+        "loadContent": { "name": "About.loadContent2", "parameters": [{ "source": "state", "name": "id" }] },
+        "diff": { "name": "About.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": {
+          "name": "About.render2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }]
+        },
+        "getCommandIds": { "name": "About.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "About.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "About.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "activityBar",
@@ -15,7 +36,42 @@
     "productionPath": "/packages/activity-bar-worker/dist/activityBarWorkerMain.js",
     "settingName": "develop.activityBarWorkerPath",
     "hotReloadCommand": "ActivityBar.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "ActivityBar",
+      "css": ["/css/parts/ViewletActivityBar.css", "/css/parts/MaskIcon.css", "/css/parts/Badge.css", "/css/parts/ActivityBarItem.css"],
+      "variables": ["ActivityBarForeground", "ActivityBarActiveForeground", "ActvityBarActiveBackground", "BadgeBackground", "BadgeForeground"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["x", "y", "width", "height"],
+        "contextFields": ["platform"],
+        "defaults": {
+          "activityBarItems": [], "filteredItems": [], "focusedIndex": -1, "selectedIndex": -1, "focused": false, "itemHeight": 48
+        }
+      },
+      "commandPrefix": "ActivityBar",
+      "methods": {
+        "create": {
+          "name": "ActivityBar.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "literal", "value": "" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "literal", "value": null }, { "source": "literal", "value": null }, { "source": "state", "name": "platform" }
+          ]
+        },
+        "loadContent": { "name": "ActivityBar.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }] },
+        "hotReloadLoadContent": { "name": "ActivityBar.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "ActivityBar.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "ActivityBar.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "saveState": { "name": "ActivityBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "ActivityBar.terminate", "parameters": [] },
+        "getCommandIds": { "name": "ActivityBar.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "ActivityBar.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": { "name": "ActivityBar.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "ActivityBar.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "textSearchView",
@@ -24,7 +80,57 @@
     "productionPath": "/packages/text-search-view/dist/textSearchViewMain.js",
     "settingName": "develop.textSearchViewPath",
     "hotReloadCommand": "TextSearch.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "Search",
+      "css": [
+        "/css/parts/Alignment.css", "/css/parts/Badge.css", "/css/parts/Chevron.css", "/css/parts/FileIcon.css", "/css/parts/Highlight.css",
+        "/css/parts/InputBox.css", "/css/parts/Label.css", "/css/parts/MaskIcon.css", "/css/parts/ScrollBar.css",
+        "/css/parts/ScrollBarThumb.css", "/css/parts/SearchField.css", "/css/parts/SearchHeader.css", "/css/parts/SearchMessage.css",
+        "/css/parts/SearchToggleButton.css", "/css/parts/Tree.css", "/css/parts/TreeItem.css", "/css/parts/TreeItems.css",
+        "/css/parts/ViewletList.css", "/css/parts/ViewletSearch.css"
+      ],
+      "state": {
+        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["assetDir", "platform"],
+        "defaults": { "actionsDom": [] }
+      },
+      "storageKeyField": "uri",
+      "stateResize": true,
+      "commandPrefix": "TextSearch",
+      "methods": {
+        "create": {
+          "name": "TextSearch.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "x" }, { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }, { "source": "context", "name": "workspacePath" },
+            { "source": "state", "name": "assetDir" }, { "source": "literal", "value": 22 }, { "source": "literal", "value": "" },
+            { "source": "literal", "value": "" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "isSearchEditor" }
+          ]
+        },
+        "loadContent": {
+          "name": "TextSearch.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "TextSearch.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "TextSearch.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "TextSearch.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "TextSearch.terminate", "parameters": [] },
+        "getCommandIds": { "name": "TextSearch.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "TextSearch.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "TextSearch.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "TextSearch.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "TextSearch.renderEventListeners", "parameters": [] }
+      },
+      "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "TextSearch.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
   },
   {
     "id": "authWorker",
@@ -42,7 +148,49 @@
     "productionPath": "/packages/chat-debug-view/dist/chatDebugViewWorkerMain.js",
     "settingName": "develop.chatDebugViewWorkerPath",
     "hotReloadCommand": "ChatDebug.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "StatusBar",
+      "css": [
+        "/css/parts/Actions.css", "/css/parts/CompletionItem.css", "/css/parts/DebugChatDetails.css", "/css/parts/DebugChatImagePreview.css",
+        "/css/parts/DebugChatDetailsClose.css", "/css/parts/DebugChatTable.css", "/css/parts/DebugChatTimeline.css", "/css/parts/DebugChatTop.css",
+        "/css/parts/EditorMessage.css", "/css/parts/IconButton.css", "/css/parts/IconButton.css", "/css/parts/InputBox.css", "/css/parts/ChatListItem.css",
+        "/css/parts/MaskIcon.css", "/css/parts/MaskIcon.css", "/css/parts/Resizer.css", "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css",
+        "/css/parts/SearchField.css", "/css/parts/SearchHeader.css", "/css/parts/SearchMessage.css", "/css/parts/SearchToggleButton.css", "/css/parts/Symbol.css",
+        "/css/parts/Table.css", "/css/parts/ViewletChat.css", "/css/parts/ViewletColorPicker.css", "/css/parts/ViewletDebugChat.css", "/css/parts/ViewletEditor.css",
+        "/css/parts/ViewletEditorCodeGenerator.css", "/css/parts/ViewletEditorCompletion.css", "/css/parts/ViewletEditorCompletionDetail.css",
+        "/css/parts/ViewletEditorError.css", "/css/parts/ViewletEditorHover.css", "/css/parts/ViewletEditorRename.css",
+        "/css/parts/ViewletEditorSourceActions.css", "/css/parts/ViewletFindWidget.css", "/css/parts/ViewletList.css", "/css/parts/ViewletPanel.css",
+        "/css/parts/ViewletPanelTabs.css"
+      ],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "commandPrefix": "ChatDebug",
+      "methods": {
+        "create": { "name": "ChatDebug.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }
+        ] },
+        "hotReloadCreate": { "name": "ChatDebug.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }
+        ] },
+        "loadContent": { "name": "ChatDebug.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }] },
+        "hotReloadLoadContent": { "name": "ChatDebug.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "ChatDebug.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "ChatDebug.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "resize": { "name": "ChatDebug.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
+        "saveState": { "name": "ChatDebug.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "ChatDebug.terminate", "parameters": [] },
+        "getCommandIds": { "name": "ChatDebug.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "ChatDebug.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "ChatDebug.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "ChatDebug.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "ChatDebug.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "chatCoordinatorWorker",
@@ -119,7 +267,67 @@
     "productionPath": "/packages/chat-view/dist/chatViewWorkerMain.js",
     "settingName": "develop.chatViewWorkerPath",
     "hotReloadCommand": "Chat.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "Chat",
+      "css": [
+        "/css/parts/Button.css", "/css/parts/ChatAttachments.css", "/css/parts/ChatListItem.css", "/css/parts/ChatComposerAttachments.css",
+        "/css/parts/ChatHeader.css", "/css/parts/ChatModelPickerList.css", "/css/parts/ChatModelPickerItem.css", "/css/parts/ChatSendArea.css",
+        "/css/parts/ChatSelect.css", "/css/parts/ChatTool.css", "/css/parts/InputBox.css", "/css/parts/Select.css",
+        "/css/parts/ViewletChat.css", "/css/parts/ViewletChatFocusMode.css", "/css/parts/ViewletChatModelPicker.css",
+        "/css/parts/ViewletChatTodoList.css", "/css/parts/ViewletDialog.css"
+      ],
+      "state": { "idKey": "id", "fields": ["x", "y", "width", "height"], "contextFields": ["platform"] },
+      "commandPrefix": "Chat",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "Chat.create",
+          "parameters": [
+            { "source": "state", "name": "id" }, { "source": "state", "name": "x" }, { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }
+          ]
+        },
+        "hotReloadCreate": {
+          "name": "Chat.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "x" }, { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }
+          ]
+        },
+        "loadContent": {
+          "name": "Chat.loadContent2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "savedState" }]
+        },
+        "hotReloadLoadContent": {
+          "name": "Chat.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "hotReloadDiff": { "name": "Chat.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "hotReloadRender": {
+          "name": "Chat.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "diff": { "name": "Chat.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": {
+          "name": "Chat.render2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "Chat.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "Chat.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Chat.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Chat.getKeyBindings", "parameters": [] },
+        "getQuickPickMenuEntries": { "name": "Chat.getQuickPickMenuEntries", "parameters": [] },
+        "getMenuEntryIds": { "name": "Chat.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "Chat.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "Chat.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "chatCoordinator",
@@ -177,7 +385,32 @@
     "productionPath": "/packages/dialog-worker/dist/dialogWorkerMain.js",
     "settingName": "develop.dialogWorkerPath",
     "hotReloadCommand": "",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "Dialog",
+      "css": ["/css/parts/ViewletDialog.css", "/css/parts/Button.css", "/css/parts/MaskIcon.css"],
+      "state": { "idKey": "id" },
+      "commandPrefix": "Dialog",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": { "name": "Dialog.create", "parameters": [{ "source": "state", "name": "id" }] },
+        "loadContent": {
+          "name": "Dialog.loadContent2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "args", "index": 0 }]
+        },
+        "diff": { "name": "Dialog.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": {
+          "name": "Dialog.render2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }]
+        },
+        "dispose": { "name": "Dialog.dispose", "parameters": [{ "source": "state", "name": "id" }] },
+        "getCommandIds": { "name": "Dialog.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Dialog.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "Dialog.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "diffWorker",
@@ -195,7 +428,40 @@
     "productionPath": "/packages/diff-view/dist/diffViewWorkerMain.js",
     "settingName": "develop.diffViewWorkerPath",
     "hotReloadCommand": "",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "DiffView",
+      "css": ["/css/parts/ViewletDiffEditor.css", "/css/parts/ViewletEditor.css"],
+      "state": { "idKey": "uid", "fields": ["id", "parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "commandPrefix": "DiffView",
+      "methods": {
+        "create": { "name": "DiffView.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }, { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }
+        ] },
+        "hotReloadCreate": { "name": "DiffView.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }, { "source": "literal", "value": null }, { "source": "state", "name": "platform" },
+          { "source": "state", "name": "assetDir" }
+        ] },
+        "loadContent": { "name": "DiffView.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "DiffView.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "DiffView.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "resize": { "name": "DiffView.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
+        "saveState": { "name": "DiffView.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "DiffView.terminate", "parameters": [] },
+        "getCommandIds": { "name": "DiffView.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "DiffView.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "DiffView.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "DiffView.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "DiffView.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "ignoreKeyBindingErrors": true,
+      "ignoreEventListenerErrors": true
+    }
   },
   {
     "id": "editor",
@@ -231,7 +497,47 @@
     "productionPath": "/packages/explorer-worker/dist/explorerViewWorkerMain.js",
     "settingName": "develop.explorerWorkerPath",
     "hotReloadCommand": "Explorer.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "Explorer",
+      "css": [
+        "/css/parts/Button.css", "/css/parts/Chevron.css", "/css/parts/Drag.css", "/css/parts/ExplorerInputBox.css",
+        "/css/parts/FileIcon.css", "/css/parts/InputBox.css", "/css/parts/Label.css", "/css/parts/MaskIcon.css",
+        "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css", "/css/parts/TreeItem.css", "/css/parts/ViewletExplorer.css",
+        "/css/parts/ViewletList.css", "/css/parts/Welcome.css"
+      ],
+      "state": {
+        "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"], "defaults": { "title": "" }
+      },
+      "commandPrefix": "Explorer",
+      "methods": {
+        "create": { "name": "Explorer.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
+          { "source": "state", "name": "assetDir" }
+        ] },
+        "loadContent": { "name": "Explorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "Explorer.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "Explorer.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "resize": { "name": "Explorer.handleResize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
+        "saveState": { "name": "Explorer.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "Explorer.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Explorer.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Explorer.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "Explorer.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Explorer.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "getTitle": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" },
+        "renderEventListeners": { "name": "Explorer.renderEventListeners", "parameters": [] }
+      },
+      "outputs": [
+        { "stateField": "actionsDom", "hotReload": false, "method": { "name": "Explorer.renderActions2", "parameters": [{ "source": "state", "name": "uid" }] } },
+        { "stateField": "title", "hotReload": false, "method": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" } }
+      ],
+      "title": "",
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "extensionDetail",
@@ -240,7 +546,58 @@
     "productionPath": "/packages/extension-detail-view-worker/dist/extensionDetailViewWorkerMain.js",
     "settingName": "develop.extensionDetailViewWorkerPath",
     "hotReloadCommand": "ExtensionDetail.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://api.github.com"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://api.github.com"],
+    "viewlet": {
+      "name": "ExtensionDetail",
+      "css": [
+        "/css/parts/AdditionalDetails.css", "/css/parts/BrowserScrollBar.css", "/css/parts/Button.css", "/css/parts/Category.css",
+        "/css/parts/Changelog.css", "/css/parts/FeatureContent.css", "/css/parts/Features.css", "/css/parts/Markdown.css",
+        "/css/parts/Message.css", "/css/parts/ScrollToTop.css", "/css/parts/ViewletExtensionDetail.css",
+        "/css/parts/ViewletExtensionDetailHeader.css", "/css/parts/ViewletExtensionDetailTabs.css"
+      ],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "defaults": { "name": "" } },
+      "commandPrefix": "ExtensionDetail",
+      "commandSkipRenderWhenDiffEmpty": true,
+      "ignoreKeyBindingErrors": true,
+      "methods": {
+        "create": {
+          "name": "ExtensionDetail.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "context", "name": "platform" }, { "source": "context", "name": "assetDir" }
+          ]
+        },
+        "loadContent": {
+          "name": "ExtensionDetail.loadContent2",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }, { "source": "context", "name": "isTest" }
+          ]
+        },
+        "hotReloadLoadContent": {
+          "name": "ExtensionDetail.loadContent2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }]
+        },
+        "diff": { "name": "ExtensionDetail.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "ExtensionDetail.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
+        "getCommandIds": { "name": "ExtensionDetail.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "ExtensionDetail.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "ExtensionDetail.getMenuIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "ExtensionDetail.getMenuEntries2",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "getTitle": { "name": "ExtensionDetail.renderTitle", "parameters": [{ "source": "state", "name": "uid" }] },
+        "renderEventListeners": { "name": "ExtensionDetail.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "extensionHostSubWorker",
@@ -267,7 +624,38 @@
     "productionPath": "/packages/extension-search-view-worker/dist/extensionSearchViewWorkerMain.js",
     "settingName": "develop.extensionSearchViewWorkerPath",
     "hotReloadCommand": "Extensions.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "Extensions",
+      "css": [
+        "/css/parts/InputBox.css", "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css", "/css/parts/SearchField.css",
+        "/css/parts/Table.css", "/css/parts/ViewletExtensions.css", "/css/parts/ViewletList.css"
+      ],
+      "state": {
+        "idKey": "id", "fields": ["uid", "parentUid", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"], "defaults": { "searchValue": "", "title": "" }
+      },
+      "commandPrefix": "SearchExtensions",
+      "methods": {
+        "create": { "name": "SearchExtensions.create", "parameters": [
+          { "source": "state", "name": "id" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }, { "source": "state", "name": "parentUid" }
+        ] },
+        "loadContent": { "name": "SearchExtensions.loadContent", "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "SearchExtensions.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": { "name": "SearchExtensions.render3", "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }] },
+        "saveState": { "name": "SearchExtensions.saveState", "parameters": [{ "source": "state", "name": "id" }] },
+        "terminate": { "name": "SearchExtensions.terminate", "parameters": [] },
+        "getCommandIds": { "name": "SearchExtensions.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "SearchExtensions.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "SearchExtensions.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "SearchExtensions.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "SearchExtensions.renderEventListeners", "parameters": [] }
+      },
+      "title": "Extensions: Installed",
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "fileSearchWorker",
@@ -321,7 +709,43 @@
     "productionPath": "/packages/iframe-inspector/dist/iframeInspectorWorkerMain.js",
     "settingName": "develop.iframeInspectorWorkerPath",
     "hotReloadCommand": "IframeInspector.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "IframeInspector",
+      "css": [
+        "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css", "/css/parts/SearchField.css", "/css/parts/Table.css",
+        "/css/parts/ViewletIframeInspector.css"
+      ],
+      "state": { "idKey": "id", "fields": ["uid", "x", "y", "width", "height"] },
+      "commandPrefix": "IframeInspector",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "IframeInspector.create",
+          "parameters": [
+            { "source": "state", "name": "id" }, { "source": "state", "name": "x" }, { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+          ]
+        },
+        "loadContent": { "name": "IframeInspector.loadContent", "parameters": [{ "source": "state", "name": "id" }] },
+        "hotReloadLoadContent": {
+          "name": "IframeInspector.loadContent",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "IframeInspector.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": {
+          "name": "IframeInspector.render2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "IframeInspector.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "IframeInspector.terminate", "parameters": [] },
+        "getCommandIds": { "name": "IframeInspector.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "IframeInspector.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "IframeInspector.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "iframeWorker",
@@ -339,7 +763,49 @@
     "productionPath": "/packages/keybindings-view-worker/dist/keyBindingsViewWorkerMain.js",
     "settingName": "develop.keyBindingsViewWorkerPath",
     "hotReloadCommand": "KeyBindings.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "KeyBindings",
+      "css": [
+        "/css/parts/InputBadge.css", "/css/parts/InputBox.css", "/css/parts/Key.css", "/css/parts/KeyBindingsHeader.css",
+        "/css/parts/KeyBindingsTable.css", "/css/parts/Resizer.css", "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css",
+        "/css/parts/SearchField.css", "/css/parts/Table.css", "/css/parts/ViewletKeyBindings.css"
+      ],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"] },
+      "stateResize": true,
+      "commandPrefix": "KeyBindings",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "KeyBindings.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+          ]
+        },
+        "loadContent": {
+          "name": "KeyBindings.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "KeyBindings.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "KeyBindings.render3",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "KeyBindings.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "KeyBindings.terminate", "parameters": [] },
+        "getCommandIds": { "name": "KeyBindings.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "KeyBindings.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "KeyBindings.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "KeyBindings.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "KeyBindings.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
   },
   {
     "id": "languageModels",
@@ -348,7 +814,62 @@
     "productionPath": "/packages/language-models-view/dist/languageModelsViewMain.js",
     "settingName": "develop.languageModelsViewPath",
     "hotReloadCommand": "LanguageModels.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "LanguageModels",
+      "css": [
+        "/css/parts/ViewletLanguageModels.css", "/css/parts/Button.css", "/css/parts/ViewletDialog.css", "/css/parts/SearchField.css",
+        "/css/parts/Button.css", "/css/parts/IconButton.css"
+      ],
+      "state": { "idKey": "id", "fields": ["x", "y", "width", "height"] },
+      "commandPrefix": "LanguageModels",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "LanguageModels.create",
+          "parameters": [
+            { "source": "state", "name": "id" }, { "source": "literal", "value": "" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "literal", "value": null }
+          ]
+        },
+        "hotReloadCreate": {
+          "name": "LanguageModels.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "literal", "value": "" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "literal", "value": null }
+          ]
+        },
+        "loadContent": { "name": "LanguageModels.loadContent", "parameters": [{ "source": "state", "name": "id" }] },
+        "hotReloadLoadContent": {
+          "name": "LanguageModels.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "hotReloadDiff": { "name": "LanguageModels.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "hotReloadRender": {
+          "name": "LanguageModels.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "diff": { "name": "LanguageModels.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": {
+          "name": "LanguageModels.render2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "LanguageModels.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "LanguageModels.terminate", "parameters": [] },
+        "getCommandIds": { "name": "LanguageModels.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "LanguageModels.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "LanguageModels.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "LanguageModels.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "LanguageModels.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "mainArea",
@@ -357,7 +878,77 @@
     "productionPath": "/packages/main-area-worker/dist/mainAreaWorkerMain.js",
     "settingName": "develop.mainAreaWorkerPath",
     "hotReloadCommand": "Main.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "Main",
+      "css": [
+        "/css/parts/EditorTabs.css",
+        "/css/parts/FileIcon.css",
+        "/css/parts/MaskIcon.css",
+        "/css/parts/ViewletMainDragOverlay.css",
+        "/css/parts/ViewletMainEditorGroup.css",
+        "/css/parts/ViewletMainWaterMark.css",
+        "/css/parts/ViewletMain.css"
+      ],
+      "variables": ["MainBackground"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"],
+        "defaults": {
+          "groups": [],
+          "activeGroupIndex": -1,
+          "moduleId": "Main",
+          "tabHeight": 35,
+          "dragOverlayX": 0,
+          "dragOverlayY": 0,
+          "dragOverlayWidth": 0,
+          "dragOverlayHeight": 0,
+          "dragOverlayVisible": false,
+          "tabsUid": -1,
+          "pendingUid": 0,
+          "tabFontFamily": "system-ui, Ubuntu, Droid Sans, sans-serif",
+          "tabFontSize": 13,
+          "tabLetterSpacing": 0,
+          "tabFontWeight": 400,
+          "tabScrollBarVisible": false
+        }
+      },
+      "commandPrefix": "MainArea",
+      "methods": {
+        "create": {
+          "name": "MainArea.create",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "literal", "value": "" },
+            { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" },
+            { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" },
+            { "source": "state", "name": "assetDir" }
+          ]
+        },
+        "loadContent": {
+          "name": "MainArea.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "MainArea.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "MainArea.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "MainArea.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getCommandIds": { "name": "MainArea.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "MainArea.getMenuIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "MainArea.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "MainArea.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "markdownWorker",
@@ -393,7 +984,54 @@
     "productionPath": "/packages/output-view/dist/outputViewWorkerMain.js",
     "settingName": "develop.outputViewWorkerPath",
     "hotReloadCommand": "Output.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "Output",
+      "css": ["/css/parts/ViewletOutput.css", "/css/parts/Select.css"],
+      "state": {
+        "idKey": "id",
+        "fields": ["uid", "uri", "x", "y", "width", "height", "parentUid"],
+        "contextFields": ["platform"],
+        "defaults": { "selectedIndex": -1, "options": [], "disposed": false, "text": "" }
+      },
+      "commandPrefix": "Output",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "Output.create",
+          "parameters": [
+            { "source": "state", "name": "id" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" }
+          ]
+        },
+        "hotReloadCreate": {
+          "name": "Output.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" }
+          ]
+        },
+        "loadContent": {
+          "name": "Output.loadContent2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "Output.diff2", "parameters": [{ "source": "state", "name": "id" }] },
+        "render": {
+          "name": "Output.render2",
+          "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }]
+        },
+        "renderActions": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] },
+        "saveState": { "name": "Output.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "Output.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Output.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "Output.renderEventListeners", "parameters": [] }
+      },
+      "outputs": [{ "stateField": "actionsDom", "method": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "always"
+    }
   },
   {
     "id": "panel",
@@ -402,7 +1040,57 @@
     "productionPath": "/packages/panel-worker/dist/panelWorkerMain.js",
     "settingName": "develop.panelWorkerPath",
     "hotReloadCommand": "Panel.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "Panel",
+      "css": ["/css/parts/ViewletPanel.css", "/css/parts/IconButton.css", "/css/parts/Actions.css", "/css/parts/ViewletPanelTabs.css"],
+      "variables": ["PanelBackground"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["x", "y", "width", "height"],
+        "defaults": { "PanelItems": [], "filteredItems": [], "focusedIndex": -1, "selectedIndex": -1, "focused": false }
+      },
+      "commandPrefix": "Panel",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "commandSkipRenderWhenDiffEmpty": true,
+      "methods": {
+        "create": {
+          "name": "Panel.create",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "literal", "value": "" },
+            { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" },
+            { "source": "state", "name": "height" },
+            { "source": "literal", "value": null }
+          ]
+        },
+        "loadContent": {
+          "name": "Panel.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }]
+        },
+        "hotReloadLoadContent": {
+          "name": "Panel.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "Panel.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Panel.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "resize": {
+          "name": "Panel.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
+        "saveState": { "name": "Panel.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "Panel.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Panel.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "Panel.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "commands"
+    }
   },
   {
     "id": "preview",
@@ -411,7 +1099,38 @@
     "productionPath": "/packages/preview-worker/dist/previewWorkerMain.js",
     "settingName": "develop.previewWorkerPath",
     "hotReloadCommand": "Preview.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "Preview",
+      "css": ["/css/parts/Preview.css"],
+      "state": {
+        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"],
+        "defaults": { "count": 0, "disposed": false }
+      },
+      "commandPrefix": "Preview",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "commandSkipRenderWhenDiffEmpty": true,
+      "methods": {
+        "create": { "name": "Preview.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+        ] },
+        "hotReloadCreate": { "name": "Preview.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }
+        ] },
+        "loadContent": { "name": "Preview.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }] },
+        "hotReloadLoadContent": { "name": "Preview.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "Preview.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "Preview.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "saveState": { "name": "Preview.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "Preview.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Preview.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "Preview.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "previewSandboxWorker",
@@ -438,7 +1157,37 @@
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/problems-view/dist/problemsViewWorkerMain.js",
     "productionPath": "/packages/problems-view/dist/problemsViewWorkerMain.js",
     "settingName": "develop.problemsWorkerPath",
-    "hotReloadCommand": ""
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "Problems",
+      "css": [
+        "/css/parts/Badge.css", "/css/parts/Filter.css", "/css/parts/Highlight.css", "/css/parts/InputBox.css",
+        "/css/parts/Label.css", "/css/parts/Message.css", "/css/parts/MessageAction.css", "/css/parts/ProblemsIcon.css",
+        "/css/parts/SearchField.css", "/css/parts/ViewletProblems.css"
+      ],
+      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"] },
+      "commandPrefix": "Problems",
+      "methods": {
+        "create": { "name": "Problems.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "context", "name": "workspaceUri" }
+        ] },
+        "loadContent": { "name": "Problems.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "Problems.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "Problems.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "resize": { "name": "Problems.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
+        "saveState": { "name": "Problems.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getCommandIds": { "name": "Problems.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "Problems.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Problems.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "Problems.renderEventListeners", "parameters": [] }
+      },
+      "outputs": [{ "stateField": "actionsDom", "method": { "name": "Problems.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "renderActionsComparison": "always",
+      "renderComparison": "emptyCommands",
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "processExplorer",
@@ -447,7 +1196,32 @@
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/process-explorer-worker/index.js",
     "productionPath": "/packages/process-explorer-worker/index.js",
     "settingName": "develop.processExplorerWorkerPath",
-    "hotReloadCommand": "ProcessExplorer.hotReload"
+    "hotReloadCommand": "ProcessExplorer.hotReload",
+    "viewlet": {
+      "name": "ProcessExplorer",
+      "css": ["/css/parts/ViewletProcessExplorer.css"],
+      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "commandPrefix": "ProcessExplorer",
+      "methods": {
+        "create": { "name": "ProcessExplorer.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
+          { "source": "state", "name": "assetDir" }
+        ] },
+        "loadContent": { "name": "ProcessExplorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "hotReloadLoadContent": { "name": "ProcessExplorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "ProcessExplorer.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "ProcessExplorer.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "dispose": { "name": "ProcessExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "ProcessExplorer.terminate", "parameters": [] },
+        "getCommandIds": { "name": "ProcessExplorer.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "ProcessExplorer.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "ProcessExplorer.renderEventListeners", "parameters": [] }
+      },
+      "renderComparison": "emptyCommands",
+      "capabilities": { "events": true, "render": true, "rootRender": true }
+    }
   },
   {
     "id": "quickPickWorker",
@@ -456,7 +1230,41 @@
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/quick-pick-worker/dist/quickPickWorkerMain.js",
     "productionPath": "/packages/quick-pick-worker/dist/quickPickWorkerMain.js",
     "settingName": "develop.quickPickWorkerPath",
-    "hotReloadCommand": ""
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "QuickPick",
+      "css": [
+        "/css/parts/FileIcon.css", "/css/parts/InputBox.css", "/css/parts/Label.css", "/css/parts/Progress.css",
+        "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css", "/css/parts/SearchField.css", "/css/parts/ViewletList.css",
+        "/css/parts/ViewletQuickPick.css"
+      ],
+      "variables": ["QuickPickBackground", "ListForeground", "ListHoverBackground", "ListHoverForeground", "ListActiveSelectionBackground"],
+      "state": {
+        "idKey": "uid", "fields": ["uri", "x", "y", "args"], "contextFields": ["assetDir", "platform"],
+        "defaults": {
+          "state": 0, "picks": [], "recentPicks": [], "versionId": 0, "warned": [], "visiblePicks": [], "maxVisibleItems": 10,
+          "cursorOffset": 0, "height": 300, "top": 50, "width": 600, "focused": false
+        }
+      },
+      "commandPrefix": "QuickPick",
+      "commandSkipRenderWhenDiffEmpty": true,
+      "methods": {
+        "create": { "name": "QuickPick.create2", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "literal", "value": 22 },
+          { "source": "state", "name": "x" }, { "source": "state", "name": "y" }, { "source": "state", "name": "width" },
+          { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "args" },
+          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" }
+        ] },
+        "loadContent": { "name": "QuickPick.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "QuickPick.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "QuickPick.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "getCommandIds": { "name": "QuickPick.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "QuickPick.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "QuickPick.renderEventListeners", "parameters": [] }
+      },
+      "renderComparison": "always",
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "references",
@@ -483,7 +1291,46 @@
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/running-extensions-view/dist/runningExtensionsViewMain.js",
     "productionPath": "/packages/running-extensions-view/dist/runningExtensionsViewMain.js",
     "settingName": "develop.runningExtensionsViewPath",
-    "hotReloadCommand": ""
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "RunningExtensions",
+      "title": "Running Extensions",
+      "css": ["/css/parts/ViewletRunningExtensions.css"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["uri", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"],
+        "defaults": { "title": "Running Extensions" }
+      },
+      "commandPrefix": "RunningExtensions",
+      "methods": {
+        "create": {
+          "name": "RunningExtensions.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }
+          ]
+        },
+        "loadContent": { "name": "RunningExtensions.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "refresh": { "name": "RunningExtensions.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "RunningExtensions.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "RunningExtensions.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "getCommandIds": { "name": "RunningExtensions.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "RunningExtensions.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "RunningExtensions.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "RunningExtensions.renderEventListeners", "parameters": [] }
+      },
+      "extraCommands": [{ "name": "handleExtensionsChanged", "method": "refresh" }],
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
   },
   {
     "id": "settingsView",
@@ -492,7 +1339,57 @@
     "productionPath": "/packages/settings-view/dist/settingsViewWorkerMain.js",
     "settingName": "develop.settingsWorkerPath",
     "hotReloadCommand": "Settings.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "Settings",
+      "css": [
+        "/css/parts/Filter.css", "/css/parts/Highlight.css", "/css/parts/InputBadge.css", "/css/parts/InputBox.css", "/css/parts/Label.css",
+        "/css/parts/ScrollBar.css", "/css/parts/ScrollBarThumb.css", "/css/parts/SearchField.css", "/css/parts/SettingsHeader.css",
+        "/css/parts/SettingsItems.css", "/css/parts/SettingsSideBar.css", "/css/parts/ViewletSettings.css"
+      ],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height", "parentUid"] },
+      "stateResize": true,
+      "commandPrefix": "Settings",
+      "methods": {
+        "create": {
+          "name": "Settings.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "context", "name": "workspaceUri" }
+          ]
+        },
+        "hotReloadCreate": {
+          "name": "Settings.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+          ]
+        },
+        "loadContent": {
+          "name": "Settings.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "Settings.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Settings.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "saveState": { "name": "Settings.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "Settings.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Settings.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Settings.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "Settings.getMenuIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "Settings.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
+        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] }
+      },
+      "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "Settings.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
   },
   {
     "id": "settings",
@@ -528,7 +1425,66 @@
     "productionPath": "/packages/status-bar-worker/dist/statusBarWorkerMain.js",
     "settingName": "develop.statusBarWorkerPath",
     "hotReloadCommand": "StatusBar.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "StatusBar",
+      "css": ["/css/parts/ViewletStatusBar.css"],
+      "variables": ["StatusBarBorderTopColor", "StatusBarForeground"],
+      "state": { "idKey": "uid", "fields": ["x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "commandPrefix": "StatusBar",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "commandSkipRenderWhenDiffEmpty": true,
+      "methods": {
+        "create": {
+          "name": "StatusBar.create",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "literal", "value": "" },
+            { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" },
+            { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" },
+            { "source": "state", "name": "assetDir" }
+          ]
+        },
+        "loadContent": {
+          "name": "StatusBar.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }]
+        },
+        "hotReloadCreate": {
+          "name": "StatusBar.create",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "literal", "value": "" },
+            { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" },
+            { "source": "state", "name": "height" },
+            { "source": "literal", "value": null }
+          ]
+        },
+        "hotReloadLoadContent": {
+          "name": "StatusBar.loadContent",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "diff": { "name": "StatusBar.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "StatusBar.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "resize": {
+          "name": "StatusBar.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
+        "saveState": { "name": "StatusBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "StatusBar.terminate", "parameters": [] },
+        "getCommandIds": { "name": "StatusBar.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "StatusBar.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "commands"
+    }
   },
   {
     "id": "syntaxHighlightingWorker",
@@ -582,7 +1538,44 @@
     "productionPath": "/packages/title-bar-worker/dist/titleBarWorkerMain.js",
     "settingName": "develop.titleBarWorkerPath",
     "hotReloadCommand": "TitleBar.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "viewlet": {
+      "name": "TitleBar",
+      "css": [
+        "/css/parts/ViewletTitleBar.css", "/css/parts/ViewletTitleBarMenuBar.css", "/css/parts/TitleBarEntry.css",
+        "/css/parts/ViewletTitleBarCommandCenter.css", "/css/parts/ViewletTitleBarTitle.css", "/css/parts/ViewletTitleBarButtons.css",
+        "/css/parts/MaskIcon.css", "/css/parts/ViewletTitleBarIcon.css"
+      ],
+      "variables": ["TitleBarForeground", "TitleBarForegroundActive", "TitleBarActiveBackground", "TitleBarBackground"],
+      "state": {
+        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"],
+        "defaults": {
+          "disposed": false, "titleBarIconWidth": 30, "isFocused": false, "titleBarIconEnabled": true,
+          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true
+        }
+      },
+      "commandPrefix": "TitleBar",
+      "commandSkipRenderWhenDiffEmpty": true,
+      "methods": {
+        "create": { "name": "TitleBar.create3", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "state", "name": "platform" }, { "source": "state", "name": "controlsOverlayEnabled" },
+          { "source": "state", "name": "titleBarStyleCustom" }, { "source": "state", "name": "assetDir" }
+        ] },
+        "loadContent": { "name": "TitleBar.loadContent2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "TitleBar.diff3", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "TitleBar.render3", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "resize": { "name": "TitleBar.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
+        "terminate": { "name": "TitleBar.terminate", "parameters": [] },
+        "getCommandIds": { "name": "TitleBar.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "TitleBar.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "TitleBar.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "TitleBar.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "TitleBar.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
   },
   {
     "id": "updateWorker",

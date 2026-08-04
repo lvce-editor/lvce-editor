@@ -32,10 +32,7 @@ jest.unstable_mockModule('../src/parts/AssetDir/AssetDir.js', () => ({
 }))
 
 const RunningExtensionsViewWorker = await import('../src/parts/RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts')
-const ViewletRunningExtensions = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ts')
-const ViewletRunningExtensionsCommands = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsCommands.ts')
-const ViewletRunningExtensionsName = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsName.ts')
-const ViewletRunningExtensionsRenderTitle = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensionsRenderTitle.ts')
+const ViewletRunningExtensions = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts')
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -45,9 +42,9 @@ beforeEach(() => {
 test('provides the side bar name and title', () => {
   const state = ViewletRunningExtensions.create(1, 'RunningExtensions', 10, 20, 800, 600)
 
-  expect(ViewletRunningExtensionsName.name).toBe('RunningExtensions')
+  expect(ViewletRunningExtensions.name).toBe('RunningExtensions')
   expect(ViewletRunningExtensions.getTitle()).toBe('Running Extensions')
-  expect(ViewletRunningExtensionsRenderTitle.renderTitle.apply(state, state)).toBe('Running Extensions')
+  expect(ViewletRunningExtensions.renderTitle.apply(state, state)).toBe('Running Extensions')
 })
 
 test('loadContent passes the platform and asset directory to the view worker', async () => {
@@ -84,9 +81,9 @@ test('handleExtensionsChanged reloads and renders running extensions', async () 
 })
 
 test('getCommands includes the extension change handler', async () => {
-  await ViewletRunningExtensionsCommands.getCommands()
+  await ViewletRunningExtensions.getCommands()
 
-  expect(ViewletRunningExtensionsCommands.Commands['handleExtensionsChanged']).toBe(ViewletRunningExtensions.handleExtensionsChanged)
+  expect(typeof ViewletRunningExtensions.Commands['handleExtensionsChanged']).toBe('function')
 })
 
 test('getMenus provides running extensions menu entries', async () => {

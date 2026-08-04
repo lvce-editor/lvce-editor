@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as ViewletActivityBarRenderVirtualDom from '../src/parts/ViewletActivityBar/ViewletActivityBarRenderVirtualDom.js'
+import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.ipc.ts'
 
 test('supports functional resize commands', () => {
-  expect(ViewletActivityBarRenderVirtualDom.hasFunctionalResize).toBe(true)
+  expect(ViewletActivityBar.hasFunctionalResize).toBe(true)
 })
