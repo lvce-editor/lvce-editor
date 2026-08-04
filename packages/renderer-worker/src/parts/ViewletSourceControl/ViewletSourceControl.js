@@ -84,6 +84,13 @@ export const handleInput = (state, text) => {
   }
 }
 
+export const focus = (state) => {
+  return {
+    ...state,
+    commands: [['Viewlet.focusSelector', '.SourceControlHeader input']],
+  }
+}
+
 const updateIcon = (displayItem) => {
   if (displayItem.type === DirentType.File) {
     return {

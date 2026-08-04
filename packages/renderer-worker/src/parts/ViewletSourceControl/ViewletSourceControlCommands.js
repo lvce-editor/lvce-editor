@@ -12,5 +12,6 @@ export const getCommands = async () => {
   Commands['loadContentLater'] = ViewletSourceControl.loadContentLater
   Commands['hotReload'] = ViewletSourceControl.hotReload
   Commands['getInfo'] = ({ uid }) => SourceControlWorker.invoke('SourceControl.getInfo', uid)
+  Commands['focus'] = ViewletSourceControl.focus
   return Commands
 }

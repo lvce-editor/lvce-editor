@@ -10,6 +10,7 @@ export const getCommands = async () => {
     Commands[command] = WrapExtensionSearchCommand.wrapExtensionSearchCommand(command)
   }
   Commands['hotReload'] = ViewletExtensions.hotReload
+  Commands['focus'] = ViewletExtensions.focus
 
   return Commands
 }

@@ -10,5 +10,6 @@ export const getCommands = async () => {
     Commands[command] = WrapRunAndDebugCommand.wrapRunAndDebugCommand(command)
   }
   Commands['hotReload'] = ViewletRunAndDebug.hotReload
+  Commands['focus'] = ViewletRunAndDebug.focus
   return Commands
 }

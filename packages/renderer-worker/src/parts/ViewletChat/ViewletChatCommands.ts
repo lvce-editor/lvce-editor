@@ -1,6 +1,6 @@
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import { wrapChatCommand } from '../WrapChatCommand/WrapChatCommand.ts'
-import { hotReload } from './ViewletChat.ts'
+import { focus, hotReload } from './ViewletChat.ts'
 
 export const Commands = {}
 
@@ -10,5 +10,6 @@ export const getCommands = async () => {
     Commands[command] = wrapChatCommand(command)
   }
   Commands['hotReload'] = hotReload
+  Commands['focus'] = focus
   return Commands
 }
