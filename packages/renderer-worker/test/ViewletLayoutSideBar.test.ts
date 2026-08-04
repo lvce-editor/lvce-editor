@@ -564,6 +564,89 @@ test('toggleSideBarView appends focus commands after showing the requested view'
   expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusElementByName', 12, 'SearchValue']])
 })
 
+test('openSideBarView appends focus commands when focus is requested', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="extensions"]']])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+  }
+
+  const result = await ViewletLayout.openSideBarView(state, 'Extensions', true, undefined)
+
+  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Extensions')
+  expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusSelector', 12, '[name="extensions"]']])
+})
+
+test('openSideBarView does not request focus by default', async () => {
+  mockActivityBarRender()
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+  }
+
+  await ViewletLayout.openSideBarView(state, 'Extensions', false, undefined)
+
+  expect(Viewlet.getFocusCommands).not.toHaveBeenCalled()
+})
+
+test('openChat focuses an already open chat when requested', async () => {
+  // @ts-ignore
+  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="composer"]']])
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarView: 'Chat',
+    secondarySideBarVisible: true,
+  }
+
+  const result = await ViewletLayout.openChat(state, true)
+
+  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Chat')
+  expect(result).toEqual({
+    newState: state,
+    commands: [['Viewlet.focusSelector', 12, '[name="composer"]']],
+  })
+})
+
+test('openChat focuses chat after opening the secondary side bar', async () => {
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+  // @ts-ignore
+  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="composer"]']])
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarView: '',
+    secondarySideBarVisible: false,
+  }
+
+  const result = await ViewletLayout.openChat(state, true)
+
+  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Chat')
+  expect(result.newState).toMatchObject({
+    secondarySideBarView: 'Chat',
+    secondarySideBarVisible: true,
+  })
+  expect(result.commands.at(-1)).toEqual(['Viewlet.focusSelector', 12, '[name="composer"]'])
+})
+
+test('openChat leaves an already open chat unfocused by default', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarView: 'Chat',
+    secondarySideBarVisible: true,
+  }
+
+  const result = await ViewletLayout.openChat(state)
+
+  expect(Viewlet.getFocusCommands).not.toHaveBeenCalled()
+  expect(result).toEqual({ newState: state, commands: [] })
+})
+
 test('toggleSideBarView opens a preview-preferred extension view in the preview area', async () => {
   mockActivityBarRender()
   // @ts-ignore
