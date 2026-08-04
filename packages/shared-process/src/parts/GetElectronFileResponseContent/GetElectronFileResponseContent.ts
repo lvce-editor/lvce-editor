@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import * as AddCustomPathsToIndexHtml from '../AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.ts'
+import * as IsDocumentNavigation from '../IsDocumentNavigation/IsDocumentNavigation.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldTranspileTypescript.ts'
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.ts'
@@ -25,9 +26,7 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
     content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
   }
   if (url === '/' || url.startsWith('/?')) {
-    const fetchDestination = request?.headers?.['sec-fetch-dest']
-    const isDocumentNavigation = fetchDestination === 'document'
-    const additionalConfig = isDocumentNavigation ? { webSocketIssuer: WebSocketIssuerRegistry.create() } : {}
+    const additionalConfig = IsDocumentNavigation.isDocumentNavigation(request) ? { webSocketIssuer: WebSocketIssuerRegistry.create() } : {}
     content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, additionalConfig)
   }
   if (typeof content === 'string') {

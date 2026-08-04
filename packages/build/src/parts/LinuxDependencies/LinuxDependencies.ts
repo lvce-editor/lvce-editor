@@ -8,6 +8,8 @@ export const defaultDepends = [
   'libgtk-3-0 (>= 3.10.0)',
   'libxss1',
   'libgbm1',
+  'fonts-noto-cjk',
+  'fonts-noto-color-emoji',
 ]
 
 export const recommends = ['ripgrep']

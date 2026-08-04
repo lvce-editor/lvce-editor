@@ -10,6 +10,7 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.ts'
 import * as GetTypeScriptSyntaxErrorResponse from '../GetTypeScriptSyntaxErrorResponse/GetTypeScriptSyntaxErrorResponse.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
+import * as IsDocumentNavigation from '../IsDocumentNavigation/IsDocumentNavigation.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as IsTypeScriptSyntaxError from '../IsTypeScriptSyntaxError/IsTypeScriptSyntaxError.ts'
 import * as Logger from '../Logger/Logger.ts'
@@ -24,9 +25,8 @@ export const resolveElectronFileUri = (url: string): string => {
 // maybe send webview requests directly to preview process
 export const getElectronFileResponse = async (url: any, request: any): Promise<any> => {
   try {
-    const fetchDestination = request?.headers?.['sec-fetch-dest']
     const isRootDocument = url === '/' || url.startsWith('/?')
-    const isSecretDocument = isRootDocument && fetchDestination === 'document'
+    const isSecretDocument = isRootDocument && IsDocumentNavigation.isDocumentNavigation(request)
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag

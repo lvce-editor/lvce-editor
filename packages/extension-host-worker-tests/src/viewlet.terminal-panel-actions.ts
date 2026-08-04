@@ -21,8 +21,16 @@ export const test: Test = async (api) => {
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
 
-  await api.Locator('#Panel .IconButton[title="New Terminal"]').click()
+  await api.Locator('.TitleBarTopLevelEntry[aria-label="More ..."]').click()
+  await api.Locator('#Menu-0 .MenuItem', { hasText: 'Terminal' }).hover()
+  await api.expect(api.Locator('#Menu-1')).toBeVisible()
+  await api.Locator('#Menu-1 .MenuItem', { hasText: 'New Terminal' }).click()
   await api.expect(api.Locator('.TerminalTab')).toHaveCount(2)
+  await api.expect(terminals).toHaveCount(1)
+  await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
+
+  await api.Locator('#Panel .IconButton[title="New Terminal"]').click()
+  await api.expect(api.Locator('.TerminalTab')).toHaveCount(3)
   await api.expect(terminals).toHaveCount(1)
   await runCommand('echo left-terminal')
   await api.expect(terminals).toContainText('left-terminal')

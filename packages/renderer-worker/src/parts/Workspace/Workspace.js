@@ -28,10 +28,10 @@ export const setPath = async (path) => {
   await onWorkspaceChange()
 }
 
-export const setUri = async (uri) => {
+export const setUri = async (uri, providedPathSeparator) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri
-  const pathSeparator = await FileSystem.getPathSeparator(uri)
+  const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }

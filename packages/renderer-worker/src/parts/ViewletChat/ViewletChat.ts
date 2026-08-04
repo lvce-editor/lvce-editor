@@ -50,3 +50,10 @@ export const hotReload = async (state) => {
 export const saveState = (state) => {
   return ChatViewWorker.invoke('Chat.saveState', state.uid)
 }
+
+export const focus = (state: ChatState): ChatState => {
+  return {
+    ...state,
+    commands: [['Viewlet.focusSelector', '[name="composer"]']],
+  }
+}

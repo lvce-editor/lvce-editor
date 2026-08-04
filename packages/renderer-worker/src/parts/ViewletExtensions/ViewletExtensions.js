@@ -52,6 +52,13 @@ export const loadContent = async (state, savedState) => {
 
 export const dispose = () => {}
 
+export const focus = (state) => {
+  return {
+    ...state,
+    commands: [['Viewlet.focusSelector', '[name="extensions"]']],
+  }
+}
+
 // TODO lazyload this
 
 export const hotReload = async (state) => {

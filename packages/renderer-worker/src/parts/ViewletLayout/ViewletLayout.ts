@@ -728,8 +728,12 @@ export const toggleSecondarySideBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.SecondarySideBar)
 }
 
-export const openChat = async (state: LayoutState): Promise<LayoutStateResult> => {
+export const openChat = async (state: LayoutState, focus = false): Promise<LayoutStateResult> => {
   if (state.secondarySideBarVisible && state.secondarySideBarView === ViewletModuleId.Chat) {
+    if (focus) {
+      await ViewletManager.waitForLoadContentLater(ViewletModuleId.Chat)
+      await Viewlet.focus(ViewletModuleId.Chat)
+    }
     return {
       newState: state,
       commands: [],
@@ -738,6 +742,10 @@ export const openChat = async (state: LayoutState): Promise<LayoutStateResult> =
   // @ts-ignore
   const openResult = await openSecondarySideBarView(state, ViewletModuleId.Chat)
   const showResult = await showSecondarySideBar(openResult.newState)
+  if (focus) {
+    await ViewletManager.waitForLoadContentLater(ViewletModuleId.Chat)
+    await Viewlet.focus(ViewletModuleId.Chat)
+  }
   return {
     newState: showResult.newState,
     commands: [...openResult.commands, ...showResult.commands],
@@ -797,12 +805,18 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView, 
 }
 
 export const openIntegratedTerminal = async (state: LayoutState, cwd: string): Promise<LayoutStateResult> => {
-  const terminalsActive = state.panelView === ViewletModuleId.Terminals && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
-  const result = await showPanel(state, ViewletModuleId.Terminals, terminalsActive ? '' : cwd)
+  const terminalsActive = state.panelVisible && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
   if (terminalsActive) {
     await Command.execute('Terminals.addTerminal', cwd)
+    return {
+      newState: {
+        ...state,
+        panelView: ViewletModuleId.Terminals,
+      },
+      commands: [],
+    }
   }
-  return result
+  return showPanel(state, ViewletModuleId.Terminals, cwd)
 }
 
 export const hidePanel = (state: LayoutState) => {
@@ -2190,7 +2204,13 @@ export const getSideBarPosition = (state: LayoutState) => {
 }
 
 export const openSideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
-  return showSideBar(state, moduleId)
+  const result = await showSideBar(state, moduleId)
+  if (!focus) {
+    return result
+  }
+  await ViewletManager.waitForLoadContentLater(moduleId)
+  await Viewlet.focus(moduleId)
+  return result
 }
 
 export const openSecondarySideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {

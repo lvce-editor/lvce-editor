@@ -106,6 +106,14 @@ test('getDragData', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getDragData')
 })
 
+test('focusSelector forwards focus to the renderer process', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+
+  await Viewlet.focusSelector(7, '[name="editor"]')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.focusSelector', 7, '[name="editor"]')
+})
+
 test('disposeFunctional disposes owned runtime viewlets', () => {
   const childFactory = {}
   ViewletStates.set(11, {
@@ -349,11 +357,22 @@ test('openWidget - declares DefineKeyBinding as an owned widget', async () => {
 })
 
 test('closeWidget restores Simple Browser after closing Quick Pick', async () => {
+  const focus = jest.fn((state: Readonly<{ readonly uid: number }>): Readonly<{ readonly uid: number }> => state)
   ViewletStates.set(2, {
-    state: { uid: 2 },
-    renderedState: { uid: 2 },
-    moduleId: 'QuickPick',
     factory: {},
+    moduleId: 'QuickPick',
+    renderedState: { uid: 2 },
+    state: { uid: 2 },
+  })
+  ViewletStates.set(3, {
+    factory: {
+      Commands: {
+        focus,
+      },
+    },
+    moduleId: 'Main',
+    renderedState: { uid: 3 },
+    state: { uid: 3 },
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -361,6 +380,7 @@ test('closeWidget restores Simple Browser after closing Quick Pick', async () =>
   await Viewlet.closeWidget(2)
 
   expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('quick-pick')
+  expect(focus).toHaveBeenCalledWith({ uid: 3 })
 })
 
 test('openWidget - should not open again when already open', async () => {
