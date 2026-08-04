@@ -5,17 +5,17 @@ import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunA
 import * as ViewletSourceControl from '../src/parts/ViewletSourceControl/ViewletSourceControl.js'
 
 test.each([
-  ['Source Control', ViewletSourceControl.focus, '.SourceControlHeader input'],
-  ['Run and Debug', ViewletRunAndDebug.focus, '.RunAndDebug'],
-  ['Extensions', ViewletExtensions.focus, '[name="extensions"]'],
-  ['Chat', ViewletChat.focus, '[name="composer"]'],
-] as const)('%s focuses its primary interactive control', (name, focus, selector) => {
-  const state = { commands: [], id: 1 }
+  ['Source Control', ViewletSourceControl.focus, ['Viewlet.focusSelector', '[name="SourceControlInput"]']],
+  ['Run and Debug', ViewletRunAndDebug.focus, ['Viewlet.focus', 7]],
+  ['Extensions', ViewletExtensions.focus, ['Viewlet.focusSelector', '[name="extensions"]']],
+  ['Chat', ViewletChat.focus, ['Viewlet.focusSelector', '[name="composer"]']],
+] as const)('%s focuses its primary interactive control', (name, focus, command) => {
+  const state = { commands: [], id: 1, uid: 7 }
 
   const result = focus(state as any)
 
   expect(result).toEqual({
     ...state,
-    commands: [['Viewlet.focusSelector', selector]],
+    commands: [command],
   })
 })
