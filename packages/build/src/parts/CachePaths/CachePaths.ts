@@ -34,7 +34,9 @@ const getRendererWorkerCacheHash = async (extraContents) => {
       'packages/build/src/parts/BundleRendererWorker/BundleRendererWorker.ts',
       'packages/build/src/parts/BundleRendererWorkerCached/BundleRendererWorkerCached.ts',
       'packages/build/src/parts/EagerLoadedCss/EagerLoadedCss.ts',
+      'packages/build/src/parts/FilterWorkerViewletCss/FilterWorkerViewletCss.ts',
       'packages/build/src/parts/GetCssDeclarationFiles/GetCssDeclarationFiles.ts',
+      'packages/build/src/parts/GetFilteredCssDeclarations/GetFilteredCssDeclarations.ts',
     ],
     extraContents,
   )
