@@ -20,6 +20,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Product from '../Product/Product.js'
+import * as RenderMainAreaPending from '../RenderMainAreaPending/RenderMainAreaPending.ts'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
@@ -1125,6 +1126,14 @@ export const createViewlet = async (
   return {
     newState: state,
     commands: commands,
+  }
+}
+
+export const renderMainAreaPending = async (state: LayoutState, uid: number) => {
+  await RenderMainAreaPending.renderMainAreaPending(uid)
+  return {
+    newState: state,
+    commands: [],
   }
 }
 

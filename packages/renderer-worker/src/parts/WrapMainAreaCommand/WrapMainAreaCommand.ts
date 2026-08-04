@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as Preferences from '../Preferences/Preferences.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import { renderMainAreaPending } from '../RenderMainAreaPending/RenderMainAreaPending.ts'
 import { resolveInternalSourceUri } from '../ResolveInternalSourceUri/ResolveInternalSourceUri.ts'
 
 const loadingDelay = 500
@@ -32,18 +32,6 @@ const resolveOpenUriArgs = async (key: string, args: readonly any[]): Promise<re
   return args
 }
 
-const renderPendingState = async (uid: number): Promise<void> => {
-  const diffResult = await MainAreaWorker.invoke('MainArea.diff2', uid)
-  if (diffResult.length === 0) {
-    return
-  }
-  const commands = await MainAreaWorker.invoke('MainArea.render2', uid, diffResult)
-  if (commands.length === 0) {
-    return
-  }
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-}
-
 const invokeMainAreaCommand = async (key: string, uid: number, args: readonly any[]): Promise<void> => {
   const resolvedArgs = await resolveOpenUriArgs(key, args)
   const commandPromise = MainAreaWorker.invoke(`MainArea.${key}`, uid, ...resolvedArgs)
@@ -60,7 +48,7 @@ const invokeMainAreaCommand = async (key: string, uid: number, args: readonly an
   try {
     const result = await Promise.race([commandPromise, timeoutPromise])
     if (result === loadingTimeout) {
-      await Promise.all([commandPromise, renderPendingState(uid)])
+      await Promise.all([commandPromise, renderMainAreaPending(uid)])
     }
   } finally {
     clearTimeout(timeoutId)
