@@ -1091,7 +1091,15 @@ export const setActionsDom = (
   }
 }
 
-export const createViewlet = async (state: LayoutState, viewletModuleId: string, editorUid: number, tabId: number, bounds: any, uri: string) => {
+export const createViewlet = async (
+  state: LayoutState,
+  viewletModuleId: string,
+  editorUid: number,
+  tabId: number,
+  bounds: any,
+  uri: string,
+  args: readonly any[] = [],
+) => {
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -1109,7 +1117,7 @@ export const createViewlet = async (state: LayoutState, viewletModuleId: string,
       height: bounds.height,
       parentUid: -1,
       append: false,
-      args: [],
+      args,
     },
     false,
     true,
