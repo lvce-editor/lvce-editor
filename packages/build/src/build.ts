@@ -3,6 +3,7 @@ import * as ExitCode from './parts/ExitCode/ExitCode.ts'
 import * as Logger from './parts/Logger/Logger.ts'
 import * as SetStackTraceLimit from './parts/SetStackTraceLimit/SetStackTraceLimit.ts'
 import * as Process from './parts/Process/Process.ts'
+import * as ValidateRendererWorkerPackageJson from './parts/ValidateRendererWorkerPackageJson/ValidateRendererWorkerPackageJson.ts'
 
 const getProduct = (productName) => {
   switch (productName) {
@@ -76,6 +77,7 @@ const main = async () => {
     Process.exit(ExitCode.Error)
   }
   SetStackTraceLimit.setStackTraceLimit(100)
+  await ValidateRendererWorkerPackageJson.validateRendererWorkerPackageJson()
   const product = await getProduct(argv.product)
   const module = await getBuildModule(target)
   try {
