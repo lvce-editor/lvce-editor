@@ -27,7 +27,8 @@ export const getElectronFileResponseRelativePath = (requestUrl: any): any => {
   }
   if (requestUrl.startsWith('/')) {
     // TODO this should not be supported anymore and could probably be removed
-    return removeQueryParameters(requestUrl)
+    const pathName = removeQueryParameters(requestUrl)
+    return decodeURI(pathName)
   }
   console.log({ requestUrl })
   return ''
