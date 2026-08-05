@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.19.0",
+    "version": "5.20.0",
     "created": "2022-07-02"
   },
   {
@@ -20,7 +20,7 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.14.0",
+    "version": "1.15.0",
     "created": "2026-07-14"
   },
   {
@@ -50,7 +50,7 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.3.1",
+    "version": "1.4.0",
     "created": "2026-08-01"
   },
   {
@@ -170,7 +170,7 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.23.0",
+    "version": "1.24.0",
     "created": "2024-08-09"
   },
   {
@@ -326,7 +326,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.7.0",
+    "version": "3.8.0",
     "created": "2022-06-26"
   },
   {
@@ -368,7 +368,7 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.12.0",
+    "version": "1.13.0",
     "created": "2024-02-28"
   },
   {
@@ -380,7 +380,7 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.16.2",
+    "version": "5.17.0",
     "created": "2022-06-16"
   },
   {
@@ -392,7 +392,7 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "created": "2022-06-16"
   },
   {
