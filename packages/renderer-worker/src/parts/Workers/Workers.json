@@ -379,6 +379,15 @@
     "contentSecurityPolicy": ["default-src 'none'"]
   },
   {
+    "id": "dragAndDropWorker",
+    "fileName": "dragAndDropWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/drag-and-drop-worker/dist/dragAndDropWorkerMain.js",
+    "productionPath": "/packages/drag-and-drop-worker/dist/dragAndDropWorkerMain.js",
+    "settingName": "develop.dragAndDropWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'"]
+  },
+  {
     "id": "dialogWorker",
     "fileName": "dialogWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/dialog-worker/dist/dialogWorkerMain.js",
