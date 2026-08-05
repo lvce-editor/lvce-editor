@@ -104,7 +104,14 @@ const createItemOther = (item) => {
     className: labelClassName,
     childCount: 1,
   }
-  dom.push(labelDom, text(label))
+  dom.push(
+    labelDom,
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text(label),
+  )
 
   if (detail) {
     labelDom.childCount++
