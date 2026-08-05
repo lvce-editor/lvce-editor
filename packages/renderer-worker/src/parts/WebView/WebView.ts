@@ -1,6 +1,7 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ExtensionHostState from '../ExtensionHost/ExtensionHostState.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetEditorProviders from '../GetEditorProviders/GetEditorProviders.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
@@ -23,6 +24,10 @@ export const getWebViewInfo = (providerId: string) => {
 
 export const getWebViewInfo2 = (providerId: string) => {
   return GetWebViews.getWebViews().then((webViews) => webViews.find((webView) => webView.id === providerId))
+}
+
+export const getEditorProviders = (): Promise<readonly unknown[]> => {
+  return GetEditorProviders.getEditorProviders()
 }
 
 export const create3 = async (uri: string, id: number): Promise<void> => {
