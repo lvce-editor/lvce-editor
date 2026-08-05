@@ -1,8 +1,9 @@
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { runInNewContext } from 'node:vm'
 import { expect, test } from '@jest/globals'
-import { setVersionsAndDependencies } from '../src/parts/BuildServer/BuildServer.ts'
+import { getServerIsStaticReplacement, setVersionsAndDependencies } from '../src/parts/BuildServer/BuildServer.ts'
 
 const writeJson = async (path: string, value: unknown): Promise<void> => {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`)
@@ -11,6 +12,15 @@ const writeJson = async (path: string, value: unknown): Promise<void> => {
 const readJson = async (path: string): Promise<any> => {
   return JSON.parse(await readFile(path, 'utf8'))
 }
+
+test('generated server sends the root document through the shared process', () => {
+  const replacement = getServerIsStaticReplacement('abcdefg')
+  const isStatic = runInNewContext(`${replacement}; isStatic`) as (url: string) => boolean
+
+  expect(isStatic('/')).toBe(false)
+  expect(isStatic('/?workspace=/test')).toBe(false)
+  expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
+})
 
 test('setVersionsAndDependencies includes process explorer as shared-process dependency', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-build-server-'))
