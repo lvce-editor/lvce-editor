@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-const getBlobUrl = jest.fn()
+const getBlobUrl = jest.fn<(uri: string, type: string) => Promise<string>>()
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   getBlobUrl,
