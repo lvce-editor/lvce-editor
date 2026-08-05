@@ -609,6 +609,15 @@
     }
   },
   {
+    "id": "extensionHostWorker",
+    "fileName": "extensionHostWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'", "script-src 'self'", "font-src 'self'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/extension-host-worker/dist/extensionHostWorkerMain.js",
+    "productionPath": "/packages/extension-host-worker/dist/extensionHostWorkerMain.js",
+    "settingName": "develop.extensionHostWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "extensionHostSubWorker",
     "fileName": "extensionHostSubWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "script-src 'self'", "font-src 'self'"],
