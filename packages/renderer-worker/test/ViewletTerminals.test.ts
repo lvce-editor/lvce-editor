@@ -5,10 +5,12 @@ const rendererProcessInvoke = jest.fn()
 const viewletDisposeFunctional = jest.fn((uid) => [['Viewlet.dispose', uid]])
 const viewletResize = jest.fn(async (uid, dimensions) => [['Viewlet.setBounds', uid, dimensions]])
 let nextId = 42
+let terminalTabsPreference: boolean | undefined
 
 beforeEach(() => {
   jest.clearAllMocks()
   nextId = 42
+  terminalTabsPreference = undefined
 })
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
@@ -29,7 +31,7 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
   return {
     get(key) {
       if (key === 'terminal.tabs.enabled') {
-        return true
+        return terminalTabsPreference
       }
       return undefined
     },
@@ -92,6 +94,23 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
   })
 })
 
+test('loadContent preserves an explicit disabled terminal tabs preference', async () => {
+  terminalTabsPreference = false
+  const state = ViewletTerminals.create(1, 'file:///workspace/folder', 10, 20, 800, 400)
+
+  const newState = await ViewletTerminals.loadContent(state)
+
+  expect(commandExecute).toHaveBeenCalledWith(
+    'Layout.createViewlet',
+    ViewletModuleId.Terminal2,
+    42,
+    0,
+    expect.objectContaining({ width: 800 }),
+    'file:///workspace/folder',
+  )
+  expect(newState.terminalTabsEnabled).toBe(false)
+})
+
 test('addTerminal opens a new terminal tab without disposing the current terminal', async () => {
   const state = createLoadedState()
 
@@ -139,6 +158,10 @@ test('renderActions wires terminal toolbar buttons to handleClickAction', () => 
 
 test('renderEventListeners routes terminal toolbar clicks and stops panel event delegation', () => {
   expect(ViewletTerminalsRender.renderEventListeners()).toEqual([
+    {
+      name: 'handleClickTab',
+      params: ['handleClickTab', 'event.currentTarget.dataset.index'],
+    },
     {
       name: 'handleClickAction',
       params: ['handleClickAction', 'event.target.dataset.command'],
@@ -313,6 +336,25 @@ test('focusIndex selects an existing terminal group without recreating or dispos
     childUid: 43,
     childUids: [42, 43],
     focusVersion: 1,
+    selectedIndex: 1,
+  })
+})
+
+test('handleClickTab selects a terminal from its DOM dataset index', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    tabs: [
+      { icon: 'Terminal', label: 'tab 1', terminalUids: [41], uid: 41 },
+      { icon: 'Terminal', label: 'tab 2', terminalUids: [42], uid: 42 },
+    ],
+  }
+
+  const newState = await ViewletTerminals.handleClickTab(state, '1')
+
+  expect(newState).toMatchObject({
+    childUid: 42,
+    childUids: [42],
     selectedIndex: 1,
   })
 })
