@@ -20,10 +20,28 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/ClipBoardWorker/ClipBoardWorker.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const ClipBoardWorker = await import('../src/parts/ClipBoardWorker/ClipBoardWorker.js')
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
+
+test('readMemoryImage', async () => {
+  const image = new Blob(['image'], { type: 'image/png' })
+  // @ts-ignore
+  ClipBoardWorker.invoke.mockResolvedValue(image)
+
+  await expect(ClipBoard.readMemoryImage()).resolves.toBe(image)
+  expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.readMemoryImage')
+})
 
 test.skip('readText', async () => {
   // @ts-ignore
@@ -136,7 +154,7 @@ test.skip('writeNativeFiles', async () => {
 
 test.skip('writeImage - error', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
+  ClipBoardWorker.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -148,7 +166,7 @@ test.skip('writeImage - error', async () => {
 
 test.skip('writeImage - error - format not supported', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(async () => {
+  ClipBoardWorker.invoke.mockImplementation(async () => {
     throw new Error('Type image/avif not supported on write.')
   })
   await expect(
@@ -160,12 +178,12 @@ test.skip('writeImage - error - format not supported', async () => {
 
 test.skip('writeImage', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
+  ClipBoardWorker.invoke.mockImplementation(() => {})
   await ClipBoard.writeImage({
     type: 'image/avif',
   })
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.writeImage', {
+  expect(ClipBoardWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.writeImage', {
     type: 'image/avif',
   })
 })
@@ -174,19 +192,19 @@ test('writeImageUrl fetches and writes the image blob', async () => {
   const blob = new Blob(['image'], { type: 'image/png' })
   const fetchImage = jest.fn<typeof fetch>(async () => new Response(blob))
   // @ts-ignore
-  RendererProcess.invoke.mockResolvedValue(undefined)
+  ClipBoardWorker.invoke.mockResolvedValue(undefined)
 
   await ClipBoard.writeImageUrl('https://example.com/image.png', fetchImage)
 
   expect(fetchImage).toHaveBeenCalledWith('https://example.com/image.png')
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.writeImage', blob)
+  expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.writeImage', blob)
 })
 
 test('writeImageUrl rejects unsuccessful responses', async () => {
   const fetchImage = jest.fn<typeof fetch>(async () => new Response(null, { status: 404, statusText: 'Not Found' }))
 
   await expect(ClipBoard.writeImageUrl('https://example.com/missing.png', fetchImage)).rejects.toThrow('Not Found')
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ClipBoardWorker.invoke).not.toHaveBeenCalled()
 })
 
 test.skip('execCopy - error', async () => {
