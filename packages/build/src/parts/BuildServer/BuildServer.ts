@@ -19,6 +19,22 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
+export const getServerIsStaticReplacement = (commitHash: string): string => `const isStatic = (url) => {
+  if (url.startsWith('/${commitHash}')) {
+    return true
+  }
+  if (url.startsWith('/favicon.ico')) {
+    return true
+  }
+  if (url === '/auth/callback' || url.startsWith('/auth/callback?')) {
+    return true
+  }
+  if (url.startsWith('/manifest.ico')) {
+    return true
+  }
+  return false
+}`
+
 const copyServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/server',
@@ -87,24 +103,7 @@ const copyServerFiles = async ({ commitHash }) => {
   }
   return false
 }`,
-    replacement: `const isStatic = (url) => {
-  if(url === '/'){
-    return true
-  }
-  if (url.startsWith('/${commitHash}')) {
-    return true
-  }
-  if (url.startsWith('/favicon.ico')) {
-    return true
-  }
-  if (url === '/auth/callback' || url.startsWith('/auth/callback?')) {
-    return true
-  }
-  if (url.startsWith('/manifest.ico')) {
-    return true
-  }
-  return false
-}`,
+    replacement: getServerIsStaticReplacement(commitHash),
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
