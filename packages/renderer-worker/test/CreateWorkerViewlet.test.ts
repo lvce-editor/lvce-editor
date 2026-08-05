@@ -64,6 +64,25 @@ test('runs configured legacy lifecycle methods with positional parameters', asyn
   expect(result).toEqual({ ...state, commands: [['setText', 'ready']] })
 })
 
+test('passes test mode to the explorer worker', async () => {
+  const invoke = jest.fn(async (method: string) => {
+    if (method === 'Explorer.diff2' || method === 'Explorer.render2') {
+      return []
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('explorer'),
+    context: { assetDir: 'test://assets', isTest: true, platform: 2 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, 'test://explorer', 1, 2, 300, 200, undefined, 5)
+
+  await viewlet.loadContent(state, undefined)
+
+  expect(invoke.mock.calls[0]).toEqual(['Explorer.create', 7, 'test://explorer', 1, 2, 300, 200, null, 5, 2, 'test://assets', true])
+})
+
 test('creates command wrappers through the same lifecycle seam', async () => {
   const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
     if (method === 'Example.getCommandIds') {

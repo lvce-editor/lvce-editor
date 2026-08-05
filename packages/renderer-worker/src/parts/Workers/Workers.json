@@ -525,7 +525,7 @@
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
           { "source": "literal", "value": null }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
-          { "source": "state", "name": "assetDir" }
+          { "source": "state", "name": "assetDir" }, { "source": "context", "name": "isTest" }
         ] },
         "loadContent": { "name": "Explorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Explorer.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
