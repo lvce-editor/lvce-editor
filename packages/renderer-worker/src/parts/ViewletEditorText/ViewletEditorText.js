@@ -150,7 +150,7 @@ export const loadContent = async (state, savedState, context) => {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
     const useCache = Preferences.get('editor.cache') ?? true
     await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath, useCache)
-    await EditorWorker.invoke('Editor.loadContent', id)
+    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
     const selectionRender = await rerender(newState2)

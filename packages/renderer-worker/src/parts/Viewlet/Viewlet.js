@@ -6,6 +6,7 @@ import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
@@ -138,6 +139,9 @@ export const dispose = async (id) => {
       throw new Error(`${id} is missing a factory function`)
     }
     const widgetDisposeCommands = LayoutWidgets.removeOwnedWidgets(instanceUid)
+    if (instance.factory.saveState) {
+      await SaveState.saveViewletState(id)
+    }
     if (instance.factory.dispose) {
       await instance.factory.dispose(instance.state)
     }

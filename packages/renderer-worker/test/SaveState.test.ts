@@ -1,5 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+const getInstance = jest.fn<() => any>(() => ({ factory: {}, state: {} }))
+
 jest.unstable_mockModule('../src/parts/InstanceStorage/InstanceStorage.js', () => ({
   getJson: jest.fn(async () => undefined),
   setJson: jest.fn(async () => {}),
@@ -10,7 +12,7 @@ jest.unstable_mockModule('../src/parts/SerializeViewlet/SerializeViewlet.js', ()
 }))
 
 jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
-  getInstance: jest.fn(() => ({ factory: {}, state: {} })),
+  getInstance,
 }))
 
 jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => ({
@@ -24,12 +26,28 @@ const SaveStateIpc = await import('../src/parts/SaveState/SaveState.ipc.js')
 
 beforeEach(() => {
   jest.clearAllMocks()
+  getInstance.mockReturnValue({ factory: {}, state: {} })
 })
 
 test('saves viewlet state under the current workspace key', async () => {
   await SaveState.saveViewletState('Explorer')
 
   expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:file:///workspace:Explorer', { value: 1 })
+})
+
+test('saves viewlet state under its instance storage key', async () => {
+  getInstance.mockReturnValue({
+    factory: {
+      getStorageKey: (state: { uri: string }) => `Editor:${state.uri}`,
+    },
+    state: {
+      uri: 'file:///workspace/file.txt',
+    },
+  })
+
+  await SaveState.saveViewletState(7)
+
+  expect(InstanceStorage.setJson).toHaveBeenCalledWith('viewlet:file:///workspace:Editor:file:///workspace/file.txt', { value: 1 })
 })
 
 test('saves layout state under its global key', async () => {
