@@ -7,6 +7,7 @@ import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Product from '../Product/Product.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
@@ -57,7 +58,7 @@ export { isTest } from '../IsTest/IsTest.js'
 
 const getTitle = (workspacePath) => {
   if (!workspacePath) {
-    return ''
+    return Product.getProductNameLong()
   }
   const pathSeparator = state.pathSeparator
   return workspacePath.slice(workspacePath.lastIndexOf(pathSeparator) + 1)

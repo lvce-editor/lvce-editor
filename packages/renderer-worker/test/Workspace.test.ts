@@ -5,8 +5,11 @@ import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
+  Workspace.state.isTest = false
   Workspace.state.workspacePath = ''
+  Workspace.state.workspaceUri = ''
+  Workspace.state.pathSeparator = ''
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -16,6 +19,11 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  canBeRestored: jest.fn(() => true),
+  getPathSeparator: jest.fn(async () => '/'),
+}))
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
@@ -52,6 +60,9 @@ test('hydrate', async () => {
         return {
           path: '/tmp/some-folder',
           homeDir: '~',
+          pathSeparator: '/',
+          source: 'shared-process',
+          uri: 'file:///tmp/some-folder',
         }
 
       default:
@@ -63,11 +74,11 @@ test('hydrate', async () => {
   await Workspace.hydrate({ href: 'http://localhost:3000' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'WindowTitle.set', '/tmp/some-folder')
+  const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
+  expect(windowTitleCalls).toEqual([['WindowTitle.set', 'some-folder']])
 })
 
-test.skip('hydrate - path changed in the meantime', async () => {
+test('hydrate - path changed in the meantime', async () => {
   let _resolve: () => void = () => {}
   // @ts-ignore
   // @ts-ignore
@@ -80,9 +91,10 @@ test.skip('hydrate - path changed in the meantime', async () => {
         return {
           path: '/tmp/some-folder',
           homeDir: '~',
+          pathSeparator: '/',
+          source: 'shared-process',
+          uri: 'file:///tmp/some-folder',
         }
-      case 'FileSystem.getPathSeparator':
-        return '/'
       default:
         throw new Error('unexpected message')
     }
@@ -96,9 +108,10 @@ test.skip('hydrate - path changed in the meantime', async () => {
   _resolve()
   await promise1
   expect(Workspace.state.workspacePath).toBe('/test')
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
+  expect(windowTitleCalls).toEqual([['WindowTitle.set', 'test']])
 })
 
 test('hydrate - error', async () => {
