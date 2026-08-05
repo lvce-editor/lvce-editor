@@ -26,7 +26,9 @@ const saveViewletStateAs = async (instanceId, storageId) => {
 }
 
 export const saveViewletState = async (id) => {
-  return saveViewletStateAs(id, id)
+  const instance = ViewletStates.getInstance(id)
+  const storageId = instance?.factory.getStorageKey ? instance.factory.getStorageKey(instance.state) : id
+  return saveViewletStateAs(id, storageId)
 }
 
 export const saveViewletStateWithStorageId = async (instanceId, storageId) => {

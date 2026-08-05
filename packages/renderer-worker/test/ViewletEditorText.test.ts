@@ -44,6 +44,7 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
 }))
 
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+const ViewletEditorTextSaveState = await import('../src/parts/ViewletEditorText/ViewletEditorTextSaveState.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
@@ -84,6 +85,7 @@ test('loadContent - restores the selection supplied by the opener', async () => 
     '/tokenize-typescript.js',
     true,
   )
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
@@ -100,6 +102,52 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
   expect(createCall?.at(-1)).toBe(true)
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
+})
+
+test('loadContent - restores the editor worker state', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+  const editorState = {
+    lines: ['saved content'],
+    redoStack: [['redo']],
+    undoStack: [['undo']],
+  }
+
+  await ViewletEditorText.loadContent(state, { editorState }, {})
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, editorState)
+})
+
+test('saveState - saves editor history under a URI-scoped key', async () => {
+  const editorState = {
+    lines: ['saved content'],
+    redoStack: [['redo']],
+    undoStack: [['undo']],
+  }
+  editorWorkerInvoke.mockResolvedValue(editorState as never)
+  const state = {
+    ...ViewletEditorText.create(1, 'file:///test/file.txt', 0, 0, 800, 600),
+    deltaY: 20,
+    focused: true,
+    selections: new Uint32Array([1, 2, 1, 4]),
+  }
+
+  await expect(ViewletEditorTextSaveState.saveState(state)).resolves.toEqual({
+    deltaY: 20,
+    editorState,
+    focused: true,
+    selections: [1, 2, 1, 4],
+  })
+  expect(ViewletEditorTextSaveState.getStorageKey(state)).toBe('Editor:file:///test/file.txt')
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.saveState', 1)
 })
 
 test('loadContent - restores the definition range supplied by the opener', async () => {

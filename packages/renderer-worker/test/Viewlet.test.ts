@@ -42,9 +42,13 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay
     show: jest.fn(),
   }
 })
+jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
+  saveViewletState: jest.fn(),
+}))
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
@@ -233,6 +237,27 @@ test('dispose - disposes the rendered viewlet when the factory has no dispose fu
 
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.dispose', 2)
   expect(ViewletStates.getInstance(2)).toBeUndefined()
+})
+
+test('dispose - saves persistent state before disposing the viewlet', async () => {
+  const factoryDispose = jest.fn()
+  const factorySaveState = jest.fn()
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'EditorText',
+    factory: {
+      dispose: factoryDispose,
+      saveState: factorySaveState,
+    },
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+
+  await Viewlet.dispose(2)
+
+  expect(SaveState.saveViewletState).toHaveBeenCalledWith(2)
+  expect(jest.mocked(SaveState.saveViewletState).mock.invocationCallOrder[0]).toBeLessThan(factoryDispose.mock.invocationCallOrder[0])
 })
 
 test('dispose - removes Layout references before recursively disposing owned widgets', async () => {
