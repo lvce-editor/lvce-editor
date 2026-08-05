@@ -2,6 +2,7 @@ import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 
 const getTabClassName = (isSelected) => {
   let className = ClassNames.TerminalTab
@@ -11,13 +12,15 @@ const getTabClassName = (isSelected) => {
   return className
 }
 
-const createTabDom = (tab, isSelected) => {
+const createTabDom = (tab, index, isSelected) => {
   const { label, icon } = tab
   const className = getTabClassName(isSelected)
   return [
     div(
       {
+        'data-index': index,
         className,
+        onClick: DomEventListenerFunctions.HandleClickTab,
         role: AriaRoles.ListItem,
       },
       2,
@@ -55,7 +58,7 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
   for (let i = 0; i < tabs.length; i++) {
     const isSelected = i === selectedIndex
     const tab = tabs[i]
-    dom.push(...createTabDom(tab, isSelected))
+    dom.push(...createTabDom(tab, i, isSelected))
   }
   return dom
 }

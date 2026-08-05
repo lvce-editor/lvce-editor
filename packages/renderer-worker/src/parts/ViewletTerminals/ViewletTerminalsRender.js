@@ -8,6 +8,10 @@ export const hasFunctionalRootRender = true
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenerFunctions.HandleClickTab,
+      params: ['handleClickTab', 'event.currentTarget.dataset.index'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickAction,
       params: ['handleClickAction', 'event.target.dataset.command'],
       stopPropagation: true,

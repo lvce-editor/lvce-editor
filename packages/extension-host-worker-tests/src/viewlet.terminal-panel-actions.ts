@@ -5,7 +5,6 @@ export const name = 'viewlet.terminal-panel-actions'
 export const test: Test = async (api) => {
   await api.Settings.update({
     'terminal.backend': 'mock',
-    'terminal.tabs.enabled': true,
   })
 
   const runCommand = async (command: string): Promise<void> => {
@@ -20,6 +19,8 @@ export const test: Test = async (api) => {
   const terminals = api.Locator('.XtermTerminal')
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
+  await runCommand('echo first-terminal')
+  await api.expect(terminals).toContainText('first-terminal')
 
   await api.Locator('.TitleBarTopLevelEntry[aria-label="More ..."]').click()
   await api.Locator('#Menu-0 .MenuItem', { hasText: 'Terminal' }).hover()
@@ -34,6 +35,14 @@ export const test: Test = async (api) => {
   await api.expect(terminals).toHaveCount(1)
   await runCommand('echo left-terminal')
   await api.expect(terminals).toContainText('left-terminal')
+
+  await api.Locator('.TerminalTab').nth(0).click()
+  await api.expect(terminals).toContainText('first-terminal')
+  await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
+
+  await api.Locator('.TerminalTab').nth(2).click()
+  await api.expect(terminals).toContainText('left-terminal')
+  await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
 
   await api.Locator('#Panel .IconButton[title="Split Terminal"]').click()
   await api.expect(terminals).toHaveCount(2)

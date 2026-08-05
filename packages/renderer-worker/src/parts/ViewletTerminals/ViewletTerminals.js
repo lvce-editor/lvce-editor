@@ -69,7 +69,7 @@ const sendCommands = async (commands) => {
 
 export const loadContent = async (state) => {
   const { cwd } = state
-  const terminalTabsEnabled = Preferences.get('terminal.tabs.enabled')
+  const terminalTabsEnabled = Preferences.get('terminal.tabs.enabled') !== false
   const childUid = Id.create()
   const newState = {
     ...state,
@@ -232,7 +232,7 @@ export const killTerminal = async (state) => {
 }
 
 export const handleClickTab = (state, index) => {
-  return focusIndex(state, index)
+  return focusIndex(state, Number(index))
 }
 
 export const handleClickAction = (state, indexOrCommand, command = indexOrCommand) => {

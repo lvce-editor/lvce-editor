@@ -33,3 +33,34 @@ test('renders split terminals in order and forwards terminal presses', () => {
     },
   ])
 })
+
+test('renders terminal tabs with switch commands', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    childUids: [42],
+    height: 400,
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'Terminal', label: 'tab 1', uid: 41 },
+      { icon: 'Terminal', label: 'tab 2', uid: 42 },
+    ],
+    tabsWidth: 90,
+    terminalTabsEnabled: true,
+    width: 800,
+    y: 20,
+  })
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      'data-index': 0,
+      className: 'TerminalTab',
+      onClick: DomEventListenerFunctions.HandleClickTab,
+    }),
+  )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      'data-index': 1,
+      className: 'TerminalTab TerminalTabSelected',
+      onClick: DomEventListenerFunctions.HandleClickTab,
+    }),
+  )
+})
