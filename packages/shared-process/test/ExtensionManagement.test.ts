@@ -38,6 +38,10 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/Trash/Trash.js', () => ({
+  trash: jest.fn((path: string) => rm(path, { recursive: true })),
+}))
+
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const originalArgv = process.argv
