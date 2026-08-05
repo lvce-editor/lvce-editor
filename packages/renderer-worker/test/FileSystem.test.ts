@@ -8,6 +8,7 @@ const readFile = jest.fn()
 const writeFile = jest.fn()
 const remove = jest.fn()
 const isReadonly = jest.fn()
+const getBlobUrl = jest.fn()
 
 FileSystemState.registerAll({
   test() {
@@ -16,6 +17,7 @@ FileSystemState.registerAll({
       writeFile,
       remove,
       isReadonly,
+      getBlobUrl,
     }
   },
 })
@@ -48,6 +50,13 @@ test('isReadonly', async () => {
   isReadonly.mockReturnValue(true)
   expect(await FileSystem.isReadonly('test://some-file.txt')).toBe(true)
   expect(isReadonly).toHaveBeenCalledWith('test://some-file.txt')
+})
+
+test('getBlobUrl forwards the media type', async () => {
+  getBlobUrl.mockReturnValue('blob:https://example.com/image-id')
+
+  await expect(FileSystem.getBlobUrl('test://some-file.svg', 'image/svg+xml')).resolves.toBe('blob:https://example.com/image-id')
+  expect(getBlobUrl).toHaveBeenCalledWith('test://some-file.svg', 'image/svg+xml')
 })
 
 test.skip('removeFile - error', async () => {
