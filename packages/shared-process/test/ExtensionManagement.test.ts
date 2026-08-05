@@ -1,6 +1,6 @@
 import { expect, jest, test, beforeAll, afterAll, afterEach } from '@jest/globals'
 import { createWriteStream } from 'node:fs'
-import { access, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -132,9 +132,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir)
-  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(
-    uninstallMissingExtensionErrorRegex,
-  )
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(uninstallMissingExtensionErrorRegex)
 })
 
 // TODO test for extension main not found (extension host)
@@ -281,6 +279,43 @@ test('getExtensions - includes transient linked extension from --link', async ()
       version: '1.0.0',
     },
   ])
+})
+
+test('getExtensions - linked extension overrides builtin extension', async () => {
+  const installedExtensionsPath = await getTmpDir()
+  const builtinExtensionsPath = await getTmpDir()
+  const linkedExtensionsPath = await getTmpDir()
+  const disabledExtensionsPath = await getTmpDir()
+  const linkedExtensionPath = await getTmpDir()
+  const extensionId = 'builtin.test-extension'
+  await mkdir(join(builtinExtensionsPath, extensionId))
+  await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), JSON.stringify({ id: extensionId, name: 'Bundled Extension' }))
+  await writeFile(join(linkedExtensionPath, 'extension.json'), JSON.stringify({ id: extensionId, name: 'Linked Extension' }))
+  await symlink(linkedExtensionPath, join(linkedExtensionsPath, extensionId))
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockImplementation(() => installedExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockImplementation(() => builtinExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => disabledExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(disabledExtensionsPath, 'disabled-extensions.json'))
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => linkedExtensionsPath)
+
+  const extensions = await ExtensionManagement.getExtensions()
+
+  expect(extensions).toHaveLength(1)
+  expect(extensions[0]).toMatchObject({
+    disabled: false,
+    id: extensionId,
+    isBuiltin: true,
+    name: 'Linked Extension',
+    path: join(linkedExtensionsPath, extensionId),
+    symlink: linkedExtensionPath,
+  })
 })
 
 test('disable', async () => {

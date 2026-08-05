@@ -20,13 +20,17 @@ const readSymlinks = (absolutePaths: any): any => {
   return Promise.all(absolutePaths.map(readSymlink))
 }
 
+const isExtensionFolder = (dirent: any): any => {
+  return dirent.type === DirentType.Directory || dirent.type === DirentType.Symlink
+}
+
 export const getExtensionManifests = async (path: any): Promise<any> => {
   try {
     if (!path) {
       return []
     }
     const dirents = await FileSystem.readDirWithFileTypes(path)
-    const folderNames = dirents.filter((dirent: any) => dirent.type === DirentType.Directory).map((dirent: any) => dirent.name)
+    const folderNames = dirents.filter(isExtensionFolder).map((dirent: any) => dirent.name)
     const absolutePaths = ToAbsolutePaths.toAbsolutePaths(path, folderNames)
     const manifests = await Promise.all(absolutePaths.map(ExtensionManifest.get))
     const symlinks = await readSymlinks(absolutePaths)
