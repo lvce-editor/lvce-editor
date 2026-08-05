@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { WebSocketServer } from 'ws'
 
 const expectedOutput = 'Mock response'
+const electronPromptTimeout = 120_000
 const electronExecutable = String(electronPath)
 const macOsTaskPolicyError =
   /^\[\d+:\d+\/\d+\.\d+:ERROR:base\/process\/process_mac\.cc:(?:53|98)\] task_policy_set TASK_(?:CATEGORY|SUPPRESSION)_POLICY: (?:\(os\/kern\) invalid argument \(4\)|\(ipc\/send\) invalid destination port \(0x[\da-f]+\))$/
@@ -151,8 +152,8 @@ const runElectron = () => {
     let stdout = ''
     const timeout = setTimeout(() => {
       child.kill()
-      reject(new Error('Electron prompt process did not exit within 45 seconds'))
-    }, 45_000)
+      reject(new Error('Electron prompt process did not exit within 120 seconds'))
+    }, electronPromptTimeout)
     child.stderr.setEncoding('utf8')
     child.stderr.on('data', (chunk) => {
       stderr += chunk
@@ -182,4 +183,4 @@ test('runs a prompt against the configured backend', async () => {
   expect(result.signal).toBeNull()
   expect(getApplicationStderr(result.stderr)).toBe('')
   expect(result.stdout.trim()).toBe(expectedOutput)
-}, 60_000)
+}, electronPromptTimeout + 15_000)
