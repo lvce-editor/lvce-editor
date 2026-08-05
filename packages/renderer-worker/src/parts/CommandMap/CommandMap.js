@@ -497,6 +497,7 @@ export const commandMap = {
   'WebView.compatRendererProcessInvokeAndTransfer': lazy('WebView.compatRendererProcessInvokeAndTransfer'),
   'WebView.compatSharedProcessInvoke': lazy('WebView.compatSharedProcessInvoke'),
   'WebView.createWebViewWorkerRpc2': lazy('WebView.createWebViewWorkerRpc2'),
+  'WebView.getEditorProviders': lazy('WebView.getEditorProviders'),
   'WebView.getSavedState': lazy('WebView.getSavedState'),
   'WebView.getSecret': lazy('WebView.getSecret'),
   'WebView.getRpcInfo': lazy('WebView.getRpcInfo'),
