@@ -5,6 +5,7 @@ import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
 import * as ChatMessageParsingWorker from '../ChatMessageParsingWorker/ChatMessageParsingWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as DiffWorker from '../DiffWorker/DiffWorker.js'
+import * as DragAndDropWorker from '../DragAndDropWorker/DragAndDropWorker.js'
 import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
@@ -209,6 +210,12 @@ export const sendMessagePortToDiffWorker = async (port, initialCommand, rpcId) =
   Assert.object(port)
   Assert.string(initialCommand)
   await DiffWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToDragAndDropWorker = async (port, initialCommand) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await DragAndDropWorker.invokeAndTransfer(initialCommand, port)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
