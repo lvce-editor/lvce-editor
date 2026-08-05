@@ -18,6 +18,10 @@ export const readMemoryText = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.readMemoryText')
 }
 
+export const readMemoryImage = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.readMemoryImage')
+}
+
 export const disableMemoryClipBoard = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.disableMemoryClipBoard')
 }
@@ -40,7 +44,7 @@ export const getSelectionText = async () => {
 
 export const writeImage = async (blob) => {
   try {
-    return await RendererProcess.invoke('ClipBoard.writeImage', blob)
+    return await ClipBoardWorker.invoke('ClipBoard.writeImage', blob)
   } catch (error) {
     throw new VError(error, 'Failed to write image to clipboard')
   }

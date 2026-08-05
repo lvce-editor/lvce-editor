@@ -34,6 +34,7 @@ export const commandMap = {
   'ClipBoard.enableMemoryClipBoard': lazy('ClipBoard.enableMemoryClipBoard'),
   'ClipBoard.execCopy': lazy('ClipBoard.execCopy'),
   'ClipBoard.hotReload': lazy('ClipBoard.hotReload'),
+  'ClipBoard.readMemoryImage': lazy('ClipBoard.readMemoryImage'),
   'ClipBoard.readMemoryText': lazy('ClipBoard.readMemoryText'),
   'ClipBoard.readNativeFiles': lazy('ClipBoard.readNativeFiles'),
   'ClipBoard.readText': lazy('ClipBoard.readText'),
