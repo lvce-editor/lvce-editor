@@ -80,14 +80,14 @@ export const unwatchAll = () => {
   throw new Error('not implemented')
 }
 
-export const getBlobUrl = async (uri) => {
+export const getBlobUrl = async (uri, type = '') => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   if (fileSystem.getBlobSrc) {
-    return fileSystem.getBlobSrc(uri)
+    return fileSystem.getBlobSrc(uri, type)
   }
   if (fileSystem.getBlobUrl) {
-    return fileSystem.getBlobUrl(uri)
+    return fileSystem.getBlobUrl(uri, type)
   }
   throw new Error(`Filesystem doesn't support the getBlobUrl function`)
 }
