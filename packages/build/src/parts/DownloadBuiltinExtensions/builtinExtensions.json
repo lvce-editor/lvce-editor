@@ -50,7 +50,7 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "created": "2026-08-01"
   },
   {
@@ -62,7 +62,7 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "created": "2026-08-03"
   },
   {
@@ -134,7 +134,7 @@
   {
     "name": "builtin.language-basics-elm",
     "repository": "github.com/lvce-editor/language-basics-elm",
-    "version": "0.12.2",
+    "version": "0.13.0",
     "created": "2022-10-05"
   },
   {
@@ -182,7 +182,7 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.5.1",
+    "version": "2.6.0",
     "created": "2024-09-07"
   },
   {
@@ -194,7 +194,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.13.0",
+    "version": "1.14.0",
     "created": "2022-06-16"
   },
   {
@@ -386,7 +386,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.19.0",
+    "version": "2.20.0",
     "created": "2022-06-16"
   },
   {
@@ -410,7 +410,7 @@
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "1.11.0",
+    "version": "1.12.0",
     "created": "2022-10-06"
   },
   {
@@ -428,7 +428,7 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.12.0",
+    "version": "0.13.0",
     "created": "2022-06-16"
   },
   {
