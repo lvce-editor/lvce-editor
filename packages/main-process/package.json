@@ -32,6 +32,6 @@
   "devDependencies": {
     "@jest/globals": "^30.4.1",
     "electron": "43.1.0",
-    "ws": "^8.21.2"
+    "ws": "^8.21.3"
   }
 }
