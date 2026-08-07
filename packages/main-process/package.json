@@ -27,11 +27,11 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@lvce-editor/main-process": "^6.20.0"
+    "@lvce-editor/main-process": "^6.21.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",
     "electron": "43.1.0",
-    "ws": "^8.21.1"
+    "ws": "^8.21.2"
   }
 }
