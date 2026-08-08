@@ -10,6 +10,9 @@ jest.unstable_mockModule('../src/parts/ExtensionSearchViewWorker/ExtensionSearch
     if (command === 'SearchExtensions.render3') {
       return renderCommands
     }
+    if (command === 'SearchExtensions.getCommandIds') {
+      return []
+    }
     return undefined
   }),
   restart: jest.fn(),
@@ -72,4 +75,25 @@ test('forwards the parent view uid to the extension search worker', async () => 
     '/test-assets',
     42,
   )
+})
+
+test('handleExtensionsChanged refreshes and renders the extension search view', async () => {
+  const state = ViewletExtensions.create(1, 'extensions://', 10, 20, 800, 600, [], 42)
+
+  const result = await ViewletExtensions.handleExtensionsChanged(state, 'builtin.language-features-typescript', true)
+
+  expect(ExtensionSearchViewWorker.invoke).toHaveBeenNthCalledWith(1, 'SearchExtensions.handleExtensionsChanged', 1)
+  expect(ExtensionSearchViewWorker.invoke).toHaveBeenNthCalledWith(2, 'SearchExtensions.diff2', 1)
+  expect(ExtensionSearchViewWorker.invoke).toHaveBeenNthCalledWith(3, 'SearchExtensions.render3', 1, [])
+  expect(result).toEqual({
+    ...state,
+    commands: [],
+    title: 'Extensions: Installed',
+  })
+})
+
+test('getCommands includes the extension change handler', async () => {
+  await ViewletExtensions.getCommands()
+
+  expect(typeof ViewletExtensions.Commands['handleExtensionsChanged']).toBe('function')
 })

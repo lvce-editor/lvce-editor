@@ -652,6 +652,7 @@
           { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }, { "source": "state", "name": "parentUid" }
         ] },
         "loadContent": { "name": "SearchExtensions.loadContent", "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "savedState" }] },
+        "handleExtensionsChanged": { "name": "SearchExtensions.handleExtensionsChanged", "parameters": [{ "source": "state", "name": "id" }] },
         "diff": { "name": "SearchExtensions.diff2", "parameters": [{ "source": "state", "name": "id" }] },
         "render": { "name": "SearchExtensions.render3", "parameters": [{ "source": "state", "name": "id" }, { "source": "result", "name": "diff" }] },
         "saveState": { "name": "SearchExtensions.saveState", "parameters": [{ "source": "state", "name": "id" }] },
@@ -662,6 +663,7 @@
         "getMenuEntries": { "name": "SearchExtensions.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "renderEventListeners": { "name": "SearchExtensions.renderEventListeners", "parameters": [] }
       },
+      "extraCommands": [{ "name": "handleExtensionsChanged", "method": "handleExtensionsChanged" }],
       "title": "Extensions: Installed",
       "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
     }
