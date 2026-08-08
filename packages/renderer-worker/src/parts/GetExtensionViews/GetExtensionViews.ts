@@ -108,7 +108,8 @@ export const findExtensionView = (views: readonly ExtensionView[], idOrUri: stri
   if (exactMatch) {
     return exactMatch
   }
-  return views.find((view) => view.type === 'preview' && view.selector?.some((selector) => idOrUri.endsWith(selector)))
+  const normalizedUri = idOrUri.toLowerCase()
+  return views.find((view) => view.type === 'preview' && view.selector?.some((selector) => normalizedUri.endsWith(selector.toLowerCase())))
 }
 
 export const getExtensionView = async (idOrUri: string): Promise<ExtensionView | undefined> => {

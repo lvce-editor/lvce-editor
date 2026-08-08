@@ -17,6 +17,14 @@ const views = [
     selector: ['.test'],
     title: 'Testing',
   },
+  {
+    extensionId: 'builtin.video-preview',
+    icon: '',
+    id: 'builtin.video-preview',
+    selector: ['.mp4'],
+    title: 'Video Preview',
+    type: 'preview',
+  },
 ]
 
 test('findExtensionView finds a view by id', () => {
@@ -25,6 +33,10 @@ test('findExtensionView finds a view by id', () => {
 
 test('findExtensionView finds preview views by document selector', () => {
   expect(findExtensionView(views, 'file:///workspace/image.png')?.id).toBe('builtin.media-preview')
+})
+
+test('findExtensionView matches document selectors case-insensitively', () => {
+  expect(findExtensionView(views, 'file:///workspace/H264-UPPER.MP4')?.id).toBe('builtin.video-preview')
 })
 
 test('findExtensionView does not use sidebar view selectors for documents', () => {
