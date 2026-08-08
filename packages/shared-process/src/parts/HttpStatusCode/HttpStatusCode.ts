@@ -1,7 +1,9 @@
 export const NotFound = 404
 export const Ok = 200
+export const PartialContent = 206
 export const Forbidden = 403
 export const UnprocessableContent = 422
 export const ServerError = 500
 export const NotModifed = 304
 export const MultipleChoices = 300
+export const RangeNotSatisfiable = 416
