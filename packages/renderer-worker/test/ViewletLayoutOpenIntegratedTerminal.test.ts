@@ -78,3 +78,41 @@ test('adds a focused terminal without reselecting the active terminal panel view
   expect(panelWorkerInvocations).toEqual([])
   expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', 'file:///workspace/folder')
 })
+
+test.each([
+  ['openProblems', 'Problems', 'Problems.handleFilterInput', 'typescript'],
+  ['openOutput', 'Output', 'Output.selectChannel', 'Window'],
+  ['openDebugConsole', 'Debug Console', 'ViewletDebugConsole.handleInput', 'process.version'],
+] as const)('opens the requested panel view with its initial option: %s', async (method, panelView, command, value) => {
+  const state = {
+    ...ViewletLayout.create(1),
+    panelView: 'Terminals',
+    panelVisible: true,
+  }
+
+  const result = await ViewletLayout[method](state, value)
+
+  expect(result.newState.panelView).toBe(panelView)
+  expect(panelWorkerInvocations).toEqual([
+    ['Panel.toggleView', 77, panelView, ''],
+    ['Panel.diff2', 77],
+  ])
+  expect(commandExecute).toHaveBeenCalledWith(command, value)
+})
+
+test.each([
+  ['openProblems', 'Problems'],
+  ['openOutput', 'Output'],
+  ['openDebugConsole', 'Debug Console'],
+] as const)('preserves the requested panel view state when no option is supplied: %s', async (method, panelView) => {
+  const state = {
+    ...ViewletLayout.create(1),
+    panelView: 'Terminals',
+    panelVisible: true,
+  }
+
+  const result = await ViewletLayout[method](state)
+
+  expect(result.newState.panelView).toBe(panelView)
+  expect(commandExecute).not.toHaveBeenCalled()
+})
