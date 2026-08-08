@@ -386,7 +386,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.20.0",
+    "version": "2.20.1",
     "created": "2022-06-16"
   },
   {
