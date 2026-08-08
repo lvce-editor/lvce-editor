@@ -20,4 +20,8 @@ export const loadContent = (state) => {
   }
 }
 
+export const getCommands = () => ({})
+
+export const getKeyBindings = () => []
+
 export const dispose = () => {}

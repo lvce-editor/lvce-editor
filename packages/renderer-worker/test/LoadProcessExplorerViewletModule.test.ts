@@ -10,6 +10,8 @@ test('loads unsupported viewlet on web', async () => {
     ...state,
     message: 'Process Explorer is not supported on web.',
   })
+  expect(module.getCommands()).toEqual({})
+  expect(module.getKeyBindings()).toEqual([])
 })
 
 test.each([PlatformType.Electron, PlatformType.Remote])('loads worker-backed viewlet on platform %s', async (platform) => {
