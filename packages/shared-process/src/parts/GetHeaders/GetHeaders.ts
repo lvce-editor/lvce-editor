@@ -15,6 +15,9 @@ export const getHeaders = async (absolutePath: any, pathName: any, etag: any, ur
     [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
   }
+  if (pathName.startsWith('/remote')) {
+    headers[HttpHeader.AcceptRanges] = 'bytes'
+  }
   const extraHeaders = await GetExtraHeaders.getExtraHeaders({
     absolutePath,
     etag,
