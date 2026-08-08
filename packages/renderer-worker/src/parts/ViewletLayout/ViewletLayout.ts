@@ -820,6 +820,30 @@ export const openIntegratedTerminal = async (state: LayoutState, cwd: string): P
   return showPanel(state, ViewletModuleId.Terminals, cwd)
 }
 
+export const openProblems = async (state: LayoutState, filterValue?: string): Promise<LayoutStateResult> => {
+  const result = await showPanel(state, ViewletModuleId.Problems)
+  if (filterValue !== undefined) {
+    await Command.execute('Problems.handleFilterInput', filterValue)
+  }
+  return result
+}
+
+export const openOutput = async (state: LayoutState, channelId?: string): Promise<LayoutStateResult> => {
+  const result = await showPanel(state, ViewletModuleId.Output)
+  if (channelId !== undefined) {
+    await Command.execute('Output.selectChannel', channelId)
+  }
+  return result
+}
+
+export const openDebugConsole = async (state: LayoutState, inputValue?: string): Promise<LayoutStateResult> => {
+  const result = await showPanel(state, ViewletModuleId.DebugConsole)
+  if (inputValue !== undefined) {
+    await Command.execute('ViewletDebugConsole.handleInput', inputValue)
+  }
+  return result
+}
+
 export const hidePanel = (state: LayoutState) => {
   return hide(state, LayoutModules.Panel)
 }
