@@ -1047,7 +1047,7 @@ export const setActionsDom = (
   if (state.previewId !== childUid) {
     return {
       commands: [],
-      handled: false,
+      handled: true,
       renderParent: false,
       statePatch: {},
     }

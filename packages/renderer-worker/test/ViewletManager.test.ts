@@ -565,6 +565,36 @@ test('extension view render keeps the parent actions state in sync', () => {
   expect(ViewletStates.getInstance(2).renderedState).toEqual(parentRenderedState)
 })
 
+test('repeated stale extension action renders do not send unsupported commands to the renderer process', () => {
+  const parentState = {
+    ...ViewletLayout.create(3),
+    previewId: 8,
+  }
+  ViewletStates.set(3, {
+    factory: ViewletLayout,
+    renderedState: parentState,
+    state: parentState,
+  })
+
+  const commands = Array.from({ length: 100 }, (_, index) => {
+    const oldState = {
+      actionsDom: [`old-actions-${index}`],
+      commands: [],
+      dom: [],
+      kind: 'virtualDom',
+      patches: [],
+      title: 'Testing',
+    }
+    const newState = {
+      ...oldState,
+      actionsDom: [`new-actions-${index}`],
+    }
+    return ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 7, 3)
+  }).flat()
+
+  expect(commands).toEqual([])
+})
+
 test('extension view render creates preview actions and adds them to the layout', () => {
   const parentState = {
     ...ViewletLayout.create(2),
