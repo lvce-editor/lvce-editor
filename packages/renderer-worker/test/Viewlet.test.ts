@@ -78,6 +78,22 @@ test('getTitle - provider has no getTitle function', () => {
   expect(Viewlet.getTitle(1)).toBeUndefined()
 })
 
+test('executeViewletCommand ignores a late blur after the viewlet was disposed', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+  await Viewlet.executeViewletCommand(2, 'handleBlur')
+
+  expect(warn).not.toHaveBeenCalled()
+})
+
+test('executeViewletCommand warns when another command targets a missing viewlet', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+  await Viewlet.executeViewletCommand(2, 'handleInput')
+
+  expect(warn).toHaveBeenCalledWith('cannot execute handleInput instance not found 2')
+})
+
 test('getTitle', async () => {
   const getTitle = jest.fn(async (_uid = 0) => 'Test Title')
   const state = { uid: 1 }

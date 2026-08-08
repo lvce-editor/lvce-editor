@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
@@ -517,7 +518,9 @@ export const getFocusCommands = async (id) => {
 export const executeViewletCommand = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
-    Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
+    if (fnName !== DomEventListenerFunctions.HandleBlur) {
+      Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
+    }
     return
   }
   const fn = await getFn(instance.factory, fnName)
