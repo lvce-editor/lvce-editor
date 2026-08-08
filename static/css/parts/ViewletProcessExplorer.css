@@ -49,3 +49,8 @@
   color: var(--ErrorForeground, #f48771);
   user-select: text;
 }
+
+.ProcessExplorerMessage {
+  padding: 8px;
+  user-select: text;
+}
