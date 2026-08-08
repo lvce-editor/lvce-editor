@@ -10,7 +10,6 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as GetServerErrorResponse from '../GetServerErrorResponse/GetServerErrorResponse.ts'
 import * as GetTypeScriptSyntaxErrorResponse from '../GetTypeScriptSyntaxErrorResponse/GetTypeScriptSyntaxErrorResponse.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
-import * as IsDocumentNavigation from '../IsDocumentNavigation/IsDocumentNavigation.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as IsTypeScriptSyntaxError from '../IsTypeScriptSyntaxError/IsTypeScriptSyntaxError.ts'
 import * as Logger from '../Logger/Logger.ts'
@@ -25,8 +24,6 @@ export const resolveElectronFileUri = (url: string): string => {
 // maybe send webview requests directly to preview process
 export const getElectronFileResponse = async (url: any, request: any): Promise<any> => {
   try {
-    const isRootDocument = url === '/' || url.startsWith('/?')
-    const isSecretDocument = isRootDocument && IsDocumentNavigation.isDocumentNavigation(request)
     const pathName = GetElectronFileResponseRelativePath.getElectronFileResponseRelativePath(url)
     let absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
     let etag
@@ -45,7 +42,7 @@ export const getElectronFileResponse = async (url: any, request: any): Promise<a
         preparedContent = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
         size = preparedContent.byteLength
       }
-      if (!isSecretDocument && request.headers[HttpHeader.IfNotMatch] === etag) {
+      if (request.headers[HttpHeader.IfNotMatch] === etag) {
         const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url, size)
         return GetNotModifiedResponse.getNotModifiedResponse(headers)
       }
@@ -54,7 +51,7 @@ export const getElectronFileResponse = async (url: any, request: any): Promise<a
     const size = content.byteLength
     const headers = await GetHeaders.getHeaders(absolutePath, pathName, etag, url, size)
 
-    headers[HttpHeader.CacheControl] = isSecretDocument ? 'no-store' : 'public, max-age=0, must-revalidate'
+    headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     return GetContentResponse.getContentResponse(content, headers)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {

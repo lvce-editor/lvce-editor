@@ -3,19 +3,19 @@ import * as GetCustomPathsConfig from '../GetCustomPathsConfig/GetCustomPathsCon
 import * as Platform from '../Platform/Platform.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 
-export const addCustomPathsToIndexHtml = async (content: any, additionalConfig: Readonly<Record<string, unknown>> = {}): Promise<any> => {
-  const config = Platform.isProduction
-    ? {}
-    : GetCustomPathsConfig.getCustomPathsConfig(
-        ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(await Preferences.getUserPreferences()),
-      )
+export const addCustomPathsToIndexHtml = async (content: any): Promise<any> => {
+  if (Platform.isProduction) {
+    return content
+  }
+  const preferences = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(await Preferences.getUserPreferences())
+  const config = GetCustomPathsConfig.getCustomPathsConfig(preferences)
   let newContent = content
-  if ('rendererProcessPath' in config && config.rendererProcessPath) {
+  if (config.rendererProcessPath) {
     newContent = newContent
       .toString()
       .replace('/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js', config.rendererProcessPath)
   }
-  const stringifiedConfig = JSON.stringify({ ...config, ...additionalConfig }, null, 2)
+  const stringifiedConfig = JSON.stringify(config, null, 2)
   newContent = newContent.toString().replace(
     '</title>',
     `</title>

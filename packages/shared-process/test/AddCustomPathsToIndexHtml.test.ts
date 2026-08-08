@@ -39,14 +39,3 @@ test('addCustomPathsToIndexHtml - excludes custom worker paths when disabled fro
   expect(result).not.toContain('editorWorkerUrl')
   expect(result).not.toContain('extensionHostWorkerUrl')
 })
-
-test('addCustomPathsToIndexHtml - injects the page websocket issuer', async () => {
-  process.argv = [...originalArgv, '--disable-custom-worker-paths']
-  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
-
-  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml('<title>Test</title>', {
-    webSocketIssuer: 'secret-issuer',
-  })
-
-  expect(result).toContain(`"webSocketIssuer": "secret-issuer"`)
-})

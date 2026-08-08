@@ -10,7 +10,6 @@ jest.unstable_mockModule('../src/parts/HandleWebSocketModule/HandleWebSocketModu
 
 const HandleWebSocket = await import('../src/parts/HandleWebSocket/HandleWebSocket.js')
 const HandleWebSocketModule = await import('../src/parts/HandleWebSocketModule/HandleWebSocketModule.js')
-const WebSocketCapabilityRegistry = await import('../src/parts/WebSocketCapabilityRegistry/WebSocketCapabilityRegistry.js')
 
 const createSocket = (): any => {
   let output = ''
@@ -27,93 +26,62 @@ const createSocket = (): any => {
   }
 }
 
-const createMessage = (token: string, url = '/websocket/capability'): any => {
-  return {
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
+test('handleWebSocket - rejects disallowed origin before upgrade', async () => {
+  const socket = createSocket()
+  const message = {
+    headers: {
+      host: 'localhost:3000',
+      origin: 'https://evil.example.com',
+    },
+    url: '/websocket/process-explorer',
+  }
+
+  await HandleWebSocket.handleWebSocket(socket, message)
+
+  expect(socket.output).toContain('HTTP/1.1 403 Forbidden')
+  expect(socket.output).toContain('Connection: close')
+  expect(socket.output).toContain('Content-Length: 0')
+  expect(socket.end).toHaveBeenCalledTimes(1)
+  expect(socket.pause).not.toHaveBeenCalled()
+  expect(HandleWebSocketModule.load).not.toHaveBeenCalled()
+  expect(moduleHandleWebSocket).not.toHaveBeenCalled()
+})
+
+test('handleWebSocket - allows process explorer upgrade from same origin', async () => {
+  const socket = createSocket()
+  const message = {
     headers: {
       host: 'localhost:3000',
       origin: 'http://localhost:3000',
-      'sec-websocket-protocol': `lvce-rpc, lvce-capability.${token}`,
     },
-    url,
+    url: '/websocket/process-explorer',
   }
-}
-
-beforeEach(() => {
-  jest.clearAllMocks()
-  WebSocketCapabilityRegistry.clear()
-})
-
-test('rejects disallowed origin before consuming a capability', async () => {
-  const socket = createSocket()
-  const token = WebSocketCapabilityRegistry.create('process-explorer')
-  const message = createMessage(token)
-  message.headers.origin = 'https://evil.example.com'
-
-  await HandleWebSocket.handleWebSocket(socket, message)
-
-  expect(socket.output).toContain('HTTP/1.1 403 Forbidden')
-  expect(socket.pause).not.toHaveBeenCalled()
-  expect(HandleWebSocketModule.load).not.toHaveBeenCalled()
-  expect(WebSocketCapabilityRegistry.consume(token)).toBeDefined()
-})
-
-test.each([
-  'clipboard-process',
-  'extension-host-helper-process',
-  'file-system-process',
-  'process-explorer',
-  'pty-host',
-  'search-process',
-  'shared-process',
-  'terminal-process',
-])('rejects raw target-selectable websocket route %s', async (target) => {
-  const socket = createSocket()
-  const token = WebSocketCapabilityRegistry.create('file-system-process')
-
-  await HandleWebSocket.handleWebSocket(socket, createMessage(token, `/websocket/${target}`))
-
-  expect(socket.output).toContain('HTTP/1.1 403 Forbidden')
-  expect(HandleWebSocketModule.load).not.toHaveBeenCalled()
-})
-
-test('rejects malformed websocket capability protocols', async () => {
-  const token = WebSocketCapabilityRegistry.create('shared-process')
-  const message = createMessage(token)
-  message.headers['sec-websocket-protocol'] = `lvce-capability.${token}`
-  const socket = createSocket()
-
-  await HandleWebSocket.handleWebSocket(socket, message)
-
-  expect(socket.output).toContain('HTTP/1.1 403 Forbidden')
-  expect(HandleWebSocketModule.load).not.toHaveBeenCalled()
-})
-
-test('consumes a capability and routes only to its stored target', async () => {
-  const socket = createSocket()
-  const token = WebSocketCapabilityRegistry.create('process-explorer')
-  const message = createMessage(token)
 
   await HandleWebSocket.handleWebSocket(socket, message)
 
   expect(socket.pause).toHaveBeenCalledTimes(1)
   expect(HandleWebSocketModule.load).toHaveBeenCalledWith('process-explorer')
-  expect(message.headers['sec-websocket-protocol']).toBe('lvce-rpc')
-  expect(moduleHandleWebSocket).toHaveBeenCalledWith(
-    message,
-    socket,
-    'process-explorer',
-    expect.objectContaining({ target: 'process-explorer' }),
-  )
+  expect(moduleHandleWebSocket).toHaveBeenCalledWith(message, socket, 'process-explorer')
 })
 
-test('rejects missing, unknown, and replayed capabilities', async () => {
-  const token = WebSocketCapabilityRegistry.create('shared-process')
-  await HandleWebSocket.handleWebSocket(createSocket(), createMessage(token))
-
-  for (const invalidToken of ['', 'unknown', token]) {
-    const socket = createSocket()
-    await HandleWebSocket.handleWebSocket(socket, createMessage(invalidToken))
-    expect(socket.output).toContain('HTTP/1.1 403 Forbidden')
+test('handleWebSocket - allows shared process upgrade from forwarded origin', async () => {
+  const socket = createSocket()
+  const message = {
+    headers: {
+      host: '127.0.0.1:3000',
+      origin: 'https://example-codespace-3000.app.github.dev',
+      'x-forwarded-host': 'example-codespace-3000.app.github.dev',
+    },
+    url: '/websocket/shared-process',
   }
-  expect(moduleHandleWebSocket).toHaveBeenCalledTimes(1)
+
+  await HandleWebSocket.handleWebSocket(socket, message)
+
+  expect(socket.pause).toHaveBeenCalledTimes(1)
+  expect(HandleWebSocketModule.load).toHaveBeenCalledWith('shared-process')
+  expect(moduleHandleWebSocket).toHaveBeenCalledWith(message, socket, 'shared-process')
 })

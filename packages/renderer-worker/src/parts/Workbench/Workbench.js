@@ -42,7 +42,6 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleInternal.js'
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as WatchFilesForHotReload from '../WatchFilesForHotReload/WatchFilesForHotReload.js'
-import * as WebSocketCapability from '../WebSocketCapability/WebSocketCapability.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as WorkspaceFileWatcher from '../WorkspaceFileWatcher/WorkspaceFileWatcher.js'
 
@@ -123,7 +122,6 @@ export const startup = async (platform, assetDir) => {
   await RendererProcess.listen()
   const initData = await InitData.getInitData()
   Location.initialize(initData.Location.href)
-  WebSocketCapability.initialize(initData.Config?.webSocketIssuer)
   if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
   }

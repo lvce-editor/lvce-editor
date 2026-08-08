@@ -1,7 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
-  jest.clearAllMocks()
+  jest.resetAllMocks()
 })
 
 jest.unstable_mockModule('../src/parts/GetElectronFileResponseContent/GetElectronFileResponseContent', () => {
@@ -21,14 +21,6 @@ jest.unstable_mockModule('../src/parts/Logger/Logger', () => {
     error: jest.fn(),
   }
 })
-
-jest.unstable_mockModule('../src/parts/GetPathEtag/GetPathEtag', () => ({
-  getPathEtag: jest.fn(async () => ({ etag: 'etag', stats: { size: 4 } })),
-}))
-
-jest.unstable_mockModule('../src/parts/GetHeaders/GetHeaders', () => ({
-  getHeaders: jest.fn(async () => ({})),
-}))
 
 const GetElectronFileResponse = await import('../src/parts/GetElectronFileResponse/GetElectronFileResponse.js')
 const GetElectronFileResponseContent = await import('../src/parts/GetElectronFileResponseContent/GetElectronFileResponseContent.js')
@@ -63,32 +55,4 @@ test('getElectronFileResponse - other error', async () => {
       statusText: 'server-error',
     },
   })
-})
-
-test('getElectronFileResponse - secret document is never cached or returned as 304', async () => {
-  jest.mocked(GetElectronFileResponseContent.getElectronFileResponseContent).mockResolvedValue(Buffer.from('html'))
-
-  const response = await GetElectronFileResponse.getElectronFileResponse('/', {
-    headers: {
-      'if-none-match': 'etag',
-      'sec-fetch-dest': 'document',
-    },
-  })
-
-  expect(response.init.status).toBe(200)
-  expect(response.init.headers['Cache-Control']).toBe('no-store')
-})
-
-test('getElectronFileResponse - navigation without a fetch destination is never cached or returned as 304', async () => {
-  jest.mocked(GetElectronFileResponseContent.getElectronFileResponseContent).mockResolvedValue(Buffer.from('html'))
-
-  const response = await GetElectronFileResponse.getElectronFileResponse('/', {
-    headers: {
-      'if-none-match': 'etag',
-      'sec-fetch-mode': 'navigate',
-    },
-  })
-
-  expect(response.init.status).toBe(200)
-  expect(response.init.headers['Cache-Control']).toBe('no-store')
 })
