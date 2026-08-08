@@ -26,10 +26,18 @@ const getColorThemeJson = async (preferences: any): Promise<any> => {
   }
 }
 
-export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeight, screenWidth }: any): Promise<any> => {
+export const getAppWindowOptions = async ({
+  floatingExtensionViewId,
+  floatingWindowMode,
+  preferences,
+  preloadUrl,
+  screenHeight,
+  screenWidth,
+}: any): Promise<any> => {
   const colorThemeJson = await getColorThemeJson(preferences)
   const colors = colorThemeJson.colors && typeof colorThemeJson.colors === 'object' ? colorThemeJson.colors : {}
   const background = getColor(colors, ['MainBackground'], fallbackBackground)
+  const isFloatingWindow = floatingWindowMode === 'extensionView' && typeof floatingExtensionViewId === 'string'
   const titleBarBackground = getColor(colors, ['TitleBarActiveBackground', 'TitleBarBackground', 'MainBackground'], fallbackBackground)
   const titleBarSymbolColor = getColor(
     colors,
@@ -37,7 +45,7 @@ export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeigh
     fallbackSymbolColor,
   )
   const titleBarPreference = preferences['window.titleBarStyle']
-  const frame = titleBarPreference !== 'custom'
+  const frame = isFloatingWindow ? false : titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = preferences['window.zoomLevel']
   const zoomLevel = zoomLevelPreference
@@ -53,12 +61,14 @@ export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeigh
     : undefined
 
   return GetBrowserWindowOptions.getBrowserWindowOptions({
-    background,
+    alwaysOnTop: isFloatingWindow,
+    background: isFloatingWindow ? '#00000000' : background,
     frame,
     height: screenHeight,
     preloadUrl,
     titleBarOverlay,
     titleBarStyle,
+    transparent: isFloatingWindow,
     width: 800,
     x: screenWidth - 800,
     y: 0,

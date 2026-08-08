@@ -58,10 +58,21 @@ const getAppWindowUrl = async (url: unknown, parsedArgs: any, workingDirectory: 
   return parsedUrl.toString()
 }
 
+const getFloatingWindowMode = (url: string): { floatingWindowMode?: string; floatingExtensionViewId?: string } => {
+  const parsedUrl = new URL(url)
+  return {
+    floatingExtensionViewId: parsedUrl.searchParams.get('floatingExtensionViewId') || undefined,
+    floatingWindowMode: parsedUrl.searchParams.get('floatingWindowMode') || undefined,
+  }
+}
+
 export const createAppWindow = async ({ parsedArgs, preferences, preloadUrl, url = DefaultUrl.defaultUrl, workingDirectory }: any): Promise<any> => {
   const validatedUrl = await getAppWindowUrl(url, parsedArgs, workingDirectory)
   const { height, width } = await Screen.getBounds()
+  const { floatingExtensionViewId, floatingWindowMode } = getFloatingWindowMode(validatedUrl)
   const windowOptions = await GetAppWindowOptions.getAppWindowOptions({
+    floatingExtensionViewId,
+    floatingWindowMode,
     preferences,
     preloadUrl,
     screenHeight: height,

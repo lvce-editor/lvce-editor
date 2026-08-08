@@ -23,6 +23,7 @@ import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -108,6 +109,31 @@ const actions = [
   },
 ]
 
+const loadFloatingExtensionView = async (initData, isTestRun) => {
+  const url = new URL(initData.Location.href)
+  const floatingWindowMode = url.searchParams.get('floatingWindowMode')
+  if (floatingWindowMode !== 'extensionView') {
+    return false
+  }
+  const floatingExtensionViewId = url.searchParams.get('floatingExtensionViewId')
+  if (!floatingExtensionViewId) {
+    return false
+  }
+
+  const extensionView = await GetExtensionViews.getExtensionView(floatingExtensionViewId)
+  if (!extensionView) {
+    return false
+  }
+
+  const viewlet = ViewletManager.create(ViewletModule.load, ViewletModuleId.ExtensionView, 0, floatingExtensionViewId, 0, 0, 0, 0)
+  viewlet.uid = Id.create()
+  const commands = await ViewletManager.load({ ...viewlet, disposed: false }, false, false, { ...initData, restore: !isTestRun })
+
+  commands.push(['Viewlet.appendToBody', viewlet.uid])
+  await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  return true
+}
+
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
@@ -188,6 +214,11 @@ export const startup = async (platform, assetDir) => {
 
   await Focus.hydrate()
   await KeyBindings.hydrate()
+
+  if (await loadFloatingExtensionView(initData, isTestRun)) {
+    await CleanUpWorkersAfterLoad.cleanUpWorkersAfterLoad()
+    return
+  }
 
   LifeCycle.mark(LifeCyclePhase.Three)
 

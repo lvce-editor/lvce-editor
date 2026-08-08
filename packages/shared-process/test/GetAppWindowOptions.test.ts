@@ -20,6 +20,21 @@ const getOptions = (preferences: any): any => {
   })
 }
 
+const getFloatingOptions = (preferences: any, floatingExtensionViewId: string): any => {
+  return GetAppWindowOptions.getAppWindowOptions({
+    floatingExtensionViewId,
+    floatingWindowMode: 'extensionView',
+    preferences: {
+      'window.controlsOverlay.enabled': true,
+      'window.titleBarStyle': 'custom',
+      ...preferences,
+    },
+    preloadUrl: 'file:///preload.js',
+    screenHeight: 900,
+    screenWidth: 1600,
+  })
+}
+
 test('getAppWindowOptions - uses active color theme for native title bar overlay', async () => {
   // @ts-ignore
   ExtensionManagementColorTheme.getColorThemeJson.mockResolvedValue({
@@ -74,4 +89,40 @@ test('getAppWindowOptions - supports older title bar color keys', async () => {
       symbolColor: '#dddddd',
     },
   })
+})
+
+test('getAppWindowOptions - returns frameless transparent always on top options for floating extension view', async () => {
+  // @ts-ignore
+  ExtensionManagementColorTheme.getColorThemeJson.mockResolvedValue({
+    colors: {
+      MainBackground: '#101820',
+      TitleBarActiveBackground: '#303840',
+      TitleBarColor: '#90a8b0',
+    },
+  })
+
+  await expect(getFloatingOptions({ 'workbench.colorTheme': 'floating-theme' }, 'gpt-voice.views.default')).resolves.toMatchObject({
+    alwaysOnTop: true,
+    backgroundColor: '#00000000',
+    frame: false,
+    transparent: true,
+  })
+})
+
+test('getAppWindowOptions - ignores floating window mode without a view id', async () => {
+  // @ts-ignore
+  ExtensionManagementColorTheme.getColorThemeJson.mockResolvedValue({
+    colors: {
+      MainBackground: '#101820',
+      TitleBarActiveBackground: '#303840',
+      TitleBarColor: '#90a8b0',
+    },
+  })
+
+  const options = await getFloatingOptions({ 'window.titleBarStyle': 'custom', 'workbench.colorTheme': 'floating-theme' }, undefined as any)
+
+  expect(options.backgroundColor).toBe('#101820')
+  expect(options.frame).toBe(false)
+  expect(options.transparent).toBe(false)
+  expect(options.alwaysOnTop).toBe(false)
 })

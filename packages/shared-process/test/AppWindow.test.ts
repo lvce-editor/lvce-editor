@@ -28,6 +28,7 @@ jest.unstable_mockModule('../src/parts/Screen/Screen.js', () => ({
 
 const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 const ParentIpc = await import('../src/parts/MainProcess/MainProcess.js')
+const GetAppWindowOptions = await import('../src/parts/GetAppWindowOptions/GetAppWindowOptions.js')
 
 const otherPath = resolve('test', 'other')
 const workspacePath = resolve('test', 'workspace')
@@ -62,6 +63,32 @@ test.each(['https://example.com', 'file:///tmp/index.html', 'javascript:alert(1)
 test('openNew rejects non-string url', async () => {
   await expect(AppWindow.openNew({})).rejects.toThrow(new TypeError('Expected url to be a string'))
   expect(ParentIpc.invoke).not.toHaveBeenCalled()
+})
+
+test('createAppWindow passes floating window flags to getAppWindowOptions', async () => {
+  const floatingUrl = new URL('lvce-oss://-/')
+  floatingUrl.searchParams.set('floatingWindowMode', 'extensionView')
+  floatingUrl.searchParams.set('floatingExtensionViewId', 'gpt-voice.views.default')
+
+  await AppWindow.createAppWindow({
+    parsedArgs: [],
+    preferences: {},
+    preloadUrl: 'file:///preload.js',
+    url: floatingUrl.toString(),
+    workingDirectory: '',
+  })
+
+  expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
+  expect(GetAppWindowOptions.getAppWindowOptions).toHaveBeenCalledWith(
+    expect.objectContaining({
+      floatingExtensionViewId: 'gpt-voice.views.default',
+      floatingWindowMode: 'extensionView',
+      preferences: {},
+      preloadUrl: 'file:///preload.js',
+      screenHeight: 1080,
+      screenWidth: 1920,
+    }),
+  )
 })
 
 test('openNewWithUri', async () => {

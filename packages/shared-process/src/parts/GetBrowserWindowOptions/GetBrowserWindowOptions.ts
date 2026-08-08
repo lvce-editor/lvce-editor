@@ -5,9 +5,22 @@ import * as GetIcon from '../GetIcon/GetIcon.ts'
  *
  * @returns {any}
  */
-export const getBrowserWindowOptions = ({ background, frame, height, preloadUrl, titleBarOverlay, titleBarStyle, width, x, y }: any): any => {
+export const getBrowserWindowOptions = ({
+  alwaysOnTop,
+  background,
+  frame,
+  height,
+  preloadUrl,
+  titleBarOverlay,
+  titleBarStyle,
+  transparent,
+  width,
+  x,
+  y,
+}: any): any => {
   const icon = GetIcon.getIcon()
   return {
+    alwaysOnTop,
     autoHideMenuBar: true,
     backgroundColor: background,
     frame,
@@ -16,6 +29,7 @@ export const getBrowserWindowOptions = ({ background, frame, height, preloadUrl,
     show: false,
     titleBarOverlay,
     titleBarStyle,
+    transparent,
     webPreferences: {
       additionalArguments: [],
       contextIsolation: true,
