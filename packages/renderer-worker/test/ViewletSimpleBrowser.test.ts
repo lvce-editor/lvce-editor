@@ -138,6 +138,28 @@ test('handleWillNavigate', () => {
   })
 })
 
+test('setUrl applies the loading state before navigation completes', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockReturnValue({
+    then() {
+      throw new Error('navigation should not be awaited')
+    },
+  })
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+
+  const loadingState = await ViewletSimpleBrowser.setUrl(state, 'https://example.com')
+
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://example.com')
+  expect(loadingState).toMatchObject({
+    iframeSrc: 'https://example.com',
+    inputValue: 'https://example.com',
+    isLoading: true,
+  })
+  expect(ViewletSimpleBrowser.handleDidNavigate(loadingState, 'https://example.com')).toMatchObject({
+    isLoading: false,
+  })
+})
+
 test('handleDidNavigate', () => {
   const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
   // @ts-ignore
