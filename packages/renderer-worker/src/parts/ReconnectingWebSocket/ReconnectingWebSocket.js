@@ -1,36 +1,21 @@
-export const create = (url, args, getConnectionInfo) => {
+export const create = (url, args) => {
   const webSocket = new WebSocket(url, args)
   const listeners = new Map()
-  let closed = false
 
-  const scheduleReconnect = () => {
-    if (!closed) {
-      setTimeout(() => void reconnect(), 2000)
-    }
-  }
-
-  const reconnect = async () => {
-    if (closed) {
-      return
-    }
-    try {
-      const originalOnMessage = context.webSocket.onmessage
-      const connectionInfo = getConnectionInfo ? await getConnectionInfo() : { args, url }
-      context.webSocket = new WebSocket(connectionInfo.url, connectionInfo.protocols || connectionInfo.args)
-      context.webSocket.onmessage = originalOnMessage
-      context.webSocket.onclose = handleClose
-      for (const [type, typeListeners] of listeners) {
-        for (const listener of typeListeners) {
-          context.webSocket.addEventListener(type, listener)
-        }
+  const reconnect = () => {
+    const originalOnMessage = context.webSocket.onmessage
+    context.webSocket = new WebSocket(url, args)
+    context.webSocket.onmessage = originalOnMessage
+    context.webSocket.onclose = handleClose
+    for (const [type, typeListeners] of listeners) {
+      for (const listener of typeListeners) {
+        context.webSocket.addEventListener(type, listener)
       }
-    } catch {
-      scheduleReconnect()
     }
   }
 
   const handleClose = () => {
-    scheduleReconnect()
+    setTimeout(reconnect, 2000)
   }
 
   const context = {
@@ -60,10 +45,6 @@ export const create = (url, args, getConnectionInfo) => {
         listeners.delete(type)
       }
       this.webSocket.removeEventListener(type, listener)
-    },
-    close() {
-      closed = true
-      this.webSocket.close()
     },
   }
 

@@ -4,6 +4,4 @@ export const name = 'HandleMessagePortForExtensionHostHelperProcess'
 
 export const Commands = {
   handleMessagePortForExtensionHostHelperProcess: HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess,
-  handlePreloadedMessagePortForExtensionHostHelperProcess:
-    HandleMessagePortForExtensionHostHelperProcess.handlePreloadedMessagePortForExtensionHostHelperProcess,
 }

@@ -154,8 +154,6 @@ export const load = (moduleId: any): any => {
       return import('../Terminal/Terminal.ipc.ts')
     case ModuleId.TextDocument:
       return import('../TextDocument/TextDocument.ipc.ts')
-    case ModuleId.WebSocketCapability:
-      return import('../WebSocketCapability/WebSocketCapability.ipc.ts')
     case ModuleId.WebViewServer:
       return import('../WebViewServer/WebViewServer.ipc.ts')
     case ModuleId.Window:
