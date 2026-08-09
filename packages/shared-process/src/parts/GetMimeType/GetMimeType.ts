@@ -6,6 +6,8 @@ export const getMimeType = (fileExtension: any): any => {
       return MimeType.TextCss
     case '.html':
       return MimeType.TextHtml
+    case '.jpg':
+      return MimeType.ImageJpg
     case '.js':
     case '.mjs':
     case '.ts':
@@ -25,6 +27,8 @@ export const getMimeType = (fileExtension: any): any => {
       return MimeType.FontTtf
     case '.webm':
       return MimeType.VideoWebm
+    case '.webp':
+      return MimeType.ImageWebp
     default:
       console.warn(`[shared-process] unsupported file extension: ${fileExtension}`)
       return ''
