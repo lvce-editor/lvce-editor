@@ -683,35 +683,28 @@ export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<L
     if (state.previewVisible && state.previewUri === sideBarView) {
       return hidePreview(state)
     }
-    const sideBarResult = state.sideBarVisible ? await hideSideBar(state) : { newState: state, commands: [] }
     const previewState = getPoints(
       {
-        ...sideBarResult.newState,
-        previewWidth: sideBarResult.newState.windowWidth / 2,
+        ...state,
+        previewWidth: state.windowWidth / 2,
       },
-      sideBarResult.newState.sideBarLocation,
+      state.sideBarLocation,
     )
     const previewResult = await showPreview(previewState, sideBarView, ViewletModuleId.ExtensionView)
     const focusCommands = await Viewlet.getFocusCommands(sideBarView)
     return {
       newState: previewResult.newState,
-      commands: [...sideBarResult.commands, ...previewResult.commands, ...focusCommands],
+      commands: [...previewResult.commands, ...focusCommands],
     }
   }
-  const previewResult = await hidePreferredLocationPreview(state)
-  const activeState = previewResult.newState
-  if (activeState.sideBarVisible && activeState.sideBarView === sideBarView) {
-    const result = await hideSideBar(activeState)
-    return {
-      newState: result.newState,
-      commands: [...previewResult.commands, ...result.commands],
-    }
+  if (state.sideBarVisible && state.sideBarView === sideBarView) {
+    return hideSideBar(state)
   }
-  const result = await showSideBar(activeState, sideBarView)
+  const result = await showSideBar(state, sideBarView)
   const focusCommands = await Viewlet.getFocusCommands(sideBarView)
   return {
     newState: result.newState,
-    commands: [...previewResult.commands, ...result.commands, ...focusCommands],
+    commands: [...result.commands, ...focusCommands],
   }
 }
 
@@ -919,23 +912,6 @@ const getPreferredViewLocation = async (viewId: string): Promise<'preview' | 'si
   }
   const view = await GetExtensionViews.getExtensionView(viewId)
   return view?.preferredLocation === 'preview' ? 'preview' : 'sideBar'
-}
-
-const hidePreferredLocationPreview = async (state: LayoutState): Promise<LayoutStateResult> => {
-  if (!state.previewVisible || state.previewViewletId !== ViewletModuleId.ExtensionView) {
-    return {
-      newState: state,
-      commands: [],
-    }
-  }
-  const preferredLocation = await getPreferredViewLocation(state.previewUri)
-  if (preferredLocation !== 'preview') {
-    return {
-      newState: state,
-      commands: [],
-    }
-  }
-  return hidePreview(state)
 }
 
 export const showStatusBar = (state: LayoutState) => {

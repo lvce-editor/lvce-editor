@@ -652,7 +652,7 @@ test('openChat leaves an already open chat unfocused by default', async () => {
   expect(result).toEqual({ newState: state, commands: [] })
 })
 
-test('toggleSideBarView opens a preview-preferred extension view in the preview area', async () => {
+test('toggleSideBarView opens a preview-preferred extension view alongside the sidebar', async () => {
   mockActivityBarRender()
   // @ts-ignore
   GetExtensionViews.getExtensionView.mockResolvedValue({
@@ -667,6 +667,8 @@ test('toggleSideBarView opens a preview-preferred extension view in the preview 
     activityBarVisible: true,
     activityBarWidth: 48,
     sideBarId: 12,
+    sideBarMaxWidth: 1200,
+    sideBarMinWidth: 170,
     sideBarSashVisible: true,
     sideBarView: 'Explorer',
     sideBarVisible: true,
@@ -682,14 +684,14 @@ test('toggleSideBarView opens a preview-preferred extension view in the preview 
   const result = await ViewletLayout.toggleSideBarView(state, 'sample.views.preview')
 
   expect(result.newState).toMatchObject({
-    mainWidth: 552,
+    mainWidth: 312,
     previewLeft: 600,
     previewUri: 'sample.views.preview',
     previewViewletId: 'ExtensionView',
     previewVisible: true,
     previewWidth: 600,
-    sideBarSashVisible: false,
-    sideBarVisible: false,
+    sideBarSashVisible: true,
+    sideBarVisible: true,
   })
   expect(ViewletManager.load).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -728,7 +730,10 @@ test('toggleSideBarView hides the preview when its selected activity item is cli
   expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(11)
 })
 
-test('toggleSideBarView closes a preview-preferred extension view before opening a sidebar view', async () => {
+test.each([
+  ['opening Explorer', false, 'Explorer'],
+  ['switching from Explorer to Search', true, 'Search'],
+])('toggleSideBarView keeps a preview-preferred extension view open while %s', async (_label, sideBarVisible, sideBarView) => {
   mockActivityBarRender()
   // @ts-ignore
   GetExtensionViews.getExtensionView.mockImplementation(async (id) => {
@@ -751,29 +756,32 @@ test('toggleSideBarView closes a preview-preferred extension view before opening
     previewViewletId: 'ExtensionView',
     previewVisible: true,
     sideBarView: 'Explorer',
-    sideBarVisible: false,
+    sideBarVisible,
     statusBarHeight: 20,
     titleBarHeight: 0,
     windowHeight: 800,
     windowWidth: 1200,
   }
 
-  const result = await ViewletLayout.toggleSideBarView(state, 'Explorer')
+  const result = await ViewletLayout.toggleSideBarView(state, sideBarView)
 
   expect(result.newState).toMatchObject({
-    previewVisible: false,
-    sideBarView: 'Explorer',
+    previewVisible: true,
+    sideBarView,
     sideBarVisible: true,
   })
-  expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(11, 'ExtensionView')
-  expect(ViewletManager.load).toHaveBeenCalledWith(
-    expect.objectContaining({
-      id: 'SideBar',
-    }),
-    false,
-    true,
-    undefined,
-  )
+  expect(SaveState.saveViewletStateWithStorageId).not.toHaveBeenCalled()
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(11)
+  if (!sideBarVisible) {
+    expect(ViewletManager.load).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'SideBar',
+      }),
+      false,
+      true,
+      undefined,
+    )
+  }
 })
 
 test('layout allows the side bar to grow when the preview uses half the window', () => {
