@@ -55,6 +55,50 @@ test('getDiagnostics returns an empty array when there is no active editor', asy
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getSelections returns selections for the active editor', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.js',
+    },
+  })
+  const invoke = jest.fn(async () => new Uint32Array([1, 2, 3, 4]))
+
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke)).resolves.toEqual([1, 2, 3, 4])
+  expect(invoke).toHaveBeenCalledWith('Editor.getSelections2', 42)
+})
+
+test('getSelections returns an empty array when there is no active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke)).resolves.toEqual([])
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('setSelections updates selections for the active editor', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.js',
+    },
+  })
+
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [1, 2, 3, 4])
+
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'setSelections', new Uint32Array([1, 2, 3, 4]))
+})
+
+test('setSelections does nothing when there is no active editor', async () => {
+  await expect(GetActiveEditor.setSelectionsWithCommand(executeCommand, [1, 2, 3, 4])).resolves.toBeUndefined()
+  expect(executeCommand).not.toHaveBeenCalled()
+})
+
 test('updateAllDiagnostics refreshes diagnostics for every open editor', async () => {
   await GetActiveEditor.updateAllDiagnosticsWithCommand(executeCommand)
 

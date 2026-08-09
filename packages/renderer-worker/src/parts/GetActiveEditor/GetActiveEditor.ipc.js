@@ -6,6 +6,8 @@ export const Commands = {
   getActiveEditorId: GetActiveEditor.getActiveEditorId,
   getDiagnostics: GetActiveEditor.getDiagnostics,
   getOpenEditorUris: GetActiveEditor.getOpenEditorUris,
+  getSelections: GetActiveEditor.getSelections,
+  setSelections: GetActiveEditor.setSelections,
   updateAllDiagnostics: GetActiveEditor.updateAllDiagnostics,
   updateDiagnostics: GetActiveEditor.updateDiagnostics,
 }
