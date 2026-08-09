@@ -6,6 +6,8 @@ export const getMimeType = (fileExtension: any): any => {
       return MimeType.TextCss
     case '.html':
       return MimeType.TextHtml
+    case '.jpg':
+      return MimeType.ImageJpg
     case '.js':
     case '.mjs':
     case '.ts':
@@ -17,8 +19,6 @@ export const getMimeType = (fileExtension: any): any => {
       return MimeType.Markdown
     case '.mp3':
       return MimeType.AudioMpeg
-    case '.jpg':
-      return MimeType.ImageJpg
     case '.png':
       return MimeType.ImagePng
     case '.svg':
