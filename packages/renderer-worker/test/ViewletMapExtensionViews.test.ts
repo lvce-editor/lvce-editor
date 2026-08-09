@@ -2,6 +2,7 @@ import { expect, jest, test } from '@jest/globals'
 
 const state = {
   views: [] as any[],
+  webViews: [] as any[],
 }
 
 jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', () => ({
@@ -15,7 +16,7 @@ jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', 
 }))
 
 jest.unstable_mockModule('../src/parts/GetWebViews/GetWebViews.ts', () => ({
-  getWebViews: jest.fn(async () => []),
+  getWebViews: jest.fn(async () => state.webViews),
 }))
 
 const ViewletMap = await import('../src/parts/ViewletMap/ViewletMap.js')
@@ -54,4 +55,28 @@ test('an explicit extension view opener uses the extension view renderer', async
   ]
 
   await expect(ViewletMap.getModuleId('/workspace/file.unknown', 'builtin.media-preview')).resolves.toBe(ViewletModuleId.ExtensionView)
+})
+
+test('video documents use a matching preview extension view', async () => {
+  state.views = [
+    {
+      id: 'builtin.video-preview',
+      selector: ['.mp4', '.avi', '.webm'],
+      type: 'preview',
+    },
+  ]
+
+  await expect(ViewletMap.getModuleId('/workspace/video.mp4')).resolves.toBe(ViewletModuleId.ExtensionView)
+})
+
+test('video documents use a matching legacy webview provider', async () => {
+  state.views = []
+  state.webViews = [
+    {
+      id: 'builtin.video-preview',
+      selector: ['.mp4', '.avi', '.webm'],
+    },
+  ]
+
+  await expect(ViewletMap.getModuleId('/workspace/video.mp4')).resolves.toBe(ViewletModuleId.WebView)
 })
