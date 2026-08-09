@@ -1,9 +1,14 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
+
+const notifyWorkspaceChanged = async (changes) => {
+  await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh', changes), Command.execute('Layout.refreshSourceControlBadgeCount')])
+}
 
 const getProviderProtocolPathAndUri = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
@@ -47,15 +52,19 @@ export const readFile = (uri) => {
   })
 }
 
-export const remove = (uri) => {
+export const remove = async (uri) => {
   const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
-  return executeProvider({
+  const result = await executeProvider({
     isolatedMethod: 'Extensions.executeFileSystemProviderRemove',
     isolatedParams: [providerUri],
     legacyMethod: ExtensionHostCommandType.FileSystemRemove,
     legacyParams: [path],
     protocol,
   })
+  await notifyWorkspaceChanged({
+    deleted: [uri],
+  })
+  return result
 }
 
 /**
@@ -63,16 +72,20 @@ export const remove = (uri) => {
  * @param {string} oldUri
  * @param {string} newUri
  */
-export const rename = (oldUri, newUri) => {
+export const rename = async (oldUri, newUri) => {
   const { protocol, path: oldPath, uri: providerOldUri } = getProviderProtocolPathAndUri(oldUri)
   const { path: newPath, uri: providerNewUri } = getProviderProtocolPathAndUri(newUri)
-  return executeProvider({
+  const result = await executeProvider({
     isolatedMethod: 'Extensions.executeFileSystemProviderRename',
     isolatedParams: [providerOldUri, providerNewUri],
     legacyMethod: ExtensionHostCommandType.FileSystemRename,
     legacyParams: [oldPath, newPath],
     protocol,
   })
+  await notifyWorkspaceChanged({
+    renamed: [[oldUri, newUri]],
+  })
+  return result
 }
 
 export const mkdir = (uri) => {
@@ -86,15 +99,19 @@ export const mkdir = (uri) => {
   })
 }
 
-export const createFile = (uri) => {
+export const createFile = async (uri) => {
   const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
-  return executeProvider({
+  const result = await executeProvider({
     isolatedMethod: 'Extensions.executeFileSystemProviderWriteFile',
     isolatedParams: [providerUri, ''],
     legacyMethod: ExtensionHostCommandType.FileSystemWriteFile,
     legacyParams: [path, ''],
     protocol,
   })
+  await notifyWorkspaceChanged({
+    changed: [uri],
+  })
+  return result
 }
 
 export const createFolder = (uri) => {
@@ -108,15 +125,19 @@ export const createFolder = (uri) => {
   })
 }
 
-export const writeFile = (uri, content) => {
+export const writeFile = async (uri, content) => {
   const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
-  return executeProvider({
+  const result = await executeProvider({
     isolatedMethod: 'Extensions.executeFileSystemProviderWriteFile',
     isolatedParams: [providerUri, content],
     legacyMethod: ExtensionHostCommandType.FileSystemWriteFile,
     legacyParams: [path, content],
     protocol,
   })
+  await notifyWorkspaceChanged({
+    changed: [uri],
+  })
+  return result
 }
 
 export const readDirWithFileTypes = (uri) => {

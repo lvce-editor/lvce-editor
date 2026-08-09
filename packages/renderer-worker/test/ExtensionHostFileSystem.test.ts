@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 const invoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
+const execute = jest.fn<(...args: readonly any[]) => Promise<any>>()
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -10,6 +11,10 @@ beforeEach(() => {
 
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({
   invoke,
+}))
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute,
 }))
 
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
@@ -65,6 +70,10 @@ test('remove', async () => {
     noProviderFoundMessage: 'no file system provider found',
     params: ['memfs', '/test.txt'],
   })
+  expect(execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
+    deleted: ['memfs:///test.txt'],
+  })
+  expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
 
 test('remove - error', async () => {
@@ -86,6 +95,10 @@ test('rename', async () => {
     noProviderFoundMessage: 'no file system provider found',
     params: ['memfs', '/test.txt', '/test2.txt'],
   })
+  expect(execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
+    renamed: [['memfs:///test.txt', 'memfs:///test2.txt']],
+  })
+  expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
 
 test('rename - wrapped extension host uri', async () => {
@@ -144,6 +157,22 @@ test('writeFile', async () => {
     noProviderFoundMessage: 'no file system provider found',
     params: ['memfs', '/test-folder', 'test'],
   })
+  expect(execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///test-folder'],
+  })
+  expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
+})
+
+test('createFile notifies workspace views with the changed uri', async () => {
+  // @ts-ignore
+  ExtensionHostShared.executeProvider.mockImplementation(() => {})
+
+  await ExtensionHostFileSystem.createFile('memfs:///new-file.txt')
+
+  expect(execute).toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///new-file.txt'],
+  })
+  expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
 
 test('writeFile - wrapped extension host uri', async () => {
@@ -165,6 +194,7 @@ test('writeFile - error', async () => {
     throw new TypeError('x is not a function')
   })
   await expect(ExtensionHostFileSystem.writeFile('memfs:///test-folder', 'test')).rejects.toThrow(new TypeError('x is not a function'))
+  expect(execute).not.toHaveBeenCalled()
 })
 
 test('readDirWithFileTypes', async () => {

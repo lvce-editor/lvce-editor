@@ -8,3 +8,7 @@ test('registers the go-to-line quick pick command', () => {
 test('registers the viewlet focus-selector bridge command', () => {
   expect(commandMap['Viewlet.focusSelector']).toBeDefined()
 })
+
+test('registers the viewlet reload command', () => {
+  expect(commandMap['Viewlet.reload']).toBeDefined()
+})

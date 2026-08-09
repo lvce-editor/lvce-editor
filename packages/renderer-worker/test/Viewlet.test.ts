@@ -27,6 +27,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
       throw new Error('not implemented')
     }),
     render: jest.fn(() => []),
+    runLoadContentLater: jest.fn(),
   }
 })
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
@@ -132,6 +133,72 @@ test('focusSelector forwards focus to the renderer process', async () => {
   await Viewlet.focusSelector(7, '[name="editor"]')
 
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.focusSelector', 7, '[name="editor"]')
+})
+
+test('reload restores a viewlet from its current saved state and rerenders it', async () => {
+  const oldState = { content: 'old', uid: 2 } as const
+  const newState = { content: 'new', uid: 2 } as const
+  const savedState = { selection: 3 } as const
+  const saveState = jest.fn(async (_state: typeof oldState) => savedState)
+  const dispose = jest.fn(async (_state: typeof oldState) => {})
+  const loadContent = jest.fn(async (_state: typeof oldState, _savedState: typeof savedState) => newState)
+  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2]])
+  const contentLoadedEffects = jest.fn(async (_state: typeof newState) => {})
+  ViewletStates.set(2, {
+    factory: { contentLoaded, contentLoadedEffects, dispose, loadContent, saveState },
+    moduleId: 'Editor',
+    renderedState: oldState,
+    state: oldState,
+  })
+  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setDom2', 2, []]])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+
+  await Viewlet.reload(2)
+
+  expect(saveState).toHaveBeenCalledWith(oldState)
+  expect(dispose).toHaveBeenCalledWith(oldState)
+  expect(loadContent).toHaveBeenCalledWith(oldState, savedState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(expect.anything(), oldState, newState)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setDom2', 2, []],
+    ['Viewlet.afterLoad', 2],
+  ])
+  expect(ViewletManager.runLoadContentLater).toHaveBeenCalledWith(2)
+  expect(contentLoadedEffects).toHaveBeenCalledWith(newState)
+  expect(ViewletStates.getState(2)).toBe(newState)
+  expect(ViewletStates.getInstance(2).status).toBe('loaded')
+})
+
+test('reload ignores a viewlet that is already reloading', async () => {
+  const loadContent = jest.fn()
+  ViewletStates.set(2, {
+    factory: { loadContent },
+    moduleId: 'Editor',
+    renderedState: { uid: 2 },
+    state: { uid: 2 },
+    status: 'reloading',
+  })
+
+  await Viewlet.reload(2)
+
+  expect(loadContent).not.toHaveBeenCalled()
+})
+
+test('reload records a failed load and propagates the error', async () => {
+  const error = new Error('Failed to reload')
+  ViewletStates.set(2, {
+    factory: {
+      loadContent: jest.fn(async () => {
+        throw error
+      }),
+    },
+    moduleId: 'Editor',
+    renderedState: { uid: 2 },
+    state: { uid: 2 },
+  })
+
+  await expect(Viewlet.reload(2)).rejects.toThrow(error)
+  expect(ViewletStates.getInstance(2).status).toBe('error')
 })
 
 test('disposeFunctional disposes owned runtime viewlets', () => {
