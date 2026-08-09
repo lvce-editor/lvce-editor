@@ -7,9 +7,6 @@ import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
 const mapExtToEditorType = {
   '.mp3': ViewletModuleId.Audio,
-  '.mp4': ViewletModuleId.Video,
-  '.mkv': ViewletModuleId.Video,
-  '.webm': ViewletModuleId.Video,
   '.ogg': ViewletModuleId.Audio,
   '.opus': ViewletModuleId.Audio,
 }
