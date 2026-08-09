@@ -16,6 +16,18 @@ export const getActiveEditorId = () => {
   return instance.state.id
 }
 
+export const getDiagnosticsWithInvoke = async (invoke) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+  if (!instance) {
+    return []
+  }
+  return invoke('Editor.getDiagnostics', instance.state.id)
+}
+
+export const getDiagnostics = async () => {
+  return getDiagnosticsWithInvoke(EditorWorker.invoke)
+}
+
 export const getOpenEditorUrisWithInvoke = async (invoke) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.Main)
   if (!instance) {
