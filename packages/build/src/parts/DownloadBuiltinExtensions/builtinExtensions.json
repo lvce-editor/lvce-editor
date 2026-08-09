@@ -134,7 +134,7 @@
   {
     "name": "builtin.language-basics-elm",
     "repository": "github.com/lvce-editor/language-basics-elm",
-    "version": "0.13.2",
+    "version": "0.14.0",
     "created": "2022-10-05"
   },
   {
@@ -386,7 +386,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.20.1",
+    "version": "2.21.0",
     "created": "2022-06-16"
   },
   {
