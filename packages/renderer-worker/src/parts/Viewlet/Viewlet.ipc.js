@@ -12,6 +12,7 @@ export const Commands = {
   getDragData: Viewlet.getDragData,
   getTitle: Viewlet.getTitle,
   openWidget: Viewlet.openWidget,
+  reload: Viewlet.reload,
   send: Viewlet.send,
   dispose: Viewlet.dispose,
   resize: Viewlet.resize,

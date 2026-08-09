@@ -456,6 +456,7 @@ export const commandMap = {
   'Viewlet.getDragData': lazy('Viewlet.getDragData'),
   'Viewlet.getTitle': lazy('Viewlet.getTitle'),
   'Viewlet.openWidget': lazy('Viewlet.openWidget'),
+  'Viewlet.reload': lazy('Viewlet.reload'),
   'Viewlet.send': lazy('Viewlet.send'),
   'ViewletDebugConsole.clear': lazy('ViewletDebugConsole.clear'),
   'ViewletDebugConsole.evaluate': lazy('ViewletDebugConsole.evaluate'),

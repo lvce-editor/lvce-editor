@@ -104,6 +104,47 @@ export const refresh = async (id) => {
   await refreshInstance(instance, id)
 }
 
+export const reload = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || instance.status === 'reloading' || instance.status === 'disposed' || typeof instance.factory.loadContent !== 'function') {
+    return
+  }
+  instance.status = 'reloading'
+  try {
+    const oldState = instance.state
+    const savedState = instance.factory.saveState ? await instance.factory.saveState(oldState) : undefined
+    if (instance.factory.dispose) {
+      await instance.factory.dispose(oldState)
+    }
+    const newState = await instance.factory.loadContent(oldState, savedState)
+    Assert.object(newState)
+    if (ViewletStates.getInstance(id) !== instance) {
+      return
+    }
+    const commands = [...ViewletManager.render(instance.factory, instance.renderedState, newState)]
+    if (instance.factory.contentLoaded) {
+      const contentLoadedCommands = await instance.factory.contentLoaded(newState)
+      Assert.array(contentLoadedCommands)
+      commands.push(...contentLoadedCommands)
+    }
+    ViewletStates.setRenderedState(id, newState)
+    UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
+    if (commands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    }
+    instance.loadContentLaterStarted = false
+    instance.loadContentLaterPromise = undefined
+    ViewletManager.runLoadContentLater(id)
+    if (instance.factory.contentLoadedEffects) {
+      await instance.factory.contentLoadedEffects(newState)
+    }
+    instance.status = 'loaded'
+  } catch (error) {
+    instance.status = 'error'
+    throw error
+  }
+}
+
 /**
  * @deprecated
  */
