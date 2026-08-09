@@ -17,6 +17,14 @@ test('png', () => {
   expect(GetMimeType.getMimeType('.png')).toBe('image/png')
 })
 
+test('jpg', () => {
+  expect(GetMimeType.getMimeType('.jpg')).toBe('image/jpg')
+})
+
+test('webp', () => {
+  expect(GetMimeType.getMimeType('.webp')).toBe('image/webp')
+})
+
 test('json', () => {
   expect(GetMimeType.getMimeType('.json')).toBe('application/json')
 })
