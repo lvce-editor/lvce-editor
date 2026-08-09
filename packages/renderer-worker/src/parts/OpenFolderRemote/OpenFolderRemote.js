@@ -1,17 +1,12 @@
 import * as Command from '../Command/Command.js'
+import * as PathToFileUri from '../PathToFileUri/PathToFileUri.js'
 import * as Prompt from '../Prompt/Prompt.js'
-
-const toFileUri = (path) => {
-  const url = new URL('file:///')
-  url.pathname = path.replaceAll('\\', '/')
-  return url.toString()
-}
 
 export const openFolder = async () => {
   const path = await Prompt.prompt('Choose Path:', '/home')
   if (!path) {
     return
   }
-  const uri = toFileUri(path)
+  const uri = PathToFileUri.pathToFileUri(path)
   await Command.execute(/* Workspace.setUri */ 'Workspace.setUri', /* uri */ uri)
 }
