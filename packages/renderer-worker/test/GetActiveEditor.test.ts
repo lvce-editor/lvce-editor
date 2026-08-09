@@ -31,6 +31,30 @@ test('updateDiagnostics refreshes diagnostics for the active editor', async () =
   expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'updateDiagnostics')
 })
 
+test('getDiagnostics returns diagnostics for the active editor', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.js',
+    },
+  })
+  const diagnostics = [{ message: 'Unexpected semicolon', rowIndex: 0 }]
+  const invoke = jest.fn(async () => diagnostics)
+
+  await expect(GetActiveEditor.getDiagnosticsWithInvoke(invoke)).resolves.toEqual(diagnostics)
+  expect(invoke).toHaveBeenCalledWith('Editor.getDiagnostics', 42)
+})
+
+test('getDiagnostics returns an empty array when there is no active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getDiagnosticsWithInvoke(invoke)).resolves.toEqual([])
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('updateAllDiagnostics refreshes diagnostics for every open editor', async () => {
   await GetActiveEditor.updateAllDiagnosticsWithCommand(executeCommand)
 
