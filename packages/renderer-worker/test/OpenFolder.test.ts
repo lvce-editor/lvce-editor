@@ -32,6 +32,7 @@ test.skip('openFolder', async () => {
 })
 
 test('openFolder - electron', async () => {
+  const folderPath = '/home/simon/Downloads/aegypten/2025 Ägypten'
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
@@ -49,7 +50,7 @@ test('openFolder - electron', async () => {
   jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => {
     return {
       showOpenDialog: jest.fn(() => {
-        return ['/test/some-file']
+        return [folderPath]
       }),
       showMessageBox: jest.fn(() => {
         throw new Error('not implemented')
@@ -64,8 +65,10 @@ test('openFolder - electron', async () => {
   })
 
   const ElectronDialog = await import('../src/parts/ElectronDialog/ElectronDialog.js')
+  const Command = await import('../src/parts/Command/Command.js')
   const OpenFolder = await import('../src/parts/OpenFolder/OpenFolder.js')
   await OpenFolder.openFolder()
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledTimes(1)
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledWith('Open Folder', ['openDirectory', 'dontAddToRecent', 'showHiddenFiles'])
+  expect(Command.execute).toHaveBeenCalledWith('Workspace.setUri', 'file:///home/simon/Downloads/aegypten/2025%20%C3%84gypten')
 })

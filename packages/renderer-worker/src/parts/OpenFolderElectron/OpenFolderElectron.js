@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
+import * as PathToFileUri from '../PathToFileUri/PathToFileUri.js'
 
 export const openFolder = async () => {
   const folders = await ElectronDialog.showOpenDialog(
@@ -10,5 +11,6 @@ export const openFolder = async () => {
     return
   }
   const path = folders[0]
-  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
+  const uri = PathToFileUri.pathToFileUri(path)
+  await Command.execute(/* Workspace.setUri */ 'Workspace.setUri', /* uri */ uri)
 }
