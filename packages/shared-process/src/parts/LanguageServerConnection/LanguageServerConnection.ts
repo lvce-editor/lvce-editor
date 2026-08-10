@@ -57,13 +57,20 @@ export interface LanguageServerConnectionOptions {
   readonly uri: string
 }
 
-const getSpawnOptions = (uri: string, argv: readonly string[]): { readonly args: readonly string[]; readonly command: string } => {
+export const getSpawnOptions = (
+  uri: string,
+  argv: readonly string[],
+): { readonly args: readonly string[]; readonly command: string; readonly env?: NodeJS.ProcessEnv } => {
   const executablePath = fileURLToPath(uri)
   const extension = extname(executablePath).toLowerCase()
   if (extension === '.js' || extension === '.mjs' || extension === '.cjs') {
     return {
       args: [executablePath, ...argv],
       command: process.execPath,
+      env: {
+        ...process.env,
+        ELECTRON_RUN_AS_NODE: '1',
+      },
     }
   }
   return {
@@ -127,8 +134,9 @@ export class LanguageServerConnection {
 
   constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
-    const { args, command } = getSpawnOptions(uri, argv)
+    const { args, command, env } = getSpawnOptions(uri, argv)
     this.child = spawn(command, [...args], {
+      env,
       stdio: ['pipe', 'pipe', 'pipe'],
     })
     this.child.stdout.on('data', (chunk: Buffer) => {
