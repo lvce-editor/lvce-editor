@@ -88,6 +88,8 @@ export const SideBar = 'SideBar'
 
 export const SecondarySideBar = 'SecondarySideBar'
 
+export const SecondaryPreview = 'SecondaryPreview'
+
 export const SimpleBrowser = 'SimpleBrowser'
 
 export const SourceControl = 'Source Control'

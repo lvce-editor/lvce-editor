@@ -66,6 +66,9 @@ const resetVisibility = async (state: Readonly<LayoutState>): Promise<void> => {
   if (state.previewVisible) {
     await Command.execute('Layout.hidePreview')
   }
+  if (state.secondaryPreviewVisible) {
+    await Command.execute('Layout.hideSecondaryPreview')
+  }
   if (!state.mainVisible) {
     await Command.execute('Layout.showMain')
   }

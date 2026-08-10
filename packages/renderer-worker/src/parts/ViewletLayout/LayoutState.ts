@@ -6,6 +6,8 @@ export interface SideBarFocusModeLayoutStateSnapshot {
   readonly panelVisible: boolean
   readonly previewSashVisible: boolean
   readonly previewVisible: boolean
+  readonly secondaryPreviewSashVisible: boolean
+  readonly secondaryPreviewVisible: boolean
   readonly secondarySideBarVisible: boolean
   readonly secondarySideBarWidth: number
   readonly sideBarSashVisible: boolean
@@ -101,6 +103,22 @@ export interface LayoutState {
   readonly secondarySideBarView: string
   readonly secondarySideBarVisible: boolean
   readonly secondarySideBarWidth: number
+  readonly secondaryPreviewActionsEventListeners: readonly unknown[]
+  readonly secondaryPreviewActionsUid: number
+  readonly secondaryPreviewHeight: number
+  readonly secondaryPreviewId: number
+  readonly secondaryPreviewLeft: number
+  readonly secondaryPreviewMaxHeight: number
+  readonly secondaryPreviewMaxWidth: number
+  readonly secondaryPreviewMinHeight: number
+  readonly secondaryPreviewMinWidth: number
+  readonly secondaryPreviewSashId: number
+  readonly secondaryPreviewSashVisible: boolean
+  readonly secondaryPreviewTop: number
+  readonly secondaryPreviewUri: string
+  readonly secondaryPreviewViewletId: string
+  readonly secondaryPreviewVisible: boolean
+  readonly secondaryPreviewWidth: number
   readonly statusBarHeight: number
   readonly statusBarId: number
   readonly statusBarLeft: number

@@ -81,6 +81,9 @@ test('bundleCss keeps the preview sash transparent', async () => {
     expect(css).toContain(`.SashPreview {
   left: var(--SashPreviewLeft);
 }`)
+    expect(css).toContain(`.SashSecondaryPreview {
+  left: var(--SashSecondaryPreviewLeft);
+}`)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
@@ -123,7 +126,7 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
-    expect(css).toContain('left: calc((100% - var(--PreviewWidth, 0px)) / 2);')
+    expect(css).toContain('left: calc((100% - var(--PreviewWidth, 0px) - var(--SecondaryPreviewWidth, 0px)) / 2);')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

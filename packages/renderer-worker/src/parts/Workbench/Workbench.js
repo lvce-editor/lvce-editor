@@ -84,7 +84,7 @@ const actions = [
   },
 
   async () => {
-    await Command.execute('Layout.loadPreviewIfVisible')
+    await Promise.all([Command.execute('Layout.loadPreviewIfVisible'), Command.execute('Layout.loadSecondaryPreviewIfVisible')])
   },
   async (platform, assetDir) => {
     LifeCycle.mark(LifeCyclePhase.Eleven)

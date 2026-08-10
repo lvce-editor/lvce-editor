@@ -106,6 +106,29 @@ test('setActionsDom creates preview actions with the child event listeners', () 
   ])
 })
 
+test('setActionsDom keeps secondary preview actions independent', () => {
+  const state = {
+    ...ViewletLayout.create(12),
+    previewActionsUid: 8,
+    previewId: 7,
+    secondaryPreviewId: 9,
+    secondaryPreviewViewletId: 'ExtensionView',
+  }
+
+  const result = ViewletLayout.setActionsDom(state, ['voice-actions'], 9, ['click'])
+
+  expect(result.statePatch).toEqual({
+    secondaryPreviewActionsEventListeners: ['click'],
+    secondaryPreviewActionsUid: expect.any(Number),
+  })
+  expect(result.commands).toEqual([
+    ['Viewlet.createFunctionalRoot', 'ExtensionView', result.statePatch.secondaryPreviewActionsUid, true],
+    ['Viewlet.registerEventListeners', result.statePatch.secondaryPreviewActionsUid, ['click']],
+    ['Viewlet.setDom2', result.statePatch.secondaryPreviewActionsUid, ['voice-actions']],
+    ['Viewlet.setUid', result.statePatch.secondaryPreviewActionsUid, 9],
+  ])
+})
+
 test('setActionsDom updates existing preview actions and event listeners', () => {
   const state = {
     ...ViewletLayout.create(12),
@@ -707,6 +730,59 @@ test('toggleSideBarView opens a preview-preferred extension view alongside the s
   )
   expect(activityBarInvokeMock.mock.calls).toEqual([
     ['ActivityBar.handleActiveViewStateChange', 7, 'sample.views.preview', true],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
+})
+
+test('toggleSideBarView opens a secondary-preview view without replacing the primary preview', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  GetExtensionViews.getExtensionView.mockResolvedValue({
+    id: 'gpt-voice.views.default',
+    preferredLocation: 'secondaryPreview',
+  })
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'ExtensionView', 1, true]])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewId: 11,
+    previewMinWidth: 100,
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 600,
+    secondaryPreviewMinWidth: 100,
+    sideBarId: 12,
+    sideBarMaxWidth: 1200,
+    sideBarMinWidth: 170,
+    sideBarView: 'Explorer',
+    sideBarVisible: true,
+    sideBarWidth: 240,
+    statusBarHeight: 20,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.toggleSideBarView(state, 'gpt-voice.views.default')
+
+  expect(result.newState).toMatchObject({
+    previewId: 11,
+    previewLeft: 400,
+    previewUri: 'simple-browser://',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(11)
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleActiveViewStateChange', 7, 'gpt-voice.views.default', true],
     ['ActivityBar.diff2', 7],
     ['ActivityBar.render2', 7, 'diff-1'],
   ])
