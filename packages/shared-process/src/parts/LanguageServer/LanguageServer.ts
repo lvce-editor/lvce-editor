@@ -26,6 +26,8 @@ export interface DiagnosticOptions {
   readonly uri: string
 }
 
+export type DefinitionOptions = CompleteOptions
+
 export interface FormatOptions {
   readonly argv: readonly string[]
   readonly id: string
@@ -89,6 +91,16 @@ export const diagnostic = async ({ argv, id, rootUri, textDocument, uri }: Diagn
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
   return connection.diagnostic(normalizedDocument)
+}
+
+export const definition = async ({ argv, id, offset, rootUri, textDocument, uri }: DefinitionOptions): Promise<unknown> => {
+  const normalizedDocument = {
+    ...textDocument,
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
+  }
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
+  return connection.definition(normalizedDocument, offset)
 }
 
 export const format = async ({ argv, id, rootUri, textDocument, uri }: FormatOptions): Promise<readonly unknown[]> => {

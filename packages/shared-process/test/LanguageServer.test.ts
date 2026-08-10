@@ -1,7 +1,8 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { complete, diagnostic, disposeAll, format } from '../src/parts/LanguageServer/LanguageServer.ts'
+import { complete, definition, diagnostic, disposeAll, format } from '../src/parts/LanguageServer/LanguageServer.ts'
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
+import { normalizeLanguageServerDocumentUri } from '../src/parts/NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
 const completionOnlyServerScript = fileURLToPath(new URL('./fixtures/languageServerCompletionOnly.js', import.meta.url))
@@ -74,6 +75,30 @@ test('complete starts a JavaScript language server', async () => {
   }
 
   await expect(complete(options)).resolves.toEqual([{ insertText: 'fixtureCompletion', kind: 6, label: 'fixtureCompletion:con' }])
+})
+
+test('definition starts a stdio language server and synchronizes documents', async () => {
+  const options = {
+    argv: [serverScript],
+    id: 'sample.definition-fixture',
+    offset: 15,
+    rootUri: 'file:///tmp',
+    textDocument: {
+      languageId: 'elm',
+      text: 'value = 1\nmain = value',
+      uri: '/tmp/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  const normalizedDocumentUri = normalizeLanguageServerDocumentUri(options.textDocument.uri)
+
+  await expect(definition(options)).resolves.toEqual({
+    range: {
+      end: { character: 7, line: 1 },
+      start: { character: 0, line: 1 },
+    },
+    uri: `${normalizedDocumentUri}?definition=value%20%3D%201%0Amain%20%3D%20value`,
+  })
 })
 
 test('diagnostic starts a stdio language server and synchronizes documents', async () => {

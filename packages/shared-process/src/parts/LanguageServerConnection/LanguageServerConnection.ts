@@ -222,6 +222,18 @@ export class LanguageServerConnection {
     return diagnostics
   }
 
+  async definition(textDocument: TextDocument, offset: number): Promise<unknown> {
+    await this.ready
+    this.configureMarkdown(textDocument.languageId)
+    this.syncDocument(textDocument)
+    return this.sendRequest('textDocument/definition', {
+      position: getPosition(textDocument.text, offset),
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+  }
+
   async format(textDocument: TextDocument): Promise<readonly unknown[]> {
     await this.ready
     if (!this.supportsDocumentFormatting) {
