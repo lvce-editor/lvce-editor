@@ -27,6 +27,14 @@
   overflow: auto;
 }
 
+.OutputContent a {
+  color: var(--vscode-textLink-foreground, dodgerblue);
+}
+
+.OutputContent a:hover {
+  color: var(--vscode-textLink-activeForeground, #4daafc);
+}
+
 .Output .Line {
   display: flex;
   align-items: center;
