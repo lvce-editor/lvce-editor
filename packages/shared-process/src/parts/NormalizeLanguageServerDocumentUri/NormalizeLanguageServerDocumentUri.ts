@@ -15,9 +15,6 @@ const normalizeRemoteFileUrl = (uri: string): string | undefined => {
 }
 
 export const normalizeLanguageServerDocumentUri = (uri: string): string => {
-  if (uri.startsWith('/')) {
-    return pathToFileURL(uri).href
-  }
-  const normalizedUri = normalizeRemoteFileUrl(uri) || uri
+  const normalizedUri = uri.startsWith('/') ? pathToFileURL(uri).href : normalizeRemoteFileUrl(uri) || uri
   return normalizedUri.replace(windowsFileUriRegex, (_, driveLetter: string) => `file:///${driveLetter.toLowerCase()}%3A`)
 }
