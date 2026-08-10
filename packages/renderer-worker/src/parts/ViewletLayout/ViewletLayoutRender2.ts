@@ -114,6 +114,10 @@ const renderDom = {
       oldState.previewSashVisible === newState.previewSashVisible &&
       oldState.previewId === newState.previewId &&
       oldState.previewActionsUid === newState.previewActionsUid &&
+      oldState.secondaryPreviewVisible === newState.secondaryPreviewVisible &&
+      oldState.secondaryPreviewSashVisible === newState.secondaryPreviewSashVisible &&
+      oldState.secondaryPreviewId === newState.secondaryPreviewId &&
+      oldState.secondaryPreviewActionsUid === newState.secondaryPreviewActionsUid &&
       oldState.secondarySideBarVisible === newState.secondarySideBarVisible &&
       oldState.widgetReferences === newState.widgetReferences &&
       oldState.mountedViewletsBySource === newState.mountedViewletsBySource
@@ -146,6 +150,8 @@ const getCss = (newState: LayoutState) => {
   const titleBarHeight = newState.titleBarHeight
   const previewLeft = newState.previewLeft
   const previewWidth = newState.previewWidth
+  const secondaryPreviewLeft = newState.secondaryPreviewLeft
+  const secondaryPreviewWidth = newState.secondaryPreviewWidth
   const sashSideBarLeft = newState.sideBarLeft
   const secondarySideBarLeft = newState.secondarySideBarLeft
   const sashPanelTop = newState.panelTop
@@ -157,6 +163,8 @@ const getCss = (newState: LayoutState) => {
   Assert.number(titleBarHeight)
   Assert.number(previewLeft)
   Assert.number(previewWidth)
+  Assert.number(secondaryPreviewLeft)
+  Assert.number(secondaryPreviewWidth)
   Assert.number(sashSideBarLeft)
   Assert.number(secondarySideBarLeft)
   Assert.number(sashPanelTop)
@@ -179,6 +187,8 @@ const getCss = (newState: LayoutState) => {
   --TitleBarHeight: ${getPixelValue(titleBarHeight)};
   --SashPreviewLeft: ${getRoundedPixelValue(previewLeft)};
   --PreviewWidth: ${getPixelValue(previewWidth)};
+  --SashSecondaryPreviewLeft: ${getRoundedPixelValue(secondaryPreviewLeft)};
+  --SecondaryPreviewWidth: ${getPixelValue(secondaryPreviewWidth)};
   --SashSideBarLeft: ${getRoundedPixelValue(sashSideBarLeft)};
   --SashSecondarySideBarLeft: ${getRoundedPixelValue(sashSecondarySideBarLeft)};
   --SashPanelTop: ${getRoundedPixelValue(sashPanelTop)};
@@ -202,6 +212,10 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleClickClose,
       params: ['hidePreview'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickCloseSecondaryPreview,
+      params: ['hideSecondaryPreview'],
     },
     {
       name: DomEventListenersFunctions.HandleContextMenu,
@@ -253,6 +267,11 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleSashPreviewPointerDown,
       params: ['handleSashPreviewPointerDown'],
+      trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashSecondaryPreviewPointerDown,
+      params: ['handleSashSecondaryPreviewPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
     },
   ]

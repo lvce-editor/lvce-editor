@@ -34,6 +34,8 @@ test('renderCss serializes valid layout bounds', () => {
     panelTop: 200,
     previewLeft: 799.6,
     previewWidth: 400,
+    secondaryPreviewLeft: 1200,
+    secondaryPreviewWidth: 0,
     sideBarLeft: 48.4,
     secondarySideBarLeft: 700.2,
   } as any
@@ -55,6 +57,8 @@ test('renderCss serializes valid layout bounds', () => {
   --TitleBarHeight: 35px;
   --SashPreviewLeft: 800px;
   --PreviewWidth: 400px;
+  --SashSecondaryPreviewLeft: 1200px;
+  --SecondaryPreviewWidth: 0px;
   --SashSideBarLeft: 48px;
   --SashSecondarySideBarLeft: 1000px;
   --SashPanelTop: 200px;
@@ -79,6 +83,8 @@ test('renderCss serializes explicit application bounds', () => {
     panelTop: 200,
     previewLeft: 799.6,
     previewWidth: 400,
+    secondaryPreviewLeft: 1200,
+    secondaryPreviewWidth: 0,
     sideBarLeft: 48.4,
     secondarySideBarLeft: 700.2,
   } as any
@@ -100,6 +106,8 @@ test('renderCss serializes explicit application bounds', () => {
   --TitleBarHeight: 35px;
   --SashPreviewLeft: 800px;
   --PreviewWidth: 400px;
+  --SashSecondaryPreviewLeft: 1200px;
+  --SecondaryPreviewWidth: 0px;
   --SashSideBarLeft: 48px;
   --SashSecondarySideBarLeft: 1000px;
   --SashPanelTop: 200px;

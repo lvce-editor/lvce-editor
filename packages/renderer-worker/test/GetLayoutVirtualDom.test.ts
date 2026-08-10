@@ -101,6 +101,53 @@ test('getLayoutVirtualDom does not render the preview close button when preview 
   expect(dom.some((node) => node.className?.includes('PreviewCloseButton'))).toBe(false)
 })
 
+test('getLayoutVirtualDom renders an independently closable secondary preview', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondaryPreviewActionsUid: 7,
+    secondaryPreviewSashVisible: true,
+    secondaryPreviewVisible: true,
+    secondaryPreviewId: 6,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+
+  expect(dom).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        className: 'Viewlet Sash SashVertical SashSecondaryPreview',
+        onPointerDown: DomEventListenerFunctions.HandleSashSecondaryPreviewPointerDown,
+      }),
+      expect.objectContaining({
+        ariaLabel: 'Close Secondary Preview',
+        className: 'IconButton SecondaryPreviewCloseButton',
+        onClick: DomEventListenerFunctions.HandleClickCloseSecondaryPreview,
+      }),
+      { type: 100, uid: 6 },
+      { type: 100, uid: 7 },
+    ]),
+  )
+})
+
 test('getLayoutVirtualDom renders visible widgets as the final Workbench children', () => {
   const state = {
     activityBarVisible: false,

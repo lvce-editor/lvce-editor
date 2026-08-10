@@ -78,6 +78,37 @@ test('loadContent enables preview sash when preview is restored', () => {
   })
 })
 
+test('loadContent restores both preview areas independently', () => {
+  const state = ViewletLayout.create(1)
+
+  const result = ViewletLayout.loadContent(state, {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+
+  expect(result).toMatchObject({
+    previewLeft: 400,
+    previewSashVisible: true,
+    previewUri: 'simple-browser://',
+    previewVisible: true,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewSashVisible: true,
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewVisible: true,
+  })
+})
+
 test('loadPreviewIfVisible restores the simple browser preview', async () => {
   const state = ViewletLayout.loadContent(ViewletLayout.create(1), {
     Layout: {
@@ -106,6 +137,36 @@ test('loadPreviewIfVisible restores the simple browser preview', async () => {
     undefined,
   )
   expect(Viewlet.resize).not.toHaveBeenCalled()
+})
+
+test('loadSecondaryPreviewIfVisible restores its extension view', async () => {
+  const state = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockReturnValue(state)
+
+  await ViewletLayout.loadSecondaryPreviewIfVisible(state)
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'ExtensionView',
+      uri: 'gpt-voice.views.default',
+      width: 400,
+      x: 800,
+    }),
+    false,
+    true,
+    undefined,
+  )
 })
 
 test('loadPreviewIfVisible uses the latest preview bounds when the window is resized during restore', async () => {
@@ -252,6 +313,176 @@ test.each([
     previewTop: 35,
     previewWidth: 400,
     statusBarWidth: 800,
+  })
+})
+
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('primary and secondary previews form three columns with the side bar on the %s', (_name, sideBarLocation) => {
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      secondaryPreviewMinWidth: 100,
+      secondaryPreviewVisible: true,
+      secondaryPreviewWidth: 400,
+      statusBarHeight: 20,
+      statusBarVisible: true,
+      titleBarHeight: 35,
+      titleBarVisible: true,
+      windowHeight: 800,
+      windowWidth: 1200,
+    },
+    sideBarLocation,
+  )
+
+  expect(state).toMatchObject({
+    panelWidth: 400,
+    previewLeft: 400,
+    previewWidth: 400,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewWidth: 400,
+    statusBarWidth: 400,
+  })
+})
+
+test('showSecondaryPreview keeps an open primary preview mounted', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewId: 7,
+    previewMinWidth: 100,
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewMinWidth: 100,
+    secondaryPreviewWidth: 400,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.showSecondaryPreview(state, 'gpt-voice.views.default')
+
+  expect(result.newState).toMatchObject({
+    previewId: 7,
+    previewUri: 'simple-browser://',
+    previewVisible: true,
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewViewletId: 'ExtensionView',
+    secondaryPreviewVisible: true,
+  })
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(7)
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'ExtensionView',
+      uri: 'gpt-voice.views.default',
+      x: 800,
+      width: 400,
+    }),
+    false,
+    true,
+    undefined,
+  )
+})
+
+test('showPreview keeps code visible when voice chat is already open', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewMinWidth: 100,
+    secondaryPreviewId: 8,
+    secondaryPreviewMinWidth: 100,
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewViewletId: 'ExtensionView',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 600,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.showPreview(state, 'simple-browser://')
+
+  expect(result.newState).toMatchObject({
+    previewLeft: 400,
+    previewUri: 'simple-browser://',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewId: 8,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(8)
+})
+
+test('hideSecondaryPreview leaves the primary preview mounted', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewId: 7,
+    previewMinWidth: 100,
+    previewUri: 'simple-browser://',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewActionsUid: 9,
+    secondaryPreviewId: 8,
+    secondaryPreviewMinWidth: 100,
+    secondaryPreviewUri: 'gpt-voice.views.default',
+    secondaryPreviewViewletId: 'ExtensionView',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.hideSecondaryPreview(state)
+
+  expect(result.newState).toMatchObject({
+    previewId: 7,
+    previewUri: 'simple-browser://',
+    previewVisible: true,
+    secondaryPreviewActionsUid: -1,
+    secondaryPreviewId: -1,
+    secondaryPreviewVisible: false,
+  })
+  expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(8)
+  expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(9)
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(7)
+})
+
+test('resizing the primary preview preserves the secondary preview width', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewId: 7,
+    previewMinWidth: 100,
+    previewVisible: true,
+    previewWidth: 400,
+    sashId: 'Preview',
+    secondaryPreviewId: 8,
+    secondaryPreviewMinWidth: 100,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.handleSashPointerMove(state, 350, 400)
+
+  expect(result.newState).toMatchObject({
+    previewLeft: 350,
+    previewWidth: 450,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewWidth: 400,
   })
 })
 

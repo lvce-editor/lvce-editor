@@ -61,6 +61,16 @@ export const PreviewMaxHeight = 'previewMaxHeight'
 export const PreviewMinWidth = 'previewMinWidth'
 export const PreviewMaxWidth = 'previewMaxWidth'
 
+export const SecondaryPreviewVisible = 'secondaryPreviewVisible'
+export const SecondaryPreviewTop = 'secondaryPreviewTop'
+export const SecondaryPreviewLeft = 'secondaryPreviewLeft'
+export const SecondaryPreviewWidth = 'secondaryPreviewWidth'
+export const SecondaryPreviewHeight = 'secondaryPreviewHeight'
+export const SecondaryPreviewMinHeight = 'secondaryPreviewMinHeight'
+export const SecondaryPreviewMaxHeight = 'secondaryPreviewMaxHeight'
+export const SecondaryPreviewMinWidth = 'secondaryPreviewMinWidth'
+export const SecondaryPreviewMaxWidth = 'secondaryPreviewMaxWidth'
+
 export const TitleBarNative = 'titleBarNative'
 
 export const Total = 'total'

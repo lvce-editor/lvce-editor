@@ -15,6 +15,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const previewVisible = source[LayoutKeys.PreviewVisible]
   const previewMinWidth = source[LayoutKeys.PreviewMinWidth]
   const previewWidth = source[LayoutKeys.PreviewWidth]
+  const secondaryPreviewVisible = source[LayoutKeys.SecondaryPreviewVisible]
+  const secondaryPreviewMinWidth = source[LayoutKeys.SecondaryPreviewMinWidth]
+  const secondaryPreviewWidth = source[LayoutKeys.SecondaryPreviewWidth]
   const windowWidth = source[LayoutKeys.WindowWidth]
   const windowHeight = source[LayoutKeys.WindowHeight]
   const sideBarMinWidth = source[LayoutKeys.SideBarMinWidth]
@@ -34,7 +37,13 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
   const newSecondarySideBarWidth = Clamp.clamp(secondarySideBarWidth, secondarySideBarMinWidth, secondarySideBarMaxWidth)
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
   const preferredPreviewWidth = previewWidth > 0 ? previewWidth : windowWidth / 2
-  const availableWidth = previewVisible ? Math.max(0, windowWidth - Math.max(previewMinWidth, preferredPreviewWidth)) : windowWidth
+  const preferredSecondaryPreviewWidth = secondaryPreviewWidth > 0 ? secondaryPreviewWidth : windowWidth / 3
+  const destinationSecondaryPreviewWidth = secondaryPreviewVisible
+    ? Math.min(windowWidth, Math.max(secondaryPreviewMinWidth, preferredSecondaryPreviewWidth))
+    : 0
+  const widthBeforeSecondaryPreview = windowWidth - destinationSecondaryPreviewWidth
+  const destinationPreviewWidth = previewVisible ? Math.min(widthBeforeSecondaryPreview, Math.max(previewMinWidth, preferredPreviewWidth)) : 0
+  const availableWidth = Math.max(0, widthBeforeSecondaryPreview - destinationPreviewWidth)
 
   if (source.sideBarFocusMode) {
     const contentTop = titleBarVisible ? titleBarHeight : 0
@@ -50,6 +59,8 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       panelVisible: false,
       previewSashVisible: false,
       previewVisible: false,
+      secondaryPreviewSashVisible: false,
+      secondaryPreviewVisible: false,
       secondarySideBarHeight: Math.max(0, contentBottom - contentTop),
       secondarySideBarLeft: 0,
       secondarySideBarTop: contentTop,
@@ -123,7 +134,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
 
     const destinationPanelLeft = p6
     const destinationpanelTop = p3
-    const destinationPanelWidth = previewVisible ? availableWidth : windowWidth
+    const destinationPanelWidth = availableWidth
     const destinationPanelHeight = p4 - p3
     const destinationPanelVisible = panelVisible
 
@@ -156,12 +167,17 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     }
     const destinationTitleBarVisible = titleBarVisible
 
-    const destinationPreviewLeft = previewVisible ? availableWidth : 0
     const destinationPreviewTop = p2
-    const destinationPreviewWidth = previewVisible ? windowWidth - availableWidth : 0
+    const destinationPreviewLeft = previewVisible ? availableWidth : 0
     const destinationPreviewHeight =
       p3 - p2 + (previewVisible && panelVisible ? destinationPanelHeight : 0) + (previewVisible && statusBarVisible ? statusBarHeight : 0)
     const destinationPreviewVisible = previewVisible
+    const destinationSecondaryPreviewLeft = availableWidth + destinationPreviewWidth
+    const destinationSecondaryPreviewHeight =
+      p3 -
+      p2 +
+      (secondaryPreviewVisible && panelVisible ? destinationPanelHeight : 0) +
+      (secondaryPreviewVisible && statusBarVisible ? statusBarHeight : 0)
     return {
       ...source,
       activityBarTop: destinationActivityBarTop,
@@ -204,6 +220,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       previewWidth: destinationPreviewWidth,
       previewHeight: destinationPreviewHeight,
       previewVisible: destinationPreviewVisible,
+      secondaryPreviewLeft: destinationSecondaryPreviewLeft,
+      secondaryPreviewTop: destinationPreviewTop,
+      secondaryPreviewWidth: destinationSecondaryPreviewWidth,
+      secondaryPreviewHeight: destinationSecondaryPreviewHeight,
+      secondaryPreviewVisible,
     }
   } else {
     const p1 = /* Top */ 0
@@ -287,12 +308,17 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
     const destinationTitleBarHeight = titleBarHeight
     const destinationTitleBarVisible = titleBarVisible
 
-    const destinationPreviewLeft = previewVisible ? availableWidth : 0
     const destinationPreviewTop = p2
-    const destinationPreviewWidth = previewVisible ? windowWidth - availableWidth : 0
+    const destinationPreviewLeft = previewVisible ? availableWidth : 0
     const destinationPreviewHeight =
       p3 - p2 + (previewVisible && panelVisible ? destinationPanelHeight : 0) + (previewVisible && statusBarVisible ? statusBarHeight : 0)
     const destinationPreviewVisible = previewVisible
+    const destinationSecondaryPreviewLeft = availableWidth + destinationPreviewWidth
+    const destinationSecondaryPreviewHeight =
+      p3 -
+      p2 +
+      (secondaryPreviewVisible && panelVisible ? destinationPanelHeight : 0) +
+      (secondaryPreviewVisible && statusBarVisible ? statusBarHeight : 0)
     return {
       ...source,
       activityBarTop: destinationActivityBarTop,
@@ -335,6 +361,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocation
       previewWidth: destinationPreviewWidth,
       previewHeight: destinationPreviewHeight,
       previewVisible: destinationPreviewVisible,
+      secondaryPreviewLeft: destinationSecondaryPreviewLeft,
+      secondaryPreviewTop: destinationPreviewTop,
+      secondaryPreviewWidth: destinationSecondaryPreviewWidth,
+      secondaryPreviewHeight: destinationSecondaryPreviewHeight,
+      secondaryPreviewVisible,
     }
   }
 }

@@ -83,6 +83,17 @@ const getSashPreviewDom = () => {
   }
 }
 
+const getSashSecondaryPreviewDom = () => {
+  return {
+    type: VirtualDomElements.Div,
+    className: 'Viewlet Sash SashVertical SashSecondaryPreview',
+    tabIndex: -1,
+    role: 'none',
+    onPointerDown: DomEventListenerFunctions.HandleSashSecondaryPreviewPointerDown,
+    onContextMenu: DomEventListenerFunctions.HandleContextMenu,
+  }
+}
+
 const getSashPanelDom = () => {
   return {
     type: VirtualDomElements.Div,
@@ -165,6 +176,20 @@ const getPreviewDom = (previewId: number) => {
   }
 }
 
+const getSecondaryPreviewDom = (secondaryPreviewId: number) => {
+  if (secondaryPreviewId === -1) {
+    return {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet SecondaryPreview',
+      childCount: 0,
+    }
+  }
+  return {
+    type: VirtualDomElements.Reference,
+    uid: secondaryPreviewId,
+  }
+}
+
 const getPreviewActionsDom = (previewActionsUid: number) => {
   return {
     type: VirtualDomElements.Reference,
@@ -190,6 +215,24 @@ const getPreviewCloseButtonDom = () => {
   ]
 }
 
+const getSecondaryPreviewCloseButtonDom = () => {
+  return [
+    {
+      ariaLabel: 'Close Secondary Preview',
+      childCount: 1,
+      className: 'IconButton SecondaryPreviewCloseButton',
+      onClick: DomEventListenerFunctions.HandleClickCloseSecondaryPreview,
+      title: 'Close Secondary Preview',
+      type: VirtualDomElements.Button,
+    },
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconClose',
+      type: VirtualDomElements.Div,
+    },
+  ]
+}
+
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   const {
     activityBarVisible,
@@ -205,6 +248,10 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     previewSashVisible,
     previewVisible,
     previewId,
+    secondaryPreviewActionsUid,
+    secondaryPreviewSashVisible,
+    secondaryPreviewVisible,
+    secondaryPreviewId,
   } = state
   const children: any[] = []
 
@@ -246,6 +293,19 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     delta--
   }
 
+  if (secondaryPreviewSashVisible) {
+    children.push(getSashSecondaryPreviewDom())
+  }
+
+  if (secondaryPreviewVisible) {
+    children.push(getSecondaryPreviewDom(secondaryPreviewId))
+    if (typeof secondaryPreviewActionsUid === 'number' && secondaryPreviewActionsUid !== -1) {
+      children.push(getPreviewActionsDom(secondaryPreviewActionsUid))
+    }
+    children.push(...getSecondaryPreviewCloseButtonDom())
+    delta--
+  }
+
   return [
     {
       type: VirtualDomElements.Div,
@@ -271,6 +331,10 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     previewSashVisible,
     previewVisible,
     previewId,
+    secondaryPreviewActionsUid,
+    secondaryPreviewSashVisible,
+    secondaryPreviewVisible,
+    secondaryPreviewId,
   } = state
   const children: any[] = []
   let delta = 0
@@ -301,6 +365,17 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
       children.push(getPreviewActionsDom(previewActionsUid))
     }
     children.push(...getPreviewCloseButtonDom())
+    delta--
+  }
+  if (secondaryPreviewSashVisible) {
+    children.push(getSashSecondaryPreviewDom())
+  }
+  if (secondaryPreviewVisible) {
+    children.push(getSecondaryPreviewDom(secondaryPreviewId))
+    if (typeof secondaryPreviewActionsUid === 'number' && secondaryPreviewActionsUid !== -1) {
+      children.push(getPreviewActionsDom(secondaryPreviewActionsUid))
+    }
+    children.push(...getSecondaryPreviewCloseButtonDom())
     delta--
   }
 

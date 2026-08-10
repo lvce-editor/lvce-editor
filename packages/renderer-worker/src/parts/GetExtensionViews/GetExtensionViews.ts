@@ -29,7 +29,7 @@ export interface ExtensionView {
   readonly iframe?: ExtensionViewIframe
   readonly kind?: string
   readonly name?: string
-  readonly preferredLocation?: 'preview' | 'sideBar'
+  readonly preferredLocation?: 'preview' | 'secondaryPreview' | 'sideBar'
   readonly selector?: readonly string[]
   readonly showSideBarHeader?: boolean
   readonly title: string
