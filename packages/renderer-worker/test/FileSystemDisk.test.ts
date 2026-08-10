@@ -18,6 +18,14 @@ const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js'
 
 const FileSystemDisk = await import('../src/parts/FileSystem/FileSystemDisk.js')
 
+test('getBlobUrl preserves a memfs uri', () => {
+  expect(FileSystemDisk.getBlobUrl('memfs:///workspace/image.svg')).toBe('memfs:///workspace/image.svg')
+})
+
+test('getBlobUrl converts a file uri to a remote source', () => {
+  expect(FileSystemDisk.getBlobUrl('file:///tmp/image.svg')).toBe('/remote/tmp/image.svg')
+})
+
 test.skip('readFile', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
