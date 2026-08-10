@@ -133,6 +133,7 @@ const mockActivityBarRender = () => {
   // @ts-ignore
   ActivityBarWorker.invoke.mockImplementation(async (method, ...args) => {
     switch (method) {
+      case 'ActivityBar.handleActiveViewStateChange':
       case 'ActivityBar.handleSideBarStateChange':
         return undefined
       case 'ActivityBar.diff2':
@@ -704,9 +705,15 @@ test('toggleSideBarView opens a preview-preferred extension view alongside the s
     true,
     undefined,
   )
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleActiveViewStateChange', 7, 'sample.views.preview', true],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
 })
 
 test('toggleSideBarView hides the preview when its selected activity item is clicked again', async () => {
+  mockActivityBarRender()
   // @ts-ignore
   GetExtensionViews.getExtensionView.mockResolvedValue({
     id: 'sample.views.preview',
@@ -714,6 +721,7 @@ test('toggleSideBarView hides the preview when its selected activity item is cli
   })
   const state = {
     ...ViewletLayout.create(1),
+    activityBarId: 7,
     previewId: 11,
     previewUri: 'sample.views.preview',
     previewViewletId: 'ExtensionView',
@@ -728,6 +736,66 @@ test('toggleSideBarView hides the preview when its selected activity item is cli
   })
   expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(11, 'ExtensionView')
   expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(11)
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleActiveViewStateChange', 7, 'sample.views.preview', false],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
+})
+
+test('showPreview updates both activity items when replacing a preview extension view', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'ExtensionView', 1, true]])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    previewId: 11,
+    previewUri: 'sample.views.first',
+    previewViewletId: 'ExtensionView',
+    previewVisible: true,
+  }
+
+  const result = await ViewletLayout.showPreview(state, 'sample.views.second', 'ExtensionView')
+
+  expect(result.newState).toMatchObject({
+    previewUri: 'sample.views.second',
+    previewViewletId: 'ExtensionView',
+    previewVisible: true,
+  })
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleActiveViewStateChange', 7, 'sample.views.first', false],
+    ['ActivityBar.handleActiveViewStateChange', 7, 'sample.views.second', true],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
+})
+
+test('showPreview deactivates a preview extension item when a file preview replaces it', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.createFunctionalRoot', 'Preview', 1, true]])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    previewId: 11,
+    previewUri: 'sample.views.preview',
+    previewViewletId: 'ExtensionView',
+    previewVisible: true,
+  }
+
+  const result = await ViewletLayout.showPreview(state, 'file:///readme.md')
+
+  expect(result.newState).toMatchObject({
+    previewUri: 'file:///readme.md',
+    previewViewletId: 'Preview',
+    previewVisible: true,
+  })
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleActiveViewStateChange', 7, 'sample.views.preview', false],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
 })
 
 test.each([
@@ -772,6 +840,11 @@ test.each([
   })
   expect(SaveState.saveViewletStateWithStorageId).not.toHaveBeenCalled()
   expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(11)
+  expect(activityBarInvokeMock.mock.calls).toEqual([
+    ['ActivityBar.handleSideBarStateChange', 7, sideBarView, true],
+    ['ActivityBar.diff2', 7],
+    ['ActivityBar.render2', 7, 'diff-1'],
+  ])
   if (!sideBarVisible) {
     expect(ViewletManager.load).toHaveBeenCalledWith(
       expect.objectContaining({
