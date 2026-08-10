@@ -212,6 +212,7 @@ export const getModuleId = (commandId: any): any => {
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
     case 'LanguageServer.complete':
+    case 'LanguageServer.definition':
     case 'LanguageServer.diagnostic':
     case 'LanguageServer.dispose':
       return ModuleId.LanguageServer

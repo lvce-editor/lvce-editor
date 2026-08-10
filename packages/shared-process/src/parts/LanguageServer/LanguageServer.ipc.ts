@@ -4,6 +4,7 @@ export const name = 'LanguageServer'
 
 export const Commands = {
   complete: LanguageServer.complete,
+  definition: LanguageServer.definition,
   diagnostic: LanguageServer.diagnostic,
   dispose: LanguageServer.dispose,
 }
