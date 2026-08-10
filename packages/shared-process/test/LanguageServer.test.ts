@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { complete, diagnostic, disposeAll } from '../src/parts/LanguageServer/LanguageServer.ts'
+import { complete, definition, diagnostic, disposeAll } from '../src/parts/LanguageServer/LanguageServer.ts'
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
 
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
@@ -74,6 +74,29 @@ test('complete starts a JavaScript language server', async () => {
   }
 
   await expect(complete(options)).resolves.toEqual([{ insertText: 'fixtureCompletion', kind: 6, label: 'fixtureCompletion:con' }])
+})
+
+test('definition starts a stdio language server and synchronizes documents', async () => {
+  const options = {
+    argv: [serverScript],
+    id: 'sample.definition-fixture',
+    offset: 15,
+    rootUri: 'file:///tmp',
+    textDocument: {
+      languageId: 'elm',
+      text: 'value = 1\nmain = value',
+      uri: '/tmp/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+
+  await expect(definition(options)).resolves.toEqual({
+    range: {
+      end: { character: 7, line: 1 },
+      start: { character: 0, line: 1 },
+    },
+    uri: 'file:///tmp/Main.elm?definition=value%20%3D%201%0Amain%20%3D%20value',
+  })
 })
 
 test('diagnostic starts a stdio language server and synchronizes documents', async () => {
