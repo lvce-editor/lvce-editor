@@ -149,7 +149,7 @@ test('diagnostic normalizes Windows URIs published by a language server', async 
 
   await expect(diagnostic(options)).resolves.toEqual([
     {
-      message: 'fixtureDiagnostic:invalid:file:///d%3A/workspace',
+      message: 'fixtureDiagnostic:invalid:file:///d:/workspace',
       range: {
         end: { character: 3, line: 0 },
         start: { character: 0, line: 0 },
