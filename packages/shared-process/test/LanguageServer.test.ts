@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { complete, definition, diagnostic, dispose, disposeAll, type CompleteOptions } from '../src/parts/LanguageServer/LanguageServer.ts'
+import { complete, definition, diagnostic, dispose, disposeAll, format, type CompleteOptions } from '../src/parts/LanguageServer/LanguageServer.ts'
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
 import { normalizeLanguageServerDocumentUri } from '../src/parts/NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
@@ -127,6 +127,46 @@ test('diagnostic starts a stdio language server and synchronizes documents', asy
       severity: 2,
     },
   ])
+})
+
+test('format starts a stdio language server and synchronizes documents', async () => {
+  const options = {
+    argv: [serverScript],
+    extensionId: 'sample.extension',
+    id: 'sample.fixture',
+    textDocument: {
+      languageId: 'elm',
+      text: 'main = 1',
+      uri: '/tmp/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+
+  await expect(format(options)).resolves.toEqual([
+    {
+      newText: 'formatted:main = 1',
+      range: {
+        end: { character: 8, line: 0 },
+        start: { character: 0, line: 0 },
+      },
+    },
+  ])
+})
+
+test('format returns no edits when the language server does not support document formatting', async () => {
+  await expect(
+    format({
+      argv: [completionOnlyServerScript],
+      extensionId: 'sample.extension',
+      id: 'sample.completion-only-fixture',
+      textDocument: {
+        languageId: 'typescript',
+        text: 'const value=1',
+        uri: '/tmp/sample.ts',
+      },
+      uri: pathToFileURL(process.execPath).href,
+    }),
+  ).resolves.toEqual([])
 })
 
 test('diagnostic supports published diagnostics and uses the provided workspace root', async () => {

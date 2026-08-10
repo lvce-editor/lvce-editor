@@ -32,6 +32,7 @@ interface PendingDiagnostics {
 interface InitializeResult {
   readonly capabilities?: {
     readonly diagnosticProvider?: unknown
+    readonly documentFormattingProvider?: unknown
   }
 }
 
@@ -131,6 +132,7 @@ export class LanguageServerConnection {
   private nextRequestId = 1
   private running = true
   private stderr = ''
+  private supportsDocumentFormatting = false
   private supportsPullDiagnostics = false
 
   constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
@@ -232,6 +234,24 @@ export class LanguageServerConnection {
     })
   }
 
+  async format(textDocument: TextDocument): Promise<readonly unknown[]> {
+    await this.ready
+    if (!this.supportsDocumentFormatting) {
+      return []
+    }
+    this.syncDocument(textDocument)
+    const result = await this.sendRequest('textDocument/formatting', {
+      options: {
+        insertSpaces: true,
+        tabSize: 2,
+      },
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+    return Array.isArray(result) ? result : []
+  }
+
   private configureMarkdown(languageId: string): void {
     if (languageId !== 'markdown' || this.markdownConfigured) {
       return
@@ -319,6 +339,7 @@ export class LanguageServerConnection {
         },
       ],
     })) as InitializeResult
+    this.supportsDocumentFormatting = Boolean(result?.capabilities?.documentFormattingProvider)
     this.supportsPullDiagnostics = Boolean(result?.capabilities?.diagnosticProvider)
     this.sendNotification('initialized', {})
     await Promise.race([this.initializationProgressStarted.promise, wait(100)])

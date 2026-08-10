@@ -30,6 +30,15 @@ export interface DiagnosticOptions {
 
 export type DefinitionOptions = CompleteOptions
 
+export interface FormatOptions {
+  readonly argv: readonly string[]
+  readonly extensionId: string
+  readonly id: string
+  readonly rootUri?: string
+  readonly textDocument: TextDocument
+  readonly uri: string
+}
+
 interface ConnectionState {
   readonly argv: readonly string[]
   readonly connection: LanguageServerConnection
@@ -97,6 +106,16 @@ export const definition = async ({ argv, extensionId, id, offset, rootUri, textD
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.definition(normalizedDocument, offset)
+}
+
+export const format = async ({ argv, extensionId, id, rootUri, textDocument, uri }: FormatOptions): Promise<readonly unknown[]> => {
+  const normalizedDocument = {
+    ...textDocument,
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
+  }
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
+  return connection.format(normalizedDocument)
 }
 
 export const dispose = (extensionId: string): void => {
