@@ -68,9 +68,6 @@ export const readDirWithFileTypes = (path) => {
 }
 
 export const getBlobUrl = (path) => {
-  if (!path.startsWith('/')) {
-    path = `/${path}`
-  }
   return GetRemoteSrc.getRemoteSrc(path)
 }
 
