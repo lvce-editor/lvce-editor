@@ -6,6 +6,7 @@ import {
   executeMarkdownLanguageServerRequest,
   isMarkdownLanguageServerRequest,
 } from '../MarkdownLanguageServerRequest/MarkdownLanguageServerRequest.ts'
+import { normalizeLanguageServerDocumentUri } from '../NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
 interface JsonRpcMessage {
   readonly error?: {
@@ -411,12 +412,13 @@ export class LanguageServerConnection {
     if (typeof uri !== 'string' || !Array.isArray(diagnostics)) {
       return
     }
-    this.publishedDiagnostics.set(uri, diagnostics)
-    const waiters = this.diagnosticWaiters.get(uri)
+    const normalizedUri = normalizeLanguageServerDocumentUri(uri)
+    this.publishedDiagnostics.set(normalizedUri, diagnostics)
+    const waiters = this.diagnosticWaiters.get(normalizedUri)
     if (!waiters) {
       return
     }
-    this.diagnosticWaiters.delete(uri)
+    this.diagnosticWaiters.delete(normalizedUri)
     for (const waiter of waiters) {
       waiter.resolve(diagnostics)
     }

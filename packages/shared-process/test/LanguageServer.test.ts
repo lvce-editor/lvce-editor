@@ -134,21 +134,42 @@ test('diagnostic supports published diagnostics and uses the provided workspace 
   ).resolves.toEqual([])
 })
 
-test(
-  'diagnostic resolves when a completion-only server does not publish diagnostics',
-  async () => {
-    const options = {
-      argv: [completionOnlyServerScript],
-      id: 'sample.completion-only-fixture',
-      textDocument: {
-        languageId: 'typescript',
-        text: 'const value = 1',
-        uri: '/tmp/sample.ts',
-      },
-      uri: pathToFileURL(process.execPath).href,
-    }
+test('diagnostic normalizes Windows URIs published by a language server', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript, '--uppercase-windows-uri'],
+    id: 'sample.windows-push-diagnostics-fixture',
+    rootUri: 'file:///D:/workspace',
+    textDocument: {
+      languageId: 'erlang',
+      text: 'invalid',
+      uri: 'file:///D:/workspace/src/main.erl',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
 
-    await expect(diagnostic(options)).resolves.toEqual([])
-  },
-  2000,
-)
+  await expect(diagnostic(options)).resolves.toEqual([
+    {
+      message: 'fixtureDiagnostic:invalid:file:///d%3A/workspace',
+      range: {
+        end: { character: 3, line: 0 },
+        start: { character: 0, line: 0 },
+      },
+      severity: 2,
+    },
+  ])
+})
+
+test('diagnostic resolves when a completion-only server does not publish diagnostics', async () => {
+  const options = {
+    argv: [completionOnlyServerScript],
+    id: 'sample.completion-only-fixture',
+    textDocument: {
+      languageId: 'typescript',
+      text: 'const value = 1',
+      uri: '/tmp/sample.ts',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+
+  await expect(diagnostic(options)).resolves.toEqual([])
+}, 2000)

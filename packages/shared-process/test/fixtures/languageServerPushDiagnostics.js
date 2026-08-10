@@ -10,6 +10,9 @@ const send = (message) => {
 
 /** @param {string} uri @param {string} text */
 const publishDiagnostics = (uri, text) => {
+  const publishedUri = process.argv.includes('--uppercase-windows-uri')
+    ? uri.replace(/^file:\/\/\/([a-z])%3A/i, (_, driveLetter) => `file:///${driveLetter.toUpperCase()}:`)
+    : uri
   const diagnostics =
     text === 'valid'
       ? []
@@ -28,7 +31,7 @@ const publishDiagnostics = (uri, text) => {
     method: 'textDocument/publishDiagnostics',
     params: {
       diagnostics,
-      uri,
+      uri: publishedUri,
     },
   })
 }
