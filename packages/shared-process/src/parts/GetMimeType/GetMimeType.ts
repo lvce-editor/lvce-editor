@@ -6,6 +6,9 @@ export const getMimeType = (fileExtension: any): any => {
       return MimeType.TextCss
     case '.html':
       return MimeType.TextHtml
+    case '.HEIC':
+    case '.heic':
+      return MimeType.ImageHeic
     case '.jpg':
       return MimeType.ImageJpg
     case '.js':
