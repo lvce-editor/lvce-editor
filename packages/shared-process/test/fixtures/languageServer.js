@@ -22,6 +22,7 @@ const handleMessage = (message) => {
             interFileDependencies: false,
             workspaceDiagnostics: false,
           },
+          documentFormattingProvider: true,
           textDocumentSync: 1,
         },
       },
@@ -80,6 +81,23 @@ const handleMessage = (message) => {
         ],
         kind: 'full',
       },
+    })
+    return
+  }
+  if (message.method === 'textDocument/formatting') {
+    const text = documents.get(message.params.textDocument.uri)
+    send({
+      id: message.id,
+      jsonrpc: '2.0',
+      result: [
+        {
+          newText: `formatted:${text}`,
+          range: {
+            end: { character: text.length, line: 0 },
+            start: { character: 0, line: 0 },
+          },
+        },
+      ],
     })
   }
 }

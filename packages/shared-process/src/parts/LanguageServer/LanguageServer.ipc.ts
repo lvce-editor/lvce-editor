@@ -6,4 +6,5 @@ export const Commands = {
   complete: LanguageServer.complete,
   definition: LanguageServer.definition,
   diagnostic: LanguageServer.diagnostic,
+  format: LanguageServer.format,
 }
