@@ -464,7 +464,7 @@ test('bundleCss preserves readable native select options', async () => {
   }
 }, 30_000)
 
-test('bundleCss rewrites icon urls in lazy-loaded css', async () => {
+test('bundleCss eagerly loads main area css and rewrites icon urls', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -473,10 +473,16 @@ test('bundleCss rewrites icon urls in lazy-loaded css', async () => {
       assetDir: '/abc1234',
     })
 
-    const css = await readFile(join(dir, 'parts', 'ViewletMainWaterMark.css'), 'utf8')
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
 
+    expect(css).toContain(`/* ViewletMainDragOverlay.css */`)
+    expect(css).toContain(`/* ViewletMainEditorGroup.css */`)
+    expect(css).toContain(`/* ViewletMainWaterMark.css */`)
     expect(css).toContain(`mask-image: url(/abc1234/icons/icon.svg);`)
     expect(css).not.toContain(`url(/icons/`)
+    await expect(readFile(join(dir, 'parts', 'ViewletMainDragOverlay.css'), 'utf8')).rejects.toThrow()
+    await expect(readFile(join(dir, 'parts', 'ViewletMainEditorGroup.css'), 'utf8')).rejects.toThrow()
+    await expect(readFile(join(dir, 'parts', 'ViewletMainWaterMark.css'), 'utf8')).rejects.toThrow()
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
