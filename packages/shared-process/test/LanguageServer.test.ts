@@ -13,9 +13,10 @@ afterEach(() => {
 
 test('JavaScript language servers use Electron as Node', () => {
   const serverUri = pathToFileURL('/tmp/language-server.mjs').href
+  const serverPath = fileURLToPath(serverUri)
 
   expect(getSpawnOptions(serverUri, ['--stdio'])).toMatchObject({
-    args: ['/tmp/language-server.mjs', '--stdio'],
+    args: [serverPath, '--stdio'],
     command: process.execPath,
     env: {
       ELECTRON_RUN_AS_NODE: '1',
@@ -25,10 +26,11 @@ test('JavaScript language servers use Electron as Node', () => {
 
 test('native language servers inherit the current environment unchanged', () => {
   const serverUri = pathToFileURL('/tmp/language-server').href
+  const serverPath = fileURLToPath(serverUri)
 
   expect(getSpawnOptions(serverUri, ['--stdio'])).toEqual({
     args: ['--stdio'],
-    command: '/tmp/language-server',
+    command: serverPath,
   })
 })
 
