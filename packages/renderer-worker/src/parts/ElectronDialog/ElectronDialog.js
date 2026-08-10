@@ -26,7 +26,7 @@ export const showOpenDialog = (title, properties) => {
 export const showMessageBox = async (options) => {
   // TODO maybe request window id here instead of at caller
   Assert.object(options)
-  const productName = await Product.getProductNameLong()
+  const productName = options.productName ?? (await Product.getProductNameLong())
   const windowId = await GetWindowId.getWindowId()
   const finalOptions = {
     ...options,
