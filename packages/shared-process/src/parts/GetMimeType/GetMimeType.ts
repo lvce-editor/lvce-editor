@@ -4,11 +4,11 @@ export const getMimeType = (fileExtension: any): any => {
   switch (fileExtension) {
     case '.css':
       return MimeType.TextCss
-    case '.html':
-      return MimeType.TextHtml
     case '.HEIC':
     case '.heic':
       return MimeType.ImageHeic
+    case '.html':
+      return MimeType.TextHtml
     case '.jpg':
       return MimeType.ImageJpg
     case '.js':
