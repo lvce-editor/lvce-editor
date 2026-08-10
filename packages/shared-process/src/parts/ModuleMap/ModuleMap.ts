@@ -213,6 +213,7 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.IsAutoUpdateSupported
     case 'LanguageServer.complete':
     case 'LanguageServer.diagnostic':
+    case 'LanguageServer.dispose':
       return ModuleId.LanguageServer
     case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
       return ModuleId.ListProcessesWithMemoryUsage

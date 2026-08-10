@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { complete, diagnostic, disposeAll } from '../src/parts/LanguageServer/LanguageServer.ts'
+import { complete, diagnostic, dispose, disposeAll, type CompleteOptions } from '../src/parts/LanguageServer/LanguageServer.ts'
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
 
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
@@ -37,6 +37,7 @@ test('native language servers inherit the current environment unchanged', () => 
 test('complete starts a stdio language server and synchronizes documents', async () => {
   const options = {
     argv: [serverScript],
+    extensionId: 'sample.extension',
     id: 'sample.fixture',
     offset: 3,
     textDocument: {
@@ -63,6 +64,7 @@ test('complete starts a stdio language server and synchronizes documents', async
 test('complete starts a JavaScript language server', async () => {
   const options = {
     argv: [],
+    extensionId: 'sample.extension',
     id: 'sample.javascript-fixture',
     offset: 3,
     textDocument: {
@@ -79,6 +81,7 @@ test('complete starts a JavaScript language server', async () => {
 test('diagnostic starts a stdio language server and synchronizes documents', async () => {
   const options = {
     argv: [serverScript],
+    extensionId: 'sample.extension',
     id: 'sample.fixture',
     textDocument: {
       languageId: 'markdown',
@@ -103,6 +106,7 @@ test('diagnostic starts a stdio language server and synchronizes documents', asy
 test('diagnostic supports published diagnostics and uses the provided workspace root', async () => {
   const options = {
     argv: [pushDiagnosticsServerScript],
+    extensionId: 'sample.extension',
     id: 'sample.push-diagnostics-fixture',
     rootUri: 'file:///tmp/sample-workspace',
     textDocument: {
@@ -137,6 +141,7 @@ test('diagnostic supports published diagnostics and uses the provided workspace 
 test('diagnostic normalizes Windows URIs published by a language server', async () => {
   const options = {
     argv: [pushDiagnosticsServerScript, '--uppercase-windows-uri'],
+    extensionId: 'sample.extension',
     id: 'sample.windows-push-diagnostics-fixture',
     rootUri: 'file:///D:/workspace',
     textDocument: {
@@ -162,6 +167,7 @@ test('diagnostic normalizes Windows URIs published by a language server', async 
 test('diagnostic resolves when a completion-only server does not publish diagnostics', async () => {
   const options = {
     argv: [completionOnlyServerScript],
+    extensionId: 'sample.extension',
     id: 'sample.completion-only-fixture',
     textDocument: {
       languageId: 'typescript',
@@ -173,3 +179,34 @@ test('diagnostic resolves when a completion-only server does not publish diagnos
 
   await expect(diagnostic(options)).resolves.toEqual([])
 }, 2000)
+
+test('dispose stops every language server owned by an extension', async () => {
+  const createOptions = (extensionId: string, serverId = 'fixture'): CompleteOptions => ({
+    argv: [serverScript, '--include-process-id'],
+    extensionId,
+    id: `${extensionId}.${serverId}`,
+    offset: 3,
+    textDocument: {
+      languageId: 'typescript',
+      text: 'con',
+      uri: '/tmp/sample.ts',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  })
+  const firstExtensionOptions = createOptions('sample.first-extension')
+  const firstExtensionSecondServerOptions = createOptions('sample.first-extension', 'second-fixture')
+  const secondExtensionOptions = createOptions('sample.second-extension')
+  const getProcessId = async (options: CompleteOptions): Promise<string> => {
+    const result = (await complete(options)) as readonly { readonly label: string }[]
+    return result[0].label.split(':').at(-1) || ''
+  }
+  const firstProcessId = await getProcessId(firstExtensionOptions)
+  const firstExtensionSecondProcessId = await getProcessId(firstExtensionSecondServerOptions)
+  const secondProcessId = await getProcessId(secondExtensionOptions)
+
+  dispose('sample.first-extension')
+
+  await expect(getProcessId(firstExtensionOptions)).resolves.not.toBe(firstProcessId)
+  await expect(getProcessId(firstExtensionSecondServerOptions)).resolves.not.toBe(firstExtensionSecondProcessId)
+  await expect(getProcessId(secondExtensionOptions)).resolves.toBe(secondProcessId)
+})

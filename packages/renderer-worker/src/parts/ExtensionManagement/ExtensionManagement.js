@@ -4,6 +4,7 @@ import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as InstallExtension from '../InstallExtension/InstallExtension.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Platform from '../Platform/Platform.js'
@@ -39,6 +40,11 @@ export const handleExtensionsCacheInvalidated = async (extensionId, disabled) =>
     }
   } catch {
     // ignore
+  }
+  try {
+    await GetActiveEditor.updateAllDiagnostics()
+  } catch {
+    // Older editor workers do not expose a command for refreshing all diagnostics.
   }
 }
 
