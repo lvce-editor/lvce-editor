@@ -17,6 +17,7 @@ const handleMessage = (message) => {
       result: {
         capabilities: {
           completionProvider: {},
+          definitionProvider: true,
           diagnosticProvider: {
             interFileDependencies: false,
             workspaceDiagnostics: false,
@@ -42,6 +43,21 @@ const handleMessage = (message) => {
       jsonrpc: '2.0',
       result: {
         items: [{ insertText: 'fixtureCompletion', kind: 6, label: `fixtureCompletion:${text}` }],
+      },
+    })
+    return
+  }
+  if (message.method === 'textDocument/definition') {
+    const text = documents.get(message.params.textDocument.uri)
+    send({
+      id: message.id,
+      jsonrpc: '2.0',
+      result: {
+        range: {
+          end: { character: 7, line: 1 },
+          start: { character: 0, line: 1 },
+        },
+        uri: `${message.params.textDocument.uri}?definition=${encodeURIComponent(text)}`,
       },
     })
     return
