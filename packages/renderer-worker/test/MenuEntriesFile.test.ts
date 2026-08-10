@@ -25,7 +25,7 @@ test('getMenuEntries', () => {
   })
   expect(menuEntries).toContainEqual({
     command: 'Main.save',
-    flags: MenuItemFlags.Disabled,
+    flags: MenuItemFlags.None,
     id: 'save',
     label: 'Save',
   })

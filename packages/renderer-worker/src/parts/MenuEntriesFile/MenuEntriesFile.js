@@ -44,7 +44,7 @@ export const getMenuEntries = () => {
     {
       id: 'save',
       label: FileStrings.save(),
-      flags: MenuItemFlags.Disabled,
+      flags: MenuItemFlags.None,
       command: 'Main.save',
     },
     {
