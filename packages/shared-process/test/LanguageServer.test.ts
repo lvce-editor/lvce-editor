@@ -1,6 +1,7 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { complete, diagnostic, disposeAll } from '../src/parts/LanguageServer/LanguageServer.ts'
+import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
 
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
 const completionOnlyServerScript = fileURLToPath(new URL('./fixtures/languageServerCompletionOnly.js', import.meta.url))
@@ -8,6 +9,29 @@ const pushDiagnosticsServerScript = fileURLToPath(new URL('./fixtures/languageSe
 
 afterEach(() => {
   disposeAll()
+})
+
+test('JavaScript language servers use Electron as Node', () => {
+  const serverUri = pathToFileURL('/tmp/language-server.mjs').href
+  const serverPath = fileURLToPath(serverUri)
+
+  expect(getSpawnOptions(serverUri, ['--stdio'])).toMatchObject({
+    args: [serverPath, '--stdio'],
+    command: process.execPath,
+    env: {
+      ELECTRON_RUN_AS_NODE: '1',
+    },
+  })
+})
+
+test('native language servers inherit the current environment unchanged', () => {
+  const serverUri = pathToFileURL('/tmp/language-server').href
+  const serverPath = fileURLToPath(serverUri)
+
+  expect(getSpawnOptions(serverUri, ['--stdio'])).toEqual({
+    args: ['--stdio'],
+    command: serverPath,
+  })
 })
 
 test('complete starts a stdio language server and synchronizes documents', async () => {
