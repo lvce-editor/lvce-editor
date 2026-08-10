@@ -468,11 +468,40 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   }
 }
 
+const renderActivityBarCommands = async (activityBarId: number) => {
+  const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
+  return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
+}
+
 const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarView: string, sideBarVisible: boolean) => {
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarStateChange', activityBarId, sideBarView, sideBarVisible)
-  const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
-  const activityBarCommands = await ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
-  return activityBarCommands
+  return renderActivityBarCommands(activityBarId)
+}
+
+const getActivePreviewViewId = (state: LayoutState) => {
+  if (!state.previewVisible || state.previewViewletId !== ViewletModuleId.ExtensionView) {
+    return ''
+  }
+  return state.previewUri
+}
+
+const renderPreviewActivityBarCommands = async (oldState: LayoutState, newState: LayoutState) => {
+  const { activityBarId } = newState
+  if (activityBarId === -1) {
+    return []
+  }
+  const oldViewId = getActivePreviewViewId(oldState)
+  const newViewId = getActivePreviewViewId(newState)
+  if (oldViewId === newViewId) {
+    return []
+  }
+  if (oldViewId) {
+    await ActivityBarWorker.invoke('ActivityBar.handleActiveViewStateChange', activityBarId, oldViewId, false)
+  }
+  if (newViewId) {
+    await ActivityBarWorker.invoke('ActivityBar.handleActiveViewStateChange', activityBarId, newViewId, true)
+  }
+  return renderActivityBarCommands(activityBarId)
 }
 
 const renderActivityBarAuthCommands = async (state: LayoutState) => {
@@ -984,7 +1013,12 @@ export const showPreview = async (state: LayoutState, uri: string = state.previe
 
   if (previewVisible && previewId !== -1) {
     if (state.previewViewletId !== previewViewletId || (previewViewletId === ViewletModuleId.ExtensionView && state.previewUri !== uri)) {
-      return replacePreview(state, uri, previewViewletId)
+      const result = await replacePreview(state, uri, previewViewletId)
+      const activityBarCommands = await renderPreviewActivityBarCommands(state, result.newState)
+      return {
+        newState: result.newState,
+        commands: [...result.commands, ...activityBarCommands],
+      }
     }
     if (previewViewletId === ViewletModuleId.Preview) {
       await Command.execute('Preview.setUri', uri)
@@ -1007,14 +1041,20 @@ export const showPreview = async (state: LayoutState, uri: string = state.previe
   ViewletStates.setState(uid, partialNewState)
   // @ts-ignore
   const result = await show(partialNewState, LayoutModules.Preview)
+  const activityBarCommands = await renderPreviewActivityBarCommands(state, result.newState)
   return {
-    ...result,
     newState: result.newState,
+    commands: [...result.commands, ...activityBarCommands],
   }
 }
 
-export const hidePreview = (state: LayoutState) => {
-  return hide(state, LayoutModules.Preview)
+export const hidePreview = async (state: LayoutState) => {
+  const result = await hide(state, LayoutModules.Preview)
+  const activityBarCommands = await renderPreviewActivityBarCommands(state, result.newState)
+  return {
+    newState: result.newState,
+    commands: [...result.commands, ...activityBarCommands],
+  }
 }
 
 export const togglePreview = (state: LayoutState, uri: string = state.previewUri) => {
