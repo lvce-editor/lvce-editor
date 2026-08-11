@@ -11,6 +11,7 @@ interface TextDocument {
 
 export interface CompleteOptions {
   readonly argv: readonly string[]
+  readonly extensionId: string
   readonly id: string
   readonly offset: number
   readonly rootUri?: string
@@ -20,6 +21,7 @@ export interface CompleteOptions {
 
 export interface DiagnosticOptions {
   readonly argv: readonly string[]
+  readonly extensionId: string
   readonly id: string
   readonly rootUri?: string
   readonly textDocument: TextDocument
@@ -30,6 +32,7 @@ export type DefinitionOptions = CompleteOptions
 
 export interface FormatOptions {
   readonly argv: readonly string[]
+  readonly extensionId: string
   readonly id: string
   readonly rootUri?: string
   readonly textDocument: TextDocument
@@ -39,6 +42,7 @@ export interface FormatOptions {
 interface ConnectionState {
   readonly argv: readonly string[]
   readonly connection: LanguageServerConnection
+  readonly extensionId: string
   readonly uri: string
 }
 
@@ -58,9 +62,9 @@ const hasSameOptions = (state: ConnectionState, uri: string, argv: readonly stri
   return state.uri === uri && state.argv.length === argv.length && state.argv.every((argument, index) => argument === argv[index])
 }
 
-const getConnection = (id: string, uri: string, argv: readonly string[], rootUri: string): LanguageServerConnection => {
+const getConnection = (id: string, extensionId: string, uri: string, argv: readonly string[], rootUri: string): LanguageServerConnection => {
   const existing = connections.get(id)
-  if (existing && existing.connection.isRunning() && hasSameOptions(existing, uri, argv)) {
+  if (existing && existing.extensionId === extensionId && existing.connection.isRunning() && hasSameOptions(existing, uri, argv)) {
     return existing.connection
   }
   existing?.connection.dispose()
@@ -68,49 +72,59 @@ const getConnection = (id: string, uri: string, argv: readonly string[], rootUri
   connections.set(id, {
     argv: [...argv],
     connection,
+    extensionId,
     uri,
   })
   return connection
 }
 
-export const complete = async ({ argv, id, offset, rootUri, textDocument, uri }: CompleteOptions): Promise<readonly unknown[]> => {
+export const complete = async ({ argv, extensionId, id, offset, rootUri, textDocument, uri }: CompleteOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
-  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.complete(normalizedDocument, offset)
 }
 
-export const diagnostic = async ({ argv, id, rootUri, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
+export const diagnostic = async ({ argv, extensionId, id, rootUri, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
-  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.diagnostic(normalizedDocument)
 }
 
-export const definition = async ({ argv, id, offset, rootUri, textDocument, uri }: DefinitionOptions): Promise<unknown> => {
+export const definition = async ({ argv, extensionId, id, offset, rootUri, textDocument, uri }: DefinitionOptions): Promise<unknown> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
-  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.definition(normalizedDocument, offset)
 }
 
-export const format = async ({ argv, id, rootUri, textDocument, uri }: FormatOptions): Promise<readonly unknown[]> => {
+export const format = async ({ argv, extensionId, id, rootUri, textDocument, uri }: FormatOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
-  const connection = getConnection(`${id}:${normalizedRootUri}`, uri, argv, normalizedRootUri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.format(normalizedDocument)
+}
+
+export const dispose = (extensionId: string): void => {
+  for (const [id, state] of connections) {
+    if (state.extensionId === extensionId) {
+      state.connection.dispose()
+      connections.delete(id)
+    }
+  }
 }
 
 export const disposeAll = (): void => {

@@ -39,11 +39,12 @@ const handleMessage = (message) => {
   }
   if (message.method === 'textDocument/completion') {
     const text = documents.get(message.params.textDocument.uri)
+    const processIdSuffix = process.argv.includes('--include-process-id') ? `:${process.pid}` : ''
     send({
       id: message.id,
       jsonrpc: '2.0',
       result: {
-        items: [{ insertText: 'fixtureCompletion', kind: 6, label: `fixtureCompletion:${text}` }],
+        items: [{ insertText: 'fixtureCompletion', kind: 6, label: `fixtureCompletion:${text}${processIdSuffix}` }],
       },
     })
     return

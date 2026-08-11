@@ -43,11 +43,18 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => {
+  return {
+    updateAllDiagnostics: jest.fn(),
+  }
+})
+
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const ExtensionManagementIpc = await import('../src/parts/ExtensionManagement/ExtensionManagement.ipc.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('activateByEvent delegates to the isolated extension management worker', async () => {
@@ -73,6 +80,7 @@ test('handleExtensionsCacheInvalidated refreshes renderer state without invalida
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
+  expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
 })
 
 test('handleExtensionsCacheInvalidated forwards the disabled extension state', async () => {
@@ -81,6 +89,16 @@ test('handleExtensionsCacheInvalidated forwards the disabled extension state', a
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged', 'sample.extension', true)
+  expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
+})
+
+test('handleExtensionsCacheInvalidated refreshes diagnostics when another renderer refresh fails', async () => {
+  // @ts-ignore
+  Command.execute.mockRejectedValueOnce(new Error('Failed to hydrate keybindings'))
+
+  await ExtensionManagement.handleExtensionsCacheInvalidated('sample.extension', true)
+
+  expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
 })
 
 test('cache invalidation commands handle notifications without invalidating again', () => {
