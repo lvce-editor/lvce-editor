@@ -432,6 +432,7 @@ export const commandMap = {
   'Terminals.handleClickTab': lazy('Terminals.handleClickTab'),
   'Terminals.handleMouseDown': lazy('Terminals.handleMouseDown'),
   'Terminals.killTerminal': lazy('Terminals.killTerminal'),
+  'Terminals.sendText': lazy('Terminals.sendText'),
   'Terminals.splitTerminal': lazy('Terminals.splitTerminal'),
   'Test.execute': lazy('Test.execute'),
   'Test.executeAll': lazy('Test.executeAll'),

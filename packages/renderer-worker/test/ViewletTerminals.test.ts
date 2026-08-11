@@ -3,6 +3,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const commandExecute = jest.fn()
 const rendererProcessInvoke = jest.fn()
 const viewletDisposeFunctional = jest.fn((uid) => [['Viewlet.dispose', uid]])
+const viewletExecuteViewletCommand = jest.fn()
 const viewletResize = jest.fn(async (uid, dimensions) => [['Viewlet.setBounds', uid, dimensions]])
 let nextId = 42
 let terminalTabsPreference: boolean | undefined
@@ -47,6 +48,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
     disposeFunctional: viewletDisposeFunctional,
+    executeViewletCommand: viewletExecuteViewletCommand,
     resize: viewletResize,
   }
 })
@@ -264,6 +266,21 @@ test('handleMouseDown focuses an already active terminal', () => {
     focusVersion: 1,
   })
   expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', 41]])
+})
+
+test('sendText writes text to the active terminal', async () => {
+  const state = createLoadedState()
+
+  await expect(ViewletTerminals.sendText(state, 'echo hello world\r')).resolves.toBe(state)
+
+  expect(viewletExecuteViewletCommand).toHaveBeenCalledWith(41, 'handleInput', 'echo hello world\r')
+})
+
+test('sendText rejects when there is no active terminal', async () => {
+  const state = ViewletTerminals.create(1, '', 10, 20, 800, 400)
+
+  await expect(ViewletTerminals.sendText(state, 'echo hello world\r')).rejects.toThrow('No active terminal')
+  expect(viewletExecuteViewletCommand).not.toHaveBeenCalled()
 })
 
 test('killTerminal disposes the active split and expands the remaining split', async () => {

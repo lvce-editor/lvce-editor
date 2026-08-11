@@ -6,5 +6,6 @@ export const Commands = {
   handleClickTab: ViewletTerminals.handleClickTab,
   handleMouseDown: ViewletTerminals.handleMouseDown,
   killTerminal: ViewletTerminals.killTerminal,
+  sendText: ViewletTerminals.sendText,
   splitTerminal: ViewletTerminals.splitTerminal,
 }
