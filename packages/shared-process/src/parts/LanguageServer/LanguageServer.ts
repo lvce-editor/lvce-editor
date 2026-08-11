@@ -19,6 +19,8 @@ export interface CompleteOptions {
   readonly uri: string
 }
 
+export type CodeActionOptions = CompleteOptions
+
 export interface DiagnosticOptions {
   readonly argv: readonly string[]
   readonly extensionId: string
@@ -86,6 +88,16 @@ export const complete = async ({ argv, extensionId, id, offset, rootUri, textDoc
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.complete(normalizedDocument, offset)
+}
+
+export const codeAction = async ({ argv, extensionId, id, offset, rootUri, textDocument, uri }: CodeActionOptions): Promise<readonly unknown[]> => {
+  const normalizedDocument = {
+    ...textDocument,
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
+  }
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
+  return connection.codeAction(normalizedDocument, offset)
 }
 
 export const diagnostic = async ({ argv, extensionId, id, rootUri, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {

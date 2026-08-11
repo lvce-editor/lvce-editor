@@ -16,6 +16,7 @@ const handleMessage = (message) => {
       jsonrpc: '2.0',
       result: {
         capabilities: {
+          codeActionProvider: true,
           completionProvider: {},
           definitionProvider: true,
           diagnosticProvider: {
@@ -46,6 +47,33 @@ const handleMessage = (message) => {
       result: {
         items: [{ insertText: 'fixtureCompletion', kind: 6, label: `fixtureCompletion:${text}${processIdSuffix}` }],
       },
+    })
+    return
+  }
+  if (message.method === 'textDocument/codeAction') {
+    const text = documents.get(message.params.textDocument.uri)
+    send({
+      id: message.id,
+      jsonrpc: '2.0',
+      result: [
+        {
+          edit: {
+            changes: {
+              [message.params.textDocument.uri]: [
+                {
+                  newText: 'fixed',
+                  range: {
+                    end: message.params.range.end,
+                    start: message.params.range.start,
+                  },
+                },
+              ],
+            },
+          },
+          kind: 'quickfix',
+          title: `fixtureCodeAction:${text}:${message.params.context.diagnostics.length}`,
+        },
+      ],
     })
     return
   }

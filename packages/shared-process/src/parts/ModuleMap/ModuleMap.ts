@@ -211,6 +211,7 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
+    case 'LanguageServer.codeAction':
     case 'LanguageServer.complete':
     case 'LanguageServer.definition':
     case 'LanguageServer.diagnostic':

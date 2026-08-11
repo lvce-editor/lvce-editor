@@ -31,6 +31,7 @@ interface PendingDiagnostics {
 
 interface InitializeResult {
   readonly capabilities?: {
+    readonly codeActionProvider?: unknown
     readonly diagnosticProvider?: unknown
     readonly documentFormattingProvider?: unknown
   }
@@ -91,6 +92,40 @@ const getPosition = (text: string, offset: number): { readonly character: number
   }
 }
 
+interface Position {
+  readonly character: number
+  readonly line: number
+}
+
+interface Range {
+  readonly end: Position
+  readonly start: Position
+}
+
+const comparePositions = (first: Position, second: Position): number => {
+  return first.line - second.line || first.character - second.character
+}
+
+const isPosition = (value: unknown): value is Position => {
+  return (
+    Boolean(value) && typeof value === 'object' && typeof (value as Position).character === 'number' && typeof (value as Position).line === 'number'
+  )
+}
+
+const containsPosition = (value: unknown, position: Position): boolean => {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+  const range = (value as { readonly range?: Range }).range
+  return Boolean(
+    range &&
+    isPosition(range.start) &&
+    isPosition(range.end) &&
+    comparePositions(range.start, position) <= 0 &&
+    comparePositions(position, range.end) <= 0,
+  )
+}
+
 const getWorkspaceName = (rootUri: string): string => {
   try {
     return basename(fileURLToPath(rootUri)) || 'workspace'
@@ -132,6 +167,7 @@ export class LanguageServerConnection {
   private nextRequestId = 1
   private running = true
   private stderr = ''
+  private supportsCodeActions = false
   private supportsDocumentFormatting = false
   private supportsPullDiagnostics = false
 
@@ -170,6 +206,28 @@ export class LanguageServerConnection {
     this.running = false
     this.child.kill()
     this.rejectPendingRequests(new Error('Language server was disposed'))
+  }
+
+  async codeAction(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
+    await this.ready
+    if (!this.supportsCodeActions) {
+      return []
+    }
+    const diagnostics = await this.diagnostic(textDocument)
+    const position = getPosition(textDocument.text, offset)
+    const result = await this.sendRequest('textDocument/codeAction', {
+      context: {
+        diagnostics: diagnostics.filter((diagnostic) => containsPosition(diagnostic, position)),
+      },
+      range: {
+        end: position,
+        start: position,
+      },
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+    return Array.isArray(result) ? result : []
   }
 
   async complete(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
@@ -339,6 +397,7 @@ export class LanguageServerConnection {
         },
       ],
     })) as InitializeResult
+    this.supportsCodeActions = Boolean(result?.capabilities?.codeActionProvider)
     this.supportsDocumentFormatting = Boolean(result?.capabilities?.documentFormattingProvider)
     this.supportsPullDiagnostics = Boolean(result?.capabilities?.diagnosticProvider)
     this.sendNotification('initialized', {})
