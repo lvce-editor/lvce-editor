@@ -12,3 +12,7 @@ test('registers the viewlet focus-selector bridge command', () => {
 test('registers the viewlet reload command', () => {
   expect(commandMap['Viewlet.reload']).toBeDefined()
 })
+
+test('registers the terminal send text command', () => {
+  expect(commandMap['Terminals.sendText']).toBeDefined()
+})

@@ -235,6 +235,16 @@ export const handleClickTab = (state, index) => {
   return focusIndex(state, Number(index))
 }
 
+export const sendText = async (state, text) => {
+  Assert.string(text)
+  const { childUid } = state
+  if (childUid === -1) {
+    throw new Error('No active terminal')
+  }
+  await Viewlet.executeViewletCommand(childUid, 'handleInput', text)
+  return state
+}
+
 export const handleClickAction = (state, indexOrCommand, command = indexOrCommand) => {
   Assert.string(command)
   switch (command) {
