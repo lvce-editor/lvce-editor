@@ -1,6 +1,15 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { complete, definition, diagnostic, dispose, disposeAll, format, type CompleteOptions } from '../src/parts/LanguageServer/LanguageServer.ts'
+import {
+  codeAction,
+  complete,
+  definition,
+  diagnostic,
+  dispose,
+  disposeAll,
+  format,
+  type CompleteOptions,
+} from '../src/parts/LanguageServer/LanguageServer.ts'
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
 import { normalizeLanguageServerDocumentUri } from '../src/parts/NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
@@ -77,6 +86,59 @@ test('complete starts a JavaScript language server', async () => {
   }
 
   await expect(complete(options)).resolves.toEqual([{ insertText: 'fixtureCompletion', kind: 6, label: 'fixtureCompletion:con' }])
+})
+
+test('codeAction sends relevant diagnostics and synchronizes documents', async () => {
+  const options = {
+    argv: [serverScript],
+    extensionId: 'sample.extension',
+    id: 'sample.code-action-fixture',
+    offset: 2,
+    textDocument: {
+      languageId: 'elm',
+      text: 'unused',
+      uri: '/tmp/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  const normalizedDocumentUri = normalizeLanguageServerDocumentUri(options.textDocument.uri)
+
+  await expect(codeAction(options)).resolves.toEqual([
+    {
+      edit: {
+        changes: {
+          [normalizedDocumentUri]: [
+            {
+              newText: 'fixed',
+              range: {
+                end: { character: 2, line: 0 },
+                start: { character: 2, line: 0 },
+              },
+            },
+          ],
+        },
+      },
+      kind: 'quickfix',
+      title: 'fixtureCodeAction:unused:1',
+    },
+  ])
+})
+
+test('codeAction returns no actions when the language server does not support them', async () => {
+  await expect(
+    codeAction({
+      argv: [completionOnlyServerScript],
+      extensionId: 'sample.extension',
+      id: 'sample.completion-only-code-action-fixture',
+      offset: 2,
+      textDocument: {
+        languageId: 'typescript',
+        text: 'const value = 1',
+        uri: '/tmp/sample.ts',
+      },
+      uri: pathToFileURL(process.execPath).href,
+    }),
+  ).resolves.toEqual([])
 })
 
 test('definition starts a stdio language server and synchronizes documents', async () => {
