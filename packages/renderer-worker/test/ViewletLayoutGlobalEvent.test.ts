@@ -2,6 +2,12 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const hydratePreferences = jest.fn()
 const extensionManagementInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
+const problemsInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => ({
+  errorCount: 0,
+  hasEditor: false,
+  problemCount: 0,
+  warningCount: 0,
+}))
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
   return {
@@ -14,6 +20,12 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
     invoke: extensionManagementInvoke,
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ProblemsWorker/ProblemsWorker.ts', () => {
+  return {
+    invoke: problemsInvoke,
   }
 })
 
@@ -177,6 +189,39 @@ test('handleActiveEditorChange ignores viewlets that are not loaded', async () =
   })
 })
 
+test('handleActiveEditorChange refreshes the problems summary for loaded viewlets', async () => {
+  const summary = {
+    errorCount: 2,
+    hasEditor: true,
+    problemCount: 5,
+    warningCount: 1,
+  }
+  problemsInvoke.mockResolvedValueOnce(summary)
+  const panelHandler = jest.fn((state: { uid: number }, receivedSummary) => ({
+    ...state,
+    summary: receivedSummary,
+  }))
+  const statusBarHandler = jest.fn((state: { uid: number }, receivedSummary) => ({
+    ...state,
+    summary: receivedSummary,
+  }))
+  ViewletStates.set('panel', createInstance(1, 'handleProblemsSummaryChange', panelHandler))
+  ViewletStates.set('status-bar', createInstance(2, 'handleProblemsSummaryChange', statusBarHandler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
+
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary')
+  expect(panelHandler).toHaveBeenCalledWith({ uid: 1 }, summary)
+  expect(statusBarHandler).toHaveBeenCalledWith({ uid: 2 }, summary)
+  expect(result).toEqual({
+    commands: [['render.1'], ['render.2']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
 test('handleDiagnosticsChange forwards the changed uri to loaded viewlets', async () => {
   const handler = jest.fn((state: { uid: number }, uri: string) => {
     return {
@@ -191,6 +236,26 @@ test('handleDiagnosticsChange forwards the changed uri to loaded viewlets', asyn
 
   expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
   expect(ViewletManager.render).toHaveBeenCalledTimes(1)
+  expect(result).toEqual({
+    commands: [['render.1']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
+test('handleDiagnosticsChange keeps the viewlet update when refreshing the problems summary fails', async () => {
+  problemsInvoke.mockRejectedValueOnce(new Error('Failed to query problems'))
+  const handler = jest.fn((state: { uid: number }, uri: string) => ({
+    ...state,
+    refreshedUri: uri,
+  }))
+  ViewletStates.set('problems', createInstance(1, 'handleDiagnosticsChange', handler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleDiagnosticsChange(state, 'file:///test.ts')
+
+  expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
   expect(result).toEqual({
     commands: [['render.1']],
     newState: {

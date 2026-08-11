@@ -45,6 +45,7 @@ export const CommandsWithSideEffects = {
   handleSashPointerUp: ViewletLayout.handleSashPointerUp,
   handleSettingsChanged: ViewletLayout.handleSettingsChanged,
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,
+  refreshProblemsSummary: ViewletLayout.refreshProblemsSummary,
   refreshSourceControlBadgeCount: ViewletLayout.refreshSourceControlBadgeCount,
   renderMainAreaPending: ViewletLayout.renderMainAreaPending,
   setMountedViewlets: ViewletLayout.setMountedViewlets,

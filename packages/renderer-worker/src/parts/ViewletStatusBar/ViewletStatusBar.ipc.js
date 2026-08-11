@@ -1,4 +1,9 @@
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+import * as Command from '../Command/Command.js'
+
+export const contentLoadedEffects = async () => {
+  await Command.execute('Layout.refreshProblemsSummary')
+}
 
 export const {
   Commands,

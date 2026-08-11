@@ -19,6 +19,7 @@ import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as Product from '../Product/Product.js'
 import * as RenderMainAreaPending from '../RenderMainAreaPending/RenderMainAreaPending.ts'
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
@@ -2415,12 +2416,33 @@ export const handleWorkspaceRefresh = async (state: LayoutState, refresh: Worksp
   return result
 }
 
+export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
+  try {
+    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
+    return callGlobalEvent(state, 'handleProblemsSummaryChange', summary)
+  } catch {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+}
+
+const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, eventName: string, ...args): Promise<LayoutStateResult> => {
+  const eventResult = await callGlobalEvent(state, eventName, ...args)
+  const summaryResult = await refreshProblemsSummary(eventResult.newState)
+  return {
+    newState: summaryResult.newState,
+    commands: [...eventResult.commands, ...summaryResult.commands],
+  }
+}
+
 export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
-  return callGlobalEvent(state, 'handleActiveEditorChange', activeUri)
+  return callGlobalEventAndRefreshProblemsSummary(state, 'handleActiveEditorChange', activeUri)
 }
 
 export const handleDiagnosticsChange = async (state: LayoutState, uri: string) => {
-  return callGlobalEvent(state, 'handleDiagnosticsChange', uri)
+  return callGlobalEventAndRefreshProblemsSummary(state, 'handleDiagnosticsChange', uri)
 }
 
 export const handleSettingsChanged = async (state: LayoutState) => {
