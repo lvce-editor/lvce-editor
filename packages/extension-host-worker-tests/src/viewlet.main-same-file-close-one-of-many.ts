@@ -1,4 +1,4 @@
-export const name = 'viewlet.main-same-file-edit-bidirectional'
+export const name = 'viewlet.main-same-file-close-one-of-many'
 
 export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
@@ -8,15 +8,16 @@ export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expec
   await Main.openUri(uri)
   await Main.splitRight()
   await Main.openUri({ uri, reuseExisting: false })
+  await Main.splitRight()
+  await Main.openUri({ uri, reuseExisting: false })
   const editors = Locator('.Editor')
 
+  await Main.closeActiveEditor()
+  await expect(editors).toHaveCount(2)
   await editors.nth(0).click()
-  await Editor.setCursor(0, 0)
-  await Editor.type('left-')
-  await editors.nth(1).click()
-  await Editor.setCursor(0, 8)
-  await Editor.type('-right')
+  await Editor.setCursor(0, 3)
+  await Editor.type('x')
 
-  await expect(editors.nth(0)).toHaveText('left-abc-right')
-  await expect(editors.nth(1)).toHaveText('left-abc-right')
+  await expect(editors.nth(0)).toHaveText('abcx')
+  await expect(editors.nth(1)).toHaveText('abcx')
 }

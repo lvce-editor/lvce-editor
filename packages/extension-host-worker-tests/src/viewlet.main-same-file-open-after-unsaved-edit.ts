@@ -10,7 +10,7 @@ export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expec
   await Editor.type('x')
 
   await Main.splitRight()
-  await Main.openUri(uri)
+  await Main.openUri({ uri, reuseExisting: false })
 
   const editors = Locator('.Editor')
   await expect(editors).toHaveCount(2)

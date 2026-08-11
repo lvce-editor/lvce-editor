@@ -3,15 +3,32 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const queues = new Map()
 
+const isTextEditor = (instance) => {
+  return instance?.moduleId === 'Editor' || instance?.moduleId === 'EditorText'
+}
+
 const getEditorUids = (editor) => {
   const uids = new Set([editor.uid])
   for (const instance of Object.values(ViewletStates.getAllInstances())) {
     const state = instance?.state
-    if (instance?.moduleId === 'EditorText' && state?.uri === editor.uri && typeof state.uid === 'number') {
+    if (isTextEditor(instance) && state?.uri === editor.uri && typeof state.uid === 'number') {
       uids.add(state.uid)
     }
   }
   return uids
+}
+
+const getExistingEditorUids = async (editor) => {
+  const editorUids = [...getEditorUids(editor)]
+  if (editorUids.length === 1) {
+    return editorUids
+  }
+  const keys = await EditorWorker.invoke('Editor.getKeys')
+  if (!Array.isArray(keys)) {
+    return editorUids
+  }
+  const existingUids = new Set(keys.map(Number))
+  return editorUids.filter((uid) => existingUids.has(uid))
 }
 
 const adjustCommands = (commands, uid) => {
@@ -23,21 +40,19 @@ const adjustCommands = (commands, uid) => {
   })
 }
 
+const renderEditor = async (uid, sourceUid) => {
+  const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
+  const commands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
+  return uid === sourceUid ? commands : adjustCommands(commands, uid)
+}
+
 const runEditorCommand = async (editor, fullId, restArgs) => {
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-  const commands = []
-  for (const uid of getEditorUids(editor)) {
-    const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
-    const editorCommands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
-    if (uid === editor.uid) {
-      commands.push(...editorCommands)
-    } else {
-      commands.push(...adjustCommands(editorCommands, uid))
-    }
-  }
+  const editorUids = await getExistingEditorUids(editor)
+  const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid)))
   return {
     ...editor,
-    commands,
+    commands: commandLists.flat(),
   }
 }
 

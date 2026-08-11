@@ -1,4 +1,4 @@
-export const name = 'viewlet.main-same-file-edit-bidirectional'
+export const name = 'viewlet.main-same-file-three-groups-horizontal'
 
 export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
@@ -8,15 +8,16 @@ export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expec
   await Main.openUri(uri)
   await Main.splitRight()
   await Main.openUri({ uri, reuseExisting: false })
+  await Main.splitRight()
+  await Main.openUri({ uri, reuseExisting: false })
   const editors = Locator('.Editor')
 
-  await editors.nth(0).click()
-  await Editor.setCursor(0, 0)
-  await Editor.type('left-')
   await editors.nth(1).click()
-  await Editor.setCursor(0, 8)
-  await Editor.type('-right')
+  await Editor.setCursor(0, 3)
+  await Editor.type('x')
 
-  await expect(editors.nth(0)).toHaveText('left-abc-right')
-  await expect(editors.nth(1)).toHaveText('left-abc-right')
+  await expect(editors).toHaveCount(3)
+  for (let index = 0; index < 3; index++) {
+    await expect(editors.nth(index)).toHaveText('abcx')
+  }
 }
