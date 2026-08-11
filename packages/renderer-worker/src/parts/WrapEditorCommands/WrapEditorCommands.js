@@ -3,15 +3,32 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const queues = new Map()
 
+const isTextEditor = (instance) => {
+  return instance?.moduleId === 'Editor' || instance?.moduleId === 'EditorText'
+}
+
 const getEditorUids = (editor) => {
   const uids = new Set([editor.uid])
   for (const instance of Object.values(ViewletStates.getAllInstances())) {
     const state = instance?.state
-    if (instance?.moduleId === 'EditorText' && state?.uri === editor.uri && typeof state.uid === 'number') {
+    if (isTextEditor(instance) && state?.uri === editor.uri && typeof state.uid === 'number') {
       uids.add(state.uid)
     }
   }
   return uids
+}
+
+const getExistingEditorUids = async (editor) => {
+  const editorUids = [...getEditorUids(editor)]
+  if (editorUids.length === 1) {
+    return editorUids
+  }
+  const keys = await EditorWorker.invoke('Editor.getKeys')
+  if (!Array.isArray(keys)) {
+    return editorUids
+  }
+  const existingUids = new Set(keys.map(Number))
+  return editorUids.filter((uid) => existingUids.has(uid))
 }
 
 const adjustCommands = (commands, uid) => {
@@ -31,7 +48,8 @@ const renderEditor = async (uid, sourceUid) => {
 
 const runEditorCommand = async (editor, fullId, restArgs) => {
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-  const commandLists = await Promise.all([...getEditorUids(editor)].map((uid) => renderEditor(uid, editor.uid)))
+  const editorUids = await getExistingEditorUids(editor)
+  const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid)))
   return {
     ...editor,
     commands: commandLists.flat(),

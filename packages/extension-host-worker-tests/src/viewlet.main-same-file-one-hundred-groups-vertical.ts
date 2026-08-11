@@ -8,7 +8,7 @@ export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expec
   await Main.openUri(uri)
   for (let index = 1; index < 100; index++) {
     await Main.splitDown()
-    await Main.openUri(uri)
+    await Main.openUri({ uri, reuseExisting: false })
   }
   const editors = Locator('.Editor')
 

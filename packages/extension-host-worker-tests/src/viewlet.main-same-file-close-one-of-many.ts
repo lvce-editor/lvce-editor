@@ -7,9 +7,9 @@ export const test = async ({ Editor, FileSystem, Locator, Main, Workspace, expec
   await Workspace.setPath(tmpDir)
   await Main.openUri(uri)
   await Main.splitRight()
-  await Main.openUri(uri)
+  await Main.openUri({ uri, reuseExisting: false })
   await Main.splitRight()
-  await Main.openUri(uri)
+  await Main.openUri({ uri, reuseExisting: false })
   const editors = Locator('.Editor')
 
   await Main.closeActiveEditor()

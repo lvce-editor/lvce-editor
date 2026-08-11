@@ -47,7 +47,7 @@ test('does not serialize find widget intents', async () => {
 test('renders every text editor showing the same uri', async () => {
   ViewletStates.set(2, {
     factory: {},
-    moduleId: 'EditorText',
+    moduleId: 'Editor',
     renderedState: { uid: 2 },
     state: {
       uid: 2,
@@ -55,6 +55,9 @@ test('renders every text editor showing the same uri', async () => {
     },
   })
   EditorWorker.invoke.mockImplementation((method: string, uid: number) => {
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve(['1', '2'])
+    }
     if (method === 'Editor.diff2') {
       return Promise.resolve([uid])
     }
@@ -79,7 +82,7 @@ test('renders one hundred text editors showing the same uri', async () => {
   for (let uid = 1; uid <= 100; uid++) {
     ViewletStates.set(uid, {
       factory: {},
-      moduleId: 'EditorText',
+      moduleId: 'Editor',
       renderedState: { uid },
       state: {
         uid,
@@ -88,6 +91,9 @@ test('renders one hundred text editors showing the same uri', async () => {
     })
   }
   EditorWorker.invoke.mockImplementation((method: string, uid: number) => {
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve(Array.from({ length: 100 }, (_, index) => String(index + 1)))
+    }
     if (method === 'Editor.diff2') {
       return Promise.resolve([uid])
     }
@@ -113,7 +119,7 @@ test('renders one hundred text editors showing the same uri', async () => {
 test('does not render a text editor showing another uri', async () => {
   ViewletStates.set(2, {
     factory: {},
-    moduleId: 'EditorText',
+    moduleId: 'Editor',
     renderedState: { uid: 2 },
     state: {
       uid: 2,
@@ -133,10 +139,37 @@ test('does not render a text editor showing another uri', async () => {
   expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
 })
 
+test('does not render a sibling removed by an editor lifecycle command', async () => {
+  ViewletStates.set(2, {
+    factory: {},
+    moduleId: 'Editor',
+    renderedState: { uid: 2 },
+    state: {
+      uid: 2,
+      uri: 'file:///same.txt',
+    },
+  })
+  EditorWorker.invoke.mockImplementation((method: string) => {
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve(['1'])
+    }
+    if (method === 'Editor.diff2' || method === 'Editor.render2') {
+      return Promise.resolve([])
+    }
+    return Promise.resolve(undefined)
+  })
+  const save = WrapEditorCommands.wrapEditorCommand('save')
+
+  await save({ uid: 1, uri: 'file:///same.txt' })
+
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+})
+
 test('preserves global sibling render commands', async () => {
   ViewletStates.set(2, {
     factory: {},
-    moduleId: 'EditorText',
+    moduleId: 'Editor',
     renderedState: { uid: 2 },
     state: {
       uid: 2,
@@ -144,6 +177,9 @@ test('preserves global sibling render commands', async () => {
     },
   })
   EditorWorker.invoke.mockImplementation((method: string, uid: number) => {
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve(['1', '2'])
+    }
     if (method === 'Editor.diff2') {
       return Promise.resolve([uid])
     }
