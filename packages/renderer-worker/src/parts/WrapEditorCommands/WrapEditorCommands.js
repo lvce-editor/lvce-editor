@@ -23,21 +23,18 @@ const adjustCommands = (commands, uid) => {
   })
 }
 
+const renderEditor = async (uid, sourceUid) => {
+  const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
+  const commands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
+  return uid === sourceUid ? commands : adjustCommands(commands, uid)
+}
+
 const runEditorCommand = async (editor, fullId, restArgs) => {
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-  const commands = []
-  for (const uid of getEditorUids(editor)) {
-    const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
-    const editorCommands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
-    if (uid === editor.uid) {
-      commands.push(...editorCommands)
-    } else {
-      commands.push(...adjustCommands(editorCommands, uid))
-    }
-  }
+  const commandLists = await Promise.all([...getEditorUids(editor)].map((uid) => renderEditor(uid, editor.uid)))
   return {
     ...editor,
-    commands,
+    commands: commandLists.flat(),
   }
 }
 

@@ -75,6 +75,41 @@ test('renders every text editor showing the same uri', async () => {
   ])
 })
 
+test('renders one hundred text editors showing the same uri', async () => {
+  for (let uid = 1; uid <= 100; uid++) {
+    ViewletStates.set(uid, {
+      factory: {},
+      moduleId: 'EditorText',
+      renderedState: { uid },
+      state: {
+        uid,
+        uri: 'file:///same.txt',
+      },
+    })
+  }
+  EditorWorker.invoke.mockImplementation((method: string, uid: number) => {
+    if (method === 'Editor.diff2') {
+      return Promise.resolve([uid])
+    }
+    if (method === 'Editor.render2') {
+      return Promise.resolve([['setText', `editor-${uid}`]])
+    }
+    return Promise.resolve(undefined)
+  })
+  const type = WrapEditorCommands.wrapEditorCommand('type')
+
+  const result = await type({ uid: 50, uri: 'file:///same.txt' }, 'x')
+
+  for (let uid = 1; uid <= 100; uid++) {
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', uid)
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', uid, [uid])
+  }
+  expect(result.commands).toHaveLength(100)
+  expect(result.commands[0]).toEqual(['setText', 'editor-50'])
+  expect(result.commands[1]).toEqual(['Viewlet.send', 1, 'setText', 'editor-1'])
+  expect(result.commands.at(-1)).toEqual(['Viewlet.send', 100, 'setText', 'editor-100'])
+})
+
 test('does not render a text editor showing another uri', async () => {
   ViewletStates.set(2, {
     factory: {},
