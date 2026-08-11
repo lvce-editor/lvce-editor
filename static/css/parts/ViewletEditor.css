@@ -176,6 +176,7 @@
 .DiffEditorLineNumber {
   color: var(--EditorLineNumberForeground, rgba(155, 162, 160, 0.3));
   contain: strict;
+  flex-shrink: 0;
   margin-right: 1px;
   height: var(--EditorLineHeight);
   text-align: right;
