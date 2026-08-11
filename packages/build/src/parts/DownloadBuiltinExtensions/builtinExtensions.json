@@ -132,9 +132,15 @@
     "created": "2022-06-16"
   },
   {
+    "name": "builtin.language-basics-erlang",
+    "repository": "github.com/lvce-editor/language-basics-erlang",
+    "version": "0.0.2",
+    "created": "2023-07-05"
+  },
+  {
     "name": "builtin.language-basics-elm",
     "repository": "github.com/lvce-editor/language-basics-elm",
-    "version": "0.15.5",
+    "version": "0.15.6",
     "created": "2022-10-05"
   },
   {
