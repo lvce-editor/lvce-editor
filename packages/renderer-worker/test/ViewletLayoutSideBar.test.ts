@@ -486,6 +486,77 @@ test('createPanelViewlet omits empty event listener registration for its new act
   ])
 })
 
+test('createPanelViewlet renders initial actions after creating their root', async () => {
+  const state = ViewletLayout.create(1)
+  const actionsDom = [{ type: 'Button', childCount: 0 }]
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.create', 'Terminals', 11],
+    ['Viewlet.setDom2', 33, actionsDom],
+  ])
+
+  const result = await ViewletLayout.createPanelViewlet(
+    state,
+    'Terminals',
+    11,
+    22,
+    33,
+    {
+      x: 0,
+      y: 35,
+      width: 400,
+      height: 200,
+    },
+    '',
+  )
+
+  expect(result.commands).toEqual([
+    ['Viewlet.create', 'Terminals', 11],
+    ['Viewlet.createFunctionalRoot', 'Terminals', 33, true],
+    ['Viewlet.setDom2', 33, actionsDom],
+    ['Viewlet.setUid', 33, 11],
+  ])
+})
+
+test('createPanelViewlet renders an empty actions root when the panel view has no actions', async () => {
+  const state = ViewletLayout.create(1)
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([['Viewlet.create', 'Problems', 11]])
+
+  const result = await ViewletLayout.createPanelViewlet(
+    state,
+    'Problems',
+    11,
+    22,
+    33,
+    {
+      x: 0,
+      y: 35,
+      width: 400,
+      height: 200,
+    },
+    '',
+  )
+
+  expect(result.commands).toEqual([
+    ['Viewlet.create', 'Problems', 11],
+    ['Viewlet.createFunctionalRoot', 'Problems', 33, true],
+    [
+      'Viewlet.setDom2',
+      33,
+      [
+        {
+          childCount: 0,
+          className: 'Actions',
+          role: 'toolbar',
+          type: 4,
+        },
+      ],
+    ],
+    ['Viewlet.setUid', 33, 11],
+  ])
+})
+
 test('createPanelViewlet forwards focus to the loaded panel view', async () => {
   const state = ViewletLayout.create(1)
   // @ts-ignore
