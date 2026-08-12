@@ -162,6 +162,17 @@ export const preview = {
     const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
     return { ...state, uri: layoutState.previewUri || state.uri }
   },
+  wrapCommand(command, defaultWrapCommand, { worker }) {
+    if (command !== 'getRuntimeDiagnostics') {
+      return defaultWrapCommand(command)
+    }
+    const getRuntimeDiagnostics = (state) => {
+      const { uid } = state
+      return worker.invoke('Preview.getRuntimeDiagnostics', uid)
+    }
+    getRuntimeDiagnostics.returnValue = true
+    return getRuntimeDiagnostics
+  },
 }
 
 export const problems = {
