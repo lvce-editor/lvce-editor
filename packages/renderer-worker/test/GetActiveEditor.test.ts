@@ -89,7 +89,7 @@ test('getVisibleLineRange returns the range for the active editor', async () => 
     },
   })
   const range = { endRowIndex: 20, startRowIndex: 4 }
-  const invoke = jest.fn(async () => range)
+  const invoke = jest.fn(async () => [4, 21])
 
   await expect(GetActiveEditor.getVisibleLineRangeWithInvoke(invoke)).resolves.toEqual(range)
   expect(invoke).toHaveBeenCalledWith('Editor.getVisibleLineRange', 42)

@@ -46,7 +46,11 @@ export const getVisibleLineRangeWithInvoke = async (invoke) => {
   if (!instance) {
     return undefined
   }
-  return invoke('Editor.getVisibleLineRange', instance.state.id)
+  const [startRowIndex, endRowIndexExclusive] = await invoke('Editor.getVisibleLineRange', instance.state.id)
+  return {
+    endRowIndex: Math.max(endRowIndexExclusive - 1, startRowIndex),
+    startRowIndex,
+  }
 }
 
 export const getVisibleLineRange = async () => {
