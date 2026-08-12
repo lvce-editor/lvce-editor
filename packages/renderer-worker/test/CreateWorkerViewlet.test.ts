@@ -1,5 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 import { createWorkerViewletWithDependencies } from '../src/parts/CreateWorkerViewlet/CreateWorkerViewlet.js'
+import { getWorkerViewletAdapter } from '../src/parts/WorkerViewletAdapterMap/WorkerViewletAdapterMap.js'
 import { getWorkerViewletConfig } from '../src/parts/WorkerViewletConfig/WorkerViewletConfig.js'
 
 const stateParameter = (name: string) => ({ name, source: 'state' })
@@ -103,6 +104,33 @@ test('creates command wrappers through the same lifecycle seam', async () => {
 
   expect(invoke).toHaveBeenNthCalledWith(2, 'Example.select', 9, 'item-1')
   expect(result.commands).toEqual([['setText', 'selected']])
+})
+
+test('returns preview runtime diagnostics without treating them as viewlet state', async () => {
+  const diagnostics = {
+    entries: [{ level: 'error', message: 'addPipe is not defined', type: 'exception' }],
+    errorCount: 1,
+  }
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Preview.getCommandIds') {
+      return ['getRuntimeDiagnostics']
+    }
+    if (method === 'Preview.getRuntimeDiagnostics') {
+      return diagnostics
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('preview'),
+    config: getWorkerViewletConfig('preview'),
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(12, 'file:///workspace/index.html', 0, 0, 640, 480)
+
+  expect(commands.getRuntimeDiagnostics.returnValue).toBe(true)
+  await expect(commands.getRuntimeDiagnostics(state)).resolves.toBe(diagnostics)
+  expect(invoke).toHaveBeenCalledWith('Preview.getRuntimeDiagnostics', 12)
 })
 
 test('preserves command short-circuit and phase-specific diff parameters', async () => {
