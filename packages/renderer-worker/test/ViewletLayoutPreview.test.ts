@@ -352,6 +352,10 @@ test.each([
 test('showSecondaryPreview keeps an open primary preview mounted', async () => {
   const state = LayoutPoints.getPoints({
     ...ViewletLayout.create(1),
+    panelHeight: 200,
+    panelMaxHeight: 600,
+    panelMinHeight: 150,
+    panelVisible: true,
     previewId: 7,
     previewMinWidth: 100,
     previewUri: 'simple-browser://',
@@ -361,7 +365,9 @@ test('showSecondaryPreview keeps an open primary preview mounted', async () => {
     secondaryPreviewMinWidth: 100,
     secondaryPreviewWidth: 400,
     statusBarHeight: 20,
+    statusBarVisible: true,
     titleBarHeight: 35,
+    titleBarVisible: true,
     windowHeight: 800,
     windowWidth: 1200,
   })
@@ -388,11 +394,24 @@ test('showSecondaryPreview keeps an open primary preview mounted', async () => {
     true,
     undefined,
   )
+  expect(result.newState.secondaryPreviewHeight).toBe(result.newState.windowHeight - result.newState.secondaryPreviewTop)
+  expect(result.commands).toContainEqual([
+    'Viewlet.setBounds',
+    expect.any(Number),
+    result.newState.secondaryPreviewLeft,
+    result.newState.secondaryPreviewTop,
+    result.newState.secondaryPreviewWidth,
+    result.newState.secondaryPreviewHeight,
+  ])
 })
 
 test('showPreview keeps code visible when voice chat is already open', async () => {
   const state = LayoutPoints.getPoints({
     ...ViewletLayout.create(1),
+    panelHeight: 200,
+    panelMaxHeight: 600,
+    panelMinHeight: 150,
+    panelVisible: true,
     previewMinWidth: 100,
     secondaryPreviewId: 8,
     secondaryPreviewMinWidth: 100,
@@ -401,7 +420,9 @@ test('showPreview keeps code visible when voice chat is already open', async () 
     secondaryPreviewVisible: true,
     secondaryPreviewWidth: 600,
     statusBarHeight: 20,
+    statusBarVisible: true,
     titleBarHeight: 35,
+    titleBarVisible: true,
     windowHeight: 800,
     windowWidth: 1200,
   })
@@ -419,6 +440,15 @@ test('showPreview keeps code visible when voice chat is already open', async () 
     secondaryPreviewWidth: 400,
   })
   expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(8)
+  expect(result.newState.previewHeight).toBe(result.newState.windowHeight - result.newState.previewTop)
+  expect(result.commands).toContainEqual([
+    'Viewlet.setBounds',
+    expect.any(Number),
+    result.newState.previewLeft,
+    result.newState.previewTop,
+    result.newState.previewWidth,
+    result.newState.previewHeight,
+  ])
 })
 
 test('hideSecondaryPreview leaves the primary preview mounted', async () => {
