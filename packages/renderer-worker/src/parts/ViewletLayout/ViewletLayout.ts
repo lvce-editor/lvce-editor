@@ -379,6 +379,18 @@ const getPreviewUri = (state: LayoutState, module: LayoutModules.LayoutModule): 
   return module === LayoutModules.SecondaryPreview ? state.secondaryPreviewUri : state.previewUri
 }
 
+const getPreviewBoundsCommand = (uid: number, state: LayoutState, module: LayoutModules.LayoutModule): any[] => {
+  const { kTop, kLeft, kWidth, kHeight } = module
+  return ['Viewlet.setBounds', uid, state[kLeft], state[kTop], state[kWidth], state[kHeight]]
+}
+
+const addPreviewBoundsCommand = (commands: any[], uid: number, state: LayoutState, module: LayoutModules.LayoutModule): void => {
+  if (!isPreviewModule(module) || commands.some((command) => command[0] === 'Viewlet.setBounds' && command[1] === uid)) {
+    return
+  }
+  commands.push(getPreviewBoundsCommand(uid, state, module))
+}
+
 export const loadContent = (state: LayoutState, savedState: any): LayoutState => {
   const { Layout } = savedState
   const { bounds } = Layout
@@ -536,6 +548,7 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   }
   const restoreState: any = shouldRestore ? undefined : { restore: false }
   const commands = await ViewletManager.load(viewlet, false, shouldRestore, restoreState)
+  addPreviewBoundsCommand(commands, childUid, intermediateState, module)
   if (commands) {
     // commands.push(['Viewlet.append', uid, childUid])
   }
@@ -1117,6 +1130,7 @@ const replacePreview = async (state: LayoutState, uri: string, previewViewletId:
   }
   const loadCommands = await ViewletManager.load(viewlet, false, true, undefined)
   commands.push(...loadCommands)
+  addPreviewBoundsCommand(commands, childUid, state, LayoutModules.Preview)
   const latestState = ViewletStates.getState(state.uid)
   return {
     newState: {
@@ -1229,6 +1243,7 @@ const replaceSecondaryPreview = async (state: LayoutState, uri: string): Promise
   }
   const loadCommands = await ViewletManager.load(viewlet, false, true, undefined)
   commands.push(...loadCommands)
+  addPreviewBoundsCommand(commands, childUid, state, LayoutModules.SecondaryPreview)
   return {
     newState: {
       ...newState,
@@ -1542,6 +1557,9 @@ const loadIfVisible = async (
         height: latestState[kHeight],
       })
       commands.push(...resizeCommands)
+    }
+    if (visible) {
+      addPreviewBoundsCommand(commands, childUid, latestState, module)
     }
     const orderedCommands = reorderCommands(commands)
     return {
@@ -1919,6 +1937,7 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
       if (resizeCommands.length === 1 && resizeCommands[0][0] === 'Viewlet.setBounds' && resizeCommands[0][1] === newState.mainId) {
         return []
       }
+      addPreviewBoundsCommand(resizeCommands, instanceUid, newState, module)
       return [...resizeCommands]
     }),
   )
@@ -1988,6 +2007,7 @@ const showAsync = async (uid, points, module, viewletUid) => {
       true,
     )
     if (commands) {
+      addPreviewBoundsCommand(commands, viewletUid, points, module)
       commands.push(['Viewlet.append', uid, viewletUid])
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
