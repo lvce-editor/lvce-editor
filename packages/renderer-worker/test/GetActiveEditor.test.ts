@@ -78,6 +78,30 @@ test('getSelections returns an empty array when there is no active editor', asyn
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getVisibleLineRange returns the range for the active editor', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.js',
+    },
+  })
+  const range = { endRowIndex: 20, startRowIndex: 4 }
+  const invoke = jest.fn(async () => range)
+
+  await expect(GetActiveEditor.getVisibleLineRangeWithInvoke(invoke)).resolves.toEqual(range)
+  expect(invoke).toHaveBeenCalledWith('Editor.getVisibleLineRange', 42)
+})
+
+test('getVisibleLineRange returns undefined when there is no active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getVisibleLineRangeWithInvoke(invoke)).resolves.toBeUndefined()
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('setSelections updates selections for the active editor', async () => {
   ViewletStates.set(1, {
     factory: {},

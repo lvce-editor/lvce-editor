@@ -34,11 +34,23 @@ export const getSelectionsWithInvoke = async (invoke) => {
     return []
   }
   const selections = await invoke('Editor.getSelections2', instance.state.id)
-  return Array.from(selections)
+  return [...selections]
 }
 
 export const getSelections = async () => {
   return getSelectionsWithInvoke(EditorWorker.invoke)
+}
+
+export const getVisibleLineRangeWithInvoke = async (invoke) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+  if (!instance) {
+    return undefined
+  }
+  return invoke('Editor.getVisibleLineRange', instance.state.id)
+}
+
+export const getVisibleLineRange = async () => {
+  return getVisibleLineRangeWithInvoke(EditorWorker.invoke)
 }
 
 export const getOpenEditorUrisWithInvoke = async (invoke) => {
