@@ -7,6 +7,7 @@ import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
@@ -1440,8 +1441,12 @@ export const createPanelViewlet = async (
     focus,
     true,
   )
-  const actionsDomIndex = commands.findIndex((command) => command[0] === 'Viewlet.send' && command[2] === 'setActionsDom')
-  const actionsDom = actionsDomIndex === -1 ? [] : commands[actionsDomIndex][3]
+  const actionsDomIndex = commands.findIndex(
+    (command) => (command[0] === 'Viewlet.send' && command[2] === 'setActionsDom') || (command[0] === 'Viewlet.setDom2' && command[1] === actionsUid),
+  )
+  const actionsDomCommand = commands[actionsDomIndex]
+  const actionsDom = actionsDomIndex === -1 ? [] : actionsDomCommand[0] === 'Viewlet.setDom2' ? actionsDomCommand[2] : actionsDomCommand[3]
+  const renderedActionsDom = actionsDom.length === 0 ? GetActionsVirtualDom.getActionsVirtualDom([]) : actionsDom
   if (actionsDomIndex !== -1) {
     commands.splice(actionsDomIndex, 1)
   }
@@ -1451,7 +1456,7 @@ export const createPanelViewlet = async (
   if (events.length > 0) {
     commands.push(['Viewlet.registerEventListeners', actionsUid, events])
   }
-  commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, editorUid])
+  commands.push(['Viewlet.setDom2', actionsUid, renderedActionsDom], ['Viewlet.setUid', actionsUid, editorUid])
   return {
     newState: state,
     commands,
