@@ -7,6 +7,7 @@ export const test: Test = async ({ Command, expect, Locator, ...api }) => {
   const extensionId = 'sample.notification-center'
   const activationEvent = 'onCommand:notificationCenter.showTestNotification'
   await activateFixture({ ...api, Command }, extensionId, activationEvent)
+  await wait(5000)
 
   const bell = Locator('.StatusBarItem[name="Notifications"]')
   await expect(bell).toBeVisible()
