@@ -441,14 +441,21 @@ export const openWidget = async (moduleId, ...args) => {
     commands.unshift(['Viewlet.dispose', moduleId])
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
-  const focusByNameIndex = commands.findIndex((command) => command[0] === 'Viewlet.focusElementByName')
+  const appendBeforeIndex = commands.findIndex((command) => {
+    return (
+      command[0] === 'Viewlet.commitPending' ||
+      command[0] === 'Viewlet.focusElementByName' ||
+      command[0] === 'Viewlet.focusSelector' ||
+      command[0] === 'Viewlet.focusSelectorAfterRender'
+    )
+  })
 
   if (isOwnedWidget) {
     commands.splice(0, commands.length, ...LayoutWidgets.declareWidget(args[0], childUid, commands))
   } else {
     const append = ['Viewlet.append', layout.uid, childUid]
-    if (focusByNameIndex !== -1) {
-      commands.splice(focusByNameIndex, 0, append)
+    if (appendBeforeIndex !== -1) {
+      commands.splice(appendBeforeIndex, 0, append)
     } else {
       commands.push(['Viewlet.append', layout.uid, childUid])
     }
