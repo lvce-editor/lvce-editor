@@ -9,6 +9,7 @@ export const {
   dispose,
   getCommands,
   getKeyBindings,
+  hasDirectRender,
   hasFunctionalEvents,
   hasFunctionalRender,
   hasFunctionalResize,

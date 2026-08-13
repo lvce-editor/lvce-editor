@@ -16,6 +16,18 @@ jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetPortTuple/GetPortTuple.js', () => ({
+  getPortTuple: jest.fn(() => ({ port1: 'extension-detail-port', port2: 'renderer-process-port' })),
+}))
+
+jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+
 jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
   return {
     create: jest.fn(() => {
@@ -27,10 +39,12 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
+const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchExtensionDetailViewWorker = await import('../src/parts/LaunchExtensionDetailViewWorker/LaunchExtensionDetailViewWorker.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 beforeEach(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
 })
 
 test('launches the extension detail view worker', async () => {
@@ -49,5 +63,7 @@ test('launches the extension detail view worker', async () => {
     url: 'file:///extension-detail-view-worker.js',
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'ExtensionDetail.handleMessagePort', 'extension-detail-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port')
   expect(result).toBe(ipc)
 })
