@@ -1,4 +1,6 @@
-const { WebWorkerRpcClient } = await import('/js/lvce-editor-rpc.js')
+const currentUrl = new URL(import.meta.url)
+const assetDir = currentUrl.pathname.slice(0, currentUrl.pathname.indexOf('/packages/'))
+const { WebWorkerRpcClient } = await import(`${assetDir}/js/lvce-editor-rpc.js`)
 
 let rpc
 let notificationCount = 0
