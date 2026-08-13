@@ -44,6 +44,7 @@ const genericWorkerViewlets = [
   ViewletModuleId.KeyBindings,
   ViewletModuleId.LanguageModels,
   ViewletModuleId.Main,
+  ViewletModuleId.NotificationCenter,
   ViewletModuleId.Output,
   ViewletModuleId.Panel,
   ViewletModuleId.Preview,

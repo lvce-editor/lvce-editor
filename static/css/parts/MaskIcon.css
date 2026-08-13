@@ -46,6 +46,10 @@
   mask-image: url(/icons/play.svg);
 }
 
+.NotificationBellIcon {
+  mask-image: url(/icons/bell.svg);
+}
+
 .MaskIconChromeClose,
 .IconChromeClose {
   mask-image: url(/icons/chrome-close.svg);

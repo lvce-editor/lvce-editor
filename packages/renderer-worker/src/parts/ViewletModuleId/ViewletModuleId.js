@@ -114,6 +114,8 @@ export const TodoList = 'TodoList'
 
 export const About = 'About'
 
+export const NotificationCenter = 'NotificationCenter'
+
 export const EditorSourceActions = 'EditorSourceActions'
 
 export const MarkDownPreview = 'MarkDownPreview'

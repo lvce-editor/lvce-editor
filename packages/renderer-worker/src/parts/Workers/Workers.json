@@ -1,5 +1,34 @@
 [
   {
+    "id": "notificationCenterView",
+    "fileName": "notificationCenterWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/notificationCenterWorkerMain.js",
+    "productionPath": "/packages/notification-center-view/dist/notificationCenterWorkerMain.js",
+    "settingName": "develop.notificationCenterViewWorkerPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "NotificationCenter",
+      "css": ["/css/parts/NotificationCenter.css"],
+      "state": { "idKey": "uid" },
+      "commandPrefix": "NotificationCenter",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": { "name": "NotificationCenter.create", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "NotificationCenter.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "NotificationCenter.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "NotificationCenter.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "getCommandIds": { "name": "NotificationCenter.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "NotificationCenter.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "always"
+    }
+  },
+  {
     "id": "aboutWorker",
     "fileName": "aboutWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
