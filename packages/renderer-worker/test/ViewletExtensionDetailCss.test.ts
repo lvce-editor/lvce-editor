@@ -4,3 +4,7 @@ import { Css } from '../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.
 test('loads changelog styles', () => {
   expect(Css).toContain('/css/parts/Changelog.css')
 })
+
+test('loads table styles', () => {
+  expect(Css).toContain('/css/parts/Table.css')
+})
