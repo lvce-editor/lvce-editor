@@ -134,7 +134,7 @@
   {
     "name": "builtin.language-basics-erlang",
     "repository": "github.com/lvce-editor/language-basics-erlang",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "created": "2023-07-05"
   },
   {
