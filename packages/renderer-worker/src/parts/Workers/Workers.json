@@ -25,7 +25,7 @@
         "getKeyBindings": { "name": "About.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "About.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -604,7 +604,7 @@
         "getTitle": { "name": "ExtensionDetail.renderTitle", "parameters": [{ "source": "state", "name": "uid" }] },
         "renderEventListeners": { "name": "ExtensionDetail.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -665,7 +665,7 @@
       },
       "extraCommands": [{ "name": "handleExtensionsChanged", "method": "handleExtensionsChanged" }],
       "title": "Extensions: Installed",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1041,7 +1041,7 @@
         "renderEventListeners": { "name": "Output.renderEventListeners", "parameters": [] }
       },
       "outputs": [{ "stateField": "actionsDom", "method": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -1198,7 +1198,7 @@
       "outputs": [{ "stateField": "actionsDom", "method": { "name": "Problems.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
       "renderActionsComparison": "always",
       "renderComparison": "emptyCommands",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1275,7 +1275,7 @@
         "renderEventListeners": { "name": "QuickPick.renderEventListeners", "parameters": [] }
       },
       "renderComparison": "always",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1494,7 +1494,7 @@
         "getCommandIds": { "name": "StatusBar.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "StatusBar.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "commands"
     }
   },
@@ -1587,7 +1587,7 @@
         "getMenuEntries": { "name": "TitleBar.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "renderEventListeners": { "name": "TitleBar.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {

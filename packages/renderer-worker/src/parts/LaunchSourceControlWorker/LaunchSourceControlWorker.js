@@ -1,9 +1,11 @@
+import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as SourceControlWorkerUrl from '../SourceControlWorkerUrl/SourceControlWorkerUrl.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const launchSourceControlWorker = async () => {
   const name = 'Source Control Worker'
@@ -14,5 +16,10 @@ export const launchSourceControlWorker = async () => {
   })
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  await Promise.all([
+    JsonRpc.invokeAndTransfer(ipc, 'SourceControl.handleRendererProcessMessagePort', port1),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2),
+  ])
   return ipc
 }
