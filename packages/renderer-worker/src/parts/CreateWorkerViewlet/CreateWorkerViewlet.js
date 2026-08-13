@@ -136,7 +136,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend } = config
   const Commands = {}
   const Events = {}
-  const idKey = state.idKey
+  const { idKey } = state
 
   const create = (id, uri, x, y, width, height, args, parentUid) => {
     const initialState = getStateField(config, id, uri, x, y, width, height, args, parentUid, context)
@@ -360,6 +360,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     getMenus,
     getStorageKey,
     getTitle,
+    hasDirectRender: Boolean(capabilities.directRender),
     hasFunctionalEvents: Boolean(capabilities.events),
     hasFunctionalRender: Boolean(capabilities.render),
     hasFunctionalResize: Boolean(capabilities.resize),

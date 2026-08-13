@@ -545,7 +545,7 @@
         { "stateField": "title", "hotReload": false, "method": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" } }
       ],
       "title": "",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
