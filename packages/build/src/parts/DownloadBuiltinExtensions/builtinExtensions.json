@@ -306,6 +306,12 @@
     "created": "2022-09-25"
   },
   {
+    "name": "builtin.language-basics-zig",
+    "repository": "github.com/lvce-editor/language-basics-zig",
+    "version": "0.1.0",
+    "created": "2026-08-13"
+  },
+  {
     "name": "builtin.language-basics-scss",
     "repository": "github.com/lvce-editor/language-basics-scss",
     "version": "0.2.0",
