@@ -32,6 +32,8 @@ export interface DiagnosticOptions {
 
 export type DefinitionOptions = CompleteOptions
 
+export type ReferencesOptions = CompleteOptions
+
 export interface FormatOptions {
   readonly argv: readonly string[]
   readonly extensionId: string
@@ -128,6 +130,16 @@ export const format = async ({ argv, extensionId, id, rootUri, textDocument, uri
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.format(normalizedDocument)
+}
+
+export const references = async ({ argv, extensionId, id, offset, rootUri, textDocument, uri }: ReferencesOptions): Promise<readonly unknown[]> => {
+  const normalizedDocument = {
+    ...textDocument,
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
+  }
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
+  return connection.references(normalizedDocument, offset)
 }
 
 export const dispose = (extensionId: string): void => {

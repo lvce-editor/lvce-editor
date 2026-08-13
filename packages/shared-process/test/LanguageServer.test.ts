@@ -8,6 +8,7 @@ import {
   dispose,
   disposeAll,
   format,
+  references,
   type CompleteOptions,
 } from '../src/parts/LanguageServer/LanguageServer.ts'
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
@@ -166,6 +167,33 @@ test('definition starts a stdio language server and synchronizes documents', asy
   })
 })
 
+test('references starts a stdio language server and includes declarations', async () => {
+  const options = {
+    argv: [serverScript],
+    extensionId: 'sample.extension',
+    id: 'sample.references-fixture',
+    offset: 15,
+    rootUri: 'file:///tmp',
+    textDocument: {
+      languageId: 'zig',
+      text: 'const value = 1;\n_ = value;',
+      uri: '/tmp/main.zig',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  const normalizedDocumentUri = normalizeLanguageServerDocumentUri(options.textDocument.uri)
+
+  await expect(references(options)).resolves.toEqual([
+    {
+      range: {
+        end: { character: 5, line: 0 },
+        start: { character: 0, line: 0 },
+      },
+      uri: `${normalizedDocumentUri}?references=const%20value%20%3D%201%3B%0A_%20%3D%20value%3B&includeDeclaration=true`,
+    },
+  ])
+})
+
 test('diagnostic starts a stdio language server and synchronizes documents', async () => {
   const options = {
     argv: [serverScript],
@@ -224,6 +252,23 @@ test('format returns no edits when the language server does not support document
       textDocument: {
         languageId: 'typescript',
         text: 'const value=1',
+        uri: '/tmp/sample.ts',
+      },
+      uri: pathToFileURL(process.execPath).href,
+    }),
+  ).resolves.toEqual([])
+})
+
+test('references returns no locations when the language server does not support them', async () => {
+  await expect(
+    references({
+      argv: [completionOnlyServerScript],
+      extensionId: 'sample.extension',
+      id: 'sample.completion-only-references-fixture',
+      offset: 2,
+      textDocument: {
+        languageId: 'typescript',
+        text: 'const value = 1',
         uri: '/tmp/sample.ts',
       },
       uri: pathToFileURL(process.execPath).href,

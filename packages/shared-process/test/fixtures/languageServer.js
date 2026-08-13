@@ -24,6 +24,7 @@ const handleMessage = (message) => {
             workspaceDiagnostics: false,
           },
           documentFormattingProvider: true,
+          referencesProvider: true,
           textDocumentSync: 1,
         },
       },
@@ -89,6 +90,23 @@ const handleMessage = (message) => {
         },
         uri: `${message.params.textDocument.uri}?definition=${encodeURIComponent(text)}`,
       },
+    })
+    return
+  }
+  if (message.method === 'textDocument/references') {
+    const text = documents.get(message.params.textDocument.uri)
+    send({
+      id: message.id,
+      jsonrpc: '2.0',
+      result: [
+        {
+          range: {
+            end: { character: 5, line: 0 },
+            start: { character: 0, line: 0 },
+          },
+          uri: `${message.params.textDocument.uri}?references=${encodeURIComponent(text)}&includeDeclaration=${message.params.context.includeDeclaration}`,
+        },
+      ],
     })
     return
   }
