@@ -337,7 +337,17 @@ export const handleContextMenu = (state: ViewletExtensionViewState, name: string
   })
 }
 
+export const handleActiveEditorChange = async (state: ViewletExtensionViewState, activeUri: string): Promise<ViewletExtensionViewState> => {
+  const { kind, uid, uri, viewId } = state
+  if (kind !== 'virtualDom') {
+    return state
+  }
+  await ExtensionManagementWorker.invoke('Extensions.setViewInstanceActive', viewId, uid, uri === activeUri, assetDir, getPlatform())
+  return state
+}
+
 export const Commands = {
+  handleActiveEditorChange,
   handleBlur,
   handleContextMenu,
   handleClick,
