@@ -84,6 +84,21 @@ test('passes test mode to the explorer worker', async () => {
   expect(invoke.mock.calls[0]).toEqual(['Explorer.create', 7, 'test://explorer', 1, 2, 300, 200, null, 5, 2, 'test://assets', true])
 })
 
+test('exposes the configured workspace change behavior', () => {
+  const viewlet = createWorkerViewletWithDependencies({
+    config: createConfig({ workspaceChangeEvent: 'workspace.titleChange', workspaceChangeEventPrepend: true }),
+    worker: { invoke: jest.fn(), restart: jest.fn() },
+  })
+
+  expect(viewlet.workspaceChangeEvent).toBe('workspace.titleChange')
+  expect(viewlet.workspaceChangeEventPrepend).toBe(true)
+})
+
+test('configures immediate workspace feedback for the title bar and main area', () => {
+  expect(getWorkerViewletConfig('titleBar').workspaceChangeEvent).toBe('workspace.titleChange')
+  expect(getWorkerViewletConfig('mainArea').workspaceChangeEventPrepend).toBe(true)
+})
+
 test('creates command wrappers through the same lifecycle seam', async () => {
   const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
     if (method === 'Example.getCommandIds') {

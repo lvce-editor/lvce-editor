@@ -892,6 +892,7 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
       "name": "Main",
+      "workspaceChangeEventPrepend": true,
       "css": [
         "/css/parts/EditorTabs.css",
         "/css/parts/FileIcon.css",
@@ -1552,6 +1553,7 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
       "name": "TitleBar",
+      "workspaceChangeEvent": "workspace.titleChange",
       "css": [
         "/css/parts/ViewletTitleBar.css", "/css/parts/ViewletTitleBarMenuBar.css", "/css/parts/TitleBarEntry.css",
         "/css/parts/ViewletTitleBarCommandCenter.css", "/css/parts/ViewletTitleBarTitle.css", "/css/parts/ViewletTitleBarButtons.css",
