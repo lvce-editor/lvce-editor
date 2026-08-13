@@ -32,6 +32,11 @@
   contain: strict;
 }
 
+.QuickPickInputWrapper {
+  display: flex;
+  flex: 1;
+}
+
 .QuickPickItems {
   outline: 0;
   margin: 0;
