@@ -78,7 +78,7 @@
     "@lvce-editor/keybindings-view": "^8.13.0",
     "@lvce-editor/language-models-view": "^1.23.0",
     "@lvce-editor/main-area-worker": "^9.43.0",
-    "@lvce-editor/markdown-worker": "^4.13.0",
+    "@lvce-editor/markdown-worker": "^4.13.1",
     "@lvce-editor/menu-worker": "^4.13.0",
     "@lvce-editor/opener-worker": "^1.17.0",
     "@lvce-editor/output-view": "^2.17.1",
