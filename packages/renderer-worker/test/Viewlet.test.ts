@@ -434,6 +434,25 @@ test('openWidget - once', async () => {
   })
 })
 
+test('openWidget - appends a directly rendered widget before committing its renderer commands', async () => {
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([
+    ['Viewlet.createFunctionalRoot', 'QuickPick', 2, true],
+    ['Viewlet.commitPending', 2, 17],
+  ])
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {})
+
+  await Viewlet.openWidget('QuickPick', ['everything'])
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', [
+    ['Viewlet.createFunctionalRoot', 'QuickPick', 2, true],
+    ['Viewlet.append', 1, 2],
+    ['Viewlet.commitPending', 2, 17],
+    ['Viewlet.focus', 2],
+  ])
+})
+
 test('openWidget - declares DefineKeyBinding as an owned widget', async () => {
   const layoutState = {
     ...ViewletStates.getState('Layout'),
