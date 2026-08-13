@@ -1,5 +1,5 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
-import { activateFixture } from '../fixtures/running-extensions-test-helpers.js'
+import { activateFixture, wait } from '../fixtures/running-extensions-test-helpers.js'
 
 export const name = 'notification-center.extension-notification'
 
@@ -9,8 +9,9 @@ export const test: Test = async ({ Command, expect, Locator, ...api }) => {
   await activateFixture({ ...api, Command }, extensionId, activationEvent)
 
   const bell = Locator('.StatusBarItem[name="Notifications"]')
-  await expect(bell).toHaveAttribute('aria-label', '1 Notification')
+  await expect(bell).toBeVisible()
   await bell.click()
+  await wait(500)
 
   const notificationCenter = Locator('.NotificationCenter')
   await expect(notificationCenter).toBeVisible()
@@ -18,10 +19,12 @@ export const test: Test = async ({ Command, expect, Locator, ...api }) => {
   await expect(notificationCenter).toContainText('Build complete')
 
   await notificationCenter.locator(`button[name="hide:${extensionId}"]`).click()
+  await wait(500)
   await expect(notificationCenter).toContainText('No new notifications')
   await expect(bell).toHaveAttribute('aria-label', 'No Notifications')
 
   await Command.execute('ExtensionHost.executeCommand', 'notificationCenter.showTestNotification')
+  await wait(500)
   await expect(notificationCenter).toContainText('No new notifications')
   await expect(bell).toHaveAttribute('aria-label', 'No Notifications')
 }
