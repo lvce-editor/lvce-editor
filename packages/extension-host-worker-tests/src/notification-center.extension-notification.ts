@@ -18,6 +18,10 @@ export const test: Test = async ({ Command, expect, Locator, ...api }) => {
   await expect(notificationCenter).toContainText(extensionId)
   await expect(notificationCenter).toContainText('Build complete')
 
+  await Command.execute('ExtensionHost.executeCommand', 'notificationCenter.showTestNotification')
+  await wait(500)
+  await expect(notificationCenter).toContainText('Tests passed')
+
   await notificationCenter.locator(`button[name="hide:${extensionId}"]`).click()
   await wait(500)
   await expect(notificationCenter).toContainText('No new notifications')
