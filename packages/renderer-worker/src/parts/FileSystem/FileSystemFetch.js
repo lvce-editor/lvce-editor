@@ -1,3 +1,5 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
@@ -20,6 +22,14 @@ const normalizeUri = (uri) => {
   return uri
 }
 
+const fetchAsset = async (uri) => {
+  const response = await fetch(`${AssetDir.assetDir}${uri}`)
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+  return response
+}
+
 export const readFile = async (uri) => {
   uri = normalizeUri(uri)
   if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
@@ -28,7 +38,8 @@ export const readFile = async (uri) => {
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystemFetch.readFile', uri)
   }
-  return FileSystemWorker.invoke('FileSystem.readFile', uri)
+  const response = await fetchAsset(uri)
+  return response.text()
 }
 
 export const exists = async (uri) => {
@@ -48,7 +59,8 @@ export const readJson = async (uri) => {
   if (uri.startsWith('http://') || uri.startsWith('https://')) {
     return FileSystemWorker.invoke('FileSystem.readJson', uri)
   }
-  return FileSystemWorker.invoke('FileSystem.readJson', uri)
+  const response = await fetchAsset(uri)
+  return response.json()
 }
 
 export const writeFile = (uri, content) => {
@@ -76,7 +88,32 @@ export const remove = (uri) => {
 
 export const readDirWithFileTypes = async (uri) => {
   uri = normalizeUri(uri)
-  return FileSystemWorker.invoke('FileSystem.readDirWithFileTypes', uri)
+  const directoryPrefix = uri.endsWith(PathSeparatorType.Slash) ? uri : `${uri}${PathSeparatorType.Slash}`
+  const response = await fetchAsset('/config/fileMap.json')
+  const fileList = await response.json()
+  const dirents = []
+  for (const fileUri of fileList) {
+    if (!fileUri.startsWith(directoryPrefix)) {
+      continue
+    }
+    const rest = fileUri.slice(directoryPrefix.length)
+    if (rest.includes(PathSeparatorType.Slash)) {
+      const name = rest.slice(0, rest.indexOf(PathSeparatorType.Slash))
+      if (dirents.some((dirent) => dirent.name === name)) {
+        continue
+      }
+      dirents.push({
+        name,
+        type: DirentType.Directory,
+      })
+    } else {
+      dirents.push({
+        name: rest,
+        type: DirentType.File,
+      })
+    }
+  }
+  return dirents
 }
 
 export const chmod = (path, permissions) => {
@@ -86,5 +123,12 @@ export const chmod = (path, permissions) => {
 
 export const getBlob = async (uri, type) => {
   uri = normalizeUri(uri)
-  return FileSystemWorker.invoke('FileSystem.readFileAsBlob', uri, type)
+  if (uri.startsWith('localhost:') || uri.startsWith(location.host)) {
+    return FileSystemWorker.invoke('FileSystem.readFileAsBlob', `${location.protocol}//${uri}`, type)
+  }
+  if (uri.startsWith('http://') || uri.startsWith('https://')) {
+    return FileSystemWorker.invoke('FileSystem.readFileAsBlob', uri, type)
+  }
+  const response = await fetchAsset(uri)
+  return response.blob()
 }
