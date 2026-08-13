@@ -47,13 +47,15 @@ export const mkdir = async (uri) => {
   await fileSystem.mkdir(uri)
 }
 
-export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
+export const writeFile = async (uri, content, encoding = EncodingType.Utf8, notify = true) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.writeFile(uri, content, encoding)
-  await notifyWorkspaceChanged({
-    changed: [uri],
-  })
+  if (notify) {
+    await notifyWorkspaceChanged({
+      changed: [uri],
+    })
+  }
 }
 
 export const writeBlob = async (uri, blob) => {

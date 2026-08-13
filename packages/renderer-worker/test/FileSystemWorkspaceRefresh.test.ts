@@ -57,3 +57,10 @@ test('writeFile notifies workspace views with the changed uri', async () => {
   })
   expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
+
+test('writeFile can skip reloading workspace views', async () => {
+  await FileSystem.writeFile('test://some-file.txt', 'updated', 'utf8', false)
+
+  expect(writeFile).toHaveBeenCalledWith('test://some-file.txt', 'updated', 'utf8')
+  expect(execute).not.toHaveBeenCalled()
+})
