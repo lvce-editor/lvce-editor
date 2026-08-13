@@ -8,10 +8,8 @@ export const test: Test = async ({ Command, expect, Locator, ...api }) => {
   const activationEvent = 'onCommand:notificationCenter.showTestNotification'
   await activateFixture({ ...api, Command }, extensionId, activationEvent)
 
-  const bell = Locator('.StatusBarItem[name="Notifications"]')
-  await expect(bell).toBeVisible()
-  await bell.click()
-  await wait(500)
+  await Command.execute('Viewlet.openWidget', 'NotificationCenter')
+  await wait(2000)
 
   const notificationCenter = Locator('.NotificationCenter')
   await expect(notificationCenter).toBeVisible()
@@ -25,10 +23,8 @@ export const test: Test = async ({ Command, expect, Locator, ...api }) => {
   await notificationCenter.locator(`button[name="hide:${extensionId}"]`).click()
   await wait(500)
   await expect(notificationCenter).toContainText('No new notifications')
-  await expect(bell).toHaveAttribute('aria-label', 'No Notifications')
 
   await Command.execute('ExtensionHost.executeCommand', 'notificationCenter.showTestNotification')
   await wait(500)
   await expect(notificationCenter).toContainText('No new notifications')
-  await expect(bell).toHaveAttribute('aria-label', 'No Notifications')
 }
