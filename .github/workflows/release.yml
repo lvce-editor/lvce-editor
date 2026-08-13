@@ -104,6 +104,9 @@ jobs:
       - run: npm run type-check
       - run: npm test
       - run: npm run build:server
+      - name: Test built server
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
+        run: npm run test:server
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v6
         id: electron-builder-cache-windows

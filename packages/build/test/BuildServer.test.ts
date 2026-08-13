@@ -13,13 +13,16 @@ const readJson = async (path: string): Promise<any> => {
   return JSON.parse(await readFile(path, 'utf8'))
 }
 
-test('generated server sends the root document through the shared process', () => {
+test('generated server sends index documents through the static server', () => {
   const replacement = getServerIsStaticReplacement('abcdefg')
   const isStatic = runInNewContext(`${replacement}; isStatic`) as (url: string) => boolean
 
-  expect(isStatic('/')).toBe(false)
-  expect(isStatic('/?workspace=/test')).toBe(false)
+  expect(isStatic('/')).toBe(true)
+  expect(isStatic('/?workspace=/test')).toBe(true)
+  expect(isStatic('/index.html')).toBe(true)
+  expect(isStatic('/index.html?workspace=/test')).toBe(true)
   expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
+  expect(isStatic('/api/status')).toBe(false)
 })
 
 test('setVersionsAndDependencies includes process explorer as shared-process dependency', async () => {
