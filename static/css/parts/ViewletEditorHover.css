@@ -21,10 +21,6 @@
   pointer-events: all;
 }
 
-.EditorHoverDiagnosticOnly {
-  overflow-y: hidden;
-}
-
 /* TODO use javascript scrollbar */
 .EditorHover::-webkit-scrollbar {
   height: 14px;
