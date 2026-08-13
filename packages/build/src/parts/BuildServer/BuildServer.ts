@@ -20,6 +20,12 @@ const getObjectDependencies = (obj) => {
 }
 
 export const getServerIsStaticReplacement = (commitHash: string): string => `const isStatic = (url) => {
+  if (url === '/' || url.startsWith('/?')) {
+    return true
+  }
+  if (url === '/index.html' || url.startsWith('/index.html?')) {
+    return true
+  }
   if (url.startsWith('/${commitHash}')) {
     return true
   }

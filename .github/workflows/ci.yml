@@ -92,6 +92,9 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build server
         run: npm run build:server
+      - name: Test built server
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
+        run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
       - name: Run extension host worker tests

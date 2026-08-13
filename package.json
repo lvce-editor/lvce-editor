@@ -16,6 +16,7 @@
     "build:static": "node packages/build/bin/build.ts --target=static",
     "build:static:ignore-icon-theme": "node packages/build/bin/build.ts --target=static --ignore-icon-theme",
     "build:server": "node packages/build/bin/build.ts --target=server",
+    "test:server": "node packages/build/src/parts/TestServer/TestServer.ts",
     "build:electron:deb": "node packages/build/bin/build.ts --target=electron-deb",
     "build:electron:deb:x64": "node packages/build/bin/build.ts --target=electron-deb --arch=x64",
     "build:electron:deb:arm64": "node packages/build/bin/build.ts --target=electron-deb --arch=arm64",

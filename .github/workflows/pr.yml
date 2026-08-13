@@ -80,6 +80,9 @@ jobs:
           PATH_PREFIX: /lvce-editor
       - name: Build server
         run: npm run build:server
+      - name: Test built server
+        if: matrix.os == 'ubuntu-24.04'
+        run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
       - name: Run extension host worker tests
