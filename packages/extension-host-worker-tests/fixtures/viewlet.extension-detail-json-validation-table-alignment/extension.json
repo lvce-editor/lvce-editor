@@ -1,0 +1,12 @@
+{
+  "id": "test.json-validation-table-alignment",
+  "name": "JSON Validation Table Alignment",
+  "description": "Checks JSON validation table alignment",
+  "version": "1.0.0",
+  "jsonValidation": [
+    {
+      "fileMatch": "*.test.json",
+      "schema": "test://schema.json"
+    }
+  ]
+}
