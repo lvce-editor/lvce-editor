@@ -380,6 +380,13 @@ export class LanguageServerConnection {
     const result = (await this.sendRequest('initialize', {
       capabilities: {
         textDocument: {
+          codeAction: {
+            codeActionLiteralSupport: {
+              codeActionKind: {
+                valueSet: ['', 'quickfix', 'refactor', 'refactor.extract', 'refactor.inline', 'refactor.rewrite', 'source', 'source.organizeImports'],
+              },
+            },
+          },
           completion: {
             completionItem: {
               snippetSupport: true,

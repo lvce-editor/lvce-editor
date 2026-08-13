@@ -11,12 +11,13 @@ const send = (message) => {
 /** @param {any} message */
 const handleMessage = (message) => {
   if (message.method === 'initialize') {
+    const codeActionKinds = message.params.capabilities?.textDocument?.codeAction?.codeActionLiteralSupport?.codeActionKind?.valueSet
     send({
       id: message.id,
       jsonrpc: '2.0',
       result: {
         capabilities: {
-          codeActionProvider: true,
+          codeActionProvider: Array.isArray(codeActionKinds) && codeActionKinds.includes('quickfix'),
           completionProvider: {},
           definitionProvider: true,
           diagnosticProvider: {
