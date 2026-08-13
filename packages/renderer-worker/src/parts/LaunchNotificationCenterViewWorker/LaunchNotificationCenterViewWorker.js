@@ -6,6 +6,7 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as NotificationCenterViewWorkerUrl from '../NotificationCenterViewWorkerUrl/NotificationCenterViewWorkerUrl.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const launchNotificationCenterViewWorker = async () => {
   const ipc = await IpcParent.create({
@@ -21,6 +22,11 @@ export const launchNotificationCenterViewWorker = async () => {
   await Promise.all([
     ExtensionManagementWorker.invokeAndTransfer('Extensions.handleMessagePort', port1, ExtensionManagementRpcId.NotificationCenterWorker),
     JsonRpc.invokeAndTransfer(ipc, 'NotificationCenter.handleExtensionManagementMessagePort', port2),
+  ])
+  const { port1: rendererWorkerPort, port2: rendererProcessPort } = new MessageChannel()
+  await Promise.all([
+    JsonRpc.invokeAndTransfer(ipc, 'NotificationCenter.handleMessagePort', rendererWorkerPort),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', rendererProcessPort),
   ])
   return ipc
 }
