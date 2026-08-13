@@ -34,6 +34,7 @@ interface InitializeResult {
     readonly codeActionProvider?: unknown
     readonly diagnosticProvider?: unknown
     readonly documentFormattingProvider?: unknown
+    readonly referencesProvider?: unknown
   }
 }
 
@@ -170,6 +171,7 @@ export class LanguageServerConnection {
   private supportsCodeActions = false
   private supportsDocumentFormatting = false
   private supportsPullDiagnostics = false
+  private supportsReferences = false
 
   constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
@@ -310,6 +312,24 @@ export class LanguageServerConnection {
     return Array.isArray(result) ? result : []
   }
 
+  async references(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
+    await this.ready
+    if (!this.supportsReferences) {
+      return []
+    }
+    this.syncDocument(textDocument)
+    const result = await this.sendRequest('textDocument/references', {
+      context: {
+        includeDeclaration: true,
+      },
+      position: getPosition(textDocument.text, offset),
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+    return Array.isArray(result) ? result : []
+  }
+
   private configureMarkdown(languageId: string): void {
     if (languageId !== 'markdown' || this.markdownConfigured) {
       return
@@ -372,6 +392,9 @@ export class LanguageServerConnection {
           publishDiagnostics: {
             relatedInformation: true,
           },
+          references: {
+            dynamicRegistration: false,
+          },
           synchronization: {
             didSave: true,
             dynamicRegistration: false,
@@ -400,6 +423,7 @@ export class LanguageServerConnection {
     this.supportsCodeActions = Boolean(result?.capabilities?.codeActionProvider)
     this.supportsDocumentFormatting = Boolean(result?.capabilities?.documentFormattingProvider)
     this.supportsPullDiagnostics = Boolean(result?.capabilities?.diagnosticProvider)
+    this.supportsReferences = Boolean(result?.capabilities?.referencesProvider)
     this.sendNotification('initialized', {})
     await Promise.race([this.initializationProgressStarted.promise, wait(100)])
     if (this.initializationProgressWasStarted) {

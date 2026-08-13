@@ -9,4 +9,5 @@ export const Commands = {
   diagnostic: LanguageServer.diagnostic,
   dispose: LanguageServer.dispose,
   format: LanguageServer.format,
+  references: LanguageServer.references,
 }
