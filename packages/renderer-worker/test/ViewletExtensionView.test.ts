@@ -212,3 +212,47 @@ test('rerender updates the title rendered by the parent sidebar', async () => {
 test('commands exports rerender', () => {
   expect(ViewletExtensionView.Commands.rerender).toBe(ViewletExtensionView.rerender)
 })
+
+test('commands exports handleActiveEditorChange', () => {
+  expect(ViewletExtensionView.Commands.handleActiveEditorChange).toBe(ViewletExtensionView.handleActiveEditorChange)
+})
+
+test('handleActiveEditorChange marks the matching virtual dom view active', async () => {
+  const invoke = ExtensionManagementWorker.invoke as any
+  const state = {
+    ...createState(),
+    uri: 'file:///workspace/image.png',
+    viewId: 'media-preview',
+  }
+
+  const newState = await ViewletExtensionView.handleActiveEditorChange(state, 'file:///workspace/image.png')
+
+  expect(newState).toBe(state)
+  expect(invoke).toHaveBeenCalledWith('Extensions.setViewInstanceActive', 'media-preview', 1, true, expect.any(String), expect.any(Number))
+})
+
+test('handleActiveEditorChange marks a non-matching virtual dom view inactive', async () => {
+  const invoke = ExtensionManagementWorker.invoke as any
+  const state = {
+    ...createState(),
+    uri: 'file:///workspace/image.png',
+    viewId: 'media-preview',
+  }
+
+  await ViewletExtensionView.handleActiveEditorChange(state, 'file:///workspace/other.png')
+
+  expect(invoke).toHaveBeenCalledWith('Extensions.setViewInstanceActive', 'media-preview', 1, false, expect.any(String), expect.any(Number))
+})
+
+test('handleActiveEditorChange ignores iframe views', async () => {
+  const invoke = ExtensionManagementWorker.invoke as any
+  const state = {
+    ...createState(),
+    kind: 'iframe',
+  }
+
+  const newState = await ViewletExtensionView.handleActiveEditorChange(state, 'sample.views.testing')
+
+  expect(newState).toBe(state)
+  expect(invoke).not.toHaveBeenCalled()
+})
