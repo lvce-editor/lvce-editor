@@ -233,6 +233,7 @@ export const commandMap = {
   'KeyBindings.setIdentifiers': lazy('KeyBindings.setIdentifiers'),
   'KeyBindingsInitial.getKeyBindings': lazy('KeyBindingsInitial.getKeyBindings'),
   'Languages.getLanguageConfiguration': lazy('Languages.getLanguageConfiguration'),
+  'LaunchIsolatedExtensionHostWorker.getMemoryUsage': lazy('LaunchIsolatedExtensionHostWorker.getMemoryUsage'),
   'LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker': lazy('LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker'),
   'Listener.3444': lazy('Listener.3444'),
   'LocalStorage.clear': lazy('LocalStorage.clear'),

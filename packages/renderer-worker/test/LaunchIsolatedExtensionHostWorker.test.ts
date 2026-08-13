@@ -111,6 +111,39 @@ test('launchIsolatedExtensionHostWorker - applies the extension content security
   expect(ContentSecurityPolicy.set.mock.invocationCallOrder[0]).toBeLessThan(RendererProcess.invokeAndTransfer.mock.invocationCallOrder[0])
 })
 
+test('getMemoryUsage returns memory attributed to the extension worker', async () => {
+  const port = {}
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue({
+    breakdown: [
+      {
+        attribution: [
+          {
+            scope: 'DedicatedWorkerGlobalScope',
+            url: 'https://example.test/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
+          },
+        ],
+        bytes: 2048,
+      },
+    ],
+  })
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker(
+    port,
+    'sample.extension',
+    '/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
+  )
+
+  await expect(LaunchIsolatedExtensionHostWorker.getMemoryUsage('sample.extension')).resolves.toBe(2048)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Performance.measureUserAgentSpecificMemory')
+})
+
+test('getMemoryUsage returns zero when the extension worker is not running', async () => {
+  await expect(LaunchIsolatedExtensionHostWorker.getMemoryUsage('sample.extension')).resolves.toBe(0)
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
 test('disposeIsolatedExtensionHostWorker terminates the renderer process worker', async () => {
   const port = {}
   // @ts-ignore

@@ -1,4 +1,5 @@
 import * as ContentSecurityPolicy from '../ContentSecurityPolicy/ContentSecurityPolicy.js'
+import * as GetExtensionWorkerMemoryUsage from '../GetExtensionWorkerMemoryUsage/GetExtensionWorkerMemoryUsage.js'
 import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -6,6 +7,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 const workerIds = Object.create(null)
+const workerUrls = Object.create(null)
 
 export const launchIsolatedExtensionHostWorker = async (port, extensionId, url, workerName = '', contentSecurityPolicy = '') => {
   const suffix = extensionId ? `: ${extensionId}` : ''
@@ -25,6 +27,16 @@ export const launchIsolatedExtensionHostWorker = async (port, extensionId, url, 
     id,
   })
   workerIds[extensionId] = id
+  workerUrls[extensionId] = url
+}
+
+export const getMemoryUsage = async (extensionId) => {
+  const workerUrl = workerUrls[extensionId]
+  if (typeof workerUrl !== 'string') {
+    return 0
+  }
+  const measurement = await RendererProcess.invoke('Performance.measureUserAgentSpecificMemory')
+  return GetExtensionWorkerMemoryUsage.getExtensionWorkerMemoryUsage(measurement, workerUrl)
 }
 
 export const disposeIsolatedExtensionHostWorker = async (extensionId) => {
@@ -33,11 +45,13 @@ export const disposeIsolatedExtensionHostWorker = async (extensionId) => {
     return
   }
   delete workerIds[extensionId]
+  delete workerUrls[extensionId]
   await RendererProcess.invoke('IpcParent.dispose', id)
 }
 
 export const clear = () => {
   for (const extensionId of Object.keys(workerIds)) {
     delete workerIds[extensionId]
+    delete workerUrls[extensionId]
   }
 }
