@@ -80,7 +80,6 @@
     "@lvce-editor/main-area-worker": "^9.44.2",
     "@lvce-editor/markdown-worker": "^4.13.1",
     "@lvce-editor/menu-worker": "^4.13.0",
-    "@lvce-editor/notification-center-view": "https://github.com/lvce-editor/notification-center-view/releases/download/v0.1.1/lvce-editor-notification-center-view-0.1.1.tgz",
     "@lvce-editor/opener-worker": "^1.17.0",
     "@lvce-editor/output-view": "^2.18.0",
     "@lvce-editor/panel-worker": "^2.8.0",

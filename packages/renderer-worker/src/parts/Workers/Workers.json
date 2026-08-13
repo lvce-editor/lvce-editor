@@ -3,7 +3,7 @@
     "id": "notificationCenterView",
     "fileName": "notificationCenterWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
-    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/notification-center-view/dist/notificationCenterWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/notificationCenterWorkerMain.js",
     "productionPath": "/packages/notification-center-view/dist/notificationCenterWorkerMain.js",
     "settingName": "develop.notificationCenterViewWorkerPath",
     "hotReloadCommand": "",
