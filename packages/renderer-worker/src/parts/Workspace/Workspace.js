@@ -18,6 +18,7 @@ export const setPath = async (path) => {
   Assert.string(path)
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
+  await updateWindowTitle(path, pathSeparator)
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
@@ -33,6 +34,7 @@ export const setUri = async (uri, providedPathSeparator) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri
   const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
+  await updateWindowTitle(path, pathSeparator)
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
@@ -56,12 +58,17 @@ export const close = () => {
 
 export { isTest } from '../IsTest/IsTest.js'
 
-const getTitle = (workspacePath) => {
+const getTitle = (workspacePath, pathSeparator) => {
   if (!workspacePath) {
     return Product.getProductNameLong()
   }
-  const pathSeparator = state.pathSeparator
   return workspacePath.slice(workspacePath.lastIndexOf(pathSeparator) + 1)
+}
+
+const updateWindowTitle = async (workspacePath, pathSeparator) => {
+  const title = getTitle(workspacePath, pathSeparator)
+  await WindowTitle.set(title)
+  await GlobalEventBus.emitEvent('workspace.titleChange', workspacePath)
 }
 
 const getPathName = (workspacePath) => {
@@ -75,8 +82,6 @@ const getPathName = (workspacePath) => {
 }
 
 const onWorkspaceChange = async () => {
-  const title = getTitle(state.workspacePath)
-  await WindowTitle.set(title)
   if (Platform.getPlatform() === PlatformType.Web || Platform.getPlatform() === PlatformType.Remote) {
     const pathName = getPathName(state.workspacePath)
     await Location.setPathName(pathName)
@@ -113,6 +118,7 @@ export const hydrate = async ({ href }) => {
   if (state.workspaceUri && state.workspaceUri.startsWith('/')) {
     state.workspaceUri = `file://${state.workspaceUri}`
   }
+  await updateWindowTitle(state.workspacePath, state.pathSeparator)
   await onWorkspaceChange()
 }
 

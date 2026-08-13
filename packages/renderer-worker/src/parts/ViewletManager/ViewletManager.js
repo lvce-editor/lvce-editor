@@ -464,7 +464,7 @@ const maybeRegisterEvents = (module) => {
       instance.renderedState = newState
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
-    GlobalEventBus.addListener('workspace.change', handleUpdate)
+    GlobalEventBus.addListener(module.workspaceChangeEvent || 'workspace.change', handleUpdate, { prepend: module.workspaceChangeEventPrepend })
   }
 
   // deprecated, use commands instead
