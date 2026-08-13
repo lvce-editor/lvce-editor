@@ -36,13 +36,14 @@
 
 .HoverEditorRow {
   display: block;
-  height: var(--EditorLineHeight);
   line-height: var(--EditorLineHeight);
+  min-height: var(--EditorLineHeight);
   /* contain: strict; */
 }
 
 .HoverDisplayString {
-  white-space: pre;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
   /* contain: content; */
   font-family: var(--EditorFontFamily);
   font-size: var(--EditorFontSize);
@@ -68,6 +69,7 @@
 .HoverProblem {
   contain: content;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .HoverProblemMessage {
