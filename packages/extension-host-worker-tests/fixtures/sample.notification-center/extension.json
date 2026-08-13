@@ -1,0 +1,9 @@
+{
+  "id": "sample.notification-center",
+  "name": "Notification Center",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onCommand:notificationCenter.showTestNotification"],
+  "commands": [{ "id": "notificationCenter.showTestNotification" }]
+}

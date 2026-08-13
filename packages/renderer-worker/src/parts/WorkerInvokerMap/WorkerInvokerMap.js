@@ -11,6 +11,7 @@ import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspector
 import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
+import * as NotificationCenterViewWorker from '../NotificationCenterViewWorker/NotificationCenterViewWorker.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
@@ -37,6 +38,7 @@ const workerInvokers = {
   keyBindings: KeyBindingsViewWorker,
   languageModels: LanguageModelsViewWorker,
   mainArea: MainAreaWorker,
+  notificationCenterView: NotificationCenterViewWorker,
   output: OutputViewWorker,
   panel: PanelWorker,
   preview: PreviewWorker,
