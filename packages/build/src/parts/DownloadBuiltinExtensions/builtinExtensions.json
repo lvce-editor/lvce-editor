@@ -50,7 +50,7 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.8.1",
+    "version": "1.9.0",
     "created": "2026-08-01"
   },
   {
@@ -308,7 +308,7 @@
   {
     "name": "builtin.language-basics-zig",
     "repository": "github.com/lvce-editor/language-basics-zig",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "created": "2026-08-13"
   },
   {
