@@ -33,6 +33,7 @@ export const CommandsWithSideEffects = {
   handleContextMenu: ViewletLayout.handleContextMenu,
   handleDiagnosticsChange: ViewletLayout.handleDiagnosticsChange,
   handleFocus: ViewletLayout.handleFocus,
+  handleFullScreenChange: ViewletLayout.handleFullScreenChange,
   handleResize: ViewletLayout.handleResize,
   handleSashDoubleClick: ViewletLayout.handleSashDoubleClick,
   handleSashPointerDown: ViewletLayout.handleSashPointerDown,

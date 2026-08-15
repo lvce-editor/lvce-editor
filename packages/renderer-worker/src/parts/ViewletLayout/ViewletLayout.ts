@@ -117,6 +117,7 @@ export const create = (id: number): LayoutState => {
     mainId: -1,
     contentAreaId: -1,
     explicitBounds: false,
+    fullScreen: false,
     statusBarId: -1,
     titleBarId: -1,
     workbenchId: -1,
@@ -186,6 +187,7 @@ export const create = (id: number): LayoutState => {
     titleBarHeight: 0,
     titleBarLeft: 0,
     titleBarTop: 0,
+    titleBarVisibleBeforeFullScreen: false,
     titleBarWidth: 0,
     panelMaxHeight: 0,
     panelMaximized: false,
@@ -1308,6 +1310,12 @@ export const toggleSecondaryPreview = (state: LayoutState, uri: string = state.s
 }
 
 export const showTitleBar = (state: LayoutState) => {
+  if (state.fullScreen) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   // @ts-ignore
   return show(state, LayoutModules.TitleBar)
 }
@@ -1317,8 +1325,50 @@ export const hideTitleBar = (state: LayoutState) => {
 }
 
 export const toggleTitleBar = (state: LayoutState) => {
+  if (state.fullScreen) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   // @ts-ignore
   return toggle(state, LayoutModules.TitleBar)
+}
+
+export const handleFullScreenChange = async (state: LayoutState, fullScreen: boolean): Promise<LayoutStateResult> => {
+  if (state.fullScreen === fullScreen) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  if (fullScreen) {
+    const titleBarVisibleBeforeFullScreen = !state.titleBarNative && state.titleBarVisible
+    const newState = {
+      ...state,
+      fullScreen: true,
+      titleBarVisibleBeforeFullScreen,
+    }
+    if (!titleBarVisibleBeforeFullScreen) {
+      return {
+        newState,
+        commands: [],
+      }
+    }
+    return hideTitleBar(newState)
+  }
+  const newState = {
+    ...state,
+    fullScreen: false,
+    titleBarVisibleBeforeFullScreen: false,
+  }
+  if (!state.titleBarVisibleBeforeFullScreen) {
+    return {
+      newState,
+      commands: [],
+    }
+  }
+  return showTitleBar(newState)
 }
 
 export const setActionsDom = (state: LayoutState, actionsDom: readonly unknown[], childUid: number, eventListeners?: readonly unknown[]) => {

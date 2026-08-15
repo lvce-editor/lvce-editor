@@ -551,6 +551,7 @@ export const commandMap = {
   'Layout.handleDiagnosticsChange': lazy('Layout.handleDiagnosticsChange'),
   'Layout.handleExtensionsChanged': lazy('Layout.handleExtensionsChanged'),
   'Layout.handleFocus': lazy('Layout.handleFocus'),
+  'Layout.handleFullScreenChange': lazy('Layout.handleFullScreenChange'),
   'Layout.handleResize': lazy('Layout.handleResize'),
   'Layout.handleSashDoubleClick': lazy('Layout.handleSashDoubleClick'),
   'Layout.handleSashPointerDown': lazy('Layout.handleSashPointerDown'),

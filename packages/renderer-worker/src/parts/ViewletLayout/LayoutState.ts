@@ -39,6 +39,7 @@ export interface LayoutState {
   readonly contentAreaId: number
   readonly contentAreaVisible: boolean
   readonly explicitBounds: boolean
+  readonly fullScreen: boolean
   readonly initial: boolean
   readonly mainHeight: number
   readonly mainId: number
@@ -130,6 +131,7 @@ export interface LayoutState {
   readonly titleBarLeft: number
   readonly titleBarNative: boolean
   readonly titleBarTop: number
+  readonly titleBarVisibleBeforeFullScreen: boolean
   readonly titleBarVisible: boolean
   readonly titleBarWidth: number
   readonly uid: number
