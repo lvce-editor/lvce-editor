@@ -26,5 +26,9 @@ test('handleCliArgs', async () => {
 
 Usage:
   lvce-oss [path]
+
+Diagnostics:
+  --trace-ipc=<worker-ids>  Trace comma-separated worker IDs (or *) to JSONL.
+                            Traces can be large and contain source code.
 `)
 })

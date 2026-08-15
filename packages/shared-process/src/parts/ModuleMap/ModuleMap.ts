@@ -209,6 +209,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleWindowAllClosed
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
+    case 'IpcTrace.append':
+      return ModuleId.IpcTrace
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
     case 'LanguageServer.codeAction':

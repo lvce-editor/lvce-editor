@@ -25,3 +25,7 @@ test('getModuleId - FirefoxCookieImport.importCookies', () => {
 test('getModuleId - GetElectronFileResponse.resolveElectronFileUri', () => {
   expect(ModuleMap.getModuleId('GetElectronFileResponse.resolveElectronFileUri')).toBe(ModuleId.GetElectronFileResponse)
 })
+
+test('getModuleId - IpcTrace.append', () => {
+  expect(ModuleMap.getModuleId('IpcTrace.append')).toBe(ModuleId.IpcTrace)
+})

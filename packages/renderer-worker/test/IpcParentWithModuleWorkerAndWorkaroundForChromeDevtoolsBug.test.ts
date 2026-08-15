@@ -25,6 +25,12 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/IpcTrace/IpcTrace.js', () => {
+  return {
+    maybeCreateProxy: async ({ port }) => port,
+  }
+})
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug =
   await import('../src/parts/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js')
