@@ -61,6 +61,70 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands.hotReload).toBeDefined()
 })
 
+test('color picker slider escape closes the picker', async () => {
+  const editor = {
+    commands: [],
+    uid: 42,
+  }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.closeColorPicker':
+        return undefined
+      case 'Editor.diff2':
+        return [1]
+      case 'Editor.getCommandIds':
+        return []
+      case 'Editor.render2':
+        return [['Viewlet.focus', 42]]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands['ColorPicker.handleSliderKeyDown'](editor, 'ColorPicker', 'ColorPicker.handleSliderKeyDown', 42, 7, 'Escape')
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.closeColorPicker', 42)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
+  expect(result.commands).toEqual([['Viewlet.focus', 42]])
+})
+
+test('color picker slider navigation keys continue to execute the widget command', async () => {
+  const editor = {
+    commands: [],
+    uid: 42,
+  }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+        return [1]
+      case 'Editor.executeWidgetCommand':
+        return undefined
+      case 'Editor.getCommandIds':
+        return []
+      case 'Editor.render2':
+        return []
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await commands['ColorPicker.handleSliderKeyDown'](editor, 'ColorPicker', 'ColorPicker.handleSliderKeyDown', 42, 7, 'ArrowRight')
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(
+    2,
+    'Editor.executeWidgetCommand',
+    42,
+    'ColorPicker',
+    'ColorPicker.handleSliderKeyDown',
+    42,
+    7,
+    'ArrowRight',
+  )
+})
+
 test('loadContentLater requests diagnostics after the initial render', async () => {
   editorWorkerInvoke.mockImplementation((method) => {
     if (method === 'Editor.getCommandIds') {

@@ -1,3 +1,4 @@
+import * as BrowserKey from '../BrowserKey/BrowserKey.js'
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
@@ -123,6 +124,17 @@ const renderPending = async (editor) => {
   }
 }
 
+const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
+const closeColorPicker = WrapEditorCommands.wrapEditorCommand('Editor.closeColorPicker')
+
+const handleColorPickerSliderKeyDown = (editor, ...args) => {
+  const key = args[args.length - 1]
+  if (key === BrowserKey.Escape) {
+    return closeColorPicker(editor)
+  }
+  return executeWidgetCommand(editor, ...args)
+}
+
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
@@ -131,6 +143,7 @@ export const getCommands = async () => {
     renderPending,
     showOverlayMessage,
     hotReload,
+    'ColorPicker.handleSliderKeyDown': handleColorPickerSliderKeyDown,
   })
   return Commands
 }
