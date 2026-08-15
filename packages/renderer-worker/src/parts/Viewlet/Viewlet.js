@@ -411,15 +411,17 @@ export const getAllStates = () => {
 }
 
 export const openWidget = async (moduleId, ...args) => {
-  const hasInstance = ViewletStates.hasInstance(moduleId)
+  const existingInstance = ViewletStates.getInstance(moduleId)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
-    if (hasInstance) {
+    if (existingInstance) {
       await ViewletElectron.closeWidgetElectronQuickPick(false)
     }
     return ViewletElectron.openElectronQuickPick(...args)
   }
+  const isOwnedWidget = moduleId === ViewletModuleId.DefineKeyBinding && typeof args[0] === 'number'
+  const disposeCommands = existingInstance && !isOwnedWidget ? disposeFunctional(existingInstance.state.uid) : []
   const childUid = Id.create()
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
@@ -436,9 +438,8 @@ export const openWidget = async (moduleId, ...args) => {
     throw new Error('expected commands to be of type array')
   }
 
-  const isOwnedWidget = moduleId === ViewletModuleId.DefineKeyBinding && typeof args[0] === 'number'
-  if (hasInstance && !isOwnedWidget) {
-    commands.unshift(['Viewlet.dispose', moduleId])
+  if (disposeCommands.length > 0) {
+    commands.unshift(...disposeCommands)
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
   const appendBeforeIndex = commands.findIndex((command) => {

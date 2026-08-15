@@ -3,6 +3,7 @@ import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(Id.create).mockReturnValue(2)
   ViewletStates.reset()
   ViewletStates.set(1, {
     state: { uid: 1 },
@@ -32,9 +33,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
 })
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
   return {
-    create() {
-      return 2
-    },
+    create: jest.fn(),
   }
 })
 jest.unstable_mockModule('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js', () => {
@@ -49,6 +48,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const Id = await import('../src/parts/Id/Id.js')
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
@@ -510,10 +510,16 @@ test('closeWidget restores Simple Browser after closing Quick Pick', async () =>
   expect(focus).toHaveBeenCalledWith({ uid: 3 })
 })
 
-test('openWidget - should not open again when already open', async () => {
+test('openWidget - replaces an existing widget by its numeric uid', async () => {
+  jest.mocked(Id.create).mockReturnValueOnce(2).mockReturnValueOnce(3)
   // @ts-ignore
-  ViewletManager.load.mockImplementation(({ id }) => {
-    ViewletStates.set(id, { factory: {}, state: {}, renderedState: {} })
+  ViewletManager.load.mockImplementation(({ id, uid }) => {
+    ViewletStates.set(uid, {
+      factory: {},
+      moduleId: id,
+      state: { uid },
+      renderedState: { uid },
+    })
     return []
   })
   // @ts-ignore
@@ -539,7 +545,7 @@ test('openWidget - should not open again when already open', async () => {
     id: 'QuickPick',
     show: false,
     type: 0,
-    uid: 2,
+    uid: 3,
     uri: 'quickPick://file',
     args: [['file']],
   })
@@ -549,8 +555,10 @@ test('openWidget - should not open again when already open', async () => {
     ['Viewlet.focus', 2],
   ])
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.executeCommands', [
-    ['Viewlet.dispose', 'QuickPick'],
-    ['Viewlet.append', 1, 2],
-    ['Viewlet.focus', 2],
+    ['Viewlet.dispose', 2],
+    ['Viewlet.append', 1, 3],
+    ['Viewlet.focus', 3],
   ])
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+  expect(ViewletStates.getInstance(3)?.moduleId).toBe('QuickPick')
 })
