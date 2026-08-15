@@ -218,7 +218,7 @@
         "getMenuEntries": { "name": "ChatDebug.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "renderEventListeners": { "name": "ChatDebug.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -354,7 +354,7 @@
         },
         "renderEventListeners": { "name": "Chat.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -496,7 +496,7 @@
         "getMenuEntries": { "name": "DiffView.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "renderEventListeners": { "name": "DiffView.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "ignoreKeyBindingErrors": true,
       "ignoreEventListenerErrors": true
     }
@@ -843,7 +843,7 @@
         },
         "renderEventListeners": { "name": "KeyBindings.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
   },
@@ -907,7 +907,7 @@
         },
         "renderEventListeners": { "name": "LanguageModels.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -1129,7 +1129,7 @@
         "getCommandIds": { "name": "Panel.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "Panel.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "commands"
     }
   },
@@ -1261,7 +1261,7 @@
         "renderEventListeners": { "name": "ProcessExplorer.renderEventListeners", "parameters": [] }
       },
       "renderComparison": "emptyCommands",
-      "capabilities": { "events": true, "render": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true }
     }
   },
   {
@@ -1369,7 +1369,7 @@
         "renderEventListeners": { "name": "RunningExtensions.renderEventListeners", "parameters": [] }
       },
       "extraCommands": [{ "name": "handleExtensionsChanged", "method": "refresh" }],
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
   },
@@ -1428,7 +1428,7 @@
         "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] }
       },
       "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "Settings.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
   },

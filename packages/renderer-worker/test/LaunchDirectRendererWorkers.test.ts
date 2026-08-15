@@ -32,11 +32,20 @@ const GetPortTuple = await import('../src/parts/GetPortTuple/GetPortTuple.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchAboutViewWorker = await import('../src/parts/LaunchAboutViewWorker/LaunchAboutViewWorker.js')
 const LaunchActivityBarWorker = await import('../src/parts/LaunchActivityBarWorker/LaunchActivityBarWorker.ts')
+const LaunchChatDebugViewWorker = await import('../src/parts/LaunchChatDebugViewWorker/LaunchChatDebugViewWorker.js')
+const LaunchChatViewWorker = await import('../src/parts/LaunchChatViewWorker/LaunchChatViewWorker.js')
+const LaunchDiffViewWorker = await import('../src/parts/LaunchDiffViewWorker/LaunchDiffViewWorker.js')
 const LaunchExtensionSearchViewWorker = await import('../src/parts/LaunchExtensionSearchViewWorker/LaunchExtensionSearchViewWorker.js')
+const LaunchKeyBindingsViewWorker = await import('../src/parts/LaunchKeyBindingsViewWorker/LaunchKeyBindingsViewWorker.js')
+const LaunchLanguageModelsViewWorker = await import('../src/parts/LaunchLanguageModelsViewWorker/LaunchLanguageModelsViewWorker.js')
 const LaunchMainAreaWorker = await import('../src/parts/LaunchMainAreaWorker/LaunchMainAreaWorker.ts')
 const LaunchOutputViewWorker = await import('../src/parts/LaunchOutputViewWorker/LaunchOutputViewWorker.js')
+const LaunchPanelWorker = await import('../src/parts/LaunchPanelWorker/LaunchPanelWorker.ts')
 const LaunchProblemsWorker = await import('../src/parts/LaunchProblemsWorker/LaunchProblemsWorker.ts')
+const LaunchProcessExplorerWorker = await import('../src/parts/LaunchProcessExplorerWorker/LaunchProcessExplorerWorker.js')
 const LaunchQuickPickWorker = await import('../src/parts/LaunchQuickPickWorker/LaunchQuickPickWorker.js')
+const LaunchRunningExtensionsViewWorker = await import('../src/parts/LaunchRunningExtensionsViewWorker/LaunchRunningExtensionsViewWorker.ts')
+const LaunchSettingsViewWorker = await import('../src/parts/LaunchSettingsViewWorker/LaunchSettingsViewWorker.js')
 const LaunchSourceControlWorker = await import('../src/parts/LaunchSourceControlWorker/LaunchSourceControlWorker.js')
 const LaunchStatusBarWorker = await import('../src/parts/LaunchStatusBarWorker/LaunchStatusBarWorker.js')
 const LaunchTextSearchViewWorker = await import('../src/parts/LaunchTextSearchViewWorker/LaunchTextSearchViewWorker.js')
@@ -50,12 +59,21 @@ beforeEach(() => {
 test.each([
   ['about', LaunchAboutViewWorker.launchAboutViewWorker, 'About.handleMessagePort'],
   ['activity bar', LaunchActivityBarWorker.launchActivityBarWorker, 'ActivityBar.handleMessagePort'],
+  ['chat', LaunchChatViewWorker.launchChatViewWorker, 'Chat.handleMessagePort'],
+  ['chat debug', LaunchChatDebugViewWorker.launchChatDebugViewWorker, 'ChatDebug.handleMessagePort'],
+  ['diff', LaunchDiffViewWorker.launchDiffViewWorker, 'DiffView.handleMessagePort'],
   ['extension search', LaunchExtensionSearchViewWorker.launchExtensionSearchViewWorker, 'SearchExtensions.handleMessagePort'],
+  ['keybindings', LaunchKeyBindingsViewWorker.launchKeyBindingsViewWorker, 'KeyBindings.handleMessagePort'],
+  ['language models', LaunchLanguageModelsViewWorker.launchLanguageModelsViewWorker, 'LanguageModels.handleMessagePort'],
   ['main area', LaunchMainAreaWorker.launchMainAreaWorker, 'MainArea.handleMessagePort'],
   ['output', LaunchOutputViewWorker.launchOutputViewWorker, 'Output.handleMessagePort'],
+  ['panel', LaunchPanelWorker.launchPanelWorker, 'Panel.handleMessagePort'],
   ['problems', LaunchProblemsWorker.launchProblemsWorker, 'Problems.handleMessagePort'],
+  ['process explorer', LaunchProcessExplorerWorker.launchProcessExplorerWorker, 'ProcessExplorer.handleMessagePort'],
   ['quick pick', LaunchQuickPickWorker.launchQuickPickWorker, 'QuickPick.handleRendererProcessMessagePort'],
   ['source control', LaunchSourceControlWorker.launchSourceControlWorker, 'SourceControl.handleRendererProcessMessagePort'],
+  ['running extensions', LaunchRunningExtensionsViewWorker.launchRunningExtensionsViewWorker, 'RunningExtensions.handleMessagePort'],
+  ['settings', LaunchSettingsViewWorker.launchSettingsViewWorker, 'Settings.handleMessagePort'],
   ['status bar', LaunchStatusBarWorker.launchStatusBarWorker, 'StatusBar.handleMessagePort'],
   ['text search', LaunchTextSearchViewWorker.launchTextSearchViewWorker, 'TextSearch.handleMessagePort'],
   ['title bar', LaunchTitleBarWorker.launchTitleBarWorker, 'TitleBar.handleMessagePort'],

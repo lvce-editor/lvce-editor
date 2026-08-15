@@ -13,6 +13,10 @@ jest.unstable_mockModule('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorke
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetPortTuple/GetPortTuple.js', () => ({
+  getPortTuple: jest.fn(() => ({ port1: 'worker-port', port2: 'renderer-process-port' })),
+}))
+
 jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc.js', () => {
   return {
     handleIpc: jest.fn(() => {
@@ -29,10 +33,21 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
+const GetPortTuple = await import('../src/parts/GetPortTuple/GetPortTuple.js')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
+const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchProcessExplorerWorker = await import('../src/parts/LaunchProcessExplorerWorker/LaunchProcessExplorerWorker.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 test('launchProcessExplorerWorker', async () => {
   const ipc = {
@@ -41,9 +56,15 @@ test('launchProcessExplorerWorker', async () => {
   // @ts-ignore
   GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///process-explorer-worker.js')
   // @ts-ignore
+  GetPortTuple.getPortTuple.mockReturnValue({ port1: 'worker-port', port2: 'renderer-process-port' })
+  // @ts-ignore
   IpcParent.create.mockResolvedValue(ipc)
   // @ts-ignore
   HandleIpc.handleIpc.mockReturnValue(undefined)
+  // @ts-ignore
+  JsonRpc.invokeAndTransfer.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockResolvedValue(undefined)
 
   const result = await LaunchProcessExplorerWorker.launchProcessExplorerWorker()
 
@@ -60,5 +81,8 @@ test('launchProcessExplorerWorker', async () => {
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledTimes(1)
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
+  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'ProcessExplorer.handleMessagePort', 'worker-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port')
   expect(result).toBe(ipc)
 })
