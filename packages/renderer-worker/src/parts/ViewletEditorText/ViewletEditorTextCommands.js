@@ -4,8 +4,13 @@ import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 
 const subWidgetCommandIds = [
+  'ColorPicker.handleColorAreaPointerDown',
+  'ColorPicker.handleColorAreaPointerMove',
+  'ColorPicker.handleColorAreaPointerUp',
+  'ColorPicker.handleContextMenu',
   'ColorPicker.handleSliderPointerDown',
   'ColorPicker.handleSliderPointerMove',
+  'ColorPicker.handleSliderPointerUp',
   'EditorCodeGenerator.accept',
   'EditorCompletion.close',
   'EditorCompletion.closeDetails',
