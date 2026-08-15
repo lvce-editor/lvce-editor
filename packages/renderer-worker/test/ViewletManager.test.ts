@@ -519,6 +519,24 @@ test('extension view render sends a dynamic title to its parent', () => {
   expect(commands).toEqual([['Viewlet.send', 2, 'setTitle', 'Testing: Updated']])
 })
 
+test('extension view render does not send a dynamic title to the root parent sentinel', () => {
+  const oldState = {
+    commands: [],
+    dom: [],
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    title: 'Testing: Updated',
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, -1)
+
+  expect(commands).toEqual([])
+})
+
 test('extension view render keeps the parent actions state in sync', () => {
   const parentState = {
     actionsUid: 3,
