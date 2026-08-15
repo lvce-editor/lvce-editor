@@ -1,4 +1,5 @@
 import { expect, jest, test } from '@jest/globals'
+import { join } from 'node:path'
 import * as IpcTrace from '../src/parts/IpcTrace/IpcTrace.ts'
 
 test('appends JSONL records to the application trace directory', async () => {
@@ -10,9 +11,9 @@ test('appends JSONL records to the application trace directory', async () => {
     mkdir: mkdir as never,
     timeOrigin: 0,
   })
-  const directory = '/cache/lvce-oss/ipcTraces/1970-01-01T00-00-00.000Z'
+  const directory = join('/cache/lvce-oss', 'ipcTraces', '1970-01-01T00-00-00.000Z')
   expect(mkdir).toHaveBeenCalledWith(directory, { recursive: true })
-  expect(appendFile).toHaveBeenCalledWith(`${directory}/builtin.eslint_evaluation-worker.jsonl`, '{"sequence":1}\n{"sequence":2}\n')
+  expect(appendFile).toHaveBeenCalledWith(join(directory, 'builtin.eslint_evaluation-worker.jsonl'), '{"sequence":1}\n{"sequence":2}\n')
 })
 
 test('sanitizes unsafe worker ids', () => {
