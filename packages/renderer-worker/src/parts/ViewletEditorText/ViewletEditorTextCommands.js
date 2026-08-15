@@ -8,6 +8,7 @@ const subWidgetCommandIds = [
   'ColorPicker.handleColorAreaPointerMove',
   'ColorPicker.handleColorAreaPointerUp',
   'ColorPicker.handleContextMenu',
+  'ColorPicker.handleSliderKeyDown',
   'ColorPicker.handleSliderPointerDown',
   'ColorPicker.handleSliderPointerMove',
   'ColorPicker.handleSliderPointerUp',
