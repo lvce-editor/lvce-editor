@@ -309,7 +309,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
 
   if (module.renderTitle && !module.renderTitle.isEqual(oldState, newState)) {
     const title = module.renderTitle.apply(oldState, newState)
-    if (parentId) {
+    if (parentId > 0) {
       const parentInstance = ViewletStates.getInstance(parentId)
       if (parentInstance?.factory?.setTitle && parentInstance.state.childUid === uid) {
         const oldParentRenderedState = parentInstance.renderedState
