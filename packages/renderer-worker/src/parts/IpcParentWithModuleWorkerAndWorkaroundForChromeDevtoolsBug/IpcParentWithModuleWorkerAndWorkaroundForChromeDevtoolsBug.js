@@ -2,17 +2,26 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as GetTransferrables from '../GetTransferrables/GetTransferrables.ts'
+import * as IpcTrace from '../IpcTrace/IpcTrace.js'
 
-export const create = async ({ url, name, port, id }) => {
+/** @param {any} options */
+export const create = async (options) => {
+  const { url, name, port, id, traceId = '' } = options
   // TODO no need to create port if worker
   // has been prelaunched in renderer process
   const { port1, port2 } = GetPortTuple.getPortTuple(port)
+  const workerPort = await IpcTrace.maybeCreateProxy({
+    id,
+    name,
+    port: port2,
+    traceId,
+  })
   await RendererProcess.invokeAndTransfer('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     url,
     name,
     raw: true,
-    port: port2,
+    port: workerPort,
     id,
   })
   return port1

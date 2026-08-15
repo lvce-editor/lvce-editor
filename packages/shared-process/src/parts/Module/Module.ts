@@ -112,6 +112,8 @@ export const load = (moduleId: any): any => {
       return import('../HandleWindowAllClosed/HandleWindowAllClosed.ipc.ts')
     case ModuleId.InstallExtension:
       return import('../InstallExtension/InstallExtension.ipc.ts')
+    case ModuleId.IpcTrace:
+      return import('../IpcTrace/IpcTrace.ipc.ts')
     case ModuleId.IsAutoUpdateSupported:
       return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.ts')
     case ModuleId.LanguageServer:

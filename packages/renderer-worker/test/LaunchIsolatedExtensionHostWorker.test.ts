@@ -28,6 +28,12 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/IpcTrace/IpcTrace.js', () => {
+  return {
+    maybeCreateProxy: async ({ port }) => port,
+  }
+})
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     getPlatform: jest.fn(() => PlatformType.Web),

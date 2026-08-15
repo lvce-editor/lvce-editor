@@ -5,5 +5,9 @@ export const getHelpString = (): any => {
 
 Usage:
   ${Platform.applicationName} [path]
+
+Diagnostics:
+  --trace-ipc=<worker-ids>  Trace comma-separated worker IDs (or *) to JSONL.
+                            Traces can be large and contain source code.
 `
 }

@@ -1,6 +1,7 @@
 import * as ContentSecurityPolicy from '../ContentSecurityPolicy/ContentSecurityPolicy.js'
 import * as GetExtensionWorkerMemoryUsage from '../GetExtensionWorkerMemoryUsage/GetExtensionWorkerMemoryUsage.js'
 import * as Id from '../Id/Id.js'
+import * as IpcTrace from '../IpcTrace/IpcTrace.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -18,10 +19,16 @@ export const launchIsolatedExtensionHostWorker = async (port, extensionId, url, 
     const pathName = new URL(url, 'http://localhost').pathname
     await ContentSecurityPolicy.set(pathName, contentSecurityPolicy)
   }
+  const workerPort = await IpcTrace.maybeCreateProxy({
+    id,
+    name,
+    port,
+    traceId: extensionId,
+  })
   await RendererProcess.invokeAndTransfer('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     name,
-    port,
+    port: workerPort,
     raw: true,
     url,
     id,
