@@ -50,6 +50,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands['ColorPicker.handleColorAreaPointerMove']).toBeDefined()
   expect(commands['ColorPicker.handleColorAreaPointerUp']).toBeDefined()
   expect(commands['ColorPicker.handleContextMenu']).toBeDefined()
+  expect(commands['ColorPicker.handleSliderKeyDown']).toBeDefined()
   expect(commands['ColorPicker.handleSliderPointerDown']).toBeDefined()
   expect(commands['ColorPicker.handleSliderPointerMove']).toBeDefined()
   expect(commands['ColorPicker.handleSliderPointerUp']).toBeDefined()
