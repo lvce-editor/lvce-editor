@@ -15,6 +15,10 @@ jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc.js', () => ({
   handleIpc: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/GetPortTuple/GetPortTuple.js', () => ({
+  getPortTuple: jest.fn(() => ({ port1: 'worker-port', port2: 'renderer-process-port' })),
+}))
+
 jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => ({
   create: jest.fn(() => {
     throw new Error('not implemented')
@@ -23,6 +27,11 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => ({
 
 jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
   invoke: jest.fn(),
+  invokeAndTransfer: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invokeAndTransfer: jest.fn(),
 }))
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
@@ -30,6 +39,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 }))
 
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
+const GetPortTuple = await import('../src/parts/GetPortTuple/GetPortTuple.js')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
@@ -40,6 +50,8 @@ test('launchTextSearchViewWorker', async () => {
   const ipc = { send() {} }
   // @ts-ignore
   GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///text-search-view-worker.js')
+  // @ts-ignore
+  GetPortTuple.getPortTuple.mockReturnValue({ port1: 'worker-port', port2: 'renderer-process-port' })
   // @ts-ignore
   IpcParent.create.mockResolvedValue(ipc)
   // @ts-ignore
