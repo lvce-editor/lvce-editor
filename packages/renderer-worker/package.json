@@ -57,7 +57,7 @@
     "@lvce-editor/completion-worker": "^4.17.0",
     "@lvce-editor/debug-worker": "^4.15.0",
     "@lvce-editor/dialog-worker": "^1.1.2",
-    "@lvce-editor/diff-view": "^3.35.0",
+    "@lvce-editor/diff-view": "^3.36.0",
     "@lvce-editor/diff-worker": "^3.4.0",
     "@lvce-editor/drag-and-drop-worker": "^0.4.0",
     "@lvce-editor/editor-worker": "^19.30.11",
