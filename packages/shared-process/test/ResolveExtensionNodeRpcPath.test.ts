@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from '@jest/globals'
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import * as ResolveExtensionNodeRpcPath from '../src/parts/ResolveExtensionNodeRpcPath/ResolveExtensionNodeRpcPath.ts'
@@ -31,7 +31,7 @@ test('resolves a declared node rpc inside the remote extension root', async () =
   const root = await createFixture()
 
   await expect(ResolveExtensionNodeRpcPath.resolveExtensionNodeRpcPath('builtin.git', 'git-client')).resolves.toBe(
-    path.join(root, 'builtin.git', 'node', 'src', 'gitClient.js'),
+    await realpath(path.join(root, 'builtin.git', 'node', 'src', 'gitClient.js')),
   )
 })
 
