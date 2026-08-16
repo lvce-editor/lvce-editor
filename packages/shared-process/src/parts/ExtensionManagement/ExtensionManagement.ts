@@ -13,12 +13,13 @@ import { VError } from '../VError/VError.ts'
 export const enable = async (id: any): Promise<any> => {
   try {
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
-    const oldDisabledExtensionIds = await getDisabledExtensionIds()
-    if (!oldDisabledExtensionIds.includes(id)) {
+    const { disabledExtensionIds, enabledExtensionIds } = await getExtensionEnablement()
+    if (!disabledExtensionIds.includes(id) && enabledExtensionIds.includes(id)) {
       return
     }
-    const newDisabledExtensionIds = oldDisabledExtensionIds.filter((extensionId: any) => extensionId !== id)
-    const content = getNewDisabledExtensionContent(newDisabledExtensionIds)
+    const newDisabledExtensionIds = disabledExtensionIds.filter((extensionId: any) => extensionId !== id)
+    const newEnabledExtensionIds = enabledExtensionIds.includes(id) ? enabledExtensionIds : [...enabledExtensionIds, id]
+    const content = getNewExtensionEnablementContent(newDisabledExtensionIds, newEnabledExtensionIds)
     await mkdir(dirname(disabledExtensionsJsonPath), { recursive: true })
     await writeFile(disabledExtensionsJsonPath, content)
   } catch (error) {
@@ -26,11 +27,12 @@ export const enable = async (id: any): Promise<any> => {
   }
 }
 
-const getNewDisabledExtensionContent = (disabledExtensions: any): any => {
+const getNewExtensionEnablementContent = (disabledExtensions: any, enabledExtensions: any): any => {
   const content =
     JSON.stringify(
       {
         disabledExtensions,
+        enabledExtensions,
       },
       null,
       2,
@@ -41,12 +43,13 @@ const getNewDisabledExtensionContent = (disabledExtensions: any): any => {
 export const disable = async (id: any): Promise<any> => {
   try {
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
-    const oldDisabledExtensionIds = await getDisabledExtensionIds()
-    if (oldDisabledExtensionIds.includes(id)) {
+    const { disabledExtensionIds, enabledExtensionIds } = await getExtensionEnablement()
+    if (disabledExtensionIds.includes(id) && !enabledExtensionIds.includes(id)) {
       return
     }
-    const newDisabledExtensionIds = [...oldDisabledExtensionIds, id]
-    const content = getNewDisabledExtensionContent(newDisabledExtensionIds)
+    const newDisabledExtensionIds = disabledExtensionIds.includes(id) ? disabledExtensionIds : [...disabledExtensionIds, id]
+    const newEnabledExtensionIds = enabledExtensionIds.filter((extensionId: any) => extensionId !== id)
+    const content = getNewExtensionEnablementContent(newDisabledExtensionIds, newEnabledExtensionIds)
     await mkdir(dirname(disabledExtensionsJsonPath), { recursive: true })
     await writeFile(disabledExtensionsJsonPath, content)
   } catch (error) {
@@ -54,21 +57,39 @@ export const disable = async (id: any): Promise<any> => {
   }
 }
 
-export const getDisabledExtensionIds = async (): Promise<any> => {
+const getStringArray = (value: any): any => {
+  if (!Array.isArray(value)) {
+    return []
+  }
+  return value.filter((extensionId: any) => typeof extensionId === 'string')
+}
+
+export const getExtensionEnablement = async (): Promise<any> => {
   try {
     const disabledExtensionsJsonPath = PlatformPaths.getDisabledExtensionsJsonPath()
     if (!existsSync(disabledExtensionsJsonPath)) {
-      return []
+      return {
+        disabledExtensionIds: [],
+        enabledExtensionIds: [],
+      }
     }
     const content = await readFile(disabledExtensionsJsonPath, 'utf8')
     const parsed = JSON.parse(content)
-    if (!parsed || !parsed.disabledExtensions || !Array.isArray(parsed.disabledExtensions)) {
-      return []
+    return {
+      disabledExtensionIds: getStringArray(parsed?.disabledExtensions),
+      enabledExtensionIds: getStringArray(parsed?.enabledExtensions),
     }
-    return parsed.disabledExtensions.filter((extensionId: any) => typeof extensionId === 'string')
   } catch {
-    return []
+    return {
+      disabledExtensionIds: [],
+      enabledExtensionIds: [],
+    }
   }
+}
+
+export const getDisabledExtensionIds = async (): Promise<any> => {
+  const { disabledExtensionIds } = await getExtensionEnablement()
+  return disabledExtensionIds
 }
 
 export const getBuiltinExtensions = (): any => {

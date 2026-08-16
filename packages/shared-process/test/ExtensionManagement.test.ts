@@ -318,6 +318,39 @@ test('getExtensions - linked extension overrides builtin extension', async () =>
   })
 })
 
+test('getExtensions - explicit enable overrides a builtin disabled by default', async () => {
+  const installedExtensionsPath = await getTmpDir()
+  const builtinExtensionsPath = await getTmpDir()
+  const linkedExtensionsPath = await getTmpDir()
+  const disabledExtensionsPath = await getTmpDir()
+  const disabledExtensionsJsonPath = join(disabledExtensionsPath, 'disabled-extensions.json')
+  const extensionId = 'builtin.gpt-voice'
+  await mkdir(join(builtinExtensionsPath, extensionId))
+  await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), JSON.stringify({ disabled: true, id: extensionId }))
+  await writeFile(disabledExtensionsJsonPath, JSON.stringify({ disabledExtensions: [], enabledExtensions: [extensionId] }))
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockImplementation(() => installedExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockImplementation(() => builtinExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => disabledExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => disabledExtensionsJsonPath)
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => linkedExtensionsPath)
+
+  const extensions = await ExtensionManagement.getExtensions()
+
+  expect(extensions).toHaveLength(1)
+  expect(extensions[0]).toMatchObject({
+    disabled: false,
+    id: extensionId,
+    isBuiltin: true,
+  })
+})
+
 test('disable', async () => {
   const tmpDir1 = await getTmpDir()
   const tmpDir2 = await getTmpDir()
@@ -330,10 +363,12 @@ test('disable', async () => {
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
+  await writeFile(join(tmpDir3, 'disabled-extensions.json'), JSON.stringify({ disabledExtensions: [], enabledExtensions: ['test-extension'] }))
   await ExtensionManagement.disable('test-extension')
   const content = await readFile(join(tmpDir3, 'disabled-extensions.json'), 'utf8')
   const parsed = JSON.parse(content)
   expect(parsed.disabledExtensions).toEqual(['test-extension'])
+  expect(parsed.enabledExtensions).toEqual([])
 })
 
 test('enable', async () => {
@@ -346,6 +381,7 @@ test('enable', async () => {
   const content = await readFile(disabledExtensionsJsonPath, 'utf8')
   const parsed = JSON.parse(content)
   expect(parsed.disabledExtensions).toEqual(['test-extension-2'])
+  expect(parsed.enabledExtensions).toEqual(['test-extension-1'])
 })
 
 test('enable - extension not in disabled list', async () => {
@@ -358,6 +394,7 @@ test('enable - extension not in disabled list', async () => {
   const content = await readFile(disabledExtensionsJsonPath, 'utf8')
   const parsed = JSON.parse(content)
   expect(parsed.disabledExtensions).toEqual(['test-extension-1'])
+  expect(parsed.enabledExtensions).toEqual(['test-extension-2'])
 })
 
 test.skip('disable should fail if enabled extension path does not exist', async () => {
