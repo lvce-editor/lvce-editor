@@ -1149,14 +1149,21 @@ export const showPreview = async (
   uri: string = initialState.previewUri,
   previewViewletId: string = getPreviewViewletId(uri),
 ) => {
-  const state =
-    !initialState.previewVisible && initialState.secondaryPreviewVisible
+  const stateWithRestoredWidth =
+    !initialState.previewVisible && initialState.previewWidthBeforeClose > 0
       ? {
           ...initialState,
-          previewWidth: initialState.windowWidth / 3,
-          secondaryPreviewWidth: initialState.windowWidth / 3,
+          previewWidth: initialState.previewWidthBeforeClose,
         }
       : initialState
+  const state =
+    !stateWithRestoredWidth.previewVisible && stateWithRestoredWidth.secondaryPreviewVisible
+      ? {
+          ...stateWithRestoredWidth,
+          previewWidth: stateWithRestoredWidth.windowWidth / 3,
+          secondaryPreviewWidth: stateWithRestoredWidth.windowWidth / 3,
+        }
+      : stateWithRestoredWidth
   const { previewVisible, previewId, uid } = state
 
   if (previewVisible && previewId !== -1) {
