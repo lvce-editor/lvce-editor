@@ -5,6 +5,7 @@ import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallback
 import * as CleanUpWorkersAfterLoad from '../CleanUpWorkersAfterLoad/CleanUpWorkersAfterLoad.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
@@ -129,6 +130,7 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.One)
 
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
+  ExtensionManagementWorker.hydrate()
 
   const promptOptions = platform === PlatformType.Electron ? await PromptMode.getPromptOptions() : undefined
 
