@@ -148,6 +148,27 @@ test('returns preview runtime diagnostics without treating them as viewlet state
   expect(invoke).toHaveBeenCalledWith('Preview.getRuntimeDiagnostics', 12)
 })
 
+test('forwards preview bounds changes to the preview worker', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Preview.diff2' || method === 'Preview.render2') {
+      return []
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('preview'),
+    config: getWorkerViewletConfig('preview'),
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(12, 'file:///workspace/index.html', 926, 29, 926, 906)
+  const dimensions = { height: 906, width: 400, x: 1452, y: 29 }
+
+  const result = await viewlet.resize!(state, dimensions)
+
+  expect(invoke).toHaveBeenCalledWith('Preview.resize', 12, dimensions)
+  expect(result).toMatchObject(dimensions)
+})
+
 test('preserves command short-circuit and phase-specific diff parameters', async () => {
   const config: any = createConfig({ commandSkipRenderWhenDiffEmpty: true })
   config.methods.commandDiff = {
