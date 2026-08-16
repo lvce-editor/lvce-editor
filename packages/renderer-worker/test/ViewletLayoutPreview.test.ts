@@ -654,3 +654,30 @@ test('hidePreview disables preview sash', async () => {
   expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(7, 'Preview')
   expect(Viewlet.disposeFunctional).toHaveBeenCalledWith(7)
 })
+
+test('showPreview restores the resized preview width after hiding', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewId: 7,
+    previewMinWidth: 100,
+    previewUri: 'file:///test.html',
+    previewViewletId: 'Preview',
+    previewVisible: true,
+    previewWidth: 400,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 1080,
+    windowWidth: 1920,
+  })
+
+  const hidden = await ViewletLayout.hidePreview(state)
+  const reopened = await ViewletLayout.showPreview(hidden.newState, 'file:///test.html')
+
+  expect(reopened.newState).toMatchObject({
+    previewLeft: 1520,
+    previewVisible: true,
+    previewWidth: 400,
+  })
+})
