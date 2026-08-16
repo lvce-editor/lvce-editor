@@ -24,6 +24,13 @@
     "created": "2026-07-14"
   },
   {
+    "name": "builtin.gpt-voice",
+    "repository": "github.com/lvce-editor/gpt-voice-extension",
+    "version": "2.2.1",
+    "created": "2026-08-06",
+    "enabled": false
+  },
+  {
     "name": "builtin.language-basics-bat",
     "repository": "github.com/lvce-editor/language-basics-bat",
     "version": "0.12.0",

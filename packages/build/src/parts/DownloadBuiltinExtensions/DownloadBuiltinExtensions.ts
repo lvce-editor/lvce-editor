@@ -11,6 +11,7 @@ import * as ExitCode from '../ExitCode/ExitCode.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
+import { getEnabledBuiltinExtensions } from '../GetEnabledBuiltinExtensions/GetEnabledBuiltinExtensions.ts'
 import extensions from './builtinExtensions.json' with { type: 'json' }
 
 const downloadUrl = async (url, outFile) => {
@@ -122,7 +123,7 @@ const printError = (error) => {
 
 const main = async () => {
   try {
-    await downloadExtensions(extensions)
+    await downloadExtensions(getEnabledBuiltinExtensions(extensions))
   } catch (error) {
     printError(error)
     Process.exit(ExitCode.Error)
