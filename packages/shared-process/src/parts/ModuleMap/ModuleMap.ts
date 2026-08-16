@@ -273,6 +273,7 @@ export const getModuleId = (commandId: any): any => {
     case 'Preferences.getAll':
       return ModuleId.Preferences
     case 'Process.getArch':
+    case 'Process.getArgv':
     case 'Process.getNodeVersion':
     case 'Process.getPid':
     case 'Process.getV8Version':
