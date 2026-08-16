@@ -431,6 +431,7 @@ export const commandMap = {
   'Terminal.handleMouseDown': lazy('Terminal.handleMouseDown'),
   'Terminals.addTerminal': lazy('Terminals.addTerminal'),
   'Terminals.handleClickTab': lazy('Terminals.handleClickTab'),
+  'Terminals.handleClickTerminalTabAction': lazy('Terminals.handleClickTerminalTabAction'),
   'Terminals.handleMouseDown': lazy('Terminals.handleMouseDown'),
   'Terminals.killTerminal': lazy('Terminals.killTerminal'),
   'Terminals.sendText': lazy('Terminals.sendText'),

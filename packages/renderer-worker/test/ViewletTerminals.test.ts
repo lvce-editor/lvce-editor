@@ -7,11 +7,17 @@ const viewletExecuteViewletCommand = jest.fn()
 const viewletResize = jest.fn(async (uid, dimensions) => [['Viewlet.setBounds', uid, dimensions]])
 let nextId = 42
 let terminalTabsPreference: boolean | undefined
+const terminalSpawnOptions = {
+  args: ['-i'],
+  command: 'bash',
+}
 
 beforeEach(() => {
   jest.clearAllMocks()
   nextId = 42
   terminalTabsPreference = undefined
+  terminalSpawnOptions.args = ['-i']
+  terminalSpawnOptions.command = 'bash'
 })
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
@@ -24,6 +30,14 @@ jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
   return {
     create() {
       return nextId++
+    },
+  }
+})
+
+jest.unstable_mockModule('../src/parts/GetTerminalSpawnOptions/GetTerminalSpawnOptions.js', () => {
+  return {
+    getTerminalSpawnOptions() {
+      return terminalSpawnOptions
     },
   }
 })
@@ -65,7 +79,7 @@ const createLoadedState = () => {
     childUid: 41,
     childUids: [41],
     selectedIndex: 0,
-    tabs: [{ icon: 'Terminal', label: 'tab 1', terminalUids: [41], uid: 41 }],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 }],
     terminalTabsEnabled: true,
   }
 }
@@ -81,17 +95,19 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
     0,
     {
       height: 400,
-      width: 710,
+      width: 800,
       x: 10,
       y: 20,
     },
     'file:///workspace/folder',
+    [terminalSpawnOptions],
   )
   expect(newState).toMatchObject({
     activeTerminalUids: [42],
     childUid: 42,
     childUids: [42],
     selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 }],
     terminalTabsEnabled: true,
   })
 })
@@ -109,8 +125,18 @@ test('loadContent preserves an explicit disabled terminal tabs preference', asyn
     0,
     expect.objectContaining({ width: 800 }),
     'file:///workspace/folder',
+    [terminalSpawnOptions],
   )
   expect(newState.terminalTabsEnabled).toBe(false)
+})
+
+test('loadContent derives the terminal label and icon from the shell executable', async () => {
+  terminalSpawnOptions.command = '/usr/bin/zsh'
+  const state = ViewletTerminals.create(1, '', 10, 20, 800, 400)
+
+  const newState = await ViewletTerminals.loadContent(state)
+
+  expect(newState.tabs).toEqual([{ icon: 'terminal-bash', label: 'zsh', terminalUids: [42], uid: 42 }])
 })
 
 test('addTerminal opens a new terminal tab without disposing the current terminal', async () => {
@@ -130,6 +156,7 @@ test('addTerminal opens a new terminal tab without disposing the current termina
       y: 20,
     },
     'file:///workspace/folder',
+    [terminalSpawnOptions],
   )
   expect(viewletDisposeFunctional).not.toHaveBeenCalled()
   expect(newState).toMatchObject({
@@ -146,7 +173,7 @@ test('handleClickAction routes the panel add action', async () => {
 
   const newState = await ViewletTerminals.handleClickAction(state, 0, 'addTerminal')
 
-  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.anything(), '')
+  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.anything(), '', [terminalSpawnOptions])
   expect(newState.childUid).toBe(42)
 })
 
@@ -165,6 +192,11 @@ test('renderEventListeners routes terminal toolbar clicks and stops panel event 
       params: ['handleClickTab', 'event.currentTarget.dataset.index'],
     },
     {
+      name: 'handleClickTerminalTabAction',
+      params: ['handleClickTerminalTabAction', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.command'],
+      stopPropagation: true,
+    },
+    {
       name: 'handleClickAction',
       params: ['handleClickAction', 'event.target.dataset.command'],
       stopPropagation: true,
@@ -177,7 +209,7 @@ test('handleClickAction routes a functional action-root split event', async () =
 
   const newState = await ViewletTerminals.handleClickAction(state, 'splitTerminal')
 
-  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.anything(), '')
+  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.anything(), '', [terminalSpawnOptions])
   expect(newState.childUids).toEqual([41, 42])
 })
 
@@ -193,15 +225,16 @@ test('splitTerminal opens a new terminal to the right of the active terminal', a
     0,
     {
       height: 400,
-      width: 355,
-      x: 365,
+      width: 400,
+      x: 410,
       y: 20,
     },
     '',
+    [terminalSpawnOptions],
   )
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 355,
+    width: 400,
     x: 10,
     y: 20,
   })
@@ -220,7 +253,7 @@ test('splitTerminal inserts the new terminal directly after the active split', a
     activeTerminalUids: [41],
     childUid: 41,
     childUids: [40, 41],
-    tabs: [{ icon: 'Terminal', label: 'tab 1', terminalUids: [40, 41], uid: 40 }],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [40, 41], uid: 40 }],
   }
 
   const newState = await ViewletTerminals.splitTerminal(state)
@@ -231,8 +264,9 @@ test('splitTerminal inserts the new terminal directly after the active split', a
     ViewletModuleId.Terminal2,
     42,
     0,
-    expect.objectContaining({ x: 10 + (710 / 3) * 2 }),
+    expect.objectContaining({ x: 10 + (800 / 3) * 2 }),
     '',
+    [terminalSpawnOptions],
   )
 })
 
@@ -242,7 +276,7 @@ test('handleMouseDown selects and focuses the terminal the user pressed', () => 
     activeTerminalUids: [42],
     childUid: 42,
     childUids: [41, 42],
-    tabs: [{ icon: 'Terminal', label: 'tab 1', terminalUids: [41, 42], uid: 41 }],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
   }
 
   const newState = ViewletTerminals.handleMouseDown(state, 41)
@@ -289,7 +323,7 @@ test('killTerminal disposes the active split and expands the remaining split', a
     activeTerminalUids: [42],
     childUid: 42,
     childUids: [41, 42],
-    tabs: [{ icon: 'Terminal', label: 'tab 1', terminalUids: [41, 42], uid: 41 }],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
   }
 
   const newState = await ViewletTerminals.killTerminal(state)
@@ -297,7 +331,7 @@ test('killTerminal disposes the active split and expands the remaining split', a
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
@@ -317,8 +351,8 @@ test('killTerminal removes an empty tab and selects the next terminal tab', asyn
     childUid: 41,
     childUids: [41],
     tabs: [
-      { icon: 'Terminal', label: 'tab 1', terminalUids: [41], uid: 41 },
-      { icon: 'Terminal', label: 'tab 2', terminalUids: [42], uid: 42 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
     ],
   }
 
@@ -340,8 +374,8 @@ test('focusIndex selects an existing terminal group without recreating or dispos
     childUid: 41,
     childUids: [41],
     tabs: [
-      { icon: 'Terminal', label: 'tab 1', terminalUids: [41], uid: 41 },
-      { icon: 'Terminal', label: 'tab 2', terminalUids: [42, 43], uid: 42 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42, 43], uid: 42 },
     ],
   }
 
@@ -362,8 +396,8 @@ test('handleClickTab selects a terminal from its DOM dataset index', async () =>
     ...createLoadedState(),
     activeTerminalUids: [41, 42],
     tabs: [
-      { icon: 'Terminal', label: 'tab 1', terminalUids: [41], uid: 41 },
-      { icon: 'Terminal', label: 'tab 2', terminalUids: [42], uid: 42 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
     ],
   }
 
@@ -373,6 +407,67 @@ test('handleClickTab selects a terminal from its DOM dataset index', async () =>
     childUid: 42,
     childUids: [42],
     selectedIndex: 1,
+  })
+})
+
+test('handleClickTerminalTabAction disposes the clicked terminal tab and focuses the previous tab', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41, 42, 43],
+    childUid: 41,
+    childUids: [41],
+    selectedIndex: 0,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [43], uid: 43 },
+    ],
+  }
+
+  const newState = await ViewletTerminals.handleClickTerminalTabAction(state, '2', 'killTerminalTab')
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(43)
+  expect(viewletResize).toHaveBeenCalledWith(42, {
+    height: 400,
+    width: 710,
+    x: 10,
+    y: 20,
+  })
+  expect(newState).toMatchObject({
+    activeTerminalUids: [41, 42],
+    childUid: 42,
+    childUids: [42],
+    selectedIndex: 1,
+  })
+})
+
+test('killTerminalTab expands the remaining terminal when the sidebar becomes hidden', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    childUid: 42,
+    childUids: [42],
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+    ],
+  }
+
+  const newState = await ViewletTerminals.killTerminalTab(state, 1)
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
+  expect(viewletResize).toHaveBeenCalledWith(41, {
+    height: 400,
+    width: 800,
+    x: 10,
+    y: 20,
+  })
+  expect(newState).toMatchObject({
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41],
+    selectedIndex: 0,
   })
 })
 

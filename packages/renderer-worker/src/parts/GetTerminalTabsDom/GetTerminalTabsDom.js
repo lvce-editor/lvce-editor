@@ -1,8 +1,9 @@
-import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as TerminalStrings from '../TerminalStrings/TerminalStrings.js'
 
 const getTabClassName = (isSelected) => {
   let className = ClassNames.TerminalTab
@@ -23,16 +24,39 @@ const createTabDom = (tab, index, isSelected) => {
         onClick: DomEventListenerFunctions.HandleClickTab,
         role: AriaRoles.ListItem,
       },
-      2,
+      3,
     ),
     div(
       {
         className: ClassNames.TerminalTabIcon,
-        maskImage: icon,
+        maskImage: `url(/icons/${icon}.svg)`,
       },
       0,
     ),
+    span(
+      {
+        className: ClassNames.TerminalTabLabel,
+      },
+      1,
+    ),
     text(label),
+    button(
+      {
+        ariaLabel: TerminalStrings.killTerminal(),
+        'data-command': 'killTerminalTab',
+        'data-index': index,
+        className: ClassNames.TerminalTabKill,
+        onClick: DomEventListenerFunctions.HandleClickTerminalTabAction,
+        title: TerminalStrings.killTerminal(),
+      },
+      1,
+    ),
+    div(
+      {
+        className: ClassNames.TerminalTabKillIcon,
+      },
+      0,
+    ),
   ]
 }
 
