@@ -67,3 +67,16 @@ test('setUri uses a provided provider path separator', async () => {
   expect(Workspace.state.pathSeparator).toBe('\\')
   expect(getPathSeparator).not.toHaveBeenCalled()
 })
+
+test('setUri uses the remote backend workspace path', async () => {
+  await Workspace.setUri('remote-ssh://host/work', '/', {
+    token: 'secret',
+    url: 'ws://127.0.0.1:45123',
+    workspacePath: '/work',
+  })
+
+  expect(Workspace.getWorkspacePath()).toBe('/work')
+  expect(Workspace.getWorkspaceUri()).toBe('remote-ssh://host/work')
+  expect(Workspace.state.pathSeparator).toBe('/')
+  expect(getPathSeparator).not.toHaveBeenCalled()
+})
