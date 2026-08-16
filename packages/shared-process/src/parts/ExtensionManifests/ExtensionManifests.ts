@@ -1,5 +1,5 @@
 import * as DeduplicateExtensions from '../DeduplicateExtensions/DeduplicateExtensions.ts'
-import { getDisabledExtensionIds } from '../ExtensionManagement/ExtensionManagement.ts'
+import { getExtensionEnablement } from '../ExtensionManagement/ExtensionManagement.ts'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.ts'
 import * as ExtensionManifestsGetFromFolder from './ExtensionManifestsFromFolder.ts'
 import * as ExtensionManifestsGetFromLinkedExtension from './ExtensionManifestsFromLinkedExtension.ts'
@@ -30,11 +30,11 @@ const isBuiltin = (extension: any): any => {
   return extension && extension.id && extension.id.startsWith('builtin.')
 }
 
-const addExtensionDisabledStatus = (uniqueExtensions: any, disabledExtensionIds: any): any => {
+const addExtensionDisabledStatus = (uniqueExtensions: any, disabledExtensionIds: any, enabledExtensionIds: any): any => {
   return uniqueExtensions.map((extension: any) => {
     return {
       ...extension,
-      disabled: extension.disabled === true || disabledExtensionIds.includes(extension.id),
+      disabled: disabledExtensionIds.includes(extension.id) || (extension.disabled === true && !enabledExtensionIds.includes(extension.id)),
       isBuiltin: isBuiltin(extension),
     }
   })
@@ -42,9 +42,9 @@ const addExtensionDisabledStatus = (uniqueExtensions: any, disabledExtensionIds:
 
 export const getAll = async (inputs: any, builtinExtensionsPath: any = undefined): Promise<any> => {
   const manifests = await Promise.all(inputs.map(get))
-  const disabledIds = await getDisabledExtensionIds()
+  const { disabledExtensionIds, enabledExtensionIds } = await getExtensionEnablement()
   const flatManifests = manifests.flat(1)
   const uniqueExtensions = DeduplicateExtensions.deduplicateExtensions(flatManifests, builtinExtensionsPath)
-  const filteredExtensions = addExtensionDisabledStatus(uniqueExtensions, disabledIds)
+  const filteredExtensions = addExtensionDisabledStatus(uniqueExtensions, disabledExtensionIds, enabledExtensionIds)
   return filteredExtensions
 }
