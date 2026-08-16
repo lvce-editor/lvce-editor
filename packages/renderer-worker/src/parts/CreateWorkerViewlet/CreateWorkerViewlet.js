@@ -206,9 +206,11 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     })
   }
 
-  Commands.__renderPending = (currentState) => {
-    return runCommandRenderPipeline(currentState, [])
-  }
+  Object.defineProperty(Commands, '__renderPending', {
+    value(currentState) {
+      return runCommandRenderPipeline(currentState, [])
+    },
+  })
 
   const wrapCommand = (command) => {
     return async (currentState, ...args) => {

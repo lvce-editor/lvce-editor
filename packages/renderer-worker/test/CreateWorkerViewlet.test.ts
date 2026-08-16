@@ -146,6 +146,7 @@ test('renders pending worker state without replaying a command', async () => {
 
   const result = await viewlet.Commands.__renderPending(state)
 
+  expect(Object.keys(viewlet.Commands)).not.toContain('__renderPending')
   expect(invoke.mock.calls).toEqual([
     ['Example.diff3', 9],
     ['Example.render3', 9, ['diff']],
