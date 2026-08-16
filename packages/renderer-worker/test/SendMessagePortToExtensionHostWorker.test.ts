@@ -29,10 +29,17 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
   }
 })
 
+jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', () => {
+  return {
+    connectMessagePort: jest.fn(async () => false),
+  }
+})
+
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
 const DragAndDropWorker = await import('../src/parts/DragAndDropWorker/DragAndDropWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const WorkspaceBackend = await import('../src/parts/WorkspaceBackend/WorkspaceBackend.js')
 const SendMessagePortToExtensionHostWorker = await import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.js')
 
 test('sendMessagePortToProcessExplorer', async () => {
@@ -42,6 +49,20 @@ test('sendMessagePortToProcessExplorer', async () => {
 
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
+})
+
+test('sendMessagePortToTerminalProcess uses the remote workspace backend', async () => {
+  const port = {}
+  jest.mocked(WorkspaceBackend.connectMessagePort).mockResolvedValueOnce(true)
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToTerminalProcess(
+    port,
+    'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess',
+    1,
+  )
+
+  expect(WorkspaceBackend.connectMessagePort).toHaveBeenCalledWith('terminal-process', port)
+  expect(SharedProcess.invokeAndTransfer).not.toHaveBeenCalled()
 })
 
 test('sendMessagePortToDialogWorker', async () => {

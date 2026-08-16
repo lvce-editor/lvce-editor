@@ -3,8 +3,21 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SendMessagePortToElectron from '../SendMessagePortToElectron/SendMessagePortToElectron.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 
 export const create = async (options) => {
+  const remoteUrl = WorkspaceBackend.getWebSocketUrl(options.type)
+  if (remoteUrl) {
+    const module = await import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
+    const rawIpc = await module.create({ ...options, url: remoteUrl })
+    if (options.raw) {
+      return rawIpc
+    }
+    return {
+      rawIpc,
+      module,
+    }
+  }
   switch (Platform.getPlatform()) {
     case PlatformType.Web:
     case PlatformType.Remote:

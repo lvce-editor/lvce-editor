@@ -526,6 +526,7 @@ export const commandMap = {
   'Workspace.hydrate': lazy('Workspace.hydrate'),
   'Workspace.setPath': lazy('Workspace.setPath'),
   'Workspace.setUri': lazy('Workspace.setUri'),
+  'WebSocketCapability.create': lazy('WebSocketCapability.create'),
   'Layout.getAllQuickPickMenuEntries': lazy('Layout.getAllQuickPickMenuEntries'),
   'Layout.attachViewlet': lazy('Layout.attachViewlet'),
   'Layout.createPanelViewlet': lazy('Layout.createPanelViewlet'),

@@ -7,10 +7,13 @@ import * as ReconnectingWebSocket from '../ReconnectingWebSocket/ReconnectingWeb
 import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
 import * as Location from '../Location/Location.js'
 
-export const create = async ({ type }) => {
+/**
+ * @param {{ readonly type: string, readonly url?: string }} options
+ */
+export const create = async ({ type, url = '' }) => {
   Assert.string(type)
   const host = Location.getHost()
-  const wsUrl = GetWebSocketUrl.getWebSocketUrl(type, host)
+  const wsUrl = url || GetWebSocketUrl.getWebSocketUrl(type, host)
   const webSocket = ReconnectingWebSocket.create(wsUrl)
   let firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
   if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {

@@ -5,17 +5,19 @@ export const getTypeFromUrl = (url: any): any => {
     throw new VError('invalid url')
   }
   const questionMarkIndex = url.indexOf('?')
-  if (questionMarkIndex === -1) {
-    const slashIndex = url.lastIndexOf('/')
-    const rest = url.slice(slashIndex + 1)
-    if (!rest) {
-      throw new Error('missing type parameter')
-    }
-    return rest
+  const path = questionMarkIndex === -1 ? url : url.slice(0, questionMarkIndex)
+  const slashIndex = path.lastIndexOf('/')
+  const pathType = path.slice(slashIndex + 1)
+  if (pathType) {
+    return pathType
   }
-  // deprecated
-  const rest = url.slice(questionMarkIndex)
-  const searchParams = new URLSearchParams(rest)
-  const type = searchParams.get('type')
-  return type
+  if (questionMarkIndex !== -1) {
+    // deprecated
+    const searchParams = new URLSearchParams(url.slice(questionMarkIndex))
+    const queryType = searchParams.get('type')
+    if (queryType) {
+      return queryType
+    }
+  }
+  throw new Error('missing type parameter')
 }

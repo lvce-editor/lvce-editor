@@ -172,6 +172,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
+    case 'WebSocketCapability':
+      return ModuleId.WebSocketCapability
     case 'WindowTitle':
       return ModuleId.WindowTitle
     case 'PointerCapture':

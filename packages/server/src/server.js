@@ -5,13 +5,12 @@ import { createServer } from 'node:http'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Worker } from 'node:worker_threads'
+import { getRemoteSshOptions, isAuthenticatedRemoteRequest } from './remoteSshOptions.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 
 const { argv, env } = process
-
-const PORT = env.PORT ? parseInt(env.PORT) : 3000
 
 let argv2 = argv[2]
 
@@ -30,6 +29,30 @@ if (!argv2) {
 }
 
 const isPublic = argv.includes('--public')
+const remoteSshOptions = getRemoteSshOptions(argvSliced, env)
+const PORT = remoteSshOptions.port
+let remoteClientCount = 0
+let remoteIdleTimer
+
+const scheduleRemoteIdleShutdown = () => {
+  if (!remoteSshOptions.enabled || remoteClientCount !== 0) {
+    return
+  }
+  clearTimeout(remoteIdleTimer)
+  remoteIdleTimer = setTimeout(() => {
+    server.close(() => process.exit(0))
+  }, remoteSshOptions.idleTimeout)
+  remoteIdleTimer.unref()
+}
+
+const trackRemoteClient = (socket) => {
+  clearTimeout(remoteIdleTimer)
+  remoteClientCount++
+  socket.once('close', () => {
+    remoteClientCount--
+    scheduleRemoteIdleShutdown()
+  })
+}
 
 /**
  * @enum {string}
@@ -89,6 +112,11 @@ const isStatic = (url) => {
 }
 
 const handleRequest = (req, res) => {
+  if (remoteSshOptions.enabled) {
+    res.statusCode = 404
+    res.end()
+    return
+  }
   if (isStatic(req.url)) {
     return handleResponseViaStaticServer(req, res, 'StaticServer.getResponse')
   }
@@ -243,6 +271,7 @@ const getHandleMessage = (request) => {
     httpVersionMajor: request.httpVersionMajor,
     httpVersionMinor: request.httpVersionMinor,
     query: request.query,
+    remoteAuthorityAuthenticated: remoteSshOptions.enabled,
   }
 }
 
@@ -357,6 +386,13 @@ const handleResponseViaStaticServer = async (request, res, method, ...params) =>
  * @param {import('net').Socket} socket
  */
 const handleUpgrade = (request, socket) => {
+  if (remoteSshOptions.enabled && !isAuthenticatedRemoteRequest(request, remoteSshOptions)) {
+    socket.end('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n')
+    return
+  }
+  if (remoteSshOptions.enabled) {
+    trackRemoteClient(socket)
+  }
   sendHandleSharedProcess(request, socket, 'HandleWebSocket.handleWebSocket')
 }
 
@@ -369,11 +405,16 @@ const handleServerError = (error) => {
   }
 }
 
+const server = createServer(handleRequest)
+
 const handleAppReady = () => {
+  scheduleRemoteIdleShutdown()
   if (process.send) {
     process.send('ready')
   } else {
-    console.info(`[server] listening on http://localhost:${PORT}`)
+    const address = server.address()
+    const port = typeof address === 'object' && address ? address.port : PORT
+    console.info(`[server] listening on http://${remoteSshOptions.host}:${port}`)
   }
 }
 
@@ -385,11 +426,10 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
 const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
-  const server = createServer(handleRequest)
   server.on('listening', handleAppReady)
   server.on('upgrade', handleUpgrade)
   server.on('error', handleServerError)
-  const host = isPublic ? undefined : 'localhost'
+  const host = remoteSshOptions.enabled ? remoteSshOptions.host : isPublic ? undefined : remoteSshOptions.host
   server.listen(PORT, host)
 }
 
