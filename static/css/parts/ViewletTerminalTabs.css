@@ -6,12 +6,20 @@
 }
 
 .TerminalTab {
-  padding: 0 10px;
+  padding: 0 3px 0 10px;
   contain: strict;
   height: 20px;
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.TerminalTabLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .TerminalTabIcon {
@@ -23,6 +31,44 @@
   mask-repeat: no-repeat;
   mask-size: 16px;
   mask-position: 50% 50%;
+  pointer-events: none;
+}
+
+.TerminalTabKill {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: currentcolor;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.TerminalTab:hover .TerminalTabKill,
+.TerminalTabKill:focus-visible {
+  opacity: 1;
+}
+
+.TerminalTabKill:hover {
+  background: var(--ToolbarHoverBackground, rgba(90, 93, 94, 0.31));
+}
+
+.TerminalTabKill:focus-visible {
+  outline: 1px solid var(--FocusBorder, #007fd4);
+  outline-offset: -1px;
+}
+
+.TerminalTabKillIcon {
+  width: 16px;
+  height: 16px;
+  background: currentcolor;
+  mask-image: url(/icons/trash.svg);
+  mask-position: 50% 50%;
+  mask-repeat: no-repeat;
+  mask-size: 16px;
   pointer-events: none;
 }
 

@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -30,14 +31,46 @@ const getTerminalUids = (tab) => {
   return tab.terminalUids || [tab.uid]
 }
 
+const getShellName = (command) => {
+  const fileName = command.split(/[\\/]/).at(-1)
+  return fileName?.replace(/\.exe$/i, '') || 'terminal'
+}
+
+const getShellIcon = (shellName) => {
+  switch (shellName.toLowerCase()) {
+    case 'bash':
+    case 'fish':
+    case 'sh':
+    case 'zsh':
+      return 'terminal-bash'
+    case 'cmd':
+      return 'terminal-cmd'
+    case 'powershell':
+    case 'pwsh':
+      return 'terminal-powershell'
+    default:
+      return 'terminal'
+  }
+}
+
+const createTab = (uid, command) => {
+  const label = getShellName(command)
+  return {
+    icon: getShellIcon(label),
+    label,
+    terminalUids: [uid],
+    uid,
+  }
+}
+
 export const getOwnedViewletIds = (state) => {
   const { tabs } = state
   return tabs.flatMap(getTerminalUids)
 }
 
 const getContentWidth = (state) => {
-  const { width, tabsWidth, terminalTabsEnabled } = state
-  return terminalTabsEnabled ? width - tabsWidth : width
+  const { tabs, width, tabsWidth, terminalTabsEnabled } = state
+  return terminalTabsEnabled && tabs.length > 1 ? width - tabsWidth : width
 }
 
 const getChildBounds = (state, index = 0, count = 1) => {
@@ -52,9 +85,9 @@ const getChildBounds = (state, index = 0, count = 1) => {
   }
 }
 
-const createViewlet = async (state, childUid, cwd = '', index = 0, count = 1) => {
+const createViewlet = async (state, childUid, spawnOptions, cwd = '', index = 0, count = 1) => {
   const bounds = getChildBounds(state, index, count)
-  await Command.execute('Layout.createViewlet', ViewletModuleId.Terminal2, childUid, 0, bounds, cwd)
+  await Command.execute('Layout.createViewlet', ViewletModuleId.Terminal2, childUid, 0, bounds, cwd, [spawnOptions])
 }
 
 const resizeTerminals = async (state, terminalUids) => {
@@ -70,6 +103,7 @@ const sendCommands = async (commands) => {
 export const loadContent = async (state) => {
   const { cwd } = state
   const terminalTabsEnabled = Preferences.get('terminal.tabs.enabled') !== false
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const childUid = Id.create()
   const newState = {
     ...state,
@@ -77,29 +111,18 @@ export const loadContent = async (state) => {
     childUid,
     childUids: [childUid],
     selectedIndex: 0,
-    tabs: [
-      {
-        label: 'tab 1',
-        icon: 'Terminal',
-        terminalUids: [childUid],
-        uid: childUid,
-      },
-    ],
+    tabs: [createTab(childUid, spawnOptions.command)],
     terminalTabsEnabled,
   }
-  await createViewlet(newState, childUid, cwd)
+  await createViewlet(newState, childUid, spawnOptions, cwd)
   return newState
 }
 
 export const addTerminal = async (state, cwd = '') => {
   const { activeTerminalUids, focusVersion, tabs: oldTabs } = state
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const childUid = Id.create()
-  const newTab = {
-    label: `tab ${oldTabs.length + 1}`,
-    icon: 'Terminal',
-    terminalUids: [childUid],
-    uid: childUid,
-  }
+  const newTab = createTab(childUid, spawnOptions.command)
   const tabs = [...oldTabs, newTab]
   const selectedIndex = tabs.length - 1
   const newState = {
@@ -111,7 +134,7 @@ export const addTerminal = async (state, cwd = '') => {
     selectedIndex,
     tabs,
   }
-  await createViewlet(newState, childUid, cwd)
+  await createViewlet(newState, childUid, spawnOptions, cwd)
   return newState
 }
 
@@ -142,6 +165,7 @@ export const splitTerminal = async (state) => {
   const tab = oldTabs[selectedIndex]
   const terminalUids = getTerminalUids(tab)
   const activeIndex = Math.max(0, terminalUids.indexOf(oldChildUid))
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const childUid = Id.create()
   const childUids = terminalUids.toSpliced(activeIndex + 1, 0, childUid)
   const tabs = oldTabs.with(selectedIndex, {
@@ -157,7 +181,7 @@ export const splitTerminal = async (state) => {
     focusVersion: focusVersion + 1,
     tabs,
   }
-  await createViewlet(newState, childUid, '', activeIndex + 1, childUids.length)
+  await createViewlet(newState, childUid, spawnOptions, '', activeIndex + 1, childUids.length)
   const existingTerminalUids = childUids.filter((uid) => uid !== childUid)
   const resizeCommands = (
     await Promise.all(existingTerminalUids.map((uid) => Viewlet.resize(uid, getChildBounds(newState, childUids.indexOf(uid), childUids.length))))
@@ -233,6 +257,46 @@ export const killTerminal = async (state) => {
 
 export const handleClickTab = (state, index) => {
   return focusIndex(state, Number(index))
+}
+
+export const killTerminalTab = async (state, index) => {
+  Assert.number(index)
+  const { activeTerminalUids: oldActiveTerminalUids, focusVersion, tabs: oldTabs } = state
+  if (index < 0 || index >= oldTabs.length) {
+    return state
+  }
+  const tab = oldTabs[index]
+  const terminalUids = getTerminalUids(tab)
+  const tabs = oldTabs.toSpliced(index, 1)
+  const activeTerminalUids = oldActiveTerminalUids.toSpliced(index, 1)
+  const selectedIndex = tabs.length === 0 ? -1 : Math.max(0, index - 1)
+  const childUids = selectedIndex === -1 ? [] : getTerminalUids(tabs[selectedIndex])
+  const childUid = selectedIndex === -1 ? -1 : activeTerminalUids[selectedIndex] || childUids[0]
+  const newState = {
+    ...state,
+    activeTerminalUids,
+    childUid,
+    childUids,
+    focusVersion: childUid === -1 ? focusVersion : focusVersion + 1,
+    selectedIndex,
+    tabs,
+  }
+  const commands = terminalUids.flatMap((uid) => Viewlet.disposeFunctional(uid))
+  if (childUids.length > 0) {
+    commands.push(...(await resizeTerminals(newState, childUids)))
+  }
+  await sendCommands(commands)
+  return newState
+}
+
+export const handleClickTerminalTabAction = (state, index, command) => {
+  Assert.string(command)
+  switch (command) {
+    case 'killTerminalTab':
+      return killTerminalTab(state, Number(index))
+    default:
+      throw new Error(`Unknown terminal tab action: ${command}`)
+  }
 }
 
 export const sendText = async (state, text) => {

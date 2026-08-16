@@ -12,6 +12,11 @@ export const renderEventListeners = () => {
       params: ['handleClickTab', 'event.currentTarget.dataset.index'],
     },
     {
+      name: DomEventListenerFunctions.HandleClickTerminalTabAction,
+      params: ['handleClickTerminalTabAction', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.command'],
+      stopPropagation: true,
+    },
+    {
       name: DomEventListenerFunctions.HandleClickAction,
       params: ['handleClickAction', 'event.target.dataset.command'],
       stopPropagation: true,
