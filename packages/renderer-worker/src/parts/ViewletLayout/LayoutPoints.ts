@@ -6,7 +6,7 @@ import type { LayoutState } from './LayoutState.ts'
 
 const mainMinWidth = 100
 
-export const getPoints = (source: LayoutState, sideBarLocation = SideBarLocationType.Right): LayoutState => {
+export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarLocation ?? SideBarLocationType.Right): LayoutState => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
   const panelVisible = source[LayoutKeys.PanelVisible]
   const sideBarVisible = source[LayoutKeys.SideBarVisible]
