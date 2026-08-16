@@ -5,20 +5,10 @@ import { join } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' with { type: 'json' }
 import * as ExitCode from '../ExitCode/ExitCode.ts'
+import { getBuiltinExtensionRepository } from '../GetBuiltinExtensionRepository/GetBuiltinExtensionRepository.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
 import * as Root from '../Root/Root.ts'
-
-const getRepository = (name) => {
-  if (name.startsWith('builtin.')) {
-    return 'lvce-editor/' + name.slice('builtin.'.length)
-  }
-  throw new Error(`expected extension name to start with builtin.`)
-}
-
-const getName = (extension) => {
-  return extension.name
-}
 
 /**
  *
@@ -102,7 +92,7 @@ const getNewBuiltinExtensions = (builtinExtensions, versions) => {
 
 const updateBuiltinExtensions = async () => {
   const start = performance.now()
-  const repositories = builtinExtensions.map(getName).map(getRepository)
+  const repositories = builtinExtensions.map(getBuiltinExtensionRepository)
   const newVersions = await Promise.all(repositories.map(getLatestReleaseVersion))
   const newBuiltinExtensions = getNewBuiltinExtensions(builtinExtensions, newVersions)
   const end = performance.now()
