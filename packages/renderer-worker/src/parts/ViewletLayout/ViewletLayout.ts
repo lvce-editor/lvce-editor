@@ -166,6 +166,7 @@ export const create = (id: number): LayoutState => {
     previewLeft: 0,
     previewTop: 0,
     previewWidth: 0,
+    previewWidthBeforeClose: 0,
     secondaryPreviewHeight: 0,
     secondaryPreviewLeft: 0,
     secondaryPreviewTop: 0,
@@ -848,7 +849,7 @@ export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<L
     }
     const previewState = {
       ...state,
-      previewWidth: state.secondaryPreviewVisible ? state.windowWidth / 3 : state.windowWidth / 2,
+      previewWidth: state.previewWidthBeforeClose || (state.secondaryPreviewVisible ? state.windowWidth / 3 : state.windowWidth / 2),
     }
     const previewResult = await showPreview(previewState, sideBarView, ViewletModuleId.ExtensionView)
     const focusCommands = await Viewlet.getFocusCommands(sideBarView)
@@ -1197,9 +1198,13 @@ export const showPreview = async (
 
 export const hidePreview = async (state: LayoutState) => {
   const result = await hide(state, LayoutModules.Preview)
-  const activityBarCommands = await renderPreviewActivityBarCommands(state, result.newState)
+  const newState = {
+    ...result.newState,
+    previewWidthBeforeClose: state.previewWidth,
+  }
+  const activityBarCommands = await renderPreviewActivityBarCommands(state, newState)
   return {
-    newState: result.newState,
+    newState,
     commands: [...result.commands, ...activityBarCommands],
   }
 }
