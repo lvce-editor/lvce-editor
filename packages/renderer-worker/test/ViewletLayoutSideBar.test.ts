@@ -934,6 +934,46 @@ test('toggleSideBarView hides the preview when its selected activity item is cli
   ])
 })
 
+test('toggleSideBarView preserves resized preview width after hiding and reopening', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  GetExtensionViews.getExtensionView.mockResolvedValue({
+    id: 'sample.views.preview',
+    preferredLocation: 'preview',
+  })
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewId: 11,
+    previewMinWidth: 100,
+    previewUri: 'sample.views.preview',
+    previewViewletId: 'ExtensionView',
+    previewVisible: true,
+    previewWidth: 400,
+    sideBarMaxWidth: 1200,
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 240,
+    statusBarHeight: 20,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const hidden = await ViewletLayout.toggleSideBarView(state, 'sample.views.preview')
+  const reopened = await ViewletLayout.toggleSideBarView(hidden.newState, 'sample.views.preview')
+
+  expect(reopened.newState).toMatchObject({
+    previewLeft: 800,
+    previewUri: 'sample.views.preview',
+    previewVisible: true,
+    previewWidth: 400,
+  })
+})
+
 test('showPreview updates both activity items when replacing a preview extension view', async () => {
   mockActivityBarRender()
   // @ts-ignore
