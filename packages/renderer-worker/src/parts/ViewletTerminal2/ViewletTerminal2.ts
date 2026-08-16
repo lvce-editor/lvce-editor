@@ -30,9 +30,9 @@ export const create = (id, cwd = '') => {
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, _savedState?: any, configuredSpawnOptions?: any) => {
   const { cwd, uid } = state
-  const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
+  const { command, args } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions())
   await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
     backend: getBackend(),
   })

@@ -40,8 +40,8 @@ test('renders terminal tabs with switch commands', () => {
     height: 400,
     selectedIndex: 1,
     tabs: [
-      { icon: 'Terminal', label: 'tab 1', uid: 41 },
-      { icon: 'Terminal', label: 'tab 2', uid: 42 },
+      { icon: 'terminal-bash', label: 'bash', uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', uid: 42 },
     ],
     tabsWidth: 90,
     terminalTabsEnabled: true,
@@ -63,4 +63,44 @@ test('renders terminal tabs with switch commands', () => {
       onClick: DomEventListenerFunctions.HandleClickTab,
     }),
   )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      'data-command': 'killTerminalTab',
+      'data-index': 0,
+      className: 'TerminalTabKill',
+      onClick: DomEventListenerFunctions.HandleClickTerminalTabAction,
+    }),
+  )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'TerminalTabIcon',
+      maskImage: 'url(/icons/terminal-bash.svg)',
+    }),
+  )
+})
+
+test('hides terminal tabs when only one terminal tab exists', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    childUids: [41],
+    height: 400,
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'bash', uid: 41 }],
+    tabsWidth: 90,
+    terminalTabsEnabled: true,
+    width: 800,
+    y: 20,
+  })
+
+  expect(dom).toEqual([
+    {
+      childCount: 1,
+      className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
+      onMouseDown: DomEventListenerFunctions.HandleMouseDown,
+      type: VirtualDomElements.Div,
+    },
+    {
+      type: VirtualDomElements.Reference,
+      uid: 41,
+    },
+  ])
 })

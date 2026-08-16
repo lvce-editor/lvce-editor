@@ -72,7 +72,7 @@ test('create initializes xterm dimensions', () => {
 
 test('loadContent starts the terminal transport', async () => {
   const state = ViewletTerminal2.create(2)
-  const newState = await ViewletTerminal2.loadContent(state)
+  const newState = await ViewletTerminal2.loadContent(state, undefined, undefined)
 
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 2, '/workspace', 'bash', ['-i'], {
     backend: 'mock',
@@ -84,9 +84,24 @@ test('loadContent starts the terminal transport', async () => {
   })
 })
 
+test('loadContent uses spawn options supplied by the terminal tabs parent', async () => {
+  const state = ViewletTerminal2.create(9)
+  const spawnOptions = {
+    args: ['-l'],
+    command: 'zsh',
+  }
+
+  const newState = await ViewletTerminal2.loadContent(state, undefined, spawnOptions)
+
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 9, '/workspace', 'zsh', ['-l'], {
+    backend: 'mock',
+  })
+  expect(newState).toMatchObject(spawnOptions)
+})
+
 test('loadContent starts the terminal transport in the requested cwd', async () => {
   const state = ViewletTerminal2.create(2, 'file:///workspace/folder')
-  await ViewletTerminal2.loadContent(state)
+  await ViewletTerminal2.loadContent(state, undefined, undefined)
 
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 2, 'file:///workspace/folder', 'bash', ['-i'], {
     backend: 'mock',
