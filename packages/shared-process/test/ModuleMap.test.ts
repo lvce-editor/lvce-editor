@@ -29,3 +29,7 @@ test('getModuleId - GetElectronFileResponse.resolveElectronFileUri', () => {
 test('getModuleId - IpcTrace.append', () => {
   expect(ModuleMap.getModuleId('IpcTrace.append')).toBe(ModuleId.IpcTrace)
 })
+
+test('getModuleId - LanguageServer.disposeAll', () => {
+  expect(ModuleMap.getModuleId('LanguageServer.disposeAll')).toBe(ModuleId.LanguageServer)
+})

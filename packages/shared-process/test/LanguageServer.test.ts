@@ -1,5 +1,6 @@
 import { afterEach, expect, test } from '@jest/globals'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import * as LanguageServerIpc from '../src/parts/LanguageServer/LanguageServer.ipc.ts'
 import {
   codeAction,
   complete,
@@ -20,6 +21,10 @@ const pushDiagnosticsServerScript = fileURLToPath(new URL('./fixtures/languageSe
 
 afterEach(() => {
   disposeAll()
+})
+
+test('exposes bulk disposal over IPC', () => {
+  expect(LanguageServerIpc.Commands.disposeAll).toBe(disposeAll)
 })
 
 test('JavaScript language servers use Electron as Node', () => {
