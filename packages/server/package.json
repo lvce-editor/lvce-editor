@@ -5,7 +5,9 @@
   "main": "index.js",
   "bin": "bin/server.js",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\""
+  },
   "keywords": [
     "Lvce Editor",
     "Server"

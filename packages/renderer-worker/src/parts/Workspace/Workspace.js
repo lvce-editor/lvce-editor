@@ -9,6 +9,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
+import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 /**
@@ -27,12 +28,13 @@ export const setPath = async (path) => {
   // @ts-ignore
   state.workspaceUri = path
   state.pathSeparator = pathSeparator
+  WorkspaceBackend.reset()
   await onWorkspaceChange()
 }
 
-export const setUri = async (uri, providedPathSeparator) => {
+export const setUri = async (uri, providedPathSeparator, backend) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri
+  const path = backend?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
   const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
   await updateWindowTitle(path, pathSeparator)
   if (path !== state.workspacePath) {
@@ -41,6 +43,11 @@ export const setUri = async (uri, providedPathSeparator) => {
   state.workspacePath = path
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
+  if (backend) {
+    WorkspaceBackend.set(uri, backend.url, backend.token)
+  } else {
+    WorkspaceBackend.reset()
+  }
   await onWorkspaceChange()
 }
 

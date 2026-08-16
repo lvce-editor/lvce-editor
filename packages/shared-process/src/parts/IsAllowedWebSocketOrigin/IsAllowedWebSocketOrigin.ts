@@ -26,6 +26,9 @@ const getAllowedHosts = (headers: any): any => {
 }
 
 export const isAllowedWebSocketOrigin = (request: any): any => {
+  if (request.remoteAuthorityAuthenticated === true) {
+    return true
+  }
   const { headers } = request
   const origin = normalizeHeaderValue(getHeaderValue(headers, 'origin'))
   if (!origin) {

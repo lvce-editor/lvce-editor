@@ -225,6 +225,8 @@ export const load = (moduleId) => {
       return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     case ModuleId.FileSystemMemory:
       return import('../FileSystem/FileSystemMemory.ipc.js')
+    case ModuleId.WebSocketCapability:
+      return import('../WebSocketCapability/WebSocketCapability.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

@@ -1,6 +1,10 @@
 import { expect, test } from '@jest/globals'
 import * as IsAllowedWebSocketOrigin from '../src/parts/IsAllowedWebSocketOrigin/IsAllowedWebSocketOrigin.js'
 
+test('isAllowedWebSocketOrigin - authenticated remote authority', () => {
+  expect(IsAllowedWebSocketOrigin.isAllowedWebSocketOrigin({ remoteAuthorityAuthenticated: true })).toBe(true)
+})
+
 test('isAllowedWebSocketOrigin - same host', () => {
   expect(
     IsAllowedWebSocketOrigin.isAllowedWebSocketOrigin({

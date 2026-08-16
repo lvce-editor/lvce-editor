@@ -27,6 +27,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurementWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
+import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
   Assert.object(port)
@@ -42,12 +43,18 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
 
 export const sendMessagePortToProcessExplorer = async (port) => {
   Assert.object(port)
+  if (await WorkspaceBackend.connectMessagePort('process-explorer', port)) {
+    return
+  }
   await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
 }
 
 export const sendMessagePortToTerminalProcess = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
+  if (await WorkspaceBackend.connectMessagePort('terminal-process', port)) {
+    return
+  }
   await SharedProcess.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
