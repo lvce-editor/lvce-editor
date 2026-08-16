@@ -57,30 +57,30 @@ beforeEach(() => {
 })
 
 test.each([
-  ['about', LaunchAboutViewWorker.launchAboutViewWorker, 'About.handleMessagePort'],
-  ['activity bar', LaunchActivityBarWorker.launchActivityBarWorker, 'ActivityBar.handleMessagePort'],
-  ['chat', LaunchChatViewWorker.launchChatViewWorker, 'Chat.handleMessagePort'],
-  ['chat debug', LaunchChatDebugViewWorker.launchChatDebugViewWorker, 'ChatDebug.handleMessagePort'],
-  ['diff', LaunchDiffViewWorker.launchDiffViewWorker, 'DiffView.handleMessagePort'],
-  ['extension search', LaunchExtensionSearchViewWorker.launchExtensionSearchViewWorker, 'SearchExtensions.handleMessagePort'],
-  ['keybindings', LaunchKeyBindingsViewWorker.launchKeyBindingsViewWorker, 'KeyBindings.handleMessagePort'],
-  ['language models', LaunchLanguageModelsViewWorker.launchLanguageModelsViewWorker, 'LanguageModels.handleMessagePort'],
-  ['main area', LaunchMainAreaWorker.launchMainAreaWorker, 'MainArea.handleMessagePort'],
-  ['output', LaunchOutputViewWorker.launchOutputViewWorker, 'Output.handleMessagePort'],
-  ['panel', LaunchPanelWorker.launchPanelWorker, 'Panel.handleMessagePort'],
-  ['problems', LaunchProblemsWorker.launchProblemsWorker, 'Problems.handleMessagePort'],
-  ['process explorer', LaunchProcessExplorerWorker.launchProcessExplorerWorker, 'ProcessExplorer.handleMessagePort'],
-  ['quick pick', LaunchQuickPickWorker.launchQuickPickWorker, 'QuickPick.handleRendererProcessMessagePort'],
-  ['source control', LaunchSourceControlWorker.launchSourceControlWorker, 'SourceControl.handleRendererProcessMessagePort'],
-  ['running extensions', LaunchRunningExtensionsViewWorker.launchRunningExtensionsViewWorker, 'RunningExtensions.handleMessagePort'],
-  ['settings', LaunchSettingsViewWorker.launchSettingsViewWorker, 'Settings.handleMessagePort'],
-  ['status bar', LaunchStatusBarWorker.launchStatusBarWorker, 'StatusBar.handleMessagePort'],
-  ['text search', LaunchTextSearchViewWorker.launchTextSearchViewWorker, 'TextSearch.handleMessagePort'],
-  ['title bar', LaunchTitleBarWorker.launchTitleBarWorker, 'TitleBar.handleMessagePort'],
-] as const)('%s worker connects directly to the renderer process', async (_name, launch, command) => {
+  ['about', LaunchAboutViewWorker.launchAboutViewWorker, 'About.handleMessagePort', 'About'],
+  ['activity bar', LaunchActivityBarWorker.launchActivityBarWorker, 'ActivityBar.handleMessagePort', 'ActivityBar'],
+  ['chat', LaunchChatViewWorker.launchChatViewWorker, 'Chat.handleMessagePort', 'Chat'],
+  ['chat debug', LaunchChatDebugViewWorker.launchChatDebugViewWorker, 'ChatDebug.handleMessagePort', 'ChatDebug'],
+  ['diff', LaunchDiffViewWorker.launchDiffViewWorker, 'DiffView.handleMessagePort', 'DiffView'],
+  ['extension search', LaunchExtensionSearchViewWorker.launchExtensionSearchViewWorker, 'SearchExtensions.handleMessagePort', 'SearchExtensions'],
+  ['keybindings', LaunchKeyBindingsViewWorker.launchKeyBindingsViewWorker, 'KeyBindings.handleMessagePort', 'KeyBindings'],
+  ['language models', LaunchLanguageModelsViewWorker.launchLanguageModelsViewWorker, 'LanguageModels.handleMessagePort', 'LanguageModels'],
+  ['main area', LaunchMainAreaWorker.launchMainAreaWorker, 'MainArea.handleMessagePort', 'MainArea'],
+  ['output', LaunchOutputViewWorker.launchOutputViewWorker, 'Output.handleMessagePort', 'Output'],
+  ['panel', LaunchPanelWorker.launchPanelWorker, 'Panel.handleMessagePort', 'Panel'],
+  ['problems', LaunchProblemsWorker.launchProblemsWorker, 'Problems.handleMessagePort', 'Problems'],
+  ['process explorer', LaunchProcessExplorerWorker.launchProcessExplorerWorker, 'ProcessExplorer.handleMessagePort', 'ProcessExplorer'],
+  ['quick pick', LaunchQuickPickWorker.launchQuickPickWorker, 'QuickPick.handleRendererProcessMessagePort', 'QuickPick'],
+  ['source control', LaunchSourceControlWorker.launchSourceControlWorker, 'SourceControl.handleRendererProcessMessagePort', 'SourceControl'],
+  ['running extensions', LaunchRunningExtensionsViewWorker.launchRunningExtensionsViewWorker, 'RunningExtensions.handleMessagePort', 'RunningExtensions'],
+  ['settings', LaunchSettingsViewWorker.launchSettingsViewWorker, 'Settings.handleMessagePort', 'Settings'],
+  ['status bar', LaunchStatusBarWorker.launchStatusBarWorker, 'StatusBar.handleMessagePort', 'StatusBar'],
+  ['text search', LaunchTextSearchViewWorker.launchTextSearchViewWorker, 'TextSearch.handleMessagePort', 'TextSearch'],
+  ['title bar', LaunchTitleBarWorker.launchTitleBarWorker, 'TitleBar.handleMessagePort', 'TitleBar'],
+] as const)('%s worker connects directly to the renderer process', async (_name, launch, command, rpcId) => {
   await launch()
 
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, command, 'worker-port')
-  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
 })

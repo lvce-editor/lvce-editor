@@ -39,5 +39,5 @@ test('launchExplorerWorker connects the explorer worker directly to the renderer
   expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'Explorer.initialize')
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'Explorer.handleMessagePort', 'explorer-port')
-  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'Explorer')
 })
