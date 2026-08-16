@@ -28,7 +28,7 @@ export const launchExtensionSearchViewWorker = async () => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'SearchExtensions.handleMessagePort', port1),
-    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'SearchExtensions'),
   ])
   return ipc
 }

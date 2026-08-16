@@ -25,7 +25,7 @@ export const launchStatusBarWorker = async () => {
   const { port1: rendererWorkerPort, port2: rendererProcessPort } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'StatusBar.handleMessagePort', rendererWorkerPort),
-    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', rendererProcessPort),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', rendererProcessPort, 'StatusBar'),
   ])
   return ipc
 }

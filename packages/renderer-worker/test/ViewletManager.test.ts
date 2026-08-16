@@ -201,6 +201,40 @@ test('load omits empty event listener registration for a new root', async () => 
   expect(commands).toEqual([['Viewlet.createFunctionalRoot', 'EmptyListenerTest', 9, true]])
 })
 
+test('load associates a direct-render root with its worker rpc', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const Commands = {}
+  Object.defineProperty(Commands, '__directEventRpcId', {
+    value: 'TestWorker',
+  })
+  const mockModule = {
+    Commands,
+    create: jest.fn(() => ({ uid: 9 })),
+    hasDirectRender: true,
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [],
+    renderEventListeners: jest.fn(() => []),
+  }
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'DirectEventTest',
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 9,
+    uri: '',
+  }
+
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands).toEqual([['Viewlet.createFunctionalRoot', 'DirectEventTest', 9, true, 'TestWorker']])
+})
+
 test('load does not invoke the renderer for empty event listeners on a new root', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)

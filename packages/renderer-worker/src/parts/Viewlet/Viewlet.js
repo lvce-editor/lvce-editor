@@ -594,6 +594,10 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }
 
+export const requestRender = (uid) => {
+  return executeViewletCommand(uid, '__renderPending')
+}
+
 // @ts-ignore
 export const disposeWidgetWithValue = async (id, value) => {
   try {

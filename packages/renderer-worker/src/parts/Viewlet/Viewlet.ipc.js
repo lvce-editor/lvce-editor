@@ -11,6 +11,7 @@ export const Commands = {
   getAllStates: Viewlet.getAllStates,
   getDragData: Viewlet.getDragData,
   getTitle: Viewlet.getTitle,
+  requestRender: Viewlet.requestRender,
   openWidget: Viewlet.openWidget,
   reload: Viewlet.reload,
   send: Viewlet.send,

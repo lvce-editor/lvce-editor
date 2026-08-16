@@ -26,7 +26,7 @@ export const launchNotificationCenterViewWorker = async () => {
   const { port1: rendererWorkerPort, port2: rendererProcessPort } = new MessageChannel()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'NotificationCenter.handleMessagePort', rendererWorkerPort),
-    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', rendererProcessPort),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', rendererProcessPort, 'NotificationCenter'),
   ])
   return ipc
 }

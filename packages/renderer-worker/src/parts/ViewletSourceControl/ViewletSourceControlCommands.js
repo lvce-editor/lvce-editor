@@ -4,6 +4,10 @@ import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker
 
 export const Commands = {}
 
+Object.defineProperty(Commands, '__directEventRpcId', {
+  value: 'SourceControl',
+})
+
 export const getCommands = async () => {
   const commands = await SourceControlWorker.invoke('SourceControl.getCommandIds')
   for (const command of commands) {

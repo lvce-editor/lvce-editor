@@ -726,7 +726,11 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       await Command.execute('Layout.handleBadgeCountChange')
     }
     if (module.hasFunctionalRootRender) {
-      commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid, module.hasFunctionalEvents])
+      if (module.hasDirectRender) {
+        commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid, module.hasFunctionalEvents, module.Commands.__directEventRpcId])
+      } else {
+        commands.push([kCreateFunctionalRoot, viewlet.id, viewletUid, module.hasFunctionalEvents])
+      }
     } else {
       commands.push([kCreate, viewlet.id, viewletUid])
     }

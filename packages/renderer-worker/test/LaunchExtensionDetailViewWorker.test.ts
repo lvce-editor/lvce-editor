@@ -64,6 +64,6 @@ test('launches the extension detail view worker', async () => {
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'ExtensionDetail.handleMessagePort', 'extension-detail-port')
-  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'ExtensionDetail')
   expect(result).toBe(ipc)
 })

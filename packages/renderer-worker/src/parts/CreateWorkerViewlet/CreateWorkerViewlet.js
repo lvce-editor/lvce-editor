@@ -138,6 +138,12 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const Events = {}
   const { idKey } = state
 
+  if (capabilities.directRender) {
+    Object.defineProperty(Commands, '__directEventRpcId', {
+      value: config.commandPrefix,
+    })
+  }
+
   const create = (id, uri, x, y, width, height, args, parentUid) => {
     const initialState = getStateField(config, id, uri, x, y, width, height, args, parentUid, context)
     return adapter.transformState(initialState)
@@ -198,6 +204,10 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
       ...currentState,
       commands: invocation.results.commands,
     })
+  }
+
+  Commands.__renderPending = (currentState) => {
+    return runCommandRenderPipeline(currentState, [])
   }
 
   const wrapCommand = (command) => {

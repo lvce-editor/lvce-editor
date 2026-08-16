@@ -83,6 +83,6 @@ test('launchProcessExplorerWorker', async () => {
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'ProcessExplorer.handleMessagePort', 'worker-port')
-  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'ProcessExplorer')
   expect(result).toBe(ipc)
 })

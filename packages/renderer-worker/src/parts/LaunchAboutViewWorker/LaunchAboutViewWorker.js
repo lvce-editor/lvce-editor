@@ -18,7 +18,7 @@ export const launchAboutViewWorker = async () => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'About.handleMessagePort', port1),
-    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'About'),
   ])
   return ipc
 }

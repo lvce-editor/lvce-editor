@@ -18,7 +18,7 @@ export const launchProcessExplorerWorker = async () => {
   const { port1, port2 } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'ProcessExplorer.handleMessagePort', port1),
-    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'ProcessExplorer'),
   ])
   return ipc
 }

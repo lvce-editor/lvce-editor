@@ -94,6 +94,16 @@ test('exposes the configured workspace change behavior', () => {
   expect(viewlet.workspaceChangeEventPrepend).toBe(true)
 })
 
+test('exposes the direct event rpc id on direct-render viewlets', () => {
+  const viewlet = createWorkerViewletWithDependencies({
+    config: createConfig({ capabilities: { directRender: true, events: true, render: true, resize: true, rootRender: true } }),
+    worker: { invoke: jest.fn(), restart: jest.fn() },
+  })
+
+  expect(viewlet.Commands.__directEventRpcId).toBe('Example')
+  expect(Object.keys(viewlet.Commands)).not.toContain('__directEventRpcId')
+})
+
 test('configures immediate workspace feedback for the title bar and main area', () => {
   expect(getWorkerViewletConfig('titleBar').workspaceChangeEvent).toBe('workspace.titleChange')
   expect(getWorkerViewletConfig('mainArea').workspaceChangeEventPrepend).toBe(true)
@@ -119,6 +129,28 @@ test('creates command wrappers through the same lifecycle seam', async () => {
 
   expect(invoke).toHaveBeenNthCalledWith(2, 'Example.select', 9, 'item-1')
   expect(result.commands).toEqual([['setText', 'selected']])
+})
+
+test('renders pending worker state without replaying a command', async () => {
+  const invoke = jest.fn(async (method: string) => {
+    if (method === 'Example.diff3') {
+      return ['diff']
+    }
+    if (method === 'Example.render3') {
+      return [['setText', 'updated']]
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({ config: createConfig(), context: { platform: 1 }, worker: { invoke, restart: jest.fn() } })
+  const state = viewlet.create(9, '', 0, 0, 0, 0)
+
+  const result = await viewlet.Commands.__renderPending(state)
+
+  expect(invoke.mock.calls).toEqual([
+    ['Example.diff3', 9],
+    ['Example.render3', 9, ['diff']],
+  ])
+  expect(result.commands).toEqual([['setText', 'updated']])
 })
 
 test('returns preview runtime diagnostics without treating them as viewlet state', async () => {
