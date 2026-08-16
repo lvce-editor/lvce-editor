@@ -8,6 +8,7 @@ import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
+import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
@@ -29,6 +30,7 @@ export const setPath = async (path) => {
   state.workspaceUri = path
   state.pathSeparator = pathSeparator
   WorkspaceBackend.reset()
+  await TextSearchWorker.dispose()
   await onWorkspaceChange()
 }
 
@@ -48,6 +50,7 @@ export const setUri = async (uri, providedPathSeparator, backend) => {
   } else {
     WorkspaceBackend.reset()
   }
+  await TextSearchWorker.dispose()
   await onWorkspaceChange()
 }
 

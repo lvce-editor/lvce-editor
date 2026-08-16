@@ -25,6 +25,7 @@ test('returns an authenticated WebSocket URL for the matching workspace', () => 
   WorkspaceBackend.set('remote-ssh://host/work', 'ws://127.0.0.1:45123', 'secret')
 
   expect(WorkspaceBackend.getWebSocketUrl('terminal-process')).toBe('ws://127.0.0.1:45123/websocket/terminal-process?token=secret')
+  expect(WorkspaceBackend.isActive()).toBe(true)
 })
 
 test('does not affect a different workspace', () => {
@@ -32,6 +33,7 @@ test('does not affect a different workspace', () => {
   WorkspaceBackend.set('remote-ssh://host/work', 'ws://127.0.0.1:45123', 'secret')
 
   expect(WorkspaceBackend.getWebSocketUrl('terminal-process')).toBe('')
+  expect(WorkspaceBackend.isActive()).toBe(false)
 })
 
 test('rejects non-loopback endpoints', () => {

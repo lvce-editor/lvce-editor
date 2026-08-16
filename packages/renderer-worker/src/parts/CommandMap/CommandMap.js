@@ -160,6 +160,7 @@ export const commandMap = {
   'ExtensionMeta.addNodeExtension': lazy('ExtensionMeta.addNodeExtension'),
   'ExtensionMeta.addWebExtension': lazy('ExtensionMeta.addWebExtension'),
   'ExtensionNodeRpc.create': lazy('ExtensionNodeRpc.create'),
+  'ExtensionNodeRpc.createConnection': lazy('ExtensionNodeRpc.createConnection'),
   'ExtensionNodeRpc.dispose': lazy('ExtensionNodeRpc.dispose'),
   'ExtensionNodeRpc.invoke': lazy('ExtensionNodeRpc.invoke'),
   'Extensions.openCachedExtensionsFolder': lazy('Extensions.openCachedExtensionsFolder'),

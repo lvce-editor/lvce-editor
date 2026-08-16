@@ -1,6 +1,7 @@
 import { resolve, sep } from 'node:path'
 import * as Command from '@lvce-editor/command'
 import * as Assert from '../Assert/Assert.js'
+import * as CommandMapRef from '../CommandMapRef/CommandMapRef.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
 import { VError } from '../VError/VError.js'
 
@@ -31,6 +32,7 @@ export const loadFile = async (path) => {
     if (module && module.commandMap) {
       const commandMap = module.commandMap
       Command.register(commandMap)
+      Object.assign(CommandMapRef.commandMapRef, commandMap)
     } else if (module && module.execute) {
       throw new Error(`execute function is not supported anymore. Use commandMap instead`)
     } else {

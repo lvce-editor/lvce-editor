@@ -6,12 +6,18 @@ import * as WorkerViewletAdapterMap from '../WorkerViewletAdapterMap/WorkerViewl
 import * as WorkerViewletConfig from '../WorkerViewletConfig/WorkerViewletConfig.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-const createContext = () => ({
+const createContext = (getPlatform) => ({
   assetDir: AssetDir.assetDir,
   isTest: Workspace.isTest?.() ?? false,
-  platform: Platform.getPlatform(),
-  workspacePath: Workspace.state.workspacePath,
-  workspaceUri: Workspace.getWorkspaceUri?.(),
+  get platform() {
+    return getPlatform()
+  },
+  get workspacePath() {
+    return Workspace.state.workspacePath
+  },
+  get workspaceUri() {
+    return Workspace.getWorkspaceUri?.()
+  },
 })
 
 const getValue = (values, name, description) => {
@@ -400,14 +406,19 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   )
 }
 
-export const createWorkerViewletWithDependencies = ({ adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(''), config, context = {}, worker }) => {
+export const createWorkerViewletWithDependencies = ({
+  adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(''),
+  config,
+  context = {},
+  worker,
+}) => {
   WorkerViewletConfig.validateWorkerViewletConfig('test', config)
   return createWorkerViewletInternal({ adapter, config, context, worker })
 }
 
-export const createWorkerViewlet = ({ workerId }) => {
+export const createWorkerViewlet = ({ workerId, getPlatform = Platform.getPlatform }) => {
   const config = WorkerViewletConfig.getWorkerViewletConfig(workerId)
-  const context = createContext()
+  const context = createContext(getPlatform)
   const worker = WorkerInvokerMap.getWorkerInvoker(workerId)
   const adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(workerId)
   return createWorkerViewletInternal({ adapter, config, context, worker })
