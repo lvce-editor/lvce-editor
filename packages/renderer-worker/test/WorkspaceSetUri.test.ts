@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const getPathSeparator = jest.fn<(uri: string) => Promise<string>>(async () => '/')
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
+const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   getPathSeparator,
@@ -15,12 +16,17 @@ jest.unstable_mockModule('../src/parts/Product/Product.js', () => ({
   getProductNameLong: () => 'Lvce Editor',
 }))
 
+jest.unstable_mockModule('../src/parts/TextSearchWorker/TextSearchWorker.js', () => ({
+  dispose: disposeTextSearchWorker,
+}))
+
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 beforeEach(() => {
   getPathSeparator.mockClear()
   setWindowTitle.mockClear()
+  disposeTextSearchWorker.mockClear()
   GlobalEventBus.state.listenerMap = Object.create(null)
   Workspace.state.pathSeparator = '/'
   Workspace.state.workspacePath = ''
@@ -31,6 +37,7 @@ test('setPath uses the product name for an empty workspace', async () => {
   await Workspace.setPath('')
 
   expect(setWindowTitle).toHaveBeenCalledWith('Lvce Editor')
+  expect(disposeTextSearchWorker).toHaveBeenCalledTimes(1)
 })
 
 test('setPath uses the folder name for a workspace', async () => {
@@ -66,6 +73,7 @@ test('setUri uses a provided provider path separator', async () => {
   expect(Workspace.getWorkspaceUri()).toBe('remote-ssh:///test-folder')
   expect(Workspace.state.pathSeparator).toBe('\\')
   expect(getPathSeparator).not.toHaveBeenCalled()
+  expect(disposeTextSearchWorker).toHaveBeenCalledTimes(1)
 })
 
 test('setUri uses the remote backend workspace path', async () => {

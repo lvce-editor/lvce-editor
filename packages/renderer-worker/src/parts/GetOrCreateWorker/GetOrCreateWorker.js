@@ -22,6 +22,9 @@ export const getOrCreateWorker = (fn) => {
     async dispose() {
       const promise = workers.get(fn)
       workers.delete(fn)
+      if (!promise) {
+        return
+      }
       const ipc = await promise
       ipc.dispose()
     },

@@ -40,6 +40,8 @@ export const getWebSocketUrl = (type) => {
   return url.toString()
 }
 
+export const isActive = () => Boolean(state.url && WorkspaceState.state.workspaceUri === state.workspaceUri)
+
 export const connectMessagePort = async (type, port) => {
   const url = getWebSocketUrl(type)
   if (!url) {

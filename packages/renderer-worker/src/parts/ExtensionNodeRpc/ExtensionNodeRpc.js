@@ -3,8 +3,23 @@ import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 
 const rpcs = Object.create(null)
+
+export const createConnection = async (extensionId, rpcId) => {
+  const value = WorkspaceBackend.getWebSocketUrl('extension-host-helper-process')
+  if (!value) {
+    throw new Error('ExtensionNodeRpc.createConnection command not found without a remote workspace backend')
+  }
+  const url = new URL(value)
+  url.searchParams.set('extensionId', extensionId)
+  url.searchParams.set('rpcId', rpcId)
+  return {
+    protocols: [],
+    url: url.toString(),
+  }
+}
 
 const getRpc = (id) => {
   const rpc = rpcs[id]
