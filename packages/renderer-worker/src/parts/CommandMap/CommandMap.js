@@ -587,6 +587,7 @@ export const commandMap = {
   'Layout.loadStatusBarIfVisible': lazy('Layout.loadStatusBarIfVisible'),
   'Layout.loadTitleBarIfVisible': lazy('Layout.loadTitleBarIfVisible'),
   'Layout.leaveSideBarFocusMode': lazy('Layout.leaveSideBarFocusMode'),
+  'Layout.maximizePanel': lazy('Layout.maximizePanel'),
   'Layout.moveSideBarLeft': lazy('Layout.moveSideBarLeft'),
   'Layout.moveSideBarRight': lazy('Layout.moveSideBarRight'),
   'Layout.openChat': lazy('Layout.openChat'),
@@ -622,4 +623,5 @@ export const commandMap = {
   'Layout.toggleSideBarPosition': lazy('Layout.toggleSideBarPosition'),
   'Layout.toggleStatusBar': lazy('Layout.toggleStatusBar'),
   'Layout.toggleTitleBar': lazy('Layout.toggleTitleBar'),
+  'Layout.unmaximizePanel': lazy('Layout.unmaximizePanel'),
 }

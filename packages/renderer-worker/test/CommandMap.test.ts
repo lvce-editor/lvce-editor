@@ -16,3 +16,8 @@ test('registers the viewlet reload command', () => {
 test('registers the terminal send text command', () => {
   expect(commandMap['Terminals.sendText']).toBeDefined()
 })
+
+test('registers the panel maximize commands', () => {
+  expect(commandMap['Layout.maximizePanel']).toBeDefined()
+  expect(commandMap['Layout.unmaximizePanel']).toBeDefined()
+})
