@@ -66,6 +66,20 @@ test('includes the built-in Zig syntax highlighting extension', async () => {
   })
 })
 
+test('includes the built-in GPT Voice extension', async () => {
+  const extensions = await getAllExtensionsJson({
+    commitHash: 'test-commit',
+    pathPrefix: '/test-prefix',
+  })
+  const extension = extensions.find((item) => item.id === 'builtin.gpt-voice')
+
+  expect(extension).toMatchObject({
+    builtin: true,
+    disabled: true,
+    path: '/test-prefix/test-commit/extensions/builtin.gpt-voice',
+  })
+})
+
 test('excludes extensions that are not web compatible', async () => {
   const extensions = await getAllExtensionsJson({
     commitHash: 'test-commit',

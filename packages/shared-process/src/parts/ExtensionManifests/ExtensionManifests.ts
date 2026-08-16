@@ -34,7 +34,7 @@ const addExtensionDisabledStatus = (uniqueExtensions: any, disabledExtensionIds:
   return uniqueExtensions.map((extension: any) => {
     return {
       ...extension,
-      disabled: disabledExtensionIds.includes(extension.id),
+      disabled: extension.disabled === true || disabledExtensionIds.includes(extension.id),
       isBuiltin: isBuiltin(extension),
     }
   })

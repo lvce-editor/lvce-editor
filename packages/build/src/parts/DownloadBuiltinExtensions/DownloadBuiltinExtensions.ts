@@ -11,7 +11,6 @@ import * as ExitCode from '../ExitCode/ExitCode.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
-import { getEnabledBuiltinExtensions } from '../GetEnabledBuiltinExtensions/GetEnabledBuiltinExtensions.ts'
 import extensions from './builtinExtensions.json' with { type: 'json' }
 
 const downloadUrl = async (url, outFile) => {
@@ -59,7 +58,8 @@ const downloadExtension = async (extension) => {
 const applyExtensionMetadata = async (extension, outPath) => {
   const manifestPath = Path.join(outPath, 'extension.json')
   const manifest = await JsonFile.readJson(manifestPath)
-  if (manifest.created === extension.created) {
+  const disabled = extension.enabled === false
+  if (manifest.created === extension.created && manifest.disabled === disabled) {
     return
   }
   await JsonFile.writeJson({
@@ -67,6 +67,7 @@ const applyExtensionMetadata = async (extension, outPath) => {
     value: {
       ...manifest,
       created: extension.created,
+      disabled,
     },
   })
 }
@@ -123,7 +124,7 @@ const printError = (error) => {
 
 const main = async () => {
   try {
-    await downloadExtensions(getEnabledBuiltinExtensions(extensions))
+    await downloadExtensions(extensions)
   } catch (error) {
     printError(error)
     Process.exit(ExitCode.Error)
