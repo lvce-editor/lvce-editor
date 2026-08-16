@@ -15,6 +15,10 @@ test('crashAsync', () => {
   expect(Process.crashAsync).rejects.toThrow()
 })
 
+test('getArgv', () => {
+  expect(Process.getArgv()).toEqual(process.argv)
+})
+
 test('kill - ESRCH', () => {
   const pid = 123
   const signal = Signal.SIGINT

@@ -70,3 +70,7 @@ export const getNodeVersion = (): any => {
 export const getArch = (): any => {
   return process.arch
 }
+
+export const getArgv = (): readonly string[] => {
+  return process.argv
+}
