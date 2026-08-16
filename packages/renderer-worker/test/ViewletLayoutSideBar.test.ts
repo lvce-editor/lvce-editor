@@ -54,6 +54,7 @@ const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
+const SideBarLocationType = await import('../src/parts/SideBarLocationType/SideBarLocationType.js')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
@@ -731,6 +732,49 @@ test('openChat focuses chat after opening the secondary side bar', async () => {
     secondarySideBarVisible: true,
   })
   expect(result.commands).toEqual([])
+})
+
+test('showSecondarySideBar preserves left side bar layout and resized preview width', async () => {
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      activityBarVisible: true,
+      activityBarWidth: 48,
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      secondarySideBarMaxWidth: 9999999,
+      secondarySideBarMinWidth: 220,
+      secondarySideBarVisible: false,
+      secondarySideBarWidth: 300,
+      sideBarLocation: SideBarLocationType.Left,
+      sideBarMaxWidth: 9999999,
+      sideBarMinWidth: 170,
+      sideBarVisible: true,
+      sideBarWidth: 240,
+      statusBarHeight: 20,
+      titleBarHeight: 0,
+      windowHeight: 1080,
+      windowWidth: 1920,
+    },
+    SideBarLocationType.Left,
+  )
+
+  const result = await ViewletLayout.showSecondarySideBar(state)
+
+  expect(result.newState).toMatchObject({
+    activityBarLeft: 0,
+    mainLeft: 288,
+    mainWidth: 1012,
+    previewLeft: 1520,
+    previewWidth: 400,
+    secondarySideBarLeft: 1300,
+    secondarySideBarWidth: 220,
+    sideBarLeft: 48,
+    sideBarLocation: SideBarLocationType.Left,
+  })
 })
 
 test('openChat leaves an already open chat unfocused by default', async () => {
