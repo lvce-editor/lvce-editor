@@ -41,3 +41,32 @@ test('getAll', async () => {
   expect(ExtensionManifestsFromFolder.getExtensionManifests).toHaveBeenCalledTimes(1)
   expect(ExtensionManifestsFromFolder.getExtensionManifests).toHaveBeenCalledWith('/test/built-in-extensions')
 })
+
+test('getAll preserves extensions disabled by the builtin registry', async () => {
+  // @ts-ignore
+  ExtensionManifestsFromFolder.getExtensionManifests.mockImplementation(() => {
+    return [
+      {
+        disabled: true,
+        id: 'builtin.gpt-voice',
+        path: '/test/built-in-extensions/builtin.gpt-voice',
+      },
+    ]
+  })
+
+  expect(
+    await ExtensionManifests.getAll([
+      {
+        path: '/test/built-in-extensions',
+        type: ExtensionManifestInputType.Folder,
+      },
+    ]),
+  ).toEqual([
+    {
+      disabled: true,
+      id: 'builtin.gpt-voice',
+      isBuiltin: true,
+      path: '/test/built-in-extensions/builtin.gpt-voice',
+    },
+  ])
+})
