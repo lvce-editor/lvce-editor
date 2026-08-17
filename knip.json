@@ -47,7 +47,7 @@
         "test/**/*.test.ts"
       ],
       "project": ["bin/**/*.ts", "src/**/*.ts", "test/**/*.ts"],
-      "ignoreDependencies": ["@lvce-editor/static-server"]
+      "ignoreDependencies": ["@lvce-editor/auth-process", "@lvce-editor/static-server"]
     },
     "packages/static-server": {
       "entry": [
