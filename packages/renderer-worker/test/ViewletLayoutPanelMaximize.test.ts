@@ -3,12 +3,15 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const panelWorkerInvocations: any[] = []
 let panelWorkerDiffResult: any[] = []
 let panelWorkerRenderCommands: any[] = []
+let currentPanelView = ''
 
 jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
   return {
     invoke: async (method, ...args) => {
       panelWorkerInvocations.push([method, ...args])
       switch (method) {
+        case 'Panel.getCurrentViewletId':
+          return currentPanelView
         case 'Panel.handlePanelLayoutChanged':
         case 'Panel.toggleView':
           return undefined
@@ -33,6 +36,7 @@ beforeEach(() => {
   panelWorkerInvocations.length = 0
   panelWorkerDiffResult = []
   panelWorkerRenderCommands = []
+  currentPanelView = ''
 })
 
 const createPanelInstance = (uid = 77) => {
@@ -206,6 +210,45 @@ test('showPanel selects requested panel view when panel is visible', async () =>
     ['Panel.diff2', 77],
     ['Panel.render2', 77, [11]],
   ])
+})
+
+test('togglePanel selects the requested view when a different panel view is visible', async () => {
+  createPanelInstance()
+  currentPanelView = 'Problems'
+  panelWorkerDiffResult = [11]
+  panelWorkerRenderCommands = [['Viewlet.setPatches', 77, []]]
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: true,
+    panelView: 'Terminals',
+  }
+
+  const result = await ViewletLayout.togglePanel(state, 'Terminals')
+
+  expect(result.newState.panelVisible).toBe(true)
+  expect(result.newState.panelView).toBe('Terminals')
+  expect(result.commands).toEqual([['Viewlet.setPatches', 77, []]])
+  expect(panelWorkerInvocations).toEqual([
+    ['Panel.getCurrentViewletId', 77],
+    ['Panel.toggleView', 77, 'Terminals', ''],
+    ['Panel.diff2', 77],
+    ['Panel.render2', 77, [11]],
+  ])
+})
+
+test('togglePanel hides the panel when the requested view is already visible', async () => {
+  createPanelInstance()
+  currentPanelView = 'Terminals'
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: true,
+    panelView: 'Terminals',
+  }
+
+  const result = await ViewletLayout.togglePanel(state, 'Terminals')
+
+  expect(result.newState.panelVisible).toBe(false)
+  expect(panelWorkerInvocations).toEqual([['Panel.getCurrentViewletId', 77]])
 })
 
 test('maximizePanel notifies panel worker when panel instance exists', async () => {

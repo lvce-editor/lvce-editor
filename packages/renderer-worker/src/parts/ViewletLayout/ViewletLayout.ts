@@ -1002,8 +1002,23 @@ export const hidePanel = (state: LayoutState) => {
   return hide(state, LayoutModules.Panel)
 }
 
-export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
-  return toggle(state, LayoutModules.Panel, moduleId)
+const getCurrentPanelView = async (state: LayoutState): Promise<string> => {
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  if (!instance) {
+    return state.panelView
+  }
+  return PanelWorker.invoke('Panel.getCurrentViewletId', instance.state.uid)
+}
+
+export const togglePanel = async (state: LayoutState, moduleId = ViewletModuleId.None): Promise<LayoutStateResult> => {
+  if (!state.panelVisible) {
+    return showPanel(state, moduleId || state.panelView)
+  }
+  const currentPanelView = await getCurrentPanelView(state)
+  if (!moduleId || currentPanelView === moduleId) {
+    return hidePanel(state)
+  }
+  return showPanel(state, moduleId)
 }
 
 const mainMinHeight = 100
