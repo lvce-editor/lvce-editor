@@ -82,7 +82,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
     let p3 = /* End of Main */ 0
-    let p4 = /* End of Panel */ 0
+    let p4 = /* End of Panel */ windowHeight
     // @ts-ignore
     const p5 = /* End of StatusBar */ windowHeight
 
@@ -230,7 +230,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const p1 = /* Top */ 0
     let p2 = /* End of Title Bar */ 0
     let p3 = /* End of Main */ 0
-    let p4 = /* End of Panel */ 0
+    let p4 = /* End of Panel */ windowHeight
     // @ts-ignore
     const p5 = /* End of StatusBar */ windowHeight
 

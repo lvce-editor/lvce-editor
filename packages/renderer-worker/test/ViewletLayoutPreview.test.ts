@@ -319,6 +319,33 @@ test.each([
 test.each([
   ['left', SideBarLocationType.Left],
   ['right', SideBarLocationType.Right],
+])('hidden status bar leaves the main and preview areas at full height with the side bar on the %s', (_name, sideBarLocation) => {
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      statusBarHeight: 20,
+      statusBarVisible: false,
+      titleBarHeight: 35,
+      titleBarVisible: true,
+      windowHeight: 800,
+      windowWidth: 1200,
+    },
+    sideBarLocation,
+  )
+
+  expect(state).toMatchObject({
+    mainHeight: 765,
+    previewHeight: 765,
+    statusBarTop: 800,
+  })
+})
+
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
 ])('primary and secondary previews form three columns with the side bar on the %s', (_name, sideBarLocation) => {
   const state = LayoutPoints.getPoints(
     {
