@@ -56,6 +56,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands['ColorPicker.handleSliderPointerUp']).toBeDefined()
   expect(commands.handleUriChange).toBeDefined()
   expect(commands.loadContentLater).toBeDefined()
+  expect(commands.__renderPending).toBeDefined()
   expect(commands.renderPending).toBeDefined()
   expect(commands.showOverlayMessage).toBeDefined()
   expect(commands.hotReload).toBeDefined()
@@ -158,7 +159,7 @@ test('renderPending renders editor-worker state changed by an asynchronous effec
   })
 
   const commands = await ViewletEditorTextCommands.getCommands()
-  const result = await commands.renderPending(editor)
+  const result = await commands.__renderPending(editor)
 
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 42)
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [1])
