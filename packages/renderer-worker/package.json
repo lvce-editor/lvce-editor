@@ -87,7 +87,7 @@
     "@lvce-editor/preview-worker": "^6.13.1",
     "@lvce-editor/problems-view": "^1.32.0",
     "@lvce-editor/process-explorer-worker": "^3.19.0",
-    "@lvce-editor/quick-pick-worker": "^4.15.0",
+    "@lvce-editor/quick-pick-worker": "^4.16.0",
     "@lvce-editor/references-view": "^2.16.0",
     "@lvce-editor/rename-worker": "^1.38.0",
     "@lvce-editor/renderer-process": "^30.35.0",
