@@ -59,10 +59,6 @@ export const list = async (): Promise<any> => {
     const manifests = await ExtensionManifests.getAll([
       ...transientLinkedExtensions,
       {
-        path: PlatformPaths.getLinkedExtensionsPath(),
-        type: ExtensionManifestInputType.LinkedExtensionsFolder,
-      },
-      {
         path: PlatformPaths.getExtensionsPath(),
         type: ExtensionManifestInputType.Folder,
       },

@@ -3,7 +3,6 @@ import { getExtensionEnablement } from '../ExtensionManagement/ExtensionManageme
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.ts'
 import * as ExtensionManifestsGetFromFolder from './ExtensionManifestsFromFolder.ts'
 import * as ExtensionManifestsGetFromLinkedExtension from './ExtensionManifestsFromLinkedExtension.ts'
-import * as ExtensionManifestsGetFromLinkedExtensionsFolder from './ExtensionManifestsFromLinkedExtensionsFolder.ts'
 import * as ExtensionManifestsGetFromOnlyExtension from './ExtensionManifestsFromOnlyExtension.ts'
 
 const getModule = (type: any): any => {
@@ -12,8 +11,6 @@ const getModule = (type: any): any => {
       return ExtensionManifestsGetFromFolder
     case ExtensionManifestInputType.LinkedExtension:
       return ExtensionManifestsGetFromLinkedExtension
-    case ExtensionManifestInputType.LinkedExtensionsFolder:
-      return ExtensionManifestsGetFromLinkedExtensionsFolder
     case ExtensionManifestInputType.OnlyExtension:
       return ExtensionManifestsGetFromOnlyExtension
     default:

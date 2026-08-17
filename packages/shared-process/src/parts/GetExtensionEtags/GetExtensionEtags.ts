@@ -35,14 +35,14 @@ const getOnly = async (path: any): Promise<any> => {
   return getManifestStats(path)
 }
 
-const isExtensionFolder = (dirent: any, includeSymlinks: boolean): boolean => {
-  return dirent.type === DirentType.Directory || (includeSymlinks && dirent.type === DirentType.Symlink)
+const isExtensionFolder = (dirent: any): boolean => {
+  return dirent.type === DirentType.Directory
 }
 
-const getFolder = async (path: any, includeSymlinks: boolean = false): Promise<any> => {
+const getFolder = async (path: any): Promise<any> => {
   try {
     const dirents = await FileSystem.readDirWithFileTypes(path)
-    const folderNames = dirents.filter((dirent: any) => isExtensionFolder(dirent, includeSymlinks)).map((dirent: any) => dirent.name)
+    const folderNames = dirents.filter(isExtensionFolder).map((dirent: any) => dirent.name)
     const stats = await Promise.all(
       folderNames.map(async (folderName: any) => {
         const extensionManifestPath = join(path, folderName, 'extension.json')
@@ -64,8 +64,6 @@ const get = (input: any): any => {
       return getFolder(input.path)
     case ExtensionManifestInputType.LinkedExtension:
       return getOnly(input.path)
-    case ExtensionManifestInputType.LinkedExtensionsFolder:
-      return getFolder(input.path, true)
     case ExtensionManifestInputType.OnlyExtension:
       return getOnly(input.path)
     default:

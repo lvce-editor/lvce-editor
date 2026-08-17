@@ -41,15 +41,20 @@ export const getServerIsStaticReplacement = (commitHash: string): string => `con
   return false
 }`
 
-const copyServerFiles = async ({ commitHash }) => {
+const copyServerFiles = async ({ commitHash, product }) => {
   await Copy.copy({
     from: 'packages/server',
     to: 'packages/build/.tmp/server/server',
-    ignore: ['tsconfig.json', 'node_modules', 'package-lock.json'],
+    ignore: ['tsconfig.json', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
     to: 'packages/build/.tmp/server/server/LICENSE',
+  })
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/server/src/argvConfig.js',
+    occurrence: `const applicationName = 'lvce-oss'`,
+    replacement: `const applicationName = '${product.applicationName}'`,
   })
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
@@ -211,7 +216,7 @@ export const build = async ({ product }) => {
     product,
   })
   console.time('copyServerFiles')
-  await copyServerFiles({ commitHash })
+  await copyServerFiles({ commitHash, product })
   console.timeEnd('copyServerFiles')
 
   const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({

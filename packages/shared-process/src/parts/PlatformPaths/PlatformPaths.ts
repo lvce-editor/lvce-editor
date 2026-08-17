@@ -58,10 +58,6 @@ export const getCachedChromeExtensionsPath = (): any => {
   return Path.join(cacheDir, 'cached-electron-browser-view-chrome-extensions')
 }
 
-export const getLinkedExtensionsPath = (): any => {
-  return Path.join(dataDir, 'linked-extensions')
-}
-
 export const getChromeExtensionsPath = (): any => {
   return Path.join(dataDir, 'electron-browser-view-chrome-extensions')
 }
