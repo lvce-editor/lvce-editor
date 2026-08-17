@@ -383,8 +383,8 @@ const getPreviewUri = (state: LayoutState, module: LayoutModules.LayoutModule): 
 }
 
 const getPreviewBoundsCommand = (uid: number, state: LayoutState, module: LayoutModules.LayoutModule): any[] => {
-  const { kTop, kLeft, kWidth, kHeight } = module
-  return ['Viewlet.setBounds', uid, state[kLeft], state[kTop], state[kWidth], state[kHeight]]
+  const { kWidth, kHeight } = module
+  return ['Viewlet.setBounds', uid, 0, 0, state[kWidth], state[kHeight]]
 }
 
 const addPreviewBoundsCommand = (commands: any[], uid: number, state: LayoutState, module: LayoutModules.LayoutModule): void => {

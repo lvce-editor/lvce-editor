@@ -101,6 +101,58 @@ test('getLayoutVirtualDom does not render the preview close button when preview 
   expect(dom.some((node) => node.className?.includes('PreviewCloseButton'))).toBe(false)
 })
 
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('getLayoutVirtualDom wraps preview content with the side bar on the %s', (_name, sideBarLocation) => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewActionsUid: 3,
+    previewSashVisible: false,
+    previewVisible: true,
+    previewId: 2,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+  const previewAreaIndex = dom.findIndex((node) => node.className === 'PreviewArea')
+
+  expect(dom.slice(previewAreaIndex, previewAreaIndex + 5)).toEqual([
+    {
+      childCount: 3,
+      className: 'PreviewArea',
+      type: 4,
+    },
+    { type: 100, uid: 2 },
+    { type: 100, uid: 3 },
+    expect.objectContaining({
+      ariaLabel: 'Close Preview',
+      childCount: 1,
+      className: 'IconButton PreviewCloseButton',
+    }),
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconClose',
+      type: 4,
+    },
+  ])
+})
+
 test('getLayoutVirtualDom renders an independently closable secondary preview', () => {
   const state = {
     activityBarVisible: false,
