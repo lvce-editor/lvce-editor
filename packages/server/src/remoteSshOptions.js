@@ -2,7 +2,7 @@ const defaultIdleTimeout = 3 * 60 * 60 * 1000
 
 const getArgument = (argv, name) => {
   const prefix = `${name}=`
-  const argument = argv.find((value) => value.startsWith(prefix))
+  const argument = argv.findLast((value) => value.startsWith(prefix))
   return argument ? argument.slice(prefix.length) : undefined
 }
 

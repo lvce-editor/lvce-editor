@@ -131,10 +131,6 @@ export const getExtensions = (): any => {
       },
       ...transientLinkedExtensions,
       {
-        path: PlatformPaths.getLinkedExtensionsPath(),
-        type: ExtensionManifestInputType.LinkedExtensionsFolder,
-      },
-      {
         path: PlatformPaths.getExtensionsPath(),
         type: ExtensionManifestInputType.Folder,
       },
@@ -160,10 +156,6 @@ export const getExtensionsEtag = async (): Promise<any> => {
       type: ExtensionManifestInputType.OnlyExtension,
     },
     ...transientLinkedExtensions,
-    {
-      path: PlatformPaths.getLinkedExtensionsPath(),
-      type: ExtensionManifestInputType.LinkedExtensionsFolder,
-    },
     {
       path: PlatformPaths.getExtensionsPath(),
       type: ExtensionManifestInputType.Folder,

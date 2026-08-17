@@ -9,9 +9,6 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: jest.fn(() => {
     return '/test/extensions'
   }),
-  getLinkedExtensionsPath: jest.fn(() => {
-    return '/test/linked-extensions'
-  }),
 }))
 
 jest.unstable_mockModule('../src/parts/ExtensionManifests/ExtensionManifests', () => ({

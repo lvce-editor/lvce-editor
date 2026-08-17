@@ -5,17 +5,19 @@ import { createServer } from 'node:http'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Worker } from 'node:worker_threads'
+import * as ArgvConfig from './argvConfig.js'
 import { getRemoteSshOptions, isAuthenticatedRemoteRequest } from './remoteSshOptions.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 
 const { argv, env } = process
-
-let argv2 = argv[2]
+const configArguments = await ArgvConfig.load(ArgvConfig.getArgvConfigPath())
+ArgvConfig.prepend(argv, configArguments)
 
 // TODO pass argv to shared process instead of using environment variables / global variables
 const argvSliced = argv.slice(2)
+let argv2 = ArgvConfig.getWorkspaceArgument(argvSliced)
 for (const arg of argvSliced) {
   if (arg.startsWith('--only-extension=')) {
     process.env['ONLY_EXTENSION'] = arg.slice('--only-extension='.length)

@@ -1,6 +1,6 @@
 import { expect, jest, test, beforeAll, afterAll, afterEach } from '@jest/globals'
 import { createWriteStream } from 'node:fs'
-import { access, mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -25,9 +25,6 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
     throw new Error('not implemented')
   }),
   getExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  getLinkedExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
   getMarketplaceUrl: jest.fn(() => {
@@ -162,8 +159,6 @@ test.skip('getExtensions', async () => {
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       id: 'test-extension',
@@ -196,8 +191,6 @@ test('getExtensions - invalid extension.json', async () => {
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       disabled: false,
@@ -231,8 +224,6 @@ test('getExtensions ignores files in extension folders', async () => {
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       disabled: false,
@@ -263,8 +254,6 @@ test('getExtensions - includes transient linked extension from --link', async ()
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   process.argv = [...originalArgv, '--link', transientRoot]
 
   expect(await ExtensionManagement.getExtensions()).toEqual([
@@ -281,17 +270,15 @@ test('getExtensions - includes transient linked extension from --link', async ()
   ])
 })
 
-test('getExtensions - linked extension overrides builtin extension', async () => {
+test('getExtensions - transient linked extension overrides builtin extension', async () => {
   const installedExtensionsPath = await getTmpDir()
   const builtinExtensionsPath = await getTmpDir()
-  const linkedExtensionsPath = await getTmpDir()
   const disabledExtensionsPath = await getTmpDir()
   const linkedExtensionPath = await getTmpDir()
   const extensionId = 'builtin.test-extension'
   await mkdir(join(builtinExtensionsPath, extensionId))
   await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), JSON.stringify({ id: extensionId, name: 'Bundled Extension' }))
   await writeFile(join(linkedExtensionPath, 'extension.json'), JSON.stringify({ id: extensionId, name: 'Linked Extension' }))
-  await symlink(linkedExtensionPath, join(linkedExtensionsPath, extensionId))
   // @ts-ignore
   PlatformPaths.getExtensionsPath.mockImplementation(() => installedExtensionsPath)
   // @ts-ignore
@@ -302,8 +289,7 @@ test('getExtensions - linked extension overrides builtin extension', async () =>
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(disabledExtensionsPath, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => linkedExtensionsPath)
+  process.argv = [...originalArgv, '--link', linkedExtensionPath]
 
   const extensions = await ExtensionManagement.getExtensions()
 
@@ -313,7 +299,7 @@ test('getExtensions - linked extension overrides builtin extension', async () =>
     id: extensionId,
     isBuiltin: true,
     name: 'Linked Extension',
-    path: join(linkedExtensionsPath, extensionId),
+    path: linkedExtensionPath,
     symlink: linkedExtensionPath,
   })
 })
@@ -321,7 +307,6 @@ test('getExtensions - linked extension overrides builtin extension', async () =>
 test('getExtensions - explicit enable overrides a builtin disabled by default', async () => {
   const installedExtensionsPath = await getTmpDir()
   const builtinExtensionsPath = await getTmpDir()
-  const linkedExtensionsPath = await getTmpDir()
   const disabledExtensionsPath = await getTmpDir()
   const disabledExtensionsJsonPath = join(disabledExtensionsPath, 'disabled-extensions.json')
   const extensionId = 'builtin.gpt-voice'
@@ -338,9 +323,6 @@ test('getExtensions - explicit enable overrides a builtin disabled by default', 
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => disabledExtensionsJsonPath)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => linkedExtensionsPath)
-
   const extensions = await ExtensionManagement.getExtensions()
 
   expect(extensions).toHaveLength(1)
@@ -462,8 +444,6 @@ test('getExtensions - error - invalid value - null', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       builtin: true,
@@ -486,8 +466,6 @@ test('getExtensions - error - invalid value - string', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       builtin: true,
@@ -510,8 +488,6 @@ test('getExtensions - error - invalid value - number', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       builtin: true,
@@ -534,8 +510,6 @@ test('getExtensions - error - invalid value - boolean', async () => {
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       builtin: true,
@@ -559,8 +533,6 @@ test('getExtensions - error - invalid json', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       builtin: true,
@@ -588,8 +560,6 @@ test.skip('getExtensions - error - manifest not found', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => '')
   const manifestPath = join(tmpDir1, 'test-extension-1', 'extension.json')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
@@ -622,8 +592,6 @@ test.skip('getExtensions - with only extension and builtin extensions', async ()
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => tmpDir3)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => '')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       id: 'language-basics-xyz',

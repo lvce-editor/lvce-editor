@@ -22,9 +22,6 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getLinkedExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
   getMarketplaceUrl: jest.fn(() => {
     return marketplaceUrl
   }),
@@ -183,8 +180,6 @@ test.skip('install should fail when the server sends an invalid compressed objec
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir4)
   // TODO avoid side effect in tests, use createServer

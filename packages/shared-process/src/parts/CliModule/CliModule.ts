@@ -16,12 +16,8 @@ export const getModule = (parsedArgs: any): any => {
   switch (argv0) {
     case CliCommandType.Install:
       return import('../CliInstall/CliInstall.ts')
-    case CliCommandType.Link:
-      return import('../CliLink/CliLink.ts')
     case CliCommandType.List:
       return import('../CliList/CliList.ts')
-    case CliCommandType.Unlink:
-      return import('../CliUnlink/CliUnlink.ts')
     default:
       throw new Error(`command not found ${argv0}`)
   }

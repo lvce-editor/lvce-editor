@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 
-const foregroundCommands = new Set(['install', 'link', 'list', 'unlink'])
+const foregroundCommands = new Set(['install', 'list'])
 const electronDiagnosticPattern = /^\[\d+:\d+\/\d+\.\d+:(?:ERROR|WARNING):/
 
 const isVersionRequest = (args) => args.includes('--version') || args.includes('-v')

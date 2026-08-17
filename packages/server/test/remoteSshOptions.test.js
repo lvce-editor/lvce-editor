@@ -22,6 +22,22 @@ test('parses private remote SSH server options', () => {
   })
 })
 
+test('uses the last value when an explicit argument follows argv.json arguments', () => {
+  assert.deepEqual(
+    getRemoteSshOptions(
+      ['--as-remote-ssh-server', '--port=3000', '--connection-token=config', '--port=45123', '--connection-token=explicit'],
+      {},
+    ),
+    {
+      enabled: true,
+      host: '127.0.0.1',
+      idleTimeout: 10_800_000,
+      port: 45123,
+      token: 'explicit',
+    },
+  )
+})
+
 test('requires an authentication token in remote mode', () => {
   assert.throws(() => getRemoteSshOptions(['--as-remote-ssh-server'], {}), /requires --connection-token/)
 })

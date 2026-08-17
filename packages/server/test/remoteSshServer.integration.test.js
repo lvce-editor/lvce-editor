@@ -85,7 +85,10 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
   const token = 'integration-secret'
   const child = spawn(process.execPath, [serverPath, '--as-remote-ssh-server', '--port=0', `--connection-token=${token}`, '--idle-timeout=30000'], {
     detached: true,
-    env: process.env,
+    env: {
+      ...process.env,
+      XDG_CONFIG_HOME: directory,
+    },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
   context.after(async () => {
