@@ -4,6 +4,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const worker = {
   dispose: jest.fn<() => Promise<void>>(),
   invoke: jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(),
+  invokeAndTransfer: jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(),
   restart: jest.fn<(terminateCommand: string) => Promise<void>>(),
 }
 
@@ -25,6 +26,16 @@ test('invokes an awake worker without a wake-up command', async () => {
 
   expect(worker.invoke).toHaveBeenCalledTimes(1)
   expect(worker.invoke).toHaveBeenCalledWith('Worker.doSomething', 1)
+})
+
+test('transfers to an awake worker without a wake-up command', async () => {
+  worker.invokeAndTransfer.mockResolvedValue('result')
+  const wrappedWorker = GetOrCreateWorkerWithSleep.getOrCreateWorkerWithSleep(jest.fn(), 'Worker.sleep', 'Worker.wakeUp')
+
+  await expect(wrappedWorker.invokeAndTransfer('Worker.handleMessagePort', 1)).resolves.toBe('result')
+
+  expect(worker.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(worker.invokeAndTransfer).toHaveBeenCalledWith('Worker.handleMessagePort', 1)
 })
 
 test('sleeps and restores a worker before its next invocations', async () => {

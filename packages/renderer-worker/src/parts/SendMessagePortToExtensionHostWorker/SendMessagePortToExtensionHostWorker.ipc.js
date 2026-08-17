@@ -35,4 +35,5 @@ export const Commands = {
   sendMessagePortToTerminalProcess: SendMessagePortToExtensionHostWorker.sendMessagePortToTerminalProcess,
   sendMessagePortToTextMeasurementWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToTextMeasurementWorker,
   sendMessagePortToTextSearchWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToTextSearchWorker,
+  sendMessagePortToViewWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker,
 }

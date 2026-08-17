@@ -1,6 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import { launchPanelWorker } from '../LaunchPanelWorker/LaunchPanelWorker.ts'
 
-const { invoke, restart } = GetOrCreateWorker.getOrCreateWorker(launchPanelWorker)
+const { invoke, invokeAndTransfer, restart } = GetOrCreateWorker.getOrCreateWorker(launchPanelWorker)
 
-export { invoke, restart }
+export { invoke, invokeAndTransfer, restart }

@@ -47,6 +47,10 @@ export const getOrCreateWorkerWithSleep = (launchWorker, sleepCommand, wakeUpCom
     return run(() => worker.invoke(method, ...params))
   }
 
+  const invokeAndTransfer = (method, ...params) => {
+    return run(() => worker.invokeAndTransfer(method, ...params))
+  }
+
   const restart = (terminateCommand) => {
     return run(() => worker.restart(terminateCommand))
   }
@@ -69,6 +73,7 @@ export const getOrCreateWorkerWithSleep = (launchWorker, sleepCommand, wakeUpCom
 
   return {
     invoke,
+    invokeAndTransfer,
     restart,
     sleep,
   }
