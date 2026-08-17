@@ -21,6 +21,7 @@ import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PrepareElectronCss from '../PrepareElectronCss/PrepareElectronCss.ts'
+import * as PrepareElectronHtmlExtension from '../PrepareElectronHtmlExtension/PrepareElectronHtmlExtension.ts'
 import * as ReadFile from '../ReadFile/ReadFile.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
@@ -99,18 +100,14 @@ const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
 }
 
 const copyExtensions = async ({ resourcesPath, commitHash }) => {
+  const extensionsPath = `${resourcesPath}/app/static/${commitHash}/extensions`
   await Copy.copy({
     from: 'extensions',
-    to: `${resourcesPath}/app/static/${commitHash}/extensions`,
+    to: extensionsPath,
     dereference: true,
   })
 
-  await Remove.remove(`${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-features-html/typescript`)
-  await Replace.replace({
-    path: `${resourcesPath}/app/static/${commitHash}/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
-    occurrence: '../../../../typescript/lib/typescript-esm.js',
-    replacement: '../../../../../builtin.language-features-typescript/typescript/lib/typescript-esm.js',
-  })
+  await PrepareElectronHtmlExtension.prepareElectronHtmlExtension({ extensionsPath })
   await CopyElectronFileIcons.copyElectronFileIcons({ resourcesPath, commitHash })
 }
 
