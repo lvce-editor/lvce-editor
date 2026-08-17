@@ -3,34 +3,38 @@ import * as Command from '../Command/Command.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const wrapSourceControlCommand = (key: string) => {
-  const fn = async (state, ...args) => {
-    await SourceControlWorker.invoke(`SourceControl.${key}`, state.uid, ...args)
-    const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
-    if (diffResult.length === 0) {
-      return state
-    }
-    const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
-    const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid, diffResult)
-    if (commands.length === 0) {
-      return state
-    }
-    if (state.badgeCount !== badgeCount) {
-      const newState = {
-        ...state,
-        commands,
-        badgeCount,
-      }
-
-      ViewletStates.setState(state.uid, newState)
-      ViewletStates.setRenderedState(state.uid, newState)
-      await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
-    }
-    return {
+export const renderPendingSourceControl = async (state) => {
+  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  if (diffResult.length === 0) {
+    return state
+  }
+  const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
+  const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid, diffResult)
+  if (commands.length === 0) {
+    return state
+  }
+  if (state.badgeCount !== badgeCount) {
+    const newState = {
       ...state,
       commands,
       badgeCount,
     }
+
+    ViewletStates.setState(state.uid, newState)
+    ViewletStates.setRenderedState(state.uid, newState)
+    await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  }
+  return {
+    ...state,
+    commands,
+    badgeCount,
+  }
+}
+
+export const wrapSourceControlCommand = (key: string) => {
+  const fn = async (state, ...args) => {
+    await SourceControlWorker.invoke(`SourceControl.${key}`, state.uid, ...args)
+    return renderPendingSourceControl(state)
   }
   return fn
 }

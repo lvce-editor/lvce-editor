@@ -8,6 +8,10 @@ Object.defineProperty(Commands, '__directEventRpcId', {
   value: 'SourceControl',
 })
 
+Object.defineProperty(Commands, '__renderPending', {
+  value: WrapSourceControlCommand.renderPendingSourceControl,
+})
+
 export const getCommands = async () => {
   const commands = await SourceControlWorker.invoke('SourceControl.getCommandIds')
   for (const command of commands) {
