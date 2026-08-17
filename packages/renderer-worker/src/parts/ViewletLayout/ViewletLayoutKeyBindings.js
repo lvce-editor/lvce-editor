@@ -31,7 +31,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyCode.Backquote,
       command: 'Layout.togglePanel',
-      args: ['Terminal'],
+      args: ['Terminals'],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyM,

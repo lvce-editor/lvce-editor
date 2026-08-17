@@ -16,6 +16,24 @@
   /* flex-direction: column; */
 }
 
+.PreviewArea {
+  flex: 0 0 var(--PreviewWidth);
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.SecondaryPreviewArea {
+  flex-basis: var(--SecondaryPreviewWidth);
+}
+
+.PreviewArea > .Actions {
+  position: absolute;
+  right: 40px;
+  top: 4px;
+  z-index: 1;
+}
+
 .PreviewCloseButton,
 .SecondaryPreviewCloseButton {
   background: var(--TitleBarBackground, rgb(40, 46, 47));
@@ -26,7 +44,7 @@
 }
 
 .PreviewCloseButton {
-  right: calc(var(--SecondaryPreviewWidth, 0px) + 4px);
+  right: 4px;
 }
 
 .SecondaryPreviewCloseButton {

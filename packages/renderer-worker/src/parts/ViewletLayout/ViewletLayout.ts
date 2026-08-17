@@ -383,8 +383,8 @@ const getPreviewUri = (state: LayoutState, module: LayoutModules.LayoutModule): 
 }
 
 const getPreviewBoundsCommand = (uid: number, state: LayoutState, module: LayoutModules.LayoutModule): any[] => {
-  const { kTop, kLeft, kWidth, kHeight } = module
-  return ['Viewlet.setBounds', uid, state[kLeft], state[kTop], state[kWidth], state[kHeight]]
+  const { kWidth, kHeight } = module
+  return ['Viewlet.setBounds', uid, 0, 0, state[kWidth], state[kHeight]]
 }
 
 const addPreviewBoundsCommand = (commands: any[], uid: number, state: LayoutState, module: LayoutModules.LayoutModule): void => {
@@ -1002,8 +1002,23 @@ export const hidePanel = (state: LayoutState) => {
   return hide(state, LayoutModules.Panel)
 }
 
-export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
-  return toggle(state, LayoutModules.Panel, moduleId)
+const getCurrentPanelView = async (state: LayoutState): Promise<string> => {
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  if (!instance) {
+    return state.panelView
+  }
+  return PanelWorker.invoke('Panel.getCurrentViewletId', instance.state.uid)
+}
+
+export const togglePanel = async (state: LayoutState, moduleId = ViewletModuleId.None): Promise<LayoutStateResult> => {
+  if (!state.panelVisible) {
+    return showPanel(state, moduleId || state.panelView)
+  }
+  const currentPanelView = await getCurrentPanelView(state)
+  if (!moduleId || currentPanelView === moduleId) {
+    return hidePanel(state)
+  }
+  return showPanel(state, moduleId)
 }
 
 const mainMinHeight = 100
