@@ -45,7 +45,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Copy.copy({
     from: 'packages/server',
     to: 'packages/build/.tmp/server/server',
-    ignore: ['tsconfig.json', 'node_modules', 'package-lock.json'],
+    ignore: ['tsconfig.json', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
