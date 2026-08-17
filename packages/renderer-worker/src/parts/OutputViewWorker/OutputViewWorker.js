@@ -1,6 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import * as LaunchOutputViewWorker from '../LaunchOutputViewWorker/LaunchOutputViewWorker.js'
 
-const { invoke, restart } = GetOrCreateWorker.getOrCreateWorker(LaunchOutputViewWorker.launchOutputViewWorker)
+const { invoke, invokeAndTransfer, restart } = GetOrCreateWorker.getOrCreateWorker(LaunchOutputViewWorker.launchOutputViewWorker)
 
-export { invoke, restart }
+export { invoke, invokeAndTransfer, restart }

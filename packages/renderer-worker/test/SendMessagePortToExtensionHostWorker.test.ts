@@ -29,6 +29,18 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
   }
 })
 
+jest.unstable_mockModule('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/MainAreaWorker/MainAreaWorker.js', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', () => {
   return {
     connectMessagePort: jest.fn(async () => false),
@@ -38,6 +50,8 @@ jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', ()
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
 const DragAndDropWorker = await import('../src/parts/DragAndDropWorker/DragAndDropWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
+const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const WorkspaceBackend = await import('../src/parts/WorkspaceBackend/WorkspaceBackend.js')
 const SendMessagePortToExtensionHostWorker = await import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.js')
@@ -90,4 +104,26 @@ test('sendMessagePortToExtensionHostWorker forwards to extension management work
 
   expect(ExtensionManagementWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(ExtensionManagementWorker.invokeAndTransfer).toHaveBeenCalledWith('Extensions.handleMessagePort', port, 42)
+})
+
+test('sendMessagePortToMainAreaWorker forwards to main area worker', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToMainAreaWorker(port, 'HandleMessagePort.handleMessagePort', 42)
+
+  expect(MainAreaWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port, 42)
+})
+
+test('sendMessagePortToViewWorker forwards to the selected direct view worker', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker(port, 'Explorer')
+
+  expect(ExplorerViewWorker.invokeAndTransfer).toHaveBeenCalledWith('Explorer.handleMessagePort', port, false)
+})
+
+test('sendMessagePortToViewWorker rejects unknown workers', async () => {
+  await expect(SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker({}, 'Unknown')).rejects.toThrow(
+    'direct view worker not found: Unknown',
+  )
 })
