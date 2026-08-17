@@ -78,6 +78,37 @@ test('renders every text editor showing the same uri', async () => {
   ])
 })
 
+test('renders pending state for every text editor showing the same uri', async () => {
+  ViewletStates.set(2, {
+    factory: {},
+    moduleId: 'Editor',
+    renderedState: { uid: 2 },
+    state: {
+      uid: 2,
+      uri: 'file:///same.txt',
+    },
+  })
+  EditorWorker.invoke.mockImplementation((method: string, uid: number) => {
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve(['1', '2'])
+    }
+    if (method === 'Editor.diff2') {
+      return Promise.resolve([uid])
+    }
+    if (method === 'Editor.render2') {
+      return Promise.resolve(uid === 1 ? [['setText', 'left']] : [['setText', 'right']])
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  const result = await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'file:///same.txt' })
+
+  expect(result.commands).toEqual([
+    ['setText', 'left'],
+    ['Viewlet.send', 2, 'setText', 'right'],
+  ])
+})
+
 test('renders one hundred text editors showing the same uri', async () => {
   for (let uid = 1; uid <= 100; uid++) {
     ViewletStates.set(uid, {

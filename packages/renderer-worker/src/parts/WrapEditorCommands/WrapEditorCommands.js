@@ -46,14 +46,18 @@ const renderEditor = async (uid, sourceUid) => {
   return uid === sourceUid ? commands : adjustCommands(commands, uid)
 }
 
-const runEditorCommand = async (editor, fullId, restArgs) => {
-  await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
+export const renderPendingEditors = async (editor) => {
   const editorUids = await getExistingEditorUids(editor)
   const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid)))
   return {
     ...editor,
     commands: commandLists.flat(),
   }
+}
+
+const runEditorCommand = async (editor, fullId, restArgs) => {
+  await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
+  return renderPendingEditors(editor)
 }
 
 export const wrapEditorCommand = (id) => {
