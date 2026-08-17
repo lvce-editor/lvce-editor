@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { join } from 'node:path'
 import test from 'node:test'
 import * as ArgvConfig from '../src/argvConfig.js'
 
@@ -28,5 +29,5 @@ test('finds the workspace while ignoring repeated link arguments', () => {
 })
 
 test('uses the application config directory for argv.json', () => {
-  assert.equal(ArgvConfig.getArgvConfigPath({ XDG_CONFIG_HOME: '/test/config' }, '/test/home'), '/test/config/lvce-oss/argv.json')
+  assert.equal(ArgvConfig.getArgvConfigPath({ XDG_CONFIG_HOME: '/test/config' }, '/test/home'), join('/test/config', 'lvce-oss', 'argv.json'))
 })
