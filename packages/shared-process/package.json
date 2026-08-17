@@ -45,7 +45,7 @@
     "@lvce-editor/process-explorer": "^3.19.0",
     "@lvce-editor/pty-host": "^8.7.0",
     "@lvce-editor/search-process": "^15.8.0",
-    "@lvce-editor/typescript-compile-process": "^5.10.0",
+    "@lvce-editor/typescript-compile-process": "^5.10.1",
     "open": "^11.0.1",
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
