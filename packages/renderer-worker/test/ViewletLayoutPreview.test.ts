@@ -398,8 +398,8 @@ test('showSecondaryPreview keeps an open primary preview mounted', async () => {
   expect(result.commands).toContainEqual([
     'Viewlet.setBounds',
     expect.any(Number),
-    result.newState.secondaryPreviewLeft,
-    result.newState.secondaryPreviewTop,
+    0,
+    0,
     result.newState.secondaryPreviewWidth,
     result.newState.secondaryPreviewHeight,
   ])
@@ -444,8 +444,8 @@ test('showPreview keeps code visible when voice chat is already open', async () 
   expect(result.commands).toContainEqual([
     'Viewlet.setBounds',
     expect.any(Number),
-    result.newState.previewLeft,
-    result.newState.previewTop,
+    0,
+    0,
     result.newState.previewWidth,
     result.newState.previewHeight,
   ])

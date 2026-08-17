@@ -233,6 +233,22 @@ const getSecondaryPreviewCloseButtonDom = () => {
   ]
 }
 
+const getPreviewAreaDom = (previewId: number, previewActionsUid: number | undefined, secondary: boolean) => {
+  const actionsDom = typeof previewActionsUid === 'number' && previewActionsUid !== -1 ? [getPreviewActionsDom(previewActionsUid)] : []
+  const previewDom = secondary ? getSecondaryPreviewDom(previewId) : getPreviewDom(previewId)
+  const closeButtonDom = secondary ? getSecondaryPreviewCloseButtonDom() : getPreviewCloseButtonDom()
+  return [
+    {
+      childCount: 2 + actionsDom.length,
+      className: secondary ? 'PreviewArea SecondaryPreviewArea' : 'PreviewArea',
+      type: VirtualDomElements.Div,
+    },
+    previewDom,
+    ...actionsDom,
+    ...closeButtonDom,
+  ]
+}
+
 const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   const {
     activityBarVisible,
@@ -285,12 +301,9 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   }
 
   if (previewVisible) {
-    children.push(getPreviewDom(previewId))
-    if (typeof previewActionsUid === 'number' && previewActionsUid !== -1) {
-      children.push(getPreviewActionsDom(previewActionsUid))
-    }
-    children.push(...getPreviewCloseButtonDom())
-    delta--
+    const previewAreaDom = getPreviewAreaDom(previewId, previewActionsUid, false)
+    children.push(...previewAreaDom)
+    delta -= previewAreaDom.length - 1
   }
 
   if (secondaryPreviewSashVisible) {
@@ -298,12 +311,9 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   }
 
   if (secondaryPreviewVisible) {
-    children.push(getSecondaryPreviewDom(secondaryPreviewId))
-    if (typeof secondaryPreviewActionsUid === 'number' && secondaryPreviewActionsUid !== -1) {
-      children.push(getPreviewActionsDom(secondaryPreviewActionsUid))
-    }
-    children.push(...getSecondaryPreviewCloseButtonDom())
-    delta--
+    const previewAreaDom = getPreviewAreaDom(secondaryPreviewId, secondaryPreviewActionsUid, true)
+    children.push(...previewAreaDom)
+    delta -= previewAreaDom.length - 1
   }
 
   return [
@@ -360,23 +370,17 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     children.push(getSashPreviewDom())
   }
   if (previewVisible) {
-    children.push(getPreviewDom(previewId))
-    if (typeof previewActionsUid === 'number' && previewActionsUid !== -1) {
-      children.push(getPreviewActionsDom(previewActionsUid))
-    }
-    children.push(...getPreviewCloseButtonDom())
-    delta--
+    const previewAreaDom = getPreviewAreaDom(previewId, previewActionsUid, false)
+    children.push(...previewAreaDom)
+    delta -= previewAreaDom.length - 1
   }
   if (secondaryPreviewSashVisible) {
     children.push(getSashSecondaryPreviewDom())
   }
   if (secondaryPreviewVisible) {
-    children.push(getSecondaryPreviewDom(secondaryPreviewId))
-    if (typeof secondaryPreviewActionsUid === 'number' && secondaryPreviewActionsUid !== -1) {
-      children.push(getPreviewActionsDom(secondaryPreviewActionsUid))
-    }
-    children.push(...getSecondaryPreviewCloseButtonDom())
-    delta--
+    const previewAreaDom = getPreviewAreaDom(secondaryPreviewId, secondaryPreviewActionsUid, true)
+    children.push(...previewAreaDom)
+    delta -= previewAreaDom.length - 1
   }
 
   return [
