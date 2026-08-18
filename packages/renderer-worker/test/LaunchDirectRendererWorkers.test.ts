@@ -27,8 +27,13 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({
   invokeAndTransfer: jest.fn(async () => undefined),
 }))
+jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => ({
+  invoke: jest.fn(async () => undefined),
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
 
 const GetPortTuple = await import('../src/parts/GetPortTuple/GetPortTuple.js')
+const EditorWorker = await import('../src/parts/EditorWorker/EditorWorker.ts')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchAboutViewWorker = await import('../src/parts/LaunchAboutViewWorker/LaunchAboutViewWorker.js')
 const LaunchActivityBarWorker = await import('../src/parts/LaunchActivityBarWorker/LaunchActivityBarWorker.ts')
@@ -72,7 +77,12 @@ test.each([
   ['process explorer', LaunchProcessExplorerWorker.launchProcessExplorerWorker, 'ProcessExplorer.handleMessagePort', 'ProcessExplorer'],
   ['quick pick', LaunchQuickPickWorker.launchQuickPickWorker, 'QuickPick.handleRendererProcessMessagePort', 'QuickPick'],
   ['source control', LaunchSourceControlWorker.launchSourceControlWorker, 'SourceControl.handleRendererProcessMessagePort', 'SourceControl'],
-  ['running extensions', LaunchRunningExtensionsViewWorker.launchRunningExtensionsViewWorker, 'RunningExtensions.handleMessagePort', 'RunningExtensions'],
+  [
+    'running extensions',
+    LaunchRunningExtensionsViewWorker.launchRunningExtensionsViewWorker,
+    'RunningExtensions.handleMessagePort',
+    'RunningExtensions',
+  ],
   ['settings', LaunchSettingsViewWorker.launchSettingsViewWorker, 'Settings.handleMessagePort', 'Settings'],
   ['status bar', LaunchStatusBarWorker.launchStatusBarWorker, 'StatusBar.handleMessagePort', 'StatusBar'],
   ['text search', LaunchTextSearchViewWorker.launchTextSearchViewWorker, 'TextSearch.handleMessagePort', 'TextSearch'],
@@ -83,4 +93,12 @@ test.each([
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, command, 'worker-port')
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
+})
+
+test('status bar worker listens for editor status changes over a direct connection', async () => {
+  await LaunchStatusBarWorker.launchStatusBarWorker()
+
+  expect(EditorWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', expect.any(MessagePort), 2001)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'StatusBar.handleMessagePort', expect.any(MessagePort), false)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Listener.register', 2, 2001)
 })
