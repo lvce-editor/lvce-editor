@@ -3,6 +3,7 @@ import * as ViewletEditorText from './ViewletEditorText.js'
 // prettier-ignore
 export const Events = {
   'languages.changed': ViewletEditorText.handleLanguagesChanged,
+  'preferences.changed': ViewletEditorText.handleSettingsChanged,
   // 'editor.change': ViewletEditorText.handleEditorChange,
   // 'tokenizer.changed': ViewletEditorText.handleTokenizeChange,
 }

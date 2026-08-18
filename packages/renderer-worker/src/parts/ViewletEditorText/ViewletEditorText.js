@@ -293,6 +293,11 @@ export const handleLanguagesChanged = async (state) => {
   return state
 }
 
+export const handleSettingsChanged = async (state) => {
+  await EditorWorker.invoke('Editor.handleSettingsChanged', state.id)
+  return rerender(state)
+}
+
 export const hasFunctionalResize = true
 
 export const resize = async (state, dimensions) => {
