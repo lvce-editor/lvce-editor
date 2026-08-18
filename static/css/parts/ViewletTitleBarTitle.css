@@ -1,4 +1,6 @@
 .TitleBarTitle {
+  -webkit-app-region: drag;
+  app-region: drag;
   display: flex;
   justify-content: center;
   align-items: center;

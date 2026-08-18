@@ -10,6 +10,9 @@ export const test = async ({ Locator, expect }) => {
   const titleBarMenuEntry = Locator('.TitleBarTopLevelEntry').first()
   await expect(titleBarMenuEntry).toHaveCSS('app-region', 'no-drag')
 
+  const titleBarTitle = Locator('.TitleBarTitle')
+  await expect(titleBarTitle).toHaveCSS('app-region', 'drag')
+
   const titleBarButtons = Locator('.TitleBarButtons')
   await expect(titleBarButtons).toHaveCSS('app-region', 'drag')
 }
