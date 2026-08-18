@@ -147,7 +147,7 @@
   {
     "name": "builtin.language-basics-gleam",
     "repository": "github.com/lvce-editor/language-basics-gleam",
-    "version": "1.12.1",
+    "version": "1.13.0",
     "created": "2025-06-23"
   },
   {
