@@ -5,6 +5,7 @@ import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Location from '../Location/Location.js'
+import * as Notification from '../Notification/Notification.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
@@ -19,7 +20,9 @@ import { state } from '../WorkspaceState/WorkspaceState.js'
 export const setPath = async (path) => {
   Assert.string(path)
   if (path && !(await FileSystem.exists(path))) {
-    throw new Error(`Workspace folder does not exist: '${path}'`)
+    const message = `Workspace folder does not exist: '${path}'`
+    await Notification.create('error', message)
+    throw new Error(message)
   }
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
