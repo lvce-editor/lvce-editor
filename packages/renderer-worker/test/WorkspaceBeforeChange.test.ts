@@ -3,6 +3,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const calls: any[] = []
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  exists: jest.fn(async () => true),
   getPathSeparator: jest.fn(async () => '/'),
 }))
 

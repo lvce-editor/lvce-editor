@@ -12,6 +12,7 @@ jest.unstable_mockModule('../src/parts/GetOrCreateWorker/GetOrCreateWorker.js', 
 }))
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  exists: jest.fn(async () => true),
   getPathSeparator: jest.fn(async () => '/'),
 }))
 

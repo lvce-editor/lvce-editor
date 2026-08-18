@@ -18,6 +18,9 @@ import { state } from '../WorkspaceState/WorkspaceState.js'
  */
 export const setPath = async (path) => {
   Assert.string(path)
+  if (path && !(await FileSystem.exists(path))) {
+    throw new Error(`Workspace folder does not exist: '${path}'`)
+  }
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
   await updateWindowTitle(path, pathSeparator)
