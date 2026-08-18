@@ -40,10 +40,26 @@ const adjustCommands = (commands, uid) => {
   })
 }
 
+const isEditorDisposed = async (uid) => {
+  try {
+    const keys = await EditorWorker.invoke('Editor.getKeys')
+    return Array.isArray(keys) && !keys.some((key) => Number(key) === uid)
+  } catch {
+    return false
+  }
+}
+
 const renderEditor = async (uid, sourceUid) => {
-  const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
-  const commands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
-  return uid === sourceUid ? commands : adjustCommands(commands, uid)
+  try {
+    const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
+    const commands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
+    return uid === sourceUid ? commands : adjustCommands(commands, uid)
+  } catch (error) {
+    if (await isEditorDisposed(uid)) {
+      return []
+    }
+    throw error
+  }
 }
 
 export const renderPendingEditors = async (editor) => {

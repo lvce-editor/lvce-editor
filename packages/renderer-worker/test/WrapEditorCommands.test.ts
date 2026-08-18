@@ -109,6 +109,38 @@ test('renders pending state for every text editor showing the same uri', async (
   ])
 })
 
+test('ignores an editor disposed while rendering pending state', async () => {
+  EditorWorker.invoke.mockImplementation((method: string) => {
+    if (method === 'Editor.diff2') {
+      return Promise.reject(new Error('Editor not found'))
+    }
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve([])
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  const result = await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'file:///same.txt' })
+
+  expect(result.commands).toEqual([])
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.render2', 1, expect.anything())
+})
+
+test('rethrows a render error when the editor still exists', async () => {
+  const renderError = new Error('render failed')
+  EditorWorker.invoke.mockImplementation((method: string) => {
+    if (method === 'Editor.diff2') {
+      return Promise.reject(renderError)
+    }
+    if (method === 'Editor.getKeys') {
+      return Promise.resolve(['1'])
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  await expect(WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'file:///same.txt' })).rejects.toBe(renderError)
+})
+
 test('renders one hundred text editors showing the same uri', async () => {
   for (let uid = 1; uid <= 100; uid++) {
     ViewletStates.set(uid, {
