@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.21.0",
+    "version": "5.22.0",
     "created": "2022-07-02"
   },
   {
@@ -20,7 +20,7 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.16.0",
+    "version": "1.17.0",
     "created": "2026-07-14"
   },
   {
@@ -51,7 +51,7 @@
   {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
-    "version": "1.16.0",
+    "version": "1.17.0",
     "created": "2022-12-15"
   },
   {
@@ -69,7 +69,7 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "created": "2026-08-03"
   },
   {
@@ -111,7 +111,7 @@
   {
     "name": "builtin.language-basics-cobol",
     "repository": "github.com/lvce-editor/language-basics-cobol",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "created": "2026-05-18"
   },
   {
@@ -183,7 +183,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "created": "2022-06-16"
   },
   {
@@ -213,7 +213,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.14.0",
+    "version": "1.15.0",
     "created": "2022-06-16"
   },
   {
@@ -309,7 +309,7 @@
   {
     "name": "builtin.language-basics-roc",
     "repository": "github.com/lvce-editor/language-basics-roc",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "created": "2026-08-15"
   },
   {
@@ -327,7 +327,7 @@
   {
     "name": "builtin.language-basics-zig",
     "repository": "github.com/lvce-editor/language-basics-zig",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "created": "2026-08-13"
   },
   {
@@ -363,7 +363,7 @@
   {
     "name": "builtin.language-basics-vue",
     "repository": "github.com/lvce-editor/language-basics-vue",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "created": "2023-01-21"
   },
   {
@@ -393,19 +393,19 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "1.9.0",
+    "version": "1.10.0",
     "created": "2022-06-16"
   },
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.14.0",
+    "version": "1.13.0",
     "created": "2024-02-28"
   },
   {
     "name": "builtin.language-features-nvmrc",
     "repository": "github.com/lvce-editor/language-features-nvmrc",
-    "version": "1.8.0",
+    "version": "1.9.0",
     "created": "2026-07-09"
   },
   {
@@ -436,7 +436,7 @@
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "created": "2022-06-16"
   },
   {
