@@ -24,8 +24,25 @@
 
 .EditorContent {
   contain: strict;
-  width: 100%;
+  flex: 1;
   height: 100%;
+  min-width: 0;
+}
+
+.EditorMinimap {
+  contain: strict;
+  flex: 0 0 120px;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.EditorMinimapCanvas {
+  display: block;
+}
+
+.EditorMinimapViewport {
+  color: rgba(121, 121, 121, 0.35);
 }
 
 .EditorLayers {

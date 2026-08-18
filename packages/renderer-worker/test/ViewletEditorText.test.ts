@@ -50,6 +50,7 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
 }))
 
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+const ViewletEditorTextIpc = await import('../src/parts/ViewletEditorText/ViewletEditorText.ipc.js')
 const ViewletEditorTextSaveState = await import('../src/parts/ViewletEditorText/ViewletEditorTextSaveState.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
@@ -252,6 +253,31 @@ test('dispose', async () => {
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.dispose', 1)
   expect(layoutWidgetsReconcile).toHaveBeenCalledWith(commands)
   expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', reconciledCommands)
+})
+
+test('handleSettingsChanged updates and rerenders the editor worker', async () => {
+  const commands = [['Viewlet.renderCanvas', '.EditorMinimap', 'EditorMinimapCanvas', 1, []]]
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.handleSettingsChanged':
+        return undefined
+      case 'Editor.diff2':
+        return [1]
+      case 'Editor.render2':
+        return commands
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+
+  const newState = await ViewletEditorText.handleSettingsChanged(state)
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.handleSettingsChanged', 1)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 1)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 1, [1])
+  expect(newState.commands).toEqual(commands)
+  expect(ViewletEditorTextIpc.Events['preferences.changed']).toBe(ViewletEditorText.handleSettingsChanged)
 })
 
 test('resize - increase height', async () => {
