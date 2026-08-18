@@ -21,3 +21,7 @@ test('registers the panel maximize commands', () => {
   expect(commandMap['Layout.maximizePanel']).toBeDefined()
   expect(commandMap['Layout.unmaximizePanel']).toBeDefined()
 })
+
+test('registers the menu select-current command', () => {
+  expect(commandMap['Menu.selectCurrent']).toBeDefined()
+})
