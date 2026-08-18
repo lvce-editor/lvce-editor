@@ -22,10 +22,10 @@ const toAbsoluteExtensionPath = (root: any, extensionPath: any): any => {
 }
 
 /**
- * @param {{extensionPath?: string, extensionPaths?: string[] | string, testPath?: string, root?: string}} [options]
+ * @param {{extensionPath?: string, extensionPaths?: string[] | string, onLoadCommands?: readonly unknown[], testPath?: string, root?: string}} [options]
  */
 export const exportStatic = async (options: any = {}): Promise<any> => {
-  const { extensionPath, extensionPaths = [], root = '', testPath = '' } = options
+  const { extensionPath, extensionPaths = [], onLoadCommands = [], root = '', testPath = '' } = options
   if (!root) {
     throw new Error(`root argument is required`)
   }
@@ -35,5 +35,5 @@ export const exportStatic = async (options: any = {}): Promise<any> => {
   const absoluteExtensionPath = toAbsoluteExtensionPath(root, defaultExtensionPath)
   const absoluteExtensionPaths = extensionPathList.map((extensionPath: any) => toAbsoluteExtensionPath(root, extensionPath))
   const pathPrefix = process.env.PATH_PREFIX || ''
-  return fn.exportStatic({ extensionPath: absoluteExtensionPath, extensionPaths: absoluteExtensionPaths, pathPrefix, root, testPath })
+  return fn.exportStatic({ extensionPath: absoluteExtensionPath, extensionPaths: absoluteExtensionPaths, onLoadCommands, pathPrefix, root, testPath })
 }

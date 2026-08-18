@@ -673,11 +673,12 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
 export const exportStatic = async ({
   extensionPath,
   extensionPaths,
+  onLoadCommands = [],
   pathPrefix,
   root,
   serverStaticPath,
@@ -728,6 +729,7 @@ export const exportStatic = async ({
   console.timeEnd('applyOverrides')
 
   await updateExtensionsJson({ commitHash, extraExtensions: [], pathPrefix, root })
+  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'onLoadCommands.json'), onLoadCommands)
 
   for (const extensionPath of allExtensionPaths) {
     console.time('addExtension')
