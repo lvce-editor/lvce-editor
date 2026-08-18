@@ -2,12 +2,17 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const getPathSeparator = jest.fn<(uri: string) => Promise<string>>(async () => '/')
 const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
+const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
 const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   exists,
   getPathSeparator,
+}))
+
+jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => ({
+  create: createNotification,
 }))
 
 jest.unstable_mockModule('../src/parts/WindowTitle/WindowTitle.js', () => ({
@@ -26,6 +31,7 @@ const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 beforeEach(() => {
+  createNotification.mockClear()
   exists.mockClear()
   exists.mockResolvedValue(true)
   getPathSeparator.mockClear()
@@ -60,6 +66,7 @@ test('setPath preserves the current workspace when the folder does not exist', a
   )
 
   expect(exists).toHaveBeenCalledWith('/home/test/missing')
+  expect(createNotification).toHaveBeenCalledWith('error', "Workspace folder does not exist: '/home/test/missing'")
   expect(getPathSeparator).not.toHaveBeenCalled()
   expect(setWindowTitle).not.toHaveBeenCalled()
   expect(disposeTextSearchWorker).not.toHaveBeenCalled()
