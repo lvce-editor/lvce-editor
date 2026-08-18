@@ -1379,7 +1379,7 @@
     "fileName": "settingsViewWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",
     "productionPath": "/packages/settings-view/dist/settingsViewWorkerMain.js",
-    "settingName": "develop.settingsWorkerPath",
+    "settingName": "develop.settingsViewWorkerPath",
     "hotReloadCommand": "Settings.hotReload",
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
@@ -1436,11 +1436,11 @@
   {
     "id": "settings",
     "fileName": "settingsWorkerMain.js",
-    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-view/dist/settingsViewWorkerMain.js",
-    "productionPath": "/packages/settings-view/dist/settingsWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/settings-worker/dist/settingsWorkerMain.js",
+    "productionPath": "/packages/settings-worker/dist/settingsWorkerMain.js",
     "settingName": "develop.settingsWorkerPath",
-    "hotReloadCommand": "Settings.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"]
   },
   {
     "id": "sourceActionWorker",

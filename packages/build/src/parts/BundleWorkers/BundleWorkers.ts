@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import * as BundleBuiltinSettings from '../BundleBuiltinSettings/BundleBuiltinSettings.ts'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
 import * as Copy from '../Copy/Copy.ts'
@@ -25,8 +26,7 @@ const getWorkerSourcePath = (defaultPath) => {
   return ''
 }
 
-const copyWorkers = async ({ toRoot }) => {
-  const workers = await JsonFile.readJson(workersJsonPath)
+const copyWorkers = async ({ toRoot, workers }) => {
   for (const worker of workers) {
     if (worker.id === 'rendererWorker') {
       continue
@@ -48,6 +48,7 @@ const copyWorkers = async ({ toRoot }) => {
 }
 
 export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot, iconThemeEtag }) => {
+  const workers = await JsonFile.readJson(workersJsonPath)
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
     commitHash,
     platform,
@@ -76,7 +77,8 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     ignore: ['static'],
   })
 
-  await copyWorkers({ toRoot })
+  await copyWorkers({ toRoot, workers })
+  await BundleBuiltinSettings.bundleBuiltinSettings({ toRoot, workers })
 
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',

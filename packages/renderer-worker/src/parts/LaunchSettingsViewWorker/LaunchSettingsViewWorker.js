@@ -12,7 +12,7 @@ export const launchSettingsViewWorker = async () => {
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
-    url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.settingsWorkerPath', SettingsViewWorkerUrl.settingsViewWorkerUrl),
+    url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.settingsViewWorkerPath', SettingsViewWorkerUrl.settingsViewWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'Initialize.initialize')

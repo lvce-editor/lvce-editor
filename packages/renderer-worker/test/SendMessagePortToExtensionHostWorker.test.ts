@@ -41,6 +41,12 @@ jest.unstable_mockModule('../src/parts/MainAreaWorker/MainAreaWorker.js', () => 
   }
 })
 
+jest.unstable_mockModule('../src/parts/SettingsWorker/SettingsWorker.js', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', () => {
   return {
     connectMessagePort: jest.fn(async () => false),
@@ -52,6 +58,7 @@ const DragAndDropWorker = await import('../src/parts/DragAndDropWorker/DragAndDr
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
+const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const WorkspaceBackend = await import('../src/parts/WorkspaceBackend/WorkspaceBackend.js')
 const SendMessagePortToExtensionHostWorker = await import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.js')
@@ -112,6 +119,14 @@ test('sendMessagePortToMainAreaWorker forwards to main area worker', async () =>
   await SendMessagePortToExtensionHostWorker.sendMessagePortToMainAreaWorker(port, 'HandleMessagePort.handleMessagePort', 42)
 
   expect(MainAreaWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port, 42)
+})
+
+test('sendMessagePortToSettingsWorker forwards to settings worker', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToSettingsWorker(port, 'HandleMessagePort.handleMessagePort', 42)
+
+  expect(SettingsWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port, 42)
 })
 
 test('sendMessagePortToViewWorker forwards to the selected direct view worker', async () => {
