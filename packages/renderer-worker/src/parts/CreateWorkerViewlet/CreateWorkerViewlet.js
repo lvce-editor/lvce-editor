@@ -8,7 +8,9 @@ import * as Workspace from '../Workspace/Workspace.js'
 
 const createContext = (getPlatform) => ({
   assetDir: AssetDir.assetDir,
-  isTest: Workspace.isTest?.() ?? false,
+  get isTest() {
+    return Workspace.isTest?.() ?? false
+  },
   get platform() {
     return getPlatform()
   },
