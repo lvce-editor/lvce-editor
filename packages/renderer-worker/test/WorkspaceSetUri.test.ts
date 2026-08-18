@@ -1,10 +1,12 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const getPathSeparator = jest.fn<(uri: string) => Promise<string>>(async () => '/')
+const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
 const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  exists,
   getPathSeparator,
 }))
 
@@ -24,6 +26,8 @@ const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 beforeEach(() => {
+  exists.mockClear()
+  exists.mockResolvedValue(true)
   getPathSeparator.mockClear()
   setWindowTitle.mockClear()
   disposeTextSearchWorker.mockClear()
@@ -44,6 +48,23 @@ test('setPath uses the folder name for a workspace', async () => {
   await Workspace.setPath('/home/test/project')
 
   expect(setWindowTitle).toHaveBeenCalledWith('project')
+})
+
+test('setPath preserves the current workspace when the folder does not exist', async () => {
+  Workspace.state.workspacePath = '/home/test/current'
+  Workspace.state.workspaceUri = '/home/test/current'
+  exists.mockResolvedValue(false)
+
+  await expect(Workspace.setPath('/home/test/missing')).rejects.toThrow(
+    new Error("Workspace folder does not exist: '/home/test/missing'"),
+  )
+
+  expect(exists).toHaveBeenCalledWith('/home/test/missing')
+  expect(getPathSeparator).not.toHaveBeenCalled()
+  expect(setWindowTitle).not.toHaveBeenCalled()
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/current')
+  expect(Workspace.getWorkspaceUri()).toBe('/home/test/current')
 })
 
 test('setUri preserves the uri and decodes the workspace path', async () => {
