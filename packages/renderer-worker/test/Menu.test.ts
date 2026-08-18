@@ -11,6 +11,7 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay
 const MenuWorker = await import('../src/parts/MenuWorker/MenuWorker.js')
 const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
 const Menu = await import('../src/parts/Menu/Menu.js')
+const MenuIpc = await import('../src/parts/Menu/Menu.ipc.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -36,4 +37,14 @@ test('hide restores the Simple Browser even when hiding the menu fails', async (
 
   await expect(Menu.hide()).rejects.toThrow('failed')
   expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('menu')
+})
+
+test('selectCurrent invokes the menu worker command', async () => {
+  await Menu.selectCurrent()
+
+  expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.selectCurrent')
+})
+
+test('selectCurrent is exported through the menu IPC command map', () => {
+  expect(MenuIpc.Commands.selectCurrent).toBe(Menu.selectCurrent)
 })

@@ -265,6 +265,7 @@ export const commandMap = {
   'Menu.handleMouseEnter': lazy('Menu.handleMouseEnter'),
   'Menu.handleMouseLeave': lazy('Menu.handleMouseLeave'),
   'Menu.hide': lazy('Menu.hide'),
+  'Menu.selectCurrent': lazy('Menu.selectCurrent'),
   'Menu.selectIndex': lazy('Menu.selectIndex'),
   'Menu.selectItem': lazy('Menu.selectItem'),
   'Menu.show': lazy('Menu.show'),

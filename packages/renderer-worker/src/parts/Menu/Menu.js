@@ -37,8 +37,8 @@ export const selectItem = async (text) => {
   await MenuWorker.invoke('Menu.selectItem', text)
 }
 
-export const selectCurrent = async (level) => {
-  await MenuWorker.invoke('Menu.selectCurrent', level)
+export const selectCurrent = async () => {
+  await MenuWorker.invoke('Menu.selectCurrent')
 }
 
 export const hide = async (restoreFocus = true) => {

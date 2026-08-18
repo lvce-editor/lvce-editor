@@ -12,6 +12,7 @@ export const Commands = {
   handleMouseEnter: Menu.handleMouseEnter,
   handleMouseLeave: Menu.handleMouseLeave,
   hide: Menu.hide,
+  selectCurrent: Menu.selectCurrent,
   selectIndex: Menu.selectIndex,
   selectItem: Menu.selectItem,
   show: Menu.show,
