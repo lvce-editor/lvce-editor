@@ -10,6 +10,7 @@ import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorCont
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -303,7 +304,10 @@ export const resize = async (state, dimensions) => {
 export const dispose = async (state) => {
   Tokenizer.removeConnectedEditor(state.id)
   const commands = await EditorWorker.invoke('Editor.dispose', state.id)
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  await RendererProcess.invoke(
+    'Viewlet.sendMultiple',
+    LayoutWidgets.reconcile(commands),
+  )
 }
 
 export const hasFunctionalRender = true
