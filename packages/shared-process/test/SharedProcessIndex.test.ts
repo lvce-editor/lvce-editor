@@ -29,8 +29,28 @@ test('exportStatic forwards multiple extension paths', async () => {
   expect(options).toEqual({
     extensionPath: undefined,
     extensionPaths: [join('/test/root', 'packages', 'extension-a'), join('/test/root', 'packages', 'extension-b')],
+    onLoadCommands: [],
     pathPrefix: '',
     root: '/test/root',
     testPath: '',
   })
+})
+
+test('exportStatic forwards on-load commands', async () => {
+  const onLoadCommands = [
+    {
+      args: ['ready'],
+      command: 'Sample.setup',
+      name: 'Setup sample',
+    },
+  ]
+
+  await SharedProcess.exportStatic({
+    onLoadCommands,
+    root: '/test/root',
+  })
+
+  // @ts-ignore
+  const [options] = ExportStatic.exportStatic.mock.calls[0]
+  expect(options.onLoadCommands).toBe(onLoadCommands)
 })

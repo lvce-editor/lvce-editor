@@ -24,6 +24,7 @@ import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
+import * as OnLoadCommands from '../OnLoadCommands/OnLoadCommands.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -238,6 +239,7 @@ export const startup = async (platform, assetDir) => {
 
   await Promise.all(actions.map((action) => action(platform, assetDir)))
   await OpenInitialUri.openInitialUri(initData.Location.href)
+  await OnLoadCommands.run(assetDir, platform)
   await CleanUpWorkersAfterLoad.cleanUpWorkersAfterLoad()
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
