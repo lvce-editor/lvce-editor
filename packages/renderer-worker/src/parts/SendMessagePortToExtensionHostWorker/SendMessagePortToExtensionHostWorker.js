@@ -39,6 +39,7 @@ import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorer
 import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
+import * as SettingsWorker from '../SettingsWorker/SettingsWorker.js'
 import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
@@ -184,6 +185,12 @@ export const sendMessagePortToTextSearchWorker = async (port, initialCommand, rp
   Assert.object(port)
   Assert.string(initialCommand)
   await TextSearchWorker.invokeAndTransfer(initialCommand, port, rpcId)
+}
+
+export const sendMessagePortToSettingsWorker = async (port, initialCommand, rpcId) => {
+  Assert.object(port)
+  Assert.string(initialCommand)
+  await SettingsWorker.invokeAndTransfer(initialCommand, port, rpcId)
 }
 
 export const sendMessagePortToSourceControlWorker = async (port, initialCommand, rpcId) => {
