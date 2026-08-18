@@ -3,6 +3,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const editorWorkerInvoke = jest.fn()
 const getTextEditorContent = jest.fn<() => string>()
 const getTokenizePath = jest.fn<(languageId: string) => string>()
+const layoutWidgetsReconcile = jest.fn<(commands: readonly (readonly any[])[]) => any[]>()
 const rendererProcessInvoke = jest.fn()
 const tokenizerRemoveConnectedEditor = jest.fn()
 
@@ -10,6 +11,7 @@ beforeEach(() => {
   jest.resetAllMocks()
   getTextEditorContent.mockReturnValue('first line\nsecond line')
   getTokenizePath.mockImplementation((languageId: string): string => `/tokenize-${languageId}.js`)
+  layoutWidgetsReconcile.mockImplementation((commands) => [...commands])
 })
 
 jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
@@ -32,6 +34,10 @@ jest.unstable_mockModule('../src/parts/GetTextEditorContent/GetTextEditorContent
 
 jest.unstable_mockModule('../src/parts/GetTokenizePath/GetTokenizePath.js', () => ({
   getTokenizePath,
+}))
+
+jest.unstable_mockModule('../src/parts/LayoutWidgets/LayoutWidgets.ts', () => ({
+  reconcile: layoutWidgetsReconcile,
 }))
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
@@ -232,14 +238,20 @@ test('loadContent - detects the language from the first line for an extensionles
 })
 
 test('dispose', async () => {
-  const commands = [['Viewlet.dispose', 2]]
+  const commands = [
+    ['Viewlet.setWidgets', 1, 2, []],
+    ['Viewlet.dispose', 2],
+  ]
+  const reconciledCommands = [['Viewlet.dispose', 2]]
   editorWorkerInvoke.mockImplementation(() => commands)
+  layoutWidgetsReconcile.mockReturnValue(reconciledCommands)
 
   await ViewletEditorText.dispose({ id: 1 })
 
   expect(tokenizerRemoveConnectedEditor).toHaveBeenCalledWith(1)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.dispose', 1)
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', commands)
+  expect(layoutWidgetsReconcile).toHaveBeenCalledWith(commands)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', reconciledCommands)
 })
 
 test('resize - increase height', async () => {
