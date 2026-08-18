@@ -17,6 +17,15 @@ export const getChildHandles = async (handle) => {
 }
 
 /**
+ * @param {FileSystemDirectoryHandle} handle
+ * @param {string} name
+ * @returns {Promise<FileSystemDirectoryHandle>}
+ */
+export const getDirectoryHandle = (handle, name) => {
+  return handle.getDirectoryHandle(name)
+}
+
+/**
  *
  * @param {FileSystemDirectoryHandle} handle
  * @param {string} name
