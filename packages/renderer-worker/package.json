@@ -52,7 +52,7 @@
     "@lvce-editor/chat-tool-worker": "^9.21.0",
     "@lvce-editor/chat-view": "^10.14.0",
     "@lvce-editor/chat-view-model": "^10.14.0",
-    "@lvce-editor/clipboard-worker": "^1.28.1",
+    "@lvce-editor/clipboard-worker": "^1.28.2",
     "@lvce-editor/color-picker-worker": "^3.15.0",
     "@lvce-editor/completion-worker": "^4.17.0",
     "@lvce-editor/debug-worker": "^4.16.0",
