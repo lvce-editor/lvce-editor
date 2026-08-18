@@ -12,8 +12,8 @@ test('gets one settings contribution candidate per worker package', () => {
       productionPath: '/packages/editor-worker/dist/editorWorkerHelperMain.js',
     },
     {
-      defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/explorer-view/dist/explorerViewWorkerMain.js',
-      productionPath: '/packages/explorer-view/dist/explorerViewWorkerMain.js',
+      defaultPath: '\\packages\\renderer-worker\\node_modules\\@lvce-editor\\explorer-view\\dist\\explorerViewWorkerMain.js',
+      productionPath: '\\packages\\explorer-view\\dist\\explorerViewWorkerMain.js',
     },
   ]
 

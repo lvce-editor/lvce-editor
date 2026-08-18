@@ -4,7 +4,13 @@ import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 
 const stripLeadingSlash = (path: string): string => {
-  return path.startsWith('/') ? path.slice(1) : path
+  return path.replaceAll('\\', '/').replace(/^\/+/, '')
+}
+
+const getSettingsPath = (defaultPath: string): string => {
+  const normalizedPath = stripLeadingSlash(defaultPath)
+  const lastSlashIndex = normalizedPath.lastIndexOf('/')
+  return `${normalizedPath.slice(0, lastSlashIndex)}/settings.json`
 }
 
 const getSourcePath = (path: string): string => {
@@ -35,7 +41,7 @@ export const getSettingsContributionCandidates = (workers: readonly any[]): read
     if (!packageName || candidates.has(packageName)) {
       continue
     }
-    const settingsPath = stripLeadingSlash(Path.join(Path.dirname(defaultPath), 'settings.json'))
+    const settingsPath = getSettingsPath(defaultPath)
     candidates.set(packageName, settingsPath)
   }
   return [...candidates].sort(([a], [b]) => a.localeCompare(b)).map(([packageName, sourcePath]) => ({ packageName, sourcePath }))
