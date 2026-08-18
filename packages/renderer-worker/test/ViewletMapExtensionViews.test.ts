@@ -57,6 +57,30 @@ test('an explicit extension view opener uses the extension view renderer', async
   await expect(ViewletMap.getModuleId('/workspace/file.unknown', 'builtin.media-preview')).resolves.toBe(ViewletModuleId.ExtensionView)
 })
 
+test('an explicit extension view opener overrides the default JSON editor', async () => {
+  state.views = [
+    {
+      id: 'builtin.cpu-profile-view',
+      selector: ['.json'],
+      type: 'preview',
+    },
+  ]
+
+  await expect(ViewletMap.getModuleId('/workspace/profile.json', 'builtin.cpu-profile-view')).resolves.toBe(ViewletModuleId.ExtensionView)
+})
+
+test('an explicit webview opener overrides the default JSON editor', async () => {
+  state.views = []
+  state.webViews = [
+    {
+      id: 'builtin.json-preview',
+      selector: ['.json'],
+    },
+  ]
+
+  await expect(ViewletMap.getModuleId('/workspace/file.json', 'builtin.json-preview')).resolves.toBe(ViewletModuleId.WebView)
+})
+
 test('video documents use a matching preview extension view', async () => {
   state.views = [
     {

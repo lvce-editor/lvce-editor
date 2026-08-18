@@ -11,6 +11,21 @@ const mapExtToEditorType = {
   '.opus': ViewletModuleId.Audio,
 }
 
+const getModuleIdForOpener = async (opener) => {
+  if (!opener) {
+    return undefined
+  }
+  const extensionViews = await GetExtensionViews.getExtensionViews()
+  if (GetExtensionViews.findExtensionView(extensionViews, opener)) {
+    return ViewletModuleId.ExtensionView
+  }
+  const webViews = await GetWebViews.getWebViews()
+  if (webViews.some((webView) => webView?.id === opener)) {
+    return ViewletModuleId.WebView
+  }
+  return undefined
+}
+
 export const getModuleId = async (uri, opener) => {
   // TODO rename scheme to keybindings://
   if (uri === 'app://keybindings') {
@@ -67,22 +82,22 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('iframe-inspector://')) {
     return ViewletModuleId.IframeInspector
   }
+  const openerModuleId = await getModuleIdForOpener(opener)
+  if (openerModuleId) {
+    return openerModuleId
+  }
   if (uri.endsWith('.css') || uri.endsWith('.json') || uri.endsWith('.js') || uri.endsWith('.ts')) {
     return ViewletModuleId.EditorText
   }
 
   const extensionViews = await GetExtensionViews.getExtensionViews()
-  if ((opener && GetExtensionViews.findExtensionView(extensionViews, opener)) || GetExtensionViews.findExtensionView(extensionViews, uri)) {
+  if (GetExtensionViews.findExtensionView(extensionViews, uri)) {
     return ViewletModuleId.ExtensionView
   }
 
   // TODO only request webviews once
   const webViews = await GetWebViews.getWebViews()
   for (const webView of webViews) {
-    if (webView && webView.id === opener) {
-      // TODO can return webview directly here?
-      return ViewletModuleId.WebView
-    }
     for (const selector of webView.selector || []) {
       if (uri.endsWith(selector)) {
         // TODO configure webviews so that some open by default (video, image)
