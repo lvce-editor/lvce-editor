@@ -69,7 +69,7 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "created": "2026-08-03"
   },
   {
@@ -189,7 +189,7 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.25.0",
+    "version": "1.26.0",
     "created": "2024-08-09"
   },
   {
