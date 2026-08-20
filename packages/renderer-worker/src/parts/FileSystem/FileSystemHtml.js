@@ -14,6 +14,11 @@ import { VError } from '../VError/VError.js'
 
 const pathSeparator = '/'
 
+export const exists = async (uri) => {
+  const handle = await PersistentFileHandle.getHandle(uri)
+  return Boolean(handle)
+}
+
 const getDirent = (handle) => {
   const { name, kind } = handle
   const type = FileHandleTypeMap.getDirentType(kind)

@@ -99,6 +99,18 @@ test('getPathSeparator', async () => {
   expect(FileSystemHtml.getPathSeparator()).toBe('/')
 })
 
+test('exists - exists', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockResolvedValue({})
+  await expect(FileSystemHtml.exists('html:///test')).resolves.toBe(true)
+})
+
+test('exists - does not exist', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockResolvedValue(undefined)
+  await expect(FileSystemHtml.exists('html:///test')).resolves.toBe(false)
+})
+
 test('readDirWithFileTypes', async () => {
   // @ts-ignore
   PersistentFileHandle.getHandle.mockImplementation(() => {
