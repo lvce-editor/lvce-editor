@@ -222,6 +222,34 @@ test('handleActiveEditorChange refreshes the problems summary for loaded viewlet
   })
 })
 
+test('handleActiveEditorChange clears the problems summary when the last editor closes', async () => {
+  const summaryHandler = jest.fn((state: { uid: number }, receivedSummary) => ({
+    ...state,
+    summary: receivedSummary,
+  }))
+  ViewletStates.set('panel', createInstance(1, 'handleProblemsSummaryChange', summaryHandler))
+
+  const state = ViewletLayout.create(1)
+  const result = await ViewletLayout.handleActiveEditorChange(state, '')
+
+  expect(problemsInvoke).not.toHaveBeenCalled()
+  expect(summaryHandler).toHaveBeenCalledWith(
+    { uid: 1 },
+    {
+      errorCount: 0,
+      hasEditor: false,
+      problemCount: 0,
+      warningCount: 0,
+    },
+  )
+  expect(result).toEqual({
+    commands: [['render.1']],
+    newState: {
+      ...state,
+    },
+  })
+})
+
 test('handleDiagnosticsChange forwards the changed uri to loaded viewlets', async () => {
   const handler = jest.fn((state: { uid: number }, uri: string) => {
     return {

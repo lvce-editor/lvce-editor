@@ -2530,6 +2530,15 @@ export const refreshProblemsSummary = async (state: LayoutState): Promise<Layout
   }
 }
 
+const clearProblemsSummary = (state: LayoutState): Promise<LayoutStateResult> => {
+  return callGlobalEvent(state, 'handleProblemsSummaryChange', {
+    errorCount: 0,
+    hasEditor: false,
+    problemCount: 0,
+    warningCount: 0,
+  })
+}
+
 const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, eventName: string, ...args): Promise<LayoutStateResult> => {
   const eventResult = await callGlobalEvent(state, eventName, ...args)
   const summaryResult = await refreshProblemsSummary(eventResult.newState)
@@ -2540,7 +2549,12 @@ const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, even
 }
 
 export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
-  return callGlobalEventAndRefreshProblemsSummary(state, 'handleActiveEditorChange', activeUri)
+  const eventResult = await callGlobalEvent(state, 'handleActiveEditorChange', activeUri)
+  const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
+  return {
+    newState: summaryResult.newState,
+    commands: [...eventResult.commands, ...summaryResult.commands],
+  }
 }
 
 export const handleDiagnosticsChange = async (state: LayoutState, uri: string) => {
