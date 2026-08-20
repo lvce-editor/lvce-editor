@@ -15,6 +15,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
+import * as IpcTrace from '../IpcTrace/IpcTrace.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
@@ -126,6 +127,7 @@ export const startup = async (platform, assetDir) => {
   Location.initialize(initData.Location.href)
   if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
+    await IpcTrace.initialize()
   }
 
   LifeCycle.mark(LifeCyclePhase.One)
