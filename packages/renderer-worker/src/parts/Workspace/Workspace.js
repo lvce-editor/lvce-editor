@@ -14,16 +14,20 @@ import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
-/**
- * @param {string|undefined} path
- */
-export const setPath = async (path) => {
-  Assert.string(path)
+const validateLocalPath = async (path) => {
   if (path && !(await FileSystem.exists(path))) {
     const message = `Workspace folder does not exist: '${path}'`
     await Notification.create('error', message)
     throw new Error(message)
   }
+}
+
+/**
+ * @param {string|undefined} path
+ */
+export const setPath = async (path) => {
+  Assert.string(path)
+  await validateLocalPath(path)
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
   await updateWindowTitle(path, pathSeparator)
@@ -43,6 +47,9 @@ export const setPath = async (path) => {
 export const setUri = async (uri, providedPathSeparator, backend) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = backend?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
+  if (protocol === 'file' && !backend) {
+    await validateLocalPath(path)
+  }
   const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
   await updateWindowTitle(path, pathSeparator)
   if (path !== state.workspacePath) {
