@@ -1,6 +1,9 @@
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 
+const workerViewlet = createWorkerViewlet({ workerId: 'preview' })
+const { dispose: disposeWorkerViewlet } = workerViewlet
+
 export const {
   Commands,
   Css,
@@ -29,6 +32,9 @@ export const {
   renderTitle,
   resize,
   saveState,
-} = createWorkerViewlet({ workerId: 'preview' })
+} = workerViewlet
 
-export const dispose = PreviewSandBoxWorker.dispose
+export const dispose = async (state) => {
+  await disposeWorkerViewlet(state)
+  await PreviewSandBoxWorker.dispose()
+}

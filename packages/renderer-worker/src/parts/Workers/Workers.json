@@ -1165,6 +1165,7 @@
         "hotReloadLoadContent": { "name": "Preview.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Preview.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Preview.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "dispose": { "name": "Preview.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "resize": { "name": "Preview.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Preview.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Preview.terminate", "parameters": [] },

@@ -109,6 +109,18 @@ test('configures immediate workspace feedback for the title bar and main area', 
   expect(getWorkerViewletConfig('mainArea').workspaceChangeEventPrepend).toBe(true)
 })
 
+test('disposes preview worker state when the preview viewlet closes', async () => {
+  const invoke = jest.fn(async (..._args: readonly unknown[]) => undefined)
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('preview'),
+    worker: { invoke, restart: jest.fn() },
+  })
+
+  await viewlet.dispose!({ uid: 7 })
+
+  expect(invoke).toHaveBeenCalledWith('Preview.dispose', 7)
+})
+
 test('creates command wrappers through the same lifecycle seam', async () => {
   const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
     if (method === 'Example.getCommandIds') {
