@@ -92,6 +92,7 @@ export const commandMap = {
   'Dialog.showWarning': lazy('Dialog.showWarning'),
   'Document.getSelectionText': lazy('Document.getSelectionText'),
   'Download.downloadFile': lazy('Download.downloadFile'),
+  'DropData.get': lazy('DropData.get'),
   'Download.downloadJson': lazy('Download.downloadJson'),
   'Download.downloadToDownloadsFolder': lazy('Download.downloadToDownloadsFolder'),
   'EditorDiagnostics.hydrate': lazy('EditorDiagnostics.hydrate'),
