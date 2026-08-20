@@ -80,7 +80,7 @@ test('includes the built-in GPT Voice extension', async () => {
   })
 })
 
-test('disables the built-in TypeScript language features extension by default', async () => {
+test('enables the built-in TypeScript language features extension by default', async () => {
   const extensions = await getAllExtensionsJson({
     commitHash: 'test-commit',
     pathPrefix: '/test-prefix',
@@ -89,7 +89,7 @@ test('disables the built-in TypeScript language features extension by default', 
 
   expect(extension).toMatchObject({
     builtin: true,
-    disabled: true,
+    disabled: false,
     path: '/test-prefix/test-commit/extensions/builtin.language-features-typescript',
   })
 })
