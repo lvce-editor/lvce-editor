@@ -5,6 +5,7 @@ const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
 const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
 const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
+const isTest = jest.fn<() => boolean>(() => false)
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   exists,
@@ -13,6 +14,13 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
 
 jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => ({
   create: createNotification,
+}))
+
+jest.unstable_mockModule('../src/parts/IsTest/IsTest.js', () => ({
+  isTest,
+  state: {
+    isTest: false,
+  },
 }))
 
 jest.unstable_mockModule('../src/parts/WindowTitle/WindowTitle.js', () => ({
@@ -37,6 +45,8 @@ beforeEach(() => {
   getPathSeparator.mockClear()
   setWindowTitle.mockClear()
   disposeTextSearchWorker.mockClear()
+  isTest.mockClear()
+  isTest.mockReturnValue(false)
   GlobalEventBus.state.listenerMap = Object.create(null)
   Workspace.state.pathSeparator = '/'
   Workspace.state.workspacePath = ''
@@ -53,6 +63,16 @@ test('setPath uses the product name for an empty workspace', async () => {
 test('setPath uses the folder name for a workspace', async () => {
   await Workspace.setPath('/home/test/project')
 
+  expect(setWindowTitle).toHaveBeenCalledWith('project')
+})
+
+test('setPath skips folder validation during tests', async () => {
+  isTest.mockReturnValue(true)
+  exists.mockResolvedValue(false)
+
+  await Workspace.setPath('/remote/home/test/project')
+
+  expect(exists).not.toHaveBeenCalled()
   expect(setWindowTitle).toHaveBeenCalledWith('project')
 })
 

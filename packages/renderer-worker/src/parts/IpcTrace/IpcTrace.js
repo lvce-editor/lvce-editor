@@ -7,6 +7,8 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 const flushRecordCount = 100
 const flushDelay = 100
 
+const createEmptyOptions = () => ({ error: '', selectors: new Set() })
+
 /** @type {any} */
 export const state = {
   batches: new Map(),
@@ -16,7 +18,7 @@ export const state = {
   getArgv: Process.getArgv,
   getTransferrables: GetIpcTraceTransferrables.getIpcTraceTransferrables,
   now: () => performance.now(),
-  optionsPromise: undefined,
+  options: createEmptyOptions(),
   pendingRecordCount: 0,
   serialize: SerializeIpcTraceMessage.serializeIpcTraceMessage,
   setTimeout: (callback, delay) => globalThis.setTimeout(callback, delay),
@@ -43,20 +45,17 @@ const reportError = (error) => {
   void Promise.resolve(state.writeStderr(`IPC tracing disabled: ${message}\n`)).catch(() => {})
 }
 
-const getOptions = async () => {
-  state.optionsPromise ||= Promise.resolve(state.getArgv())
-    .then((argv) => {
-      const options = IpcTraceConfig.parseTraceIpc(argv)
-      if (options.error) {
-        reportError(new Error(options.error))
-      }
-      return options
-    })
-    .catch((error) => {
-      reportError(error)
-      return { error: '', selectors: new Set() }
-    })
-  return state.optionsPromise
+export const initialize = async () => {
+  try {
+    const argv = await state.getArgv()
+    state.options = IpcTraceConfig.parseTraceIpc(argv)
+    if (state.options.error) {
+      reportError(new Error(state.options.error))
+    }
+  } catch (error) {
+    reportError(error)
+    state.options = createEmptyOptions()
+  }
 }
 
 const getWorkerId = (traceId, name, runtimeId) => {
@@ -157,8 +156,7 @@ export const maybeCreateProxy = async ({ id, name = '', port, traceId = '' }) =>
   if (!port || state.disabled) {
     return port
   }
-  const options = await getOptions()
-  if (state.disabled || !IpcTraceConfig.shouldTrace(options.selectors, traceId)) {
+  if (!IpcTraceConfig.shouldTrace(state.options.selectors, traceId)) {
     return port
   }
   const workerId = getWorkerId(traceId, name, id)
@@ -183,7 +181,7 @@ export const reset = () => {
   state.connectionId = 0
   state.disabled = false
   state.flushTimer = undefined
-  state.optionsPromise = undefined
+  state.options = createEmptyOptions()
   state.pendingRecordCount = 0
   state.writeChain = Promise.resolve()
 }
