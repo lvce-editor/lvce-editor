@@ -31,6 +31,13 @@
     "enabled": false
   },
   {
+    "name": "builtin.pull-request-github",
+    "repository": "github.com/lvce-editor/pull-request-github",
+    "version": "1.1.0",
+    "created": "2026-08-19",
+    "enabled": false
+  },
+  {
     "name": "builtin.language-basics-bat",
     "repository": "github.com/lvce-editor/language-basics-bat",
     "version": "0.13.0",

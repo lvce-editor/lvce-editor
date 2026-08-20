@@ -2,13 +2,28 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'typescript.diagnostics-enabled'
 
-export const test: Test = async ({ Editor, FileSystem, Main, Settings, Workspace }) => {
+const waitFor = async (assertion: () => Promise<void>): Promise<void> => {
+  for (let attempt = 0; attempt < 100; attempt++) {
+    try {
+      await assertion()
+      return
+    } catch (error) {
+      if (attempt === 99) {
+        throw error
+      }
+      await new Promise((resolve) => setTimeout(resolve, 50))
+    }
+  }
+}
+
+export const test: Test = async ({ Editor, expect, FileSystem, Locator, Main, Settings, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const uri = `${tmpDir}/main.ts`
   await FileSystem.writeFile(uri, 'const foo: string = 123\n\nconsole.log(foo)\n')
   await Settings.update({ 'editor.diagnostics': true })
   await Workspace.setPath(tmpDir)
   await Main.openUri(uri)
+  await expect(Locator('.EditorContainer > .Viewlet.Editor')).toHaveCount(1)
 
   const expectedDiagnostics = [
     {
@@ -23,5 +38,5 @@ export const test: Test = async ({ Editor, FileSystem, Main, Settings, Workspace
       uri,
     },
   ] as const
-  await Editor.shouldHaveDiagnostics(expectedDiagnostics)
+  await waitFor(() => Editor.shouldHaveDiagnostics(expectedDiagnostics))
 }
