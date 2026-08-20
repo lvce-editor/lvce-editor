@@ -80,7 +80,25 @@ test('setUri preserves the uri and decodes the workspace path', async () => {
   expect(Workspace.getWorkspacePath()).toBe('/home/test/my folder/#project?')
   expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/my%20folder/%23project%3F')
   expect(Workspace.state.pathSeparator).toBe('/')
+  expect(exists).toHaveBeenCalledWith('/home/test/my folder/#project?')
   expect(getPathSeparator).toHaveBeenCalledWith('file:///home/test/my%20folder/%23project%3F')
+  expect(setWindowTitle).toHaveBeenCalledWith('#project?')
+})
+
+test('setUri preserves the current workspace when a local folder does not exist', async () => {
+  Workspace.state.workspacePath = '/home/test/current'
+  Workspace.state.workspaceUri = 'file:///home/test/current'
+  exists.mockResolvedValue(false)
+
+  await expect(Workspace.setUri('file:///home/test/missing%20folder')).rejects.toThrow(
+    new Error("Workspace folder does not exist: '/home/test/missing folder'"),
+  )
+
+  expect(exists).toHaveBeenCalledWith('/home/test/missing folder')
+  expect(createNotification).toHaveBeenCalledWith('error', "Workspace folder does not exist: '/home/test/missing folder'")
+  expect(setWindowTitle).not.toHaveBeenCalled()
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/current')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/current')
 })
 
 test('setUri preserves a custom uri as the workspace path', async () => {
