@@ -79,6 +79,13 @@ export const getConfigPath = () => {
   return SharedProcess.invoke(/* Platform.getConfigDir */ 'Platform.getConfigDir')
 }
 
+export const getUserDataDir = (platform = Platform.getPlatform()) => {
+  if (platform === PlatformType.Web) {
+    throw new Error('User data directory is not available on web')
+  }
+  return SharedProcess.invoke(/* Platform.getConfigUri */ 'Platform.getConfigUri')
+}
+
 export const getCachePath = () => {
   return SharedProcess.invoke(/* Platform.getCacheDir */ 'Platform.getCacheDir')
 }

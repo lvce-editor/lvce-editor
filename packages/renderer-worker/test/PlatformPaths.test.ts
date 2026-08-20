@@ -101,6 +101,24 @@ test('getConfigJsonPath - electron', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Platform.getConfigJsonPath')
 })
 
+test('getUserDataDir - remote', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method) => {
+    if (method === 'Platform.getConfigUri') {
+      return 'file:///home/test/.config/lvce-oss'
+    }
+    throw new Error('unexpected message')
+  })
+
+  expect(await PlatformPaths.getUserDataDir(PlatformType.Remote)).toBe('file:///home/test/.config/lvce-oss')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Platform.getConfigUri')
+})
+
+test('getUserDataDir - web', async () => {
+  expect(() => PlatformPaths.getUserDataDir(PlatformType.Web)).toThrow('User data directory is not available on web')
+  expect(SharedProcess.invoke).not.toHaveBeenCalled()
+})
+
 test('getApplicationName - web', () => {
   expect(PlatformPaths.getApplicationName(PlatformType.Web)).toBe('lvce-oss')
   expect(SharedProcess.invoke).not.toHaveBeenCalled()

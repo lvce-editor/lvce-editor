@@ -14,6 +14,7 @@ export const Commands = {
   getCommit: Platform.getCommit,
   getConfigDir: PlatformPaths.getConfigDir,
   getConfigJsonPath: PlatformPaths.getConfigJsonPath,
+  getConfigUri: PlatformPaths.getConfigUri,
   getDataDir: PlatformPaths.getDataDir,
   getDate: Platform.getDate,
   getDisabledExtensionsPath: PlatformPaths.getDisabledExtensionsPath,

@@ -22,6 +22,10 @@ test('configDir', () => {
   expect(PlatformPaths.configDir).toEqual(expect.any(String))
 })
 
+test('getConfigUri', () => {
+  expect(PlatformPaths.getConfigUri()).toBe(pathToFileURL(PlatformPaths.configDir).toString())
+})
+
 test('cacheDir', () => {
   expect(PlatformPaths.cacheDir).toEqual(expect.any(String))
 })

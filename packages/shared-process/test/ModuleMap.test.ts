@@ -6,6 +6,10 @@ test('getModuleId - Platform.getConfigJsonPath', () => {
   expect(ModuleMap.getModuleId('Platform.getConfigJsonPath')).toBe(ModuleId.Platform)
 })
 
+test('getModuleId - Platform.getConfigUri', () => {
+  expect(ModuleMap.getModuleId('Platform.getConfigUri')).toBe(ModuleId.Platform)
+})
+
 test('getModuleId - SendMessagePortToMainProcess.sendMessagePortToMainProcess', () => {
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
 })
