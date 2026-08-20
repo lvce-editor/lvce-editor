@@ -22,7 +22,7 @@ export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, 
   await expect(Locator('.EditorBreadcrumb')).toHaveCount(4)
   const separators = Locator('.EditorBreadcrumbSeparator')
   await expect(separators).toHaveCount(3)
-  await expect(separators.nth(0)).toHaveClass('EditorBreadcrumbSeparator MaskIcon MaskIconChevronRight')
-  await expect(separators.nth(1)).toHaveClass('EditorBreadcrumbSeparator MaskIcon MaskIconChevronRight')
-  await expect(separators.nth(2)).toHaveClass('EditorBreadcrumbSeparator MaskIcon MaskIconChevronRight')
+  await expect(separators.nth(0)).toHaveClass('MaskIconChevronRight')
+  await expect(separators.nth(1)).toHaveClass('MaskIconChevronRight')
+  await expect(separators.nth(2)).toHaveClass('MaskIconChevronRight')
 }

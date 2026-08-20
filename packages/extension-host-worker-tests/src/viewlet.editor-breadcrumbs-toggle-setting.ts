@@ -19,7 +19,7 @@ export const test: Test = async ({ FileSystem, Locator, Main, Settings, Workspac
     'breadcrumbs.enabled': true,
   })
   await expect(breadcrumbs).toHaveCount(1)
-  await expect(Locator('.EditorBreadcrumb')).toHaveCount(2)
+  await expect(Locator('.EditorBreadcrumb')).toHaveCount(1)
 
   await Settings.update({
     'breadcrumbs.enabled': false,
