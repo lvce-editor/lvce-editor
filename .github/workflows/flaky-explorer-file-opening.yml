@@ -1,0 +1,67 @@
+name: Flaky Explorer File Opening
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  explorer-file-opening:
+    strategy:
+      fail-fast: false
+      matrix:
+        attempt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: Install dependencies
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Install Chromium
+        working-directory: ./packages/extension-host-worker-tests
+        run: npx playwright install chromium
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Build static site
+        run: npm run build:static:ignore-icon-theme
+        env:
+          PATH_PREFIX: /lvce-editor
+      - name: Prepare static test export
+        run: npm run test-static-export
+      - name: Run Explorer file-opening scenario
+        working-directory: ./packages/extension-host-worker-tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p artifacts
+          node src/_all.js --headless --ci --record-videos --test-name-prefix=viewlet.explorer-preview-replacement 2>&1 | tee artifacts/test.log
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Upload attempt evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: explorer-file-opening-attempt-${{ matrix.attempt }}
+          path: |
+            packages/extension-host-worker-tests/artifacts/test.log
+            packages/extension-host-worker-tests/videos
+          if-no-files-found: warn
