@@ -32,6 +32,8 @@ export interface DiagnosticOptions {
 
 export type DefinitionOptions = CompleteOptions
 
+export type DocumentSymbolOptions = DiagnosticOptions
+
 export type ReferencesOptions = CompleteOptions
 
 export interface FormatOptions {
@@ -120,6 +122,16 @@ export const definition = async ({ argv, extensionId, id, offset, rootUri, textD
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.definition(normalizedDocument, offset)
+}
+
+export const documentSymbols = async ({ argv, extensionId, id, rootUri, textDocument, uri }: DocumentSymbolOptions): Promise<readonly unknown[]> => {
+  const normalizedDocument = {
+    ...textDocument,
+    uri: normalizeLanguageServerDocumentUri(textDocument.uri),
+  }
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
+  return connection.documentSymbols(normalizedDocument)
 }
 
 export const format = async ({ argv, extensionId, id, rootUri, textDocument, uri }: FormatOptions): Promise<readonly unknown[]> => {

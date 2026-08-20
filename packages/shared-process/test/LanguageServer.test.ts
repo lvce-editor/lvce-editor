@@ -8,6 +8,7 @@ import {
   diagnostic,
   dispose,
   disposeAll,
+  documentSymbols,
   format,
   references,
   type CompleteOptions,
@@ -170,6 +171,54 @@ test('definition starts a stdio language server and synchronizes documents', asy
     },
     uri: `${normalizedDocumentUri}?definition=value%20%3D%201%0Amain%20%3D%20value`,
   })
+})
+
+test('documentSymbols starts a stdio language server and synchronizes documents', async () => {
+  const options = {
+    argv: [serverScript],
+    extensionId: 'sample.extension',
+    id: 'sample.document-symbol-fixture',
+    rootUri: 'file:///tmp',
+    textDocument: {
+      languageId: 'typescript',
+      text: 'class FixtureClass {}',
+      uri: '/tmp/Fixture.ts',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+
+  await expect(documentSymbols(options)).resolves.toEqual([
+    {
+      children: [],
+      detail: options.textDocument.text,
+      kind: 5,
+      name: 'FixtureClass',
+      range: {
+        end: { character: options.textDocument.text.length, line: 0 },
+        start: { character: 0, line: 0 },
+      },
+      selectionRange: {
+        end: { character: 12, line: 0 },
+        start: { character: 0, line: 0 },
+      },
+    },
+  ])
+})
+
+test('documentSymbols returns no symbols when the language server does not support them', async () => {
+  await expect(
+    documentSymbols({
+      argv: [completionOnlyServerScript],
+      extensionId: 'sample.extension',
+      id: 'sample.completion-only-document-symbol-fixture',
+      textDocument: {
+        languageId: 'typescript',
+        text: 'const value = 1',
+        uri: '/tmp/sample.ts',
+      },
+      uri: pathToFileURL(process.execPath).href,
+    }),
+  ).resolves.toEqual([])
 })
 
 test('references starts a stdio language server and includes declarations', async () => {
