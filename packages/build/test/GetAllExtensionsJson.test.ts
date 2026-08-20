@@ -80,6 +80,20 @@ test('includes the built-in GPT Voice extension', async () => {
   })
 })
 
+test('includes the built-in GitHub Pull Requests extension disabled by default', async () => {
+  const extensions = await getAllExtensionsJson({
+    commitHash: 'test-commit',
+    pathPrefix: '/test-prefix',
+  })
+  const extension = extensions.find((item) => item.id === 'github.pull-requests')
+
+  expect(extension).toMatchObject({
+    builtin: true,
+    disabled: true,
+    path: '/test-prefix/test-commit/extensions/builtin.pull-request-github',
+  })
+})
+
 test('enables the built-in TypeScript language features extension by default', async () => {
   const extensions = await getAllExtensionsJson({
     commitHash: 'test-commit',
