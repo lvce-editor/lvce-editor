@@ -35,10 +35,20 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v6
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download builtin extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - name: Install Chromium
         working-directory: ./packages/extension-host-worker-tests
         run: npx playwright install chromium
-        if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build static site
