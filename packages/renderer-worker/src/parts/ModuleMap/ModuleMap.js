@@ -137,6 +137,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.PersistentFileHandle
     case 'Preferences':
       return ModuleId.Preferences
+    case 'Platform':
     case 'PlatformPaths':
       return ModuleId.PlatformPaths
     case 'Prompt':

@@ -37,3 +37,13 @@ test('getModule - layout runtime context', async () => {
   expect(Layout.Commands.getAssetDir()).toBe('')
   expect(Layout.Commands.getPlatform()).toBe(PlatformType.Test)
 })
+
+test('getModule - public user data directory command', async () => {
+  const moduleId = ModuleMap.getModuleId('Platform.getUserDataDir')
+  const loadedModule = await Module.load(moduleId)
+  const commands = (loadedModule as { Commands: Record<string, unknown> })
+    .Commands
+
+  expect(moduleId).toBe(ModuleId.PlatformPaths)
+  expect(commands['Platform.getUserDataDir']).toBeDefined()
+})
