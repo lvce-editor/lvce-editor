@@ -360,6 +360,10 @@
   mask-image: url(/icons/edit.svg);
 }
 
+.MaskIconLightBulb {
+  mask-image: url(/icons/lightbulb.svg);
+}
+
 .MaskIconSymbolFile,
 .IconSymbolFile {
   mask-image: url(/icons/symbol-file.svg);
