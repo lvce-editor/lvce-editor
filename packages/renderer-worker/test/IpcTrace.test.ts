@@ -28,7 +28,7 @@ globalThis.MessageChannel = FakeMessageChannel
 
 const IpcTrace = await import('../src/parts/IpcTrace/IpcTrace.js')
 
-beforeEach(() => {
+beforeEach(async () => {
   IpcTrace.reset()
   IpcTrace.state.getArgv = jest.fn(async () => ['/usr/bin/lvce', '--trace-ipc=builtin.eslint'])
   IpcTrace.state.getTransferrables = jest.fn(() => [])
@@ -38,6 +38,24 @@ beforeEach(() => {
   IpcTrace.state.wallTime = jest.fn(() => '2026-08-15T21:55:00.000Z')
   IpcTrace.state.write = jest.fn(async () => undefined)
   IpcTrace.state.writeStderr = jest.fn(async () => undefined)
+  await IpcTrace.initialize()
+})
+
+test('does not request trace configuration while creating a worker proxy', async () => {
+  IpcTrace.reset()
+  const getArgv = jest.fn(async () => ['/usr/bin/lvce', '--trace-ipc=builtin.eslint'])
+  IpcTrace.state.getArgv = getArgv
+  const parentChannel = new FakeMessageChannel()
+
+  const port = await IpcTrace.maybeCreateProxy({
+    id: 42,
+    name: 'ESLint Worker',
+    port: parentChannel.port2,
+    traceId: 'builtin.eslint',
+  })
+
+  expect(port).toBe(parentChannel.port2)
+  expect(getArgv).not.toHaveBeenCalled()
 })
 
 test('forwards selected worker messages in both directions and records them', async () => {
