@@ -15,7 +15,7 @@ const readJson = async (path: string): Promise<any> => {
 
 test('generated server sends index documents through the static server', () => {
   const replacement = getServerIsStaticReplacement('abcdefg')
-  const isStatic = runInNewContext(`${replacement}; isStatic`) as (url: string) => boolean
+  const isStatic = runInNewContext(`${replacement}; isStatic`, { argvSliced: [] }) as (url: string) => boolean
 
   expect(isStatic('/')).toBe(true)
   expect(isStatic('/?workspace=/test')).toBe(true)
@@ -23,6 +23,17 @@ test('generated server sends index documents through the static server', () => {
   expect(isStatic('/index.html?workspace=/test')).toBe(true)
   expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
   expect(isStatic('/api/status')).toBe(false)
+})
+
+test('generated server sends index documents through the shared process when extensions are linked', () => {
+  const replacement = getServerIsStaticReplacement('abcdefg')
+  const isStatic = runInNewContext(`${replacement}; isStatic`, { argvSliced: ['--link', '/test/extension'] }) as (url: string) => boolean
+
+  expect(isStatic('/')).toBe(false)
+  expect(isStatic('/?workspace=/test')).toBe(false)
+  expect(isStatic('/index.html')).toBe(false)
+  expect(isStatic('/index.html?workspace=/test')).toBe(false)
+  expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
 })
 
 test('setVersionsAndDependencies includes process explorer as shared-process dependency', async () => {

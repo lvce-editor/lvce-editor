@@ -19,12 +19,14 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-export const getServerIsStaticReplacement = (commitHash: string): string => `const isStatic = (url) => {
+export const getServerIsStaticReplacement = (commitHash: string): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
+
+const isStatic = (url) => {
   if (url === '/' || url.startsWith('/?')) {
-    return true
+    return !hasLinkedExtensions
   }
   if (url === '/index.html' || url.startsWith('/index.html?')) {
-    return true
+    return !hasLinkedExtensions
   }
   if (url.startsWith('/${commitHash}')) {
     return true
