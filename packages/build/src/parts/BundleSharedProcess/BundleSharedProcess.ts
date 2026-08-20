@@ -2,6 +2,7 @@ import { chmod, readFile, readdir, rm, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopySharedProcessWorkerManifest from '../CopySharedProcessWorkerManifest/CopySharedProcessWorkerManifest.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
@@ -91,6 +92,7 @@ export const bundleSharedProcess = async ({
     to: `${cachePath}/package.json`,
   })
   await transpileTypescriptDirectory(`${cachePath}/src`)
+  await CopySharedProcessWorkerManifest.copySharedProcessWorkerManifest(cachePath)
   await Replace.replace({
     path: `${cachePath}/src/parts/PreloadUrl/PreloadUrl.js`,
     occurrence: `join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'preload', 'src', 'index.js')`,
@@ -226,17 +228,8 @@ export const getBuiltinExtensionsPath = () => {
     })
   }
   if (target === 'server') {
-    await Copy.copyFile({
-      from: 'packages/renderer-worker/src/parts/Workers/Workers.json',
-      to: `${cachePath}/src/parts/Workers/Workers.json`,
-    })
     await Replace.replace({
       path: `${cachePath}/src/parts/ExportStatic/ExportStatic.js`,
-      occurrence: `../../../../renderer-worker/src/parts/Workers/Workers.json`,
-      replacement: `../Workers/Workers.json`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js`,
       occurrence: `../../../../renderer-worker/src/parts/Workers/Workers.json`,
       replacement: `../Workers/Workers.json`,
     })
