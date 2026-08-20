@@ -11,7 +11,12 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js', () => ({
+  getLinkedWorkerPreferences: jest.fn(() => ({})),
+}))
+
 const AddCustomPathsToIndexHtml = await import('../src/parts/AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.js')
+const LinkedWorkerPreferences = await import('../src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
 const originalArgv = process.argv
@@ -38,4 +43,17 @@ test('addCustomPathsToIndexHtml - excludes custom worker paths when disabled fro
   expect(result).toContain(`"rendererProcessPath": "${rendererProcessUrl}"`)
   expect(result).not.toContain('editorWorkerUrl')
   expect(result).not.toContain('extensionHostWorkerUrl')
+})
+
+test('addCustomPathsToIndexHtml - adds linked worker urls', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({
+    'develop.mainAreaWorkerPath': '/test/main-area-worker',
+  })
+  const content = '<title>Test</title>'
+  const mainAreaWorkerUrl = GetRemoteUrl.getRemoteUrl('/test/main-area-worker')
+
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+
+  expect(result).toContain(`"develop.mainAreaWorkerPath": "${mainAreaWorkerUrl}"`)
 })
