@@ -100,7 +100,6 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   expect(editorMethods).toEqual([
     'Editor.create2',
     'Editor.loadContent',
-    'Editor.updateDiagnostics',
     'Editor.diff2',
     'Editor.render2',
     'Editor.setSelections2',
