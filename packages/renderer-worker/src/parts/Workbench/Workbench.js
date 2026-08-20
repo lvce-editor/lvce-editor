@@ -34,6 +34,7 @@ import * as PreferencesState from '../PreferencesState/PreferencesState.js'
 import * as PromptMode from '../PromptMode/PromptMode.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as RuntimeWorkerPaths from '../RuntimeWorkerPaths/RuntimeWorkerPaths.ts'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import { shouldInitializeAuth } from '../ShouldInitializeAuth/ShouldInitializeAuth.ts'
@@ -133,6 +134,7 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.One)
 
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
+  RuntimeWorkerPaths.initialize(initData.Config?.workerUrls)
   ExtensionManagementWorker.hydrate()
 
   const promptOptions = platform === PlatformType.Electron ? await PromptMode.getPromptOptions() : undefined
