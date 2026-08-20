@@ -19,8 +19,8 @@ const createPackage = async (packageJson: unknown): Promise<string> => {
 
 test('getLinkedWorkerPreferences - resolves a linked worker package', async () => {
   const root = await createPackage({
-    name: '@lvce-editor/main-area-worker',
     main: 'dist/mainAreaWorkerMain.js',
+    name: '@lvce-editor/main-area-worker',
   })
   process.argv = [...originalArgv, '--link', root]
 
@@ -32,8 +32,8 @@ test('getLinkedWorkerPreferences - resolves a linked worker package', async () =
 test('getLinkedWorkerPreferences - ignores extension and unknown packages', async () => {
   const extensionRoot = await mkdtemp(join(tmpdir(), 'linked-extension-'))
   const unknownRoot = await createPackage({
-    name: '@lvce-editor/unknown-worker',
     main: 'dist/unknownWorkerMain.js',
+    name: '@lvce-editor/unknown-worker',
   })
   process.argv = [...originalArgv, '--link', extensionRoot, '--link', unknownRoot]
 
