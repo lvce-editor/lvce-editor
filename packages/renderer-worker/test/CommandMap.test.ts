@@ -25,3 +25,7 @@ test('registers the panel maximize commands', () => {
 test('registers the menu select-current command', () => {
   expect(commandMap['Menu.selectCurrent']).toBeDefined()
 })
+
+test('registers the drop data command', () => {
+  expect(commandMap['DropData.get']).toBeDefined()
+})
