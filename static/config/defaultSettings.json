@@ -1,4 +1,6 @@
 {
+  "breadcrumbs.enabled": false,
+
   "completions.loadingDelay": 1200,
 
   "development.watchColorTheme": true,

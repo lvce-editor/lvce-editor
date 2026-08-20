@@ -219,6 +219,7 @@ export const getModuleId = (commandId: any): any => {
     case 'LanguageServer.diagnostic':
     case 'LanguageServer.dispose':
     case 'LanguageServer.disposeAll':
+    case 'LanguageServer.documentSymbols':
     case 'LanguageServer.format':
     case 'LanguageServer.references':
       return ModuleId.LanguageServer

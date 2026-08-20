@@ -34,6 +34,7 @@ interface InitializeResult {
     readonly codeActionProvider?: unknown
     readonly diagnosticProvider?: unknown
     readonly documentFormattingProvider?: unknown
+    readonly documentSymbolProvider?: unknown
     readonly referencesProvider?: unknown
   }
 }
@@ -170,6 +171,7 @@ export class LanguageServerConnection {
   private stderr = ''
   private supportsCodeActions = false
   private supportsDocumentFormatting = false
+  private supportsDocumentSymbols = false
   private supportsPullDiagnostics = false
   private supportsReferences = false
 
@@ -294,6 +296,20 @@ export class LanguageServerConnection {
     })
   }
 
+  async documentSymbols(textDocument: TextDocument): Promise<readonly unknown[]> {
+    await this.ready
+    if (!this.supportsDocumentSymbols) {
+      return []
+    }
+    this.syncDocument(textDocument)
+    const result = await this.sendRequest('textDocument/documentSymbol', {
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+    return Array.isArray(result) ? result : []
+  }
+
   async format(textDocument: TextDocument): Promise<readonly unknown[]> {
     await this.ready
     if (!this.supportsDocumentFormatting) {
@@ -396,6 +412,10 @@ export class LanguageServerConnection {
             dynamicRegistration: false,
             relatedDocumentSupport: false,
           },
+          documentSymbol: {
+            dynamicRegistration: false,
+            hierarchicalDocumentSymbolSupport: true,
+          },
           publishDiagnostics: {
             relatedInformation: true,
           },
@@ -429,6 +449,7 @@ export class LanguageServerConnection {
     })) as InitializeResult
     this.supportsCodeActions = Boolean(result?.capabilities?.codeActionProvider)
     this.supportsDocumentFormatting = Boolean(result?.capabilities?.documentFormattingProvider)
+    this.supportsDocumentSymbols = Boolean(result?.capabilities?.documentSymbolProvider)
     this.supportsPullDiagnostics = Boolean(result?.capabilities?.diagnosticProvider)
     this.supportsReferences = Boolean(result?.capabilities?.referencesProvider)
     this.sendNotification('initialized', {})

@@ -20,6 +20,50 @@
   cursor: text;
   font-weight: var(--EditorFontWeight);
   display: flex;
+  position: relative;
+}
+
+.EditorBreadcrumbs {
+  align-items: center;
+  color: var(--EditorForeground, #cccccc);
+  contain: strict;
+  display: flex;
+  font-family: sans-serif;
+  font-size: 13px;
+  height: 22px;
+  inset: 0 0 auto;
+  line-height: 22px;
+  overflow: hidden;
+  padding: 0 8px;
+  position: absolute;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.EditorBreadcrumb {
+  flex-shrink: 0;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.EditorBreadcrumbSymbol {
+  color: var(--EditorBreadcrumbSymbolForeground, #e0e0e0);
+}
+
+.EditorBreadcrumbSeparator {
+  --MaskIconSize: 14px;
+
+  color: var(--EditorBreadcrumbSeparatorForeground, #858585);
+  flex: 0 0 16px;
+  height: 16px;
+}
+
+.Editor:has(> .EditorBreadcrumbs) > .Gutter,
+.Editor:has(> .EditorBreadcrumbs) > .EditorContent,
+.Editor:has(> .EditorBreadcrumbs) > .EditorMinimap {
+  height: calc(100% - 22px);
+  margin-top: 22px;
 }
 
 .EditorContent {

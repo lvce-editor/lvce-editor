@@ -9,6 +9,7 @@ export const Commands = {
   diagnostic: LanguageServer.diagnostic,
   dispose: LanguageServer.dispose,
   disposeAll: LanguageServer.disposeAll,
+  documentSymbols: LanguageServer.documentSymbols,
   format: LanguageServer.format,
   references: LanguageServer.references,
 }
