@@ -204,6 +204,15 @@
   contain: content;
 }
 
+.LineNumberLightBulb {
+  background: var(--EditorLightBulbForeground, #ffcc00);
+  cursor: pointer;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 16px;
+  pointer-events: all;
+}
+
 .DiffEditorLineNumber {
   contain: strict;
 }
