@@ -351,7 +351,7 @@ export const getQuickPickMenuEntries = () => {
       label: 'File: Open Folder',
     },
     {
-      id: 'file.openRecent',
+      id: 'QuickPick.showRecent',
       label: 'File: Open Recent',
     },
     {

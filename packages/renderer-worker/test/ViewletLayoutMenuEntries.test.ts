@@ -104,3 +104,12 @@ test('getQuickPickMenuEntries includes close all editors command', () => {
     label: 'Main: Close all Editors',
   })
 })
+
+test('getQuickPickMenuEntries includes executable open recent command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'QuickPick.showRecent',
+    label: 'File: Open Recent',
+  })
+})
