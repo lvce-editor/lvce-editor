@@ -4,6 +4,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as IsTest from '../IsTest/IsTest.js'
 import * as Location from '../Location/Location.js'
 import * as Notification from '../Notification/Notification.js'
 import * as Platform from '../Platform/Platform.js'
@@ -15,6 +16,9 @@ import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 const validateLocalPath = async (path) => {
+  if (IsTest.isTest()) {
+    return
+  }
   if (path && !(await FileSystem.exists(path))) {
     const message = `Workspace folder does not exist: '${path}'`
     await Notification.create('error', message)

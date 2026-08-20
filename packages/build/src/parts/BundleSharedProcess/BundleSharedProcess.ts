@@ -235,6 +235,11 @@ export const getBuiltinExtensionsPath = () => {
       occurrence: `../../../../renderer-worker/src/parts/Workers/Workers.json`,
       replacement: `../Workers/Workers.json`,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js`,
+      occurrence: `../../../../renderer-worker/src/parts/Workers/Workers.json`,
+      replacement: `../Workers/Workers.json`,
+    })
     await Copy.copy({
       from: 'packages/shared-process/bin',
       to: `${cachePath}/bin`,

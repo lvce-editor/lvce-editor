@@ -1,6 +1,7 @@
 import * as ApplyCustomWorkerPathCliOverride from '../ApplyCustomWorkerPathCliOverride/ApplyCustomWorkerPathCliOverride.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as JsoncFile from '../JsoncFile/JsoncFile.ts'
+import * as LinkedWorkerPreferences from '../LinkedWorkerPreferences/LinkedWorkerPreferences.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as Process from '../Process/Process.ts'
@@ -82,7 +83,12 @@ export const getAll = async (): Promise<any> => {
     // } catch {
     //   // ignore
     // }
-    return ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(preferences)
+    const preferencesWithoutCustomWorkerPaths = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(preferences)
+    const linkedWorkerPreferences = await LinkedWorkerPreferences.getLinkedWorkerPreferences()
+    return {
+      ...preferencesWithoutCustomWorkerPaths,
+      ...linkedWorkerPreferences,
+    }
   } catch (error) {
     throw new VError(error, 'Failed to get all preferences')
   }
