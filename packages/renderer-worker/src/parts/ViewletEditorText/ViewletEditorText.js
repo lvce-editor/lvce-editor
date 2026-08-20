@@ -152,7 +152,6 @@ export const loadContent = async (state, savedState, context) => {
     const useCache = Preferences.get('editor.cache') ?? true
     await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath, useCache)
     await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState)
-    await EditorWorker.invoke('Editor.updateDiagnostics', id)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
     const selectionRender = await rerender(newState2)
@@ -195,7 +194,6 @@ export const loadContent = async (state, savedState, context) => {
       y,
       useFunctionalRendering,
     })
-    await EditorWorker.invoke('Editor.updateDiagnostics', id)
   }
 
   // TODO send render commands directly from editor worker

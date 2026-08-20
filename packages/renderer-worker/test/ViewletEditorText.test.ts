@@ -59,7 +59,7 @@ beforeEach(() => {
   delete Preferences.state['editor.cache']
 })
 
-test('loadContent - restores the selection supplied by the opener', async () => {
+test('loadContent - renders before diagnostics are requested by loadContentLater', async () => {
   const initialCommands = [['Viewlet.setDom2']]
   const selectionCommands = [['Viewlet.setPatches']]
   let renderCount = 0
@@ -100,7 +100,6 @@ test('loadContent - restores the selection supplied by the opener', async () => 
   expect(editorMethods).toEqual([
     'Editor.create2',
     'Editor.loadContent',
-    'Editor.updateDiagnostics',
     'Editor.diff2',
     'Editor.render2',
     'Editor.setSelections2',
